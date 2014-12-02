@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term.h,v 1.101 2014/04/20 16:46:05 schwarze Exp $ */
+comment|/*	$Id: term.h,v 1.105 2014/10/28 17:36:19 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -134,6 +134,10 @@ name|tbl
 decl_stmt|;
 comment|/* table configuration */
 name|int
+name|synopsisonly
+decl_stmt|;
+comment|/* print the synopsis only */
+name|int
 name|mdocstyle
 decl_stmt|;
 comment|/* imitate mdoc(7) output */
@@ -251,17 +255,12 @@ define|#
 directive|define
 name|TERMP_NOSPLIT
 value|(1<< 12)
-comment|/* See termp_an_pre/post(). */
+comment|/* Do not break line before .An. */
 define|#
 directive|define
 name|TERMP_SPLIT
 value|(1<< 13)
-comment|/* See termp_an_pre/post(). */
-define|#
-directive|define
-name|TERMP_ANPREC
-value|(1<< 14)
-comment|/* See termp_an_pre(). */
+comment|/* Break line before .An. */
 name|int
 modifier|*
 name|buf
@@ -272,12 +271,13 @@ name|termenc
 name|enc
 decl_stmt|;
 comment|/* Type of encoding. */
+specifier|const
 name|struct
 name|mchars
 modifier|*
 name|symtab
 decl_stmt|;
-comment|/* Encoded-symbol table. */
+comment|/* Character table. */
 name|enum
 name|termfont
 name|fontl
@@ -422,6 +422,17 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|ascii_uc2str
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

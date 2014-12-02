@@ -1,28 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man_validate.c,v 1.105 2014/08/06 15:09:05 schwarze Exp $ */
+comment|/*	$OpenBSD$ */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2012, 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"config.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -117,7 +106,7 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|int
+name|void
 function_decl|(
 modifier|*
 name|v_check
@@ -130,7 +119,7 @@ end_typedef
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|check_eq0
 parameter_list|(
 name|CHKARGS
@@ -140,7 +129,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|check_eq2
 parameter_list|(
 name|CHKARGS
@@ -150,7 +139,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|check_le1
 parameter_list|(
 name|CHKARGS
@@ -160,7 +149,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|check_le5
 parameter_list|(
 name|CHKARGS
@@ -170,7 +159,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|check_par
 parameter_list|(
 name|CHKARGS
@@ -180,7 +169,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|check_part
 parameter_list|(
 name|CHKARGS
@@ -190,7 +179,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|check_root
 parameter_list|(
 name|CHKARGS
@@ -200,7 +189,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|check_text
 parameter_list|(
 name|CHKARGS
@@ -210,7 +199,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|post_AT
 parameter_list|(
 name|CHKARGS
@@ -220,7 +209,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|post_IP
 parameter_list|(
 name|CHKARGS
@@ -230,7 +219,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|post_vs
 parameter_list|(
 name|CHKARGS
@@ -240,7 +229,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|post_fi
 parameter_list|(
 name|CHKARGS
@@ -250,7 +239,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|post_ft
 parameter_list|(
 name|CHKARGS
@@ -260,7 +249,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|post_nf
 parameter_list|(
 name|CHKARGS
@@ -270,7 +259,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|post_TH
 parameter_list|(
 name|CHKARGS
@@ -280,7 +269,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|post_UC
 parameter_list|(
 name|CHKARGS
@@ -290,7 +279,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|post_UR
 parameter_list|(
 name|CHKARGS
@@ -429,7 +418,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|void
 name|man_valid_post
 parameter_list|(
 name|struct
@@ -461,11 +450,7 @@ name|flags
 operator|&
 name|MAN_VALID
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 name|n
 operator|->
 name|flags
@@ -482,29 +467,25 @@ block|{
 case|case
 name|MAN_TEXT
 case|:
-return|return
-operator|(
 name|check_text
 argument_list|(
 name|man
 argument_list|,
 name|n
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+break|break;
 case|case
 name|MAN_ROOT
 case|:
-return|return
-operator|(
 name|check_root
 argument_list|(
 name|man
 argument_list|,
 name|n
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+break|break;
 case|case
 name|MAN_EQN
 case|:
@@ -512,11 +493,7 @@ comment|/* FALLTHROUGH */
 case|case
 name|MAN_TBL
 case|:
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+break|break;
 default|default:
 name|cp
 operator|=
@@ -526,11 +503,11 @@ name|n
 operator|->
 name|tok
 expr_stmt|;
-return|return
-operator|(
+if|if
+condition|(
 operator|*
 name|cp
-condition|?
+condition|)
 call|(
 modifier|*
 name|cp
@@ -540,17 +517,15 @@ name|man
 argument_list|,
 name|n
 argument_list|)
-else|:
-literal|1
-operator|)
-return|;
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|check_root
 parameter_list|(
 name|CHKARGS
@@ -697,17 +672,12 @@ name|pos
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|check_text
 parameter_list|(
 name|CHKARGS
@@ -728,11 +698,7 @@ name|man
 operator|->
 name|flags
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 name|cp
 operator|=
 name|n
@@ -786,11 +752,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
@@ -806,7 +767,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|static int \ check_##name(CHKARGS) \ { \ 	if (n->nchild ineq (x)) \ 		return(1); \ 	mandoc_vmsg(MANDOCERR_ARGCOUNT, man->parse, n->line, n->pos, \ 	    "line arguments %s %d (have %d)", \ 	    #ineq, (x), n->nchild); \ 	return(1); \ }
+value|static void \ check_##name(CHKARGS) \ { \ 	if (n->nchild ineq (x)) \ 		return; \ 	mandoc_vmsg(MANDOCERR_ARGCOUNT, man->parse, n->line, n->pos, \ 	    "line arguments %s %d (have %d)", \ 	    #ineq, (x), n->nchild); \ }
 end_define
 
 begin_macro
@@ -855,7 +816,7 @@ end_macro
 
 begin_function
 specifier|static
-name|int
+name|void
 name|post_UR
 parameter_list|(
 name|CHKARGS
@@ -898,22 +859,19 @@ operator|->
 name|nchild
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
 name|check_part
 argument_list|(
 name|man
 argument_list|,
 name|n
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|post_ft
 parameter_list|(
 name|CHKARGS
@@ -934,11 +892,7 @@ name|n
 operator|->
 name|nchild
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 name|ok
 operator|=
 literal|0
@@ -1123,17 +1077,12 @@ operator|->
 name|nchild
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|check_part
 parameter_list|(
 name|CHKARGS
@@ -1172,17 +1121,12 @@ argument_list|,
 literal|"want children (have none)"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|check_par
 parameter_list|(
 name|CHKARGS
@@ -1309,17 +1253,12 @@ break|break;
 default|default:
 break|break;
 block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|post_IP
 parameter_list|(
 name|CHKARGS
@@ -1412,17 +1351,12 @@ break|break;
 default|default:
 break|break;
 block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|post_TH
 parameter_list|(
 name|CHKARGS
@@ -1952,17 +1886,12 @@ operator|->
 name|last
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|post_nf
 parameter_list|(
 name|CHKARGS
@@ -2008,17 +1937,12 @@ name|flags
 operator||=
 name|MAN_LITERAL
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|post_fi
 parameter_list|(
 name|CHKARGS
@@ -2068,17 +1992,12 @@ operator|&=
 operator|~
 name|MAN_LITERAL
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|post_UC
 parameter_list|(
 name|CHKARGS
@@ -2268,17 +2187,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|post_AT
 parameter_list|(
 name|CHKARGS
@@ -2466,17 +2380,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|post_vs
 parameter_list|(
 name|CHKARGS
@@ -2513,11 +2422,7 @@ name|n
 operator|->
 name|prev
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 switch|switch
 condition|(
 name|n
@@ -2585,11 +2490,6 @@ break|break;
 default|default:
 break|break;
 block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 

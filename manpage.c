@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: manpage.c,v 1.7 2014/01/06 03:02:46 schwarze Exp $ */
+comment|/*	$Id: manpage.c,v 1.9 2014/08/17 03:24:47 schwarze Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
@@ -19,10 +13,11 @@ directive|include
 file|"config.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -353,11 +348,15 @@ name|usage
 goto|;
 name|search
 operator|.
-name|deftype
+name|outkey
 operator|=
-name|TYPE_Nm
-operator||
-name|TYPE_Nd
+literal|"Nd"
+expr_stmt|;
+name|search
+operator|.
+name|argmode
+operator|=
+name|ARG_EXPR
 expr_stmt|;
 name|manpath_parse
 argument_list|(
@@ -384,8 +383,6 @@ argument_list|,
 name|argc
 argument_list|,
 name|argv
-argument_list|,
-literal|"Nd"
 argument_list|,
 operator|&
 name|res

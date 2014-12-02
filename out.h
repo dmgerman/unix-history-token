@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: out.h,v 1.22 2014/04/20 16:46:05 schwarze Exp $ */
+comment|/*	$Id: out.h,v 1.24 2014/10/14 02:16:06 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -70,6 +70,10 @@ name|size_t
 name|decimal
 decl_stmt|;
 comment|/* decimal position in cell */
+name|int
+name|flags
+decl_stmt|;
+comment|/* layout flags, see tbl_cell */
 block|}
 struct|;
 end_struct
@@ -173,7 +177,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|do { (p)->unit = SCALE_BU; \ 	     (p)->scale = (v); } \ 	while (
+value|do { (p)->unit = SCALE_EN; \ 	     (p)->scale = (v); } \ 	while (
 comment|/* CONSTCOND */
 value|0)
 name|int
@@ -206,6 +210,8 @@ specifier|const
 name|struct
 name|tbl_span
 modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,26 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"config.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|HAVE_GETSUBOPT
-end_ifdef
+end_if
 
 begin_decl_stmt
 name|int
@@ -32,6 +21,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/*	$Id: compat_getsubopt.c,v 1.5 2014/08/17 20:53:50 schwarze Exp $	*/
+end_comment
 
 begin_comment
 comment|/*	$OpenBSD: getsubopt.c,v 1.4 2005/08/08 08:05:36 espie Exp $	*/
@@ -59,17 +52,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_comment
-comment|/*  * The SVID interface to getsubopt provides no way of figuring out which  * part of the suboptions list wasn't matched.  This makes error messages  * tricky...  The extern variable suboptarg is a pointer to the token  * which didn't match.  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|suboptarg
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|getsubopt
@@ -93,6 +75,10 @@ parameter_list|)
 block|{
 name|int
 name|cnt
+decl_stmt|;
+name|char
+modifier|*
+name|suboptarg
 decl_stmt|;
 name|char
 modifier|*

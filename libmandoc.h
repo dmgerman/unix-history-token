@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libmandoc.h,v 1.42 2014/07/09 11:31:43 schwarze Exp $ */
+comment|/*	$Id: libmandoc.h,v 1.49 2014/11/28 06:27:05 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -52,6 +52,21 @@ comment|/* badness: puke and stop */
 block|}
 enum|;
 end_enum
+
+begin_struct
+struct|struct
+name|buf
+block|{
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|size_t
+name|sz
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_macro
 name|__BEGIN_DECLS
@@ -303,7 +318,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|mdoc_addspan
 parameter_list|(
 name|struct
@@ -319,7 +334,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|mdoc_addeqn
 parameter_list|(
 name|struct
@@ -405,7 +420,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|man_addspan
 parameter_list|(
 name|struct
@@ -421,7 +436,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|man_addeqn
 parameter_list|(
 name|struct
@@ -431,6 +446,44 @@ parameter_list|,
 specifier|const
 name|struct
 name|eqn
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|preconv_cue
+parameter_list|(
+specifier|const
+name|struct
+name|buf
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|preconv_encode
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
@@ -455,6 +508,11 @@ name|roff_alloc
 parameter_list|(
 name|struct
 name|mparse
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|mchars
 modifier|*
 parameter_list|,
 name|int
@@ -484,14 +542,9 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|char
+name|struct
+name|buf
 modifier|*
-modifier|*
-parameter_list|,
-name|size_t
-modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 modifier|*
@@ -582,17 +635,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|char		 roff_eqndelim(const struct roff *); void		 roff_openeqn(struct roff *, const char *, 			int, int, const char *); int		 roff_closeeqn(struct roff *);
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|int
+name|roff_getformat
+parameter_list|(
+specifier|const
+name|struct
+name|roff
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|const

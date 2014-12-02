@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: html.h,v 1.51 2014/04/20 16:46:04 schwarze Exp $ */
+comment|/*	$Id: html.h,v 1.67 2014/10/28 17:36:19 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008-2011, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -72,8 +72,6 @@ name|TAG_DD
 operator|,
 name|TAG_BLOCKQUOTE
 operator|,
-name|TAG_P
-operator|,
 name|TAG_PRE
 operator|,
 name|TAG_B
@@ -83,6 +81,40 @@ operator|,
 name|TAG_CODE
 operator|,
 name|TAG_SMALL
+operator|,
+name|TAG_STYLE
+operator|,
+name|TAG_MATH
+operator|,
+name|TAG_MROW
+operator|,
+name|TAG_MI
+operator|,
+name|TAG_MO
+operator|,
+name|TAG_MSUP
+operator|,
+name|TAG_MSUB
+operator|,
+name|TAG_MSUBSUP
+operator|,
+name|TAG_MFRAC
+operator|,
+name|TAG_MSQRT
+operator|,
+name|TAG_MFENCED
+operator|,
+name|TAG_MTABLE
+operator|,
+name|TAG_MTR
+operator|,
+name|TAG_MTD
+operator|,
+name|TAG_MUNDEROVER
+operator|,
+name|TAG_MUNDER
+operator|,
+name|TAG_MOVER
 operator|,
 name|TAG_MAX
 block|}
@@ -96,10 +128,6 @@ begin_enum
 enum|enum
 name|htmlattr
 block|{
-name|ATTR_HTTPEQUIV
-block|,
-name|ATTR_CONTENT
-block|,
 name|ATTR_NAME
 block|,
 name|ATTR_REL
@@ -114,15 +142,17 @@ name|ATTR_CLASS
 block|,
 name|ATTR_STYLE
 block|,
-name|ATTR_WIDTH
-block|,
 name|ATTR_ID
 block|,
-name|ATTR_SUMMARY
-block|,
-name|ATTR_ALIGN
-block|,
 name|ATTR_COLSPAN
+block|,
+name|ATTR_CHARSET
+block|,
+name|ATTR_OPEN
+block|,
+name|ATTR_CLOSE
+block|,
+name|ATTR_MATHVARIANT
 block|,
 name|ATTR_MAX
 block|}
@@ -260,29 +290,6 @@ parameter_list|)
 value|PAIR_INIT(p, ATTR_STYLE, (h)->buf)
 end_define
 
-begin_define
-define|#
-directive|define
-name|PAIR_SUMMARY_INIT
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-value|PAIR_INIT(p, ATTR_SUMMARY, v)
-end_define
-
-begin_enum
-enum|enum
-name|htmltype
-block|{
-name|HTML_HTML_4_01_STRICT
-block|,
-name|HTML_XHTML_1_0_STRICT
-block|}
-enum|;
-end_enum
-
 begin_struct
 struct|struct
 name|html
@@ -322,6 +329,16 @@ directive|define
 name|HTML_SKIPCHAR
 value|(1<< 6)
 comment|/* skip the next character */
+define|#
+directive|define
+name|HTML_NOSPLIT
+value|(1<< 7)
+comment|/* do not break line before .An */
+define|#
+directive|define
+name|HTML_SPLIT
+value|(1<< 8)
+comment|/* break line before .An */
 name|struct
 name|tagq
 name|tags
@@ -338,12 +355,13 @@ modifier|*
 name|tblt
 decl_stmt|;
 comment|/* current open table scope */
+specifier|const
 name|struct
 name|mchars
 modifier|*
 name|symtab
 decl_stmt|;
-comment|/* character-escapes */
+comment|/* character table */
 name|char
 modifier|*
 name|base_man
@@ -385,11 +403,6 @@ name|htmlfont
 name|metac
 decl_stmt|;
 comment|/* current font mode */
-name|enum
-name|htmltype
-name|type
-decl_stmt|;
-comment|/* output media type */
 name|int
 name|oflags
 decl_stmt|;
@@ -533,6 +546,17 @@ parameter_list|,
 specifier|const
 name|struct
 name|eqn
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|print_paragraph
+parameter_list|(
+name|struct
+name|html
 modifier|*
 parameter_list|)
 function_decl|;
