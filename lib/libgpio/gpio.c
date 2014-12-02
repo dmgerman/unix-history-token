@@ -269,6 +269,8 @@ operator|=
 name|calloc
 argument_list|(
 name|maxpins
+operator|+
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
