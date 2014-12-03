@@ -230,6 +230,56 @@ index|[]
 init|=
 block|{
 block|{
+name|HDA_INTEL_OAK
+block|,
+literal|"Intel Oaktrail"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_BAY
+block|,
+literal|"Intel BayTrail"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_HSW1
+block|,
+literal|"Intel Haswell"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_HSW2
+block|,
+literal|"Intel Haswell"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_HSW3
+block|,
+literal|"Intel Haswell"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_INTEL_CPT
 block|,
 literal|"Intel Cougar Point"
@@ -273,6 +323,46 @@ block|{
 name|HDA_INTEL_LPT2
 block|,
 literal|"Intel Lynx Point"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_WELLS1
+block|,
+literal|"Intel Wellsburg"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_WELLS2
+block|,
+literal|"Intel Wellsburg"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_LPTLP1
+block|,
+literal|"Intel Lynx Point-LP"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_LPTLP2
+block|,
+literal|"Intel Lynx Point-LP"
 block|,
 literal|0
 block|,
