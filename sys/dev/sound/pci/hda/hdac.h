@@ -3560,6 +3560,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_INTELLP
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2807)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_INTELCL
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x29fb)
 end_define

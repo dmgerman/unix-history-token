@@ -2156,6 +2156,14 @@ literal|"Intel Panther Point"
 block|}
 block|,
 block|{
+name|HDA_CODEC_INTELLP
+block|,
+literal|0
+block|,
+literal|"Intel Lynx Point"
+block|}
+block|,
+block|{
 name|HDA_CODEC_INTELCL
 block|,
 literal|0
