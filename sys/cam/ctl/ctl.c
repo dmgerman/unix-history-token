@@ -37026,7 +37026,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ctl_set_res_ua
+name|ctl_est_res_ua
 parameter_list|(
 name|struct
 name|ctl_lun
@@ -37325,7 +37325,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|ctl_set_res_ua
+name|ctl_est_res_ua
 argument_list|(
 name|lun
 argument_list|,
@@ -37663,7 +37663,7 @@ operator|->
 name|pr_key_count
 operator|--
 expr_stmt|;
-name|ctl_set_res_ua
+name|ctl_est_res_ua
 argument_list|(
 name|lun
 argument_list|,
@@ -38024,7 +38024,7 @@ operator|->
 name|pr_key_count
 operator|--
 expr_stmt|;
-name|ctl_set_res_ua
+name|ctl_est_res_ua
 argument_list|(
 name|lun
 argument_list|,
@@ -38058,7 +38058,7 @@ name|SPR_TYPE_EX_AC_RO
 operator|)
 condition|)
 block|{
-name|ctl_set_res_ua
+name|ctl_est_res_ua
 argument_list|(
 name|lun
 argument_list|,
@@ -38262,7 +38262,7 @@ operator|->
 name|pr_key_count
 operator|--
 expr_stmt|;
-name|ctl_set_res_ua
+name|ctl_est_res_ua
 argument_list|(
 name|lun
 argument_list|,
@@ -38560,7 +38560,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|ctl_set_res_ua
+name|ctl_est_res_ua
 argument_list|(
 name|lun
 argument_list|,
@@ -38657,7 +38657,7 @@ operator|->
 name|pr_key_count
 operator|--
 expr_stmt|;
-name|ctl_set_res_ua
+name|ctl_est_res_ua
 argument_list|(
 name|lun
 argument_list|,
@@ -38733,7 +38733,7 @@ operator|->
 name|pr_key_count
 operator|--
 expr_stmt|;
-name|ctl_set_res_ua
+name|ctl_est_res_ua
 argument_list|(
 name|lun
 argument_list|,
@@ -38773,7 +38773,7 @@ name|SPR_TYPE_EX_AC_RO
 operator|)
 condition|)
 block|{
-name|ctl_set_res_ua
+name|ctl_est_res_ua
 argument_list|(
 name|lun
 argument_list|,
@@ -40546,7 +40546,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|ctl_set_res_ua
+name|ctl_est_res_ua
 argument_list|(
 name|lun
 argument_list|,
@@ -41217,7 +41217,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|ctl_set_res_ua
+name|ctl_est_res_ua
 argument_list|(
 name|lun
 argument_list|,
