@@ -519,6 +519,22 @@ literal|"Intel Lynx Point USB 2.0 controller USB-B"
 operator|)
 return|;
 case|case
+literal|0x8ca68086
+case|:
+return|return
+operator|(
+literal|"Intel Wildcat Point USB 2.0 controller USB-A"
+operator|)
+return|;
+case|case
+literal|0x8cad8086
+case|:
+return|return
+operator|(
+literal|"Intel Wildcat Point USB 2.0 controller USB-B"
+operator|)
+return|;
+case|case
 literal|0x00e01033
 case|:
 return|return
