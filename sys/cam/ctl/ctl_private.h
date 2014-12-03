@@ -1375,11 +1375,12 @@ name|int
 name|PRGeneration
 decl_stmt|;
 name|uint64_t
+modifier|*
 name|pr_keys
 index|[
 literal|2
 operator|*
-name|CTL_MAX_INITIATORS
+name|CTL_MAX_PORTS
 index|]
 decl_stmt|;
 name|int
