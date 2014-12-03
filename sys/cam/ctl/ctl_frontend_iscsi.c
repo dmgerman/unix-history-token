@@ -9368,7 +9368,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"target \"%s\" already exist"
+literal|"target \"%s\" already exists"
 argument_list|,
 name|target
 argument_list|)
