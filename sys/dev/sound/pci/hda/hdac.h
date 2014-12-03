@@ -203,6 +203,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_WCPT
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x8ca0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_WELLS1
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x8d20)
 end_define
