@@ -1347,9 +1347,10 @@ decl_stmt|;
 endif|#
 directive|endif
 name|ctl_ua_type
+modifier|*
 name|pending_ua
 index|[
-name|CTL_MAX_INITIATORS
+name|CTL_MAX_PORTS
 index|]
 decl_stmt|;
 name|time_t
