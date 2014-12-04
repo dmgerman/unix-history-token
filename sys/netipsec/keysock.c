@@ -567,8 +567,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|m
+operator|==
+name|NULL
 condition|)
 block|{
 name|PFKEYSTAT_INC
@@ -576,13 +577,10 @@ argument_list|(
 name|in_nomem
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|m
@@ -597,6 +595,7 @@ operator|*
 name|pmsg
 argument_list|)
 expr_stmt|;
+comment|/* XXX: is this correct? */
 name|pmsg
 operator|=
 name|mtod
