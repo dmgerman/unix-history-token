@@ -334,6 +334,7 @@ specifier|static
 name|int
 name|name2oid
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -3472,6 +3473,7 @@ specifier|static
 name|int
 name|name2oid
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
