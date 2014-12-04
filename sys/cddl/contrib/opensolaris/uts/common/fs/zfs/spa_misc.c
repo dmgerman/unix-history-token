@@ -657,6 +657,27 @@ literal|5
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|spa_slop_shift
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|spa_slop_shift
+argument_list|,
+literal|0
+argument_list|,
+literal|"Shift value of reserved space (1/(2^spa_slop_shift))."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * ==========================================================================  * SPA config locking  * ==========================================================================  */
 end_comment
