@@ -32074,9 +32074,9 @@ index|[
 literal|4
 index|]
 operator|=
-literal|0x01
+literal|0x02
 expr_stmt|;
-comment|/* per-LUN */
+comment|/* per-pool */
 name|data
 operator|+=
 name|phdr
@@ -32174,9 +32174,9 @@ index|[
 literal|4
 index|]
 operator|=
-literal|0x02
+literal|0x01
 expr_stmt|;
-comment|/* per-pool */
+comment|/* per-LUN */
 name|data
 operator|+=
 name|phdr
