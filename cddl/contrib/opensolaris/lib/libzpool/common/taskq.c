@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2012 Garrett D'Amore<garrett@damore.org>.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -517,6 +517,12 @@ operator|->
 name|tqent_arg
 operator|=
 name|arg
+expr_stmt|;
+name|t
+operator|->
+name|tqent_flags
+operator|=
+literal|0
 expr_stmt|;
 name|cv_signal
 argument_list|(
