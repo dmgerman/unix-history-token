@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: manpath.c,v 1.15 2014/04/23 21:06:41 schwarze Exp $ */
+comment|/*	$Id: manpath.c,v 1.19 2014/11/27 00:30:40 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011 Ingo Schwarze<schwarze@openbsd.org>  * Copyright (c) 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2011, 2014 Ingo Schwarze<schwarze@openbsd.org>  * Copyright (c) 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
@@ -19,10 +13,17 @@ directive|include
 file|"config.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
 
 begin_include
 include|#
@@ -98,6 +99,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -113,6 +116,8 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -140,9 +145,9 @@ modifier|*
 name|auxp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|USE_MANPATH
+if|#
+directive|if
+name|HAVE_MANPATH
 name|char
 name|cmd
 index|[
@@ -375,6 +380,8 @@ argument_list|(
 name|dirs
 argument_list|,
 name|buf
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -400,6 +407,8 @@ argument_list|(
 name|dirs
 argument_list|,
 name|auxp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* If -M is given, it overrides everything else. */
@@ -415,6 +424,8 @@ argument_list|(
 name|dirs
 argument_list|,
 name|defp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -484,6 +495,8 @@ argument_list|(
 name|dirs
 argument_list|,
 name|defp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -509,6 +522,8 @@ argument_list|(
 name|dirs
 argument_list|,
 name|defp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|manpath_manconf
@@ -548,6 +563,8 @@ argument_list|(
 name|dirs
 argument_list|,
 name|defp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|manpath_manconf
@@ -564,6 +581,8 @@ argument_list|,
 name|insert
 operator|+
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -574,6 +593,8 @@ argument_list|(
 name|dirs
 argument_list|,
 name|defp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -598,6 +619,9 @@ parameter_list|,
 name|char
 modifier|*
 name|path
+parameter_list|,
+name|int
+name|complain
 parameter_list|)
 block|{
 name|char
@@ -638,6 +662,8 @@ argument_list|(
 name|dirs
 argument_list|,
 name|dir
+argument_list|,
+name|complain
 argument_list|)
 expr_stmt|;
 block|}
@@ -661,6 +687,9 @@ specifier|const
 name|char
 modifier|*
 name|dir
+parameter_list|,
+name|int
+name|complain
 parameter_list|)
 block|{
 name|char
@@ -668,6 +697,10 @@ name|buf
 index|[
 name|PATH_MAX
 index|]
+decl_stmt|;
+name|struct
+name|stat
+name|sb
 decl_stmt|;
 name|char
 modifier|*
@@ -691,7 +724,27 @@ name|buf
 argument_list|)
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|complain
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"manpath: "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+name|dir
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
+block|}
 for|for
 control|(
 name|i
@@ -724,6 +777,40 @@ name|dir
 argument_list|)
 condition|)
 return|return;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|cp
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|complain
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"manpath: "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+name|dir
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
 name|dirs
 operator|->
 name|paths
@@ -993,6 +1080,8 @@ argument_list|(
 name|dirs
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

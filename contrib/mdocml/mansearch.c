@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mansearch.c,v 1.42 2014/08/09 14:24:53 schwarze Exp $ */
+comment|/*	$Id: mansearch.c,v 1.51 2014/11/27 01:58:21 schwarze Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
@@ -19,15 +13,16 @@ directive|include
 file|"config.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -96,11 +91,11 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|HAVE_OHASH
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -293,6 +288,10 @@ name|uint64_t
 name|pageid
 decl_stmt|;
 comment|/* identifier in database */
+name|uint64_t
+name|bits
+decl_stmt|;
+comment|/* name type mask */
 name|char
 modifier|*
 name|desc
@@ -301,7 +300,7 @@ comment|/* manual page description */
 name|int
 name|form
 decl_stmt|;
-comment|/* 0 == catpage */
+comment|/* bit field: formatted, zipped? */
 block|}
 struct|;
 end_struct
@@ -805,11 +804,6 @@ modifier|*
 name|argv
 index|[]
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|outkey
-parameter_list|,
 name|struct
 name|manpage
 modifier|*
@@ -996,6 +990,8 @@ if|if
 condition|(
 name|NULL
 operator|!=
+name|search
+operator|->
 name|outkey
 condition|)
 block|{
@@ -1027,6 +1023,8 @@ literal|0
 operator|==
 name|strcasecmp
 argument_list|(
+name|search
+operator|->
 name|outkey
 argument_list|,
 name|mansearch_keynames
@@ -1506,6 +1504,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|mp
+operator|->
+name|bits
+operator|=
+name|sqlite3_column_int64
+argument_list|(
+name|s
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TYPE_Nd
@@ -1706,6 +1715,20 @@ name|cur
 expr_stmt|;
 name|mpage
 operator|->
+name|ipath
+operator|=
+name|i
+expr_stmt|;
+name|mpage
+operator|->
+name|bits
+operator|=
+name|mp
+operator|->
+name|bits
+expr_stmt|;
+name|mpage
+operator|->
 name|sec
 operator|=
 literal|10
@@ -1801,6 +1824,16 @@ operator|&
 name|htab
 argument_list|)
 expr_stmt|;
+comment|/* 		 * In man(1) mode, prefer matches in earlier trees 		 * over matches in later trees. 		 */
+if|if
+condition|(
+name|cur
+operator|&&
+name|search
+operator|->
+name|firstmatch
+condition|)
+break|break;
 block|}
 name|qsort
 argument_list|(
@@ -1877,6 +1910,75 @@ block|}
 end_function
 
 begin_function
+name|void
+name|mansearch_free
+parameter_list|(
+name|struct
+name|manpage
+modifier|*
+name|res
+parameter_list|,
+name|size_t
+name|sz
+parameter_list|)
+block|{
+name|size_t
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|sz
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|free
+argument_list|(
+name|res
+index|[
+name|i
+index|]
+operator|.
+name|file
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|res
+index|[
+name|i
+index|]
+operator|.
+name|names
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|res
+index|[
+name|i
+index|]
+operator|.
+name|output
+argument_list|)
+expr_stmt|;
+block|}
+name|free
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|manpage_compare
@@ -1912,6 +2014,23 @@ name|mp2
 operator|=
 name|vp2
 expr_stmt|;
+return|return
+operator|(
+operator|(
+name|diff
+operator|=
+name|mp2
+operator|->
+name|bits
+operator|-
+name|mp1
+operator|->
+name|bits
+operator|)
+condition|?
+name|diff
+else|:
+operator|(
 name|diff
 operator|=
 name|mp1
@@ -1921,10 +2040,7 @@ operator|-
 name|mp2
 operator|->
 name|sec
-expr_stmt|;
-return|return
-operator|(
-name|diff
+operator|)
 condition|?
 name|diff
 else|:
@@ -2303,16 +2419,18 @@ expr_stmt|;
 comment|/* Also save the first file name encountered. */
 if|if
 condition|(
-name|NULL
-operator|!=
 name|mpage
 operator|->
 name|file
+operator|!=
+name|NULL
 condition|)
 continue|continue;
 if|if
 condition|(
 name|form
+operator|&
+name|FORM_SRC
 condition|)
 block|{
 name|sep1
@@ -2337,10 +2455,10 @@ expr_stmt|;
 block|}
 name|sep2
 operator|=
-literal|'\0'
-operator|==
 operator|*
 name|arch
+operator|==
+literal|'\0'
 condition|?
 literal|""
 else|:
@@ -2373,9 +2491,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|SQLITE_DONE
-operator|!=
 name|c
+operator|!=
+name|SQLITE_DONE
 condition|)
 name|fprintf
 argument_list|(
@@ -2397,17 +2515,17 @@ expr_stmt|;
 comment|/* Append one final section to the names. */
 if|if
 condition|(
-name|NULL
-operator|!=
 name|prevsec
+operator|!=
+name|NULL
 condition|)
 block|{
 name|sep2
 operator|=
-literal|'\0'
-operator|==
 operator|*
 name|prevarch
+operator|==
+literal|'\0'
 condition|?
 literal|""
 else|:
@@ -2928,7 +3046,14 @@ name|sql
 operator|=
 name|mandoc_strdup
 argument_list|(
-literal|"SELECT desc, form, pageid FROM mpages WHERE "
+name|e
+operator|->
+name|equal
+condition|?
+literal|"SELECT desc, form, pageid, bits "
+literal|"FROM mpages NATURAL JOIN names WHERE "
+else|:
+literal|"SELECT desc, form, pageid, 0 FROM mpages WHERE "
 argument_list|)
 expr_stmt|;
 name|sz
@@ -3059,8 +3184,7 @@ name|e
 operator|->
 name|equal
 condition|?
-literal|"pageid IN (SELECT pageid FROM names "
-literal|"WHERE name = ?)"
+literal|"name = ? "
 else|:
 literal|"pageid IN (SELECT pageid FROM names "
 literal|"WHERE name MATCH ?)"
@@ -3896,20 +4020,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|MANSEARCH_MAN
-operator|&
 name|search
 operator|->
-name|flags
+name|argmode
+operator|==
+name|ARG_NAME
 condition|)
 block|{
 name|e
 operator|->
 name|bits
 operator|=
-name|search
-operator|->
-name|deftype
+name|TYPE_Nm
 expr_stmt|;
 name|e
 operator|->
@@ -3929,20 +4051,47 @@ name|e
 operator|)
 return|;
 block|}
-comment|/* 	 * Look for an '=' or '~' operator, 	 * unless forced to some fixed macro keys. 	 */
+comment|/* 	 * Separate macro keys from search string. 	 * If needed, request regular expression handling 	 * by setting e->substr to NULL. 	 */
 if|if
 condition|(
-name|MANSEARCH_WHATIS
-operator|&
 name|search
 operator|->
-name|flags
+name|argmode
+operator|==
+name|ARG_WORD
 condition|)
-name|val
+block|{
+name|e
+operator|->
+name|bits
+operator|=
+name|TYPE_Nm
+expr_stmt|;
+name|e
+operator|->
+name|substr
 operator|=
 name|NULL
 expr_stmt|;
-else|else
+name|mandoc_asprintf
+argument_list|(
+operator|&
+name|val
+argument_list|,
+literal|"[[:<:]]%s[[:>:]]"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|cs
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
 name|val
 operator|=
 name|strpbrk
@@ -3951,21 +4100,18 @@ name|buf
 argument_list|,
 literal|"=~"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NULL
+operator|)
 operator|==
-name|val
+name|NULL
 condition|)
 block|{
 name|e
 operator|->
 name|bits
 operator|=
-name|search
-operator|->
-name|deftype
+name|TYPE_Nm
+operator||
+name|TYPE_Nd
 expr_stmt|;
 name|e
 operator|->
@@ -3973,7 +4119,6 @@ name|substr
 operator|=
 name|buf
 expr_stmt|;
-comment|/* 	 * Found an operator. 	 * Regexp search is requested by !e->substr. 	 */
 block|}
 else|else
 block|{
@@ -3987,9 +4132,9 @@ name|e
 operator|->
 name|bits
 operator|=
-name|search
-operator|->
-name|deftype
+name|TYPE_Nm
+operator||
+name|TYPE_Nd
 expr_stmt|;
 if|if
 condition|(
@@ -4031,32 +4176,6 @@ block|}
 comment|/* Compile regular expressions. */
 if|if
 condition|(
-name|MANSEARCH_WHATIS
-operator|&
-name|search
-operator|->
-name|flags
-condition|)
-block|{
-name|e
-operator|->
-name|substr
-operator|=
-name|NULL
-expr_stmt|;
-name|mandoc_asprintf
-argument_list|(
-operator|&
-name|val
-argument_list|,
-literal|"[[:<:]]%s[[:>:]]"
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|NULL
 operator|==
 name|e
@@ -4090,11 +4209,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|MANSEARCH_WHATIS
-operator|&
 name|search
 operator|->
-name|flags
+name|argmode
+operator|==
+name|ARG_WORD
 condition|)
 name|free
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mansearch.h,v 1.15 2014/07/24 20:30:45 schwarze Exp $ */
+comment|/*	$Id: mansearch.h,v 1.21 2014/11/27 01:58:21 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -316,28 +316,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|NAME_FILE
-value|0x0000004000000002ULL
+name|NAME_FIRST
+value|0x0000004000000004ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|NAME_TITLE
-value|0x000000400000000cULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|NAME_FIRST
-value|0x0000004000000008ULL
+value|0x0000004000000006ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|NAME_HEAD
+value|0x0000004000000008ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAME_FILE
 value|0x0000004000000010ULL
 end_define
 
@@ -348,9 +348,55 @@ name|NAME_MASK
 value|0x000000000000001fULL
 end_define
 
-begin_macro
-name|__BEGIN_DECLS
-end_macro
+begin_define
+define|#
+directive|define
+name|FORM_CAT
+value|0
+end_define
+
+begin_comment
+comment|/* manual page is preformatted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FORM_SRC
+value|1
+end_define
+
+begin_comment
+comment|/* format is mdoc(7) or man(7) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FORM_NONE
+value|4
+end_define
+
+begin_comment
+comment|/* format is unknown */
+end_comment
+
+begin_enum
+enum|enum
+name|argmode
+block|{
+name|ARG_FILE
+init|=
+literal|0
+block|,
+name|ARG_NAME
+block|,
+name|ARG_WORD
+block|,
+name|ARG_EXPR
+block|}
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -371,6 +417,14 @@ modifier|*
 name|output
 decl_stmt|;
 comment|/* user-defined additional output */
+name|size_t
+name|ipath
+decl_stmt|;
+comment|/* number of the manpath */
+name|uint64_t
+name|bits
+decl_stmt|;
+comment|/* name type mask */
 name|int
 name|sec
 decl_stmt|;
@@ -399,28 +453,27 @@ modifier|*
 name|sec
 decl_stmt|;
 comment|/* mansection/NULL */
-name|uint64_t
-name|deftype
+specifier|const
+name|char
+modifier|*
+name|outkey
 decl_stmt|;
-comment|/* type if no key  */
+comment|/* show content of this macro */
+name|enum
+name|argmode
+name|argmode
+decl_stmt|;
+comment|/* interpretation of arguments */
 name|int
-name|flags
+name|firstmatch
 decl_stmt|;
-define|#
-directive|define
-name|MANSEARCH_WHATIS
-value|0x01
-comment|/* whatis(1) mode: whole words, no keys */
-define|#
-directive|define
-name|MANSEARCH_MAN
-value|0x02
-comment|/* man(1) mode: string equality, no keys */
+comment|/* first matching database only */
 block|}
 struct|;
 end_struct
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|int
 name|mansearch_setup
 parameter_list|(
@@ -457,12 +510,6 @@ name|argv
 index|[]
 parameter_list|,
 comment|/* search terms */
-specifier|const
-name|char
-modifier|*
-name|outkey
-parameter_list|,
-comment|/* name of additional output key */
 name|struct
 name|manpage
 modifier|*
@@ -481,6 +528,19 @@ begin_comment
 comment|/* results returned */
 end_comment
 
+begin_function_decl
+name|void
+name|mansearch_free
+parameter_list|(
+name|struct
+name|manpage
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
@@ -491,7 +551,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*!MANSEARCH_H*/
+comment|/* MANSEARCH_H */
 end_comment
 
 end_unit

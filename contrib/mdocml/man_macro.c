@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man_macro.c,v 1.87 2014/07/30 23:01:39 schwarze Exp $ */
+comment|/*	$Id: man_macro.c,v 1.91 2014/11/28 05:51:32 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2012, 2013 Ingo Schwarze<schwarze@openbsd.org>  * Copyright (c) 2013 Franco Fichtner<franco@lastsummer.de>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2012, 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  * Copyright (c) 2013 Franco Fichtner<franco@lastsummer.de>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
@@ -19,10 +13,11 @@ directive|include
 file|"config.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -87,7 +82,7 @@ end_enum
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|blk_close
 parameter_list|(
 name|MACRO_PROT_ARGS
@@ -97,7 +92,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|blk_exp
 parameter_list|(
 name|MACRO_PROT_ARGS
@@ -107,7 +102,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|blk_imp
 parameter_list|(
 name|MACRO_PROT_ARGS
@@ -117,7 +112,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|in_line_eoln
 parameter_list|(
 name|MACRO_PROT_ARGS
@@ -151,7 +146,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|rew_scope
 parameter_list|(
 name|enum
@@ -299,6 +294,8 @@ block|{
 name|in_line_eoln
 block|,
 name|MAN_SCOPED
+operator||
+name|MAN_JOIN
 block|}
 block|,
 comment|/* SM */
@@ -306,6 +303,8 @@ block|{
 name|in_line_eoln
 block|,
 name|MAN_SCOPED
+operator||
+name|MAN_JOIN
 block|}
 block|,
 comment|/* SB */
@@ -341,6 +340,8 @@ block|{
 name|in_line_eoln
 block|,
 name|MAN_SCOPED
+operator||
+name|MAN_JOIN
 block|}
 block|,
 comment|/* R */
@@ -348,6 +349,8 @@ block|{
 name|in_line_eoln
 block|,
 name|MAN_SCOPED
+operator||
+name|MAN_JOIN
 block|}
 block|,
 comment|/* B */
@@ -355,6 +358,8 @@ block|{
 name|in_line_eoln
 block|,
 name|MAN_SCOPED
+operator||
+name|MAN_JOIN
 block|}
 block|,
 comment|/* I */
@@ -519,7 +524,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|void
 name|man_unscope
 parameter_list|(
 name|struct
@@ -539,12 +544,6 @@ name|man_node
 modifier|*
 name|n
 decl_stmt|;
-name|man
-operator|->
-name|next
-operator|=
-name|MAN_NEXT_SIBLING
-expr_stmt|;
 name|to
 operator|=
 name|to
@@ -751,25 +750,29 @@ name|n
 operator|->
 name|parent
 expr_stmt|;
-if|if
-condition|(
-operator|!
 name|man_valid_post
 argument_list|(
 name|man
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 block|}
-return|return
+comment|/* 	 * If we ended up at the parent of the node we were 	 * supposed to rewind to, that means the target node 	 * got deleted, so add the next node we parse as a child 	 * of the parent instead of as a sibling of the target. 	 */
+name|man
+operator|->
+name|next
+operator|=
 operator|(
-literal|1
+name|man
+operator|->
+name|last
+operator|==
+name|to
 operator|)
-return|;
+condition|?
+name|MAN_NEXT_CHILD
+else|:
+name|MAN_NEXT_SIBLING
+expr_stmt|;
 block|}
 end_function
 
@@ -796,9 +799,9 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|MAN_BLOCK
-operator|==
 name|type
+operator|==
+name|MAN_BLOCK
 operator|&&
 name|ntok
 operator|==
@@ -808,13 +811,13 @@ name|parent
 operator|->
 name|tok
 operator|&&
-name|MAN_BODY
-operator|==
 name|n
 operator|->
 name|parent
 operator|->
 name|type
+operator|==
+name|MAN_BODY
 condition|)
 return|return
 operator|(
@@ -1165,7 +1168,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|rew_scope
 parameter_list|(
 name|enum
@@ -1226,11 +1229,7 @@ name|REW_HALT
 operator|==
 name|c
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 if|if
 condition|(
 name|REW_REWIND
@@ -1240,21 +1239,13 @@ condition|)
 break|break;
 block|}
 comment|/* 	 * Rewind until the current point.  Warn if we're a roff 	 * instruction that's mowing over explicit scopes. 	 */
-name|assert
-argument_list|(
-name|n
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
 name|man_unscope
 argument_list|(
 name|man
 argument_list|,
 name|n
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -1263,7 +1254,7 @@ comment|/*  * Close out a generic explicit macro.  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|blk_close
 parameter_list|(
 name|MACRO_PROT_ARGS
@@ -1326,24 +1317,24 @@ name|parent
 control|)
 if|if
 condition|(
-name|ntok
-operator|==
 name|nn
 operator|->
 name|tok
-operator|&&
-name|MAN_BLOCK
 operator|==
+name|ntok
+operator|&&
 name|nn
 operator|->
 name|type
+operator|==
+name|MAN_BLOCK
 condition|)
 break|break;
 if|if
 condition|(
-name|NULL
-operator|==
 name|nn
+operator|==
+name|NULL
 condition|)
 block|{
 name|mandoc_msg
@@ -1364,9 +1355,6 @@ name|tok
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
 name|rew_scope
 argument_list|(
 name|MAN_BLOCK
@@ -1375,12 +1363,7 @@ name|man
 argument_list|,
 name|MAN_PP
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 block|}
 else|else
 name|man_unscope
@@ -1390,16 +1373,11 @@ argument_list|,
 name|nn
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|blk_exp
 parameter_list|(
 name|MACRO_PROT_ARGS
@@ -1417,10 +1395,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-comment|/* Close out prior implicit scopes. */
-if|if
-condition|(
-operator|!
 name|rew_scope
 argument_list|(
 name|MAN_BLOCK
@@ -1429,15 +1403,7 @@ name|man
 argument_list|,
 name|tok
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
-operator|!
+expr_stmt|;
 name|man_block_alloc
 argument_list|(
 name|man
@@ -1448,15 +1414,7 @@ name|ppos
 argument_list|,
 name|tok
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
-operator|!
+expr_stmt|;
 name|man_head_alloc
 argument_list|(
 name|man
@@ -1467,12 +1425,7 @@ name|ppos
 argument_list|,
 name|tok
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1502,9 +1455,6 @@ name|p
 argument_list|)
 condition|)
 break|break;
-if|if
-condition|(
-operator|!
 name|man_word_alloc
 argument_list|(
 name|man
@@ -1515,12 +1465,7 @@ name|la
 argument_list|,
 name|p
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 block|}
 name|assert
 argument_list|(
@@ -1550,23 +1495,22 @@ name|n
 operator|->
 name|parent
 control|)
-block|{
 if|if
 condition|(
 name|n
 operator|->
 name|tok
-operator|!=
+operator|==
 name|tok
 condition|)
-continue|continue;
+block|{
 name|assert
 argument_list|(
-name|MAN_HEAD
-operator|==
 name|n
 operator|->
 name|type
+operator|==
+name|MAN_HEAD
 argument_list|)
 expr_stmt|;
 name|man_unscope
@@ -1578,8 +1522,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return
-operator|(
 name|man_body_alloc
 argument_list|(
 name|man
@@ -1590,8 +1532,7 @@ name|ppos
 argument_list|,
 name|tok
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -1600,7 +1541,7 @@ comment|/*  * Parse an implicit-block macro.  These contain a MAN_HEAD and a  * 
 end_comment
 
 begin_function
-name|int
+name|void
 name|blk_imp
 parameter_list|(
 name|MACRO_PROT_ARGS
@@ -1618,10 +1559,6 @@ name|man_node
 modifier|*
 name|n
 decl_stmt|;
-comment|/* Close out prior scopes. */
-if|if
-condition|(
-operator|!
 name|rew_scope
 argument_list|(
 name|MAN_BODY
@@ -1630,15 +1567,7 @@ name|man
 argument_list|,
 name|tok
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
-operator|!
+expr_stmt|;
 name|rew_scope
 argument_list|(
 name|MAN_BLOCK
@@ -1647,16 +1576,7 @@ name|man
 argument_list|,
 name|tok
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Allocate new block& head scope. */
-if|if
-condition|(
-operator|!
+expr_stmt|;
 name|man_block_alloc
 argument_list|(
 name|man
@@ -1667,15 +1587,7 @@ name|ppos
 argument_list|,
 name|tok
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
-operator|!
+expr_stmt|;
 name|man_head_alloc
 argument_list|(
 name|man
@@ -1686,12 +1598,7 @@ name|ppos
 argument_list|,
 name|tok
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 name|n
 operator|=
 name|man
@@ -1728,9 +1635,6 @@ name|p
 argument_list|)
 condition|)
 break|break;
-if|if
-condition|(
-operator|!
 name|man_word_alloc
 argument_list|(
 name|man
@@ -1741,37 +1645,32 @@ name|la
 argument_list|,
 name|p
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 block|}
 comment|/* Close out head and open body (unless MAN_SCOPE). */
 if|if
 condition|(
-name|MAN_SCOPED
-operator|&
 name|man_macros
 index|[
 name|tok
 index|]
 operator|.
 name|flags
+operator|&
+name|MAN_SCOPED
 condition|)
 block|{
 comment|/* If we're forcing scope (`TP'), keep it open. */
 if|if
 condition|(
-name|MAN_FSCOPED
-operator|&
 name|man_macros
 index|[
 name|tok
 index|]
 operator|.
 name|flags
+operator|&
+name|MAN_FSCOPED
 condition|)
 block|{
 name|man
@@ -1780,11 +1679,7 @@ name|flags
 operator||=
 name|MAN_BLINE
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 elseif|else
 if|if
@@ -1802,16 +1697,9 @@ name|flags
 operator||=
 name|MAN_BLINE
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 block|}
-if|if
-condition|(
-operator|!
 name|rew_scope
 argument_list|(
 name|MAN_HEAD
@@ -1820,14 +1708,7 @@ name|man
 argument_list|,
 name|tok
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-return|return
-operator|(
+expr_stmt|;
 name|man_body_alloc
 argument_list|(
 name|man
@@ -1838,13 +1719,12 @@ name|ppos
 argument_list|,
 name|tok
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|in_line_eoln
 parameter_list|(
 name|MACRO_PROT_ARGS
@@ -1862,9 +1742,6 @@ name|man_node
 modifier|*
 name|n
 decl_stmt|;
-if|if
-condition|(
-operator|!
 name|man_elem_alloc
 argument_list|(
 name|man
@@ -1875,12 +1752,7 @@ name|ppos
 argument_list|,
 name|tok
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 name|n
 operator|=
 name|man
@@ -1918,7 +1790,31 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|!
+name|man_macros
+index|[
+name|tok
+index|]
+operator|.
+name|flags
+operator|&
+name|MAN_JOIN
+operator|&&
+name|man
+operator|->
+name|last
+operator|->
+name|type
+operator|==
+name|MAN_TEXT
+condition|)
+name|man_word_append
+argument_list|(
+name|man
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+else|else
 name|man_word_alloc
 argument_list|(
 name|man
@@ -1929,12 +1825,7 @@ name|la
 argument_list|,
 name|p
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 block|}
 comment|/* 	 * Append MAN_EOS in case the last snipped argument 	 * ends with a dot, e.g. `.IR syslog (3).' 	 */
 if|if
@@ -1980,28 +1871,28 @@ name|man
 operator|->
 name|last
 operator|&&
-name|MAN_SCOPED
-operator|&
 name|man_macros
 index|[
 name|tok
 index|]
 operator|.
 name|flags
+operator|&
+name|MAN_SCOPED
 condition|)
 block|{
 name|assert
 argument_list|(
 operator|!
 operator|(
-name|MAN_NSCOPED
-operator|&
 name|man_macros
 index|[
 name|tok
 index|]
 operator|.
 name|flags
+operator|&
+name|MAN_NSCOPED
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2011,21 +1902,17 @@ name|flags
 operator||=
 name|MAN_ELINE
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 name|assert
 argument_list|(
-name|MAN_ROOT
-operator|!=
 name|man
 operator|->
 name|last
 operator|->
 name|type
+operator|!=
+name|MAN_ROOT
 argument_list|)
 expr_stmt|;
 name|man
@@ -2073,19 +1960,11 @@ operator|==
 name|MAN_ROOT
 condition|)
 break|break;
-if|if
-condition|(
-operator|!
 name|man_valid_post
 argument_list|(
 name|man
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 block|}
 name|assert
 argument_list|(
@@ -2104,28 +1983,17 @@ operator|->
 name|type
 operator|!=
 name|MAN_ROOT
-operator|&&
-operator|!
+condition|)
 name|man_valid_post
 argument_list|(
 name|man
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|man_macroend
 parameter_list|(
 name|struct
@@ -2134,8 +2002,6 @@ modifier|*
 name|man
 parameter_list|)
 block|{
-return|return
-operator|(
 name|man_unscope
 argument_list|(
 name|man
@@ -2144,8 +2010,7 @@ name|man
 operator|->
 name|first
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 

@@ -856,43 +856,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCMCIA_CARD2_D
-parameter_list|(
-name|v1
-parameter_list|,
-name|p1
-parameter_list|,
-name|p2
-parameter_list|)
-define|\
-value|{ PCMCIA_STR_ ## p2, PCMCIA_VENDOR_ ## v1, PCCARD_P(v1, p1), \ 		  PCMCIA_CIS_ ## p2}
-end_define
-
-begin_define
-define|#
-directive|define
 name|PCMCIA_CARD
 parameter_list|(
 name|v
 parameter_list|,
 name|p
 parameter_list|)
-value|{ NULL, PCMCIA_VENDOR_ ## v, \ 		PCCARD_P(v, p), PCCARD_C(v, p) }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CARD2
-parameter_list|(
-name|v1
-parameter_list|,
-name|p1
-parameter_list|,
-name|p2
-parameter_list|)
-define|\
-value|{ NULL, PCMCIA_VENDOR_ ## v1, PCCARD_P(v1, p1), \ 		  PCMCIA_CIS_ ## p2}
+value|{ PCCARD_S(v, p), PCMCIA_VENDOR_ ## v, \ 		PCCARD_P(v, p), PCCARD_C(v, p) }
 end_define
 
 begin_comment

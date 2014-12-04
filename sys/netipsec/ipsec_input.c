@@ -114,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/netisr.h>
 end_include
 

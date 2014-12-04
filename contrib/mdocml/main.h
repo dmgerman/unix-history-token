@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: main.h,v 1.16 2014/04/20 16:46:04 schwarze Exp $ */
+comment|/*	$Id: main.h,v 1.17 2014/10/28 17:36:19 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -54,17 +54,11 @@ name|void
 modifier|*
 name|html_alloc
 parameter_list|(
-name|char
+specifier|const
+name|struct
+name|mchars
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|xhtml_alloc
-parameter_list|(
+parameter_list|,
 name|char
 modifier|*
 parameter_list|)
@@ -176,6 +170,11 @@ name|void
 modifier|*
 name|locale_alloc
 parameter_list|(
+specifier|const
+name|struct
+name|mchars
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|)
@@ -187,6 +186,11 @@ name|void
 modifier|*
 name|utf8_alloc
 parameter_list|(
+specifier|const
+name|struct
+name|mchars
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|)
@@ -198,6 +202,11 @@ name|void
 modifier|*
 name|ascii_alloc
 parameter_list|(
+specifier|const
+name|struct
+name|mchars
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|)
@@ -219,6 +228,11 @@ name|void
 modifier|*
 name|pdf_alloc
 parameter_list|(
+specifier|const
+name|struct
+name|mchars
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|)
@@ -230,6 +244,11 @@ name|void
 modifier|*
 name|ps_alloc
 parameter_list|(
+specifier|const
+name|struct
+name|mchars
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|)

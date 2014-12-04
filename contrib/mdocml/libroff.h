@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libroff.h,v 1.29 2014/04/20 16:46:04 schwarze Exp $ */
+comment|/*	$Id: libroff.h,v 1.31 2014/10/25 14:35:37 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -117,43 +117,65 @@ struct|struct
 name|eqn_node
 block|{
 name|struct
-name|eqn_def
-modifier|*
-name|defs
-decl_stmt|;
-name|size_t
-name|defsz
-decl_stmt|;
-name|char
-modifier|*
-name|data
-decl_stmt|;
-name|size_t
-name|rew
-decl_stmt|;
-name|size_t
-name|cur
-decl_stmt|;
-name|size_t
-name|sz
-decl_stmt|;
-name|int
-name|gsize
-decl_stmt|;
-name|struct
 name|eqn
 name|eqn
 decl_stmt|;
+comment|/* syntax tree of this equation */
 name|struct
 name|mparse
 modifier|*
 name|parse
 decl_stmt|;
+comment|/* main parser, for error reporting */
 name|struct
 name|eqn_node
 modifier|*
 name|next
 decl_stmt|;
+comment|/* singly linked list of equations */
+name|struct
+name|eqn_def
+modifier|*
+name|defs
+decl_stmt|;
+comment|/* array of definitions */
+name|char
+modifier|*
+name|data
+decl_stmt|;
+comment|/* source code of this equation */
+name|size_t
+name|defsz
+decl_stmt|;
+comment|/* number of definitions */
+name|size_t
+name|sz
+decl_stmt|;
+comment|/* length of the source code */
+name|size_t
+name|cur
+decl_stmt|;
+comment|/* parse point in the source code */
+name|size_t
+name|rew
+decl_stmt|;
+comment|/* beginning of the current token */
+name|int
+name|gsize
+decl_stmt|;
+comment|/* default point size */
+name|int
+name|delim
+decl_stmt|;
+comment|/* in-line delimiters enabled */
+name|char
+name|odelim
+decl_stmt|;
+comment|/* in-line opening delimiter */
+name|char
+name|cdelim
+decl_stmt|;
+comment|/* in-line closing delimiter */
 block|}
 struct|;
 end_struct
@@ -354,10 +376,6 @@ name|eqn_node
 modifier|*
 name|eqn_alloc
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
 name|int
 parameter_list|,
 name|int

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.h,v 1.152 2014/08/06 15:09:05 schwarze Exp $ */
+comment|/*	$Id: mandoc.h,v 1.171 2014/11/28 18:09:01 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2010, 2011, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -115,9 +115,6 @@ comment|/* missing manual section, using "": macro */
 name|MANDOCERR_MSEC_BAD
 block|,
 comment|/* unknown manual section: Dt ... section */
-name|MANDOCERR_ARCH_BAD
-block|,
-comment|/* unknown manual volume or arch: Dt ... volume */
 name|MANDOCERR_DATE_MISSING
 block|,
 comment|/* missing date, using today's date */
@@ -164,6 +161,15 @@ comment|/* duplicate section title: Sh title */
 name|MANDOCERR_SEC_MSEC
 block|,
 comment|/* unexpected section: Sh title for ... only */
+name|MANDOCERR_XR_ORDER
+block|,
+comment|/* unusual Xr order: ... after ... */
+name|MANDOCERR_XR_PUNCT
+block|,
+comment|/* unusual Xr punctuation: ... after ... */
+name|MANDOCERR_AN_MISSING
+block|,
+comment|/* AUTHORS section without An macro */
 comment|/* related to macros and nesting */
 name|MANDOCERR_MACRO_OBS
 block|,
@@ -241,6 +247,9 @@ comment|/* unknown font type, using \fR: Bf font */
 name|MANDOCERR_ARG_STD
 block|,
 comment|/* missing -std argument, adding it: macro */
+name|MANDOCERR_EQN_NOBOX
+block|,
+comment|/* missing eqn box, using "": op */
 comment|/* related to bad arguments */
 name|MANDOCERR_ARG_QUOTE
 block|,
@@ -263,6 +272,12 @@ comment|/* skipping -width argument: Bl -type */
 name|MANDOCERR_AT_BAD
 block|,
 comment|/* unknown AT&T UNIX version: At version */
+name|MANDOCERR_FA_COMMA
+block|,
+comment|/* comma in function argument: arg */
+name|MANDOCERR_FN_PAREN
+block|,
+comment|/* parenthesis in function name: arg */
 name|MANDOCERR_RS_BAD
 block|,
 comment|/* invalid content in Rs block: macro */
@@ -307,9 +322,6 @@ comment|/* overlapping equation scopes */
 name|MANDOCERR_EQNEOF
 block|,
 comment|/* unexpected end of equation */
-name|MANDOCERR_EQNSYNT
-block|,
-comment|/* equation syntax error */
 comment|/* related to tables */
 name|MANDOCERR_TBL
 block|,
@@ -367,6 +379,9 @@ comment|/* escaped character not allowed in a name: name */
 name|MANDOCERR_ARGCOUNT
 block|,
 comment|/* argument count wrong */
+name|MANDOCERR_BD_FILE
+block|,
+comment|/* NOT IMPLEMENTED: Bd -file */
 name|MANDOCERR_BL_NOTYPE
 block|,
 comment|/* missing list type, using -item: Bl */
@@ -388,15 +403,15 @@ comment|/* skipping all arguments: macro args */
 name|MANDOCERR_ARG_EXCESS
 block|,
 comment|/* skipping excess arguments: macro ... args */
+name|MANDOCERR_DIVZERO
+block|,
+comment|/* divide by zero */
 name|MANDOCERR_FATAL
 block|,
 comment|/* ===== start of fatal errors ===== */
 name|MANDOCERR_TOOLARGE
 block|,
 comment|/* input too large */
-name|MANDOCERR_BD_FILE
-block|,
-comment|/* NOT IMPLEMENTED: Bd -file */
 name|MANDOCERR_SO_PATH
 block|,
 comment|/* NOT IMPLEMENTED: .so with absolute path or ".." */
@@ -404,15 +419,36 @@ name|MANDOCERR_SO_FAIL
 block|,
 comment|/* .so request failed */
 comment|/* ===== system errors ===== */
+name|MANDOCERR_SYSDUP
+block|,
+comment|/* cannot dup file descriptor */
+name|MANDOCERR_SYSEXEC
+block|,
+comment|/* cannot exec */
+name|MANDOCERR_SYSEXIT
+block|,
+comment|/* gunzip failed with code */
+name|MANDOCERR_SYSFORK
+block|,
+comment|/* cannot fork */
 name|MANDOCERR_SYSOPEN
 block|,
 comment|/* cannot open file */
-name|MANDOCERR_SYSSTAT
+name|MANDOCERR_SYSPIPE
 block|,
-comment|/* cannot stat file */
+comment|/* cannot open pipe */
 name|MANDOCERR_SYSREAD
 block|,
 comment|/* cannot read file */
+name|MANDOCERR_SYSSIG
+block|,
+comment|/* gunzip died from signal */
+name|MANDOCERR_SYSSTAT
+block|,
+comment|/* cannot stat file */
+name|MANDOCERR_SYSWAIT
+block|,
+comment|/* wait failed */
 name|MANDOCERR_MAX
 block|}
 enum|;
@@ -600,6 +636,11 @@ directive|define
 name|TBL_CELL_WIGN
 value|(1<< 6)
 comment|/* z, Z */
+define|#
+directive|define
+name|TBL_CELL_WMAX
+value|(1<< 7)
+comment|/* x, X */
 name|struct
 name|tbl_head
 modifier|*
@@ -794,38 +835,15 @@ block|,
 comment|/* nested `eqn' subexpression */
 name|EQN_LIST
 block|,
-comment|/* subexpressions list */
+comment|/* list (braces, etc.) */
+name|EQN_LISTONE
+block|,
+comment|/* singleton list */
+name|EQN_PILE
+block|,
+comment|/* vertical pile */
 name|EQN_MATRIX
-comment|/* matrix subexpression */
-block|}
-enum|;
-end_enum
-
-begin_enum
-enum|enum
-name|eqn_markt
-block|{
-name|EQNMARK_NONE
-init|=
-literal|0
-block|,
-name|EQNMARK_DOT
-block|,
-name|EQNMARK_DOTDOT
-block|,
-name|EQNMARK_HAT
-block|,
-name|EQNMARK_TILDE
-block|,
-name|EQNMARK_VEC
-block|,
-name|EQNMARK_DYAD
-block|,
-name|EQNMARK_BAR
-block|,
-name|EQNMARK_UNDER
-block|,
-name|EQNMARK__MAX
+comment|/* pile of piles */
 block|}
 enum|;
 end_enum
@@ -859,15 +877,21 @@ name|EQNPOS_NONE
 init|=
 literal|0
 block|,
-name|EQNPOS_OVER
-block|,
 name|EQNPOS_SUP
+block|,
+name|EQNPOS_SUBSUP
 block|,
 name|EQNPOS_SUB
 block|,
 name|EQNPOS_TO
 block|,
 name|EQNPOS_FROM
+block|,
+name|EQNPOS_FROMTO
+block|,
+name|EQNPOS_OVER
+block|,
+name|EQNPOS_SQRT
 block|,
 name|EQNPOS__MAX
 block|}
@@ -945,6 +969,12 @@ comment|/* node sibling */
 name|struct
 name|eqn_box
 modifier|*
+name|prev
+decl_stmt|;
+comment|/* node sibling */
+name|struct
+name|eqn_box
+modifier|*
 name|parent
 decl_stmt|;
 comment|/* node sibling */
@@ -957,20 +987,35 @@ name|char
 modifier|*
 name|left
 decl_stmt|;
+comment|/* fence left-hand */
 name|char
 modifier|*
 name|right
 decl_stmt|;
+comment|/* fence right-hand */
+name|char
+modifier|*
+name|top
+decl_stmt|;
+comment|/* expression over-symbol */
+name|char
+modifier|*
+name|bottom
+decl_stmt|;
+comment|/* expression under-symbol */
+name|size_t
+name|args
+decl_stmt|;
+comment|/* arguments in parent */
+name|size_t
+name|expectargs
+decl_stmt|;
+comment|/* max arguments in parent */
 name|enum
 name|eqn_post
 name|pos
 decl_stmt|;
 comment|/* position of next box */
-name|enum
-name|eqn_markt
-name|mark
-decl_stmt|;
-comment|/* a mark about the box */
 name|enum
 name|eqn_fontt
 name|font
@@ -1062,6 +1107,28 @@ end_define
 
 begin_comment
 comment|/* abort the parse early */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPARSE_UTF8
+value|16
+end_define
+
+begin_comment
+comment|/* accept UTF-8 input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPARSE_LATIN1
+value|32
+end_define
+
+begin_comment
+comment|/* accept ISO-LATIN-1 input */
 end_comment
 
 begin_enum
@@ -1210,7 +1277,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
+name|int
 name|mchars_num2char
 parameter_list|(
 specifier|const
@@ -1218,6 +1285,17 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|mchars_uc2str
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1290,6 +1368,11 @@ parameter_list|,
 name|mandocmsg
 parameter_list|,
 specifier|const
+name|struct
+name|mchars
+modifier|*
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1313,6 +1396,25 @@ name|mparse_keep
 parameter_list|(
 name|struct
 name|mparse
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|enum
+name|mandoclevel
+name|mparse_open
+parameter_list|(
+name|struct
+name|mparse
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1428,6 +1530,18 @@ name|mparse_strlevel
 parameter_list|(
 name|enum
 name|mandoclevel
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|enum
+name|mandoclevel
+name|mparse_wait
+parameter_list|(
+name|struct
+name|mparse
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

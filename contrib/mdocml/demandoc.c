@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: demandoc.c,v 1.10 2014/03/19 22:20:43 schwarze Exp $ */
+comment|/*	$Id: demandoc.c,v 1.12 2014/10/28 17:36:19 schwarze Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
@@ -19,10 +13,11 @@ directive|include
 file|"config.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -220,6 +215,11 @@ name|mparse
 modifier|*
 name|mp
 decl_stmt|;
+name|struct
+name|mchars
+modifier|*
+name|mchars
+decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
@@ -346,6 +346,11 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+name|mchars
+operator|=
+name|mchars_alloc
+argument_list|()
+expr_stmt|;
 name|mp
 operator|=
 name|mparse_alloc
@@ -355,6 +360,8 @@ argument_list|,
 name|MANDOCLEVEL_FATAL
 argument_list|,
 name|NULL
+argument_list|,
+name|mchars
 argument_list|,
 name|NULL
 argument_list|)
@@ -419,6 +426,11 @@ block|}
 name|mparse_free
 argument_list|(
 name|mp
+argument_list|)
+expr_stmt|;
+name|mchars_free
+argument_list|(
+name|mchars
 argument_list|)
 expr_stmt|;
 return|return
