@@ -2060,7 +2060,7 @@ name|int
 name|pool
 parameter_list|,
 name|int
-name|index
+name|idx
 parameter_list|,
 name|__u8
 modifier|*
@@ -2090,7 +2090,7 @@ literal|"kvp_pool_enumerate: pool = %d, index = %d\n,"
 argument_list|,
 name|pool
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 comment|/* First update our in-memory state first. */
@@ -2111,7 +2111,7 @@ expr_stmt|;
 comment|/* Index starts with 0 */
 if|if
 condition|(
-name|index
+name|idx
 operator|>=
 name|kvp_pools
 index|[
@@ -2133,7 +2133,7 @@ name|key
 argument_list|,
 name|record
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|key
@@ -2147,7 +2147,7 @@ name|value
 argument_list|,
 name|record
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|value
