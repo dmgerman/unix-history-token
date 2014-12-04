@@ -20599,7 +20599,7 @@ modifier|*
 name|op_err
 parameter_list|,
 name|uint8_t
-name|use_mflowid
+name|mflowtype
 parameter_list|,
 name|uint32_t
 name|mflowid
@@ -20699,7 +20699,7 @@ name|vtag
 argument_list|,
 name|op_err
 argument_list|,
-name|use_mflowid
+name|mflowtype
 argument_list|,
 name|mflowid
 argument_list|,
@@ -21691,7 +21691,7 @@ modifier|*
 name|cause
 parameter_list|,
 name|uint8_t
-name|use_mflowid
+name|mflowtype
 parameter_list|,
 name|uint32_t
 name|mflowid
@@ -21860,7 +21860,7 @@ name|dst
 argument_list|,
 name|sh
 argument_list|,
-name|use_mflowid
+name|mflowtype
 argument_list|,
 name|mflowid
 argument_list|,
@@ -21953,7 +21953,7 @@ literal|0
 argument_list|,
 name|cause
 argument_list|,
-name|use_mflowid
+name|mflowtype
 argument_list|,
 name|mflowid
 argument_list|,
