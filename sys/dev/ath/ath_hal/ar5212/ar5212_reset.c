@@ -11945,6 +11945,36 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|uint32_t
+name|udiff
+parameter_list|(
+name|uint32_t
+name|u
+parameter_list|,
+name|uint32_t
+name|v
+parameter_list|)
+block|{
+return|return
+operator|(
+name|u
+operator|>=
+name|v
+condition|?
+name|u
+operator|-
+name|v
+else|:
+name|v
+operator|-
+name|u
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Search a list for a specified value v that is within  * EEP_DELTA of the search values.  Return the closest  * values in the list above and below the desired value.  * EEP_DELTA is a factional value; everything is scaled  * so only integer arithmetic is used.  *  * NB: the input list is assumed to be sorted in ascending order  */
 end_comment
@@ -12069,7 +12099,7 @@ block|{
 comment|/* 		 * If value is close to the current value of the list 		 * then target is not between values, it is one of the values 		 */
 if|if
 condition|(
-name|abs
+name|udiff
 argument_list|(
 name|lp
 index|[
@@ -12077,7 +12107,7 @@ literal|0
 index|]
 operator|*
 name|EEP_SCALE
-operator|-
+argument_list|,
 name|target
 argument_list|)
 operator|<
