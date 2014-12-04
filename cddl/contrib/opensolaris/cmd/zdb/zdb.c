@@ -297,6 +297,13 @@ name|zfs_arc_meta_limit
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|zfs_vdev_async_read_max_active
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -313,6 +320,12 @@ name|uint64_t
 name|zfs_arc_max
 decl_stmt|,
 name|zfs_arc_meta_limit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|zfs_vdev_async_read_max_active
 decl_stmt|;
 end_decl_stmt
 
@@ -13493,6 +13506,28 @@ name|zcb_readfails
 operator|=
 literal|0
 expr_stmt|;
+comment|/* only call gethrtime() every 100 blocks */
+specifier|static
+name|int
+name|iters
+decl_stmt|;
+if|if
+condition|(
+operator|++
+name|iters
+operator|>
+literal|100
+condition|)
+name|iters
+operator|=
+literal|0
+expr_stmt|;
+else|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|dump_opt
@@ -14087,6 +14122,15 @@ name|ms_ops
 operator|=
 operator|&
 name|zdb_metaslab_ops
+expr_stmt|;
+comment|/* 					 * We don't want to spend the CPU 					 * manipulating the size-ordered 					 * tree, so clear the range_tree 					 * ops. 					 */
+name|msp
+operator|->
+name|ms_tree
+operator|->
+name|rt_ops
+operator|=
+name|NULL
 expr_stmt|;
 name|VERIFY0
 argument_list|(
@@ -19473,6 +19517,11 @@ operator|*
 literal|1024
 operator|*
 literal|1024
+expr_stmt|;
+comment|/* 	 * "zdb -c" uses checksum-verifying scrub i/os which are async reads. 	 * "zdb -b" uses traversal prefetch which uses async reads. 	 * For good performance, let several of them be active at once. 	 */
+name|zfs_vdev_async_read_max_active
+operator|=
+literal|10
 expr_stmt|;
 name|kernel_init
 argument_list|(
