@@ -274,7 +274,7 @@ if|if
 condition|(
 name|ix
 operator|>
-literal|0x80000000
+literal|0x54000000
 condition|)
 name|z
 operator|=
@@ -726,7 +726,7 @@ if|if
 condition|(
 name|ix
 operator|>
-literal|0x80000000
+literal|0x54800000
 condition|)
 name|z
 operator|=
