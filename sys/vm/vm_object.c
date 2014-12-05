@@ -1667,6 +1667,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* 	 * The test for text of vp vnode does not need a bypass to 	 * reach right VV_TEXT there, since it is obtained from 	 * object->handle. 	 */
 if|if
 condition|(
 name|object
@@ -1674,6 +1675,16 @@ operator|->
 name|ref_count
 operator|>
 literal|1
+operator|||
+operator|(
+name|vp
+operator|->
+name|v_vflag
+operator|&
+name|VV_TEXT
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|object
