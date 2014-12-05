@@ -3273,6 +3273,12 @@ name|CTL_SERIDX_MD_SEL
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
+name|CTL_CMD_FLAG_OK_ON_STOPPED
+operator||
+name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
+operator||
 name|CTL_FLAG_DATA_OUT
 block|,
 name|CTL_LUN_PAT_NONE
@@ -3307,6 +3313,12 @@ block|,
 name|CTL_SERIDX_MD_SNS
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
+operator||
+name|CTL_CMD_FLAG_OK_ON_STOPPED
+operator||
+name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
 operator||
 name|CTL_FLAG_DATA_IN
 operator||
