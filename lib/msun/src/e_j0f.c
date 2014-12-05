@@ -333,10 +333,10 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x39000000
+literal|0x3c000000
 condition|)
 block|{
-comment|/* |x|< 2**-13 */
+comment|/* |x|< 2**-7 */
 if|if
 condition|(
 name|huge
@@ -351,24 +351,21 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x32000000
+literal|0x39800000
 condition|)
 return|return
 name|one
 return|;
-comment|/* |x|<2**-27 */
+comment|/* |x|<2**-12 */
 else|else
 return|return
 name|one
 operator|-
-operator|(
-name|float
-operator|)
-literal|0.25
-operator|*
 name|x
 operator|*
 name|x
+operator|/
+literal|4
 return|;
 block|}
 block|}
