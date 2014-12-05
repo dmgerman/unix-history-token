@@ -241,13 +241,13 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|AUTHENTICATION
-literal|"[-4] [-6] [-8] [-E] [-K] [-L] [-N] [-S tos] [-X atype] [-c] [-d]"
+literal|"[-4] [-6] [-8] [-B baudrate] [-E] [-K] [-L] [-N] [-S tos] [-X atype]"
 argument_list|,
-literal|"\n\t[-e char] [-k realm] [-l user] [-f/-F] [-n tracefile] "
+literal|"\n\t[-c] [-d] [-e char] [-k realm] [-l user] [-f/-F] [-n tracefile] "
 argument_list|,
 else|#
 directive|else
-literal|"[-4] [-6] [-8] [-E] [-L] [-N] [-S tos] [-c] [-d]"
+literal|"[-4] [-6] [-8] [-B baudrate] [-E] [-L] [-N] [-S tos] [-c] [-d]"
 argument_list|,
 literal|"\n\t[-e char] [-l user] [-n tracefile] "
 argument_list|,
@@ -457,7 +457,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"468EKLNS:X:acde:fFk:l:n:rs:uxy"
+literal|"468B:EKLNS:X:acde:fFk:l:n:rs:uxy"
 name|IPSECOPT
 argument_list|)
 operator|)
@@ -503,6 +503,15 @@ operator|=
 literal|3
 expr_stmt|;
 comment|/* binary output and input */
+break|break;
+case|case
+literal|'B'
+case|:
+name|DoBaudRate
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'E'
