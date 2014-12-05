@@ -463,13 +463,10 @@ begin_decl_stmt
 name|hrtime_t
 name|dtrace_chill_max
 init|=
+name|MSEC2NSEC
+argument_list|(
 literal|500
-operator|*
-operator|(
-name|NANOSEC
-operator|/
-name|MILLISEC
-operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -54336,17 +54333,13 @@ continue|continue;
 comment|/* just ignore non-loadable sections */
 if|if
 condition|(
+operator|!
+name|ISP2
+argument_list|(
 name|sec
 operator|->
 name|dofs_align
-operator|&
-operator|(
-name|sec
-operator|->
-name|dofs_align
-operator|-
-literal|1
-operator|)
+argument_list|)
 condition|)
 block|{
 name|dtrace_dof_error
