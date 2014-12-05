@@ -4,7 +4,7 @@ comment|/*  * This file and its contents are supplied under the terms of the  * 
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2014, Joyent, Inc.  */
 end_comment
 
 begin_include
@@ -53,11 +53,10 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|if (fprintf(fp, __VA_ARGS__)< 0)	\ 		return (-1)
+value|do {						\ 		if (fprintf(fp, __VA_ARGS__)< 0)	\ 			return (-1);			\ 	} while (0)
 end_define
 
 begin_comment
-unit|\
 comment|/*  * When formatting a string for JSON output we must escape certain characters,  * as described in RFC4627.  This applies to both member names and  * DATA_TYPE_STRING values.  *  * This function will only operate correctly if the following conditions are  * met:  *  *       1. The input String is encoded in the current locale.  *  *       2. The current locale includes the Basic Multilingual Plane (plane 0)  *          as defined in the Unicode standard.  *  * The output will be entirely 7-bit ASCII (as a subset of UTF-8) with all  * representable Unicode characters included in their escaped numeric form.  */
 end_comment
 
@@ -1443,7 +1442,7 @@ name|FPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"%hhd"
+literal|"%hd"
 argument_list|,
 name|val
 index|[
