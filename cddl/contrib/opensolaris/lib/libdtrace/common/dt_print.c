@@ -478,8 +478,10 @@ name|uint8_t
 name|shift
 decl_stmt|;
 comment|/* 	 * On big-endian machines, we need to adjust the buf pointer to refer 	 * to the lowest 'size' bytes in 'value', and we need to shift based on 	 * the offset from the end of the data, not the offset of the start. 	 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
 name|_BIG_ENDIAN
 name|buf
 operator|+=
@@ -514,8 +516,10 @@ operator|%
 name|NBBY
 expr_stmt|;
 comment|/* 	 * Offsets are counted from opposite ends on little- and 	 * big-endian machines. 	 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
 name|_BIG_ENDIAN
 name|shift
 operator|=
