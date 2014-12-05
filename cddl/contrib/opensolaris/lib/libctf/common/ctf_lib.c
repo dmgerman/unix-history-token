@@ -1358,8 +1358,10 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
 name|_BIG_ENDIAN
 name|uchar_t
 name|order
