@@ -120,13 +120,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|P_OSREL_MAP_RENAME
-value|1100039
-end_define
-
-begin_define
-define|#
-directive|define
 name|P_OSREL_MAJOR
 parameter_list|(
 name|x
