@@ -1034,6 +1034,34 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
+name|char
+name|ComPortBaudRate
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Baud rate of the remote end */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|DoBaudRate
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Function to set the baud rate of the remote end */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|jmp_buf
 name|toplevel
 decl_stmt|;
@@ -2490,6 +2518,38 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|system
+decl_stmt|,
+comment|/* what the current time is */
+name|echotoggle
+decl_stmt|,
+comment|/* last time user entered echo character */
+name|modenegotiated
+decl_stmt|,
+comment|/* last time operating mode negotiated */
+name|didnetreceive
+decl_stmt|,
+comment|/* last time we read data from network */
+name|gotDM
+decl_stmt|;
+comment|/* when did we last see a data mark */
+block|}
+name|Clocks
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|Clocks
+name|clocks
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Ring buffer structures which are shared */
