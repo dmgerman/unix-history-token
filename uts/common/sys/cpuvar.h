@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1989, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 1989, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2014 Igor Kozhukhov<ikozhukhov@gmail.com>.  */
 end_comment
 
 begin_ifndef
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/processor.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/loadavg.h>
 end_include
 
 begin_if
@@ -171,39 +177,6 @@ define|#
 directive|define
 name|CPU_CACHE_COHERENCE_SIZE
 value|64
-define|#
-directive|define
-name|S_LOADAVG_SZ
-value|11
-define|#
-directive|define
-name|S_MOVAVG_SZ
-value|10
-struct|struct
-name|loadavg_s
-block|{
-name|int
-name|lg_cur
-decl_stmt|;
-comment|/* current loadavg entry */
-name|unsigned
-name|int
-name|lg_len
-decl_stmt|;
-comment|/* number entries recorded */
-name|hrtime_t
-name|lg_total
-decl_stmt|;
-comment|/* used to temporarily hold load totals */
-name|hrtime_t
-name|lg_loads
-index|[
-name|S_LOADAVG_SZ
-index|]
-decl_stmt|;
-comment|/* table of recorded entries */
-block|}
-struct|;
 comment|/*  * For fast event tracing.  */
 struct_decl|struct
 name|ftrace_record
