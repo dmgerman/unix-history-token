@@ -105,7 +105,7 @@ parameter_list|(
 name|ds
 parameter_list|)
 define|\
-value|((ds)->ds_phys->ds_flags& DS_FLAG_INCONSISTENT)
+value|(dsl_dataset_phys(ds)->ds_flags& DS_FLAG_INCONSISTENT)
 comment|/*  * Do not allow this dataset to be promoted.  */
 define|#
 directive|define
@@ -128,7 +128,7 @@ parameter_list|(
 name|ds
 parameter_list|)
 define|\
-value|((ds)->ds_phys->ds_flags& DS_FLAG_DEFER_DESTROY)
+value|(dsl_dataset_phys(ds)->ds_flags& DS_FLAG_DEFER_DESTROY)
 comment|/*  * DS_FIELD_* are strings that are used in the "extensified" dataset zap object.  * They should be of the format<reverse-dns>:<field>.  */
 comment|/*  * This field's value is the object ID of a zap object which contains the  * bookmarks of this dataset.  If it is present, then this dataset is counted  * in the refcount of the SPA_FEATURES_BOOKMARKS feature.  */
 define|#
@@ -247,10 +247,6 @@ name|dsl_dir
 modifier|*
 name|ds_dir
 decl_stmt|;
-name|dsl_dataset_phys_t
-modifier|*
-name|ds_phys
-decl_stmt|;
 name|dmu_buf_t
 modifier|*
 name|ds_dbuf
@@ -342,19 +338,53 @@ decl_stmt|;
 block|}
 name|dsl_dataset_t
 typedef|;
+specifier|inline
+name|dsl_dataset_phys_t
+modifier|*
+name|dsl_dataset_phys
+parameter_list|(
+name|dsl_dataset_t
+modifier|*
+name|ds
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ds
+operator|->
+name|ds_dbuf
+operator|->
+name|db_data
+operator|)
+return|;
+block|}
 comment|/*  * The max length of a temporary tag prefix is the number of hex digits  * required to express UINT64_MAX plus one for the hyphen.  */
 define|#
 directive|define
 name|MAX_TAG_PREFIX_LEN
 value|17
-define|#
-directive|define
+specifier|inline
+name|boolean_t
 name|dsl_dataset_is_snapshot
 parameter_list|(
+name|dsl_dataset_t
+modifier|*
 name|ds
 parameter_list|)
-define|\
-value|((ds)->ds_phys->ds_num_children != 0)
+block|{
+return|return
+operator|(
+name|dsl_dataset_phys
+argument_list|(
+name|ds
+argument_list|)
+operator|->
+name|ds_num_children
+operator|!=
+literal|0
+operator|)
+return|;
+block|}
 define|#
 directive|define
 name|DS_UNIQUE_IS_ACCURATE
@@ -362,7 +392,7 @@ parameter_list|(
 name|ds
 parameter_list|)
 define|\
-value|(((ds)->ds_phys->ds_flags& DS_FLAG_UNIQUE_ACCURATE) != 0)
+value|((dsl_dataset_phys(ds)->ds_flags& DS_FLAG_UNIQUE_ACCURATE) != 0)
 name|int
 name|dsl_dataset_hold
 parameter_list|(

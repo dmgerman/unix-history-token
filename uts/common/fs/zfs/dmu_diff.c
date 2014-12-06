@@ -999,9 +999,10 @@ return|;
 block|}
 name|fromtxg
 operator|=
+name|dsl_dataset_phys
+argument_list|(
 name|fromsnap
-operator|->
-name|ds_phys
+argument_list|)
 operator|->
 name|ds_creation_txg
 expr_stmt|;

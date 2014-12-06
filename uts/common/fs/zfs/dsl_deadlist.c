@@ -1593,9 +1593,10 @@ argument_list|(
 operator|&
 name|dl
 argument_list|,
+name|dsl_dataset_phys
+argument_list|(
 name|ds
-operator|->
-name|ds_phys
+argument_list|)
 operator|->
 name|ds_prev_snap_txg
 argument_list|,
@@ -1604,9 +1605,10 @@ argument_list|)
 expr_stmt|;
 name|mrs_obj
 operator|=
+name|dsl_dataset_phys
+argument_list|(
 name|ds
-operator|->
-name|ds_phys
+argument_list|)
 operator|->
 name|ds_prev_snap_obj
 expr_stmt|;

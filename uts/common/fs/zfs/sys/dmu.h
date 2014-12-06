@@ -1498,7 +1498,7 @@ modifier|*
 name|tag
 parameter_list|)
 function_decl|;
-comment|/*  * Returns NULL on success, or the existing user ptr if it's already  * been set.  *  * user_ptr is for use by the user and can be obtained via dmu_buf_get_user().  *  * user_data_ptr_ptr should be NULL, or a pointer to a pointer which  * will be set to db->db_data when you are allowed to access it.  Note  * that db->db_data (the pointer) can change when you do dmu_buf_read(),  * dmu_buf_tryupgrade(), dmu_buf_will_dirty(), or dmu_buf_will_fill().  * *user_data_ptr_ptr will be set to the new value when it changes.  *  * If non-NULL, pageout func will be called when this buffer is being  * excised from the cache, so that you can clean up the data structure  * pointed to by user_ptr.  *  * dmu_evict_user() will call the pageout func for all buffers in a  * objset with a given pageout func.  */
+comment|/*  * Returns NULL on success, or the existing user ptr if it's already  * been set.  *  * user_ptr is for use by the user and can be obtained via dmu_buf_get_user().  *  * If non-NULL, pageout func will be called when this buffer is being  * excised from the cache, so that you can clean up the data structure  * pointed to by user_ptr.  *  * dmu_evict_user() will call the pageout func for all buffers in a  * objset with a given pageout func.  */
 name|void
 modifier|*
 name|dmu_buf_set_user
@@ -1510,10 +1510,6 @@ parameter_list|,
 name|void
 modifier|*
 name|user_ptr
-parameter_list|,
-name|void
-modifier|*
-name|user_data_ptr_ptr
 parameter_list|,
 name|dmu_buf_evict_func_t
 modifier|*
@@ -1532,10 +1528,6 @@ parameter_list|,
 name|void
 modifier|*
 name|user_ptr
-parameter_list|,
-name|void
-modifier|*
-name|user_data_ptr_ptr
 parameter_list|,
 name|dmu_buf_evict_func_t
 modifier|*
@@ -1557,10 +1549,6 @@ parameter_list|,
 name|void
 modifier|*
 name|user_ptr
-parameter_list|,
-name|void
-modifier|*
-name|user_data_ptr_ptr
 parameter_list|,
 name|dmu_buf_evict_func_t
 modifier|*
