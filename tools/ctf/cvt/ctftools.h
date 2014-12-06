@@ -19,13 +19,6 @@ directive|define
 name|_CTFTOOLS_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_comment
 comment|/*  * Functions and data structures used in the manipulation of stabs and CTF data  */
 end_comment
@@ -64,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ccompile.h>
 end_include
 
 begin_ifdef
@@ -1489,22 +1488,24 @@ parameter_list|)
 function_decl|;
 name|void
 name|terminate
-parameter_list|(
+argument_list|(
 name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
+operator|*
+argument_list|,
+operator|...
+argument_list|)
+name|__NORETURN
+decl_stmt|;
 name|void
 name|aborterr
-parameter_list|(
+argument_list|(
 name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
+operator|*
+argument_list|,
+operator|...
+argument_list|)
+name|__NORETURN
+decl_stmt|;
 name|void
 name|set_terminate_cleanup
 parameter_list|(
