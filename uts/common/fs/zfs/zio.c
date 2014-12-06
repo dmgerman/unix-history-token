@@ -13583,6 +13583,10 @@ name|error
 expr_stmt|;
 if|if
 condition|(
+name|error
+operator|==
+name|ECKSUM
+operator|&&
 operator|!
 operator|(
 name|zio
