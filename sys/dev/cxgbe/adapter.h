@@ -569,9 +569,8 @@ endif|#
 directive|endif
 name|CL_METADATA_SIZE
 init|=
-literal|256
+name|CACHE_LINE_SIZE
 block|,
-comment|/* same as MSIZE for now */
 name|SGE_MAX_WR_NDESC
 init|=
 name|SGE_MAX_WR_LEN
