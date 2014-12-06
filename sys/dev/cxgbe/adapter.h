@@ -569,8 +569,9 @@ endif|#
 directive|endif
 name|CL_METADATA_SIZE
 init|=
-name|CACHE_LINE_SIZE
+literal|256
 block|,
+comment|/* same as MSIZE for now */
 name|SGE_MAX_WR_NDESC
 init|=
 name|SGE_MAX_WR_LEN
@@ -2550,6 +2551,9 @@ modifier|*
 name|eqmap
 decl_stmt|;
 comment|/* eq->cntxt_id to eq mapping */
+name|int
+name|pad_boundary
+decl_stmt|;
 name|int
 name|pack_boundary
 decl_stmt|;
