@@ -11013,8 +11013,13 @@ operator|->
 name|count
 operator|++
 expr_stmt|;
+name|SPACQ_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|SPACQ_UNLOCK
