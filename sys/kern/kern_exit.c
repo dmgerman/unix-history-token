@@ -742,6 +742,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* 	 * First check if some other thread or external request got 	 * here before us.  If so, act appropriately: exit or suspend. 	 * We must ensure that stop requests are handled before we set 	 * P_WEXIT. 	 */
+name|thread_suspend_check
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|p
@@ -751,12 +757,6 @@ operator|&
 name|P_HADTHREADS
 condition|)
 block|{
-comment|/* 		 * First check if some other thread got here before us. 		 * If so, act appropriately: exit or suspend. 		 */
-name|thread_suspend_check
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Kill off the other threads. This requires 		 * some co-operation from other parts of the kernel 		 * so it may not be instantaneous.  With this state set 		 * any thread entering the kernel from userspace will 		 * thread_exit() in trap().  Any thread attempting to 		 * sleep will return immediately with EINTR or EWOULDBLOCK 		 * which will hopefully force them to back out to userland 		 * freeing resources as they go.  Any thread attempting 		 * to return to userland will thread_exit() from userret(). 		 * thread_exit() will unsuspend us when the last of the 		 * other threads exits. 		 * If there is already a thread singler after resumption, 		 * calling thread_single will fail; in that case, we just 		 * re-check all suspension request, the thread should 		 * either be suspended there or exit. 		 */
 if|if
 condition|(
@@ -766,8 +766,14 @@ argument_list|(
 name|SINGLE_EXIT
 argument_list|)
 condition|)
+comment|/* 			 * All other activity in this process is now 			 * stopped.  Threading support has been turned 			 * off. 			 */
 break|break;
-comment|/* 		 * All other activity in this process is now stopped. 		 * Threading support has been turned off. 		 */
+comment|/* 		 * Recheck for new stop or suspend requests which 		 * might appear while process lock was dropped in 		 * thread_single(). 		 */
+name|thread_suspend_check
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 name|KASSERT
 argument_list|(
