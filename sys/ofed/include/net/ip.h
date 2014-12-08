@@ -84,6 +84,14 @@ modifier|*
 name|high
 parameter_list|)
 block|{
+name|CURVNET_SET_QUIET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|curthread
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|low
 operator|=
@@ -93,6 +101,9 @@ operator|*
 name|high
 operator|=
 name|V_ipport_lastauto
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
