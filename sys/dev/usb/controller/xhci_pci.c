@@ -1173,6 +1173,10 @@ case|case
 literal|0x8c318086
 case|:
 comment|/* Lynx Point */
+case|case
+literal|0x8cb18086
+case|:
+comment|/* Wildcat Point */
 name|sc
 operator|->
 name|sc_port_route
