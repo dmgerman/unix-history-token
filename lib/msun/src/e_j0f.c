@@ -333,10 +333,10 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x3c000000
+literal|0x3b000000
 condition|)
 block|{
-comment|/* |x|< 2**-7 */
+comment|/* |x|< 2**-9 */
 if|if
 condition|(
 name|huge
