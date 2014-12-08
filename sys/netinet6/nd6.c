@@ -789,6 +789,9 @@ argument_list|,
 name|curvnet
 argument_list|)
 expr_stmt|;
+name|nd6_dad_init
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

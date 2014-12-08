@@ -2159,6 +2159,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|nd6_dad_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|nd6_dad_start
 parameter_list|(
 name|struct

@@ -2551,6 +2551,9 @@ name|eqmap
 decl_stmt|;
 comment|/* eq->cntxt_id to eq mapping */
 name|int
+name|pad_boundary
+decl_stmt|;
+name|int
 name|pack_boundary
 decl_stmt|;
 name|int8_t

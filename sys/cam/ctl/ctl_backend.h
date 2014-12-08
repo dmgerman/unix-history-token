@@ -73,6 +73,10 @@ block|,
 name|CTL_LUN_FLAG_OFFLINE
 init|=
 literal|0x100
+block|,
+name|CTL_LUN_FLAG_SERSEQ_READ
+init|=
+literal|0x200
 block|}
 name|ctl_backend_lun_flags
 typedef|;

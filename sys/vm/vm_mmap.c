@@ -787,16 +787,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * Ignore old flags that used to be defined but did not do anything. 	 */
-if|if
-condition|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_osrel
-operator|<
-name|P_OSREL_MAP_RENAME
-condition|)
 name|flags
 operator|&=
 operator|~

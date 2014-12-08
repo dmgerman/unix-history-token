@@ -540,6 +540,22 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|ffs
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ffs
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_ffs(x)
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|va_list
 end_undef
 
