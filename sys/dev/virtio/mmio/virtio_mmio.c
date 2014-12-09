@@ -617,7 +617,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|do {							\ 	bus_write_1((sc)->res[0], (o), (v)); 		\ 	if (sc->platform != NULL)			\ 		VIRTIO_MMIO_NOTE(sc->platform, (o));	\ } while (0)
+value|do {								\ 	bus_write_1((sc)->res[0], (o), (v)); 			\ 	if (sc->platform != NULL)				\ 		VIRTIO_MMIO_NOTE(sc->platform, (o), (v));	\ } while (0)
 end_define
 
 begin_define
@@ -632,7 +632,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|do {							\ 	bus_write_2((sc)->res[0], (o), (v));		\ 	if (sc->platform != NULL)			\ 		VIRTIO_MMIO_NOTE(sc->platform, (o));	\ } while (0)
+value|do {								\ 	bus_write_2((sc)->res[0], (o), (v));			\ 	if (sc->platform != NULL)				\ 		VIRTIO_MMIO_NOTE(sc->platform, (o), (v));	\ } while (0)
 end_define
 
 begin_define
@@ -647,7 +647,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|do {							\ 	bus_write_4((sc)->res[0], (o), (v));		\ 	if (sc->platform != NULL)			\ 		VIRTIO_MMIO_NOTE(sc->platform, (o));	\ } while (0)
+value|do {								\ 	bus_write_4((sc)->res[0], (o), (v));			\ 	if (sc->platform != NULL)				\ 		VIRTIO_MMIO_NOTE(sc->platform, (o), (v));	\ } while (0)
 end_define
 
 begin_define
