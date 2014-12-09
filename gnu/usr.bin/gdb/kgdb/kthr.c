@@ -373,9 +373,9 @@ if|if
 condition|(
 name|td
 operator|.
-name|td_state
-operator|==
-name|TDS_RUNNING
+name|td_oncpu
+operator|!=
+name|NOCPU
 operator|&&
 name|CPU_ISSET
 argument_list|(
