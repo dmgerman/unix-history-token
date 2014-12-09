@@ -125,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|SI_SUB_OFED_PREINIT
-value|(SI_SUB_KTHREAD_INIT - 2)
+value|(SI_SUB_ROOT_CONF - 2)
 end_define
 
 begin_comment
@@ -136,7 +136,7 @@ begin_define
 define|#
 directive|define
 name|SI_SUB_OFED_MODINIT
-value|(SI_SUB_KTHREAD_INIT - 1)
+value|(SI_SUB_ROOT_CONF - 1)
 end_define
 
 begin_include
