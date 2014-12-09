@@ -1145,7 +1145,7 @@ expr_stmt|;
 name|connectlog
 argument_list|()
 expr_stmt|;
-comment|/* 	 * If the send() failed, there are two likely scenarios:  	 *  1) syslogd was restarted 	 *  2) /var/run/log is out of socket buffer space, which 	 *     in most cases means local DoS. 	 * We attempt to reconnect to /var/run/log[priv] to take care of 	 * case #1 and keep send()ing data to cover case #2 	 * to give syslogd a chance to empty its socket buffer. 	 * 	 * If we are working with a priveleged socket, then take 	 * only one attempt, because we don't want to freeze a 	 * critical application like su(1) or sshd(8). 	 * 	 */
+comment|/* 	 * If the send() fails, there are two likely scenarios:  	 *  1) syslogd was restarted 	 *  2) /var/run/log is out of socket buffer space, which 	 *     in most cases means local DoS. 	 * If the error does not indicate a full buffer, we address 	 * case #1 by attempting to reconnect to /var/run/log[priv] 	 * and resending the message once. 	 * 	 * If we are working with a privileged socket, the retry 	 * attempts end there, because we don't want to freeze a 	 * critical application like su(1) or sshd(8). 	 * 	 * Otherwise, we address case #2 by repeatedly retrying the 	 * send() to give syslogd a chance to empty its socket buffer. 	 */
 if|if
 condition|(
 name|send
@@ -1169,15 +1169,44 @@ operator|!=
 name|ENOBUFS
 condition|)
 block|{
+comment|/* 			 * Scenario 1: syslogd was restarted 			 * reconnect and resend once 			 */
 name|disconnectlog
 argument_list|()
 expr_stmt|;
 name|connectlog
 argument_list|()
 expr_stmt|;
-block|}
-do|do
+if|if
+condition|(
+name|send
+argument_list|(
+name|LogFile
+argument_list|,
+name|tbuf
+argument_list|,
+name|cnt
+argument_list|,
+literal|0
+argument_list|)
+operator|>=
+literal|0
+condition|)
 block|{
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+comment|/* 			 * if the resend failed, fall through to 			 * possible scenario 2 			 */
+block|}
+while|while
+condition|(
+name|errno
+operator|==
+name|ENOBUFS
+condition|)
+block|{
+comment|/* 			 * Scenario 2: out of socket buffer space 			 * possible DoS, fail fast on a privileged 			 * socket 			 */
 if|if
 condition|(
 name|status
@@ -1212,13 +1241,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-do|while
-condition|(
-name|errno
-operator|==
-name|ENOBUFS
-condition|)
-do|;
 block|}
 else|else
 block|{
@@ -1463,7 +1485,7 @@ name|sun_family
 operator|=
 name|AF_UNIX
 expr_stmt|;
-comment|/* 		 * First try priveleged socket. If no success, 		 * then try default socket. 		 */
+comment|/* 		 * First try privileged socket. If no success, 		 * then try default socket. 		 */
 operator|(
 name|void
 operator|)
