@@ -7839,9 +7839,6 @@ name|int
 name|syncer_final_iter
 decl_stmt|;
 name|int
-name|first_printf
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
 name|last_work_seen

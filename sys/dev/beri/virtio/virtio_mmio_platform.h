@@ -7,21 +7,35 @@ begin_define
 define|#
 directive|define
 name|Q_NOTIFY
-value|0x1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|Q_PFN
-value|0x2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|Q_INTR
-value|0x4
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_SEL
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_NOTIFY1
+value|0x10
 end_define
 
 end_unit

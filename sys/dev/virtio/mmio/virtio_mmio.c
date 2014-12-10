@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2014 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * This software was developed by SRI International and the University of  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)  * ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2014 Ruslan Bukin<br@bsdpad.com>  * Copyright (c) 2014 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by SRI International and the University of  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)  * ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Portions of this software were developed by Andrew Turner  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -617,7 +617,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|bus_write_1((sc)->res[0], (o), (v)); \ 	VIRTIO_MMIO_NOTE(sc->platform, (o))
+value|do {								\ 	bus_write_1((sc)->res[0], (o), (v)); 			\ 	if (sc->platform != NULL)				\ 		VIRTIO_MMIO_NOTE(sc->platform, (o), (v));	\ } while (0)
 end_define
 
 begin_define
@@ -632,7 +632,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|bus_write_2((sc)->res[0], (o), (v)); \ 	VIRTIO_MMIO_NOTE(sc->platform, (o))
+value|do {								\ 	bus_write_2((sc)->res[0], (o), (v));			\ 	if (sc->platform != NULL)				\ 		VIRTIO_MMIO_NOTE(sc->platform, (o), (v));	\ } while (0)
 end_define
 
 begin_define
@@ -647,7 +647,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|bus_write_4((sc)->res[0], (o), (v)); \ 	VIRTIO_MMIO_NOTE(sc->platform, (o))
+value|do {								\ 	bus_write_4((sc)->res[0], (o), (v));			\ 	if (sc->platform != NULL)				\ 		VIRTIO_MMIO_NOTE(sc->platform, (o), (v));	\ } while (0)
 end_define
 
 begin_define
@@ -960,6 +960,15 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|platform
+operator|!=
+name|NULL
+condition|)
+block|{
 name|err
 operator|=
 name|VIRTIO_MMIO_SETUP_INTR
@@ -990,6 +999,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 name|rid
 operator|=
@@ -2038,13 +2048,13 @@ name|virtqueue
 modifier|*
 name|vq
 decl_stmt|;
+name|uint32_t
+name|size
+decl_stmt|;
 name|int
 name|idx
 decl_stmt|,
 name|error
-decl_stmt|;
-name|uint16_t
-name|size
 decl_stmt|;
 name|sc
 operator|=
@@ -2143,6 +2153,15 @@ index|[
 name|idx
 index|]
 expr_stmt|;
+name|vtmmio_write_config_4
+argument_list|(
+name|sc
+argument_list|,
+name|VIRTIO_MMIO_QUEUE_SEL
+argument_list|,
+name|idx
+argument_list|)
+expr_stmt|;
 name|vtmmio_select_virtqueue
 argument_list|(
 name|sc
@@ -2152,11 +2171,11 @@ argument_list|)
 expr_stmt|;
 name|size
 operator|=
-name|vtmmio_read_config_2
+name|vtmmio_read_config_4
 argument_list|(
 name|sc
 argument_list|,
-name|VIRTIO_MMIO_QUEUE_NUM
+name|VIRTIO_MMIO_QUEUE_NUM_MAX
 argument_list|)
 expr_stmt|;
 name|error
@@ -2197,6 +2216,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|vtmmio_write_config_4
+argument_list|(
+name|sc
+argument_list|,
+name|VIRTIO_MMIO_QUEUE_NUM
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+name|vtmmio_write_config_4
+argument_list|(
+name|sc
+argument_list|,
+name|VIRTIO_MMIO_QUEUE_ALIGN
+argument_list|,
+name|VIRTIO_MMIO_VRING_ALIGN
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -2432,7 +2469,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|vtmmio_write_config_2
+name|vtmmio_write_config_4
 argument_list|(
 name|sc
 argument_list|,
@@ -2467,7 +2504,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|vtmmio_read_config_1
+name|vtmmio_read_config_4
 argument_list|(
 name|sc
 argument_list|,
@@ -2515,7 +2552,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|vtmmio_write_config_1
+name|vtmmio_write_config_4
 argument_list|(
 name|sc
 argument_list|,
@@ -2597,6 +2634,9 @@ operator|-=
 name|size
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|ALLOW_WORD_ALIGNED_ACCESS
 if|if
 condition|(
 name|length
@@ -2651,6 +2691,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 name|size
 operator|=
@@ -2741,6 +2783,9 @@ operator|-=
 name|size
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|ALLOW_WORD_ALIGNED_ACCESS
 if|if
 condition|(
 name|length
@@ -2795,6 +2840,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 name|size
 operator|=
@@ -3069,11 +3116,11 @@ argument_list|)
 expr_stmt|;
 name|size
 operator|=
-name|vtmmio_read_config_2
+name|vtmmio_read_config_4
 argument_list|(
 name|sc
 argument_list|,
-name|VIRTIO_MMIO_QUEUE_NUM
+name|VIRTIO_MMIO_QUEUE_NUM_MAX
 argument_list|)
 expr_stmt|;
 name|error
@@ -3346,7 +3393,7 @@ name|int
 name|idx
 parameter_list|)
 block|{
-name|vtmmio_write_config_2
+name|vtmmio_write_config_4
 argument_list|(
 name|sc
 argument_list|,
@@ -3383,6 +3430,9 @@ name|virtqueue
 modifier|*
 name|vq
 decl_stmt|;
+name|uint32_t
+name|status
+decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
@@ -3390,7 +3440,54 @@ name|sc
 operator|=
 name|arg
 expr_stmt|;
+name|status
+operator|=
+name|vtmmio_read_config_4
+argument_list|(
+name|sc
+argument_list|,
+name|VIRTIO_MMIO_INTERRUPT_STATUS
+argument_list|)
+expr_stmt|;
+name|vtmmio_write_config_4
+argument_list|(
+name|sc
+argument_list|,
+name|VIRTIO_MMIO_INTERRUPT_ACK
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+comment|/* The config changed */
+if|if
+condition|(
+name|status
+operator|&
+name|VIRTIO_MMIO_INT_CONFIG
+condition|)
+if|if
+condition|(
+name|sc
+operator|->
+name|vtmmio_child_dev
+operator|!=
+name|NULL
+condition|)
+name|VIRTIO_CONFIG_CHANGE
+argument_list|(
+name|sc
+operator|->
+name|vtmmio_child_dev
+argument_list|)
+expr_stmt|;
 comment|/* Notify all virtqueues. */
+if|if
+condition|(
+name|status
+operator|&
+name|VIRTIO_MMIO_INT_VRING
+condition|)
+block|{
 for|for
 control|(
 name|idx
@@ -3417,6 +3514,15 @@ index|[
 name|idx
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|vqx
+operator|->
+name|vtv_no_intr
+operator|==
+literal|0
+condition|)
+block|{
 name|vq
 operator|=
 name|vqx
@@ -3429,7 +3535,8 @@ name|vq
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
+block|}
+block|}
 block|}
 end_function
 

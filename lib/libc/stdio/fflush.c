@@ -383,6 +383,7 @@ name|fp
 operator|->
 name|_p
 condition|)
+block|{
 comment|/* Some was written. */
 name|memmove
 argument_list|(
@@ -423,6 +424,7 @@ name|_w
 operator|-=
 name|n
 expr_stmt|;
+block|}
 name|fp
 operator|->
 name|_flags

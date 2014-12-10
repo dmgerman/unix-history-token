@@ -280,6 +280,39 @@ operator|&
 name|pol
 argument_list|)
 expr_stmt|;
+comment|/* Remap the IRQ if it is mapped to a different interrupt vector. */
+if|if
+condition|(
+name|intr
+operator|->
+name|SourceIrq
+operator|!=
+name|intr
+operator|->
+name|GlobalIrq
+operator|&&
+name|intr
+operator|->
+name|GlobalIrq
+operator|>
+literal|15
+operator|&&
+name|intr
+operator|->
+name|SourceIrq
+operator|==
+name|AcpiGbl_FADT
+operator|.
+name|SciInterrupt
+condition|)
+comment|/* 		 * If the SCI is remapped to a non-ISA global interrupt, 		 * then override the vector we use to setup. 		 */
+name|acpi_OverrideInterruptLevel
+argument_list|(
+name|intr
+operator|->
+name|GlobalIrq
+argument_list|)
+expr_stmt|;
 comment|/* Register the IRQ with the polarity and trigger mode found. */
 name|xen_register_pirq
 argument_list|(
