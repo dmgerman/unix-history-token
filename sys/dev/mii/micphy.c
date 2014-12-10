@@ -191,7 +191,7 @@ name|PS_TO_REG
 parameter_list|(
 name|p
 parameter_list|)
-value|(p / 200)
+value|((p) / 200)
 end_define
 
 begin_function_decl
