@@ -168,39 +168,6 @@ block|{
 name|device_t
 name|child
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-comment|/* Initialize grant table before any Xen specific device is attached */
-name|error
-operator|=
-name|gnttab_init
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"error initializing grant table: %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 comment|/* 	 * Let our child drivers identify any child devices that they 	 * can find.  Once that is done attach any devices that we 	 * found. 	 */
 name|bus_generic_probe
 argument_list|(
