@@ -16766,7 +16766,7 @@ name|NULL
 expr_stmt|;
 name|result
 operator|=
-name|dns_resolver_createfetch2
+name|dns_resolver_createfetch3
 argument_list|(
 name|client
 operator|->
@@ -16797,6 +16797,10 @@ operator|->
 name|query
 operator|.
 name|fetchoptions
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|,
 name|client
 operator|->
