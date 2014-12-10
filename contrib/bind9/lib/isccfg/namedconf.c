@@ -7848,6 +7848,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"max-recursion-depth"
+block|,
+operator|&
+name|cfg_type_uint32
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"max-udp-size"
 block|,
 operator|&
