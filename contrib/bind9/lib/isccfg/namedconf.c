@@ -4,10 +4,6 @@ comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id$ */
-end_comment
-
-begin_comment
 comment|/*! \file */
 end_comment
 
@@ -7387,6 +7383,24 @@ block|}
 block|,
 block|{
 literal|"max-ncache-ttl"
+block|,
+operator|&
+name|cfg_type_uint32
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"max-recursion-depth"
+block|,
+operator|&
+name|cfg_type_uint32
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"max-recursion-queries"
 block|,
 operator|&
 name|cfg_type_uint32
