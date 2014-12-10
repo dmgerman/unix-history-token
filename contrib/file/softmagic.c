@@ -345,6 +345,13 @@ parameter_list|)
 value|((n)< (o) || (i)> ((n) - (o)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_RECURSION_LEVEL
+value|10
+end_define
+
 begin_comment
 comment|/*  * softmagic - lookup one file in parsed, in-memory copy of database  * Passed the name and FILE * of one file to be typed.  */
 end_comment
@@ -5490,7 +5497,7 @@ if|if
 condition|(
 name|recursion_level
 operator|>=
-literal|20
+name|MAX_RECURSION_LEVEL
 condition|)
 block|{
 name|file_error
