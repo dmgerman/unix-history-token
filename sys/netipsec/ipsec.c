@@ -2230,6 +2230,11 @@ name|sp
 operator|=
 name|NULL
 expr_stmt|;
+operator|*
+name|error
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|key_havesp
