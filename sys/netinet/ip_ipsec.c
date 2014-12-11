@@ -756,11 +756,6 @@ argument_list|,
 name|sp
 operator|->
 name|req
-argument_list|,
-operator|*
-name|flags
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
