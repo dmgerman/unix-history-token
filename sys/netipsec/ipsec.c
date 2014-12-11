@@ -6565,6 +6565,10 @@ comment|/* Valid. */
 block|}
 end_function
 
+begin_comment
+comment|/*  * Non zero return value means security policy DISCARD or policy violation.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -6664,9 +6668,9 @@ else|else
 block|{
 name|result
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-comment|/* XXX Should be panic? 				 * -> No, there may be error. */
+comment|/* treat errors as policy violation */
 block|}
 return|return
 operator|(
