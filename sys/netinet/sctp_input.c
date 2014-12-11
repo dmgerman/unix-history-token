@@ -29017,11 +29017,6 @@ name|inp
 argument_list|)
 condition|)
 block|{
-name|IPSECSTAT_INC
-argument_list|(
-name|ips_in_polvio
-argument_list|)
-expr_stmt|;
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_hdrops
@@ -29055,11 +29050,6 @@ name|inp
 argument_list|)
 condition|)
 block|{
-name|IPSEC6STAT_INC
-argument_list|(
-name|ips_in_polvio
-argument_list|)
-expr_stmt|;
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_hdrops

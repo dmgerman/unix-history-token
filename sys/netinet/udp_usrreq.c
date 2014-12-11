@@ -1335,11 +1335,6 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-name|IPSECSTAT_INC
-argument_list|(
-name|ips_in_polvio
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 ifdef|#

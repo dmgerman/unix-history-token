@@ -4513,11 +4513,6 @@ name|inp
 argument_list|)
 condition|)
 block|{
-name|IPSEC6STAT_INC
-argument_list|(
-name|ips_in_polvio
-argument_list|)
-expr_stmt|;
 goto|goto
 name|dropunlock
 goto|;
@@ -4538,11 +4533,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|IPSECSTAT_INC
-argument_list|(
-name|ips_in_polvio
-argument_list|)
-expr_stmt|;
 goto|goto
 name|dropunlock
 goto|;
