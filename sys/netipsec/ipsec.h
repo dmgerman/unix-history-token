@@ -1314,8 +1314,6 @@ modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
-name|u_int
-parameter_list|,
 name|int
 modifier|*
 parameter_list|,
@@ -1338,8 +1336,6 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|u_int
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 modifier|*

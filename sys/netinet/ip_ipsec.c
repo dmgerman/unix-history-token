@@ -358,8 +358,6 @@ name|m
 argument_list|,
 name|IPSEC_DIR_INBOUND
 argument_list|,
-name|IP_FORWARDING
-argument_list|,
 operator|&
 name|error
 argument_list|)
@@ -459,8 +457,6 @@ argument_list|(
 name|m
 argument_list|,
 name|IPSEC_DIR_INBOUND
-argument_list|,
-name|IP_FORWARDING
 argument_list|,
 operator|&
 name|error
@@ -582,10 +578,6 @@ name|inp
 parameter_list|,
 name|int
 modifier|*
-name|flags
-parameter_list|,
-name|int
-modifier|*
 name|error
 parameter_list|)
 block|{
@@ -629,9 +621,6 @@ operator|*
 name|m
 argument_list|,
 name|IPSEC_DIR_OUTBOUND
-argument_list|,
-operator|*
-name|flags
 argument_list|,
 name|error
 argument_list|,

@@ -2174,9 +2174,6 @@ name|u_int
 name|dir
 parameter_list|,
 name|int
-name|flag
-parameter_list|,
-name|int
 modifier|*
 name|error
 parameter_list|)
@@ -2252,15 +2249,7 @@ argument_list|,
 operator|&
 name|spidx
 argument_list|,
-operator|(
-name|flag
-operator|&
-name|IP_FORWARDING
-operator|)
-condition|?
 literal|0
-else|:
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2274,13 +2263,11 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: setpidx failed, dir %u flag %u\n"
+literal|"%s: setpidx failed, dir %u\n"
 operator|,
 name|__func__
 operator|,
 name|dir
-operator|,
-name|flag
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2352,9 +2339,6 @@ parameter_list|,
 name|u_int
 name|dir
 parameter_list|,
-name|u_int
-name|flag
-parameter_list|,
 name|int
 modifier|*
 name|error
@@ -2388,8 +2372,6 @@ argument_list|(
 name|m
 argument_list|,
 name|dir
-argument_list|,
-name|flag
 argument_list|,
 name|error
 argument_list|)
@@ -6616,7 +6598,7 @@ literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get SP for this packet. 	 * When we are called from ip_forward(), we call 	 * ipsec_getpolicybyaddr() with IP_FORWARDING flag. 	 */
+comment|/* Get SP for this packet. */
 if|if
 condition|(
 name|inp
@@ -6630,8 +6612,6 @@ argument_list|(
 name|m
 argument_list|,
 name|IPSEC_DIR_INBOUND
-argument_list|,
-name|IP_FORWARDING
 argument_list|,
 operator|&
 name|error
@@ -7087,7 +7067,7 @@ literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Get SP for this packet. 	 * When we are called from ip_forward(), we call 	 * ipsec_getpolicybyaddr() with IP_FORWARDING flag. 	 */
+comment|/* Get SP for this packet. */
 if|if
 condition|(
 name|inp
@@ -7101,8 +7081,6 @@ argument_list|(
 name|m
 argument_list|,
 name|dir
-argument_list|,
-name|IP_FORWARDING
 argument_list|,
 operator|&
 name|error

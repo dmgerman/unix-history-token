@@ -1108,7 +1108,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|IPSEC
-comment|/* 	 * IPSec checking which handles several cases. 	 * FAST IPSEC: We re-injected the packet. 	 */
+comment|/* 	 * IPSec checking which handles several cases. 	 * FAST IPSEC: We re-injected the packet. 	 * XXX: need scope argument. 	 */
 switch|switch
 condition|(
 name|ip6_ipsec_output
@@ -1119,13 +1119,7 @@ argument_list|,
 name|inp
 argument_list|,
 operator|&
-name|flags
-argument_list|,
-operator|&
 name|error
-argument_list|,
-operator|&
-name|ifp
 argument_list|)
 condition|)
 block|{
