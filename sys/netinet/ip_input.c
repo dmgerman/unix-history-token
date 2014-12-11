@@ -3369,7 +3369,13 @@ condition|(
 name|ip_ipsec_input
 argument_list|(
 name|m
+argument_list|,
+name|ip
+operator|->
+name|ip_p
 argument_list|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|bad
