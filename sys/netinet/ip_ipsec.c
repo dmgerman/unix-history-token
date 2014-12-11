@@ -329,7 +329,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if this packet has an active SA and needs to be dropped instead  * of forwarded.  * Called from ip_input().  * 1 = drop packet, 0 = forward packet.  */
+comment|/*  * Check if this packet has an active SA and needs to be dropped instead  * of forwarded.  * Called from ip_forward().  * 1 = drop packet, 0 = forward packet.  */
 end_comment
 
 begin_function
@@ -343,16 +343,6 @@ name|m
 parameter_list|)
 block|{
 name|struct
-name|m_tag
-modifier|*
-name|mtag
-decl_stmt|;
-name|struct
-name|tdb_ident
-modifier|*
-name|tdbi
-decl_stmt|;
-name|struct
 name|secpolicy
 modifier|*
 name|sp
@@ -360,49 +350,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|mtag
-operator|=
-name|m_tag_find
-argument_list|(
-name|m
-argument_list|,
-name|PACKET_TAG_IPSEC_IN_DONE
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mtag
-operator|!=
-name|NULL
-condition|)
-block|{
-name|tdbi
-operator|=
-operator|(
-expr|struct
-name|tdb_ident
-operator|*
-operator|)
-operator|(
-name|mtag
-operator|+
-literal|1
-operator|)
-expr_stmt|;
-name|sp
-operator|=
-name|ipsec_getpolicy
-argument_list|(
-name|tdbi
-argument_list|,
-name|IPSEC_DIR_INBOUND
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|sp
 operator|=
 name|ipsec_getpolicybyaddr
@@ -417,29 +364,14 @@ operator|&
 name|error
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sp
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* NB: can happen if error */
-comment|/*XXX error stat???*/
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"ip_input: no SP for forwarding\n"
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/*XXX*/
-return|return
-literal|1
-return|;
-block|}
-comment|/* 	 * Check security policy against packet attributes. 	 */
+comment|/* 		 * Check security policy against packet attributes. 		 */
 name|error
 operator|=
 name|ipsec_in_reject
@@ -455,22 +387,22 @@ operator|&
 name|sp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
-condition|)
-block|{
-name|IPSTAT_INC
-argument_list|(
-name|ips_cantforward
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-return|return
+operator|!=
 literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
