@@ -26,7 +26,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: vasprintf.c,v 1.12 2014/05/14 23:09:21 christos Exp $"
+literal|"@(#)$File: vasprintf.c,v 1.13 2014/12/04 15:56:46 christos Exp $"
 argument_list|)
 end_macro
 
@@ -2276,6 +2276,17 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|WIN32
+name|s
+operator|.
+name|vargs
+operator|=
+name|vargs
+expr_stmt|;
+else|#
+directive|else
 name|memcpy
 argument_list|(
 operator|&
@@ -2294,6 +2305,9 @@ name|va_args
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* WIN32 */
 endif|#
 directive|endif
 comment|/* __va_copy */
