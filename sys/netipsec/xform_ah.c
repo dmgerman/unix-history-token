@@ -3556,8 +3556,6 @@ argument_list|,
 name|skip
 argument_list|,
 name|protoff
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3580,8 +3578,6 @@ argument_list|,
 name|skip
 argument_list|,
 name|protoff
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
