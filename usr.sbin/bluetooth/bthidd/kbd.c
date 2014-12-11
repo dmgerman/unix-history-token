@@ -873,17 +873,13 @@ literal|1
 block|,
 comment|/* Unassigned */
 comment|/* Keyboard Lang 1              90 */
-name|NOBREAK
-operator||
-literal|0xF2
+literal|0x71
 block|,
-comment|/* None */
+comment|/* eisu */
 comment|/* Keyboard Lang 2              91 */
-name|NOBREAK
-operator||
-literal|0xF1
+literal|0x72
 block|,
-comment|/* None */
+comment|/* kana */
 comment|/* Keyboard Lang 3              92 */
 literal|0x78
 block|,

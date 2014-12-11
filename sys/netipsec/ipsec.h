@@ -1314,8 +1314,6 @@ modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
-name|u_int
-parameter_list|,
 name|int
 modifier|*
 parameter_list|,
@@ -1338,8 +1336,6 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|u_int
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 modifier|*
@@ -1753,11 +1749,6 @@ name|skip
 parameter_list|,
 name|int
 name|protoff
-parameter_list|,
-name|struct
-name|m_tag
-modifier|*
-name|mt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1774,10 +1765,6 @@ parameter_list|,
 name|struct
 name|ipsecrequest
 modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -227,11 +227,6 @@ name|skip
 parameter_list|,
 name|int
 name|protoff
-parameter_list|,
-name|struct
-name|m_tag
-modifier|*
-name|mt
 parameter_list|)
 function_decl|;
 end_function_decl

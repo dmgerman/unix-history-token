@@ -1352,11 +1352,6 @@ name|skip
 parameter_list|,
 name|int
 name|protoff
-parameter_list|,
-name|struct
-name|m_tag
-modifier|*
-name|mt
 parameter_list|)
 block|{
 name|int
@@ -2160,13 +2155,9 @@ operator|=
 name|IPPROTO_IPIP
 expr_stmt|;
 block|}
-comment|/* 	 * Record what we've done to the packet (under what SA it was 	 * processed). If we've been passed an mtag, it means the packet 	 * was already processed by an ethernet/crypto combo card and 	 * thus has a tag attached with all the right information, but 	 * with a PACKET_TAG_IPSEC_IN_CRYPTO_DONE as opposed to 	 * PACKET_TAG_IPSEC_IN_DONE type; in that case, just change the type. 	 */
+comment|/* 	 * Record what we've done to the packet (under what SA it was 	 * processed). 	 */
 if|if
 condition|(
-name|mt
-operator|==
-name|NULL
-operator|&&
 name|sproto
 operator|!=
 name|IPPROTO_IPCOMP
@@ -2290,22 +2281,6 @@ argument_list|,
 name|mtag
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|mt
-operator|!=
-name|NULL
-condition|)
-block|{
-name|mt
-operator|->
-name|m_tag_id
-operator|=
-name|PACKET_TAG_IPSEC_IN_DONE
-expr_stmt|;
-comment|/* XXX do we need to mark m_flags??? */
 block|}
 name|key_sa_recordxfer
 argument_list|(
@@ -2840,11 +2815,6 @@ name|skip
 parameter_list|,
 name|int
 name|protoff
-parameter_list|,
-name|struct
-name|m_tag
-modifier|*
-name|mt
 parameter_list|)
 block|{
 name|int
@@ -3618,13 +3588,9 @@ name|IPPROTO_IPV6
 expr_stmt|;
 comment|/* for correct BPF processing */
 block|}
-comment|/* 	 * Record what we've done to the packet (under what SA it was 	 * processed). If we've been passed an mtag, it means the packet 	 * was already processed by an ethernet/crypto combo card and 	 * thus has a tag attached with all the right information, but 	 * with a PACKET_TAG_IPSEC_IN_CRYPTO_DONE as opposed to 	 * PACKET_TAG_IPSEC_IN_DONE type; in that case, just change the type. 	 */
+comment|/* 	 * Record what we've done to the packet (under what SA it was 	 * processed). 	 */
 if|if
 condition|(
-name|mt
-operator|==
-name|NULL
-operator|&&
 name|sproto
 operator|!=
 name|IPPROTO_IPCOMP
@@ -3746,22 +3712,6 @@ argument_list|,
 name|mtag
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|mt
-operator|!=
-name|NULL
-condition|)
-name|mt
-operator|->
-name|m_tag_id
-operator|=
-name|PACKET_TAG_IPSEC_IN_DONE
-expr_stmt|;
-comment|/* XXX do we need to mark m_flags??? */
 block|}
 name|key_sa_recordxfer
 argument_list|(

@@ -581,8 +581,6 @@ name|m
 argument_list|,
 name|IPSEC_DIR_OUTBOUND
 argument_list|,
-name|IP_FORWARDING
-argument_list|,
 operator|&
 name|error
 argument_list|)

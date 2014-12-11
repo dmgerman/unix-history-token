@@ -1841,9 +1841,6 @@ argument_list|,
 name|inp
 argument_list|,
 operator|&
-name|flags
-argument_list|,
-operator|&
 name|error
 argument_list|)
 condition|)

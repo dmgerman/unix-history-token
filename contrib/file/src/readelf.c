@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: readelf.c,v 1.103 2014/05/02 02:25:10 christos Exp $"
+literal|"@(#)$File: readelf.c,v 1.111 2014/12/09 02:47:45 christos Exp $"
 argument_list|)
 end_macro
 
@@ -272,14 +272,21 @@ begin_define
 define|#
 directive|define
 name|MAX_PHNUM
-value|256
+value|128
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAX_SHNUM
-value|1024
+value|32768
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIZE_UNKNOWN
+value|((off_t)-1)
 end_define
 
 begin_function
@@ -1195,6 +1202,10 @@ name|size
 expr_stmt|;
 if|if
 condition|(
+name|fsize
+operator|!=
+name|SIZE_UNKNOWN
+operator|&&
 name|xph_offset
 operator|>
 name|fsize
@@ -4332,6 +4343,10 @@ break|break;
 default|default:
 if|if
 condition|(
+name|fsize
+operator|!=
+name|SIZE_UNKNOWN
+operator|&&
 name|xsh_offset
 operator|>
 name|fsize
@@ -5312,6 +5327,10 @@ break|break;
 default|default:
 if|if
 condition|(
+name|fsize
+operator|!=
+name|SIZE_UNKNOWN
+operator|&&
 name|xph_offset
 operator|>
 name|fsize
@@ -5334,12 +5353,20 @@ case|:
 if|if
 condition|(
 operator|(
+operator|(
 name|align
 operator|=
 name|xph_align
 operator|)
 operator|&
 literal|0x80000000UL
+operator|)
+operator|!=
+literal|0
+operator|||
+name|align
+operator|<
+literal|4
 condition|)
 block|{
 if|if
@@ -5700,11 +5727,31 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|S_ISREG
+argument_list|(
+name|st
+operator|.
+name|st_mode
+argument_list|)
+operator|||
+name|st
+operator|.
+name|st_size
+operator|!=
+literal|0
+condition|)
 name|fsize
 operator|=
 name|st
 operator|.
 name|st_size
+expr_stmt|;
+else|else
+name|fsize
+operator|=
+name|SIZE_UNKNOWN
 expr_stmt|;
 name|clazz
 operator|=

@@ -2174,9 +2174,6 @@ name|u_int
 name|dir
 parameter_list|,
 name|int
-name|flag
-parameter_list|,
-name|int
 modifier|*
 name|error
 parameter_list|)
@@ -2233,6 +2230,11 @@ name|sp
 operator|=
 name|NULL
 expr_stmt|;
+operator|*
+name|error
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|key_havesp
@@ -2252,15 +2254,7 @@ argument_list|,
 operator|&
 name|spidx
 argument_list|,
-operator|(
-name|flag
-operator|&
-name|IP_FORWARDING
-operator|)
-condition|?
 literal|0
-else|:
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2274,13 +2268,11 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: setpidx failed, dir %u flag %u\n"
+literal|"%s: setpidx failed, dir %u\n"
 operator|,
 name|__func__
 operator|,
 name|dir
-operator|,
-name|flag
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2352,9 +2344,6 @@ parameter_list|,
 name|u_int
 name|dir
 parameter_list|,
-name|u_int
-name|flag
-parameter_list|,
 name|int
 modifier|*
 name|error
@@ -2388,8 +2377,6 @@ argument_list|(
 name|m
 argument_list|,
 name|dir
-argument_list|,
-name|flag
 argument_list|,
 name|error
 argument_list|)
@@ -6578,6 +6565,10 @@ comment|/* Valid. */
 block|}
 end_function
 
+begin_comment
+comment|/*  * Non zero return value means security policy DISCARD or policy violation.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -6616,7 +6607,7 @@ literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get SP for this packet. 	 * When we are called from ip_forward(), we call 	 * ipsec_getpolicybyaddr() with IP_FORWARDING flag. 	 */
+comment|/* Get SP for this packet. */
 if|if
 condition|(
 name|inp
@@ -6630,8 +6621,6 @@ argument_list|(
 name|m
 argument_list|,
 name|IPSEC_DIR_INBOUND
-argument_list|,
-name|IP_FORWARDING
 argument_list|,
 operator|&
 name|error
@@ -6679,9 +6668,9 @@ else|else
 block|{
 name|result
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-comment|/* XXX Should be panic? 				 * -> No, there may be error. */
+comment|/* treat errors as policy violation */
 block|}
 return|return
 operator|(
@@ -7087,7 +7076,7 @@ literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Get SP for this packet. 	 * When we are called from ip_forward(), we call 	 * ipsec_getpolicybyaddr() with IP_FORWARDING flag. 	 */
+comment|/* Get SP for this packet. */
 if|if
 condition|(
 name|inp
@@ -7101,8 +7090,6 @@ argument_list|(
 name|m
 argument_list|,
 name|dir
-argument_list|,
-name|IP_FORWARDING
 argument_list|,
 operator|&
 name|error
