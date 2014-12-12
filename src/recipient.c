@@ -2642,8 +2642,11 @@ name|new
 operator|->
 name|q_status
 argument_list|,
-literal|"550 UID %d is an unknown user: cannot mail to programs"
+literal|"550 UID %ld is an unknown user: cannot mail to programs"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|new
 operator|->
 name|q_alias
@@ -3423,8 +3426,11 @@ name|new
 operator|->
 name|q_status
 argument_list|,
-literal|"550 UID %d is an unknown user: cannot mail to files"
+literal|"550 UID %ld is an unknown user: cannot mail to files"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|new
 operator|->
 name|q_alias
@@ -4646,6 +4652,9 @@ expr_stmt|;
 if|#
 directive|if
 name|HESIOD
+operator|&&
+operator|!
+name|HESIOD_ALLOW_NUMERIC_LOGIN
 comment|/* DEC Hesiod getpwnam accepts numeric strings -- short circuit it */
 for|for
 control|(
@@ -4706,7 +4715,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* HESIOD */
+comment|/* HESIOD&& !HESIOD_ALLOW_NUMERIC_LOGIN */
 comment|/* look up this login name using fast path */
 name|status
 operator|=
@@ -5613,16 +5622,16 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"   ruid=%d euid=%d\n"
+literal|"   ruid=%ld euid=%ld\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -5665,16 +5674,16 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"include: old uid = %d/%d\n"
+literal|"include: old uid = %ld/%ld\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -5785,16 +5794,16 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"include: not safe (euid=%d, RunAsUid=%d)\n"
+literal|"include: not safe (euid=%ld, RunAsUid=%ld)\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|RunAsUid
 argument_list|)
@@ -5915,10 +5924,13 @@ name|EAGAIN
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"include: initgroups(%s, %d) failed"
+literal|"include: initgroups(%s, %ld) failed"
 argument_list|,
 name|user
 argument_list|,
+operator|(
+name|long
+operator|)
 name|gid
 argument_list|)
 expr_stmt|;
@@ -5990,8 +6002,11 @@ name|EAGAIN
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"setgid(%d) failure"
+literal|"setgid(%ld) failure"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|gid
 argument_list|)
 expr_stmt|;
@@ -6027,18 +6042,21 @@ name|EAGAIN
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"seteuid(%d) failure (real=%d, eff=%d)"
+literal|"seteuid(%ld) failure (real=%ld, eff=%ld)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|uid
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -6074,18 +6092,21 @@ name|EAGAIN
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"setreuid(0, %d) failure (real=%d, eff=%d)"
+literal|"setreuid(0, %ld) failure (real=%ld, eff=%ld)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|uid
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -6114,16 +6135,16 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"include: new uid = %d/%d\n"
+literal|"include: new uid = %ld/%ld\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -6468,10 +6489,10 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"include: not safe (uid=%d): %s\n"
+literal|"include: not safe (uid=%ld): %s\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|uid
 argument_list|,
@@ -6615,16 +6636,16 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"!seteuid(0) failure (real=%d, eff=%d)"
+literal|"!seteuid(0) failure (real=%ld, eff=%ld)"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -6647,16 +6668,16 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"!setreuid(-1, 0) failure (real=%d, eff=%d)"
+literal|"!setreuid(-1, 0) failure (real=%ld, eff=%ld)"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -6675,21 +6696,21 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"!setreuid(%d, 0) failure (real=%d, eff=%d)"
+literal|"!setreuid(%ld, 0) failure (real=%ld, eff=%ld)"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|RealUid
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -6710,21 +6731,21 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"!setgid(%d) failure (real=%d eff=%d)"
+literal|"!setgid(%ld) failure (real=%ld eff=%ld)"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|savedgid
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getgid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getegid
 argument_list|()
@@ -6745,16 +6766,16 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"include: reset uid = %d/%d\n"
+literal|"include: reset uid = %ld/%ld\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()

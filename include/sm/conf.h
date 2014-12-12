@@ -3228,6 +3228,34 @@ begin_comment
 comment|/* ! HASGETUSERSHELL */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|SOLARIS
+operator|<
+literal|21200
+end_if
+
+begin_define
+define|#
+directive|define
+name|SIGWAIT_TAKES_1_ARG
+value|1
+end_define
+
+begin_comment
+comment|/* S12 moves to UNIX V7 semantic */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOLARIS< 21200 */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -12953,6 +12981,13 @@ name|SOCKOPT_LEN_T
 value|size_t
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIGWAIT_TAKES_1_ARG
+value|1
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18864,6 +18899,28 @@ end_endif
 
 begin_comment
 comment|/* ! FD_SETSIZE */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIGWAIT_TAKES_1_ARG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SIGWAIT_TAKES_1_ARG
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! SIGWAIT_TAKES_1_ARG */
 end_comment
 
 begin_comment

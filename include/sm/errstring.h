@@ -255,24 +255,46 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E_LDAPBASE
+name|E_LDAPREALBASE
 value|(E_PSEUDOBASE + 70)
 end_define
 
 begin_comment
-comment|/* base for LDAP errors */
+comment|/* start of range for LDAP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_LDAPBASE
+value|(E_LDAPREALBASE + E_LDAP_SHIM)
+end_define
+
+begin_comment
+comment|/* LDAP error zero */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|E_LDAPURLBASE
-value|(E_PSEUDOBASE + 200)
+value|(E_PSEUDOBASE + 230)
 end_define
 
 begin_comment
 comment|/* base for LDAP URL errors */
 end_comment
+
+begin_comment
+comment|/* **  OpenLDAP uses small negative errors for internal (non-protocol) **  errors.  We expect them to be between zero and -E_LDAP_SHIM **  (and then offset by E_LDAPBASE). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_LDAP_SHIM
+value|30
+end_define
 
 begin_comment
 comment|/* libsmdb */

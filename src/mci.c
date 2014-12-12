@@ -1167,6 +1167,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* PIPELINING */
+name|mci
+operator|->
+name|mci_flags
+operator|&=
+operator|~
+name|MCIF_NOTSTICKY
+expr_stmt|;
 if|if
 condition|(
 name|mci

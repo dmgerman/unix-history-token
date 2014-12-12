@@ -2000,9 +2000,6 @@ expr_stmt|;
 break|break;
 if|#
 directive|if
-name|_FFR_DAEMON_NETUNIX
-if|#
-directive|if
 name|NETUNIX
 case|case
 name|AF_UNIX
@@ -2028,9 +2025,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* NETUNIX */
-endif|#
-directive|endif
-comment|/* _FFR_DAEMON_NETUNIX */
 if|#
 directive|if
 name|NETINET
@@ -3220,6 +3214,64 @@ name|false
 expr_stmt|;
 if|#
 directive|if
+name|_FFR_XCNCT
+name|t
+operator|=
+name|xconnect
+argument_list|(
+name|inchannel
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|<=
+literal|0
+condition|)
+block|{
+name|clrbitn
+argument_list|(
+name|D_XCNCT
+argument_list|,
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_flags
+argument_list|)
+expr_stmt|;
+name|clrbitn
+argument_list|(
+name|D_XCNCT_M
+argument_list|,
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_flags
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|setbitn
+argument_list|(
+name|t
+argument_list|,
+name|Daemons
+index|[
+name|curdaemon
+index|]
+operator|.
+name|d_flags
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_XCNCT */
+if|#
+directive|if
 name|XLA
 if|if
 condition|(
@@ -4107,9 +4159,6 @@ condition|)
 block|{
 if|#
 directive|if
-name|_FFR_DAEMON_NETUNIX
-if|#
-directive|if
 name|NETUNIX
 if|if
 condition|(
@@ -4221,9 +4270,6 @@ block|}
 endif|#
 directive|endif
 comment|/* NETUNIX */
-endif|#
-directive|endif
-comment|/* _FFR_DOMAIN_NETUNIX */
 name|d
 operator|->
 name|d_socket
@@ -4355,15 +4401,13 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|SM_FD_SETSIZE
-operator|>
-literal|0
-operator|&&
+operator|!
+name|SM_FD_OK_SELECT
+argument_list|(
 name|d
 operator|->
 name|d_socket
-operator|>=
-name|SM_FD_SETSIZE
+argument_list|)
 condition|)
 block|{
 name|save_errno
@@ -4676,9 +4720,6 @@ operator|.
 name|sa_family
 condition|)
 block|{
-if|#
-directive|if
-name|_FFR_DAEMON_NETUNIX
 ifdef|#
 directive|ifdef
 name|NETUNIX
@@ -4700,9 +4741,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* NETUNIX */
-endif|#
-directive|endif
-comment|/* _FFR_DAEMON_NETUNIX */
 if|#
 directive|if
 name|NETINET
@@ -5782,6 +5820,15 @@ case|:
 case|case
 name|SM_FORK
 case|:
+if|#
+directive|if
+name|_FFR_PROXY
+case|case
+name|SM_PROXY_REQ
+case|:
+endif|#
+directive|endif
+comment|/* _FFR_PROXY */
 name|d
 operator|->
 name|d_dm
@@ -5857,9 +5904,6 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_DAEMON_NETUNIX
 ifdef|#
 directive|ifdef
 name|NETUNIX
@@ -5897,9 +5941,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NETUNIX */
-endif|#
-directive|endif
-comment|/* _FFR_DAEMON_NETUNIX */
 if|#
 directive|if
 name|NETINET
@@ -6341,9 +6382,6 @@ condition|)
 block|{
 if|#
 directive|if
-name|_FFR_DAEMON_NETUNIX
-if|#
-directive|if
 name|NETUNIX
 case|case
 name|AF_UNIX
@@ -6373,10 +6411,13 @@ name|ENAMETOOLONG
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"setsockaddroptions: domain socket name too long: %s> %d"
+literal|"setsockaddroptions: domain socket name too long: %s> %ld"
 argument_list|,
 name|addr
 argument_list|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 name|d
@@ -6456,9 +6497,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* NETUNIX */
-endif|#
-directive|endif
-comment|/* _FFR_DAEMON_NETUNIX */
 if|#
 directive|if
 name|NETINET
@@ -7886,9 +7924,6 @@ directive|endif
 comment|/* NETINET6 */
 if|#
 directive|if
-name|_FFR_DAEMON_NETUNIX
-if|#
-directive|if
 name|NETUNIX
 if|if
 condition|(
@@ -7921,9 +7956,6 @@ block|}
 endif|#
 directive|endif
 comment|/* NETUNIX */
-endif|#
-directive|endif
-comment|/* _FFR_DAEMON_NETUNIX */
 if|if
 condition|(
 name|tTd
@@ -8039,7 +8071,7 @@ name|MILTER
 end_if
 
 begin_comment
-comment|/* **  SETUP_DAEMON_FILTERS -- Parse per-socket filters ** **	Parameters: **		none ** **	Returns: **		none */
+comment|/* **  SETUP_DAEMON_MILTERS -- Parse per-socket filters ** **	Parameters: **		none ** **	Returns: **		none */
 end_comment
 
 begin_function
@@ -12208,9 +12240,6 @@ literal|1
 expr_stmt|;
 if|#
 directive|if
-name|_FFR_DAEMON_NETUNIX
-if|#
-directive|if
 name|NETUNIX
 comment|/* Remove named sockets */
 if|if
@@ -12338,9 +12367,6 @@ block|}
 endif|#
 directive|endif
 comment|/* NETUNIX */
-endif|#
-directive|endif
-comment|/* _FFR_DAEMON_NETUNIX */
 block|}
 block|}
 name|finis
@@ -13485,7 +13511,7 @@ decl_stmt|;
 operator|*
 name|may_be_forged
 operator|=
-name|false
+name|true
 expr_stmt|;
 name|falen
 operator|=
@@ -13555,6 +13581,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+operator|*
+name|may_be_forged
+operator|=
+name|false
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -13642,16 +13673,22 @@ argument_list|)
 index|[
 literal|0
 index|]
-operator|!=
+operator|==
 literal|'['
-operator|&&
+operator|||
 name|RealHostName
 index|[
 literal|0
 index|]
-operator|!=
+operator|==
 literal|'['
 condition|)
+operator|*
+name|may_be_forged
+operator|=
+name|false
+expr_stmt|;
+else|else
 block|{
 name|int
 name|family
@@ -13706,18 +13743,9 @@ expr_stmt|;
 if|if
 condition|(
 name|hp
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
-comment|/* XXX: Could be a temporary error on forward lookup */
-operator|*
-name|may_be_forged
-operator|=
-name|true
-expr_stmt|;
-block|}
-else|else
 block|{
 for|for
 control|(
@@ -13751,16 +13779,15 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-break|break;
-block|}
+block|{
 operator|*
 name|may_be_forged
 operator|=
-operator|*
-name|ha
-operator|==
-name|NULL
+name|false
 expr_stmt|;
+break|break;
+block|}
+block|}
 if|#
 directive|if
 name|NETINET6
@@ -16946,7 +16973,7 @@ name|sz
 expr_stmt|;
 if|#
 directive|if
-name|_FFR_IPV6_FULL
+name|IPV6_FULL
 name|ap
 operator|=
 name|sm_inet6_ntop
@@ -16960,7 +16987,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* _FFR_IPV6_FULL */
+comment|/* IPV6_FULL */
 name|ap
 operator|=
 operator|(
@@ -16980,7 +17007,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_IPV6_FULL */
+comment|/* IPV6_FULL */
 comment|/* Restore pointer to beginning of string */
 if|if
 condition|(

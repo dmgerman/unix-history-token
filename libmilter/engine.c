@@ -3384,7 +3384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  CLR_MACROS -- clear set of macros starting from a given index ** **	Parameters: **		ctx -- context structure **		m -- index from which to clear all macros ** **	Returns: **		None. */
+comment|/* **  MI_CLR_MACROS -- clear set of macros starting from a given index ** **	Parameters: **		ctx -- context structure **		m -- index from which to clear all macros ** **	Returns: **		None. */
 end_comment
 
 begin_function
@@ -7282,7 +7282,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  SENDOK -- is it ok for the filter to send stuff to the MTA? ** **	Parameters: **		ctx -- context structure **		flag -- flag to check ** **	Returns: **		sending allowed (in current state) */
+comment|/* **  MI_SENDOK -- is it ok for the filter to send stuff to the MTA? ** **	Parameters: **		ctx -- context structure **		flag -- flag to check ** **	Returns: **		sending allowed (in current state) */
 end_comment
 
 begin_function

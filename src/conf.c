@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.1191 2014-01-08 17:03:14 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.1192 2014-01-27 18:23:21 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1051,18 +1051,12 @@ block|,
 name|DBS_GROUPREADABLEKEYFILE
 block|}
 block|,
-if|#
-directive|if
-name|_FFR_GROUPREADABLEAUTHINFOFILE
 block|{
-literal|"groupreadableadefaultauthinfofile"
+literal|"groupreadabledefaultauthinfofile"
 block|,
 name|DBS_GROUPREADABLEAUTHINFOFILE
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* _FFR_GROUPREADABLEAUTHINFOFILE */
 block|{
 name|NULL
 block|,
@@ -1356,7 +1350,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"setdefaults: DefUser=%s, DefUid=%d, DefGid=%d\n"
+literal|"setdefaults: DefUser=%s, DefUid=%ld, DefGid=%ld\n"
 argument_list|,
 name|DefUser
 operator|!=
@@ -1367,12 +1361,12 @@ else|:
 literal|"<1:1>"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|DefUid
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|DefGid
 argument_list|)
@@ -1668,6 +1662,17 @@ name|TLS_Srv_Opts
 operator|=
 name|TLS_I_SRV
 expr_stmt|;
+if|if
+condition|(
+name|NULL
+operator|==
+name|EVP_digest
+condition|)
+name|EVP_digest
+operator|=
+name|EVP_md5
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* STARTTLS */
@@ -1818,6 +1823,16 @@ name|ConnectionRateWindowSize
 operator|=
 literal|60
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_BOUNCE_QUEUE
+name|BounceQueue
+operator|=
+name|NOQGRP
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_BOUNCE_QUEUE */
 name|setupmaps
 argument_list|()
 expr_stmt|;
@@ -1907,10 +1922,10 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"setdefuser: DefUid=%d, DefUser=%s\n"
+literal|"setdefuser: DefUid=%ld, DefUser=%s\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|DefUid
 argument_list|,
@@ -2812,9 +2827,6 @@ argument_list|,
 name|null_map_store
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_ARPA_MAP
 comment|/* "arpa" map -- IP -> arpa */
 name|MAPDEF
 argument_list|(
@@ -2835,9 +2847,6 @@ argument_list|,
 name|null_map_store
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_ARPA_MAP */
 if|#
 directive|if
 name|SOCKETMAP
@@ -12191,7 +12200,7 @@ return|return
 name|SIGFUNC_RETURN
 return|;
 block|}
-comment|/* **  GETDTABLESIZE -- return number of file descriptors ** **	Only on non-BSD systems ** **	Parameters: **		none ** **	Returns: **		size of file descriptor table ** **	Side Effects: **		none */
+comment|/* **  GETDTSIZE -- return number of file descriptors ** **	Only on non-BSD systems ** **	Parameters: **		none ** **	Returns: **		size of file descriptor table ** **	Side Effects: **		none */
 ifdef|#
 directive|ifdef
 name|SOLARIS
@@ -14869,7 +14878,7 @@ name|save_errno
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"cannot lockf(%s%s, fd=%d, type=%o, omode=%o, euid=%d)"
+literal|"cannot lockf(%s%s, fd=%d, type=%o, omode=%o, euid=%ld)"
 argument_list|,
 name|filename
 argument_list|,
@@ -14881,6 +14890,9 @@ name|type
 argument_list|,
 name|omode
 argument_list|,
+operator|(
+name|long
+operator|)
 name|euid
 argument_list|)
 expr_stmt|;
@@ -15034,7 +15046,7 @@ name|save_errno
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"cannot flock(%s%s, fd=%d, type=%o, omode=%o, euid=%d)"
+literal|"cannot flock(%s%s, fd=%d, type=%o, omode=%o, euid=%ld)"
 argument_list|,
 name|filename
 argument_list|,
@@ -15046,6 +15058,9 @@ name|type
 argument_list|,
 name|omode
 argument_list|,
+operator|(
+name|long
+operator|)
 name|euid
 argument_list|)
 expr_stmt|;
@@ -15868,6 +15883,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NOQID
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -21436,7 +21453,7 @@ expr_stmt|;
 name|SM_ASSERT
 argument_list|(
 name|n
-operator|>
+operator|>=
 literal|0
 argument_list|)
 expr_stmt|;
@@ -22674,7 +22691,6 @@ literal|"ALLOW_255"
 block|,
 endif|#
 directive|endif
-comment|/* ALLOW_255 */
 if|#
 directive|if
 name|NAMED_BIND
@@ -22685,10 +22701,8 @@ literal|"DNSMAP"
 block|,
 endif|#
 directive|endif
-comment|/* DNSMAP */
 endif|#
 directive|endif
-comment|/* NAMED_BIND */
 if|#
 directive|if
 name|EGD
@@ -22696,7 +22710,6 @@ literal|"EGD"
 block|,
 endif|#
 directive|endif
-comment|/* EGD */
 if|#
 directive|if
 name|HESIOD
@@ -22704,7 +22717,13 @@ literal|"HESIOD"
 block|,
 endif|#
 directive|endif
-comment|/* HESIOD */
+if|#
+directive|if
+name|HESIOD_ALLOW_NUMERIC_LOGIN
+literal|"HESIOD_ALLOW_NUMERIC_LOGIN"
+block|,
+endif|#
+directive|endif
 if|#
 directive|if
 name|HES_GETMAILHOST
@@ -22712,7 +22731,14 @@ literal|"HES_GETMAILHOST"
 block|,
 endif|#
 directive|endif
-comment|/* HES_GETMAILHOST */
+if|#
+directive|if
+name|IPV6_FULL
+comment|/* Use uncompressed IPv6 address format (no "::") */
+literal|"IPV6_FULL"
+block|,
+endif|#
+directive|endif
 if|#
 directive|if
 name|LDAPMAP
@@ -22720,7 +22746,6 @@ literal|"LDAPMAP"
 block|,
 endif|#
 directive|endif
-comment|/* LDAPMAP */
 if|#
 directive|if
 name|LDAP_REFERRALS
@@ -22728,7 +22753,6 @@ literal|"LDAP_REFERRALS"
 block|,
 endif|#
 directive|endif
-comment|/* LDAP_REFERRALS */
 if|#
 directive|if
 name|LOG
@@ -22736,7 +22760,6 @@ literal|"LOG"
 block|,
 endif|#
 directive|endif
-comment|/* LOG */
 if|#
 directive|if
 name|MAP_NSD
@@ -22744,7 +22767,6 @@ literal|"MAP_NSD"
 block|,
 endif|#
 directive|endif
-comment|/* MAP_NSD */
 if|#
 directive|if
 name|MAP_REGEX
@@ -22752,7 +22774,6 @@ literal|"MAP_REGEX"
 block|,
 endif|#
 directive|endif
-comment|/* MAP_REGEX */
 if|#
 directive|if
 name|MATCHGECOS
@@ -22760,7 +22781,6 @@ literal|"MATCHGECOS"
 block|,
 endif|#
 directive|endif
-comment|/* MATCHGECOS */
 if|#
 directive|if
 name|MILTER
@@ -22768,7 +22788,6 @@ literal|"MILTER"
 block|,
 endif|#
 directive|endif
-comment|/* MILTER */
 if|#
 directive|if
 name|MIME7TO8
@@ -22776,7 +22795,6 @@ literal|"MIME7TO8"
 block|,
 endif|#
 directive|endif
-comment|/* MIME7TO8 */
 if|#
 directive|if
 name|MIME7TO8_OLD
@@ -22784,7 +22802,6 @@ literal|"MIME7TO8_OLD"
 block|,
 endif|#
 directive|endif
-comment|/* MIME7TO8_OLD */
 if|#
 directive|if
 name|MIME8TO7
@@ -22792,7 +22809,6 @@ literal|"MIME8TO7"
 block|,
 endif|#
 directive|endif
-comment|/* MIME8TO7 */
 if|#
 directive|if
 name|NAMED_BIND
@@ -22800,7 +22816,6 @@ literal|"NAMED_BIND"
 block|,
 endif|#
 directive|endif
-comment|/* NAMED_BIND */
 if|#
 directive|if
 name|NDBM
@@ -22808,7 +22823,6 @@ literal|"NDBM"
 block|,
 endif|#
 directive|endif
-comment|/* NDBM */
 if|#
 directive|if
 name|NETINET
@@ -22816,7 +22830,6 @@ literal|"NETINET"
 block|,
 endif|#
 directive|endif
-comment|/* NETINET */
 if|#
 directive|if
 name|NETINET6
@@ -22824,7 +22837,6 @@ literal|"NETINET6"
 block|,
 endif|#
 directive|endif
-comment|/* NETINET6 */
 if|#
 directive|if
 name|NETINFO
@@ -22832,7 +22844,6 @@ literal|"NETINFO"
 block|,
 endif|#
 directive|endif
-comment|/* NETINFO */
 if|#
 directive|if
 name|NETISO
@@ -22840,7 +22851,6 @@ literal|"NETISO"
 block|,
 endif|#
 directive|endif
-comment|/* NETISO */
 if|#
 directive|if
 name|NETNS
@@ -22848,7 +22858,6 @@ literal|"NETNS"
 block|,
 endif|#
 directive|endif
-comment|/* NETNS */
 if|#
 directive|if
 name|NETUNIX
@@ -22856,7 +22865,6 @@ literal|"NETUNIX"
 block|,
 endif|#
 directive|endif
-comment|/* NETUNIX */
 if|#
 directive|if
 name|NETX25
@@ -22864,7 +22872,6 @@ literal|"NETX25"
 block|,
 endif|#
 directive|endif
-comment|/* NETX25 */
 if|#
 directive|if
 name|NEWDB
@@ -22872,7 +22879,6 @@ literal|"NEWDB"
 block|,
 endif|#
 directive|endif
-comment|/* NEWDB */
 if|#
 directive|if
 name|NIS
@@ -22880,7 +22886,6 @@ literal|"NIS"
 block|,
 endif|#
 directive|endif
-comment|/* NIS */
 if|#
 directive|if
 name|NISPLUS
@@ -22888,7 +22893,6 @@ literal|"NISPLUS"
 block|,
 endif|#
 directive|endif
-comment|/* NISPLUS */
 if|#
 directive|if
 name|NO_DH
@@ -22896,7 +22900,6 @@ literal|"NO_DH"
 block|,
 endif|#
 directive|endif
-comment|/* NO_DH */
 if|#
 directive|if
 name|PH_MAP
@@ -22904,7 +22907,6 @@ literal|"PH_MAP"
 block|,
 endif|#
 directive|endif
-comment|/* PH_MAP */
 ifdef|#
 directive|ifdef
 name|PICKY_HELO_CHECK
@@ -22912,7 +22914,6 @@ literal|"PICKY_HELO_CHECK"
 block|,
 endif|#
 directive|endif
-comment|/* PICKY_HELO_CHECK */
 if|#
 directive|if
 name|PIPELINING
@@ -22920,7 +22921,6 @@ literal|"PIPELINING"
 block|,
 endif|#
 directive|endif
-comment|/* PIPELINING */
 if|#
 directive|if
 name|SASL
@@ -22938,10 +22938,8 @@ literal|"SASL"
 block|,
 endif|#
 directive|endif
-comment|/* SASL>= 20000 */
 endif|#
 directive|endif
-comment|/* SASL */
 if|#
 directive|if
 name|SCANF
@@ -22949,7 +22947,6 @@ literal|"SCANF"
 block|,
 endif|#
 directive|endif
-comment|/* SCANF */
 if|#
 directive|if
 name|SM_LDAP_ERROR_ON_MISSING_ARGS
@@ -22957,7 +22954,6 @@ literal|"SM_LDAP_ERROR_ON_MISSING_ARGS"
 block|,
 endif|#
 directive|endif
-comment|/* SM_LDAP_ERROR_ON_MISSING_ARGS */
 if|#
 directive|if
 name|SMTPDEBUG
@@ -22965,7 +22961,6 @@ literal|"SMTPDEBUG"
 block|,
 endif|#
 directive|endif
-comment|/* SMTPDEBUG */
 if|#
 directive|if
 name|SOCKETMAP
@@ -22973,7 +22968,6 @@ literal|"SOCKETMAP"
 block|,
 endif|#
 directive|endif
-comment|/* SOCKETMAP */
 if|#
 directive|if
 name|STARTTLS
@@ -22981,7 +22975,6 @@ literal|"STARTTLS"
 block|,
 endif|#
 directive|endif
-comment|/* STARTTLS */
 if|#
 directive|if
 name|SUID_ROOT_FILES_OK
@@ -22989,7 +22982,6 @@ literal|"SUID_ROOT_FILES_OK"
 block|,
 endif|#
 directive|endif
-comment|/* SUID_ROOT_FILES_OK */
 if|#
 directive|if
 name|TCPWRAPPERS
@@ -22997,7 +22989,6 @@ literal|"TCPWRAPPERS"
 block|,
 endif|#
 directive|endif
-comment|/* TCPWRAPPERS */
 if|#
 directive|if
 name|TLS_NO_RSA
@@ -23005,7 +22996,6 @@ literal|"TLS_NO_RSA"
 block|,
 endif|#
 directive|endif
-comment|/* TLS_NO_RSA */
 if|#
 directive|if
 name|TLS_VRFY_PER_CTX
@@ -23013,7 +23003,6 @@ literal|"TLS_VRFY_PER_CTX"
 block|,
 endif|#
 directive|endif
-comment|/* TLS_VRFY_PER_CTX */
 if|#
 directive|if
 name|USERDB
@@ -23021,7 +23010,6 @@ literal|"USERDB"
 block|,
 endif|#
 directive|endif
-comment|/* USERDB */
 if|#
 directive|if
 name|USE_LDAP_INIT
@@ -23029,7 +23017,6 @@ literal|"USE_LDAP_INIT"
 block|,
 endif|#
 directive|endif
-comment|/* USE_LDAP_INIT */
 if|#
 directive|if
 name|USE_TTYPATH
@@ -23037,7 +23024,6 @@ literal|"USE_TTYPATH"
 block|,
 endif|#
 directive|endif
-comment|/* USE_TTYPATH */
 if|#
 directive|if
 name|XDEBUG
@@ -23045,7 +23031,6 @@ literal|"XDEBUG"
 block|,
 endif|#
 directive|endif
-comment|/* XDEBUG */
 if|#
 directive|if
 name|XLA
@@ -23053,7 +23038,6 @@ literal|"XLA"
 block|,
 endif|#
 directive|endif
-comment|/* XLA */
 name|NULL
 block|}
 decl_stmt|;
@@ -23071,7 +23055,6 @@ literal|"ADDRCONFIG_IS_BROKEN"
 block|,
 endif|#
 directive|endif
-comment|/* ADDRCONFIG_IS_BROKEN */
 ifdef|#
 directive|ifdef
 name|AUTO_NETINFO_HOSTS
@@ -23079,7 +23062,6 @@ literal|"AUTO_NETINFO_HOSTS"
 block|,
 endif|#
 directive|endif
-comment|/* AUTO_NETINFO_HOSTS */
 ifdef|#
 directive|ifdef
 name|AUTO_NIS_ALIASES
@@ -23087,7 +23069,6 @@ literal|"AUTO_NIS_ALIASES"
 block|,
 endif|#
 directive|endif
-comment|/* AUTO_NIS_ALIASES */
 if|#
 directive|if
 name|BROKEN_RES_SEARCH
@@ -23095,7 +23076,6 @@ literal|"BROKEN_RES_SEARCH"
 block|,
 endif|#
 directive|endif
-comment|/* BROKEN_RES_SEARCH */
 ifdef|#
 directive|ifdef
 name|BSD4_4_SOCKADDR
@@ -23103,7 +23083,6 @@ literal|"BSD4_4_SOCKADDR"
 block|,
 endif|#
 directive|endif
-comment|/* BSD4_4_SOCKADDR */
 if|#
 directive|if
 name|BOGUS_O_EXCL
@@ -23111,7 +23090,6 @@ literal|"BOGUS_O_EXCL"
 block|,
 endif|#
 directive|endif
-comment|/* BOGUS_O_EXCL */
 if|#
 directive|if
 name|DEC_OSF_BROKEN_GETPWENT
@@ -23119,7 +23097,6 @@ literal|"DEC_OSF_BROKEN_GETPWENT"
 block|,
 endif|#
 directive|endif
-comment|/* DEC_OSF_BROKEN_GETPWENT */
 if|#
 directive|if
 name|FAST_PID_RECYCLE
@@ -23127,7 +23104,6 @@ literal|"FAST_PID_RECYCLE"
 block|,
 endif|#
 directive|endif
-comment|/* FAST_PID_RECYCLE */
 if|#
 directive|if
 name|HASCLOSEFROM
@@ -23135,7 +23111,6 @@ literal|"HASCLOSEFROM"
 block|,
 endif|#
 directive|endif
-comment|/* HASCLOSEFROM */
 if|#
 directive|if
 name|HASFCHOWN
@@ -23143,7 +23118,6 @@ literal|"HASFCHOWN"
 block|,
 endif|#
 directive|endif
-comment|/* HASFCHOWN */
 if|#
 directive|if
 name|HASFCHMOD
@@ -23151,7 +23125,6 @@ literal|"HASFCHMOD"
 block|,
 endif|#
 directive|endif
-comment|/* HASFCHMOD */
 if|#
 directive|if
 name|HASFDWALK
@@ -23159,7 +23132,6 @@ literal|"HASFDWALK"
 block|,
 endif|#
 directive|endif
-comment|/* HASFDWALK */
 if|#
 directive|if
 name|HASFLOCK
@@ -23167,7 +23139,6 @@ literal|"HASFLOCK"
 block|,
 endif|#
 directive|endif
-comment|/* HASFLOCK */
 if|#
 directive|if
 name|HASGETDTABLESIZE
@@ -23175,7 +23146,6 @@ literal|"HASGETDTABLESIZE"
 block|,
 endif|#
 directive|endif
-comment|/* HASGETDTABLESIZE */
 if|#
 directive|if
 name|HASGETUSERSHELL
@@ -23183,7 +23153,6 @@ literal|"HASGETUSERSHELL"
 block|,
 endif|#
 directive|endif
-comment|/* HASGETUSERSHELL */
 if|#
 directive|if
 name|HASINITGROUPS
@@ -23191,7 +23160,6 @@ literal|"HASINITGROUPS"
 block|,
 endif|#
 directive|endif
-comment|/* HASINITGROUPS */
 if|#
 directive|if
 name|HASLDAPGETALIASBYNAME
@@ -23199,7 +23167,6 @@ literal|"HASLDAPGETALIASBYNAME"
 block|,
 endif|#
 directive|endif
-comment|/* HASLDAPGETALIASBYNAME */
 if|#
 directive|if
 name|HASLSTAT
@@ -23207,7 +23174,6 @@ literal|"HASLSTAT"
 block|,
 endif|#
 directive|endif
-comment|/* HASLSTAT */
 if|#
 directive|if
 name|HASNICE
@@ -23215,7 +23181,6 @@ literal|"HASNICE"
 block|,
 endif|#
 directive|endif
-comment|/* HASNICE */
 if|#
 directive|if
 name|HASRANDOM
@@ -23223,7 +23188,6 @@ literal|"HASRANDOM"
 block|,
 endif|#
 directive|endif
-comment|/* HASRANDOM */
 if|#
 directive|if
 name|HASRRESVPORT
@@ -23231,7 +23195,6 @@ literal|"HASRRESVPORT"
 block|,
 endif|#
 directive|endif
-comment|/* HASRRESVPORT */
 if|#
 directive|if
 name|HASSETEGID
@@ -23239,7 +23202,6 @@ literal|"HASSETEGID"
 block|,
 endif|#
 directive|endif
-comment|/* HASSETEGID */
 if|#
 directive|if
 name|HASSETLOGIN
@@ -23247,7 +23209,6 @@ literal|"HASSETLOGIN"
 block|,
 endif|#
 directive|endif
-comment|/* HASSETLOGIN */
 if|#
 directive|if
 name|HASSETREGID
@@ -23255,7 +23216,6 @@ literal|"HASSETREGID"
 block|,
 endif|#
 directive|endif
-comment|/* HASSETREGID */
 if|#
 directive|if
 name|HASSETRESGID
@@ -23263,7 +23223,6 @@ literal|"HASSETRESGID"
 block|,
 endif|#
 directive|endif
-comment|/* HASSETRESGID */
 if|#
 directive|if
 name|HASSETREUID
@@ -23271,7 +23230,6 @@ literal|"HASSETREUID"
 block|,
 endif|#
 directive|endif
-comment|/* HASSETREUID */
 if|#
 directive|if
 name|HASSETRLIMIT
@@ -23279,7 +23237,6 @@ literal|"HASSETRLIMIT"
 block|,
 endif|#
 directive|endif
-comment|/* HASSETRLIMIT */
 if|#
 directive|if
 name|HASSETSID
@@ -23287,7 +23244,6 @@ literal|"HASSETSID"
 block|,
 endif|#
 directive|endif
-comment|/* HASSETSID */
 if|#
 directive|if
 name|HASSETUSERCONTEXT
@@ -23295,7 +23251,6 @@ literal|"HASSETUSERCONTEXT"
 block|,
 endif|#
 directive|endif
-comment|/* HASSETUSERCONTEXT */
 if|#
 directive|if
 name|HASSETVBUF
@@ -23303,7 +23258,6 @@ literal|"HASSETVBUF"
 block|,
 endif|#
 directive|endif
-comment|/* HASSETVBUF */
 if|#
 directive|if
 name|HAS_ST_GEN
@@ -23311,7 +23265,6 @@ literal|"HAS_ST_GEN"
 block|,
 endif|#
 directive|endif
-comment|/* HAS_ST_GEN */
 if|#
 directive|if
 name|HASSRANDOMDEV
@@ -23319,7 +23272,6 @@ literal|"HASSRANDOMDEV"
 block|,
 endif|#
 directive|endif
-comment|/* HASSRANDOMDEV */
 if|#
 directive|if
 name|HASURANDOMDEV
@@ -23327,7 +23279,6 @@ literal|"HASURANDOMDEV"
 block|,
 endif|#
 directive|endif
-comment|/* HASURANDOMDEV */
 if|#
 directive|if
 name|HASSTRERROR
@@ -23335,7 +23286,6 @@ literal|"HASSTRERROR"
 block|,
 endif|#
 directive|endif
-comment|/* HASSTRERROR */
 if|#
 directive|if
 name|HASULIMIT
@@ -23343,7 +23293,6 @@ literal|"HASULIMIT"
 block|,
 endif|#
 directive|endif
-comment|/* HASULIMIT */
 if|#
 directive|if
 name|HASUNAME
@@ -23351,7 +23300,6 @@ literal|"HASUNAME"
 block|,
 endif|#
 directive|endif
-comment|/* HASUNAME */
 if|#
 directive|if
 name|HASUNSETENV
@@ -23359,7 +23307,6 @@ literal|"HASUNSETENV"
 block|,
 endif|#
 directive|endif
-comment|/* HASUNSETENV */
 if|#
 directive|if
 name|HASWAITPID
@@ -23367,7 +23314,6 @@ literal|"HASWAITPID"
 block|,
 endif|#
 directive|endif
-comment|/* HASWAITPID */
 if|#
 directive|if
 name|HAVE_NANOSLEEP
@@ -23375,7 +23321,6 @@ literal|"HAVE_NANOSLEEP"
 block|,
 endif|#
 directive|endif
-comment|/* HAVE_NANOSLEEP */
 if|#
 directive|if
 name|IDENTPROTO
@@ -23383,7 +23328,6 @@ literal|"IDENTPROTO"
 block|,
 endif|#
 directive|endif
-comment|/* IDENTPROTO */
 if|#
 directive|if
 name|IP_SRCROUTE
@@ -23391,7 +23335,6 @@ literal|"IP_SRCROUTE"
 block|,
 endif|#
 directive|endif
-comment|/* IP_SRCROUTE */
 if|#
 directive|if
 name|O_EXLOCK
@@ -23404,7 +23347,6 @@ literal|"LOCK_ON_OPEN"
 block|,
 endif|#
 directive|endif
-comment|/* O_EXLOCK&& HASFLOCK&& !BOGUS_O_EXCL */
 if|#
 directive|if
 name|MILTER_NO_NAGLE
@@ -23412,7 +23354,6 @@ literal|"MILTER_NO_NAGLE "
 block|,
 endif|#
 directive|endif
-comment|/* MILTER_NO_NAGLE */
 if|#
 directive|if
 name|NEEDFSYNC
@@ -23420,7 +23361,6 @@ literal|"NEEDFSYNC"
 block|,
 endif|#
 directive|endif
-comment|/* NEEDFSYNC */
 if|#
 directive|if
 name|NEEDLINK
@@ -23428,7 +23368,6 @@ literal|"NEEDLINK"
 block|,
 endif|#
 directive|endif
-comment|/* NEEDLINK */
 if|#
 directive|if
 name|NEEDLOCAL_HOSTNAME_LENGTH
@@ -23436,7 +23375,6 @@ literal|"NEEDLOCAL_HOSTNAME_LENGTH"
 block|,
 endif|#
 directive|endif
-comment|/* NEEDLOCAL_HOSTNAME_LENGTH */
 if|#
 directive|if
 name|NEEDSGETIPNODE
@@ -23444,7 +23382,6 @@ literal|"NEEDSGETIPNODE"
 block|,
 endif|#
 directive|endif
-comment|/* NEEDSGETIPNODE */
 if|#
 directive|if
 name|NEEDSTRSTR
@@ -23452,7 +23389,6 @@ literal|"NEEDSTRSTR"
 block|,
 endif|#
 directive|endif
-comment|/* NEEDSTRSTR */
 if|#
 directive|if
 name|NEEDSTRTOL
@@ -23460,7 +23396,6 @@ literal|"NEEDSTRTOL"
 block|,
 endif|#
 directive|endif
-comment|/* NEEDSTRTOL */
 ifdef|#
 directive|ifdef
 name|NO_GETSERVBYNAME
@@ -23468,7 +23403,6 @@ literal|"NO_GETSERVBYNAME"
 block|,
 endif|#
 directive|endif
-comment|/* NO_GETSERVBYNAME */
 if|#
 directive|if
 name|NOFTRUNCATE
@@ -23476,7 +23410,6 @@ literal|"NOFTRUNCATE"
 block|,
 endif|#
 directive|endif
-comment|/* NOFTRUNCATE */
 if|#
 directive|if
 name|REQUIRES_DIR_FSYNC
@@ -23484,7 +23417,6 @@ literal|"REQUIRES_DIR_FSYNC"
 block|,
 endif|#
 directive|endif
-comment|/* REQUIRES_DIR_FSYNC */
 if|#
 directive|if
 name|RLIMIT_NEEDS_SYS_TIME_H
@@ -23492,7 +23424,6 @@ literal|"RLIMIT_NEEDS_SYS_TIME_H"
 block|,
 endif|#
 directive|endif
-comment|/* RLIMIT_NEEDS_SYS_TIME_H */
 if|#
 directive|if
 name|SAFENFSPATHCONF
@@ -23500,7 +23431,6 @@ literal|"SAFENFSPATHCONF"
 block|,
 endif|#
 directive|endif
-comment|/* SAFENFSPATHCONF */
 if|#
 directive|if
 name|SECUREWARE
@@ -23508,7 +23438,6 @@ literal|"SECUREWARE"
 block|,
 endif|#
 directive|endif
-comment|/* SECUREWARE */
 if|#
 directive|if
 name|SFS_TYPE
@@ -23574,7 +23503,6 @@ literal|"SHARE_V1"
 block|,
 endif|#
 directive|endif
-comment|/* SHARE_V1 */
 if|#
 directive|if
 name|SIOCGIFCONF_IS_BROKEN
@@ -23582,7 +23510,6 @@ literal|"SIOCGIFCONF_IS_BROKEN"
 block|,
 endif|#
 directive|endif
-comment|/* SIOCGIFCONF_IS_BROKEN */
 if|#
 directive|if
 name|SIOCGIFNUM_IS_BROKEN
@@ -23590,7 +23517,6 @@ literal|"SIOCGIFNUM_IS_BROKEN"
 block|,
 endif|#
 directive|endif
-comment|/* SIOCGIFNUM_IS_BROKEN */
 if|#
 directive|if
 name|SNPRINTF_IS_BROKEN
@@ -23598,7 +23524,6 @@ literal|"SNPRINTF_IS_BROKEN"
 block|,
 endif|#
 directive|endif
-comment|/* SNPRINTF_IS_BROKEN */
 if|#
 directive|if
 name|SO_REUSEADDR_IS_BROKEN
@@ -23606,7 +23531,6 @@ literal|"SO_REUSEADDR_IS_BROKEN"
 block|,
 endif|#
 directive|endif
-comment|/* SO_REUSEADDR_IS_BROKEN */
 if|#
 directive|if
 name|SYS5SETPGRP
@@ -23614,7 +23538,6 @@ literal|"SYS5SETPGRP"
 block|,
 endif|#
 directive|endif
-comment|/* SYS5SETPGRP */
 if|#
 directive|if
 name|SYSTEM5
@@ -23622,7 +23545,6 @@ literal|"SYSTEM5"
 block|,
 endif|#
 directive|endif
-comment|/* SYSTEM5 */
 if|#
 directive|if
 name|USE_DOUBLE_FORK
@@ -23630,7 +23552,6 @@ literal|"USE_DOUBLE_FORK"
 block|,
 endif|#
 directive|endif
-comment|/* USE_DOUBLE_FORK */
 if|#
 directive|if
 name|USE_ENVIRON
@@ -23638,7 +23559,6 @@ literal|"USE_ENVIRON"
 block|,
 endif|#
 directive|endif
-comment|/* USE_ENVIRON */
 if|#
 directive|if
 name|USE_SA_SIGACTION
@@ -23646,7 +23566,6 @@ literal|"USE_SA_SIGACTION"
 block|,
 endif|#
 directive|endif
-comment|/* USE_SA_SIGACTION */
 if|#
 directive|if
 name|USE_SIGLONGJMP
@@ -23654,7 +23573,6 @@ literal|"USE_SIGLONGJMP"
 block|,
 endif|#
 directive|endif
-comment|/* USE_SIGLONGJMP */
 if|#
 directive|if
 name|USEGETCONFATTR
@@ -23662,7 +23580,6 @@ literal|"USEGETCONFATTR"
 block|,
 endif|#
 directive|endif
-comment|/* USEGETCONFATTR */
 if|#
 directive|if
 name|USESETEUID
@@ -23670,7 +23587,6 @@ literal|"USESETEUID"
 block|,
 endif|#
 directive|endif
-comment|/* USESETEUID */
 ifdef|#
 directive|ifdef
 name|USESYSCTL
@@ -23678,7 +23594,6 @@ literal|"USESYSCTL"
 block|,
 endif|#
 directive|endif
-comment|/* USESYSCTL */
 if|#
 directive|if
 name|USE_OPENSSL_ENGINE
@@ -23686,7 +23601,6 @@ literal|"USE_OPENSSL_ENGINE"
 block|,
 endif|#
 directive|endif
-comment|/* USE_OPENSSL_ENGINE */
 if|#
 directive|if
 name|USING_NETSCAPE_LDAP
@@ -23694,7 +23608,6 @@ literal|"USING_NETSCAPE_LDAP"
 block|,
 endif|#
 directive|endif
-comment|/* USING_NETSCAPE_LDAP */
 ifdef|#
 directive|ifdef
 name|WAITUNION
@@ -23702,7 +23615,6 @@ literal|"WAITUNION"
 block|,
 endif|#
 directive|endif
-comment|/* WAITUNION */
 name|NULL
 block|}
 decl_stmt|;
@@ -23715,13 +23627,27 @@ init|=
 block|{
 if|#
 directive|if
+name|_FFR_ADD_BCC
+literal|"_FFR_ADD_BCC"
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
 name|_FFR_ADDR_TYPE_MODES
 comment|/* more info in {addr_type}, requires m4 changes! */
 literal|"_FFR_ADDR_TYPE_MODES"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_ADDR_TYPE_MODES */
+if|#
+directive|if
+name|_FFR_ALIAS_DETAIL
+comment|/* try to handle +detail for aliases */
+literal|"_FFR_ALIAS_DETAIL"
+block|,
+endif|#
+directive|endif
 if|#
 directive|if
 name|_FFR_ALLOW_SASLINFO
@@ -23731,16 +23657,6 @@ literal|"_FFR_ALLOW_SASLINFO"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_ALLOW_SASLINFO */
-if|#
-directive|if
-name|_FFR_ARPA_MAP
-comment|/* arpa map to reverse an IPv(4,6) address */
-literal|"_FFR_ARPA_MAP"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_ARPA_MAP */
 if|#
 directive|if
 name|_FFR_BADRCPT_SHUTDOWN
@@ -23749,7 +23665,6 @@ literal|"_FFR_BADRCPT_SHUTDOWN"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_BADRCPT_SHUTDOWN */
 if|#
 directive|if
 name|_FFR_BESTMX_BETTER_TRUNCATION
@@ -23758,7 +23673,15 @@ literal|"_FFR_BESTMX_BETTER_TRUNCATION"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_BESTMX_BETTER_TRUNCATION */
+if|#
+directive|if
+name|_FFR_BOUNCE_QUEUE
+comment|/* Separate, unprocessed queue for DSNs */
+comment|/* John Gardiner Myers of Proofpoint */
+literal|"_FFR_BOUNCE_QUEUE"
+block|,
+endif|#
+directive|endif
 if|#
 directive|if
 name|_FFR_CATCH_BROKEN_MTAS
@@ -23767,16 +23690,6 @@ literal|"_FFR_CATCH_BROKEN_MTAS"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_CATCH_BROKEN_MTAS */
-if|#
-directive|if
-name|_FFR_CHECKCONFIG
-comment|/* New OpMode to check the configuration file */
-literal|"_FFR_CHECKCONFIG"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_CHECKCONFIG */
 if|#
 directive|if
 name|_FFR_CHK_QUEUE
@@ -23785,7 +23698,6 @@ literal|"_FFR_CHK_QUEUE"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_CHK_QUEUE */
 if|#
 directive|if
 name|_FFR_CLIENT_SIZE
@@ -23794,7 +23706,6 @@ literal|"_FFR_CLIENT_SIZE"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_CLIENT_SIZE */
 if|#
 directive|if
 name|_FFR_CRLPATH
@@ -23803,25 +23714,6 @@ literal|"_FFR_CRLPATH"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_CRLPATH */
-if|#
-directive|if
-name|_FFR_DAEMON_NETUNIX
-comment|/* Allow local (not just TCP) socket connection to server. */
-literal|"_FFR_DAEMON_NETUNIX"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_DAEMON_NETUNIX */
-if|#
-directive|if
-name|_FFR_DEPRECATE_MAILER_FLAG_I
-comment|/* What it says :-) */
-literal|"_FFR_DEPRECATE_MAILER_FLAG_I"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_DEPRECATE_MAILER_FLAG_I */
 if|#
 directive|if
 name|_FFR_DM_ONE
@@ -23830,7 +23722,6 @@ literal|"_FFR_DM_ONE"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_DM_ONE */
 if|#
 directive|if
 name|_FFR_DIGUNIX_SAFECHOWN
@@ -23840,7 +23731,6 @@ literal|"_FFR_DIGUNIX_SAFECHOWN"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_DIGUNIX_SAFECHOWN */
 if|#
 directive|if
 name|_FFR_DNSMAP_ALIASABLE
@@ -23850,7 +23740,6 @@ literal|"_FFR_DNSMAP_ALIASABLE"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_DNSMAP_ALIASABLE */
 if|#
 directive|if
 name|_FFR_DONTLOCKFILESFORREAD_OPTION
@@ -23859,7 +23748,6 @@ literal|"_FFR_DONTLOCKFILESFORREAD_OPTION"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_DONTLOCKFILESFORREAD_OPTION */
 if|#
 directive|if
 name|_FFR_DOTTED_USERNAMES
@@ -23868,7 +23756,6 @@ literal|"_FFR_DOTTED_USERNAMES"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_DOTTED_USERNAMES */
 if|#
 directive|if
 name|_FFR_DPO_CS
@@ -23877,7 +23764,6 @@ literal|"_FFR_DPO_CS"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_DPO_CS */
 if|#
 directive|if
 name|_FFR_DPRINTF_MAP
@@ -23886,7 +23772,6 @@ literal|"_FFR_DPRINTF_MAP"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_DPRINTF_MAP */
 if|#
 directive|if
 name|_FFR_DROP_TRUSTUSER_WARNING
@@ -23895,7 +23780,6 @@ literal|"_FFR_DROP_TRUSTUSER_WARNING"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_DROP_TRUSTUSER_WARNING */
 if|#
 directive|if
 name|_FFR_EIGHT_BIT_ADDR_OK
@@ -23904,16 +23788,6 @@ literal|"_FFR_EIGHT_BIT_ADDR_OK"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_EIGHT_BIT_ADDR_OK */
-if|#
-directive|if
-name|_FFR_EXPDELAY
-comment|/* exponential queue delay */
-literal|"_FFR_EXPDELAY"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_EXPDELAY */
 if|#
 directive|if
 name|_FFR_EXTRA_MAP_CHECK
@@ -23922,16 +23796,14 @@ literal|"_FFR_EXTRA_MAP_CHECK"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_EXTRA_MAP_CHECK */
 if|#
 directive|if
 name|_FFR_GETHBN_ExFILE
-comment|/* 	**  According to Motonori Nakamura some gethostbyname() 	**  implementations (TurboLinux?) may (temporarily) fail 	**  due to a lack of file discriptors. Enabling this FFR 	**  will check errno for EMFILE and ENFILE and in case of a match 	**  cause a temporary error instead of a permanent error. 	**  The right solution is of course to file a bug against those 	**  systems such that they actually set h_errno = TRY_AGAIN. 	*/
+comment|/* 	**  According to Motonori Nakamura some gethostbyname() 	**  implementations (TurboLinux?) may (temporarily) fail 	**  due to a lack of file descriptors. Enabling this FFR 	**  will check errno for EMFILE and ENFILE and in case of a match 	**  cause a temporary error instead of a permanent error. 	**  The right solution is of course to file a bug against those 	**  systems such that they actually set h_errno = TRY_AGAIN. 	*/
 literal|"_FFR_GETHBN_ExFILE"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_GETHBN_ExFILE */
 if|#
 directive|if
 name|_FFR_FIPSMODE
@@ -23940,7 +23812,6 @@ literal|"_FFR_FIPSMODE"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_FIPSMODE */
 if|#
 directive|if
 name|_FFR_FIX_DASHT
@@ -23949,7 +23820,6 @@ literal|"_FFR_FIX_DASHT"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_FIX_DASHT */
 if|#
 directive|if
 name|_FFR_FORWARD_SYSERR
@@ -23958,7 +23828,6 @@ literal|"_FFR_FORWARD_SYSERR"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_FORWARD_SYSERR */
 if|#
 directive|if
 name|_FFR_GEN_ORCPT
@@ -23967,16 +23836,6 @@ literal|"_FFR_GEN_ORCPT"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_GEN_ORCPT */
-if|#
-directive|if
-name|_FFR_GROUPREADABLEAUTHINFOFILE
-comment|/* Allow group readable DefaultAuthInfo file. */
-literal|"_FFR_GROUPREADABLEAUTHINFOFILE"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_GROUPREADABLEAUTHINFOFILE */
 if|#
 directive|if
 name|_FFR_HANDLE_ISO8859_GECOS
@@ -23986,7 +23845,14 @@ literal|"_FFR_HANDLE_ISO8859_GECOS"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_HANDLE_ISO8859_GECOS */
+if|#
+directive|if
+name|_FFR_HANDLE_HDR_RW_TEMPFAIL
+comment|/* 	**  Temporary header rewriting problems from remotename() etc 	**  are not "sticky" for mci (e.g., during queue runs). 	*/
+literal|"_FFR_HANDLE_HDR_RW_TEMPFAIL"
+block|,
+endif|#
+directive|endif
 if|#
 directive|if
 name|_FFR_HPUX_NSSWITCH
@@ -23995,7 +23861,6 @@ literal|"_FFR_HPUX_NSSWITCH"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_HPUX_NSSWITCH */
 if|#
 directive|if
 name|_FFR_IGNORE_BOGUS_ADDR
@@ -24004,7 +23869,6 @@ literal|"_FFR_IGNORE_BOGUS_ADDR"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_IGNORE_BOGUS_ADDR */
 if|#
 directive|if
 name|_FFR_IGNORE_EXT_ON_HELO
@@ -24013,16 +23877,6 @@ literal|"_FFR_IGNORE_EXT_ON_HELO"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_IGNORE_EXT_ON_HELO */
-if|#
-directive|if
-name|_FFR_IPV6_FULL
-comment|/* Use uncompressed IPv6 address format (no "::") */
-literal|"_FFR_IPV6_FULL"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_IPV6_FULL */
 if|#
 directive|if
 name|_FFR_LINUX_MHNL
@@ -24031,7 +23885,6 @@ literal|"_FFR_LINUX_MHNL"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_LINUX_MHNL */
 if|#
 directive|if
 name|_FFR_LOCAL_DAEMON
@@ -24040,7 +23893,29 @@ literal|"_FFR_LOCAL_DAEMON"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_LOCAL_DAEMON */
+if|#
+directive|if
+name|_FFR_LOG_MORE1
+comment|/* log some TLS/AUTH info in from= too */
+literal|"_FFR_LOG_MORE1"
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|_FFR_LOG_MORE2
+comment|/* log some TLS info in to= too */
+literal|"_FFR_LOG_MORE2"
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|_FFR_LOGREPLY
+literal|"_FFR_LOGREPLY"
+block|,
+endif|#
+directive|endif
 if|#
 directive|if
 name|_FFR_MAIL_MACRO
@@ -24048,7 +23923,6 @@ literal|"_FFR_MAIL_MACRO"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MAIL_MACRO */
 if|#
 directive|if
 name|_FFR_MAXDATASIZE
@@ -24057,7 +23931,6 @@ literal|"_FFR_MAXDATASIZE"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MAXDATASIZE */
 if|#
 directive|if
 name|_FFR_MAX_FORWARD_ENTRIES
@@ -24068,7 +23941,6 @@ literal|"_FFR_MAX_FORWARD_ENTRIES"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MAX_FORWARD_ENTRIES */
 if|#
 directive|if
 name|_FFR_MAX_SLEEP_TIME
@@ -24077,7 +23949,6 @@ literal|"_FFR_MAX_SLEEP_TIME"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MAX_SLEEP_TIME */
 if|#
 directive|if
 name|_FFR_MDS_NEGOTIATE
@@ -24086,7 +23957,6 @@ literal|"_FFR_MDS_NEGOTIATE"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MDS_NEGOTIATE */
 if|#
 directive|if
 name|_FFR_MEMSTAT
@@ -24095,7 +23965,6 @@ literal|"_FFR_MEMSTAT"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MEMSTAT */
 if|#
 directive|if
 name|_FFR_MILTER_CHECK
@@ -24103,7 +23972,15 @@ literal|"_FFR_MILTER_CHECK"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MILTER_CHECK */
+if|#
+directive|if
+name|_FFR_MILTER_CONNECT_REPLYCODE
+comment|/* milter: propagate replycode returned by connect commands */
+comment|/* John Gardiner Myers of Proofpoint */
+literal|"_FFR_MILTER_CONNECT_REPLYCODE "
+block|,
+endif|#
+directive|endif
 if|#
 directive|if
 name|_FFR_MILTER_CONVERT_ALL_LF_TO_CRLF
@@ -24112,7 +23989,6 @@ literal|"_FFR_MILTER_CONVERT_ALL_LF_TO_CRLF"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MILTER_CONVERT_ALL_LF_TO_CRLF */
 if|#
 directive|if
 name|_FFR_MILTER_CHECK_REJECTIONS_TOO
@@ -24121,7 +23997,6 @@ literal|"_FFR_MILTER_CHECK_REJECTIONS_TOO"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MILTER_CHECK_REJECTIONS_TOO */
 if|#
 directive|if
 name|_FFR_MILTER_ENHSC
@@ -24130,7 +24005,6 @@ literal|"_FFR_MILTER_ENHSC"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MILTER_ENHSC */
 if|#
 directive|if
 name|_FFR_MIME7TO8_OLD
@@ -24139,7 +24013,6 @@ literal|"_FFR_MIME7TO8_OLD"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MAX_SLEEP_TIME */
 if|#
 directive|if
 name|_FFR_MORE_MACROS
@@ -24148,7 +24021,6 @@ literal|"_FFR_MORE_MACROS"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MORE_MACROS */
 if|#
 directive|if
 name|_FFR_MSG_ACCEPT
@@ -24157,7 +24029,6 @@ literal|"_FFR_MSG_ACCEPT"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MSG_ACCEPT */
 if|#
 directive|if
 name|_FFR_NODELAYDSN_ON_HOLD
@@ -24167,7 +24038,6 @@ literal|"_FFR_NODELAYDSN_ON_HOLD"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_NODELAYDSN_ON_HOLD */
 if|#
 directive|if
 name|_FFR_NO_PIPE
@@ -24176,7 +24046,6 @@ literal|"_FFR_NO_PIPE"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_NO_PIPE */
 if|#
 directive|if
 name|_FFR_LDAP_NETWORK_TIMEOUT
@@ -24185,7 +24054,6 @@ literal|"_FFR_LDAP_NETWORK_TIMEOUT"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_LDAP_NETWORK_TIMEOUT */
 if|#
 directive|if
 name|_FFR_LOG_NTRIES
@@ -24194,7 +24062,14 @@ literal|"_FFR_LOG_NTRIES"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_LOG_NTRIES */
+if|#
+directive|if
+name|_FFR_PROXY
+comment|/* "proxy" (synchronous) delivery mode */
+literal|"_FFR_PROXY"
+block|,
+endif|#
+directive|endif
 if|#
 directive|if
 name|_FFR_QF_PARANOIA
@@ -24202,16 +24077,6 @@ literal|"_FFR_QF_PARANOIA"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_QF_PARANOIA */
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-comment|/* Exponential queue delay; disabled in 8.13 since it isn't used. */
-literal|"_FFR_QUEUEDELAY"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_QUEUEDELAY */
 if|#
 directive|if
 name|_FFR_QUEUE_GROUP_SORTORDER
@@ -24221,7 +24086,6 @@ literal|"_FFR_QUEUE_GROUP_SORTORDER"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_QUEUE_GROUP_SORTORDER */
 if|#
 directive|if
 name|_FFR_QUEUE_MACRO
@@ -24230,7 +24094,6 @@ literal|"_FFR_QUEUE_MACRO"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_QUEUE_MACRO */
 if|#
 directive|if
 name|_FFR_QUEUE_RUN_PARANOIA
@@ -24239,7 +24102,6 @@ literal|"_FFR_QUEUE_RUN_PARANOIA"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_QUEUE_RUN_PARANOIA */
 if|#
 directive|if
 name|_FFR_QUEUE_SCHED_DBG
@@ -24248,7 +24110,13 @@ literal|"_FFR_QUEUE_SCHED_DBG"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_QUEUE_SCHED_DBG */
+if|#
+directive|if
+name|_FFR_RCPTFLAGS
+literal|"_FFR_RCPTFLAGS"
+block|,
+endif|#
+directive|endif
 if|#
 directive|if
 name|_FFR_RCPTTHROTDELAY
@@ -24257,7 +24125,6 @@ literal|"_FFR_RCPTTHROTDELAY"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_RCPTTHROTDELAY */
 if|#
 directive|if
 name|_FFR_REDIRECTEMPTY
@@ -24266,7 +24133,6 @@ literal|"_FFR_REDIRECTEMPTY"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_REDIRECTEMPTY */
 if|#
 directive|if
 name|_FFR_REJECT_NUL_BYTE
@@ -24275,7 +24141,6 @@ literal|"_FFR_REJECT_NUL_BYTE"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_REJECT_NUL_BYTE */
 if|#
 directive|if
 name|_FFR_RESET_MACRO_GLOBALS
@@ -24284,7 +24149,6 @@ literal|"_FFR_RESET_MACRO_GLOBALS"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_RESET_MACRO_GLOBALS */
 if|#
 directive|if
 name|_FFR_RHS
@@ -24293,7 +24157,6 @@ literal|"_FFR_RHS"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_RHS */
 if|#
 directive|if
 name|_FFR_RUNPQG
@@ -24302,7 +24165,6 @@ literal|"_FFR_RUNPQG"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_RUNPQG */
 if|#
 directive|if
 name|_FFR_SESSID
@@ -24311,7 +24173,6 @@ literal|"_FFR_SESSID"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_SESSID */
 if|#
 directive|if
 name|_FFR_SHM_STATUS
@@ -24320,7 +24181,6 @@ literal|"_FFR_SHM_STATUS"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_SHM_STATUS */
 if|#
 directive|if
 name|_FFR_LDAP_SINGLEDN
@@ -24329,7 +24189,6 @@ literal|"_FFR_LDAP_SINGLEDN"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_LDAP_SINGLEDN */
 if|#
 directive|if
 name|_FFR_SKIP_DOMAINS
@@ -24338,7 +24197,6 @@ literal|"_FFR_SKIP_DOMAINS"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_SKIP_DOMAINS */
 if|#
 directive|if
 name|_FFR_SLEEP_USE_SELECT
@@ -24347,7 +24205,6 @@ literal|"_FFR_SLEEP_USE_SELECT "
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_SLEEP_USE_SELECT */
 if|#
 directive|if
 name|_FFR_SPT_ALIGN
@@ -24357,7 +24214,6 @@ literal|"_FFR_SPT_ALIGN"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_SPT_ALIGN */
 if|#
 directive|if
 name|_FFR_SS_PER_DAEMON
@@ -24366,7 +24222,6 @@ literal|"_FFR_SS_PER_DAEMON"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_SS_PER_DAEMON */
 if|#
 directive|if
 name|_FFR_TESTS
@@ -24375,7 +24230,6 @@ literal|"_FFR_TESTS"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_TESTS */
 if|#
 directive|if
 name|_FFR_TIMERS
@@ -24384,16 +24238,6 @@ literal|"_FFR_TIMERS"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_TIMERS */
-if|#
-directive|if
-name|_FFR_TLS_1
-comment|/* More STARTTLS options, e.g., secondary certs. */
-literal|"_FFR_TLS_1"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_TLS_1 */
 if|#
 directive|if
 name|_FFR_TLS_EC
@@ -24401,7 +24245,14 @@ literal|"_FFR_TLS_EC"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_TLS_EC */
+if|#
+directive|if
+name|_FFR_TLS_USE_CERTIFICATE_CHAIN_FILE
+comment|/* 	**  Use SSL_CTX_use_certificate_chain_file() 	**  instead of SSL_CTX_use_certificate_file() 	*/
+literal|"_FFR_TLS_USE_CERTIFICATE_CHAIN_FILE"
+block|,
+endif|#
+directive|endif
 if|#
 directive|if
 name|_FFR_TRUSTED_QF
@@ -24410,7 +24261,6 @@ literal|"_FFR_TRUSTED_QF"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_TRUSTED_QF */
 if|#
 directive|if
 name|_FFR_USE_GETPWNAM_ERRNO
@@ -24419,7 +24269,6 @@ literal|"_FFR_USE_GETPWNAM_ERRNO"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_USE_GETPWNAM_ERRNO */
 if|#
 directive|if
 name|_FFR_USE_SEM_LOCKING
@@ -24427,7 +24276,6 @@ literal|"_FFR_USE_SEM_LOCKING"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_USE_SEM_LOCKING */
 if|#
 directive|if
 name|_FFR_USE_SETLOGIN
@@ -24437,7 +24285,13 @@ literal|"_FFR_USE_SETLOGIN"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_USE_SETLOGIN */
+if|#
+directive|if
+name|_FFR_XCNCT
+literal|"_FFR_XCNCT"
+block|,
+endif|#
+directive|endif
 name|NULL
 block|}
 decl_stmt|;

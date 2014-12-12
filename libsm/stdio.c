@@ -796,7 +796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  SM_GETINFO -- get information about the open file ** **	Parameters: **		fp -- file to get info for **		what -- type of info to get **		valp -- location to place found info ** **	Returns: **		Success: may or may not place info in 'valp' depending **			on 'what' value, and returns values>=0. Return **			value may be the obtained info **		Failure: -1 and sets errno */
+comment|/* **  SM_STDGETINFO -- get information about the open file ** **	Parameters: **		fp -- file to get info for **		what -- type of info to get **		valp -- location to place found info ** **	Returns: **		Success: may or may not place info in 'valp' depending **			on 'what' value, and returns values>=0. Return **			value may be the obtained info **		Failure: -1 and sets errno */
 end_comment
 
 begin_function

@@ -30,7 +30,7 @@ name|_FFR_WORKERS_POOL
 end_if
 
 begin_comment
-comment|/* **  HANDLE_SESSION -- Handle a connected session in its own context ** **	Parameters: **		ctx -- context structure ** **	Returns: **		MI_SUCCESS/MI_FAILURE */
+comment|/* **  MI_HANDLE_SESSION -- Handle a connected session in its own context ** **	Parameters: **		ctx -- context structure ** **	Returns: **		MI_SUCCESS/MI_FAILURE */
 end_comment
 
 begin_function

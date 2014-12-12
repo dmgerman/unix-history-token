@@ -775,11 +775,14 @@ name|size
 argument_list|,
 name|len
 operator|-
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|p
 operator|-
 name|data
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dns_free_data

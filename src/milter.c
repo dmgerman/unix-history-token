@@ -905,7 +905,7 @@ parameter_list|,
 name|function
 parameter_list|)
 define|\
-value|{ \ 	int ret; \ 	int save_errno; \ 	fd_set fds; \ 	struct timeval tv; \  \ 	if (SM_FD_SETSIZE> 0&& m->mf_sock>= SM_FD_SETSIZE) \ 	{ \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): socket %d is larger than FD_SETSIZE %d\n", \ 				   (routine), m->mf_name, m->mf_sock, \ 				   SM_FD_SETSIZE); \ 		if (MilterLogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): socket(%s) %d is larger than FD_SETSIZE %d", \ 				  m->mf_name, (routine), m->mf_sock, \ 				  SM_FD_SETSIZE); \ 		milter_error(m, e); \ 		return NULL; \ 	} \  \ 	do \ 	{ \ 		FD_ZERO(&fds); \ 		SM_FD_SET(m->mf_sock,&fds); \ 		tv.tv_sec = (secs); \ 		tv.tv_usec = 0; \ 		ret = select(m->mf_sock + 1, \ 			     (write) ? NULL :&fds, \ 			     (write) ?&fds : NULL, \ 			     NULL,&tv); \ 	} while (ret< 0&& errno == EINTR); \  \ 	switch (ret) \ 	{ \ 	  case 0: \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): timeout, where=%s\n", \ 				(routine), m->mf_name, (function)); \ 		if (MilterLogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): timeout %s data %s, where=%s", \ 				  m->mf_name, \ 				  started ? "during" : "before", \ 				  (routine), (function)); \ 		milter_error(m, e); \ 		return NULL; \  \ 	  case -1: \ 		save_errno = errno; \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): select: %s\n", (routine), \ 				   m->mf_name, sm_errstring(save_errno)); \ 		if (MilterLogLevel> 0) \ 		{ \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): select(%s): %s", \ 				  m->mf_name, (routine), \ 				  sm_errstring(save_errno)); \ 		} \ 		milter_error(m, e); \ 		return NULL; \  \ 	  default: \ 		if (SM_FD_ISSET(m->mf_sock,&fds)) \ 			break; \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): socket not ready\n", \ 				(routine), m->mf_name); \ 		if (MilterLogLevel> 0) \ 		{ \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): socket(%s) not ready", \ 				  m->mf_name, (routine)); \ 		} \ 		milter_error(m, e); \ 		return NULL; \ 	} \ }
+value|{ \ 	int ret; \ 	int save_errno; \ 	fd_set fds; \ 	struct timeval tv; \  \ 	if (!SM_FD_OK_SELECT(m->mf_sock)) \ 	{ \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): socket %d is larger than FD_SETSIZE %d\n", \ 				   (routine), m->mf_name, m->mf_sock, \ 				   SM_FD_SETSIZE); \ 		if (MilterLogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): socket(%s) %d is larger than FD_SETSIZE %d", \ 				  m->mf_name, (routine), m->mf_sock, \ 				  SM_FD_SETSIZE); \ 		milter_error(m, e); \ 		return NULL; \ 	} \  \ 	do \ 	{ \ 		FD_ZERO(&fds); \ 		SM_FD_SET(m->mf_sock,&fds); \ 		tv.tv_sec = (secs); \ 		tv.tv_usec = 0; \ 		ret = select(m->mf_sock + 1, \ 			     (write) ? NULL :&fds, \ 			     (write) ?&fds : NULL, \ 			     NULL,&tv); \ 	} while (ret< 0&& errno == EINTR); \  \ 	switch (ret) \ 	{ \ 	  case 0: \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): timeout, where=%s\n", \ 				(routine), m->mf_name, (function)); \ 		if (MilterLogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): timeout %s data %s, where=%s", \ 				  m->mf_name, \ 				  started ? "during" : "before", \ 				  (routine), (function)); \ 		milter_error(m, e); \ 		return NULL; \  \ 	  case -1: \ 		save_errno = errno; \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): select: %s\n", (routine), \ 				   m->mf_name, sm_errstring(save_errno)); \ 		if (MilterLogLevel> 0) \ 		{ \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): select(%s): %s", \ 				  m->mf_name, (routine), \ 				  sm_errstring(save_errno)); \ 		} \ 		milter_error(m, e); \ 		return NULL; \  \ 	  default: \ 		if (SM_FD_ISSET(m->mf_sock,&fds)) \ 			break; \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): socket not ready\n", \ 				(routine), m->mf_name); \ 		if (MilterLogLevel> 0) \ 		{ \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): socket(%s) not ready", \ 				  m->mf_name, (routine)); \ 		} \ 		milter_error(m, e); \ 		return NULL; \ 	} \ }
 end_define
 
 begin_comment
@@ -6656,10 +6656,14 @@ name|LOG_WARNING
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"WARNING: Milter.%s=%d, allowed are only %d, %d, and %d"
+literal|"WARNING: Milter.%s=%lu, allowed are only %d, %d, and %d"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|MilterMaxDataSize
 argument_list|,
 name|MILTER_MDS_64K
@@ -9678,16 +9682,28 @@ name|m
 operator|->
 name|mf_name
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|fvers
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|fflags
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|pflags
@@ -10235,8 +10251,12 @@ name|LOG_WARNING
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"WARNING: Milter.maxdatasize: configured=%d, set by libmilter=%d"
+literal|"WARNING: Milter.maxdatasize: configured=%lu, set by libmilter=%d"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|MilterMaxDataSize
 argument_list|,
 name|MILTER_MDS_1M
@@ -10274,8 +10294,12 @@ name|LOG_WARNING
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"WARNING: Milter.maxdatasize: configured=%d, set by libmilter=%d"
+literal|"WARNING: Milter.maxdatasize: configured=%lu, set by libmilter=%d"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|MilterMaxDataSize
 argument_list|,
 name|MILTER_MDS_256K
@@ -10301,8 +10325,12 @@ name|LOG_WARNING
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"WARNING: Milter.maxdatasize: configured=%d, set by libmilter=%d"
+literal|"WARNING: Milter.maxdatasize: configured=%lu, set by libmilter=%d"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|MilterMaxDataSize
 argument_list|,
 name|MILTER_MDS_64K
@@ -15893,6 +15921,10 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|_FFR_MILTER_CONNECT_REPLYCODE
 comment|/* 	**  SMFIR_REPLYCODE can't work with connect due to 	**  the requirements of SMTP.  Therefore, ignore the 	**  reply code text but keep the state it would reflect. 	*/
 if|if
 condition|(
@@ -15964,6 +15996,9 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* !_FFR_MILTER_CONNECT_REPLYCODE */
 return|return
 name|response
 return|;

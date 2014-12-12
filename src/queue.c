@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2009, 2011, 2012 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2009, 2011, 2012, 2014 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -416,21 +416,6 @@ end_endif
 begin_comment
 comment|/* SM_HEAP_CHECK */
 end_comment
-
-begin_comment
-comment|/* **  We use EmptyString instead of "" to avoid **  'zero-length format string' warnings from gcc */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|EmptyString
-index|[]
-init|=
-literal|""
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1282,7 +1267,7 @@ value|FILE_SYS(i).fs_dev
 end_define
 
 begin_comment
-comment|/* **  Current qf file field assignments: ** **	A	AUTH= parameter **	B	body type **	C	controlling user **	D	data file name **	d	data file directory name (added in 8.12) **	E	error recipient **	F	flag bits **	G	free (was: queue delay algorithm if _FFR_QUEUEDELAY) **	H	header **	I	data file's inode number **	K	time of last delivery attempt **	L	Solaris Content-Length: header (obsolete) **	M	message **	N	number of delivery attempts **	P	message priority **	q	quarantine reason **	Q	original recipient (ORCPT=) **	r	final recipient (Final-Recipient: DSN field) **	R	recipient **	S	sender **	T	init time **	V	queue file version **	X	free (was: character set if _FFR_SAVE_CHARSET) **	Y	free (was: current delay if _FFR_QUEUEDELAY) **	Z	original envelope id from ESMTP **	!	deliver by (added in 8.12) **	$	define macro **	.	terminate file */
+comment|/* **  Current qf file field assignments: ** **	A	AUTH= parameter **	B	body type **	C	controlling user **	D	data file name **	d	data file directory name (added in 8.12) **	E	error recipient **	F	flag bits **	G	free **	H	header **	I	data file's inode number **	K	time of last delivery attempt **	L	Solaris Content-Length: header (obsolete) **	M	message **	N	number of delivery attempts **	P	message priority **	q	quarantine reason **	Q	original recipient (ORCPT=) **	r	final recipient (Final-Recipient: DSN field) **	R	recipient **	S	sender **	T	init time **	V	queue file version **	X	free (was: character set if _FFR_SAVE_CHARSET) **	Y	free **	Z	original envelope id from ESMTP **	!	deliver by (added in 8.12) **	$	define macro **	.	terminate file */
 end_comment
 
 begin_comment
@@ -1524,12 +1509,12 @@ name|save_errno
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"!queueup: cannot create queue file %s, euid=%d, fd=%d, fp=%p"
+literal|"!queueup: cannot create queue file %s, euid=%ld, fd=%d, fp=%p"
 argument_list|,
 name|tf
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -1626,12 +1611,12 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"queueup: cannot create %s, euid=%d: %s"
+literal|"queueup: cannot create %s, euid=%ld: %s"
 argument_list|,
 name|tf
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -1832,12 +1817,12 @@ name|save_errno
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"!queueup: cannot create queue temp file %s, uid=%d"
+literal|"!queueup: cannot create queue temp file %s, uid=%ld"
 argument_list|,
 name|tf
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -2070,7 +2055,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"!queueup: cannot commit data file %s, uid=%d"
+literal|"!queueup: cannot commit data file %s, uid=%ld"
 argument_list|,
 name|queuename
 argument_list|(
@@ -2080,7 +2065,7 @@ name|DATAFL_LETTER
 argument_list|)
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -2290,12 +2275,12 @@ name|NULL
 condition|)
 name|syserr
 argument_list|(
-literal|"!queueup: cannot create data temp file %s, uid=%d"
+literal|"!queueup: cannot create data temp file %s, uid=%ld"
 argument_list|,
 name|df
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -2476,12 +2461,12 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"!queueup: cannot save data temp file %s, uid=%d"
+literal|"!queueup: cannot save data temp file %s, uid=%ld"
 argument_list|,
 name|df
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -3353,6 +3338,29 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bitset
+argument_list|(
+name|QINTBCC
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|sm_io_putc
+argument_list|(
+name|tfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|'B'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|q
 operator|->
 name|q_alias
@@ -3380,6 +3388,30 @@ argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
 literal|'A'
+argument_list|)
+expr_stmt|;
+comment|/* _FFR_RCPTFLAGS */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QDYNMAILER
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|sm_io_putc
+argument_list|(
+name|tfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+name|QDYNMAILFLG
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3450,6 +3482,8 @@ name|q_paddr
 expr_stmt|;
 name|message
 argument_list|(
+literal|"%s"
+argument_list|,
 name|tag
 argument_list|)
 expr_stmt|;
@@ -3481,6 +3515,10 @@ operator|)
 literal|0
 argument_list|,
 name|e
+argument_list|,
+name|q
+argument_list|,
+name|EX_OK
 argument_list|)
 expr_stmt|;
 name|e
@@ -4160,14 +4198,14 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"cannot rename(%s, %s), uid=%d"
+literal|"cannot rename(%s, %s), uid=%ld"
 argument_list|,
 name|tf
 argument_list|,
 name|qf
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -6882,7 +6920,9 @@ name|Verbose
 condition|)
 name|message
 argument_list|(
-name|EmptyString
+literal|"%s"
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -7007,7 +7047,9 @@ condition|)
 block|{
 name|message
 argument_list|(
-name|EmptyString
+literal|"%s"
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 name|message
@@ -7864,16 +7906,10 @@ name|MinQueueAge
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_EXPDELAY
 name|MaxQueueAge
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_EXPDELAY */
 block|}
 comment|/* 	**  Here is where we choose the queue group from the work group. 	**  The caller of the "domorework" label must setup a new envelope. 	*/
 name|endgrp
@@ -10945,9 +10981,6 @@ break|break;
 case|case
 literal|'K'
 case|:
-if|#
-directive|if
-name|_FFR_EXPDELAY
 if|if
 condition|(
 name|MaxQueueAge
@@ -11008,9 +11041,6 @@ name|true
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_EXPDELAY */
 name|age
 operator|=
 name|curtime
@@ -15137,16 +15167,26 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"bogus queue file, uid=%d, gid=%d, mode=%o"
+literal|"bogus queue file, uid=%ld, gid=%ld, mode=%o"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|st
 operator|.
 name|st_uid
 argument_list|,
+operator|(
+name|long
+operator|)
 name|st
 operator|.
 name|st_gid
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|st
 operator|.
 name|st_mode
@@ -16432,6 +16472,22 @@ operator||=
 name|QALIAS
 expr_stmt|;
 break|break;
+case|case
+literal|'B'
+case|:
+name|qflags
+operator||=
+name|QINTBCC
+expr_stmt|;
+break|break;
+case|case
+name|QDYNMAILFLG
+case|:
+name|qflags
+operator||=
+name|QDYNMAILER
+expr_stmt|;
+break|break;
 default|default:
 comment|/* ignore or complain? */
 break|break;
@@ -16457,6 +16513,18 @@ argument_list|(
 literal|"{addr_type}"
 argument_list|)
 argument_list|,
+operator|(
+operator|(
+name|qflags
+operator|&
+name|QINTBCC
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|?
+literal|"e b"
+else|:
 literal|"e r"
 argument_list|)
 expr_stmt|;
@@ -16554,6 +16622,27 @@ name|q_orcpt
 operator|=
 name|orcpt
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_RCPTFLAGS
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QDYNMAILER
+argument_list|,
+name|qflags
+argument_list|)
+condition|)
+name|newmodmailer
+argument_list|(
+name|q
+argument_list|,
+name|QDYNMAILFLG
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -16824,32 +16913,6 @@ operator|=
 name|true
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-case|case
-literal|'G'
-case|:
-case|case
-literal|'Y'
-case|:
-comment|/* 			**  Maintain backward compatibility for 			**  users who defined _FFR_QUEUEDELAY in 			**  previous releases.  Remove this 			**  code in 8.14 or 8.15. 			*/
-if|if
-condition|(
-name|qfver
-operator|==
-literal|5
-operator|||
-name|qfver
-operator|==
-literal|7
-condition|)
-break|break;
-comment|/* If not qfver 5 or 7, then 'G' or 'Y' is invalid */
-comment|/* FALLTHROUGH */
-endif|#
-directive|endif
-comment|/* _FFR_QUEUEDELAY */
 default|default:
 name|syserr
 argument_list|(
@@ -17261,6 +17324,36 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|_FFR_BOUNCE_QUEUE
+end_if
+
+begin_define
+define|#
+directive|define
+name|SKIP_BOUNCE_QUEUE
+define|\
+value|if (i == BounceQueue)	\ 			continue;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SKIP_BOUNCE_QUEUE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -17513,6 +17606,7 @@ block|{
 name|int
 name|j
 decl_stmt|;
+name|SKIP_BOUNCE_QUEUE
 name|k
 operator|++
 expr_stmt|;
@@ -21291,14 +21385,14 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"cannot rename(%s, %s), uid=%d"
+literal|"cannot rename(%s, %s), uid=%ld"
 argument_list|,
 name|buf
 argument_list|,
 name|p
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
@@ -25113,7 +25207,7 @@ name|LOG_ERR
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"key=%ld, sm_semsetowner=%d, RunAsUid=%d, RunAsGid=%d"
+literal|"key=%ld, sm_semsetowner=%d, RunAsUid=%ld, RunAsGid=%ld"
 argument_list|,
 operator|(
 name|long
@@ -25122,8 +25216,14 @@ name|SemKey
 argument_list|,
 name|r
 argument_list|,
+operator|(
+name|long
+operator|)
 name|RunAsUid
 argument_list|,
+operator|(
+name|long
+operator|)
 name|RunAsGid
 argument_list|)
 expr_stmt|;
@@ -25655,10 +25755,13 @@ name|LOG_ALERT
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"ownership change on %s to %d failed: %s"
+literal|"ownership change on %s to %ld failed: %s"
 argument_list|,
 name|keypath
 argument_list|,
+operator|(
+name|long
+operator|)
 name|RunAsUid
 argument_list|,
 name|sm_errstring
@@ -26188,7 +26291,7 @@ name|LOG_ERR
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"key=%ld, sm_shmsetowner=%d, RunAsUid=%d, RunAsGid=%d"
+literal|"key=%ld, sm_shmsetowner=%d, RunAsUid=%ld, RunAsGid=%ld"
 argument_list|,
 operator|(
 name|long
@@ -26197,8 +26300,14 @@ name|ShmKey
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|long
+operator|)
 name|RunAsUid
 argument_list|,
+operator|(
+name|long
+operator|)
 name|RunAsGid
 argument_list|)
 expr_stmt|;
@@ -26920,17 +27029,17 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"can not write to queue directory %s (RunAsGid=%d, required=%d)"
+literal|"can not write to queue directory %s (RunAsGid=%ld, required=%ld)"
 argument_list|,
 name|basedir
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|RunAsGid
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|st
 operator|.
@@ -26960,6 +27069,7 @@ argument_list|(
 literal|"dangerous permissions=%o on queue directory %s"
 argument_list|,
 operator|(
+name|unsigned
 name|int
 operator|)
 name|st
@@ -26987,6 +27097,7 @@ argument_list|,
 literal|"dangerous permissions=%o on queue directory %s"
 argument_list|,
 operator|(
+name|unsigned
 name|int
 operator|)
 name|st
@@ -28398,7 +28509,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MAKEWORKGROUP -- balance queue groups into work groups per MaxQueueChildren ** **  Take the now defined queue groups and assign them to work groups. **  This is done to balance out the number of concurrently active **  queue runners such that MaxQueueChildren is not exceeded. This may **  result in more than one queue group per work group. In such a case **  the number of running queue groups in that work group will have no **  more than the work group maximum number of runners (a "fair" portion **  of MaxQueueRunners). All queue groups within a work group will get a **  chance at running. ** **	Parameters: **		none. ** **	Returns: **		nothing. ** **	Side Effects: **		Sets up WorkGrp structure. */
+comment|/* **  MAKEWORKGROUPS -- balance queue groups into work groups per MaxQueueChildren ** **  Take the now defined queue groups and assign them to work groups. **  This is done to balance out the number of concurrently active **  queue runners such that MaxQueueChildren is not exceeded. This may **  result in more than one queue group per work group. In such a case **  the number of running queue groups in that work group will have no **  more than the work group maximum number of runners (a "fair" portion **  of MaxQueueRunners). All queue groups within a work group will get a **  chance at running. ** **	Parameters: **		none. ** **	Returns: **		nothing. ** **	Side Effects: **		Sets up WorkGrp structure. */
 end_comment
 
 begin_function
@@ -28676,6 +28787,7 @@ name|i
 operator|++
 control|)
 block|{
+name|SKIP_BOUNCE_QUEUE
 name|total_runners
 operator|+=
 name|si
@@ -28747,6 +28859,7 @@ name|i
 operator|++
 control|)
 block|{
+name|SKIP_BOUNCE_QUEUE
 comment|/* a to-and-fro packing scheme, continue from last position */
 if|if
 condition|(

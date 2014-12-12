@@ -759,27 +759,12 @@ name|DBS_GROUPREADABLEKEYFILE
 value|41
 end_define
 
-begin_if
-if|#
-directive|if
-name|_FFR_GROUPREADABLEAUTHINFOFILE
-end_if
-
 begin_define
 define|#
 directive|define
 name|DBS_GROUPREADABLEAUTHINFOFILE
 value|42
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_GROUPREADABLEAUTHINFOFILE */
-end_comment
 
 begin_comment
 comment|/* struct defining such things */

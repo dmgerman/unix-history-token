@@ -5311,6 +5311,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|rcode
+operator|!=
+name|EX_OK
+operator|&&
+name|bitnset
+argument_list|(
+name|M_xSMTP
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+goto|goto
+name|cleanup
+goto|;
+if|if
+condition|(
 name|strlen
 argument_list|(
 name|rpath
@@ -5613,6 +5631,15 @@ operator|*
 name|pvp
 operator|=
 name|NULL
+expr_stmt|;
+name|setbitn
+argument_list|(
+name|M_xSMTP
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -6117,6 +6144,8 @@ argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -9809,10 +9838,13 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"openmailer: initgroups(%s, %d) failed"
+literal|"openmailer: initgroups(%s, %ld) failed"
 argument_list|,
 name|user
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ctladdr
 operator|->
 name|q_gid
@@ -9905,10 +9937,13 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"openmailer: initgroups(%s, %d) failed"
+literal|"openmailer: initgroups(%s, %ld) failed"
 argument_list|,
 name|DefUser
 argument_list|,
+operator|(
+name|long
+operator|)
 name|DefGid
 argument_list|)
 expr_stmt|;
@@ -10017,26 +10052,26 @@ block|{
 comment|/* Only root can change the gid */
 name|syserr
 argument_list|(
-literal|"openmailer: insufficient privileges to change gid, RunAsUid=%d, new_gid=%d, gid=%d, egid=%d"
+literal|"openmailer: insufficient privileges to change gid, RunAsUid=%ld, new_gid=%ld, gid=%ld, egid=%ld"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|RunAsUid
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|new_gid
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getgid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getegid
 argument_list|()
@@ -10423,15 +10458,15 @@ block|{
 comment|/* Only root can change the uid */
 name|syserr
 argument_list|(
-literal|"openmailer: insufficient privileges to change uid, new_euid=%d, RunAsUid=%d"
+literal|"openmailer: insufficient privileges to change uid, new_euid=%ld, RunAsUid=%ld"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|new_euid
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|RunAsUid
 argument_list|)
@@ -10621,28 +10656,28 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"openmailer: running as r/euid=%d/%d, r/egid=%d/%d\n"
+literal|"openmailer: running as r/euid=%ld/%ld, r/egid=%ld/%ld\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getgid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getegid
 argument_list|()
@@ -11977,6 +12012,8 @@ argument_list|,
 name|NOQID
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 name|EX_OK
@@ -12180,6 +12217,8 @@ argument_list|,
 name|host
 argument_list|,
 name|NOQID
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -13489,6 +13528,8 @@ operator|->
 name|e_id
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -14515,7 +14556,7 @@ name|xstart
 argument_list|,
 name|e
 argument_list|,
-name|tochain
+name|NULL
 argument_list|)
 expr_stmt|;
 if|#
@@ -16589,7 +16630,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	**  Final cleanup. 	**	Log a record of the transaction.  Compute the new 	**	ExitStat -- if we already had an error, stick with 	**	that. 	*/
+comment|/* 	**  Final cleanup. 	**	Log a record of the transaction.  Compute the new ExitStat 	**	-- if we already had an error, stick with that. 	*/
 if|if
 condition|(
 name|OpMode
@@ -16645,6 +16686,10 @@ argument_list|,
 name|xstart
 argument_list|,
 name|e
+argument_list|,
+name|to
+argument_list|,
+name|status
 argument_list|)
 expr_stmt|;
 if|if
@@ -16802,7 +16847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  LOGDELIVERY -- log the delivery in the system log ** **	Care is taken to avoid logging lines that are too long, because **	some versions of syslog have an unfortunate proclivity for core **	dumping.  This is a hack, to be sure, that is at best empirical. ** **	Parameters: **		m -- the mailer info.  Can be NULL for initial queue. **		mci -- the mailer connection info -- can be NULL if the **			log is occurring when no connection is active. **		dsn -- the DSN attached to the status. **		status -- the message to print for the status. **		ctladdr -- the controlling address for the to list. **		xstart -- the transaction start time, used for **			computing transaction delay. **		e -- the current envelope. ** **	Returns: **		none ** **	Side Effects: **		none */
+comment|/* **  LOGDELIVERY -- log the delivery in the system log ** **	Care is taken to avoid logging lines that are too long, because **	some versions of syslog have an unfortunate proclivity for core **	dumping.  This is a hack, to be sure, that is at best empirical. ** **	Parameters: **		m -- the mailer info.  Can be NULL for initial queue. **		mci -- the mailer connection info -- can be NULL if the **			log is occurring when no connection is active. **		dsn -- the DSN attached to the status. **		status -- the message to print for the status. **		ctladdr -- the controlling address for the to list. **		xstart -- the transaction start time, used for **			computing transaction delay. **		e -- the current envelope. **		to -- the current recipient (NULL if none). **		rcode -- status code ** **	Returns: **		none ** **	Side Effects: **		none */
 end_comment
 
 begin_function
@@ -16822,6 +16867,10 @@ parameter_list|,
 name|xstart
 parameter_list|,
 name|e
+parameter_list|,
+name|to
+parameter_list|,
+name|rcode
 parameter_list|)
 name|MAILER
 modifier|*
@@ -16852,6 +16901,13 @@ specifier|register
 name|ENVELOPE
 modifier|*
 name|e
+decl_stmt|;
+name|ADDRESS
+modifier|*
+name|to
+decl_stmt|;
+name|int
+name|rcode
 decl_stmt|;
 block|{
 specifier|register
@@ -17108,6 +17164,71 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_LOG_MORE2
+if|#
+directive|if
+name|STARTTLS
+name|p
+operator|=
+name|macvalue
+argument_list|(
+name|macid
+argument_list|(
+literal|"{verify}"
+argument_list|)
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+operator|||
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
+name|p
+operator|=
+literal|"NONE"
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_snprintf
+argument_list|(
+name|bp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|bp
+argument_list|)
+argument_list|,
+literal|", tls_verify=%.20s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* STARTTLS */
+endif|#
+directive|endif
+comment|/* _FFR_LOG_MORE2 */
 comment|/* pri: changes with each delivery attempt */
 operator|(
 name|void
@@ -17478,6 +17599,142 @@ value|203
 endif|#
 directive|endif
 comment|/* (STATLEN)> 203 */
+if|#
+directive|if
+name|_FFR_LOGREPLY
+comment|/* 	**  Notes: 	**  per-rcpt status: to->q_rstatus 	**  global status: e->e_text 	** 	**  We (re)use STATLEN here, is that a good choice? 	** 	**  stat=Deferred: ... 	**  has sometimes the same text? 	** 	**  Note: this doesn't show the stage at which the error happened. 	**  can/should we log that? 	**  XS_* in reply() basically encodes the state. 	*/
+comment|/* only show errors */
+if|if
+condition|(
+name|rcode
+operator|!=
+name|EX_OK
+operator|&&
+name|to
+operator|!=
+name|NULL
+operator|&&
+name|to
+operator|->
+name|q_rstatus
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|to
+operator|->
+name|q_rstatus
+operator|!=
+literal|'\0'
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sm_snprintf
+argument_list|(
+name|bp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|bp
+argument_list|)
+argument_list|,
+literal|", reply=%s"
+argument_list|,
+name|shortenstring
+argument_list|(
+name|to
+operator|->
+name|q_rstatus
+argument_list|,
+name|STATLEN
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|rcode
+operator|!=
+name|EX_OK
+operator|&&
+name|e
+operator|->
+name|e_text
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sm_snprintf
+argument_list|(
+name|bp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|bp
+argument_list|)
+argument_list|,
+literal|", reply=%d %s%s%s"
+argument_list|,
+name|e
+operator|->
+name|e_rcode
+argument_list|,
+name|e
+operator|->
+name|e_renhsc
+argument_list|,
+operator|(
+name|e
+operator|->
+name|e_renhsc
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|)
+condition|?
+literal|" "
+else|:
+literal|""
+argument_list|,
+name|shortenstring
+argument_list|(
+name|e
+operator|->
+name|e_text
+argument_list|,
+name|STATLEN
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* stat: max 210 bytes */
 if|if
 condition|(
@@ -17656,6 +17913,7 @@ name|q
 operator|--
 control|)
 block|{
+comment|/* XXX a comma in an address will break this! */
 if|if
 condition|(
 operator|*
@@ -21657,15 +21915,15 @@ block|{
 comment|/* Only root can change the uid */
 name|syserr
 argument_list|(
-literal|"mailfile: insufficient privileges to change uid, RunAsUid=%d, RealUid=%d"
+literal|"mailfile: insufficient privileges to change uid, RunAsUid=%ld, RealUid=%ld"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|RunAsUid
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|RealUid
 argument_list|)
@@ -21831,26 +22089,26 @@ block|{
 comment|/* Only root can change the gid */
 name|syserr
 argument_list|(
-literal|"mailfile: insufficient privileges to change gid, RealGid=%d, RunAsUid=%d, gid=%d, egid=%d"
+literal|"mailfile: insufficient privileges to change gid, RealGid=%ld, RunAsUid=%ld, gid=%ld, egid=%ld"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|RealGid
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|RunAsUid
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getgid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getegid
 argument_list|()
@@ -22014,10 +22272,13 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"mailfile: initgroups(%s, %d) failed"
+literal|"mailfile: initgroups(%s, %ld) failed"
 argument_list|,
 name|RealUserName
 argument_list|,
+operator|(
+name|long
+operator|)
 name|RealGid
 argument_list|)
 expr_stmt|;
@@ -22252,28 +22513,28 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"mailfile: running as r/euid=%d/%d, r/egid=%d/%d\n"
+literal|"mailfile: running as r/euid=%ld/%ld, r/egid=%ld/%ld\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getgid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getegid
 argument_list|()
