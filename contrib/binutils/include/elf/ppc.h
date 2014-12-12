@@ -634,6 +634,24 @@ literal|94
 argument_list|)
 end_macro
 
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PPC_TLSGD
+argument_list|,
+literal|95
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PPC_TLSLD
+argument_list|,
+literal|96
+argument_list|)
+end_macro
+
 begin_comment
 comment|/* The remaining relocs are from the Embedded ELF ABI, and are not    in the SVR4 ELF ABI.  */
 end_comment
