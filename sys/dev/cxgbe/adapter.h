@@ -153,6 +153,13 @@ directive|include
 file|"firmware/t4fw_interface.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|KTR_CXGBE
+value|KTR_SPARE3
+end_define
+
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
