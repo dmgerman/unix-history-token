@@ -5625,9 +5625,8 @@ literal|0x04
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_RDEF
+argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | ENXIO
 argument_list|,
-comment|/* XXX TBD */
 literal|"Logical unit not accessible, asymmetric access state transition"
 argument_list|)
 block|}
@@ -5640,9 +5639,8 @@ literal|0x04
 argument_list|,
 literal|0x0B
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | ENXIO
 argument_list|,
-comment|/* XXX TBD */
 literal|"Logical unit not accessible, target port in standby state"
 argument_list|)
 block|}
@@ -5655,9 +5653,8 @@ literal|0x04
 argument_list|,
 literal|0x0C
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | ENXIO
 argument_list|,
-comment|/* XXX TBD */
 literal|"Logical unit not accessible, target port in unavailable state"
 argument_list|)
 block|}
