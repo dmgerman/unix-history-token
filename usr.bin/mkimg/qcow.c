@@ -199,7 +199,7 @@ name|uint64_t
 name|refcnt_offset
 decl_stmt|;
 name|uint32_t
-name|refcnt_entries
+name|refcnt_clstrs
 decl_stmt|;
 name|uint32_t
 name|snapshot_count
@@ -467,6 +467,8 @@ name|rcclno
 decl_stmt|;
 name|u_int
 name|blk_clstrsz
+decl_stmt|,
+name|refcnt_clstrs
 decl_stmt|;
 name|u_int
 name|clstrsz
@@ -805,6 +807,17 @@ operator|*
 name|rcclno
 argument_list|)
 expr_stmt|;
+name|refcnt_clstrs
+operator|=
+name|round_clstr
+argument_list|(
+name|clstr_rcblks
+operator|*
+literal|8
+argument_list|)
+operator|>>
+name|clstr_log2sz
+expr_stmt|;
 name|be32enc
 argument_list|(
 operator|&
@@ -814,9 +827,9 @@ name|u
 operator|.
 name|v2
 operator|.
-name|refcnt_entries
+name|refcnt_clstrs
 argument_list|,
-name|clstr_rcblks
+name|refcnt_clstrs
 argument_list|)
 expr_stmt|;
 break|break;
