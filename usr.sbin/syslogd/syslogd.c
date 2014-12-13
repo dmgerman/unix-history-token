@@ -8145,9 +8145,7 @@ decl_stmt|;
 name|char
 name|prog
 index|[
-name|NAME_MAX
-operator|+
-literal|1
+name|LINE_MAX
 index|]
 decl_stmt|;
 name|char
@@ -8896,7 +8894,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|NAME_MAX
+name|LINE_MAX
+operator|-
+literal|1
 condition|;
 name|i
 operator|++

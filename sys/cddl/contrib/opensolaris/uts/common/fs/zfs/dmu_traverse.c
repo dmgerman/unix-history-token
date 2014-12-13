@@ -2160,6 +2160,10 @@ break|break;
 block|}
 if|if
 condition|(
+name|err
+operator|==
+literal|0
+operator|&&
 name|dnp
 operator|->
 name|dn_flags

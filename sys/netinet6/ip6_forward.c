@@ -224,6 +224,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<netinet6/ip6_ipsec.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netipsec/ipsec.h>
 end_include
 
@@ -370,36 +376,6 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC
-comment|/* 	 * Check AH/ESP integrity. 	 */
-comment|/* 	 * Don't increment ip6s_cantforward because this is the check 	 * before forwarding packet actually. 	 */
-if|if
-condition|(
-name|ipsec6_in_reject
-argument_list|(
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-condition|)
-block|{
-name|IPSEC6STAT_INC
-argument_list|(
-name|ips_in_polvio
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
-comment|/* IPSEC */
 comment|/* 	 * Do not forward packets to multicast destination (should be handled 	 * by ip6_mforward(). 	 * Do not forward packets with unspecified source.  It was discussed 	 * in July 2000, on the ipngwg mailing list. 	 */
 if|if
 condition|(
@@ -502,6 +478,35 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|IPSEC
+comment|/* 	 * Check if this packet has an active SA and needs to be dropped 	 * instead of forwarded. 	 */
+if|if
+condition|(
+name|ip6_ipsec_fwd
+argument_list|(
+name|m
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|IP6STAT_INC
+argument_list|(
+name|ip6s_cantforward
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
+comment|/* IPSEC */
 ifdef|#
 directive|ifdef
 name|IPSTEALTH

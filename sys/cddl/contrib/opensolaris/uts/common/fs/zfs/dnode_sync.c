@@ -3526,7 +3526,7 @@ name|tx
 operator|->
 name|tx_txg
 decl_stmt|;
-comment|/* 	 * We will either remove a spill block when a file is being removed 	 * or we have been asked to remove it. 	 */
+comment|/* 	 * Remove the spill block if we have been explicitly asked to 	 * remove it, or if the object is being removed. 	 */
 if|if
 condition|(
 name|dn
@@ -3536,28 +3536,16 @@ index|[
 name|txgoff
 index|]
 operator|||
-operator|(
-operator|(
-name|dnp
-operator|->
-name|dn_flags
-operator|&
-name|DNODE_FLAG_SPILL_BLKPTR
-operator|)
-operator|&&
 name|freeing_dnode
-operator|)
 condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|dnp
 operator|->
 name|dn_flags
 operator|&
 name|DNODE_FLAG_SPILL_BLKPTR
-operator|)
 condition|)
 name|kill_spill
 operator|=

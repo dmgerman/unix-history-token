@@ -953,11 +953,6 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-name|IPSEC6STAT_INC
-argument_list|(
-name|ips_in_polvio
-argument_list|)
-expr_stmt|;
 comment|/* Do not inject data into pcb. */
 block|}
 elseif|else
@@ -1104,11 +1099,6 @@ block|{
 name|m_freem
 argument_list|(
 name|m
-argument_list|)
-expr_stmt|;
-name|IPSEC6STAT_INC
-argument_list|(
-name|ips_in_polvio
 argument_list|)
 expr_stmt|;
 name|IP6STAT_DEC
