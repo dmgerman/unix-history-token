@@ -1221,12 +1221,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED09
+name|TDF_ALLPROCSUSP
 value|0x00000200
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* suspended by SINGLE_ALLPROC */
 end_comment
 
 begin_define
@@ -3209,9 +3209,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_UNUSED1
+name|P_TOTAL_STOP
 value|0x2000000
 end_define
+
+begin_comment
+comment|/* Stopped in proc_stop_total. */
+end_comment
 
 begin_define
 define|#
@@ -3670,6 +3674,13 @@ define|#
 directive|define
 name|SINGLE_BOUNDARY
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SINGLE_ALLPROC
+value|3
 end_define
 
 begin_ifdef
@@ -4189,6 +4200,13 @@ specifier|extern
 name|struct
 name|sx
 name|allproc_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|allproc_gen
 decl_stmt|;
 end_decl_stmt
 
@@ -5682,6 +5700,11 @@ begin_function_decl
 name|int
 name|thread_single
 parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
 name|int
 name|how
 parameter_list|)
@@ -5692,7 +5715,13 @@ begin_function_decl
 name|void
 name|thread_single_end
 parameter_list|(
-name|void
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|how
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5786,6 +5815,11 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5834,6 +5868,11 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5863,6 +5902,24 @@ name|p
 parameter_list|,
 name|lwpid_t
 name|tid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|stop_all_proc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|resume_all_proc
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

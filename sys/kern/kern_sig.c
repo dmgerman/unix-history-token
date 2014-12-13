@@ -12269,6 +12269,8 @@ label|:
 name|thread_suspend_switch
 argument_list|(
 name|td
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -13334,6 +13336,8 @@ expr_stmt|;
 name|thread_suspend_switch
 argument_list|(
 name|td
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|PROC_SUNLOCK
@@ -14073,14 +14077,14 @@ operator|&
 name|SA_CORE
 operator|)
 operator|&&
-operator|(
 name|thread_single
 argument_list|(
+name|p
+argument_list|,
 name|SINGLE_NO_EXIT
 argument_list|)
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|p
