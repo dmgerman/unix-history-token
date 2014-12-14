@@ -16079,12 +16079,14 @@ name|CTLFLAG_RW
 operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
-operator|(
-name|void
+name|__DEVOLATILE
+argument_list|(
+name|int
 operator|*
-operator|)
+argument_list|,
 operator|&
 name|ap_resume
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
