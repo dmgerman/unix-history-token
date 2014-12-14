@@ -466,6 +466,7 @@ begin_struct
 struct|struct
 name|cmdtab
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1709,6 +1710,7 @@ specifier|static
 name|int
 name|_fdt_strtovect
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1728,12 +1730,14 @@ name|uint8_t
 name|base
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|buf
 init|=
 name|str
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|end
@@ -1948,12 +1952,14 @@ name|int
 name|len
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|str
+decl_stmt|;
 name|char
 modifier|*
 name|end
-decl_stmt|,
-modifier|*
-name|str
 decl_stmt|;
 name|uint8_t
 name|tmp_addr
@@ -6262,6 +6268,7 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -6353,10 +6360,6 @@ literal|0
 expr_stmt|;
 name|buf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|value
 expr_stmt|;
 switch|switch
