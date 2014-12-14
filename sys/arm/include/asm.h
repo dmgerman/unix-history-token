@@ -458,8 +458,14 @@ parameter_list|,
 name|pclabel
 parameter_list|)
 define|\
-value|ldr	got, gotsym;	\ 	add	got, got, pc;	\ 	pclabel:
+value|ldr	got, gotsym;	\ 	pclabel: add	got, got, pc
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__thumb__
+end_ifdef
 
 begin_define
 define|#
@@ -471,8 +477,31 @@ parameter_list|,
 name|pclabel
 parameter_list|)
 define|\
-value|gotsym: .word _C_LABEL(_GLOBAL_OFFSET_TABLE_) + (. - (pclabel+4))
+value|.align 0;		\ 	gotsym: .word _C_LABEL(_GLOBAL_OFFSET_TABLE_) - (pclabel+4)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GOT_INITSYM
+parameter_list|(
+name|gotsym
+parameter_list|,
+name|pclabel
+parameter_list|)
+define|\
+value|.align 0;		\ 	gotsym: .word _C_LABEL(_GLOBAL_OFFSET_TABLE_) - (pclabel+8)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
