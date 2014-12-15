@@ -722,10 +722,10 @@ name|zio_flags
 init|=
 name|ZIO_FLAG_CANFAIL
 decl_stmt|;
-name|uint32_t
+name|arc_flags_t
 name|aflags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|arc_buf_t
 modifier|*
@@ -1164,10 +1164,10 @@ name|lr
 operator|->
 name|lr_blkptr
 decl_stmt|;
-name|uint32_t
+name|arc_flags_t
 name|aflags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|arc_buf_t
 modifier|*

@@ -11039,10 +11039,10 @@ name|abuf
 init|=
 name|NULL
 decl_stmt|;
-name|uint32_t
+name|arc_flags_t
 name|aflags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|blkptr_t
 name|blk

@@ -2048,7 +2048,7 @@ name|arc_buf_t
 modifier|*
 name|b_buf
 decl_stmt|;
-name|uint32_t
+name|arc_flags_t
 name|b_flags
 decl_stmt|;
 name|uint32_t
@@ -2207,105 +2207,6 @@ name|arc_eviction_hdr
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|void
-name|arc_get_data_buf
-parameter_list|(
-name|arc_buf_t
-modifier|*
-name|buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|arc_access
-parameter_list|(
-name|arc_buf_hdr_t
-modifier|*
-name|buf
-parameter_list|,
-name|kmutex_t
-modifier|*
-name|hash_lock
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|arc_evict_needed
-parameter_list|(
-name|arc_buf_contents_t
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|arc_evict_ghost
-parameter_list|(
-name|arc_state_t
-modifier|*
-name|state
-parameter_list|,
-name|uint64_t
-name|spa
-parameter_list|,
-name|int64_t
-name|bytes
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|illumos
-end_ifdef
-
-begin_function_decl
-specifier|static
-name|void
-name|arc_buf_watch
-parameter_list|(
-name|arc_buf_t
-modifier|*
-name|buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* illumos */
-end_comment
-
-begin_function_decl
-specifier|static
-name|boolean_t
-name|l2arc_write_eligible
-parameter_list|(
-name|uint64_t
-name|spa_guid
-parameter_list|,
-name|arc_buf_hdr_t
-modifier|*
-name|ab
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -2317,120 +2218,6 @@ define|\
 value|((state) == arc_mru_ghost || (state) == arc_mfu_ghost ||	\ 	(state) == arc_l2c_only)
 end_define
 
-begin_comment
-comment|/*  * Private ARC flags.  These flags are private ARC only flags that will show up  * in b_flags in the arc_hdr_buf_t.  Some flags are publicly declared, and can  * be passed in as arc_flags in things like arc_read.  However, these flags  * should never be passed and should only be set by ARC code.  When adding new  * public flags, make sure not to smash the private ones.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARC_IN_HASH_TABLE
-value|(1<< 9)
-end_define
-
-begin_comment
-comment|/* this buffer is hashed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARC_IO_IN_PROGRESS
-value|(1<< 10)
-end_define
-
-begin_comment
-comment|/* I/O in progress for buf */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARC_IO_ERROR
-value|(1<< 11)
-end_define
-
-begin_comment
-comment|/* I/O failed for buf */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARC_FREED_IN_READ
-value|(1<< 12)
-end_define
-
-begin_comment
-comment|/* buf freed while in read */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARC_BUF_AVAILABLE
-value|(1<< 13)
-end_define
-
-begin_comment
-comment|/* block not in active use */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARC_INDIRECT
-value|(1<< 14)
-end_define
-
-begin_comment
-comment|/* this is an indirect block */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARC_FREE_IN_PROGRESS
-value|(1<< 15)
-end_define
-
-begin_comment
-comment|/* hdr about to be freed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARC_L2_WRITING
-value|(1<< 16)
-end_define
-
-begin_comment
-comment|/* L2ARC write in progress */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARC_L2_EVICTED
-value|(1<< 17)
-end_define
-
-begin_comment
-comment|/* evicted during I/O */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARC_L2_WRITE_HEAD
-value|(1<< 18)
-end_define
-
-begin_comment
-comment|/* head of write list */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -2438,7 +2225,7 @@ name|HDR_IN_HASH_TABLE
 parameter_list|(
 name|hdr
 parameter_list|)
-value|((hdr)->b_flags& ARC_IN_HASH_TABLE)
+value|((hdr)->b_flags& ARC_FLAG_IN_HASH_TABLE)
 end_define
 
 begin_define
@@ -2448,7 +2235,7 @@ name|HDR_IO_IN_PROGRESS
 parameter_list|(
 name|hdr
 parameter_list|)
-value|((hdr)->b_flags& ARC_IO_IN_PROGRESS)
+value|((hdr)->b_flags& ARC_FLAG_IO_IN_PROGRESS)
 end_define
 
 begin_define
@@ -2458,7 +2245,7 @@ name|HDR_IO_ERROR
 parameter_list|(
 name|hdr
 parameter_list|)
-value|((hdr)->b_flags& ARC_IO_ERROR)
+value|((hdr)->b_flags& ARC_FLAG_IO_ERROR)
 end_define
 
 begin_define
@@ -2468,7 +2255,7 @@ name|HDR_PREFETCH
 parameter_list|(
 name|hdr
 parameter_list|)
-value|((hdr)->b_flags& ARC_PREFETCH)
+value|((hdr)->b_flags& ARC_FLAG_PREFETCH)
 end_define
 
 begin_define
@@ -2478,7 +2265,7 @@ name|HDR_FREED_IN_READ
 parameter_list|(
 name|hdr
 parameter_list|)
-value|((hdr)->b_flags& ARC_FREED_IN_READ)
+value|((hdr)->b_flags& ARC_FLAG_FREED_IN_READ)
 end_define
 
 begin_define
@@ -2488,7 +2275,7 @@ name|HDR_BUF_AVAILABLE
 parameter_list|(
 name|hdr
 parameter_list|)
-value|((hdr)->b_flags& ARC_BUF_AVAILABLE)
+value|((hdr)->b_flags& ARC_FLAG_BUF_AVAILABLE)
 end_define
 
 begin_define
@@ -2498,7 +2285,8 @@ name|HDR_FREE_IN_PROGRESS
 parameter_list|(
 name|hdr
 parameter_list|)
-value|((hdr)->b_flags& ARC_FREE_IN_PROGRESS)
+define|\
+value|((hdr)->b_flags& ARC_FLAG_FREE_IN_PROGRESS)
 end_define
 
 begin_define
@@ -2508,7 +2296,7 @@ name|HDR_L2CACHE
 parameter_list|(
 name|hdr
 parameter_list|)
-value|((hdr)->b_flags& ARC_L2CACHE)
+value|((hdr)->b_flags& ARC_FLAG_L2CACHE)
 end_define
 
 begin_define
@@ -2518,7 +2306,8 @@ name|HDR_L2_READING
 parameter_list|(
 name|hdr
 parameter_list|)
-value|((hdr)->b_flags& ARC_IO_IN_PROGRESS&&	\ 				    (hdr)->b_l2hdr != NULL)
+define|\
+value|((hdr)->b_flags& ARC_FLAG_IO_IN_PROGRESS&&	\ 	    (hdr)->b_l2hdr != NULL)
 end_define
 
 begin_define
@@ -2528,7 +2317,7 @@ name|HDR_L2_WRITING
 parameter_list|(
 name|hdr
 parameter_list|)
-value|((hdr)->b_flags& ARC_L2_WRITING)
+value|((hdr)->b_flags& ARC_FLAG_L2_WRITING)
 end_define
 
 begin_define
@@ -2538,7 +2327,7 @@ name|HDR_L2_EVICTED
 parameter_list|(
 name|hdr
 parameter_list|)
-value|((hdr)->b_flags& ARC_L2_EVICTED)
+value|((hdr)->b_flags& ARC_FLAG_L2_EVICTED)
 end_define
 
 begin_define
@@ -2548,7 +2337,7 @@ name|HDR_L2_WRITE_HEAD
 parameter_list|(
 name|hdr
 parameter_list|)
-value|((hdr)->b_flags& ARC_L2_WRITE_HEAD)
+value|((hdr)->b_flags& ARC_FLAG_L2_WRITE_HEAD)
 end_define
 
 begin_comment
@@ -3760,11 +3549,84 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|void
+name|arc_get_data_buf
+parameter_list|(
+name|arc_buf_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|arc_access
+parameter_list|(
+name|arc_buf_hdr_t
+modifier|*
+parameter_list|,
+name|kmutex_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|arc_evict_needed
+parameter_list|(
+name|arc_buf_contents_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|arc_evict_ghost
+parameter_list|(
+name|arc_state_t
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|int64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|arc_buf_watch
+parameter_list|(
+name|arc_buf_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|boolean_t
+name|l2arc_write_eligible
+parameter_list|(
+name|uint64_t
+parameter_list|,
+name|arc_buf_hdr_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|l2arc_read_done
 parameter_list|(
 name|zio_t
 modifier|*
-name|zio
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3796,7 +3658,6 @@ name|l2arc_compress_buf
 parameter_list|(
 name|l2arc_buf_hdr_t
 modifier|*
-name|l2hdr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3808,15 +3669,12 @@ name|l2arc_decompress_zio
 parameter_list|(
 name|zio_t
 modifier|*
-name|zio
 parameter_list|,
 name|arc_buf_hdr_t
 modifier|*
-name|hdr
 parameter_list|,
 name|enum
 name|zio_compress
-name|c
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3828,7 +3686,6 @@ name|l2arc_release_cdata_buf
 parameter_list|(
 name|arc_buf_hdr_t
 modifier|*
-name|ab
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4071,7 +3928,7 @@ argument_list|)
 decl_stmt|;
 name|arc_buf_hdr_t
 modifier|*
-name|buf
+name|hdr
 decl_stmt|;
 name|mutex_enter
 argument_list|(
@@ -4080,7 +3937,7 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|buf
+name|hdr
 operator|=
 name|buf_hash_table
 operator|.
@@ -4089,13 +3946,13 @@ index|[
 name|idx
 index|]
 init|;
-name|buf
+name|hdr
 operator|!=
 name|NULL
 condition|;
-name|buf
+name|hdr
 operator|=
-name|buf
+name|hdr
 operator|->
 name|b_hash_next
 control|)
@@ -4110,7 +3967,7 @@ name|dva
 argument_list|,
 name|birth
 argument_list|,
-name|buf
+name|hdr
 argument_list|)
 condition|)
 block|{
@@ -4121,7 +3978,7 @@ name|hash_lock
 expr_stmt|;
 return|return
 operator|(
-name|buf
+name|hdr
 operator|)
 return|;
 block|}
@@ -4156,7 +4013,7 @@ name|buf_hash_insert
 parameter_list|(
 name|arc_buf_hdr_t
 modifier|*
-name|buf
+name|hdr
 parameter_list|,
 name|kmutex_t
 modifier|*
@@ -4169,16 +4026,16 @@ name|idx
 init|=
 name|BUF_HASH_INDEX
 argument_list|(
-name|buf
+name|hdr
 operator|->
 name|b_spa
 argument_list|,
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_dva
 argument_list|,
-name|buf
+name|hdr
 operator|->
 name|b_birth
 argument_list|)
@@ -4194,7 +4051,7 @@ argument_list|)
 decl_stmt|;
 name|arc_buf_hdr_t
 modifier|*
-name|fbuf
+name|fhdr
 decl_stmt|;
 name|uint32_t
 name|i
@@ -4205,7 +4062,7 @@ operator|!
 name|DVA_IS_EMPTY
 argument_list|(
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_dva
 argument_list|)
@@ -4213,7 +4070,7 @@ argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
-name|buf
+name|hdr
 operator|->
 name|b_birth
 operator|!=
@@ -4225,7 +4082,7 @@ argument_list|(
 operator|!
 name|HDR_IN_HASH_TABLE
 argument_list|(
-name|buf
+name|hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4241,7 +4098,7 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|fbuf
+name|fhdr
 operator|=
 name|buf_hash_table
 operator|.
@@ -4254,13 +4111,13 @@ name|i
 operator|=
 literal|0
 init|;
-name|fbuf
+name|fhdr
 operator|!=
 name|NULL
 condition|;
-name|fbuf
+name|fhdr
 operator|=
-name|fbuf
+name|fhdr
 operator|->
 name|b_hash_next
 operator|,
@@ -4272,29 +4129,29 @@ if|if
 condition|(
 name|BUF_EQUAL
 argument_list|(
-name|buf
+name|hdr
 operator|->
 name|b_spa
 argument_list|,
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_dva
 argument_list|,
-name|buf
+name|hdr
 operator|->
 name|b_birth
 argument_list|,
-name|fbuf
+name|fhdr
 argument_list|)
 condition|)
 return|return
 operator|(
-name|fbuf
+name|fhdr
 operator|)
 return|;
 block|}
-name|buf
+name|hdr
 operator|->
 name|b_hash_next
 operator|=
@@ -4312,13 +4169,13 @@ index|[
 name|idx
 index|]
 operator|=
-name|buf
+name|hdr
 expr_stmt|;
-name|buf
+name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_IN_HASH_TABLE
+name|ARC_FLAG_IN_HASH_TABLE
 expr_stmt|;
 comment|/* collect some hash table performance data */
 if|if
@@ -4377,32 +4234,32 @@ name|buf_hash_remove
 parameter_list|(
 name|arc_buf_hdr_t
 modifier|*
-name|buf
+name|hdr
 parameter_list|)
 block|{
 name|arc_buf_hdr_t
 modifier|*
-name|fbuf
+name|fhdr
 decl_stmt|,
 modifier|*
 modifier|*
-name|bufp
+name|hdrp
 decl_stmt|;
 name|uint64_t
 name|idx
 init|=
 name|BUF_HASH_INDEX
 argument_list|(
-name|buf
+name|hdr
 operator|->
 name|b_spa
 argument_list|,
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_dva
 argument_list|,
-name|buf
+name|hdr
 operator|->
 name|b_birth
 argument_list|)
@@ -4422,11 +4279,11 @@ name|ASSERT
 argument_list|(
 name|HDR_IN_HASH_TABLE
 argument_list|(
-name|buf
+name|hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bufp
+name|hdrp
 operator|=
 operator|&
 name|buf_hash_table
@@ -4439,49 +4296,49 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|fbuf
+name|fhdr
 operator|=
 operator|*
-name|bufp
+name|hdrp
 operator|)
 operator|!=
-name|buf
+name|hdr
 condition|)
 block|{
 name|ASSERT
 argument_list|(
-name|fbuf
+name|fhdr
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|bufp
+name|hdrp
 operator|=
 operator|&
-name|fbuf
+name|fhdr
 operator|->
 name|b_hash_next
 expr_stmt|;
 block|}
 operator|*
-name|bufp
+name|hdrp
 operator|=
-name|buf
+name|hdr
 operator|->
 name|b_hash_next
 expr_stmt|;
-name|buf
+name|hdr
 operator|->
 name|b_hash_next
 operator|=
 name|NULL
 expr_stmt|;
-name|buf
+name|hdr
 operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_IN_HASH_TABLE
+name|ARC_FLAG_IN_HASH_TABLE
 expr_stmt|;
 comment|/* collect some hash table performance data */
 name|ARCSTAT_BUMPDOWN
@@ -4635,13 +4492,13 @@ parameter_list|)
 block|{
 name|arc_buf_hdr_t
 modifier|*
-name|buf
+name|hdr
 init|=
 name|vbuf
 decl_stmt|;
 name|bzero
 argument_list|(
-name|buf
+name|hdr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4652,7 +4509,7 @@ expr_stmt|;
 name|refcount_create
 argument_list|(
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_refcnt
 argument_list|)
@@ -4660,7 +4517,7 @@ expr_stmt|;
 name|cv_init
 argument_list|(
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_cv
 argument_list|,
@@ -4674,7 +4531,7 @@ expr_stmt|;
 name|mutex_init
 argument_list|(
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_freeze_lock
 argument_list|,
@@ -4796,7 +4653,7 @@ parameter_list|)
 block|{
 name|arc_buf_hdr_t
 modifier|*
-name|buf
+name|hdr
 init|=
 name|vbuf
 decl_stmt|;
@@ -4804,14 +4661,14 @@ name|ASSERT
 argument_list|(
 name|BUF_EMPTY
 argument_list|(
-name|buf
+name|hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|refcount_destroy
 argument_list|(
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_refcnt
 argument_list|)
@@ -4819,7 +4676,7 @@ expr_stmt|;
 name|cv_destroy
 argument_list|(
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_cv
 argument_list|)
@@ -4827,7 +4684,7 @@ expr_stmt|;
 name|mutex_destroy
 argument_list|(
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_freeze_lock
 argument_list|)
@@ -5234,7 +5091,7 @@ name|b_hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_IO_ERROR
+name|ARC_FLAG_IO_ERROR
 operator|)
 condition|)
 block|{
@@ -5768,7 +5625,7 @@ name|b_hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_IO_IN_PROGRESS
+name|ARC_FLAG_IO_IN_PROGRESS
 condition|)
 name|panic
 argument_list|(
@@ -5967,7 +5824,7 @@ name|get_buf_info
 parameter_list|(
 name|arc_buf_hdr_t
 modifier|*
-name|ab
+name|hdr
 parameter_list|,
 name|arc_state_t
 modifier|*
@@ -5989,23 +5846,23 @@ name|buf_hashid
 init|=
 name|buf_hash
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_spa
 argument_list|,
 operator|&
-name|ab
+name|hdr
 operator|->
 name|b_dva
 argument_list|,
-name|ab
+name|hdr
 operator|->
 name|b_birth
 argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|ab
+name|hdr
 operator|->
 name|b_type
 operator|==
@@ -6065,7 +5922,7 @@ name|add_reference
 parameter_list|(
 name|arc_buf_hdr_t
 modifier|*
-name|ab
+name|hdr
 parameter_list|,
 name|kmutex_t
 modifier|*
@@ -6090,7 +5947,7 @@ operator|(
 name|refcount_add
 argument_list|(
 operator|&
-name|ab
+name|hdr
 operator|->
 name|b_refcnt
 argument_list|,
@@ -6101,7 +5958,7 @@ literal|1
 operator|)
 operator|&&
 operator|(
-name|ab
+name|hdr
 operator|->
 name|b_state
 operator|!=
@@ -6112,11 +5969,11 @@ block|{
 name|uint64_t
 name|delta
 init|=
-name|ab
+name|hdr
 operator|->
 name|b_size
 operator|*
-name|ab
+name|hdr
 operator|->
 name|b_datacnt
 decl_stmt|;
@@ -6125,13 +5982,13 @@ modifier|*
 name|size
 init|=
 operator|&
-name|ab
+name|hdr
 operator|->
 name|b_state
 operator|->
 name|arcs_lsize
 index|[
-name|ab
+name|hdr
 operator|->
 name|b_type
 index|]
@@ -6146,9 +6003,9 @@ name|lock
 decl_stmt|;
 name|get_buf_info
 argument_list|(
-name|ab
+name|hdr
 argument_list|,
-name|ab
+name|hdr
 operator|->
 name|b_state
 argument_list|,
@@ -6178,7 +6035,7 @@ argument_list|(
 name|list_link_active
 argument_list|(
 operator|&
-name|ab
+name|hdr
 operator|->
 name|b_arc_node
 argument_list|)
@@ -6188,14 +6045,14 @@ name|list_remove
 argument_list|(
 name|list
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|GHOST_STATE
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_state
 argument_list|)
@@ -6203,14 +6060,14 @@ condition|)
 block|{
 name|ASSERT0
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_datacnt
 argument_list|)
 expr_stmt|;
 name|ASSERT3P
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_buf
 argument_list|,
@@ -6221,7 +6078,7 @@ argument_list|)
 expr_stmt|;
 name|delta
 operator|=
-name|ab
+name|hdr
 operator|->
 name|b_size
 expr_stmt|;
@@ -6259,18 +6116,18 @@ expr_stmt|;
 comment|/* remove the prefetch flag if we get a reference */
 if|if
 condition|(
-name|ab
+name|hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 condition|)
-name|ab
+name|hdr
 operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 expr_stmt|;
 block|}
 block|}
@@ -6283,7 +6140,7 @@ name|remove_reference
 parameter_list|(
 name|arc_buf_hdr_t
 modifier|*
-name|ab
+name|hdr
 parameter_list|,
 name|kmutex_t
 modifier|*
@@ -6301,7 +6158,7 @@ name|arc_state_t
 modifier|*
 name|state
 init|=
-name|ab
+name|hdr
 operator|->
 name|b_state
 decl_stmt|;
@@ -6335,7 +6192,7 @@ operator|=
 name|refcount_remove
 argument_list|(
 operator|&
-name|ab
+name|hdr
 operator|->
 name|b_refcnt
 argument_list|,
@@ -6362,7 +6219,7 @@ name|state
 operator|->
 name|arcs_lsize
 index|[
-name|ab
+name|hdr
 operator|->
 name|b_type
 index|]
@@ -6377,7 +6234,7 @@ name|lock
 decl_stmt|;
 name|get_buf_info
 argument_list|(
-name|ab
+name|hdr
 argument_list|,
 name|state
 argument_list|,
@@ -6408,7 +6265,7 @@ operator|!
 name|list_link_active
 argument_list|(
 operator|&
-name|ab
+name|hdr
 operator|->
 name|b_arc_node
 argument_list|)
@@ -6418,12 +6275,12 @@ name|list_insert_head
 argument_list|(
 name|list
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_datacnt
 operator|>
@@ -6434,11 +6291,11 @@ name|atomic_add_64
 argument_list|(
 name|size
 argument_list|,
-name|ab
+name|hdr
 operator|->
 name|b_size
 operator|*
-name|ab
+name|hdr
 operator|->
 name|b_datacnt
 argument_list|)
@@ -6472,7 +6329,7 @@ name|new_state
 parameter_list|,
 name|arc_buf_hdr_t
 modifier|*
-name|ab
+name|hdr
 parameter_list|,
 name|kmutex_t
 modifier|*
@@ -6483,7 +6340,7 @@ name|arc_state_t
 modifier|*
 name|old_state
 init|=
-name|ab
+name|hdr
 operator|->
 name|b_state
 decl_stmt|;
@@ -6493,7 +6350,7 @@ init|=
 name|refcount_count
 argument_list|(
 operator|&
-name|ab
+name|hdr
 operator|->
 name|b_refcnt
 argument_list|)
@@ -6534,7 +6391,7 @@ name|refcnt
 operator|==
 literal|0
 operator|||
-name|ab
+name|hdr
 operator|->
 name|b_datacnt
 operator|>
@@ -6543,7 +6400,7 @@ argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_datacnt
 operator|==
@@ -6558,7 +6415,7 @@ argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_datacnt
 operator|<=
@@ -6573,11 +6430,11 @@ name|from_delta
 operator|=
 name|to_delta
 operator|=
-name|ab
+name|hdr
 operator|->
 name|b_datacnt
 operator|*
-name|ab
+name|hdr
 operator|->
 name|b_size
 expr_stmt|;
@@ -6608,14 +6465,14 @@ name|old_state
 operator|->
 name|arcs_lsize
 index|[
-name|ab
+name|hdr
 operator|->
 name|b_type
 index|]
 decl_stmt|;
 name|get_buf_info
 argument_list|(
-name|ab
+name|hdr
 argument_list|,
 name|old_state
 argument_list|,
@@ -6648,7 +6505,7 @@ argument_list|(
 name|list_link_active
 argument_list|(
 operator|&
-name|ab
+name|hdr
 operator|->
 name|b_arc_node
 argument_list|)
@@ -6658,7 +6515,7 @@ name|list_remove
 argument_list|(
 name|list
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 comment|/* 			 * If prefetching out of the ghost cache, 			 * we will have a non-zero datacnt. 			 */
@@ -6669,7 +6526,7 @@ argument_list|(
 name|old_state
 argument_list|)
 operator|&&
-name|ab
+name|hdr
 operator|->
 name|b_datacnt
 operator|==
@@ -6679,7 +6536,7 @@ block|{
 comment|/* ghost elements have a ghost size */
 name|ASSERT
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_buf
 operator|==
@@ -6688,7 +6545,7 @@ argument_list|)
 expr_stmt|;
 name|from_delta
 operator|=
-name|ab
+name|hdr
 operator|->
 name|b_size
 expr_stmt|;
@@ -6740,14 +6597,14 @@ name|new_state
 operator|->
 name|arcs_lsize
 index|[
-name|ab
+name|hdr
 operator|->
 name|b_type
 index|]
 decl_stmt|;
 name|get_buf_info
 argument_list|(
-name|ab
+name|hdr
 argument_list|,
 name|new_state
 argument_list|,
@@ -6779,7 +6636,7 @@ name|list_insert_head
 argument_list|(
 name|list
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 comment|/* ghost elements have a ghost size */
@@ -6793,7 +6650,7 @@ condition|)
 block|{
 name|ASSERT
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_datacnt
 operator|==
@@ -6802,7 +6659,7 @@ argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_buf
 operator|==
@@ -6811,7 +6668,7 @@ argument_list|)
 expr_stmt|;
 name|to_delta
 operator|=
-name|ab
+name|hdr
 operator|->
 name|b_size
 expr_stmt|;
@@ -6839,7 +6696,7 @@ argument_list|(
 operator|!
 name|BUF_EMPTY
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6851,12 +6708,12 @@ name|arc_anon
 operator|&&
 name|HDR_IN_HASH_TABLE
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 condition|)
 name|buf_hash_remove
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 comment|/* adjust state sizes */
@@ -6902,7 +6759,7 @@ name|from_delta
 argument_list|)
 expr_stmt|;
 block|}
-name|ab
+name|hdr
 operator|->
 name|b_state
 operator|=
@@ -7832,7 +7689,7 @@ name|hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 operator|)
 argument_list|,
 name|demand
@@ -9020,7 +8877,7 @@ name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_BUF_AVAILABLE
+name|ARC_FLAG_BUF_AVAILABLE
 expr_stmt|;
 block|}
 name|mutex_exit
@@ -9311,7 +9168,7 @@ name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_BUF_AVAILABLE
+name|ARC_FLAG_BUF_AVAILABLE
 expr_stmt|;
 block|}
 name|ASSERT
@@ -9561,10 +9418,10 @@ name|bytes_remaining
 decl_stmt|;
 name|arc_buf_hdr_t
 modifier|*
-name|ab
+name|hdr
 decl_stmt|,
 modifier|*
-name|ab_prev
+name|hdr_prev
 init|=
 name|NULL
 decl_stmt|;
@@ -9923,37 +9780,37 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|ab
+name|hdr
 operator|=
 name|list_tail
 argument_list|(
 name|list
 argument_list|)
 init|;
-name|ab
+name|hdr
 condition|;
-name|ab
+name|hdr
 operator|=
-name|ab_prev
+name|hdr_prev
 control|)
 block|{
-name|ab_prev
+name|hdr_prev
 operator|=
 name|list_prev
 argument_list|(
 name|list
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 name|bytes_remaining
 operator|-=
 operator|(
-name|ab
+name|hdr
 operator|->
 name|b_size
 operator|*
-name|ab
+name|hdr
 operator|->
 name|b_datacnt
 operator|)
@@ -9963,13 +9820,13 @@ if|if
 condition|(
 name|HDR_IO_IN_PROGRESS
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 operator|||
 operator|(
 name|spa
 operator|&&
-name|ab
+name|hdr
 operator|->
 name|b_spa
 operator|!=
@@ -9977,20 +9834,20 @@ name|spa
 operator|)
 operator|||
 operator|(
-name|ab
+name|hdr
 operator|->
 name|b_flags
 operator|&
 operator|(
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 operator||
-name|ARC_INDIRECT
+name|ARC_FLAG_INDIRECT
 operator|)
 operator|&&
 name|ddi_get_lbolt
 argument_list|()
 operator|-
-name|ab
+name|hdr
 operator|->
 name|b_arc_access
 operator|<
@@ -10008,15 +9865,15 @@ if|if
 condition|(
 name|recycle
 operator|&&
-name|ab
+name|hdr
 operator|->
 name|b_size
 operator|!=
 name|bytes
 operator|&&
-name|ab_prev
+name|hdr_prev
 operator|&&
-name|ab_prev
+name|hdr_prev
 operator|->
 name|b_size
 operator|==
@@ -10026,7 +9883,7 @@ continue|continue;
 comment|/* ignore markers */
 if|if
 condition|(
-name|ab
+name|hdr
 operator|->
 name|b_spa
 operator|==
@@ -10049,7 +9906,7 @@ name|list_insert_after
 argument_list|(
 name|list
 argument_list|,
-name|ab
+name|hdr
 argument_list|,
 operator|&
 name|marker
@@ -10080,7 +9937,7 @@ argument_list|(
 name|evicted_lock
 argument_list|)
 expr_stmt|;
-name|ab_prev
+name|hdr_prev
 operator|=
 name|list_prev
 argument_list|(
@@ -10108,7 +9965,7 @@ name|hash_lock
 operator|=
 name|HDR_LOCK
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 name|have_lock
@@ -10133,7 +9990,7 @@ argument_list|(
 name|refcount_count
 argument_list|(
 operator|&
-name|ab
+name|hdr
 operator|->
 name|b_refcnt
 argument_list|)
@@ -10141,7 +9998,7 @@ argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_datacnt
 operator|>
@@ -10150,7 +10007,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|ab
+name|hdr
 operator|->
 name|b_buf
 condition|)
@@ -10159,7 +10016,7 @@ name|arc_buf_t
 modifier|*
 name|buf
 init|=
-name|ab
+name|hdr
 operator|->
 name|b_buf
 decl_stmt|;
@@ -10190,7 +10047,7 @@ condition|)
 block|{
 name|bytes_evicted
 operator|+=
-name|ab
+name|hdr
 operator|->
 name|b_size
 expr_stmt|;
@@ -10198,13 +10055,13 @@ if|if
 condition|(
 name|recycle
 operator|&&
-name|ab
+name|hdr
 operator|->
 name|b_type
 operator|==
 name|type
 operator|&&
-name|ab
+name|hdr
 operator|->
 name|b_size
 operator|==
@@ -10213,7 +10070,7 @@ operator|&&
 operator|!
 name|HDR_L2_WRITING
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 condition|)
 block|{
@@ -10255,7 +10112,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|ab
+name|hdr
 operator|->
 name|b_buf
 operator|=
@@ -10322,7 +10179,7 @@ block|}
 block|}
 if|if
 condition|(
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 condition|)
@@ -10331,7 +10188,7 @@ name|ARCSTAT_INCR
 argument_list|(
 name|arcstat_evict_l2_cached
 argument_list|,
-name|ab
+name|hdr
 operator|->
 name|b_size
 argument_list|)
@@ -10343,11 +10200,11 @@ if|if
 condition|(
 name|l2arc_write_eligible
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_spa
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 condition|)
 block|{
@@ -10355,7 +10212,7 @@ name|ARCSTAT_INCR
 argument_list|(
 name|arcstat_evict_l2_eligible
 argument_list|,
-name|ab
+name|hdr
 operator|->
 name|b_size
 argument_list|)
@@ -10367,7 +10224,7 @@ name|ARCSTAT_INCR
 argument_list|(
 name|arcstat_evict_l2_ineligible
 argument_list|,
-name|ab
+name|hdr
 operator|->
 name|b_size
 argument_list|)
@@ -10376,7 +10233,7 @@ block|}
 block|}
 if|if
 condition|(
-name|ab
+name|hdr
 operator|->
 name|b_datacnt
 operator|==
@@ -10387,7 +10244,7 @@ name|arc_change_state
 argument_list|(
 name|evicted_state
 argument_list|,
-name|ab
+name|hdr
 argument_list|,
 name|hash_lock
 argument_list|)
@@ -10396,22 +10253,22 @@ name|ASSERT
 argument_list|(
 name|HDR_IN_HASH_TABLE
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ab
+name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_IN_HASH_TABLE
+name|ARC_FLAG_IN_HASH_TABLE
 expr_stmt|;
-name|ab
+name|hdr
 operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_BUF_AVAILABLE
+name|ARC_FLAG_BUF_AVAILABLE
 expr_stmt|;
 name|DTRACE_PROBE1
 argument_list|(
@@ -10420,7 +10277,7 @@ argument_list|,
 name|arc_buf_hdr_t
 operator|*
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 block|}
@@ -10630,10 +10487,10 @@ parameter_list|)
 block|{
 name|arc_buf_hdr_t
 modifier|*
-name|ab
+name|hdr
 decl_stmt|,
 modifier|*
-name|ab_prev
+name|hdr_prev
 decl_stmt|;
 name|arc_buf_hdr_t
 name|marker
@@ -10744,32 +10601,32 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|ab
+name|hdr
 operator|=
 name|list_tail
 argument_list|(
 name|list
 argument_list|)
 init|;
-name|ab
+name|hdr
 condition|;
-name|ab
+name|hdr
 operator|=
-name|ab_prev
+name|hdr_prev
 control|)
 block|{
-name|ab_prev
+name|hdr_prev
 operator|=
 name|list_prev
 argument_list|(
 name|list
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ab
+name|hdr
 operator|->
 name|b_type
 operator|>
@@ -10777,20 +10634,20 @@ name|ARC_BUFC_NUMTYPES
 condition|)
 name|panic
 argument_list|(
-literal|"invalid ab=%p"
+literal|"invalid hdr=%p"
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|spa
 operator|&&
-name|ab
+name|hdr
 operator|->
 name|b_spa
 operator|!=
@@ -10800,7 +10657,7 @@ continue|continue;
 comment|/* ignore markers */
 if|if
 condition|(
-name|ab
+name|hdr
 operator|->
 name|b_spa
 operator|==
@@ -10811,7 +10668,7 @@ name|hash_lock
 operator|=
 name|HDR_LOCK
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 comment|/* caller may be trying to modify this buffer, skip it */
@@ -10836,7 +10693,7 @@ name|list_insert_after
 argument_list|(
 name|list
 argument_list|,
-name|ab
+name|hdr
 argument_list|,
 operator|&
 name|marker
@@ -10857,7 +10714,7 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|ab_prev
+name|hdr_prev
 operator|=
 name|list_prev
 argument_list|(
@@ -10894,13 +10751,13 @@ argument_list|(
 operator|!
 name|HDR_IO_IN_PROGRESS
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_buf
 operator|==
@@ -10914,13 +10771,13 @@ argument_list|)
 expr_stmt|;
 name|bytes_deleted
 operator|+=
-name|ab
+name|hdr
 operator|->
 name|b_size
 expr_stmt|;
 if|if
 condition|(
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 operator|!=
@@ -10932,7 +10789,7 @@ name|arc_change_state
 argument_list|(
 name|arc_l2c_only
 argument_list|,
-name|ab
+name|hdr
 argument_list|,
 name|hash_lock
 argument_list|)
@@ -10949,7 +10806,7 @@ name|arc_change_state
 argument_list|(
 name|arc_anon
 argument_list|,
-name|ab
+name|hdr
 argument_list|,
 name|hash_lock
 argument_list|)
@@ -10961,7 +10818,7 @@ argument_list|)
 expr_stmt|;
 name|arc_hdr_destroy
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 block|}
@@ -10972,7 +10829,7 @@ argument_list|,
 name|arc_buf_hdr_t
 operator|*
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 if|if
@@ -11000,7 +10857,7 @@ name|list_insert_after
 argument_list|(
 name|list
 argument_list|,
-name|ab
+name|hdr
 argument_list|,
 operator|&
 name|marker
@@ -11026,7 +10883,7 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|ab_prev
+name|hdr_prev
 operator|=
 name|list_prev
 argument_list|(
@@ -13249,7 +13106,7 @@ name|b_hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 condition|?
 name|arc_mru
 else|:
@@ -13569,7 +13426,7 @@ name|arc_access
 parameter_list|(
 name|arc_buf_hdr_t
 modifier|*
-name|buf
+name|hdr
 parameter_list|,
 name|kmutex_t
 modifier|*
@@ -13589,7 +13446,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|buf
+name|hdr
 operator|->
 name|b_state
 operator|==
@@ -13599,14 +13456,14 @@ block|{
 comment|/* 		 * This buffer is not in the cache, and does not 		 * appear in our "ghost" list.  Add the new buffer 		 * to the MRU state. 		 */
 name|ASSERT
 argument_list|(
-name|buf
+name|hdr
 operator|->
 name|b_arc_access
 operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|buf
+name|hdr
 operator|->
 name|b_arc_access
 operator|=
@@ -13620,14 +13477,14 @@ argument_list|,
 name|arc_buf_hdr_t
 operator|*
 argument_list|,
-name|buf
+name|hdr
 argument_list|)
 expr_stmt|;
 name|arc_change_state
 argument_list|(
 name|arc_mru
 argument_list|,
-name|buf
+name|hdr
 argument_list|,
 name|hash_lock
 argument_list|)
@@ -13636,7 +13493,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|buf
+name|hdr
 operator|->
 name|b_state
 operator|==
@@ -13652,11 +13509,11 @@ comment|/* 		 * If this buffer is here because of a prefetch, then either: 		 * 
 if|if
 condition|(
 operator|(
-name|buf
+name|hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 operator|)
 operator|!=
 literal|0
@@ -13667,7 +13524,7 @@ condition|(
 name|refcount_count
 argument_list|(
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_refcnt
 argument_list|)
@@ -13680,7 +13537,7 @@ argument_list|(
 name|list_link_active
 argument_list|(
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_arc_node
 argument_list|)
@@ -13689,12 +13546,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|buf
+name|hdr
 operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 expr_stmt|;
 name|ARCSTAT_BUMP
 argument_list|(
@@ -13702,7 +13559,7 @@ name|arcstat_mru_hits
 argument_list|)
 expr_stmt|;
 block|}
-name|buf
+name|hdr
 operator|->
 name|b_arc_access
 operator|=
@@ -13715,7 +13572,7 @@ if|if
 condition|(
 name|now
 operator|>
-name|buf
+name|hdr
 operator|->
 name|b_arc_access
 operator|+
@@ -13723,7 +13580,7 @@ name|ARC_MINTIME
 condition|)
 block|{
 comment|/* 			 * More than 125ms have passed since we 			 * instantiated this buffer.  Move it to the 			 * most frequently used state. 			 */
-name|buf
+name|hdr
 operator|->
 name|b_arc_access
 operator|=
@@ -13736,14 +13593,14 @@ argument_list|,
 name|arc_buf_hdr_t
 operator|*
 argument_list|,
-name|buf
+name|hdr
 argument_list|)
 expr_stmt|;
 name|arc_change_state
 argument_list|(
 name|arc_mfu
 argument_list|,
-name|buf
+name|hdr
 argument_list|,
 name|hash_lock
 argument_list|)
@@ -13758,7 +13615,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|buf
+name|hdr
 operator|->
 name|b_state
 operator|==
@@ -13772,11 +13629,11 @@ decl_stmt|;
 comment|/* 		 * This buffer has been "accessed" recently, but 		 * was evicted from the cache.  Move it to the 		 * MFU state. 		 */
 if|if
 condition|(
-name|buf
+name|hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 condition|)
 block|{
 name|new_state
@@ -13788,19 +13645,19 @@ condition|(
 name|refcount_count
 argument_list|(
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_refcnt
 argument_list|)
 operator|>
 literal|0
 condition|)
-name|buf
+name|hdr
 operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 expr_stmt|;
 name|DTRACE_PROBE1
 argument_list|(
@@ -13809,7 +13666,7 @@ argument_list|,
 name|arc_buf_hdr_t
 operator|*
 argument_list|,
-name|buf
+name|hdr
 argument_list|)
 expr_stmt|;
 block|}
@@ -13826,11 +13683,11 @@ argument_list|,
 name|arc_buf_hdr_t
 operator|*
 argument_list|,
-name|buf
+name|hdr
 argument_list|)
 expr_stmt|;
 block|}
-name|buf
+name|hdr
 operator|->
 name|b_arc_access
 operator|=
@@ -13841,7 +13698,7 @@ name|arc_change_state
 argument_list|(
 name|new_state
 argument_list|,
-name|buf
+name|hdr
 argument_list|,
 name|hash_lock
 argument_list|)
@@ -13855,7 +13712,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|buf
+name|hdr
 operator|->
 name|b_state
 operator|==
@@ -13866,11 +13723,11 @@ comment|/* 		 * This buffer has been accessed more than once and is 		 * still i
 if|if
 condition|(
 operator|(
-name|buf
+name|hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 operator|)
 operator|!=
 literal|0
@@ -13881,7 +13738,7 @@ argument_list|(
 name|refcount_count
 argument_list|(
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_refcnt
 argument_list|)
@@ -13894,7 +13751,7 @@ argument_list|(
 name|list_link_active
 argument_list|(
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_arc_node
 argument_list|)
@@ -13906,7 +13763,7 @@ argument_list|(
 name|arcstat_mfu_hits
 argument_list|)
 expr_stmt|;
-name|buf
+name|hdr
 operator|->
 name|b_arc_access
 operator|=
@@ -13917,7 +13774,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|buf
+name|hdr
 operator|->
 name|b_state
 operator|==
@@ -13933,11 +13790,11 @@ decl_stmt|;
 comment|/* 		 * This buffer has been accessed more than once but has 		 * been evicted from the cache.  Move it back to the 		 * MFU state. 		 */
 if|if
 condition|(
-name|buf
+name|hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 condition|)
 block|{
 comment|/* 			 * This is a prefetch access... 			 * move this block back to the MRU state. 			 */
@@ -13946,7 +13803,7 @@ argument_list|(
 name|refcount_count
 argument_list|(
 operator|&
-name|buf
+name|hdr
 operator|->
 name|b_refcnt
 argument_list|)
@@ -13957,7 +13814,7 @@ operator|=
 name|arc_mru
 expr_stmt|;
 block|}
-name|buf
+name|hdr
 operator|->
 name|b_arc_access
 operator|=
@@ -13971,14 +13828,14 @@ argument_list|,
 name|arc_buf_hdr_t
 operator|*
 argument_list|,
-name|buf
+name|hdr
 argument_list|)
 expr_stmt|;
 name|arc_change_state
 argument_list|(
 name|new_state
 argument_list|,
-name|buf
+name|hdr
 argument_list|,
 name|hash_lock
 argument_list|)
@@ -13992,7 +13849,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|buf
+name|hdr
 operator|->
 name|b_state
 operator|==
@@ -14000,7 +13857,7 @@ name|arc_l2c_only
 condition|)
 block|{
 comment|/* 		 * This buffer is on the 2nd Level ARC. 		 */
-name|buf
+name|hdr
 operator|->
 name|b_arc_access
 operator|=
@@ -14014,14 +13871,14 @@ argument_list|,
 name|arc_buf_hdr_t
 operator|*
 argument_list|,
-name|buf
+name|hdr
 argument_list|)
 expr_stmt|;
 name|arc_change_state
 argument_list|(
 name|arc_mfu
 argument_list|,
-name|buf
+name|hdr
 argument_list|,
 name|hash_lock
 argument_list|)
@@ -14379,7 +14236,7 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_L2_EVICTED
+name|ARC_FLAG_L2_EVICTED
 expr_stmt|;
 if|if
 condition|(
@@ -14390,7 +14247,7 @@ name|hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 operator|)
 condition|)
 name|hdr
@@ -14398,7 +14255,7 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_L2CACHE
+name|ARC_FLAG_L2CACHE
 expr_stmt|;
 comment|/* byteswap if necessary */
 name|callback_list
@@ -14591,7 +14448,7 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_IO_IN_PROGRESS
+name|ARC_FLAG_IO_IN_PROGRESS
 expr_stmt|;
 name|ASSERT
 argument_list|(
@@ -14631,7 +14488,7 @@ name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_BUF_AVAILABLE
+name|ARC_FLAG_BUF_AVAILABLE
 expr_stmt|;
 block|}
 name|ASSERT
@@ -14662,7 +14519,7 @@ name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_IO_ERROR
+name|ARC_FLAG_IO_ERROR
 expr_stmt|;
 if|if
 condition|(
@@ -14873,7 +14730,7 @@ parameter_list|,
 name|int
 name|zio_flags
 parameter_list|,
-name|uint32_t
+name|arc_flags_t
 modifier|*
 name|arc_flags
 parameter_list|,
@@ -14970,7 +14827,7 @@ block|{
 operator|*
 name|arc_flags
 operator||=
-name|ARC_CACHED
+name|ARC_FLAG_CACHED
 expr_stmt|;
 if|if
 condition|(
@@ -14985,7 +14842,7 @@ condition|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 condition|)
 block|{
 name|cv_wait
@@ -15012,7 +14869,7 @@ argument_list|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_NOWAIT
+name|ARC_FLAG_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -15199,7 +15056,7 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_BUF_AVAILABLE
+name|ARC_FLAG_BUF_AVAILABLE
 expr_stmt|;
 block|}
 else|else
@@ -15219,7 +15076,7 @@ condition|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 operator|&&
 name|refcount_count
 argument_list|(
@@ -15236,7 +15093,7 @@ name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 expr_stmt|;
 block|}
 name|DTRACE_PROBE1
@@ -15261,26 +15118,26 @@ condition|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_L2CACHE
+name|ARC_FLAG_L2CACHE
 condition|)
 name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_L2CACHE
+name|ARC_FLAG_L2CACHE
 expr_stmt|;
 if|if
 condition|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_L2COMPRESS
+name|ARC_FLAG_L2COMPRESS
 condition|)
 name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_L2COMPRESS
+name|ARC_FLAG_L2COMPRESS
 expr_stmt|;
 name|mutex_exit
 argument_list|(
@@ -15300,7 +15157,7 @@ name|hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 operator|)
 argument_list|,
 name|demand
@@ -15507,7 +15364,7 @@ condition|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 condition|)
 block|{
 operator|(
@@ -15526,7 +15383,7 @@ name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 expr_stmt|;
 block|}
 if|if
@@ -15534,26 +15391,26 @@ condition|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_L2CACHE
+name|ARC_FLAG_L2CACHE
 condition|)
 name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_L2CACHE
+name|ARC_FLAG_L2CACHE
 expr_stmt|;
 if|if
 condition|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_L2COMPRESS
+name|ARC_FLAG_L2COMPRESS
 condition|)
 name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_L2COMPRESS
+name|ARC_FLAG_L2COMPRESS
 expr_stmt|;
 if|if
 condition|(
@@ -15568,7 +15425,7 @@ name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_INDIRECT
+name|ARC_FLAG_INDIRECT
 expr_stmt|;
 block|}
 else|else
@@ -15619,13 +15476,13 @@ condition|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 condition|)
 name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 expr_stmt|;
 else|else
 name|add_reference
@@ -15642,26 +15499,26 @@ condition|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_L2CACHE
+name|ARC_FLAG_L2CACHE
 condition|)
 name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_L2CACHE
+name|ARC_FLAG_L2CACHE
 expr_stmt|;
 if|if
 condition|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_L2COMPRESS
+name|ARC_FLAG_L2COMPRESS
 condition|)
 name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_L2COMPRESS
+name|ARC_FLAG_L2COMPRESS
 expr_stmt|;
 name|buf
 operator|=
@@ -15790,7 +15647,7 @@ name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_IO_IN_PROGRESS
+name|ARC_FLAG_IO_IN_PROGRESS
 expr_stmt|;
 if|if
 condition|(
@@ -15934,7 +15791,7 @@ name|hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 operator|)
 argument_list|,
 name|demand
@@ -16203,7 +16060,7 @@ condition|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_NOWAIT
+name|ARC_FLAG_NOWAIT
 condition|)
 block|{
 name|zio_nowait
@@ -16222,7 +16079,7 @@ argument_list|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -16354,7 +16211,7 @@ condition|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 condition|)
 return|return
 operator|(
@@ -16369,7 +16226,7 @@ argument_list|(
 operator|*
 name|arc_flags
 operator|&
-name|ARC_NOWAIT
+name|ARC_FLAG_NOWAIT
 argument_list|)
 expr_stmt|;
 name|zio_nowait
@@ -16568,7 +16425,7 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_BUF_AVAILABLE
+name|ARC_FLAG_BUF_AVAILABLE
 expr_stmt|;
 name|mutex_exit
 argument_list|(
@@ -16855,7 +16712,7 @@ name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_BUF_AVAILABLE
+name|ARC_FLAG_BUF_AVAILABLE
 expr_stmt|;
 name|mutex_exit
 argument_list|(
@@ -17345,7 +17202,7 @@ name|b_flags
 operator|=
 name|flags
 operator|&
-name|ARC_L2_WRITING
+name|ARC_FLAG_L2_WRITING
 expr_stmt|;
 name|nhdr
 operator|->
@@ -17823,7 +17680,7 @@ name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_IO_IN_PROGRESS
+name|ARC_FLAG_IO_IN_PROGRESS
 expr_stmt|;
 block|}
 end_function
@@ -18246,7 +18103,7 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_IO_IN_PROGRESS
+name|ARC_FLAG_IO_IN_PROGRESS
 expr_stmt|;
 comment|/* if it's not anon, we are doing a scrub */
 if|if
@@ -18280,7 +18137,7 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_IO_IN_PROGRESS
+name|ARC_FLAG_IO_IN_PROGRESS
 expr_stmt|;
 block|}
 name|ASSERT
@@ -18430,7 +18287,7 @@ name|hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_IO_IN_PROGRESS
+name|ARC_FLAG_IO_IN_PROGRESS
 operator|)
 operator|==
 literal|0
@@ -18453,7 +18310,7 @@ name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_L2CACHE
+name|ARC_FLAG_L2CACHE
 expr_stmt|;
 if|if
 condition|(
@@ -18463,7 +18320,7 @@ name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_L2COMPRESS
+name|ARC_FLAG_L2COMPRESS
 expr_stmt|;
 name|callback
 operator|=
@@ -20295,13 +20152,13 @@ name|spa_guid
 parameter_list|,
 name|arc_buf_hdr_t
 modifier|*
-name|ab
+name|hdr
 parameter_list|)
 block|{
 comment|/* 	 * A buffer is *not* eligible for the L2ARC if it: 	 * 1. belongs to a different spa. 	 * 2. is already cached on the L2ARC. 	 * 3. has an I/O in progress (it may be an incomplete read). 	 * 4. is flagged not eligible (zfs property). 	 */
 if|if
 condition|(
-name|ab
+name|hdr
 operator|->
 name|b_spa
 operator|!=
@@ -20321,7 +20178,7 @@ return|;
 block|}
 if|if
 condition|(
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 operator|!=
@@ -20343,7 +20200,7 @@ if|if
 condition|(
 name|HDR_IO_IN_PROGRESS
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 condition|)
 block|{
@@ -20363,7 +20220,7 @@ condition|(
 operator|!
 name|HDR_L2CACHE
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 condition|)
 block|{
@@ -20916,10 +20773,10 @@ modifier|*
 name|head
 decl_stmt|,
 modifier|*
-name|ab
+name|hdr
 decl_stmt|,
 modifier|*
-name|ab_prev
+name|hdr_prev
 decl_stmt|;
 name|l2arc_buf_hdr_t
 modifier|*
@@ -21023,7 +20880,7 @@ expr_stmt|;
 comment|/* 	 * All writes completed, or an error was hit. 	 */
 for|for
 control|(
-name|ab
+name|hdr
 operator|=
 name|list_prev
 argument_list|(
@@ -21032,25 +20889,25 @@ argument_list|,
 name|head
 argument_list|)
 init|;
-name|ab
+name|hdr
 condition|;
-name|ab
+name|hdr
 operator|=
-name|ab_prev
+name|hdr_prev
 control|)
 block|{
-name|ab_prev
+name|hdr_prev
 operator|=
 name|list_prev
 argument_list|(
 name|buflist
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 name|abl2
 operator|=
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 expr_stmt|;
@@ -21065,14 +20922,14 @@ name|ZIO_COMPRESS_OFF
 condition|)
 name|l2arc_release_cdata_buf
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 name|hash_lock
 operator|=
 name|HDR_LOCK
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 if|if
@@ -21106,7 +20963,7 @@ name|list_remove
 argument_list|(
 name|buflist
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 name|ARCSTAT_INCR
@@ -21125,7 +20982,7 @@ name|abl2
 operator|->
 name|b_asize
 expr_stmt|;
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 operator|=
@@ -21143,7 +21000,7 @@ name|abl2
 operator|->
 name|b_daddr
 argument_list|,
-name|ab
+name|hdr
 operator|->
 name|b_size
 argument_list|,
@@ -21165,19 +21022,19 @@ argument_list|(
 name|arcstat_l2_size
 argument_list|,
 operator|-
-name|ab
+name|hdr
 operator|->
 name|b_size
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Allow ARC to begin reads to this L2ARC entry. 		 */
-name|ab
+name|hdr
 operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_L2_WRITING
+name|ARC_FLAG_L2_WRITING
 expr_stmt|;
 name|mutex_exit
 argument_list|(
@@ -21822,10 +21679,10 @@ name|abl2
 decl_stmt|;
 name|arc_buf_hdr_t
 modifier|*
-name|ab
+name|hdr
 decl_stmt|,
 modifier|*
-name|ab_prev
+name|hdr_prev
 decl_stmt|;
 name|kmutex_t
 modifier|*
@@ -21936,34 +21793,34 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|ab
+name|hdr
 operator|=
 name|list_tail
 argument_list|(
 name|buflist
 argument_list|)
 init|;
-name|ab
+name|hdr
 condition|;
-name|ab
+name|hdr
 operator|=
-name|ab_prev
+name|hdr_prev
 control|)
 block|{
-name|ab_prev
+name|hdr_prev
 operator|=
 name|list_prev
 argument_list|(
 name|buflist
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 name|hash_lock
 operator|=
 name|HDR_LOCK
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 if|if
@@ -22005,7 +21862,7 @@ if|if
 condition|(
 name|HDR_L2_WRITE_HEAD
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 condition|)
 block|{
@@ -22014,7 +21871,7 @@ name|list_remove
 argument_list|(
 name|buflist
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 name|mutex_exit
@@ -22029,14 +21886,14 @@ condition|(
 operator|!
 name|all
 operator|&&
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 operator|!=
 name|NULL
 operator|&&
 operator|(
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 operator|->
@@ -22044,7 +21901,7 @@ name|b_daddr
 operator|>
 name|taddr
 operator|||
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 operator|->
@@ -22068,7 +21925,7 @@ if|if
 condition|(
 name|HDR_FREE_IN_PROGRESS
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 condition|)
 block|{
@@ -22082,7 +21939,7 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|ab
+name|hdr
 operator|->
 name|b_state
 operator|==
@@ -22094,7 +21951,7 @@ argument_list|(
 operator|!
 name|HDR_L2_READING
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -22103,14 +21960,14 @@ name|arc_change_state
 argument_list|(
 name|arc_anon
 argument_list|,
-name|ab
+name|hdr
 argument_list|,
 name|hash_lock
 argument_list|)
 expr_stmt|;
 name|arc_hdr_destroy
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 block|}
@@ -22121,7 +21978,7 @@ if|if
 condition|(
 name|HDR_L2_READING
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 condition|)
 block|{
@@ -22130,17 +21987,17 @@ argument_list|(
 name|arcstat_l2_evict_reading
 argument_list|)
 expr_stmt|;
-name|ab
+name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_L2_EVICTED
+name|ARC_FLAG_L2_EVICTED
 expr_stmt|;
 block|}
 comment|/* 			 * Tell ARC this no longer exists in L2ARC. 			 */
 if|if
 condition|(
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 operator|!=
@@ -22149,7 +22006,7 @@ condition|)
 block|{
 name|abl2
 operator|=
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 expr_stmt|;
@@ -22169,7 +22026,7 @@ name|abl2
 operator|->
 name|b_asize
 expr_stmt|;
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 operator|=
@@ -22200,7 +22057,7 @@ argument_list|(
 name|arcstat_l2_size
 argument_list|,
 operator|-
-name|ab
+name|hdr
 operator|->
 name|b_size
 argument_list|)
@@ -22210,16 +22067,16 @@ name|list_remove
 argument_list|(
 name|buflist
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 comment|/* 			 * This may have been leftover after a 			 * failed write. 			 */
-name|ab
+name|hdr
 operator|->
 name|b_flags
 operator|&=
 operator|~
-name|ARC_L2_WRITING
+name|ARC_FLAG_L2_WRITING
 expr_stmt|;
 block|}
 name|mutex_exit
@@ -22258,7 +22115,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find and write ARC buffers to the L2ARC device.  *  * An ARC_L2_WRITING flag is set so that the L2ARC buffers are not valid  * for reading until they have completed writing.  * The headroom_boost is an in-out parameter used to maintain headroom boost  * state between calls to this function.  *  * Returns the number of bytes actually written (which may be smaller than  * the delta by which the device hand has changed due to alignment).  */
+comment|/*  * Find and write ARC buffers to the L2ARC device.  *  * An ARC_FLAG_L2_WRITING flag is set so that the L2ARC buffers are not valid  * for reading until they have completed writing.  * The headroom_boost is an in-out parameter used to maintain headroom boost  * state between calls to this function.  *  * Returns the number of bytes actually written (which may be smaller than  * the delta by which the device hand has changed due to alignment).  */
 end_comment
 
 begin_function
@@ -22284,10 +22141,10 @@ parameter_list|)
 block|{
 name|arc_buf_hdr_t
 modifier|*
-name|ab
+name|hdr
 decl_stmt|,
 modifier|*
-name|ab_prev
+name|hdr_prev
 decl_stmt|,
 modifier|*
 name|head
@@ -22391,7 +22248,7 @@ name|head
 operator|->
 name|b_flags
 operator||=
-name|ARC_L2_WRITE_HEAD
+name|ARC_FLAG_L2_WRITE_HEAD
 expr_stmt|;
 name|ARCSTAT_BUMP
 argument_list|(
@@ -22459,7 +22316,7 @@ name|arc_warm
 operator|==
 name|B_FALSE
 condition|)
-name|ab
+name|hdr
 operator|=
 name|list_head
 argument_list|(
@@ -22467,7 +22324,7 @@ name|list
 argument_list|)
 expr_stmt|;
 else|else
-name|ab
+name|hdr
 operator|=
 name|list_tail
 argument_list|(
@@ -22476,7 +22333,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ab
+name|hdr
 operator|==
 name|NULL
 condition|)
@@ -22512,11 +22369,11 @@ expr_stmt|;
 for|for
 control|(
 init|;
-name|ab
+name|hdr
 condition|;
-name|ab
+name|hdr
 operator|=
-name|ab_prev
+name|hdr_prev
 control|)
 block|{
 name|l2arc_buf_hdr_t
@@ -22536,30 +22393,30 @@ name|arc_warm
 operator|==
 name|B_FALSE
 condition|)
-name|ab_prev
+name|hdr_prev
 operator|=
 name|list_next
 argument_list|(
 name|list
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 else|else
-name|ab_prev
+name|hdr_prev
 operator|=
 name|list_prev
 argument_list|(
 name|list
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 name|ARCSTAT_INCR
 argument_list|(
 name|arcstat_l2_write_buffer_bytes_scanned
 argument_list|,
-name|ab
+name|hdr
 operator|->
 name|b_size
 argument_list|)
@@ -22568,7 +22425,7 @@ name|hash_lock
 operator|=
 name|HDR_LOCK
 argument_list|(
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 if|if
@@ -22590,7 +22447,7 @@ continue|continue;
 block|}
 name|passed_sz
 operator|+=
-name|ab
+name|hdr
 operator|->
 name|b_size
 expr_stmt|;
@@ -22621,7 +22478,7 @@ name|l2arc_write_eligible
 argument_list|(
 name|guid
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 condition|)
 block|{
@@ -22637,7 +22494,7 @@ condition|(
 operator|(
 name|write_sz
 operator|+
-name|ab
+name|hdr
 operator|->
 name|b_size
 operator|)
@@ -22740,13 +22597,13 @@ name|b_dev
 operator|=
 name|dev
 expr_stmt|;
-name|ab
+name|hdr
 operator|->
 name|b_flags
 operator||=
-name|ARC_L2_WRITING
+name|ARC_FLAG_L2_WRITING
 expr_stmt|;
-comment|/* 			 * Temporarily stash the data buffer in b_tmp_cdata. 			 * The subsequent write step will pick it up from 			 * there. This is because can't access ab->b_buf 			 * without holding the hash_lock, which we in turn 			 * can't access without holding the ARC list locks 			 * (which we want to avoid during compression/writing). 			 */
+comment|/* 			 * Temporarily stash the data buffer in b_tmp_cdata. 			 * The subsequent write step will pick it up from 			 * there. This is because can't access hdr->b_buf 			 * without holding the hash_lock, which we in turn 			 * can't access without holding the ARC list locks 			 * (which we want to avoid during compression/writing). 			 */
 name|l2hdr
 operator|->
 name|b_compress
@@ -22757,7 +22614,7 @@ name|l2hdr
 operator|->
 name|b_asize
 operator|=
-name|ab
+name|hdr
 operator|->
 name|b_size
 expr_stmt|;
@@ -22765,7 +22622,7 @@ name|l2hdr
 operator|->
 name|b_tmp_cdata
 operator|=
-name|ab
+name|hdr
 operator|->
 name|b_buf
 operator|->
@@ -22773,11 +22630,11 @@ name|b_data
 expr_stmt|;
 name|buf_sz
 operator|=
-name|ab
+name|hdr
 operator|->
 name|b_size
 expr_stmt|;
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 operator|=
@@ -22789,20 +22646,20 @@ name|dev
 operator|->
 name|l2ad_buflist
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Compute and store the buffer cksum before 			 * writing.  On debug the cksum is verified first. 			 */
 name|arc_cksum_verify
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_buf
 argument_list|)
 expr_stmt|;
 name|arc_cksum_compute
 argument_list|(
-name|ab
+name|hdr
 operator|->
 name|b_buf
 argument_list|,
@@ -22867,7 +22724,7 @@ block|}
 comment|/* 	 * Now start writing the buffers. We're starting at the write head 	 * and work backwards, retracing the course of the buffer selector 	 * loop above. 	 */
 for|for
 control|(
-name|ab
+name|hdr
 operator|=
 name|list_prev
 argument_list|(
@@ -22878,9 +22735,9 @@ argument_list|,
 name|head
 argument_list|)
 init|;
-name|ab
+name|hdr
 condition|;
-name|ab
+name|hdr
 operator|=
 name|list_prev
 argument_list|(
@@ -22888,7 +22745,7 @@ name|dev
 operator|->
 name|l2ad_buflist
 argument_list|,
-name|ab
+name|hdr
 argument_list|)
 control|)
 block|{
@@ -22899,10 +22756,10 @@ decl_stmt|;
 name|uint64_t
 name|buf_sz
 decl_stmt|;
-comment|/* 		 * We shouldn't need to lock the buffer here, since we flagged 		 * it as ARC_L2_WRITING in the previous step, but we must take 		 * care to only access its L2 cache parameters. In particular, 		 * ab->b_buf may be invalid by now due to ARC eviction. 		 */
+comment|/* 		 * We shouldn't need to lock the buffer here, since we flagged 		 * it as ARC_FLAG_L2_WRITING in the previous step, but we must 		 * take care to only access its L2 cache parameters. In 		 * particular, hdr->b_buf may be invalid by now due to 		 * ARC eviction. 		 */
 name|l2hdr
 operator|=
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 expr_stmt|;
@@ -22917,11 +22774,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|ab
+name|hdr
 operator|->
 name|b_flags
 operator|&
-name|ARC_L2COMPRESS
+name|ARC_FLAG_L2COMPRESS
 operator|)
 operator|&&
 name|l2hdr
@@ -23622,14 +23479,14 @@ name|l2arc_release_cdata_buf
 parameter_list|(
 name|arc_buf_hdr_t
 modifier|*
-name|ab
+name|hdr
 parameter_list|)
 block|{
 name|l2arc_buf_hdr_t
 modifier|*
 name|l2hdr
 init|=
-name|ab
+name|hdr
 operator|->
 name|b_l2hdr
 decl_stmt|;
@@ -23668,7 +23525,7 @@ name|l2hdr
 operator|->
 name|b_tmp_cdata
 argument_list|,
-name|ab
+name|hdr
 operator|->
 name|b_size
 argument_list|)

@@ -1071,10 +1071,10 @@ name|os_rootbp
 argument_list|)
 condition|)
 block|{
-name|uint32_t
+name|arc_flags_t
 name|aflags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|zbookmark_phys_t
 name|zb
@@ -1108,7 +1108,7 @@ argument_list|)
 condition|)
 name|aflags
 operator||=
-name|ARC_L2CACHE
+name|ARC_FLAG_L2CACHE
 expr_stmt|;
 if|if
 condition|(
@@ -1119,7 +1119,7 @@ argument_list|)
 condition|)
 name|aflags
 operator||=
-name|ARC_L2COMPRESS
+name|ARC_FLAG_L2COMPRESS
 expr_stmt|;
 name|dprintf_bp
 argument_list|(
