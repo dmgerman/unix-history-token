@@ -5634,6 +5634,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bool
+name|thread_suspend_check_needed
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|thread_suspend_switch
 parameter_list|(
