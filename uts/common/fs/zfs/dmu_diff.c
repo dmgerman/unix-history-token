@@ -638,10 +638,10 @@ name|arc_buf_t
 modifier|*
 name|abuf
 decl_stmt|;
-name|uint32_t
+name|arc_flags_t
 name|aflags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|int
 name|blksz

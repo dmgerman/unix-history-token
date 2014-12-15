@@ -2295,10 +2295,10 @@ argument_list|(
 name|bp
 argument_list|)
 decl_stmt|;
-name|uint32_t
+name|arc_flags_t
 name|aflags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|arc_buf_t
 modifier|*
@@ -2419,10 +2419,10 @@ operator|==
 name|DMU_OT_SA
 condition|)
 block|{
-name|uint32_t
+name|arc_flags_t
 name|aflags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|arc_buf_t
 modifier|*
@@ -2546,10 +2546,10 @@ block|}
 else|else
 block|{
 comment|/* it's a level-0 block of a regular object */
-name|uint32_t
+name|arc_flags_t
 name|aflags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|arc_buf_t
 modifier|*
