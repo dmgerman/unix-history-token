@@ -1965,7 +1965,7 @@ name|msz
 operator|=
 name|s
 operator|->
-name|off
+name|vma
 operator|+
 name|s
 operator|->
@@ -1973,7 +1973,7 @@ name|sz
 operator|-
 name|seg
 operator|->
-name|off
+name|addr
 expr_stmt|;
 if|if
 condition|(
