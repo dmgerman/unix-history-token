@@ -702,6 +702,7 @@ name|size_cells
 operator|>
 literal|2
 condition|)
+block|{
 name|rv
 operator|=
 name|ERANGE
@@ -736,30 +737,22 @@ operator|=
 name|cell2
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|rv
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|out
 label|:
-end_label
-
-begin_return
 return|return
 operator|(
 name|rv
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|int
 name|mv_pci_ranges
 parameter_list|(
