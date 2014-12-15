@@ -6407,10 +6407,10 @@ name|bp
 argument_list|)
 condition|)
 block|{
-name|uint32_t
+name|arc_flags_t
 name|flags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|int
 name|i
