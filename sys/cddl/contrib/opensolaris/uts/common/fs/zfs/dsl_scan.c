@@ -7655,10 +7655,16 @@ name|scn_async_destroying
 operator|=
 name|B_FALSE
 expr_stmt|;
+name|scn
+operator|->
+name|scn_async_stalled
+operator|=
+name|B_FALSE
+expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * If we didn't make progress, mark the async destroy as 			 * stalled, so that we will not initiate a spa_sync() on 			 * its behalf. 			 */
+comment|/* 			 * If we didn't make progress, mark the async 			 * destroy as stalled, so that we will not initiate 			 * a spa_sync() on its behalf.  Note that we only 			 * check this if we are not finished, because if the 			 * bptree had no blocks for us to visit, we can 			 * finish without "making progress". 			 */
 name|scn
 operator|->
 name|scn_async_stalled
