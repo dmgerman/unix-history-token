@@ -4370,6 +4370,24 @@ name|vfs_stdsysctl
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|syncer_suspend
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|syncer_resume
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
