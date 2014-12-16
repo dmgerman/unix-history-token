@@ -112,7 +112,7 @@ literal|0x7fffff
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|x
 argument_list|,
@@ -141,7 +141,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|x
 argument_list|,
@@ -180,7 +180,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|y
 operator|-
@@ -214,7 +214,7 @@ argument_list|)
 decl_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|copysignf
 argument_list|(
@@ -287,7 +287,7 @@ name|s
 expr_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 operator|(
 name|beta
@@ -322,7 +322,7 @@ name|z
 operator|=
 name|ctanhf
 argument_list|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 operator|-
 name|cimagf
@@ -339,7 +339,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|cimagf
 argument_list|(

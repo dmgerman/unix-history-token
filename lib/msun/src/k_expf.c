@@ -301,7 +301,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|cosf
 argument_list|(
