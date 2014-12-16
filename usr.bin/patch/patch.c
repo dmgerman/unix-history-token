@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1986, Larry Wall  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following condition is met:  * 1. Redistributions of source code must retain the above copyright notice,  * this condition and the following disclaimer.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * patch - a program to apply diffs to original files  *  * -C option added in 1998, original code by Marc Espie, based on FreeBSD  * behaviour  *  * $OpenBSD: patch.c,v 1.50 2012/05/15 19:32:02 millert Exp $  * $FreeBSD$  *  */
+comment|/*-  * Copyright 1986, Larry Wall  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following condition is met:  * 1. Redistributions of source code must retain the above copyright notice,  * this condition and the following disclaimer.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * patch - a program to apply diffs to original files  *  * -C option added in 1998, original code by Marc Espie, based on FreeBSD  * behaviour  *  * $OpenBSD: patch.c,v 1.52 2014/11/26 18:34:51 millert Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -832,14 +832,26 @@ name|char
 modifier|*
 name|v
 decl_stmt|;
-name|setlinebuf
+name|setvbuf
 argument_list|(
 name|stdout
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|setlinebuf
+name|setvbuf
 argument_list|(
 name|stderr
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
