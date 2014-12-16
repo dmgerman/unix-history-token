@@ -25427,14 +25427,61 @@ argument_list|)
 expr_stmt|;
 name|stats
 operator|->
+name|mgprc
+operator|+=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_MGTPRC
+argument_list|)
+expr_stmt|;
+name|stats
+operator|->
+name|mgpdc
+operator|+=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_MGTPDC
+argument_list|)
+expr_stmt|;
+name|stats
+operator|->
+name|mgptc
+operator|+=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_MGTPTC
+argument_list|)
+expr_stmt|;
+name|stats
+operator|->
 name|tor
 operator|+=
 name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
+name|E1000_TORL
+argument_list|)
+operator|+
+operator|(
+operator|(
+name|u64
+operator|)
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
 name|E1000_TORH
 argument_list|)
+operator|<<
+literal|32
+operator|)
 expr_stmt|;
 name|stats
 operator|->
@@ -25444,8 +25491,22 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
+name|E1000_TOTL
+argument_list|)
+operator|+
+operator|(
+operator|(
+name|u64
+operator|)
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
 name|E1000_TOTH
 argument_list|)
+operator|<<
+literal|32
+operator|)
 expr_stmt|;
 name|stats
 operator|->
@@ -27508,6 +27569,26 @@ name|stat_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
+literal|"recv_length_errors"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|stats
+operator|->
+name|rlec
+argument_list|,
+literal|"Receive Length Errors"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_QUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|stat_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
 literal|"recv_no_buff"
 argument_list|,
 name|CTLFLAG_RD
@@ -27557,7 +27638,7 @@ name|stats
 operator|->
 name|rfc
 argument_list|,
-literal|"Fragmented Packets Received "
+literal|"Fragmented Packets Received"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_QUAD
@@ -27658,6 +27739,26 @@ operator|->
 name|algnerrc
 argument_list|,
 literal|"Alignment Errors"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_QUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|stat_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_no_crs"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|stats
+operator|->
+name|tncrs
+argument_list|,
+literal|"Transmit with No CRS"
 argument_list|)
 expr_stmt|;
 comment|/* On 82575 these are collision counts */
@@ -27761,6 +27862,86 @@ argument_list|,
 literal|"XOFF Transmitted"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_QUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|stat_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"unsupported_fc_recvd"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|stats
+operator|->
+name|fcruc
+argument_list|,
+literal|"Unsupported Flow Control Received"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_QUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|stat_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"mgmt_pkts_recvd"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|stats
+operator|->
+name|mgprc
+argument_list|,
+literal|"Management Packets Received"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_QUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|stat_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"mgmt_pkts_drop"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|stats
+operator|->
+name|mgpdc
+argument_list|,
+literal|"Management Packets Dropped"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_QUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|stat_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"mgmt_pkts_txd"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|stats
+operator|->
+name|mgptc
+argument_list|,
+literal|"Management Packets Transmitted"
+argument_list|)
+expr_stmt|;
 comment|/* Packet Reception Stats */
 name|SYSCTL_ADD_QUAD
 argument_list|(
@@ -27779,7 +27960,7 @@ name|stats
 operator|->
 name|tpr
 argument_list|,
-literal|"Total Packets Received "
+literal|"Total Packets Received"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_QUAD
@@ -27859,7 +28040,7 @@ name|stats
 operator|->
 name|prc64
 argument_list|,
-literal|"64 byte frames received "
+literal|"64 byte frames received"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_QUAD
@@ -27982,6 +28163,26 @@ argument_list|,
 literal|"Good Octets Received"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_QUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|stat_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"total_octets_recvd"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|stats
+operator|->
+name|tor
+argument_list|,
+literal|"Total Octets Received"
+argument_list|)
+expr_stmt|;
 comment|/* Packet Transmission Stats */
 name|SYSCTL_ADD_QUAD
 argument_list|(
@@ -28001,6 +28202,26 @@ operator|->
 name|gotc
 argument_list|,
 literal|"Good Octets Transmitted"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_QUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|stat_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"total_octets_txd"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|stats
+operator|->
+name|tot
+argument_list|,
+literal|"Total Octets Transmitted"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_QUAD
@@ -28100,7 +28321,7 @@ name|stats
 operator|->
 name|ptc64
 argument_list|,
-literal|"64 byte frames transmitted "
+literal|"64 byte frames transmitted"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_QUAD
