@@ -3562,7 +3562,7 @@ argument_list|,
 name|filter
 operator|&
 operator|~
-name|SIS_RXFILT_CTL
+name|SIS_RXFILTCTL_ENABLE
 argument_list|)
 expr_stmt|;
 name|CSR_READ_4
