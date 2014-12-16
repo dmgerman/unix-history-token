@@ -1770,6 +1770,7 @@ name|rs
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|PROC_REAP_KILL
 case|:
