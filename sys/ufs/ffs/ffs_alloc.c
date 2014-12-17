@@ -4242,8 +4242,11 @@ name|prtrealloc
 condition|)
 name|printf
 argument_list|(
-literal|"realloc: ino %d, lbns %jd-%jd\n\told:"
+literal|"realloc: ino %ju, lbns %jd-%jd\n\told:"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -5163,14 +5166,14 @@ name|dup_alloc
 label|:
 name|printf
 argument_list|(
-literal|"mode = 0%o, inum = %lu, fs = %s\n"
+literal|"mode = 0%o, inum = %ju, fs = %s\n"
 argument_list|,
 name|ip
 operator|->
 name|i_mode
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|ip
 operator|->

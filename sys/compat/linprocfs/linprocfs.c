@@ -2873,8 +2873,11 @@ name|PS_ADD
 argument_list|(
 literal|"tty"
 argument_list|,
-literal|"%d"
+literal|"%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|kp
 operator|.
 name|ki_tdev

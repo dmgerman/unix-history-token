@@ -1213,8 +1213,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"realloc: ino %d, lbns %jd-%jd\n\told:"
+literal|"realloc: ino %ju, lbns %jd-%jd\n\told:"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip
 operator|->
 name|i_number
@@ -4717,7 +4720,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bad block %lld, ino %llu\n"
+literal|"bad block %lld, ino %ju\n"
 argument_list|,
 operator|(
 name|long
@@ -4726,9 +4729,7 @@ operator|)
 name|bno
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|ip
 operator|->
