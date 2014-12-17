@@ -390,6 +390,8 @@ decl_stmt|;
 name|Link_map
 modifier|*
 name|lmp
+init|=
+name|NULL
 decl_stmt|;
 if|#
 directive|if
