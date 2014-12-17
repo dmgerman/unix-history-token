@@ -5184,6 +5184,17 @@ operator|)
 operator|==
 literal|0
 operator|)
+operator|&&
+name|lookup_symop_list
+argument_list|(
+name|ecp
+argument_list|,
+name|NULL
+argument_list|,
+name|SYMOP_STRIP
+argument_list|)
+operator|==
+name|NULL
 condition|)
 name|ecp
 operator|->
