@@ -18301,7 +18301,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ctl_expand_number
 parameter_list|(
@@ -47859,7 +47858,7 @@ name|lun
 operator|->
 name|be_lun
 operator|->
-name|pblockexp
+name|ublockexp
 operator|!=
 literal|0
 condition|)
@@ -47873,7 +47872,7 @@ name|lun
 operator|->
 name|be_lun
 operator|->
-name|pblockexp
+name|ublockexp
 operator|)
 argument_list|,
 name|bl_ptr
@@ -47889,7 +47888,7 @@ name|lun
 operator|->
 name|be_lun
 operator|->
-name|pblockoff
+name|ublockoff
 argument_list|,
 name|bl_ptr
 operator|->
