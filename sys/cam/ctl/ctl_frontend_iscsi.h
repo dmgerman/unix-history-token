@@ -124,6 +124,9 @@ decl_stmt|;
 name|uint32_t
 name|cdw_r2t_end
 decl_stmt|;
+name|uint32_t
+name|cdw_datasn
+decl_stmt|;
 block|}
 struct|;
 end_struct

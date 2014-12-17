@@ -1028,7 +1028,7 @@ comment|/* 		 * It's a warning, not an error, to work around what seems 		 * to 
 name|log_warnx
 argument_list|(
 literal|"received Login PDU with wrong StatSN: "
-literal|"is %d, should be %d"
+literal|"is %u, should be %u"
 argument_list|,
 name|ntohl
 argument_list|(
