@@ -15461,6 +15461,17 @@ argument_list|(
 literal|"elf32 kernel"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|kmdp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|smapbase
 operator|=
 operator|(
