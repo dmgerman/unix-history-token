@@ -47814,9 +47814,11 @@ name|blocksize
 expr_stmt|;
 name|scsi_ulto4b
 argument_list|(
-name|MAXPHYS
-operator|/
-name|bs
+name|lun
+operator|->
+name|be_lun
+operator|->
+name|opttxferlen
 argument_list|,
 name|bl_ptr
 operator|->
