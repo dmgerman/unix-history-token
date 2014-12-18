@@ -2121,6 +2121,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ctl_get_lba_status
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ctl_tpc_init
 parameter_list|(
