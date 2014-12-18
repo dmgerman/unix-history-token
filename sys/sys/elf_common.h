@@ -4915,6 +4915,127 @@ end_comment
 begin_define
 define|#
 directive|define
+name|R_AARCH64_ABS64
+value|257
+end_define
+
+begin_comment
+comment|/* Absolute offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AARCH64_ABS32
+value|258
+end_define
+
+begin_comment
+comment|/* Absolute, 32-bit overflow check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AARCH64_ABS16
+value|259
+end_define
+
+begin_comment
+comment|/* Absolute, 16-bit overflow check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AARCH64_PREL64
+value|260
+end_define
+
+begin_comment
+comment|/* PC relative */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AARCH64_PREL32
+value|261
+end_define
+
+begin_comment
+comment|/* PC relative, 32-bit overflow check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AARCH64_PREL16
+value|262
+end_define
+
+begin_comment
+comment|/* PC relative, 16-bit overflow check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AARCH64_COPY
+value|1024
+end_define
+
+begin_comment
+comment|/* Copy data from shared object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AARCH64_GLOB_DAT
+value|1025
+end_define
+
+begin_comment
+comment|/* Set GOT entry to data address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AARCH64_JUMP_SLOT
+value|1026
+end_define
+
+begin_comment
+comment|/* Set GOT entry to code address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AARCH64_RELATIVE
+value|1027
+end_define
+
+begin_comment
+comment|/* Add load address of shared object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AARCH64_TLSDESC
+value|1031
+end_define
+
+begin_comment
+comment|/* Identify the TLS descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|R_ARM_NONE
 value|0
 end_define

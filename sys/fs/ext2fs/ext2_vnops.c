@@ -6343,10 +6343,10 @@ name|ip
 operator|->
 name|i_devvp
 argument_list|,
-literal|"\tino %lu"
+literal|"\tino %ju"
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|ip
 operator|->

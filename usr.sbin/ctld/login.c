@@ -452,16 +452,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ISCSI_SNLT
+argument_list|(
 name|ntohl
 argument_list|(
 name|bhslr
 operator|->
 name|bhslr_cmdsn
 argument_list|)
-operator|<
+argument_list|,
 name|conn
 operator|->
 name|conn_cmdsn
+argument_list|)
 condition|)
 block|{
 name|login_send_error
@@ -478,7 +481,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Login PDU with decreasing CmdSN: "
-literal|"was %d, is %d"
+literal|"was %u, is %u"
 argument_list|,
 name|conn
 operator|->
@@ -525,7 +528,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Login PDU with wrong ExpStatSN: "
-literal|"is %d, should be %d"
+literal|"is %u, should be %u"
 argument_list|,
 name|ntohl
 argument_list|(

@@ -2506,6 +2506,7 @@ argument_list|,
 name|ERESTART
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|SINGLE_ALLPROC
 case|:

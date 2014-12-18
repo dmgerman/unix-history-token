@@ -1776,7 +1776,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cpackl
+name|CMPLXL
 argument_list|(
 name|cos
 argument_list|(

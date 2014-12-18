@@ -893,7 +893,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 argument_list|,
@@ -913,7 +913,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|y
 argument_list|,
@@ -932,7 +932,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 operator|+
@@ -945,7 +945,7 @@ return|;
 comment|/* 		 * All other cases involving NaN return NaN + I*NaN. 		 * C99 leaves it optional whether to raise invalid if one of 		 * the arguments is not NaN, so we opt not to raise it. 		 */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 operator|+
@@ -1013,7 +1013,7 @@ name|m_ln2
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|copysign
 argument_list|(
@@ -1122,7 +1122,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|copysign
 argument_list|(
@@ -1163,7 +1163,7 @@ name|w
 init|=
 name|casinh
 argument_list|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|cimag
 argument_list|(
@@ -1179,7 +1179,7 @@ argument_list|)
 decl_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|cimag
 argument_list|(
@@ -1306,7 +1306,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|y
 operator|+
@@ -1327,7 +1327,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 operator|+
@@ -1347,7 +1347,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|pio2_hi
 operator|+
@@ -1362,7 +1362,7 @@ return|;
 comment|/* 		 * All other cases involving NaN return NaN + I*NaN. 		 * C99 leaves it optional whether to raise invalid if one of 		 * the arguments is not NaN, so we opt not to raise it. 		 */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 operator|+
@@ -1438,7 +1438,7 @@ name|ry
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|rx
 argument_list|,
@@ -1460,7 +1460,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 literal|0
 argument_list|,
@@ -1489,7 +1489,7 @@ literal|4
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|pio2_hi
 operator|-
@@ -1596,7 +1596,7 @@ name|ry
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|rx
 argument_list|,
@@ -1666,7 +1666,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|ry
 argument_list|,
@@ -1685,7 +1685,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|fabs
 argument_list|(
@@ -1706,7 +1706,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|ry
 argument_list|,
@@ -1716,7 +1716,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|fabs
 argument_list|(
@@ -1824,7 +1824,7 @@ literal|2
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|log
 argument_list|(
@@ -1864,7 +1864,7 @@ name|SQRT_MIN
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|log
 argument_list|(
@@ -1887,7 +1887,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|log
 argument_list|(
@@ -2214,7 +2214,7 @@ literal|1
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|atanh
 argument_list|(
@@ -2234,7 +2234,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 argument_list|,
@@ -2268,7 +2268,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|copysign
 argument_list|(
@@ -2293,7 +2293,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|copysign
 argument_list|(
@@ -2316,7 +2316,7 @@ return|;
 comment|/* 		 * All other cases involving NaN return NaN + I*NaN. 		 * C99 leaves it optional whether to raise invalid if one of 		 * the arguments is not NaN, so we opt not to raise it. 		 */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 operator|+
@@ -2353,7 +2353,7 @@ name|RECIP_EPSILON
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|real_part_reciprocal
 argument_list|(
@@ -2520,7 +2520,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|copysign
 argument_list|(
@@ -2561,7 +2561,7 @@ name|w
 init|=
 name|catanh
 argument_list|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|cimag
 argument_list|(
@@ -2577,7 +2577,7 @@ argument_list|)
 decl_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|cimag
 argument_list|(

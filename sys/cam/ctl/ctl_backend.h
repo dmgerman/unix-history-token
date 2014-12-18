@@ -183,6 +183,14 @@ name|uint16_t
 name|pblockoff
 decl_stmt|;
 comment|/* passed to CTL */
+name|uint16_t
+name|ublockexp
+decl_stmt|;
+comment|/* passed to CTL */
+name|uint16_t
+name|ublockoff
+decl_stmt|;
+comment|/* passed to CTL */
 name|uint32_t
 name|atomicblock
 decl_stmt|;

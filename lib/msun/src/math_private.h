@@ -904,15 +904,21 @@ value|((z).a[1])
 end_define
 
 begin_comment
-comment|/*  * Inline functions that can be used to construct complex values.  *  * The C99 standard intends x+I*y to be used for this, but x+I*y is  * currently unusable in general since gcc introduces many overflow,  * underflow, sign and efficiency bugs by rewriting I*y as  * (0.0+I)*(y+0.0*I) and laboriously computing the full complex product.  * In particular, I*Inf is corrupted to NaN+I*Inf, and I*-0 is corrupted  * to -0.0+I*0.0.  */
+comment|/*  * Inline functions that can be used to construct complex values.  *  * The C99 standard intends x+I*y to be used for this, but x+I*y is  * currently unusable in general since gcc introduces many overflow,  * underflow, sign and efficiency bugs by rewriting I*y as  * (0.0+I)*(y+0.0*I) and laboriously computing the full complex product.  * In particular, I*Inf is corrupted to NaN+I*Inf, and I*-0 is corrupted  * to -0.0+I*0.0.  *  * The C11 standard introduced the macros CMPLX(), CMPLXF() and CMPLXL()  * to construct complex values. The functions below are modelled after  * these macros, with the exception that they cannot be used to  * construct compile-time complex values.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CMPLXF
+end_ifndef
 
 begin_function
 specifier|static
 name|__inline
 name|float
 name|complex
-name|cpackf
+name|CMPLXF
 parameter_list|(
 name|float
 name|x
@@ -948,12 +954,23 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CMPLX
+end_ifndef
+
 begin_function
 specifier|static
 name|__inline
 name|double
 name|complex
-name|cpack
+name|CMPLX
 parameter_list|(
 name|double
 name|x
@@ -989,13 +1006,24 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CMPLXL
+end_ifndef
+
 begin_function
 specifier|static
 name|__inline
 name|long
 name|double
 name|complex
-name|cpackl
+name|CMPLXL
 parameter_list|(
 name|long
 name|double
@@ -1032,6 +1060,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

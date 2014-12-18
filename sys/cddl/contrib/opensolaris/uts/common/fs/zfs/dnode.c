@@ -6406,8 +6406,6 @@ name|db
 argument_list|,
 name|children_dnodes
 argument_list|,
-name|NULL
-argument_list|,
 name|dnode_buf_pageout
 argument_list|)
 condition|)

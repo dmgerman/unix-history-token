@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1181,8 +1187,11 @@ name|dflag
 condition|)
 name|printf
 argument_list|(
-literal|"ttydev:0x%x\n"
+literal|"ttydev:0x%jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|tdev
 argument_list|)
 expr_stmt|;
@@ -2052,7 +2061,7 @@ name|dflag
 condition|)
 name|printf
 argument_list|(
-literal|"sig:%d, cmd:%s, pid:%d, dev:0x%x uid:%d\n"
+literal|"sig:%d, cmd:%s, pid:%d, dev:0x%jx uid:%d\n"
 argument_list|,
 name|sig
 argument_list|,
@@ -2060,6 +2069,9 @@ name|thiscmd
 argument_list|,
 name|thispid
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|thistdev
 argument_list|,
 name|thisuid

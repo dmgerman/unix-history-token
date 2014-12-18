@@ -122,7 +122,7 @@ condition|)
 comment|/* x is NaN */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 argument_list|,
@@ -152,7 +152,7 @@ expr_stmt|;
 comment|/* x = copysign(1, x) */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 argument_list|,
@@ -192,7 +192,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|y
 operator|-
@@ -227,7 +227,7 @@ argument_list|)
 decl_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|copysign
 argument_list|(
@@ -303,7 +303,7 @@ name|s
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 operator|(
 name|beta
@@ -339,7 +339,7 @@ name|z
 operator|=
 name|ctanh
 argument_list|(
-name|cpack
+name|CMPLX
 argument_list|(
 operator|-
 name|cimag
@@ -356,7 +356,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|cimag
 argument_list|(

@@ -134,7 +134,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|coshf
 argument_list|(
@@ -156,7 +156,7 @@ condition|)
 comment|/* small x: normal case */
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|coshf
 argument_list|(
@@ -203,7 +203,7 @@ literal|0.5f
 expr_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|h
 operator|*
@@ -240,7 +240,7 @@ name|z
 operator|=
 name|__ldexp_cexpf
 argument_list|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|fabsf
 argument_list|(
@@ -256,7 +256,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|crealf
 argument_list|(
@@ -289,7 +289,7 @@ name|x
 expr_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|h
 operator|*
@@ -323,7 +323,7 @@ literal|0x7f800000
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|y
 operator|-
@@ -367,7 +367,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|x
 operator|*
@@ -386,7 +386,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|x
 operator|*
@@ -420,7 +420,7 @@ literal|0x7f800000
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|y
 operator|-
@@ -459,7 +459,7 @@ literal|0x7f800000
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|x
 operator|*
@@ -477,7 +477,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 operator|(
 name|x
@@ -502,7 +502,7 @@ return|;
 block|}
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 operator|(
 name|x
@@ -547,7 +547,7 @@ return|return
 operator|(
 name|ccoshf
 argument_list|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 operator|-
 name|cimagf

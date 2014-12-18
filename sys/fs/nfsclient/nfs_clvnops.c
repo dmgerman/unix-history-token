@@ -5848,12 +5848,8 @@ name|cn_flags
 operator|&
 name|MAKEENTRY
 operator|)
-operator|&&
-name|cnp
-operator|->
-name|cn_nameiop
 operator|!=
-name|CREATE
+literal|0
 operator|&&
 name|dattrflag
 condition|)

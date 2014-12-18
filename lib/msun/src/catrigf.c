@@ -830,7 +830,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|x
 argument_list|,
@@ -849,7 +849,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|y
 argument_list|,
@@ -867,7 +867,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|x
 operator|+
@@ -879,7 +879,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|x
 operator|+
@@ -946,7 +946,7 @@ name|m_ln2
 expr_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|copysignf
 argument_list|(
@@ -1053,7 +1053,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|copysignf
 argument_list|(
@@ -1090,7 +1090,7 @@ name|w
 init|=
 name|casinhf
 argument_list|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|cimagf
 argument_list|(
@@ -1106,7 +1106,7 @@ argument_list|)
 decl_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|cimagf
 argument_list|(
@@ -1228,7 +1228,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|y
 operator|+
@@ -1248,7 +1248,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|x
 operator|+
@@ -1267,7 +1267,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|pio2_hi
 operator|+
@@ -1281,7 +1281,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|x
 operator|+
@@ -1356,7 +1356,7 @@ name|ry
 expr_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|rx
 argument_list|,
@@ -1377,7 +1377,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 literal|0
 argument_list|,
@@ -1405,7 +1405,7 @@ literal|4
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|pio2_hi
 operator|-
@@ -1512,7 +1512,7 @@ name|ry
 expr_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|rx
 argument_list|,
@@ -1577,7 +1577,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|ry
 argument_list|,
@@ -1594,7 +1594,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|fabsf
 argument_list|(
@@ -1614,7 +1614,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|ry
 argument_list|,
@@ -1624,7 +1624,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|fabsf
 argument_list|(
@@ -1727,7 +1727,7 @@ literal|2
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|logf
 argument_list|(
@@ -1766,7 +1766,7 @@ name|SQRT_MIN
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|logf
 argument_list|(
@@ -1789,7 +1789,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|logf
 argument_list|(
@@ -2088,7 +2088,7 @@ literal|1
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|atanhf
 argument_list|(
@@ -2107,7 +2107,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|x
 argument_list|,
@@ -2140,7 +2140,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|copysignf
 argument_list|(
@@ -2164,7 +2164,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|copysignf
 argument_list|(
@@ -2186,7 +2186,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|x
 operator|+
@@ -2223,7 +2223,7 @@ name|RECIP_EPSILON
 condition|)
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|real_part_reciprocal
 argument_list|(
@@ -2389,7 +2389,7 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|copysignf
 argument_list|(
@@ -2426,7 +2426,7 @@ name|w
 init|=
 name|catanhf
 argument_list|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|cimagf
 argument_list|(
@@ -2442,7 +2442,7 @@ argument_list|)
 decl_stmt|;
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|cimagf
 argument_list|(
