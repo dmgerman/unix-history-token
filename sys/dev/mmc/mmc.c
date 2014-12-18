@@ -8836,13 +8836,6 @@ operator|.
 name|au_size
 expr_stmt|;
 block|}
-name|mmc_select_card
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Find max supported bus width. */
 if|if
 condition|(
@@ -8949,6 +8942,13 @@ name|ivar
 argument_list|)
 expr_stmt|;
 block|}
+name|mmc_select_card
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|mmc_decode_cid_mmc
@@ -9311,13 +9311,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mmc_select_card
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Handle HC erase sector size. */
 if|if
 condition|(
@@ -9356,6 +9349,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|mmc_select_card
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
