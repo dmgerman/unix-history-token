@@ -2445,11 +2445,10 @@ name|inline_data_granularity
 operator|=
 literal|0
 expr_stmt|;
+name|ctl_set_success
+argument_list|(
 name|ctsio
-operator|->
-name|scsi_status
-operator|=
-name|SCSI_STATUS_OK
+argument_list|)
 expr_stmt|;
 name|ctsio
 operator|->
@@ -2805,6 +2804,11 @@ literal|3
 index|]
 operator|=
 name|EC_CSCD_ID
+expr_stmt|;
+name|ctl_set_success
+argument_list|(
+name|ctsio
+argument_list|)
 expr_stmt|;
 name|ctsio
 operator|->
@@ -3347,6 +3351,11 @@ name|transfer_count
 argument_list|)
 expr_stmt|;
 block|}
+name|ctl_set_success
+argument_list|(
+name|ctsio
+argument_list|)
+expr_stmt|;
 name|ctsio
 operator|->
 name|io_hdr
@@ -3777,6 +3786,11 @@ argument_list|,
 name|list_copy
 operator|.
 name|sense_len
+argument_list|)
+expr_stmt|;
+name|ctl_set_success
+argument_list|(
+name|ctsio
 argument_list|)
 expr_stmt|;
 name|ctsio
@@ -4289,6 +4303,11 @@ argument_list|,
 name|list_copy
 operator|.
 name|sense_len
+argument_list|)
+expr_stmt|;
+name|ctl_set_success
+argument_list|(
+name|ctsio
 argument_list|)
 expr_stmt|;
 name|ctsio
@@ -8501,8 +8520,6 @@ modifier|*
 name|tior
 decl_stmt|;
 comment|/* 	 * Very minimal retry logic.  We basically retry if we got an error 	 * back, and the retry count is greater than 0.  If we ever want 	 * more sophisticated initiator type behavior, the CAM error 	 * recovery code in ../common might be helpful. 	 */
-comment|//	if ((io->io_hdr.status& CTL_STATUS_MASK) != CTL_SUCCESS)
-comment|//		ctl_io_error_print(io, NULL);
 name|tio
 operator|=
 name|io
@@ -13135,6 +13152,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	printf("RRTI(list=%u) valid=%d\n", 	    scsi_4btoul(cdb->list_identifier), list_copy.res_token_valid); */
+name|ctl_set_success
+argument_list|(
+name|ctsio
+argument_list|)
+expr_stmt|;
 name|ctsio
 operator|->
 name|io_hdr
@@ -13483,6 +13505,11 @@ name|available_data
 argument_list|)
 expr_stmt|;
 comment|/* 	printf("RART tokens=%d\n", i); */
+name|ctl_set_success
+argument_list|(
+name|ctsio
+argument_list|)
+expr_stmt|;
 name|ctsio
 operator|->
 name|io_hdr

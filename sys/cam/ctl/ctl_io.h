@@ -333,7 +333,12 @@ operator||
 name|CTL_FLAG_AUTO_MIRROR
 operator||
 name|CTL_FLAG_REDIR_DONE
+block|,
 comment|/* Flags we care about for 						   remote DMA */
+name|CTL_FLAG_STATUS_SENT
+init|=
+literal|0x10000000
+comment|/* Status sent by datamove */
 block|}
 name|ctl_io_flags
 typedef|;
