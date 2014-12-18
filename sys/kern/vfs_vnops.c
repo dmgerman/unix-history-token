@@ -748,6 +748,7 @@ name|cn_nameiop
 operator|=
 name|CREATE
 expr_stmt|;
+comment|/* 		 * Set NOCACHE to avoid flushing the cache when 		 * rolling in many files at once. 		*/
 name|ndp
 operator|->
 name|ni_cnd
@@ -759,6 +760,8 @@ operator||
 name|LOCKPARENT
 operator||
 name|LOCKLEAF
+operator||
+name|NOCACHE
 expr_stmt|;
 if|if
 condition|(

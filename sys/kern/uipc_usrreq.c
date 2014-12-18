@@ -2234,6 +2234,8 @@ operator||
 name|LOCKPARENT
 operator||
 name|SAVENAME
+operator||
+name|NOCACHE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,

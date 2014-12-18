@@ -6386,6 +6386,8 @@ operator||
 name|LOCKLEAF
 operator||
 name|SAVESTART
+operator||
+name|NOCACHE
 expr_stmt|;
 comment|/* 	 * Call namei and do initial cleanup to get a few things 	 * out of the way.  If we get an initial error we cleanup 	 * and return here to avoid special-casing the invalid nd 	 * structure through the rest of the case.  dirp may be 	 * set even if an error occurs, but the nd structure will not 	 * be valid at all if an error occurs so we have to invalidate it 	 * prior to calling nfsm_reply ( which might goto nfsmout ). 	 */
 name|error
@@ -7808,6 +7810,8 @@ operator||
 name|LOCKLEAF
 operator||
 name|SAVESTART
+operator||
+name|NOCACHE
 expr_stmt|;
 comment|/* 	 * Handle nfs_namei() call.  If an error occurs, the nd structure 	 * is not valid.  However, nfsm_*() routines may still jump to 	 * nfsmout. 	 */
 name|error
@@ -10790,6 +10794,8 @@ operator|.
 name|cn_flags
 operator|=
 name|LOCKPARENT
+operator||
+name|NOCACHE
 expr_stmt|;
 name|error
 operator|=
@@ -11500,6 +11506,8 @@ operator|=
 name|LOCKPARENT
 operator||
 name|SAVESTART
+operator||
+name|NOCACHE
 expr_stmt|;
 name|error
 operator|=
@@ -12455,6 +12463,8 @@ operator|.
 name|cn_flags
 operator|=
 name|LOCKPARENT
+operator||
+name|NOCACHE
 expr_stmt|;
 name|error
 operator|=

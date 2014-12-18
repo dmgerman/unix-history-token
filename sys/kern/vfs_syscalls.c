@@ -5873,6 +5873,8 @@ operator||
 name|SAVENAME
 operator||
 name|AUDITVNODE1
+operator||
+name|NOCACHE
 argument_list|,
 name|pathseg
 argument_list|,
@@ -6454,6 +6456,8 @@ operator||
 name|SAVENAME
 operator||
 name|AUDITVNODE1
+operator||
+name|NOCACHE
 argument_list|,
 name|pathseg
 argument_list|,
@@ -7277,6 +7281,8 @@ operator||
 name|SAVENAME
 operator||
 name|AUDITVNODE2
+operator||
+name|NOCACHE
 argument_list|,
 name|segflg
 argument_list|,
@@ -7916,6 +7922,8 @@ operator||
 name|SAVENAME
 operator||
 name|AUDITVNODE1
+operator||
+name|NOCACHE
 argument_list|,
 name|segflg
 argument_list|,
@@ -17563,6 +17571,8 @@ operator||
 name|SAVENAME
 operator||
 name|AUDITVNODE1
+operator||
+name|NOCACHE
 argument_list|,
 name|segflg
 argument_list|,
