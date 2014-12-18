@@ -211,6 +211,8 @@ name|CTL_SER_EXTENT
 block|,
 name|CTL_SER_EXTENTOPT
 block|,
+name|CTL_SER_EXTENTSEQ
+block|,
 name|CTL_SER_PASS
 block|,
 name|CTL_SER_SKIP
@@ -453,6 +455,20 @@ init|=
 literal|0x800
 block|}
 name|ctl_lun_flags
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CTL_LUN_SERSEQ_OFF
+block|,
+name|CTL_LUN_SERSEQ_READ
+block|,
+name|CTL_LUN_SERSEQ_ON
+block|}
+name|ctl_lun_serseq
 typedef|;
 end_typedef
 
@@ -1259,6 +1275,9 @@ name|lun
 decl_stmt|;
 name|ctl_lun_flags
 name|flags
+decl_stmt|;
+name|ctl_lun_serseq
+name|serseq
 decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(

@@ -133,6 +133,17 @@ begin_comment
 comment|/* Optional extent check */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|xS
+value|CTL_SER_EXTENTSEQ
+end_define
+
+begin_comment
+comment|/* Sequential extent check */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|ctl_serialize_action
@@ -179,7 +190,7 @@ comment|/*READ    */
 block|{
 name|pS
 block|,
-name|pS
+name|xS
 block|,
 name|xT
 block|,
