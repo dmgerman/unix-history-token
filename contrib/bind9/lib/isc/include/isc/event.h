@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -178,6 +178,35 @@ parameter_list|,
 name|isc_taskaction_t
 name|action
 parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_event_t
+modifier|*
+name|isc_event_constallocate
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|void
+modifier|*
+name|sender
+parameter_list|,
+name|isc_eventtype_t
+name|type
+parameter_list|,
+name|isc_taskaction_t
+name|action
+parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -190,7 +219,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Allocate an event structure.   *  * Allocate and initialize in a structure with initial elements  * defined by:  *  * \code  *	struct {  *		ISC_EVENT_COMMON(struct isc_event);  *		...  *	};  * \endcode  *	  * Requires:  *\li	'size'>= sizeof(struct isc_event)  *\li	'action' to be non NULL  *  * Returns:  *\li	a pointer to a initialized structure of the requested size.  *\li	NULL if unable to allocate memory.  */
+comment|/*%<  * Allocate an event structure.  *  * Allocate and initialize in a structure with initial elements  * defined by:  *  * \code  *	struct {  *		ISC_EVENT_COMMON(struct isc_event);  *		...  *	};  * \endcode  *  * Requires:  *\li	'size'>= sizeof(struct isc_event)  *\li	'action' to be non NULL  *  * Returns:  *\li	a pointer to a initialized structure of the requested size.  *\li	NULL if unable to allocate memory.  */
 end_comment
 
 begin_function_decl

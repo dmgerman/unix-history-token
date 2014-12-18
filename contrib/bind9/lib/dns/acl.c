@@ -1230,6 +1230,21 @@ operator|(
 name|ISC_R_NOMEMORY
 operator|)
 return|;
+comment|/* Zero. */
+name|memset
+argument_list|(
+name|newmem
+argument_list|,
+literal|0
+argument_list|,
+name|newalloc
+operator|*
+sizeof|sizeof
+argument_list|(
+name|dns_aclelement_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Copy in the original elements */
 name|memmove
 argument_list|(

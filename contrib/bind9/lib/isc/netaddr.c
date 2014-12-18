@@ -1161,6 +1161,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|INSIST
+argument_list|(
+name|nbytes
+operator|<
+name|ipbytes
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1189,6 +1196,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|nbytes
+operator|<
+name|ipbytes
+operator|&&
 name|memcmp
 argument_list|(
 name|p

@@ -4,10 +4,6 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009, 2011-2014  Internet Systems C
 end_comment
 
 begin_comment
-comment|/* $Id$ */
-end_comment
-
-begin_comment
 comment|/*! \file */
 end_comment
 
@@ -509,7 +505,7 @@ parameter_list|,
 name|node
 parameter_list|)
 define|\
-value|(chain)->levels[(chain)->level_count++] = (node)
+value|do { \ 		INSIST((chain)->level_count< DNS_RBT_LEVELBLOCK); \ 		(chain)->levels[(chain)->level_count++] = (node); \ 	} while (0)
 end_define
 
 begin_comment

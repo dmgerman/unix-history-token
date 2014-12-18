@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008, 2011, 2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008, 2011, 2013, 2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -170,9 +170,6 @@ argument_list|)
 name|publink
 expr_stmt|;
 comment|/*%< RW: client use */
-name|isc_uint32_t
-name|qtotal
-decl_stmt|;
 comment|/* Private */
 name|isc_mutex_t
 name|lock
@@ -587,6 +584,10 @@ name|unsigned
 name|int
 name|depth
 parameter_list|,
+name|isc_counter_t
+modifier|*
+name|qc
+parameter_list|,
 name|dns_adbfind_t
 modifier|*
 modifier|*
@@ -698,7 +699,7 @@ comment|/*%<  * Mark the given address as lame for the<qname,qtype>.  expire_tim
 end_comment
 
 begin_comment
-comment|/*  * A reasonable default for RTT adjustments  */
+comment|/*  * Reasonable defaults for RTT adjustments  *  * (Note: these values function both as scaling factors and as  * indicators of the type of RTT adjustment operation taking place.  * Adjusting the scaling factors is fine, as long as they all remain  * unique values.)  */
 end_comment
 
 begin_define
@@ -758,7 +759,29 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Mix the round trip time into the existing smoothed rtt.   * The formula used  * (where srtt is the existing rtt value, and rtt and factor are arguments to  * this function):  *  *\code  *	new_srtt = (old_srtt / 10 * factor) + (rtt / 10 * (10 - factor));  *\endcode  *  * XXXRTH  Do we want to publish the formula?  What if we want to change how  *         this works later on?  Recommend/require that the units are  *	   microseconds?  *  * Requires:  *  *\li	adb be valid.  *  *\li	addr be valid.  *  *\li	0<= factor<= 10  *  * Note:  *  *\li	The srtt in addr will be updated to reflect the new global  *	srtt value.  This may include changes made by others.  */
+comment|/*%<  * Mix the round trip time into the existing smoothed rtt.  *  * Requires:  *  *\li	adb be valid.  *  *\li	addr be valid.  *  *\li	0<= factor<= 10  *  * Note:  *  *\li	The srtt in addr will be updated to reflect the new global  *	srtt value.  This may include changes made by others.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_adb_agesrtt
+parameter_list|(
+name|dns_adb_t
+modifier|*
+name|adb
+parameter_list|,
+name|dns_adbaddrinfo_t
+modifier|*
+name|addr
+parameter_list|,
+name|isc_stdtime_t
+name|now
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * dns_adb_agesrtt is equivalent to dns_adb_adjustsrtt with factor  * equal to DNS_ADB_RTTADJAGE and the current time passed in.  *  * Requires:  *  *\li	adb be valid.  *  *\li	addr be valid.  *  * Note:  *  *\li	The srtt in addr will be updated to reflect the new global  *	srtt value.  This may include changes made by others.  */
 end_comment
 
 begin_function_decl

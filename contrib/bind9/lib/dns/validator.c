@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1467,7 +1467,7 @@ argument_list|)
 expr_stmt|;
 name|result
 operator|=
-name|isc_base32hex_decoderegion
+name|isc_base32hexnp_decoderegion
 argument_list|(
 operator|&
 name|hashlabel
@@ -4523,19 +4523,60 @@ operator|!
 name|exists
 condition|)
 block|{
+name|dns_name_t
+modifier|*
+name|closest
+decl_stmt|;
+name|unsigned
+name|int
+name|clabels
+decl_stmt|;
 name|val
 operator|->
 name|attributes
 operator||=
 name|VALATTR_FOUNDNOQNAME
 expr_stmt|;
+name|closest
+operator|=
+name|dns_fixedname_name
+argument_list|(
+operator|&
+name|val
+operator|->
+name|closest
+argument_list|)
+expr_stmt|;
+name|clabels
+operator|=
+name|dns_name_countlabels
+argument_list|(
+name|closest
+argument_list|)
+expr_stmt|;
+comment|/* 				 * If we are validating a wildcard response 				 * clabels will not be zero.  We then need 				 * to check if the generated wilcard from 				 * dns_nsec_noexistnodata is consistent with 				 * the wildcard used to generate the response. 				 */
+if|if
+condition|(
+name|clabels
+operator|==
+literal|0
+operator|||
+name|dns_name_countlabels
+argument_list|(
+name|wild
+argument_list|)
+operator|==
+name|clabels
+operator|+
+literal|1
+condition|)
 name|val
 operator|->
 name|attributes
 operator||=
 name|VALATTR_FOUNDCLOSEST
 expr_stmt|;
-comment|/* 				 * The NSEC noqname proof also contains 				 * the closest encloser.  				 */
+comment|/* 				 * The NSEC noqname proof also contains 				 * the closest encloser. 				 */
 if|if
 condition|(
 name|NEEDNOQNAME
@@ -13072,6 +13113,12 @@ name|val
 argument_list|)
 operator|&&
 name|FOUNDCLOSEST
+argument_list|(
+name|val
+argument_list|)
+operator|&&
+operator|!
+name|FOUNDOPTOUT
 argument_list|(
 name|val
 argument_list|)

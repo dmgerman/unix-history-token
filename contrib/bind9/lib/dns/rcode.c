@@ -751,7 +751,7 @@ operator|(
 name|ISC_R_BADNUMBER
 operator|)
 return|;
-comment|/* 	 * We have a potential number.  Try to parse it with 	 * isc_parse_uint32().  isc_parse_uint32() requires 	 * null termination, so we must make a copy. 	 */
+comment|/* 	 * We have a potential number.	Try to parse it with 	 * isc_parse_uint32().	isc_parse_uint32() requires 	 * null termination, so we must make a copy. 	 */
 name|strncpy
 argument_list|(
 name|buffer
@@ -760,8 +760,23 @@ name|source
 operator|->
 name|base
 argument_list|,
-name|NUMBERSIZE
+sizeof|sizeof
+argument_list|(
+name|buffer
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|buffer
+index|[
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|INSIST
 argument_list|(

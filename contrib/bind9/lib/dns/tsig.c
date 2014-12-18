@@ -7099,7 +7099,7 @@ name|tsigkey
 argument_list|,
 literal|2
 argument_list|,
-literal|"signature length to big"
+literal|"signature length too big"
 argument_list|)
 expr_stmt|;
 return|return

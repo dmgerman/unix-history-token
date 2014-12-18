@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -12193,8 +12193,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|CHECK
-argument_list|(
+name|result
+operator|=
 name|do_diff
 argument_list|(
 operator|&
@@ -12209,10 +12209,16 @@ argument_list|,
 operator|&
 name|diff
 argument_list|)
-argument_list|)
 expr_stmt|;
-name|CHECK
-argument_list|(
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|result
+operator|=
 name|do_diff
 argument_list|(
 operator|&
@@ -12227,8 +12233,35 @@ argument_list|,
 operator|&
 name|diff
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|dns_diff_clear
+argument_list|(
+operator|&
+name|ctx
+operator|.
+name|del_diff
 argument_list|)
 expr_stmt|;
+name|dns_diff_clear
+argument_list|(
+operator|&
+name|ctx
+operator|.
+name|add_diff
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure
+goto|;
+block|}
 name|CHECK
 argument_list|(
 name|update_one_rr
@@ -12895,15 +12928,6 @@ name|zone
 parameter_list|)
 define|\
 value|((dns_zone_getoptions(zone)& DNS_ZONEOPT_SECURETOINSECURE) != 0)
-if|if
-condition|(
-operator|!
-name|ALLOW_SECURE_TO_INSECURE
-argument_list|(
-name|zone
-argument_list|)
-condition|)
-block|{
 name|CHECK
 argument_list|(
 name|rrset_exists
@@ -12923,6 +12947,15 @@ name|had_dnskey
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ALLOW_SECURE_TO_INSECURE
+argument_list|(
+name|zone
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|had_dnskey

@@ -3434,7 +3434,7 @@ comment|/* GENERIC_NSEC3PARAM_51_H */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2012, 2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -3455,7 +3455,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*!  *  \brief per draft-ietf-dane-protocol-19.txt  */
+comment|/*!  *  \brief per rfc6698.txt  */
 end_comment
 
 begin_typedef
@@ -3614,6 +3614,134 @@ end_endif
 
 begin_comment
 comment|/* GENERIC_HIP_5_H */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GENERIC_CDS_59_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GENERIC_CDS_59_H
+value|1
+end_define
+
+begin_comment
+comment|/* CDS records have the same RDATA fields as DS records. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|dns_rdata_cds
+block|{
+name|dns_rdatacommon_t
+name|common
+decl_stmt|;
+name|isc_mem_t
+modifier|*
+name|mctx
+decl_stmt|;
+name|isc_uint16_t
+name|key_tag
+decl_stmt|;
+name|isc_uint8_t
+name|algorithm
+decl_stmt|;
+name|isc_uint8_t
+name|digest_type
+decl_stmt|;
+name|isc_uint16_t
+name|length
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|digest
+decl_stmt|;
+block|}
+name|dns_rdata_cds_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GENERIC_CDS_59_H */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GENERIC_CDNSKEY_60_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GENERIC_CDNSKEY_60_H
+value|1
+end_define
+
+begin_comment
+comment|/* CDNSKEY records have the same RDATA fields as DNSKEY records. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|dns_rdata_cdnskey
+block|{
+name|dns_rdatacommon_t
+name|common
+decl_stmt|;
+name|isc_mem_t
+modifier|*
+name|mctx
+decl_stmt|;
+name|isc_uint16_t
+name|flags
+decl_stmt|;
+name|isc_uint8_t
+name|protocol
+decl_stmt|;
+name|isc_uint8_t
+name|algorithm
+decl_stmt|;
+name|isc_uint16_t
+name|datalen
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|data
+decl_stmt|;
+block|}
+name|dns_rdata_cdnskey_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GENERIC_CDNSKEY_60_H */
 end_comment
 
 begin_comment
@@ -4321,6 +4449,72 @@ end_endif
 
 begin_comment
 comment|/* GENERIC_URI_256_H */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GENERIC_CAA_257_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GENERIC_CAA_257_H
+value|1
+end_define
+
+begin_comment
+comment|/* $Id$ */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|dns_rdata_caa
+block|{
+name|dns_rdatacommon_t
+name|common
+decl_stmt|;
+name|isc_mem_t
+modifier|*
+name|mctx
+decl_stmt|;
+name|isc_uint8_t
+name|flags
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|tag
+decl_stmt|;
+name|isc_uint8_t
+name|tag_len
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|value
+decl_stmt|;
+name|isc_uint8_t
+name|value_len
+decl_stmt|;
+block|}
+name|dns_rdata_caa_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GENERIC_CAA_257_H */
 end_comment
 
 begin_comment

@@ -428,6 +428,8 @@ decl_stmt|,
 comment|/*% initial query for either +trace or +nssearch */
 name|tcp_mode
 decl_stmt|,
+name|tcp_mode_set
+decl_stmt|,
 name|ip6_int
 decl_stmt|,
 name|comments
@@ -750,6 +752,9 @@ name|sockaddr
 decl_stmt|;
 name|isc_time_t
 name|time_sent
+decl_stmt|;
+name|isc_time_t
+name|time_recv
 decl_stmt|;
 name|isc_uint64_t
 name|byte_count
@@ -1263,7 +1268,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|isc_boolean_t
 name|setup_lookup
 parameter_list|(
 name|dig_lookup_t

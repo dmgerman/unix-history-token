@@ -6783,8 +6783,8 @@ name|pctx
 argument_list|,
 literal|0
 argument_list|,
-literal|"option '%s' is not "
-literal|"configured"
+literal|"option '%s' was not "
+literal|"enabled at compile time"
 argument_list|,
 name|clause
 operator|->

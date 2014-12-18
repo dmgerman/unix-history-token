@@ -33,6 +33,27 @@ directive|include
 file|<string.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_INTTYPES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_comment
+comment|/* uintptr_t */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

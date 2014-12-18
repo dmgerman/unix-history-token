@@ -6582,6 +6582,13 @@ operator|->
 name|time
 argument_list|)
 expr_stmt|;
+name|ISC_LINK_INIT
+argument_list|(
+name|new
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
 name|ISC_LIST_APPEND
 argument_list|(
 name|lctx

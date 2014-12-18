@@ -1041,6 +1041,13 @@ name|int
 name|hval
 parameter_list|)
 block|{
+name|INSIST
+argument_list|(
+name|hash
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|&

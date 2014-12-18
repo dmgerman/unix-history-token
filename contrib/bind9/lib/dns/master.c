@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009, 2011-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009, 2011-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -262,6 +262,16 @@ define|#
 directive|define
 name|DNS_MASTER_RHS
 value|MINTSIZ
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECKNAMESFAIL
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& DNS_MASTER_CHECKNAMESFAIL) != 0)
 end_define
 
 begin_typedef
@@ -3460,9 +3470,6 @@ name|rdatalist_head_t
 name|head
 decl_stmt|;
 name|int
-name|n
-decl_stmt|;
-name|int
 name|target_size
 init|=
 name|MINTSIZ
@@ -3480,15 +3487,18 @@ decl_stmt|;
 name|isc_textregion_t
 name|r
 decl_stmt|;
-name|unsigned
 name|int
+name|i
+decl_stmt|,
+name|n
+decl_stmt|,
 name|start
 decl_stmt|,
 name|stop
 decl_stmt|,
 name|step
-decl_stmt|,
-name|i
+init|=
+literal|0
 decl_stmt|;
 name|dns_incctx_t
 modifier|*
@@ -3597,7 +3607,7 @@ name|sscanf
 argument_list|(
 name|range
 argument_list|,
-literal|"%u-%u/%u"
+literal|"%d-%d/%d"
 argument_list|,
 operator|&
 name|start
@@ -3611,13 +3621,35 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|n
 operator|<
 literal|2
+operator|)
 operator|||
+operator|(
+name|start
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|stop
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|step
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
 name|stop
 operator|<
 name|start
+operator|)
 condition|)
 block|{
 call|(
@@ -8314,15 +8346,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|CHECKNAMESFAIL
+argument_list|(
 name|lctx
 operator|->
 name|options
-operator|&
-name|DNS_MASTER_CHECKNAMESFAIL
-operator|)
-operator|!=
-literal|0
+argument_list|)
+operator|||
+name|type
+operator|==
+name|dns_rdatatype_nsec3
 condition|)
 block|{
 call|(
@@ -10336,6 +10369,10 @@ argument_list|(
 operator|&
 name|target
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|commonlen
 argument_list|)
 expr_stmt|;
@@ -10491,6 +10528,10 @@ argument_list|(
 operator|&
 name|target
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|remainder
 argument_list|)
 expr_stmt|;
@@ -10946,6 +10987,10 @@ condition|(
 name|rdcount
 operator|==
 literal|0
+operator|||
+name|rdcount
+operator|>
+literal|0xffff
 condition|)
 block|{
 name|result

@@ -89,6 +89,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|days
 index|[
@@ -761,6 +762,22 @@ argument_list|,
 name|day
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__COVERITY__
+comment|/* 	 * Use a simplified range to silence Coverity warning (in 	 * arithmetic with day below). 	 */
+name|RANGE
+argument_list|(
+literal|1
+argument_list|,
+literal|31
+argument_list|,
+name|day
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* __COVERITY__ */
 name|RANGE
 argument_list|(
 literal|0

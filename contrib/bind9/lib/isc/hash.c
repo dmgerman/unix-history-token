@@ -1394,7 +1394,9 @@ end_function
 begin_function
 name|void
 name|isc_hash_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|INSIST
 argument_list|(
@@ -1749,7 +1751,9 @@ end_function
 begin_function
 name|void
 name|isc_hash_destroy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unsigned
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -314,6 +314,10 @@ decl_stmt|;
 name|dns_acl_t
 modifier|*
 name|denyansweracl
+decl_stmt|;
+name|dns_acl_t
+modifier|*
+name|nocasecompress
 decl_stmt|;
 name|dns_rbt_t
 modifier|*
@@ -1155,7 +1159,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Search zone with 'name' in view with 'rdclass' in viewlist 'list'  * If found, zone is returned in *zonep. If allclasses is set rdclass is ignored  *  * Returns:  *\li	#ISC_R_SUCCESS          A matching zone was found.  *\li	#ISC_R_NOTFOUND         No matching zone was found.  */
+comment|/*%<  * Search zone with 'name' in view with 'rdclass' in viewlist 'list'  * If found, zone is returned in *zonep. If allclasses is set rdclass is ignored  *  * Returns:  *\li	#ISC_R_SUCCESS          A matching zone was found.  *\li	#ISC_R_NOTFOUND         No matching zone was found.  *\li	#ISC_R_MULTIPLE         Multiple zones with the same name were found.  */
 end_comment
 
 begin_function_decl

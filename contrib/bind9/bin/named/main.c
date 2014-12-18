@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
-end_comment
-
-begin_comment
-comment|/* $Id$ */
+comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1779,6 +1775,11 @@ decl_stmt|;
 name|int
 name|port
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|p
+decl_stmt|;
 name|isc_boolean_t
 name|disable6
 init|=
@@ -1797,6 +1798,10 @@ name|argv
 argument_list|)
 expr_stmt|;
 comment|/* PLEASE keep options synchronized when main is hooked! */
+define|#
+directive|define
+name|CMDLINE_FLAGS
+value|"46c:C:d:E:fFgi:lm:n:N:p:P:sS:t:T:U:u:vVx:"
 name|isc_commandline_errprint
 operator|=
 name|ISC_FALSE
@@ -1812,8 +1817,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46c:C:d:E:fFgi:lm:n:N:p:P:"
-literal|"sS:t:T:U:u:vVx:"
+name|CMDLINE_FLAGS
 argument_list|)
 operator|)
 operator|!=
@@ -2473,9 +2477,39 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|CMDLINE_FLAGS
+argument_list|,
+name|isc_commandline_option
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+operator|||
+operator|*
+operator|++
+name|p
+operator|!=
+literal|':'
+condition|)
 name|ns_main_earlyfatal
 argument_list|(
 literal|"unknown option '-%c'"
+argument_list|,
+name|isc_commandline_option
+argument_list|)
+expr_stmt|;
+else|else
+name|ns_main_earlyfatal
+argument_list|(
+literal|"option '-%c' requires "
+literal|"an argument"
 argument_list|,
 name|isc_commandline_option
 argument_list|)
@@ -2607,10 +2641,36 @@ name|ns_g_udpdisp
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|ns_g_cpus_detected
+operator|==
+literal|1
+condition|)
+name|ns_g_udpdisp
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ns_g_cpus_detected
+operator|<
+literal|4
+condition|)
+name|ns_g_udpdisp
+operator|=
+literal|2
+expr_stmt|;
+else|else
 name|ns_g_udpdisp
 operator|=
 name|ns_g_cpus_detected
+operator|/
+literal|2
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ns_g_udpdisp
@@ -2945,7 +3005,9 @@ begin_function
 specifier|static
 name|void
 name|dump_symboltable
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i

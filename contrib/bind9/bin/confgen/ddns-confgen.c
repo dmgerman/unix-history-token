@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dns/result.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dst/dst.h>
 end_include
 
@@ -330,6 +336,9 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
+name|dns_result_register
+argument_list|()
+expr_stmt|;
 name|result
 operator|=
 name|isc_file_progname

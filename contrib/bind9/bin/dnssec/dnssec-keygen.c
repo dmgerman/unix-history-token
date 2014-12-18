@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
-end_comment
-
-begin_comment
-comment|/* $Id: dnssec-keygen.c,v 1.120 2011/11/30 00:48:51 marka Exp $ */
+comment|/*  * Portions Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -610,6 +606,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"    -V: print version information\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"Timing options:\n"
 argument_list|)
 expr_stmt|;
@@ -1152,7 +1155,7 @@ comment|/* 	 * Process memory debugging argument first. 	 */
 define|#
 directive|define
 name|CMDLINE_FLAGS
-value|"3A:a:b:Cc:D:d:E:eFf:Gg:hI:i:K:kL:m:n:P:p:qR:r:S:s:T:t:v:"
+value|"3A:a:b:Cc:D:d:E:eFf:Gg:hI:i:K:kL:m:n:P:p:qR:r:S:s:T:t:" \ 		      "v:V"
 while|while
 condition|(
 operator|(
@@ -1556,22 +1559,6 @@ break|break;
 case|case
 literal|'L'
 case|:
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|isc_commandline_argument
-argument_list|,
-literal|"none"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|ttl
-operator|=
-literal|0
-expr_stmt|;
-else|else
 name|ttl
 operator|=
 name|strtottl
@@ -1800,20 +1787,6 @@ argument_list|(
 literal|"-P specified more than once"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strcasecmp
-argument_list|(
-name|isc_commandline_argument
-argument_list|,
-literal|"none"
-argument_list|)
-condition|)
-block|{
-name|setpub
-operator|=
-name|ISC_TRUE
-expr_stmt|;
 name|publish
 operator|=
 name|strtotime
@@ -1823,16 +1796,16 @@ argument_list|,
 name|now
 argument_list|,
 name|now
+argument_list|,
+operator|&
+name|setpub
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
 name|unsetpub
 operator|=
-name|ISC_TRUE
+operator|!
+name|setpub
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'A'
@@ -1848,20 +1821,6 @@ argument_list|(
 literal|"-A specified more than once"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strcasecmp
-argument_list|(
-name|isc_commandline_argument
-argument_list|,
-literal|"none"
-argument_list|)
-condition|)
-block|{
-name|setact
-operator|=
-name|ISC_TRUE
-expr_stmt|;
 name|activate
 operator|=
 name|strtotime
@@ -1871,16 +1830,16 @@ argument_list|,
 name|now
 argument_list|,
 name|now
+argument_list|,
+operator|&
+name|setact
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
 name|unsetact
 operator|=
-name|ISC_TRUE
+operator|!
+name|setact
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'R'
@@ -1896,20 +1855,6 @@ argument_list|(
 literal|"-R specified more than once"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strcasecmp
-argument_list|(
-name|isc_commandline_argument
-argument_list|,
-literal|"none"
-argument_list|)
-condition|)
-block|{
-name|setrev
-operator|=
-name|ISC_TRUE
-expr_stmt|;
 name|revoke
 operator|=
 name|strtotime
@@ -1919,16 +1864,16 @@ argument_list|,
 name|now
 argument_list|,
 name|now
+argument_list|,
+operator|&
+name|setrev
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
 name|unsetrev
 operator|=
-name|ISC_TRUE
+operator|!
+name|setrev
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'I'
@@ -1944,20 +1889,6 @@ argument_list|(
 literal|"-I specified more than once"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strcasecmp
-argument_list|(
-name|isc_commandline_argument
-argument_list|,
-literal|"none"
-argument_list|)
-condition|)
-block|{
-name|setinact
-operator|=
-name|ISC_TRUE
-expr_stmt|;
 name|inactive
 operator|=
 name|strtotime
@@ -1967,16 +1898,16 @@ argument_list|,
 name|now
 argument_list|,
 name|now
+argument_list|,
+operator|&
+name|setinact
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
 name|unsetinact
 operator|=
-name|ISC_TRUE
+operator|!
+name|setinact
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'D'
@@ -1992,20 +1923,6 @@ argument_list|(
 literal|"-D specified more than once"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strcasecmp
-argument_list|(
-name|isc_commandline_argument
-argument_list|,
-literal|"none"
-argument_list|)
-condition|)
-block|{
-name|setdel
-operator|=
-name|ISC_TRUE
-expr_stmt|;
 name|delete
 operator|=
 name|strtotime
@@ -2015,16 +1932,16 @@ argument_list|,
 name|now
 argument_list|,
 name|now
+argument_list|,
+operator|&
+name|setdel
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
 name|unsetdel
 operator|=
-name|ISC_TRUE
+operator|!
+name|setdel
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'S'
@@ -2074,8 +1991,18 @@ comment|/* FALLTHROUGH */
 case|case
 literal|'h'
 case|:
+comment|/* Does not return. */
 name|usage
 argument_list|()
+expr_stmt|;
+case|case
+literal|'V'
+case|:
+comment|/* Does not return. */
+name|version
+argument_list|(
+name|program
+argument_list|)
 expr_stmt|;
 default|default:
 name|fprintf
@@ -4391,6 +4318,9 @@ elseif|else
 if|if
 condition|(
 name|setact
+operator|&&
+operator|!
+name|unsetpub
 condition|)
 name|dst_key_settime
 argument_list|(
@@ -4399,6 +4329,8 @@ argument_list|,
 name|DST_TIME_PUBLISH
 argument_list|,
 name|activate
+operator|-
+name|prepub
 argument_list|)
 expr_stmt|;
 elseif|else

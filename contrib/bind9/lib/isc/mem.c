@@ -9184,12 +9184,6 @@ name|lo_water
 operator|=
 name|lowater
 expr_stmt|;
-name|ctx
-operator|->
-name|hi_called
-operator|=
-name|ISC_FALSE
-expr_stmt|;
 block|}
 name|MCTXUNLOCK
 argument_list|(
@@ -11450,7 +11444,9 @@ end_ifdef
 begin_function
 name|isc_result_t
 name|isc__mem_register
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(

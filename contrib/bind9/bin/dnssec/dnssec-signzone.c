@@ -4,10 +4,6 @@ comment|/*  * Portions Copyright (C) 2004-2014  Internet Systems Consortium, Inc
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-signzone.c,v 1.285 2011/12/22 07:32:39 each Exp $ */
-end_comment
-
-begin_comment
 comment|/*! \file */
 end_comment
 
@@ -2599,6 +2595,17 @@ operator|==
 name|ISC_R_NOTFOUND
 condition|)
 block|{
+name|vbprintf
+argument_list|(
+literal|2
+argument_list|,
+literal|"no existing signatures for %s/%s\n"
+argument_list|,
+name|namestr
+argument_list|,
+name|typestr
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|ISC_R_SUCCESS
@@ -8529,7 +8536,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove signatures covering the given type (0 == all signatures).  */
+comment|/*  * Remove signatures covering the given type.  If type == 0,  * then remove all signatures, unless this is a delegation, in  * which case remove all signatures except for DS or nsec_datatype  */
 end_comment
 
 begin_function
@@ -8540,6 +8547,9 @@ parameter_list|(
 name|dns_dbnode_t
 modifier|*
 name|node
+parameter_list|,
+name|isc_boolean_t
+name|delegation
 parameter_list|,
 name|dns_rdatatype_t
 name|which
@@ -8641,20 +8651,47 @@ expr_stmt|;
 if|if
 condition|(
 name|type
-operator|==
+operator|!=
 name|dns_rdatatype_rrsig
-operator|&&
-operator|(
-name|covers
-operator|==
-name|which
-operator|||
+condition|)
+continue|continue;
+if|if
+condition|(
 name|which
 operator|==
 literal|0
+operator|&&
+name|delegation
+operator|&&
+operator|(
+name|dns_rdatatype_atparent
+argument_list|(
+name|covers
+argument_list|)
+operator|||
+operator|(
+name|nsec_datatype
+operator|==
+name|dns_rdatatype_nsec
+operator|&&
+name|covers
+operator|==
+name|nsec_datatype
+operator|)
 operator|)
 condition|)
-block|{
+continue|continue;
+if|if
+condition|(
+name|which
+operator|!=
+literal|0
+operator|&&
+name|covers
+operator|!=
+name|which
+condition|)
+continue|continue;
 name|result
 operator|=
 name|dns_db_deleterdataset
@@ -8677,8 +8714,6 @@ argument_list|,
 literal|"dns_db_deleterdataset()"
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
 block|}
 name|dns_rdatasetiter_destroy
 argument_list|(
@@ -9139,6 +9174,8 @@ name|remove_sigs
 argument_list|(
 name|node
 argument_list|,
+name|ISC_TRUE
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -9253,6 +9290,8 @@ block|{
 name|remove_sigs
 argument_list|(
 name|nextnode
+argument_list|,
+name|ISC_FALSE
 argument_list|,
 literal|0
 argument_list|)
@@ -11363,6 +11402,8 @@ name|remove_sigs
 argument_list|(
 name|nextnode
 argument_list|,
+name|ISC_FALSE
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -11422,6 +11463,8 @@ expr_stmt|;
 name|remove_sigs
 argument_list|(
 name|nextnode
+argument_list|,
+name|ISC_TRUE
 argument_list|,
 literal|0
 argument_list|)
@@ -13030,7 +13073,9 @@ begin_function
 specifier|static
 name|void
 name|build_final_keylist
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|isc_result_t
 name|result
@@ -15063,6 +15108,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\t-V:\tprint version information\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"\t-o origin:\n"
 argument_list|)
 expr_stmt|;
@@ -15842,7 +15894,7 @@ define|#
 directive|define
 name|CMDLINE_FLAGS
 define|\
-value|"3:AaCc:Dd:E:e:f:FghH:i:I:j:K:k:L:l:m:n:N:o:O:PpQRr:s:ST:tuUv:X:xzZ:"
+value|"3:AaCc:Dd:E:e:f:FghH:i:I:j:K:k:L:l:m:n:N:o:O:PpQRr:s:ST:tuUv:VX:xzZ:"
 comment|/* 	 * Process memory debugging argument first. 	 */
 while|while
 condition|(
@@ -16288,13 +16340,6 @@ name|fatal
 argument_list|(
 literal|"iterations too big"
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'h'
-case|:
-name|usage
-argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -16772,25 +16817,21 @@ argument_list|,
 name|isc_commandline_option
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+literal|'h'
+case|:
+comment|/* Does not return. */
 name|usage
 argument_list|()
 expr_stmt|;
-break|break;
-default|default:
-name|fprintf
+case|case
+literal|'V'
+case|:
+comment|/* Does not return. */
+name|version
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: unhandled option -%c\n"
-argument_list|,
 name|program
-argument_list|,
-name|isc_commandline_option
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 case|case
@@ -16812,6 +16853,23 @@ operator|=
 name|ISC_TRUE
 expr_stmt|;
 break|break;
+default|default:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: unhandled option -%c\n"
+argument_list|,
+name|program
+argument_list|,
+name|isc_commandline_option
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -16916,6 +16974,8 @@ argument_list|,
 name|now
 argument_list|,
 name|now
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -16942,6 +17002,8 @@ argument_list|,
 name|now
 argument_list|,
 name|starttime
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -16975,6 +17037,8 @@ argument_list|,
 name|now
 argument_list|,
 name|starttime
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

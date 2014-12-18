@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012, 2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -110,9 +110,6 @@ decl_stmt|;
 name|isc_result_t
 name|vresult
 decl_stmt|;
-name|isc_uint32_t
-name|qtotal
-decl_stmt|;
 block|}
 name|dns_fetchevent_t
 typedef|;
@@ -208,6 +205,10 @@ end_define
 
 begin_comment
 comment|/*%< Request NSID */
+end_comment
+
+begin_comment
+comment|/* Reserved in use by adb.c		0x00400000 */
 end_comment
 
 begin_define
@@ -640,6 +641,10 @@ parameter_list|,
 name|unsigned
 name|int
 name|depth
+parameter_list|,
+name|isc_counter_t
+modifier|*
+name|qc
 parameter_list|,
 name|isc_task_t
 modifier|*
@@ -1259,6 +1264,37 @@ end_function_decl
 
 begin_comment
 comment|/*%  * Get and set how many NS indirections will be followed when looking for  * nameserver addresses.  *  * Requires:  * \li	resolver to be valid.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_resolver_setmaxqueries
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
+parameter_list|,
+name|unsigned
+name|int
+name|queries
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|int
+name|dns_resolver_getmaxqueries
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Get and set how many iterative queries will be allowed before  * terminating a recursive query.  *  * Requires:  * \li	resolver to be valid.  */
 end_comment
 
 begin_macro

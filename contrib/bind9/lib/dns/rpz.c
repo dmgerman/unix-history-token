@@ -2328,7 +2328,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|isc__buffer_init
+name|isc_buffer_init
 argument_list|(
 operator|&
 name|buffer
@@ -2341,7 +2341,7 @@ name|str
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|isc__buffer_add
+name|isc_buffer_add
 argument_list|(
 operator|&
 name|buffer
@@ -2384,7 +2384,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|isc__buffer_init
+name|isc_buffer_init
 argument_list|(
 operator|&
 name|buffer
@@ -2397,7 +2397,7 @@ name|str
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|isc__buffer_add
+name|isc_buffer_add
 argument_list|(
 operator|&
 name|buffer

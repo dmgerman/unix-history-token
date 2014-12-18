@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009, 2011-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009, 2011-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -98,7 +98,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Get the time of last modification of a file.  *  * Notes:  *\li	The time that is set is relative to the (OS-specific) epoch, as are  *	all isc_time_t structures.  *  * Requires:  *\li	file != NULL.  *\li	time != NULL.  *  * Ensures:  *\li	If the file could not be accessed, 'time' is unchanged.  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success.  *\li	#ISC_R_NOTFOUND  *		No such file exists.  *\li	#ISC_R_INVALIDFILE  *		The path specified was not usable by the operating system.  *\li	#ISC_R_NOPERM  *		The file's metainformation could not be retrieved because  *		permission was denied to some part of the file's path.  *\li	#ISC_R_EIO  *		Hardware error interacting with the filesystem.  *\li	#ISC_R_UNEXPECTED  *		Something totally unexpected happened.  *  */
+comment|/*!<  * \brief Get the time of last modification of a file.  *  * Notes:  *\li	The time that is set is relative to the (OS-specific) epoch, as are  *	all isc_time_t structures.  *  * Requires:  *\li	file != NULL.  *\li	time != NULL.  *  * Ensures:  *\li	If the file could not be accessed, 'time' is unchanged.  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success.  *\li	#ISC_R_NOTFOUND  *		No such file exists.  *\li	#ISC_R_INVALIDFILE  *		The path specified was not usable by the operating system.  *\li	#ISC_R_NOPERM  *		The file's metainformation could not be retrieved because  *		permission was denied to some part of the file's path.  *\li	#ISC_R_IOERROR  *		Hardware error interacting with the filesystem.  *\li	#ISC_R_UNEXPECTED  *		Something totally unexpected happened.  *  */
 end_comment
 
 begin_function_decl
@@ -312,7 +312,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Check that the file is a plain file  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success. The file is a plain file.  *\li	#ISC_R_INVALIDFILE  *		The path specified was not usable by the operating system.  *\li	#ISC_R_FILENOTFOUND  *		The file does not exist. This return code comes from  *		errno=ENOENT when stat returns -1. This code is mentioned  *		here, because in logconf.c, it is the one rcode that is  *		permitted in addition to ISC_R_SUCCESS. This is done since  *		the next call in logconf.c is to isc_stdio_open(), which  *		will create the file if it can.  *\li	#other ISC_R_* errors translated from errno  *		These occur when stat returns -1 and an errno.  */
+comment|/*!<  * \brief Check that the file is a plain file  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success. The file is a plain file.  *\li	#ISC_R_INVALIDFILE  *		The path specified was not usable by the operating system.  *\li	#ISC_R_FILENOTFOUND  *		The file does not exist. This return code comes from  *		errno=ENOENT when stat returns -1. This code is mentioned  *		here, because in logconf.c, it is the one rcode that is  *		permitted in addition to ISC_R_SUCCESS. This is done since  *		the next call in logconf.c is to isc_stdio_open(), which  *		will create the file if it can.  *\li	other ISC_R_* errors translated from errno  *		These occur when stat returns -1 and an errno.  */
 end_comment
 
 begin_function_decl
@@ -328,7 +328,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Check that 'name' exists and is a directory.  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success, file is a directory.  *\li	#ISC_R_INVALIDFILE  *		File is not a directory.  *\li	#ISC_R_FILENOTFOUND  *		File does not exist.  *\li	#other ISC_R_* errors translated from errno  *		These occur when stat returns -1 and an errno.  */
+comment|/*!<  * \brief Check that 'name' exists and is a directory.  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success, file is a directory.  *\li	#ISC_R_INVALIDFILE  *		File is not a directory.  *\li	#ISC_R_FILENOTFOUND  *		File does not exist.  *\li	other ISC_R_* errors translated from errno  *		These occur when stat returns -1 and an errno.  */
 end_comment
 
 begin_function_decl

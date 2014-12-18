@@ -1204,7 +1204,7 @@ name|hash_length
 operator|=
 name|len
 expr_stmt|;
-comment|/* convert the hash to base32hex */
+comment|/* convert the hash to base32hex non-padded */
 name|region
 operator|.
 name|base
@@ -1232,7 +1232,7 @@ sizeof|sizeof
 name|nametext
 argument_list|)
 expr_stmt|;
-name|isc_base32hex_totext
+name|isc_base32hexnp_totext
 argument_list|(
 operator|&
 name|region
@@ -2661,6 +2661,16 @@ name|salt_length
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|INSIST
+argument_list|(
+name|next_length
+operator|<=
+sizeof|sizeof
+argument_list|(
+name|nexthash
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create the node if it doesn't exist and hold 	 * a reference to it until we have added the NSEC3. 	 */
 name|CHECK
 argument_list|(
@@ -4021,15 +4031,13 @@ condition|(
 literal|1
 condition|)
 do|;
-if|if
-condition|(
+comment|/* result cannot be ISC_R_NOMORE here */
+name|INSIST
+argument_list|(
 name|result
-operator|==
+operator|!=
 name|ISC_R_NOMORE
-condition|)
-name|result
-operator|=
-name|ISC_R_SUCCESS
+argument_list|)
 expr_stmt|;
 name|failure
 label|:
@@ -10044,6 +10052,22 @@ literal|3
 argument_list|)
 argument_list|,
 literal|"NSEC3 indicates optout"
+argument_list|)
+expr_stmt|;
+else|else
+call|(
+modifier|*
+name|logit
+call|)
+argument_list|(
+name|arg
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
+literal|"NSEC3 indicates secure range"
 argument_list|)
 expr_stmt|;
 operator|*

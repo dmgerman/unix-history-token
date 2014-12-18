@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2013, 2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1475,6 +1475,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"    -V: print version information\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"    -h: print usage and exit\n"
 argument_list|)
 expr_stmt|;
@@ -1628,7 +1635,7 @@ expr_stmt|;
 define|#
 directive|define
 name|CMDLINE_FLAGS
-value|"D:f:hK:L:P:v:"
+value|"D:f:hK:L:P:v:V"
 while|while
 condition|(
 operator|(
@@ -1665,10 +1672,6 @@ argument_list|(
 literal|"-D specified more than once"
 argument_list|)
 expr_stmt|;
-name|setdel
-operator|=
-name|ISC_TRUE
-expr_stmt|;
 name|del
 operator|=
 name|strtotime
@@ -1678,6 +1681,9 @@ argument_list|,
 name|now
 argument_list|,
 name|now
+argument_list|,
+operator|&
+name|setdel
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1706,22 +1712,6 @@ break|break;
 case|case
 literal|'L'
 case|:
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|isc_commandline_argument
-argument_list|,
-literal|"none"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|ttl
-operator|=
-literal|0
-expr_stmt|;
-else|else
 name|ttl
 operator|=
 name|strtottl
@@ -1746,10 +1736,6 @@ argument_list|(
 literal|"-P specified more than once"
 argument_list|)
 expr_stmt|;
-name|setpub
-operator|=
-name|ISC_TRUE
-expr_stmt|;
 name|pub
 operator|=
 name|strtotime
@@ -1759,6 +1745,9 @@ argument_list|,
 name|now
 argument_list|,
 name|now
+argument_list|,
+operator|&
+name|setpub
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1822,8 +1811,18 @@ comment|/* FALLTHROUGH */
 case|case
 literal|'h'
 case|:
+comment|/* Does not return. */
 name|usage
 argument_list|()
+expr_stmt|;
+case|case
+literal|'V'
+case|:
+comment|/* Does not return. */
+name|version
+argument_list|(
+name|program
+argument_list|)
 expr_stmt|;
 default|default:
 name|fprintf

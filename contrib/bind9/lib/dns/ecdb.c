@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009-2011, 2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
-end_comment
-
-begin_comment
-comment|/* $Id: ecdb.c,v 1.10 2011/12/20 00:06:53 marka Exp $ */
+comment|/*  * Copyright (C) 2009-2011, 2013, 2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -3623,14 +3619,23 @@ modifier|*
 name|iteratorp
 parameter_list|)
 block|{
-name|ecdb_rdatasetiter_t
-modifier|*
-name|ecdbiterator
-decl_stmt|;
 name|isc_mem_t
 modifier|*
 name|mctx
 decl_stmt|;
+union|union
+block|{
+name|dns_rdatasetiter_t
+modifier|*
+name|rdatasetiterator
+decl_stmt|;
+name|ecdb_rdatasetiter_t
+modifier|*
+name|ecdbiterator
+decl_stmt|;
+block|}
+name|u
+union|;
 name|REQUIRE
 argument_list|(
 name|iteratorp
@@ -3638,28 +3643,26 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|ecdbiterator
-operator|=
-operator|(
-name|ecdb_rdatasetiter_t
-operator|*
-operator|)
-operator|*
-name|iteratorp
-expr_stmt|;
 name|REQUIRE
 argument_list|(
 name|DNS_RDATASETITER_VALID
 argument_list|(
-operator|&
-name|ecdbiterator
-operator|->
-name|common
+operator|*
+name|iteratorp
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|u
+operator|.
+name|rdatasetiterator
+operator|=
+operator|*
+name|iteratorp
+expr_stmt|;
 name|mctx
 operator|=
+name|u
+operator|.
 name|ecdbiterator
 operator|->
 name|common
@@ -3668,6 +3671,8 @@ name|db
 operator|->
 name|mctx
 expr_stmt|;
+name|u
+operator|.
 name|ecdbiterator
 operator|->
 name|common
@@ -3678,6 +3683,8 @@ literal|0
 expr_stmt|;
 name|dns_db_detachnode
 argument_list|(
+name|u
+operator|.
 name|ecdbiterator
 operator|->
 name|common
@@ -3685,6 +3692,8 @@ operator|.
 name|db
 argument_list|,
 operator|&
+name|u
+operator|.
 name|ecdbiterator
 operator|->
 name|common
@@ -3696,6 +3705,8 @@ name|isc_mem_put
 argument_list|(
 name|mctx
 argument_list|,
+name|u
+operator|.
 name|ecdbiterator
 argument_list|,
 sizeof|sizeof

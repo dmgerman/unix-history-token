@@ -161,6 +161,18 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
+name|isc_counter
+name|isc_counter_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*%< Counter */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
 name|isc_entropy
 name|isc_entropy_t
 typedef|;

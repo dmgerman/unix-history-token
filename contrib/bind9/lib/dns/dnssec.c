@@ -6263,6 +6263,15 @@ name|hint_sign
 operator|=
 name|ISC_TRUE
 expr_stmt|;
+comment|/* Only publish if publish time has already passed. */
+if|if
+condition|(
+name|pubset
+operator|&&
+name|publish
+operator|<=
+name|now
+condition|)
 name|key
 operator|->
 name|hint_publish
@@ -7542,7 +7551,7 @@ name|isc_boolean_t
 name|savekeys
 parameter_list|,
 name|isc_boolean_t
-name|public
+name|publickey
 parameter_list|,
 name|dns_dnsseckeylist_t
 modifier|*
@@ -7701,7 +7710,7 @@ name|skip
 goto|;
 if|if
 condition|(
-name|public
+name|publickey
 condition|)
 block|{
 name|RETERR

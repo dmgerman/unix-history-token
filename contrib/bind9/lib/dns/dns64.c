@@ -188,7 +188,7 @@ operator|==
 name|AF_INET6
 argument_list|)
 expr_stmt|;
-comment|/* Legal prefix lengths from draft-ietf-behave-address-format-04. */
+comment|/* Legal prefix lengths from rfc6052.txt. */
 name|REQUIRE
 argument_list|(
 name|prefixlen
@@ -273,7 +273,7 @@ literal|8
 operator|+
 literal|4
 expr_stmt|;
-comment|/* Bits 64-71 are zeros. draft-ietf-behave-address-format-04 */
+comment|/* Bits 64-71 are zeros. rfc6052.txt */
 if|if
 condition|(
 name|prefixlen
@@ -884,7 +884,7 @@ argument_list|,
 name|nbytes
 argument_list|)
 expr_stmt|;
-comment|/* Bits 64-71 are zeros. draft-ietf-behave-address-format-04 */
+comment|/* Bits 64-71 are zeros. rfc6052.txt */
 if|if
 condition|(
 name|nbytes
@@ -925,7 +925,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* Bits 64-71 are zeros. draft-ietf-behave-address-format-04 */
+comment|/* Bits 64-71 are zeros. rfc6052.txt */
 if|if
 condition|(
 name|nbytes

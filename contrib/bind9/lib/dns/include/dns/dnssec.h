@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -679,7 +679,7 @@ name|isc_boolean_t
 name|savekeys
 parameter_list|,
 name|isc_boolean_t
-name|public
+name|publickey
 parameter_list|,
 name|dns_dnsseckeylist_t
 modifier|*
@@ -689,7 +689,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Append the contents of a DNSKEY rdataset 'keyset' to 'keylist'.  * Omit duplicates.  If 'public' is ISC_FALSE, search 'directory' for  * matching key files, and load the private keys that go with  * the public ones.  If 'savekeys' is ISC_TRUE, mark the keys so  * they will not be deleted or inactivated regardless of metadata.  *  * 'keysigs' and 'soasigs', if not NULL and associated, contain the  * RRSIGS for the DNSKEY and SOA records respectively and are used to mark  * whether a key is already active in the zone.  */
+comment|/*%<  * Append the contents of a DNSKEY rdataset 'keyset' to 'keylist'.  * Omit duplicates.  If 'publickey' is ISC_FALSE, search 'directory' for  * matching key files, and load the private keys that go with  * the public ones.  If 'savekeys' is ISC_TRUE, mark the keys so  * they will not be deleted or inactivated regardless of metadata.  *  * 'keysigs' and 'soasigs', if not NULL and associated, contain the  * RRSIGS for the DNSKEY and SOA records respectively and are used to mark  * whether a key is already active in the zone.  */
 end_comment
 
 begin_function_decl

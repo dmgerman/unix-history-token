@@ -5917,6 +5917,36 @@ name|covers
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * Check the ownername of NSEC3 records 		 */
+if|if
+condition|(
+name|rdtype
+operator|==
+name|dns_rdatatype_nsec3
+operator|&&
+operator|!
+name|dns_rdata_checkowner
+argument_list|(
+name|name
+argument_list|,
+name|msg
+operator|->
+name|rdclass
+argument_list|,
+name|rdtype
+argument_list|,
+name|ISC_FALSE
+argument_list|)
+condition|)
+block|{
+name|result
+operator|=
+name|DNS_R_BADOWNERNAME
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+block|}
 comment|/* 		 * If we are doing a dynamic update or this is a meta-type, 		 * don't bother searching for a name, just append this one 		 * to the end of the message. 		 */
 if|if
 condition|(
@@ -14651,6 +14681,19 @@ argument_list|,
 literal|" ("
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isc_buffer_availablelength
+argument_list|(
+name|target
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ISC_R_NOSPACE
+operator|)
+return|;
 if|if
 condition|(
 name|isprint

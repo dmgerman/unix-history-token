@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isc/util.h>
 end_include
 

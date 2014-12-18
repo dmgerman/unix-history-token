@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isc/mem.h>
 end_include
 
@@ -4001,6 +4007,34 @@ decl_stmt|;
 name|isc_buffer_t
 name|b
 decl_stmt|;
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_CONTROL
+argument_list|,
+name|ISC_LOG_INFO
+argument_list|,
+literal|"configuring command channel from '%s'"
+argument_list|,
+name|ns_g_keyfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isc_file_exists
+argument_list|(
+name|ns_g_keyfile
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ISC_R_FILENOTFOUND
+operator|)
+return|;
 name|CHECK
 argument_list|(
 name|cfg_parser_create
