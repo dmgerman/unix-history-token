@@ -79,7 +79,7 @@ begin_define
 define|#
 directive|define
 name|CTL_MAX_LUNS
-value|256
+value|1024
 end_define
 
 begin_comment
@@ -94,10 +94,6 @@ value|2048
 end_define
 
 begin_comment
-comment|// Was 16
-end_comment
-
-begin_comment
 comment|/*  * Maximum number of ports registered at one time.  */
 end_comment
 
@@ -105,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|CTL_MAX_PORTS
-value|128
+value|256
 end_define
 
 begin_comment
