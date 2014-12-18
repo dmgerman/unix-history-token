@@ -1644,13 +1644,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|persis_offset
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|uint8_t
 name|ctl_pause_rtr
 decl_stmt|;
@@ -5510,6 +5503,8 @@ operator|)
 operator|*
 name|CTL_MAX_PORTS
 expr_stmt|;
+name|softc
+operator|->
 name|persis_offset
 operator|=
 name|softc
@@ -36754,15 +36749,24 @@ name|ctl_ua_type
 name|ua
 parameter_list|)
 block|{
+name|int
+name|off
+init|=
+name|lun
+operator|->
+name|ctl_softc
+operator|->
+name|persis_offset
+decl_stmt|;
 if|if
 condition|(
 name|residx
 operator|>=
-name|persis_offset
+name|off
 operator|&&
 name|residx
 operator|<
-name|persis_offset
+name|off
 operator|+
 name|CTL_MAX_INITIATORS
 condition|)
@@ -36772,7 +36776,7 @@ name|pending_ua
 index|[
 name|residx
 operator|-
-name|persis_offset
+name|off
 index|]
 operator||=
 name|ua
@@ -39405,6 +39409,8 @@ name|pr_keys
 index|[
 name|i
 operator|+
+name|softc
+operator|->
 name|persis_offset
 index|]
 operator|==
@@ -40087,6 +40093,8 @@ name|pr_keys
 index|[
 name|i
 operator|+
+name|softc
+operator|->
 name|persis_offset
 index|]
 operator|==
@@ -40662,6 +40670,8 @@ name|pr_keys
 index|[
 name|i
 operator|+
+name|softc
+operator|->
 name|persis_offset
 index|]
 operator|==
@@ -40806,6 +40816,8 @@ name|pr_keys
 index|[
 name|i
 operator|+
+name|softc
+operator|->
 name|persis_offset
 index|]
 operator|!=
