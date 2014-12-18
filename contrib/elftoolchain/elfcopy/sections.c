@@ -3899,8 +3899,12 @@ name|loadable
 condition|)
 name|warnx
 argument_list|(
-literal|"moving loadable section,"
+literal|"moving loadable section %s, "
 literal|"is this intentional?"
+argument_list|,
+name|s
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|s
