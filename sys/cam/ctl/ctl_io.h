@@ -1402,6 +1402,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|union
+name|ctl_io
+modifier|*
+name|ctl_alloc_io_nowait
+parameter_list|(
+name|void
+modifier|*
+name|pool_ref
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ctl_free_io
 parameter_list|(

@@ -492,8 +492,7 @@ modifier|*
 name|port
 parameter_list|)
 block|{
-name|struct
-name|ctl_io_pool
+name|void
 modifier|*
 name|pool
 decl_stmt|;
@@ -651,7 +650,9 @@ name|ctl_pool_create
 argument_list|(
 name|control_softc
 argument_list|,
-name|CTL_POOL_FETD
+name|port
+operator|->
+name|port_name
 argument_list|,
 name|port
 operator|->

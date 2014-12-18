@@ -3025,25 +3025,6 @@ operator|.
 name|ctl_pool_ref
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|new_io
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: unable to allocate ctl_io for "
-literal|"error recovery\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
 name|ctl_zero_io
 argument_list|(
 name|new_io
@@ -4017,36 +3998,6 @@ operator|.
 name|ctl_pool_ref
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|io
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: unable to alloc ctl_io for target %ju "
-literal|"lun %d probe\n"
-argument_list|,
-name|__func__
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|lun
-operator|->
-name|target_id
-operator|.
-name|id
-argument_list|,
-name|lun
-operator|->
-name|lun_id
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|ctl_scsi_inquiry
 argument_list|(
 name|io
@@ -4235,36 +4186,6 @@ operator|.
 name|ctl_pool_ref
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|io
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: unable to alloc ctl_io for target %ju "
-literal|"lun %d probe\n"
-argument_list|,
-name|__func__
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|lun
-operator|->
-name|target_id
-operator|.
-name|id
-argument_list|,
-name|lun
-operator|->
-name|lun_id
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|dataptr
 operator|=
 name|malloc
@@ -6031,7 +5952,7 @@ operator|++
 expr_stmt|;
 name|io
 operator|=
-name|ctl_alloc_io
+name|ctl_alloc_io_nowait
 argument_list|(
 name|softc
 operator|->
@@ -6653,7 +6574,7 @@ expr_stmt|;
 block|}
 name|io
 operator|=
-name|ctl_alloc_io
+name|ctl_alloc_io_nowait
 argument_list|(
 name|softc
 operator|->
