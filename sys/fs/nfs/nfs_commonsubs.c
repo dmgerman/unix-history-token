@@ -1710,11 +1710,11 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|len
-operator|>
+operator|>=
 literal|0
 argument_list|,
 operator|(
-literal|"len %d"
+literal|"len %d, corrupted mbuf?"
 operator|,
 name|len
 operator|)
