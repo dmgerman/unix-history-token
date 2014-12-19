@@ -434,9 +434,6 @@ modifier|*
 name|ts
 parameter_list|)
 block|{
-name|time_t
-name|secs
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -613,11 +610,15 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/* Add hours, minutes, seconds. */
-name|secs
+name|ts
+operator|->
+name|tv_sec
 operator|=
 operator|(
 operator|(
+operator|(
+name|time_t
+operator|)
 name|days
 operator|*
 literal|24
@@ -639,12 +640,6 @@ operator|+
 name|ct
 operator|->
 name|sec
-expr_stmt|;
-name|ts
-operator|->
-name|tv_sec
-operator|=
-name|secs
 expr_stmt|;
 name|ts
 operator|->
