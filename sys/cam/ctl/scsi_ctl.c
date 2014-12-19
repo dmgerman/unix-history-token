@@ -859,15 +859,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ctl_softc
-modifier|*
-name|control_softc
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|ctlfeshutdown

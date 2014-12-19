@@ -32,6 +32,11 @@ begin_function_decl
 name|uint64_t
 name|tpcl_resolve
 parameter_list|(
+name|struct
+name|ctl_softc
+modifier|*
+name|softc
+parameter_list|,
 name|int
 name|init_port
 parameter_list|,
