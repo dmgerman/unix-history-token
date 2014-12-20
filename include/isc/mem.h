@@ -160,7 +160,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|isc_mem_attach
+name|isc__mem_attach
 parameter_list|(
 name|src
 parameter_list|,
@@ -172,7 +172,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|isc_mem_detach
+name|isc__mem_detach
 parameter_list|(
 name|c
 parameter_list|)
@@ -182,7 +182,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|isc_mem_printallactive
+name|isc__mem_printallactive
 parameter_list|(
 name|s
 parameter_list|)

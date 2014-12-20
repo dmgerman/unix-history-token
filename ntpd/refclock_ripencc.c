@@ -3280,10 +3280,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
 name|fd
 operator|=
 name|refclock_open
@@ -3294,7 +3290,12 @@ name|SPEED232
 argument_list|,
 name|LDISC_RAW
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<=
+literal|0
 condition|)
 block|{
 name|pp
@@ -3399,56 +3400,14 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Allocate and initialize unit structure 	 */
-if|if
-condition|(
-operator|!
-operator|(
 name|up
 operator|=
-operator|(
-expr|struct
-name|ripencc_unit
-operator|*
-operator|)
-name|emalloc
+name|emalloc_zero
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|ripencc_unit
-argument_list|)
-argument_list|)
-operator|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|memset
-argument_list|(
-operator|(
-name|char
 operator|*
-operator|)
 name|up
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ripencc_unit
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3466,9 +3425,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -3500,9 +3456,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
@@ -3523,9 +3476,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 comment|/* 	 * Initialize miscellaneous variables 	 */
@@ -3979,11 +3929,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|ripencc_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4163,7 +4108,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|pps_enable
+name|hardpps_enable
 operator|=
 literal|1
 expr_stmt|;
@@ -4268,7 +4213,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"ripencc_get_pps_ts\n"
+literal|"ripencc_get_pps_ts"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4498,7 +4443,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"ts.tv_sec: %d\n"
+literal|"ts.tv_sec: %d"
 argument_list|,
 operator|(
 name|int
@@ -4512,7 +4457,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"ts.tv_nsec: %ld\n"
+literal|"ts.tv_nsec: %ld"
 argument_list|,
 name|ts
 operator|.
@@ -4572,11 +4517,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|ripencc_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4691,11 +4631,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|ripencc_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4806,11 +4741,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|ripencc_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -5111,14 +5041,9 @@ comment|/* msyslog(LOG_INFO, "%s",__FUNCTION__); */
 comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -5128,11 +5053,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|ripencc_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -5437,7 +5357,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s(): ripencc_get_pps_ts returns failure\n"
+literal|"%s(): ripencc_get_pps_ts returns failure"
 argument_list|,
 name|__FUNCTION__
 argument_list|)
@@ -5454,7 +5374,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s(): unrequested packet\n"
+literal|"%s(): unrequested packet"
 argument_list|,
 name|__FUNCTION__
 argument_list|)

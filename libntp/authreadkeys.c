@@ -57,6 +57,12 @@ directive|include
 file|"openssl/objects.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"openssl/evp.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -172,9 +178,7 @@ operator|==
 name|cp
 condition|)
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 if|if
 condition|(
@@ -253,9 +257,10 @@ comment|/* lots of room for line */
 name|u_char
 name|keystr
 index|[
-literal|20
+literal|32
 index|]
 decl_stmt|;
+comment|/* Bug 2537 */
 name|int
 name|len
 decl_stmt|;
@@ -463,7 +468,7 @@ continue|continue;
 block|}
 else|#
 directive|else
-comment|/* OPENSSL */
+comment|/* !OPENSSL follows */
 comment|/* 		 * The key type is unused, but is required to be 'M' or 		 * 'm' for compatibility. 		 */
 if|if
 condition|(
@@ -498,7 +503,7 @@ name|KEY_TYPE_MD5
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* OPENSSL */
+comment|/* !OPENSSL */
 comment|/* 		 * Finally, get key and insert it. If it is longer than 20 		 * characters, it is a binary string encoded in hex; 		 * otherwise, it is a text string of printable ASCII 		 * characters. 		 */
 name|token
 operator|=
@@ -540,6 +545,7 @@ operator|<=
 literal|20
 condition|)
 block|{
+comment|/* Bug 2537 */
 name|MD5auth_setkey
 argument_list|(
 name|keyno
@@ -623,18 +629,8 @@ name|ptr
 operator|==
 name|NULL
 condition|)
-block|{
-name|msyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"authreadkeys: invalid hex digit for key %d"
-argument_list|,
-name|keyno
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
+break|break;
+comment|/* abort decoding */
 name|temp
 operator|=
 call|(
@@ -673,6 +669,24 @@ name|temp
 operator|<<
 literal|4
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|j
+operator|<
+name|jlim
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"authreadkeys: invalid hex digit for key %d"
+argument_list|,
+name|keyno
+argument_list|)
+expr_stmt|;
+continue|continue;
 block|}
 name|MD5auth_setkey
 argument_list|(

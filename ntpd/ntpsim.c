@@ -3,6 +3,12 @@ begin_comment
 comment|/* ntpdsim.c  *  * The source code for the ntp discrete event simulator.   *  * Written By:	Sachin Kamboj  *		University of Delaware  *		Newark, DE 19711  * Copyright (c) 2006  * (Some code shamelessly based on the original NTP discrete event simulator)  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -18,14 +24,66 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntpsim.h"
+file|"ntp_config.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ntp_data_structures.h"
-end_include
+begin_comment
+comment|/* forward prototypes */
+end_comment
+
+begin_function_decl
+name|int
+name|determine_event_ordering
+parameter_list|(
+specifier|const
+name|Event
+modifier|*
+name|e1
+parameter_list|,
+specifier|const
+name|Event
+modifier|*
+name|e2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|determine_recv_buf_ordering
+parameter_list|(
+specifier|const
+name|struct
+name|recvbuf
+modifier|*
+name|b1
+parameter_list|,
+specifier|const
+name|struct
+name|recvbuf
+modifier|*
+name|b2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|create_server_associations
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|init_sim_io
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Global Variable Definitions */
@@ -114,32 +172,19 @@ comment|/* Function pointer to the events */
 end_comment
 
 begin_comment
-comment|/* Define a function to compare two events to determine which one occurs first  */
+comment|/*  * Define a function to compare two events to determine which one occurs  * first.  */
 end_comment
-
-begin_function_decl
-name|int
-name|determine_event_ordering
-parameter_list|(
-name|Event
-modifier|*
-name|e1
-parameter_list|,
-name|Event
-modifier|*
-name|e2
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|int
 name|determine_event_ordering
 parameter_list|(
+specifier|const
 name|Event
 modifier|*
 name|e1
 parameter_list|,
+specifier|const
 name|Event
 modifier|*
 name|e2
@@ -160,35 +205,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Define a function to compare two received packets to determine which one  * is received first  */
+comment|/*  * Define a function to compare two received packets to determine which  * one is received first.  */
 end_comment
-
-begin_function_decl
-name|int
-name|determine_recv_buf_ordering
-parameter_list|(
-name|struct
-name|recvbuf
-modifier|*
-name|b1
-parameter_list|,
-name|struct
-name|recvbuf
-modifier|*
-name|b2
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|int
 name|determine_recv_buf_ordering
 parameter_list|(
+specifier|const
 name|struct
 name|recvbuf
 modifier|*
 name|b1
 parameter_list|,
+specifier|const
 name|struct
 name|recvbuf
 modifier|*
@@ -197,7 +227,8 @@ parameter_list|)
 block|{
 name|double
 name|recv_time1
-decl_stmt|,
+decl_stmt|;
+name|double
 name|recv_time2
 decl_stmt|;
 comment|/* Simply convert the time received to double and subtract */
@@ -222,7 +253,6 @@ name|recv_time2
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 call|(
 name|int
 call|)
@@ -231,7 +261,6 @@ name|recv_time1
 operator|-
 name|recv_time2
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -243,7 +272,9 @@ end_comment
 begin_function
 name|void
 name|create_server_associations
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -294,17 +325,9 @@ index|]
 operator|.
 name|addr
 argument_list|,
-name|ANY_INTERFACE_CHOOSE
-argument_list|(
-name|simulation
-operator|.
-name|servers
-index|[
-name|i
-index|]
-operator|.
-name|addr
-argument_list|)
+name|NULL
+argument_list|,
+name|loopback_interface
 argument_list|,
 name|MODE_CLIENT
 argument_list|,
@@ -323,12 +346,8 @@ comment|/* ttl */
 literal|0
 argument_list|,
 comment|/* peerkey */
-operator|(
-name|u_char
-operator|*
-operator|)
-literal|"*"
-comment|/* peerkeystr */
+name|NULL
+comment|/* group ident */
 argument_list|)
 operator|==
 literal|0
@@ -338,7 +357,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ERROR!! Could not create association for: %s"
+literal|"ERROR!! Could not create association for: %s\n"
 argument_list|,
 name|stoa
 argument_list|(
@@ -383,7 +402,7 @@ name|struct
 name|timeval
 name|seed
 decl_stmt|;
-comment|/* Initialize the local Clock       */
+comment|/* Initialize the local Clock */
 name|simclock
 operator|.
 name|local_time
@@ -400,9 +419,9 @@ name|simclock
 operator|.
 name|slew
 operator|=
-literal|0
+literal|500e-6
 expr_stmt|;
-comment|/* Initialize the simulation       */
+comment|/* Initialize the simulation */
 name|simulation
 operator|.
 name|num_of_servers
@@ -427,10 +446,17 @@ name|end_time
 operator|=
 name|SIM_TIME
 expr_stmt|;
-comment|/*      * Initialize ntp variables      */
+comment|/* Initialize ntp modules */
 name|initializing
 operator|=
-literal|1
+name|TRUE
+expr_stmt|;
+name|msyslog_term
+operator|=
+name|TRUE
+expr_stmt|;
+name|init_sim_io
+argument_list|()
 expr_stmt|;
 name|init_auth
 argument_list|()
@@ -462,9 +488,6 @@ expr_stmt|;
 name|init_proto
 argument_list|()
 expr_stmt|;
-name|init_io
-argument_list|()
-expr_stmt|;
 name|init_loopfilter
 argument_list|()
 expr_stmt|;
@@ -481,20 +504,18 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|initializing
-operator|=
-literal|0
-expr_stmt|;
 name|loop_config
 argument_list|(
-name|LOOP_DRIFTCOMP
+name|LOOP_DRIFTINIT
 argument_list|,
-name|old_drift
-operator|/
-literal|1e6
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/*      * Watch out here, we want the real time, not the silly stuff.      */
+name|initializing
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* 	 * Watch out here, we want the real time, not the silly stuff. 	 */
 name|gettimeofday
 argument_list|(
 operator|&
@@ -516,17 +537,7 @@ operator|=
 name|create_priority_queue
 argument_list|(
 operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|,
-name|void
-operator|*
-argument_list|)
+name|q_order_func
 operator|)
 name|determine_event_ordering
 argument_list|)
@@ -537,17 +548,7 @@ operator|=
 name|create_priority_queue
 argument_list|(
 operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|,
-name|void
-operator|*
-argument_list|)
+name|q_order_func
 operator|)
 name|determine_recv_buf_ordering
 argument_list|)
@@ -581,7 +582,7 @@ name|TIMER
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*       * Pop the queue until nothing is left or time is exceeded      */
+comment|/*  	 * Pop the queue until nothing is left or time is exceeded 	 */
 comment|/* maxtime = simulation.sim_time + simulation.end_time;*/
 while|while
 condition|(
@@ -616,15 +617,18 @@ name|curr_event
 argument_list|)
 expr_stmt|;
 comment|/* Execute the function associated with the event */
+call|(
+modifier|*
 name|event_ptr
 index|[
 name|curr_event
 operator|->
 name|function
 index|]
-operator|(
+call|)
+argument_list|(
 name|curr_event
-operator|)
+argument_list|)
 expr_stmt|;
 name|free_node
 argument_list|(
@@ -632,11 +636,192 @@ name|curr_event
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"sys_received: %lu\n"
+argument_list|,
+name|sys_received
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sys_badlength: %lu\n"
+argument_list|,
+name|sys_badlength
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sys_declined: %lu\n"
+argument_list|,
+name|sys_declined
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sys_restricted: %lu\n"
+argument_list|,
+name|sys_restricted
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sys_newversion: %lu\n"
+argument_list|,
+name|sys_newversion
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sys_oldversion: %lu\n"
+argument_list|,
+name|sys_oldversion
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sys_limitrejected: %lu\n"
+argument_list|,
+name|sys_limitrejected
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sys_badauth: %lu\n"
+argument_list|,
+name|sys_badauth
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|init_sim_io
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|loopback_interface
+operator|=
+name|emalloc_zero
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|loopback_interface
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ep_list
+operator|=
+name|loopback_interface
+expr_stmt|;
+name|strlcpy
+argument_list|(
+name|loopback_interface
+operator|->
+name|name
+argument_list|,
+literal|"IPv4loop"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|loopback_interface
+operator|->
+name|name
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|loopback_interface
+operator|->
+name|flags
+operator|=
+name|INT_UP
+operator||
+name|INT_LOOPBACK
+expr_stmt|;
+name|loopback_interface
+operator|->
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|loopback_interface
+operator|->
+name|bfd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|loopback_interface
+operator|->
+name|ifnum
+operator|=
+literal|1
+expr_stmt|;
+name|loopback_interface
+operator|->
+name|family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|AF
+argument_list|(
+operator|&
+name|loopback_interface
+operator|->
+name|sin
+argument_list|)
+operator|=
+name|AF_INET
+expr_stmt|;
+name|SET_ADDR4
+argument_list|(
+operator|&
+name|loopback_interface
+operator|->
+name|sin
+argument_list|,
+name|LOOPBACKADR
+argument_list|)
+expr_stmt|;
+name|SET_PORT
+argument_list|(
+operator|&
+name|loopback_interface
+operator|->
+name|sin
+argument_list|,
+name|NTP_PORT
+argument_list|)
+expr_stmt|;
+name|AF
+argument_list|(
+operator|&
+name|loopback_interface
+operator|->
+name|mask
+argument_list|)
+operator|=
+name|AF_INET
+expr_stmt|;
+name|SET_ADDR4
+argument_list|(
+operator|&
+name|loopback_interface
+operator|->
+name|mask
+argument_list|,
+name|LOOPNETMASK
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -751,6 +936,7 @@ name|recv_queue
 argument_list|)
 expr_stmt|;
 call|(
+modifier|*
 name|rbuf
 operator|->
 name|receiver
@@ -802,24 +988,23 @@ modifier|*
 name|serv_addr
 parameter_list|,
 comment|/* Address of the server */
-name|struct
-name|interface
+name|endpt
 modifier|*
 name|inter
 parameter_list|,
-comment|/* Interface on which the reply should 					   be inserted */
+comment|/* Interface on which the reply should 				   be inserted */
 name|struct
 name|pkt
 modifier|*
 name|rpkt
-comment|/* Packet sent to the server that 					   needs to be processed. */
+comment|/* Packet sent to the server that 				   needs to be processed. */
 parameter_list|)
 block|{
 name|struct
 name|pkt
 name|xpkt
 decl_stmt|;
-comment|/* Packet to be transmitted back 				  to the client */
+comment|/* Packet to be transmitted back 				   to the client */
 name|struct
 name|recvbuf
 name|rbuf
@@ -861,30 +1046,18 @@ decl_stmt|,
 name|t4
 decl_stmt|;
 comment|/* The four timestamps in the packet */
-name|memset
-argument_list|(
-operator|&
-name|xpkt
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
+name|l_fp
+name|lfp_host
+decl_stmt|;
+comment|/* host-order l_fp */
+name|ZERO
 argument_list|(
 name|xpkt
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|rbuf
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
+name|ZERO
 argument_list|(
 name|rbuf
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Search for the server with the desired address */
@@ -908,25 +1081,6 @@ operator|++
 name|i
 control|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Checking address: %s\n"
-argument_list|,
-name|stoa
-argument_list|(
-name|simulation
-operator|.
-name|servers
-index|[
-name|i
-index|]
-operator|.
-name|addr
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|memcmp
@@ -969,11 +1123,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Received packet for: %s\n"
+literal|"Received packet from %s on %s\n"
 argument_list|,
 name|stoa
 argument_list|(
 name|serv_addr
+argument_list|)
+argument_list|,
+name|latoa
+argument_list|(
+name|inter
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1103,12 +1262,21 @@ name|jitter
 argument_list|)
 expr_stmt|;
 comment|/* Note: In the transmitted packet:       * 1. t1 and t4 are times in the client according to the local clock.      * 2. t2 and t3 are server times according to the simulated server.      * Compute t1, t2, t3 and t4      * Note: This function is called at time t1.       */
-name|LFPTOD
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|rpkt
 operator|->
 name|xmt
+argument_list|,
+operator|&
+name|lfp_host
+argument_list|)
+expr_stmt|;
+name|LFPTOD
+argument_list|(
+operator|&
+name|lfp_host
 argument_list|,
 name|t1
 argument_list|)
@@ -1155,6 +1323,15 @@ argument_list|(
 name|t2
 argument_list|,
 operator|&
+name|lfp_host
+argument_list|)
+expr_stmt|;
+name|HTONL_FP
+argument_list|(
+operator|&
+name|lfp_host
+argument_list|,
+operator|&
 name|xpkt
 operator|.
 name|rec
@@ -1163,6 +1340,15 @@ expr_stmt|;
 name|DTOLFP
 argument_list|(
 name|t3
+argument_list|,
+operator|&
+name|lfp_host
+argument_list|)
+expr_stmt|;
+name|HTONL_FP
+argument_list|(
+operator|&
+name|lfp_host
 argument_list|,
 operator|&
 name|xpkt
@@ -1178,14 +1364,21 @@ name|xpkt
 operator|.
 name|xmt
 expr_stmt|;
-comment|/* Ok, we are done with the packet. Now initialize the receive buffer for      * the packet.      */
+comment|/*       * Ok, we are done with the packet. Now initialize the receive      * buffer for the packet.      */
+name|rbuf
+operator|.
+name|used
+operator|=
+literal|1
+expr_stmt|;
 name|rbuf
 operator|.
 name|receiver
 operator|=
+operator|&
 name|receive
 expr_stmt|;
-comment|/* Function to call to process the packet */
+comment|/* callback to process the packet */
 name|rbuf
 operator|.
 name|recv_length
@@ -1200,89 +1393,53 @@ name|xpkt
 expr_stmt|;
 name|rbuf
 operator|.
-name|used
-operator|=
-literal|1
-expr_stmt|;
-name|memcpy
-argument_list|(
-operator|&
-name|rbuf
-operator|.
-name|srcadr
-argument_list|,
-name|serv_addr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|rbuf
-operator|.
-name|srcadr
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-operator|&
-name|rbuf
-operator|.
-name|recv_srcadr
-argument_list|,
-name|serv_addr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|rbuf
-operator|.
-name|recv_srcadr
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|rbuf
-operator|.
 name|dstadr
 operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|rbuf
-operator|.
-name|dstadr
-argument_list|)
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|abortsim
-argument_list|(
-literal|"malloc failed in simulate_server"
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|rbuf
-operator|.
-name|dstadr
-argument_list|,
 name|inter
+expr_stmt|;
+name|rbuf
+operator|.
+name|fd
+operator|=
+name|inter
+operator|->
+name|fd
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|rbuf
+operator|.
+name|srcadr
+argument_list|,
+name|serv_addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
 name|rbuf
 operator|.
-name|dstadr
+name|srcadr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* rbuf.link = NULL; */
-comment|/* Create a packet event and insert it onto the event_queue at the       * arrival time (t4) of the packet at the client       */
+name|memcpy
+argument_list|(
+operator|&
+name|rbuf
+operator|.
+name|recv_srcadr
+argument_list|,
+name|serv_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rbuf
+operator|.
+name|recv_srcadr
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/*      * Create a packet event and insert it onto the event_queue at the      * arrival time (t4) of the packet at the client       */
 name|e
 operator|=
 name|event
@@ -1305,7 +1462,7 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-comment|/* Check if the time of the script has expired. If yes, delete the script.      * If not, re-enqueue the script onto the server script queue       */
+comment|/*      * Check if the time of the script has expired. If yes, delete it.      */
 if|if
 condition|(
 name|curr_script
@@ -1316,8 +1473,9 @@ name|simulation
 operator|.
 name|sim_time
 operator|&&
-operator|!
-name|empty
+name|NULL
+operator|==
+name|HEAD_PFIFO
 argument_list|(
 name|server
 operator|->
@@ -1330,14 +1488,17 @@ argument_list|(
 literal|"Hello\n"
 argument_list|)
 expr_stmt|;
-comment|/*  	 * For some reason freeing up the curr_script memory kills the 	 * simulation. Further debugging is needed to determine why. 	 * free_node(curr_script); 	 */
-name|curr_script
-operator|=
-name|dequeue
+comment|/*  	 * For some reason freeing up the curr_script memory kills the 	 * simulation. Further debugging is needed to determine why. 	 * free(curr_script); 	 */
+name|UNLINK_FIFO
 argument_list|(
+name|curr_script
+argument_list|,
+operator|*
 name|server
 operator|->
 name|script
+argument_list|,
+name|link
 argument_list|)
 expr_stmt|;
 block|}
@@ -1382,7 +1543,55 @@ name|simulation
 operator|.
 name|sim_time
 expr_stmt|;
+if|if
+condition|(
+name|time_gap
+operator|<
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: e->time %.6g comes before sim_time %.6g (gap %+.6g)\n"
+argument_list|,
+name|e
+operator|->
+name|time
+argument_list|,
+name|simulation
+operator|.
+name|sim_time
+argument_list|,
+name|time_gap
+argument_list|)
+expr_stmt|;
 comment|/* Advance the client clock */
+if|if
+condition|(
+name|e
+operator|->
+name|time
+operator|+
+name|time_gap
+operator|<
+name|simclock
+operator|.
+name|local_time
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: e->time + gap %.6g comes before local_time %.6g\n"
+argument_list|,
+name|e
+operator|->
+name|time
+operator|+
+name|time_gap
+argument_list|,
+name|simclock
+operator|.
+name|local_time
+argument_list|)
+expr_stmt|;
 name|simclock
 operator|.
 name|local_time
@@ -2022,6 +2231,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+comment|/* empty statement */
 empty_stmt|;
 name|q2
 operator|=
@@ -2102,6 +2312,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+comment|/* empty statement */
 empty_stmt|;
 return|return
 operator|(

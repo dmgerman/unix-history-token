@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: heap.h,v 1.24.332.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: heap.h,v 1.26 2009/01/17 23:47:43 tbox Exp $ */
 end_comment
 
 begin_ifndef

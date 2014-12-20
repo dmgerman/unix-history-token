@@ -47,23 +47,6 @@ directive|include
 file|<ntp_stdlib.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"openssl/evp.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -71,13 +54,8 @@ file|<ntp_md5.h>
 end_include
 
 begin_comment
-comment|/* provides clone of OpenSSL MD5 API */
+comment|/* provides OpenSSL digest API */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

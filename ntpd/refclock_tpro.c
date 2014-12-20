@@ -324,21 +324,8 @@ block|}
 comment|/* 	 * Allocate and initialize unit structure 	 */
 name|up
 operator|=
-name|emalloc
+name|emalloc_zero
 argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|up
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|up
-argument_list|,
-literal|0
-argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -366,9 +353,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -391,9 +375,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 comment|/* 	 * Initialize miscellaneous peer variables 	 */
@@ -402,12 +383,6 @@ operator|->
 name|precision
 operator|=
 name|PRECISION
-expr_stmt|;
-name|peer
-operator|->
-name|burst
-operator|=
-name|NSTAGE
 expr_stmt|;
 name|pp
 operator|->
@@ -476,11 +451,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|tprounit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -550,11 +520,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|tprounit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -614,7 +579,7 @@ operator|->
 name|polls
 operator|++
 expr_stmt|;
-comment|/* 	 * We get down to business, check the timecode format and decode 	 * its contents. If the timecode has invalid length or is not in 	 * proper format, we declare bad format and exit. Note: we 	 * can't use the sec/usec conversion produced by the driver, 	 * since the year may be suspect. All format error checking is 	 * done by the sprintf() and sscanf() routines. 	 * 	 * Note that the refclockproc usec member has now become nsec. 	 * We could either multiply the read-in usec value by 1000 or 	 * we could pad the written string appropriately and read the 	 * resulting value in already scaled. 	 */
+comment|/* 	 * We get down to business, check the timecode format and decode 	 * its contents. If the timecode has invalid length or is not in 	 * proper format, we declare bad format and exit. Note: we 	 * can't use the sec/usec conversion produced by the driver, 	 * since the year may be suspect. All format error checking is 	 * done by the snprintf() and sscanf() routines. 	 * 	 * Note that the refclockproc usec member has now become nsec. 	 * We could either multiply the read-in usec value by 1000 or 	 * we could pad the written string appropriately and read the 	 * resulting value in already scaled. 	 */
 name|snprintf
 argument_list|(
 name|pp
@@ -835,15 +800,6 @@ return|return;
 block|}
 if|if
 condition|(
-name|peer
-operator|->
-name|burst
-operator|>
-literal|0
-condition|)
-return|return;
-if|if
-condition|(
 name|pp
 operator|->
 name|coderecv
@@ -886,12 +842,6 @@ name|refclock_receive
 argument_list|(
 name|peer
 argument_list|)
-expr_stmt|;
-name|peer
-operator|->
-name|burst
-operator|=
-name|NSTAGE
 expr_stmt|;
 block|}
 end_function

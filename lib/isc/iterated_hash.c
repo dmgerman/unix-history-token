@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2006, 2008, 2009  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: iterated_hash.c,v 1.4.48.2 2009/02/18 23:47:12 tbox Exp $ */
+comment|/* $Id: iterated_hash.c,v 1.6 2009/02/18 23:47:48 tbox Exp $ */
 end_comment
 
 begin_include

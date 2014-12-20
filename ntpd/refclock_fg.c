@@ -410,9 +410,7 @@ return|return
 literal|0
 return|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -455,38 +453,31 @@ literal|20
 index|]
 decl_stmt|;
 comment|/* 	 * Open device file for reading. 	 */
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|device
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|device
+argument_list|)
 argument_list|,
 name|DEVICE
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
+name|DPRINTF
 argument_list|(
-literal|"starting FG with device %s\n"
+literal|1
 argument_list|,
+operator|(
+literal|"starting FG with device %s\n"
+operator|,
 name|device
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-operator|!
-operator|(
 name|fd
 operator|=
 name|refclock_open
@@ -497,25 +488,21 @@ name|SPEED232
 argument_list|,
 name|LDISC_CLK
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<=
+literal|0
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/*          * Allocate and initialize unit structure          */
-if|if
-condition|(
-operator|!
-operator|(
+comment|/* 	 * Allocate and initialize unit structure 	 */
 name|up
 operator|=
-operator|(
-expr|struct
-name|fgunit
-operator|*
-operator|)
 name|emalloc
 argument_list|(
 sizeof|sizeof
@@ -524,29 +511,9 @@ expr|struct
 name|fgunit
 argument_list|)
 argument_list|)
-operator|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|up
 argument_list|,
 literal|0
@@ -568,9 +535,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 name|pp
@@ -587,9 +551,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -620,18 +581,22 @@ name|io
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 comment|/* 	 * Initialize miscellaneous variables 	 */
@@ -649,10 +614,6 @@ name|DESCRIPTION
 expr_stmt|;
 name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|pp
 operator|->
@@ -669,7 +630,7 @@ name|pollnum
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  	 * Setup dating station to use GPS receiver. 	 * GPS receiver should work before this operation.          */
+comment|/*  	 * Setup dating station to use GPS receiver. 	 * GPS receiver should work before this operation. 	 */
 if|if
 condition|(
 operator|!
@@ -733,15 +694,21 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|fgunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
 expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
 name|io_closeclock
 argument_list|(
 operator|&
@@ -750,6 +717,12 @@ operator|->
 name|io
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|up
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|up
@@ -787,7 +760,7 @@ name|peer
 operator|->
 name|procptr
 expr_stmt|;
-comment|/*          * Time to poll the clock. The FG clock responds to a          * "<DLE>D<DLE><CR>" by returning a timecode in the format specified          * above. If nothing is heard from the clock for two polls,          * declare a timeout and keep going.          */
+comment|/* 	 * Time to poll the clock. The FG clock responds to a 	 * "<DLE>D<DLE><CR>" by returning a timecode in the format specified 	 * above. If nothing is heard from the clock for two polls, 	 * declare a timeout and keep going. 	 */
 if|if
 condition|(
 name|write
@@ -818,22 +791,7 @@ operator|->
 name|polls
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|peer
-operator|->
-name|burst
-operator|>
-literal|0
-condition|)
-return|return;
-comment|/*         if (pp->coderecv == pp->codeproc) {                 refclock_report(peer, CEVNT_TIMEOUT);                 return;         } 	*/
-name|peer
-operator|->
-name|burst
-operator|=
-name|NSTAGE
-expr_stmt|;
+comment|/* 	if (pp->coderecv == pp->codeproc) { 		refclock_report(peer, CEVNT_TIMEOUT); 		return; 	} 	*/
 name|record_clock_stats
 argument_list|(
 operator|&
@@ -884,17 +842,12 @@ name|char
 modifier|*
 name|bpt
 decl_stmt|;
-comment|/*          * Initialize pointers and read the timecode and timestamp 	 * We can't use gtlin function because we need bynary data in buf */
+comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 * We can't use gtlin function because we need bynary data in buf */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -904,16 +857,11 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|fgunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
 expr_stmt|;
-comment|/*          * Below hug to implement receiving of status information          */
+comment|/* 	 * Below hug to implement receiving of status information 	 */
 if|if
 condition|(
 operator|!
@@ -970,8 +918,7 @@ condition|(
 operator|*
 name|bpt
 operator|!=
-literal|'
-literal|'
+literal|'\x10'
 condition|)
 name|bpt
 operator|++
@@ -1320,11 +1267,18 @@ name|y2kwarn
 operator|++
 expr_stmt|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|pp
 operator|->
 name|a_lastcode
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|)
 argument_list|,
 literal|"%d %d %d %d %d"
 argument_list|,
@@ -1413,7 +1367,7 @@ name|recv_time
 expr_stmt|;
 comment|/* Is it better than get_systime()? */
 comment|/* pp->leap = LEAP_NOWARNING; */
-comment|/*          * Process the new sample in the median filter and determine the          * timecode timestamp.          */
+comment|/* 	 * Process the new sample in the median filter and determine the 	 * timecode timestamp. 	 */
 if|if
 condition|(
 operator|!

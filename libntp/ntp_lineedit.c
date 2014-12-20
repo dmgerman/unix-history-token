@@ -388,16 +388,11 @@ operator|==
 name|ntp_hist
 condition|)
 block|{
-name|fprintf
+name|mfprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"history_init(): %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"history_init(): %m\n"
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -421,17 +416,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|memset
-argument_list|(
-operator|&
-name|hev
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
+name|ZERO
 argument_list|(
 name|hev
-argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#

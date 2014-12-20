@@ -41,6 +41,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|ntpOptionPrintVersion
+parameter_list|(
+name|tOptions
+modifier|*
+parameter_list|,
+name|tOptDesc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

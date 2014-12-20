@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2007-2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: mutex.h,v 1.20.56.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: mutex.h,v 1.22 2009/01/18 23:48:14 tbox Exp $ */
 end_comment
 
 begin_ifndef

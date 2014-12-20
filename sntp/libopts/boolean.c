@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * \file boolean.c  *  * Time-stamp:      "2010-07-10 11:02:10 bkorb"  *  *   Automated Options Paged Usage module.  *  *  This routine will run run-on options through a pager so the  *  user may examine, print or edit them at their leisure.  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (c) 1992-2011 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following md5sums:  *  *  43b91e8ca915626ed3818ffb1b71248b pkg/libopts/COPYING.gplv3  *  06a1a2e4760c90ea5e1dad8dfaac4d39 pkg/libopts/COPYING.lgplv3  *  66a5cedaf62c4b2637025f049f9b826f pkg/libopts/COPYING.mbsd  */
+comment|/**  * \file boolean.c  *  * Handle options with true/false values for arguments.  *  * @addtogroup autoopts  * @{  */
 end_comment
 
 begin_comment
-comment|/*=export_func  optionBooleanVal  * private:  *  * what:  Decipher a boolean value  * arg:   + tOptions* + pOpts    + program options descriptor +  * arg:   + tOptDesc* + pOptDesc + the descriptor for this arg +  *  * doc:  *  Decipher a true or false value for a boolean valued option argument.  *  The value is true, unless it starts with 'n' or 'f' or "#f" or  *  it is an empty string or it is a number that evaluates to zero. =*/
+comment|/*  *  This routine will run run-on options through a pager so the  *  user may examine, print or edit them at their leisure.  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
+end_comment
+
+begin_comment
+comment|/*=export_func  optionBooleanVal  * private:  *  * what:  Decipher a boolean value  * arg:   + tOptions* + opts + program options descriptor +  * arg:   + tOptDesc* + od  + the descriptor for this arg +  *  * doc:  *  Decipher a true or false value for a boolean valued option argument.  *  The value is true, unless it starts with 'n' or 'f' or "#f" or  *  it is an empty string or it is a number that evaluates to zero. =*/
 end_comment
 
 begin_function
@@ -13,38 +17,35 @@ name|optionBooleanVal
 parameter_list|(
 name|tOptions
 modifier|*
-name|pOpts
+name|opts
 parameter_list|,
 name|tOptDesc
 modifier|*
-name|pOD
+name|od
 parameter_list|)
 block|{
 name|char
 modifier|*
 name|pz
 decl_stmt|;
-name|ag_bool
+name|bool
 name|res
 init|=
-name|AG_TRUE
+name|true
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|pOD
-operator|->
-name|fOptState
-operator|&
-name|OPTST_RESET
-operator|)
-operator|!=
-literal|0
+name|INQUERY_CALL
+argument_list|(
+name|opts
+argument_list|,
+name|od
+argument_list|)
 condition|)
 return|return;
 if|if
 condition|(
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
@@ -53,13 +54,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
 name|argBool
 operator|=
-name|AG_FALSE
+name|false
 expr_stmt|;
 return|return;
 block|}
@@ -67,7 +68,7 @@ switch|switch
 condition|(
 operator|*
 operator|(
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
@@ -84,7 +85,7 @@ name|val
 init|=
 name|strtol
 argument_list|(
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
@@ -131,7 +132,7 @@ name|NUL
 case|:
 name|res
 operator|=
-name|AG_FALSE
+name|false
 expr_stmt|;
 break|break;
 case|case
@@ -139,7 +140,7 @@ literal|'#'
 case|:
 if|if
 condition|(
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
@@ -153,12 +154,12 @@ condition|)
 break|break;
 name|res
 operator|=
-name|AG_FALSE
+name|false
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|pOD
+name|od
 operator|->
 name|fOptState
 operator|&
@@ -167,14 +168,14 @@ condition|)
 block|{
 name|AGFREE
 argument_list|(
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
 name|argString
 argument_list|)
 expr_stmt|;
-name|pOD
+name|od
 operator|->
 name|fOptState
 operator|&=
@@ -182,7 +183,7 @@ operator|~
 name|OPTST_ALLOC_ARG
 expr_stmt|;
 block|}
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
@@ -194,7 +195,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/boolean.c */
+comment|/** @}  *  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/boolean.c */
 end_comment
 
 end_unit

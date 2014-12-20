@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2010-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: netaddr.c,v 1.38 2007/06/18 23:47:44 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -70,6 +70,16 @@ include|#
 directive|include
 file|<isc/util.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_comment
+comment|/* NTP change for strlcpy, strlcat */
+end_comment
 
 begin_function
 name|isc_boolean_t
@@ -280,13 +290,19 @@ name|unsigned
 name|char
 modifier|*
 name|pa
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|pb
+init|=
+name|NULL
 decl_stmt|;
 name|unsigned
 name|int
 name|ipabytes
+init|=
+literal|0
 decl_stmt|;
 comment|/* Length of whole IP address in bytes */
 name|unsigned
@@ -430,18 +446,6 @@ literal|16
 expr_stmt|;
 break|break;
 default|default:
-name|pa
-operator|=
-name|pb
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* Avoid silly compiler warning. */
-name|ipabytes
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Ditto. */
 return|return
 operator|(
 name|ISC_FALSE
@@ -946,6 +950,13 @@ operator|&
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|size
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* 	 * Null terminate. 	 */
 if|if
 condition|(
@@ -1054,6 +1065,8 @@ decl_stmt|,
 name|nbytes
 decl_stmt|,
 name|ipbytes
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|unsigned
@@ -1137,10 +1150,6 @@ operator|)
 return|;
 break|break;
 default|default:
-name|ipbytes
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
 name|ISC_R_NOTIMPLEMENTED
@@ -1240,10 +1249,16 @@ block|{
 name|unsigned
 name|int
 name|nbits
+init|=
+literal|0
 decl_stmt|,
 name|nbytes
+init|=
+literal|0
 decl_stmt|,
 name|ipbytes
+init|=
+literal|0
 decl_stmt|,
 name|i
 decl_stmt|;
@@ -1307,22 +1322,12 @@ literal|16
 expr_stmt|;
 break|break;
 default|default:
-name|ipbytes
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
 name|ISC_R_NOTIMPLEMENTED
 operator|)
 return|;
 block|}
-name|nbytes
-operator|=
-name|nbits
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1607,7 +1612,7 @@ name|family
 operator|=
 name|AF_UNIX
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|netaddr
 operator|->
@@ -1616,6 +1621,15 @@ operator|.
 name|un
 argument_list|,
 name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|netaddr
+operator|->
+name|type
+operator|.
+name|un
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|netaddr

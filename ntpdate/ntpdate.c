@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_unixtime.h"
+file|"timevalops.h"
 end_include
 
 begin_include
@@ -95,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|"ntp_stdlib.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_assert.h"
 end_include
 
 begin_include
@@ -557,19 +551,6 @@ end_decl_stmt
 begin_comment
 comment|/* local clock precision (log2 s) */
 end_comment
-
-begin_comment
-comment|/*  * Debugging flag  */
-end_comment
-
-begin_decl_stmt
-specifier|volatile
-name|int
-name|debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * File descriptor masks etc. for call to select  */
@@ -1475,7 +1456,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ExpandEnvironmentStrings(KEYFILE) failed: %m\n"
+literal|"ExpandEnvironmentStrings(KEYFILE) failed: %m"
 argument_list|)
 expr_stmt|;
 name|ssl_applink
@@ -3359,7 +3340,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s rate limit response from server.\n"
+literal|"%s rate limit response from server."
 argument_list|,
 name|stoa
 argument_list|(
@@ -5502,7 +5483,7 @@ decl_stmt|;
 name|sockaddr_u
 name|addr
 decl_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|service
 argument_list|,
@@ -5603,7 +5584,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"name server cannot be used: %s (%d)\n"
+literal|"name server cannot be used: %s (%d)"
 argument_list|,
 name|gai_strerror
 argument_list|(
@@ -5639,7 +5620,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't find host %s: %s (%d)\n"
+literal|"Can't find host %s: %s (%d)"
 argument_list|,
 name|serv
 argument_list|,
@@ -6756,7 +6737,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Open the socket 	 */
-name|strncpy
+name|strlcpy
 argument_list|(
 name|service
 argument_list|,
@@ -8223,9 +8204,11 @@ argument_list|,
 literal|"Can't adjust the time of day: %m"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 return|return

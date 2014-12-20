@@ -15,114 +15,6 @@ directive|define
 name|NTP_REFCLOCK_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"ntp_types.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_BSD_TTYS
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sgtty.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_BSD_TTYS */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SYSV_TTYS
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<termio.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYSV_TTYS */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_TERMIOS
-argument_list|)
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TERMIOS_NEEDS__SVID3
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_SVID3
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<termios.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TERMIOS_NEEDS__SVID3
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|_SVID3
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -143,115 +35,23 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* If you need that, include ntp_io.h instead */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|STREAM
-argument_list|)
-end_if
+begin_include
+include|#
+directive|include
+file|"ntp_types.h"
+end_include
 
 begin_include
 include|#
 directive|include
-file|<stropts.h>
+file|"ntp_tty.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CLK
-argument_list|)
-end_if
-
-begin_comment
-comment|/* This is never defined, except perhaps by a system header file */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/clkdefs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CLK */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* STREAM */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
 directive|include
 file|"recvbuff.h"
 end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SYSV_TTYS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|STREAM
-argument_list|)
-operator|&
-operator|!
-name|defined
-argument_list|(
-name|BSD_TTYS
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|BSD_TTYS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYSV_TTYS STREAM BSD_TTYS */
-end_comment
 
 begin_define
 define|#
@@ -555,14 +355,16 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* input routine - 				to avoid excessive buffer use 				due to small bursts 				of refclock input data */
-name|caddr_t
+name|struct
+name|peer
+modifier|*
 name|srcclock
 decl_stmt|;
-comment|/* pointer to clock structure */
+comment|/* refclock peer */
 name|int
 name|datalen
 decl_stmt|;
-comment|/* lenth of data */
+comment|/* length of data */
 name|int
 name|fd
 decl_stmt|;
@@ -571,6 +373,20 @@ name|u_long
 name|recvcount
 decl_stmt|;
 comment|/* count of receive completions */
+name|int
+name|active
+decl_stmt|;
+comment|/* nonzero when in use */
+ifdef|#
+directive|ifdef
+name|HAVE_IO_COMPLETION_PORT
+name|void
+modifier|*
+name|device_context
+decl_stmt|;
+comment|/* device-related data for i/o subsystem */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -631,6 +447,24 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_IO_COMPLETION_PORT
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|HANDLE
+name|WaitableIoEventHandle
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Structure interface between the reference clock support  * ntp_refclock.c and the driver utility routines  */
 end_comment
@@ -690,134 +524,26 @@ begin_comment
 comment|/* max length of modem dial strings */
 end_comment
 
-begin_comment
-comment|/*  * Line discipline flags. These require line discipline or streams  * modules to be installed/loaded in the kernel. If specified, but not  * installed, the code runs as if unspecified.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LDISC_STD
-value|0x00
-end_define
-
-begin_comment
-comment|/* standard */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LDISC_CLK
-value|0x01
-end_define
-
-begin_comment
-comment|/* tty_clk \n intercept */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LDISC_CLKPPS
-value|0x02
-end_define
-
-begin_comment
-comment|/* tty_clk \377 intercept */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LDISC_ACTS
-value|0x04
-end_define
-
-begin_comment
-comment|/* tty_clk #* intercept */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LDISC_CHU
-value|0x08
-end_define
-
-begin_comment
-comment|/* depredated */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LDISC_PPS
-value|0x10
-end_define
-
-begin_comment
-comment|/* ppsclock, ppsapi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LDISC_RAW
-value|0x20
-end_define
-
-begin_comment
-comment|/* raw binary */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LDISC_ECHO
-value|0x40
-end_define
-
-begin_comment
-comment|/* enable echo */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LDISC_REMOTE
-value|0x80
-end_define
-
-begin_comment
-comment|/* remote mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LDISC_7O1
-value|0x100
-end_define
-
-begin_comment
-comment|/* 7-bit, odd parity for Z3801A */
-end_comment
-
 begin_struct
 struct|struct
 name|refclockproc
 block|{
-name|struct
-name|refclockio
-name|io
-decl_stmt|;
-comment|/* I/O handler structure */
 name|void
 modifier|*
 name|unitptr
 decl_stmt|;
 comment|/* pointer to unit structure */
+name|struct
+name|refclock
+modifier|*
+name|conf
+decl_stmt|;
+comment|/* refclock_conf[type] */
+name|struct
+name|refclockio
+name|io
+decl_stmt|;
+comment|/* I/O handler structure */
 name|u_char
 name|leap
 decl_stmt|;
@@ -840,6 +566,22 @@ modifier|*
 name|clockdesc
 decl_stmt|;
 comment|/* clock description */
+name|u_long
+name|nextaction
+decl_stmt|;
+comment|/* local activity timeout */
+name|void
+function_decl|(
+modifier|*
+name|action
+function_decl|)
+parameter_list|(
+name|struct
+name|peer
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* timeout callback */
 name|char
 name|a_lastcode
 index|[
@@ -1037,6 +779,7 @@ function_decl|)
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|struct
 name|refclockstat
 modifier|*
@@ -1097,33 +840,6 @@ begin_comment
 comment|/*  * Function prototypes  */
 end_comment
 
-begin_comment
-comment|/*  * auxiliary PPS interface (implemented by refclock_atom())  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|pps_sample
-parameter_list|(
-name|l_fp
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|io_addclock_simple
-parameter_list|(
-name|struct
-name|refclockio
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 specifier|extern
 name|int
@@ -1177,6 +893,7 @@ parameter_list|(
 name|sockaddr_u
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|refclockstat
 modifier|*
@@ -1237,18 +954,6 @@ parameter_list|(
 name|struct
 name|peer
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|refclock_ioctl
-parameter_list|(
-name|int
-parameter_list|,
-name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1346,6 +1051,34 @@ parameter_list|,
 name|int
 parameter_list|,
 name|l_fp
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|indicate_refclock_packet
+parameter_list|(
+name|struct
+name|refclockio
+modifier|*
+parameter_list|,
+name|struct
+name|recvbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|process_refclock_packet
+parameter_list|(
+name|struct
+name|recvbuf
 modifier|*
 parameter_list|)
 function_decl|;

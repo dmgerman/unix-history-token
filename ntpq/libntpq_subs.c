@@ -15,10 +15,6 @@ directive|include
 file|"libntpq.h"
 end_include
 
-begin_comment
-comment|/* the following functions are required internally by a number of libntpq functions   * and since they are defined as static in ntpq-subs.c, they need to be exported here  */
-end_comment
-
 begin_function
 name|int
 name|ntpq_dogetassoc
@@ -33,19 +29,19 @@ argument_list|(
 name|NULL
 argument_list|)
 condition|)
-block|{
 return|return
 name|numassoc
 return|;
-block|}
 else|else
-block|{
 return|return
 literal|0
 return|;
 block|}
-block|}
 end_function
+
+begin_comment
+comment|/* the following functions are required internally by a number of libntpq functions   * and since they are defined as static in ntpq-subs.c, they need to be exported here  */
+end_comment
 
 begin_function
 name|char

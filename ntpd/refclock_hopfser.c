@@ -634,21 +634,8 @@ expr_stmt|;
 comment|/* 	 * Allocate and initialize unit structure 	 */
 name|up
 operator|=
-name|emalloc
+name|emalloc_zero
 argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|up
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|up
-argument_list|,
-literal|0
-argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -666,9 +653,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 name|pp
@@ -685,9 +669,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -774,12 +755,6 @@ name|precision
 operator|=
 name|PRECISION
 expr_stmt|;
-name|peer
-operator|->
-name|burst
-operator|=
-name|NSTAGE
-expr_stmt|;
 name|memcpy
 argument_list|(
 operator|(
@@ -856,11 +831,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|hopfclock_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -935,24 +905,22 @@ comment|/* synchhronization indicator */
 name|int
 name|DoW
 decl_stmt|;
-comment|/* Dow */
+comment|/* Day of Week */
 name|int
 name|day
 decl_stmt|,
 name|month
 decl_stmt|;
 comment|/* ddd conversion */
+name|int
+name|converted
+decl_stmt|;
 comment|/* 	 * Initialize pointers and read the timecode and timestamp. 	 */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -962,11 +930,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|hopfclock_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -1002,7 +965,12 @@ name|pp
 operator|->
 name|a_lastcode
 argument_list|,
-name|BMAX
+sizeof|sizeof
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|)
 argument_list|,
 operator|&
 name|pp
@@ -1019,6 +987,8 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|converted
+operator|=
 name|sscanf
 argument_list|(
 name|pp
@@ -1074,6 +1044,12 @@ expr_stmt|;
 comment|/* 	  Validate received values at least enough to prevent internal 	  array-bounds problems, etc. 	*/
 if|if
 condition|(
+operator|(
+literal|8
+operator|!=
+name|converted
+operator|)
+operator|||
 operator|(
 name|pp
 operator|->
@@ -1389,11 +1365,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|hopfclock_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr

@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/**  * \file project.h  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -15,6 +19,18 @@ begin_include
 include|#
 directive|include
 file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"compat/compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ag-char-map.h"
 end_include
 
 begin_comment
@@ -162,16 +178,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|STRSIZE
-parameter_list|(
-name|s
-parameter_list|)
-value|(sizeof(s)-1)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -220,6 +226,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|parse_duration
+value|option_parse_duration
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -227,6 +240,10 @@ end_endif
 
 begin_comment
 comment|/* AUTOGEN_PROJECT_H */
+end_comment
+
+begin_comment
+comment|/* end of project.h */
 end_comment
 
 end_unit

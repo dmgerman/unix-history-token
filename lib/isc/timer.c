@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007-2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: timer.c,v 1.84.58.4 2009/01/23 23:47:21 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -89,10 +89,78 @@ directive|include
 file|<isc/util.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_LEAKS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/err.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* See task.c about the following definition: */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BIND9
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_USETHREADS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|USE_TIMER_THREAD
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|USE_SHARED_MANAGER
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ISC_PLATFORM_USETHREADS */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BIND9 */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
 end_ifndef
 
 begin_include
@@ -107,7 +175,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_TIMER_THREAD */
 end_comment
 
 begin_ifdef
@@ -266,16 +334,31 @@ parameter_list|)
 value|ISC_MAGIC_VALID(t, TIMER_MAGIC)
 end_define
 
+begin_typedef
+typedef|typedef
+name|struct
+name|isc__timer
+name|isc__timer_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|isc__timermgr
+name|isc__timermgr_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|isc_timer
+name|isc__timer
 block|{
 comment|/*! Not locked. */
-name|unsigned
-name|int
-name|magic
+name|isc_timer_t
+name|common
 decl_stmt|;
-name|isc_timermgr_t
+name|isc__timermgr_t
 modifier|*
 name|manager
 decl_stmt|;
@@ -320,7 +403,7 @@ name|due
 decl_stmt|;
 name|LINK
 argument_list|(
-argument|isc_timer_t
+argument|isc__timer_t
 argument_list|)
 name|link
 expr_stmt|;
@@ -347,12 +430,11 @@ end_define
 
 begin_struct
 struct|struct
-name|isc_timermgr
+name|isc__timermgr
 block|{
 comment|/* Not locked. */
-name|unsigned
-name|int
-name|magic
+name|isc_timermgr_t
+name|common
 decl_stmt|;
 name|isc_mem_t
 modifier|*
@@ -367,7 +449,7 @@ name|done
 decl_stmt|;
 name|LIST
 argument_list|(
-argument|isc_timer_t
+argument|isc__timer_t
 argument_list|)
 name|timers
 expr_stmt|;
@@ -380,23 +462,26 @@ name|due
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
 name|isc_condition_t
 name|wakeup
 decl_stmt|;
 name|isc_thread_t
 name|thread
 decl_stmt|;
-else|#
-directive|else
-comment|/* ISC_PLATFORM_USETHREADS */
+endif|#
+directive|endif
+comment|/* USE_TIMER_THREAD */
+ifdef|#
+directive|ifdef
+name|USE_SHARED_MANAGER
 name|unsigned
 name|int
 name|refs
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_SHARED_MANAGER */
 name|isc_heap_t
 modifier|*
 name|heap
@@ -405,19 +490,302 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
+begin_comment
+comment|/*%  * The followings can be either static or public, depending on build  * environment.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BIND9
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISC_TIMERFUNC_SCOPE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISC_TIMERFUNC_SCOPE
+value|static
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|ISC_TIMERFUNC_SCOPE
+name|isc_result_t
+name|isc__timer_create
+parameter_list|(
+name|isc_timermgr_t
+modifier|*
+name|manager
+parameter_list|,
+name|isc_timertype_t
+name|type
+parameter_list|,
+name|isc_time_t
+modifier|*
+name|expires
+parameter_list|,
+name|isc_interval_t
+modifier|*
+name|interval
+parameter_list|,
+name|isc_task_t
+modifier|*
+name|task
+parameter_list|,
+name|isc_taskaction_t
+name|action
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|isc_timer_t
+modifier|*
+modifier|*
+name|timerp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ISC_TIMERFUNC_SCOPE
+name|isc_result_t
+name|isc__timer_reset
+parameter_list|(
+name|isc_timer_t
+modifier|*
+name|timer
+parameter_list|,
+name|isc_timertype_t
+name|type
+parameter_list|,
+name|isc_time_t
+modifier|*
+name|expires
+parameter_list|,
+name|isc_interval_t
+modifier|*
+name|interval
+parameter_list|,
+name|isc_boolean_t
+name|purge
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ISC_TIMERFUNC_SCOPE
+name|isc_timertype_t
+name|isc__timer_gettype
+parameter_list|(
+name|isc_timer_t
+modifier|*
+name|timer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ISC_TIMERFUNC_SCOPE
+name|isc_result_t
+name|isc__timer_touch
+parameter_list|(
+name|isc_timer_t
+modifier|*
+name|timer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ISC_TIMERFUNC_SCOPE
+name|void
+name|isc__timer_attach
+parameter_list|(
+name|isc_timer_t
+modifier|*
+name|timer0
+parameter_list|,
+name|isc_timer_t
+modifier|*
+modifier|*
+name|timerp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ISC_TIMERFUNC_SCOPE
+name|void
+name|isc__timer_detach
+parameter_list|(
+name|isc_timer_t
+modifier|*
+modifier|*
+name|timerp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ISC_TIMERFUNC_SCOPE
+name|isc_result_t
+name|isc__timermgr_create
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|isc_timermgr_t
+modifier|*
+modifier|*
+name|managerp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ISC_TIMERFUNC_SCOPE
+name|void
+name|isc__timermgr_poke
+parameter_list|(
+name|isc_timermgr_t
+modifier|*
+name|manager0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ISC_TIMERFUNC_SCOPE
+name|void
+name|isc__timermgr_destroy
+parameter_list|(
+name|isc_timermgr_t
+modifier|*
+modifier|*
+name|managerp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct
+specifier|static
+struct|struct
+name|isc__timermethods
+block|{
+name|isc_timermethods_t
+name|methods
+decl_stmt|;
+comment|/*% 	 * The following are defined just for avoiding unused static functions. 	 */
 ifndef|#
 directive|ifndef
-name|ISC_PLATFORM_USETHREADS
-end_ifndef
+name|BIND9
+name|void
+modifier|*
+name|gettype
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|timermethods
+init|=
+block|{
+block|{
+name|isc__timer_attach
+block|,
+name|isc__timer_detach
+block|,
+name|isc__timer_reset
+block|,
+name|isc__timer_touch
+block|}
+ifndef|#
+directive|ifndef
+name|BIND9
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+name|isc__timer_gettype
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_struct
+specifier|static
+struct|struct
+name|isc__timermgrmethods
+block|{
+name|isc_timermgrmethods_t
+name|methods
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|BIND9
+name|void
+modifier|*
+name|poke
+decl_stmt|;
+comment|/* see above */
+endif|#
+directive|endif
+block|}
+name|timermgrmethods
+init|=
+block|{
+block|{
+name|isc__timermgr_destroy
+block|,
+name|isc__timer_create
+block|}
+ifndef|#
+directive|ifndef
+name|BIND9
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+name|isc__timermgr_poke
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_SHARED_MANAGER
+end_ifdef
 
 begin_comment
-comment|/*!  * If threads are not in use, there can be only one.  */
+comment|/*!  * If the manager is supposed to be shared, there can be only one.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|isc_timermgr_t
+name|isc__timermgr_t
 modifier|*
 name|timermgr
 init|=
@@ -431,7 +799,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_SHARED_MANAGER */
 end_comment
 
 begin_function
@@ -440,7 +808,7 @@ specifier|inline
 name|isc_result_t
 name|schedule
 parameter_list|(
-name|isc_timer_t
+name|isc__timer_t
 modifier|*
 name|timer
 parameter_list|,
@@ -455,7 +823,7 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
-name|isc_timermgr_t
+name|isc__timermgr_t
 modifier|*
 name|manager
 decl_stmt|;
@@ -467,7 +835,7 @@ name|cmp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
 name|isc_boolean_t
 name|timedwait
 decl_stmt|;
@@ -485,7 +853,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
 name|UNUSED
 argument_list|(
 name|signal_ok
@@ -493,7 +861,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_TIMER_THREAD */
 name|manager
 operator|=
 name|timer
@@ -502,7 +870,7 @@ name|manager
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
 comment|/*! 	 * If the manager was timed wait, we may need to signal the 	 * manager to force a wakeup. 	 */
 name|timedwait
 operator|=
@@ -797,7 +1165,7 @@ expr_stmt|;
 comment|/* 	 * If this timer is at the head of the queue, we need to ensure 	 * that we won't miss it if it has a more recent due time than 	 * the current "next" timer.  We do this either by waking up the 	 * run thread, or explicitly setting the value in the manager. 	 */
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
 comment|/* 	 * This is a temporary (probably) hack to fix a bug on tru64 5.1 	 * and 5.1a.  Sometimes, pthread_cond_timedwait() doesn't actually 	 * return when the time expires, so here, we check to see if 	 * we're 15 seconds or more behind, and if we are, we signal 	 * the dispatcher.  This isn't such a bad idea as a general purpose 	 * watchdog, so perhaps we should just leave it in here. 	 */
 if|if
 condition|(
@@ -918,7 +1286,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_TIMER_THREAD */
 if|if
 condition|(
 name|timer
@@ -952,7 +1320,7 @@ name|due
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_TIMER_THREAD */
 return|return
 operator|(
 name|ISC_R_SUCCESS
@@ -967,17 +1335,22 @@ specifier|inline
 name|void
 name|deschedule
 parameter_list|(
-name|isc_timer_t
+name|isc__timer_t
 modifier|*
 name|timer
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_TIMER_THREAD
 name|isc_boolean_t
 name|need_wakeup
 init|=
 name|ISC_FALSE
 decl_stmt|;
-name|isc_timermgr_t
+endif|#
+directive|endif
+name|isc__timermgr_t
 modifier|*
 name|manager
 decl_stmt|;
@@ -997,6 +1370,9 @@ operator|>
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_TIMER_THREAD
 if|if
 condition|(
 name|timer
@@ -1009,6 +1385,8 @@ name|need_wakeup
 operator|=
 name|ISC_TRUE
 expr_stmt|;
+endif|#
+directive|endif
 name|isc_heap_delete
 argument_list|(
 name|manager
@@ -1042,7 +1420,7 @@ operator|--
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
 if|if
 condition|(
 name|need_wakeup
@@ -1073,7 +1451,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_TIMER_THREAD */
 block|}
 block|}
 end_function
@@ -1083,12 +1461,12 @@ specifier|static
 name|void
 name|destroy
 parameter_list|(
-name|isc_timer_t
+name|isc__timer_t
 modifier|*
 name|timer
 parameter_list|)
 block|{
-name|isc_timermgr_t
+name|isc__timermgr_t
 modifier|*
 name|manager
 init|=
@@ -1165,6 +1543,16 @@ argument_list|)
 expr_stmt|;
 name|timer
 operator|->
+name|common
+operator|.
+name|impmagic
+operator|=
+literal|0
+expr_stmt|;
+name|timer
+operator|->
+name|common
+operator|.
 name|magic
 operator|=
 literal|0
@@ -1188,12 +1576,13 @@ block|}
 end_function
 
 begin_function
+name|ISC_TIMERFUNC_SCOPE
 name|isc_result_t
-name|isc_timer_create
+name|isc__timer_create
 parameter_list|(
 name|isc_timermgr_t
 modifier|*
-name|manager
+name|manager0
 parameter_list|,
 name|isc_timertype_t
 name|type
@@ -1224,7 +1613,17 @@ modifier|*
 name|timerp
 parameter_list|)
 block|{
-name|isc_timer_t
+name|isc__timermgr_t
+modifier|*
+name|manager
+init|=
+operator|(
+name|isc__timermgr_t
+operator|*
+operator|)
+name|manager0
+decl_stmt|;
+name|isc__timer_t
 modifier|*
 name|timer
 decl_stmt|;
@@ -1571,9 +1970,32 @@ argument_list|)
 expr_stmt|;
 name|timer
 operator|->
-name|magic
+name|common
+operator|.
+name|impmagic
 operator|=
 name|TIMER_MAGIC
+expr_stmt|;
+name|timer
+operator|->
+name|common
+operator|.
+name|magic
+operator|=
+name|ISCAPI_TIMER_MAGIC
+expr_stmt|;
+name|timer
+operator|->
+name|common
+operator|.
+name|methods
+operator|=
+operator|(
+name|isc_timermethods_t
+operator|*
+operator|)
+operator|&
+name|timermethods
 expr_stmt|;
 name|LOCK
 argument_list|(
@@ -1641,6 +2063,16 @@ condition|)
 block|{
 name|timer
 operator|->
+name|common
+operator|.
+name|impmagic
+operator|=
+literal|0
+expr_stmt|;
+name|timer
+operator|->
+name|common
+operator|.
 name|magic
 operator|=
 literal|0
@@ -1685,6 +2117,10 @@ block|}
 operator|*
 name|timerp
 operator|=
+operator|(
+name|isc_timer_t
+operator|*
+operator|)
 name|timer
 expr_stmt|;
 return|return
@@ -1696,12 +2132,13 @@ block|}
 end_function
 
 begin_function
+name|ISC_TIMERFUNC_SCOPE
 name|isc_result_t
-name|isc_timer_reset
+name|isc__timer_reset
 parameter_list|(
 name|isc_timer_t
 modifier|*
-name|timer
+name|timer0
 parameter_list|,
 name|isc_timertype_t
 name|type
@@ -1718,10 +2155,20 @@ name|isc_boolean_t
 name|purge
 parameter_list|)
 block|{
+name|isc__timer_t
+modifier|*
+name|timer
+init|=
+operator|(
+name|isc__timer_t
+operator|*
+operator|)
+name|timer0
+decl_stmt|;
 name|isc_time_t
 name|now
 decl_stmt|;
-name|isc_timermgr_t
+name|isc__timermgr_t
 modifier|*
 name|manager
 decl_stmt|;
@@ -1836,12 +2283,6 @@ name|now
 argument_list|)
 expr_stmt|;
 block|}
-name|manager
-operator|=
-name|timer
-operator|->
-name|manager
-expr_stmt|;
 name|LOCK
 argument_list|(
 operator|&
@@ -2007,14 +2448,25 @@ block|}
 end_function
 
 begin_function
+name|ISC_TIMERFUNC_SCOPE
 name|isc_timertype_t
-name|isc_timer_gettype
+name|isc__timer_gettype
 parameter_list|(
 name|isc_timer_t
 modifier|*
-name|timer
+name|timer0
 parameter_list|)
 block|{
+name|isc__timer_t
+modifier|*
+name|timer
+init|=
+operator|(
+name|isc__timer_t
+operator|*
+operator|)
+name|timer0
+decl_stmt|;
 name|isc_timertype_t
 name|t
 decl_stmt|;
@@ -2057,14 +2509,25 @@ block|}
 end_function
 
 begin_function
+name|ISC_TIMERFUNC_SCOPE
 name|isc_result_t
-name|isc_timer_touch
+name|isc__timer_touch
 parameter_list|(
 name|isc_timer_t
 modifier|*
-name|timer
+name|timer0
 parameter_list|)
 block|{
+name|isc__timer_t
+modifier|*
+name|timer
+init|=
+operator|(
+name|isc__timer_t
+operator|*
+operator|)
+name|timer0
+decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
@@ -2130,12 +2593,13 @@ block|}
 end_function
 
 begin_function
+name|ISC_TIMERFUNC_SCOPE
 name|void
-name|isc_timer_attach
+name|isc__timer_attach
 parameter_list|(
 name|isc_timer_t
 modifier|*
-name|timer
+name|timer0
 parameter_list|,
 name|isc_timer_t
 modifier|*
@@ -2143,6 +2607,16 @@ modifier|*
 name|timerp
 parameter_list|)
 block|{
+name|isc__timer_t
+modifier|*
+name|timer
+init|=
+operator|(
+name|isc__timer_t
+operator|*
+operator|)
+name|timer0
+decl_stmt|;
 comment|/* 	 * Attach *timerp to timer. 	 */
 name|REQUIRE
 argument_list|(
@@ -2188,14 +2662,19 @@ expr_stmt|;
 operator|*
 name|timerp
 operator|=
+operator|(
+name|isc_timer_t
+operator|*
+operator|)
 name|timer
 expr_stmt|;
 block|}
 end_function
 
 begin_function
+name|ISC_TIMERFUNC_SCOPE
 name|void
-name|isc_timer_detach
+name|isc__timer_detach
 parameter_list|(
 name|isc_timer_t
 modifier|*
@@ -2203,7 +2682,7 @@ modifier|*
 name|timerp
 parameter_list|)
 block|{
-name|isc_timer_t
+name|isc__timer_t
 modifier|*
 name|timer
 decl_stmt|;
@@ -2222,6 +2701,10 @@ argument_list|)
 expr_stmt|;
 name|timer
 operator|=
+operator|(
+name|isc__timer_t
+operator|*
+operator|)
 operator|*
 name|timerp
 expr_stmt|;
@@ -2297,7 +2780,7 @@ specifier|static
 name|void
 name|dispatch
 parameter_list|(
-name|isc_timermgr_t
+name|isc__timermgr_t
 modifier|*
 name|manager
 parameter_list|,
@@ -2324,7 +2807,7 @@ name|type
 init|=
 literal|0
 decl_stmt|;
-name|isc_timer_t
+name|isc__timer_t
 modifier|*
 name|timer
 decl_stmt|;
@@ -2795,7 +3278,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
 end_ifdef
 
 begin_function
@@ -2815,7 +3298,7 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
-name|isc_timermgr_t
+name|isc__timermgr_t
 modifier|*
 name|manager
 init|=
@@ -2989,6 +3472,16 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_LEAKS
+name|ERR_remove_state
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|(
@@ -3006,7 +3499,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_TIMER_THREAD */
 end_comment
 
 begin_function
@@ -3023,7 +3516,7 @@ modifier|*
 name|v2
 parameter_list|)
 block|{
-name|isc_timer_t
+name|isc__timer_t
 modifier|*
 name|t1
 decl_stmt|,
@@ -3098,7 +3591,7 @@ name|int
 name|index
 parameter_list|)
 block|{
-name|isc_timer_t
+name|isc__timer_t
 modifier|*
 name|timer
 decl_stmt|;
@@ -3124,8 +3617,9 @@ block|}
 end_function
 
 begin_function
+name|ISC_TIMERFUNC_SCOPE
 name|isc_result_t
-name|isc_timermgr_create
+name|isc__timermgr_create
 parameter_list|(
 name|isc_mem_t
 modifier|*
@@ -3137,7 +3631,7 @@ modifier|*
 name|managerp
 parameter_list|)
 block|{
-name|isc_timermgr_t
+name|isc__timermgr_t
 modifier|*
 name|manager
 decl_stmt|;
@@ -3157,9 +3651,9 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ISC_PLATFORM_USETHREADS
+ifdef|#
+directive|ifdef
+name|USE_SHARED_MANAGER
 if|if
 condition|(
 name|timermgr
@@ -3175,6 +3669,10 @@ expr_stmt|;
 operator|*
 name|managerp
 operator|=
+operator|(
+name|isc_timermgr_t
+operator|*
+operator|)
 name|timermgr
 expr_stmt|;
 return|return
@@ -3185,7 +3683,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_SHARED_MANAGER */
 name|manager
 operator|=
 name|isc_mem_get
@@ -3212,9 +3710,32 @@ operator|)
 return|;
 name|manager
 operator|->
-name|magic
+name|common
+operator|.
+name|impmagic
 operator|=
 name|TIMER_MANAGER_MAGIC
+expr_stmt|;
+name|manager
+operator|->
+name|common
+operator|.
+name|magic
+operator|=
+name|ISCAPI_TIMERMGR_MAGIC
+expr_stmt|;
+name|manager
+operator|->
+name|common
+operator|.
+name|methods
+operator|=
+operator|(
+name|isc_timermgrmethods_t
+operator|*
+operator|)
+operator|&
+name|timermgrmethods
 expr_stmt|;
 name|manager
 operator|->
@@ -3362,7 +3883,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
 if|if
 condition|(
 name|isc_condition_init
@@ -3530,9 +4051,11 @@ name|ISC_R_UNEXPECTED
 operator|)
 return|;
 block|}
-else|#
-directive|else
-comment|/* ISC_PLATFORM_USETHREADS */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_SHARED_MANAGER
 name|manager
 operator|->
 name|refs
@@ -3545,10 +4068,14 @@ name|manager
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_SHARED_MANAGER */
 operator|*
 name|managerp
 operator|=
+operator|(
+name|isc_timermgr_t
+operator|*
+operator|)
 name|manager
 expr_stmt|;
 return|return
@@ -3560,17 +4087,28 @@ block|}
 end_function
 
 begin_function
+name|ISC_TIMERFUNC_SCOPE
 name|void
-name|isc_timermgr_poke
+name|isc__timermgr_poke
 parameter_list|(
 name|isc_timermgr_t
 modifier|*
-name|manager
+name|manager0
 parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
+name|isc__timermgr_t
+modifier|*
+name|manager
+init|=
+operator|(
+name|isc__timermgr_t
+operator|*
+operator|)
+name|manager0
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_MANAGER
@@ -3591,7 +4129,7 @@ else|#
 directive|else
 name|UNUSED
 argument_list|(
-name|manager
+name|manager0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3600,8 +4138,9 @@ block|}
 end_function
 
 begin_function
+name|ISC_TIMERFUNC_SCOPE
 name|void
-name|isc_timermgr_destroy
+name|isc__timermgr_destroy
 parameter_list|(
 name|isc_timermgr_t
 modifier|*
@@ -3609,7 +4148,7 @@ modifier|*
 name|managerp
 parameter_list|)
 block|{
-name|isc_timermgr_t
+name|isc__timermgr_t
 modifier|*
 name|manager
 decl_stmt|;
@@ -3627,6 +4166,10 @@ argument_list|)
 expr_stmt|;
 name|manager
 operator|=
+operator|(
+name|isc__timermgr_t
+operator|*
+operator|)
 operator|*
 name|managerp
 expr_stmt|;
@@ -3646,23 +4189,23 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ISC_PLATFORM_USETHREADS
+ifdef|#
+directive|ifdef
+name|USE_SHARED_MANAGER
+name|manager
+operator|->
+name|refs
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|manager
 operator|->
 name|refs
 operator|>
-literal|1
+literal|0
 condition|)
 block|{
-name|manager
-operator|->
-name|refs
-operator|--
-expr_stmt|;
 name|UNLOCK
 argument_list|(
 operator|&
@@ -3678,12 +4221,27 @@ name|NULL
 expr_stmt|;
 return|return;
 block|}
-name|isc__timermgr_dispatch
-argument_list|()
+name|timermgr
+operator|=
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_SHARED_MANAGER */
+ifndef|#
+directive|ifndef
+name|USE_TIMER_THREAD
+name|isc__timermgr_dispatch
+argument_list|(
+operator|(
+name|isc_timermgr_t
+operator|*
+operator|)
+name|manager
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|REQUIRE
 argument_list|(
 name|EMPTY
@@ -3702,7 +4260,7 @@ name|ISC_TRUE
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
 name|XTRACE
 argument_list|(
 name|isc_msgcat_get
@@ -3727,7 +4285,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_TIMER_THREAD */
 name|UNLOCK
 argument_list|(
 operator|&
@@ -3738,7 +4296,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
 comment|/* 	 * Wait for thread to exit. 	 */
 if|if
 condition|(
@@ -3775,11 +4333,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_TIMER_THREAD */
 comment|/* 	 * Clean up. 	 */
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
 operator|(
 name|void
 operator|)
@@ -3793,7 +4351,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_TIMER_THREAD */
 name|DESTROYLOCK
 argument_list|(
 operator|&
@@ -3812,6 +4370,16 @@ argument_list|)
 expr_stmt|;
 name|manager
 operator|->
+name|common
+operator|.
+name|impmagic
+operator|=
+literal|0
+expr_stmt|;
+name|manager
+operator|->
+name|common
+operator|.
 name|magic
 operator|=
 literal|0
@@ -3846,31 +4414,69 @@ name|managerp
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_SHARED_MANAGER
+name|timermgr
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ISC_PLATFORM_USETHREADS
+name|USE_TIMER_THREAD
 end_ifndef
 
 begin_function
 name|isc_result_t
 name|isc__timermgr_nextevent
 parameter_list|(
+name|isc_timermgr_t
+modifier|*
+name|manager0
+parameter_list|,
 name|isc_time_t
 modifier|*
 name|when
 parameter_list|)
 block|{
+name|isc__timermgr_t
+modifier|*
+name|manager
+init|=
+operator|(
+name|isc__timermgr_t
+operator|*
+operator|)
+name|manager0
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_SHARED_MANAGER
 if|if
 condition|(
+name|manager
+operator|==
+name|NULL
+condition|)
+name|manager
+operator|=
 name|timermgr
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|manager
 operator|==
 name|NULL
 operator|||
-name|timermgr
+name|manager
 operator|->
 name|nscheduled
 operator|==
@@ -3884,7 +4490,7 @@ return|;
 operator|*
 name|when
 operator|=
-name|timermgr
+name|manager
 operator|->
 name|due
 expr_stmt|;
@@ -3900,15 +4506,42 @@ begin_function
 name|void
 name|isc__timermgr_dispatch
 parameter_list|(
-name|void
+name|isc_timermgr_t
+modifier|*
+name|manager0
 parameter_list|)
 block|{
+name|isc__timermgr_t
+modifier|*
+name|manager
+init|=
+operator|(
+name|isc__timermgr_t
+operator|*
+operator|)
+name|manager0
+decl_stmt|;
 name|isc_time_t
 name|now
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_SHARED_MANAGER
 if|if
 condition|(
+name|manager
+operator|==
+name|NULL
+condition|)
+name|manager
+operator|=
 name|timermgr
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|manager
 operator|==
 name|NULL
 condition|)
@@ -3921,7 +4554,7 @@ argument_list|)
 expr_stmt|;
 name|dispatch
 argument_list|(
-name|timermgr
+name|manager
 argument_list|,
 operator|&
 name|now
@@ -3936,8 +4569,35 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ISC_PLATFORM_USETHREADS */
+comment|/* USE_TIMER_THREAD */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_TIMERIMPREGISTER
+end_ifdef
+
+begin_function
+name|isc_result_t
+name|isc__timer_register
+parameter_list|()
+block|{
+return|return
+operator|(
+name|isc_timer_register
+argument_list|(
+name|isc__timermgr_create
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

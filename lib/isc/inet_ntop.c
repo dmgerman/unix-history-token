@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1996-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1996-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_ntop.c,v 1.19 2007/06/19 23:47:17 tbox Exp $"
+literal|"$Id: inet_ntop.c,v 1.21 2009/07/17 23:47:41 tbox Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,16 +76,6 @@ include|#
 directive|include
 file|<isc/print.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_sprintf.h"
-end_include
-
-begin_comment
-comment|/* NTP local change, helps SunOS 4 */
-end_comment
 
 begin_define
 define|#
@@ -162,8 +152,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|isc_net_ntop
+parameter_list|(
+name|int
+name|af
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|src
+parameter_list|,
+name|char
+modifier|*
+name|dst
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*! char *  * isc_net_ntop(af, src, dst, size)  *	convert a network format address to presentation format.  * \return  *	pointer to presentation format address (`dst'), or NULL (see errno).  * \author   *	Paul Vixie, 1996.  */
+comment|/*! char *  * isc_net_ntop(af, src, dst, size)  *	convert a network format address to presentation format.  * \return  *	pointer to presentation format address (`dst'), or NULL (see errno).  * \author  *	Paul Vixie, 1996.  */
 end_comment
 
 begin_function
@@ -285,42 +299,53 @@ literal|"255.255.255.255"
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* NTP local change to use SNPRINTF() macro for SunOS4 compat */
-if|if
-condition|(
-name|SNPRINTF
+name|int
+name|len
+decl_stmt|;
+name|len
+operator|=
+name|snprintf
 argument_list|(
-operator|(
 name|tmp
-operator|,
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|tmp
 argument_list|)
-operator|,
+argument_list|,
 name|fmt
-operator|,
+argument_list|,
 name|src
 index|[
 literal|0
 index|]
-operator|,
+argument_list|,
 name|src
 index|[
 literal|1
 index|]
-operator|,
+argument_list|,
 name|src
 index|[
 literal|2
 index|]
-operator|,
+argument_list|,
 name|src
 index|[
 literal|3
 index|]
-operator|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+literal|0
+operator|||
+operator|(
+name|size_t
+operator|)
+name|len
 operator|>=
 name|size
 condition|)
@@ -335,11 +360,15 @@ name|NULL
 operator|)
 return|;
 block|}
-name|strcpy
+name|memcpy
 argument_list|(
 name|dst
 argument_list|,
 name|tmp
+argument_list|,
+literal|1
+operator|+
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -745,6 +774,21 @@ name|best
 operator|.
 name|len
 operator|==
+literal|7
+operator|&&
+name|words
+index|[
+literal|7
+index|]
+operator|!=
+literal|0x0001
+operator|)
+operator|||
+operator|(
+name|best
+operator|.
+name|len
+operator|==
 literal|5
 operator|&&
 name|words
@@ -796,21 +840,29 @@ break|break;
 block|}
 name|tp
 operator|+=
-name|SPRINTF
+name|snprintf
 argument_list|(
+name|tp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmp
+argument_list|)
+operator|-
 operator|(
 name|tp
-operator|,
+operator|-
+name|tmp
+operator|)
+argument_list|,
 literal|"%x"
-operator|,
+argument_list|,
 name|words
 index|[
 name|i
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
-comment|/* NTP local change */
 block|}
 comment|/* Was it a trailing run of 0x00's? */
 if|if
@@ -875,11 +927,20 @@ name|NULL
 operator|)
 return|;
 block|}
-name|strcpy
+name|memcpy
 argument_list|(
 name|dst
 argument_list|,
 name|tmp
+argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
+name|tp
+operator|-
+name|tmp
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

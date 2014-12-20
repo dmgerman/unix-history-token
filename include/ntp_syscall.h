@@ -18,23 +18,6 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<config.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|HAVE_SYS_TIMEX_H
 end_ifdef
 
@@ -93,13 +76,13 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE___ADJTIMEX
+name|HAVE_NTP_ADJTIME
 end_ifdef
 
 begin_function_decl
 specifier|extern
 name|int
-name|__adjtimex
+name|ntp_adjtime
 parameter_list|(
 name|struct
 name|timex
@@ -107,16 +90,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|ntp_adjtime
-parameter_list|(
-name|t
-parameter_list|)
-value|__adjtimex((t))
-end_define
 
 begin_ifndef
 ifndef|#
@@ -152,6 +125,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_NTP_GETTIME
+end_ifndef
+
 begin_function
 specifier|static
 specifier|inline
@@ -171,15 +150,14 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
+name|ZERO
+argument_list|(
 name|tntx
-operator|.
-name|modes
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|result
 operator|=
-name|__adjtimex
+name|ntp_adjtime
 argument_list|(
 operator|&
 name|tntx
@@ -230,50 +208,27 @@ directive|endif
 endif|#
 directive|endif
 return|return
-operator|(
 name|result
-operator|)
 return|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* !HAVE__ADJTIMEX */
+comment|/* !HAVE_NTP_GETTIME */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE___NTP_GETTIME
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ntp_gettime
-parameter_list|(
-name|t
-parameter_list|)
-value|__ntp_gettime((t))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !HAVE_ADJTIMEX */
+comment|/* !HAVE_NTP_ADJTIME */
 end_comment
 
 begin_endif

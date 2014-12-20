@@ -1,12 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ntpd.h - Prototypes for ntpd.  */
+comment|/*  * ntpd.h - Prototypes and external variables for ntpd.  *  * Note the first half is primarily function prototypes, type  * declarations, and preprocessor macros, with variables declared  * primarily in the second half.  *  * Each half is further divided into sections for each source file.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"ntp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_syslog.h"
 end_include
 
 begin_include
@@ -42,8 +54,88 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ntp_intres.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"recvbuff.h"
 end_include
+
+begin_comment
+comment|/*  * First half: ntpd types, functions, macros  * -----------------------------------------  */
+end_comment
+
+begin_comment
+comment|/*  * macro for debugging output - cut down on #ifdef pollution.  *  * DPRINTF() is for use by ntpd only, and compiles away to nothing  * without DEBUG (configure --disable-debugging).  *  * TRACE() is similar for libntp and utilities, which retain full  * debug capability even when compiled without DEBUG.  *  * The calling convention is not attractive:  *     DPRINTF(debuglevel, (fmt, ...));  *     DPRINTF(2, ("shows #ifdef DEBUG and if debug>= %d\n", 2));  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|lvl
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|do { 						\ 		if (debug>= (lvl))			\ 			mprintf arg;			\ 	} while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|lvl
+parameter_list|,
+name|arg
+parameter_list|)
+value|do {} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* nt_clockstuff.c */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|win_time_stepped
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ntp_config.c */
@@ -179,30 +271,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|init_logging
-parameter_list|(
-name|char
-specifier|const
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|setup_logfile
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|process_control
 parameter_list|(
 name|struct
@@ -231,6 +299,35 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|mprintf_event
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|peer
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|NTP_PRINTF
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* ntp_control.c */
@@ -385,64 +482,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* ntp_intres.c */
-end_comment
-
 begin_function_decl
 specifier|extern
-name|void
-name|ntp_res_name
-parameter_list|(
-name|sockaddr_u
-parameter_list|,
-name|u_short
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|ntp_res_recv
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|ntp_intres
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYS_WINNT
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|unsigned
-name|WINAPI
-name|ntp_intres_thread
-parameter_list|(
-name|void
+specifier|const
+name|char
 modifier|*
+name|get_ext_sys_var
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|tag
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* ntp_io.c */
@@ -482,13 +535,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|disable_dynamic_updates
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|extern
 name|void
@@ -497,6 +543,39 @@ parameter_list|(
 name|interface_receiver_t
 parameter_list|,
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|endpt
+modifier|*
+name|getinterface
+parameter_list|(
+name|sockaddr_u
+modifier|*
+parameter_list|,
+name|u_int32
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|endpt
+modifier|*
+name|select_peerinterface
+parameter_list|(
+name|struct
+name|peer
+modifier|*
+parameter_list|,
+name|sockaddr_u
+modifier|*
+parameter_list|,
+name|endpt
 modifier|*
 parameter_list|)
 function_decl|;
@@ -567,6 +646,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_IO_COMPLETION_PORT
+end_ifndef
+
+begin_function_decl
+specifier|extern
+name|void
+name|io_handler
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|extern
 name|void
@@ -583,17 +683,6 @@ name|void
 name|io_open_sockets
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|input_handler
-parameter_list|(
-name|l_fp
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -672,27 +761,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SYS_WINNT
-end_ifndef
-
-begin_function_decl
-specifier|extern
-name|void
-name|kill_asyncio
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -788,6 +856,7 @@ define|#
 directive|define
 name|UNBLOCK_IO_AND_ALARM
 parameter_list|()
+value|do {} while (0)
 end_define
 
 begin_define
@@ -795,6 +864,7 @@ define|#
 directive|define
 name|BLOCK_IO_AND_ALARM
 parameter_list|()
+value|do {} while (0)
 end_define
 
 begin_endif
@@ -878,6 +948,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|select_loop
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|huffpuff
 parameter_list|(
 name|void
@@ -899,9 +979,40 @@ name|sys_tai
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|freq_cnt
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* ntp_monitor.c */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MON_HASH_SIZE
+value|(1U<< mon_hash_bits)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MON_HASH_MASK
+value|(MON_HASH_SIZE - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MON_HASH
+parameter_list|(
+name|addr
+parameter_list|)
+value|(sock_hash(addr)& MON_HASH_MASK)
+end_define
 
 begin_function_decl
 specifier|extern
@@ -935,14 +1046,14 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|u_short
 name|ntp_monitor
 parameter_list|(
 name|struct
 name|recvbuf
 modifier|*
 parameter_list|,
-name|int
+name|u_short
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -950,10 +1061,9 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|ntp_monclearinterface
+name|mon_clearinterface
 parameter_list|(
-name|struct
-name|interface
+name|endpt
 modifier|*
 name|interface
 parameter_list|)
@@ -982,6 +1092,10 @@ modifier|*
 name|findexistingpeer
 parameter_list|(
 name|sockaddr_u
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|,
 name|struct
@@ -1021,7 +1135,7 @@ name|peer
 modifier|*
 name|findpeerbyassoc
 parameter_list|(
-name|u_int
+name|associd_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1034,12 +1148,9 @@ parameter_list|(
 name|struct
 name|peer
 modifier|*
-name|peer
 parameter_list|,
-name|struct
-name|interface
+name|endpt
 modifier|*
-name|interface
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1054,25 +1165,32 @@ parameter_list|(
 name|sockaddr_u
 modifier|*
 parameter_list|,
-name|struct
-name|interface
+specifier|const
+name|char
 modifier|*
 parameter_list|,
-name|int
+name|endpt
+modifier|*
 parameter_list|,
-name|int
+name|u_char
 parameter_list|,
-name|int
+name|u_char
 parameter_list|,
-name|int
+name|u_char
+parameter_list|,
+name|u_char
 parameter_list|,
 name|u_int
 parameter_list|,
 name|u_char
 parameter_list|,
-name|int
+name|u_int32
 parameter_list|,
 name|keyid_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1107,25 +1225,29 @@ parameter_list|(
 name|sockaddr_u
 modifier|*
 parameter_list|,
-name|struct
-name|interface
+specifier|const
+name|char
 modifier|*
 parameter_list|,
-name|int
+name|endpt
+modifier|*
 parameter_list|,
-name|int
+name|u_char
 parameter_list|,
-name|int
+name|u_char
 parameter_list|,
-name|int
+name|u_char
+parameter_list|,
+name|u_char
 parameter_list|,
 name|u_int
 parameter_list|,
-name|int
+name|u_int32
 parameter_list|,
 name|keyid_t
 parameter_list|,
-name|u_char
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1208,7 +1330,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OPENSSL
+name|AUTOKEY
 end_ifdef
 
 begin_function_decl
@@ -1460,7 +1582,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* OPENSSL */
+comment|/* AUTOKEY */
 end_comment
 
 begin_comment
@@ -1536,57 +1658,24 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|leap_tai
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* TAI at next leap */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|leap_sec
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* next scheduled leap from file */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|leap_peers
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* next scheduled leap from peers */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|u_long
 name|leapsec
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* seconds to next leap */
+comment|/* seconds to next leap (proximity class) */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_long
-name|leap_expire
+name|int
+name|leapdif
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* leap information expiration */
+comment|/* TAI difference step at next leap second*/
 end_comment
 
 begin_decl_stmt
@@ -1610,8 +1699,16 @@ name|sys_maxdist
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sys_ident
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * there seems to be a bug in the IRIX 4 compiler which prevents  * u_char from beeing used in prototyped functions.  * This is also true AIX compiler.  * So give up and define it to be int. WLJ  */
+comment|/* identity scheme */
 end_comment
 
 begin_function_decl
@@ -1623,7 +1720,7 @@ name|struct
 name|peer
 modifier|*
 parameter_list|,
-name|int
+name|u_char
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1671,6 +1768,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|set_sys_tick_precision
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|proto_config
 parameter_list|(
 name|int
@@ -1695,15 +1802,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* ntp_refclock.c */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|REFCLOCK
 end_ifdef
-
-begin_comment
-comment|/* ntp_refclock.c */
-end_comment
 
 begin_function_decl
 specifier|extern
@@ -1800,6 +1907,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|reset_auth_stats
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* ntp_restrict.c */
 end_comment
@@ -1841,6 +1958,23 @@ parameter_list|,
 name|u_short
 parameter_list|,
 name|u_short
+parameter_list|,
+name|u_long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|restrict_source
+parameter_list|(
+name|sockaddr_u
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1907,10 +2041,21 @@ name|interface_interval
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|orphwait
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* orphan wait time */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OPENSSL
+name|AUTOKEY
 end_ifdef
 
 begin_decl_stmt
@@ -1977,7 +2122,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* OPENSSL */
+comment|/* AUTOKEY */
 end_comment
 
 begin_comment
@@ -2085,36 +2230,104 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|mprintf_clock_stats
+parameter_list|(
+name|sockaddr_u
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|NTP_PRINTF
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|extern
 name|void
 name|record_raw_stats
 parameter_list|(
 name|sockaddr_u
 modifier|*
+name|srcadr
 parameter_list|,
 name|sockaddr_u
 modifier|*
+name|dstadr
 parameter_list|,
 name|l_fp
 modifier|*
+name|t1
 parameter_list|,
 name|l_fp
 modifier|*
+name|t2
 parameter_list|,
 name|l_fp
 modifier|*
+name|t3
 parameter_list|,
 name|l_fp
 modifier|*
+name|t4
+parameter_list|,
+name|int
+name|leap
+parameter_list|,
+name|int
+name|version
+parameter_list|,
+name|int
+name|mode
+parameter_list|,
+name|int
+name|stratum
+parameter_list|,
+name|int
+name|poll
+parameter_list|,
+name|int
+name|precision
+parameter_list|,
+name|double
+name|root_delay
+parameter_list|,
+name|double
+name|root_dispersion
+parameter_list|,
+name|u_int32
+name|refid
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|extern
-name|u_long
-name|leap_month
+name|void
+name|check_leap_file
 parameter_list|(
-name|u_long
+name|int
+name|is_daily_check
+parameter_list|,
+name|u_int32
+name|ntptime
+parameter_list|,
+specifier|const
+name|time_t
+modifier|*
+name|systime
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2159,17 +2372,6 @@ end_endif
 
 begin_function_decl
 specifier|extern
-name|u_short
-name|sock_hash
-parameter_list|(
-name|sockaddr_u
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|fstostr
@@ -2183,36 +2385,93 @@ begin_comment
 comment|/* NTP timescale seconds */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|double
-name|old_drift
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* ntpd.c */
+end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
+name|void
+name|parse_cmdline_opts
+parameter_list|(
 name|int
-name|drift_file_sw
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|double
-name|wander_threshold
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|double
-name|wander_resid
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * Variable declarations for ntpd.  */
+comment|/*  * Signals we catch for debugging.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOREDEBUGSIG
+value|SIGUSR1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LESSDEBUGSIG
+value|SIGUSR2
+end_define
+
+begin_comment
+comment|/*  * Signals which terminate us gracefully.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYS_WINNT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SIGDIE1
+value|SIGHUP
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGDIE2
+value|SIGINT
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGDIE3
+value|SIGQUIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGDIE4
+value|SIGTERM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYS_WINNT */
+end_comment
+
+begin_comment
+comment|/*  * Last half: ntpd variables  * -------------------------  */
 end_comment
 
 begin_comment
@@ -2280,7 +2539,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|config_tree
+name|config_tree_tag
 modifier|*
 name|cfg_tree_history
 decl_stmt|;
@@ -2517,96 +2776,6 @@ comment|/* number of async messages we've sent */
 end_comment
 
 begin_comment
-comment|/* ntp_intres.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|keyid_t
-name|req_keyid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* request keyid */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|req_keytype
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* OpenSSL NID such as NID_md5 */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|size_t
-name|req_hashlen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* digest size for req_keytype */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|req_file
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of the file with configuration info */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYS_WINNT
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|HANDLE
-name|ResolverEventHandle
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|resolver_pipe_fd
-index|[
-literal|2
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* used to let the resolver process alert the parent process */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYS_WINNT */
-end_comment
-
-begin_comment
 comment|/*  * Other statistics of possible interest  */
 end_comment
 
@@ -2704,7 +2873,25 @@ comment|/* time counters were reset */
 end_comment
 
 begin_comment
-comment|/*  * Interface stuff  */
+comment|/* ntp_io.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|disable_dynamic_updates
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|sys_ifnum
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* next .ifnum to assign */
 end_comment
 
 begin_decl_stmt
@@ -2743,23 +2930,17 @@ begin_comment
 comment|/* IPv4 loopback for refclocks */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|endpt
+modifier|*
+name|ep_list
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * File descriptor masks etc. for call to select  */
+comment|/* linked list */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|fd_set
-name|activefds
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|maxactivefd
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* ntp_loopfilter.c */
@@ -2908,7 +3089,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|pps_enable
+name|hardpps_enable
 decl_stmt|;
 end_decl_stmt
 
@@ -3080,26 +3261,148 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|mon_data
+name|u_char
+name|mon_hash_bits
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* log2 size of hash table */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|mon_entry
+modifier|*
+modifier|*
+name|mon_hash
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MRU hash table */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|mon_entry
 name|mon_mru_list
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* mru listhead */
+end_comment
+
 begin_decl_stmt
 specifier|extern
-name|struct
-name|mon_data
-name|mon_fifo_list
+name|u_int
+name|mon_enabled
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* MON_OFF (0) or other MON_* */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|mru_alloc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mru list + free list count */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|mru_entries
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mru list count */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|mru_peakentries
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* highest mru_entries */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|mru_initalloc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* entries to preallocate */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|mru_incalloc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* allocation batch factor */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|mru_mindepth
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* preempt above this */
+end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|mon_enabled
+name|mru_maxage
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* for entries older than */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|mru_maxdepth
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MRU size hard limit */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mon_age
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* preemption limit */
+end_comment
 
 begin_comment
 comment|/* ntp_peer.c */
@@ -3111,7 +3414,9 @@ name|struct
 name|peer
 modifier|*
 name|peer_hash
-index|[]
+index|[
+name|NTP_HASH_SIZE
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -3123,12 +3428,14 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|peer_hash_count
-index|[]
+index|[
+name|NTP_HASH_SIZE
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* count of peers in each bucket */
+comment|/* count of in each bucket */
 end_comment
 
 begin_decl_stmt
@@ -3137,7 +3444,9 @@ name|struct
 name|peer
 modifier|*
 name|assoc_hash
-index|[]
+index|[
+name|NTP_HASH_SIZE
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -3149,9 +3458,39 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|assoc_hash_count
-index|[]
+index|[
+name|NTP_HASH_SIZE
+index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* count of in each bucket */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|peer
+modifier|*
+name|peer_list
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* peer structures list */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|peer_count
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* count in peer_list */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -3159,6 +3498,10 @@ name|int
 name|peer_free_count
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* count in peer_free */
+end_comment
 
 begin_comment
 comment|/*  * Miscellaneous statistic counters which may be queried.  */
@@ -3400,6 +3743,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|u_long
+name|sys_epoch
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* last clock update time */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|keyid_t
 name|sys_private
 decl_stmt|;
@@ -3626,47 +3980,6 @@ comment|/* KoD sent */
 end_comment
 
 begin_comment
-comment|/* ntp_refclock.c */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REFCLOCK
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PPS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|fdpps
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pps file descriptor */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PPS */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* ntp_request.c */
 end_comment
 
@@ -3680,6 +3993,13 @@ end_decl_stmt
 begin_comment
 comment|/* keyid used to authenticate requests */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|auth_timereset
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ntp_restrict.c */
@@ -3718,21 +4038,62 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_char
 name|ntp_minpoll
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* ntp_scanner.c */
+end_comment
+
 begin_decl_stmt
 specifier|extern
-name|int
-name|mon_age
+name|u_int32
+name|conf_file_sum
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* monitor preempt age */
+comment|/* Simple sum of characters */
 end_comment
+
+begin_comment
+comment|/* ntp_signd.c */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NTP_SIGND
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|send_via_ntp_signd
+parameter_list|(
+name|struct
+name|recvbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|keyid_t
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|pkt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ntp_timer.c */
@@ -3766,7 +4127,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* current time (s) */
+comment|/* seconds since startup */
 end_comment
 
 begin_decl_stmt
@@ -3790,9 +4151,36 @@ name|timer_xmtcalls
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+end_ifdef
+
+begin_decl_stmt
+name|HANDLE
+name|WaitableTimerHandle
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* ntp_util.c */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|statsdir
+index|[
+name|MAXFILENAME
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -3823,20 +4211,15 @@ name|stats_write_tolerance
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* ntpd.c */
-end_comment
-
 begin_decl_stmt
 specifier|extern
-specifier|volatile
-name|int
-name|debug
+name|double
+name|wander_threshold
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* debugging flag */
+comment|/* ntpd.c */
 end_comment
 
 begin_decl_stmt
@@ -3880,6 +4263,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|root_dropped
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* root has been dropped */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|user
@@ -3912,8 +4306,52 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* directory to chroot to */
+comment|/* directory to chroot() to */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_WORKING_FORK
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|waitsync_fd_to_close
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -w/--wait-sync */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ntservice.c */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|accept_wildcard_if_for_winnt
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -3951,49 +4389,6 @@ name|u_char
 name|num_refclock_conf
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ntp_signd.c */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_NTP_SIGND
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-name|send_via_ntp_signd
-parameter_list|(
-name|struct
-name|recvbuf
-modifier|*
-name|rbufp
-parameter_list|,
-comment|/* receive packet pointer */
-name|int
-name|xmode
-parameter_list|,
-name|keyid_t
-name|xkeyid
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|struct
-name|pkt
-modifier|*
-name|xpkt
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

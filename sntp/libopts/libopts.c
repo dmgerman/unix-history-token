@@ -1,10 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_include
-include|#
-directive|include
-file|"autoopts/project.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -15,7 +9,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"compat/compat.h"
+file|"autoopts/project.h"
 end_include
 
 begin_define
@@ -24,6 +18,12 @@ directive|define
 name|LOCAL
 value|static
 end_define
+
+begin_include
+include|#
+directive|include
+file|"ao-strs.h"
+end_include
 
 begin_include
 include|#
@@ -46,13 +46,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xat-attribute.h"
+file|"option-xat-attribute.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"value-type.h"
+file|"option-value-type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ao-strs.h"
 end_include
 
 begin_include
@@ -76,25 +82,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"parse-duration.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"parse-duration.c"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"value-type.c"
+file|"ao-strs.c"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xat-attribute.c"
+file|"option-value-type.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"option-xat-attribute.c"
 end_include
 
 begin_include
@@ -106,7 +112,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"alias.c"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"boolean.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"check.c"
 end_include
 
 begin_include
@@ -124,19 +142,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"enumeration.c"
+file|"enum.c"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"environment.c"
+file|"env.c"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"file.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"find.c"
 end_include
 
 begin_include
@@ -226,13 +250,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tokenize.c"
+file|"time.c"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.c"
+file|"tokenize.c"
 end_include
 
 begin_include
@@ -245,6 +269,12 @@ begin_include
 include|#
 directive|include
 file|"version.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"init.c"
 end_include
 
 end_unit

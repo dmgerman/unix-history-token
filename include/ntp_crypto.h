@@ -16,7 +16,7 @@ name|NTP_CRYPTO_H
 end_define
 
 begin_comment
-comment|/*  * Configuration codes (also needed for parser without OPENSSL)  */
+comment|/*  * Configuration codes (also needed for parser without AUTOKEY)  */
 end_comment
 
 begin_define
@@ -38,18 +38,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* host keys file name */
+comment|/* host name */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CRYPTO_CONF_SIGN
+name|CRYPTO_CONF_IDENT
 value|2
 end_define
 
 begin_comment
-comment|/* signature keys file name */
+comment|/* group name */
 end_comment
 
 begin_define
@@ -121,19 +121,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CRYPTO_CONF_IDENT
-value|9
-end_define
-
-begin_comment
-comment|/* specify identity scheme */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CRYPTO_CONF_NID
-value|10
+value|9
 end_define
 
 begin_comment
@@ -143,274 +132,159 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OPENSSL
+name|AUTOKEY
 end_ifdef
 
-begin_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|AUTOKEY should be defined only if OPENSSL is.
+end_error
+
+begin_label
+name|invalidsyntax
+label|:
+end_label
+
+begin_expr_stmt
+name|AUTOKEY
+name|should
+name|be
+name|defined
+name|only
+end_expr_stmt
+
+begin_if
+if|if OPENSSL is.
+endif|#
+directive|endif
 include|#
 directive|include
 file|"openssl/evp.h"
-end_include
-
-begin_comment
+include|#
+directive|include
+file|"ntp_calendar.h"
+comment|/* for fields in the cert_info structure */
 comment|/*  * The following bits are set by the CRYPTO_ASSOC message from  * the server and are not modified by the client.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_ENAB
 value|0x0001
-end_define
-
-begin_comment
 comment|/* crypto enable */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_TAI
 value|0x0002
-end_define
-
-begin_comment
 comment|/* leapseconds table */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_PRIV
 value|0x0010
-end_define
-
-begin_comment
 comment|/* PC identity scheme */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_IFF
 value|0x0020
-end_define
-
-begin_comment
 comment|/* IFF identity scheme */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_GQ
 value|0x0040
-end_define
-
-begin_comment
 comment|/* GQ identity scheme */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_MV
 value|0x0080
-end_define
-
-begin_comment
 comment|/* MV identity scheme */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_MASK
 value|0x00f0
-end_define
-
-begin_comment
 comment|/* identity scheme mask */
-end_comment
-
-begin_comment
 comment|/*  * The following bits are used by the client during the protocol  * exchange.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_CERT
 value|0x0100
-end_define
-
-begin_comment
 comment|/* public key verified */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_VRFY
 value|0x0200
-end_define
-
-begin_comment
 comment|/* identity verified */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_PROV
 value|0x0400
-end_define
-
-begin_comment
 comment|/* signature verified */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_COOK
 value|0x0800
-end_define
-
-begin_comment
 comment|/* cookie verifed */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_AUTO
 value|0x1000
-end_define
-
-begin_comment
 comment|/* autokey verified */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_SIGN
 value|0x2000
-end_define
-
-begin_comment
 comment|/* certificate signed */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_LEAP
 value|0x4000
-end_define
-
-begin_comment
 comment|/* leapsecond values verified */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_FLAG_ALL
 value|0x7f00
-end_define
-
-begin_comment
 comment|/* all mask */
-end_comment
-
-begin_comment
 comment|/*  * Flags used for certificate management  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CERT_TRUST
 value|0x01
-end_define
-
-begin_comment
 comment|/* certificate is trusted */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CERT_SIGN
 value|0x02
-end_define
-
-begin_comment
 comment|/* certificate is signed */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CERT_VALID
 value|0x04
-end_define
-
-begin_comment
 comment|/* certificate is valid */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CERT_PRIV
 value|0x08
-end_define
-
-begin_comment
 comment|/* certificate is private */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CERT_ERROR
 value|0x80
-end_define
-
-begin_comment
 comment|/* certificate has errors */
-end_comment
-
-begin_comment
 comment|/*  * Extension field definitions  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_MAXLEN
 value|1024
-end_define
-
-begin_comment
 comment|/* max extension field length */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_VN
 value|2
-end_define
-
-begin_comment
 comment|/* current protocol version number */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_CMD
@@ -418,145 +292,67 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((CRYPTO_VN<< 8) | (x))<< 16)
-end_define
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_NULL
 value|CRYPTO_CMD(0)
-end_define
-
-begin_comment
 comment|/* no operation */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_ASSOC
 value|CRYPTO_CMD(1)
-end_define
-
-begin_comment
 comment|/* association */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_CERT
 value|CRYPTO_CMD(2)
-end_define
-
-begin_comment
 comment|/* certificate */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_COOK
 value|CRYPTO_CMD(3)
-end_define
-
-begin_comment
 comment|/* cookie value */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_AUTO
 value|CRYPTO_CMD(4)
-end_define
-
-begin_comment
 comment|/* autokey values */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_LEAP
 value|CRYPTO_CMD(5)
-end_define
-
-begin_comment
 comment|/* leapsecond values */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_SIGN
 value|CRYPTO_CMD(6)
-end_define
-
-begin_comment
 comment|/* certificate sign */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_IFF
 value|CRYPTO_CMD(7)
-end_define
-
-begin_comment
 comment|/* IFF identity scheme */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_GQ
 value|CRYPTO_CMD(8)
-end_define
-
-begin_comment
 comment|/* GQ identity scheme */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_MV
 value|CRYPTO_CMD(9)
-end_define
-
-begin_comment
 comment|/* MV identity scheme */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_RESP
 value|0x80000000
-end_define
-
-begin_comment
 comment|/* response */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CRYPTO_ERROR
 value|0x40000000
-end_define
-
-begin_comment
 comment|/* error */
-end_comment
-
-begin_comment
 comment|/*  * Autokey event codes  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_CMD
@@ -564,261 +360,119 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(CRPT_EVENT | (x))
-end_define
-
-begin_define
 define|#
 directive|define
 name|XEVNT_OK
 value|XEVNT_CMD(0)
-end_define
-
-begin_comment
 comment|/* success */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_LEN
 value|XEVNT_CMD(1)
-end_define
-
-begin_comment
 comment|/* bad field format or length */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_TSP
 value|XEVNT_CMD(2)
-end_define
-
-begin_comment
 comment|/* bad timestamp */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_FSP
 value|XEVNT_CMD(3)
-end_define
-
-begin_comment
 comment|/* bad filestamp */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_PUB
 value|XEVNT_CMD(4)
-end_define
-
-begin_comment
 comment|/* bad or missing public key */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_MD
 value|XEVNT_CMD(5)
-end_define
-
-begin_comment
 comment|/* unsupported digest type */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_KEY
 value|XEVNT_CMD(6)
-end_define
-
-begin_comment
 comment|/* unsupported identity type */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_SGL
 value|XEVNT_CMD(7)
-end_define
-
-begin_comment
 comment|/* bad signature length */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_SIG
 value|XEVNT_CMD(8)
-end_define
-
-begin_comment
 comment|/* signature not verified */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_VFY
 value|XEVNT_CMD(9)
-end_define
-
-begin_comment
 comment|/* certificate not verified */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_PER
 value|XEVNT_CMD(10)
-end_define
-
-begin_comment
 comment|/* host certificate expired */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_CKY
 value|XEVNT_CMD(11)
-end_define
-
-begin_comment
 comment|/* bad or missing cookie */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_DAT
 value|XEVNT_CMD(12)
-end_define
-
-begin_comment
 comment|/* bad or missing leapseconds */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_CRT
 value|XEVNT_CMD(13)
-end_define
-
-begin_comment
 comment|/* bad or missing certificate */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_ID
 value|XEVNT_CMD(14)
-end_define
-
-begin_comment
 comment|/* bad or missing group key */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|XEVNT_ERR
 value|XEVNT_CMD(15)
-end_define
-
-begin_comment
 comment|/* protocol error */
-end_comment
-
-begin_comment
 comment|/*  * Miscellaneous crypto stuff  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|NTP_MAXSESSION
 value|100
-end_define
-
-begin_comment
 comment|/* maximum session key list entries */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|NTP_MAXEXTEN
 value|2048
-end_define
-
-begin_comment
 comment|/* maximum extension field size */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|NTP_AUTOMAX
 value|12
-end_define
-
-begin_comment
 comment|/* default key list timeout (log2 s) */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|KEY_REVOKE
 value|17
-end_define
-
-begin_comment
 comment|/* default key revoke timeout (log2 s) */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|NTP_REFRESH
 value|19
-end_define
-
-begin_comment
 comment|/* default restart timeout (log2 s) */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|NTP_MAXKEY
 value|65535
-end_define
-
-begin_comment
 comment|/* maximum symmetric key ID */
-end_comment
-
-begin_comment
 comment|/*  * The autokey structure holds the values used to authenticate key IDs.  */
-end_comment
-
-begin_struct
-struct|struct
-name|autokey
+if|struct autokey
 block|{
 comment|/* network byte order */
 name|keyid_t
@@ -830,8 +484,11 @@ name|seq
 decl_stmt|;
 comment|/* key number */
 block|}
-struct|;
-end_struct
+end_if
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/*  * The value structure holds variable length data such as public  * key, agreement parameters, public valule and leapsecond table.  * They are in network byte order.  */
@@ -854,7 +511,7 @@ name|u_int32
 name|vallen
 decl_stmt|;
 comment|/* value length */
-name|u_char
+name|void
 modifier|*
 name|ptr
 decl_stmt|;
@@ -952,11 +609,13 @@ name|u_long
 name|serial
 decl_stmt|;
 comment|/* serial number */
-name|tstamp_t
+name|struct
+name|calendar
 name|first
 decl_stmt|;
 comment|/* not valid before */
-name|tstamp_t
+name|struct
+name|calendar
 name|last
 decl_stmt|;
 comment|/* not valid after */
@@ -1085,7 +744,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* OPENSSL */
+comment|/* AUTOKEY */
 end_comment
 
 begin_endif

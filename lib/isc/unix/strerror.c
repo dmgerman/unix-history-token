@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: strerror.c,v 1.8.332.2 2009/02/16 23:47:15 tbox Exp $ */
+comment|/* $Id: strerror.c,v 1.10 2009/02/16 23:48:04 tbox Exp $ */
 end_comment
 
 begin_comment

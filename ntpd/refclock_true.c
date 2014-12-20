@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * refclock_true - clock driver for the Kinemetrics Truetime receivers  *	Receiver Version 3.0C - tested plain, with CLKLDISC  *	Developement work being done:  * 	- Properly handle varying satellite positions (more acurately)  *	- Integrate GPSTM and/or OMEGA and/or TRAK and/or ??? drivers  */
+comment|/*  * refclock_true - clock driver for the Kinemetrics/TrueTime receivers  *	Receiver Version 3.0C - tested plain, with CLKLDISC  *	Development work being done:  *      - Support TL-3 WWV TOD receiver  */
 end_comment
 
 begin_ifdef
@@ -37,6 +37,18 @@ end_if
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntpd.h"
 end_include
 
@@ -62,18 +74,6 @@ begin_include
 include|#
 directive|include
 file|"ntp_stdlib.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_ifdef
@@ -200,7 +200,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Support for Kinemetrics Truetime Receivers  *	GOES  *	GPS/TM-TMD  *	XL-DC		(a 151-602-210, reported by the driver as a GPS/TM-TMD)  *	GPS-800 TCU	(an 805-957 with the RS232 Talker/Listener module)  *	OM-DC:		getting stale ("OMEGA")  *  * Most of this code is originally from refclock_wwvb.c with thanks.  * It has been so mangled that wwvb is not a recognizable ancestor.  *  * Timcode format: ADDD:HH:MM:SSQCL  *	A - control A		(this is stripped before we see it)  *	Q - Quality indication	(see below)  *	C - Carriage return  *	L - Line feed  *  * Quality codes indicate possible error of  *   468-DC GOES Receiver:  *   GPS-TM/TMD Receiver: (default quality codes for XL-DC)  *       ?     +/- 1  milliseconds	#     +/- 100 microseconds  *       *     +/- 10 microseconds	.     +/- 1   microsecond  *     space   less than 1 microsecond  *   OM-DC OMEGA Receiver: (default quality codes for OMEGA)  *   WARNING OMEGA navigation system is no longer existent  *>>+- 5 seconds  *       ?>+/- 500 milliseconds    #>+/- 50 milliseconds  *       *>+/- 5 milliseconds      .>+/- 1 millisecond  *      A-H    less than 1 millisecond.  Character indicates which station  *             is being received as follows:  *             A = Norway, B = Liberia, C = Hawaii, D = North Dakota,  *             E = La Reunion, F = Argentina, G = Australia, H = Japan.  *  * The carriage return start bit begins on 0 seconds and extends to 1 bit time.  *  * Notes on 468-DC and OMEGA receiver:  *  * Send the clock a 'R' or 'C' and once per second a timestamp will  * appear.  Send a 'P' to get the satellite position once (GOES only.)  *  * Notes on the 468-DC receiver:  *  * Since the old east/west satellite locations are only historical, you can't  * set your clock propagation delay settings correctly and still use  * automatic mode. The manual says to use a compromise when setting the  * switches. This results in significant errors. The solution; use fudge  * time1 and time2 to incorporate corrections. If your clock is set for  * 50 and it should be 58 for using the west and 46 for using the east,  * use the line  *  * fudge 127.127.5.0 time1 +0.008 time2 -0.004  *  * This corrects the 4 milliseconds advance and 8 milliseconds retard  * needed. The software will ask the clock which satellite it sees.  *  * Ntp.conf parameters:  * time1 - offset applied to samples when reading WEST satellite (default = 0)  * time2 - offset applied to samples when reading EAST satellite (default = 0)  * val1  - stratum to assign to this clock (default = 0)  * val2  - refid assigned to this clock (default = "TRUE", see below)  * flag1 - will silence the clock side of ntpd, just reading the clock  *         without trying to write to it.  (default = 0)  * flag2 - generate a debug file /tmp/true%d.  * flag3 - enable ppsclock streams module  * flag4 - use the PCL-720 (BSD/OS only)  */
+comment|/*  * Support for Kinemetrics Truetime Receivers  *	GOES:           (468-DC, usable with GPS->GOES converting antenna)  *	GPS/TM-TMD:	  *	XL-DC:		(a 151-602-210, reported by the driver as a GPS/TM-TMD)  *	GPS-800 TCU:	(an 805-957 with the RS232 Talker/Listener module)  *      TL-3:           3 channel WWV/H receiver w/ IRIG and RS-232 outputs  *	OM-DC:		getting stale ("OMEGA")  *  * Most of this code is originally from refclock_wwvb.c with thanks.  * It has been so mangled that wwvb is not a recognizable ancestor.  *  * Timcode format: ADDD:HH:MM:SSQCL  *	A - control A		(this is stripped before we see it)  *	Q - Quality indication	(see below)  *	C - Carriage return  *	L - Line feed  *  * Quality codes indicate possible error of  *   468-DC GOES Receiver:  *   GPS-TM/TMD Receiver: (default quality codes for XL-DC)  *       ?     +/- 1  milliseconds	#     +/- 100 microseconds  *       *     +/- 10 microseconds	.     +/- 1   microsecond  *     space   less than 1 microsecond  *   TL-3 Receiver: (default quality codes for TL-3)  *       ?     unknown quality (receiver is unlocked)  *     space   +/- 5 milliseconds  *   OM-DC OMEGA Receiver: (default quality codes for OMEGA)  *   WARNING OMEGA navigation system is no longer existent  *>>+- 5 seconds  *       ?>+/- 500 milliseconds    #>+/- 50 milliseconds  *       *>+/- 5 milliseconds      .>+/- 1 millisecond  *      A-H    less than 1 millisecond.  Character indicates which station  *	       is being received as follows:  *	       A = Norway, B = Liberia, C = Hawaii, D = North Dakota,  *	       E = La Reunion, F = Argentina, G = Australia, H = Japan.  *  * The carriage return start bit begins on 0 seconds and extends to 1 bit time.  *  * Notes on 468-DC and OMEGA receiver:  *  * Send the clock a 'R' or 'C' and once per second a timestamp will  * appear.  Send a 'P' to get the satellite position once (GOES only.)  *  * Notes on the 468-DC receiver:  *  * Since the old east/west satellite locations are only historical, you can't  * set your clock propagation delay settings correctly and still use  * automatic mode. The manual says to use a compromise when setting the  * switches. This results in significant errors. The solution; use fudge  * time1 and time2 to incorporate corrections. If your clock is set for  * 50 and it should be 58 for using the west and 46 for using the east,  * use the line  *  * fudge 127.127.5.0 time1 +0.008 time2 -0.004  *  * This corrects the 4 milliseconds advance and 8 milliseconds retard  * needed. The software will ask the clock which satellite it sees.  *  * Notes on the TrueTime TimeLink TL-3 WWV TOD receiver:  *   * This clock may be polled, or send one timecode per second.  * That mode may be toggled via the front panel ("C" mode), or controlled  * from the RS-232 port.  Send the receiver "ST1" to turn it on, and  * "ST0" to turn it off.  Send "QV" to get the firmware revision (useful  * for identifying this model.)  *   * Note that it can take several polling cycles, especially if the receiver  * was in the continuous timecode mode.  (It can be slow to leave that mode.)  *   * ntp.conf parameters:  * time1   - offset applied to samples when reading WEST satellite (default = 0)  * time2   - offset applied to samples when reading EAST satellite (default = 0)  * stratum - stratum to assign to this clock (default = 0)  * refid   - refid assigned to this clock (default = "TRUE", see below)  * flag1   - will silence the clock side of ntpd, just reading the clock  *	     without trying to write to it.  (default = 0)  * flag2   - generate a debug file /tmp/true%d.  * flag3   - enable ppsclock streams module  * flag4   - use the PCL-720 (BSD/OS only)  */
 end_comment
 
 begin_comment
@@ -304,6 +304,8 @@ name|e_F51
 block|,
 name|e_Satellite
 block|,
+name|e_TL3
+block|,
 name|e_Poll
 block|,
 name|e_Location
@@ -334,6 +336,8 @@ block|,
 literal|"F51"
 block|,
 literal|"Satellite"
+block|,
+literal|"TL3"
 block|,
 literal|"Poll"
 block|,
@@ -368,6 +372,8 @@ name|s_InqOmega
 block|,
 name|s_InqGOES
 block|,
+name|s_InqTL3
+block|,
 name|s_Init
 block|,
 name|s_F18
@@ -400,6 +406,8 @@ block|,
 literal|"InqOmega"
 block|,
 literal|"InqGOES"
+block|,
+literal|"InqTL3"
 block|,
 literal|"Init"
 block|,
@@ -438,6 +446,8 @@ name|t_tcu
 block|,
 name|t_omega
 block|,
+name|t_tl3
+block|,
 name|t_Max
 block|}
 enum|;
@@ -460,6 +470,8 @@ block|,
 literal|"tcu"
 block|,
 literal|"omega"
+block|,
+literal|"tl3"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -746,11 +758,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|true_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -990,9 +997,6 @@ name|int
 name|fd
 decl_stmt|;
 comment|/* 	 * Open serial port 	 */
-operator|(
-name|void
-operator|)
 name|snprintf
 argument_list|(
 name|device
@@ -1007,10 +1011,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
 name|fd
 operator|=
 name|refclock_open
@@ -1021,64 +1021,25 @@ name|SPEED232
 argument_list|,
 name|LDISC_CLK
 argument_list|)
-operator|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* 	 * Allocate and initialize unit structure 	 */
+expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
+name|fd
+operator|<=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+comment|/* 	 * Allocate and initialize unit structure 	 */
 name|up
 operator|=
-operator|(
-expr|struct
-name|true_unit
-operator|*
-operator|)
-name|emalloc
+name|emalloc_zero
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|true_unit
-argument_list|)
-argument_list|)
-operator|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|memset
-argument_list|(
-operator|(
-name|char
 operator|*
-operator|)
 name|up
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|true_unit
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1102,9 +1063,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -1135,13 +1093,19 @@ name|io
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
 argument_list|)
+expr_stmt|;
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|free
 argument_list|(
@@ -1158,9 +1122,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 comment|/* 	 * Initialize miscellaneous variables 	 */
@@ -1178,10 +1139,6 @@ name|DESCRIPTION
 expr_stmt|;
 name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|pp
 operator|->
@@ -1270,15 +1227,21 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|true_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
 expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
 name|io_closeclock
 argument_list|(
 operator|&
@@ -1287,6 +1250,12 @@ operator|->
 name|io
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|up
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|up
@@ -1343,7 +1312,7 @@ decl_stmt|,
 name|off
 decl_stmt|;
 comment|/* GOES Satellite position */
-comment|/* Use these variable to hold data until we decide its worth keeping */
+comment|/* These variables hold data until we decide to keep it */
 name|char
 name|rd_lastcode
 index|[
@@ -1359,14 +1328,9 @@ decl_stmt|;
 comment|/* 	 * Get the clock this applies to and pointers to the data. 	 */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -1376,11 +1340,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|true_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -1421,13 +1380,20 @@ name|lencode
 operator|=
 name|rd_lencode
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|pp
 operator|->
 name|a_lastcode
 argument_list|,
 name|rd_lastcode
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|pp
@@ -1746,16 +1712,84 @@ break|break;
 block|}
 return|return;
 block|}
+comment|/*          * Timecode: "VER xx.xx"          * (from a TL3 when sent "QV", so id's it during initialization.)          */
+if|if
+condition|(
+name|pp
+operator|->
+name|a_lastcode
+index|[
+literal|0
+index|]
+operator|==
+literal|'V'
+operator|&&
+name|pp
+operator|->
+name|a_lastcode
+index|[
+literal|1
+index|]
+operator|==
+literal|'E'
+operator|&&
+name|pp
+operator|->
+name|a_lastcode
+index|[
+literal|2
+index|]
+operator|==
+literal|'R'
+operator|&&
+name|pp
+operator|->
+name|a_lastcode
+index|[
+literal|6
+index|]
+operator|==
+literal|'.'
+condition|)
+block|{
+name|true_doevent
+argument_list|(
+name|peer
+argument_list|,
+name|e_TL3
+argument_list|)
+expr_stmt|;
+name|NLOG
+argument_list|(
+argument|NLOG_CLOCKSTATUS
+argument_list|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"TL3: %s"
+argument_list|,
+name|pp
+operator|->
+name|a_lastcode
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
 comment|/* 	 * Timecode: " TRUETIME Mk III" or " TRUETIME XL" 	 * (from a TM/TMD/XL clock during initialization.) 	 */
 if|if
 condition|(
-name|strcmp
+name|strncmp
 argument_list|(
 name|pp
 operator|->
 name|a_lastcode
 argument_list|,
-literal|" TRUETIME Mk III"
+literal|" TRUETIME Mk III "
+argument_list|,
+literal|17
 argument_list|)
 operator|==
 literal|0
@@ -1800,7 +1834,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/* 	 * Timecode: "N03726428W12209421+000033" 	 *                      1         2 	 *            0123456789012345678901234 	 * (from a TCU during initialization) 	 */
+comment|/* 	 * Timecode: "N03726428W12209421+000033" 	 *			1	   2 	 * index      0123456789012345678901234 	 * (from a TCU during initialization) 	 */
 if|if
 condition|(
 operator|(
@@ -1879,7 +1913,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/* 	 * Timecode: "ddd:hh:mm:ssQ" 	 * (from all clocks supported by this driver.) 	 */
+comment|/* 	 * Timecode: "ddd:hh:mm:ssQ" 	 *			1	   2 	 * index      0123456789012345678901234 	 * (from all clocks supported by this driver.) 	 */
 if|if
 condition|(
 name|pp
@@ -2147,6 +2181,21 @@ operator|->
 name|polled
 condition|)
 return|return;
+comment|/* We only call doevent if additional things need be done                  * at poll interval.  Currently, its only for GOES.  We also                  * call it for clock unknown so that it gets logged.                  */
+if|if
+condition|(
+name|up
+operator|->
+name|type
+operator|==
+name|t_goes
+operator|||
+name|up
+operator|->
+name|type
+operator|==
+name|t_unknown
+condition|)
 name|true_doevent
 argument_list|(
 name|peer
@@ -2257,7 +2306,6 @@ name|CLK_FLAG1
 operator|)
 condition|)
 block|{
-specifier|register
 name|int
 name|len
 init|=
@@ -2349,11 +2397,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|true_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -2576,6 +2619,60 @@ argument_list|,
 literal|"F50\r"
 argument_list|)
 expr_stmt|;
+comment|/*                          * Timecode: " TRUETIME Mk III" or " TRUETIME XL"                          * (from a TM/TMD/XL clock during initialization.)                          */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|,
+literal|" TRUETIME Mk III"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|,
+literal|" TRUETIME XL"
+argument_list|,
+literal|12
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|true_doevent
+argument_list|(
+name|peer
+argument_list|,
+name|e_F18
+argument_list|)
+expr_stmt|;
+name|NLOG
+argument_list|(
+argument|NLOG_CLOCKSTATUS
+argument_list|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"TM/TMD/XL: %s"
+argument_list|,
+name|pp
+operator|->
+name|a_lastcode
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
 name|up
 operator|->
 name|state
@@ -2736,8 +2833,49 @@ break|break;
 block|}
 break|break;
 case|case
+name|t_tl3
+case|:
+switch|switch
+condition|(
+name|event
+condition|)
+block|{
+case|case
+name|e_Init
+case|:
+name|true_send
+argument_list|(
+name|peer
+argument_list|,
+literal|"ST1"
+argument_list|)
+expr_stmt|;
+comment|/* Turn on continuous stream */
+break|break;
+case|case
+name|e_TS
+case|:
+name|up
+operator|->
+name|state
+operator|=
+name|s_Auto
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+break|break;
+case|case
 name|t_unknown
 case|:
+if|if
+condition|(
+name|event
+operator|==
+name|e_Poll
+condition|)
+break|break;
 switch|switch
 condition|(
 name|up
@@ -2803,9 +2941,83 @@ comment|/*FALLTHROUGH*/
 case|case
 name|e_Huh
 case|:
-comment|/*FALLTHROUGH*/
 case|case
 name|e_TS
+case|:
+name|true_send
+argument_list|(
+name|peer
+argument_list|,
+literal|"ST0"
+argument_list|)
+expr_stmt|;
+comment|/* turn off TL3 auto */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* wait for it */
+name|up
+operator|->
+name|state
+operator|=
+name|s_InqTL3
+expr_stmt|;
+name|true_send
+argument_list|(
+name|peer
+argument_list|,
+literal|"QV"
+argument_list|)
+expr_stmt|;
+comment|/* see if its a TL3 */
+break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|s_InqTL3
+case|:
+switch|switch
+condition|(
+name|event
+condition|)
+block|{
+case|case
+name|e_TL3
+case|:
+name|up
+operator|->
+name|type
+operator|=
+name|t_tl3
+expr_stmt|;
+name|up
+operator|->
+name|state
+operator|=
+name|s_Auto
+expr_stmt|;
+comment|/* Inq side-effect. */
+name|true_send
+argument_list|(
+name|peer
+argument_list|,
+literal|"ST1"
+argument_list|)
+expr_stmt|;
+comment|/* Turn on 1/sec data */
+break|break;
+case|case
+name|e_Init
+case|:
+comment|/*FALLTHROUGH*/
+case|case
+name|e_Huh
 case|:
 name|up
 operator|->
@@ -2821,10 +3033,34 @@ literal|"C\r"
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
-name|abort
-argument_list|()
+case|case
+name|e_TS
+case|:
+name|up
+operator|->
+name|type
+operator|=
+name|t_tl3
 expr_stmt|;
+comment|/* Already sending data */
+name|up
+operator|->
+name|state
+operator|=
+name|s_Auto
+expr_stmt|;
+break|break;
+default|default:
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"TRUE: TL3 init fellthrough! (%d)"
+argument_list|,
+name|event
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 break|break;
 case|case
@@ -2926,9 +3162,14 @@ name|s_InqTCU
 expr_stmt|;
 break|break;
 default|default:
-name|abort
-argument_list|()
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"TRUE: TM/TMD init fellthrough!"
+argument_list|)
 expr_stmt|;
+break|break;
 block|}
 break|break;
 case|case
@@ -2977,9 +3218,14 @@ expr_stmt|;
 comment|/* XXX */
 break|break;
 default|default:
-name|abort
-argument_list|()
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"TRUE: TCU init fellthrough!"
+argument_list|)
 expr_stmt|;
+break|break;
 block|}
 break|break;
 comment|/* 			 * An expedient hack to prevent lint complaints, 			 * these don't actually need to be used here... 			 */
@@ -3018,6 +3264,13 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"TRUE: cannot identify refclock!"
+argument_list|)
+expr_stmt|;
 name|abort
 argument_list|()
 expr_stmt|;
@@ -3116,11 +3369,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|true_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -3133,11 +3381,13 @@ name|pollcnt
 operator|>
 literal|0
 condition|)
+block|{
 name|up
 operator|->
 name|pollcnt
 operator|--
 expr_stmt|;
+block|}
 else|else
 block|{
 name|true_doevent

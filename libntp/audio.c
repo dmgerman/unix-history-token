@@ -940,7 +940,7 @@ name|ab
 argument_list|)
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cf_i_dev
 argument_list|,
@@ -985,7 +985,7 @@ name|ab
 argument_list|)
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cf_c_dev
 argument_list|,
@@ -1030,7 +1030,7 @@ name|ab
 argument_list|)
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cf_agc
 argument_list|,
@@ -1077,7 +1077,7 @@ name|ab
 argument_list|)
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cf_monitor
 argument_list|,
@@ -1272,7 +1272,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"audio_init: %s %m\n"
+literal|"audio_init: %s %m"
 argument_list|,
 name|dname
 argument_list|)
@@ -1304,7 +1304,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"audio_init: invalid control device<%s>\n"
+literal|"audio_init: invalid control device<%s>"
 argument_list|,
 name|actl
 argument_list|)
@@ -1606,13 +1606,14 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* recmask */
 name|i
 operator|=
 name|mixer_name
 argument_list|(
 name|cf_agc
 argument_list|,
-name|devmask
+name|recmask
 argument_list|)
 expr_stmt|;
 if|if
@@ -1755,7 +1756,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"audio: invalid control device parameters\n"
+literal|"audio: invalid control device parameters"
 argument_list|)
 expr_stmt|;
 name|close

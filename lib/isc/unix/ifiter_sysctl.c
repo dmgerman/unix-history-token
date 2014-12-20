@@ -615,6 +615,20 @@ operator|->
 name|bufused
 operator|)
 expr_stmt|;
+comment|// Skip wrong RTM version headers
+if|if
+condition|(
+name|ifam
+operator|->
+name|ifam_version
+operator|!=
+name|RTM_VERSION
+condition|)
+return|return
+operator|(
+name|ISC_R_IGNORE
+operator|)
+return|;
 if|if
 condition|(
 name|ifam
@@ -1271,6 +1285,8 @@ else|else
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|isc_msgcat_get
 argument_list|(
 name|isc_msgcat
@@ -1279,8 +1295,8 @@ name|ISC_MSGSET_IFITERSYSCTL
 argument_list|,
 name|ISC_MSG_UNEXPECTEDTYPE
 argument_list|,
-literal|"warning: unexpected interface list "
-literal|"message type\n"
+literal|"warning: unexpected interface "
+literal|"list message type\n"
 argument_list|)
 argument_list|)
 expr_stmt|;

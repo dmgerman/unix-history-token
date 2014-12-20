@@ -11,26 +11,15 @@ directive|define
 name|NTP_IO_H
 end_define
 
-begin_comment
-comment|/*  * POSIX says use<fnct.h> to get O_* symbols and   * SEEK_SET symbol form<unistd.h>.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<config.h>
+file|"ntp_workimpl.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*  * POSIX says use<fnct.h> to get O_* symbols and   * SEEK_SET symbol form<unistd.h>.  */
+end_comment
 
 begin_include
 include|#
@@ -205,6 +194,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"libntp.h"
+end_include
+
+begin_comment
+comment|/* This needs Something above for GETDTABLESIZE */
+end_comment
+
 begin_comment
 comment|/*  * Define FNDELAY and FASYNC using O_NONBLOCK and O_ASYNC if we need  * to (and can).  This is here initially for QNX, but may help for  * others as well...  */
 end_comment
@@ -310,6 +309,16 @@ typedef|;
 end_typedef
 
 begin_function_decl
+name|SOCKET
+name|move_fd
+parameter_list|(
+name|SOCKET
+name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|isc_boolean_t
 name|get_broadcastclient_flag
 parameter_list|(
@@ -326,6 +335,8 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|u_short
 parameter_list|,
 name|sockaddr_u
 modifier|*
@@ -369,6 +380,48 @@ name|action
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_IO_COMPLETION_PORT
+end_ifndef
+
+begin_function_decl
+specifier|extern
+name|void
+name|maintain_activefds
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|int
+name|closing
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|maintain_activefds
+parameter_list|(
+name|f
+parameter_list|,
+name|c
+parameter_list|)
+value|do {} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: file.h,v 1.33.332.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -54,7 +54,7 @@ name|file
 parameter_list|,
 name|isc_time_t
 modifier|*
-name|time
+name|itime
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -70,7 +70,7 @@ name|file
 parameter_list|,
 name|isc_time_t
 modifier|*
-name|time
+name|itime
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -109,6 +109,41 @@ parameter_list|(
 name|char
 modifier|*
 name|templet
+parameter_list|,
+name|FILE
+modifier|*
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|isc_file_openuniqueprivate
+parameter_list|(
+name|char
+modifier|*
+name|templet
+parameter_list|,
+name|FILE
+modifier|*
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|isc_file_openuniquemode
+parameter_list|(
+name|char
+modifier|*
+name|templet
+parameter_list|,
+name|int
+name|mode
 parameter_list|,
 name|FILE
 modifier|*
@@ -189,6 +224,22 @@ end_function_decl
 
 begin_comment
 comment|/*!<  * \brief Return #ISC_TRUE if the given file name is absolute.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_file_isplainfile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*!<  * \brief Check that the file is a plain file  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success. The file is a plain file.  *\li	#ISC_R_INVALIDFILE  *		The path specified was not usable by the operating system.  *\li	#ISC_R_FILENOTFOUND  *		The file does not exist. This return code comes from  *		errno=ENOENT when stat returns -1. This code is mentioned  *		here, because in logconf.c, it is the one rcode that is  *		permitted in addition to ISC_R_SUCCESS. This is done since  *		the next call in logconf.c is to isc_stdio_open(), which  *		will create the file if it can.  *\li	#other ISC_R_* errors translated from errno  *		These occur when stat returns -1 and an errno.  */
 end_comment
 
 begin_function_decl
@@ -356,6 +407,56 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Truncate/extend the file specified to 'size' bytes.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_file_safecreate
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|FILE
+modifier|*
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Open 'filename' for writing, truncating if necessary.  Ensure that  * if it existed it was a normal file.  If creating the file, ensure  * that only the owner can read/write it.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_file_splitpath
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|dirname
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|basename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Split a path into dirname and basename.  If 'path' contains no slash  * (or, on windows, backslash), then '*dirname' is set to ".".  *  * Allocates memory for '*dirname', which can be freed with isc_mem_free().  *  * Returns:  * - ISC_R_SUCCESS on success  * - ISC_R_INVALIDFILE if 'path' is empty or ends with '/'  * - ISC_R_NOMEMORY if unable to allocate memory  */
 end_comment
 
 begin_macro

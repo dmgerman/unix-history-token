@@ -112,19 +112,19 @@ operator|<
 name|sys_nerr
 condition|)
 return|return
-operator|(
 name|sys_errlist
 index|[
 name|errnum
 index|]
-operator|)
 return|;
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ebuf
+argument_list|)
 argument_list|,
 literal|"Unknown error: %d"
 argument_list|,
@@ -132,9 +132,7 @@ name|errnum
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ebuf
-operator|)
 return|;
 block|}
 end_function

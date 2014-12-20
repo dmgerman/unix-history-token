@@ -62,6 +62,15 @@ directive|include
 file|"openssl/evp.h"
 end_include
 
+begin_function_decl
+name|void
+name|atexit_ssl_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
 name|ssl_init_done
@@ -75,6 +84,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|init_lib
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|ssl_init_done
@@ -86,9 +98,41 @@ expr_stmt|;
 name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
+name|atexit
+argument_list|(
+operator|&
+name|atexit_ssl_cleanup
+argument_list|)
+expr_stmt|;
 name|ssl_init_done
 operator|=
-literal|1
+name|TRUE
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|atexit_ssl_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|ssl_init_done
+condition|)
+return|return;
+name|ssl_init_done
+operator|=
+name|FALSE
+expr_stmt|;
+name|EVP_cleanup
+argument_list|()
+expr_stmt|;
+name|ERR_free_strings
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -119,6 +163,9 @@ name|LOG_WARNING
 argument_list|,
 literal|"OpenSSL version mismatch. Built against %lx, you have %lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|OPENSSL_VERSION_NUMBER
 argument_list|,
 name|SSLeay
@@ -131,6 +178,9 @@ name|stderr
 argument_list|,
 literal|"OpenSSL version mismatch. Built against %lx, you have %lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|OPENSSL_VERSION_NUMBER
 argument_list|,
 name|SSLeay
@@ -171,6 +221,15 @@ modifier|*
 name|pdigest_len
 parameter_list|)
 block|{
+name|int
+name|key_type
+decl_stmt|;
+name|u_int
+name|digest_len
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL
 specifier|const
 name|u_long
 name|max_digest_len
@@ -182,15 +241,6 @@ argument_list|(
 name|keyid_t
 argument_list|)
 decl_stmt|;
-name|int
-name|key_type
-decl_stmt|;
-name|u_int
-name|digest_len
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|OPENSSL
 name|u_char
 name|digest
 index|[
@@ -217,7 +267,7 @@ argument_list|(
 name|upcased
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|upcased
 argument_list|,
@@ -329,13 +379,8 @@ expr_stmt|;
 if|if
 condition|(
 name|digest_len
-operator|+
-sizeof|sizeof
-argument_list|(
-name|keyid_t
-argument_list|)
 operator|>
-name|MAX_MAC_LEN
+name|max_digest_len
 condition|)
 block|{
 name|fprintf
@@ -358,7 +403,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"key type %s %u octet digests are too big, max %lu\n"
+literal|"key type %s %u octet digests are too big, max %lu"
 argument_list|,
 name|keytype_name
 argument_list|(

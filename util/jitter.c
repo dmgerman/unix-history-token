@@ -84,12 +84,6 @@ comment|/* Solaris hires clock */
 end_comment
 
 begin_decl_stmt
-name|int
-name|debug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|progname
 index|[

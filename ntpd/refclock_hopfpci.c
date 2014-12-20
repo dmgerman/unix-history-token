@@ -430,21 +430,8 @@ decl_stmt|;
 comment|/* 	 * Allocate and initialize unit structure 	 */
 name|up
 operator|=
-name|emalloc
+name|emalloc_zero
 argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|up
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|up
-argument_list|,
-literal|0
-argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -518,9 +505,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -543,9 +527,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 name|get_systime
@@ -698,6 +679,8 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|SYS_WINNT
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|fd
@@ -706,6 +689,17 @@ name|HOPF_CLOCK_GET_UTC
 argument_list|,
 operator|&
 name|m_time
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"HOPF_P(%d): HOPF_CLOCK_GET_UTC: %m"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 else|#

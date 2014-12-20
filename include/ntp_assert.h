@@ -21,6 +21,10 @@ directive|ifdef
 name|CALYSTO
 end_ifdef
 
+begin_comment
+comment|/* see: http://www.domagoj-babic.com/index.php/ResearchProjects/Calysto */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|void
@@ -113,13 +117,68 @@ begin_comment
 comment|/* #define ALWAYS_REQUIRE(x)	assert(x) #define ALWAYS_INSIST(x)	assert(x) #define ALWAYS_INVARIANT(x)	assert(x) #define ALWAYS_ENSURE(x)	assert(x) */
 end_comment
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FLEXELINT__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ALWAYS_REQUIRE
+parameter_list|(
+name|x
+parameter_list|)
+value|assert(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALWAYS_INSIST
+parameter_list|(
+name|x
+parameter_list|)
+value|assert(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALWAYS_INVARIANT
+parameter_list|(
+name|x
+parameter_list|)
+value|assert(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALWAYS_ENSURE
+parameter_list|(
+name|x
+parameter_list|)
+value|assert(x)
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* neither Coverity nor Calysto */
+comment|/* neither Calysto, Coverity or FlexeLint */
 end_comment
 
 begin_include
@@ -319,7 +378,7 @@ name|DEBUG_REQUIRE
 parameter_list|(
 name|x
 parameter_list|)
-value|(void)(x)
+value|do {} while (FALSE)
 end_define
 
 begin_define
@@ -329,7 +388,7 @@ name|DEBUG_INSIST
 parameter_list|(
 name|x
 parameter_list|)
-value|(void)(x)
+value|do {} while (FALSE)
 end_define
 
 begin_define
@@ -339,7 +398,7 @@ name|DEBUG_INVARIANT
 parameter_list|(
 name|x
 parameter_list|)
-value|(void)(x)
+value|do {} while (FALSE)
 end_define
 
 begin_define
@@ -349,7 +408,7 @@ name|DEBUG_ENSURE
 parameter_list|(
 name|x
 parameter_list|)
-value|(void)(x)
+value|do {} while (FALSE)
 end_define
 
 begin_endif

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2006, 2007, 2009  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: netdb.h,v 1.7.332.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: netdb.h,v 1.9 2009/01/18 23:48:14 tbox Exp $ */
 end_comment
 
 begin_ifndef

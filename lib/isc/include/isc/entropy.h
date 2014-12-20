@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: entropy.h,v 1.32.332.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: entropy.h,v 1.35 2009/10/19 02:37:08 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -321,7 +321,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Create an entropy source that consists of samples.  Each sample is added  * to the source via isc_entropy_addsamples(), below.  */
+comment|/*!<  * \brief Create an entropy source that consists of samples.  Each sample is  * added to the source via isc_entropy_addsamples(), below.  */
 end_comment
 
 begin_function_decl
@@ -473,7 +473,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Add "length" bytes in "data" to the entropy pool, incrementing the pool's  * entropy count by "entropy."  *  * These bytes will prime the pseudorandom portion even no entropy is actually  * added.  */
+comment|/*!<  * \brief Add "length" bytes in "data" to the entropy pool, incrementing the  * pool's entropy count by "entropy."  *  * These bytes will prime the pseudorandom portion even if no entropy is  * actually added.  */
 end_comment
 
 begin_function_decl

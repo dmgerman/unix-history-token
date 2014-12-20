@@ -499,7 +499,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  *  ntpq_openhost  *  *  Sets up a connection to the ntpd instance of a specified host. Note:  *  There is no real "connection" established because NTP solely works  *  based on UDP.  *  ****************************************************************************  * Parameters:  *	hostname	char*	Hostname/IP of the host running ntpd  *  * Returns:  *	int		1 if the host connection could be set up, i.e.   *			name resolution was succesful and/or IP address  *			has been validated  *  			- OR -  *			0 (zero) if a failure occured  ****************************************************************************/
+comment|/*****************************************************************************  *  *  ntpq_openhost  *  *  Sets up a connection to the ntpd instance of a specified host. Note:  *  There is no real "connection" established because NTP solely works  *  based on UDP.  *  ****************************************************************************  * Parameters:  *	hostname	char*	Hostname/IP of the host running ntpd  *	fam		int	Address Family (AF_INET, AF_INET6, or 0)  *  * Returns:  *	int		1 if the host connection could be set up, i.e.   *			name resolution was succesful and/or IP address  *			has been validated  *  			- OR -  *			0 (zero) if a failure occured  ****************************************************************************/
 end_comment
 
 begin_function
@@ -509,6 +509,9 @@ parameter_list|(
 name|char
 modifier|*
 name|hostname
+parameter_list|,
+name|int
+name|fam
 parameter_list|)
 block|{
 if|if
@@ -516,6 +519,8 @@ condition|(
 name|openhost
 argument_list|(
 name|hostname
+argument_list|,
+name|fam
 argument_list|)
 condition|)
 block|{

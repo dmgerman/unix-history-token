@@ -455,19 +455,6 @@ value|(((Year)%4 || (!((Year)%100)&& (Year)%400)) ? 0 : 13 )
 end_define
 
 begin_decl_stmt
-specifier|volatile
-name|int
-name|debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* debugging requests for parse stuff */
-end_comment
-
-begin_decl_stmt
 name|char
 specifier|const
 modifier|*

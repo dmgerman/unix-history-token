@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * \file numeric.c  *  *  Time-stamp:      "2011-03-25 16:26:10 bkorb"  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (c) 1992-2011 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following md5sums:  *  *  43b91e8ca915626ed3818ffb1b71248b pkg/libopts/COPYING.gplv3  *  06a1a2e4760c90ea5e1dad8dfaac4d39 pkg/libopts/COPYING.lgplv3  *  66a5cedaf62c4b2637025f049f9b826f pkg/libopts/COPYING.mbsd  */
+comment|/**  * \file numeric.c  *  * Handle options with numeric (integer) arguments.  *  * @addtogroup autoopts  * @{  */
 end_comment
 
 begin_comment
-comment|/*=export_func  optionShowRange  * private:  *  * what:    * arg:   + tOptions* + pOpts     + program options descriptor  +  * arg:   + tOptDesc* + pOptDesc  + the descriptor for this arg +  * arg:   + void *    + rng_table + the value range tables      +  * arg:   + int       + rng_count + the number of entries       +  *  * doc:  *   Show information about a numeric option with range constraints. =*/
+comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
+end_comment
+
+begin_comment
+comment|/*=export_func  optionShowRange  * private:  *  * what:  Show info about range constraints  * arg:   + tOptions* + pOpts     + program options descriptor  +  * arg:   + tOptDesc* + pOptDesc  + the descriptor for this arg +  * arg:   + void *    + rng_table + the value range tables      +  * arg:   + int       + rng_count + the number of entries       +  *  * doc:  *   Show information about a numeric option with range constraints. =*/
 end_comment
 
 begin_function
@@ -27,30 +31,6 @@ name|int
 name|rng_ct
 parameter_list|)
 block|{
-specifier|static
-name|char
-specifier|const
-name|bullet
-index|[]
-init|=
-literal|"\t\t\t\t- "
-decl_stmt|;
-specifier|static
-name|char
-specifier|const
-name|deepin
-index|[]
-init|=
-literal|"\t\t\t\t  "
-decl_stmt|;
-specifier|static
-name|char
-specifier|const
-name|onetab
-index|[]
-init|=
-literal|"\t"
-decl_stmt|;
 specifier|const
 struct|struct
 block|{
@@ -71,7 +51,9 @@ specifier|const
 modifier|*
 name|pz_indent
 init|=
-name|bullet
+name|zTabHyp
+operator|+
+name|tab_skip_ct
 decl_stmt|;
 comment|/*      * The range is shown only for full usage requests and an error      * in this particular option.      */
 if|if
@@ -90,7 +72,7 @@ condition|)
 return|return;
 name|pz_indent
 operator|=
-name|onetab
+name|ONE_TAB_STR
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -110,7 +92,7 @@ name|pOD
 operator|->
 name|optArg
 operator|.
-name|argString
+name|argInt
 argument_list|)
 expr_stmt|;
 name|pz_indent
@@ -160,9 +142,13 @@ operator|!=
 name|OPTPROC_EMIT_USAGE
 operator|)
 condition|?
-name|onetab
+name|ONE_TAB_STR
 else|:
-name|deepin
+operator|(
+name|zTabSpace
+operator|+
+name|tab_skip_ct
+operator|)
 expr_stmt|;
 for|for
 control|(
@@ -263,7 +249,7 @@ condition|)
 block|{
 name|fputc
 argument_list|(
-literal|'\n'
+name|NL
 argument_list|,
 name|option_usage_fp
 argument_list|)
@@ -300,7 +286,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionNumericVal  * private:  *  * what:  process an option with a numeric value.  * arg:   + tOptions* + pOpts    + program options descriptor +  * arg:   + tOptDesc* + pOptDesc + the descriptor for this arg +  *  * doc:  *  Decipher a numeric value. =*/
+comment|/*=export_func  optionNumericVal  * private:  *  * what:  process an option with a numeric value.  * arg:   + tOptions* + opts + program options descriptor +  * arg:   + tOptDesc* + od   + the descriptor for this arg +  *  * doc:  *  Decipher a numeric value. =*/
 end_comment
 
 begin_function
@@ -309,11 +295,11 @@ name|optionNumericVal
 parameter_list|(
 name|tOptions
 modifier|*
-name|pOpts
+name|opts
 parameter_list|,
 name|tOptDesc
 modifier|*
-name|pOD
+name|od
 parameter_list|)
 block|{
 name|char
@@ -323,17 +309,38 @@ decl_stmt|;
 name|long
 name|val
 decl_stmt|;
-comment|/*      *  Numeric options may have a range associated with it.      *  If it does, the usage procedure requests that it be      *  emitted by passing a NULL pOD pointer.  Also bail out      *  if there is no option argument or if we are being reset.      */
+comment|/*      *  Guard against all the different ways this procedure might get invoked      *  when there is no string argument provided.      */
+if|if
+condition|(
+name|INQUERY_CALL
+argument_list|(
+name|opts
+argument_list|,
+name|od
+argument_list|)
+operator|||
+operator|(
+name|od
+operator|->
+name|optArg
+operator|.
+name|argString
+operator|==
+name|NULL
+operator|)
+condition|)
+return|return;
+comment|/*      *  Numeric options may have a range associated with it.      *  If it does, the usage procedure requests that it be      *  emitted by passing a NULL od pointer.  Also bail out      *  if there is no option argument or if we are being reset.      */
 if|if
 condition|(
 operator|(
-name|pOD
+name|od
 operator|==
 name|NULL
 operator|)
 operator|||
 operator|(
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
@@ -344,7 +351,7 @@ operator|)
 operator|||
 operator|(
 operator|(
-name|pOD
+name|od
 operator|->
 name|fOptState
 operator|&
@@ -363,7 +370,7 @@ name|val
 operator|=
 name|strtol
 argument_list|(
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
@@ -380,7 +387,7 @@ condition|(
 operator|(
 name|pz
 operator|==
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
@@ -399,7 +406,7 @@ goto|;
 if|if
 condition|(
 operator|(
-name|pOD
+name|od
 operator|->
 name|fOptState
 operator|&
@@ -418,7 +425,7 @@ operator|)
 condition|)
 block|{
 case|case
-literal|'\0'
+name|NUL
 case|:
 name|pz
 operator|--
@@ -499,7 +506,7 @@ name|bad_number
 goto|;
 if|if
 condition|(
-name|pOD
+name|od
 operator|->
 name|fOptState
 operator|&
@@ -508,14 +515,14 @@ condition|)
 block|{
 name|AGFREE
 argument_list|(
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
 name|argString
 argument_list|)
 expr_stmt|;
-name|pOD
+name|od
 operator|->
 name|fOptState
 operator|&=
@@ -523,7 +530,7 @@ operator|~
 name|OPTST_ALLOC_ARG
 expr_stmt|;
 block|}
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
@@ -540,11 +547,11 @@ name|stderr
 argument_list|,
 name|zNotNumber
 argument_list|,
-name|pOpts
+name|opts
 operator|->
 name|pzProgName
 argument_list|,
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
@@ -554,7 +561,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|pOpts
+name|opts
 operator|->
 name|fOptSet
 operator|&
@@ -566,13 +573,13 @@ condition|)
 operator|(
 operator|*
 operator|(
-name|pOpts
+name|opts
 operator|->
 name|pUsageProc
 operator|)
 operator|)
 operator|(
-name|pOpts
+name|opts
 operator|,
 name|EXIT_FAILURE
 operator|)
@@ -581,7 +588,7 @@ name|errno
 operator|=
 name|EINVAL
 expr_stmt|;
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
@@ -594,7 +601,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/numeric.c */
+comment|/** @}  *  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/numeric.c */
 end_comment
 
 end_unit

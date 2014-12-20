@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * \file restore.c  *  * Time-stamp:      "2010-08-22 11:04:00 bkorb"  *  *  This module's routines will save the current option state to memory  *  and restore it.  If saved prior to the initial optionProcess call,  *  then the initial state will be restored.  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (c) 1992-2011 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following md5sums:  *  *  43b91e8ca915626ed3818ffb1b71248b pkg/libopts/COPYING.gplv3  *  06a1a2e4760c90ea5e1dad8dfaac4d39 pkg/libopts/COPYING.lgplv3  *  66a5cedaf62c4b2637025f049f9b826f pkg/libopts/COPYING.mbsd  */
+comment|/*  * \file restore.c  *  *  This module's routines will save the current option state to memory  *  and restore it.  If saved prior to the initial optionProcess call,  *  then the initial state will be restored.  *  * @addtogroup autoopts  * @{  */
+end_comment
+
+begin_comment
+comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
 
 begin_comment
@@ -216,6 +220,9 @@ name|pOpts
 argument_list|)
 operator|+
 operator|(
+operator|(
+name|size_t
+operator|)
 name|pOpts
 operator|->
 name|optCt
@@ -235,62 +242,6 @@ argument_list|,
 literal|"saved option state"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-condition|)
-block|{
-name|tCC
-modifier|*
-name|pzName
-init|=
-name|pOpts
-operator|->
-name|pzProgName
-decl_stmt|;
-if|if
-condition|(
-name|pzName
-operator|==
-name|NULL
-condition|)
-block|{
-name|pzName
-operator|=
-name|pOpts
-operator|->
-name|pzPROGNAME
-expr_stmt|;
-if|if
-condition|(
-name|pzName
-operator|==
-name|NULL
-condition|)
-name|pzName
-operator|=
-name|zNil
-expr_stmt|;
-block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|zCantSave
-argument_list|,
-name|pzName
-argument_list|,
-name|sz
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|pOpts
 operator|->
 name|pSavedState
@@ -321,6 +272,9 @@ name|pOpts
 operator|->
 name|pOptDesc
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|p
 operator|->
 name|optCt
@@ -371,7 +325,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzName
 init|=
@@ -412,7 +367,7 @@ argument_list|,
 name|pzName
 argument_list|)
 expr_stmt|;
-name|exit
+name|option_exits
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -452,6 +407,9 @@ name|p
 operator|+
 literal|1
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|p
 operator|->
 name|optCt
@@ -688,6 +646,9 @@ name|p
 operator|+
 literal|1
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|p
 operator|->
 name|optCt
@@ -719,7 +680,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/restore.c */
+comment|/** @}  *  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/restore.c */
 end_comment
 
 end_unit

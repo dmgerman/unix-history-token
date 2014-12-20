@@ -8,12 +8,36 @@ comment|/* pathfind.c --- find a FILE  MODE along PATH */
 end_comment
 
 begin_comment
-comment|/*  * Author:           Gary V Vaughan<gvaughan@oranda.demon.co.uk>  * Time-stamp:       "2010-07-17 09:50:32 bkorb"  */
+comment|/* Author: Gary V Vaughan<gvaughan@oranda.demon.co.uk> */
 end_comment
 
 begin_comment
 comment|/* Code: */
 end_comment
+
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|pathfind
+parameter_list|(
+name|char
+specifier|const
+modifier|*
+name|path
+parameter_list|,
+name|char
+specifier|const
+modifier|*
+name|fname
+parameter_list|,
+name|char
+specifier|const
+modifier|*
+name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_include
 include|#
@@ -43,6 +67,7 @@ argument_list|)
 end_if
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|pathfind
@@ -55,7 +80,7 @@ parameter_list|,
 name|char
 specifier|const
 modifier|*
-name|fileName
+name|fname
 parameter_list|,
 name|char
 specifier|const
@@ -64,7 +89,10 @@ name|mode
 parameter_list|)
 block|{
 return|return
-name|NULL
+name|strdup
+argument_list|(
+name|fname
+argument_list|)
 return|;
 block|}
 end_function
@@ -129,10 +157,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*=export_func pathfind  *  * what: fild a file in a list of directories  *  * ifndef: HAVE_PATHFIND  *  * arg:  + char const* + path + colon separated list of search directories +  * arg:  + char const* + file + the name of the file to look for +  * arg:  + char const* + mode + the mode bits that must be set to match +  *  * ret_type:  char*  * ret_desc:  the path to the located file  *  * doc:  *  * pathfind looks for a a file with name "FILE" and "MODE" access  * along colon delimited "PATH", and returns the full pathname as a  * string, or NULL if not found.  If "FILE" contains a slash, then  * it is treated as a relative or absolute path and "PATH" is ignored.  *  * @strong{NOTE}: this function is compiled into @file{libopts} only if  * it is not natively supplied.  *  * The "MODE" argument is a string of option letters chosen from the  * list below:  * @example  *          Letter    Meaning  *          r         readable  *          w         writable  *          x         executable  *          f         normal file       (NOT IMPLEMENTED)  *          b         block special     (NOT IMPLEMENTED)  *          c         character special (NOT IMPLEMENTED)  *          d         directory         (NOT IMPLEMENTED)  *          p         FIFO (pipe)       (NOT IMPLEMENTED)  *          u         set user ID bit   (NOT IMPLEMENTED)  *          g         set group ID bit  (NOT IMPLEMENTED)  *          k         sticky bit        (NOT IMPLEMENTED)  *          s         size nonzero      (NOT IMPLEMENTED)  * @end example  *  * example:  * To find the "ls" command using the "PATH" environment variable:  * @example  *    #include<stdlib.h>  *    char* pz_ls = pathfind( getenv("PATH"), "ls", "rx" );  *<<do whatever with pz_ls>>  *    free( pz_ls );  * @end example  * The path is allocated with @code{malloc(3C)}, so you must @code{free(3C)}  * the result.  Also, do not use unimplemented file modes.  :-)  *  * err:  returns NULL if the file is not found. =*/
+comment|/**  * local implementation of pathfind.  * @param[in] path  colon separated list of directories  * @param[in] fname the name we are hunting for  * @param[in] mode  the required file mode  * @returns an allocated string with the full path, or NULL  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|pathfind
@@ -145,7 +174,7 @@ parameter_list|,
 name|char
 specifier|const
 modifier|*
-name|fileName
+name|fname
 parameter_list|,
 name|char
 specifier|const
@@ -165,7 +194,7 @@ literal|0
 decl_stmt|;
 name|char
 modifier|*
-name|pathName
+name|res_path
 init|=
 name|NULL
 decl_stmt|;
@@ -241,7 +270,6 @@ operator|&
 name|p_index
 argument_list|)
 decl_stmt|;
-comment|/*          *  IF no more entries, THEN quit          */
 if|if
 condition|(
 name|colon_unit
@@ -264,7 +292,6 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/*          *  FOR every entry in the given directory, ...          */
 for|for
 control|(
 init|;
@@ -302,7 +329,7 @@ name|entP
 operator|->
 name|d_name
 argument_list|,
-name|fileName
+name|fname
 argument_list|)
 operator|==
 literal|0
@@ -310,11 +337,11 @@ condition|)
 block|{
 name|char
 modifier|*
-name|pzFullName
+name|abs_name
 init|=
 name|make_absolute
 argument_list|(
-name|fileName
+name|fname
 argument_list|,
 name|colon_unit
 argument_list|)
@@ -324,7 +351,7 @@ if|if
 condition|(
 name|access
 argument_list|(
-name|pzFullName
+name|abs_name
 argument_list|,
 name|mode_bits
 argument_list|)
@@ -333,21 +360,17 @@ literal|0
 condition|)
 block|{
 comment|/*                      *  We can, so normalize the name and return it below                      */
-name|pathName
+name|res_path
 operator|=
 name|canonicalize_pathname
 argument_list|(
-name|pzFullName
+name|abs_name
 argument_list|)
 expr_stmt|;
 block|}
 name|free
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|pzFullName
+name|abs_name
 argument_list|)
 expr_stmt|;
 break|break;
@@ -360,14 +383,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pathName
+name|res_path
 operator|!=
 name|NULL
 condition|)
 break|break;
 block|}
 return|return
-name|pathName
+name|res_path
 return|;
 block|}
 end_function
@@ -457,6 +480,9 @@ argument_list|)
 expr_stmt|;
 name|result_len
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|result
@@ -1050,6 +1076,7 @@ index|]
 operator|=
 name|NUL
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|NUL
 case|:
@@ -1059,11 +1086,15 @@ goto|;
 block|}
 if|if
 condition|(
-operator|(
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|pzDest
 operator|-
 name|pzDir
-operator|)
+argument_list|)
 operator|>=
 name|AG_PATH_MAX
 condition|)
@@ -1074,9 +1105,14 @@ label|:
 empty_stmt|;
 name|ix
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|pzSrc
 operator|-
 name|string
+argument_list|)
 expr_stmt|;
 block|}
 if|if

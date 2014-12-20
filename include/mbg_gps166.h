@@ -635,7 +635,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_TM_DEFINED
+name|GPS166_TM_DEFINED
 end_ifndef
 
 begin_typedef
@@ -765,7 +765,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_TM_DEFINED
+name|GPS166_TM_DEFINED
 end_define
 
 begin_endif

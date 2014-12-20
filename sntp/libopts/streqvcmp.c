@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * \file streqvcmp.c  *  * Time-stamp:      "2010-07-17 10:16:24 bkorb"  *  *  String Equivalence Comparison  *  *  These routines allow any character to be mapped to any other  *  character before comparison.  In processing long option names,  *  the characters "-", "_" and "^" all need to be equivalent  *  (because they are treated so by different development environments).  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (c) 1992-2011 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following md5sums:  *  *  43b91e8ca915626ed3818ffb1b71248b pkg/libopts/COPYING.gplv3  *  06a1a2e4760c90ea5e1dad8dfaac4d39 pkg/libopts/COPYING.lgplv3  *  66a5cedaf62c4b2637025f049f9b826f pkg/libopts/COPYING.mbsd  *  * This array is designed for mapping upper and lower case letter  * together for a case independent comparison.  The mappings are  * based upon ascii character sequences.  */
+comment|/**  * \file streqvcmp.c  *  *  String Equivalence Comparison  *  *  These routines allow any character to be mapped to any other  *  character before comparison.  In processing long option names,  *  the characters "-", "_" and "^" all need to be equivalent  *  (because they are treated so by different development environments).  *  * @addtogroup autoopts  * @{  */
+end_comment
+
+begin_comment
+comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  *  * This array is designed for mapping upper and lower case letter  * together for a case independent comparison.  The mappings are  * based upon ascii character sequences.  */
 end_comment
 
 begin_decl_stmt
@@ -11,7 +15,7 @@ name|charmap
 index|[]
 init|=
 block|{
-literal|0x00
+name|NUL
 block|,
 literal|0x01
 block|,
@@ -31,7 +35,7 @@ literal|'\b'
 block|,
 literal|'\t'
 block|,
-literal|'\n'
+name|NL
 block|,
 literal|'\v'
 block|,
@@ -534,11 +538,13 @@ begin_function
 name|int
 name|strneqvcmp
 parameter_list|(
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|s1
 parameter_list|,
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|s2
 parameter_list|,
@@ -583,7 +589,27 @@ operator|++
 decl_stmt|;
 name|int
 name|dif
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|u1
+operator|==
+name|u2
+condition|)
+block|{
+if|if
+condition|(
+name|u1
+operator|==
+name|NUL
+condition|)
+return|return
+literal|0
+return|;
+continue|continue;
+block|}
+name|dif
+operator|=
 name|charmap
 index|[
 name|u1
@@ -593,7 +619,7 @@ name|charmap
 index|[
 name|u2
 index|]
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|dif
@@ -627,11 +653,13 @@ begin_function
 name|int
 name|streqvcmp
 parameter_list|(
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|s1
 parameter_list|,
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|s2
 parameter_list|)
@@ -668,7 +696,27 @@ operator|++
 decl_stmt|;
 name|int
 name|dif
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|u1
+operator|==
+name|u2
+condition|)
+block|{
+if|if
+condition|(
+name|u1
+operator|==
+name|NUL
+condition|)
+return|return
+literal|0
+return|;
+continue|continue;
+block|}
+name|dif
+operator|=
 name|charmap
 index|[
 name|u1
@@ -678,7 +726,7 @@ name|charmap
 index|[
 name|u2
 index|]
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|dif
@@ -702,7 +750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func streqvmap  *  * what: Set the character mappings for the streqv functions  *  * arg:  + char + From + Input character +  * arg:  + char + To   + Mapped-to character +  * arg:  + int  + ct   + compare length +  *  * doc:  *  * Set the character mapping.  If the count (@code{ct}) is set to zero, then  * the map is cleared by setting all entries in the map to their index  * value.  Otherwise, the "@code{From}" character is mapped to the "@code{To}"  * character.  If @code{ct} is greater than 1, then @code{From} and @code{To}  * are incremented and the process repeated until @code{ct} entries have been  * set. For example,  * @example  *    streqvmap('a', 'A', 26);  * @end example  * @noindent  * will alter the mapping so that all English lower case letters  * will map to upper case.  *  * This function name is mapped to option_streqvmap so as to not conflict  * with the POSIX name space.  *  * err:  none. =*/
+comment|/*=export_func streqvmap  *  * what: Set the character mappings for the streqv functions  *  * arg:  + char + from + Input character +  * arg:  + char + to   + Mapped-to character +  * arg:  + int  + ct   + compare length +  *  * doc:  *  * Set the character mapping.  If the count (@code{ct}) is set to zero, then  * the map is cleared by setting all entries in the map to their index  * value.  Otherwise, the "@code{From}" character is mapped to the "@code{To}"  * character.  If @code{ct} is greater than 1, then @code{From} and @code{To}  * are incremented and the process repeated until @code{ct} entries have been  * set. For example,  * @example  *    streqvmap('a', 'A', 26);  * @end example  * @noindent  * will alter the mapping so that all English lower case letters  * will map to upper case.  *  * This function name is mapped to option_streqvmap so as to not conflict  * with the POSIX name space.  *  * err:  none. =*/
 end_comment
 
 begin_function
@@ -710,10 +758,10 @@ name|void
 name|streqvmap
 parameter_list|(
 name|char
-name|From
+name|from
 parameter_list|,
 name|char
-name|To
+name|to
 parameter_list|,
 name|int
 name|ct
@@ -742,6 +790,10 @@ index|[
 name|ct
 index|]
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ct
 expr_stmt|;
 block|}
@@ -756,23 +808,25 @@ do|;
 block|}
 else|else
 block|{
+name|unsigned
 name|int
-name|chTo
+name|i_to
 init|=
 operator|(
 name|int
 operator|)
-name|To
+name|to
 operator|&
 literal|0xFF
 decl_stmt|;
+name|unsigned
 name|int
-name|chFrom
+name|i_from
 init|=
 operator|(
 name|int
 operator|)
-name|From
+name|from
 operator|&
 literal|0xFF
 decl_stmt|;
@@ -780,24 +834,25 @@ do|do
 block|{
 name|charmap
 index|[
-name|chFrom
+name|i_from
 index|]
 operator|=
 operator|(
 name|unsigned
+name|char
 operator|)
-name|chTo
+name|i_to
 expr_stmt|;
-name|chFrom
+name|i_from
 operator|++
 expr_stmt|;
-name|chTo
+name|i_to
 operator|++
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|chFrom
+name|i_from
 operator|>=
 sizeof|sizeof
 argument_list|(
@@ -806,7 +861,7 @@ argument_list|)
 operator|)
 operator|||
 operator|(
-name|chTo
+name|i_to
 operator|>=
 sizeof|sizeof
 argument_list|(
@@ -864,6 +919,7 @@ name|equiv
 init|=
 operator|(
 name|unsigned
+name|char
 operator|)
 operator|*
 name|s
@@ -879,6 +935,7 @@ name|charmap
 index|[
 operator|(
 name|unsigned
+name|char
 operator|)
 operator|*
 operator|(
@@ -926,6 +983,7 @@ name|charmap
 index|[
 operator|(
 name|unsigned
+name|char
 operator|)
 operator|*
 name|s
@@ -947,7 +1005,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/streqvcmp.c */
+comment|/** @}  *  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/streqvcmp.c */
 end_comment
 
 end_unit

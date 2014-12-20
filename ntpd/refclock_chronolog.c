@@ -357,10 +357,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-operator|!
-operator|(
 name|fd
 operator|=
 name|refclock_open
@@ -371,7 +367,12 @@ name|SPEED232
 argument_list|,
 literal|0
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<=
+literal|0
 condition|)
 return|return
 operator|(
@@ -381,21 +382,8 @@ return|;
 comment|/* 	 * Allocate and initialize unit structure 	 */
 name|up
 operator|=
-name|emalloc
+name|emalloc_zero
 argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|up
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|up
-argument_list|,
-literal|0
-argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -413,9 +401,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 name|pp
@@ -432,9 +417,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -570,11 +552,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chronolog_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -669,14 +646,9 @@ comment|/* got a good time flag */
 comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -686,11 +658,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chronolog_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -1179,6 +1146,9 @@ name|up
 operator|->
 name|lasthour
 operator|=
+operator|(
+name|u_char
+operator|)
 name|pp
 operator|->
 name|hour
@@ -1208,7 +1178,7 @@ comment|/* 	 * Time to poll the clock. The Chrono-log clock is supposed to 	 * r
 if|#
 directive|if
 literal|0
-block|register struct chronolog_unit *up; 	struct refclockproc *pp; 	char pollchar;  	pp = peer->procptr; 	up = (struct chronolog_unit *)pp->unitptr; 	if (peer->burst == 0&& peer->reach == 0) 		refclock_report(peer, CEVNT_TIMEOUT); 	if (up->linect> 0) 		pollchar = 'R'; 	else 		pollchar = 'T'; 	if (write(pp->io.fd,&pollchar, 1) != 1) 		refclock_report(peer, CEVNT_FAULT); 	else 		pp->polls++;
+block|register struct chronolog_unit *up; 	struct refclockproc *pp; 	char pollchar;  	pp = peer->procptr; 	up = pp->unitptr; 	if (peer->burst == 0&& peer->reach == 0) 		refclock_report(peer, CEVNT_TIMEOUT); 	if (up->linect> 0) 		pollchar = 'R'; 	else 		pollchar = 'T'; 	if (write(pp->io.fd,&pollchar, 1) != 1) 		refclock_report(peer, CEVNT_FAULT); 	else 		pp->polls++;
 endif|#
 directive|endif
 block|}

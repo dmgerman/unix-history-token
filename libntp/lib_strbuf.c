@@ -35,6 +35,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ntp_fp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntp_stdlib.h"
 end_include
 
@@ -49,13 +55,16 @@ comment|/*  * Storage declarations  */
 end_comment
 
 begin_decl_stmt
-name|char
+name|int
+name|debug
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|libbufstr
 name|lib_stringbuf
 index|[
-name|LIB_NUMBUFS
-index|]
-index|[
-name|LIB_BUFLENGTH
+name|LIB_NUMBUF
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -81,8 +90,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|lib_inited
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -97,10 +104,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|lib_nextbuf
-operator|=
-literal|0
-expr_stmt|;
+if|if
+condition|(
+name|lib_inited
+condition|)
+return|return;
 name|ipv4_works
 operator|=
 operator|(
@@ -119,9 +127,12 @@ name|isc_net_probeipv6
 argument_list|()
 operator|)
 expr_stmt|;
+name|init_systime
+argument_list|()
+expr_stmt|;
 name|lib_inited
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 block|}
 end_function

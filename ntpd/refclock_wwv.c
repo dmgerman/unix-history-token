@@ -138,7 +138,7 @@ comment|/* ICOM */
 end_comment
 
 begin_comment
-comment|/*  * Audio WWV/H demodulator/decoder  *  * This driver synchronizes the computer time using data encoded in  * radio transmissions from NIST time/frequency stations WWV in Boulder,  * CO, and WWVH in Kauai, HI. Transmissions are made continuously on  * 2.5, 5, 10 and 15 MHz from WWV and WWVH, and 20 MHz from WWV. An  * ordinary AM shortwave receiver can be tuned manually to one of these  * frequencies or, in the case of ICOM receivers, the receiver can be  * tuned automatically using this program as propagation conditions  * change throughout the weasons, both day and night.  *  * The driver requires an audio codec or sound card with sampling rate 8  * kHz and mu-law companding. This is the same standard as used by the  * telephone industry and is supported by most hardware and operating  * systems, including Solaris, SunOS, FreeBSD, NetBSD and Linux. In this  * implementation, only one audio driver and codec can be supported on a  * single machine.  *  * The demodulation and decoding algorithms used in this driver are  * based on those developed for the TAPR DSP93 development board and the  * TI 320C25 digital signal processor described in: Mills, D.L. A  * precision radio clock for WWV transmissions. Electrical Engineering  * Report 97-8-1, University of Delaware, August 1997, 25 pp., available  * from www.eecis.udel.edu/~mills/reports.html. The algorithms described  * in this report have been modified somewhat to improve performance  * under weak signal conditions and to provide an automatic station  * identification feature.  *  * The ICOM code is normally compiled in the driver. It isn't used,  * unless the mode keyword on the server configuration command specifies  * a nonzero ICOM ID select code. The C-IV trace is turned on if the  * debug level is greater than one.  *  * Fudge factors  *  * Fudge flag4 causes the dubugging output described above to be  * recorded in the clockstats file. Fudge flag2 selects the audio input  * port, where 0 is the mike port (default) and 1 is the line-in port.  * It does not seem useful to select the compact disc player port. Fudge  * flag3 enables audio monitoring of the input signal. For this purpose,  * the monitor gain is set to a default value.  *  * CEVNT_BADTIME	invalid date or time  * CEVNT_PROP		propagation failure - no stations heard  * CEVNT_TIMEOUT	timeout (see newgame() below)  */
+comment|/*  * Audio WWV/H demodulator/decoder  *  * This driver synchronizes the computer time using data encoded in  * radio transmissions from NIST time/frequency stations WWV in Boulder,  * CO, and WWVH in Kauai, HI. Transmissions are made continuously on  * 2.5, 5, 10 and 15 MHz from WWV and WWVH, and 20 MHz from WWV. An  * ordinary AM shortwave receiver can be tuned manually to one of these  * frequencies or, in the case of ICOM receivers, the receiver can be  * tuned automatically using this program as propagation conditions  * change throughout the weasons, both day and night.  *  * The driver requires an audio codec or sound card with sampling rate 8  * kHz and mu-law companding. This is the same standard as used by the  * telephone industry and is supported by most hardware and operating  * systems, including Solaris, SunOS, FreeBSD, NetBSD and Linux. In this  * implementation, only one audio driver and codec can be supported on a  * single machine.  *  * The demodulation and decoding algorithms used in this driver are  * based on those developed for the TAPR DSP93 development board and the  * TI 320C25 digital signal processor described in: Mills, D.L. A  * precision radio clock for WWV transmissions. Electrical Engineering  * Report 97-8-1, University of Delaware, August 1997, 25 pp., available  * from www.eecis.udel.edu/~mills/reports.html. The algorithms described  * in this report have been modified somewhat to improve performance  * under weak signal conditions and to provide an automatic station  * identification feature.  *  * The ICOM code is normally compiled in the driver. It isn't used,  * unless the mode keyword on the server configuration command specifies  * a nonzero ICOM ID select code. The C-IV trace is turned on if the  * debug level is greater than one.  *  * Fudge factors  *  * Fudge flag4 causes the debugging output described above to be  * recorded in the clockstats file. Fudge flag2 selects the audio input  * port, where 0 is the mike port (default) and 1 is the line-in port.  * It does not seem useful to select the compact disc player port. Fudge  * flag3 enables audio monitoring of the input signal. For this purpose,  * the monitor gain is set to a default value.  *  * CEVNT_BADTIME	invalid date or time  * CEVNT_PROP		propagation failure - no stations heard  * CEVNT_TIMEOUT	timeout (see newgame() below)  */
 end_comment
 
 begin_comment
@@ -192,7 +192,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SECOND
+name|WWV_SEC
 value|8000
 end_define
 
@@ -203,8 +203,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MINUTE
-value|(SECOND * 60)
+name|WWV_MIN
+value|(WWV_SEC * 60)
 end_define
 
 begin_comment
@@ -837,7 +837,7 @@ begin_define
 define|#
 directive|define
 name|MS
-value|(SECOND / 1000)
+value|(WWV_SEC / 1000)
 end_define
 
 begin_comment
@@ -848,7 +848,7 @@ begin_define
 define|#
 directive|define
 name|IN100
-value|((100 * 80) / SECOND)
+value|((100 * 80) / WWV_SEC)
 end_define
 
 begin_comment
@@ -859,7 +859,7 @@ begin_define
 define|#
 directive|define
 name|IN1000
-value|((1000 * 80) / SECOND)
+value|((1000 * 80) / WWV_SEC)
 end_define
 
 begin_comment
@@ -870,7 +870,7 @@ begin_define
 define|#
 directive|define
 name|IN1200
-value|((1200 * 80) / SECOND)
+value|((1200 * 80) / WWV_SEC)
 end_define
 
 begin_comment
@@ -2978,6 +2978,8 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3232,49 +3234,14 @@ endif|#
 directive|endif
 comment|/* DEBUG */
 comment|/* 	 * Allocate and initialize unit structure 	 */
-if|if
-condition|(
-operator|!
-operator|(
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
+name|emalloc_zero
+argument_list|(
+sizeof|sizeof
+argument_list|(
 operator|*
-operator|)
-name|emalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|wwvunit
-argument_list|)
-argument_list|)
-operator|)
-condition|)
-block|{
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|memset
-argument_list|(
 name|up
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|wwvunit
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3283,15 +3250,6 @@ operator|=
 name|peer
 operator|->
 name|procptr
-expr_stmt|;
-name|pp
-operator|->
-name|unitptr
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|up
 expr_stmt|;
 name|pp
 operator|->
@@ -3307,9 +3265,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -3356,6 +3311,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|pp
+operator|->
+name|unitptr
+operator|=
+name|up
+expr_stmt|;
 comment|/* 	 * Initialize miscellaneous variables 	 */
 name|peer
 operator|->
@@ -3498,7 +3459,7 @@ name|DTOLFP
 argument_list|(
 literal|1.
 operator|/
-name|SECOND
+name|WWV_SEC
 argument_list|,
 operator|&
 name|up
@@ -3797,11 +3758,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -3900,14 +3856,9 @@ name|ltemp
 decl_stmt|;
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -3917,11 +3868,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -3936,7 +3882,7 @@ name|rbufp
 operator|->
 name|recv_length
 operator|/
-name|SECOND
+name|WWV_SEC
 argument_list|,
 operator|&
 name|ltemp
@@ -4048,7 +3994,7 @@ operator|+
 name|clock_codec
 operator|)
 operator|/
-name|SECOND
+name|WWV_SEC
 expr_stmt|;
 if|if
 condition|(
@@ -4206,11 +4152,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4467,7 +4408,7 @@ specifier|static
 name|double
 name|epobuf
 index|[
-name|SECOND
+name|WWV_SEC
 index|]
 decl_stmt|;
 comment|/* second sync comb filter */
@@ -4506,11 +4447,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -5210,7 +5146,7 @@ operator|+
 literal|1
 operator|)
 operator|%
-name|MINUTE
+name|WWV_MIN
 expr_stmt|;
 name|epoch
 operator|=
@@ -5218,7 +5154,7 @@ name|up
 operator|->
 name|mphase
 operator|%
-name|SECOND
+name|WWV_SEC
 expr_stmt|;
 comment|/* 	 * WWV 	 */
 name|i
@@ -5403,7 +5339,7 @@ name|pp
 operator|->
 name|fudgetime1
 operator|*
-name|SECOND
+name|WWV_SEC
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5590,7 +5526,7 @@ name|pp
 operator|->
 name|fudgetime2
 operator|*
-name|SECOND
+name|WWV_SEC
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5673,7 +5609,7 @@ name|up
 operator|->
 name|mphase
 operator|-=
-name|SECOND
+name|WWV_SEC
 expr_stmt|;
 if|if
 condition|(
@@ -5687,7 +5623,7 @@ name|up
 operator|->
 name|mphase
 operator|+=
-name|MINUTE
+name|WWV_MIN
 expr_stmt|;
 block|}
 block|}
@@ -5738,7 +5674,7 @@ name|sp
 operator|->
 name|mepoch
 operator|%
-name|SECOND
+name|WWV_SEC
 condition|)
 block|{
 name|up
@@ -5752,7 +5688,7 @@ name|sp
 operator|->
 name|mepoch
 operator|/
-name|SECOND
+name|WWV_SEC
 operator|)
 operator|%
 literal|60
@@ -5917,7 +5853,7 @@ literal|0
 condition|)
 name|j
 operator|+=
-name|SECOND
+name|WWV_SEC
 expr_stmt|;
 name|nxtmax
 operator|=
@@ -5968,7 +5904,7 @@ literal|0
 condition|)
 name|epopos
 operator|+=
-name|SECOND
+name|WWV_SEC
 expr_stmt|;
 name|wwv_endpoc
 argument_list|(
@@ -6072,11 +6008,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -6100,7 +6031,7 @@ literal|0
 condition|)
 name|epoch
 operator|+=
-name|MINUTE
+name|WWV_MIN
 expr_stmt|;
 if|if
 condition|(
@@ -6174,7 +6105,7 @@ operator|->
 name|synmax
 operator|)
 operator|/
-name|MINUTE
+name|WWV_MIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -6205,7 +6136,7 @@ operator|->
 name|lastpos
 operator|)
 operator|%
-name|MINUTE
+name|WWV_MIN
 expr_stmt|;
 name|sp
 operator|->
@@ -6334,9 +6265,14 @@ operator|&
 name|CLK_FLAG4
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"wwv8 %04x %3d %s %04x %.0f %.0f/%.1f %ld %ld"
 argument_list|,
@@ -6374,7 +6310,7 @@ name|sp
 operator|->
 name|pos
 operator|%
-name|SECOND
+name|WWV_SEC
 argument_list|,
 name|epoch
 argument_list|)
@@ -6540,11 +6476,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -6559,20 +6490,9 @@ name|iniflg
 operator|=
 literal|1
 expr_stmt|;
-name|memset
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|epoch_mf
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
+name|ZERO
 argument_list|(
 name|epoch_mf
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6786,7 +6706,7 @@ operator|-
 name|xepoch
 operator|)
 operator|%
-name|SECOND
+name|WWV_SEC
 expr_stmt|;
 if|if
 condition|(
@@ -6886,9 +6806,14 @@ name|MSYNC
 operator|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"wwv1 %04x %3d %4d %5.0f %5.1f %5d %4d %4d %4d"
 argument_list|,
@@ -7015,7 +6940,7 @@ operator|-
 name|zepoch
 operator|)
 operator|%
-name|SECOND
+name|WWV_SEC
 expr_stmt|;
 if|if
 condition|(
@@ -7187,9 +7112,14 @@ operator|&
 name|CLK_FLAG4
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"wwv2 %04x %5.0f %5.1f %5d %4d %4d %4d %4.0f %7.2f"
 argument_list|,
@@ -7225,7 +7155,7 @@ name|freq
 operator|*
 literal|1e6
 operator|/
-name|SECOND
+name|WWV_SEC
 argument_list|)
 expr_stmt|;
 name|record_clock_stats
@@ -7333,11 +7263,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -7579,7 +7504,7 @@ name|up
 operator|->
 name|mphase
 operator|%
-name|SECOND
+name|WWV_SEC
 operator|==
 name|up
 operator|->
@@ -7842,11 +7767,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -7861,20 +7781,9 @@ name|iniflg
 operator|=
 literal|1
 expr_stmt|;
-name|memset
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|bitvec
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
+name|ZERO
 argument_list|(
 name|bitvec
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -8194,9 +8103,14 @@ operator|&
 name|CLK_FLAG4
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"wwv5 %04x %3d %4d %.0f/%.1f %.0f/%.1f %s %04x %.0f %.0f/%.1f %s %04x %.0f %.0f/%.1f"
 argument_list|,
@@ -8873,9 +8787,14 @@ name|DSYNC
 operator|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"wwv3 %2d %04x %3d %4d %5.0f %5.1f %5.0f %5.1f %5.0f"
 argument_list|,
@@ -8987,11 +8906,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -9320,6 +9234,13 @@ argument_list|,
 name|pp
 operator|->
 name|a_lastcode
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|record_clock_stats
@@ -9439,11 +9360,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -9713,9 +9629,14 @@ name|INSYNC
 operator|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"wwv4 %2d %04x %3d %4d %5.0f %2d %d %d %d %5.0f %5.1f"
 argument_list|,
@@ -9839,11 +9760,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -10543,11 +10459,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -10896,11 +10807,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -11015,13 +10921,22 @@ name|select
 operator|=
 name|SELV
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|cp
 operator|->
 name|wwv
 operator|.
 name|refid
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cp
+operator|->
+name|wwv
+operator|.
+name|refid
+argument_list|)
 argument_list|,
 literal|"WV%.0f"
 argument_list|,
@@ -11042,13 +10957,22 @@ name|select
 operator|=
 name|SELH
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|cp
 operator|->
 name|wwvh
 operator|.
 name|refid
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cp
+operator|->
+name|wwvh
+operator|.
+name|refid
+argument_list|)
 argument_list|,
 literal|"WH%.0f"
 argument_list|,
@@ -11208,11 +11132,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -11317,8 +11236,12 @@ parameter_list|,
 comment|/* driver structure pointer */
 name|char
 modifier|*
-name|ptr
+name|tc
+parameter_list|,
 comment|/* target string */
+name|size_t
+name|tcsiz
+comment|/* target max chars */
 parameter_list|)
 block|{
 name|struct
@@ -11535,9 +11458,11 @@ operator|=
 operator|-
 name|dut
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
-name|ptr
+name|tc
+argument_list|,
+name|tcsiz
 argument_list|,
 literal|"%c%1X"
 argument_list|,
@@ -11548,9 +11473,14 @@ operator|->
 name|alarm
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|cptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cptr
+argument_list|)
 argument_list|,
 literal|" %4d %03d %02d:%02d:%02d %c%c %+d"
 argument_list|,
@@ -11571,11 +11501,13 @@ argument_list|,
 name|dut
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strlcat
 argument_list|(
-name|ptr
+name|tc
 argument_list|,
 name|cptr
+argument_list|,
+name|tcsiz
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Specific variable-format fields 	 */
@@ -11585,9 +11517,14 @@ name|up
 operator|->
 name|sptr
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|cptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cptr
+argument_list|)
 argument_list|,
 literal|" %d %d %s %.0f %d %.1f %d"
 argument_list|,
@@ -11622,7 +11559,7 @@ name|up
 operator|->
 name|freq
 operator|/
-name|SECOND
+name|WWV_SEC
 operator|*
 literal|1e6
 argument_list|,
@@ -11631,20 +11568,20 @@ operator|->
 name|avgint
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strlcat
 argument_list|(
-name|ptr
+name|tc
 argument_list|,
 name|cptr
+argument_list|,
+name|tcsiz
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|strlen
 argument_list|(
-name|ptr
+name|tc
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -11683,11 +11620,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr

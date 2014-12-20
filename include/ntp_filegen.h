@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ntp_filegen.h,v 3.9 1996/12/01 16:02:45 kardel Exp  *  * definitions for NTP file generations support  *  *  * Copyright (C) 1992, 1996 by Rainer Pruy  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * This code may be modified and used freely  * provided the credits remain intact.  */
+comment|/*  * ntp_filegen.h,v 3.9 1996/12/01 16:02:45 kardel Exp  *  * definitions for NTP file generations support  *  *  * Copyright (C) 1992, 1996 by Rainer Pruy  * Friedrich-Alexander Universitaet Erlangen-Nuernberg, Germany  *  * This code may be modified and used freely  * provided the credits remain intact.  */
 end_comment
 
 begin_include
@@ -113,7 +113,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* set this to really create files   */
+comment|/* set this to really create files	  */
 end_comment
 
 begin_comment
@@ -123,29 +123,32 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|FILEGEN
+name|filegen_tag
 block|{
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
 comment|/* file referring to current generation */
-specifier|const
 name|char
 modifier|*
-name|prefix
+name|dir
 decl_stmt|;
-comment|/* filename prefix and basename to be used*/
+comment|/* currently always statsdir */
 name|char
 modifier|*
-name|basename
+name|fname
 decl_stmt|;
-comment|/* for constructing filename of generation file */
-comment|/* WARNING: must be malloced !!! will be fed to free()*/
+comment|/* filename prefix of generation file */
+comment|/* must be malloced, will be fed to free() */
 name|u_long
-name|id
+name|id_lo
 decl_stmt|;
-comment|/* id of current generation */
+comment|/* lower bound of ident value */
+name|u_long
+name|id_hi
+decl_stmt|;
+comment|/* upper bound of ident value */
 name|u_char
 name|type
 decl_stmt|;
@@ -167,7 +170,7 @@ parameter_list|(
 name|FILEGEN
 modifier|*
 parameter_list|,
-name|u_long
+name|u_int32
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -184,9 +187,23 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|u_int
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|filegen_statsdir
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

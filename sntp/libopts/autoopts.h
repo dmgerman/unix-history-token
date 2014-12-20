@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  \file autoopts.h  *  *  Time-stamp:      "2011-03-25 17:51:34 bkorb"  *  *  This file defines all the global structures and special values  *  used in the automated option processing library.  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (c) 1992-2011 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following md5sums:  *  *  43b91e8ca915626ed3818ffb1b71248b pkg/libopts/COPYING.gplv3  *  06a1a2e4760c90ea5e1dad8dfaac4d39 pkg/libopts/COPYING.lgplv3  *  66a5cedaf62c4b2637025f049f9b826f pkg/libopts/COPYING.mbsd  */
+comment|/*  *  \file autoopts.h  *  *  This file defines all the global structures and special values  *  used in the automated option processing library.  *  * @group autoopts  * @{  */
+end_comment
+
+begin_comment
+comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
 
 begin_ifndef
@@ -18,13 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"compat/compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ag-char-map.h"
+file|<stdnoreturn.h>
 end_include
 
 begin_define
@@ -132,6 +130,73 @@ directive|define
 name|EXPORT
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NUL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NUL
+value|'\0'
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|BEL
+value|'\a'
+end_define
+
+begin_define
+define|#
+directive|define
+name|BS
+value|'\b'
+end_define
+
+begin_define
+define|#
+directive|define
+name|HT
+value|'\t'
+end_define
+
+begin_define
+define|#
+directive|define
+name|LF
+value|'\n'
+end_define
+
+begin_define
+define|#
+directive|define
+name|VT
+value|'\v'
+end_define
+
+begin_define
+define|#
+directive|define
+name|FF
+value|'\f'
+end_define
+
+begin_define
+define|#
+directive|define
+name|CR
+value|'\r'
+end_define
+
 begin_if
 if|#
 directive|if
@@ -174,8 +239,56 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|EX_USAGE
+end_ifndef
+
+begin_comment
+comment|/**     *  Command line usage problem     */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EX_USAGE
+value|64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EX_DATAERR
+end_ifndef
+
+begin_comment
+comment|/**     *  The input data was incorrect in some way.     */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EX_DATAERR
+value|64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|EX_NOINPUT
 end_ifndef
+
+begin_comment
+comment|/**     *  option state was requested from a file that cannot be loaded.     */
+end_comment
 
 begin_define
 define|#
@@ -195,6 +308,10 @@ directive|ifndef
 name|EX_SOFTWARE
 end_ifndef
 
+begin_comment
+comment|/**     *  AutoOpts Software failure.     */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -210,14 +327,104 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|EX_CONFIG
+name|EX_OSERR
 end_ifndef
+
+begin_comment
+comment|/**     *  Command line usage problem     */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|EX_CONFIG
-value|78
+name|EX_OSERR
+value|71
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|NL
+value|'\n'
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|C
+end_ifndef
+
+begin_comment
+comment|/**  *  Coercive cast.  Compel an address to be interpreted as the type  *  of the first argument.  No complaints, just do it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C
+parameter_list|(
+name|_t
+parameter_list|,
+name|_p
+parameter_list|)
+value|((_t)(void *)(_p))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* The __attribute__((__warn_unused_result__)) feature    is available in gcc versions 3.4 and newer,    while the typeof feature has been available since 2.7 at least.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|<
+literal|3
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|3
+operator|&&
+name|__GNUC_MINOR__
+operator|<
+literal|4
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ignore_val
+parameter_list|(
+name|x
+parameter_list|)
+value|((void) (x))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ignore_val
+parameter_list|(
+name|x
+parameter_list|)
+value|(({ __typeof__ (x) __x = (x); (void) __x; }))
 end_define
 
 begin_endif
@@ -257,7 +464,7 @@ name|SKIP_OPT
 parameter_list|(
 name|p
 parameter_list|)
-value|(((p)->fOptState& (OPTST_DOCUMENT|OPTST_OMITTED)) != 0)
+value|(((p)->fOptState& OPTST_IMMUTABLE_MASK) != 0)
 end_define
 
 begin_typedef
@@ -267,6 +474,10 @@ name|tDirection
 typedef|;
 end_typedef
 
+begin_comment
+comment|/**  * handling option presets.  Start with command line and work through  * config settings in reverse order.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -274,12 +485,20 @@ name|DIRECTION_PRESET
 value|-1
 end_define
 
+begin_comment
+comment|/**  * handling normal options.  Start with first config file, then environment  * variables and finally the command line.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DIRECTION_PROCESS
 value|1
 end_define
+
+begin_comment
+comment|/**  * An initialzation phase or an option being loaded from program sources.  */
+end_comment
 
 begin_define
 define|#
@@ -308,18 +527,31 @@ parameter_list|)
 value|((d)<0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CALLED
+parameter_list|(
+name|d
+parameter_list|)
+value|((d)==0)
+end_define
+
 begin_comment
-comment|/*  *  When loading a line (or block) of text as an option, the value can  *  be processed in any of several modes:  *  *  @table @samp  *  @item keep  *  Every part of the value between the delimiters is saved.  *  *  @item uncooked  *  Even if the value begins with quote characters, do not do quote processing.  *  *  @item cooked  *  If the value looks like a quoted string, then process it.  *  Double quoted strings are processed the way strings are in "C" programs,  *  except they are treated as regular characters if the following character  *  is not a well-established escape sequence.  *  Single quoted strings (quoted with apostrophies) are handled the way  *  strings are handled in shell scripts, *except* that backslash escapes  *  are honored before backslash escapes and apostrophies.  *  @end table  */
+comment|/**  *  When loading a line (or block) of text as an option, the value can  *  be processed in any of several modes.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 enum|enum
 block|{
+comment|/**      *  If the value looks like a quoted string, then process it.  Double      *  quoted strings are processed the way strings are in "C" programs,      *  except they are treated as regular characters if the following      *  character is not a well-established escape sequence.  Single quoted      *  strings (quoted with apostrophies) are handled the way strings are      *  handled in shell scripts, *except* that backslash escapes are      *  honored before backslash escapes and apostrophies.      */
 name|OPTION_LOAD_COOKED
 block|,
+comment|/**      * Even if the value begins with quote characters, do not do quote      * processing.  Strip leading and trailing white space.      */
 name|OPTION_LOAD_UNCOOKED
 block|,
+comment|/**      * Keep every part of the value between the delimiters.      */
 name|OPTION_LOAD_KEEP
 block|}
 name|tOptionLoadMode
@@ -334,7 +566,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *  The pager state is used by optionPagedUsage() procedure.  *  When it runs, it sets itself up to be called again on exit.  *  If, however, a routine needs a child process to do some work  *  before it is done, then 'pagerState' must be set to  *  'PAGER_STATE_CHILD' so that optionPagedUsage() will not try  *  to run the pager program before its time.  */
+comment|/**  *  The pager state is used by optionPagedUsage() procedure.  *  When it runs, it sets itself up to be called again on exit.  *  If, however, a routine needs a child process to do some work  *  before it is done, then 'pagerState' must be set to  *  'PAGER_STATE_CHILD' so that optionPagedUsage() will not try  *  to run the pager program before its time.  */
 end_comment
 
 begin_typedef
@@ -343,8 +575,11 @@ enum|enum
 block|{
 name|PAGER_STATE_INITIAL
 block|,
+comment|//@< initial option paging state
+comment|/**      * temp file created and optionPagedUsage is scheduled to run at exit      */
 name|PAGER_STATE_READY
 block|,
+comment|/**      *  This is a child process used in creating shell script usage.      */
 name|PAGER_STATE_CHILD
 block|}
 name|tePagerState
@@ -391,11 +626,12 @@ name|tOptDesc
 modifier|*
 name|pOD
 decl_stmt|;
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzOptArg
 decl_stmt|;
-name|tAoUL
+name|opt_state_mask_t
 name|flags
 decl_stmt|;
 name|teOptType
@@ -452,6 +688,10 @@ undef|#
 directive|undef
 name|_TT_
 end_undef
+
+begin_comment
+comment|/**  * option argument types.  Used to create usage information for  * particular options.  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -639,19 +879,8 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|TAGMEM
-parameter_list|(
-name|m
-parameter_list|,
-name|t
-parameter_list|)
-end_define
-
 begin_comment
-comment|/*  *  DO option handling?  *  *  Options are examined at two times:  at immediate handling time and at  *  normal handling time.  If an option is disabled, the timing may be  *  different from the handling of the undisabled option.  The OPTST_DIABLED  *  bit indicates the state of the currently discovered option.  *  So, here's how it works:  *  *  A) handling at "immediate" time, either 1 or 2:  *  *  1.  OPTST_DISABLED is not set:  *      IMM           must be set  *      DISABLE_IMM   don't care  *      TWICE         don't care  *      DISABLE_TWICE don't care  *      0 -and-  1 x x x  *  *  2.  OPTST_DISABLED is set:  *      IMM           don't care  *      DISABLE_IMM   must be set  *      TWICE         don't care  *      DISABLE_TWICE don't care  *      1 -and-  x 1 x x  */
+comment|/**  *  DO option handling?  *  *  Options are examined at two times:  at immediate handling time and at  *  normal handling time.  If an option is disabled, the timing may be  *  different from the handling of the undisabled option.  The OPTST_DIABLED  *  bit indicates the state of the currently discovered option.  *  So, here's how it works:  *  *  A) handling at "immediate" time, either 1 or 2:  *  *  1.  OPTST_DISABLED is not set:  *      IMM           must be set  *      DISABLE_IMM   don't care  *      TWICE         don't care  *      DISABLE_TWICE don't care  *      0 -and-  1 x x x  *  *  2.  OPTST_DISABLED is set:  *      IMM           don't care  *      DISABLE_IMM   must be set  *      TWICE         don't care  *      DISABLE_TWICE don't care  *      1 -and-  x 1 x x  */
 end_comment
 
 begin_define
@@ -666,7 +895,7 @@ value|(  (((_flg)& (OPTST_DISABLED|OPTST_IMM)) == OPTST_IMM) \     || (   ((_flg
 end_define
 
 begin_comment
-comment|/*  B) handling at "regular" time because it was not immediate  *  *  1.  OPTST_DISABLED is not set:  *      IMM           must *NOT* be set  *      DISABLE_IMM   don't care  *      TWICE         don't care  *      DISABLE_TWICE don't care  *      0 -and-  0 x x x  *  *  2.  OPTST_DISABLED is set:  *      IMM           don't care  *      DISABLE_IMM   don't care  *      TWICE         must be set  *      DISABLE_TWICE don't care  *      1 -and-  x x 1 x  */
+comment|/**  *  B) handling at "regular" time because it was not immediate  *  *  1.  OPTST_DISABLED is not set:  *      IMM           must *NOT* be set  *      DISABLE_IMM   don't care  *      TWICE         don't care  *      DISABLE_TWICE don't care  *      0 -and-  0 x x x  *  *  2.  OPTST_DISABLED is set:  *      IMM           don't care  *      DISABLE_IMM   don't care  *      TWICE         must be set  *      DISABLE_TWICE don't care  *      1 -and-  x x 1 x  */
 end_comment
 
 begin_define
@@ -680,7 +909,7 @@ value|( \        (((_flg)& (OPTST_DISABLED|OPTST_IMM))            == 0)  \     |
 end_define
 
 begin_comment
-comment|/*  C)  handling at "regular" time because it is to be handled twice.  *      The immediate bit was already tested and found to be set:  *  *  3.  OPTST_DISABLED is not set:  *      IMM           is set (but don't care)  *      DISABLE_IMM   don't care  *      TWICE         must be set  *      DISABLE_TWICE don't care  *      0 -and-  ? x 1 x  *  *  4.  OPTST_DISABLED is set:  *      IMM           don't care  *      DISABLE_IMM   is set (but don't care)  *      TWICE         don't care  *      DISABLE_TWICE must be set  *      1 -and-  x ? x 1  */
+comment|/**  *  C)  handling at "regular" time because it is to be handled twice.  *      The immediate bit was already tested and found to be set:  *  *  3.  OPTST_DISABLED is not set:  *      IMM           is set (but don't care)  *      DISABLE_IMM   don't care  *      TWICE         must be set  *      DISABLE_TWICE don't care  *      0 -and-  ? x 1 x  *  *  4.  OPTST_DISABLED is set:  *      IMM           don't care  *      DISABLE_IMM   is set (but don't care)  *      TWICE         don't care  *      DISABLE_TWICE must be set  *      1 -and-  x ? x 1  */
 end_comment
 
 begin_define
@@ -884,7 +1113,23 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *  Define and initialize all the user visible strings.  *  We do not do translations.  If translations are to be done, then  *  the client will provide a callback for that purpose.  */
+comment|/**  * INQUERY_CALL() tests whether the option handling function has been  * called by an inquery (help text needed, or option being reset),  * or called by a set-the-option operation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INQUERY_CALL
+parameter_list|(
+name|_o
+parameter_list|,
+name|_d
+parameter_list|)
+value|(                  \     ((_o)<= OPTPROC_EMIT_LIMIT)                \     || ((_d) == NULL)                           \     || (((_d)->fOptState& OPTST_RESET) != 0) )
+end_define
+
+begin_comment
+comment|/**  *  Define and initialize all the user visible strings.  *  We do not do translations.  If translations are to be done, then  *  the client will provide a callback for that purpose.  */
 end_comment
 
 begin_undef
@@ -900,7 +1145,7 @@ file|"autoopts/usage-txt.h"
 end_include
 
 begin_comment
-comment|/*  *  File pointer for usage output  */
+comment|/**  *  File pointer for usage output  */
 end_comment
 
 begin_decl_stmt
@@ -910,6 +1155,10 @@ name|option_usage_fp
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/**  *  If provided in the option structure  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -918,6 +1167,10 @@ modifier|*
 name|program_pkgdatadir
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/**  * privately exported functions  */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -930,6 +1183,325 @@ name|optionLoadOpt
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AUTOOPTS_INTERNAL
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PKGDATADIR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PKGDATADIR
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|APOSTROPHE
+value|'\''
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTPROC_L_N_S
+value|(OPTPROC_LONGOPT | OPTPROC_SHORTOPT)
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENABLE_NLS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LIBINTL_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libintl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|size_t
+name|fnm_len
+decl_stmt|;
+name|uint32_t
+name|fnm_mask
+decl_stmt|;
+name|char
+specifier|const
+modifier|*
+name|fnm_name
+decl_stmt|;
+block|}
+name|ao_flag_names_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**  * Automated Options Usage Flags.  * NB: no entry may be a prefix of another entry  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AOFLAG_TABLE
+define|\
+value|_aof_(gnu,             OPTPROC_GNUUSAGE )   \     _aof_(autoopts,        ~OPTPROC_GNUUSAGE)   \     _aof_(no_misuse_usage, OPTPROC_MISUSE   )   \     _aof_(misuse_usage,    ~OPTPROC_MISUSE  )   \     _aof_(compute,         OPTPROC_COMPUTE  )
+end_define
+
+begin_define
+define|#
+directive|define
+name|_aof_
+parameter_list|(
+name|_n
+parameter_list|,
+name|_f
+parameter_list|)
+value|AOUF_ ## _n ## _ID,
+end_define
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|AOFLAG_TABLE
+name|AOUF_COUNT
+block|}
+name|ao_flag_id_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_aof_
+end_undef
+
+begin_define
+define|#
+directive|define
+name|_aof_
+parameter_list|(
+name|_n
+parameter_list|,
+name|_f
+parameter_list|)
+value|AOUF_ ## _n = (1<< AOUF_ ## _n ## _ID),
+end_define
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|AOFLAG_TABLE
+block|}
+name|ao_flags_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_aof_
+end_undef
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+name|zNil
+index|[]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|arg_types_t
+name|argTypes
+init|=
+block|{
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|line_fmt_buf
+index|[
+literal|32
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|displayEnum
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+name|pkgdatadir_default
+index|[]
+init|=
+name|PKGDATADIR
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+modifier|*
+name|program_pkgdatadir
+init|=
+name|pkgdatadir_default
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|tOptionLoadMode
+name|option_load_mode
+init|=
+name|OPTION_LOAD_UNCOOKED
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|tePagerState
+name|pagerState
+init|=
+name|PAGER_STATE_INITIAL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|option_usage_fp
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+modifier|*
+name|pz_enum_err_fmt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|tOptions
+modifier|*
+name|optionParseShellOptions
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+modifier|*
+name|shell_prog
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|script_leader
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|script_trailer
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|script_text
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|print_exit
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AUTOOPTS_INTERNAL */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -940,7 +1512,7 @@ comment|/* AUTOGEN_AUTOOPTS_H */
 end_comment
 
 begin_comment
-comment|/*  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/autoopts.h */
+comment|/**  * @}  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/autoopts.h */
 end_comment
 
 end_unit

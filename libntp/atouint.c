@@ -1,7 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*  * atouint - convert an ascii string to an unsigned long, with error checking  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
 
 begin_include
 include|#
@@ -27,6 +29,10 @@ directive|include
 file|"ntp_stdlib.h"
 end_include
 
+begin_comment
+comment|/*  * atouint() - convert an ascii string representing a whole base 10  *	       number to u_long *uval, returning TRUE if successful.  *	       Does not modify *uval and returns FALSE if str is not  *	       a positive base10 integer or is too large for a u_int32.  *	       this function uses u_long but should use u_int32, and  *	       probably be renamed.  */
+end_comment
+
 begin_function
 name|int
 name|atouint
@@ -41,11 +47,9 @@ modifier|*
 name|uval
 parameter_list|)
 block|{
-specifier|register
 name|u_long
 name|u
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -57,10 +61,10 @@ name|str
 expr_stmt|;
 if|if
 condition|(
+literal|'\0'
+operator|==
 operator|*
 name|cp
-operator|==
-literal|'\0'
 condition|)
 return|return
 literal|0
@@ -71,10 +75,10 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+literal|'\0'
+operator|!=
 operator|*
 name|cp
-operator|!=
-literal|'\0'
 condition|)
 block|{
 if|if
@@ -82,9 +86,6 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
-operator|(
-name|int
-operator|)
 operator|*
 name|cp
 argument_list|)
@@ -113,6 +114,7 @@ return|return
 literal|0
 return|;
 comment|/* overflow */
+comment|/* hand-optimized u *= 10; */
 name|u
 operator|=
 operator|(
@@ -135,7 +137,7 @@ operator|++
 operator|-
 literal|'0'
 expr_stmt|;
-comment|/* ascii dependent */
+comment|/* not '\0' */
 block|}
 operator|*
 name|uval

@@ -370,9 +370,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 comment|/* 	 * Open PPS device. This can be any serial or parallel port and 	 * not necessarily the port used for the associated radio. 	 */
@@ -484,11 +481,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|ppsunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -559,11 +551,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|ppsunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr

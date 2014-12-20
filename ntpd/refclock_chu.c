@@ -20,6 +20,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"ntp_types.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -464,7 +470,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MINCHAR
+name|MINCHARS
 value|9
 end_define
 
@@ -1504,7 +1510,7 @@ name|DEBUG
 if|if
 condition|(
 name|fd_audio
-operator|>
+operator|>=
 literal|0
 operator|&&
 name|debug
@@ -1518,7 +1524,7 @@ comment|/* 	 * If audio is unavailable, Open serial port in raw mode. 	 */
 if|if
 condition|(
 name|fd_audio
-operator|>
+operator|>=
 literal|0
 condition|)
 block|{
@@ -1590,7 +1596,7 @@ comment|/* HAVE_AUDIO */
 if|if
 condition|(
 name|fd
-operator|<=
+operator|<
 literal|0
 condition|)
 return|return
@@ -1601,21 +1607,8 @@ return|;
 comment|/* 	 * Allocate and initialize unit structure 	 */
 name|up
 operator|=
-name|emalloc
+name|emalloc_zero
 argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|up
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|up
-argument_list|,
-literal|0
-argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1633,9 +1626,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 name|pp
@@ -1652,9 +1642,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -1729,13 +1716,20 @@ name|clockdesc
 operator|=
 name|DESCRIPTION
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|up
 operator|->
 name|ident
 argument_list|,
 literal|"CHU"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|up
+operator|->
+name|ident
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -2086,11 +2080,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -2175,14 +2164,9 @@ name|peer
 decl_stmt|;
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -2192,11 +2176,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -2290,14 +2269,9 @@ decl_stmt|;
 comment|/* l_fp temp */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -2307,11 +2281,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -2591,11 +2560,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4075,14 +4039,9 @@ decl_stmt|;
 comment|/* receive buffer pointer */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -4092,11 +4051,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4176,11 +4130,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4354,11 +4303,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4370,7 +4314,7 @@ name|up
 operator|->
 name|ndx
 operator|<
-name|MINCHAR
+name|MINCHARS
 condition|)
 block|{
 name|up
@@ -4565,11 +4509,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4939,11 +4878,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -5354,7 +5288,7 @@ name|temp
 expr_stmt|;
 name|offset
 operator|.
-name|l_f
+name|l_uf
 operator|=
 literal|0
 expr_stmt|;
@@ -5747,11 +5681,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -6323,11 +6252,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -6544,11 +6468,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -6681,11 +6600,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -7162,11 +7076,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|chuunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -7271,11 +7180,9 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
-name|int
-name|refclock_chu_bs
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|NONEMPTY_TRANSLATION_UNIT
+end_macro
 
 begin_endif
 endif|#

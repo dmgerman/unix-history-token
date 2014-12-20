@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: random.c,v 1.25 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: random.c,v 1.28 2009/07/16 05:52:46 marka Exp $ */
 end_comment
 
 begin_comment
@@ -250,6 +250,12 @@ ifndef|#
 directive|ifndef
 name|HAVE_ARC4RANDOM
 comment|/* 	 * rand()'s lower bits are not random. 	 * rand()'s upper bit is zero. 	 */
+if|#
+directive|if
+name|RAND_MAX
+operator|>=
+literal|0xfffff
+comment|/* We have at least 20 bits.  Use lower 16 excluding lower most 4 */
 operator|*
 name|val
 operator|=
@@ -275,6 +281,55 @@ operator|&
 literal|0xffff0000
 operator|)
 expr_stmt|;
+elif|#
+directive|elif
+name|RAND_MAX
+operator|>=
+literal|0x7fff
+comment|/* We have at least 15 bits.  Use lower 10/11 excluding lower most 4 */
+operator|*
+name|val
+operator|=
+operator|(
+operator|(
+name|rand
+argument_list|()
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0x000007ff
+operator|)
+operator||
+operator|(
+operator|(
+name|rand
+argument_list|()
+operator|<<
+literal|7
+operator|)
+operator|&
+literal|0x003ff800
+operator|)
+operator||
+operator|(
+operator|(
+name|rand
+argument_list|()
+operator|<<
+literal|18
+operator|)
+operator|&
+literal|0xffc00000
+operator|)
+expr_stmt|;
+else|#
+directive|else
+error|#
+directive|error
+error|RAND_MAX is too small
+endif|#
+directive|endif
 else|#
 directive|else
 operator|*
@@ -299,11 +354,24 @@ name|isc_uint32_t
 name|jitter
 parameter_list|)
 block|{
+name|isc_uint32_t
+name|rnd
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|jitter
 operator|<
 name|max
+operator|||
+operator|(
+name|jitter
+operator|==
+literal|0
+operator|&&
+name|max
+operator|==
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -317,34 +385,21 @@ operator|(
 name|max
 operator|)
 return|;
-else|else
-ifndef|#
-directive|ifndef
-name|HAVE_ARC4RANDOM
+name|isc_random_get
+argument_list|(
+operator|&
+name|rnd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|max
 operator|-
-name|rand
-argument_list|()
+name|rnd
 operator|%
 name|jitter
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-name|max
-operator|-
-name|arc4random
-argument_list|()
-operator|%
-name|jitter
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -75,7 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_unixtime.h"
+file|"timevalops.h"
 end_include
 
 begin_include
@@ -372,21 +372,6 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-specifier|extern
-name|long
-name|tstouslo
-index|[]
-decl_stmt|;
-specifier|extern
-name|long
-name|tstousmid
-index|[]
-decl_stmt|;
-specifier|extern
-name|long
-name|tstoushi
-index|[]
-decl_stmt|;
 name|l_fp
 name|delt
 decl_stmt|;
@@ -2501,7 +2486,7 @@ name|msyslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"parse: INTERNAL error: bad return code of convert routine \"%s\"\n"
+literal|"parse: INTERNAL error: bad return code of convert routine \"%s\""
 argument_list|,
 name|clockformats
 index|[

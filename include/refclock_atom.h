@@ -3,6 +3,16 @@ begin_comment
 comment|/*  * Definitions for the atom driver and its friends  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|NANOSECOND
+end_undef
+
+begin_comment
+comment|/* some systems define it differently */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -12,17 +22,6 @@ end_define
 
 begin_comment
 comment|/* one second (ns) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGEGATE
-value|500000
-end_define
-
-begin_comment
-comment|/* range gate (ns) */
 end_comment
 
 begin_struct

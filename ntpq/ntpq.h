@@ -3,6 +3,23 @@ begin_comment
 comment|/*  * ntpq.h - definitions of interest to ntpq  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -18,7 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_control.h"
+file|"ntp_stdlib.h"
 end_include
 
 begin_include
@@ -31,6 +48,18 @@ begin_include
 include|#
 directive|include
 file|"ntp_malloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_assert.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_control.h"
 end_include
 
 begin_include
@@ -51,8 +80,47 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * Flags for forming descriptors.  */
+comment|/*  * Limit on packets in a single response.  Increasing this value to  * 96 will marginally speed "mrulist" operation on lossless networks  * but it has been observed to cause loss on WiFi networks and with  * an IPv6 go6.net tunnel over UDP.  That loss causes the request  * row limit to be cut in half, and it grows back very slowly to  * ensure forward progress is made and loss isn't triggered too quickly  * afterward.  While the lossless case gains only marginally with  * MAXFRAGS == 96, the lossy case is a lot slower due to the repeated  * timeouts.  Empirally, MAXFRAGS == 32 avoids most of the routine loss  * on both the WiFi and UDP v6 tunnel tests and seems a good compromise.  * This suggests some device in the path has a limit of 32 ~512 byte UDP  * packets in queue.  * Lowering MAXFRAGS may help with particularly lossy networks, but some  * ntpq commands may rely on the longtime value of 24 implicitly,  * assuming a single multipacket response will be large enough for any  * needs.  In contrast, the "mrulist" command is implemented as a series  * of requests and multipacket responses to each.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXFRAGS
+value|32
+end_define
+
+begin_comment
+comment|/*  * Error codes for internal use  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ERR_UNSPEC
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_INCOMPLETE
+value|257
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_TIMEOUT
+value|258
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_TOOMUCH
+value|259
+end_define
 
 begin_comment
 comment|/*  * Flags for forming descriptors.  */
@@ -131,6 +199,50 @@ begin_comment
 comment|/* IP version */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NTP_ADP
+value|0x6
+end_define
+
+begin_comment
+comment|/* IP address and port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_LFP
+value|0x7
+end_define
+
+begin_comment
+comment|/* NTP timestamp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_MODE
+value|0x8
+end_define
+
+begin_comment
+comment|/* peer mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_2BIT
+value|0x9
+end_define
+
+begin_comment
+comment|/* leap bits */
+end_comment
+
 begin_comment
 comment|/*  * Arguments are returned in a union  */
 end_comment
@@ -139,6 +251,7 @@ begin_typedef
 typedef|typedef
 union|union
 block|{
+specifier|const
 name|char
 modifier|*
 name|string
@@ -255,35 +368,70 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * mrulist terminal status interval  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|MAXASSOC
-value|1024
+name|MRU_REPORT_SECS
+value|5
 end_define
 
 begin_comment
-comment|/*  * Structure for translation tables between text format  * variable indices and text format.  */
+comment|/*  * var_format is used to override cooked formatting for selected vars.  */
 end_comment
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|ctl_var
+name|var_format_tag
 block|{
-name|u_short
-name|code
+specifier|const
+name|char
+modifier|*
+name|varname
 decl_stmt|;
 name|u_short
 name|fmt
 decl_stmt|;
+block|}
+name|var_format
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|chost_tag
+name|chost
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|chost_tag
+block|{
 specifier|const
 name|char
 modifier|*
-name|text
+name|name
+decl_stmt|;
+name|int
+name|fam
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|chost
+name|chosts
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -306,6 +454,45 @@ end_decl_stmt
 begin_comment
 comment|/* use old rv behavior? --old-rv */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|assoc_cache_slots
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* count of allocated array entries */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|numassoc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of cached associations */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|numhosts
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|void
+name|grow_assoc_cache
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -368,6 +555,17 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|dogetassoc
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|doquery
 parameter_list|(
 name|int
@@ -378,6 +576,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -408,6 +607,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -429,6 +629,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|nntohost
@@ -441,6 +642,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|nntohost_col
@@ -451,6 +653,19 @@ parameter_list|,
 name|size_t
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|nntohostp
+parameter_list|(
+name|sockaddr_u
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -560,24 +775,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|findvar
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|struct
-name|ctl_var
-modifier|*
-parameter_list|,
-name|int
-name|code
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|makeascii
 parameter_list|(
@@ -595,6 +792,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|trunc_left
@@ -610,6 +808,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|trunc_right

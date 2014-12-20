@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007-2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dir.c,v 1.25.332.3 2009/02/16 23:47:15 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -76,6 +76,16 @@ include|#
 directive|include
 file|"errno2result.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_comment
+comment|/* NTP change for strlcpy, strlcat */
+end_comment
 
 begin_define
 define|#
@@ -166,6 +176,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|size_t
+name|octets
+decl_stmt|;
 name|isc_result_t
 name|result
 init|=
@@ -187,14 +200,20 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy directory name.  Need to have enough space for the name, 	 * a possible path separator, the wildcard, and the final NUL. 	 */
-if|if
-condition|(
+name|octets
+operator|=
 name|strlen
 argument_list|(
 name|dirname
 argument_list|)
 operator|+
-literal|3
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|octets
+operator|+
+literal|2
 operator|>
 sizeof|sizeof
 argument_list|(
@@ -209,13 +228,15 @@ operator|(
 name|ISC_R_NOSPACE
 operator|)
 return|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|dir
 operator|->
 name|dirname
 argument_list|,
 name|dirname
+argument_list|,
+name|octets
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Append path separator, if needed, and "*". 	 */
@@ -263,7 +284,6 @@ literal|'*'
 expr_stmt|;
 operator|*
 name|p
-operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -317,6 +337,9 @@ name|dirent
 modifier|*
 name|entry
 decl_stmt|;
+name|size_t
+name|octets
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_DIR
@@ -353,6 +376,17 @@ name|ISC_R_NOMORE
 operator|)
 return|;
 comment|/* 	 * Make sure that the space for the name is long enough. 	 */
+name|octets
+operator|=
+name|strlen
+argument_list|(
+name|entry
+operator|->
+name|d_name
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
 if|if
 condition|(
 sizeof|sizeof
@@ -363,20 +397,15 @@ name|entry
 operator|.
 name|name
 argument_list|)
-operator|<=
-name|strlen
-argument_list|(
-name|entry
-operator|->
-name|d_name
-argument_list|)
+operator|<
+name|octets
 condition|)
 return|return
 operator|(
 name|ISC_R_UNEXPECTED
 operator|)
 return|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|dir
 operator|->
@@ -387,6 +416,8 @@ argument_list|,
 name|entry
 operator|->
 name|d_name
+argument_list|,
+name|octets
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Some dirents have d_namlen, but it is not portable. 	 */

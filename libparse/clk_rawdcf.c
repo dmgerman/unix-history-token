@@ -797,7 +797,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"parse: convert_rawdcf: INCOMPLETE DATA - time code only has %d bits\n"
+literal|"parse: convert_rawdcf: INCOMPLETE DATA - time code only has %d bits"
 argument_list|,
 name|size
 argument_list|)
@@ -1340,7 +1340,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"parse: convert_rawdcf: parity check FAILED for \"%s\"\n"
+literal|"parse: convert_rawdcf: parity check FAILED for \"%s\""
 argument_list|,
 name|buffer
 argument_list|)

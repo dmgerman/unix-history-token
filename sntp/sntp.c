@@ -11,13 +11,6 @@ directive|include
 file|"main.h"
 end_include
 
-begin_decl_stmt
-specifier|volatile
-name|int
-name|debug
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
@@ -37,6 +30,8 @@ argument_list|(
 name|argc
 argument_list|,
 name|argv
+argument_list|,
+name|Version
 argument_list|)
 return|;
 block|}

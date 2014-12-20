@@ -15,6 +15,12 @@ directive|define
 name|NTP_SCANNER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"ntp_config.h"
+end_include
+
 begin_comment
 comment|/*  * ntp.conf syntax is slightly irregular in that some tokens such as  * hostnames do not require quoting even if they might otherwise be  * recognized as T_ terminal tokens.  This hand-crafted lexical scanner  * uses a "followed by" value associated with each keyword to indicate  * normal scanning of the next token, forced scanning of the next token  * alone as a T_String, or forced scanning of all tokens to the end of  * the command as T_String.  * In the past the identifiers for this functionality ended in _ARG:  *  * NO_ARG	->	FOLLBY_TOKEN  * SINGLE_ARG	->	FOLLBY_STRING  * MULTIPLE_ARG	->	FOLLBY_STRINGS_TO_EOC  *  * Note that some tokens use FOLLBY_TOKEN even though they sometimes  * are followed by strings.  FOLLBY_STRING is used only when needed to  * avoid the keyword scanner matching a token where a string is needed.  *  * FOLLBY_NON_ACCEPT is an overloading of this field to distinguish  * non-accepting states (where the state number does not match a T_  * value).  */
 end_comment
@@ -185,7 +191,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
 name|config_tree
 name|cfgt
 decl_stmt|;
@@ -204,19 +209,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* The current include level */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|FILE_INFO
-modifier|*
-name|ip_file
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Pointer to the configuration file stream */
 end_comment
 
 begin_comment
@@ -281,7 +273,9 @@ begin_function_decl
 name|int
 name|yylex
 parameter_list|(
-name|void
+name|struct
+name|FILE_INFO
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -340,16 +334,6 @@ name|struct
 name|FILE_INFO
 modifier|*
 name|stream
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|push_back_char
-parameter_list|(
-name|int
-name|ch
 parameter_list|)
 function_decl|;
 end_function_decl

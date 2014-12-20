@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2005-2007  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2005-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: sha2.h,v 1.9 2007/06/19 23:47:18 tbox Exp $ */
+comment|/* $Id: sha2.h,v 1.12 2009/10/22 02:21:31 each Exp $ */
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$FreeBSD: src/sys/crypto/sha2/sha2.h,v 1.1.2.1 2001/07/03 11:01:36 ume Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/*	$KAME: sha2.h,v 1.3 2001/03/12 08:27:48 itojun Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * sha2.h  *  * Version 1.0.0beta1  *  * Written by Aaron D. Gifford<me@aarongifford.com>  *  * Copyright 2000 Aaron D. Gifford.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the copyright holder nor the names of contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) AND CONTRIBUTOR(S) ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) OR CONTRIBUTOR(S) BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sha2.h  *  * Version 1.0.0beta1  *  * Written by Aaron D. Gifford<me@aarongifford.com>  *  * Copyright 2000 Aaron D. Gifford.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the copyright holder nor the names of contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) AND CONTRIBUTOR(S) ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) OR CONTRIBUTOR(S) BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<isc/lang.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/platform.h>
 end_include
 
 begin_include
@@ -131,13 +137,40 @@ name|ISC_SHA512_DIGESTSTRINGLENGTH
 value|(ISC_SHA512_DIGESTLENGTH * 2 + 1)
 end_define
 
-begin_macro
-name|ISC_LANG_BEGINDECLS
-end_macro
-
 begin_comment
 comment|/*** SHA-256/384/512 Context Structures *******************************/
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_OPENSSLHASH
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/evp.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|EVP_MD_CTX
+name|isc_sha256_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|EVP_MD_CTX
+name|isc_sha512_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/*  * Keep buffer immediately after bitcount to preserve alignment.  */
@@ -198,6 +231,11 @@ name|isc_sha512_t
 typedef|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|isc_sha256_t
@@ -212,13 +250,21 @@ name|isc_sha384_t
 typedef|;
 end_typedef
 
-begin_comment
+begin_function_decl
+name|ISC_LANG_BEGINDECLS
 comment|/*** SHA-224/256/384/512 Function Prototypes ******************************/
-end_comment
+name|void
+name|isc_sha224_init
+parameter_list|(
+name|isc_sha224_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
-name|isc_sha224_init
+name|isc_sha224_invalidate
 parameter_list|(
 name|isc_sha224_t
 modifier|*
@@ -304,6 +350,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|isc_sha256_invalidate
+parameter_list|(
+name|isc_sha256_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|isc_sha256_update
 parameter_list|(
 name|isc_sha256_t
@@ -380,6 +436,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|isc_sha384_invalidate
+parameter_list|(
+name|isc_sha384_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|isc_sha384_update
 parameter_list|(
 name|isc_sha384_t
@@ -447,6 +513,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|isc_sha512_init
+parameter_list|(
+name|isc_sha512_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isc_sha512_invalidate
 parameter_list|(
 name|isc_sha512_t
 modifier|*

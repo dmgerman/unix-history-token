@@ -32,19 +32,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ntp_stdlib.h>
+file|"ntp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ntp_fp.h>
+file|"ntp_stdlib.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ntp.h>
+file|"lib_strbuf.h"
 end_include
 
 begin_define
@@ -137,6 +137,7 @@ name|char
 modifier|*
 name|addrinfo_to_str
 parameter_list|(
+specifier|const
 name|struct
 name|addrinfo
 modifier|*
@@ -171,10 +172,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|hostnameaddr
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|sockaddr_u
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* UTILITIES_H */
+end_comment
 
 end_unit
 

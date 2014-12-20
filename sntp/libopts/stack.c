@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * \file stack.c  *  *  Time-stamp:      "2010-07-17 10:42:27 bkorb"  *  *  This is a special option processing routine that will save the  *  argument to an option in a FIFO queue.  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (c) 1992-2011 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following md5sums:  *  *  43b91e8ca915626ed3818ffb1b71248b pkg/libopts/COPYING.gplv3  *  06a1a2e4760c90ea5e1dad8dfaac4d39 pkg/libopts/COPYING.lgplv3  *  66a5cedaf62c4b2637025f049f9b826f pkg/libopts/COPYING.mbsd  */
+comment|/**  * \file stack.c  *  *  This is a special option processing routine that will save the  *  argument to an option in a FIFO queue.  *  * @addtogroup autoopts  * @{  */
+end_comment
+
+begin_comment
+comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
 
 begin_ifdef
@@ -21,7 +25,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*=export_func  optionUnstackArg  * private:  *  * what:  Remove option args from a stack  * arg:   + tOptions* + pOpts    + program options descriptor +  * arg:   + tOptDesc* + pOptDesc + the descriptor for this arg +  *  * doc:  *  Invoked for options that are equivalenced to stacked options. =*/
+comment|/*=export_func  optionUnstackArg  * private:  *  * what:  Remove option args from a stack  * arg:   + tOptions* + opts + program options descriptor +  * arg:   + tOptDesc* + od   + the descriptor for this arg +  *  * doc:  *  Invoked for options that are equivalenced to stacked options. =*/
 end_comment
 
 begin_function
@@ -30,52 +34,46 @@ name|optionUnstackArg
 parameter_list|(
 name|tOptions
 modifier|*
-name|pOpts
+name|opts
 parameter_list|,
 name|tOptDesc
 modifier|*
-name|pOptDesc
+name|od
 parameter_list|)
 block|{
-name|int
-name|res
-decl_stmt|;
 name|tArgList
 modifier|*
-name|pAL
+name|arg_list
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|pOptDesc
-operator|->
-name|fOptState
-operator|&
-name|OPTST_RESET
-operator|)
-operator|!=
-literal|0
+name|INQUERY_CALL
+argument_list|(
+name|opts
+argument_list|,
+name|od
+argument_list|)
 condition|)
 return|return;
-name|pAL
+name|arg_list
 operator|=
 operator|(
 name|tArgList
 operator|*
 operator|)
-name|pOptDesc
+name|od
 operator|->
 name|optCookie
 expr_stmt|;
 comment|/*      *  IF we don't have any stacked options,      *  THEN indicate that we don't have any of these options      */
 if|if
 condition|(
-name|pAL
+name|arg_list
 operator|==
 name|NULL
 condition|)
 block|{
-name|pOptDesc
+name|od
 operator|->
 name|fOptState
 operator|&=
@@ -84,7 +82,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|pOptDesc
+name|od
 operator|->
 name|fOptState
 operator|&
@@ -93,7 +91,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|pOptDesc
+name|od
 operator|->
 name|fOptState
 operator||=
@@ -122,7 +120,7 @@ argument_list|(
 operator|&
 name|re
 argument_list|,
-name|pOptDesc
+name|od
 operator|->
 name|optArg
 operator|.
@@ -147,7 +145,7 @@ literal|0
 operator|,
 name|ct
 operator|=
-name|pAL
+name|arg_list
 operator|->
 name|useCt
 init|;
@@ -160,11 +158,12 @@ name|i
 operator|++
 control|)
 block|{
-name|tCC
+name|char
+specifier|const
 modifier|*
 name|pzSrc
 init|=
-name|pAL
+name|arg_list
 operator|->
 name|apzArgs
 index|[
@@ -181,6 +180,9 @@ name|pzSrc
 argument_list|,
 literal|'='
 argument_list|)
+decl_stmt|;
+name|int
+name|res
 decl_stmt|;
 if|if
 condition|(
@@ -226,7 +228,7 @@ argument_list|(
 name|pzSrc
 argument_list|)
 expr_stmt|;
-name|pAL
+name|arg_list
 operator|->
 name|useCt
 operator|--
@@ -254,7 +256,7 @@ name|dIdx
 operator|!=
 name|i
 condition|)
-name|pAL
+name|arg_list
 operator|->
 name|apzArgs
 index|[
@@ -299,7 +301,7 @@ literal|0
 operator|,
 name|ct
 operator|=
-name|pAL
+name|arg_list
 operator|->
 name|useCt
 init|;
@@ -312,11 +314,12 @@ name|i
 operator|++
 control|)
 block|{
-name|tCC
+specifier|const
+name|char
 modifier|*
 name|pzSrc
 init|=
-name|pAL
+name|arg_list
 operator|->
 name|apzArgs
 index|[
@@ -351,7 +354,7 @@ name|strcmp
 argument_list|(
 name|pzSrc
 argument_list|,
-name|pOptDesc
+name|od
 operator|->
 name|optArg
 operator|.
@@ -367,7 +370,7 @@ argument_list|(
 name|pzSrc
 argument_list|)
 expr_stmt|;
-name|pAL
+name|arg_list
 operator|->
 name|useCt
 operator|--
@@ -393,7 +396,7 @@ name|dIdx
 operator|!=
 name|i
 condition|)
-name|pAL
+name|arg_list
 operator|->
 name|apzArgs
 index|[
@@ -414,14 +417,14 @@ comment|/* WITH_LIBREGEX */
 comment|/*      *  IF we have unstacked everything,      *  THEN indicate that we don't have any of these options      */
 if|if
 condition|(
-name|pAL
+name|arg_list
 operator|->
 name|useCt
 operator|==
 literal|0
 condition|)
 block|{
-name|pOptDesc
+name|od
 operator|->
 name|fOptState
 operator|&=
@@ -430,7 +433,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|pOptDesc
+name|od
 operator|->
 name|fOptState
 operator|&
@@ -439,7 +442,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|pOptDesc
+name|od
 operator|->
 name|fOptState
 operator||=
@@ -451,10 +454,10 @@ operator|(
 name|void
 operator|*
 operator|)
-name|pAL
+name|arg_list
 argument_list|)
 expr_stmt|;
-name|pOptDesc
+name|od
 operator|->
 name|optCookie
 operator|=
@@ -587,6 +590,9 @@ operator|*
 argument_list|)
 operator|*
 operator|(
+operator|(
+name|size_t
+operator|)
 name|pAL
 operator|->
 name|allocCt
@@ -649,7 +655,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionStackArg  * private:  *  * what:  put option args on a stack  * arg:   + tOptions* + pOpts    + program options descriptor +  * arg:   + tOptDesc* + pOptDesc + the descriptor for this arg +  *  * doc:  *  Keep an entry-ordered list of option arguments. =*/
+comment|/*=export_func  optionStackArg  * private:  *  * what:  put option args on a stack  * arg:   + tOptions* + opts + program options descriptor +  * arg:   + tOptDesc* + od   + the descriptor for this arg +  *  * doc:  *  Keep an entry-ordered list of option arguments. =*/
 end_comment
 
 begin_function
@@ -658,11 +664,11 @@ name|optionStackArg
 parameter_list|(
 name|tOptions
 modifier|*
-name|pOpts
+name|opts
 parameter_list|,
 name|tOptDesc
 modifier|*
-name|pOD
+name|od
 parameter_list|)
 block|{
 name|char
@@ -671,8 +677,18 @@ name|pz
 decl_stmt|;
 if|if
 condition|(
+name|INQUERY_CALL
+argument_list|(
+name|opts
+argument_list|,
+name|od
+argument_list|)
+condition|)
+return|return;
+if|if
+condition|(
 operator|(
-name|pOD
+name|od
 operator|->
 name|fOptState
 operator|&
@@ -684,13 +700,13 @@ condition|)
 block|{
 name|tArgList
 modifier|*
-name|pAL
+name|arg_list
 init|=
 operator|(
 name|void
 operator|*
 operator|)
-name|pOD
+name|od
 operator|->
 name|optCookie
 decl_stmt|;
@@ -699,14 +715,14 @@ name|ix
 decl_stmt|;
 if|if
 condition|(
-name|pAL
+name|arg_list
 operator|==
 name|NULL
 condition|)
 return|return;
 name|ix
 operator|=
-name|pAL
+name|arg_list
 operator|->
 name|useCt
 expr_stmt|;
@@ -719,7 +735,7 @@ literal|0
 condition|)
 name|AGFREE
 argument_list|(
-name|pAL
+name|arg_list
 operator|->
 name|apzArgs
 index|[
@@ -729,7 +745,7 @@ argument_list|)
 expr_stmt|;
 name|AGFREE
 argument_list|(
-name|pAL
+name|arg_list
 argument_list|)
 expr_stmt|;
 block|}
@@ -737,7 +753,7 @@ else|else
 block|{
 if|if
 condition|(
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
@@ -750,7 +766,7 @@ name|AGDUPSTR
 argument_list|(
 name|pz
 argument_list|,
-name|pOD
+name|od
 operator|->
 name|optArg
 operator|.
@@ -763,7 +779,7 @@ name|addArgListEntry
 argument_list|(
 operator|&
 operator|(
-name|pOD
+name|od
 operator|->
 name|optCookie
 operator|)
@@ -780,7 +796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/stack.c */
+comment|/** @}  *  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/stack.c */
 end_comment
 
 end_unit

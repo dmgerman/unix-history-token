@@ -174,12 +174,40 @@ name|HAVE_SIGNALED_IO
 argument_list|)
 end_if
 
+begin_function_decl
+specifier|static
+name|RETSIGTYPE
+name|sigio_handler
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* consistency safegurad to catch BLOCK/UNBLOCK oversights */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
 name|sigio_block_count
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* main inputhandler to be called on SIGIO */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|input_handler_t
+modifier|*
+name|input_handler_callback
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -210,167 +238,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|extern
-name|void
-name|input_handler
-parameter_list|(
-name|l_fp
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * SIGPOLL and SIGIO ROUTINES.  */
-end_comment
-
-begin_comment
-comment|/*  * Some systems (MOST) define SIGPOLL == SIGIO, others SIGIO == SIGPOLL, and  * a few have separate SIGIO and SIGPOLL signals.  This code checks for the  * SIGIO == SIGPOLL case at compile time.  * Do not define USE_SIGPOLL or USE_SIGIO.  * these are interal only to iosignal.c!  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_SIGPOLL
-argument_list|)
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|USE_SIGPOLL
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_SIGIO
-argument_list|)
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|USE_SIGIO
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_TTY_SIGPOLL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|USE_UDP_SIGPOLL
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|USE_SIGPOLL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|USE_TTY_SIGPOLL
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|USE_UDP_SIGPOLL
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|USE_SIGIO
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_SIGIO
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|USE_SIGPOLL
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|SIGIO
-operator|==
-name|SIGPOLL
-end_if
-
-begin_define
-define|#
-directive|define
-name|USE_SIGIO
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|USE_SIGPOLL
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SIGIO == SIGPOLL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USE_SIGIO&& USE_SIGIO */
 end_comment
 
 begin_comment
@@ -486,7 +355,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl(FIOSSAIOOWN) fails for clock I/O: %m"
+literal|"ioctl(FIOSSAIOOWN) fails for clock I/O: %m - EXITING"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -523,7 +392,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl(FIOSNBIO) fails for clock I/O: %m"
+literal|"ioctl(FIOSNBIO) fails for clock I/O: %m - EXITING"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -559,7 +428,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl(FIOSSAIOSTAT) fails for clock I/O: %m"
+literal|"ioctl(FIOSSAIOSTAT) fails for clock I/O: %m - EXITING"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -869,7 +738,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"init_socket_sig: ioctl(I_SETSIG, S_INPUT) failed: %m"
+literal|"init_socket_sig: ioctl(I_SETSIG, S_INPUT) failed: %m - EXITING"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -926,7 +795,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl(FIOASYNC) fails: %m"
+literal|"ioctl(FIOASYNC) fails: %m - EXITING"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -969,7 +838,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"fcntl(F_GETFL) fails: %m"
+literal|"fcntl(F_GETFL) fails: %m - EXITING"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -999,7 +868,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"fcntl(...|FASYNC) fails: %m"
+literal|"fcntl(...|FASYNC) fails: %m - EXITING"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1065,7 +934,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl(SIOCSPGRP) fails: %m"
+literal|"ioctl(SIOCSPGRP) fails: %m - EXITING"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1105,7 +974,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl(FIOSETOWN) fails: %m"
+literal|"ioctl(FIOSETOWN) fails: %m - EXITING"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1140,7 +1009,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"fcntl(F_SETOWN) fails: %m"
+literal|"fcntl(F_SETOWN) fails: %m - EXITING"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1165,6 +1034,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|RETSIGTYPE
 name|sigio_handler
 parameter_list|(
@@ -1211,10 +1081,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
-name|input_handler
+name|INSIST
+argument_list|(
+name|input_handler_callback
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+call|(
+modifier|*
+name|input_handler_callback
+call|)
 argument_list|(
 operator|&
 name|ts
@@ -1266,9 +1143,26 @@ begin_function
 name|void
 name|set_signal
 parameter_list|(
-name|void
+name|input_handler_t
+modifier|*
+name|input
 parameter_list|)
 block|{
+name|INSIST
+argument_list|(
+name|input
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|input_handler_callback
+operator|=
+name|input
+expr_stmt|;
+name|using_sigio
+operator|=
+name|TRUE
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_SIGIO
@@ -2039,9 +1933,26 @@ begin_function
 name|void
 name|set_signal
 parameter_list|(
-name|void
+name|input_handler_t
+modifier|*
+name|input
 parameter_list|)
 block|{
+name|INSIST
+argument_list|(
+name|input
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|input_handler_callback
+operator|=
+name|input
+expr_stmt|;
+name|using_sigio
+operator|=
+name|TRUE
+expr_stmt|;
 operator|(
 name|void
 operator|)

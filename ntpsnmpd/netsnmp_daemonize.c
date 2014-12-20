@@ -657,6 +657,9 @@ name|i
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|saved_errno
+decl_stmt|;
 name|DEBUGMSGT
 argument_list|(
 operator|(
@@ -666,8 +669,8 @@ literal|"deamonizing...\n"
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|HAVE_WORKING_FORK
 comment|/*      * Fork to return control to the invoking process and to      * guarantee that we aren't a process group leader.      */
 name|i
@@ -683,6 +686,10 @@ literal|0
 condition|)
 block|{
 comment|/* Parent. */
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 name|DEBUGMSGT
 argument_list|(
 operator|(
@@ -709,7 +716,7 @@ argument_list|,
 literal|"first fork failed (errno %d) in "
 literal|"netsnmp_daemonize()\n"
 argument_list|,
-name|errno
+name|saved_errno
 argument_list|)
 expr_stmt|;
 return|return
@@ -763,6 +770,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 name|DEBUGMSGT
 argument_list|(
 operator|(
@@ -789,7 +800,7 @@ argument_list|,
 literal|"second fork failed (errno %d) in "
 literal|"netsnmp_daemonize()\n"
 argument_list|,
-name|errno
+name|saved_errno
 argument_list|)
 expr_stmt|;
 block|}

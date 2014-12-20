@@ -60,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_unixtime.h"
+file|"timevalops.h"
 end_include
 
 begin_include

@@ -152,7 +152,7 @@ if|if
 condition|(
 name|size
 operator|!=
-literal|16
+literal|15
 operator|||
 name|buffer
 index|[

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2008, 2009  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: portset.h,v 1.3.90.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: portset.h,v 1.6 2009/06/25 05:28:34 marka Exp $ */
 end_comment
 
 begin_comment
@@ -201,7 +201,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ISC_NETADDR_H */
+comment|/* ISC_PORTSET_H */
 end_comment
 
 end_unit

@@ -112,6 +112,12 @@ directive|include
 file|"ntp_rfc2553.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ntp_malloc.h"
+end_include
+
 begin_typedef
 typedef|typedef
 union|union
@@ -533,7 +539,7 @@ parameter_list|(
 name|psau
 parameter_list|)
 define|\
-value|memset((psau), 0, sizeof(*(psau)))
+value|ZERO(*(psau))
 end_define
 
 begin_comment
@@ -791,12 +797,6 @@ begin_comment
 comment|/* 255.255.0.0 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REFCLOCK
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -807,26 +807,6 @@ parameter_list|)
 define|\
 value|(IS_IPV4(srcadr)&&					\ 	 (SRCADR(srcadr)& REFCLOCK_MASK) == REFCLOCK_ADDR)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ISREFCLOCKADR
-parameter_list|(
-name|srcadr
-parameter_list|)
-value|(0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Macro for checking for invalid addresses.  This is really, really  * gross, but is needed so no one configures a host on net 127 now that  * we're encouraging it the the configuration file.  */

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  This file defines the string_tokenize interface  * Time-stamp:      "2010-07-17 10:40:26 bkorb"  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (c) 1992-2011 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following md5sums:  *  *  43b91e8ca915626ed3818ffb1b71248b pkg/libopts/COPYING.gplv3  *  06a1a2e4760c90ea5e1dad8dfaac4d39 pkg/libopts/COPYING.lgplv3  *  66a5cedaf62c4b2637025f049f9b826f pkg/libopts/COPYING.mbsd  */
+comment|/** \file tokenize.c  *  *  Tokenize a string, accommodating quoted strings.  *  * @addtogroup autoopts  * @{  */
+end_comment
+
+begin_comment
+comment|/*  *  This file defines the string_tokenize interface  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
 
 begin_include
@@ -341,14 +345,14 @@ operator|++
 name|pSrc
 operator|)
 operator|==
-literal|'\n'
+name|NL
 condition|)
 operator|++
 name|pSrc
 expr_stmt|;
 continue|continue;
 case|case
-literal|'\n'
+name|NL
 case|:
 operator|++
 name|pSrc
@@ -436,16 +440,12 @@ goto|goto
 name|enoent_res
 goto|;
 comment|/*      *  Trim leading white space.  Use "ENOENT" and a NULL return to indicate      *  an empty string was passed.      */
-while|while
-condition|(
-name|IS_WHITESPACE_CHAR
+name|str
+operator|=
+name|SPN_WHITESPACE_CHARS
 argument_list|(
-operator|*
 name|str
 argument_list|)
-condition|)
-name|str
-operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -459,14 +459,11 @@ name|enoent_res
 goto|;
 comment|/*      *  Take an approximate count of tokens.  If no quoted strings are used,      *  it will be accurate.  If quoted strings are used, it will be a little      *  high and we'll squander the space for a few extra pointers.      */
 block|{
-name|cc_t
+name|char
+specifier|const
 modifier|*
 name|pz
 init|=
-operator|(
-name|cc_t
-operator|*
-operator|)
 name|str
 decl_stmt|;
 do|do
@@ -474,36 +471,21 @@ block|{
 name|max_token_ct
 operator|++
 expr_stmt|;
-while|while
-condition|(
-operator|!
-name|IS_WHITESPACE_CHAR
+name|pz
+operator|=
+name|BRK_WHITESPACE_CHARS
 argument_list|(
-operator|*
-operator|++
+name|pz
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|pz
+operator|=
+name|SPN_WHITESPACE_CHARS
+argument_list|(
 name|pz
 argument_list|)
-condition|)
-if|if
-condition|(
-operator|*
-name|pz
-operator|==
-name|NUL
-condition|)
-goto|goto
-name|found_nul
-goto|;
-while|while
-condition|(
-name|IS_WHITESPACE_CHAR
-argument_list|(
-operator|*
-name|pz
-argument_list|)
-condition|)
-name|pz
-operator|++
 expr_stmt|;
 block|}
 do|while
@@ -514,8 +496,6 @@ operator|!=
 name|NUL
 condition|)
 do|;
-name|found_nul
-label|:
 name|res
 operator|=
 name|malloc
@@ -526,17 +506,19 @@ operator|*
 name|res
 argument_list|)
 operator|+
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|pz
 operator|-
-operator|(
-name|cc_t
-operator|*
-operator|)
 name|str
-operator|)
+argument_list|)
 operator|+
 operator|(
+operator|(
+name|size_t
+operator|)
 name|max_token_ct
 operator|*
 sizeof|sizeof
@@ -695,16 +677,15 @@ condition|)
 block|{
 name|found_white_space
 label|:
-while|while
-condition|(
-name|IS_WHITESPACE_CHAR
-argument_list|(
-operator|*
-operator|++
 name|str
+operator|=
+name|SPN_WHITESPACE_CHARS
+argument_list|(
+name|str
+operator|+
+literal|1
 argument_list|)
-condition|)
-empty_stmt|;
+expr_stmt|;
 break|break;
 block|}
 switch|switch
@@ -816,6 +797,10 @@ name|pzDest
 operator|++
 operator|)
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 expr_stmt|;
 block|}
@@ -1023,7 +1008,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/tokenize.c */
+comment|/** @}  *  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/tokenize.c */
 end_comment
 
 end_unit

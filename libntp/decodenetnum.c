@@ -207,7 +207,7 @@ comment|/* two or more colons */
 else|else
 block|{
 comment|/* one colon */
-name|strncpy
+name|strlcpy
 argument_list|(
 name|name
 argument_list|,
@@ -218,18 +218,6 @@ argument_list|(
 name|name
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|name
-index|[
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|cp
 operator|=
@@ -374,6 +362,12 @@ argument_list|(
 operator|*
 name|netnum
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ZERO
+argument_list|(
+operator|*
+name|netnum
 argument_list|)
 expr_stmt|;
 name|memcpy

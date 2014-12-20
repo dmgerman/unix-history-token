@@ -297,29 +297,29 @@ comment|/* maximum dispersion (fp 64) */
 end_comment
 
 begin_comment
-comment|/*  * Some defaults  */
+comment|/*  * No less than 2s between requests to a server to stay within ntpd's  * default "discard minimum 1" (and 1s enforcement slop).  That is  * enforced only if the nondefault limited restriction is in place, such  * as with "restrict ... limited" and "restrict ... kod limited".  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MINTIMEOUT
-value|(2 * TIMER_HZ)
+value|(1 * TIMER_HZ)
 end_define
 
 begin_comment
-comment|/* 2s min. between packets */
+comment|/* 1s min. between packets */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DEFTIMEOUT
-value|MINTIMEOUT
+value|(2 * TIMER_HZ)
 end_define
 
 begin_comment
-comment|/*   (to the same server) */
+comment|/* 2s by default */
 end_comment
 
 begin_define

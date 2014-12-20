@@ -1,36 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Define string ops: strchr strrchr memcmp memmove memset   */
+comment|/*  * Define string ops: strchr strrchr memcmp memmove memset  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ntp_string_h
+name|NTP_STRING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ntp_string_h
+name|NTP_STRING_H
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<config.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -82,92 +65,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|STDC_HEADERS
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_STRCHR
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|strchr
-value|index
-end_define
-
-begin_define
-define|#
-directive|define
-name|strrchr
-value|rindex
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__GNUC__
-end_ifndef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|strchr
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strrchr
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_MEMCPY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NTP_NEED_BOPS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* STDC_HEADERS */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -281,7 +178,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _ntp_string_h */
+comment|/* NTP_STRING_H */
 end_comment
 
 end_unit

@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -33,6 +39,69 @@ directive|include
 file|<setjmp.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FCNTL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<mswsock.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<isc/net.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/result.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -43,12 +112,6 @@ begin_include
 include|#
 directive|include
 file|"ntp_select.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_io.h"
 end_include
 
 begin_include
@@ -69,17 +132,28 @@ directive|include
 file|"ntp_lineedit.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|"isc/net.h"
+file|"openssl/evp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"isc/result.h"
+file|"openssl/objects.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -98,33 +172,6 @@ include|#
 directive|include
 file|"ntpdc-opts.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYS_WINNT
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<Mswsock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<io.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYS_WINNT */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -1592,21 +1639,6 @@ value|(*(a) == *(b)&& strcmp((a), (b)) == 0)
 end_define
 
 begin_comment
-comment|/*  * For converting time stamps to dates  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JAN_1970
-value|2208988800
-end_define
-
-begin_comment
-comment|/* 1970 - 1900 in seconds */
-end_comment
-
-begin_comment
 comment|/*  * Jump buffer for longjumping back to the command level  */
 end_comment
 
@@ -1656,13 +1688,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|progname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|volatile
-name|int
-name|debug
 decl_stmt|;
 end_decl_stmt
 
@@ -1774,10 +1799,6 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|ntp_optind
-decl_stmt|;
 name|delay_time
 operator|.
 name|l_ui
@@ -1811,6 +1832,9 @@ argument_list|()
 expr_stmt|;
 comment|/* sets up ipv4_works, ipv6_works */
 name|ssl_applink
+argument_list|()
+expr_stmt|;
+name|init_auth
 argument_list|()
 expr_stmt|;
 comment|/* Check to see if we have IPv6. Otherwise default to IPv4 */
@@ -1927,12 +1951,7 @@ block|}
 block|}
 name|debug
 operator|=
-name|DESC
-argument_list|(
-name|DEBUG_LEVEL
-argument_list|)
-operator|.
-name|optOccCt
+name|OPT_VALUE_SET_DEBUG_LEVEL
 expr_stmt|;
 if|if
 condition|(
@@ -2068,12 +2087,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|ai_fam_templ = ai_fam_default; 	while ((c = ntp_getopt(argc, argv, "46c:dilnps")) != EOF) 	    switch (c) { 		case '4': 		    ai_fam_templ = AF_INET; 		    break; 		case '6': 		    ai_fam_templ = AF_INET6; 		    break; 		case 'c': 		    ADDCMD(ntp_optarg); 		    break; 		case 'd': 		    ++debug; 		    break; 		case 'i': 		    interactive = 1; 		    break; 		case 'l': 		    ADDCMD("listpeers"); 		    break; 		case 'n': 		    showhostnames = 0; 		    break; 		case 'p': 		    ADDCMD("peers"); 		    break; 		case 's': 		    ADDCMD("dmpeers"); 		    break; 		default: 		    errflg++; 		    break; 	    }  	if (errflg) { 		(void) fprintf(stderr, 			       "usage: %s [-46dilnps] [-c cmd] host ...\n", 			       progname); 		exit(2); 	}  	if (ntp_optind == argc) { 		ADDHOST(DEFHOST); 	} else { 		for (; ntp_optind< argc; ntp_optind++) 		    ADDHOST(argv[ntp_optind]); 	}  	if (numcmds == 0&& interactive == 0&& isatty(fileno(stdin))&& isatty(fileno(stderr))) { 		interactive = 1; 	}
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|SYS_WINNT
@@ -2257,6 +2270,12 @@ name|ai
 init|=
 name|NULL
 decl_stmt|;
+name|sockaddr_u
+name|addr
+decl_stmt|;
+name|size_t
+name|octets
+decl_stmt|;
 specifier|register
 specifier|const
 name|char
@@ -2347,29 +2366,21 @@ return|;
 block|}
 block|}
 comment|/* 	 * First try to resolve it as an ip address and if that fails, 	 * do a fullblown (dns) lookup. That way we only use the dns 	 * when it is needed and work around some implementations that 	 * will return an "IPv4-mapped IPv6 address" address if you 	 * give it an IPv4 address to lookup. 	 */
-name|strcpy
+name|strlcpy
 argument_list|(
 name|service
 argument_list|,
 literal|"ntp"
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|hints
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|addrinfo
+name|service
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ZERO
+argument_list|(
+name|hints
 argument_list|)
 expr_stmt|;
 name|hints
@@ -2497,9 +2508,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -2528,11 +2536,42 @@ literal|0
 return|;
 block|}
 comment|/*  	 * getaddrinfo() has returned without error so ai should not  	 * be NULL. 	 */
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|ai
 operator|!=
 name|NULL
+argument_list|)
+expr_stmt|;
+name|ZERO
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
+name|octets
+operator|=
+name|min
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
+argument_list|,
+name|ai
+operator|->
+name|ai_addrlen
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|addr
+argument_list|,
+name|ai
+operator|->
+name|ai_addr
+argument_list|,
+name|octets
 argument_list|)
 expr_stmt|;
 if|if
@@ -2543,38 +2582,24 @@ name|ai_canonname
 operator|==
 name|NULL
 condition|)
-block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|temphost
 argument_list|,
 name|stoa
 argument_list|(
-operator|(
-name|sockaddr_u
-operator|*
-operator|)
-name|ai
-operator|->
-name|ai_addr
+operator|&
+name|addr
 argument_list|)
 argument_list|,
-name|LENHOSTNAME
+sizeof|sizeof
+argument_list|(
+name|temphost
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|temphost
-index|[
-name|LENHOSTNAME
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
 else|else
-block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|temphost
 argument_list|,
@@ -2582,19 +2607,12 @@ name|ai
 operator|->
 name|ai_canonname
 argument_list|,
-name|LENHOSTNAME
+sizeof|sizeof
+argument_list|(
+name|temphost
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|temphost
-index|[
-name|LENHOSTNAME
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|debug
@@ -2628,9 +2646,6 @@ argument_list|,
 name|currenthost
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|closesocket
 argument_list|(
 name|sockfd
@@ -2641,32 +2656,28 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|currenthost
 argument_list|,
 name|temphost
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|currenthost
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* port maps to the same in both families */
 name|s_port
 operator|=
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-name|ai
-operator|->
-name|ai_addr
-operator|)
-operator|->
-name|sin6_port
+name|NSRCPORT
+argument_list|(
+operator|&
+name|addr
+argument_list|)
 expr_stmt|;
+empty_stmt|;
 ifdef|#
 directive|ifdef
 name|SYS_VXWORKS
@@ -2800,6 +2811,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* SYS_WINNT */
 name|sockfd
 operator|=
 name|socket
@@ -2836,40 +2850,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-name|sockfd
-operator|=
-name|socket
-argument_list|(
-name|ai
-operator|->
-name|ai_family
-argument_list|,
-name|SOCK_DGRAM
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sockfd
-operator|==
-operator|-
-literal|1
-condition|)
-name|error
-argument_list|(
-literal|"socket"
-argument_list|,
-literal|""
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* SYS_WINNT */
 ifdef|#
 directive|ifdef
 name|NEED_RCVBUF_SLOP
@@ -2947,6 +2927,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 else|#
 directive|else
 if|if
@@ -2955,11 +2936,6 @@ name|connect
 argument_list|(
 name|sockfd
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
 name|ai
 operator|->
 name|ai_addr
@@ -2972,6 +2948,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 endif|#
 directive|endif
 comment|/* SYS_VXWORKS */
@@ -2984,6 +2961,13 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|freeaddrinfo
 argument_list|(
 name|ai
@@ -3005,17 +2989,8 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* XXX ELIMINATE sendpkt similar in ntpq.c, ntpdc.c, ntp_io.c, ntptrace.c */
-end_comment
-
-begin_comment
 comment|/*  * sendpkt - send a packet to the remote host  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|sendpkt
@@ -3063,13 +3038,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * growpktdata - grow the packet data area  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|growpktdata
@@ -3077,13 +3046,23 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|size_t
+name|priorsz
+decl_stmt|;
+name|priorsz
+operator|=
+operator|(
+name|size_t
+operator|)
+name|pktdatasize
+expr_stmt|;
 name|pktdatasize
 operator|+=
 name|INCDATASIZE
 expr_stmt|;
 name|pktdata
 operator|=
-name|erealloc
+name|erealloc_zero
 argument_list|(
 name|pktdata
 argument_list|,
@@ -3091,16 +3070,12 @@ operator|(
 name|size_t
 operator|)
 name|pktdatasize
+argument_list|,
+name|priorsz
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * getresponse - get a (series of) response packet(s) and return the data  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|getresponse
@@ -3216,16 +3191,9 @@ operator|=
 literal|999
 expr_stmt|;
 comment|/* too big to be a sequence number */
-name|memset
+name|ZERO
 argument_list|(
 name|haveseq
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|haveseq
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|FD_ZERO
@@ -3801,7 +3769,7 @@ condition|(
 operator|!
 name|firstpkt
 operator|&&
-name|esize
+name|size
 operator|!=
 operator|*
 name|rsize
@@ -3948,6 +3916,8 @@ name|tmp_data
 operator|=
 name|rpkt
 operator|.
+name|u
+operator|.
 name|data
 expr_stmt|;
 for|for
@@ -3980,13 +3950,11 @@ name|tmp_data
 operator|+=
 name|size
 expr_stmt|;
-name|memset
+name|zero_mem
 argument_list|(
 name|datap
 operator|+
 name|size
-argument_list|,
-literal|0
 argument_list|,
 name|pad
 argument_list|)
@@ -4037,13 +4005,7 @@ return|return
 name|INFO_OKAY
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * sendrequest - format and send a request packet  *  * Historically, ntpdc has used a fixed-size request packet regardless  * of the actual payload size.  When authenticating, the timestamp, key  * ID, and digest have been placed just before the end of the packet.  * With the introduction in late 2009 of support for authenticated  * ntpdc requests using larger 20-octet digests (vs. 16 for MD5), we  * come up four bytes short.  *  * To maintain interop while allowing for larger digests, the behavior  * is unchanged when using 16-octet digests.  For larger digests, the  * timestamp, key ID, and digest are placed immediately following the  * request payload, with the overall packet size variable.  ntpd can  * distinguish 16-octet digests by the overall request size being  * REQ_LEN_NOMAC + 4 + 16 with the auth bit enabled.  When using a  * longer digest, that request size should be avoided.  *  * With the form used with 20-octet and larger digests, the timestamp,  * key ID, and digest are located by ntpd relative to the start of the  * packet, and the size of the digest is then implied by the packet  * size.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|sendrequest
@@ -4095,17 +4057,9 @@ name|char
 modifier|*
 name|pass
 decl_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|qpkt
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
+name|ZERO
 argument_list|(
 name|qpkt
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|qpkt
@@ -4157,6 +4111,8 @@ block|{
 name|memcpy
 argument_list|(
 name|qpkt
+operator|.
+name|u
 operator|.
 name|data
 argument_list|,
@@ -4530,13 +4486,7 @@ name|maclen
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * doquery - send a request and process the response  */
-end_comment
-
-begin_function
 name|int
 name|doquery
 parameter_list|(
@@ -4891,7 +4841,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"***Server implementation incompatable with our own\n"
+literal|"***Server implementation incompatible with our own\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4999,13 +4949,7 @@ return|return
 name|res
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * getcmds - read commands from the standard input and execute them  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|getcmds
@@ -5065,23 +5009,11 @@ name|ntp_readline_uninit
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|SYS_WINNT
-end_ifndef
-
-begin_comment
 comment|/* Under NT cannot handle SIGINT, WIN32 spawns a handler */
-end_comment
-
-begin_comment
 comment|/*  * abortcmd - catch interrupts and abort the current command  */
-end_comment
-
-begin_function
 specifier|static
 name|RETSIGTYPE
 name|abortcmd
@@ -5131,22 +5063,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* SYS_WINNT */
-end_comment
-
-begin_comment
 comment|/*  * docmd - decode the command line and execute a command  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|docmd
@@ -5195,6 +5115,31 @@ operator|=
 name|ai_fam_default
 expr_stmt|;
 comment|/* 	 * Tokenize the command line.  If nothing on it, return. 	 */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|cmdline
+argument_list|)
+operator|>=
+name|MAXLINE
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"***Command ignored, more than %d characters:\n%s\n"
+argument_list|,
+name|MAXLINE
+operator|-
+literal|1
+argument_list|,
+name|cmdline
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|tokenize
 argument_list|(
 name|cmdline
@@ -5700,13 +5645,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * tokenize - turn a command line into tokens  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|tokenize
@@ -5835,13 +5774,7 @@ literal|'\0'
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * findcmd - find a command in a command description table  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|findcmd
@@ -6056,13 +5989,7 @@ return|return
 name|nmatch
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * getarg - interpret an argument token  *  * string is always set.  * type is set to the decoded type.  *  * return:	 0 - failure  *		 1 - success  *		-1 - skip to next token  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|getarg
@@ -6097,17 +6024,10 @@ name|digits
 init|=
 literal|"0123456789"
 decl_stmt|;
-name|memset
-argument_list|(
-name|argp
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
+name|ZERO
 argument_list|(
 operator|*
 name|argp
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|argp
@@ -6410,13 +6330,7 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * getnetnum - given a host name, return its net number  *	       and (optional) full name  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|getnetnum
@@ -6573,8 +6487,7 @@ name|ai_canonname
 operator|!=
 name|NULL
 condition|)
-block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|fullhost
 argument_list|,
@@ -6585,18 +6498,7 @@ argument_list|,
 name|LENHOSTNAME
 argument_list|)
 expr_stmt|;
-name|fullhost
-index|[
-name|LENHOSTNAME
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
 else|else
-block|{
 name|getnameinfo
 argument_list|(
 operator|&
@@ -6621,7 +6523,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 return|return
 literal|1
 return|;
@@ -6639,13 +6540,8 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * nntohost - convert network number to host name.  This routine enforces  *	       the showhostnames setting.  */
-end_comment
-
-begin_function
+specifier|const
 name|char
 modifier|*
 name|nntohost
@@ -6659,6 +6555,11 @@ if|if
 condition|(
 operator|!
 name|showhostnames
+operator|||
+name|SOCK_UNSPEC
+argument_list|(
+name|netnum
+argument_list|)
 condition|)
 return|return
 name|stoa
@@ -6666,6 +6567,7 @@ argument_list|(
 name|netnum
 argument_list|)
 return|;
+elseif|else
 if|if
 condition|(
 name|ISREFCLOCKADR
@@ -6679,6 +6581,7 @@ argument_list|(
 name|netnum
 argument_list|)
 return|;
+else|else
 return|return
 name|socktohost
 argument_list|(
@@ -6686,17 +6589,8 @@ name|netnum
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Finally, the built in command handlers  */
-end_comment
-
-begin_comment
 comment|/*  * help - tell about commands, or details of a particular command  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|help
@@ -6830,9 +6724,6 @@ operator|*
 operator|)
 name|list
 argument_list|,
-operator|(
-name|size_t
-operator|)
 name|words
 argument_list|,
 sizeof|sizeof
@@ -6944,8 +6835,14 @@ name|fp
 argument_list|,
 literal|"%-*.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|col
 argument_list|,
+operator|(
+name|int
+operator|)
 name|col
 operator|-
 literal|1
@@ -7049,13 +6946,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * helpsort - do hostname qsort comparisons  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|helpsort
@@ -7100,13 +6991,7 @@ name|name2
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * printusage - print usage information for a command  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|printusage
@@ -7261,13 +7146,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * timeout - set time out time  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|timeout
@@ -7365,13 +7244,7 @@ literal|1000
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * my_delay - set delay for auth requests  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|my_delay
@@ -7520,13 +7393,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * host - set the host we are dealing with.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|host
@@ -7733,13 +7600,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * keyid - get a keyid to use for authenticating requests  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|keyid
@@ -7837,13 +7698,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * keytype - get type of key to use for authenticating requests  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|keytype
@@ -7948,24 +7803,18 @@ endif|#
 directive|endif
 return|return;
 block|}
-end_function
-
-begin_expr_stmt
 name|info_auth_keytype
 operator|=
 name|key_type
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|info_auth_hashlen
 operator|=
 name|digest_len
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * passwd - get an authentication key  */
 end_comment
 
@@ -7974,7 +7823,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|void
 name|passwd
 parameter_list|(
@@ -8028,20 +7877,14 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
-name|interactive
+name|pcmd
+operator|->
+name|nargs
+operator|>=
+literal|1
 condition|)
-block|{
-name|authusekey
-argument_list|(
-name|info_auth_keyid
-argument_list|,
-name|info_auth_keytype
-argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
+name|pass
+operator|=
 name|pcmd
 operator|->
 name|argval
@@ -8050,16 +7893,7 @@ literal|0
 index|]
 operator|.
 name|string
-argument_list|)
 expr_stmt|;
-name|authtrust
-argument_list|(
-name|info_auth_keyid
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 block|{
 name|pass
@@ -8071,14 +7905,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+literal|'\0'
+operator|==
 operator|*
 name|pass
-operator|==
-literal|'\0'
 condition|)
-operator|(
-name|void
-operator|)
+block|{
 name|fprintf
 argument_list|(
 name|fp
@@ -8086,8 +7918,9 @@ argument_list|,
 literal|"Password unchanged\n"
 argument_list|)
 expr_stmt|;
-else|else
-block|{
+return|return;
+block|}
+block|}
 name|authusekey
 argument_list|(
 name|info_auth_keyid
@@ -8108,8 +7941,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 

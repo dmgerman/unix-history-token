@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -157,7 +163,7 @@ name|netaddr
 argument_list|)
 condition|)
 comment|/* assume the typical /64 subnet size */
-name|memset
+name|zero_mem
 argument_list|(
 operator|&
 name|NSRCADR6
@@ -167,8 +173,6 @@ argument_list|)
 index|[
 literal|8
 index|]
-argument_list|,
-literal|0
 argument_list|,
 literal|8
 argument_list|)

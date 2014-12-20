@@ -37,6 +37,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -409,10 +415,7 @@ name|s
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|t
 argument_list|,
@@ -939,8 +942,7 @@ modifier|*
 name|str
 init|=
 operator|(
-expr|struct
-name|stroptions
+name|void
 operator|*
 operator|)
 name|mp
@@ -1738,8 +1740,7 @@ case|:
 name|iocp
 operator|=
 operator|(
-expr|struct
-name|iocblk
+name|void
 operator|*
 operator|)
 name|mp
@@ -1845,10 +1846,15 @@ name|b_cont
 operator|=
 name|datap
 expr_stmt|;
+comment|/* (void *) quiets cast alignment warning */
 operator|*
 operator|(
 expr|struct
 name|ppsclockev
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|datap
@@ -2020,7 +2026,7 @@ modifier|*
 name|dct
 init|=
 operator|(
-name|parsectl_t
+name|void
 operator|*
 operator|)
 name|mp
@@ -3829,8 +3835,7 @@ modifier|*
 name|za
 init|=
 operator|(
-expr|struct
-name|asyncline
+name|void
 operator|*
 operator|)
 name|zs

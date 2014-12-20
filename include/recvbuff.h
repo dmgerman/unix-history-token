@@ -11,23 +11,6 @@ directive|define
 name|RECVBUFF_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<config.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -37,7 +20,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_fp.h"
+file|"ntp_net.h"
 end_include
 
 begin_include
@@ -204,12 +187,10 @@ begin_struct
 struct|struct
 name|recvbuf
 block|{
-name|ISC_LINK
-argument_list|(
-argument|recvbuf_t
-argument_list|)
+name|recvbuf_t
+modifier|*
 name|link
-expr_stmt|;
+decl_stmt|;
 comment|/* next in list */
 union|union
 block|{
@@ -282,7 +263,7 @@ name|recvbuf
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* routine to receive buffer */
+comment|/* callback */
 name|int
 name|recv_length
 decl_stmt|;
@@ -348,6 +329,10 @@ begin_comment
 comment|/*  Get a free buffer (typically used so an async  *  read can directly place data into the buffer  *  *  The buffer is removed from the free list. Make sure  *  you put it back with freerecvbuf() or   */
 end_comment
 
+begin_comment
+comment|/* signal safe - no malloc */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|struct
@@ -361,7 +346,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* signal safe - no malloc */
+comment|/* signal unsafe - may malloc */
 end_comment
 
 begin_function_decl
@@ -375,10 +360,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* signal unsafe - may malloc */
-end_comment
 
 begin_comment
 comment|/*   Add a buffer to the full list  */
@@ -395,10 +376,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*extern	void	process_recv_buffers	 (void); */
-end_comment
 
 begin_comment
 comment|/* number of recvbufs on freelist */
@@ -456,6 +433,20 @@ modifier|*
 name|get_full_recv_buffer
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * purge_recv_buffers_for_fd() - purges any previously-received input  *				 from a given file descriptor.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|purge_recv_buffers_for_fd
+parameter_list|(
+name|SOCKET
 parameter_list|)
 function_decl|;
 end_function_decl

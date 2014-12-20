@@ -6,31 +6,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_l_stdlib_h
+name|L_STDLIB_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_l_stdlib_h
+name|L_STDLIB_H
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<config.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -712,7 +695,7 @@ end_ifdef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_ntp_select_h
+name|NTP_SELECT_H
 end_ifdef
 
 begin_function_decl
@@ -870,74 +853,6 @@ parameter_list|,
 name|struct
 name|sigvec
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_SNPRINTF
-end_ifndef
-
-begin_comment
-comment|/* PRINTFLIKE3 */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|snprintf
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HMS: does this need further protection? */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_VSNPRINTF
-end_ifndef
-
-begin_function_decl
-specifier|extern
-name|int
-name|vsnprintf
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|va_list
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1677,7 +1592,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* l_stdlib_h */
+comment|/* L_STDLIB_H */
 end_comment
 
 end_unit

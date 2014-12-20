@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Parse a time duration and return a seconds count    Copyright (C) 2008-2011 Free Software Foundation, Inc.    Written by Bruce Korb<bkorb@gnu.org>, 2008.     This program is free software: you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 3 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program.  If not, see<http://www.gnu.org/licenses/>.  */
+comment|/* Parse a time duration and return a seconds count    Copyright (C) 2008-2014 Free Software Foundation, Inc.    Written by Bruce Korb<bkorb@gnu.org>, 2008.     This program is free software: you can redistribute it and/or modify    it under the terms of the GNU Lesser General Public License as published by    the Free Software Foundation; either version 2.1 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU Lesser General Public License for more details.     You should have received a copy of the GNU Lesser General Public License    along with this program.  If not, see<http://www.gnu.org/licenses/>.  */
 end_comment
 
 begin_include
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"intprops.h"
 end_include
 
 begin_ifndef
@@ -146,11 +152,17 @@ name|SEC_PER_YEAR
 value|(SEC_PER_DAY * 365)
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|MAX_DURATION
+end_undef
+
 begin_define
 define|#
 directive|define
-name|TIME_MAX
-value|0x7FFFFFFF
+name|MAX_DURATION
+value|TYPE_MAXIMUM(time_t)
 end_define
 
 begin_comment
@@ -161,7 +173,6 @@ begin_function
 specifier|static
 name|unsigned
 name|long
-specifier|inline
 name|str_const_to_ul
 parameter_list|(
 name|cch_t
@@ -202,7 +213,6 @@ end_comment
 begin_function
 specifier|static
 name|long
-specifier|inline
 name|str_const_to_l
 parameter_list|(
 name|cch_t
@@ -243,7 +253,6 @@ end_comment
 begin_function
 specifier|static
 name|time_t
-specifier|inline
 name|scale_n_add
 parameter_list|(
 name|time_t
@@ -281,7 +290,7 @@ if|if
 condition|(
 name|val
 operator|>
-name|TIME_MAX
+name|MAX_DURATION
 operator|/
 name|scale
 condition|)
@@ -302,7 +311,7 @@ if|if
 condition|(
 name|base
 operator|>
-name|TIME_MAX
+name|MAX_DURATION
 operator|-
 name|val
 condition|)

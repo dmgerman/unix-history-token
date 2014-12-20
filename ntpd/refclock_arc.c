@@ -20,6 +20,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"ntp_types.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -696,7 +702,7 @@ begin_define
 define|#
 directive|define
 name|INITIALOFFSET
-value|(u_int32)(-BITTIME/2)
+value|((u_int32)(-BITTIME/2))
 end_define
 
 begin_comment
@@ -1325,7 +1331,7 @@ parameter_list|(
 name|up
 parameter_list|)
 define|\
-value|do { \ 	     peer->nextaction = current_time + QUEUETICK; \ 	} while(0)
+value|do { \ 	     peer->procptr->nextaction = current_time + QUEUETICK; \ 	} while(0)
 end_define
 
 begin_comment
@@ -1679,7 +1685,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"MSF_ARCRON(%d): failed second open(%s, 0777): %m.\n"
+literal|"MSF_ARCRON(%d): failed second open(%s, 0777): %m."
 argument_list|,
 name|unit
 argument_list|,
@@ -1708,6 +1714,11 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|SYS_WINNT
+if|if
+condition|(
+operator|-
+literal|1
+operator|==
 name|fcntl
 argument_list|(
 name|fd
@@ -1716,8 +1727,17 @@ name|F_SETFL
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
 comment|/* clear the descriptor flags */
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"MSF_ARCRON(%d): fcntl(F_SETFL, 0): %m."
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|DPRINTF
@@ -1751,7 +1771,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"MSF_ARCRON(%d): tcgetattr(%s): %m.\n"
+literal|"MSF_ARCRON(%d): tcgetattr(%s): %m."
 argument_list|,
 name|unit
 argument_list|,
@@ -1838,7 +1858,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"MSF_ARCRON(%d): tcsetattr(%s): %m.\n"
+literal|"MSF_ARCRON(%d): tcsetattr(%s): %m."
 argument_list|,
 name|unit
 argument_list|,
@@ -1908,9 +1928,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -2174,6 +2191,8 @@ endif|#
 directive|endif
 name|peer
 operator|->
+name|procptr
+operator|->
 name|action
 operator|=
 name|arc_event_handler
@@ -2221,6 +2240,8 @@ modifier|*
 name|pp
 decl_stmt|;
 name|peer
+operator|->
+name|procptr
 operator|->
 name|action
 operator|=
@@ -2660,14 +2681,9 @@ decl_stmt|;
 comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -3057,11 +3073,11 @@ name|mfptoms
 argument_list|(
 name|diff
 operator|.
-name|l_i
+name|l_ui
 argument_list|,
 name|diff
 operator|.
-name|l_f
+name|l_uf
 argument_list|,
 literal|3
 argument_list|)
@@ -5620,11 +5636,9 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
-name|int
-name|refclock_arc_bs
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|NONEMPTY_TRANSLATION_UNIT
+end_macro
 
 begin_endif
 endif|#

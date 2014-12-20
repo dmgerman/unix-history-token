@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Time-stamp:        "2010-02-24 08:39:04 bkorb"  *  *  This file is part of AutoGen.  *  *  AutoGen Copyright (c) 1992-2011 by Bruce Korb - all rights reserved  *  *  AutoGen is free software: you can redistribute it and/or modify it  *  under the terms of the GNU General Public License as published by the  *  Free Software Foundation, either version 3 of the License, or  *  (at your option) any later version.  *  *  AutoGen is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  See the GNU General Public License for more details.  *  *  You should have received a copy of the GNU General Public License along  *  with this program.  If not, see<http://www.gnu.org/licenses/>.  */
+comment|/**  * \file windows-config.h  *  *  This file contains all of the routines that must be linked into  *  an executable to use the generated option processing.  The optional  *  routines are in separately compiled modules so that they will not  *  necessarily be linked in.  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Miscellaneous functions that Microsoft maps  * to other names  *  * #define inline __inline  * #define vsnprintf _vsnprintf  */
+comment|/*  * Miscellaneous functions that Microsoft maps to other names  */
 end_comment
 
 begin_define
@@ -48,10 +48,6 @@ directive|define
 name|snprintf
 value|_snprintf
 end_define
-
-begin_comment
-comment|/*  * #define stricmp _stricmp  * #define strcasecmp _stricmp  * #define isascii __isascii  * #define finite _finite  * #define random      rand  * #define srandom     srand  */
-end_comment
 
 begin_define
 define|#
@@ -80,18 +76,6 @@ directive|define
 name|SIZEOF_SHORT
 value|2
 end_define
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|uintptr_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * # define HAVE_NET_IF_H  * # define QSORT_USES_VOID_P  * # define HAVE_SETVBUF  * # define HAVE_VSPRINTF  * # define HAVE_SNPRINTF  * # define HAVE_VSNPRINTF  * # define HAVE_PROTOTYPES             /* from ntpq.mak * /  * # define HAVE_MEMMOVE  * # define HAVE_TERMIOS_H  * # define HAVE_ERRNO_H  * # define HAVE_STDARG_H  * # define HAVE_NO_NICE  * # define HAVE_MKTIME  * # define TIME_WITH_SYS_TIME  * # define HAVE_IO_COMPLETION_PORT  * # define ISC_PLATFORM_NEEDNTOP  * # define ISC_PLATFORM_NEEDPTON  * # define NEED_S_CHAR_TYPEDEF  * # define USE_PROTOTYPES              /* for ntp_types.h * /  *  * #define ULONG_CONST(a) a ## UL  */
-end_comment
 
 begin_define
 define|#
@@ -122,7 +106,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * VS.NET's version of wspiapi.h has a bug in it  * where it assigns a value to a variable inside  * an if statement. It should be comparing them.  * We prevent inclusion since we are not using this  * code so we don't have to see the warning messages  */
+comment|/*  * VS.NET's version of wspiapi.h has a bug in it where it assigns a value  * to a variable inside an if statement. It should be comparing them.  * We prevent inclusion since we are not using this code so we don't have  * to see the warning messages  */
 end_comment
 
 begin_ifndef
@@ -240,7 +224,6 @@ name|_x
 parameter_list|,
 name|_y
 parameter_list|)
-value|;
 end_define
 
 begin_define
@@ -382,6 +365,151 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* C99 exact size integer support. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_INTTYPES_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_STDINT_H
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|MISSING_INTTYPES_H
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|ADDED_EXACT_SIZE_INTEGERS
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|ADDED_EXACT_SIZE_INTEGERS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MISSING_INTTYPES_H
+value|1
+end_define
+
+begin_typedef
+typedef|typedef
+name|__int8
+name|int8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|__int8
+name|uint8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__int16
+name|int16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|__int16
+name|uint16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__int32
+name|int32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|__int32
+name|uint32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__int64
+name|int64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|__int64
+name|uint64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|uintptr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|long
+name|intptr_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -389,6 +517,10 @@ end_endif
 
 begin_comment
 comment|/* WINDOWS_CONFIG_HACKERY */
+end_comment
+
+begin_comment
+comment|/* windows-config.h ends here */
 end_comment
 
 end_unit

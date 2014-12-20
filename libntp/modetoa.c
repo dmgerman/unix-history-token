@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -39,6 +45,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|modestrings
 index|[]
 init|=

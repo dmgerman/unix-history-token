@@ -330,7 +330,7 @@ block|{
 name|val_cnt
 operator|--
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|value
 argument_list|,

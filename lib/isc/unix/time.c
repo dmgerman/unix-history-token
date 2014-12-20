@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: time.c,v 1.56 2008/02/15 23:46:51 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -1478,13 +1478,7 @@ name|i2
 expr_stmt|;
 comment|/* 	 * Convert to microseconds. 	 */
 name|i3
-operator|=
-operator|(
-name|i1
-operator|-
-name|i2
-operator|)
-operator|/
+operator|/=
 name|NS_PER_US
 expr_stmt|;
 return|return
@@ -1548,9 +1542,6 @@ modifier|*
 name|secondsp
 parameter_list|)
 block|{
-name|isc_uint64_t
-name|i
-decl_stmt|;
 name|time_t
 name|seconds
 decl_stmt|;
@@ -1570,7 +1561,7 @@ operator|<
 name|NS_PER_S
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Ensure that the number of seconds represented by t->seconds 	 * can be represented by a time_t.  Since t->seconds is an unsigned 	 * int and since time_t is mostly opaque, this is trickier than 	 * it seems.  (This standardized opaqueness of time_t is *very* 	 * frustrating; time_t is not even limited to being an integral 	 * type.) 	 * 	 * The mission, then, is to avoid generating any kind of warning 	 * about "signed versus unsigned" while trying to determine if the 	 * the unsigned int t->seconds is out range for tv_sec, which is 	 * pretty much only true if time_t is a signed integer of the same 	 * size as the return value of isc_time_seconds. 	 * 	 * The use of the 64 bit integer ``i'' takes advantage of C's 	 * conversion rules to either zero fill or sign extend the widened 	 * type. 	 * 	 * Solaris 5.6 gives this warning about the left shift: 	 *	warning: integer overflow detected: op "<<" 	 * if the U(nsigned) qualifier is not on the 1. 	 */
+comment|/* 	 * Ensure that the number of seconds represented by t->seconds 	 * can be represented by a time_t.  Since t->seconds is an unsigned 	 * int and since time_t is mostly opaque, this is trickier than 	 * it seems.  (This standardized opaqueness of time_t is *very* 	 * frustrating; time_t is not even limited to being an integral 	 * type.) 	 * 	 * The mission, then, is to avoid generating any kind of warning 	 * about "signed versus unsigned" while trying to determine if the 	 * the unsigned int t->seconds is out range for tv_sec, which is 	 * pretty much only true if time_t is a signed integer of the same 	 * size as the return value of isc_time_seconds. 	 * 	 * If the paradox in the if clause below is true, t->seconds is out 	 * of range for time_t. 	 */
 name|seconds
 operator|=
 operator|(
@@ -1609,73 +1600,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-sizeof|sizeof
-argument_list|(
-name|time_t
-argument_list|)
-operator|==
-sizeof|sizeof
-argument_list|(
-name|isc_uint32_t
-argument_list|)
-operator|&&
-comment|/* Same size. */
-operator|(
-name|time_t
-operator|)
-literal|0.5
-operator|!=
-literal|0.5
-operator|&&
-comment|/* Not a floating point type. */
-operator|(
-name|i
-operator|=
-operator|(
-name|time_t
-operator|)
-operator|-
-literal|1
-operator|)
-operator|!=
-literal|4294967295u
-operator|&&
-comment|/* Is signed. */
-operator|(
+name|t
+operator|->
 name|seconds
-operator|&
+operator|>
 operator|(
-literal|1U
-operator|<<
-operator|(
-sizeof|sizeof
-argument_list|(
-name|time_t
-argument_list|)
-operator|*
-name|CHAR_BIT
-operator|-
+operator|~
+literal|0U
+operator|>>
 literal|1
 operator|)
-operator|)
-operator|)
-operator|!=
-literal|0U
-condition|)
-block|{
-comment|/* Negative. */
-comment|/* 		 * This UNUSED() is here to shut up the IRIX compiler: 		 *	variable "i" was set but never used 		 * when the value of i *was* used in the third test. 		 * (Let's hope the compiler got the actual test right.) 		 */
-name|UNUSED
+operator|&&
+name|seconds
+operator|<=
+call|(
+name|time_t
+call|)
 argument_list|(
-name|i
+operator|~
+literal|0U
+operator|>>
+literal|1
 argument_list|)
-expr_stmt|;
+condition|)
 return|return
 operator|(
 name|ISC_R_RANGE
 operator|)
 return|;
-block|}
 operator|*
 name|secondsp
 operator|=

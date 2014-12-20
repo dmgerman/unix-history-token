@@ -62,18 +62,29 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE___ADJTIMEX
+name|HAVE_SYS_TIMEX_H
 end_ifdef
-
-begin_comment
-comment|/* Linux */
-end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/timex.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ADJTIMEX
+end_ifdef
+
+begin_comment
+comment|/* Linux */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -94,7 +105,7 @@ comment|/* old Linux format, for compatability */
 end_comment
 
 begin_else
-unit|if ((i = atoi(argv[1]))> 0) { 		    txc.time_tick = i; 		    txc.modes = ADJ_TIMETICK; 	    } else { 		    fprintf(stderr, "Silly value for tick: %s\n", argv[1]); 		    errflg++; 	    } 	} else { 	    while ((c = ntp_getopt(argc, argv, "a:qt:")) != EOF) { 		switch (c) { 		    case 'a': 			if ((i=atoi(ntp_optarg))> 0) { 				txc.tickadj = i; 				txc.modes |= ADJ_TICKADJ; 			} else { 				(void) fprintf(stderr, 				       "%s: unlikely value for tickadj: %s\n", 				       progname, ntp_optarg); 				errflg++; 			} 			break;  		    case 'q': 			quiet = 1; 			break;  		    case 't': 			if ((i=atoi(ntp_optarg))> 0) { 				txc.time_tick = i; 				txc.modes |= ADJ_TIMETICK; 			} else { 				(void) fprintf(stderr, 				       "%s: unlikely value for tick: %s\n", 				       progname, ntp_optarg); 				errflg++; 			} 			break;  		    default: 			fprintf(stderr, 			    "Usage: %s [tick_value]\n-or-   %s [ -q ] [ -t tick ] [ -a tickadj ]\n", 			    progname, progname); 			errflg++; 			break; 		} 	    } 	}  	if (!errflg) { 		if (__adjtimex(&txc)< 0) 			perror("adjtimex"); 		else if (!quiet) 			printf("tick     = %ld\ntick_adj = %d\n", 			    txc.time_tick, txc.tickadj); 	}  	exit(errflg ? 1 : 0); }
+unit|if ((i = atoi(argv[1]))> 0) { 		    txc.time_tick = i; 		    txc.modes = ADJ_TIMETICK; 	    } else { 		    fprintf(stderr, "Silly value for tick: %s\n", argv[1]); 		    errflg++; 	    } 	} else { 	    while ((c = ntp_getopt(argc, argv, "a:qt:")) != EOF) { 		switch (c) { 		    case 'a': 			if ((i=atoi(ntp_optarg))> 0) { 				txc.tickadj = i; 				txc.modes |= ADJ_TICKADJ; 			} else { 				fprintf(stderr, 					"%s: unlikely value for tickadj: %s\n", 					progname, ntp_optarg); 				errflg++; 			} 			break;  		    case 'q': 			quiet = 1; 			break;  		    case 't': 			if ((i=atoi(ntp_optarg))> 0) { 				txc.time_tick = i; 				txc.modes |= ADJ_TIMETICK; 			} else { 				(void) fprintf(stderr, 				       "%s: unlikely value for tick: %s\n", 				       progname, ntp_optarg); 				errflg++; 			} 			break;  		    default: 			fprintf(stderr, 			    "Usage: %s [tick_value]\n-or-   %s [ -q ] [ -t tick ] [ -a tickadj ]\n", 			    progname, progname); 			errflg++; 			break; 		} 	    } 	}  	if (!errflg) { 		if (adjtimex(&txc)< 0) 			perror("adjtimex"); 		else if (!quiet) 			printf("tick     = %ld\ntick_adj = %d\n", 			    txc.time_tick, txc.tickadj); 	}  	exit(errflg ? 1 : 0); }
 else|#
 directive|else
 end_else
@@ -279,7 +290,7 @@ directive|endif
 block|}
 if|if
 condition|(
-name|__adjtimex
+name|adjtimex
 argument_list|(
 operator|&
 name|txc
@@ -601,13 +612,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|volatile
-name|int
-name|debug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|dokmem
 init|=
@@ -824,6 +828,9 @@ decl_stmt|;
 name|long
 name|tmp
 decl_stmt|;
+name|init_lib
+argument_list|()
+expr_stmt|;
 name|progname
 operator|=
 name|argv

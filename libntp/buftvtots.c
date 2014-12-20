@@ -35,7 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_unixtime.h"
+file|"timevalops.h"
 end_include
 
 begin_ifndef
@@ -77,86 +77,29 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * and use it 	 */
-name|ts
-operator|->
-name|l_ui
-operator|=
-name|tv
-operator|.
-name|tv_sec
-operator|+
-operator|(
-name|u_long
-operator|)
-name|JAN_1970
-expr_stmt|;
 if|if
 condition|(
 name|tv
 operator|.
 name|tv_usec
 operator|>
-literal|999999
+name|MICROSECONDS
+operator|-
+literal|1
 condition|)
 return|return
-literal|0
+name|FALSE
 return|;
-name|TVUTOTSF
+operator|*
+name|ts
+operator|=
+name|tval_stamp_to_lfp
 argument_list|(
 name|tv
-operator|.
-name|tv_usec
-argument_list|,
-name|ts
-operator|->
-name|l_uf
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
-return|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SYS_WINNT */
-end_comment
-
-begin_comment
-comment|/*  * Windows doesn't have the tty_clock line discipline, so  * don't look for a timestamp where there is none.  */
-end_comment
-
-begin_function
-name|int
-name|buftvtots
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|bufp
-parameter_list|,
-name|l_fp
-modifier|*
-name|ts
-parameter_list|)
-block|{
-name|UNUSED_ARG
-argument_list|(
-name|bufp
-argument_list|)
-expr_stmt|;
-name|UNUSED_ARG
-argument_list|(
-name|ts
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
+name|TRUE
 return|;
 block|}
 end_function
@@ -167,7 +110,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SYS_WINNT */
+comment|/* !SYS_WINNT */
 end_comment
 
 end_unit

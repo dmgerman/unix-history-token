@@ -257,6 +257,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CLOCK_SEL240X
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|clockformat_t
+name|clock_sel240x
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * format definitions  */
 end_comment
@@ -368,6 +386,14 @@ directive|ifdef
 name|CLOCK_VARITEXT
 operator|&
 name|clock_varitext
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|CLOCK_SEL240X
+operator|&
+name|clock_sel240x
 block|,
 endif|#
 directive|endif

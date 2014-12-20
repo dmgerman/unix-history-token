@@ -138,6 +138,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|isc_net_pton
+parameter_list|(
+name|int
+name|af
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|void
+modifier|*
+name|dst
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*%   *	convert from presentation format (which usually means ASCII printable)  *	to network format (which is usually some kind of binary format).  * \return  *	1 if the address was valid for the specified address family  *	0 if the address wasn't valid (`dst' is untouched in this case)  *	-1 if some other error occurred (`dst' is untouched in this case, too)  * \author  *	Paul Vixie, 1996.  */
 end_comment

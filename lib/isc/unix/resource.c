@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2007-2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: resource.c,v 1.21.66.2 2009/02/13 23:47:39 tbox Exp $ */
+comment|/* $Id: resource.c,v 1.23 2009/02/13 23:48:14 tbox Exp $ */
 end_comment
 
 begin_include

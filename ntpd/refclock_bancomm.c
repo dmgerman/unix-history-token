@@ -496,22 +496,6 @@ comment|/* current time(s) */
 end_comment
 
 begin_comment
-comment|/*  * Imported from ntpd module  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|int
-name|debug
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* global debug flag */
-end_comment
-
-begin_comment
 comment|/*  * VME unit control structure.  * Changes made to vmeunit structure. Most members are now available in the   * new refclockproc structure in ntp_refclock.h - 07/99 - Ganesh Ramasivan  */
 end_comment
 
@@ -1081,28 +1065,8 @@ block|}
 comment|/* 	 * Allocate unit structure 	 */
 name|vme
 operator|=
-operator|(
-expr|struct
-name|vmeunit
-operator|*
-operator|)
-name|emalloc
+name|emalloc_zero
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|vmeunit
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|vme
-argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1121,9 +1085,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|vme
 expr_stmt|;
 name|pp
@@ -1146,9 +1107,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -1167,6 +1125,7 @@ name|fd
 operator|=
 name|fd_vme
 expr_stmt|;
+comment|/* shouldn't there be an io_addclock() call? */
 comment|/* 	 * All done.  Initialize a few random peer variables, then  	 * return success. Note that root delay and root dispersion are 	 * always zero for this clock. 	 */
 name|peer
 operator|->
@@ -1232,11 +1191,6 @@ name|procptr
 expr_stmt|;
 name|vme
 operator|=
-operator|(
-expr|struct
-name|vmeunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -1346,11 +1300,6 @@ name|procptr
 expr_stmt|;
 name|vme
 operator|=
-operator|(
-expr|struct
-name|vmeunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -1812,7 +1761,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not set time format\n"
+literal|"Could not set time format"
 argument_list|)
 expr_stmt|;
 return|return

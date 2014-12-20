@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2008, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: mutex.c,v 1.16 2008/04/04 23:47:01 tbox Exp $ */
+comment|/* $Id: mutex.c,v 1.18 2011/01/04 23:47:14 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -58,6 +58,50 @@ include|#
 directive|include
 file|<isc/strerror.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|HAVE_PTHREADS
+operator|<
+literal|5
+end_if
+
+begin_comment
+comment|/* HP-UX 10.20 has 4, needs this */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|pthread_mutex_init
+parameter_list|(
+name|m
+parameter_list|,
+name|a
+parameter_list|)
+define|\
+value|pthread_mutex_init(m, (a)					\ 				? *(const pthread_mutexattr_t *)(a)	\ 				: pthread_mutexattr_default)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_MUTEX_RECURSIVE
+value|MUTEX_RECURSIVE_NP
+end_define
+
+begin_define
+define|#
+directive|define
+name|pthread_mutexattr_settype
+value|pthread_mutexattr_setkind_np
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -201,7 +245,7 @@ begin_define
 define|#
 directive|define
 name|ISC_MUTEX_PROFTABLESIZE
-value|(16 * 1024)
+value|(1024 * 1024)
 end_define
 
 begin_endif
@@ -902,7 +946,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%-12s %4d: %10u  %lu.%06lu %lu.%06lu\n"
+literal|"%-12s %4d: %10u  %lu.%06lu %lu.%06lu %5d\n"
 argument_list|,
 name|stats
 index|[
@@ -960,6 +1004,8 @@ operator|.
 name|wait_total
 operator|.
 name|tv_usec
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 for|for
@@ -1002,7 +1048,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|" %-11s %4d: %10u  %lu.%06lu %lu.%06lu\n"
+literal|" %-11s %4d: %10u  %lu.%06lu %lu.%06lu %5d\n"
 argument_list|,
 name|locker
 operator|->
@@ -1039,6 +1085,8 @@ operator|->
 name|wait_total
 operator|.
 name|tv_usec
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 block|}
@@ -1108,11 +1156,19 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|pthread_mutexattr_destroy
+argument_list|(
+operator|&
+name|attr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ISC_R_UNEXPECTED
 operator|)
 return|;
+block|}
 name|err
 operator|=
 name|pthread_mutex_init
@@ -1125,19 +1181,29 @@ argument_list|)
 operator|!=
 literal|0
 block|)
-function|if
+function|pthread_mutexattr_destroy
 parameter_list|(
-function|err == ENOMEM
+function|&attr
 end_function
 
-begin_return
+begin_empty_stmt
 unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_if
+if|if
+condition|(
+name|err
+operator|==
+name|ENOMEM
+condition|)
 return|return
 operator|(
 name|ISC_R_NOMEMORY
 operator|)
 return|;
-end_return
+end_if
 
 begin_return
 return|return

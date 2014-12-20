@@ -107,9 +107,12 @@ end_endif
 
 begin_function_decl
 name|void
-name|init_logging
+name|sntp_init_logging
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
+name|program
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -125,6 +128,18 @@ name|logfile
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|progname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for msyslog use too */
+end_comment
 
 begin_endif
 endif|#

@@ -660,9 +660,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -686,9 +683,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 name|get_systime
@@ -929,9 +923,9 @@ name|LOG_WARNING
 argument_list|,
 literal|"SYNCHRONIZATION LOST on unit %1d, status %02x\n"
 argument_list|,
-name|status
-argument_list|,
 name|unit
+argument_list|,
+name|status
 argument_list|)
 expr_stmt|;
 name|up

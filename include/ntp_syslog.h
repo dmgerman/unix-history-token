@@ -96,6 +96,20 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|msyslog_term_pid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|msyslog_include_timestamp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|FILE
 modifier|*
 name|syslog_file
@@ -105,6 +119,22 @@ end_decl_stmt
 begin_comment
 comment|/* if syslogit is FALSE, log to  				   this file and not syslog */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|syslog_fname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|syslog_abs_fname
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -525,9 +555,24 @@ define|#
 directive|define
 name|NLOG
 parameter_list|(
-name|_X_
+name|bits
 parameter_list|)
-value|if (ntp_syslogmask& (_X_))
+value|if (ntp_syslogmask& (bits))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOGIF
+parameter_list|(
+name|nlog_suffix
+parameter_list|,
+name|msl_args
+parameter_list|)
+define|\
+value|do {								\ 	NLOG(NLOG_##nlog_suffix)
+comment|/* like "if (...) */
+value|\ 		msyslog msl_args;				\ } while (FALSE)
 end_define
 
 begin_endif

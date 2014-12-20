@@ -20,6 +20,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"ntp_types.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -64,13 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_unixtime.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_calendar.h"
+file|"timevalops.h"
 end_include
 
 begin_include
@@ -1612,12 +1612,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|QSORT_USES_VOID_P
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -1638,41 +1632,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|int
-name|offcompare
-name|P
-argument_list|(
-operator|(
-specifier|const
-name|l_fp
-operator|*
-name|a
-operator|,
-specifier|const
-name|l_fp
-operator|*
-name|b
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* QSORT_USES_VOID_P */
-end_comment
 
 begin_comment
 comment|/*  * Transfer vector  */
@@ -2583,10 +2542,7 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
-name|ees
+name|peer
 expr_stmt|;
 name|ees
 operator|->
@@ -2832,9 +2788,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|eesunits
 index|[
@@ -3156,7 +3109,11 @@ operator|*
 operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
+operator|->
+name|procptr
+operator|->
+name|unitptr
 expr_stmt|;
 name|dpt
 operator|=
@@ -4410,36 +4367,17 @@ argument_list|,
 name|pps_step
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|buftvtots
+else|else
+block|{
+name|pps_arrvstamp
+operator|=
+name|tval_stamp_to_lfp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-operator|(
 name|ppsclockev
 operator|.
 name|tv
-operator|)
-argument_list|,
-operator|&
-name|pps_arrvstamp
-argument_list|)
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"buftvtots failed\n"
 argument_list|)
 expr_stmt|;
-else|else
-block|{
 comment|/* if ((ABS(time difference) - 0.25)< 0) 			 * then believe it ... 			 */
 name|l_fp
 name|diff
@@ -6530,12 +6468,6 @@ begin_comment
 comment|/* offcompare - auxiliary comparison routine for offset sort */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|QSORT_USES_VOID_P
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -6604,65 +6536,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function
-specifier|static
-name|int
-name|offcompare
-parameter_list|(
-specifier|const
-name|l_fp
-modifier|*
-name|a
-parameter_list|,
-specifier|const
-name|l_fp
-modifier|*
-name|b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|L_ISGEQ
-argument_list|(
-name|a
-argument_list|,
-name|b
-argument_list|)
-condition|?
-operator|(
-name|L_ISEQU
-argument_list|(
-name|a
-argument_list|,
-name|b
-argument_list|)
-condition|?
-literal|0
-else|:
-literal|1
-operator|)
-else|:
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* QSORT_USES_VOID_P */
-end_comment
 
 begin_comment
 comment|/* ees_process - process a pile of samples from the clock */
@@ -6884,21 +6757,6 @@ expr_stmt|;
 comment|/* Sort the offsets, trim off the extremes, then choose one. */
 name|qsort
 argument_list|(
-ifdef|#
-directive|ifdef
-name|QSORT_USES_VOID_P
-operator|(
-name|void
-operator|*
-operator|)
-else|#
-directive|else
-operator|(
-name|char
-operator|*
-operator|)
-endif|#
-directive|endif
 name|coffs
 argument_list|,
 operator|(
@@ -6908,7 +6766,10 @@ name|samples
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|l_fp
+name|coffs
+index|[
+literal|0
+index|]
 argument_list|)
 argument_list|,
 name|offcompare
@@ -7719,7 +7580,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"MSF%d: fix_pending=%d -> jump %x.%08x\n"
+literal|"MSF%d: fix_pending=%d -> jump %x.%08x"
 argument_list|,
 name|ees
 operator|->
@@ -7871,11 +7732,9 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
-name|int
-name|refclock_msfees_bs
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|NONEMPTY_TRANSLATION_UNIT
+end_macro
 
 begin_endif
 endif|#

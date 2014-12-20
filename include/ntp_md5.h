@@ -3,6 +3,43 @@ begin_comment
 comment|/*  * ntp_md5.h: deal with md5.h headers  *  * Use the system MD5 if available, otherwise libisc's.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NTP_MD5_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NTP_MD5_H
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"openssl/evp.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !OPENSSL follows */
+end_comment
+
+begin_comment
+comment|/*  * Provide OpenSSL-alike MD5 API if we're not using OpenSSL  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -82,16 +119,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Provide OpenSSL-alike MD5 API if we're not using OpenSSL  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL
-end_ifndef
-
 begin_typedef
 typedef|typedef
 name|MD5_CTX
@@ -112,13 +139,57 @@ end_define
 begin_define
 define|#
 directive|define
+name|EVP_md5
+parameter_list|(
+name|v
+parameter_list|)
+value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVP_MD_CTX_init
+parameter_list|(
+name|c
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVP_MD_CTX_set_flags
+parameter_list|(
+name|c
+parameter_list|,
+name|f
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|EVP_DigestInit
 parameter_list|(
 name|c
 parameter_list|,
 name|dt
 parameter_list|)
-value|MD5Init(c)
+value|(MD5Init(c), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVP_DigestInit_ex
+parameter_list|(
+name|c
+parameter_list|,
+name|dt
+parameter_list|,
+name|i
+parameter_list|)
+value|(MD5Init(c), 1)
 end_define
 
 begin_define
@@ -132,7 +203,7 @@ name|p
 parameter_list|,
 name|s
 parameter_list|)
-value|MD5Update(c, p, s)
+value|MD5Update(c, (const void *)(p), \ 						  s)
 end_define
 
 begin_define
@@ -154,6 +225,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !OPENSSL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NTP_MD5_H */
+end_comment
 
 end_unit
 

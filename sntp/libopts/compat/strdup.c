@@ -3,6 +3,20 @@ begin_comment
 comment|/*  * Platforms without strdup ?!?!?!  */
 end_comment
 
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|strdup
+parameter_list|(
+name|char
+specifier|const
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|char

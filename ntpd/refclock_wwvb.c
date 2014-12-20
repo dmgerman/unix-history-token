@@ -546,10 +546,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -662,16 +658,15 @@ modifier|*
 name|peer
 parameter_list|)
 block|{
-specifier|register
-name|struct
-name|wwvbunit
-modifier|*
-name|up
-decl_stmt|;
 name|struct
 name|refclockproc
 modifier|*
 name|pp
+decl_stmt|;
+name|struct
+name|wwvbunit
+modifier|*
+name|up
 decl_stmt|;
 name|pp
 operator|=
@@ -1409,9 +1404,14 @@ name|char
 name|pollchar
 decl_stmt|;
 comment|/* character sent to clock */
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|l_fp
 name|now
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Time to poll the clock. The Spectracom clock responds to a 	 * 'T' by returning a timecode in the format(s) specified above. 	 * Note there is no checking on state, since this may not be the 	 * only customer reading the clock. Only one customer need poll 	 * the clock; all others just listen in. 	 */
 name|pp
 operator|=
@@ -1929,10 +1929,6 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|NLOG
-argument_list|(
-argument|NLOG_CLOCKINFO
-argument_list|)
 name|msyslog
 argument_list|(
 name|LOG_WARNING

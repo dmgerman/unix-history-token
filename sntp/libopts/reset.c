@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * \file reset.c  *  *  Time-stamp:      "2010-07-10 10:56:34 bkorb"  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (c) 1992-2011 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following md5sums:  *  *  43b91e8ca915626ed3818ffb1b71248b pkg/libopts/COPYING.gplv3  *  06a1a2e4760c90ea5e1dad8dfaac4d39 pkg/libopts/COPYING.lgplv3  *  66a5cedaf62c4b2637025f049f9b826f pkg/libopts/COPYING.mbsd  */
+comment|/**  * \file reset.c  *  *  Reset the option state to the compiled state.  *  * @addtogroup autoopts  * @{  */
+end_comment
+
+begin_comment
+comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
 
 begin_function
@@ -156,10 +160,10 @@ name|pOD
 parameter_list|)
 block|{
 specifier|static
-name|ag_bool
+name|bool
 name|reset_active
 init|=
-name|AG_FALSE
+name|false
 decl_stmt|;
 name|tOptState
 name|opt_state
@@ -185,6 +189,13 @@ name|succ
 decl_stmt|;
 if|if
 condition|(
+name|pOpts
+operator|<=
+name|OPTPROC_EMIT_LIMIT
+condition|)
+return|return;
+if|if
+condition|(
 name|reset_active
 condition|)
 return|return;
@@ -206,20 +217,11 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
-name|fputs
+name|ao_bug
 argument_list|(
-name|zResetNotConfig
-argument_list|,
-name|stderr
+name|zno_reset
 argument_list|)
 expr_stmt|;
-name|_exit
-argument_list|(
-name|EX_SOFTWARE
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -236,11 +238,19 @@ name|NUL
 operator|)
 condition|)
 block|{
-name|fputs
+name|fprintf
 argument_list|(
-name|zNoResetArg
-argument_list|,
 name|stderr
+argument_list|,
+name|zreset_arg
+argument_list|,
+name|pOpts
+operator|->
+name|pzProgName
+argument_list|,
+name|pOD
+operator|->
+name|pz_Name
 argument_list|)
 expr_stmt|;
 name|pOpts
@@ -263,7 +273,7 @@ expr_stmt|;
 block|}
 name|reset_active
 operator|=
-name|AG_TRUE
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -290,18 +300,18 @@ argument_list|)
 expr_stmt|;
 name|reset_active
 operator|=
-name|AG_FALSE
+name|false
 expr_stmt|;
 return|return;
 block|}
 name|succ
 operator|=
-name|shortOptionFind
+name|opt_find_short
 argument_list|(
 name|pOpts
 argument_list|,
 operator|(
-name|tAoUC
+name|uint8_t
 operator|)
 operator|*
 name|pzArg
@@ -356,7 +366,7 @@ else|else
 block|{
 name|succ
 operator|=
-name|longOptionFind
+name|opt_find_long
 argument_list|(
 name|pOpts
 argument_list|,
@@ -423,13 +433,13 @@ argument_list|)
 expr_stmt|;
 name|reset_active
 operator|=
-name|AG_FALSE
+name|false
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/reset.c */
+comment|/** @}  *  * Local Variables:  * mode: C  * c-file-style: "stroustrup"  * indent-tabs-mode: nil  * End:  * end of autoopts/reset.c */
 end_comment
 
 end_unit

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: mem.h,v 1.78.120.3 2009/02/11 03:07:01 jinmei Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -318,7 +318,7 @@ begin_define
 define|#
 directive|define
 name|_ISC_MEM_FLARG
-value|, const char *, int
+value|, const char *, unsigned int
 end_define
 
 begin_else
@@ -421,6 +421,66 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*%<  * We use either isc___mem (three underscores) or isc__mem (two) depending on  * whether it's for BIND9's internal purpose (with -DBIND9) or generic export  * library.  This condition is generally handled in isc/namespace.h, but for  * Windows it doesn't work if it involves multiple times of macro expansion  * (such as isc_mem to isc__mem then to isc___mem).  The following definitions  * are used to work around this portability issue.  Right now, we don't support  * the export library for Windows, so we always use the three-underscore  * version.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISCMEMFUNC
+parameter_list|(
+name|sfx
+parameter_list|)
+value|isc___mem_ ## sfx
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISCMEMPOOLFUNC
+parameter_list|(
+name|sfx
+parameter_list|)
+value|isc___mempool_ ## sfx
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISCMEMFUNC
+parameter_list|(
+name|sfx
+parameter_list|)
+value|isc__mem_ ## sfx
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISCMEMPOOLFUNC
+parameter_list|(
+name|sfx
+parameter_list|)
+value|isc__mempool_ ## sfx
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -430,7 +490,7 @@ name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|isc__mem_get((c), (s) _ISC_MEM_FILELINE)
+value|ISCMEMFUNC(get)((c), (s) _ISC_MEM_FILELINE)
 end_define
 
 begin_define
@@ -442,7 +502,7 @@ name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|isc__mem_allocate((c), (s) _ISC_MEM_FILELINE)
+value|ISCMEMFUNC(allocate)((c), (s) _ISC_MEM_FILELINE)
 end_define
 
 begin_define
@@ -456,7 +516,7 @@ name|p
 parameter_list|,
 name|s
 parameter_list|)
-value|isc__mem_reallocate((c), (p), (s) _ISC_MEM_FILELINE)
+value|ISCMEMFUNC(reallocate)((c), (p), (s) _ISC_MEM_FILELINE)
 end_define
 
 begin_define
@@ -468,7 +528,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|isc__mem_strdup((c), (p) _ISC_MEM_FILELINE)
+value|ISCMEMFUNC(strdup)((c), (p) _ISC_MEM_FILELINE)
 end_define
 
 begin_define
@@ -478,12 +538,505 @@ name|isc_mempool_get
 parameter_list|(
 name|c
 parameter_list|)
-value|isc__mempool_get((c) _ISC_MEM_FILELINE)
+value|ISCMEMPOOLFUNC(get)((c) _ISC_MEM_FILELINE)
 end_define
 
 begin_comment
 comment|/*%  * isc_mem_putanddetach() is a convenience function for use where you  * have a structure with an attached memory context.  *  * Given:  *  * \code  * struct {  *	...  *	isc_mem_t *mctx;  *	...  * } *ptr;  *  * isc_mem_t *mctx;  *  * isc_mem_putanddetach(&ptr->mctx, ptr, sizeof(*ptr));  * \endcode  *  * is the equivalent of:  *  * \code  * mctx = NULL;  * isc_mem_attach(ptr->mctx,&mctx);  * isc_mem_detach(&ptr->mctx);  * isc_mem_put(mctx, ptr, sizeof(*ptr));  * isc_mem_detach(&mctx);  * \endcode  */
 end_comment
+
+begin_comment
+comment|/*% memory and memory pool methods */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|isc_memmethods
+block|{
+name|void
+function_decl|(
+modifier|*
+name|attach
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|source
+parameter_list|,
+name|isc_mem_t
+modifier|*
+modifier|*
+name|targetp
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|detach
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+modifier|*
+name|mctxp
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|destroy
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+modifier|*
+name|mctxp
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|memget
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|size_t
+name|size
+name|_ISC_MEM_FLARG
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|memput
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|size
+name|_ISC_MEM_FLARG
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|memputanddetach
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+modifier|*
+name|mctxp
+parameter_list|,
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|size
+name|_ISC_MEM_FLARG
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|memallocate
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|size_t
+name|size
+name|_ISC_MEM_FLARG
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|memreallocate
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|size
+name|_ISC_MEM_FLARG
+parameter_list|)
+function_decl|;
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|memstrdup
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+name|_ISC_MEM_FLARG
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|memfree
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|void
+modifier|*
+name|ptr
+name|_ISC_MEM_FLARG
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|setdestroycheck
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|isc_boolean_t
+name|flag
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|setwater
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|ctx
+parameter_list|,
+name|isc_mem_water_t
+name|water
+parameter_list|,
+name|void
+modifier|*
+name|water_arg
+parameter_list|,
+name|size_t
+name|hiwater
+parameter_list|,
+name|size_t
+name|lowater
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|waterack
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+function_decl|;
+name|size_t
+function_decl|(
+modifier|*
+name|inuse
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|)
+function_decl|;
+name|isc_boolean_t
+function_decl|(
+modifier|*
+name|isovermem
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|)
+function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|mpcreate
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|isc_mempool_t
+modifier|*
+modifier|*
+name|mpctxp
+parameter_list|)
+function_decl|;
+block|}
+name|isc_memmethods_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|isc_mempoolmethods
+block|{
+name|void
+function_decl|(
+modifier|*
+name|destroy
+function_decl|)
+parameter_list|(
+name|isc_mempool_t
+modifier|*
+modifier|*
+name|mpctxp
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|get
+function_decl|)
+parameter_list|(
+name|isc_mempool_t
+modifier|*
+name|mpctx
+name|_ISC_MEM_FLARG
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|put
+function_decl|)
+parameter_list|(
+name|isc_mempool_t
+modifier|*
+name|mpctx
+parameter_list|,
+name|void
+modifier|*
+name|mem
+name|_ISC_MEM_FLARG
+parameter_list|)
+function_decl|;
+name|unsigned
+name|int
+function_decl|(
+modifier|*
+name|getallocated
+function_decl|)
+parameter_list|(
+name|isc_mempool_t
+modifier|*
+name|mpctx
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|setmaxalloc
+function_decl|)
+parameter_list|(
+name|isc_mempool_t
+modifier|*
+name|mpctx
+parameter_list|,
+name|unsigned
+name|int
+name|limit
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|setfreemax
+function_decl|)
+parameter_list|(
+name|isc_mempool_t
+modifier|*
+name|mpctx
+parameter_list|,
+name|unsigned
+name|int
+name|limit
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|setname
+function_decl|)
+parameter_list|(
+name|isc_mempool_t
+modifier|*
+name|mpctx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|associatelock
+function_decl|)
+parameter_list|(
+name|isc_mempool_t
+modifier|*
+name|mpctx
+parameter_list|,
+name|isc_mutex_t
+modifier|*
+name|lock
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|setfillcount
+function_decl|)
+parameter_list|(
+name|isc_mempool_t
+modifier|*
+name|mpctx
+parameter_list|,
+name|unsigned
+name|int
+name|limit
+parameter_list|)
+function_decl|;
+block|}
+name|isc_mempoolmethods_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*%  * This structure is actually just the common prefix of a memory context  * implementation's version of an isc_mem_t.  * \brief  * Direct use of this structure by clients is forbidden.  mctx implementations  * may change the structure.  'magic' must be ISCAPI_MCTX_MAGIC for any of the  * isc_mem_ routines to work.  mctx implementations must maintain all mctx  * invariants.  */
+end_comment
+
+begin_struct
+struct|struct
+name|isc_mem
+block|{
+name|unsigned
+name|int
+name|impmagic
+decl_stmt|;
+name|unsigned
+name|int
+name|magic
+decl_stmt|;
+name|isc_memmethods_t
+modifier|*
+name|methods
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ISCAPI_MCTX_MAGIC
+value|ISC_MAGIC('A','m','c','x')
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISCAPI_MCTX_VALID
+parameter_list|(
+name|m
+parameter_list|)
+value|((m) != NULL&& \ 				 (m)->magic == ISCAPI_MCTX_MAGIC)
+end_define
+
+begin_comment
+comment|/*%  * This is the common prefix of a memory pool context.  The same note as  * that for the mem structure applies.  */
+end_comment
+
+begin_struct
+struct|struct
+name|isc_mempool
+block|{
+name|unsigned
+name|int
+name|impmagic
+decl_stmt|;
+name|unsigned
+name|int
+name|magic
+decl_stmt|;
+name|isc_mempoolmethods_t
+modifier|*
+name|methods
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ISCAPI_MPOOL_MAGIC
+value|ISC_MAGIC('A','m','p','l')
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISCAPI_MPOOL_VALID
+parameter_list|(
+name|mp
+parameter_list|)
+value|((mp) != NULL&& \ 				 (mp)->magic == ISCAPI_MPOOL_MAGIC)
+end_define
 
 begin_if
 if|#
@@ -503,7 +1056,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|do { \ 		isc__mem_put((c), (p), (s) _ISC_MEM_FILELINE); \ 		(p) = NULL; \ 	} while (0)
+value|do { \ 		ISCMEMFUNC(put)((c), (p), (s) _ISC_MEM_FILELINE);	\ 		(p) = NULL; \ 	} while (0)
 end_define
 
 begin_define
@@ -518,7 +1071,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|do { \ 		isc__mem_putanddetach((c), (p), (s) _ISC_MEM_FILELINE); \ 		(p) = NULL; \ 	} while (0)
+value|do { \ 		ISCMEMFUNC(putanddetach)((c), (p), (s) _ISC_MEM_FILELINE); \ 		(p) = NULL; \ 	} while (0)
 end_define
 
 begin_define
@@ -531,7 +1084,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|do { \ 		isc__mem_free((c), (p) _ISC_MEM_FILELINE); \ 		(p) = NULL; \ 	} while (0)
+value|do { \ 		ISCMEMFUNC(free)((c), (p) _ISC_MEM_FILELINE);	\ 		(p) = NULL; \ 	} while (0)
 end_define
 
 begin_define
@@ -544,7 +1097,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|do { \ 		isc__mempool_put((c), (p) _ISC_MEM_FILELINE); \ 		(p) = NULL; \ 	} while (0)
+value|do { \ 		ISCMEMPOOLFUNC(put)((c), (p) _ISC_MEM_FILELINE);	\ 		(p) = NULL; \ 	} while (0)
 end_define
 
 begin_else
@@ -563,7 +1116,7 @@ name|p
 parameter_list|,
 name|s
 parameter_list|)
-value|isc__mem_put((c), (p), (s) _ISC_MEM_FILELINE)
+value|ISCMEMFUNC(put)((c), (p), (s) _ISC_MEM_FILELINE)
 end_define
 
 begin_define
@@ -578,7 +1131,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|isc__mem_putanddetach((c), (p), (s) _ISC_MEM_FILELINE)
+value|ISCMEMFUNC(putanddetach)((c), (p), (s) _ISC_MEM_FILELINE)
 end_define
 
 begin_define
@@ -590,7 +1143,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|isc__mem_free((c), (p) _ISC_MEM_FILELINE)
+value|ISCMEMFUNC(free)((c), (p) _ISC_MEM_FILELINE)
 end_define
 
 begin_define
@@ -602,7 +1155,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|isc__mempool_put((c), (p) _ISC_MEM_FILELINE)
+value|ISCMEMPOOLFUNC(put)((c), (p) _ISC_MEM_FILELINE)
 end_define
 
 begin_endif
@@ -715,7 +1268,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Create a memory context.  *  * 'max_size' and 'target_size' are tuning parameters.  When  * ISC_MEMFLAG_INTERNAL is set, allocations smaller than 'max_size'  * will be satisfied by getting blocks of size 'target_size' from the  * system allocator and breaking them up into pieces; larger allocations  * will use the system allocator directly. If 'max_size' and/or  * 'target_size' are zero, default values will be * used.  When  * ISC_MEMFLAG_INTERNAL is not set, 'target_size' is ignored.  *  * 'max_size' is also used to size the statistics arrays and the array  * used to record active memory when ISC_MEM_DEBUGRECORD is set.  Settin  * 'max_size' too low can have detrimental effects on performance.  *  * A memory context created using isc_mem_createx() will obtain  * memory from the system by calling 'memalloc' and 'memfree',  * passing them the argument 'arg'.  A memory context created  * using isc_mem_create() will use the standard library malloc()  * and free().  *  * If ISC_MEMFLAG_NOLOCK is set in 'flags', the corresponding memory context  * will be accessed without locking.  The user who creates the context must  * ensure there be no race.  Since this can be a source of bug, it is generally  * inadvisable to use this flag unless the user is very sure about the race  * condition and the access to the object is highly performance sensitive.  *  * Requires:  * mctxp != NULL&& *mctxp == NULL */
+comment|/*!<  * \brief Create a memory context.  *  * 'max_size' and 'target_size' are tuning parameters.  When  * ISC_MEMFLAG_INTERNAL is set, allocations smaller than 'max_size'  * will be satisfied by getting blocks of size 'target_size' from the  * system allocator and breaking them up into pieces; larger allocations  * will use the system allocator directly. If 'max_size' and/or  * 'target_size' are zero, default values will be * used.  When  * ISC_MEMFLAG_INTERNAL is not set, 'target_size' is ignored.  *  * 'max_size' is also used to size the statistics arrays and the array  * used to record active memory when ISC_MEM_DEBUGRECORD is set.  Setting  * 'max_size' too low can have detrimental effects on performance.  *  * A memory context created using isc_mem_createx() will obtain  * memory from the system by calling 'memalloc' and 'memfree',  * passing them the argument 'arg'.  A memory context created  * using isc_mem_create() will use the standard library malloc()  * and free().  *  * If ISC_MEMFLAG_NOLOCK is set in 'flags', the corresponding memory context  * will be accessed without locking.  The user who creates the context must  * ensure there be no race.  Since this can be a source of bug, it is generally  * inadvisable to use this flag unless the user is very sure about the race  * condition and the access to the object is highly performance sensitive.  *  * Requires:  * mctxp != NULL&& *mctxp == NULL */
 end_comment
 
 begin_comment
@@ -882,6 +1435,21 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Get an estimate of the number of memory in use in 'mctx', in bytes.  * This includes quantization overhead, but does not include memory  * allocated from the system but not yet used.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|isc_mem_isovermem
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Return true iff the memory context is in "over memory" state, i.e.,  * a hiwater mark has been set and the used amount of memory has exceeds  * the mark.  */
 end_comment
 
 begin_function_decl
@@ -1311,7 +1879,10 @@ end_comment
 begin_function_decl
 name|void
 modifier|*
-name|isc__mem_get
+name|ISCMEMFUNC
+function_decl|(
+name|get
+function_decl|)
 parameter_list|(
 name|isc_mem_t
 modifier|*
@@ -1324,26 +1895,13 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|isc__mem_putanddetach
+name|ISCMEMFUNC
+function_decl|(
+name|putanddetach
+function_decl|)
 parameter_list|(
 name|isc_mem_t
 modifier|*
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-name|_ISC_MEM_FLARG
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|isc__mem_put
-parameter_list|(
-name|isc_mem_t
 modifier|*
 parameter_list|,
 name|void
@@ -1357,22 +1915,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-modifier|*
-name|isc__mem_allocate
-parameter_list|(
-name|isc_mem_t
-modifier|*
-parameter_list|,
-name|size_t
-name|_ISC_MEM_FLARG
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|isc__mem_reallocate
+name|ISCMEMFUNC
+function_decl|(
+name|put
+function_decl|)
 parameter_list|(
 name|isc_mem_t
 modifier|*
@@ -1388,7 +1934,47 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|isc__mem_free
+modifier|*
+name|ISCMEMFUNC
+function_decl|(
+name|allocate
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+parameter_list|,
+name|size_t
+name|_ISC_MEM_FLARG
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|ISCMEMFUNC
+function_decl|(
+name|reallocate
+function_decl|)
+parameter_list|(
+name|isc_mem_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+name|_ISC_MEM_FLARG
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ISCMEMFUNC
+function_decl|(
+name|free
+function_decl|)
 parameter_list|(
 name|isc_mem_t
 modifier|*
@@ -1403,7 +1989,10 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|isc__mem_strdup
+name|ISCMEMFUNC
+function_decl|(
+name|strdup
+function_decl|)
 parameter_list|(
 name|isc_mem_t
 modifier|*
@@ -1419,7 +2008,10 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|isc__mempool_get
+name|ISCMEMPOOLFUNC
+function_decl|(
+name|get
+function_decl|)
 parameter_list|(
 name|isc_mempool_t
 modifier|*
@@ -1430,7 +2022,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|isc__mempool_put
+name|ISCMEMPOOLFUNC
+function_decl|(
+name|put
+function_decl|)
 parameter_list|(
 name|isc_mempool_t
 modifier|*
@@ -1441,6 +2036,78 @@ name|_ISC_MEM_FLARG
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_MEMIMPREGISTER
+end_ifdef
+
+begin_comment
+comment|/*%<  * See isc_mem_create2() above.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|isc_result_t
+function_decl|(
+modifier|*
+name|isc_memcreatefunc_t
+function_decl|)
+parameter_list|(
+name|size_t
+name|init_max_size
+parameter_list|,
+name|size_t
+name|target_size
+parameter_list|,
+name|isc_mem_t
+modifier|*
+modifier|*
+name|ctxp
+parameter_list|,
+name|unsigned
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function_decl
+name|isc_result_t
+name|isc_mem_register
+parameter_list|(
+name|isc_memcreatefunc_t
+name|createfunc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Register a new memory management implementation and add it to the list of  * supported implementations.  This function must be called when a different  * memory management library is used than the one contained in the ISC library.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc__mem_register
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * A short cut function that specifies the memory management module in the ISC  * library for isc_mem_register().  An application that uses the ISC library  * usually do not have to care about this function: it would call  * isc_lib_register(), which internally calls this function.  */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_MEMIMPREGISTER */
+end_comment
 
 begin_macro
 name|ISC_LANG_ENDDECLS

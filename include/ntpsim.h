@@ -107,7 +107,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_data_structures.h"
+file|"ntp_prio_q.h"
 end_include
 
 begin_comment
@@ -263,8 +263,20 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|struct
+name|script_info_tag
+name|script_info
+typedef|;
+end_typedef
+
+begin_struct
 struct|struct
+name|script_info_tag
 block|{
+name|script_info
+modifier|*
+name|link
+decl_stmt|;
 name|double
 name|duration
 decl_stmt|;
@@ -284,8 +296,17 @@ name|double
 name|proc_delay
 decl_stmt|;
 block|}
-name|script_info
-typedef|;
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|DECL_FIFO_ANCHOR
+argument_list|(
+argument|script_info
+argument_list|)
+name|script_info_fifo
+expr_stmt|;
 end_typedef
 
 begin_comment
@@ -294,30 +315,47 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|struct
+name|server_info_tag
+name|server_info
+typedef|;
+end_typedef
+
+begin_struct
 struct|struct
+name|server_info_tag
 block|{
+name|server_info
+modifier|*
+name|link
+decl_stmt|;
 name|double
 name|server_time
 decl_stmt|;
-comment|/* Server time */
 name|sockaddr_u
 modifier|*
 name|addr
 decl_stmt|;
-comment|/* Server Address */
-name|queue
+name|script_info_fifo
 modifier|*
 name|script
 decl_stmt|;
-comment|/* Server Script */
 name|script_info
 modifier|*
 name|curr_script
 decl_stmt|;
-comment|/* Current Script */
 block|}
-name|server_info
-typedef|;
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|DECL_FIFO_ANCHOR
+argument_list|(
+argument|server_info
+argument_list|)
+name|server_info_fifo
+expr_stmt|;
 end_typedef
 
 begin_comment
@@ -459,8 +497,7 @@ name|sockaddr_u
 modifier|*
 name|serv_addr
 parameter_list|,
-name|struct
-name|interface
+name|endpt
 modifier|*
 name|inter
 parameter_list|,
@@ -534,15 +571,6 @@ parameter_list|(
 name|double
 parameter_list|,
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|yyparse
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

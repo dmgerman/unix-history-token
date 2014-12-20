@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: hmacmd5.h,v 1.12 2007/06/19 23:47:18 tbox Exp $ */
+comment|/* $Id: hmacmd5.h,v 1.14 2009/02/06 23:47:42 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -39,6 +39,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/platform.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isc/types.h>
 end_include
 
@@ -48,6 +54,30 @@ directive|define
 name|ISC_HMACMD5_KEYLENGTH
 value|64
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_OPENSSLHASH
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/hmac.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|HMAC_CTX
+name|isc_hmacmd5_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_typedef
 typedef|typedef
@@ -67,6 +97,11 @@ block|}
 name|isc_hmacmd5_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|ISC_LANG_BEGINDECLS

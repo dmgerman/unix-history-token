@@ -10,31 +10,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_REFCLOCK_PALISADE_H
+name|REFCLOCK_PALISADE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_REFCLOCK_PALISADE_H
+name|REFCLOCK_PALISADE_H
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"config.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -722,16 +705,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|float
-name|getfloat
-parameter_list|(
-name|u_char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|double
 name|getdbl
 parameter_list|(
@@ -742,6 +716,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|short
 name|getint
 parameter_list|(
@@ -752,7 +727,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|long
+specifier|static
+name|int32
 name|getlong
 parameter_list|(
 name|u_char
@@ -883,7 +859,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PALISADE_H */
+comment|/* REFCLOCK_PALISADE_H */
 end_comment
 
 end_unit

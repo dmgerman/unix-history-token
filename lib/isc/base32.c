@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2008, 2009  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: base32.c,v 1.3.116.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: base32.c,v 1.6 2009/10/21 01:22:29 each Exp $ */
 end_comment
 
 begin_comment
@@ -770,6 +770,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|source
+operator|->
+name|length
+operator|>
+literal|0
+condition|)
+name|isc_region_consume
+argument_list|(
+name|source
+argument_list|,
+name|source
+operator|->
+name|length
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ISC_R_SUCCESS

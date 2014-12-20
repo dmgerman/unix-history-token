@@ -4,37 +4,13 @@ comment|/*  * Copyright (C) 2004, 2007-2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: interfaceiter.c,v 1.13.110.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: interfaceiter.c,v 1.15 2009/01/18 23:48:14 tbox Exp $ */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<config.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<winsock2.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ws2tcpip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<iphlpapi.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -53,6 +29,30 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<winsock2.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ws2tcpip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<gaa_compat.h>
 end_include
 
 begin_include

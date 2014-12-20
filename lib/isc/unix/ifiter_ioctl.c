@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: ifiter_ioctl.c,v 1.60.120.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: ifiter_ioctl.c,v 1.62 2009/01/18 23:48:14 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -411,6 +411,77 @@ directive|endif
 end_endif
 
 begin_function
+name|int
+name|isc_ioctl
+parameter_list|(
+name|int
+name|fildes
+parameter_list|,
+name|int
+name|req
+parameter_list|,
+name|char
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|int
+name|trys
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+for|for
+control|(
+name|trys
+operator|=
+literal|0
+init|;
+name|trys
+operator|<
+literal|3
+condition|;
+name|trys
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|ret
+operator|=
+name|ioctl
+argument_list|(
+name|fildes
+argument_list|,
+name|req
+argument_list|,
+name|arg
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
+block|}
+break|break;
+block|}
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|isc_result_t
 name|getbuf4
@@ -510,7 +581,7 @@ expr_stmt|;
 comment|/* 		 * Ignore the HP/UX warning about "integer overflow during 		 * conversion".  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
 if|if
 condition|(
-name|ioctl
+name|isc_ioctl
 argument_list|(
 name|iter
 operator|->
@@ -834,7 +905,7 @@ expr_stmt|;
 comment|/* 		 * Ignore the HP/UX warning about "integer overflow during 		 * conversion".  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
 if|if
 condition|(
-name|ioctl
+name|isc_ioctl
 argument_list|(
 name|iter
 operator|->
@@ -1962,8 +2033,7 @@ expr_stmt|;
 name|ifrp
 operator|=
 operator|(
-expr|struct
-name|ifreq
+name|void
 operator|*
 operator|)
 operator|(
@@ -2239,7 +2309,7 @@ expr_stmt|;
 comment|/* 	 * Ignore the HP/UX warning about "integer overflow during 	 * conversion.  It comes from its own macro definition, 	 * and is really hard to shut up. 	 */
 if|if
 condition|(
-name|ioctl
+name|isc_ioctl
 argument_list|(
 name|iter
 operator|->
@@ -2489,7 +2559,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|isc_ioctl
 argument_list|(
 name|iter
 operator|->
@@ -2712,7 +2782,7 @@ block|{
 comment|/* 		 * Ignore the HP/UX warning about "integer overflow during 		 * conversion.  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
 if|if
 condition|(
-name|ioctl
+name|isc_ioctl
 argument_list|(
 name|iter
 operator|->
@@ -2821,7 +2891,7 @@ block|{
 comment|/* 		 * Ignore the HP/UX warning about "integer overflow during 		 * conversion.  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
 if|if
 condition|(
-name|ioctl
+name|isc_ioctl
 argument_list|(
 name|iter
 operator|->
@@ -2940,7 +3010,7 @@ expr_stmt|;
 comment|/* 	 * Ignore the HP/UX warning about "integer overflow during 	 * conversion.  It comes from its own macro definition, 	 * and is really hard to shut up. 	 */
 if|if
 condition|(
-name|ioctl
+name|isc_ioctl
 argument_list|(
 name|iter
 operator|->
@@ -3123,8 +3193,7 @@ expr_stmt|;
 name|ifrp
 operator|=
 operator|(
-expr|struct
-name|LIFREQ
+name|void
 operator|*
 operator|)
 operator|(
@@ -3455,7 +3524,7 @@ expr_stmt|;
 comment|/* 	 * Ignore the HP/UX warning about "integer overflow during 	 * conversion.  It comes from its own macro definition, 	 * and is really hard to shut up. 	 */
 if|if
 condition|(
-name|ioctl
+name|isc_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -3641,7 +3710,7 @@ block|{
 comment|/* 		 * Ignore the HP/UX warning about "integer overflow during 		 * conversion.  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
 if|if
 condition|(
-name|ioctl
+name|isc_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -3751,7 +3820,7 @@ block|{
 comment|/* 		 * Ignore the HP/UX warning about "integer overflow during 		 * conversion.  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
 if|if
 condition|(
-name|ioctl
+name|isc_ioctl
 argument_list|(
 name|iter
 operator|->
@@ -3975,7 +4044,7 @@ directive|endif
 comment|/* 	 * Ignore the HP/UX warning about "integer overflow during 	 * conversion.  It comes from its own macro definition, 	 * and is really hard to shut up. 	 */
 if|if
 condition|(
-name|ioctl
+name|isc_ioctl
 argument_list|(
 name|fd
 argument_list|,

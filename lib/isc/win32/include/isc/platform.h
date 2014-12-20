@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: platform.h,v 1.16.118.2 2009/02/16 23:47:15 tbox Exp $ */
+comment|/* $Id: platform.h,v 1.19 2009/09/29 23:48:04 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -89,12 +89,23 @@ directive|define
 name|ISC_PLATFORM_NEEDPTON
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISC_PLATFORM_QUADFORMAT
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|ISC_PLATFORM_QUADFORMAT
 value|"I64"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -150,6 +161,23 @@ undef|#
 directive|undef
 name|ISC_PLATFORM_HAVESYSUNH
 end_undef
+
+begin_comment
+comment|/*  * Defines for the noreturn attribute.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_NORETURN_PRE
+value|__declspec(noreturn)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_NORETURN_POST
+end_define
 
 begin_comment
 comment|/*  * Set up a macro for importing and exporting from the DLL  *  * To build static libraries on win32, #define ISC_STATIC_WIN  */
