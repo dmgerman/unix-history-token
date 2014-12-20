@@ -1950,7 +1950,7 @@ decl_stmt|;
 name|uint8_t
 name|essid
 index|[
-literal|32
+name|IEEE80211_NWID_LEN
 index|]
 decl_stmt|;
 block|}
