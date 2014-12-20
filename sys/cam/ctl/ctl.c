@@ -8648,7 +8648,7 @@ name|kern_ptr
 decl_stmt|;
 name|len_to_copy
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|ext_sglist
 index|[
@@ -13695,7 +13695,7 @@ name|bbrread
 operator|.
 name|sense_data
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -17207,7 +17207,7 @@ operator|++
 expr_stmt|;
 name|num_pieces
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 operator|(
 sizeof|sizeof
@@ -18295,7 +18295,7 @@ name|dest
 argument_list|,
 name|src
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -31352,7 +31352,7 @@ name|header
 operator|->
 name|datalen
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|total_len
 operator|-
@@ -31471,7 +31471,7 @@ name|kern_data_ptr
 expr_stmt|;
 name|datalen
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|total_len
 operator|-
@@ -44790,7 +44790,7 @@ index|[
 name|initidx
 index|]
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -57626,7 +57626,7 @@ name|scsiio
 operator|.
 name|sense_data
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -58656,7 +58656,7 @@ name|dt
 operator|.
 name|cur_sg_entries
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 operator|(
 sizeof|sizeof
@@ -60018,7 +60018,7 @@ index|]
 operator|.
 name|len
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|len_to_go
 argument_list|,
@@ -60469,7 +60469,7 @@ expr_stmt|;
 comment|/* 		 * Both pointers should be aligned.  But it is possible 		 * that the allocation length is not.  They should both 		 * also have enough slack left over at the end, though, 		 * to round up to the next 8 byte boundary. 		 */
 name|cur_len
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|local_sglist
 index|[
@@ -62648,7 +62648,7 @@ name|scsiio
 operator|.
 name|sense_data
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(

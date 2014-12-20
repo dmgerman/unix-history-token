@@ -22,18 +22,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ctl_min
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(((x)< (y)) ? (x) : (y))
-end_define
-
-begin_define
-define|#
-directive|define
 name|CTL_RETVAL_COMPLETE
 value|0
 end_define

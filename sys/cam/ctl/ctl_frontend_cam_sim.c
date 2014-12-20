@@ -1790,7 +1790,7 @@ name|ctl_ptr
 decl_stmt|;
 name|len_to_copy
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|cam_sglist
 index|[
