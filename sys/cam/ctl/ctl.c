@@ -16662,7 +16662,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\t<initiator>%u %s</initiator>\n"
+literal|"\t<initiator id=\"%u\">%s</initiator>\n"
 argument_list|,
 name|j
 argument_list|,
@@ -16683,7 +16683,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\t<initiator>%u naa.%08jx</initiator>\n"
+literal|"\t<initiator id=\"%u\">naa.%08jx</initiator>\n"
 argument_list|,
 name|j
 argument_list|,
