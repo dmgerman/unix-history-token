@@ -3893,6 +3893,7 @@ argument_list|)
 operator|->
 name|ss_duration
 expr_stmt|;
+comment|/* XXX scan state can change! Re-validate scan state! */
 name|IEEE80211_UNLOCK
 argument_list|(
 name|ic
@@ -4138,6 +4139,7 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+comment|/* XXX scan state can change! Re-validate scan state! */
 name|SCAN_PRIVATE
 argument_list|(
 name|ss
@@ -4230,6 +4232,7 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+comment|/* XXX scan state can change! Re-validate scan state! */
 comment|/* 	 * Since a cancellation may have occured during one of the 	 * driver calls (whilst unlocked), update scandone. 	 */
 if|if
 condition|(
@@ -4260,29 +4263,16 @@ name|vap
 operator|->
 name|iv_ifp
 argument_list|,
-literal|"%s: OOPS! scan cancelled during driver call!\n"
+literal|"%s: OOPS! scan cancelled during driver call (1)!\n"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-block|}
 name|scandone
-operator||=
-operator|(
-operator|(
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
-operator|->
-name|ss_iflags
-operator|&
-name|ISCAN_CANCEL
-operator|)
-operator|!=
-literal|0
-operator|)
+operator|=
+literal|1
 expr_stmt|;
+block|}
 comment|/* 	 * Record scan complete time.  Note that we also do 	 * this when canceled so any background scan will 	 * not be restarted for a while. 	 */
 if|if
 condition|(
@@ -4536,6 +4526,46 @@ argument_list|,
 name|scanend
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Since a cancellation may have occured during one of the 	 * driver calls (whilst unlocked), update scandone. 	 */
+if|if
+condition|(
+name|scandone
+operator|==
+literal|0
+operator|&&
+operator|(
+operator|(
+name|SCAN_PRIVATE
+argument_list|(
+name|ss
+argument_list|)
+operator|->
+name|ss_iflags
+operator|&
+name|ISCAN_CANCEL
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* XXX printf? */
+name|if_printf
+argument_list|(
+name|vap
+operator|->
+name|iv_ifp
+argument_list|,
+literal|"%s: OOPS! scan cancelled during driver call (2)!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|scandone
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* 	 * Clear the SCAN bit first in case frames are 	 * pending on the station power save queue.  If 	 * we defer this then the dispatch of the frames 	 * may generate a request to cancel scanning. 	 */
 name|done
 label|:
