@@ -3475,6 +3475,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|slot_printf
+argument_list|(
+name|slot
+argument_list|,
+literal|" Controller timeout\n"
+argument_list|)
+expr_stmt|;
+name|sdhci_dumpregs
+argument_list|(
+name|slot
+argument_list|)
+expr_stmt|;
 name|sdhci_reset
 argument_list|(
 name|slot
@@ -3495,6 +3507,16 @@ expr_stmt|;
 name|sdhci_req_done
 argument_list|(
 name|slot
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|slot_printf
+argument_list|(
+name|slot
+argument_list|,
+literal|" Spurious timeout - no active command\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6222,6 +6244,17 @@ operator|&
 name|SDHCI_INT_DATA_MASK
 argument_list|)
 expr_stmt|;
+comment|/* Dont call data_irq in case of errored command */
+if|if
+condition|(
+operator|(
+name|intmask
+operator|&
+name|SDHCI_INT_CMD_ERROR_MASK
+operator|)
+operator|==
+literal|0
+condition|)
 name|sdhci_data_irq
 argument_list|(
 name|slot

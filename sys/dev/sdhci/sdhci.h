@@ -899,8 +899,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDHCI_INT_CMD_ERROR_MASK
+value|(SDHCI_INT_TIMEOUT | \ 		SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDHCI_INT_CMD_MASK
-value|(SDHCI_INT_RESPONSE | SDHCI_INT_TIMEOUT | \ 		SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX)
+value|(SDHCI_INT_RESPONSE | SDHCI_INT_CMD_ERROR_MASK)
 end_define
 
 begin_define
