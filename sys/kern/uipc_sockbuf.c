@@ -2589,6 +2589,13 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return;
 name|KASSERT
 argument_list|(
 name|m
