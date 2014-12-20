@@ -188,6 +188,17 @@ value|(1<<13)
 end_define
 
 begin_comment
+comment|/* Wait to see reset bit asserted before waiting for de-asserted  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_WAITFOR_RESET_ASSERTED
+value|(1<<14)
+end_define
+
+begin_comment
 comment|/*  * Controller registers  */
 end_comment
 

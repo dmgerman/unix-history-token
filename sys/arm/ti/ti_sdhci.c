@@ -1725,7 +1725,7 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Reset both the command and data state machines */
+comment|/* 	 * Reset the command and data state machines and also other aspects of 	 * the controller such as bus clock and power. 	 * 	 * If we read the software reset register too fast after writing it we 	 * can get back a zero that means the reset hasn't started yet rather 	 * than that the reset is complete. Per TI recommendations, work around 	 * it by reading until we see the reset bit asserted, then read until 	 * it's clear. We also set the SDHCI_QUIRK_WAITFOR_RESET_ASSERTED quirk 	 * so that the main sdhci driver uses this same logic in its resets. 	 */
 name|ti_sdhci_write_1
 argument_list|(
 name|dev
@@ -1739,7 +1739,45 @@ argument_list|)
 expr_stmt|;
 name|timeout
 operator|=
-literal|1000
+literal|10000
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|ti_sdhci_read_1
+argument_list|(
+name|dev
+argument_list|,
+name|NULL
+argument_list|,
+name|SDHCI_SOFTWARE_RESET
+argument_list|)
+operator|&
+name|SDHCI_RESET_ALL
+operator|)
+operator|!=
+name|SDHCI_RESET_ALL
+condition|)
+block|{
+if|if
+condition|(
+operator|--
+name|timeout
+operator|==
+literal|0
+condition|)
+block|{
+break|break;
+block|}
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|timeout
+operator|=
+literal|10000
 expr_stmt|;
 while|while
 condition|(
@@ -2325,6 +2363,15 @@ operator|.
 name|quirks
 operator||=
 name|SDHCI_QUIRK_DONT_SHIFT_RESPONSE
+expr_stmt|;
+comment|/* 	 * Reset bits are broken, have to wait to see the bits asserted 	 * before waiting to see them de-asserted. 	 */
+name|sc
+operator|->
+name|slot
+operator|.
+name|quirks
+operator||=
+name|SDHCI_QUIRK_WAITFOR_RESET_ASSERTED
 expr_stmt|;
 comment|/* 	 * DMA is not really broken, I just haven't implemented it yet. 	 */
 name|sc
