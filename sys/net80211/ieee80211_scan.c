@@ -3368,6 +3368,17 @@ name|ic
 operator|->
 name|ic_scan
 decl_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* wake up the scan task */
 name|IEEE80211_LOCK
 argument_list|(
@@ -3415,6 +3426,17 @@ name|ieee80211_scan_state
 modifier|*
 name|ss
 decl_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|IEEE80211_LOCK
 argument_list|(
 name|ic
@@ -3638,6 +3660,19 @@ name|ss
 operator|->
 name|ss_vap
 decl_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: calling; maxdwell=%lu\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|maxdwell
+argument_list|)
+expr_stmt|;
 name|IEEE80211_LOCK
 argument_list|(
 name|vap
@@ -3754,6 +3789,19 @@ name|ss
 operator|->
 name|ss_ic
 decl_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|ss
+operator|->
+name|ss_vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|IEEE80211_LOCK
 argument_list|(
 name|ic
@@ -4041,6 +4089,19 @@ operator|)
 operator|!=
 literal|0
 expr_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: loop start; scandone=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|scandone
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|scandone
@@ -4280,6 +4341,17 @@ operator|)
 operator|)
 condition|)
 continue|continue;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: waiting\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Wait to be signalled to scan the next channel */
 name|cv_wait
 argument_list|(
@@ -4298,6 +4370,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: out\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SCAN_PRIVATE
