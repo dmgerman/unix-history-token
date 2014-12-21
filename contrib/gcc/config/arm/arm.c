@@ -3758,6 +3758,21 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* Clang compatibility... define __ARM_ARCH_7A__, but codegen is still 6ZK. */
+block|{
+literal|"armv7a"
+block|,
+name|arm1176jzs
+block|,
+literal|"7A"
+block|,
+name|FL_CO_PROC
+operator||
+name|FL_FOR_ARCH6ZK
+block|,
+name|NULL
+block|}
+block|,
 block|{
 literal|"ep9312"
 block|,
