@@ -2524,6 +2524,36 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* Ensure we don't overrun irqs. */
+if|if
+condition|(
+name|ctlr
+operator|->
+name|numirqs
+operator|>
+name|AHCI_MAX_IRQS
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Too many irqs %d> %d (clamping)\n"
+argument_list|,
+name|ctlr
+operator|->
+name|numirqs
+argument_list|,
+name|AHCI_MAX_IRQS
+argument_list|)
+expr_stmt|;
+name|ctlr
+operator|->
+name|numirqs
+operator|=
+name|AHCI_MAX_IRQS
+expr_stmt|;
+block|}
 comment|/* Allocate all IRQs. */
 for|for
 control|(
