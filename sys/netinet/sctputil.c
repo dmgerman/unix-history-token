@@ -10549,12 +10549,6 @@ comment|/* 		 * the net is used here so that we can add in the RTO. Even 		 * th
 if|if
 condition|(
 operator|(
-name|inp
-operator|==
-name|NULL
-operator|)
-operator|||
-operator|(
 name|stcb
 operator|==
 name|NULL
@@ -10788,15 +10782,6 @@ case|case
 name|SCTP_TIMER_TYPE_NEWCOOKIE
 case|:
 comment|/* 		 * nothing needed but the endpoint here ususually about 60 		 * minutes. 		 */
-if|if
-condition|(
-name|inp
-operator|==
-name|NULL
-condition|)
-block|{
-return|return;
-block|}
 name|tmr
 operator|=
 operator|&
@@ -10851,15 +10836,6 @@ case|case
 name|SCTP_TIMER_TYPE_INPKILL
 case|:
 comment|/* 		 * The inp is setup to die. We re-use the signature_chage 		 * timer since that has stopped and we are in the GONE 		 * state. 		 */
-if|if
-condition|(
-name|inp
-operator|==
-name|NULL
-condition|)
-block|{
-return|return;
-block|}
 name|tmr
 operator|=
 operator|&
@@ -10890,19 +10866,10 @@ name|NULL
 operator|)
 operator|||
 operator|(
-name|inp
-operator|==
-name|NULL
-operator|)
-condition|)
-block|{
-return|return;
-block|}
-if|if
-condition|(
 name|net
 operator|==
 name|NULL
+operator|)
 condition|)
 block|{
 return|return;
@@ -11005,17 +10972,9 @@ case|:
 comment|/* 		 * Here we use the endpoints shutdown guard timer usually 		 * about 3 minutes. 		 */
 if|if
 condition|(
-operator|(
-name|inp
-operator|==
-name|NULL
-operator|)
-operator|||
-operator|(
 name|stcb
 operator|==
 name|NULL
-operator|)
 condition|)
 block|{
 return|return;
