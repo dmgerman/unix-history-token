@@ -173,10 +173,12 @@ define|#
 directive|define
 name|intc_read_4
 parameter_list|(
-name|reg
+name|_sc
+parameter_list|,
+name|_reg
 parameter_list|)
 define|\
-value|bus_space_read_4(intc_softc->li_bst, intc_softc->li_bsh, reg)
+value|bus_space_read_4((_sc)->li_bst, (_sc)->li_bsh, (_reg))
 end_define
 
 begin_define
@@ -184,12 +186,14 @@ define|#
 directive|define
 name|intc_write_4
 parameter_list|(
-name|reg
+name|_sc
 parameter_list|,
-name|val
+name|_reg
+parameter_list|,
+name|_val
 parameter_list|)
 define|\
-value|bus_space_write_4(intc_softc->li_bst, intc_softc->li_bsh, reg, val)
+value|bus_space_write_4((_sc)->li_bst, (_sc)->li_bsh, (_reg), (_val))
 end_define
 
 begin_function
@@ -347,6 +351,8 @@ expr_stmt|;
 comment|/* Clear interrupt status registers and disable all interrupts */
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|LPC_INTC_MIC_ER
 argument_list|,
 literal|0
@@ -354,6 +360,8 @@ argument_list|)
 expr_stmt|;
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|LPC_INTC_SIC1_ER
 argument_list|,
 literal|0
@@ -361,6 +369,8 @@ argument_list|)
 expr_stmt|;
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|LPC_INTC_SIC2_ER
 argument_list|,
 literal|0
@@ -368,6 +378,8 @@ argument_list|)
 expr_stmt|;
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|LPC_INTC_MIC_RSR
 argument_list|,
 operator|~
@@ -376,6 +388,8 @@ argument_list|)
 expr_stmt|;
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|LPC_INTC_SIC1_RSR
 argument_list|,
 operator|~
@@ -384,6 +398,8 @@ argument_list|)
 expr_stmt|;
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|LPC_INTC_SIC2_RSR
 argument_list|,
 operator|~
@@ -480,6 +496,13 @@ name|int
 name|last
 parameter_list|)
 block|{
+name|struct
+name|lpc_intc_softc
+modifier|*
+name|sc
+init|=
+name|intc_softc
+decl_stmt|;
 name|uint32_t
 name|value
 decl_stmt|;
@@ -491,6 +514,8 @@ name|value
 operator|=
 name|intc_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|LPC_INTC_MIC_SR
 argument_list|)
 expr_stmt|;
@@ -529,6 +554,8 @@ name|value
 operator|=
 name|intc_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|LPC_INTC_SIC1_SR
 argument_list|)
 expr_stmt|;
@@ -569,6 +596,8 @@ name|value
 operator|=
 name|intc_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|LPC_INTC_SIC2_SR
 argument_list|)
 expr_stmt|;
@@ -621,6 +650,13 @@ name|uintptr_t
 name|nb
 parameter_list|)
 block|{
+name|struct
+name|lpc_intc_softc
+modifier|*
+name|sc
+init|=
+name|intc_softc
+decl_stmt|;
 name|int
 name|reg
 decl_stmt|;
@@ -680,6 +716,8 @@ name|value
 operator|=
 name|intc_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
@@ -694,6 +732,8 @@ operator|)
 expr_stmt|;
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|reg
 argument_list|,
 name|value
@@ -710,6 +750,13 @@ name|uintptr_t
 name|nb
 parameter_list|)
 block|{
+name|struct
+name|lpc_intc_softc
+modifier|*
+name|sc
+init|=
+name|intc_softc
+decl_stmt|;
 name|int
 name|reg
 decl_stmt|;
@@ -759,6 +806,8 @@ name|value
 operator|=
 name|intc_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
@@ -772,6 +821,8 @@ operator|)
 expr_stmt|;
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|reg
 argument_list|,
 name|value
@@ -790,6 +841,13 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+name|struct
+name|lpc_intc_softc
+modifier|*
+name|sc
+init|=
+name|intc_softc
+decl_stmt|;
 name|int
 name|reg
 decl_stmt|;
@@ -847,6 +905,8 @@ name|value
 operator|=
 name|intc_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
@@ -860,6 +920,8 @@ operator|)
 expr_stmt|;
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|reg
 argument_list|,
 name|value
