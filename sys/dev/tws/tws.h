@@ -1011,6 +1011,10 @@ name|TWS_MAX_QS
 index|]
 decl_stmt|;
 comment|/* tail pointers to q's */
+name|struct
+name|callout
+name|stats_timer
+decl_stmt|;
 block|}
 struct|;
 end_struct
