@@ -19,6 +19,23 @@ directive|define
 name|_MACHINE_INTR_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/openfirm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* XXX move to std.* files? */
 end_comment
@@ -389,6 +406,31 @@ name|pol
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
+begin_function_decl
+name|int
+name|arm_fdt_map_irq
+parameter_list|(
+name|phandle_t
+parameter_list|,
+name|pcell_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
