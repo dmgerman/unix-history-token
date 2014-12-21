@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -729,11 +735,13 @@ expr_stmt|;
 block|}
 name|paddr_unmap
 argument_list|(
-operator|(
+name|__DEVOLATILE
+argument_list|(
 name|void
 operator|*
-operator|)
+argument_list|,
 name|vindir
+argument_list|)
 argument_list|,
 name|be32toh
 argument_list|(
