@@ -1548,10 +1548,16 @@ expr_stmt|;
 comment|/* Setup interrupts. */
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|ahci_setup_interrupt
 argument_list|(
 name|dev
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|bus_dma_tag_destroy
@@ -1585,7 +1591,7 @@ name|sc_iomem
 argument_list|)
 expr_stmt|;
 return|return
-name|ENXIO
+name|error
 return|;
 block|}
 name|i
