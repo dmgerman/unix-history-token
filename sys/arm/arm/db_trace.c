@@ -1340,6 +1340,7 @@ index|]
 operator|==
 literal|0
 condition|)
+block|{
 name|state
 operator|->
 name|registers
@@ -1354,6 +1355,29 @@ index|[
 name|LR
 index|]
 expr_stmt|;
+comment|/* 		 * If the program counter changed, flag it in the update mask. 		 */
+if|if
+condition|(
+name|state
+operator|->
+name|start_pc
+operator|!=
+name|state
+operator|->
+name|registers
+index|[
+name|PC
+index|]
+condition|)
+name|state
+operator|->
+name|update_mask
+operator||=
+literal|1
+operator|<<
+name|PC
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
