@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2014, LSI Corp.  * All rights reserved.  * Author: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of the<ORGANIZATION> nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation  * are those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@lsi.com>  * Mail to: LSI Corporation, 1621 Barber Lane, Milpitas, CA 95035  *    ATTN: MegaRaid FreeBSD  *  */
+comment|/*  * Copyright (c) 2014, LSI Corp. All rights reserved. Author: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer. 2. Redistributions  * in binary form must reproduce the above copyright notice, this list of  * conditions and the following disclaimer in the documentation and/or other  * materials provided with the distribution. 3. Neither the name of the  *<ORGANIZATION> nor the names of its contributors may be used to endorse or  * promote products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@lsi.com> Mail to: LSI Corporation, 1621  * Barber Lane, Milpitas, CA 95035 ATTN: MegaRaid FreeBSD  *  */
 end_comment
 
 begin_include
@@ -65,8 +65,14 @@ directive|include
 file|<sys/taskqueue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/smp.h>
+end_include
+
 begin_comment
-comment|/*   * Function prototypes   */
+comment|/*  * Function prototypes  */
 end_comment
 
 begin_decl_stmt
@@ -104,6 +110,21 @@ name|mrsas_ioctl
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|d_poll_t
+name|mrsas_poll
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mrsas_mgmt_info
+name|mrsas_mgmt_info
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|struct
@@ -112,6 +133,32 @@ modifier|*
 name|mrsas_find_ident
 parameter_list|(
 name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|mrsas_setup_msix
+parameter_list|(
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|mrsas_allocate_msix
+parameter_list|(
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -296,6 +343,9 @@ name|struct
 name|mrsas_softc
 modifier|*
 name|sc
+parameter_list|,
+name|u_int32_t
+name|MSIxIndex
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -988,6 +1038,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|u_long
+name|ioctlCmd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1013,7 +1066,7 @@ parameter_list|(
 name|u_int32_t
 name|ld
 parameter_list|,
-name|MR_FW_RAID_MAP_ALL
+name|MR_DRV_RAID_MAP_ALL
 modifier|*
 name|map
 parameter_list|)
@@ -1029,7 +1082,7 @@ parameter_list|(
 name|u_int32_t
 name|ld
 parameter_list|,
-name|MR_FW_RAID_MAP_ALL
+name|MR_DRV_RAID_MAP_ALL
 modifier|*
 name|map
 parameter_list|)
@@ -1142,7 +1195,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * PCI device struct and table  *  */
+comment|/*  * PCI device struct and table  *  */
 end_comment
 
 begin_typedef
@@ -1230,7 +1283,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * Character device entry points   *  */
+comment|/*  * Character device entry points  *  */
 end_comment
 
 begin_decl_stmt
@@ -1271,6 +1324,11 @@ operator|=
 name|mrsas_ioctl
 block|,
 operator|.
+name|d_poll
+operator|=
+name|mrsas_poll
+block|,
+operator|.
 name|d_name
 operator|=
 literal|"mrsas"
@@ -1291,7 +1349,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * In the cdevsw routines, we find our softc by using the si_drv1 member  * of struct cdev.  We set this variable to point to our softc in our  * attach routine when we create the /dev entry.  */
+comment|/*  * In the cdevsw routines, we find our softc by using the si_drv1 member of  * struct cdev.  We set this variable to point to our softc in our attach  * routine when we create the /dev entry.  */
 end_comment
 
 begin_function
@@ -1447,7 +1505,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**   * Register Read/Write Functions   *  */
+comment|/*  * Register Read/Write Functions  *  */
 end_comment
 
 begin_function
@@ -1540,7 +1598,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**   * Interrupt Disable/Enable/Clear Functions   *  */
+comment|/*  * Interrupt Disable/Enable/Clear Functions  *  */
 end_comment
 
 begin_function
@@ -1705,7 +1763,7 @@ name|outbound_intr_status
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* If FW state change interrupt is received, write to it again to clear */
+comment|/* 	 * If FW state change interrupt is received, write to it again to 	 * clear 	 */
 if|if
 condition|(
 name|status
@@ -1821,7 +1879,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**   * PCI Support Functions   *  */
+comment|/*  * PCI Support Functions  *  */
 end_comment
 
 begin_function
@@ -2013,7 +2071,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_setup_sysctl:  setup sysctl values for mrsas  * input:               Adapter instance soft state  *  * Setup sysctl entries for mrsas driver.  */
+comment|/*  * mrsas_setup_sysctl:	setup sysctl values for mrsas  * input:				Adapter instance soft state  *  * Setup sysctl entries for mrsas driver.  */
 end_comment
 
 begin_function
@@ -2052,7 +2110,7 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-comment|/*      * Setup the sysctl variable so the user can change the debug level      * on the fly.      */
+comment|/* 	 * Setup the sysctl variable so the user can change the debug level 	 * on the fly. 	 */
 name|snprintf
 argument_list|(
 name|tmpstr
@@ -2411,7 +2469,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_get_tunables:  get tunable parameters.  * input:               Adapter instance soft state  *  * Get tunable parameters. This will help to debug driver at boot time.  */
+comment|/*  * mrsas_get_tunables:	get tunable parameters.  * input:				Adapter instance soft state  *  * Get tunable parameters. This will help to debug driver at boot time.  */
 end_comment
 
 begin_function
@@ -2462,7 +2520,7 @@ name|reset_in_progress
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Grab the global variables.      */
+comment|/* 	 * Grab the global variables. 	 */
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"hw.mrsas.debug_level"
@@ -2507,7 +2565,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_alloc_evt_log_info cmd:	Allocates memory to get event log information.  * 								  	Used to get sequence number at driver load time.  * input:                      	  	Adapter soft state  *  * Allocates DMAable memory for the event log info internal command.  */
+comment|/*  * mrsas_alloc_evt_log_info cmd: Allocates memory to get event log information.  * Used to get sequence number at driver load time.  * input:		Adapter soft state  *  * Allocates DMAable memory for the event log info internal command.  */
 end_comment
 
 begin_function
@@ -2540,40 +2598,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|el_info_size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|el_info_size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|sc
 operator|->
@@ -2702,7 +2750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_free_evt_info_cmd: 	Free memory for Event log info command   * input:                    	Adapter soft state  *  * Deallocates memory for the event log info internal command.  */
+comment|/*  * mrsas_free_evt_info_cmd:	Free memory for Event log info command  * input:					Adapter soft state  *  * Deallocates memory for the event log info internal command.  */
 end_comment
 
 begin_function
@@ -2774,7 +2822,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  mrsas_get_seq_num:	Get latest event sequence number  *  @sc:				Adapter soft state  *  @eli:				Firmware event log sequence number information.  *						Firmware maintains a log of all events in a non-volatile area.  *						Driver get the sequence number using DCMD  *						"MR_DCMD_CTRL_EVENT_GET_INFO" at driver load time.  */
+comment|/*  *  mrsas_get_seq_num:	Get latest event sequence number  *  @sc:				Adapter soft state  *  @eli:				Firmware event log sequence number information.  *  * Firmware maintains a log of all events in a non-volatile area.  * Driver get the sequence number using DCMD  * "MR_DCMD_CTRL_EVENT_GET_INFO" at driver load time.  */
 end_comment
 
 begin_function
@@ -2972,7 +3020,7 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Copy the data back into callers buffer  	 */
+comment|/* 	 * Copy the data back into callers buffer 	 */
 name|memcpy
 argument_list|(
 name|eli
@@ -3005,7 +3053,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  mrsas_register_aen:		Register for asynchronous event notification  *  @sc:					Adapter soft state  *  @seq_num:				Starting sequence number  *  @class_locale:			Class of the event  *  						This function subscribes for events beyond the @seq_num   *  						and type @class_locale.  *   * */
+comment|/*  *  mrsas_register_aen:		Register for asynchronous event notification  *  @sc:			Adapter soft state  *  @seq_num:			Starting sequence number  *  @class_locale:		Class of the event  *  *  This function subscribes for events beyond the @seq_num  *  and type @class_locale.  *  */
 end_comment
 
 begin_function
@@ -3046,7 +3094,7 @@ name|union
 name|mrsas_evt_class_locale
 name|prev_aen
 decl_stmt|;
-comment|/*  *  If there an AEN pending already (aen_cmd), check if the  *  class_locale of that pending AEN is inclusive of the new  *  AEN request we currently have. If it is, then we don't have  *  to do anything. In other words, whichever events the current  *  AEN request is subscribing to, have already been subscribed  *  to.  *  If the old_cmd is _not_ inclusive, then we have to abort  *  that command, form a class_locale that is superset of both  *  old and current and re-issue to the FW  * */
+comment|/* 	 * If there an AEN pending already (aen_cmd), check if the 	 * class_locale of that pending AEN is inclusive of the new AEN 	 * request we currently have. If it is, then we don't have to do 	 * anything. In other words, whichever events the current AEN request 	 * is subscribing to, have already been subscribed to. If the old_cmd 	 * is _not_ inclusive, then we have to abort that command, form a 	 * class_locale that is superset of both old and current and re-issue 	 * to the FW 	 */
 name|curr_aen
 operator|.
 name|word
@@ -3079,7 +3127,7 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|/*  * A class whose enum value is smaller is inclusive of all  * higher values. If a PROGRESS (= -1) was previously  * registered, then a new registration requests for higher  * classes need not be sent to FW. They are automatically  * included.  * Locale numbers don't have such hierarchy. They are bitmap values  */
+comment|/* 		 * A class whose enum value is smaller is inclusive of all 		 * higher values. If a PROGRESS (= -1) was previously 		 * registered, then a new registration requests for higher 		 * classes need not be sent to FW. They are automatically 		 * included. Locale numbers don't have such hierarchy. They 		 * are bitmap values 		 */
 if|if
 condition|(
 operator|(
@@ -3120,7 +3168,7 @@ name|locale
 operator|)
 condition|)
 block|{
-comment|/*   			 * Previously issued event registration includes   			 * current request. Nothing to do.   			 */
+comment|/* 			 * Previously issued event registration includes 			 * current request. Nothing to do. 			 */
 return|return
 literal|0
 return|;
@@ -3241,7 +3289,7 @@ name|mrsas_evt_detail
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  * Prepare DCMD for aen registration  */
+comment|/* 	 * Prepare DCMD for aen registration 	 */
 name|memset
 argument_list|(
 name|dcmd
@@ -3390,14 +3438,14 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*   	 * Store reference to the cmd used to register for AEN. When an   	 * application wants us to register for AEN, we have to abort this    	 * cmd and re-register with a new EVENT LOCALE supplied by that app   	 */
+comment|/* 	 * Store reference to the cmd used to register for AEN. When an 	 * application wants us to register for AEN, we have to abort this 	 * cmd and re-register with a new EVENT LOCALE supplied by that app 	 */
 name|sc
 operator|->
 name|aen_cmd
 operator|=
 name|cmd
 expr_stmt|;
-comment|/*   	  Issue the aen registration frame   	*/
+comment|/* 	 * Issue the aen registration frame 	 */
 if|if
 condition|(
 name|mrsas_issue_dcmd
@@ -3430,7 +3478,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_start_aen -  Subscribes to AEN during driver load time  * @instance:           Adapter soft state  */
+comment|/*  * mrsas_start_aen:	Subscribes to AEN during driver load time  * @instance:		Adapter soft state  */
 end_comment
 
 begin_function
@@ -3452,7 +3500,7 @@ name|union
 name|mrsas_evt_class_locale
 name|class_locale
 decl_stmt|;
-comment|/* Get the latest sequence number from FW*/
+comment|/* Get the latest sequence number from FW */
 name|memset
 argument_list|(
 operator|&
@@ -3480,7 +3528,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* Register AEN with FW for latest sequence number plus 1*/
+comment|/* Register AEN with FW for latest sequence number plus 1 */
 name|class_locale
 operator|.
 name|members
@@ -3525,7 +3573,278 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_attach:            PCI entry point  * input:                   device struct pointer   *   * Performs setup of PCI and registers, initializes mutexes and  * linked lists, registers interrupts and CAM, and initializes     * the adapter/controller to its proper state.  */
+comment|/*  * mrsas_setup_msix:	Allocate MSI-x vectors  * @sc:					adapter soft state  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|mrsas_setup_msix
+parameter_list|(
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|sc
+operator|->
+name|msix_vectors
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sc
+operator|->
+name|irq_context
+index|[
+name|i
+index|]
+operator|.
+name|sc
+operator|=
+name|sc
+expr_stmt|;
+name|sc
+operator|->
+name|irq_context
+index|[
+name|i
+index|]
+operator|.
+name|MSIxIndex
+operator|=
+name|i
+expr_stmt|;
+name|sc
+operator|->
+name|irq_id
+index|[
+name|i
+index|]
+operator|=
+name|i
+operator|+
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|mrsas_irq
+index|[
+name|i
+index|]
+operator|=
+name|bus_alloc_resource_any
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|irq_id
+index|[
+name|i
+index|]
+argument_list|,
+name|RF_ACTIVE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mrsas_irq
+index|[
+name|i
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+literal|"Can't allocate MSI-x\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|irq_alloc_failed
+goto|;
+block|}
+if|if
+condition|(
+name|bus_setup_intr
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+name|sc
+operator|->
+name|mrsas_irq
+index|[
+name|i
+index|]
+argument_list|,
+name|INTR_MPSAFE
+operator||
+name|INTR_TYPE_CAM
+argument_list|,
+name|NULL
+argument_list|,
+name|mrsas_isr
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|irq_context
+index|[
+name|i
+index|]
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|intr_handle
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+literal|"Cannot set up MSI-x interrupt handler\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|irq_alloc_failed
+goto|;
+block|}
+block|}
+return|return
+name|SUCCESS
+return|;
+name|irq_alloc_failed
+label|:
+name|mrsas_teardown_intr
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|FAIL
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * mrsas_allocate_msix:		Setup MSI-x vectors  * @sc:						adapter soft state  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|mrsas_allocate_msix
+parameter_list|(
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+if|if
+condition|(
+name|pci_alloc_msix
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|msix_vectors
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+literal|"Using MSI-X with %d number"
+literal|" of vectors\n"
+argument_list|,
+name|sc
+operator|->
+name|msix_vectors
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+literal|"MSI-x setup failed\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|irq_alloc_failed
+goto|;
+block|}
+return|return
+name|SUCCESS
+return|;
+name|irq_alloc_failed
+label|:
+name|mrsas_teardown_intr
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|FAIL
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * mrsas_attach:	PCI entry point  * input:			pointer to device struct  *  * Performs setup of PCI and registers, initializes mutexes and linked lists,  * registers interrupts and CAM, and initializes   the adapter/controller to  * its proper state.  */
 end_comment
 
 begin_function
@@ -3575,7 +3894,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*       * Set up PCI and registers       */
+comment|/* 	 * Set up PCI and registers 	 */
 name|cmd
 operator|=
 name|pci_read_config
@@ -3620,7 +3939,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|//bar = pci_read_config(dev, MRSAS_PCI_BAR0, 4);
 name|bar
 operator|=
 name|pci_read_config
@@ -3819,6 +4137,21 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Intialize a counting Semaphore to take care no. of concurrent 	 * IOCTLs 	 */
+name|sema_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ioctl_count_sema
+argument_list|,
+name|MRSAS_MAX_MFI_CMDS
+operator|-
+literal|5
+argument_list|,
+name|IOCTL_SEMA_DESCRIPTION
+argument_list|)
+expr_stmt|;
 comment|/* Intialize linked list */
 name|TAILQ_INIT
 argument_list|(
@@ -3836,7 +4169,7 @@ operator|->
 name|mrsas_mfi_cmd_list_head
 argument_list|)
 expr_stmt|;
-name|atomic_set
+name|mrsas_atomic_set
 argument_list|(
 operator|&
 name|sc
@@ -3891,6 +4224,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|make_dev_alias
+argument_list|(
+name|sc
+operator|->
+name|mrsas_cdev
+argument_list|,
+literal|"megaraid_sas_ioctl_node"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|sc
 operator|->
 name|mrsas_cdev
@@ -3912,6 +4263,12 @@ expr_stmt|;
 name|sc
 operator|->
 name|UnevenSpanSupport
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|msix_enable
 operator|=
 literal|0
 expr_stmt|;
@@ -4016,7 +4373,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Initiate AEN (Asynchronous Event Notification)*/
+comment|/* Initiate AEN (Asynchronous Event Notification) */
 if|if
 condition|(
 name|mrsas_start_aen
@@ -4034,6 +4391,50 @@ goto|goto
 name|fail_start_aen
 goto|;
 block|}
+comment|/* 	 * Add this controller to mrsas_mgmt_info structure so that it can be 	 * exported to management applications 	 */
+if|if
+condition|(
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|memset
+argument_list|(
+operator|&
+name|mrsas_mgmt_info
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mrsas_mgmt_info
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|mrsas_mgmt_info
+operator|.
+name|count
+operator|++
+expr_stmt|;
+name|mrsas_mgmt_info
+operator|.
+name|sc_ptr
+index|[
+name|mrsas_mgmt_info
+operator|.
+name|max_index
+index|]
+operator|=
+name|sc
+expr_stmt|;
+name|mrsas_mgmt_info
+operator|.
+name|max_index
+operator|++
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4057,7 +4458,22 @@ argument_list|)
 expr_stmt|;
 name|attach_fail_fw
 label|:
-comment|//attach_fail_raidmap:
+comment|/* if MSIX vector is allocated and FW Init FAILED then release MSIX */
+if|if
+condition|(
+name|sc
+operator|->
+name|msix_enable
+operator|==
+literal|1
+condition|)
+name|pci_release_msi
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|)
+expr_stmt|;
 name|mrsas_free_mem
 argument_list|(
 name|sc
@@ -4127,6 +4543,15 @@ operator|->
 name|raidmap_lock
 argument_list|)
 expr_stmt|;
+comment|/* Destroy the counting semaphore created for Ioctl */
+name|sema_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ioctl_count_sema
+argument_list|)
+expr_stmt|;
 name|attach_fail
 label|:
 name|destroy_dev
@@ -4170,7 +4595,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_detach:            De-allocates and teardown resources  * input:                   device struct pointer   *   * This function is the entry point for device disconnect and detach.  It  * performs memory de-allocations, shutdown of the controller and various   * teardown and destroy resource functions.  */
+comment|/*  * mrsas_detach:	De-allocates and teardown resources  * input:			pointer to device struct  *  * This function is the entry point for device disconnect and detach.  * It performs memory de-allocations, shutdown of the controller and various  * teardown and destroy resource functions.  */
 end_comment
 
 begin_function
@@ -4205,6 +4630,60 @@ name|remove_in_progress
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Destroy the character device so no other IOCTL will be handled */
+name|destroy_dev
+argument_list|(
+name|sc
+operator|->
+name|mrsas_cdev
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Take the instance off the instance array. Note that we will not 	 * decrement the max_index. We let this array be sparse array 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|mrsas_mgmt_info
+operator|.
+name|max_index
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|mrsas_mgmt_info
+operator|.
+name|sc_ptr
+index|[
+name|i
+index|]
+operator|==
+name|sc
+condition|)
+block|{
+name|mrsas_mgmt_info
+operator|.
+name|count
+operator|--
+expr_stmt|;
+name|mrsas_mgmt_info
+operator|.
+name|sc_ptr
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+block|}
+block|}
 if|if
 condition|(
 name|sc
@@ -4404,6 +4883,39 @@ operator|->
 name|raidmap_lock
 argument_list|)
 expr_stmt|;
+comment|/* Wait for all the semaphores to be released */
+while|while
+condition|(
+name|sema_value
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ioctl_count_sema
+argument_list|)
+operator|!=
+operator|(
+name|MRSAS_MAX_MFI_CMDS
+operator|-
+literal|5
+operator|)
+condition|)
+name|pause
+argument_list|(
+literal|"mr_shutdown"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+comment|/* Destroy the counting semaphore created for Ioctl */
+name|sema_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ioctl_count_sema
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -4429,13 +4941,6 @@ name|reg_res
 argument_list|)
 expr_stmt|;
 block|}
-name|destroy_dev
-argument_list|(
-name|sc
-operator|->
-name|mrsas_cdev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -4461,7 +4966,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_free_mem:          Frees allocated memory   * input:                   Adapter instance soft state  *   * This function is called from mrsas_detach() to free previously allocated  * memory.    */
+comment|/*  * mrsas_free_mem:		Frees allocated memory  * input:				Adapter instance soft state  *  * This function is called from mrsas_detach() to free previously allocated  * memory.  */
 end_comment
 
 begin_function
@@ -4490,7 +4995,7 @@ name|mrsas_mpt_cmd
 modifier|*
 name|mpt_cmd
 decl_stmt|;
-comment|/*      * Free RAID map memory      */
+comment|/* 	 * Free RAID map memory 	 */
 for|for
 control|(
 name|i
@@ -4587,8 +5092,31 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ld_drv_map
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|sc
+operator|->
+name|ld_drv_map
+index|[
+name|i
+index|]
+argument_list|,
+name|M_MRSAS
+argument_list|)
+expr_stmt|;
 block|}
-comment|/*       * Free version buffer memroy       */
+comment|/* 	 * Free version buffer memroy 	 */
 if|if
 condition|(
 name|sc
@@ -4644,7 +5172,7 @@ operator|->
 name|verbuf_tag
 argument_list|)
 expr_stmt|;
-comment|/*       * Free sense buffer memory       */
+comment|/* 	 * Free sense buffer memory 	 */
 if|if
 condition|(
 name|sc
@@ -4700,7 +5228,7 @@ operator|->
 name|sense_tag
 argument_list|)
 expr_stmt|;
-comment|/*       * Free chain frame memory       */
+comment|/* 	 * Free chain frame memory 	 */
 if|if
 condition|(
 name|sc
@@ -4756,7 +5284,7 @@ operator|->
 name|chain_frame_tag
 argument_list|)
 expr_stmt|;
-comment|/*       * Free IO Request memory       */
+comment|/* 	 * Free IO Request memory 	 */
 if|if
 condition|(
 name|sc
@@ -4812,7 +5340,7 @@ operator|->
 name|io_request_tag
 argument_list|)
 expr_stmt|;
-comment|/*       * Free Reply Descriptor memory       */
+comment|/* 	 * Free Reply Descriptor memory 	 */
 if|if
 condition|(
 name|sc
@@ -4868,7 +5396,7 @@ operator|->
 name|reply_desc_tag
 argument_list|)
 expr_stmt|;
-comment|/*       * Free event detail memory       */
+comment|/* 	 * Free event detail memory 	 */
 if|if
 condition|(
 name|sc
@@ -4924,7 +5452,7 @@ operator|->
 name|evt_detail_tag
 argument_list|)
 expr_stmt|;
-comment|/*       * Free MFI frames       */
+comment|/* 	 * Free MFI frames 	 */
 if|if
 condition|(
 name|sc
@@ -4979,7 +5507,7 @@ operator|->
 name|mficmd_frame_tag
 argument_list|)
 expr_stmt|;
-comment|/*       * Free MPT internal command list       */
+comment|/* 	 * Free MPT internal command list 	 */
 name|max_cmd
 operator|=
 name|sc
@@ -5056,7 +5584,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*      * Free MFI internal command list       */
+comment|/* 	 * Free MFI internal command list 	 */
 if|if
 condition|(
 name|sc
@@ -5107,7 +5635,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*       * Free request descriptor memory       */
+comment|/* 	 * Free request descriptor memory 	 */
 name|free
 argument_list|(
 name|sc
@@ -5123,7 +5651,7 @@ name|req_desc
 operator|=
 name|NULL
 expr_stmt|;
-comment|/*       * Destroy parent tag       */
+comment|/* 	 * Destroy parent tag 	 */
 if|if
 condition|(
 name|sc
@@ -5143,7 +5671,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_teardown_intr:        Teardown interrupt   * input:                      Adapter instance soft state  *  * This function is called from mrsas_detach() to teardown and release  * bus interrupt resourse.  */
+comment|/*  * mrsas_teardown_intr:	Teardown interrupt  * input:				Adapter instance soft state  *  * This function is called from mrsas_detach() to teardown and release bus  * interrupt resourse.  */
 end_comment
 
 begin_function
@@ -5156,11 +5684,25 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|msix_enable
+condition|)
+block|{
 if|if
 condition|(
 name|sc
 operator|->
 name|intr_handle
+index|[
+literal|0
+index|]
 condition|)
 name|bus_teardown_intr
 argument_list|(
@@ -5171,10 +5713,16 @@ argument_list|,
 name|sc
 operator|->
 name|mrsas_irq
+index|[
+literal|0
+index|]
 argument_list|,
 name|sc
 operator|->
 name|intr_handle
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -5182,6 +5730,9 @@ condition|(
 name|sc
 operator|->
 name|mrsas_irq
+index|[
+literal|0
+index|]
 operator|!=
 name|NULL
 condition|)
@@ -5196,23 +5747,133 @@ argument_list|,
 name|sc
 operator|->
 name|irq_id
+index|[
+literal|0
+index|]
 argument_list|,
 name|sc
 operator|->
 name|mrsas_irq
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
 name|intr_handle
+index|[
+literal|0
+index|]
 operator|=
 name|NULL
 expr_stmt|;
 block|}
+else|else
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|sc
+operator|->
+name|msix_vectors
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|intr_handle
+index|[
+name|i
+index|]
+condition|)
+name|bus_teardown_intr
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+name|sc
+operator|->
+name|mrsas_irq
+index|[
+name|i
+index|]
+argument_list|,
+name|sc
+operator|->
+name|intr_handle
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mrsas_irq
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|)
+name|bus_release_resource
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+name|sc
+operator|->
+name|irq_id
+index|[
+name|i
+index|]
+argument_list|,
+name|sc
+operator|->
+name|mrsas_irq
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|intr_handle
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|pci_release_msi
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_suspend:          Suspend entry point  * input:                  Device struct pointer   *   * This function is the entry point for system suspend from the OS.     */
+comment|/*  * mrsas_suspend:	Suspend entry point  * input:			Device struct pointer  *  * This function is the entry point for system suspend from the OS.  */
 end_comment
 
 begin_function
@@ -5245,7 +5906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_resume:           Resume entry point   * input:                  Device struct pointer   *   * This function is the entry point for system resume from the OS.     */
+comment|/*  * mrsas_resume:	Resume entry point  * input:			Device struct pointer  *  * This function is the entry point for system resume from the OS.  */
 end_comment
 
 begin_function
@@ -5278,7 +5939,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_ioctl:       IOCtl commands entry point.   *   * This function is the entry point for IOCtls from the OS.  It calls the   * appropriate function for processing depending on the command received.  */
+comment|/*  * mrsas_ioctl:	IOCtl commands entry point.  *  * This function is the entry point for IOCtls from the OS.  It calls the  * appropriate function for processing depending on the command received.  */
 end_comment
 
 begin_function
@@ -5319,19 +5980,73 @@ name|i
 init|=
 literal|0
 decl_stmt|;
-name|sc
-operator|=
+name|struct
+name|mrsas_iocpacket
+modifier|*
+name|user_ioc
+init|=
 operator|(
 expr|struct
-name|mrsas_softc
+name|mrsas_iocpacket
 operator|*
 operator|)
-operator|(
-name|dev
+name|arg
+decl_stmt|;
+comment|/* get the Host number& the softc from data sent by the Application */
+name|sc
+operator|=
+name|mrsas_mgmt_info
+operator|.
+name|sc_ptr
+index|[
+name|user_ioc
 operator|->
-name|si_drv1
-operator|)
+name|host_no
+index|]
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|mrsas_mgmt_info
+operator|.
+name|max_index
+operator|==
+name|user_ioc
+operator|->
+name|host_no
+operator|)
+operator|||
+operator|(
+name|sc
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Please check the controller number\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"There is NO such Host no. %d\n"
+argument_list|,
+name|user_ioc
+operator|->
+name|host_no
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOENT
+return|;
+block|}
 if|if
 condition|(
 name|sc
@@ -5380,7 +6095,6 @@ goto|goto
 name|do_ioctl
 goto|;
 block|}
-comment|/* Release ioclt_lock, and wait for OCR      * to be finished */
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -5442,8 +6156,25 @@ name|cmd
 condition|)
 block|{
 case|case
-name|MRSAS_IOC_FIRMWARE_PASS_THROUGH
+name|MRSAS_IOC_FIRMWARE_PASS_THROUGH64
 case|:
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+case|case
+name|MRSAS_IOC_FIRMWARE_PASS_THROUGH32
+case|:
+endif|#
+directive|endif
+comment|/* 		 * Decrement the Ioctl counting Semaphore before getting an 		 * mfi command 		 */
+name|sema_wait
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ioctl_count_sema
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|mrsas_passthru
@@ -5455,6 +6186,17 @@ name|void
 operator|*
 operator|)
 name|arg
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+comment|/* Increment the Ioctl counting semaphore value */
+name|sema_post
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ioctl_count_sema
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5469,6 +6211,22 @@ name|sc
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|mrsas_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MRSAS_TRACE
+argument_list|,
+literal|"IOCTL command 0x%lx is not handled\n"
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|ENOENT
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -5479,7 +6237,118 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_setup_irq:   Set up interrupt.   * input:             Adapter instance soft state  *   * This function sets up interrupts as a bus resource, with flags indicating  * resource permitting contemporaneous sharing and for resource to activate   * atomically.  */
+comment|/*  * mrsas_poll:	poll entry point for mrsas driver fd  *  * This function is the entry point for poll from the OS.  It waits for some AEN  * events to be triggered from the controller and notifies back.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|mrsas_poll
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|poll_events
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|int
+name|revents
+init|=
+literal|0
+decl_stmt|;
+name|sc
+operator|=
+name|dev
+operator|->
+name|si_drv1
+expr_stmt|;
+if|if
+condition|(
+name|poll_events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|mrsas_aen_triggered
+condition|)
+block|{
+name|revents
+operator||=
+name|poll_events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|revents
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|poll_events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
+condition|)
+block|{
+name|sc
+operator|->
+name|mrsas_poll_waiting
+operator|=
+literal|1
+expr_stmt|;
+name|selrecord
+argument_list|(
+name|td
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|mrsas_select
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+return|return
+name|revents
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * mrsas_setup_irq:	Set up interrupt  * input:			Adapter instance soft state  *  * This function sets up interrupts as a bus resource, with flags indicating  * resource permitting contemporaneous sharing and for resource to activate  * atomically.  */
 end_comment
 
 begin_function
@@ -5493,15 +6362,78 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|msix_enable
+operator|&&
+operator|(
+name|mrsas_setup_msix
+argument_list|(
+name|sc
+argument_list|)
+operator|==
+name|SUCCESS
+operator|)
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+literal|"MSI-x interrupts setup success\n"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+literal|"Fall back to legacy interrupt\n"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|irq_context
+index|[
+literal|0
+index|]
+operator|.
+name|sc
+operator|=
+name|sc
+expr_stmt|;
+name|sc
+operator|->
+name|irq_context
+index|[
+literal|0
+index|]
+operator|.
+name|MSIxIndex
+operator|=
+literal|0
+expr_stmt|;
 name|sc
 operator|->
 name|irq_id
+index|[
+literal|0
+index|]
 operator|=
 literal|0
 expr_stmt|;
 name|sc
 operator|->
 name|mrsas_irq
+index|[
+literal|0
+index|]
 operator|=
 name|bus_alloc_resource_any
 argument_list|(
@@ -5515,6 +6447,9 @@ operator|&
 name|sc
 operator|->
 name|irq_id
+index|[
+literal|0
+index|]
 argument_list|,
 name|RF_SHAREABLE
 operator||
@@ -5526,6 +6461,9 @@ condition|(
 name|sc
 operator|->
 name|mrsas_irq
+index|[
+literal|0
+index|]
 operator|==
 name|NULL
 condition|)
@@ -5536,7 +6474,8 @@ name|sc
 operator|->
 name|mrsas_dev
 argument_list|,
-literal|"Cannot allocate interrupt\n"
+literal|"Cannot allocate legcay"
+literal|"interrupt\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5556,6 +6495,9 @@ argument_list|,
 name|sc
 operator|->
 name|mrsas_irq
+index|[
+literal|0
+index|]
 argument_list|,
 name|INTR_MPSAFE
 operator||
@@ -5565,12 +6507,21 @@ name|NULL
 argument_list|,
 name|mrsas_isr
 argument_list|,
+operator|&
 name|sc
+operator|->
+name|irq_context
+index|[
+literal|0
+index|]
 argument_list|,
 operator|&
 name|sc
 operator|->
 name|intr_handle
+index|[
+literal|0
+index|]
 argument_list|)
 condition|)
 block|{
@@ -5580,7 +6531,8 @@ name|sc
 operator|->
 name|mrsas_dev
 argument_list|,
-literal|"Cannot set up interrupt\n"
+literal|"Cannot set up legacy"
+literal|"interrupt\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5588,6 +6540,7 @@ operator|(
 name|FAIL
 operator|)
 return|;
+block|}
 block|}
 return|return
 operator|(
@@ -5598,7 +6551,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_isr:        ISR entry point   * input:            argument pointer   *  * This function is the interrupt service routine entry point.  There  * are two types of interrupts, state change interrupt and response  * interrupt.  If an interrupt is not ours, we just return.  */
+comment|/*  * mrsas_isr:	ISR entry point  * input:		argument pointer  *  * This function is the interrupt service routine entry point.  There are two  * types of interrupts, state change interrupt and response interrupt.  If an  * interrupt is not ours, we just return.  */
 end_comment
 
 begin_function
@@ -5611,21 +6564,39 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|mrsas_softc
+name|mrsas_irq_context
 modifier|*
-name|sc
+name|irq_context
 init|=
 operator|(
 expr|struct
-name|mrsas_softc
+name|mrsas_irq_context
 operator|*
 operator|)
 name|arg
 decl_stmt|;
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
+init|=
+name|irq_context
+operator|->
+name|sc
+decl_stmt|;
 name|int
 name|status
+init|=
+literal|0
 decl_stmt|;
-comment|/* Clear FW state change interrupt */
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|msix_vectors
+condition|)
+block|{
 name|status
 operator|=
 name|mrsas_clear_intr
@@ -5633,17 +6604,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Not our interrupt */
 if|if
 condition|(
 operator|!
 name|status
 condition|)
 return|return;
+block|}
 comment|/* If we are resetting, bail */
 if|if
 condition|(
-name|test_bit
+name|mrsas_test_bit
 argument_list|(
 name|MRSAS_FUSION_IN_RESET
 argument_list|,
@@ -5672,6 +6643,10 @@ condition|(
 name|mrsas_complete_cmd
 argument_list|(
 name|sc
+argument_list|,
+name|irq_context
+operator|->
+name|MSIxIndex
 argument_list|)
 operator|!=
 name|SUCCESS
@@ -5686,7 +6661,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_complete_cmd:        Process reply request    * input:                     Adapter instance soft state  *  * This function is called from mrsas_isr() to process reply request and   * clear response interrupt. Processing of the reply request entails  * walking through the reply descriptor array for the command request    * pended from Firmware.  We look at the Function field to determine  * the command type and perform the appropriate action.  Before we  * return, we clear the response interrupt.  */
+comment|/*  * mrsas_complete_cmd:	Process reply request  * input:				Adapter instance soft state  *  * This function is called from mrsas_isr() to process reply request and clear  * response interrupt. Processing of the reply request entails walking  * through the reply descriptor array for the command request  pended from  * Firmware.  We look at the Function field to determine the command type and  * perform the appropriate action.  Before we return, we clear the response  * interrupt.  */
 end_comment
 
 begin_function
@@ -5698,6 +6673,9 @@ name|struct
 name|mrsas_softc
 modifier|*
 name|sc
+parameter_list|,
+name|u_int32_t
+name|MSIxIndex
 parameter_list|)
 block|{
 name|Mpi2ReplyDescriptorsUnion_t
@@ -5774,9 +6752,27 @@ name|reply_desc_mem
 expr_stmt|;
 name|desc
 operator|+=
+operator|(
+operator|(
+name|MSIxIndex
+operator|*
+name|sc
+operator|->
+name|reply_alloc_sz
+operator|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|MPI2_REPLY_DESCRIPTORS_UNION
+argument_list|)
+operator|)
+operator|+
 name|sc
 operator|->
 name|last_reply_idx
+index|[
+name|MSIxIndex
+index|]
 expr_stmt|;
 name|reply_desc
 operator|=
@@ -5883,7 +6879,7 @@ block|{
 case|case
 name|MPI2_FUNCTION_SCSI_IO_REQUEST
 case|:
-comment|/*Fast Path IO.*/
+comment|/* Fast Path IO. */
 name|device_id
 operator|=
 name|cmd_mpt
@@ -5930,7 +6926,7 @@ literal|0
 else|:
 literal|1
 expr_stmt|;
-name|atomic_dec
+name|mrsas_atomic_dec
 argument_list|(
 operator|&
 name|lbinfo
@@ -5949,7 +6945,7 @@ operator|~
 name|MRSAS_LOAD_BALANCE_FLAG
 expr_stmt|;
 block|}
-comment|//Fall thru and complete IO
+comment|/* Fall thru and complete IO */
 case|case
 name|MRSAS_MPI2_FUNCTION_LD_IO_REQUEST
 case|:
@@ -5985,7 +6981,7 @@ name|exStatus
 operator|=
 literal|0
 expr_stmt|;
-name|atomic_dec
+name|mrsas_atomic_dec
 argument_list|(
 operator|&
 name|sc
@@ -5997,7 +6993,7 @@ break|break;
 case|case
 name|MRSAS_MPI2_FUNCTION_PASSTHRU_IO_REQUEST
 case|:
-comment|/*MFI command */
+comment|/* MFI command */
 name|cmd_mfi
 operator|=
 name|sc
@@ -6034,6 +7030,9 @@ block|}
 name|sc
 operator|->
 name|last_reply_idx
+index|[
+name|MSIxIndex
+index|]
 operator|++
 expr_stmt|;
 if|if
@@ -6041,6 +7040,9 @@ condition|(
 name|sc
 operator|->
 name|last_reply_idx
+index|[
+name|MSIxIndex
+index|]
 operator|>=
 name|sc
 operator|->
@@ -6049,6 +7051,9 @@ condition|)
 name|sc
 operator|->
 name|last_reply_idx
+index|[
+name|MSIxIndex
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -6064,7 +7069,7 @@ operator|)
 literal|0x00
 operator|)
 expr_stmt|;
-comment|/* set it back to all 0xFFFFFFFFs */
+comment|/* set it back to all 							 * 0xFFFFFFFFs */
 name|num_completed
 operator|++
 expr_stmt|;
@@ -6078,13 +7083,35 @@ operator|!
 name|sc
 operator|->
 name|last_reply_idx
+index|[
+name|MSIxIndex
+index|]
 condition|)
+block|{
 name|desc
 operator|=
 name|sc
 operator|->
 name|reply_desc_mem
 expr_stmt|;
+name|desc
+operator|+=
+operator|(
+operator|(
+name|MSIxIndex
+operator|*
+name|sc
+operator|->
+name|reply_alloc_sz
+operator|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|MPI2_REPLY_DESCRIPTORS_UNION
+argument_list|)
+operator|)
+expr_stmt|;
+block|}
 else|else
 name|desc
 operator|++
@@ -6120,7 +7147,7 @@ operator|==
 name|MPI2_RPY_DESCRIPT_FLAGS_UNUSED
 condition|)
 break|break;
-comment|/*           * Write to reply post index after completing threshold reply count           * and still there are more replies in reply queue pending to be           * completed.          */
+comment|/* 		 * Write to reply post index after completing threshold reply 		 * count and still there are more replies in reply queue 		 * pending to be completed. 		 */
 if|if
 condition|(
 name|threshold_reply_count
@@ -6128,6 +7155,90 @@ operator|>=
 name|THRESHOLD_REPLY_COUNT
 condition|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|msix_enable
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|device_id
+operator|==
+name|MRSAS_INVADER
+operator|)
+operator|||
+operator|(
+name|sc
+operator|->
+name|device_id
+operator|==
+name|MRSAS_FURY
+operator|)
+condition|)
+name|mrsas_write_reg
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|msix_reg_offset
+index|[
+name|MSIxIndex
+operator|/
+literal|8
+index|]
+argument_list|,
+operator|(
+operator|(
+name|MSIxIndex
+operator|&
+literal|0x7
+operator|)
+operator|<<
+literal|24
+operator|)
+operator||
+name|sc
+operator|->
+name|last_reply_idx
+index|[
+name|MSIxIndex
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|mrsas_write_reg
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|msix_reg_offset
+index|[
+literal|0
+index|]
+argument_list|,
+operator|(
+name|MSIxIndex
+operator|<<
+literal|24
+operator|)
+operator||
+name|sc
+operator|->
+name|last_reply_idx
+index|[
+name|MSIxIndex
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|mrsas_write_reg
 argument_list|(
 name|sc
@@ -6142,6 +7253,9 @@ argument_list|,
 name|sc
 operator|->
 name|last_reply_idx
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|threshold_reply_count
@@ -6163,6 +7277,92 @@ name|DONE
 operator|)
 return|;
 comment|/* Clear response interrupt */
+if|if
+condition|(
+name|sc
+operator|->
+name|msix_enable
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|device_id
+operator|==
+name|MRSAS_INVADER
+operator|)
+operator|||
+operator|(
+name|sc
+operator|->
+name|device_id
+operator|==
+name|MRSAS_FURY
+operator|)
+condition|)
+block|{
+name|mrsas_write_reg
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|msix_reg_offset
+index|[
+name|MSIxIndex
+operator|/
+literal|8
+index|]
+argument_list|,
+operator|(
+operator|(
+name|MSIxIndex
+operator|&
+literal|0x7
+operator|)
+operator|<<
+literal|24
+operator|)
+operator||
+name|sc
+operator|->
+name|last_reply_idx
+index|[
+name|MSIxIndex
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|mrsas_write_reg
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|msix_reg_offset
+index|[
+literal|0
+index|]
+argument_list|,
+operator|(
+name|MSIxIndex
+operator|<<
+literal|24
+operator|)
+operator||
+name|sc
+operator|->
+name|last_reply_idx
+index|[
+name|MSIxIndex
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|mrsas_write_reg
 argument_list|(
 name|sc
@@ -6177,6 +7377,9 @@ argument_list|,
 name|sc
 operator|->
 name|last_reply_idx
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 return|return
@@ -6188,7 +7391,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_map_mpt_cmd_status:  Allocate DMAable memory.  * input:                     Adapter instance soft state  *  * This function is called from mrsas_complete_cmd(), for LD IO and FastPath IO.  * It checks the command status and maps the appropriate CAM status for the CCB.     */
+comment|/*  * mrsas_map_mpt_cmd_status:	Allocate DMAable memory.  * input:						Adapter instance soft state  *  * This function is called from mrsas_complete_cmd(), for LD IO and FastPath IO.  * It checks the command status and maps the appropriate CAM status for the  * CCB.  */
 end_comment
 
 begin_function
@@ -6350,7 +7553,6 @@ break|break;
 case|case
 name|MFI_STAT_CONFIG_SEQ_MISMATCH
 case|:
-comment|/*send status to CAM layer to retry sending  command without               * decrementing retry counter*/
 name|cmd
 operator|->
 name|ccb_ptr
@@ -6400,7 +7602,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_alloc_mem:  Allocate DMAable memory.  * input:            Adapter instance soft state  *  * This function creates the parent DMA tag and allocates DMAable memory.  * DMA tag describes constraints of DMA mapping. Memory allocated is mapped  * into Kernel virtual address. Callback argument is physical memory address.   */
+comment|/*  * mrsas_alloc_mem:	Allocate DMAable memory  * input:			Adapter instance soft state  *  * This function creates the parent DMA tag and allocates DMAable memory. DMA  * tag describes constraints of DMA mapping. Memory allocated is mapped into  * Kernel virtual address. Callback argument is physical memory address.  */
 end_comment
 
 begin_function
@@ -6426,8 +7628,10 @@ decl_stmt|,
 name|chain_frame_size
 decl_stmt|,
 name|evt_detail_size
+decl_stmt|,
+name|count
 decl_stmt|;
-comment|/*      * Allocate parent DMA tag      */
+comment|/* 	 * Allocate parent DMA tag 	 */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -6492,7 +7696,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*      * Allocate for version buffer      */
+comment|/* 	 * Allocate for version buffer 	 */
 name|verbuf_size
 operator|=
 name|MRSAS_MAX_NAME_LENGTH
@@ -6512,40 +7716,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|verbuf_size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|verbuf_size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|sc
 operator|->
@@ -6663,7 +7857,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*      * Allocate IO Request Frames      */
+comment|/* 	 * Allocate IO Request Frames 	 */
 name|io_req_size
 operator|=
 name|sc
@@ -6678,40 +7872,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|16
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|io_req_size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|io_req_size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|sc
 operator|->
@@ -6829,7 +8013,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*      * Allocate Chain Frames      */
+comment|/* 	 * Allocate Chain Frames 	 */
 name|chain_frame_size
 operator|=
 name|sc
@@ -6844,40 +8028,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|4
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|chain_frame_size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|chain_frame_size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|sc
 operator|->
@@ -6995,12 +8169,28 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*      * Allocate Reply Descriptor Array      */
+name|count
+operator|=
+name|sc
+operator|->
+name|msix_vectors
+operator|>
+literal|0
+condition|?
+name|sc
+operator|->
+name|msix_vectors
+else|:
+literal|1
+expr_stmt|;
+comment|/* 	 * Allocate Reply Descriptor Array 	 */
 name|reply_desc_size
 operator|=
 name|sc
 operator|->
 name|reply_alloc_sz
+operator|*
+name|count
 expr_stmt|;
 if|if
 condition|(
@@ -7010,40 +8200,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|16
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|reply_desc_size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|reply_desc_size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|sc
 operator|->
@@ -7152,7 +8332,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*      * Allocate Sense Buffer Array.  Keep in lower 4GB       */
+comment|/* 	 * Allocate Sense Buffer Array.  Keep in lower 4GB 	 */
 name|sense_size
 operator|=
 name|sc
@@ -7169,40 +8349,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|64
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|sense_size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// nsegments
 name|sense_size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|sc
 operator|->
@@ -7311,7 +8481,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*      * Allocate for Event detail structure      */
+comment|/* 	 * Allocate for Event detail structure 	 */
 name|evt_detail_size
 operator|=
 sizeof|sizeof
@@ -7328,40 +8498,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|evt_detail_size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|evt_detail_size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|sc
 operator|->
@@ -7479,7 +8639,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*     * Create a dma tag for data buffers; size will be the maximum     * possible I/O size (280kB).     */
+comment|/* 	 * Create a dma tag for data buffers; size will be the maximum 	 * possible I/O size (280kB). 	 */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -7488,45 +8648,33 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|1
 argument_list|,
-comment|// alignment
 literal|0
 argument_list|,
-comment|// boundary
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|MRSAS_MAX_IO_SIZE
 argument_list|,
-comment|// maxsize
 name|MRSAS_MAX_SGL
 argument_list|,
-comment|// nsegments
 name|MRSAS_MAX_IO_SIZE
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|busdma_lock_mutex
 argument_list|,
-comment|// lockfunc
 operator|&
 name|sc
 operator|->
 name|io_lock
 argument_list|,
-comment|// lockfuncarg
 operator|&
 name|sc
 operator|->
@@ -7558,7 +8706,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_addr_cb:   Callback function of bus_dmamap_load()  * input:           callback argument,   *                  machine dependent type that describes DMA segments,  *                  number of segments,  *                  error code.    *  * This function is for the driver to receive mapping information resultant  * of the bus_dmamap_load(). The information is actually not being used,  * but the address is saved anyway.  */
+comment|/*  * mrsas_addr_cb:	Callback function of bus_dmamap_load()  * input:			callback argument, machine dependent type  * 					that describes DMA segments, number of segments, error code  *  * This function is for the driver to receive mapping information resultant of  * the bus_dmamap_load(). The information is actually not being used, but the  * address is saved anyway.  */
 end_comment
 
 begin_function
@@ -7602,7 +8750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_setup_raidmap:  Set up RAID map.  * input:                Adapter instance soft state  *  * Allocate DMA memory for the RAID maps and perform setup.  */
+comment|/*  * mrsas_setup_raidmap:	Set up RAID map.  * input:				Adapter instance soft state  *  * Allocate DMA memory for the RAID maps and perform setup.  */
 end_comment
 
 begin_function
@@ -7616,9 +8764,111 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 name|sc
 operator|->
-name|map_sz
+name|drv_supported_vd_count
+operator|=
+name|MRSAS_MAX_LD_CHANNELS
+operator|*
+name|MRSAS_MAX_DEV_PER_CHANNEL
+expr_stmt|;
+name|sc
+operator|->
+name|drv_supported_pd_count
+operator|=
+name|MRSAS_MAX_PD_CHANNELS
+operator|*
+name|MRSAS_MAX_DEV_PER_CHANNEL
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|max256vdSupport
+condition|)
+block|{
+name|sc
+operator|->
+name|fw_supported_vd_count
+operator|=
+name|MAX_LOGICAL_DRIVES_EXT
+expr_stmt|;
+name|sc
+operator|->
+name|fw_supported_pd_count
+operator|=
+name|MAX_PHYSICAL_DEVICES
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sc
+operator|->
+name|fw_supported_vd_count
+operator|=
+name|MAX_LOGICAL_DRIVES
+expr_stmt|;
+name|sc
+operator|->
+name|fw_supported_pd_count
+operator|=
+name|MAX_PHYSICAL_DEVICES
+expr_stmt|;
+block|}
+if|#
+directive|if
+name|VD_EXT_DEBUG
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+literal|"FW supports: max256vdSupport = %s\n"
+argument_list|,
+name|sc
+operator|->
+name|max256vdSupport
+condition|?
+literal|"YES"
+else|:
+literal|"NO"
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+literal|"FW supports %dVDs %dPDs\n"
+literal|"DRIVER supports %dVDs  %dPDs \n"
+argument_list|,
+name|sc
+operator|->
+name|fw_supported_vd_count
+argument_list|,
+name|sc
+operator|->
+name|fw_supported_pd_count
+argument_list|,
+name|sc
+operator|->
+name|drv_supported_vd_count
+argument_list|,
+name|sc
+operator|->
+name|drv_supported_pd_count
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|sc
+operator|->
+name|old_map_sz
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -7632,11 +8882,165 @@ name|MR_LD_SPAN_MAP
 argument_list|)
 operator|*
 operator|(
-name|MAX_LOGICAL_DRIVES
+name|sc
+operator|->
+name|fw_supported_vd_count
 operator|-
 literal|1
 operator|)
 operator|)
+expr_stmt|;
+name|sc
+operator|->
+name|new_map_sz
+operator|=
+sizeof|sizeof
+argument_list|(
+name|MR_FW_RAID_MAP_EXT
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|drv_map_sz
+operator|=
+sizeof|sizeof
+argument_list|(
+name|MR_DRV_RAID_MAP
+argument_list|)
+operator|+
+operator|(
+sizeof|sizeof
+argument_list|(
+name|MR_LD_SPAN_MAP
+argument_list|)
+operator|*
+operator|(
+name|sc
+operator|->
+name|drv_supported_vd_count
+operator|-
+literal|1
+operator|)
+operator|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|2
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sc
+operator|->
+name|ld_drv_map
+index|[
+name|i
+index|]
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|sc
+operator|->
+name|drv_map_sz
+argument_list|,
+name|M_MRSAS
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+comment|/* Do Error handling */
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|ld_drv_map
+index|[
+name|i
+index|]
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+literal|"Could not allocate memory for local map"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|1
+condition|)
+name|free
+argument_list|(
+name|sc
+operator|->
+name|ld_drv_map
+index|[
+literal|0
+index|]
+argument_list|,
+name|M_MRSAS
+argument_list|)
+expr_stmt|;
+comment|/* ABORT driver initialization */
+goto|goto
+name|ABORT
+goto|;
+block|}
+block|}
+name|sc
+operator|->
+name|max_map_sz
+operator|=
+name|max
+argument_list|(
+name|sc
+operator|->
+name|old_map_sz
+argument_list|,
+name|sc
+operator|->
+name|new_map_sz
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|max256vdSupport
+condition|)
+name|sc
+operator|->
+name|current_map_sz
+operator|=
+name|sc
+operator|->
+name|new_map_sz
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|current_map_sz
+operator|=
+name|sc
+operator|->
+name|old_map_sz
 expr_stmt|;
 for|for
 control|(
@@ -7661,44 +9065,34 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|4
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|sc
 operator|->
-name|map_sz
+name|max_map_sz
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// nsegments
 name|sc
 operator|->
-name|map_sz
+name|max_map_sz
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|sc
 operator|->
@@ -7775,6 +9169,20 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+name|bzero
+argument_list|(
+name|sc
+operator|->
+name|raidmap_mem
+index|[
+name|i
+index|]
+argument_list|,
+name|sc
+operator|->
+name|max_map_sz
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_dmamap_load
@@ -7802,7 +9210,7 @@ index|]
 argument_list|,
 name|sc
 operator|->
-name|map_sz
+name|max_map_sz
 argument_list|,
 name|mrsas_addr_cb
 argument_list|,
@@ -7878,11 +9286,18 @@ operator|(
 literal|0
 operator|)
 return|;
+name|ABORT
+label|:
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_init_fw:      Initialize Firmware     * input:              Adapter soft state  *  * Calls transition_to_ready() to make sure Firmware is in operational   * state and calls mrsas_init_adapter() to send IOC_INIT command to  * Firmware.  It issues internal commands to get the controller info  * after the IOC_INIT command response is received by Firmware.    * Note:  code relating to get_pdlist, get_ld_list and max_sectors   * are currently not being used, it is left here as placeholder.   */
+comment|/*  * mrsas_init_fw:	Initialize Firmware  * input:			Adapter soft state  *  * Calls transition_to_ready() to make sure Firmware is in operational state and  * calls mrsas_init_adapter() to send IOC_INIT command to Firmware.  It  * issues internal commands to get the controller info after the IOC_INIT  * command response is received by Firmware.  Note:  code relating to  * get_pdlist, get_ld_list and max_sectors are currently not being used, it  * is left here as placeholder.  */
 end_comment
 
 begin_function
@@ -7896,6 +9311,15 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|int
+name|ret
+decl_stmt|,
+name|loop
+decl_stmt|,
+name|ocr
+init|=
+literal|0
+decl_stmt|;
 name|u_int32_t
 name|max_sectors_1
 decl_stmt|;
@@ -7910,10 +9334,16 @@ name|mrsas_ctrl_info
 modifier|*
 name|ctrl_info
 decl_stmt|;
+name|u_int32_t
+name|scratch_pad_2
+decl_stmt|;
 name|int
-name|ret
-decl_stmt|,
-name|ocr
+name|msix_enable
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|fw_msix_count
 init|=
 literal|0
 decl_stmt|;
@@ -7940,7 +9370,197 @@ name|ret
 operator|)
 return|;
 block|}
-comment|/* Get operational params, sge flags, send init cmd to ctlr */
+comment|/* MSI-x index 0- reply post host index register */
+name|sc
+operator|->
+name|msix_reg_offset
+index|[
+literal|0
+index|]
+operator|=
+name|MPI2_REPLY_POST_HOST_INDEX_OFFSET
+expr_stmt|;
+comment|/* Check if MSI-X is supported while in ready state */
+name|msix_enable
+operator|=
+operator|(
+name|mrsas_read_reg
+argument_list|(
+name|sc
+argument_list|,
+name|offsetof
+argument_list|(
+name|mrsas_reg_set
+argument_list|,
+name|outbound_scratch_pad
+argument_list|)
+argument_list|)
+operator|&
+literal|0x4000000
+operator|)
+operator|>>
+literal|0x1a
+expr_stmt|;
+if|if
+condition|(
+name|msix_enable
+condition|)
+block|{
+name|scratch_pad_2
+operator|=
+name|mrsas_read_reg
+argument_list|(
+name|sc
+argument_list|,
+name|offsetof
+argument_list|(
+name|mrsas_reg_set
+argument_list|,
+name|outbound_scratch_pad_2
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Check max MSI-X vectors */
+if|if
+condition|(
+name|sc
+operator|->
+name|device_id
+operator|==
+name|MRSAS_TBOLT
+condition|)
+block|{
+name|sc
+operator|->
+name|msix_vectors
+operator|=
+operator|(
+name|scratch_pad_2
+operator|&
+name|MR_MAX_REPLY_QUEUES_OFFSET
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+name|fw_msix_count
+operator|=
+name|sc
+operator|->
+name|msix_vectors
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Invader/Fury supports 96 MSI-X vectors */
+name|sc
+operator|->
+name|msix_vectors
+operator|=
+operator|(
+operator|(
+name|scratch_pad_2
+operator|&
+name|MR_MAX_REPLY_QUEUES_EXT_OFFSET
+operator|)
+operator|>>
+name|MR_MAX_REPLY_QUEUES_EXT_OFFSET_SHIFT
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+name|fw_msix_count
+operator|=
+name|sc
+operator|->
+name|msix_vectors
+expr_stmt|;
+for|for
+control|(
+name|loop
+operator|=
+literal|1
+init|;
+name|loop
+operator|<
+name|MR_MAX_MSIX_REG_ARRAY
+condition|;
+name|loop
+operator|++
+control|)
+block|{
+name|sc
+operator|->
+name|msix_reg_offset
+index|[
+name|loop
+index|]
+operator|=
+name|MPI2_SUP_REPLY_POST_HOST_INDEX_OFFSET
+operator|+
+operator|(
+name|loop
+operator|*
+literal|0x10
+operator|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Don't bother allocating more MSI-X vectors than cpus */
+name|sc
+operator|->
+name|msix_vectors
+operator|=
+name|min
+argument_list|(
+name|sc
+operator|->
+name|msix_vectors
+argument_list|,
+name|mp_ncpus
+argument_list|)
+expr_stmt|;
+comment|/* Allocate MSI-x vectors */
+if|if
+condition|(
+name|mrsas_allocate_msix
+argument_list|(
+name|sc
+argument_list|)
+operator|==
+name|SUCCESS
+condition|)
+name|sc
+operator|->
+name|msix_enable
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|msix_enable
+operator|=
+literal|0
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+literal|"FW supports<%d> MSIX vector,"
+literal|"Online CPU %d Current MSIX<%d>\n"
+argument_list|,
+name|fw_msix_count
+argument_list|,
+name|mp_ncpus
+argument_list|,
+name|sc
+operator|->
+name|msix_vectors
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|mrsas_init_adapter
@@ -7991,6 +9611,85 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+comment|/* 	 * Get the controller info from FW, so that the MAX VD support 	 * availability can be decided. 	 */
+name|ctrl_info
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mrsas_ctrl_info
+argument_list|)
+argument_list|,
+name|M_MRSAS
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ctrl_info
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+literal|"Malloc for ctrl_info failed.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mrsas_get_ctrl_info
+argument_list|(
+name|sc
+argument_list|,
+name|ctrl_info
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
+literal|"Unable to get FW ctrl_info.\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|sc
+operator|->
+name|max256vdSupport
+operator|=
+operator|(
+name|u_int8_t
+operator|)
+name|ctrl_info
+operator|->
+name|adapterOperations3
+operator|.
+name|supportMaxExtLDs
+expr_stmt|;
+if|if
+condition|(
+name|ctrl_info
+operator|->
+name|max_lds
+operator|>
+literal|64
+condition|)
+block|{
+name|sc
+operator|->
+name|max256vdSupport
+operator|=
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -8048,7 +9747,7 @@ name|ld_ids
 argument_list|,
 literal|0xff
 argument_list|,
-name|MRSAS_MAX_LD
+name|MRSAS_MAX_LD_IDS
 argument_list|)
 expr_stmt|;
 name|mrsas_get_ld_list
@@ -8056,40 +9755,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|//memset(sc->log_to_span, 0, MRSAS_MAX_LD * sizeof(LD_SPAN_INFO));
-name|ctrl_info
-operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mrsas_ctrl_info
-argument_list|)
-argument_list|,
-name|M_MRSAS
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-comment|/*      * Compute the max allowed sectors per IO: The controller info has two      * limits on max sectors. Driver should use the minimum of these two.      *      * 1<< stripe_sz_ops.min = max sectors per strip      *      * Note that older firmwares (< FW ver 30) didn't report information      * to calculate max_sectors_1. So the number ended up as zero always.      */
+comment|/* 	 * Compute the max allowed sectors per IO: The controller info has 	 * two limits on max sectors. Driver should use the minimum of these 	 * two. 	 * 	 * 1<< stripe_sz_ops.min = max sectors per strip 	 * 	 * Note that older firmwares (< FW ver 30) didn't report information to 	 * calculate max_sectors_1. So the number ended up as zero always. 	 */
 name|tmp_sectors
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|ctrl_info
-operator|&&
-operator|!
-name|mrsas_get_ctrl_info
-argument_list|(
-name|sc
-argument_list|,
-name|ctrl_info
-argument_list|)
-condition|)
-block|{
 name|max_sectors_1
 operator|=
 operator|(
@@ -8120,6 +9790,36 @@ name|max_sectors_1
 argument_list|,
 name|max_sectors_2
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|max_sectors_per_req
+operator|=
+name|sc
+operator|->
+name|max_num_sge
+operator|*
+name|MRSAS_PAGE_SIZE
+operator|/
+literal|512
+expr_stmt|;
+if|if
+condition|(
+name|tmp_sectors
+operator|&&
+operator|(
+name|sc
+operator|->
+name|max_sectors_per_req
+operator|>
+name|tmp_sectors
+operator|)
+condition|)
+name|sc
+operator|->
+name|max_sectors_per_req
+operator|=
+name|tmp_sectors
 expr_stmt|;
 name|sc
 operator|->
@@ -8156,7 +9856,7 @@ name|sc
 operator|->
 name|mrsas_dev
 argument_list|,
-literal|"FW supports: UnevenSpanSupport=%x\n"
+literal|"FW supports: UnevenSpanSupport=%x\n\n"
 argument_list|,
 name|sc
 operator|->
@@ -8184,37 +9884,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-block|}
-name|sc
-operator|->
-name|max_sectors_per_req
-operator|=
-name|sc
-operator|->
-name|max_num_sge
-operator|*
-name|MRSAS_PAGE_SIZE
-operator|/
-literal|512
-expr_stmt|;
-if|if
-condition|(
-name|tmp_sectors
-operator|&&
-operator|(
-name|sc
-operator|->
-name|max_sectors_per_req
-operator|>
-name|tmp_sectors
-operator|)
-condition|)
-name|sc
-operator|->
-name|max_sectors_per_req
-operator|=
-name|tmp_sectors
-expr_stmt|;
 if|if
 condition|(
 name|ctrl_info
@@ -8235,7 +9904,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_init_adapter:     Initializes the adapter/controller   * input:                  Adapter soft state  *  * Prepares for the issuing of the IOC Init cmd to FW for initializing the   * ROC/controller.  The FW register is read to determined the number of   * commands that is supported.  All memory allocations for IO is based on  * max_cmd.  Appropriate calculations are performed in this function.   */
+comment|/*  * mrsas_init_adapter:	Initializes the adapter/controller  * input:				Adapter soft state  *  * Prepares for the issuing of the IOC Init cmd to FW for initializing the  * ROC/controller.  The FW register is read to determined the number of  * commands that is supported.  All memory allocations for IO is based on  * max_cmd.  Appropriate calculations are performed in this function.  */
 end_comment
 
 begin_function
@@ -8256,6 +9925,11 @@ name|max_cmd
 decl_stmt|;
 name|int
 name|ret
+decl_stmt|;
+name|int
+name|i
+init|=
+literal|0
 decl_stmt|;
 comment|/* Read FW status register */
 name|status
@@ -8306,8 +9980,6 @@ operator|=
 operator|(
 operator|(
 name|max_cmd
-operator|*
-literal|2
 operator|+
 literal|1
 operator|+
@@ -8440,9 +10112,40 @@ operator|)
 operator|/
 literal|16
 expr_stmt|;
+name|int
+name|count
+init|=
+name|sc
+operator|->
+name|msix_vectors
+operator|>
+literal|0
+condition|?
+name|sc
+operator|->
+name|msix_vectors
+else|:
+literal|1
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|count
+condition|;
+name|i
+operator|++
+control|)
 name|sc
 operator|->
 name|last_reply_idx
+index|[
+name|i
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -8509,7 +10212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_alloc_ioc_cmd:   Allocates memory for IOC Init command   * input:                 Adapter soft state  *  * Allocates for the IOC Init cmd to FW to initialize the ROC/controller.  */
+comment|/*  * mrsas_alloc_ioc_cmd:	Allocates memory for IOC Init command  * input:				Adapter soft state  *  * Allocates for the IOC Init cmd to FW to initialize the ROC/controller.  */
 end_comment
 
 begin_function
@@ -8543,40 +10246,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|ioc_init_size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|ioc_init_size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|sc
 operator|->
@@ -8703,7 +10396,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_free_ioc_cmd:   Allocates memory for IOC Init command   * input:                Adapter soft state  *  * Deallocates memory of the IOC Init cmd.  */
+comment|/*  * mrsas_free_ioc_cmd:	Allocates memory for IOC Init command  * input:				Adapter soft state  *  * Deallocates memory of the IOC Init cmd.  */
 end_comment
 
 begin_function
@@ -8775,7 +10468,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_ioc_init:     Sends IOC Init command to FW  * input:              Adapter soft state  *  * Issues the IOC Init cmd to FW to initialize the ROC/controller.  */
+comment|/*  * mrsas_ioc_init:	Sends IOC Init command to FW  * input:			Adapter soft state  *  * Issues the IOC Init cmd to FW to initialize the ROC/controller.  */
 end_comment
 
 begin_function
@@ -8913,6 +10606,24 @@ name|sc
 operator|->
 name|io_request_phys_addr
 expr_stmt|;
+name|IOCInitMsg
+operator|->
+name|HostMSIxVectors
+operator|=
+operator|(
+name|sc
+operator|->
+name|msix_vectors
+operator|>
+literal|0
+condition|?
+name|sc
+operator|->
+name|msix_vectors
+else|:
+literal|0
+operator|)
+expr_stmt|;
 name|init_frame
 operator|=
 operator|(
@@ -8942,6 +10653,37 @@ name|flags
 operator||=
 name|MFI_FRAME_DONT_POST_IN_REPLY_QUEUE
 expr_stmt|;
+comment|/* driver support Extended MSIX */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|device_id
+operator|==
+name|MRSAS_INVADER
+operator|)
+operator|||
+operator|(
+name|sc
+operator|->
+name|device_id
+operator|==
+name|MRSAS_FURY
+operator|)
+condition|)
+block|{
+name|init_frame
+operator|->
+name|driver_operations
+operator|.
+name|mfi_capabilities
+operator|.
+name|support_additional_msix
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
@@ -8989,6 +10731,16 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|init_frame
+operator|->
+name|driver_operations
+operator|.
+name|mfi_capabilities
+operator|.
+name|support_max_255lds
+operator|=
+literal|1
+expr_stmt|;
 name|phys_addr
 operator|=
 operator|(
@@ -9054,7 +10806,6 @@ argument_list|,
 literal|"Issuing IOC INIT command to FW.\n"
 argument_list|)
 expr_stmt|;
-comment|//device_printf(sc->mrsas_dev, "Issuing IOC INIT command to FW.\n");del?
 name|mrsas_fire_cmd
 argument_list|(
 name|sc
@@ -9076,7 +10827,7 @@ operator|.
 name|high
 argument_list|)
 expr_stmt|;
-comment|/*      * Poll response timer to wait for Firmware response.  While this      * timer with the DELAY call could block CPU, the time interval for      * this is only 1 millisecond.      */
+comment|/* 	 * Poll response timer to wait for Firmware response.  While this 	 * timer with the DELAY call could block CPU, the time interval for 	 * this is only 1 millisecond. 	 */
 if|if
 condition|(
 name|init_frame
@@ -9138,7 +10889,6 @@ argument_list|,
 literal|"IOC INIT response received from FW.\n"
 argument_list|)
 expr_stmt|;
-comment|//device_printf(sc->mrsas_dev, "IOC INIT response received from FW.\n");del?
 else|else
 block|{
 if|if
@@ -9193,7 +10943,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_alloc_mpt_cmds:  Allocates the command packets  * input:                 Adapter instance soft state  *  * This function allocates the internal commands for IOs. Each command that is  * issued to FW is wrapped in a local data structure called mrsas_mpt_cmd.  * An array is allocated with mrsas_mpt_cmd context.  The free commands are   * maintained in a linked list (cmd pool). SMID value range is from 1 to  * max_fw_cmds.  */
+comment|/*  * mrsas_alloc_mpt_cmds:	Allocates the command packets  * input:					Adapter instance soft state  *  * This function allocates the internal commands for IOs. Each command that is  * issued to FW is wrapped in a local data structure called mrsas_mpt_cmd. An  * array is allocated with mrsas_mpt_cmd context.  The free commands are  * maintained in a linked list (cmd pool). SMID value range is from 1 to  * max_fw_cmds.  */
 end_comment
 
 begin_function
@@ -9213,6 +10963,8 @@ name|j
 decl_stmt|;
 name|u_int32_t
 name|max_cmd
+decl_stmt|,
+name|count
 decl_stmt|;
 name|struct
 name|mrsas_mpt_cmd
@@ -9303,7 +11055,7 @@ operator|->
 name|request_alloc_sz
 argument_list|)
 expr_stmt|;
-comment|/*      * sc->mpt_cmd_list is an array of struct mrsas_mpt_cmd pointers. Allocate the      * dynamic array first and then allocate individual commands.      */
+comment|/* 	 * sc->mpt_cmd_list is an array of struct mrsas_mpt_cmd pointers. 	 * Allocate the dynamic array first and then allocate individual 	 * commands. 	 */
 name|sc
 operator|->
 name|mpt_cmd_list
@@ -9730,6 +11482,20 @@ name|sc
 operator|->
 name|reply_desc_mem
 expr_stmt|;
+name|count
+operator|=
+name|sc
+operator|->
+name|msix_vectors
+operator|>
+literal|0
+condition|?
+name|sc
+operator|->
+name|msix_vectors
+else|:
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -9741,6 +11507,8 @@ operator|<
 name|sc
 operator|->
 name|reply_q_depth
+operator|*
+name|count
 condition|;
 name|i
 operator|++
@@ -9765,7 +11533,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_fire_cmd:     Sends command to FW  * input:              Adapter soft state  *                     request descriptor address low  *                     request descriptor address high  *  * This functions fires the command to Firmware by writing to the   * inbound_low_queue_port and inbound_high_queue_port.  */
+comment|/*  * mrsas_fire_cmd:	Sends command to FW  * input:			Adapter softstate  * 					request descriptor address low  * 					request descriptor address high  *  * This functions fires the command to Firmware by writing to the  * inbound_low_queue_port and inbound_high_queue_port.  */
 end_comment
 
 begin_function
@@ -9832,7 +11600,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_transition_to_ready:  Move FW to Ready state   * input:                      Adapter instance soft state  *  * During the initialization, FW passes can potentially be in any one of  * several possible states. If the FW in operational, waiting-for-handshake  * states, driver must take steps to bring it to ready state. Otherwise, it  * has to wait for the ready state.  */
+comment|/*  * mrsas_transition_to_ready:  Move FW to Ready state input:  * Adapter instance soft state  *  * During the initialization, FW passes can potentially be in any one of several  * possible states. If the FW in operational, waiting-for-handshake states,  * driver must take steps to bring it to ready state. Otherwise, it has to  * wait for the ready state.  */
 end_comment
 
 begin_function
@@ -10010,7 +11778,7 @@ break|break;
 case|case
 name|MFI_STATE_OPERATIONAL
 case|:
-comment|/* Bring it to READY state; assuming max wait 10 secs */
+comment|/* 			 * Bring it to READY state; assuming max wait 10 			 * secs 			 */
 name|mrsas_disable_intr
 argument_list|(
 name|sc
@@ -10078,7 +11846,7 @@ break|break;
 case|case
 name|MFI_STATE_UNDEFINED
 case|:
-comment|/* This state should not last for more than 2 seconds */
+comment|/* 			 * This state should not last for more than 2 			 * seconds 			 */
 name|cur_state
 operator|=
 name|MFI_STATE_UNDEFINED
@@ -10141,7 +11909,7 @@ operator|-
 name|ENODEV
 return|;
 block|}
-comment|/* 	 * The cur_state should not last for more than max_wait secs 	 */
+comment|/* 		 * The cur_state should not last for more than max_wait secs 		 */
 for|for
 control|(
 name|i
@@ -10206,7 +11974,7 @@ expr_stmt|;
 else|else
 break|break;
 block|}
-comment|/* 	 * Return error if fw_state hasn't changed after max_wait 	 */
+comment|/* 		 * Return error if fw_state hasn't changed after max_wait 		 */
 if|if
 condition|(
 name|curr_abs_state
@@ -10243,7 +12011,6 @@ argument_list|,
 literal|"FW now in Ready state\n"
 argument_list|)
 expr_stmt|;
-comment|//device_printf(sc->mrsas_dev, "FW now in Ready state\n");del?
 return|return
 literal|0
 return|;
@@ -10251,7 +12018,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_get_mfi_cmd:      Get a cmd from free command pool  * input:                  Adapter soft state  *  * This function removes an MFI command from the command list.  */
+comment|/*  * mrsas_get_mfi_cmd:	Get a cmd from free command pool  * input:				Adapter soft state  *  * This function removes an MFI command from the command list.  */
 end_comment
 
 begin_function
@@ -10331,7 +12098,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_ocr_thread             Thread to handle OCR/Kill Adapter.  * input:               Adapter Context.  *  * This function will check FW status register and flag  * do_timeout_reset flag. It will do OCR/Kill adapter if  * FW is in fault state or IO timed out has trigger reset.  */
+comment|/*  * mrsas_ocr_thread:	Thread to handle OCR/Kill Adapter.  * input:				Adapter Context.  *  * This function will check FW status register and flag do_timeout_reset flag.  * It will do OCR/Kill adapter if FW is in fault state or IO timed out has  * trigger reset.  */
 end_comment
 
 begin_function
@@ -10394,7 +12161,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* Sleep for 1 second and check the queue status*/
+comment|/* Sleep for 1 second and check the queue status */
 name|msleep
 argument_list|(
 operator|&
@@ -10565,7 +12332,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_reset_reply_desc       Reset Reply descriptor as part of OCR.  * input:                       Adapter Context.  *  * This function will clear reply descriptor so that post OCR  * driver and FW will lost old history.  */
+comment|/*  * mrsas_reset_reply_desc:	Reset Reply descriptor as part of OCR.  * input:					Adapter Context.  *  * This function will clear reply descriptor so that post OCR driver and FW will  * lost old history.  */
 end_comment
 
 begin_function
@@ -10580,13 +12347,45 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|count
 decl_stmt|;
 name|pMpi2ReplyDescriptorsUnion_t
 name|reply_desc
 decl_stmt|;
+name|count
+operator|=
+name|sc
+operator|->
+name|msix_vectors
+operator|>
+literal|0
+condition|?
+name|sc
+operator|->
+name|msix_vectors
+else|:
+literal|1
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|count
+condition|;
+name|i
+operator|++
+control|)
 name|sc
 operator|->
 name|last_reply_idx
+index|[
+name|i
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -10626,7 +12425,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_reset_ctrl     Core function to OCR/Kill adapter.  * input:               Adapter Context.  *  * This function will run from thread context so that it can sleep.  * 1. Do not handle OCR if FW is in HW critical error.  * 2. Wait for outstanding command to complete for 180 seconds.  * 3. If #2 does not find any outstanding command Controller is in working  * state, so skip OCR.  * Otherwise, do OCR/kill Adapter based on flag disableOnlineCtrlReset.  * 4. Start of the OCR, return all SCSI command back to CAM layer which has  * ccb_ptr.  * 5. Post OCR, Re-fire Managment command and move Controller to Operation  * state.  */
+comment|/*  * mrsas_reset_ctrl:	Core function to OCR/Kill adapter.  * input:				Adapter Context.  *  * This function will run from thread context so that it can sleep. 1. Do not  * handle OCR if FW is in HW critical error. 2. Wait for outstanding command  * to complete for 180 seconds. 3. If #2 does not find any outstanding  * command Controller is in working state, so skip OCR. Otherwise, do  * OCR/kill Adapter based on flag disableOnlineCtrlReset. 4. Start of the  * OCR, return all SCSI command back to CAM layer which has ccb_ptr. 5. Post  * OCR, Re-fire Managment command and move Controller to Operation state.  */
 end_comment
 
 begin_function
@@ -10702,7 +12501,7 @@ return|return
 name|FAIL
 return|;
 block|}
-name|set_bit
+name|mrsas_set_bit
 argument_list|(
 name|MRSAS_FUSION_IN_RESET
 argument_list|,
@@ -10811,7 +12610,7 @@ argument_list|,
 name|mpt_cmd
 argument_list|)
 expr_stmt|;
-name|atomic_dec
+name|mrsas_atomic_dec
 argument_list|(
 operator|&
 name|sc
@@ -11310,7 +13109,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|clear_bit
+name|mrsas_clear_bit
 argument_list|(
 name|MRSAS_FUSION_IN_RESET
 argument_list|,
@@ -11495,7 +13294,7 @@ argument_list|(
 name|LD_LOAD_BALANCE_INFO
 argument_list|)
 operator|*
-name|MAX_LOGICAL_DRIVES
+name|MAX_LOGICAL_DRIVES_EXT
 argument_list|)
 expr_stmt|;
 if|if
@@ -11551,7 +13350,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|clear_bit
+name|mrsas_clear_bit
 argument_list|(
 name|MRSAS_FUSION_IN_RESET
 argument_list|,
@@ -11575,7 +13374,7 @@ expr_stmt|;
 block|}
 name|out
 label|:
-name|clear_bit
+name|mrsas_clear_bit
 argument_list|(
 name|MRSAS_FUSION_IN_RESET
 argument_list|,
@@ -11603,7 +13402,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_kill_hba       Kill HBA when OCR is not supported.  * input:               Adapter Context.  *  * This function will kill HBA when OCR is not supported.  */
+comment|/*  * mrsas_kill_hba:	Kill HBA when OCR is not supported  * input:			Adapter Context.  *  * This function will kill HBA when OCR is not supported.  */
 end_comment
 
 begin_function
@@ -11658,7 +13457,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_wait_for_outstanding           Wait for outstanding commands  * input:                               Adapter Context.  *  * This function will wait for 180 seconds for outstanding  * commands to be completed.  */
+comment|/*  * mrsas_wait_for_outstanding:	Wait for outstanding commands  * input:						Adapter Context.  *  * This function will wait for 180 seconds for outstanding commands to be  * completed.  */
 end_comment
 
 begin_function
@@ -11682,6 +13481,10 @@ literal|0
 decl_stmt|;
 name|u_int32_t
 name|fw_state
+decl_stmt|,
+name|count
+decl_stmt|,
+name|MSIxIndex
 decl_stmt|;
 for|for
 control|(
@@ -11764,7 +13567,7 @@ goto|;
 block|}
 name|outstanding
 operator|=
-name|atomic_read
+name|mrsas_atomic_read
 argument_list|(
 operator|&
 name|sc
@@ -11804,9 +13607,38 @@ argument_list|,
 name|outstanding
 argument_list|)
 expr_stmt|;
+name|count
+operator|=
+name|sc
+operator|->
+name|msix_vectors
+operator|>
+literal|0
+condition|?
+name|sc
+operator|->
+name|msix_vectors
+else|:
+literal|1
+expr_stmt|;
+for|for
+control|(
+name|MSIxIndex
+operator|=
+literal|0
+init|;
+name|MSIxIndex
+operator|<
+name|count
+condition|;
+name|MSIxIndex
+operator|++
+control|)
 name|mrsas_complete_cmd
 argument_list|(
 name|sc
+argument_list|,
+name|MSIxIndex
 argument_list|)
 expr_stmt|;
 block|}
@@ -11820,7 +13652,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|atomic_read
+name|mrsas_atomic_read
 argument_list|(
 operator|&
 name|sc
@@ -11853,7 +13685,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_release_mfi_cmd: Return a cmd to free command pool  * input:                 Command packet for return to free cmd pool   *  * This function returns the MFI command to the command list.  */
+comment|/*  * mrsas_release_mfi_cmd:	Return a cmd to free command pool  * input:					Command packet for return to free cmd pool  *  * This function returns the MFI command to the command list.  */
 end_comment
 
 begin_function
@@ -11924,7 +13756,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_get_controller_info -        Returns FW's controller structure  * input:                             Adapter soft state  *                                    Controller information structure  *  * Issues an internal command (DCMD) to get the FW's controller structure.  * This information is mainly used to find out the maximum IO transfer per  * command supported by the FW.  */
+comment|/*  * mrsas_get_controller_info:	Returns FW's controller structure  * input:						Adapter soft state  * 								Controller information structure  *  * Issues an internal command (DCMD) to get the FW's controller structure. This  * information is mainly used to find out the maximum IO transfer per command  * supported by the FW.  */
 end_comment
 
 begin_function
@@ -12169,7 +14001,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_alloc_ctlr_info_cmd:  Allocates memory for controller info command  * input:                      Adapter soft state  *  * Allocates DMAable memory for the controller info internal command.  */
+comment|/*  * mrsas_alloc_ctlr_info_cmd:	Allocates memory for controller info command  * input:						Adapter soft state  *  * Allocates DMAable memory for the controller info internal command.  */
 end_comment
 
 begin_function
@@ -12202,40 +14034,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|ctlr_info_size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|ctlr_info_size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|sc
 operator|->
@@ -12364,7 +14186,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_free_ctlr_info_cmd: Free memory for controller info command   * input:                    Adapter soft state  *  * Deallocates memory of the get controller info cmd.  */
+comment|/*  * mrsas_free_ctlr_info_cmd:	Free memory for controller info command  * input:						Adapter soft state  *  * Deallocates memory of the get controller info cmd.  */
 end_comment
 
 begin_function
@@ -12436,7 +14258,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_issue_polled:        Issues a polling command  * inputs:                    Adapter soft state  *                            Command packet to be issued  *  * This function is for posting of internal commands to Firmware.  MFI   * requires the cmd_status to be set to 0xFF before posting.  The maximun  * wait time of the poll response timer is 180 seconds.  */
+comment|/*  * mrsas_issue_polled:	Issues a polling command  * inputs:				Adapter soft state  * 						Command packet to be issued  *  * This function is for posting of internal commands to Firmware.  MFI requires  * the cmd_status to be set to 0xFF before posting.  The maximun wait time of  * the poll response timer is 180 seconds.  */
 end_comment
 
 begin_function
@@ -12516,7 +14338,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/*       * Poll response timer to wait for Firmware response.  While this         * timer with the DELAY call could block CPU, the time interval for       * this is only 1 millisecond.       */
+comment|/* 	 * Poll response timer to wait for Firmware response.  While this 	 * timer with the DELAY call could block CPU, the time interval for 	 * this is only 1 millisecond. 	 */
 if|if
 condition|(
 name|frame_hdr
@@ -12617,7 +14439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_issue_dcmd -     Issues a MFI Pass thru cmd  * input:                 Adapter soft state  *                        mfi cmd pointer  *  * This function is called by mrsas_issued_blocked_cmd() and  * mrsas_issued_polled(), to build the MPT command and then fire the   * command to Firmware.   */
+comment|/*  * mrsas_issue_dcmd:	Issues a MFI Pass thru cmd  * input:				Adapter soft state mfi cmd pointer  *  * This function is called by mrsas_issued_blocked_cmd() and  * mrsas_issued_polled(), to build the MPT command and then fire the command  * to Firmware.  */
 end_comment
 
 begin_function
@@ -12699,7 +14521,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_build_mpt_cmd - Calls helper function to build Passthru cmd  * input:                Adapter soft state  *                       mfi cmd to build  *  * This function is called by mrsas_issue_cmd() to build the MPT-MFI  * passthru command and prepares the MPT command to send to Firmware.  */
+comment|/*  * mrsas_build_mpt_cmd:	Calls helper function to build Passthru cmd  * input:				Adapter soft state mfi cmd to build  *  * This function is called by mrsas_issue_cmd() to build the MPT-MFI passthru  * command and prepares the MPT command to send to Firmware.  */
 end_comment
 
 begin_function
@@ -12814,7 +14636,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_build_mptmfi_passthru - Builds a MPT MFI Passthru command   * input:                        Adapter soft state  *                               mfi cmd pointer   *  * The MPT command and the io_request are setup as a passthru command.   * The SGE chain address is set to frame_phys_addr of the MFI command.   */
+comment|/*  * mrsas_build_mptmfi_passthru:	Builds a MPT MFI Passthru command  * input:						Adapter soft state mfi cmd pointer  *  * The MPT command and the io_request are setup as a passthru command. The SGE  * chain address is set to frame_phys_addr of the MFI command.  */
 end_comment
 
 begin_function
@@ -12894,7 +14716,7 @@ name|mfi_cmd
 operator|->
 name|index
 expr_stmt|;
-comment|/*      * For cmds where the flag is set, store the flag and check      * on completion. For cmds with this flag, don't call      * mrsas_complete_cmd.      */
+comment|/* 	 * For cmds where the flag is set, store the flag and check on 	 * completion. For cmds with this flag, don't call 	 * mrsas_complete_cmd. 	 */
 if|if
 condition|(
 name|frame_hdr
@@ -13031,7 +14853,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_issue_blocked_cmd - Synchronous wrapper around regular FW cmds  * input:                    Adapter soft state  *                           Command to be issued  *  * This function waits on an event for the command to be returned   * from the ISR. Max wait time is MRSAS_INTERNAL_CMD_WAIT_TIME secs.  * Used for issuing internal and ioctl commands.  */
+comment|/*  * mrsas_issue_blocked_cmd:	Synchronous wrapper around regular FW cmds  * input:					Adapter soft state Command to be issued  *  * This function waits on an event for the command to be returned from the ISR.  * Max wait time is MRSAS_INTERNAL_CMD_WAIT_TIME secs. Used for issuing  * internal and ioctl commands.  */
 end_comment
 
 begin_function
@@ -13109,9 +14931,6 @@ operator|)
 operator|&
 name|cmd
 expr_stmt|;
-comment|/* The following is for debug only... */
-comment|//device_printf(sc->mrsas_dev,"DCMD issued to FW, about to sleep-wait...\n");
-comment|//device_printf(sc->mrsas_dev,"sc->chan = %p\n", sc->chan);
 while|while
 condition|(
 literal|1
@@ -13184,7 +15003,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_complete_mptmfi_passthru - Completes a command  * input:                           sc: Adapter soft state  *                                  cmd: Command to be completed  *                                  status: cmd completion status   *  * This function is called from mrsas_complete_cmd() after an interrupt   * is received from Firmware, and io_request->Function is   * MRSAS_MPI2_FUNCTION_PASSTHRU_IO_REQUEST.  */
+comment|/*  * mrsas_complete_mptmfi_passthru:	Completes a command  * input:	@sc:					Adapter soft state  * 			@cmd:					Command to be completed  * 			@status:				cmd completion status  *  * This function is called from mrsas_complete_cmd() after an interrupt is  * received from Firmware, and io_request->Function is  * MRSAS_MPI2_FUNCTION_PASSTHRU_IO_REQUEST.  */
 end_comment
 
 begin_function
@@ -13273,7 +15092,7 @@ case|:
 case|case
 name|MFI_CMD_LD_SCSI_IO
 case|:
-comment|/*              * MFI_CMD_PD_SCSI_IO and MFI_CMD_LD_SCSI_IO could have been              * issued either through an IO path or an IOCTL path. If it              * was via IOCTL, we will send it to internal completion.              */
+comment|/* 		 * MFI_CMD_PD_SCSI_IO and MFI_CMD_LD_SCSI_IO could have been 		 * issued either through an IO path or an IOCTL path. If it 		 * was via IOCTL, we will send it to internal completion. 		 */
 if|if
 condition|(
 name|cmd
@@ -13440,13 +15259,36 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
+if|if
+condition|(
+name|cmd
+operator|->
+name|frame
+operator|->
+name|dcmd
+operator|.
+name|opcode
+operator|==
+name|MR_DCMD_CTRL_EVENT_GET_INFO
+operator|||
+name|cmd
+operator|->
+name|frame
+operator|->
+name|dcmd
+operator|.
+name|opcode
+operator|==
+name|MR_DCMD_CTRL_EVENT_GET
+condition|)
+block|{
+name|sc
+operator|->
+name|mrsas_aen_triggered
+operator|=
 literal|0
-comment|//currently not supporting event handling, so commenting out
-block|if (cmd->frame->dcmd.opcode == MR_DCMD_CTRL_EVENT_GET_INFO ||                     cmd->frame->dcmd.opcode == MR_DCMD_CTRL_EVENT_GET) {                 mrsas_poll_wait_aen = 0;             }
-endif|#
-directive|endif
+expr_stmt|;
+block|}
 comment|/* See if got an event notification */
 if|if
 condition|(
@@ -13508,7 +15350,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_wakeup -         Completes an internal command  * input:                 Adapter soft state  *                        Command to be completed  *  * In mrsas_issue_blocked_cmd(), after a command is issued to Firmware,   * a wait timer is started.  This function is called from    * mrsas_complete_mptmfi_passthru() as it completes the command,  * to wake up from the command wait.  */
+comment|/*  * mrsas_wakeup:	Completes an internal command  * input:			Adapter soft state  * 					Command to be completed  *  * In mrsas_issue_blocked_cmd(), after a command is issued to Firmware, a wait  * timer is started.  This function is called from  * mrsas_complete_mptmfi_passthru() as it completes the command, to wake up  * from the command wait.  */
 end_comment
 
 begin_function
@@ -13552,8 +15394,6 @@ name|cmd_status
 operator|=
 literal|0
 expr_stmt|;
-comment|/* For debug only ... */
-comment|//device_printf(sc->mrsas_dev,"DCMD rec'd for wakeup, sc->chan=%p\n", sc->chan);
 name|sc
 operator|->
 name|chan
@@ -13582,7 +15422,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_shutdown_ctlr:       Instructs FW to shutdown the controller  * input:                     Adapter soft state  *                            Shutdown/Hibernate  *  * This function issues a DCMD internal command to Firmware to initiate  * shutdown of the controller.  */
+comment|/*  * mrsas_shutdown_ctlr:       Instructs FW to shutdown the controller input:  * Adapter soft state Shutdown/Hibernate  *  * This function issues a DCMD internal command to Firmware to initiate shutdown  * of the controller.  */
 end_comment
 
 begin_function
@@ -13768,7 +15608,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_flush_cache:         Requests FW to flush all its caches   * input:                     Adapter soft state  *  * This function is issues a DCMD internal command to Firmware to initiate  * flushing of all caches.  */
+comment|/*  * mrsas_flush_cache:         Requests FW to flush all its caches input:  * Adapter soft state  *  * This function is issues a DCMD internal command to Firmware to initiate  * flushing of all caches.  */
 end_comment
 
 begin_function
@@ -13925,7 +15765,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_get_map_info:        Load and validate RAID map   * input:                     Adapter instance soft state  *  * This function calls mrsas_get_ld_map_info() and MR_ValidateMapInfo()  * to load and validate RAID map.  It returns 0 if successful, 1 other-  * wise.   */
+comment|/*  * mrsas_get_map_info:        Load and validate RAID map input:  * Adapter instance soft state  *  * This function calls mrsas_get_ld_map_info() and MR_ValidateMapInfo() to load  * and validate RAID map.  It returns 0 if successful, 1 other- wise.  */
 end_comment
 
 begin_function
@@ -13991,7 +15831,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_get_ld_map_info:      Get FW's ld_map structure  * input:                      Adapter instance soft state  *  * Issues an internal command (DCMD) to get the FW's controller PD  * list structure.    */
+comment|/*  * mrsas_get_ld_map_info:      Get FW's ld_map structure input:  * Adapter instance soft state  *  * Issues an internal command (DCMD) to get the FW's controller PD list  * structure.  */
 end_comment
 
 begin_function
@@ -14020,7 +15860,7 @@ name|mrsas_dcmd_frame
 modifier|*
 name|dcmd
 decl_stmt|;
-name|MR_FW_RAID_MAP_ALL
+name|void
 modifier|*
 name|map
 decl_stmt|;
@@ -14066,6 +15906,10 @@ name|dcmd
 expr_stmt|;
 name|map
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|sc
 operator|->
 name|raidmap_mem
@@ -14128,8 +15972,9 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
-name|map
+name|sc
+operator|->
+name|max_map_sz
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -14188,7 +16033,7 @@ name|data_xfer_len
 operator|=
 name|sc
 operator|->
-name|map_sz
+name|current_map_sz
 expr_stmt|;
 name|dcmd
 operator|->
@@ -14222,7 +16067,7 @@ name|length
 operator|=
 name|sc
 operator|->
-name|map_sz
+name|current_map_sz
 expr_stmt|;
 if|if
 condition|(
@@ -14268,7 +16113,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_sync_map_info:        Get FW's ld_map structure  * input:                      Adapter instance soft state  *  * Issues an internal command (DCMD) to get the FW's controller PD  * list structure.    */
+comment|/*  * mrsas_sync_map_info:        Get FW's ld_map structure input:  * Adapter instance soft state  *  * Issues an internal command (DCMD) to get the FW's controller PD list  * structure.  */
 end_comment
 
 begin_function
@@ -14310,7 +16155,7 @@ name|target_map
 init|=
 name|NULL
 decl_stmt|;
-name|MR_FW_RAID_MAP_ALL
+name|MR_DRV_RAID_MAP_ALL
 modifier|*
 name|map
 decl_stmt|;
@@ -14357,7 +16202,7 @@ name|map
 operator|=
 name|sc
 operator|->
-name|raidmap_mem
+name|ld_drv_map
 index|[
 name|sc
 operator|->
@@ -14432,10 +16277,9 @@ name|target_map
 argument_list|,
 literal|0
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|MR_FW_RAID_MAP_ALL
-argument_list|)
+name|sc
+operator|->
+name|max_map_sz
 argument_list|)
 expr_stmt|;
 name|map_phys_addr
@@ -14551,7 +16395,7 @@ name|data_xfer_len
 operator|=
 name|sc
 operator|->
-name|map_sz
+name|current_map_sz
 expr_stmt|;
 name|dcmd
 operator|->
@@ -14607,7 +16451,7 @@ name|length
 operator|=
 name|sc
 operator|->
-name|map_sz
+name|current_map_sz
 expr_stmt|;
 name|sc
 operator|->
@@ -14649,7 +16493,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_get_pd_list:           Returns FW's PD list structure  * input:                       Adapter soft state  *  * Issues an internal command (DCMD) to get the FW's controller PD  * list structure.  This information is mainly used to find out about   * system supported by Firmware.  */
+comment|/*  * mrsas_get_pd_list:           Returns FW's PD list structure input:  * Adapter soft state  *  * Issues an internal command (DCMD) to get the FW's controller PD list  * structure.  This information is mainly used to find out about system  * supported by Firmware.  */
 end_comment
 
 begin_function
@@ -15062,7 +16906,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* Use mutext/spinlock if pd_list component size increase more than 32 bit. */
+comment|/* 	 * Use mutext/spinlock if pd_list component size increase more than 	 * 32 bit. 	 */
 name|memcpy
 argument_list|(
 name|sc
@@ -15107,7 +16951,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_get_ld_list:           Returns FW's LD list structure  * input:                       Adapter soft state  *  * Issues an internal command (DCMD) to get the FW's controller PD  * list structure.  This information is mainly used to find out about  * supported by the FW.  */
+comment|/*  * mrsas_get_ld_list:           Returns FW's LD list structure input:  * Adapter soft state  *  * Issues an internal command (DCMD) to get the FW's controller PD list  * structure.  This information is mainly used to find out about supported by  * the FW.  */
 end_comment
 
 begin_function
@@ -15281,6 +17125,23 @@ argument_list|,
 name|MFI_MBOX_SIZE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|max256vdSupport
+condition|)
+name|dcmd
+operator|->
+name|mbox
+operator|.
+name|b
+index|[
+literal|0
+index|]
+operator|=
+literal|1
+expr_stmt|;
 name|dcmd
 operator|->
 name|cmd
@@ -15382,6 +17243,20 @@ name|retcode
 operator|=
 literal|1
 expr_stmt|;
+if|#
+directive|if
+name|VD_EXT_DEBUG
+name|printf
+argument_list|(
+literal|"Number of LDs %d\n"
+argument_list|,
+name|ld_list_mem
+operator|->
+name|ldCount
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Get the instance LD list */
 if|if
 condition|(
@@ -15396,9 +17271,9 @@ name|ld_list_mem
 operator|->
 name|ldCount
 operator|<=
-operator|(
-name|MAX_LOGICAL_DRIVES
-operator|)
+name|sc
+operator|->
+name|fw_supported_vd_count
 operator|)
 condition|)
 block|{
@@ -15418,7 +17293,7 @@ name|ld_ids
 argument_list|,
 literal|0xff
 argument_list|,
-name|MRSAS_MAX_LD
+name|MAX_LOGICAL_DRIVES_EXT
 argument_list|)
 expr_stmt|;
 for|for
@@ -15515,7 +17390,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_alloc_tmp_dcmd:       Allocates memory for temporary command  * input:                      Adapter soft state  *                             Temp command  *                             Size of alloction  *  * Allocates DMAable memory for a temporary internal command. The allocated  * memory is initialized to all zeros upon successful loading of the dma   * mapped memory.  */
+comment|/*  * mrsas_alloc_tmp_dcmd:       Allocates memory for temporary command input:  * Adapter soft state Temp command Size of alloction  *  * Allocates DMAable memory for a temporary internal command. The allocated  * memory is initialized to all zeros upon successful loading of the dma  * mapped memory.  */
 end_comment
 
 begin_function
@@ -15544,40 +17419,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|tcmd
 operator|->
@@ -15706,7 +17571,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_free_tmp_dcmd:      Free memory for temporary command   * input:                    temporary dcmd pointer   *  * Deallocates memory of the temporary command for use in the construction  * of the internal DCMD.  */
+comment|/*  * mrsas_free_tmp_dcmd:      Free memory for temporary command input:  * temporary dcmd pointer  *  * Deallocates memory of the temporary command for use in the construction of  * the internal DCMD.  */
 end_comment
 
 begin_function
@@ -15778,7 +17643,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_issue_blocked_abort_cmd:       Aborts previously issued cmd  * input:                               Adapter soft state  *                                      Previously issued cmd to be aborted  *  * This function is used to abort previously issued commands, such as AEN and   * RAID map sync map commands.  The abort command is sent as a DCMD internal   * command and subsequently the driver will wait for a return status.  The   * max wait time is MRSAS_INTERNAL_CMD_WAIT_TIME seconds.   */
+comment|/*  * mrsas_issue_blocked_abort_cmd:       Aborts previously issued cmd input:  * Adapter soft state Previously issued cmd to be aborted  *  * This function is used to abort previously issued commands, such as AEN and  * RAID map sync map commands.  The abort command is sent as a DCMD internal  * command and subsequently the driver will wait for a return status.  The  * max wait time is MRSAS_INTERNAL_CMD_WAIT_TIME seconds.  */
 end_comment
 
 begin_function
@@ -16033,7 +17898,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_complete_abort:      Completes aborting a command  * input:                     Adapter soft state  *                            Cmd that was issued to abort another cmd  *  * The mrsas_issue_blocked_abort_cmd() function waits for the command status  * to change after sending the command.  This function is called from   * mrsas_complete_mptmfi_passthru() to wake up the sleep thread associated.  */
+comment|/*  * mrsas_complete_abort:      Completes aborting a command input:  * Adapter soft state Cmd that was issued to abort another cmd  *  * The mrsas_issue_blocked_abort_cmd() function waits for the command status to  * change after sending the command.  This function is called from  * mrsas_complete_mptmfi_passthru() to wake up the sleep thread associated.  */
 end_comment
 
 begin_function
@@ -16099,7 +17964,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_aen_handler:		Callback function for AEN processing from thread context.  * input:					Adapter soft state  *  */
+comment|/*  * mrsas_aen_handler:	AEN processing callback function from thread context  * input:				Adapter soft state  *  * Asynchronous event handler  */
 end_comment
 
 begin_function
@@ -16346,7 +18211,7 @@ name|seq_num
 operator|+
 literal|1
 expr_stmt|;
-comment|// Register AEN with FW for latest sequence number plus 1
+comment|/* Register AEN with FW for latest sequence number plus 1 */
 name|class_locale
 operator|.
 name|members
@@ -16379,7 +18244,7 @@ name|aen_cmd
 operator|!=
 name|NULL
 condition|)
-return|return ;
+return|return;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -16428,7 +18293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_complete_aen:        	Completes AEN command  * input:                     	Adapter soft state  *                            	Cmd that was issued to abort another cmd  *  * 								This function will be called from ISR and will continue   * 								event processing from thread context by enqueuing task  * 								in ev_tq (callback function "mrsas_aen_handler").  */
+comment|/*  * mrsas_complete_aen:	Completes AEN command  * input:				Adapter soft state  * 						Cmd that was issued to abort another cmd  *  * This function will be called from ISR and will continue event processing from  * thread context by enqueuing task in ev_tq (callback function  * "mrsas_aen_handler").  */
 end_comment
 
 begin_function
@@ -16446,7 +18311,7 @@ modifier|*
 name|cmd
 parameter_list|)
 block|{
-comment|/* 	* Don't signal app if it is just an aborted previously registered aen 	*/
+comment|/* 	 * Don't signal app if it is just an aborted previously registered 	 * aen 	 */
 if|if
 condition|(
 operator|(
@@ -16465,7 +18330,34 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* TO DO (?) */
+name|sc
+operator|->
+name|mrsas_aen_triggered
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mrsas_poll_waiting
+condition|)
+block|{
+name|sc
+operator|->
+name|mrsas_poll_waiting
+operator|=
+literal|0
+expr_stmt|;
+name|selwakeup
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mrsas_select
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 name|cmd
