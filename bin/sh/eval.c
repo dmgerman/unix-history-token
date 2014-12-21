@@ -2437,8 +2437,6 @@ operator|&
 name|fn
 argument_list|,
 name|EXP_TILDE
-operator||
-name|EXP_REDIR
 argument_list|)
 expr_stmt|;
 name|redir
@@ -2481,8 +2479,6 @@ operator|&
 name|fn
 argument_list|,
 name|EXP_TILDE
-operator||
-name|EXP_REDIR
 argument_list|)
 expr_stmt|;
 name|fixredir
