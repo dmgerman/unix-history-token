@@ -677,8 +677,8 @@ name|bus_dmamap_t
 name|dma_map
 decl_stmt|;
 name|struct
-name|callout_handle
-name|timeout_ch
+name|callout
+name|timeout
 decl_stmt|;
 name|SG
 name|psg
@@ -767,7 +767,7 @@ name|task
 name|worker
 decl_stmt|;
 name|struct
-name|callout_handle
+name|callout
 name|timer
 decl_stmt|;
 name|eventhandler_tag
@@ -829,6 +829,16 @@ parameter_list|(
 name|vbus_ext
 parameter_list|)
 value|mtx_unlock(&(vbus_ext)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|hpt_assert_vbus_locked
+parameter_list|(
+name|vbus_ext
+parameter_list|)
+value|mtx_assert(&(vbus_ext)->lock, MA_OWNED)
 end_define
 
 begin_else
