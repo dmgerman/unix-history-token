@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* bconfig.h.  Generated from bconfig.h.in by configure.  */
+comment|/* config.h.  Generated from config.h.in by configure.  */
 end_comment
 
 begin_comment
-comment|/* bconfig.h.in.  Generated from configure.ac by autoheader.  */
+comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
@@ -211,7 +211,7 @@ comment|/* #undef HAVE_VSNPRINTF_IN_STD */
 end_comment
 
 begin_comment
-comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+comment|/* Define to the sub-directory where libtool stores uninstalled libraries. */
 end_comment
 
 begin_define
@@ -240,7 +240,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_BUGREPORT
-value|"atf-devel@NetBSD.org"
+value|"atf-discuss@googlegroups.com"
 end_define
 
 begin_comment
@@ -273,7 +273,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"Automated Testing Framework 0.20"
+value|"Automated Testing Framework 0.21"
 end_define
 
 begin_comment
@@ -306,7 +306,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.20"
+value|"0.21"
 end_define
 
 begin_comment
@@ -328,7 +328,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.20"
+value|"0.21"
 end_define
 
 end_unit
