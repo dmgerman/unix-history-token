@@ -881,6 +881,19 @@ expr_stmt|;
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+literal|1100027
+operator|<=
+name|__FreeBSD_version
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1813,6 +1826,11 @@ expr_stmt|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|ATF_TP_ADD_TCS
 argument_list|(
@@ -1855,6 +1873,16 @@ argument_list|,
 name|hsearch_two
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+literal|1100027
+operator|<=
+name|__FreeBSD_version
 ifdef|#
 directive|ifdef
 name|__NetBSD__
@@ -1888,6 +1916,8 @@ argument_list|,
 name|hsearch_r_two
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|atf_no_error
 argument_list|()
