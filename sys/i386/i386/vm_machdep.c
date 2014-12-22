@@ -606,15 +606,6 @@ name|sf_buf_lock
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|_ucodesel
-decl_stmt|,
-name|_udatasel
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Finish a fork operation, with process p2 nearly set up.  * Copy and update the pcb, set up the stack so that the child  * ready to run and return to user mode.  */
 end_comment
