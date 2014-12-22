@@ -1101,7 +1101,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_gpio_pin_max - Returns the maximum number of GPIO pins  *	@dev: gpio device handle  *	@maxpin: pointer to a value that upon return will contain the maximum number  *	         of pins in the device.  *  *  *	LOCKING:  *	Internally locks the context  *  *	RETURNS:  *	Returns 0 on success otherwise an error code  */
+comment|/**  *	ti_gpio_pin_max - Returns the maximum number of GPIO pins  *	@dev: gpio device handle  *	@maxpin: pointer to a value that upon return will contain the maximum number  *	         of pins in the device.  *  *  *	LOCKING:  *	No locking required, returns static data.  *  *	RETURNS:  *	Returns 0 on success otherwise an error code  */
 end_comment
 
 begin_function
@@ -1137,11 +1137,6 @@ name|banks
 init|=
 literal|0
 decl_stmt|;
-name|TI_GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Calculate how many valid banks we have and then multiply that by 32 to 	 * give use the total number of pins. 	 */
 for|for
 control|(
@@ -1184,11 +1179,6 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-name|TI_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1198,7 +1188,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_gpio_pin_getcaps - Gets the capabilties of a given pin  *	@dev: gpio device handle  *	@pin: the number of the pin  *	@caps: pointer to a value that upon return will contain the capabilities  *  *	Currently all pins have the same capability, notably:  *	  - GPIO_PIN_INPUT  *	  - GPIO_PIN_OUTPUT  *	  - GPIO_PIN_PULLUP  *	  - GPIO_PIN_PULLDOWN  *  *	LOCKING:  *	Internally locks the context  *  *	RETURNS:  *	Returns 0 on success otherwise an error code  */
+comment|/**  *	ti_gpio_pin_getcaps - Gets the capabilties of a given pin  *	@dev: gpio device handle  *	@pin: the number of the pin  *	@caps: pointer to a value that upon return will contain the capabilities  *  *	Currently all pins have the same capability, notably:  *	  - GPIO_PIN_INPUT  *	  - GPIO_PIN_OUTPUT  *	  - GPIO_PIN_PULLUP  *	  - GPIO_PIN_PULLDOWN  *  *	LOCKING:  *	No locking required, returns static data.  *  *	RETURNS:  *	Returns 0 on success otherwise an error code  */
 end_comment
 
 begin_function
@@ -1236,11 +1226,6 @@ operator|/
 name|PINS_PER_BANK
 operator|)
 decl_stmt|;
-name|TI_GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Sanity check the pin number is valid */
 if|if
 condition|(
@@ -1262,18 +1247,11 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
-name|TI_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 operator|*
 name|caps
 operator|=
@@ -1286,11 +1264,6 @@ name|GPIO_PIN_PULLUP
 operator||
 name|GPIO_PIN_PULLDOWN
 operator|)
-expr_stmt|;
-name|TI_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1339,11 +1312,6 @@ operator|/
 name|PINS_PER_BANK
 operator|)
 decl_stmt|;
-name|TI_GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Sanity check the pin number is valid */
 if|if
 condition|(
@@ -1365,19 +1333,17 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
-name|TI_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 comment|/* Get the current pin state */
+name|TI_GPIO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|TI_GPIO_GET_FLAGS
 argument_list|(
 name|dev
@@ -1401,7 +1367,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_gpio_pin_getname - Gets the name of a given pin  *	@dev: gpio device handle  *	@pin: the number of the pin  *	@name: buffer to put the name in  *  *	The driver simply calls the pins gpio_n, where 'n' is obviously the number  *	of the pin.  *  *	LOCKING:  *	Internally locks the context  *  *	RETURNS:  *	Returns 0 on success otherwise an error code  */
+comment|/**  *	ti_gpio_pin_getname - Gets the name of a given pin  *	@dev: gpio device handle  *	@pin: the number of the pin  *	@name: buffer to put the name in  *  *	The driver simply calls the pins gpio_n, where 'n' is obviously the number  *	of the pin.  *  *	LOCKING:  *	No locking required, returns static data.  *  *	RETURNS:  *	Returns 0 on success otherwise an error code  */
 end_comment
 
 begin_function
@@ -1439,11 +1405,6 @@ operator|/
 name|PINS_PER_BANK
 operator|)
 decl_stmt|;
-name|TI_GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Sanity check the pin number is valid */
 if|if
 condition|(
@@ -1465,18 +1426,11 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
-name|TI_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 comment|/* Set a very simple name */
 name|snprintf
 argument_list|(
@@ -1497,11 +1451,6 @@ literal|1
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-name|TI_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1563,13 +1512,8 @@ operator|)
 operator|)
 decl_stmt|;
 name|uint32_t
-name|reg_val
+name|oe
 decl_stmt|;
-name|TI_GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Sanity check the pin number is valid */
 if|if
 condition|(
@@ -1591,19 +1535,17 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
-name|TI_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 comment|/* Set the GPIO mode and state */
+name|TI_GPIO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TI_GPIO_SET_FLAGS
@@ -1630,7 +1572,7 @@ operator|)
 return|;
 block|}
 comment|/* If configuring as an output set the "output enable" bit */
-name|reg_val
+name|oe
 operator|=
 name|ti_gpio_read_4
 argument_list|(
@@ -1647,12 +1589,12 @@ name|flags
 operator|&
 name|GPIO_PIN_INPUT
 condition|)
-name|reg_val
+name|oe
 operator||=
 name|mask
 expr_stmt|;
 else|else
-name|reg_val
+name|oe
 operator|&=
 operator|~
 name|mask
@@ -1665,7 +1607,7 @@ name|bank
 argument_list|,
 name|TI_GPIO_OE
 argument_list|,
-name|reg_val
+name|oe
 argument_list|)
 expr_stmt|;
 name|TI_GPIO_UNLOCK
@@ -1733,11 +1675,9 @@ name|PINS_PER_BANK
 operator|)
 operator|)
 decl_stmt|;
-name|TI_GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+name|uint32_t
+name|reg
+decl_stmt|;
 comment|/* Sanity check the pin number is valid */
 if|if
 condition|(
@@ -1759,33 +1699,38 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
-name|TI_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
+name|TI_GPIO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|value
+operator|==
+name|GPIO_PIN_LOW
+condition|)
+name|reg
+operator|=
+name|TI_GPIO_CLEARDATAOUT
+expr_stmt|;
+else|else
+name|reg
+operator|=
+name|TI_GPIO_SETDATAOUT
+expr_stmt|;
 name|ti_gpio_write_4
 argument_list|(
 name|sc
 argument_list|,
 name|bank
 argument_list|,
-operator|(
-name|value
-operator|==
-name|GPIO_PIN_LOW
-operator|)
-condition|?
-name|TI_GPIO_CLEARDATAOUT
-else|:
-name|TI_GPIO_SETDATAOUT
+name|reg
 argument_list|,
 name|mask
 argument_list|)
@@ -1857,15 +1802,10 @@ operator|)
 operator|)
 decl_stmt|;
 name|uint32_t
-name|val
-init|=
-literal|0
+name|oe
+decl_stmt|,
+name|reg
 decl_stmt|;
-name|TI_GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Sanity check the pin number is valid */
 if|if
 condition|(
@@ -1887,20 +1827,18 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
-name|TI_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
-comment|/* Sanity check the pin is not configured as an output */
-name|val
+comment|/* 	 * Return data from output latch when set as output and from the  	 * input register otherwise. 	 */
+name|TI_GPIO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|oe
 operator|=
 name|ti_gpio_read_4
 argument_list|(
@@ -1911,34 +1849,21 @@ argument_list|,
 name|TI_GPIO_OE
 argument_list|)
 expr_stmt|;
-comment|/* Read the value on the pin */
 if|if
 condition|(
-name|val
+name|oe
 operator|&
 name|mask
 condition|)
-operator|*
-name|value
+name|reg
 operator|=
-operator|(
-name|ti_gpio_read_4
-argument_list|(
-name|sc
-argument_list|,
-name|bank
-argument_list|,
 name|TI_GPIO_DATAIN
-argument_list|)
-operator|&
-name|mask
-operator|)
-condition|?
-literal|1
-else|:
-literal|0
 expr_stmt|;
 else|else
+name|reg
+operator|=
+name|TI_GPIO_DATAOUT
+expr_stmt|;
 operator|*
 name|value
 operator|=
@@ -1949,7 +1874,7 @@ name|sc
 argument_list|,
 name|bank
 argument_list|,
-name|TI_GPIO_DATAOUT
+name|reg
 argument_list|)
 operator|&
 name|mask
@@ -2021,13 +1946,10 @@ operator|)
 operator|)
 decl_stmt|;
 name|uint32_t
+name|reg
+decl_stmt|,
 name|val
 decl_stmt|;
-name|TI_GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Sanity check the pin number is valid */
 if|if
 condition|(
@@ -2049,19 +1971,17 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
-name|TI_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 comment|/* Toggle the pin */
+name|TI_GPIO_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|val
 operator|=
 name|ti_gpio_read_4
@@ -2079,25 +1999,22 @@ name|val
 operator|&
 name|mask
 condition|)
-name|ti_gpio_write_4
-argument_list|(
-name|sc
-argument_list|,
-name|bank
-argument_list|,
+name|reg
+operator|=
 name|TI_GPIO_CLEARDATAOUT
-argument_list|,
-name|mask
-argument_list|)
 expr_stmt|;
 else|else
+name|reg
+operator|=
+name|TI_GPIO_SETDATAOUT
+expr_stmt|;
 name|ti_gpio_write_4
 argument_list|(
 name|sc
 argument_list|,
 name|bank
 argument_list|,
-name|TI_GPIO_SETDATAOUT
+name|reg
 argument_list|,
 name|mask
 argument_list|)
