@@ -13813,6 +13813,10 @@ operator|&
 name|rb
 operator|->
 name|recv_srcadr
+operator|.
+name|sa6
+operator|.
+name|sin6_addr
 argument_list|)
 operator|,
 name|stoa
@@ -13830,6 +13834,10 @@ operator|&
 name|itf
 operator|->
 name|sin
+operator|.
+name|sa6
+operator|.
+name|sin6_addr
 argument_list|)
 operator|)
 argument_list|)
@@ -13849,6 +13857,10 @@ operator|&
 name|rb
 operator|->
 name|recv_srcadr
+operator|.
+name|sa6
+operator|.
+name|sin6_addr
 argument_list|)
 operator|&&
 operator|!
@@ -13858,6 +13870,10 @@ operator|&
 name|itf
 operator|->
 name|sin
+operator|.
+name|sa6
+operator|.
+name|sin6_addr
 argument_list|)
 condition|)
 block|{
