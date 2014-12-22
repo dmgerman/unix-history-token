@@ -1286,6 +1286,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VM_ALLOC_NOWAIT
+value|0x8000
+end_define
+
+begin_comment
+comment|/* (g) Do not sleep, return NULL */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VM_ALLOC_COUNT_SHIFT
 value|16
 end_define
