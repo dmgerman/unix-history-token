@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libdwarf_arange.c 2070 2011-10-27 03:05:32Z jkoshy $"
+literal|"$Id: libdwarf_arange.c 3029 2014-04-21 23:26:02Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -203,6 +203,8 @@ operator|=
 name|_dwarf_info_load
 argument_list|(
 name|dbg
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|,
@@ -658,8 +660,7 @@ name|dbg_arange_cnt
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|_Dwarf_Arange
+name|Dwarf_Arange
 argument_list|)
 argument_list|)
 operator|)

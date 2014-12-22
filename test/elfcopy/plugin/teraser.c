@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 1. Erase archive symbol table's timestamp from ar archives,  * make it easy to `diff'.  (option -e)  * 2. Check the sanity of timestamp. (option -c)  *  * $Id: teraser.c 2142 2011-11-10 15:29:59Z jkoshy $  */
+comment|/* 1. Erase archive symbol table's timestamp from ar archives,  * make it easy to `diff'.  (option -e)  * 2. Check the sanity of timestamp. (option -c)  *  * $Id: teraser.c 3102 2014-10-29 21:09:01Z jkoshy $  */
 end_comment
 
 begin_include
@@ -137,9 +137,6 @@ name|TSLEN
 operator|+
 literal|1
 index|]
-decl_stmt|,
-modifier|*
-name|_buf
 decl_stmt|;
 name|char
 modifier|*
@@ -425,8 +422,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|_buf
-operator|=
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|buf
@@ -434,6 +431,13 @@ argument_list|,
 name|TSLEN
 argument_list|,
 name|ps
+argument_list|)
+operator|!=
+name|buf
+condition|)
+name|perror
+argument_list|(
+literal|"fgets"
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -516,8 +520,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|_buf
-operator|=
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|buf
@@ -525,6 +529,13 @@ argument_list|,
 name|TSLEN
 argument_list|,
 name|ct
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|perror
+argument_list|(
+literal|"fgets"
 argument_list|)
 expr_stmt|;
 name|snprintf

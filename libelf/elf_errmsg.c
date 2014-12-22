@@ -36,7 +36,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elf_errmsg.c 2225 2011-11-26 18:55:54Z jkoshy $"
+literal|"$Id: elf_errmsg.c 3012 2014-03-23 03:41:38Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -46,6 +46,7 @@ comment|/*  * Retrieve a human readable translation for an error message.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -264,6 +265,10 @@ name|void
 operator|)
 name|snprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|LIBELF_PRIVATE
 argument_list|(
 name|msg

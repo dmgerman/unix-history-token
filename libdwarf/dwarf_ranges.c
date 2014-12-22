@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: dwarf_ranges.c 2075 2011-10-27 03:47:28Z jkoshy $"
+literal|"$Id: dwarf_ranges.c 3029 2014-04-21 23:26:02Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -217,6 +217,8 @@ condition|(
 name|_dwarf_info_load
 argument_list|(
 name|dbg
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|,

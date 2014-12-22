@@ -60,7 +60,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: sections.c 2358 2011-12-19 18:22:32Z kaiwang27 $"
+literal|"$Id: sections.c 3126 2014-12-21 08:03:31Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1969,6 +1969,22 @@ name|ish
 operator|.
 name|sh_info
 argument_list|)
+condition|)
+continue|continue;
+comment|/* 		 * Section groups should be removed if symbol table will 		 * be removed. (section group's signature stored in symbol 		 * table) 		 */
+if|if
+condition|(
+name|ish
+operator|.
+name|sh_type
+operator|==
+name|SHT_GROUP
+operator|&&
+name|ecp
+operator|->
+name|strip
+operator|==
+name|STRIP_ALL
 condition|)
 continue|continue;
 comment|/* Get section flags set by user. */
@@ -3899,8 +3915,12 @@ name|loadable
 condition|)
 name|warnx
 argument_list|(
-literal|"moving loadable section,"
+literal|"moving loadable section %s, "
 literal|"is this intentional?"
+argument_list|,
+name|s
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|s
@@ -5957,44 +5977,6 @@ name|ecp
 operator|->
 name|shstrtab
 expr_stmt|;
-if|if
-condition|(
-name|s
-operator|->
-name|buf
-operator|==
-name|NULL
-condition|)
-block|{
-name|insert_to_strtab
-argument_list|(
-name|s
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-name|insert_to_strtab
-argument_list|(
-name|s
-argument_list|,
-literal|".symtab"
-argument_list|)
-expr_stmt|;
-name|insert_to_strtab
-argument_list|(
-name|s
-argument_list|,
-literal|".strtab"
-argument_list|)
-expr_stmt|;
-name|insert_to_strtab
-argument_list|(
-name|s
-argument_list|,
-literal|".shstrtab"
-argument_list|)
-expr_stmt|;
-block|}
 name|insert_to_strtab
 argument_list|(
 name|s
@@ -6293,6 +6275,34 @@ operator|->
 name|vma
 operator|=
 literal|0
+expr_stmt|;
+name|insert_to_strtab
+argument_list|(
+name|s
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|insert_to_strtab
+argument_list|(
+name|s
+argument_list|,
+literal|".symtab"
+argument_list|)
+expr_stmt|;
+name|insert_to_strtab
+argument_list|(
+name|s
+argument_list|,
+literal|".strtab"
+argument_list|)
+expr_stmt|;
+name|insert_to_strtab
+argument_list|(
+name|s
+argument_list|,
+literal|".shstrtab"
+argument_list|)
 expr_stmt|;
 block|}
 end_function

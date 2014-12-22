@@ -114,7 +114,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: strings.c 2351 2011-12-19 11:20:37Z jkoshy $"
+literal|"$Id: strings.c 3124 2014-12-21 05:46:28Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -176,6 +176,7 @@ value|((c)>= 0&& (c)<= 255&& 				\ 	  ((c) == '\t' || isprint((c)) ||			\ 	     
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|encoding_size
 decl_stmt|,
@@ -190,6 +191,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|enum
 name|encoding_style
 name|encoding
@@ -197,6 +199,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|enum
 name|radix_style
 name|radix

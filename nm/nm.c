@@ -138,7 +138,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: nm.c 2484 2012-04-07 15:52:05Z kaiwang27 $"
+literal|"$Id: nm.c 3124 2014-12-21 05:46:28Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -263,16 +263,14 @@ begin_comment
 comment|/* output filter list */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument|filter_head
 argument_list|,
 argument|filter_entry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|nm_out_filter
 operator|=
 name|SLIST_HEAD_INITIALIZER

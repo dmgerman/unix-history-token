@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libdwarf_die.c 2948 2013-05-30 21:25:52Z kaiwang27 $"
+literal|"$Id: libdwarf_die.c 3039 2014-05-18 15:10:56Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -246,6 +246,10 @@ block|{
 name|Dwarf_Debug
 name|dbg
 decl_stmt|;
+name|Dwarf_Section
+modifier|*
+name|ds
+decl_stmt|;
 name|Dwarf_CU
 name|cu
 decl_stmt|;
@@ -270,15 +274,27 @@ name|die
 operator|->
 name|die_dbg
 expr_stmt|;
+name|ds
+operator|=
+name|cu
+operator|->
+name|cu_is_info
+condition|?
+name|dbg
+operator|->
+name|dbg_info_sec
+else|:
+name|dbg
+operator|->
+name|dbg_types_sec
+expr_stmt|;
 name|ret
 operator|=
 name|_dwarf_die_parse
 argument_list|(
 name|dbg
 argument_list|,
-name|dbg
-operator|->
-name|dbg_info_sec
+name|ds
 argument_list|,
 name|cu
 argument_list|,

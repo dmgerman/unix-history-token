@@ -96,7 +96,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: brandelf.c 2324 2011-12-12 06:36:27Z jkoshy $"
+literal|"$Id: brandelf.c 3101 2014-10-27 22:24:40Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -387,10 +387,6 @@ name|change
 init|=
 literal|0
 decl_stmt|,
-name|verbose
-init|=
-literal|0
-decl_stmt|,
 name|force
 init|=
 literal|0
@@ -517,10 +513,7 @@ break|break;
 case|case
 literal|'v'
 case|:
-name|verbose
-operator|=
-literal|1
-expr_stmt|;
+comment|/* This flag is ignored. */
 break|break;
 case|case
 literal|'t'
@@ -1031,7 +1024,7 @@ begin_define
 define|#
 directive|define
 name|USAGE_MESSAGE
-value|"\ Usage: %s [options] file...\n\   Set or display the ABI field for an ELF object.\n\n\   Supported options are:\n\   -f NUM                    Set the ELF ABI to the number 'NUM'.\n\   -h | --help               Print a usage message and exit.\n\   -l                        List known ELF ABI names.\n\   -t ABI                    Set the ELF ABI to the value named by \"ABI\".\n\   -v                        Be verbose.\n\   -V | --version            Print a version identifier and exit.\n"
+value|"\ Usage: %s [options] file...\n\   Set or display the ABI field for an ELF object.\n\n\   Supported options are:\n\   -f NUM                    Set the ELF ABI to the number 'NUM'.\n\   -h | --help               Print a usage message and exit.\n\   -l                        List known ELF ABI names.\n\   -t ABI                    Set the ELF ABI to the value named by \"ABI\".\n\   -V | --version            Print a version identifier and exit.\n"
 end_define
 
 begin_function

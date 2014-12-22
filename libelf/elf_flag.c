@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elf_flag.c 2272 2011-12-03 17:07:31Z jkoshy $"
+literal|"$Id: elf_flag.c 2988 2014-03-17 08:51:49Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -422,6 +422,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|r
 decl_stmt|;
@@ -756,6 +757,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|r
 decl_stmt|;

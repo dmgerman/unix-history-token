@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007 John Birrell (jb@freebsd.org)  * Copyright (c) 2009-2011 Kai Wang  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: _libdwarf.h 2075 2011-10-27 03:47:28Z jkoshy $  */
+comment|/*-  * Copyright (c) 2007 John Birrell (jb@freebsd.org)  * Copyright (c) 2009-2014 Kai Wang  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: _libdwarf.h 3106 2014-12-19 16:00:58Z kaiwang27 $  */
 end_comment
 
 begin_ifndef
@@ -251,6 +251,15 @@ define|\
 value|do {								\ 		ret = expr;						\ 		if (ret != DW_DLE_NONE)					\ 			goto gen_fail;					\ 	} while(0)
 end_define
 
+begin_typedef
+typedef|typedef
+name|struct
+name|_Dwarf_CU
+modifier|*
+name|Dwarf_CU
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|_Dwarf_AttrDef
@@ -484,39 +493,6 @@ argument_list|)
 name|die_pro_next
 expr_stmt|;
 comment|/* Next die in pro-die list. */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|_Dwarf_Loclist
-block|{
-name|Dwarf_Locdesc
-modifier|*
-modifier|*
-name|ll_ldlist
-decl_stmt|;
-comment|/* Array of Locdesc pointer. */
-name|int
-name|ll_ldlen
-decl_stmt|;
-comment|/* Number of Locdesc. */
-name|Dwarf_Unsigned
-name|ll_offset
-decl_stmt|;
-comment|/* Offset in .debug_loc section. */
-name|Dwarf_Unsigned
-name|ll_length
-decl_stmt|;
-comment|/* Length (in bytes) of the loclist. */
-name|TAILQ_ENTRY
-argument_list|(
-argument|_Dwarf_Loclist
-argument_list|)
-name|ll_next
-expr_stmt|;
-comment|/* Next loclist in list. */
 block|}
 struct|;
 end_struct
@@ -980,6 +956,14 @@ name|Dwarf_Unsigned
 name|cie_ehdata
 decl_stmt|;
 comment|/* Optional EH Data. */
+name|uint8_t
+name|cie_addrsize
+decl_stmt|;
+comment|/* Address size. (DWARF4) */
+name|uint8_t
+name|cie_segmentsize
+decl_stmt|;
+comment|/* Segment size. (DWARF4) */
 name|Dwarf_Unsigned
 name|cie_caf
 decl_stmt|;
@@ -1260,6 +1244,14 @@ name|uint8_t
 name|cu_dwarf_size
 decl_stmt|;
 comment|/* CU section dwarf size. */
+name|Dwarf_Sig8
+name|cu_type_sig
+decl_stmt|;
+comment|/* Type unit's signature. */
+name|uint64_t
+name|cu_type_offset
+decl_stmt|;
+comment|/* Type unit's type offset. */
 name|Dwarf_Off
 name|cu_next_offset
 decl_stmt|;
@@ -1280,6 +1272,10 @@ name|Dwarf_Abbrev
 name|cu_abbrev_hash
 decl_stmt|;
 comment|/* Abbrev hash table. */
+name|Dwarf_Bool
+name|cu_is_info
+decl_stmt|;
+comment|/* Compilation/type unit flag. */
 name|STAILQ_ENTRY
 argument_list|(
 argument|_Dwarf_CU
@@ -1538,6 +1534,15 @@ name|Dwarf_Off
 name|dbg_info_off
 decl_stmt|;
 comment|/* Current info section offset. */
+name|Dwarf_Section
+modifier|*
+name|dbg_types_sec
+decl_stmt|;
+comment|/* Pointer to type section. */
+name|Dwarf_Off
+name|dbg_types_off
+decl_stmt|;
+comment|/* Current types section offset. */
 name|Dwarf_Unsigned
 name|dbg_seccnt
 decl_stmt|;
@@ -1558,6 +1563,10 @@ name|int
 name|dbg_info_loaded
 decl_stmt|;
 comment|/* Flag indicating all CU loaded. */
+name|int
+name|dbg_types_loaded
+decl_stmt|;
+comment|/* Flag indicating all TU loaded. */
 name|Dwarf_Half
 name|dbg_machine
 decl_stmt|;
@@ -1578,18 +1587,22 @@ argument_list|)
 name|dbg_cu
 expr_stmt|;
 comment|/* List of compilation units. */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|_Dwarf_CU
+argument_list|)
+name|dbg_tu
+expr_stmt|;
+comment|/* List of type units. */
 name|Dwarf_CU
 name|dbg_cu_current
 decl_stmt|;
 comment|/* Ptr to the current CU. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|_Dwarf_Loclist
-argument_list|)
-name|dbg_loclist
-expr_stmt|;
-comment|/* List of location list. */
+name|Dwarf_CU
+name|dbg_tu_current
+decl_stmt|;
+comment|/* Ptr to the current TU. */
 name|Dwarf_NameSec
 name|dbg_globals
 decl_stmt|;
@@ -2450,6 +2463,19 @@ end_function_decl
 begin_function_decl
 name|Dwarf_Section
 modifier|*
+name|_dwarf_find_next_types_section
+parameter_list|(
+name|Dwarf_Debug
+parameter_list|,
+name|Dwarf_Section
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Dwarf_Section
+modifier|*
 name|_dwarf_find_section
 parameter_list|(
 name|Dwarf_Debug
@@ -2505,6 +2531,8 @@ name|int
 name|_dwarf_frame_get_fop
 parameter_list|(
 name|Dwarf_Debug
+parameter_list|,
+name|uint8_t
 parameter_list|,
 name|uint8_t
 modifier|*
@@ -2675,6 +2703,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|_dwarf_info_first_tu
+parameter_list|(
+name|Dwarf_Debug
+parameter_list|,
+name|Dwarf_Error
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|_dwarf_info_gen
 parameter_list|(
 name|Dwarf_P_Debug
@@ -2691,7 +2731,9 @@ name|_dwarf_info_load
 parameter_list|(
 name|Dwarf_Debug
 parameter_list|,
-name|int
+name|Dwarf_Bool
+parameter_list|,
+name|Dwarf_Bool
 parameter_list|,
 name|Dwarf_Error
 modifier|*
@@ -2702,6 +2744,18 @@ end_function_decl
 begin_function_decl
 name|int
 name|_dwarf_info_next_cu
+parameter_list|(
+name|Dwarf_Debug
+parameter_list|,
+name|Dwarf_Error
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_dwarf_info_next_tu
 parameter_list|(
 name|Dwarf_Debug
 parameter_list|,
@@ -2798,6 +2852,10 @@ name|uint64_t
 parameter_list|,
 name|uint8_t
 parameter_list|,
+name|uint8_t
+parameter_list|,
+name|uint8_t
+parameter_list|,
 name|Dwarf_Error
 modifier|*
 parameter_list|)
@@ -2818,6 +2876,10 @@ name|uint8_t
 modifier|*
 parameter_list|,
 name|uint64_t
+parameter_list|,
+name|uint8_t
+parameter_list|,
+name|uint8_t
 parameter_list|,
 name|uint8_t
 parameter_list|,
@@ -2878,44 +2940,15 @@ name|Dwarf_CU
 parameter_list|,
 name|uint64_t
 parameter_list|,
-name|Dwarf_Loclist
+name|Dwarf_Locdesc
+modifier|*
+modifier|*
 modifier|*
 parameter_list|,
-name|Dwarf_Error
+name|Dwarf_Signed
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_dwarf_loclist_cleanup
-parameter_list|(
-name|Dwarf_Debug
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_dwarf_loclist_free
-parameter_list|(
-name|Dwarf_Loclist
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_dwarf_loclist_add
-parameter_list|(
-name|Dwarf_Debug
 parameter_list|,
-name|Dwarf_CU
-parameter_list|,
-name|uint64_t
-parameter_list|,
-name|Dwarf_Loclist
+name|Dwarf_Unsigned
 modifier|*
 parameter_list|,
 name|Dwarf_Error
@@ -3475,6 +3508,15 @@ name|Dwarf_Debug
 parameter_list|,
 name|Dwarf_Error
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_dwarf_type_unit_cleanup
+parameter_list|(
+name|Dwarf_Debug
 parameter_list|)
 function_decl|;
 end_function_decl

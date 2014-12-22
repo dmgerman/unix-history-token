@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009-2011 Kai Wang  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2009-2011,2014 Kai Wang  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libdwarf_frame.c 2529 2012-07-29 23:31:12Z kaiwang27 $"
+literal|"$Id: libdwarf_frame.c 3106 2014-12-19 16:00:58Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -93,6 +93,9 @@ parameter_list|(
 name|Dwarf_Debug
 name|dbg
 parameter_list|,
+name|Dwarf_Cie
+name|cie
+parameter_list|,
 name|uint64_t
 modifier|*
 name|val
@@ -159,9 +162,9 @@ name|data
 argument_list|,
 name|offsetp
 argument_list|,
-name|dbg
+name|cie
 operator|->
-name|dbg_pointer_size
+name|cie_addrsize
 argument_list|)
 expr_stmt|;
 break|break;
@@ -500,6 +503,8 @@ operator|=
 name|_dwarf_frame_read_lsb_encoded
 argument_list|(
 name|dbg
+argument_list|,
+name|cie
 argument_list|,
 operator|&
 name|val
@@ -984,6 +989,63 @@ operator|->
 name|dbg_pointer_size
 argument_list|)
 expr_stmt|;
+comment|/* DWARF4 added "address_size" and "segment_size". */
+if|if
+condition|(
+name|cie
+operator|->
+name|cie_version
+operator|==
+literal|4
+condition|)
+block|{
+name|cie
+operator|->
+name|cie_addrsize
+operator|=
+name|dbg
+operator|->
+name|read
+argument_list|(
+name|ds
+operator|->
+name|ds_data
+argument_list|,
+name|off
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|cie
+operator|->
+name|cie_segmentsize
+operator|=
+name|dbg
+operator|->
+name|read
+argument_list|(
+name|ds
+operator|->
+name|ds_data
+argument_list|,
+name|off
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Otherwise (DWARF[23]) we just set CIE addrsize to the 		 * debug context pointer size. 		 */
+name|cie
+operator|->
+name|cie_addrsize
+operator|=
+name|dbg
+operator|->
+name|dbg_pointer_size
+expr_stmt|;
+block|}
 name|cie
 operator|->
 name|cie_caf
@@ -1607,6 +1669,8 @@ name|_dwarf_frame_read_lsb_encoded
 argument_list|(
 name|dbg
 argument_list|,
+name|cie
+argument_list|,
 operator|&
 name|val
 argument_list|,
@@ -1653,6 +1717,8 @@ operator|=
 name|_dwarf_frame_read_lsb_encoded
 argument_list|(
 name|dbg
+argument_list|,
+name|cie
 argument_list|,
 operator|&
 name|val
@@ -1706,9 +1772,9 @@ name|ds_data
 argument_list|,
 name|off
 argument_list|,
-name|dbg
+name|cie
 operator|->
-name|dbg_pointer_size
+name|cie_addrsize
 argument_list|)
 expr_stmt|;
 name|fde
@@ -1725,9 +1791,9 @@ name|ds_data
 argument_list|,
 name|off
 argument_list|,
-name|dbg
+name|cie
 operator|->
-name|dbg_pointer_size
+name|cie_addrsize
 argument_list|)
 expr_stmt|;
 block|}
@@ -2595,6 +2661,9 @@ modifier|*
 name|rt
 parameter_list|,
 name|uint8_t
+name|addr_size
+parameter_list|,
+name|uint8_t
 modifier|*
 name|insts
 parameter_list|,
@@ -2997,9 +3066,7 @@ argument_list|(
 operator|&
 name|p
 argument_list|,
-name|dbg
-operator|->
-name|dbg_pointer_size
+name|addr_size
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4311,6 +4378,9 @@ name|Dwarf_Debug
 name|dbg
 parameter_list|,
 name|uint8_t
+name|addr_size
+parameter_list|,
+name|uint8_t
 modifier|*
 name|insts
 parameter_list|,
@@ -4356,9 +4426,6 @@ decl_stmt|,
 name|soff
 decl_stmt|,
 name|blen
-decl_stmt|;
-name|int
-name|ret
 decl_stmt|;
 define|#
 directive|define
@@ -4418,10 +4485,6 @@ name|len
 parameter_list|)
 define|\
 value|do {								\ 		if (fop3 != NULL) {					\ 			fop3[*count].fp_expr_block =			\ 			    malloc((size_t) (len));			\ 			if (fop3[*count].fp_expr_block == NULL)	{	\ 				DWARF_SET_ERROR(dbg, error,		\ 				    DW_DLE_MEMORY);			\ 				return (DW_DLE_MEMORY);			\ 			}						\ 			memcpy(&fop3[*count].fp_expr_block,		\ 			    (addr), (len));				\ 		}							\ 	} while(0)
-name|ret
-operator|=
-name|DW_DLE_NONE
-expr_stmt|;
 operator|*
 name|count
 operator|=
@@ -4600,9 +4663,7 @@ argument_list|(
 operator|&
 name|p
 argument_list|,
-name|dbg
-operator|->
-name|dbg_pointer_size
+name|addr_size
 argument_list|)
 expr_stmt|;
 name|SET_OFFSET
@@ -4954,6 +5015,9 @@ name|Dwarf_Debug
 name|dbg
 parameter_list|,
 name|uint8_t
+name|addr_size
+parameter_list|,
+name|uint8_t
 modifier|*
 name|insts
 parameter_list|,
@@ -4989,6 +5053,8 @@ operator|=
 name|_dwarf_frame_convert_inst
 argument_list|(
 name|dbg
+argument_list|,
+name|addr_size
 argument_list|,
 name|insts
 argument_list|,
@@ -5054,6 +5120,8 @@ operator|=
 name|_dwarf_frame_convert_inst
 argument_list|(
 name|dbg
+argument_list|,
+name|addr_size
 argument_list|,
 name|insts
 argument_list|,
@@ -5514,6 +5582,10 @@ name|rt
 argument_list|,
 name|cie
 operator|->
+name|cie_addrsize
+argument_list|,
+name|cie
+operator|->
 name|cie_initinst
 argument_list|,
 name|cie
@@ -5567,6 +5639,10 @@ argument_list|(
 name|dbg
 argument_list|,
 name|rt
+argument_list|,
+name|cie
+operator|->
+name|cie_addrsize
 argument_list|,
 name|fde
 operator|->

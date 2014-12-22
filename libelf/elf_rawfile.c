@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elf_rawfile.c 2225 2011-11-26 18:55:54Z jkoshy $"
+literal|"$Id: elf_rawfile.c 3013 2014-03-23 06:16:59Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -43,12 +43,13 @@ modifier|*
 name|sz
 parameter_list|)
 block|{
+name|size_t
+name|size
+decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
-name|size_t
-name|size
 decl_stmt|;
 name|size
 operator|=
@@ -114,6 +115,10 @@ name|size
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|ptr
 operator|)
 return|;

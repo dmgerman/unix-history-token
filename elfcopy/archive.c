@@ -81,7 +81,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: archive.c 2370 2011-12-29 12:48:12Z jkoshy $"
+literal|"$Id: archive.c 3102 2014-10-29 21:09:01Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1896,11 +1896,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|archive_read_support_compression_none
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
 name|archive_read_support_format_ar
 argument_list|(
 name|a
@@ -1934,7 +1929,7 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -2084,11 +2079,6 @@ name|archive_error_string
 argument_list|(
 name|a
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|archive_read_support_compression_none
-argument_list|(
-name|a
 argument_list|)
 expr_stmt|;
 name|archive_read_support_format_ar
@@ -2428,7 +2418,7 @@ argument_list|)
 expr_stmt|;
 name|ACV
 argument_list|(
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -2493,11 +2483,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|archive_write_set_format_ar_svr4
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-name|archive_write_set_compression_none
 argument_list|(
 name|a
 argument_list|)
@@ -2804,7 +2789,7 @@ argument_list|)
 expr_stmt|;
 name|ACV
 argument_list|(
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)

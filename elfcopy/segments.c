@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: segments.c 2542 2012-08-12 16:14:15Z kaiwang27 $"
+literal|"$Id: segments.c 3113 2014-12-20 08:33:29Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -144,6 +144,21 @@ operator|<
 name|seg
 operator|->
 name|off
+operator|||
+operator|(
+name|s
+operator|->
+name|vma
+operator|<
+name|seg
+operator|->
+name|addr
+operator|&&
+operator|!
+name|s
+operator|->
+name|pseudo
+operator|)
 condition|)
 continue|continue;
 if|if
@@ -184,6 +199,25 @@ operator|>
 name|seg
 operator|->
 name|off
+operator|+
+name|seg
+operator|->
+name|msz
+condition|)
+continue|continue;
+if|if
+condition|(
+name|s
+operator|->
+name|vma
+operator|+
+name|s
+operator|->
+name|sz
+operator|>
+name|seg
+operator|->
+name|addr
 operator|+
 name|seg
 operator|->
@@ -275,8 +309,6 @@ name|dl
 decl_stmt|,
 name|lma
 decl_stmt|,
-name|old_vma
-decl_stmt|,
 name|start
 decl_stmt|,
 name|end
@@ -336,12 +368,6 @@ operator|->
 name|pseudo
 condition|)
 block|{
-name|old_vma
-operator|=
-name|s
-operator|->
-name|vma
-expr_stmt|;
 comment|/* Apply global VMA adjustment. */
 if|if
 condition|(
@@ -1959,7 +1985,7 @@ name|msz
 operator|=
 name|s
 operator|->
-name|off
+name|vma
 operator|+
 name|s
 operator|->
@@ -1967,7 +1993,7 @@ name|sz
 operator|-
 name|seg
 operator|->
-name|off
+name|addr
 expr_stmt|;
 if|if
 condition|(

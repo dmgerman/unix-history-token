@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Selectively compare two ar archives.  * Usage:  * 	ardiff [-ni] [-t name] ar1 ar2  * Options:  * 	-c compare member content. (This implies -s)  * 	-n compare member name.  * 	-i compare member mtime.  *	-l compare archive length (member count).  *	-s compare member size.  *	-t specify the test name.  *  * By default, it compares nothing and consider the test "not ok"  * iff it encounters errors while reading archive.  *  * $Id: ardiff.c 2142 2011-11-10 15:29:59Z jkoshy $  */
+comment|/* Selectively compare two ar archives.  * Usage:  * 	ardiff [-ni] [-t name] ar1 ar2  * Options:  * 	-c compare member content. (This implies -s)  * 	-n compare member name.  * 	-i compare member mtime.  *	-l compare archive length (member count).  *	-s compare member size.  *	-t specify the test name.  *  * By default, it compares nothing and consider the test "not ok"  * iff it encounters errors while reading archive.  *  * $Id: ardiff.c 3102 2014-10-29 21:09:01Z jkoshy $  */
 end_comment
 
 begin_include
@@ -325,11 +325,6 @@ operator|=
 name|archive_read_new
 argument_list|()
 expr_stmt|;
-name|archive_read_support_compression_none
-argument_list|(
-name|a1
-argument_list|)
-expr_stmt|;
 name|archive_read_support_format_ar
 argument_list|(
 name|a1
@@ -337,7 +332,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|archive_read_open_file
+name|archive_read_open_filename
 argument_list|(
 name|a1
 argument_list|,
@@ -378,11 +373,6 @@ operator|=
 name|archive_read_new
 argument_list|()
 expr_stmt|;
-name|archive_read_support_compression_none
-argument_list|(
-name|a2
-argument_list|)
-expr_stmt|;
 name|archive_read_support_format_ar
 argument_list|(
 name|a2
@@ -390,7 +380,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|archive_read_open_file
+name|archive_read_open_filename
 argument_list|(
 name|a2
 argument_list|,
@@ -977,9 +967,6 @@ name|buf
 index|[
 literal|10
 index|]
-decl_stmt|,
-modifier|*
-name|_buf
 decl_stmt|;
 if|if
 condition|(
@@ -997,8 +984,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|_buf
-operator|=
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|buf
@@ -1006,6 +993,13 @@ argument_list|,
 literal|10
 argument_list|,
 name|fp
+argument_list|)
+operator|!=
+name|buf
+condition|)
+name|perror
+argument_list|(
+literal|"fgets"
 argument_list|)
 expr_stmt|;
 name|snprintf
