@@ -613,8 +613,8 @@ comment|/*  * The maximum number of bytes that can be accessed as part of one  *
 define|#
 directive|define
 name|DMU_MAX_ACCESS
-value|(10<<20)
-comment|/* 10MB */
+value|(32 * 1024 * 1024)
+comment|/* 32MB */
 define|#
 directive|define
 name|DMU_MAX_DELETEBLKCNT
@@ -2233,6 +2233,10 @@ function_decl|;
 specifier|extern
 name|int
 name|zfs_prefetch_disable
+decl_stmt|;
+specifier|extern
+name|int
+name|zfs_max_recordsize
 decl_stmt|;
 comment|/*  * Asynchronously try to read in the data.  */
 name|void

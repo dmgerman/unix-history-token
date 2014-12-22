@@ -7822,7 +7822,7 @@ operator|<=
 argument_list|,
 name|origoffset
 operator|+
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|)
 expr_stmt|;
 name|start
@@ -7848,7 +7848,7 @@ operator|-
 name|origoffset
 operator|)
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|origoffset
 argument_list|,

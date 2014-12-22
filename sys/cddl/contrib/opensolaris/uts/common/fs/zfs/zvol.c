@@ -1113,7 +1113,7 @@ name|SPA_MINBLOCKSIZE
 operator|||
 name|volblocksize
 operator|>
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 operator|||
 operator|!
 name|ISP2
@@ -4006,7 +4006,7 @@ name|MIN
 argument_list|(
 name|resid
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|)
 decl_stmt|;
 name|tx
@@ -9021,7 +9021,7 @@ operator|=
 literal|1
 operator|<<
 operator|(
-name|SPA_MAXBLOCKSHIFT
+name|SPA_OLD_MAXBLOCKSHIFT
 operator|-
 name|zv
 operator|->
@@ -10534,7 +10534,7 @@ name|os
 argument_list|,
 name|ZVOL_OBJ
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 literal|0
 argument_list|,
@@ -10586,7 +10586,7 @@ name|zv
 operator|->
 name|zv_volblocksize
 operator|=
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 expr_stmt|;
 block|}
 name|dmu_tx_commit

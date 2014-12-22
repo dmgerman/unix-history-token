@@ -195,7 +195,7 @@ begin_decl_stmt
 name|int
 name|zfs_vdev_aggregation_limit
 init|=
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 decl_stmt|;
 end_decl_stmt
 
