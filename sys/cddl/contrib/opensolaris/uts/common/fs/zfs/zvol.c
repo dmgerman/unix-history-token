@@ -903,7 +903,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|dev_t
 name|dev
 init|=
@@ -966,7 +966,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 if|if
 condition|(
 name|zv
@@ -1012,7 +1012,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 block|}
 end_function
 
@@ -2296,7 +2296,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -2368,7 +2368,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_comment
@@ -2499,7 +2499,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 operator|(
@@ -2758,7 +2758,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 name|zv
 operator|=
 name|kmem_zalloc
@@ -3089,7 +3089,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 operator|(
 name|void
 operator|)
@@ -3286,7 +3286,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|sun
+name|illumos
 if|if
 condition|(
 name|zv
@@ -3343,7 +3343,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|minor_t
 name|minor
 init|=
@@ -3391,7 +3391,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 operator|(
 name|void
 operator|)
@@ -3464,7 +3464,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
 name|avl_destroy
 argument_list|(
 operator|&
@@ -3893,7 +3892,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -4106,7 +4105,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function
@@ -4631,7 +4630,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * Generate a LUN expansion event. 	 */
 if|if
 condition|(
@@ -4743,7 +4742,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 name|out
 label|:
 name|dmu_objset_rele
@@ -5959,7 +5958,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -6550,7 +6549,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function
@@ -7197,7 +7196,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/*  * Set the buffer count to the zvol maximum transfer.  * Using our own routine instead of the default minphys()  * means that for larger writes we write bigger buffers on X86  * (128K instead of 56K) and flush the disk write cache less often  * (every zvol_maxphys - currently 1MB) instead of minphys (currently  * 56K on X86 and 128K on sparc).  */
 name|void
 name|zvol_minphys
@@ -7425,6 +7424,7 @@ argument_list|)
 decl_stmt|;
 else|#
 directive|else
+comment|/* !illumos */
 name|int
 name|zvol_read
 parameter_list|(
@@ -7444,6 +7444,7 @@ parameter_list|)
 block|{
 endif|#
 directive|endif
+comment|/* illumos */
 name|zvol_state_t
 modifier|*
 name|zv
@@ -7462,7 +7463,7 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|zv
 operator|=
 name|zfsdev_get_soft_state
@@ -7687,7 +7688,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/*ARGSUSED*/
 name|int
 name|zvol_write
@@ -7714,6 +7715,7 @@ argument_list|)
 decl_stmt|;
 else|#
 directive|else
+comment|/* !illumos */
 name|int
 name|zvol_write
 parameter_list|(
@@ -7733,6 +7735,7 @@ parameter_list|)
 block|{
 endif|#
 directive|endif
+comment|/* illumos */
 name|zvol_state_t
 modifier|*
 name|zv
@@ -7754,7 +7757,7 @@ name|sync
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|zv
 operator|=
 name|zfsdev_get_soft_state
@@ -7859,11 +7862,6 @@ name|error
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|sun
 name|sync
 operator|=
 operator|!
@@ -8082,7 +8080,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|int
 name|zvol_getefi
 parameter_list|(
@@ -8736,7 +8734,7 @@ block|}
 comment|/*  * END entry points to allow external callers access to the volume.  */
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 comment|/*  * Log a DKIOCFREE/free-long-range to the ZIL with TX_TRUNCATE.  */
 specifier|static
 name|void
@@ -8846,7 +8844,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/*  * Dirtbag ioctls to support mkfs(1M) for UFS filesystems.  See dkio(7I).  * Also a dirtbag dkio ioctl for unmap/free-block functionality.  */
 comment|/*ARGSUSED*/
 name|int
@@ -9849,7 +9847,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 name|int
 name|zvol_busy
 parameter_list|(
@@ -9918,7 +9916,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/*ARGSUSED*/
 specifier|static
 name|int
@@ -11431,7 +11429,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 specifier|static
 name|void
 name|zvol_geom_run
