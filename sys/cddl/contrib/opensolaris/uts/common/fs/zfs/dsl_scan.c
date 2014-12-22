@@ -7760,7 +7760,7 @@ block|{
 name|zfs_dbgmsg
 argument_list|(
 literal|"freed %llu blocks in %llums from "
-literal|"free_bpobj/bptree txg %llu; err=%u"
+literal|"free_bpobj/bptree txg %llu; err=%d"
 argument_list|,
 operator|(
 name|longlong_t
