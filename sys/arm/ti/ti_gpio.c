@@ -147,6 +147,33 @@ directive|include
 file|"ti_gpio_if.h"
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SOC_OMAP4
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SOC_TI_AM335X
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Unknown SoC"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Register definitions */
 end_comment
@@ -164,20 +191,6 @@ directive|define
 name|TI_GPIO_SYSCONFIG
 value|0x0010
 end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOC_OMAP4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SOC_TI_AM335X
-argument_list|)
-end_if
 
 begin_define
 define|#
@@ -388,22 +401,6 @@ directive|define
 name|TI_GPIO_SETDATAOUT
 value|0x0194
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-literal|"Unknown SoC"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Other SoC Specific definitions */
@@ -1038,17 +1035,6 @@ name|mask
 parameter_list|)
 block|{
 comment|/* We clear both set of registers. */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOC_OMAP4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SOC_TI_AM335X
-argument_list|)
 name|ti_gpio_write_4
 argument_list|(
 name|sc
@@ -1071,32 +1057,6 @@ argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ti_gpio_write_4
-argument_list|(
-name|sc
-argument_list|,
-name|bank
-argument_list|,
-name|TI_GPIO_CLEARIRQENABLE1
-argument_list|,
-name|mask
-argument_list|)
-expr_stmt|;
-name|ti_gpio_write_4
-argument_list|(
-name|sc
-argument_list|,
-name|bank
-argument_list|,
-name|TI_GPIO_CLEARIRQENABLE2
-argument_list|,
-name|mask
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
