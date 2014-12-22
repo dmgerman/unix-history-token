@@ -2705,7 +2705,7 @@ condition|)
 block|{
 name|temp
 operator|=
-name|ntp_random
+name|arc4random
 argument_list|()
 operator|&
 literal|0xff
@@ -2839,7 +2839,7 @@ name|RSA_generate_key
 argument_list|(
 name|modulus
 argument_list|,
-literal|3
+literal|65537
 argument_list|,
 name|cb
 argument_list|,
@@ -4016,7 +4016,7 @@ name|RSA_generate_key
 argument_list|(
 name|modulus
 argument_list|,
-literal|3
+literal|65537
 argument_list|,
 name|cb
 argument_list|,

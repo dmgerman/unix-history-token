@@ -90,6 +90,29 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)<= (b)) ? (a) : (b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Structure to hold request procedure information  */
 end_comment
@@ -4172,6 +4195,10 @@ block|{
 name|int
 name|overhead
 decl_stmt|;
+name|unsigned
+name|int
+name|currentlen
+decl_stmt|;
 name|overhead
 operator|=
 literal|0
@@ -4253,7 +4280,7 @@ block|}
 block|}
 block|}
 comment|/* 	 * Save room for trailing junk 	 */
-if|if
+while|while
 condition|(
 name|dlen
 operator|+
@@ -4265,6 +4292,42 @@ name|dataend
 condition|)
 block|{
 comment|/* 		 * Not enough room in this one, flush it out. 		 */
+name|currentlen
+operator|=
+name|MIN
+argument_list|(
+name|dlen
+argument_list|,
+name|dataend
+operator|-
+name|datapt
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|datapt
+argument_list|,
+name|dp
+argument_list|,
+name|currentlen
+argument_list|)
+expr_stmt|;
+name|datapt
+operator|+=
+name|currentlen
+expr_stmt|;
+name|dp
+operator|+=
+name|currentlen
+expr_stmt|;
+name|dlen
+operator|-=
+name|currentlen
+expr_stmt|;
+name|datalinelen
+operator|+=
+name|currentlen
+expr_stmt|;
 name|ctl_flushpkt
 argument_list|(
 name|CTL_MORE
