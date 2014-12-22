@@ -456,8 +456,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|struct
-name|pcb
+name|void
 modifier|*
 name|res
 decl_stmt|;

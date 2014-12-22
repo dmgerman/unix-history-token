@@ -4445,12 +4445,10 @@ name|td_pcb
 operator|->
 name|pcb_save
 operator|==
-operator|&
+name|get_pcb_user_save_td
+argument_list|(
 name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_user_save
+argument_list|)
 argument_list|,
 operator|(
 literal|"System call %s returning with mangled pcb_save"
