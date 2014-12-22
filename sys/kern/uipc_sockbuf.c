@@ -2375,6 +2375,11 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|m_clrprotoflags
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|SBLASTRECORDCHK
 argument_list|(
 name|sb
@@ -3047,6 +3052,11 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|m_clrprotoflags
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Put the first mbuf on the queue.  Note this permits zero length 	 * records. 	 */
 name|sballoc
 argument_list|(
@@ -3273,6 +3283,15 @@ argument_list|,
 name|asa
 operator|->
 name|sa_len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m0
+condition|)
+name|m_clrprotoflags
+argument_list|(
+name|m0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3704,6 +3723,11 @@ operator|(
 literal|0
 operator|)
 return|;
+name|m_clrprotoflags
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 name|n
 operator|->
 name|m_next
