@@ -3093,7 +3093,7 @@ comment|/* set up CPU registers and state */
 name|cpu_setregs
 argument_list|()
 expr_stmt|;
-comment|/* set up SSE/NX registers */
+comment|/* set up SSE/NX */
 name|initializecpu
 argument_list|()
 expr_stmt|;
