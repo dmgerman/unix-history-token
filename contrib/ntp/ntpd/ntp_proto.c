@@ -2388,6 +2388,7 @@ expr_stmt|;
 name|sys_badauth
 operator|++
 expr_stmt|;
+return|return;
 block|}
 else|else
 block|{
