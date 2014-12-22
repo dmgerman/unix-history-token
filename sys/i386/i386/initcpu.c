@@ -103,52 +103,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|CPU_WT_ALLOC
-argument_list|)
-end_if
-
-begin_function_decl
-name|void
-name|enable_K5_wt_alloc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|enable_K6_wt_alloc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|enable_K6_2_wt_alloc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -318,15 +272,9 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Must *NOT* be BSS or locore will bzero these after setting them */
-end_comment
-
 begin_decl_stmt
 name|int
 name|cpu
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -337,8 +285,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|cpu_feature
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -349,8 +295,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|cpu_feature2
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -361,8 +305,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|amd_feature
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -373,8 +315,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|amd_feature2
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -385,8 +325,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|amd_pminfo
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -397,8 +335,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|via_feature_rng
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -409,8 +345,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|via_feature_xcrypt
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -421,8 +355,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|cpu_high
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -432,9 +364,17 @@ end_comment
 
 begin_decl_stmt
 name|u_int
+name|cpu_exthigh
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Highest arg to extended CPUID */
+end_comment
+
+begin_decl_stmt
+name|u_int
 name|cpu_id
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -445,8 +385,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|cpu_procinfo
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -457,8 +395,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|cpu_procinfo2
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -472,8 +408,6 @@ name|cpu_vendor
 index|[
 literal|20
 index|]
-init|=
-literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -484,8 +418,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|cpu_vendor_id
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -493,11 +425,48 @@ begin_comment
 comment|/* CPU vendor ID */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+end_ifdef
+
+begin_decl_stmt
+name|u_int
+name|cpu_fxsr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SSE enabled */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cpu_mxcsr_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Valid bits in mxcsr */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|u_int
 name|cpu_clflush_line_size
 init|=
 literal|32
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|cpu_stdext_feature
 decl_stmt|;
 end_decl_stmt
 
@@ -529,6 +498,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* MONITOR minimum range size, bytes */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cyrix_did
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Device ID of Cyrix CPU */
 end_comment
 
 begin_expr_stmt
@@ -572,37 +551,6 @@ literal|"VIA xcrypt feature available in CPU"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
-
-begin_decl_stmt
-name|u_int
-name|cpu_fxsr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* SSE enabled */
-end_comment
-
-begin_decl_stmt
-name|u_int
-name|cpu_mxcsr_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* valid bits in mxcsr */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

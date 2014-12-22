@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/intr_machdep.h>
 end_include
 
@@ -112,6 +118,24 @@ include|#
 directive|include
 file|<machine/specialreg.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<amd64/vmm/intel/vmx_controls.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<x86/isa/icu.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
 
 begin_define
 define|#
@@ -134,92 +158,6 @@ name|IDENTBLUE_CYRIXM2
 value|2
 end_define
 
-begin_comment
-comment|/* XXX - should be in header file: */
-end_comment
-
-begin_function_decl
-name|void
-name|printcpuinfo
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|finishidentcpu
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|earlysetcpuclass
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|CPU_WT_ALLOC
-argument_list|)
-end_if
-
-begin_function_decl
-name|void
-name|enable_K5_wt_alloc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|enable_K6_wt_alloc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|enable_K6_2_wt_alloc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-name|void
-name|panicifcpuunsupported
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 specifier|static
 name|void
@@ -233,12 +171,17 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|init_exthigh
+name|print_transmeta_info
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -284,28 +227,17 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|print_AMD_assoc
-parameter_list|(
-name|int
-name|i
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|print_transmeta_info
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|print_via_padlock_info
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_vmx_info
 parameter_list|(
 name|void
 parameter_list|)
@@ -319,26 +251,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
-name|cpu_exthigh
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Highest arg to extended CPUID */
-end_comment
-
-begin_decl_stmt
-name|u_int
-name|cyrix_did
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Device ID of Cyrix CPU */
-end_comment
-
-begin_decl_stmt
 name|char
 name|machine
 index|[]
@@ -346,6 +258,141 @@ init|=
 name|MACHINE
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCTL_MASK32
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|adaptive_machine_arch
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+name|int
+name|sysctl_hw_machine
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|SCTL_MASK32
+specifier|static
+specifier|const
+name|char
+name|machine32
+index|[]
+init|=
+literal|"i386"
+decl_stmt|;
+endif|#
+directive|endif
+name|int
+name|error
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SCTL_MASK32
+if|if
+condition|(
+operator|(
+name|req
+operator|->
+name|flags
+operator|&
+name|SCTL_MASK32
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|adaptive_machine_arch
+condition|)
+name|error
+operator|=
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+name|machine32
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|machine32
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|error
+operator|=
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+name|machine
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|machine
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_hw
+argument_list|,
+name|HW_MACHINE
+argument_list|,
+name|machine
+argument_list|,
+name|CTLTYPE_STRING
+operator||
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|sysctl_hw_machine
+argument_list|,
+literal|"A"
+argument_list|,
+literal|"Machine class"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_expr_stmt
 name|SYSCTL_STRING
@@ -366,6 +413,11 @@ literal|"Machine class"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -442,6 +494,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -484,6 +542,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 specifier|static
 struct|struct
@@ -496,10 +559,13 @@ name|int
 name|cpu_class
 decl_stmt|;
 block|}
-name|i386_cpus
+name|cpus
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"Intel 80286"
 block|,
@@ -619,6 +685,24 @@ name|CPUCLASS_686
 block|}
 block|,
 comment|/* CPU_P4 */
+else|#
+directive|else
+block|{
+literal|"Clawhammer"
+block|,
+name|CPUCLASS_K8
+block|}
+block|,
+comment|/* CPU_CLAWHAMMER */
+block|{
+literal|"Sledgehammer"
+block|,
+name|CPUCLASS_K8
+block|}
+block|,
+comment|/* CPU_SLEDGEHAMMER */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -660,6 +744,9 @@ name|CPU_VENDOR_CENTAUR
 block|}
 block|,
 comment|/* CentaurHauls */
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 name|NSC_VENDOR_ID
 block|,
@@ -716,129 +803,11 @@ comment|/* XXX CPUID 8000_0000h and 8086_0000h, not 0000_0000h */
 block|{ "TransmetaCPU",	CPU_VENDOR_TRANSMETA },
 endif|#
 directive|endif
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NO_F00F_HACK
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|int
-name|has_f00f_bug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Initialized so that it can be patched. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-specifier|static
-name|void
-name|init_exthigh
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-specifier|static
-name|int
-name|done
-init|=
-literal|0
-decl_stmt|;
-name|u_int
-name|regs
-index|[
-literal|4
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|done
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|cpu_high
-operator|>
-literal|0
-operator|&&
-operator|(
-name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_INTEL
-operator|||
-name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_AMD
-operator|||
-name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_TRANSMETA
-operator|||
-name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_CENTAUR
-operator|||
-name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_NSC
-operator|)
-condition|)
-block|{
-name|do_cpuid
-argument_list|(
-literal|0x80000000
-argument_list|,
-name|regs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|regs
-index|[
-literal|0
-index|]
-operator|>=
-literal|0x80000000
-condition|)
-name|cpu_exthigh
-operator|=
-name|regs
-index|[
-literal|0
-index|]
-expr_stmt|;
-block|}
-name|done
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-end_function
 
 begin_function
 name|void
@@ -861,7 +830,7 @@ name|brand
 decl_stmt|;
 name|cpu_class
 operator|=
-name|i386_cpus
+name|cpus
 index|[
 name|cpu
 index|]
@@ -877,7 +846,7 @@ name|strncpy
 argument_list|(
 name|cpu_model
 argument_list|,
-name|i386_cpus
+name|cpus
 index|[
 name|cpu
 index|]
@@ -891,9 +860,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Check for extended CPUID information and a processor name. */
-name|init_exthigh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|cpu_exthigh
@@ -947,13 +913,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
+switch|switch
 condition|(
 name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_INTEL
 condition|)
 block|{
+case|case
+name|CPU_VENDOR_INTEL
+case|:
+ifdef|#
+directive|ifdef
+name|__i386__
 if|if
 condition|(
 operator|(
@@ -1389,15 +1359,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|cpu_vendor_id
-operator|==
+else|#
+directive|else
+comment|/* Please make up your mind folks! */
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"EM64T"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+case|case
 name|CPU_VENDOR_AMD
-condition|)
-block|{
+case|:
 comment|/* 		 * Values taken from AMD Processor Recognition 		 * http://www.amd.com/K6/k6docs/pdf/20734g.pdf 		 * (also describes ``Features'' encodings. 		 */
 name|strcpy
 argument_list|(
@@ -1406,6 +1383,9 @@ argument_list|,
 literal|"AMD "
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
 switch|switch
 condition|(
 name|cpu_id
@@ -1499,10 +1479,6 @@ name|cpu_model
 argument_list|,
 literal|"K5 model 0"
 argument_list|)
-expr_stmt|;
-name|tsc_freq
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1726,15 +1702,42 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-block|}
-elseif|else
+else|#
+directive|else
 if|if
 condition|(
-name|cpu_vendor_id
+operator|(
+name|cpu_id
+operator|&
+literal|0xf00
+operator|)
 operator|==
-name|CPU_VENDOR_CYRIX
+literal|0xf00
 condition|)
-block|{
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"AMD64 Processor"
+argument_list|)
+expr_stmt|;
+else|else
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Unknown"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+ifdef|#
+directive|ifdef
+name|__i386__
+case|case
+name|CPU_VENDOR_CYRIX
+case|:
 name|strcpy
 argument_list|(
 name|cpu_model
@@ -2210,15 +2213,10 @@ break|break;
 block|}
 break|break;
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|cpu_vendor_id
-operator|==
+break|break;
+case|case
 name|CPU_VENDOR_RISE
-condition|)
-block|{
+case|:
 name|strcpy
 argument_list|(
 name|cpu_model
@@ -2258,15 +2256,15 @@ literal|"Unknown"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|cpu_vendor_id
-operator|==
+break|break;
+endif|#
+directive|endif
+case|case
 name|CPU_VENDOR_CENTAUR
-condition|)
-block|{
+case|:
+ifdef|#
+directive|ifdef
+name|__i386__
 switch|switch
 condition|(
 name|cpu_id
@@ -2283,11 +2281,6 @@ name|cpu_model
 argument_list|,
 literal|"IDT WinChip C6"
 argument_list|)
-expr_stmt|;
-comment|/* 			 * http://www.centtech.com/c6_data_sheet.pdf 			 * 			 * I-12 RDTSC may return incoherent values in EDX:EAX 			 * I-13 RDTSC hangs when certain event counters are used 			 */
-name|tsc_freq
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -2404,15 +2397,49 @@ literal|"VIA/IDT Unknown"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-elseif|else
+else|#
+directive|else
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"VIA "
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|cpu_vendor_id
+operator|(
+name|cpu_id
+operator|&
+literal|0xff0
+operator|)
 operator|==
-name|CPU_VENDOR_IBM
+literal|0x6f0
 condition|)
-block|{
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Nano Processor"
+argument_list|)
+expr_stmt|;
+else|else
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Unknown"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+ifdef|#
+directive|ifdef
+name|__i386__
+case|case
+name|CPU_VENDOR_IBM
+case|:
 name|strcpy
 argument_list|(
 name|cpu_model
@@ -2420,15 +2447,10 @@ argument_list|,
 literal|"Blue Lightning CPU"
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|cpu_vendor_id
-operator|==
+break|break;
+case|case
 name|CPU_VENDOR_NSC
-condition|)
-block|{
+case|:
 switch|switch
 condition|(
 name|cpu_id
@@ -2450,20 +2472,6 @@ name|cpu
 operator|=
 name|CPU_GEODE1100
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|cpu_id
-operator|&
-name|CPUID_STEPPING
-operator|)
-operator|==
-literal|0
-condition|)
-name|tsc_freq
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 default|default:
 name|strcpy
@@ -2475,6 +2483,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+break|break;
+endif|#
+directive|endif
+default|default:
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Unknown"
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 comment|/* 	 * Replace cpu_model with cpu_brand minus leading spaces if 	 * we have one. 	 */
 name|brand
@@ -2512,11 +2532,63 @@ argument_list|,
 name|cpu_model
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tsc_freq
+operator|!=
+literal|0
+condition|)
+block|{
+name|hw_clockrate
+operator|=
+operator|(
+name|tsc_freq
+operator|+
+literal|5000
+operator|)
+operator|/
+literal|1000000
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%jd.%02d-MHz "
+argument_list|,
+call|(
+name|intmax_t
+call|)
+argument_list|(
+name|tsc_freq
+operator|+
+literal|4999
+argument_list|)
+operator|/
+literal|1000000
+argument_list|,
+call|(
+name|u_int
+call|)
+argument_list|(
+operator|(
+name|tsc_freq
+operator|+
+literal|4999
+operator|)
+operator|/
+literal|10000
+argument_list|)
+operator|%
+literal|100
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|cpu_class
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__i386__
 case|case
 name|CPUCLASS_286
 case|:
@@ -2561,55 +2633,6 @@ argument_list|)
 case|case
 name|CPUCLASS_586
 case|:
-if|if
-condition|(
-name|tsc_freq
-operator|!=
-literal|0
-condition|)
-block|{
-name|hw_clockrate
-operator|=
-operator|(
-name|tsc_freq
-operator|+
-literal|5000
-operator|)
-operator|/
-literal|1000000
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%jd.%02d-MHz "
-argument_list|,
-call|(
-name|intmax_t
-call|)
-argument_list|(
-name|tsc_freq
-operator|+
-literal|4999
-argument_list|)
-operator|/
-literal|1000000
-argument_list|,
-call|(
-name|u_int
-call|)
-argument_list|(
-operator|(
-name|tsc_freq
-operator|+
-literal|4999
-operator|)
-operator|/
-literal|10000
-argument_list|)
-operator|%
-literal|100
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"586"
@@ -2627,58 +2650,22 @@ argument_list|)
 case|case
 name|CPUCLASS_686
 case|:
-if|if
-condition|(
-name|tsc_freq
-operator|!=
-literal|0
-condition|)
-block|{
-name|hw_clockrate
-operator|=
-operator|(
-name|tsc_freq
-operator|+
-literal|5000
-operator|)
-operator|/
-literal|1000000
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%jd.%02d-MHz "
-argument_list|,
-call|(
-name|intmax_t
-call|)
-argument_list|(
-name|tsc_freq
-operator|+
-literal|4999
-argument_list|)
-operator|/
-literal|1000000
-argument_list|,
-call|(
-name|u_int
-call|)
-argument_list|(
-operator|(
-name|tsc_freq
-operator|+
-literal|4999
-operator|)
-operator|/
-literal|10000
-argument_list|)
-operator|%
-literal|100
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"686"
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+else|#
+directive|else
+case|case
+name|CPUCLASS_K8
+case|:
+name|printf
+argument_list|(
+literal|"K8"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2704,7 +2691,7 @@ name|cpu_vendor
 condition|)
 name|printf
 argument_list|(
-literal|"  Origin = \"%s\""
+literal|"  Origin=\"%s\""
 argument_list|,
 name|cpu_vendor
 argument_list|)
@@ -2715,7 +2702,7 @@ name|cpu_id
 condition|)
 name|printf
 argument_list|(
-literal|"  Id = 0x%x"
+literal|"  Id=0x%x"
 argument_list|,
 name|cpu_id
 argument_list|)
@@ -2732,15 +2719,18 @@ name|CPU_VENDOR_AMD
 operator|||
 name|cpu_vendor_id
 operator|==
+name|CPU_VENDOR_CENTAUR
+operator|||
+ifdef|#
+directive|ifdef
+name|__i386__
+name|cpu_vendor_id
+operator|==
 name|CPU_VENDOR_TRANSMETA
 operator|||
 name|cpu_vendor_id
 operator|==
 name|CPU_VENDOR_RISE
-operator|||
-name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_CENTAUR
 operator|||
 name|cpu_vendor_id
 operator|==
@@ -2761,11 +2751,15 @@ operator|>
 literal|0x500
 operator|)
 operator|)
+operator|||
+endif|#
+directive|endif
+literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  Family = 0x%x"
+literal|"  Family=0x%x"
 argument_list|,
 name|CPUID_TO_FAMILY
 argument_list|(
@@ -2775,7 +2769,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Model = 0x%x"
+literal|"  Model=0x%x"
 argument_list|,
 name|CPUID_TO_MODEL
 argument_list|(
@@ -2785,13 +2779,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Stepping = %u"
+literal|"  Stepping=%u"
 argument_list|,
 name|cpu_id
 operator|&
 name|CPUID_STEPPING
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
 if|if
 condition|(
 name|cpu_vendor_id
@@ -2805,6 +2802,8 @@ argument_list|,
 name|cyrix_did
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * AMD CPUID Specification 		 * http://support.amd.com/us/Embedded_TechDocs/25481.pdf 		 * 		 * Intel Processor Identification and CPUID Instruction 		 * http://www.intel.com/assets/pdf/appnote/241618.pdf 		 */
 if|if
 condition|(
@@ -3123,6 +3122,57 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|cpu_stdext_feature
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n  Structured Extended Features=0x%b"
+argument_list|,
+name|cpu_stdext_feature
+argument_list|,
+literal|"\020"
+comment|/* RDFSBASE/RDGSBASE/WRFSBASE/WRGSBASE */
+literal|"\001FSGSBASE"
+literal|"\002TSCADJ"
+comment|/* Bit Manipulation Instructions */
+literal|"\004BMI1"
+comment|/* Hardware Lock Elision */
+literal|"\005HLE"
+comment|/* Advanced Vector Instructions 2 */
+literal|"\006AVX2"
+comment|/* Supervisor Mode Execution Prot. */
+literal|"\010SMEP"
+comment|/* Bit Manipulation Instructions */
+literal|"\011BMI2"
+literal|"\012ERMS"
+comment|/* Invalidate Processor Context ID */
+literal|"\013INVPCID"
+comment|/* Restricted Transactional Memory */
+literal|"\014RTM"
+comment|/* Intel Memory Protection Extensions */
+literal|"\017MPX"
+comment|/* AVX512 Foundation */
+literal|"\021AVX512F"
+comment|/* Enhanced NRBG */
+literal|"\023RDSEED"
+comment|/* ADCX + ADOX */
+literal|"\024ADX"
+comment|/* Supervisor Mode Access Prevention */
+literal|"\025SMAP"
+literal|"\030CLFLUSHOPT"
+literal|"\032PROCTRACE"
+literal|"\033AVX512PF"
+literal|"\034AVX512ER"
+literal|"\035AVX512CD"
+literal|"\036SHA"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|via_feature_rng
 operator|!=
 literal|0
@@ -3132,6 +3182,15 @@ operator|!=
 literal|0
 condition|)
 name|print_via_padlock_info
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|cpu_feature2
+operator|&
+name|CPUID2_VMX
+condition|)
+name|print_vmx_info
 argument_list|()
 expr_stmt|;
 if|if
@@ -3173,6 +3232,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|__i386__
 block|}
 elseif|else
 if|if
@@ -3239,6 +3301,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
 block|}
 comment|/* Avoid ugly blank lines: only print newline when we have to. */
 if|if
@@ -3278,6 +3342,9 @@ condition|)
 name|print_INTEL_info
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
 elseif|else
 if|if
 condition|(
@@ -3288,6 +3355,8 @@ condition|)
 name|print_transmeta_info
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3298,6 +3367,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__i386__
 if|#
 directive|if
 operator|!
@@ -3335,12 +3407,28 @@ comment|/* lint */
 endif|#
 directive|endif
 comment|/* lint */
+else|#
+directive|else
+comment|/* __amd64__ */
+ifndef|#
+directive|ifndef
+name|HAMMER
+error|#
+directive|error
+literal|"You need to specify a cpu type"
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/* 	 * Now that we have told the user what they have, 	 * let them know if that machine type isn't configured. 	 */
 switch|switch
 condition|(
 name|cpu_class
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__i386__
 case|case
 name|CPUCLASS_286
 case|:
@@ -3384,6 +3472,22 @@ name|CPUCLASS_686
 case|:
 endif|#
 directive|endif
+else|#
+directive|else
+comment|/* __amd64__ */
+case|case
+name|CPUCLASS_X86
+case|:
+ifndef|#
+directive|ifndef
+name|HAMMER
+case|case
+name|CPUCLASS_K8
+case|:
+endif|#
+directive|endif
+endif|#
+directive|endif
 name|panic
 argument_list|(
 literal|"CPU class not configured"
@@ -3394,6 +3498,12 @@ break|break;
 block|}
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -3764,6 +3874,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Update TSC freq with the value indicated by the caller. */
 end_comment
@@ -3857,30 +3972,159 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Final stage of CPU identification. -- Should I check TI?  */
+comment|/*  * Final stage of CPU identification.  */
 end_comment
 
-begin_function
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_decl_stmt
 name|void
 name|finishidentcpu
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+name|void
+name|identify_cpu
+argument_list|(
+name|void
+argument_list|)
+endif|#
+directive|endif
 block|{
-name|int
-name|isblue
-init|=
-literal|0
-decl_stmt|;
-name|u_char
-name|ccr3
-decl_stmt|;
 name|u_int
 name|regs
 index|[
 literal|4
 index|]
+decl_stmt|,
+name|cpu_stdext_disable
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
+name|u_char
+name|ccr3
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__amd64__
+name|do_cpuid
+argument_list|(
+literal|0
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+name|cpu_high
+operator|=
+name|regs
+index|[
+literal|0
+index|]
+expr_stmt|;
+operator|(
+operator|(
+name|u_int
+operator|*
+operator|)
+operator|&
+name|cpu_vendor
+operator|)
+index|[
+literal|0
+index|]
+operator|=
+name|regs
+index|[
+literal|1
+index|]
+expr_stmt|;
+operator|(
+operator|(
+name|u_int
+operator|*
+operator|)
+operator|&
+name|cpu_vendor
+operator|)
+index|[
+literal|1
+index|]
+operator|=
+name|regs
+index|[
+literal|3
+index|]
+expr_stmt|;
+operator|(
+operator|(
+name|u_int
+operator|*
+operator|)
+operator|&
+name|cpu_vendor
+operator|)
+index|[
+literal|2
+index|]
+operator|=
+name|regs
+index|[
+literal|2
+index|]
+expr_stmt|;
+name|cpu_vendor
+index|[
+literal|12
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|do_cpuid
+argument_list|(
+literal|1
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+name|cpu_id
+operator|=
+name|regs
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|cpu_procinfo
+operator|=
+name|regs
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|cpu_feature
+operator|=
+name|regs
+index|[
+literal|3
+index|]
+expr_stmt|;
+name|cpu_feature2
+operator|=
+name|regs
+index|[
+literal|2
+index|]
+expr_stmt|;
+endif|#
+directive|endif
 name|cpu_vendor_id
 operator|=
 name|find_cpu_vendor_id
@@ -4031,7 +4275,121 @@ operator|&
 name|CPUID5_MON_MAX_SIZE
 expr_stmt|;
 block|}
-comment|/* Detect AMD features (PTE no-execute bit, 3dnow, 64 bit mode etc) */
+if|if
+condition|(
+name|cpu_high
+operator|>=
+literal|7
+condition|)
+block|{
+name|cpuid_count
+argument_list|(
+literal|7
+argument_list|,
+literal|0
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+name|cpu_stdext_feature
+operator|=
+name|regs
+index|[
+literal|1
+index|]
+expr_stmt|;
+comment|/* 		 * Some hypervisors fail to filter out unsupported 		 * extended features.  For now, disable the 		 * extensions, activation of which requires setting a 		 * bit in CR4, and which VM monitors do not support. 		 */
+if|if
+condition|(
+name|cpu_feature2
+operator|&
+name|CPUID2_HV
+condition|)
+block|{
+name|cpu_stdext_disable
+operator|=
+name|CPUID_STDEXT_FSGSBASE
+operator||
+name|CPUID_STDEXT_SMEP
+expr_stmt|;
+block|}
+else|else
+name|cpu_stdext_disable
+operator|=
+literal|0
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"hw.cpu_stdext_disable"
+argument_list|,
+operator|&
+name|cpu_stdext_disable
+argument_list|)
+expr_stmt|;
+name|cpu_stdext_feature
+operator|&=
+operator|~
+name|cpu_stdext_disable
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|__i386__
+if|if
+condition|(
+name|cpu_high
+operator|>
+literal|0
+operator|&&
+operator|(
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_INTEL
+operator|||
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_AMD
+operator|||
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_TRANSMETA
+operator|||
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_CENTAUR
+operator|||
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_NSC
+operator|)
+condition|)
+block|{
+name|do_cpuid
+argument_list|(
+literal|0x80000000
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|regs
+index|[
+literal|0
+index|]
+operator|>=
+literal|0x80000000
+condition|)
+name|cpu_exthigh
+operator|=
+name|regs
+index|[
+literal|0
+index|]
+expr_stmt|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 name|cpu_vendor_id
@@ -4041,11 +4399,29 @@ operator|||
 name|cpu_vendor_id
 operator|==
 name|CPU_VENDOR_AMD
+operator|||
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_CENTAUR
 condition|)
 block|{
-name|init_exthigh
-argument_list|()
+name|do_cpuid
+argument_list|(
+literal|0x80000000
+argument_list|,
+name|regs
+argument_list|)
 expr_stmt|;
+name|cpu_exthigh
+operator|=
+name|regs
+index|[
+literal|0
+index|]
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|cpu_exthigh
@@ -4126,49 +4502,9 @@ literal|2
 index|]
 expr_stmt|;
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_CENTAUR
-condition|)
-block|{
-name|init_exthigh
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|cpu_exthigh
-operator|>=
-literal|0x80000001
-condition|)
-block|{
-name|do_cpuid
-argument_list|(
-literal|0x80000001
-argument_list|,
-name|regs
-argument_list|)
-expr_stmt|;
-name|amd_feature
-operator|=
-name|regs
-index|[
-literal|3
-index|]
-operator|&
-operator|~
-operator|(
-name|cpu_feature
-operator|&
-literal|0x0183f3ff
-operator|)
-expr_stmt|;
-block|}
-block|}
-elseif|else
+ifdef|#
+directive|ifdef
+name|__i386__
 if|if
 condition|(
 name|cpu_vendor_id
@@ -4184,14 +4520,10 @@ name|CPU_486
 condition|)
 block|{
 comment|/* 			 * These conditions are equivalent to: 			 *     - CPU does not support cpuid instruction. 			 *     - Cyrix/IBM CPU is detected. 			 */
-name|isblue
-operator|=
-name|identblue
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
-name|isblue
+name|identblue
+argument_list|()
 operator|==
 name|IDENTBLUE_IBMCPU
 condition|)
@@ -4400,14 +4732,10 @@ literal|'\0'
 condition|)
 block|{
 comment|/* 		 * There are BlueLightning CPUs that do not change 		 * undefined flags by dividing 5 by 2.  In this case, 		 * the CPU identification routine in locore.s leaves 		 * cpu_vendor null string and puts CPU_486 into the 		 * cpu. 		 */
-name|isblue
-operator|=
-name|identblue
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
-name|isblue
+name|identblue
+argument_list|()
 operator|==
 name|IDENTBLUE_IBMCPU
 condition|)
@@ -4430,8 +4758,17 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+else|#
+directive|else
+comment|/* XXX */
+name|cpu
+operator|=
+name|CPU_CLAWHAMMER
+expr_stmt|;
+endif|#
+directive|endif
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -4536,13 +4873,114 @@ end_function
 begin_function
 specifier|static
 name|void
+name|print_AMD_l2_assoc
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|i
+operator|&
+literal|0x0f
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|printf
+argument_list|(
+literal|", disabled/not present\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|printf
+argument_list|(
+literal|", direct mapped\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|printf
+argument_list|(
+literal|", 2-way associative\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|printf
+argument_list|(
+literal|", 4-way associative\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|6
+case|:
+name|printf
+argument_list|(
+literal|", 8-way associative\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|8
+case|:
+name|printf
+argument_list|(
+literal|", 16-way associative\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|15
+case|:
+name|printf
+argument_list|(
+literal|", fully associative\n"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|", reserved configuration\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|print_AMD_info
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|quad_t
+ifdef|#
+directive|ifdef
+name|__i386__
+name|uint64_t
 name|amd_whcr
+decl_stmt|;
+endif|#
+directive|endif
+name|u_int
+name|regs
+index|[
+literal|4
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -4551,12 +4989,6 @@ operator|>=
 literal|0x80000005
 condition|)
 block|{
-name|u_int
-name|regs
-index|[
-literal|4
-index|]
-decl_stmt|;
 name|do_cpuid
 argument_list|(
 literal|0x80000005
@@ -4566,7 +4998,59 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Data TLB: %d entries"
+literal|"L1 2MB data TLB: %d entries"
+argument_list|,
+operator|(
+name|regs
+index|[
+literal|0
+index|]
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+name|print_AMD_assoc
+argument_list|(
+name|regs
+index|[
+literal|0
+index|]
+operator|>>
+literal|24
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"L1 2MB instruction TLB: %d entries"
+argument_list|,
+name|regs
+index|[
+literal|0
+index|]
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+name|print_AMD_assoc
+argument_list|(
+operator|(
+name|regs
+index|[
+literal|0
+index|]
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"L1 4KB data TLB: %d entries"
 argument_list|,
 operator|(
 name|regs
@@ -4592,7 +5076,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Instruction TLB: %d entries"
+literal|"L1 4KB instruction TLB: %d entries"
 argument_list|,
 name|regs
 index|[
@@ -4724,6 +5208,7 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|cpu_exthigh
@@ -4731,7 +5216,6 @@ operator|>=
 literal|0x80000006
 condition|)
 block|{
-comment|/* K6-III only */
 name|do_cpuid
 argument_list|(
 literal|0x80000006
@@ -4739,9 +5223,209 @@ argument_list|,
 name|regs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|regs
+index|[
+literal|0
+index|]
+operator|>>
+literal|16
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"L2 internal cache: %d kbytes"
+literal|"L2 2MB data TLB: %d entries"
+argument_list|,
+operator|(
+name|regs
+index|[
+literal|0
+index|]
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xfff
+argument_list|)
+expr_stmt|;
+name|print_AMD_l2_assoc
+argument_list|(
+name|regs
+index|[
+literal|0
+index|]
+operator|>>
+literal|28
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"L2 2MB instruction TLB: %d entries"
+argument_list|,
+name|regs
+index|[
+literal|0
+index|]
+operator|&
+literal|0xfff
+argument_list|)
+expr_stmt|;
+name|print_AMD_l2_assoc
+argument_list|(
+operator|(
+name|regs
+index|[
+literal|0
+index|]
+operator|>>
+literal|28
+operator|)
+operator|&
+literal|0xf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"L2 2MB unified TLB: %d entries"
+argument_list|,
+name|regs
+index|[
+literal|0
+index|]
+operator|&
+literal|0xfff
+argument_list|)
+expr_stmt|;
+name|print_AMD_l2_assoc
+argument_list|(
+operator|(
+name|regs
+index|[
+literal|0
+index|]
+operator|>>
+literal|28
+operator|)
+operator|&
+literal|0xf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|regs
+index|[
+literal|1
+index|]
+operator|>>
+literal|16
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"L2 4KB data TLB: %d entries"
+argument_list|,
+operator|(
+name|regs
+index|[
+literal|1
+index|]
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xfff
+argument_list|)
+expr_stmt|;
+name|print_AMD_l2_assoc
+argument_list|(
+name|regs
+index|[
+literal|1
+index|]
+operator|>>
+literal|28
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"L2 4KB instruction TLB: %d entries"
+argument_list|,
+operator|(
+name|regs
+index|[
+literal|1
+index|]
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xfff
+argument_list|)
+expr_stmt|;
+name|print_AMD_l2_assoc
+argument_list|(
+operator|(
+name|regs
+index|[
+literal|1
+index|]
+operator|>>
+literal|28
+operator|)
+operator|&
+literal|0xf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"L2 4KB unified TLB: %d entries"
+argument_list|,
+operator|(
+name|regs
+index|[
+literal|1
+index|]
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xfff
+argument_list|)
+expr_stmt|;
+name|print_AMD_l2_assoc
+argument_list|(
+operator|(
+name|regs
+index|[
+literal|1
+index|]
+operator|>>
+literal|28
+operator|)
+operator|&
+literal|0xf
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"L2 unified cache: %d kbytes"
 argument_list|,
 name|regs
 index|[
@@ -4779,7 +5463,7 @@ operator|&
 literal|0x0f
 argument_list|)
 expr_stmt|;
-name|print_AMD_assoc
+name|print_AMD_l2_assoc
 argument_list|(
 operator|(
 name|regs
@@ -4794,7 +5478,9 @@ literal|0x0f
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+ifdef|#
+directive|ifdef
+name|__i386__
 if|if
 condition|(
 operator|(
@@ -5025,6 +5711,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Opteron Rev E shows a bug as in very rare occasions a read memory 	 * barrier is not performed as expected if it is followed by a 	 * non-atomic read-modify-write instruction. 	 * As long as that bug pops up very rarely (intensive machine usage 	 * on other operating systems generally generates one unexplainable 	 * crash any 2 months) and as long as a model specific fix would be 	 * impratical at this stage, print out a warning string if the broken 	 * model and family are identified. 	 */
 if|if
 condition|(
@@ -5276,7 +5964,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nL2 cache: %u kbytes, %u-way associative, %u bytes/line"
+literal|"L2 cache: %u kbytes, %u-way associative, %u bytes/line\n"
 argument_list|,
 operator|(
 name|regs
@@ -5300,11 +5988,6 @@ literal|0xff
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -5335,7 +6018,7 @@ literal|0x1
 case|:
 name|printf
 argument_list|(
-literal|"\nInstruction TLB: 4 KB pages, 4-way set associative, 32 entries"
+literal|"Instruction TLB: 4 KB pages, 4-way set associative, 32 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5344,7 +6027,7 @@ literal|0x2
 case|:
 name|printf
 argument_list|(
-literal|"\nInstruction TLB: 4 MB pages, fully associative, 2 entries"
+literal|"Instruction TLB: 4 MB pages, fully associative, 2 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5353,7 +6036,7 @@ literal|0x3
 case|:
 name|printf
 argument_list|(
-literal|"\nData TLB: 4 KB pages, 4-way set associative, 64 entries"
+literal|"Data TLB: 4 KB pages, 4-way set associative, 64 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5362,7 +6045,7 @@ literal|0x4
 case|:
 name|printf
 argument_list|(
-literal|"\nData TLB: 4 MB Pages, 4-way set associative, 8 entries"
+literal|"Data TLB: 4 MB Pages, 4-way set associative, 8 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5371,7 +6054,7 @@ literal|0x6
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level instruction cache: 8 KB, 4-way set associative, 32 byte line size"
+literal|"1st-level instruction cache: 8 KB, 4-way set associative, 32 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5380,7 +6063,7 @@ literal|0x8
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level instruction cache: 16 KB, 4-way set associative, 32 byte line size"
+literal|"1st-level instruction cache: 16 KB, 4-way set associative, 32 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5389,7 +6072,7 @@ literal|0xa
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 8 KB, 2-way set associative, 32 byte line size"
+literal|"1st-level data cache: 8 KB, 2-way set associative, 32 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5398,7 +6081,7 @@ literal|0xc
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 16 KB, 4-way set associative, 32 byte line size"
+literal|"1st-level data cache: 16 KB, 4-way set associative, 32 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5407,7 +6090,7 @@ literal|0x22
 case|:
 name|printf
 argument_list|(
-literal|"\n3rd-level cache: 512 KB, 4-way set associative, sectored cache, 64 byte line size"
+literal|"3rd-level cache: 512 KB, 4-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5416,7 +6099,7 @@ literal|0x23
 case|:
 name|printf
 argument_list|(
-literal|"\n3rd-level cache: 1 MB, 8-way set associative, sectored cache, 64 byte line size"
+literal|"3rd-level cache: 1 MB, 8-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5425,7 +6108,7 @@ literal|0x25
 case|:
 name|printf
 argument_list|(
-literal|"\n3rd-level cache: 2 MB, 8-way set associative, sectored cache, 64 byte line size"
+literal|"3rd-level cache: 2 MB, 8-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5434,7 +6117,7 @@ literal|0x29
 case|:
 name|printf
 argument_list|(
-literal|"\n3rd-level cache: 4 MB, 8-way set associative, sectored cache, 64 byte line size"
+literal|"3rd-level cache: 4 MB, 8-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5443,7 +6126,7 @@ literal|0x2c
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 32 KB, 8-way set associative, 64 byte line size"
+literal|"1st-level data cache: 32 KB, 8-way set associative, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5452,7 +6135,7 @@ literal|0x30
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level instruction cache: 32 KB, 8-way set associative, 64 byte line size"
+literal|"1st-level instruction cache: 32 KB, 8-way set associative, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5461,7 +6144,7 @@ literal|0x39
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 128 KB, 4-way set associative, sectored cache, 64 byte line size"
+literal|"2nd-level cache: 128 KB, 4-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5470,7 +6153,7 @@ literal|0x3b
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 128 KB, 2-way set associative, sectored cache, 64 byte line size"
+literal|"2nd-level cache: 128 KB, 2-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5479,7 +6162,7 @@ literal|0x3c
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 256 KB, 4-way set associative, sectored cache, 64 byte line size"
+literal|"2nd-level cache: 256 KB, 4-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5488,7 +6171,7 @@ literal|0x41
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 128 KB, 4-way set associative, 32 byte line size"
+literal|"2nd-level cache: 128 KB, 4-way set associative, 32 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5497,7 +6180,7 @@ literal|0x42
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 256 KB, 4-way set associative, 32 byte line size"
+literal|"2nd-level cache: 256 KB, 4-way set associative, 32 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5506,7 +6189,7 @@ literal|0x43
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 512 KB, 4-way set associative, 32 byte line size"
+literal|"2nd-level cache: 512 KB, 4-way set associative, 32 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5515,7 +6198,7 @@ literal|0x44
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 1 MB, 4-way set associative, 32 byte line size"
+literal|"2nd-level cache: 1 MB, 4-way set associative, 32 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5524,7 +6207,7 @@ literal|0x45
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 2 MB, 4-way set associative, 32 byte line size"
+literal|"2nd-level cache: 2 MB, 4-way set associative, 32 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5533,7 +6216,7 @@ literal|0x46
 case|:
 name|printf
 argument_list|(
-literal|"\n3rd-level cache: 4 MB, 4-way set associative, 64 byte line size"
+literal|"3rd-level cache: 4 MB, 4-way set associative, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5542,7 +6225,7 @@ literal|0x47
 case|:
 name|printf
 argument_list|(
-literal|"\n3rd-level cache: 8 MB, 8-way set associative, 64 byte line size"
+literal|"3rd-level cache: 8 MB, 8-way set associative, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5551,7 +6234,7 @@ literal|0x50
 case|:
 name|printf
 argument_list|(
-literal|"\nInstruction TLB: 4 KB, 2 MB or 4 MB pages, fully associative, 64 entries"
+literal|"Instruction TLB: 4 KB, 2 MB or 4 MB pages, fully associative, 64 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5560,7 +6243,7 @@ literal|0x51
 case|:
 name|printf
 argument_list|(
-literal|"\nInstruction TLB: 4 KB, 2 MB or 4 MB pages, fully associative, 128 entries"
+literal|"Instruction TLB: 4 KB, 2 MB or 4 MB pages, fully associative, 128 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5569,7 +6252,7 @@ literal|0x52
 case|:
 name|printf
 argument_list|(
-literal|"\nInstruction TLB: 4 KB, 2 MB or 4 MB pages, fully associative, 256 entries"
+literal|"Instruction TLB: 4 KB, 2 MB or 4 MB pages, fully associative, 256 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5578,7 +6261,7 @@ literal|0x5b
 case|:
 name|printf
 argument_list|(
-literal|"\nData TLB: 4 KB or 4 MB pages, fully associative, 64 entries"
+literal|"Data TLB: 4 KB or 4 MB pages, fully associative, 64 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5587,7 +6270,7 @@ literal|0x5c
 case|:
 name|printf
 argument_list|(
-literal|"\nData TLB: 4 KB or 4 MB pages, fully associative, 128 entries"
+literal|"Data TLB: 4 KB or 4 MB pages, fully associative, 128 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5596,7 +6279,7 @@ literal|0x5d
 case|:
 name|printf
 argument_list|(
-literal|"\nData TLB: 4 KB or 4 MB pages, fully associative, 256 entries"
+literal|"Data TLB: 4 KB or 4 MB pages, fully associative, 256 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5605,7 +6288,7 @@ literal|0x60
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 16 KB, 8-way set associative, sectored cache, 64 byte line size"
+literal|"1st-level data cache: 16 KB, 8-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5614,7 +6297,7 @@ literal|0x66
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 8 KB, 4-way set associative, sectored cache, 64 byte line size"
+literal|"1st-level data cache: 8 KB, 4-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5623,7 +6306,7 @@ literal|0x67
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 16 KB, 4-way set associative, sectored cache, 64 byte line size"
+literal|"1st-level data cache: 16 KB, 4-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5632,7 +6315,7 @@ literal|0x68
 case|:
 name|printf
 argument_list|(
-literal|"\n1st-level data cache: 32 KB, 4 way set associative, sectored cache, 64 byte line size"
+literal|"1st-level data cache: 32 KB, 4 way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5641,7 +6324,7 @@ literal|0x70
 case|:
 name|printf
 argument_list|(
-literal|"\nTrace cache: 12K-uops, 8-way set associative"
+literal|"Trace cache: 12K-uops, 8-way set associative\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5650,7 +6333,7 @@ literal|0x71
 case|:
 name|printf
 argument_list|(
-literal|"\nTrace cache: 16K-uops, 8-way set associative"
+literal|"Trace cache: 16K-uops, 8-way set associative\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5659,7 +6342,7 @@ literal|0x72
 case|:
 name|printf
 argument_list|(
-literal|"\nTrace cache: 32K-uops, 8-way set associative"
+literal|"Trace cache: 32K-uops, 8-way set associative\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5668,7 +6351,7 @@ literal|0x78
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 1 MB, 4-way set associative, 64-byte line size"
+literal|"2nd-level cache: 1 MB, 4-way set associative, 64-byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5677,7 +6360,7 @@ literal|0x79
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 128 KB, 8-way set associative, sectored cache, 64 byte line size"
+literal|"2nd-level cache: 128 KB, 8-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5686,7 +6369,7 @@ literal|0x7a
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 256 KB, 8-way set associative, sectored cache, 64 byte line size"
+literal|"2nd-level cache: 256 KB, 8-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5695,7 +6378,7 @@ literal|0x7b
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 512 KB, 8-way set associative, sectored cache, 64 byte line size"
+literal|"2nd-level cache: 512 KB, 8-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5704,7 +6387,7 @@ literal|0x7c
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 1 MB, 8-way set associative, sectored cache, 64 byte line size"
+literal|"2nd-level cache: 1 MB, 8-way set associative, sectored cache, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5713,7 +6396,7 @@ literal|0x7d
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 2-MB, 8-way set associative, 64-byte line size"
+literal|"2nd-level cache: 2-MB, 8-way set associative, 64-byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5722,7 +6405,7 @@ literal|0x7f
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 512-KB, 2-way set associative, 64-byte line size"
+literal|"2nd-level cache: 512-KB, 2-way set associative, 64-byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5731,7 +6414,7 @@ literal|0x82
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 256 KB, 8-way set associative, 32 byte line size"
+literal|"2nd-level cache: 256 KB, 8-way set associative, 32 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5740,7 +6423,7 @@ literal|0x83
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 512 KB, 8-way set associative, 32 byte line size"
+literal|"2nd-level cache: 512 KB, 8-way set associative, 32 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5749,7 +6432,7 @@ literal|0x84
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 1 MB, 8-way set associative, 32 byte line size"
+literal|"2nd-level cache: 1 MB, 8-way set associative, 32 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5758,7 +6441,7 @@ literal|0x85
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 2 MB, 8-way set associative, 32 byte line size"
+literal|"2nd-level cache: 2 MB, 8-way set associative, 32 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5767,7 +6450,7 @@ literal|0x86
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 512 KB, 4-way set associative, 64 byte line size"
+literal|"2nd-level cache: 512 KB, 4-way set associative, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5776,7 +6459,7 @@ literal|0x87
 case|:
 name|printf
 argument_list|(
-literal|"\n2nd-level cache: 1 MB, 8-way set associative, 64 byte line size"
+literal|"2nd-level cache: 1 MB, 8-way set associative, 64 byte line size\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5785,7 +6468,7 @@ literal|0xb0
 case|:
 name|printf
 argument_list|(
-literal|"\nInstruction TLB: 4 KB Pages, 4-way set associative, 128 entries"
+literal|"Instruction TLB: 4 KB Pages, 4-way set associative, 128 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5794,13 +6477,19 @@ literal|0xb3
 case|:
 name|printf
 argument_list|(
-literal|"\nData TLB: 4 KB Pages, 4-way set associative, 128 entries"
+literal|"Data TLB: 4 KB Pages, 4-way set associative, 128 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
 
 begin_function
 specifier|static
@@ -6050,6 +6739,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -6093,6 +6787,693 @@ literal|"\015RSA"
 comment|/* PMM */
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|uint32_t
+name|vmx_settable
+parameter_list|(
+name|uint64_t
+name|basic
+parameter_list|,
+name|int
+name|msr
+parameter_list|,
+name|int
+name|true_msr
+parameter_list|)
+block|{
+name|uint64_t
+name|val
+decl_stmt|;
+if|if
+condition|(
+name|basic
+operator|&
+operator|(
+literal|1ULL
+operator|<<
+literal|55
+operator|)
+condition|)
+name|val
+operator|=
+name|rdmsr
+argument_list|(
+name|true_msr
+argument_list|)
+expr_stmt|;
+else|else
+name|val
+operator|=
+name|rdmsr
+argument_list|(
+name|msr
+argument_list|)
+expr_stmt|;
+comment|/* Just report the controls that can be set to 1. */
+return|return
+operator|(
+name|val
+operator|>>
+literal|32
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|print_vmx_info
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint64_t
+name|basic
+decl_stmt|,
+name|msr
+decl_stmt|;
+name|uint32_t
+name|entry
+decl_stmt|,
+name|exit
+decl_stmt|,
+name|mask
+decl_stmt|,
+name|pin
+decl_stmt|,
+name|proc
+decl_stmt|,
+name|proc2
+decl_stmt|;
+name|int
+name|comma
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"\n  VT-x: "
+argument_list|)
+expr_stmt|;
+name|msr
+operator|=
+name|rdmsr
+argument_list|(
+name|MSR_IA32_FEATURE_CONTROL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|msr
+operator|&
+name|IA32_FEATURE_CONTROL_VMX_EN
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"(disabled in BIOS) "
+argument_list|)
+expr_stmt|;
+name|basic
+operator|=
+name|rdmsr
+argument_list|(
+name|MSR_VMX_BASIC
+argument_list|)
+expr_stmt|;
+name|pin
+operator|=
+name|vmx_settable
+argument_list|(
+name|basic
+argument_list|,
+name|MSR_VMX_PINBASED_CTLS
+argument_list|,
+name|MSR_VMX_TRUE_PINBASED_CTLS
+argument_list|)
+expr_stmt|;
+name|proc
+operator|=
+name|vmx_settable
+argument_list|(
+name|basic
+argument_list|,
+name|MSR_VMX_PROCBASED_CTLS
+argument_list|,
+name|MSR_VMX_TRUE_PROCBASED_CTLS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_SECONDARY_CONTROLS
+condition|)
+name|proc2
+operator|=
+name|vmx_settable
+argument_list|(
+name|basic
+argument_list|,
+name|MSR_VMX_PROCBASED_CTLS2
+argument_list|,
+name|MSR_VMX_PROCBASED_CTLS2
+argument_list|)
+expr_stmt|;
+else|else
+name|proc2
+operator|=
+literal|0
+expr_stmt|;
+name|exit
+operator|=
+name|vmx_settable
+argument_list|(
+name|basic
+argument_list|,
+name|MSR_VMX_EXIT_CTLS
+argument_list|,
+name|MSR_VMX_TRUE_EXIT_CTLS
+argument_list|)
+expr_stmt|;
+name|entry
+operator|=
+name|vmx_settable
+argument_list|(
+name|basic
+argument_list|,
+name|MSR_VMX_ENTRY_CTLS
+argument_list|,
+name|MSR_VMX_TRUE_ENTRY_CTLS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bootverbose
+condition|)
+block|{
+name|comma
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|exit
+operator|&
+name|VM_EXIT_SAVE_PAT
+operator|&&
+name|exit
+operator|&
+name|VM_EXIT_LOAD_PAT
+operator|&&
+name|entry
+operator|&
+name|VM_ENTRY_LOAD_PAT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sPAT"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_HLT_EXITING
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sHLT"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_MTF
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sMTF"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_PAUSE_EXITING
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sPAUSE"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc2
+operator|&
+name|PROCBASED2_ENABLE_EPT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sEPT"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc2
+operator|&
+name|PROCBASED2_UNRESTRICTED_GUEST
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sUG"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc2
+operator|&
+name|PROCBASED2_ENABLE_VPID
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sVPID"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_USE_TPR_SHADOW
+operator|&&
+name|proc2
+operator|&
+name|PROCBASED2_VIRTUALIZE_APIC_ACCESSES
+operator|&&
+name|proc2
+operator|&
+name|PROCBASED2_VIRTUALIZE_X2APIC_MODE
+operator|&&
+name|proc2
+operator|&
+name|PROCBASED2_APIC_REGISTER_VIRTUALIZATION
+operator|&&
+name|proc2
+operator|&
+name|PROCBASED2_VIRTUAL_INTERRUPT_DELIVERY
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sVID"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|pin
+operator|&
+name|PINBASED_POSTED_INTERRUPT
+condition|)
+name|printf
+argument_list|(
+literal|",PostIntr"
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+name|mask
+operator|=
+name|basic
+operator|>>
+literal|32
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Basic Features=0x%b"
+argument_list|,
+name|mask
+argument_list|,
+literal|"\020"
+literal|"\02132PA"
+comment|/* 32-bit physical addresses */
+literal|"\022SMM"
+comment|/* SMM dual-monitor */
+literal|"\027INS/OUTS"
+comment|/* VM-exit info for INS and OUTS */
+literal|"\030TRUE"
+comment|/* TRUE_CTLS MSRs */
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n        Pin-Based Controls=0x%b"
+argument_list|,
+name|pin
+argument_list|,
+literal|"\020"
+literal|"\001ExtINT"
+comment|/* External-interrupt exiting */
+literal|"\004NMI"
+comment|/* NMI exiting */
+literal|"\006VNMI"
+comment|/* Virtual NMIs */
+literal|"\007PreTmr"
+comment|/* Activate VMX-preemption timer */
+literal|"\010PostIntr"
+comment|/* Process posted interrupts */
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n        Primary Processor Controls=0x%b"
+argument_list|,
+name|proc
+argument_list|,
+literal|"\020"
+literal|"\003INTWIN"
+comment|/* Interrupt-window exiting */
+literal|"\004TSCOff"
+comment|/* Use TSC offsetting */
+literal|"\010HLT"
+comment|/* HLT exiting */
+literal|"\012INVLPG"
+comment|/* INVLPG exiting */
+literal|"\013MWAIT"
+comment|/* MWAIT exiting */
+literal|"\014RDPMC"
+comment|/* RDPMC exiting */
+literal|"\015RDTSC"
+comment|/* RDTSC exiting */
+literal|"\020CR3-LD"
+comment|/* CR3-load exiting */
+literal|"\021CR3-ST"
+comment|/* CR3-store exiting */
+literal|"\024CR8-LD"
+comment|/* CR8-load exiting */
+literal|"\025CR8-ST"
+comment|/* CR8-store exiting */
+literal|"\026TPR"
+comment|/* Use TPR shadow */
+literal|"\027NMIWIN"
+comment|/* NMI-window exiting */
+literal|"\030MOV-DR"
+comment|/* MOV-DR exiting */
+literal|"\031IO"
+comment|/* Unconditional I/O exiting */
+literal|"\032IOmap"
+comment|/* Use I/O bitmaps */
+literal|"\034MTF"
+comment|/* Monitor trap flag */
+literal|"\035MSRmap"
+comment|/* Use MSR bitmaps */
+literal|"\036MONITOR"
+comment|/* MONITOR exiting */
+literal|"\037PAUSE"
+comment|/* PAUSE exiting */
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_SECONDARY_CONTROLS
+condition|)
+name|printf
+argument_list|(
+literal|"\n        Secondary Processor Controls=0x%b"
+argument_list|,
+name|proc2
+argument_list|,
+literal|"\020"
+literal|"\001APIC"
+comment|/* Virtualize APIC accesses */
+literal|"\002EPT"
+comment|/* Enable EPT */
+literal|"\003DT"
+comment|/* Descriptor-table exiting */
+literal|"\004RDTSCP"
+comment|/* Enable RDTSCP */
+literal|"\005x2APIC"
+comment|/* Virtualize x2APIC mode */
+literal|"\006VPID"
+comment|/* Enable VPID */
+literal|"\007WBINVD"
+comment|/* WBINVD exiting */
+literal|"\010UG"
+comment|/* Unrestricted guest */
+literal|"\011APIC-reg"
+comment|/* APIC-register virtualization */
+literal|"\012VID"
+comment|/* Virtual-interrupt delivery */
+literal|"\013PAUSE-loop"
+comment|/* PAUSE-loop exiting */
+literal|"\014RDRAND"
+comment|/* RDRAND exiting */
+literal|"\015INVPCID"
+comment|/* Enable INVPCID */
+literal|"\016VMFUNC"
+comment|/* Enable VM functions */
+literal|"\017VMCS"
+comment|/* VMCS shadowing */
+literal|"\020EPT#VE"
+comment|/* EPT-violation #VE */
+literal|"\021XSAVES"
+comment|/* Enable XSAVES/XRSTORS */
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n        Exit Controls=0x%b"
+argument_list|,
+name|mask
+argument_list|,
+literal|"\020"
+literal|"\003DR"
+comment|/* Save debug controls */
+comment|/* Ignore Host address-space size */
+literal|"\015PERF"
+comment|/* Load MSR_PERF_GLOBAL_CTRL */
+literal|"\020AckInt"
+comment|/* Acknowledge interrupt on exit */
+literal|"\023PAT-SV"
+comment|/* Save MSR_PAT */
+literal|"\024PAT-LD"
+comment|/* Load MSR_PAT */
+literal|"\025EFER-SV"
+comment|/* Save MSR_EFER */
+literal|"\026EFER-LD"
+comment|/* Load MSR_EFER */
+literal|"\027PTMR-SV"
+comment|/* Save VMX-preemption timer value */
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n        Entry Controls=0x%b"
+argument_list|,
+name|mask
+argument_list|,
+literal|"\020"
+literal|"\003DR"
+comment|/* Save debug controls */
+comment|/* Ignore IA-32e mode guest */
+comment|/* Ignore Entry to SMM */
+comment|/* Ignore Deactivate dual-monitor treatment */
+literal|"\016PERF"
+comment|/* Load MSR_PERF_GLOBAL_CTRL */
+literal|"\017PAT"
+comment|/* Load MSR_PAT */
+literal|"\020EFER"
+comment|/* Load MSR_EFER */
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_SECONDARY_CONTROLS
+operator|&&
+operator|(
+name|proc2
+operator|&
+operator|(
+name|PROCBASED2_ENABLE_EPT
+operator||
+name|PROCBASED2_ENABLE_VPID
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|msr
+operator|=
+name|rdmsr
+argument_list|(
+name|MSR_VMX_EPT_VPID_CAP
+argument_list|)
+expr_stmt|;
+name|mask
+operator|=
+name|msr
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n        EPT Features=0x%b"
+argument_list|,
+name|mask
+argument_list|,
+literal|"\020"
+literal|"\001XO"
+comment|/* Execute-only translations */
+literal|"\007PW4"
+comment|/* Page-walk length of 4 */
+literal|"\011UC"
+comment|/* EPT paging-structure mem can be UC */
+literal|"\017WB"
+comment|/* EPT paging-structure mem can be WB */
+literal|"\0212M"
+comment|/* EPT PDE can map a 2-Mbyte page */
+literal|"\0221G"
+comment|/* EPT PDPTE can map a 1-Gbyte page */
+literal|"\025INVEPT"
+comment|/* INVEPT is supported */
+literal|"\026AD"
+comment|/* Accessed and dirty flags for EPT */
+literal|"\032single"
+comment|/* INVEPT single-context type */
+literal|"\033all"
+comment|/* INVEPT all-context type */
+argument_list|)
+expr_stmt|;
+name|mask
+operator|=
+name|msr
+operator|>>
+literal|32
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n        VPID Features=0x%b"
+argument_list|,
+name|mask
+argument_list|,
+literal|"\020"
+literal|"\001INVVPID"
+comment|/* INVVPID is supported */
+literal|"\011individual"
+comment|/* INVVPID individual-address type */
+literal|"\012single"
+comment|/* INVVPID single-context type */
+literal|"\013all"
+comment|/* INVVPID all-context type */
+comment|/* INVVPID single-context-retaining-globals type */
+literal|"\014single-globals"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

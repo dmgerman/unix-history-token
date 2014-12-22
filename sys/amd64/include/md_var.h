@@ -507,6 +507,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|identify_cpu
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|initializecpu
 parameter_list|(
 name|void
@@ -575,6 +584,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|panicifcpuunsupported
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pagecopy
 parameter_list|(
 name|void
@@ -595,6 +613,15 @@ parameter_list|(
 name|void
 modifier|*
 name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|printcpuinfo
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
