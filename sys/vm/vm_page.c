@@ -9976,9 +9976,6 @@ argument_list|,
 name|pindex
 argument_list|,
 name|allocflags
-operator|&
-operator|~
-name|VM_ALLOC_IGN_SBUSY
 argument_list|)
 expr_stmt|;
 if|if
