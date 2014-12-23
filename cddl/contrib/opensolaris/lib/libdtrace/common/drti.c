@@ -737,6 +737,7 @@ name|dofdata
 operator|->
 name|d_buf
 expr_stmt|;
+break|break;
 block|}
 block|}
 block|}
