@@ -150,12 +150,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_stf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/vnet.h>
 end_include
 
@@ -407,7 +401,26 @@ name|inetdomain
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|in_stf_input
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
+specifier|static
 name|struct
 name|protosw
 name|in_stf_protosw
@@ -2727,6 +2740,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|in_stf_input
 parameter_list|(
