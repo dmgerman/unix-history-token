@@ -1483,6 +1483,27 @@ name|CPUID_EXTSTATE_XSAVEOPT
 value|0x00000001
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPUID_EXTSTATE_XSAVEC
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_EXTSTATE_XINUSE
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_EXTSTATE_XSAVES
+value|0x00000008
+end_define
+
 begin_comment
 comment|/*  * AMD extended function 8000_0007h edx info  */
 end_comment
