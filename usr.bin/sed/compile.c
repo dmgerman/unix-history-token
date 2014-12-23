@@ -3020,6 +3020,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|q
+decl_stmt|,
+modifier|*
+name|eq
 decl_stmt|;
 name|s
 operator|->
@@ -3272,6 +3275,17 @@ name|q
 operator|=
 name|wfile
 expr_stmt|;
+name|eq
+operator|=
+name|wfile
+operator|+
+sizeof|sizeof
+argument_list|(
+name|wfile
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -3286,6 +3300,19 @@ operator|==
 literal|'\n'
 condition|)
 break|break;
+if|if
+condition|(
+name|q
+operator|>=
+name|eq
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"wfile too long"
+argument_list|)
+expr_stmt|;
 operator|*
 name|q
 operator|++
