@@ -2670,6 +2670,13 @@ name|MSR_APIC_SELF_IPI
 value|0x83f
 end_define
 
+begin_define
+define|#
+directive|define
+name|MSR_IA32_XSS
+value|0xda0
+end_define
+
 begin_comment
 comment|/*  * Constants related to MSR's.  */
 end_comment
