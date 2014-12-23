@@ -93,6 +93,12 @@ parameter_list|)
 value|(le32toh(t<< 2)& EXT3_NSEC_MASK)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EXT2FS_DEBUG
+end_ifdef
+
 begin_function
 name|void
 name|ext2_print_inode
@@ -363,6 +369,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EXT2FS_DEBUG */
+end_comment
 
 begin_comment
 comment|/*  *	raw ext2 inode to inode  */
