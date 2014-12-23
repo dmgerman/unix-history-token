@@ -9318,6 +9318,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|mmc_select_card
+argument_list|(
+name|sc
+argument_list|,
+name|ivar
+operator|->
+name|rca
+argument_list|)
+expr_stmt|;
 comment|/* Only MMC>= 4.x cards support EXT_CSD. */
 if|if
 condition|(
@@ -9330,16 +9339,6 @@ operator|>=
 literal|4
 condition|)
 block|{
-comment|/* Card must be selected to fetch EXT_CSD. */
-name|mmc_select_card
-argument_list|(
-name|sc
-argument_list|,
-name|ivar
-operator|->
-name|rca
-argument_list|)
-expr_stmt|;
 name|mmc_send_ext_csd
 argument_list|(
 name|sc
@@ -9517,13 +9516,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|mmc_select_card
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -9616,6 +9608,13 @@ name|ivar
 argument_list|)
 expr_stmt|;
 block|}
+name|mmc_select_card
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
