@@ -798,12 +798,6 @@ name|defined
 argument_list|(
 name|NFS_ROOT
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NFSCLIENT
-argument_list|)
 end_if
 
 begin_decl_stmt
@@ -3965,7 +3959,7 @@ name|PSOCK
 argument_list|,
 literal|0
 argument_list|,
-literal|"newnfscon"
+literal|"nfscon"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6397,7 +6391,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 		 * If a change from TCP->UDP is done and there are thread(s) 		 * that have I/O RPC(s) in progress with a tranfer size 		 * greater than NFS_MAXDGRAMDATA, those thread(s) will be 		 * hung, retrying the RPC(s) forever. Usually these threads 		 * will be seen doing an uninterruptible sleep on wait channel 		 * "newnfsreq" (truncated to "newnfsre" by procstat). 		 */
+comment|/* 		 * If a change from TCP->UDP is done and there are thread(s) 		 * that have I/O RPC(s) in progress with a tranfer size 		 * greater than NFS_MAXDGRAMDATA, those thread(s) will be 		 * hung, retrying the RPC(s) forever. Usually these threads 		 * will be seen doing an uninterruptible sleep on wait channel 		 * "nfsreq". 		 */
 if|if
 condition|(
 name|args
