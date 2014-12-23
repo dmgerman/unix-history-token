@@ -440,10 +440,13 @@ block|{
 name|uint64_t
 name|xstate_bv
 decl_stmt|;
+name|uint64_t
+name|xstate_xcomp_bv
+decl_stmt|;
 name|uint8_t
 name|xstate_rsrv0
 index|[
-literal|16
+literal|8
 index|]
 decl_stmt|;
 name|uint8_t
@@ -455,6 +458,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|XSTATE_XCOMP_BV_COMPACT
+value|(1ULL<< 63)
+end_define
 
 begin_struct
 struct|struct
