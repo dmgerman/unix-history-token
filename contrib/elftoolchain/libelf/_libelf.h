@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006,2008-2011 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: _libelf.h 2365 2011-12-29 04:36:44Z jkoshy $  */
+comment|/*-  * Copyright (c) 2006,2008-2011 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: _libelf.h 3011 2014-03-23 03:32:42Z jkoshy $  */
 end_comment
 
 begin_ifndef
@@ -68,6 +68,7 @@ name|unsigned
 name|int
 name|libelf_version
 decl_stmt|;
+name|unsigned
 name|char
 name|libelf_msg
 index|[
@@ -152,7 +153,7 @@ begin_define
 define|#
 directive|define
 name|LIBELF_F_API_MASK
-value|0x00FFFF
+value|0x00FFFFU
 end_define
 
 begin_comment
@@ -163,7 +164,7 @@ begin_define
 define|#
 directive|define
 name|LIBELF_F_AR_HEADER
-value|0x010000
+value|0x010000U
 end_define
 
 begin_comment
@@ -174,7 +175,7 @@ begin_define
 define|#
 directive|define
 name|LIBELF_F_AR_VARIANT_SVR4
-value|0x020000
+value|0x020000U
 end_define
 
 begin_comment
@@ -185,7 +186,7 @@ begin_define
 define|#
 directive|define
 name|LIBELF_F_DATA_MALLOCED
-value|0x040000
+value|0x040000U
 end_define
 
 begin_comment
@@ -196,7 +197,7 @@ begin_define
 define|#
 directive|define
 name|LIBELF_F_RAWFILE_MALLOC
-value|0x080000
+value|0x080000U
 end_define
 
 begin_comment
@@ -207,7 +208,7 @@ begin_define
 define|#
 directive|define
 name|LIBELF_F_RAWFILE_MMAP
-value|0x100000
+value|0x100000U
 end_define
 
 begin_comment
@@ -218,7 +219,7 @@ begin_define
 define|#
 directive|define
 name|LIBELF_F_SHDRS_LOADED
-value|0x200000
+value|0x200000U
 end_define
 
 begin_comment
@@ -229,7 +230,7 @@ begin_define
 define|#
 directive|define
 name|LIBELF_F_SPECIAL_FILE
-value|0x400000
+value|0x400000U
 end_define
 
 begin_comment
@@ -275,6 +276,7 @@ modifier|*
 name|e_parent
 decl_stmt|;
 comment|/* non-NULL for archive members */
+name|unsigned
 name|char
 modifier|*
 name|e_rawfile
@@ -297,6 +299,7 @@ modifier|*
 name|e_arhdr
 decl_stmt|;
 comment|/* translated header */
+name|unsigned
 name|char
 modifier|*
 name|e_rawhdr
@@ -317,6 +320,7 @@ comment|/* set by elf_rand()/elf_next() */
 name|int
 name|e_nchildren
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|e_rawstrtab
@@ -325,6 +329,7 @@ comment|/* file name strings */
 name|size_t
 name|e_rawstrtabsz
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|e_rawsymtab
@@ -511,6 +516,10 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/*  * The LIBELF_COPY macros are used to copy fields from a GElf_*  * structure to their 32-bit counterparts, while checking for out of  * range values.  *  * - LIBELF_COPY_U32 :: copy an unsigned 32 bit field.  * - LIBELF_COPY_S32 :: copy a signed 32 bit field.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -522,7 +531,7 @@ name|SRC
 parameter_list|,
 name|NAME
 parameter_list|)
-value|do {		\ 		if ((SRC)->NAME> UINT_MAX) {		\ 			LIBELF_SET_ERROR(RANGE, 0);	\ 			return (0);			\ 		}					\ 		(DST)->NAME = (SRC)->NAME;		\ 	} while (0)
+value|do {			\ 		if ((SRC)->NAME> UINT32_MAX) {			\ 			LIBELF_SET_ERROR(RANGE, 0);		\ 			return (0);				\ 		}						\ 		(DST)->NAME = (SRC)->NAME& 0xFFFFFFFFU;	\ 	} while (0)
 end_define
 
 begin_define
@@ -536,7 +545,7 @@ name|SRC
 parameter_list|,
 name|NAME
 parameter_list|)
-value|do {		\ 		if ((SRC)->NAME> INT_MAX ||		\ 		    (SRC)->NAME< INT_MIN) {		\ 			LIBELF_SET_ERROR(RANGE, 0);	\ 			return (0);			\ 		}					\ 		(DST)->NAME = (SRC)->NAME;		\ 	} while (0)
+value|do {			\ 		if ((SRC)->NAME> INT32_MAX ||			\ 		    (SRC)->NAME< INT32_MIN) {			\ 			LIBELF_SET_ERROR(RANGE, 0);		\ 			return (0);				\ 		}						\ 		(DST)->NAME = (int32_t) (SRC)->NAME;		\ 	} while (0)
 end_define
 
 begin_comment
@@ -628,27 +637,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|_libelf_ar_get_member
-parameter_list|(
-name|char
-modifier|*
-name|_s
-parameter_list|,
-name|size_t
-name|_sz
-parameter_list|,
-name|int
-name|_base
-parameter_list|,
-name|size_t
-modifier|*
-name|_ret
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Arsym
 modifier|*
 name|_libelf_ar_process_bsd_symtab
@@ -681,7 +669,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
 name|long
 name|_libelf_checksum
 parameter_list|(
@@ -714,6 +701,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|unsigned
 name|int
 name|_libelf_falign
 parameter_list|(
@@ -755,6 +743,7 @@ end_macro
 
 begin_expr_stmt
 operator|(
+name|unsigned
 name|char
 operator|*
 name|_dst
@@ -762,6 +751,7 @@ operator|,
 name|size_t
 name|dsz
 operator|,
+name|unsigned
 name|char
 operator|*
 name|_src
@@ -835,6 +825,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|unsigned
 name|int
 name|_libelf_malign
 parameter_list|(
@@ -852,6 +843,7 @@ name|Elf
 modifier|*
 name|_libelf_memory
 parameter_list|(
+name|unsigned
 name|char
 modifier|*
 name|_image

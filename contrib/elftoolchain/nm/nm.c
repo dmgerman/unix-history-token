@@ -138,7 +138,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: nm.c 2484 2012-04-07 15:52:05Z kaiwang27 $"
+literal|"$Id: nm.c 3124 2014-12-21 05:46:28Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -30,7 +30,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elf_strptr.c 2271 2011-12-03 17:06:35Z jkoshy $"
+literal|"$Id: elf_strptr.c 2990 2014-03-17 09:56:58Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -63,13 +63,13 @@ name|Elf_Data
 modifier|*
 name|d
 decl_stmt|;
-name|size_t
+name|GElf_Shdr
+name|shdr
+decl_stmt|;
+name|uint64_t
 name|alignment
 decl_stmt|,
 name|count
-decl_stmt|;
-name|GElf_Shdr
-name|shdr
 decl_stmt|;
 if|if
 condition|(
@@ -265,7 +265,7 @@ comment|/* 		 * Otherwise, the `d_off' members are not useable and 		 * we need 
 name|count
 operator|=
 operator|(
-name|size_t
+name|uint64_t
 operator|)
 literal|0
 expr_stmt|;

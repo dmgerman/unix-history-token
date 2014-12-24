@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libelf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<libelftc.h>
 end_include
 
@@ -60,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elftc_demangle.c 2065 2011-10-26 15:24:47Z jkoshy $"
+literal|"$Id: elftc_demangle.c 3030 2014-05-01 06:30:48Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

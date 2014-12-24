@@ -42,7 +42,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelf_phdr.c 2931 2013-03-23 11:41:07Z jkoshy $"
+literal|"$Id: libelf_phdr.c 3009 2014-03-23 01:49:59Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -92,6 +92,7 @@ modifier|*
 name|xlator
 function_decl|)
 parameter_list|(
+name|unsigned
 name|char
 modifier|*
 name|_d
@@ -99,6 +100,7 @@ parameter_list|,
 name|size_t
 name|_dsz
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|_s

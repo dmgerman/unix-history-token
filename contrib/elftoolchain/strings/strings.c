@@ -114,7 +114,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: strings.c 2351 2011-12-19 11:20:37Z jkoshy $"
+literal|"$Id: strings.c 3124 2014-12-21 05:46:28Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

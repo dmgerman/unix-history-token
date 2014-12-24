@@ -36,7 +36,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: gelf_rel.c 2272 2011-12-03 17:07:31Z jkoshy $"
+literal|"$Id: gelf_rel.c 2998 2014-03-18 17:19:00Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -232,10 +232,20 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|ndx
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|msz
 operator|*
+operator|(
+name|size_t
+operator|)
 name|ndx
 operator|>=
 name|d
@@ -536,10 +546,20 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|ndx
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|msz
 operator|*
+operator|(
+name|size_t
+operator|)
 name|ndx
 operator|>=
 name|d
@@ -640,6 +660,9 @@ name|r_info
 operator|=
 name|ELF32_R_INFO
 argument_list|(
+operator|(
+name|Elf32_Word
+operator|)
 name|ELF64_R_SYM
 argument_list|(
 name|dr
@@ -647,6 +670,9 @@ operator|->
 name|r_info
 argument_list|)
 argument_list|,
+operator|(
+name|Elf32_Word
+operator|)
 name|ELF64_R_TYPE
 argument_list|(
 name|dr
