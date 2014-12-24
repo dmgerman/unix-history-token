@@ -48,6 +48,13 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
+name|int
+name|sc_maxpin
+decl_stmt|;
+name|struct
+name|mtx
+name|sc_mtx
+decl_stmt|;
 comment|/* 	 * The memory resource(s) for the PRCM register set, when the device is 	 * created the caller can assign up to 6 memory regions depending on 	 * the SoC type. 	 */
 name|struct
 name|resource
@@ -72,17 +79,6 @@ name|sc_irq_hdl
 index|[
 name|MAX_GPIO_INTRS
 index|]
-decl_stmt|;
-comment|/* 	 * The following describes the H/W revision of each of the GPIO banks. 	 */
-name|uint32_t
-name|sc_revision
-index|[
-name|MAX_GPIO_BANKS
-index|]
-decl_stmt|;
-name|struct
-name|mtx
-name|sc_mtx
 decl_stmt|;
 block|}
 struct|;
