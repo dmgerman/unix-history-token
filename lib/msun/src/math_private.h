@@ -904,7 +904,7 @@ value|((z).a[1])
 end_define
 
 begin_comment
-comment|/*  * Inline functions that can be used to construct complex values.  *  * The C99 standard intends x+I*y to be used for this, but x+I*y is  * currently unusable in general since gcc introduces many overflow,  * underflow, sign and efficiency bugs by rewriting I*y as  * (0.0+I)*(y+0.0*I) and laboriously computing the full complex product.  * In particular, I*Inf is corrupted to NaN+I*Inf, and I*-0 is corrupted  * to -0.0+I*0.0.  *  * The C11 standard introduced the macros CMPLX(), CMPLXF() and CMPLXL()  * to construct complex values. The functions below are modelled after  * these macros, with the exception that they cannot be used to  * construct compile-time complex values.  */
+comment|/*  * Inline functions that can be used to construct complex values.  *  * The C99 standard intends x+I*y to be used for this, but x+I*y is  * currently unusable in general since gcc introduces many overflow,  * underflow, sign and efficiency bugs by rewriting I*y as  * (0.0+I)*(y+0.0*I) and laboriously computing the full complex product.  * In particular, I*Inf is corrupted to NaN+I*Inf, and I*-0 is corrupted  * to -0.0+I*0.0.  *  * The C11 standard introduced the macros CMPLX(), CMPLXF() and CMPLXL()  * to construct complex values.  Compilers that conform to the C99  * standard require the following functions to avoid the above issues.  */
 end_comment
 
 begin_ifndef
