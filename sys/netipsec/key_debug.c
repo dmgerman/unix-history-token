@@ -2009,15 +2009,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"secpolicy{ refcnt=%u state=%u policy=%u\n"
+literal|"secpolicy{ refcnt=%u policy=%u\n"
 argument_list|,
 name|sp
 operator|->
 name|refcnt
-argument_list|,
-name|sp
-operator|->
-name|state
 argument_list|,
 name|sp
 operator|->

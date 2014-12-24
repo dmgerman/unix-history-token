@@ -500,17 +500,6 @@ name|IPSEC_LEVEL_USE
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-expr|struct
-name|secpolicy
-argument_list|,
-name|ip4_def_policy
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* ECN ignore(-1)/forbidden(0)/allowed(1) */
 end_comment
@@ -539,6 +528,25 @@ operator|-
 literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+expr|struct
+name|secpolicy
+argument_list|,
+name|def_policy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_def_policy
+value|VNET(def_policy)
+end_define
 
 begin_comment
 comment|/*  * Crypto support requirements:  *  *  1	require hardware support  * -1	require software support  *  0	take anything  */
@@ -617,7 +625,7 @@ argument_list|,
 operator|&
 name|VNET_NAME
 argument_list|(
-name|ip4_def_policy
+name|def_policy
 argument_list|)
 operator|.
 name|policy
@@ -1143,7 +1151,7 @@ argument_list|,
 operator|&
 name|VNET_NAME
 argument_list|(
-name|ip4_def_policy
+name|def_policy
 argument_list|)
 operator|.
 name|policy
@@ -1551,7 +1559,7 @@ expr_stmt|;
 name|sp
 operator|=
 operator|&
-name|V_ip4_def_policy
+name|V_def_policy
 expr_stmt|;
 if|if
 condition|(
@@ -4673,14 +4681,6 @@ name|new
 operator|->
 name|sp_in
 operator|->
-name|state
-operator|=
-name|IPSEC_SPSTATE_ALIVE
-expr_stmt|;
-name|new
-operator|->
-name|sp_in
-operator|->
 name|policy
 operator|=
 name|IPSEC_POLICY_ENTRUST
@@ -4718,14 +4718,6 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-name|new
-operator|->
-name|sp_out
-operator|->
-name|state
-operator|=
-name|IPSEC_SPSTATE_ALIVE
-expr_stmt|;
 name|new
 operator|->
 name|sp_out
@@ -5193,14 +5185,6 @@ name|newchain
 expr_stmt|;
 name|dst
 operator|->
-name|state
-operator|=
-name|src
-operator|->
-name|state
-expr_stmt|;
-name|dst
-operator|->
 name|policy
 operator|=
 name|src
@@ -5431,12 +5415,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|newsp
-operator|->
-name|state
-operator|=
-name|IPSEC_SPSTATE_ALIVE
-expr_stmt|;
 comment|/* Clear old SP and set new SP. */
 name|KEY_FREESP
 argument_list|(
@@ -8374,7 +8352,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ipsec_init
+name|def_policy_init
 parameter_list|(
 specifier|const
 name|void
@@ -8383,32 +8361,43 @@ name|unused
 name|__unused
 parameter_list|)
 block|{
-name|SECPOLICY_LOCK_INIT
+name|bzero
 argument_list|(
 operator|&
-name|V_ip4_def_policy
+name|V_def_policy
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|secpolicy
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|V_ip4_def_policy
+name|V_def_policy
+operator|.
+name|policy
+operator|=
+name|IPSEC_POLICY_NONE
+expr_stmt|;
+name|V_def_policy
 operator|.
 name|refcnt
 operator|=
 literal|1
 expr_stmt|;
-comment|/* NB: disallow free. */
 block|}
 end_function
 
 begin_expr_stmt
 name|VNET_SYSINIT
 argument_list|(
-name|ipsec_init
+name|def_policy_init
 argument_list|,
 name|SI_SUB_PROTO_DOMAININIT
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
-name|ipsec_init
+name|def_policy_init
 argument_list|,
 name|NULL
 argument_list|)
