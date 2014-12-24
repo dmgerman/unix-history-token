@@ -1103,7 +1103,7 @@ argument_list|)
 expr_stmt|;
 name|ipi
 operator|=
-name|pic_ipi_get
+name|pic_ipi_read
 argument_list|(
 operator|(
 name|int
@@ -1292,7 +1292,7 @@ argument_list|)
 expr_stmt|;
 name|ipi
 operator|=
-name|pic_ipi_get
+name|pic_ipi_read
 argument_list|(
 operator|-
 literal|1

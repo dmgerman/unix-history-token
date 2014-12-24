@@ -2219,7 +2219,7 @@ end_function
 
 begin_function
 name|int
-name|pic_ipi_get
+name|pic_ipi_read
 parameter_list|(
 name|int
 name|i
