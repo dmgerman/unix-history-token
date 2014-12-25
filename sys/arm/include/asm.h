@@ -250,7 +250,7 @@ name|EENTRY
 parameter_list|(
 name|y
 parameter_list|)
-value|_EENTRY(_C_LABEL(y)); _PROF_PROLOGUE
+value|_EENTRY(_C_LABEL(y));
 end_define
 
 begin_define
@@ -290,6 +290,7 @@ name|EEND
 parameter_list|(
 name|y
 parameter_list|)
+value|_EEND(_C_LABEL(y))
 end_define
 
 begin_define
@@ -309,7 +310,7 @@ name|ASEENTRY
 parameter_list|(
 name|y
 parameter_list|)
-value|_EENTRY(_ASM_LABEL(y)); _PROF_PROLOGUE
+value|_EENTRY(_ASM_LABEL(y));
 end_define
 
 begin_define
@@ -349,6 +350,7 @@ name|ASEEND
 parameter_list|(
 name|y
 parameter_list|)
+value|_EEND(_ASM_LABEL(y))
 end_define
 
 begin_define
