@@ -1106,7 +1106,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|savestr
+name|xstrdup
 argument_list|(
 name|bestguess
 argument_list|)
@@ -1139,7 +1139,7 @@ argument_list|)
 expr_stmt|;
 name|bestguess
 operator|=
-name|savestr
+name|xstrdup
 argument_list|(
 name|buf
 argument_list|)
@@ -1829,7 +1829,7 @@ control|)
 empty_stmt|;
 name|revision
 operator|=
-name|savestr
+name|xstrdup
 argument_list|(
 name|t
 argument_list|)
@@ -2340,7 +2340,7 @@ name|NULL
 condition|)
 name|bestguess
 operator|=
-name|savestr
+name|xstrdup
 argument_list|(
 name|filearg
 index|[
@@ -7532,7 +7532,7 @@ block|}
 return|return
 name|path
 condition|?
-name|savestr
+name|xstrdup
 argument_list|(
 name|path
 argument_list|)
@@ -7828,7 +7828,7 @@ block|}
 return|return
 name|best
 condition|?
-name|savestr
+name|xstrdup
 argument_list|(
 name|best
 argument_list|)
