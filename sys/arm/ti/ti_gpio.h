@@ -48,6 +48,17 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
+comment|/* Interrupt trigger type and level. */
+name|enum
+name|intr_trigger
+modifier|*
+name|sc_irq_trigger
+decl_stmt|;
+name|enum
+name|intr_polarity
+modifier|*
+name|sc_irq_polarity
+decl_stmt|;
 name|int
 name|sc_maxpin
 decl_stmt|;
@@ -71,6 +82,13 @@ name|sc_irq_res
 index|[
 name|MAX_GPIO_INTRS
 index|]
+decl_stmt|;
+comment|/* Interrupt events. */
+name|struct
+name|intr_event
+modifier|*
+modifier|*
+name|sc_events
 decl_stmt|;
 comment|/* The handle for the register IRQ handlers. */
 name|void
