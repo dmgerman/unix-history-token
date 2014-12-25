@@ -35669,7 +35669,7 @@ argument_list|,
 operator|&
 name|V_sptree
 index|[
-name|dir
+name|i
 index|]
 argument_list|,
 name|chain
