@@ -20270,6 +20270,42 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+if|if
+condition|(
+name|zpool_get_state
+argument_list|(
+name|zhp
+argument_list|)
+operator|==
+name|POOL_STATE_UNAVAIL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"cannot upgrade '%s': pool is "
+literal|"currently unavailable\n\n"
+argument_list|)
+argument_list|,
+name|zpool_get_name
+argument_list|(
+name|zhp
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Allow iteration to continue. */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|config
 operator|=
 name|zpool_get_config
@@ -20672,6 +20708,42 @@ decl_stmt|;
 name|uint64_t
 name|version
 decl_stmt|;
+if|if
+condition|(
+name|zpool_get_state
+argument_list|(
+name|zhp
+argument_list|)
+operator|==
+name|POOL_STATE_UNAVAIL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"cannot check supported "
+literal|"features on '%s': pool is currently unavailable\n\n"
+argument_list|)
+argument_list|,
+name|zpool_get_name
+argument_list|(
+name|zhp
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Allow iteration to continue. */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|config
 operator|=
 name|zpool_get_config
