@@ -186,11 +186,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GLOBAL
+parameter_list|(
+name|x
+parameter_list|)
+value|.global x
+end_define
+
+begin_define
+define|#
+directive|define
 name|_EENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|.globl x; .type x,_ASM_TYPE_FUNCTION; x:
+value|GLOBAL(x); .type x,_ASM_TYPE_FUNCTION; x:
 end_define
 
 begin_define
@@ -205,16 +215,6 @@ end_define
 begin_comment
 comment|/* nothing */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|GLOBAL
-parameter_list|(
-name|X
-parameter_list|)
-value|.globl x
-end_define
 
 begin_define
 define|#
