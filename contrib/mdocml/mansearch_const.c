@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mansearch_const.c,v 1.6 2014/08/10 23:54:41 schwarze Exp $ */
+comment|/*	$Id: mansearch_const.c,v 1.7 2014/12/01 08:05:52 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"manpath.h"
 end_include
 
 begin_include

@@ -50,7 +50,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.13.1"
+value|"1.13.2"
 end_define
 
 begin_define
@@ -163,6 +163,34 @@ define|#
 directive|define
 name|HAVE_MANPATH
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINM_APROPOS
+value|"apropos"
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINM_MAN
+value|"man"
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINM_WHATIS
+value|"whatis"
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINM_MAKEWHATIS
+value|"makewhatis"
 end_define
 
 begin_if

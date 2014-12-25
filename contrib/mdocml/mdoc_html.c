@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_html.c,v 1.213 2014/11/27 22:27:56 schwarze Exp $ */
+comment|/*	$Id: mdoc_html.c,v 1.216 2014/12/02 10:08:06 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mandoc.h"
+file|"mandoc_aux.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mandoc_aux.h"
+file|"mdoc.h"
 end_include
 
 begin_include
@@ -77,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"html.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mdoc.h"
 end_include
 
 begin_include
@@ -6372,19 +6366,28 @@ break|break;
 block|}
 if|if
 condition|(
+name|h
+operator|->
+name|flags
+operator|&
+name|HTML_NONEWLINE
+operator|||
+operator|(
 name|nn
 operator|->
 name|next
 operator|&&
+operator|!
+operator|(
 name|nn
 operator|->
 name|next
 operator|->
-name|line
-operator|==
-name|nn
-operator|->
-name|line
+name|flags
+operator|&
+name|MDOC_LINE
+operator|)
+operator|)
 condition|)
 continue|continue;
 elseif|else
@@ -9496,6 +9499,25 @@ parameter_list|(
 name|MDOC_ARGS
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|n
+operator|->
+name|next
+operator|==
+name|NULL
+operator|||
+name|n
+operator|->
+name|next
+operator|->
+name|flags
+operator|&
+name|MDOC_LINE
+operator|)
+condition|)
 name|h
 operator|->
 name|flags

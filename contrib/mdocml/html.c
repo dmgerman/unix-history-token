@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: html.c,v 1.181 2014/10/29 00:17:43 schwarze Exp $ */
+comment|/*	$Id: html.c,v 1.183 2014/12/02 10:08:06 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -77,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"mandoc_aux.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"libmandoc.h"
 end_include
 
 begin_include
@@ -2507,6 +2501,13 @@ operator|&=
 operator|~
 name|HTML_NOSPACE
 expr_stmt|;
+name|h
+operator|->
+name|flags
+operator|&=
+operator|~
+name|HTML_NONEWLINE
+expr_stmt|;
 block|}
 else|else
 name|h
@@ -2514,6 +2515,8 @@ operator|->
 name|flags
 operator||=
 name|HTML_NOSPACE
+operator||
+name|HTML_NONEWLINE
 expr_stmt|;
 if|if
 condition|(

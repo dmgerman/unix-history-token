@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_validate.c,v 1.262 2014/11/28 18:36:35 schwarze Exp $ */
+comment|/*	$Id: mdoc_validate.c,v 1.263 2014/11/30 05:29:00 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -1442,7 +1442,7 @@ comment|/* Pc */
 block|{
 name|NULL
 block|,
-name|ewarn_eq1
+name|NULL
 block|}
 block|,
 comment|/* Pf */
