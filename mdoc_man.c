@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_man.c,v 1.76 2014/11/27 22:27:56 schwarze Exp $ */
+comment|/*	$Id: mdoc_man.c,v 1.77 2014/11/30 05:29:00 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -7993,6 +7993,25 @@ parameter_list|(
 name|DECL_ARGS
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|n
+operator|->
+name|next
+operator|==
+name|NULL
+operator|||
+name|n
+operator|->
+name|next
+operator|->
+name|flags
+operator|&
+name|MDOC_LINE
+operator|)
+condition|)
 name|outflags
 operator|&=
 operator|~

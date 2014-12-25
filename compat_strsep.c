@@ -23,7 +23,11 @@ directive|else
 end_else
 
 begin_comment
-comment|/*	($)OpenBSD: strsep.c,v 1.6 2005/08/08 08:05:37 espie Exp $	*/
+comment|/*	$Id: compat_strsep.c,v 1.4 2014/12/11 09:05:01 schwarze Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$OpenBSD: strsep.c,v 1.7 2014/02/05 20:42:32 stsp Exp $	*/
 end_comment
 
 begin_comment

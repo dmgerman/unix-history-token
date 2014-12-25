@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term.c,v 1.236 2014/11/21 01:52:53 schwarze Exp $ */
+comment|/*	$Id: term.c,v 1.237 2014/12/02 10:08:06 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -1729,7 +1729,11 @@ operator|->
 name|flags
 operator|&=
 operator|~
+operator|(
 name|TERMP_SENTENCE
+operator||
+name|TERMP_NONEWLINE
+operator|)
 expr_stmt|;
 while|while
 condition|(
@@ -2064,7 +2068,11 @@ name|p
 operator|->
 name|flags
 operator||=
+operator|(
 name|TERMP_NOSPACE
+operator||
+name|TERMP_NONEWLINE
+operator|)
 expr_stmt|;
 continue|continue;
 case|case

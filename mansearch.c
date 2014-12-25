@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mansearch.c,v 1.51 2014/11/27 01:58:21 schwarze Exp $ */
+comment|/*	$Id: mansearch.c,v 1.52 2014/12/06 01:23:24 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -1191,9 +1197,25 @@ operator|!=
 name|c
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"%s/%s: %s\n"
+argument_list|,
+name|paths
+operator|->
+name|paths
+index|[
+name|i
+index|]
+argument_list|,
 name|MANDOC_DB
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sqlite3_close

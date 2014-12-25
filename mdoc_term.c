@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_term.c,v 1.297 2014/11/28 16:54:23 schwarze Exp $ */
+comment|/*	$Id: mdoc_term.c,v 1.299 2014/12/02 10:08:06 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -7564,19 +7564,28 @@ break|break;
 block|}
 if|if
 condition|(
+name|p
+operator|->
+name|flags
+operator|&
+name|TERMP_NONEWLINE
+operator|||
+operator|(
 name|nn
 operator|->
 name|next
 operator|&&
+operator|!
+operator|(
 name|nn
 operator|->
 name|next
 operator|->
-name|line
-operator|==
-name|nn
-operator|->
-name|line
+name|flags
+operator|&
+name|MDOC_LINE
+operator|)
+operator|)
 condition|)
 continue|continue;
 name|term_flushln
@@ -7959,6 +7968,25 @@ parameter_list|(
 name|DECL_ARGS
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|n
+operator|->
+name|next
+operator|==
+name|NULL
+operator|||
+name|n
+operator|->
+name|next
+operator|->
+name|flags
+operator|&
+name|MDOC_LINE
+operator|)
+condition|)
 name|p
 operator|->
 name|flags

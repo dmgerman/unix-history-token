@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: out.c,v 1.53 2014/10/14 18:18:05 schwarze Exp $ */
+comment|/*	$Id: out.c,v 1.54 2014/12/04 02:05:42 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -404,7 +404,7 @@ operator|)
 return|;
 name|unit
 operator|=
-name|SCALE_EN
+name|def
 expr_stmt|;
 break|break;
 case|case
