@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CodeGen.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -2223,6 +2229,27 @@ name|getDwarfVersion
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// @}
+comment|/// @name Utility functions for querying and setting PIC level
+comment|/// @{
+comment|/// \brief Returns the PIC level (small or large model)
+name|PICLevel
+operator|::
+name|Level
+name|getPICLevel
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Set the PIC level (small or large model)
+name|void
+name|setPICLevel
+argument_list|(
+name|PICLevel
+operator|::
+name|Level
+name|PL
+argument_list|)
+decl_stmt|;
 comment|/// @}
 block|}
 empty_stmt|;

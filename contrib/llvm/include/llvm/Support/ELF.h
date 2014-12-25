@@ -1938,6 +1938,14 @@ name|R_PPC_PLTREL24
 init|=
 literal|18
 block|,
+name|R_PPC_JMP_SLOT
+init|=
+literal|21
+block|,
+name|R_PPC_LOCAL24PC
+init|=
+literal|23
+block|,
 name|R_PPC_REL32
 init|=
 literal|26
@@ -2285,6 +2293,10 @@ block|,
 name|R_PPC64_GOT16_HA
 init|=
 literal|17
+block|,
+name|R_PPC64_JMP_SLOT
+init|=
+literal|21
 block|,
 name|R_PPC64_REL32
 init|=

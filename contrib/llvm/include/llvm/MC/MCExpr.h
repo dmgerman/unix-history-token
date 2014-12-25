@@ -715,6 +715,9 @@ comment|// symbol@got@tlsld@ha
 name|VK_PPC_TLSLD
 block|,
 comment|// symbol@tlsld
+name|VK_PPC_LOCAL
+block|,
+comment|// symbol@local
 name|VK_Mips_GPREL
 block|,
 name|VK_Mips_GOT_CALL
