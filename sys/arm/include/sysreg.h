@@ -561,6 +561,19 @@ begin_comment
 comment|/* Instruction Fault Status Register */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|7
+end_if
+
 begin_comment
 comment|/* From ARMv7: */
 end_comment
@@ -656,7 +669,12 @@ if|#
 directive|if
 name|__ARM_ARCH
 operator|>=
-literal|6
+literal|7
+operator|&&
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
 end_if
 
 begin_comment
@@ -730,7 +748,7 @@ begin_if
 if|#
 directive|if
 name|__ARM_ARCH
-operator|>=
+operator|==
 literal|6
 end_if
 
@@ -780,7 +798,7 @@ begin_if
 if|#
 directive|if
 name|__ARM_ARCH
-operator|>=
+operator|==
 literal|6
 end_if
 
@@ -893,7 +911,7 @@ if|#
 directive|if
 name|__ARM_ARCH
 operator|>=
-literal|6
+literal|7
 end_if
 
 begin_comment
@@ -965,7 +983,7 @@ begin_if
 if|#
 directive|if
 name|__ARM_ARCH
-operator|>=
+operator|==
 literal|6
 end_if
 
@@ -1021,7 +1039,7 @@ begin_if
 if|#
 directive|if
 name|__ARM_ARCH
-operator|>=
+operator|==
 literal|6
 end_if
 
@@ -1061,7 +1079,7 @@ if|#
 directive|if
 name|__ARM_ARCH
 operator|>=
-literal|6
+literal|7
 end_if
 
 begin_comment
@@ -1091,7 +1109,7 @@ begin_if
 if|#
 directive|if
 name|__ARM_ARCH
-operator|>=
+operator|==
 literal|6
 end_if
 
@@ -1152,7 +1170,12 @@ if|#
 directive|if
 name|__ARM_ARCH
 operator|>=
-literal|6
+literal|7
+operator|&&
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
 end_if
 
 begin_comment
@@ -1501,6 +1524,24 @@ end_define
 
 begin_comment
 comment|/* PL1 only Thread ID Register */
+end_comment
+
+begin_comment
+comment|/*  * CP15 C15 registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CBAR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 4, rr, c15, c0, 0
+end_define
+
+begin_comment
+comment|/* Configuration Base Address Register */
 end_comment
 
 begin_endif
