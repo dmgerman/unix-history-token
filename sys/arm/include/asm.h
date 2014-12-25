@@ -128,6 +128,58 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * gas/arm uses @ as a single comment character and thus cannot be used here.  * It recognises the # instead of an @ symbol in .type directives.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ASM_TYPE_FUNCTION
+value|#function
+end_define
+
+begin_define
+define|#
+directive|define
+name|_ASM_TYPE_OBJECT
+value|#object
+end_define
+
+begin_comment
+comment|/* XXX Is this still the right prologue for profiling? */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GPROF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_PROF_PROLOGUE
+define|\
+value|mov ip, lr;	\ 	bl __mcount
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_PROF_PROLOGUE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * EENTRY()/EEND() mark "extra" entry/exit points from a function.  * The unwind info cannot handle the concept of a nested function, or a function  * with multiple .fnstart directives, but some of our assembler code is written  * with multiple labels to allow entry at several points.  The EENTRY() macro  * defines such an extra entry point without a new .fnstart, so that it's  * basically just a label that you can jump to.  The EEND() macro does nothing  * at all, except document the exit point associated with the same-named entry.  */
 end_comment
 
@@ -154,24 +206,6 @@ begin_comment
 comment|/* nothing */
 end_comment
 
-begin_comment
-comment|/*  * gas/arm uses @ as a single comment character and thus cannot be used here  * Instead it recognised the # instead of an @ symbols in .type directives  * We define a couple of macros so that assembly code will not be dependent  * on one or the other.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_ASM_TYPE_FUNCTION
-value|#function
-end_define
-
-begin_define
-define|#
-directive|define
-name|_ASM_TYPE_OBJECT
-value|#object
-end_define
-
 begin_define
 define|#
 directive|define
@@ -189,7 +223,6 @@ name|_ENTRY
 parameter_list|(
 name|x
 parameter_list|)
-define|\
 value|.text; _ALIGN_TEXT; _EENTRY(x) _FNSTART
 end_define
 
@@ -202,36 +235,6 @@ name|x
 parameter_list|)
 value|.size x, . - x; _FNEND
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GPROF
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_PROF_PROLOGUE
-define|\
-value|mov ip, lr; bl __mcount
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_PROF_PROLOGUE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
