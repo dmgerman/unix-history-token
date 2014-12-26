@@ -302,6 +302,11 @@ block|}
 block|,
 comment|/* Huawei Modem class match */
 block|{
+name|USB_VENDOR
+argument_list|(
+name|USB_VENDOR_HUAWEI
+argument_list|)
+block|,
 name|USB_IFACE_CLASS
 argument_list|(
 name|UICLASS_CDC
