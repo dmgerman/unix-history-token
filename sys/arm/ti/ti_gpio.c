@@ -2086,6 +2086,11 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|reg
+operator|=
+literal|0
+expr_stmt|;
+comment|/* squelch bogus gcc warning */
 for|for
 control|(
 name|irq
