@@ -268,12 +268,6 @@ parameter_list|)
 value|do {		\ 	mtx_unlock(&(sc)->lock);	\ } while(0)
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
