@@ -5142,6 +5142,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|sbt
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Squelch bogus gcc warning. */
 name|timeout
 operator|=
 name|time_ms
