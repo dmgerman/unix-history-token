@@ -268,6 +268,12 @@ parameter_list|)
 value|do {		\ 	mtx_unlock(&(sc)->lock);	\ } while(0)
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|DEBUG
+end_undef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -488,12 +494,7 @@ index|[
 name|chan
 index|]
 operator|=
-name|MBOX_MSG
-argument_list|(
-name|data
-argument_list|,
-literal|0xf
-argument_list|)
+name|msg
 expr_stmt|;
 name|sema_post
 argument_list|(
@@ -802,9 +803,29 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Read all pending messages */
-name|bcm_mbox_intr
+while|while
+condition|(
+operator|(
+name|mbox_read_4
 argument_list|(
 name|sc
+argument_list|,
+name|REG_STATUS
+argument_list|)
+operator|&
+name|STATUS_EMPTY
+operator|)
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|mbox_read_4
+argument_list|(
+name|sc
+argument_list|,
+name|REG_READ
 argument_list|)
 expr_stmt|;
 name|mbox_write_4
