@@ -937,6 +937,8 @@ name|dtrace_trap_func
 call|)
 argument_list|(
 name|frame
+argument_list|,
+name|type
 argument_list|)
 condition|)
 goto|goto

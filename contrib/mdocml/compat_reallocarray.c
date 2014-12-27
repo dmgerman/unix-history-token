@@ -23,7 +23,11 @@ directive|else
 end_else
 
 begin_comment
-comment|/*	$OpenBSD: malloc.c,v 1.158 2014/04/23 15:07:27 tedu Exp $	*/
+comment|/*	$Id: compat_reallocarray.c,v 1.4 2014/12/11 09:05:01 schwarze Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$OpenBSD: reallocarray.c,v 1.2 2014/12/08 03:45:00 bcook Exp $	*/
 end_comment
 
 begin_comment
@@ -54,11 +58,15 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_comment
+comment|/*  * This is sqrt(SIZE_MAX+1), as s1*s2<= SIZE_MAX  * if both s1< MUL_NO_OVERFLOW and s2< MUL_NO_OVERFLOW  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MUL_NO_OVERFLOW
-value|(1UL<< (sizeof(size_t) * 4))
+value|((size_t)1<< (sizeof(size_t) * 4))
 end_define
 
 begin_function

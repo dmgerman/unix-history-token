@@ -2618,6 +2618,10 @@ block|{
 ifndef|#
 directive|ifndef
 name|NO_CTF
+name|ctf_file_t
+modifier|*
+name|ctf
+decl_stmt|;
 name|prmap_t
 modifier|*
 name|map
@@ -2645,8 +2649,8 @@ operator|(
 name|NULL
 operator|)
 return|;
-return|return
-operator|(
+name|ctf
+operator|=
 name|ctf_open
 argument_list|(
 name|map
@@ -2656,6 +2660,15 @@ argument_list|,
 operator|&
 name|error
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ctf
 operator|)
 return|;
 else|#

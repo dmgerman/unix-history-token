@@ -187,49 +187,17 @@ begin_struct
 struct|struct
 name|secpolicy
 block|{
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|secpolicy
 argument_list|)
 name|chain
 expr_stmt|;
 name|struct
-name|mtx
-name|lock
-decl_stmt|;
-name|u_int
-name|refcnt
-decl_stmt|;
-comment|/* reference count */
-name|struct
 name|secpolicyindex
 name|spidx
 decl_stmt|;
 comment|/* selector */
-name|u_int32_t
-name|id
-decl_stmt|;
-comment|/* It's unique number on the system. */
-name|u_int
-name|state
-decl_stmt|;
-comment|/* 0: dead, others: alive */
-define|#
-directive|define
-name|IPSEC_SPSTATE_DEAD
-value|0
-define|#
-directive|define
-name|IPSEC_SPSTATE_ALIVE
-value|1
-name|u_int
-name|policy
-decl_stmt|;
-comment|/* policy_type per pfkeyv2.h */
-name|u_int16_t
-name|scangen
-decl_stmt|;
-comment|/* scan generation # */
 name|struct
 name|ipsecrequest
 modifier|*
@@ -237,6 +205,18 @@ name|req
 decl_stmt|;
 comment|/* pointer to the ipsec request tree, */
 comment|/* if policy == IPSEC else this value == NULL.*/
+name|u_int
+name|refcnt
+decl_stmt|;
+comment|/* reference count */
+name|u_int
+name|policy
+decl_stmt|;
+comment|/* policy_type per pfkeyv2.h */
+name|u_int32_t
+name|id
+decl_stmt|;
+comment|/* It's unique number on the system. */
 comment|/* 	 * lifetime handler. 	 * the policy can be used without limitiation if both lifetime and 	 * validtime are zero. 	 * "lifetime" is passed by sadb_lifetime.sadb_lifetime_addtime. 	 * "validtime" is passed by sadb_lifetime.sadb_lifetime_usetime. 	 */
 name|time_t
 name|created
@@ -257,57 +237,6 @@ comment|/* duration this policy is valid without use */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|SECPOLICY_LOCK_INIT
-parameter_list|(
-name|_sp
-parameter_list|)
-define|\
-value|mtx_init(&(_sp)->lock, "ipsec policy", NULL, MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SECPOLICY_LOCK
-parameter_list|(
-name|_sp
-parameter_list|)
-value|mtx_lock(&(_sp)->lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SECPOLICY_UNLOCK
-parameter_list|(
-name|_sp
-parameter_list|)
-value|mtx_unlock(&(_sp)->lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SECPOLICY_LOCK_DESTROY
-parameter_list|(
-name|_sp
-parameter_list|)
-value|mtx_destroy(&(_sp)->lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SECPOLICY_LOCK_ASSERT
-parameter_list|(
-name|_sp
-parameter_list|)
-value|mtx_assert(&(_sp)->lock, MA_OWNED)
-end_define
 
 begin_comment
 comment|/* Request for IPsec */
@@ -1046,17 +975,6 @@ end_expr_stmt
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
-expr|struct
-name|secpolicy
-argument_list|,
-name|ip4_def_policy
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
 name|int
 argument_list|,
 name|ip4_esp_trans_deflev
@@ -1153,13 +1071,6 @@ name|name
 parameter_list|)
 define|\
 value|VNET_PCPUSTAT_ADD(struct ipsecstat, ipsec4stat, name, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ip4_def_policy
-value|VNET(ip4_def_policy)
 end_define
 
 begin_define

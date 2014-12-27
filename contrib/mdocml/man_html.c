@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man_html.c,v 1.104 2014/09/27 11:17:19 kristaps Exp $ */
+comment|/*	$Id: man_html.c,v 1.107 2014/12/04 02:05:42 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mandoc.h"
+file|"mandoc_aux.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mandoc_aux.h"
+file|"man.h"
 end_include
 
 begin_include
@@ -71,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|"html.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"man.h"
 end_include
 
 begin_include
@@ -1144,7 +1138,6 @@ break|break;
 case|case
 name|MAN_TEXT
 case|:
-comment|/* 		 * If we have a blank line, output a vertical space. 		 * If we have a space as the first character, break 		 * before printing the line's data. 		 */
 if|if
 condition|(
 literal|'\0'
@@ -1164,42 +1157,43 @@ return|return;
 block|}
 if|if
 condition|(
-literal|' '
-operator|==
+name|n
+operator|->
+name|flags
+operator|&
+name|MAN_LINE
+operator|&&
+operator|(
 operator|*
 name|n
 operator|->
 name|string
-operator|&&
-name|MAN_LINE
-operator|&
-name|n
-operator|->
-name|flags
-condition|)
-name|print_otag
-argument_list|(
-name|h
-argument_list|,
-name|TAG_BR
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|MANH_LITERAL
-operator|&
-name|mh
-operator|->
-name|fl
-operator|&&
+operator|==
+literal|' '
+operator|||
+operator|(
 name|n
 operator|->
 name|prev
+operator|!=
+name|NULL
+operator|&&
+name|mh
+operator|->
+name|fl
+operator|&
+name|MANH_LITERAL
+operator|&&
+operator|!
+operator|(
+name|h
+operator|->
+name|flags
+operator|&
+name|HTML_NONEWLINE
+operator|)
+operator|)
+operator|)
 condition|)
 name|print_otag
 argument_list|(
@@ -1466,7 +1460,7 @@ name|string
 argument_list|,
 name|su
 argument_list|,
-name|SCALE_BU
+name|SCALE_EN
 argument_list|)
 condition|)
 return|return

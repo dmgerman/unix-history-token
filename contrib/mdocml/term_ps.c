@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term_ps.c,v 1.69 2014/11/20 13:56:20 schwarze Exp $ */
+comment|/*	$Id: term_ps.c,v 1.70 2014/12/01 08:05:52 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mandoc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"mandoc_aux.h"
 end_include
 
@@ -82,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"main.h"
+file|"term.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"term.h"
+file|"main.h"
 end_include
 
 begin_comment

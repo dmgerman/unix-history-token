@@ -242,12 +242,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_gif.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_var.h>
 end_include
 
@@ -311,12 +305,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/scope6_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/in6_gif.h>
 end_include
 
 begin_include

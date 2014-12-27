@@ -866,6 +866,13 @@ name|AHCI_MAX_SLOTS
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|AHCI_MAX_IRQS
+value|16
+end_define
+
 begin_comment
 comment|/* SATA AHCI v1.0 register defines */
 end_comment
@@ -2676,7 +2683,7 @@ value|2
 block|}
 name|irqs
 index|[
-literal|16
+name|AHCI_MAX_IRQS
 index|]
 struct|;
 name|uint32_t

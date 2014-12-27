@@ -301,6 +301,7 @@ comment|/*  * Note that these are default values only.  The actual values will b
 end_comment
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|copan_debugconf_subpage
@@ -361,6 +362,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|copan_debugconf_subpage
@@ -417,6 +419,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_da_rw_recovery_page
@@ -472,6 +475,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_da_rw_recovery_page
@@ -525,6 +529,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_format_page
@@ -630,6 +635,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_format_page
@@ -727,6 +733,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_rigid_disk_page
@@ -826,6 +833,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_rigid_disk_page
@@ -917,6 +925,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_caching_page
@@ -1000,6 +1009,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_caching_page
@@ -1083,6 +1093,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_control_page
@@ -1138,6 +1149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_control_page
@@ -1193,6 +1205,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_info_exceptions_page
@@ -1243,6 +1256,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_info_exceptions_page
@@ -1300,6 +1314,7 @@ value|(sizeof(struct ctl_logical_block_provisioning_page) - 4)
 end_define
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|ctl_logical_block_provisioning_page
@@ -1466,6 +1481,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|ctl_logical_block_provisioning_page
@@ -2061,6 +2077,11 @@ specifier|static
 name|uint32_t
 name|ctl_map_lun
 parameter_list|(
+name|struct
+name|ctl_softc
+modifier|*
+name|softc
+parameter_list|,
 name|int
 name|port_num
 parameter_list|,
@@ -2075,6 +2096,11 @@ specifier|static
 name|uint32_t
 name|ctl_map_lun_back
 parameter_list|(
+name|struct
+name|ctl_softc
+modifier|*
+name|softc
+parameter_list|,
 name|int
 name|port_num
 parameter_list|,
@@ -2524,11 +2550,6 @@ specifier|static
 name|int
 name|ctl_scsiio_lun_check
 parameter_list|(
-name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-parameter_list|,
 name|struct
 name|ctl_lun
 modifier|*
@@ -3475,7 +3496,7 @@ block|{
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 decl_stmt|;
 name|union
 name|ctl_io
@@ -3490,7 +3511,7 @@ decl_stmt|;
 name|ctl_ha_status
 name|isc_status
 decl_stmt|;
-name|ctl_softc
+name|softc
 operator|=
 name|control_softc
 expr_stmt|;
@@ -3577,7 +3598,7 @@ name|io
 operator|=
 name|ctl_alloc_io_nowait
 argument_list|(
-name|ctl_softc
+name|softc
 operator|->
 name|othersc_pool
 argument_list|)
@@ -3706,7 +3727,7 @@ expr_stmt|;
 comment|/* 			 * If we're in serialization-only mode, we don't 			 * want to go through full done processing.  Thus 			 * the COPY flag. 			 * 			 * XXX KDM add another flag that is more specific. 			 */
 if|if
 condition|(
-name|ctl_softc
+name|softc
 operator|->
 name|ha_mode
 operator|==
@@ -3781,7 +3802,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ctl_softc
+name|softc
 operator|->
 name|ha_mode
 operator|==
@@ -4452,7 +4473,7 @@ name|CTL_MSG_FINISH_IO
 case|:
 if|if
 condition|(
-name|ctl_softc
+name|softc
 operator|->
 name|ha_mode
 operator|==
@@ -4460,7 +4481,7 @@ name|CTL_HA_MODE_XFER
 condition|)
 name|ctl_isc_handler_finish_xfer
 argument_list|(
-name|ctl_softc
+name|softc
 argument_list|,
 operator|&
 name|msg_info
@@ -4469,7 +4490,7 @@ expr_stmt|;
 else|else
 name|ctl_isc_handler_finish_ser_only
 argument_list|(
-name|ctl_softc
+name|softc
 argument_list|,
 operator|&
 name|msg_info
@@ -4564,7 +4585,7 @@ operator|*
 operator|)
 name|ctl_alloc_io_nowait
 argument_list|(
-name|ctl_softc
+name|softc
 operator|->
 name|othersc_pool
 argument_list|)
@@ -4711,7 +4732,7 @@ operator|*
 operator|)
 name|ctl_alloc_io_nowait
 argument_list|(
-name|ctl_softc
+name|softc
 operator|->
 name|othersc_pool
 argument_list|)
@@ -8627,7 +8648,7 @@ name|kern_ptr
 decl_stmt|;
 name|len_to_copy
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|ext_sglist
 index|[
@@ -8961,7 +8982,7 @@ block|{
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 decl_stmt|;
 name|union
 name|ctl_ha_msg
@@ -8980,7 +9001,7 @@ decl_stmt|;
 name|uint32_t
 name|targ_lun
 decl_stmt|;
-name|ctl_softc
+name|softc
 operator|=
 name|control_softc
 expr_stmt|;
@@ -8996,7 +9017,7 @@ name|targ_mapped_lun
 expr_stmt|;
 name|lun
 operator|=
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_luns
 index|[
@@ -9218,7 +9239,7 @@ name|CTL_ACTION_SKIP
 case|:
 if|if
 condition|(
-name|ctl_softc
+name|softc
 operator|->
 name|ha_mode
 operator|==
@@ -13674,7 +13695,7 @@ name|bbrread
 operator|.
 name|sense_data
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -16641,7 +16662,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\t<initiator>%u %s</initiator>\n"
+literal|"\t<initiator id=\"%u\">%s</initiator>\n"
 argument_list|,
 name|j
 argument_list|,
@@ -16662,7 +16683,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\t<initiator>%u naa.%08jx</initiator>\n"
+literal|"\t<initiator id=\"%u\">naa.%08jx</initiator>\n"
 argument_list|,
 name|j
 argument_list|,
@@ -16978,6 +16999,11 @@ specifier|static
 name|uint32_t
 name|ctl_map_lun
 parameter_list|(
+name|struct
+name|ctl_softc
+modifier|*
+name|softc
+parameter_list|,
 name|int
 name|port_num
 parameter_list|,
@@ -16992,7 +17018,7 @@ name|port
 decl_stmt|;
 name|port
 operator|=
-name|control_softc
+name|softc
 operator|->
 name|ctl_ports
 index|[
@@ -17048,6 +17074,11 @@ specifier|static
 name|uint32_t
 name|ctl_map_lun_back
 parameter_list|(
+name|struct
+name|ctl_softc
+modifier|*
+name|softc
+parameter_list|,
 name|int
 name|port_num
 parameter_list|,
@@ -17065,7 +17096,7 @@ name|i
 decl_stmt|;
 name|port
 operator|=
-name|control_softc
+name|softc
 operator|->
 name|ctl_ports
 index|[
@@ -17176,7 +17207,7 @@ operator|++
 expr_stmt|;
 name|num_pieces
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 operator|(
 sizeof|sizeof
@@ -18264,7 +18295,7 @@ name|dest
 argument_list|,
 name|src
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -22673,22 +22704,22 @@ block|{
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 decl_stmt|;
-name|ctl_softc
+name|softc
 operator|=
 name|control_softc
 expr_stmt|;
 comment|/* 	 * ctl_alloc_lun() should handle all potential failure cases. 	 */
 name|ctl_alloc_lun
 argument_list|(
-name|ctl_softc
+name|softc
 argument_list|,
 name|NULL
 argument_list|,
 name|be_lun
 argument_list|,
-name|ctl_softc
+name|softc
 operator|->
 name|target
 argument_list|)
@@ -22709,14 +22740,14 @@ block|{
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 init|=
 name|control_softc
 decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -22724,7 +22755,7 @@ expr_stmt|;
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|pending_lun_queue
 argument_list|,
@@ -22736,7 +22767,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -22744,7 +22775,7 @@ expr_stmt|;
 name|wakeup
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|pending_lun_queue
 argument_list|)
@@ -22770,7 +22801,7 @@ block|{
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 decl_stmt|;
 name|struct
 name|ctl_port
@@ -22788,10 +22819,6 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
-expr_stmt|;
 name|lun
 operator|=
 operator|(
@@ -22803,10 +22830,16 @@ name|be_lun
 operator|->
 name|ctl_lun
 expr_stmt|;
+name|softc
+operator|=
+name|lun
+operator|->
+name|ctl_softc
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -22844,7 +22877,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -22877,7 +22910,7 @@ operator|=
 name|STAILQ_FIRST
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|port_list
 argument_list|)
@@ -22904,7 +22937,7 @@ comment|/* 		 * Drop the lock while we call the FETD's enable routine. 		 * This
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -22931,7 +22964,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -22990,7 +23023,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -23016,7 +23049,7 @@ block|{
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 decl_stmt|;
 name|struct
 name|ctl_port
@@ -23031,10 +23064,6 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
-expr_stmt|;
 name|lun
 operator|=
 operator|(
@@ -23046,10 +23075,16 @@ name|be_lun
 operator|->
 name|ctl_lun
 expr_stmt|;
+name|softc
+operator|=
+name|lun
+operator|->
+name|ctl_softc
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -23082,7 +23117,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -23111,7 +23146,7 @@ name|STAILQ_FOREACH
 argument_list|(
 argument|port
 argument_list|,
-argument|&ctl_softc->port_list
+argument|&softc->port_list
 argument_list|,
 argument|links
 argument_list|)
@@ -23119,7 +23154,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -23147,7 +23182,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -23196,7 +23231,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -23220,21 +23255,10 @@ name|be_lun
 parameter_list|)
 block|{
 name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-decl_stmt|;
-name|struct
 name|ctl_lun
 modifier|*
 name|lun
-decl_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
-expr_stmt|;
-name|lun
-operator|=
+init|=
 operator|(
 expr|struct
 name|ctl_lun
@@ -23243,7 +23267,7 @@ operator|)
 name|be_lun
 operator|->
 name|ctl_lun
-expr_stmt|;
+decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -23286,21 +23310,10 @@ name|be_lun
 parameter_list|)
 block|{
 name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-decl_stmt|;
-name|struct
 name|ctl_lun
 modifier|*
 name|lun
-decl_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
-expr_stmt|;
-name|lun
-operator|=
+init|=
 operator|(
 expr|struct
 name|ctl_lun
@@ -23309,7 +23322,7 @@ operator|)
 name|be_lun
 operator|->
 name|ctl_lun
-expr_stmt|;
+decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -23351,21 +23364,10 @@ name|be_lun
 parameter_list|)
 block|{
 name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-decl_stmt|;
-name|struct
 name|ctl_lun
 modifier|*
 name|lun
-decl_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
-expr_stmt|;
-name|lun
-operator|=
+init|=
 operator|(
 expr|struct
 name|ctl_lun
@@ -23374,7 +23376,7 @@ operator|)
 name|be_lun
 operator|->
 name|ctl_lun
-expr_stmt|;
+decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -23416,21 +23418,10 @@ name|be_lun
 parameter_list|)
 block|{
 name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-decl_stmt|;
-name|struct
 name|ctl_lun
 modifier|*
 name|lun
-decl_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
-expr_stmt|;
-name|lun
-operator|=
+init|=
 operator|(
 expr|struct
 name|ctl_lun
@@ -23439,7 +23430,7 @@ operator|)
 name|be_lun
 operator|->
 name|ctl_lun
-expr_stmt|;
+decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -23484,17 +23475,13 @@ block|{
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 decl_stmt|;
 name|struct
 name|ctl_lun
 modifier|*
 name|lun
 decl_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
-expr_stmt|;
 name|lun
 operator|=
 operator|(
@@ -23505,6 +23492,12 @@ operator|)
 name|be_lun
 operator|->
 name|ctl_lun
+expr_stmt|;
+name|softc
+operator|=
+name|lun
+operator|->
+name|ctl_softc
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -23573,7 +23566,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -23586,7 +23579,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -23620,21 +23613,10 @@ name|be_lun
 parameter_list|)
 block|{
 name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-decl_stmt|;
-name|struct
 name|ctl_lun
 modifier|*
 name|lun
-decl_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
-expr_stmt|;
-name|lun
-operator|=
+init|=
 operator|(
 expr|struct
 name|ctl_lun
@@ -23643,7 +23625,7 @@ operator|)
 name|be_lun
 operator|->
 name|ctl_lun
-expr_stmt|;
+decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -23685,21 +23667,10 @@ name|be_lun
 parameter_list|)
 block|{
 name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-decl_stmt|;
-name|struct
 name|ctl_lun
 modifier|*
 name|lun
-decl_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
-expr_stmt|;
-name|lun
-operator|=
+init|=
 operator|(
 expr|struct
 name|ctl_lun
@@ -23708,7 +23679,7 @@ operator|)
 name|be_lun
 operator|->
 name|ctl_lun
-expr_stmt|;
+decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -24381,11 +24352,6 @@ decl_stmt|,
 name|resv_id
 decl_stmt|;
 name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-decl_stmt|;
-name|struct
 name|ctl_lun
 modifier|*
 name|lun
@@ -24437,10 +24403,6 @@ name|CTL_PRIV_LUN
 index|]
 operator|.
 name|ptr
-expr_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
 expr_stmt|;
 switch|switch
 condition|(
@@ -24746,11 +24708,6 @@ name|uint64_t
 name|thirdparty_id
 decl_stmt|;
 name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-decl_stmt|;
-name|struct
 name|ctl_lun
 modifier|*
 name|lun
@@ -24818,10 +24775,6 @@ name|CTL_PRIV_LUN
 index|]
 operator|.
 name|ptr
-expr_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
 expr_stmt|;
 switch|switch
 condition|(
@@ -25137,11 +25090,6 @@ name|ctl_lun
 modifier|*
 name|lun
 decl_stmt|;
-name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
@@ -25169,10 +25117,6 @@ name|CTL_PRIV_LUN
 index|]
 operator|.
 name|ptr
-expr_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
 expr_stmt|;
 name|retval
 operator|=
@@ -25560,7 +25504,7 @@ decl_stmt|;
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 decl_stmt|;
 name|uint64_t
 name|starting_lba
@@ -25596,9 +25540,11 @@ index|]
 operator|.
 name|ptr
 expr_stmt|;
-name|ctl_softc
+name|softc
 operator|=
-name|control_softc
+name|lun
+operator|->
+name|ctl_softc
 expr_stmt|;
 name|retval
 operator|=
@@ -25796,7 +25742,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|ctl_softc
+name|softc
 operator|->
 name|flags
 operator|&
@@ -25904,11 +25850,6 @@ name|ctl_lun
 modifier|*
 name|lun
 decl_stmt|;
-name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-decl_stmt|;
 name|int
 name|length
 decl_stmt|,
@@ -25938,10 +25879,6 @@ name|CTL_PRIV_LUN
 index|]
 operator|.
 name|ptr
-expr_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
 expr_stmt|;
 name|cdb
 operator|=
@@ -28190,11 +28127,6 @@ name|ctl_lun
 modifier|*
 name|lun
 decl_stmt|;
-name|struct
-name|ctl_softc
-modifier|*
-name|softc
-decl_stmt|;
 name|int
 name|set_ua
 decl_stmt|;
@@ -28285,10 +28217,6 @@ operator|*
 name|CTL_PAGE_SAVED
 operator|)
 operator|)
-expr_stmt|;
-name|softc
-operator|=
-name|control_softc
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -31424,7 +31352,7 @@ name|header
 operator|->
 name|datalen
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|total_len
 operator|-
@@ -31543,7 +31471,7 @@ name|kern_data_ptr
 expr_stmt|;
 name|datalen
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|total_len
 operator|-
@@ -34427,10 +34355,6 @@ name|ctsio
 operator|->
 name|cdb
 expr_stmt|;
-name|softc
-operator|=
-name|control_softc
-expr_stmt|;
 name|lun
 operator|=
 operator|(
@@ -34448,6 +34372,12 @@ name|CTL_PRIV_LUN
 index|]
 operator|.
 name|ptr
+expr_stmt|;
+name|softc
+operator|=
+name|lun
+operator|->
+name|ctl_softc
 expr_stmt|;
 name|retval
 operator|=
@@ -34569,6 +34499,8 @@ if|if
 condition|(
 name|ctl_map_lun_back
 argument_list|(
+name|softc
+argument_list|,
 name|port
 operator|->
 name|targ_port
@@ -34980,6 +34912,8 @@ if|if
 condition|(
 name|ctl_map_lun_back
 argument_list|(
+name|softc
+argument_list|,
 name|port
 operator|->
 name|targ_port
@@ -36541,10 +36475,6 @@ literal|"ctl_persistent_reserve_in\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|softc
-operator|=
-name|control_softc
-expr_stmt|;
 name|cdb
 operator|=
 operator|(
@@ -36582,6 +36512,12 @@ name|CTL_PRIV_LUN
 index|]
 operator|.
 name|ptr
+expr_stmt|;
+name|softc
+operator|=
+name|lun
+operator|->
+name|ctl_softc
 expr_stmt|;
 name|retry
 label|:
@@ -39528,10 +39464,6 @@ name|retval
 operator|=
 name|CTL_RETVAL_COMPLETE
 expr_stmt|;
-name|softc
-operator|=
-name|control_softc
-expr_stmt|;
 name|cdb
 operator|=
 operator|(
@@ -39560,6 +39492,12 @@ name|CTL_PRIV_LUN
 index|]
 operator|.
 name|ptr
+expr_stmt|;
+name|softc
+operator|=
+name|lun
+operator|->
+name|ctl_softc
 expr_stmt|;
 comment|/* 	 * We only support whole-LUN scope.  The scope& type are ignored for 	 * register, register and ignore existing key and clear. 	 * We sometimes ignore scope and type on preempts too!! 	 * Verify reservation type here as well. 	 */
 name|type
@@ -43825,6 +43763,13 @@ name|ctsio
 parameter_list|)
 block|{
 name|struct
+name|ctl_softc
+modifier|*
+name|softc
+init|=
+name|control_softc
+decl_stmt|;
+name|struct
 name|scsi_report_luns
 modifier|*
 name|cdb
@@ -43893,21 +43838,21 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|control_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
 expr_stmt|;
 name|num_luns
 operator|=
-name|control_softc
+name|softc
 operator|->
 name|num_luns
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|control_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -44125,7 +44070,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|control_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -44156,6 +44101,8 @@ name|lun_id
 operator|=
 name|ctl_map_lun
 argument_list|(
+name|softc
+argument_list|,
 name|ctsio
 operator|->
 name|io_hdr
@@ -44176,7 +44123,7 @@ condition|)
 continue|continue;
 name|lun
 operator|=
-name|control_softc
+name|softc
 operator|->
 name|ctl_luns
 index|[
@@ -44380,7 +44327,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|control_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -44843,7 +44790,7 @@ index|[
 name|initidx
 index|]
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -45112,6 +45059,9 @@ name|ctl_lun
 modifier|*
 name|lun
 decl_stmt|;
+name|int
+name|p
+decl_stmt|;
 name|lun
 operator|=
 operator|(
@@ -45275,18 +45225,17 @@ operator|)
 operator||
 name|T_DIRECT
 expr_stmt|;
-name|pages
-operator|->
-name|length
+name|p
 operator|=
-name|SCSI_EVPD_NUM_SUPPORTED_PAGES
+literal|0
 expr_stmt|;
 comment|/* Supported VPD pages */
 name|pages
 operator|->
 name|page_list
 index|[
-literal|0
+name|p
+operator|++
 index|]
 operator|=
 name|SVPD_SUPPORTED_PAGES
@@ -45296,7 +45245,8 @@ name|pages
 operator|->
 name|page_list
 index|[
-literal|1
+name|p
+operator|++
 index|]
 operator|=
 name|SVPD_UNIT_SERIAL_NUMBER
@@ -45306,7 +45256,8 @@ name|pages
 operator|->
 name|page_list
 index|[
-literal|2
+name|p
+operator|++
 index|]
 operator|=
 name|SVPD_DEVICE_ID
@@ -45316,7 +45267,8 @@ name|pages
 operator|->
 name|page_list
 index|[
-literal|3
+name|p
+operator|++
 index|]
 operator|=
 name|SVPD_EXTENDED_INQUIRY_DATA
@@ -45326,7 +45278,8 @@ name|pages
 operator|->
 name|page_list
 index|[
-literal|4
+name|p
+operator|++
 index|]
 operator|=
 name|SVPD_MODE_PAGE_POLICY
@@ -45336,7 +45289,8 @@ name|pages
 operator|->
 name|page_list
 index|[
-literal|5
+name|p
+operator|++
 index|]
 operator|=
 name|SVPD_SCSI_PORTS
@@ -45346,17 +45300,34 @@ name|pages
 operator|->
 name|page_list
 index|[
-literal|6
+name|p
+operator|++
 index|]
 operator|=
 name|SVPD_SCSI_TPC
 expr_stmt|;
+if|if
+condition|(
+name|lun
+operator|!=
+name|NULL
+operator|&&
+name|lun
+operator|->
+name|be_lun
+operator|->
+name|lun_type
+operator|==
+name|T_DIRECT
+condition|)
+block|{
 comment|/* Block limits */
 name|pages
 operator|->
 name|page_list
 index|[
-literal|7
+name|p
+operator|++
 index|]
 operator|=
 name|SVPD_BLOCK_LIMITS
@@ -45366,7 +45337,8 @@ name|pages
 operator|->
 name|page_list
 index|[
-literal|8
+name|p
+operator|++
 index|]
 operator|=
 name|SVPD_BDC
@@ -45376,10 +45348,18 @@ name|pages
 operator|->
 name|page_list
 index|[
-literal|9
+name|p
+operator|++
 index|]
 operator|=
 name|SVPD_LBP
+expr_stmt|;
+block|}
+name|pages
+operator|->
+name|length
+operator|=
+name|p
 expr_stmt|;
 name|ctl_set_success
 argument_list|(
@@ -46254,7 +46234,7 @@ decl_stmt|;
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 decl_stmt|;
 name|struct
 name|ctl_lun
@@ -46272,13 +46252,13 @@ decl_stmt|;
 name|uint8_t
 name|proto
 decl_stmt|;
-name|ctl_softc
+name|softc
 operator|=
 name|control_softc
 expr_stmt|;
 name|port
 operator|=
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_ports
 index|[
@@ -47031,6 +47011,8 @@ name|NULL
 operator|&&
 name|ctl_map_lun_back
 argument_list|(
+name|softc
+argument_list|,
 name|port
 operator|->
 name|targ_port
@@ -47339,6 +47321,8 @@ name|NULL
 operator|&&
 name|ctl_map_lun_back
 argument_list|(
+name|softc
+argument_list|,
 name|port
 operator|->
 name|targ_port
@@ -47814,9 +47798,11 @@ name|blocksize
 expr_stmt|;
 name|scsi_ulto4b
 argument_list|(
-name|MAXPHYS
-operator|/
-name|bs
+name|lun
+operator|->
+name|be_lun
+operator|->
+name|opttxferlen
 argument_list|,
 name|bl_ptr
 operator|->
@@ -48654,6 +48640,11 @@ name|ctsio
 parameter_list|)
 block|{
 name|struct
+name|ctl_lun
+modifier|*
+name|lun
+decl_stmt|;
+name|struct
 name|scsi_inquiry
 modifier|*
 name|cdb
@@ -48663,6 +48654,24 @@ name|alloc_len
 decl_stmt|,
 name|retval
 decl_stmt|;
+name|lun
+operator|=
+operator|(
+expr|struct
+name|ctl_lun
+operator|*
+operator|)
+name|ctsio
+operator|->
+name|io_hdr
+operator|.
+name|ctl_private
+index|[
+name|CTL_PRIV_LUN
+index|]
+operator|.
+name|ptr
+expr_stmt|;
 name|cdb
 operator|=
 operator|(
@@ -48673,10 +48682,6 @@ operator|)
 name|ctsio
 operator|->
 name|cdb
-expr_stmt|;
-name|retval
-operator|=
-name|CTL_RETVAL_COMPLETE
 expr_stmt|;
 name|alloc_len
 operator|=
@@ -48788,6 +48793,23 @@ break|break;
 case|case
 name|SVPD_BLOCK_LIMITS
 case|:
+if|if
+condition|(
+name|lun
+operator|==
+name|NULL
+operator|||
+name|lun
+operator|->
+name|be_lun
+operator|->
+name|lun_type
+operator|!=
+name|T_DIRECT
+condition|)
+goto|goto
+name|err
+goto|;
 name|retval
 operator|=
 name|ctl_inquiry_evpd_block_limits
@@ -48801,6 +48823,23 @@ break|break;
 case|case
 name|SVPD_BDC
 case|:
+if|if
+condition|(
+name|lun
+operator|==
+name|NULL
+operator|||
+name|lun
+operator|->
+name|be_lun
+operator|->
+name|lun_type
+operator|!=
+name|T_DIRECT
+condition|)
+goto|goto
+name|err
+goto|;
 name|retval
 operator|=
 name|ctl_inquiry_evpd_bdc
@@ -48814,6 +48853,23 @@ break|break;
 case|case
 name|SVPD_LBP
 case|:
+if|if
+condition|(
+name|lun
+operator|==
+name|NULL
+operator|||
+name|lun
+operator|->
+name|be_lun
+operator|->
+name|lun_type
+operator|!=
+name|T_DIRECT
+condition|)
+goto|goto
+name|err
+goto|;
 name|retval
 operator|=
 name|ctl_inquiry_evpd_lbp
@@ -48825,6 +48881,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|err
+label|:
 name|ctl_set_invalid_field
 argument_list|(
 name|ctsio
@@ -48893,7 +48951,7 @@ decl_stmt|;
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 decl_stmt|;
 name|struct
 name|ctl_lun
@@ -48912,14 +48970,14 @@ decl_stmt|;
 name|ctl_port_type
 name|port_type
 decl_stmt|;
-name|ctl_softc
+name|softc
 operator|=
 name|control_softc
 expr_stmt|;
 comment|/* 	 * Figure out whether we're talking to a Fibre Channel port or not. 	 * We treat the ioctl front end, and any SCSI adapters, as packetized 	 * SCSI front ends. 	 */
 name|port_type
 operator|=
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_ports
 index|[
@@ -49114,7 +49172,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|ctl_softc
+name|softc
 operator|->
 name|inquiry_pq_no_lun
 operator|==
@@ -51876,11 +51934,6 @@ case|case
 name|CTL_ACTION_SKIP
 case|:
 block|{
-name|struct
-name|ctl_softc
-modifier|*
-name|softc
-decl_stmt|;
 specifier|const
 name|struct
 name|ctl_cmd_entry
@@ -52007,17 +52060,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|softc
-operator|=
-name|control_softc
-expr_stmt|;
 comment|/* 			 * Check this I/O for LUN state changes that may 			 * have happened while this command was blocked. 			 * The LUN state may have been changed by a command 			 * ahead of us in the queue, so we need to re-check 			 * for any states that can be caused by SCSI 			 * commands. 			 */
 if|if
 condition|(
 name|ctl_scsiio_lun_check
 argument_list|(
-name|softc
-argument_list|,
 name|lun
 argument_list|,
 name|entry
@@ -52076,11 +52123,6 @@ name|int
 name|ctl_scsiio_lun_check
 parameter_list|(
 name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-parameter_list|,
-name|struct
 name|ctl_lun
 modifier|*
 name|lun
@@ -52097,6 +52139,15 @@ modifier|*
 name|ctsio
 parameter_list|)
 block|{
+name|struct
+name|ctl_softc
+modifier|*
+name|softc
+init|=
+name|lun
+operator|->
+name|ctl_softc
+decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
@@ -52121,7 +52172,7 @@ comment|/* 	 * If this shelf is a secondary shelf controller, we have to reject 
 if|if
 condition|(
 operator|(
-name|ctl_softc
+name|softc
 operator|->
 name|flags
 operator|&
@@ -52575,7 +52626,7 @@ decl_stmt|;
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 decl_stmt|;
 name|union
 name|ctl_io
@@ -52593,14 +52644,14 @@ decl_stmt|;
 name|int
 name|lun_idx
 decl_stmt|;
-name|ctl_softc
+name|softc
 operator|=
 name|control_softc
 expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -52612,7 +52663,7 @@ name|notyet
 name|mtx_lock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|queue_lock
 argument_list|)
@@ -52629,7 +52680,7 @@ operator|)
 name|STAILQ_FIRST
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|rtr_queue
 argument_list|)
@@ -52673,7 +52724,7 @@ condition|)
 name|STAILQ_REMOVE
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|rtr_queue
 argument_list|,
@@ -52691,7 +52742,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|queue_lock
 argument_list|)
@@ -52706,7 +52757,7 @@ literal|0
 init|;
 name|lun_idx
 operator|<
-name|ctl_softc
+name|softc
 operator|->
 name|num_luns
 condition|;
@@ -52716,7 +52767,7 @@ control|)
 block|{
 name|lun
 operator|=
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_luns
 index|[
@@ -52753,7 +52804,7 @@ name|CTL_LUN_PRIMARY_SC
 operator|)
 operator|&&
 operator|(
-name|ctl_softc
+name|softc
 operator|->
 name|ha_mode
 operator|==
@@ -52963,7 +53014,7 @@ name|CTL_LUN_PRIMARY_SC
 operator|)
 operator|&&
 operator|(
-name|ctl_softc
+name|softc
 operator|->
 name|ha_mode
 operator|==
@@ -53058,7 +53109,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|ctl_softc
+name|softc
 operator|->
 name|ha_mode
 operator|==
@@ -53196,7 +53247,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|ctl_softc
+name|softc
 operator|->
 name|ha_mode
 operator|==
@@ -53538,7 +53589,7 @@ name|lun
 operator|->
 name|flags
 argument_list|,
-name|ctl_softc
+name|softc
 operator|->
 name|ha_mode
 argument_list|)
@@ -53552,7 +53603,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -53568,7 +53619,7 @@ parameter_list|(
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 parameter_list|,
 name|struct
 name|ctl_scsiio
@@ -53625,7 +53676,7 @@ operator|(
 operator|(
 name|lun
 operator|=
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_luns
 index|[
@@ -54124,8 +54175,6 @@ if|if
 condition|(
 name|ctl_scsiio_lun_check
 argument_list|(
-name|ctl_softc
-argument_list|,
 name|lun
 argument_list|,
 name|entry
@@ -55084,7 +55133,7 @@ parameter_list|(
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 parameter_list|,
 name|union
 name|ctl_io
@@ -55096,7 +55145,7 @@ return|return
 operator|(
 name|ctl_target_reset
 argument_list|(
-name|ctl_softc
+name|softc
 argument_list|,
 name|io
 argument_list|,
@@ -55115,7 +55164,7 @@ parameter_list|(
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 parameter_list|,
 name|union
 name|ctl_io
@@ -55251,7 +55300,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -55260,7 +55309,7 @@ name|STAILQ_FOREACH
 argument_list|(
 argument|lun
 argument_list|,
-argument|&ctl_softc->lun_list
+argument|&softc->lun_list
 argument_list|,
 argument|links
 argument_list|)
@@ -55278,7 +55327,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -56134,7 +56183,7 @@ decl_stmt|;
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 decl_stmt|;
 if|#
 directive|if
@@ -56148,7 +56197,7 @@ decl_stmt|;
 name|uint32_t
 name|targ_lun
 decl_stmt|;
-name|ctl_softc
+name|softc
 operator|=
 name|control_softc
 expr_stmt|;
@@ -56170,7 +56219,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -56184,7 +56233,7 @@ name|CTL_MAX_LUNS
 operator|)
 operator|&&
 operator|(
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_luns
 index|[
@@ -56196,7 +56245,7 @@ operator|)
 condition|)
 name|lun
 operator|=
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_luns
 index|[
@@ -56208,7 +56257,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -56236,7 +56285,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -56561,7 +56610,7 @@ block|{
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 init|=
 name|control_softc
 decl_stmt|;
@@ -56765,7 +56814,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -56779,7 +56828,7 @@ name|CTL_MAX_LUNS
 operator|)
 operator|&&
 operator|(
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_luns
 index|[
@@ -56791,7 +56840,7 @@ operator|)
 condition|)
 name|lun
 operator|=
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_luns
 index|[
@@ -56803,7 +56852,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -56923,7 +56972,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -56937,7 +56986,7 @@ name|retval
 operator|=
 name|ctl_target_reset
 argument_list|(
-name|ctl_softc
+name|softc
 argument_list|,
 name|io
 argument_list|,
@@ -56952,7 +57001,7 @@ name|retval
 operator|=
 name|ctl_bus_reset
 argument_list|(
-name|ctl_softc
+name|softc
 argument_list|,
 name|io
 argument_list|)
@@ -57037,12 +57086,12 @@ decl_stmt|;
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 decl_stmt|;
 name|uint32_t
 name|targ_lun
 decl_stmt|;
-name|ctl_softc
+name|softc
 operator|=
 name|control_softc
 expr_stmt|;
@@ -57058,7 +57107,7 @@ name|targ_mapped_lun
 expr_stmt|;
 name|lun
 operator|=
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_luns
 index|[
@@ -57127,8 +57176,6 @@ if|if
 condition|(
 name|ctl_scsiio_lun_check
 argument_list|(
-name|ctl_softc
-argument_list|,
 name|lun
 argument_list|,
 name|entry
@@ -57187,7 +57234,7 @@ name|CTL_MSG_FINISH_IO
 case|:
 if|if
 condition|(
-name|ctl_softc
+name|softc
 operator|->
 name|ha_mode
 operator|==
@@ -57684,7 +57731,7 @@ name|scsiio
 operator|.
 name|sense_data
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -58714,7 +58761,7 @@ name|dt
 operator|.
 name|cur_sg_entries
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 operator|(
 sizeof|sizeof
@@ -60076,7 +60123,7 @@ index|]
 operator|.
 name|len
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|len_to_go
 argument_list|,
@@ -60527,7 +60574,7 @@ expr_stmt|;
 comment|/* 		 * Both pointers should be aligned.  But it is possible 		 * that the allocation length is not.  They should both 		 * also have enough slack left over at the end, though, 		 * to round up to the next 8 byte boundary. 		 */
 name|cur_len
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|local_sglist
 index|[
@@ -61381,7 +61428,7 @@ decl_stmt|;
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 init|=
 name|control_softc
 decl_stmt|;
@@ -61420,7 +61467,7 @@ argument_list|)
 expr_stmt|;
 name|fe_done
 operator|=
-name|control_softc
+name|softc
 operator|->
 name|ctl_ports
 index|[
@@ -62097,7 +62144,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -62110,7 +62157,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -62278,7 +62325,7 @@ comment|/* 	 * Tell the FETD or the other shelf controller we're done with this 
 if|if
 condition|(
 operator|(
-name|ctl_softc
+name|softc
 operator|->
 name|ha_mode
 operator|==
@@ -62557,14 +62604,14 @@ decl_stmt|;
 name|struct
 name|ctl_softc
 modifier|*
-name|ctl_softc
+name|softc
 decl_stmt|;
 name|uint32_t
 name|initidx
 decl_stmt|,
 name|targ_lun
 decl_stmt|;
-name|ctl_softc
+name|softc
 operator|=
 name|control_softc
 expr_stmt|;
@@ -62579,7 +62626,7 @@ comment|/* 	 * LUN lookup will likely move to the ctl_work_thread() once we 	 * 
 name|mtx_lock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -62599,6 +62646,8 @@ name|targ_lun
 operator|=
 name|ctl_map_lun
 argument_list|(
+name|softc
+argument_list|,
 name|io
 operator|->
 name|io_hdr
@@ -62619,7 +62668,7 @@ name|CTL_MAX_LUNS
 operator|)
 operator|&&
 operator|(
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_luns
 index|[
@@ -62631,7 +62680,7 @@ operator|)
 condition|)
 name|lun
 operator|=
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_luns
 index|[
@@ -62704,7 +62753,7 @@ name|scsiio
 operator|.
 name|sense_data
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -62749,7 +62798,7 @@ label|:
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ctl_softc
+name|softc
 operator|->
 name|ctl_lock
 argument_list|)
@@ -62786,11 +62835,6 @@ modifier|*
 name|io
 parameter_list|)
 block|{
-name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-decl_stmt|;
 name|CTL_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -62806,10 +62850,6 @@ literal|0
 index|]
 operator|)
 argument_list|)
-expr_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -62846,6 +62886,8 @@ name|targ_mapped_lun
 operator|=
 name|ctl_map_lun
 argument_list|(
+name|control_softc
+argument_list|,
 name|io
 operator|->
 name|io_hdr
@@ -62978,15 +63020,6 @@ modifier|*
 name|io
 parameter_list|)
 block|{
-name|struct
-name|ctl_softc
-modifier|*
-name|ctl_softc
-decl_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
-expr_stmt|;
 comment|/* 	 * Enable this to catch duplicate completion issues. 	 */
 if|#
 directive|if

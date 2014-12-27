@@ -2230,7 +2230,13 @@ name|dtrace_trap_func
 call|)
 argument_list|(
 name|frame
+argument_list|,
+name|frame
+operator|->
+name|tf_trapno
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return;
 endif|#

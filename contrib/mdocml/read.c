@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: read.c,v 1.101 2014/11/28 18:09:01 schwarze Exp $ */
+comment|/*	$Id: read.c,v 1.104 2014/12/01 04:14:14 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -136,12 +136,6 @@ begin_include
 include|#
 directive|include
 file|"man.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"main.h"
 end_include
 
 begin_define
@@ -455,6 +449,8 @@ block|,
 comment|/* related to macros and nesting */
 literal|"obsolete macro"
 block|,
+literal|"macro neither callable nor escaped"
+block|,
 literal|"skipping paragraph macro"
 block|,
 literal|"moving paragraph macro out of list"
@@ -501,6 +497,8 @@ block|,
 literal|"missing font type, using \\fR"
 block|,
 literal|"unknown font type, using \\fR"
+block|,
+literal|"nothing follows prefix"
 block|,
 literal|"missing -std argument, adding it"
 block|,
@@ -3057,7 +3055,6 @@ name|mparse
 modifier|*
 name|curp
 parameter_list|,
-specifier|const
 name|void
 modifier|*
 name|buf
@@ -3079,10 +3076,7 @@ name|blk
 operator|.
 name|buf
 operator|=
-name|UNCONST
-argument_list|(
 name|buf
-argument_list|)
 expr_stmt|;
 name|blk
 operator|.

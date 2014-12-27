@@ -136,8 +136,6 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|major_t
-parameter_list|,
 name|uint64_t
 parameter_list|)
 function_decl|;

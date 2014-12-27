@@ -960,7 +960,9 @@ literal|"AHCI controller reset failure\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 comment|/* Reenable AHCI mode */
@@ -1537,7 +1539,9 @@ name|sc_iomem
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 name|ahci_ctlr_setup
@@ -1548,10 +1552,16 @@ expr_stmt|;
 comment|/* Setup interrupts. */
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|ahci_setup_interrupt
 argument_list|(
 name|dev
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|bus_dma_tag_destroy
@@ -1585,7 +1595,9 @@ name|sc_iomem
 argument_list|)
 expr_stmt|;
 return|return
-name|ENXIO
+operator|(
+name|error
+operator|)
 return|;
 block|}
 name|i
@@ -2308,7 +2320,9 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2524,6 +2538,36 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* Ensure we don't overrun irqs. */
+if|if
+condition|(
+name|ctlr
+operator|->
+name|numirqs
+operator|>
+name|AHCI_MAX_IRQS
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Too many irqs %d> %d (clamping)\n"
+argument_list|,
+name|ctlr
+operator|->
+name|numirqs
+argument_list|,
+name|AHCI_MAX_IRQS
+argument_list|)
+expr_stmt|;
+name|ctlr
+operator|->
+name|numirqs
+operator|=
+name|AHCI_MAX_IRQS
+expr_stmt|;
+block|}
 comment|/* Allocate all IRQs. */
 for|for
 control|(
@@ -2717,7 +2761,9 @@ literal|"unable to map interrupt\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 if|if
@@ -2799,7 +2845,9 @@ literal|"unable to setup interrupt\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 if|if
@@ -3625,7 +3673,9 @@ operator|!=
 name|ATA_IRQ_RID
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 return|return
 operator|(

@@ -424,6 +424,44 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_DEBUG
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|nfs_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_nfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfs_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"Toggle debug flag"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|int
@@ -797,12 +835,6 @@ operator|!
 name|defined
 argument_list|(
 name|NFS_ROOT
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NFSCLIENT
 argument_list|)
 end_if
 
@@ -3965,7 +3997,7 @@ name|PSOCK
 argument_list|,
 literal|0
 argument_list|,
-literal|"newnfscon"
+literal|"nfscon"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6397,7 +6429,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 		 * If a change from TCP->UDP is done and there are thread(s) 		 * that have I/O RPC(s) in progress with a tranfer size 		 * greater than NFS_MAXDGRAMDATA, those thread(s) will be 		 * hung, retrying the RPC(s) forever. Usually these threads 		 * will be seen doing an uninterruptible sleep on wait channel 		 * "newnfsreq" (truncated to "newnfsre" by procstat). 		 */
+comment|/* 		 * If a change from TCP->UDP is done and there are thread(s) 		 * that have I/O RPC(s) in progress with a tranfer size 		 * greater than NFS_MAXDGRAMDATA, those thread(s) will be 		 * hung, retrying the RPC(s) forever. Usually these threads 		 * will be seen doing an uninterruptible sleep on wait channel 		 * "nfsreq". 		 */
 if|if
 condition|(
 name|args

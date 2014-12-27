@@ -306,7 +306,10 @@ struct|struct
 name|fxp_ident
 block|{
 name|uint16_t
-name|devid
+name|vendor
+decl_stmt|;
+name|uint16_t
+name|device
 decl_stmt|;
 name|int16_t
 name|revid

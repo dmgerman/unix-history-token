@@ -2472,6 +2472,13 @@ name|VN_OPEN_NOCAPCHECK
 value|0x00000002
 end_define
 
+begin_define
+define|#
+directive|define
+name|VN_OPEN_NAMECACHE
+value|0x00000004
+end_define
+
 begin_comment
 comment|/*  * Public vnode manipulation functions.  */
 end_comment

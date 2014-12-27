@@ -1512,7 +1512,9 @@ operator|++
 control|)
 block|{
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -1718,7 +1720,9 @@ literal|0
 condition|)
 block|{
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -2014,7 +2018,9 @@ name|ext_attr_length
 argument_list|)
 expr_stmt|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -2310,7 +2316,9 @@ name|ISO_DEFAULT_BLOCK_SIZE
 argument_list|)
 expr_stmt|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|16
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=

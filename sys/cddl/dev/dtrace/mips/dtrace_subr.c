@@ -441,23 +441,11 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
-parameter_list|)
-block|{
+parameter_list|,
 name|u_int
 name|type
-decl_stmt|;
-name|type
-operator|=
-operator|(
-name|trapframe
-operator|->
-name|cause
-operator|&
-name|MIPS_CR_EXC_CODE
-operator|)
-operator|>>
-name|MIPS_CR_EXC_CODE_SHIFT
-expr_stmt|;
+parameter_list|)
+block|{
 comment|/* 	 * A trap can occur while DTrace executes a probe. Before 	 * executing the probe, DTrace blocks re-scheduling and sets 	 * a flag in its per-cpu flags to indicate that it doesn't 	 * want to fault. On returning from the probe, the no-fault 	 * flag is cleared and finally re-scheduling is enabled. 	 * 	 * Check if DTrace has enabled 'no-fault' mode: 	 */
 if|if
 condition|(

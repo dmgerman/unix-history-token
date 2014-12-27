@@ -201,15 +201,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|ctl_softc
-modifier|*
-name|control_softc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|tpcl_softc
@@ -1368,6 +1359,11 @@ begin_function
 name|uint64_t
 name|tpcl_resolve
 parameter_list|(
+name|struct
+name|ctl_softc
+modifier|*
+name|softc
+parameter_list|,
 name|int
 name|init_port
 parameter_list|,
@@ -1381,13 +1377,6 @@ modifier|*
 name|ss
 parameter_list|)
 block|{
-name|struct
-name|ctl_softc
-modifier|*
-name|softc
-init|=
-name|control_softc
-decl_stmt|;
 name|struct
 name|scsi_ec_cscd_id
 modifier|*

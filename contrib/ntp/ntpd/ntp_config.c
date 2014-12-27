@@ -8263,7 +8263,7 @@ call|(
 name|char
 call|)
 argument_list|(
-name|ntp_random
+name|arc4random
 argument_list|()
 operator|&
 literal|0xff

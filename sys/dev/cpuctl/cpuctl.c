@@ -211,7 +211,7 @@ begin_define
 define|#
 directive|define
 name|UCODE_SIZE_MAX
-value|(16 * 1024)
+value|(32 * 1024)
 end_define
 
 begin_function_decl

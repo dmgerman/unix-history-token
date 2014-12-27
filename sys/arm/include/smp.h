@@ -160,7 +160,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pic_ipi_get
+name|pic_ipi_read
 parameter_list|(
 name|int
 name|arg

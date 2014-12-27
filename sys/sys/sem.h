@@ -159,7 +159,7 @@ name|sem_ctime
 decl_stmt|;
 comment|/* last change time */
 comment|/* Times measured in secs since */
-comment|/* 00:00:00 GMT, Jan. 1, 1970 */
+comment|/* 00:00:00 UTC, Jan. 1, 1970, without leap seconds */
 name|long
 name|sem_pad2
 decl_stmt|;
@@ -209,7 +209,7 @@ name|sem_ctime
 decl_stmt|;
 comment|/* last change time */
 comment|/* Times measured in secs since */
-comment|/* 00:00:00 GMT, Jan. 1, 1970 */
+comment|/* 00:00:00 UTC, Jan. 1, 1970, without leap seconds */
 block|}
 struct|;
 end_struct

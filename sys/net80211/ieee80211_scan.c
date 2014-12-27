@@ -3116,6 +3116,55 @@ name|ss
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: called; F_SCAN=%d, vap=%s, CANCEL=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+operator|!
+operator|!
+operator|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_SCAN
+operator|)
+argument_list|,
+operator|(
+name|ss
+operator|->
+name|ss_vap
+operator|==
+name|vap
+condition|?
+literal|"match"
+else|:
+literal|"nomatch"
+operator|)
+argument_list|,
+operator|!
+operator|!
+operator|(
+name|SCAN_PRIVATE
+argument_list|(
+name|ss
+argument_list|)
+operator|->
+name|ss_iflags
+operator|&
+name|ISCAN_CANCEL
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|IEEE80211_UNLOCK
 argument_list|(
 name|ic
@@ -3230,6 +3279,55 @@ name|ss
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: called; F_SCAN=%d, vap=%s, CANCEL=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+operator|!
+operator|!
+operator|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_SCAN
+operator|)
+argument_list|,
+operator|(
+name|ss
+operator|->
+name|ss_vap
+operator|==
+name|vap
+condition|?
+literal|"match"
+else|:
+literal|"nomatch"
+operator|)
+argument_list|,
+operator|!
+operator|!
+operator|(
+name|SCAN_PRIVATE
+argument_list|(
+name|ss
+argument_list|)
+operator|->
+name|ss_iflags
+operator|&
+name|ISCAN_CANCEL
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|IEEE80211_UNLOCK
 argument_list|(
 name|ic
@@ -3270,6 +3368,17 @@ name|ic
 operator|->
 name|ic_scan
 decl_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* wake up the scan task */
 name|IEEE80211_LOCK
 argument_list|(
@@ -3317,6 +3426,17 @@ name|ieee80211_scan_state
 modifier|*
 name|ss
 decl_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|IEEE80211_LOCK
 argument_list|(
 name|ic
@@ -3540,6 +3660,19 @@ name|ss
 operator|->
 name|ss_vap
 decl_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: calling; maxdwell=%lu\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|maxdwell
+argument_list|)
+expr_stmt|;
 name|IEEE80211_LOCK
 argument_list|(
 name|vap
@@ -3656,6 +3789,19 @@ name|ss
 operator|->
 name|ss_ic
 decl_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|ss
+operator|->
+name|ss_vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|IEEE80211_LOCK
 argument_list|(
 name|ic
@@ -3893,6 +4039,7 @@ argument_list|)
 operator|->
 name|ss_duration
 expr_stmt|;
+comment|/* XXX scan state can change! Re-validate scan state! */
 name|IEEE80211_UNLOCK
 argument_list|(
 name|ic
@@ -3941,6 +4088,19 @@ name|ISCAN_CANCEL
 operator|)
 operator|!=
 literal|0
+expr_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: loop start; scandone=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|scandone
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4138,6 +4298,7 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+comment|/* XXX scan state can change! Re-validate scan state! */
 name|SCAN_PRIVATE
 argument_list|(
 name|ss
@@ -4180,6 +4341,17 @@ operator|)
 operator|)
 condition|)
 continue|continue;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: waiting\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Wait to be signalled to scan the next channel */
 name|cv_wait
 argument_list|(
@@ -4198,6 +4370,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SCAN
+argument_list|,
+literal|"%s: out\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SCAN_PRIVATE
@@ -4230,6 +4413,7 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+comment|/* XXX scan state can change! Re-validate scan state! */
 comment|/* 	 * Since a cancellation may have occured during one of the 	 * driver calls (whilst unlocked), update scandone. 	 */
 if|if
 condition|(
@@ -4260,29 +4444,16 @@ name|vap
 operator|->
 name|iv_ifp
 argument_list|,
-literal|"%s: OOPS! scan cancelled during driver call!\n"
+literal|"%s: OOPS! scan cancelled during driver call (1)!\n"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-block|}
 name|scandone
-operator||=
-operator|(
-operator|(
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
-operator|->
-name|ss_iflags
-operator|&
-name|ISCAN_CANCEL
-operator|)
-operator|!=
-literal|0
-operator|)
+operator|=
+literal|1
 expr_stmt|;
+block|}
 comment|/* 	 * Record scan complete time.  Note that we also do 	 * this when canceled so any background scan will 	 * not be restarted for a while. 	 */
 if|if
 condition|(
@@ -4536,6 +4707,46 @@ argument_list|,
 name|scanend
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Since a cancellation may have occured during one of the 	 * driver calls (whilst unlocked), update scandone. 	 */
+if|if
+condition|(
+name|scandone
+operator|==
+literal|0
+operator|&&
+operator|(
+operator|(
+name|SCAN_PRIVATE
+argument_list|(
+name|ss
+argument_list|)
+operator|->
+name|ss_iflags
+operator|&
+name|ISCAN_CANCEL
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* XXX printf? */
+name|if_printf
+argument_list|(
+name|vap
+operator|->
+name|iv_ifp
+argument_list|,
+literal|"%s: OOPS! scan cancelled during driver call (2)!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|scandone
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* 	 * Clear the SCAN bit first in case frames are 	 * pending on the station power save queue.  If 	 * we defer this then the dispatch of the frames 	 * may generate a request to cancel scanning. 	 */
 name|done
 label|:

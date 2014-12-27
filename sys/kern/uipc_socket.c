@@ -5762,15 +5762,9 @@ operator||=
 name|M_EOR
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|resid
-operator|>
-literal|0
-condition|)
+else|else
 block|{
-comment|/* 				 * Copy the data from userland into a mbuf 				 * chain.  If no data is to be copied in, 				 * a single empty mbuf is returned. 				 */
+comment|/* 				 * Copy the data from userland into a mbuf 				 * chain.  If resid is 0, which can happen 				 * only if we have control to send, then 				 * a single empty mbuf is returned.  This 				 * is a workaround to prevent protocol send 				 * methods to panic. 				 */
 name|top
 operator|=
 name|m_uiotombuf

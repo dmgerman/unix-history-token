@@ -23,11 +23,11 @@ directive|else
 end_else
 
 begin_comment
-comment|/*	$Id: compat_fts.c,v 1.4 2014/08/17 20:45:59 schwarze Exp $	*/
+comment|/*	$Id: compat_fts.c,v 1.6 2014/12/11 18:20:07 schwarze Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: fts.c,v 1.46 2014/05/25 17:47:04 tedu Exp $	*/
+comment|/*	$OpenBSD: fts.c,v 1.49 2014/11/23 00:14:22 guenther Exp $	*/
 end_comment
 
 begin_comment
@@ -239,6 +239,36 @@ name|a
 parameter_list|)
 value|(a[0] == '.'&& (!a[1] || (a[1] == '.'&& !a[2])))
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)>(b))?(a):(b))
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_DIRECTORY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_DIRECTORY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -624,8 +654,8 @@ argument_list|(
 literal|"."
 argument_list|,
 name|O_RDONLY
-argument_list|,
-literal|0
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|<
@@ -1648,10 +1678,6 @@ name|descend
 decl_stmt|,
 name|level
 decl_stmt|,
-name|nlinks
-decl_stmt|,
-name|nostat
-decl_stmt|,
 name|doadjust
 decl_stmt|;
 name|int
@@ -1703,16 +1729,6 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 * Nlinks is the number of possible entries of type directory in the 	 * directory if we're cheating on stat calls, 0 if we're not doing 	 * any stat calls at all, -1 if we're doing stats on everything. 	 */
-name|nlinks
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|nostat
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * If we're going to need to stat anything or we want to descend 	 * and stay in the directory, chdir.  If this fails we keep going, 	 * but set a flag so we don't chdir after the post-order visit. 	 * We won't be able to stat anything, but we can still return the 	 * names themselves.  Note, that since fts_read won't be able to 	 * chdir into the directory, it will have to return different path 	 * names than before, i.e. "a/b" instead of "b".  Since the node 	 * has already been visited in pre-order, have to wait until the 	 * post-order visit to return the error.  There is a special case 	 * here, if there was nothing to stat then it's not an error to 	 * not be able to stat.  This is all fairly nasty.  If a program 	 * needed sorted entries or stat information, they had better be 	 * checking FTS_NS on the returned nodes. 	 */
 name|cderrno
 operator|=
@@ -1735,10 +1751,6 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|nlinks
-condition|)
 name|cur
 operator|->
 name|fts_errno
@@ -2111,11 +2123,6 @@ condition|(
 name|cderrno
 condition|)
 block|{
-if|if
-condition|(
-name|nlinks
-condition|)
-block|{
 name|p
 operator|->
 name|fts_info
@@ -2128,14 +2135,6 @@ name|fts_errno
 operator|=
 name|cderrno
 expr_stmt|;
-block|}
-else|else
-name|p
-operator|->
-name|fts_info
-operator|=
-name|FTS_NSOK
-expr_stmt|;
 name|p
 operator|->
 name|fts_accpath
@@ -2143,59 +2142,6 @@ operator|=
 name|cur
 operator|->
 name|fts_accpath
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|nlinks
-operator|==
-literal|0
-ifdef|#
-directive|ifdef
-name|DT_DIR
-operator|||
-operator|(
-name|nostat
-operator|&&
-name|dp
-operator|->
-name|d_type
-operator|!=
-name|DT_DIR
-operator|&&
-name|dp
-operator|->
-name|d_type
-operator|!=
-name|DT_UNKNOWN
-operator|)
-endif|#
-directive|endif
-condition|)
-block|{
-name|p
-operator|->
-name|fts_accpath
-operator|=
-name|ISSET
-argument_list|(
-name|FTS_NOCHDIR
-argument_list|)
-condition|?
-name|p
-operator|->
-name|fts_path
-else|:
-name|p
-operator|->
-name|fts_name
-expr_stmt|;
-name|p
-operator|->
-name|fts_info
-operator|=
-name|FTS_NSOK
 expr_stmt|;
 block|}
 else|else
@@ -2253,36 +2199,6 @@ name|sp
 argument_list|,
 name|p
 argument_list|)
-expr_stmt|;
-comment|/* Decrement link count if applicable. */
-if|if
-condition|(
-name|nlinks
-operator|>
-literal|0
-operator|&&
-operator|(
-name|p
-operator|->
-name|fts_info
-operator|==
-name|FTS_D
-operator|||
-name|p
-operator|->
-name|fts_info
-operator|==
-name|FTS_DC
-operator|||
-name|p
-operator|->
-name|fts_info
-operator|==
-name|FTS_DOT
-operator|)
-condition|)
-operator|--
-name|nlinks
 expr_stmt|;
 block|}
 comment|/* We walk in directory order so "ls -f" doesn't get upset. */
@@ -3196,8 +3112,10 @@ argument_list|(
 name|path
 argument_list|,
 name|O_RDONLY
-argument_list|,
-literal|0
+operator||
+name|O_DIRECTORY
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|<

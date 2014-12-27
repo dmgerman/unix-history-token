@@ -1,33 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term.h,v 1.105 2014/10/28 17:36:19 schwarze Exp $ */
+comment|/*	$Id: term.h,v 1.108 2014/12/02 10:08:06 schwarze Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012, 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TERM_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TERM_H
-end_define
-
-begin_macro
-name|__BEGIN_DECLS
-end_macro
-
-begin_struct_decl
-struct_decl|struct
-name|termp
-struct_decl|;
-end_struct_decl
 
 begin_enum
 enum|enum
@@ -84,6 +62,12 @@ end_define
 begin_comment
 comment|/* FIXME */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|termp
+struct_decl|;
+end_struct_decl
 
 begin_typedef
 typedef|typedef
@@ -261,6 +245,11 @@ directive|define
 name|TERMP_SPLIT
 value|(1<< 13)
 comment|/* Break line before .An. */
+define|#
+directive|define
+name|TERMP_NONEWLINE
+value|(1<< 14)
+comment|/* No line break in nofill mode. */
 name|int
 modifier|*
 name|buf
@@ -422,6 +411,22 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_macro
+name|__BEGIN_DECLS
+end_macro
+
+begin_struct_decl
+struct_decl|struct
+name|tbl_span
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|eqn
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 specifier|const
@@ -727,15 +732,6 @@ end_function_decl
 begin_macro
 name|__END_DECLS
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!TERM_H*/
-end_comment
 
 end_unit
 

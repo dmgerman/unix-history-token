@@ -3358,6 +3358,11 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+while|while
+condition|(
+name|m
+condition|)
+block|{
 name|m
 operator|->
 name|m_flags
@@ -3365,6 +3370,13 @@ operator|&=
 operator|~
 name|M_PROTOFLAGS
 expr_stmt|;
+name|m
+operator|=
+name|m
+operator|->
+name|m_next
+expr_stmt|;
+block|}
 block|}
 end_function
 

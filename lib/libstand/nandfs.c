@@ -4719,7 +4719,9 @@ operator|)
 return|;
 block|}
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|NANDFS_DEBUG
 argument_list|(

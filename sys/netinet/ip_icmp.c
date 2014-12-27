@@ -4279,7 +4279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return milliseconds since 00:00 GMT in network format.  */
+comment|/*  * Return milliseconds since 00:00 UTC in network format.  */
 end_comment
 
 begin_function

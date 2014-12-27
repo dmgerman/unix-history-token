@@ -79,17 +79,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXP_REDIR
-value|0x8
-end_define
-
-begin_comment
-comment|/* file glob for a redirection (1 match only) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|EXP_CASE
 value|0x10
 end_define

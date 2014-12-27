@@ -25,111 +25,25 @@ directive|include
 file|<machine/fp.h>
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|trapframe
-struct_decl|;
-end_struct_decl
-
-begin_struct
-struct|struct
-name|pcb_arm32
-block|{
-name|vm_offset_t
-name|pcb32_pagedir
-decl_stmt|;
-comment|/* PT hooks */
-name|uint32_t
-modifier|*
-name|pcb32_pl1vec
-decl_stmt|;
-comment|/* PTR to vector_base L1 entry*/
-name|uint32_t
-name|pcb32_l1vec
-decl_stmt|;
-comment|/* Value to stuff on ctx sw */
-name|u_int
-name|pcb32_dacr
-decl_stmt|;
-comment|/* Domain Access Control Reg */
-comment|/* 	 * WARNING! 	 * cpuswitch.S relies on pcb32_r8 being quad-aligned in struct pcb 	 * (due to the use of "strd" when compiled for XSCALE) 	 */
-name|u_int
-name|pcb32_r8
-decl_stmt|;
-comment|/* used */
-name|u_int
-name|pcb32_r9
-decl_stmt|;
-comment|/* used */
-name|u_int
-name|pcb32_r10
-decl_stmt|;
-comment|/* used */
-name|u_int
-name|pcb32_r11
-decl_stmt|;
-comment|/* used */
-name|u_int
-name|pcb32_r12
-decl_stmt|;
-comment|/* used */
-name|u_int
-name|pcb32_sp
-decl_stmt|;
-comment|/* used */
-name|u_int
-name|pcb32_lr
-decl_stmt|;
-name|u_int
-name|pcb32_pc
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|pcb_pagedir
-value|un_32.pcb32_pagedir
-end_define
-
-begin_define
-define|#
-directive|define
-name|pcb_pl1vec
-value|un_32.pcb32_pl1vec
-end_define
-
-begin_define
-define|#
-directive|define
-name|pcb_l1vec
-value|un_32.pcb32_l1vec
-end_define
-
-begin_define
-define|#
-directive|define
-name|pcb_dacr
-value|un_32.pcb32_dacr
-end_define
-
-begin_define
-define|#
-directive|define
-name|pcb_cstate
-value|un_32.pcb32_cstate
-end_define
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
+end_include
 
 begin_comment
-comment|/*  * WARNING!  * See warning for struct pcb_arm32, above, before changing struct pcb!  */
+comment|/*  * WARNING!  * Keep pcb_regs first for faster access in switch.S  */
 end_comment
 
 begin_struct
 struct|struct
 name|pcb
 block|{
+name|struct
+name|switchframe
+name|pcb_regs
+decl_stmt|;
+comment|/* CPU state */
 name|u_int
 name|pcb_flags
 decl_stmt|;
@@ -145,10 +59,23 @@ name|caddr_t
 name|pcb_onfault
 decl_stmt|;
 comment|/* On fault handler */
-name|struct
-name|pcb_arm32
-name|un_32
+name|vm_offset_t
+name|pcb_pagedir
 decl_stmt|;
+comment|/* PT hooks */
+name|uint32_t
+modifier|*
+name|pcb_pl1vec
+decl_stmt|;
+comment|/* PTR to vector_base L1 entry*/
+name|uint32_t
+name|pcb_l1vec
+decl_stmt|;
+comment|/* Value to stuff on ctx sw */
+name|u_int
+name|pcb_dacr
+decl_stmt|;
+comment|/* Domain Access Control Reg */
 name|struct
 name|vfp_state
 name|pcb_vfpstate
@@ -167,7 +94,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  		 * We need the PCB to be aligned on 8 bytes, as we may 		 * access it using ldrd/strd, and some CPUs require it 		 * to by aligned on 8 bytes. 		 */
+comment|/*  		 * We need the PCB to be aligned on 8 bytes, as we may 		 * access it using ldrd/strd, and ARM ABI require it 		 * to by aligned on 8 bytes. 		 */
 end_comment
 
 begin_comment

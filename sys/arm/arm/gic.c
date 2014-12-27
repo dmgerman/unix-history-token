@@ -520,6 +520,9 @@ begin_struct
 struct|struct
 name|arm_gic_softc
 block|{
+name|device_t
+name|gic_dev
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -542,9 +545,6 @@ name|gic_d_bsh
 decl_stmt|;
 name|uint8_t
 name|ver
-decl_stmt|;
-name|device_t
-name|dev
 decl_stmt|;
 name|struct
 name|mtx
@@ -609,10 +609,12 @@ define|#
 directive|define
 name|gic_c_read_4
 parameter_list|(
-name|reg
+name|_sc
+parameter_list|,
+name|_reg
 parameter_list|)
 define|\
-value|bus_space_read_4(arm_gic_sc->gic_c_bst, arm_gic_sc->gic_c_bsh, reg)
+value|bus_space_read_4((_sc)->gic_c_bst, (_sc)->gic_c_bsh, (_reg))
 end_define
 
 begin_define
@@ -620,12 +622,14 @@ define|#
 directive|define
 name|gic_c_write_4
 parameter_list|(
-name|reg
+name|_sc
 parameter_list|,
-name|val
+name|_reg
+parameter_list|,
+name|_val
 parameter_list|)
 define|\
-value|bus_space_write_4(arm_gic_sc->gic_c_bst, arm_gic_sc->gic_c_bsh, reg, val)
+value|bus_space_write_4((_sc)->gic_c_bst, (_sc)->gic_c_bsh, (_reg), (_val))
 end_define
 
 begin_define
@@ -633,10 +637,12 @@ define|#
 directive|define
 name|gic_d_read_4
 parameter_list|(
-name|reg
+name|_sc
+parameter_list|,
+name|_reg
 parameter_list|)
 define|\
-value|bus_space_read_4(arm_gic_sc->gic_d_bst, arm_gic_sc->gic_d_bsh, reg)
+value|bus_space_read_4((_sc)->gic_d_bst, (_sc)->gic_d_bsh, (_reg))
 end_define
 
 begin_define
@@ -644,12 +650,14 @@ define|#
 directive|define
 name|gic_d_write_4
 parameter_list|(
-name|reg
+name|_sc
 parameter_list|,
-name|val
+name|_reg
+parameter_list|,
+name|_val
 parameter_list|)
 define|\
-value|bus_space_write_4(arm_gic_sc->gic_d_bst, arm_gic_sc->gic_d_bsh, reg, val)
+value|bus_space_write_4((_sc)->gic_d_bst, (_sc)->gic_d_bsh, (_reg), (_val))
 end_define
 
 begin_function_decl
@@ -803,33 +811,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|arm_gic_softc
+modifier|*
+name|sc
+init|=
+name|arm_gic_sc
+decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|nirqs
 decl_stmt|;
-comment|/* Get the number of interrupts */
-name|nirqs
-operator|=
-name|gic_d_read_4
-argument_list|(
-name|GICD_TYPER
-argument_list|)
-expr_stmt|;
-name|nirqs
-operator|=
-literal|32
-operator|*
-operator|(
-operator|(
-name|nirqs
-operator|&
-literal|0x1f
-operator|)
-operator|+
-literal|1
-operator|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -838,6 +829,8 @@ literal|0
 init|;
 name|i
 operator|<
+name|sc
+operator|->
 name|nirqs
 condition|;
 name|i
@@ -846,6 +839,8 @@ literal|4
 control|)
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_IPRIORITYR
 argument_list|(
 name|i
@@ -865,6 +860,8 @@ literal|0
 init|;
 name|i
 operator|<
+name|sc
+operator|->
 name|nirqs
 condition|;
 name|i
@@ -874,6 +871,8 @@ control|)
 block|{
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_IGROUPR
 argument_list|(
 name|i
@@ -888,6 +887,8 @@ block|}
 comment|/* Enable CPU interface */
 name|gic_c_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICC_CTLR
 argument_list|,
 literal|1
@@ -896,6 +897,8 @@ expr_stmt|;
 comment|/* Set priority mask register. */
 name|gic_c_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICC_PMR
 argument_list|,
 literal|0xff
@@ -904,6 +907,8 @@ expr_stmt|;
 comment|/* Enable interrupt distribution */
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_CTLR
 argument_list|,
 literal|0x01
@@ -912,6 +917,8 @@ expr_stmt|;
 comment|/* 	 * Activate the timer interrupts: virtual, secure, and non-secure. 	 */
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_ISENABLER
 argument_list|(
 literal|27
@@ -932,6 +939,8 @@ argument_list|)
 expr_stmt|;
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_ISENABLER
 argument_list|(
 literal|29
@@ -952,6 +961,8 @@ argument_list|)
 expr_stmt|;
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_ISENABLER
 argument_list|(
 literal|30
@@ -1205,12 +1216,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|dev
-operator|=
-name|dev
-expr_stmt|;
 if|if
 condition|(
 name|bus_alloc_resources
@@ -1238,6 +1243,16 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|sc
+operator|->
+name|gic_dev
+operator|=
+name|dev
+expr_stmt|;
+name|arm_gic_sc
+operator|=
+name|sc
+expr_stmt|;
 comment|/* Initialize mutex */
 name|mtx_init
 argument_list|(
@@ -1311,13 +1326,11 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|arm_gic_sc
-operator|=
-name|sc
-expr_stmt|;
 comment|/* Disable interrupt forwarding to the CPU interface */
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_CTLR
 argument_list|,
 literal|0x00
@@ -1330,6 +1343,8 @@ name|nirqs
 operator|=
 name|gic_d_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_TYPER
 argument_list|)
 expr_stmt|;
@@ -1364,6 +1379,8 @@ name|icciidr
 operator|=
 name|gic_c_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICC_IIDR
 argument_list|)
 expr_stmt|;
@@ -1424,6 +1441,8 @@ control|)
 block|{
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_ICFGR
 argument_list|(
 name|i
@@ -1455,6 +1474,8 @@ control|)
 block|{
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_ICENABLER
 argument_list|(
 name|i
@@ -1485,6 +1506,8 @@ control|)
 block|{
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_IPRIORITYR
 argument_list|(
 name|i
@@ -1497,6 +1520,8 @@ argument_list|)
 expr_stmt|;
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_ITARGETSR
 argument_list|(
 name|i
@@ -1542,6 +1567,8 @@ control|)
 block|{
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_IGROUPR
 argument_list|(
 name|i
@@ -1556,6 +1583,8 @@ block|}
 comment|/* Enable CPU interface */
 name|gic_c_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICC_CTLR
 argument_list|,
 literal|1
@@ -1564,6 +1593,8 @@ expr_stmt|;
 comment|/* Set priority mask register. */
 name|gic_c_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICC_PMR
 argument_list|,
 literal|0xff
@@ -1572,6 +1603,8 @@ expr_stmt|;
 comment|/* Enable interrupt distribution */
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_CTLR
 argument_list|,
 literal|0x01
@@ -1585,106 +1618,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|device_method_t
-name|arm_gic_methods
-index|[]
-init|=
-block|{
-name|DEVMETHOD
-argument_list|(
-name|device_probe
-argument_list|,
-name|arm_gic_probe
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_attach
-argument_list|,
-name|arm_gic_attach
-argument_list|)
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|driver_t
-name|arm_gic_driver
-init|=
-block|{
-literal|"gic"
-block|,
-name|arm_gic_methods
-block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|arm_gic_softc
-argument_list|)
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|arm_gic_devclass
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|EARLY_DRIVER_MODULE
-argument_list|(
-name|gic
-argument_list|,
-name|simplebus
-argument_list|,
-name|arm_gic_driver
-argument_list|,
-name|arm_gic_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|BUS_PASS_INTERRUPT
-operator|+
-name|BUS_PASS_ORDER_MIDDLE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|EARLY_DRIVER_MODULE
-argument_list|(
-name|gic
-argument_list|,
-name|ofwbus
-argument_list|,
-name|arm_gic_driver
-argument_list|,
-name|arm_gic_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|BUS_PASS_INTERRUPT
-operator|+
-name|BUS_PASS_ORDER_MIDDLE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
 name|void
@@ -1695,6 +1628,13 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|struct
+name|arm_gic_softc
+modifier|*
+name|sc
+init|=
+name|arm_gic_sc
+decl_stmt|;
 name|uintptr_t
 name|irq
 init|=
@@ -1716,6 +1656,8 @@ argument_list|)
 expr_stmt|;
 name|gic_c_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICC_EOIR
 argument_list|,
 name|irq
@@ -1732,6 +1674,13 @@ name|int
 name|last_irq
 parameter_list|)
 block|{
+name|struct
+name|arm_gic_softc
+modifier|*
+name|sc
+init|=
+name|arm_gic_sc
+decl_stmt|;
 name|uint32_t
 name|active_irq
 decl_stmt|;
@@ -1739,6 +1688,8 @@ name|active_irq
 operator|=
 name|gic_c_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICC_IAR
 argument_list|)
 expr_stmt|;
@@ -1755,6 +1706,8 @@ name|GIC_LAST_IPI
 condition|)
 name|gic_c_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICC_EOIR
 argument_list|,
 name|active_irq
@@ -1802,8 +1755,17 @@ name|uintptr_t
 name|nb
 parameter_list|)
 block|{
+name|struct
+name|arm_gic_softc
+modifier|*
+name|sc
+init|=
+name|arm_gic_sc
+decl_stmt|;
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_ICENABLER
 argument_list|(
 name|nb
@@ -1824,6 +1786,8 @@ argument_list|)
 expr_stmt|;
 name|gic_c_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICC_EOIR
 argument_list|,
 name|nb
@@ -1840,6 +1804,13 @@ name|uintptr_t
 name|nb
 parameter_list|)
 block|{
+name|struct
+name|arm_gic_softc
+modifier|*
+name|sc
+init|=
+name|arm_gic_sc
+decl_stmt|;
 if|if
 condition|(
 name|nb
@@ -1853,6 +1824,8 @@ argument_list|)
 expr_stmt|;
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_ISENABLER
 argument_list|(
 name|nb
@@ -1891,6 +1864,20 @@ name|intr_polarity
 name|pol
 parameter_list|)
 block|{
+name|struct
+name|arm_gic_softc
+modifier|*
+name|sc
+init|=
+name|arm_gic_sc
+decl_stmt|;
+name|device_t
+name|dev
+init|=
+name|sc
+operator|->
+name|gic_dev
+decl_stmt|;
 name|uint32_t
 name|reg
 decl_stmt|;
@@ -1909,7 +1896,7 @@ operator|||
 operator|(
 name|irq
 operator|>=
-name|arm_gic_sc
+name|sc
 operator|->
 name|nirqs
 operator|)
@@ -1966,7 +1953,7 @@ goto|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|arm_gic_sc
+name|sc
 operator|->
 name|mutex
 argument_list|)
@@ -1975,6 +1962,8 @@ name|reg
 operator|=
 name|gic_d_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_ICFGR
 argument_list|(
 name|irq
@@ -2105,6 +2094,8 @@ operator|)
 expr_stmt|;
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_ICFGR
 argument_list|(
 name|irq
@@ -2118,7 +2109,7 @@ expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|arm_gic_sc
+name|sc
 operator|->
 name|mutex
 argument_list|)
@@ -2132,8 +2123,6 @@ name|invalid_args
 label|:
 name|device_printf
 argument_list|(
-name|arm_gic_sc
-operator|->
 name|dev
 argument_list|,
 literal|"gic_config_irg, invalid parameters\n"
@@ -2164,6 +2153,13 @@ name|u_int
 name|ipi
 parameter_list|)
 block|{
+name|struct
+name|arm_gic_softc
+modifier|*
+name|sc
+init|=
+name|arm_gic_sc
+decl_stmt|;
 name|uint32_t
 name|val
 init|=
@@ -2206,6 +2202,8 @@ operator|)
 expr_stmt|;
 name|gic_d_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|GICD_SGIR
 argument_list|(
 literal|0
@@ -2221,7 +2219,7 @@ end_function
 
 begin_function
 name|int
-name|pic_ipi_get
+name|pic_ipi_read
 parameter_list|(
 name|int
 name|i
@@ -2279,6 +2277,107 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|device_method_t
+name|arm_gic_methods
+index|[]
+init|=
+block|{
+comment|/* Device interface */
+name|DEVMETHOD
+argument_list|(
+name|device_probe
+argument_list|,
+name|arm_gic_probe
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_attach
+argument_list|,
+name|arm_gic_attach
+argument_list|)
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|driver_t
+name|arm_gic_driver
+init|=
+block|{
+literal|"gic"
+block|,
+name|arm_gic_methods
+block|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|arm_gic_softc
+argument_list|)
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|devclass_t
+name|arm_gic_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|EARLY_DRIVER_MODULE
+argument_list|(
+name|gic
+argument_list|,
+name|simplebus
+argument_list|,
+name|arm_gic_driver
+argument_list|,
+name|arm_gic_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|BUS_PASS_INTERRUPT
+operator|+
+name|BUS_PASS_ORDER_MIDDLE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|EARLY_DRIVER_MODULE
+argument_list|(
+name|gic
+argument_list|,
+name|ofwbus
+argument_list|,
+name|arm_gic_driver
+argument_list|,
+name|arm_gic_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|BUS_PASS_INTERRUPT
+operator|+
+name|BUS_PASS_ORDER_MIDDLE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

@@ -4153,28 +4153,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Add a newline to the fmt string */
-if|if
-condition|(
-operator|!
-operator|(
-name|xop
-operator|->
-name|xo_flags
-operator|&
-name|XOF_WARN_XML
-operator|)
-condition|)
-name|newfmt
-index|[
-name|len
-operator|++
-operator|+
-name|plen
-index|]
-operator|=
-literal|'\n'
-expr_stmt|;
 name|newfmt
 index|[
 name|len
@@ -4493,6 +4471,18 @@ argument_list|,
 name|newfmt
 argument_list|,
 name|vap
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|": %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|code
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
