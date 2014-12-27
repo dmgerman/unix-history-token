@@ -191,7 +191,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|NFSCLIENT
+name|NFSCL
 argument_list|)
 end_if
 
