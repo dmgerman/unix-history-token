@@ -459,7 +459,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|PROP_DEBUG
 end_ifdef
 
 begin_function
