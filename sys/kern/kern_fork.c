@@ -1390,6 +1390,8 @@ if|if
 condition|(
 name|thread_single
 argument_list|(
+name|p1
+argument_list|,
 name|SINGLE_BOUNDARY
 argument_list|)
 condition|)
@@ -1518,7 +1520,11 @@ name|p1
 argument_list|)
 expr_stmt|;
 name|thread_single_end
-argument_list|()
+argument_list|(
+name|p1
+argument_list|,
+name|SINGLE_BOUNDARY
+argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
@@ -1666,6 +1672,9 @@ name|p2
 argument_list|,
 name|p_list
 argument_list|)
+expr_stmt|;
+name|allproc_gen
+operator|++
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(

@@ -5699,6 +5699,16 @@ name|P_SHOULDSTOP
 argument_list|(
 name|p
 argument_list|)
+operator|||
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_TOTAL_STOP
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|thread_suspend_check

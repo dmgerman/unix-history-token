@@ -767,6 +767,8 @@ condition|(
 operator|!
 name|thread_single
 argument_list|(
+name|p
+argument_list|,
 name|SINGLE_EXIT
 argument_list|)
 condition|)
