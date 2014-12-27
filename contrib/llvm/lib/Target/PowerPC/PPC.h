@@ -316,6 +316,20 @@ init|=
 literal|8
 operator|<<
 literal|4
+block|,
+comment|// Symbols for VK_PPC_TLSGD and VK_PPC_TLSLD in __tls_get_addr
+comment|// call sequences.
+name|MO_TLSLD
+init|=
+literal|9
+operator|<<
+literal|4
+block|,
+name|MO_TLSGD
+init|=
+literal|10
+operator|<<
+literal|4
 block|}
 enum|;
 block|}

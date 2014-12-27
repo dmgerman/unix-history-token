@@ -206,6 +206,12 @@ name|CALL
 block|,
 name|CALL_NOP
 block|,
+comment|/// CALL_TLS and CALL_NOP_TLS - Versions of CALL and CALL_NOP used
+comment|/// to access TLS variables.
+name|CALL_TLS
+block|,
+name|CALL_NOP_TLS
+block|,
 comment|/// CHAIN,FLAG = MTCTR(VAL, CHAIN[, INFLAG]) - Directly corresponds to a
 comment|/// MTCTR instruction.
 name|MTCTR
@@ -326,10 +332,6 @@ comment|/// model, produces an ADDI8 instruction that adds G8RReg to
 comment|/// sym\@got\@tlsgd\@l.
 name|ADDI_TLSGD_L
 block|,
-comment|/// G8RC = GET_TLS_ADDR %X3, Symbol - For the general-dynamic TLS
-comment|/// model, produces a call to __tls_get_addr(sym\@tlsgd).
-name|GET_TLS_ADDR
-block|,
 comment|/// G8RC = ADDIS_TLSLD_HA %X2, Symbol - For the local-dynamic TLS
 comment|/// model, produces an ADDIS8 instruction that adds the GOT base
 comment|/// register to sym\@got\@tlsld\@ha.
@@ -339,10 +341,6 @@ comment|/// G8RC = ADDI_TLSLD_L G8RReg, Symbol - For the local-dynamic TLS
 comment|/// model, produces an ADDI8 instruction that adds G8RReg to
 comment|/// sym\@got\@tlsld\@l.
 name|ADDI_TLSLD_L
-block|,
-comment|/// G8RC = GET_TLSLD_ADDR %X3, Symbol - For the local-dynamic TLS
-comment|/// model, produces a call to __tls_get_addr(sym\@tlsld).
-name|GET_TLSLD_ADDR
 block|,
 comment|/// G8RC = ADDIS_DTPREL_HA %X3, Symbol, Chain - For the
 comment|/// local-dynamic TLS model, produces an ADDIS8 instruction
@@ -1167,6 +1165,24 @@ name|SDValue
 name|LowerBlockAddress
 argument_list|(
 argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+block|,
+name|SDValue
+operator|>
+name|lowerTLSCall
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
