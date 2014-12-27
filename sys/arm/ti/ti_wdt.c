@@ -353,7 +353,6 @@ end_expr_stmt
 
 begin_function
 specifier|static
-specifier|volatile
 name|__inline
 name|uint32_t
 name|ti_wdt_reg_read
