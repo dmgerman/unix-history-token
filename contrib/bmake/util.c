@@ -1,11 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: util.c,v 1.53 2012/06/04 22:45:05 sjg Exp $	*/
+comment|/*	$NetBSD: util.c,v 1.54 2013/11/26 13:44:41 joerg Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Missing stuff from OS's  *  *	$Id: util.c,v 1.32 2012/06/06 20:08:44 sjg Exp $  */
+comment|/*  * Missing stuff from OS's  *  *	$Id: util.c,v 1.33 2014/01/02 02:29:49 sjg Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MINT__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -25,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: util.c,v 1.53 2012/06/04 22:45:05 sjg Exp $"
+literal|"$NetBSD: util.c,v 1.54 2013/11/26 13:44:41 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +68,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: util.c,v 1.53 2012/06/04 22:45:05 sjg Exp $"
+literal|"$NetBSD: util.c,v 1.54 2013/11/26 13:44:41 joerg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
