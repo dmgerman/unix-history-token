@@ -27,17 +27,6 @@ name|pmap
 struct_decl|;
 end_struct_decl
 
-begin_define
-define|#
-directive|define
-name|GUEST_MSR_MAX_ENTRIES
-value|64
-end_define
-
-begin_comment
-comment|/* arbitrary */
-end_comment
-
 begin_struct
 struct|struct
 name|vmxctx
@@ -235,6 +224,29 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Index into the 'guest_msrs[]' array */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|IDX_MSR_LSTAR
+block|,
+name|IDX_MSR_CSTAR
+block|,
+name|IDX_MSR_STAR
+block|,
+name|IDX_MSR_SF_MASK
+block|,
+name|IDX_MSR_KGSBASE
+block|,
+name|GUEST_MSR_NUM
+comment|/* must be the last enumeration */
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/* virtual machine softc */
 end_comment
 
@@ -271,14 +283,13 @@ index|[
 name|VM_MAXCPU
 index|]
 decl_stmt|;
-name|struct
-name|msr_entry
+name|uint64_t
 name|guest_msrs
 index|[
 name|VM_MAXCPU
 index|]
 index|[
-name|GUEST_MSR_MAX_ENTRIES
+name|GUEST_MSR_NUM
 index|]
 decl_stmt|;
 name|struct
@@ -354,26 +365,6 @@ name|msr_bitmap
 argument_list|)
 operator|&
 name|PAGE_MASK
-operator|)
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-operator|(
-name|offsetof
-argument_list|(
-expr|struct
-name|vmx
-argument_list|,
-name|guest_msrs
-argument_list|)
-operator|&
-literal|15
 operator|)
 operator|==
 literal|0
