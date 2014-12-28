@@ -1967,6 +1967,9 @@ if|if
 condition|(
 name|abs
 argument_list|(
+operator|(
+name|int
+operator|)
 name|offset
 argument_list|)
 operator|<
