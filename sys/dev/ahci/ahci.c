@@ -5765,11 +5765,7 @@ argument_list|,
 name|ahci_ch_resume
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5804,9 +5800,9 @@ name|ahcich_driver
 argument_list|,
 name|ahcich_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
