@@ -6394,6 +6394,19 @@ operator|->
 name|t_mtx
 argument_list|)
 expr_stmt|;
+comment|/* Bail out when the device slipped away. */
+if|if
+condition|(
+name|tty_gone
+argument_list|(
+name|tp
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* Restart the system call when we may have been revoked. */
 if|if
 condition|(
@@ -6406,19 +6419,6 @@ condition|)
 return|return
 operator|(
 name|ERESTART
-operator|)
-return|;
-comment|/* Bail out when the device slipped away. */
-if|if
-condition|(
-name|tty_gone
-argument_list|(
-name|tp
-argument_list|)
-condition|)
-return|return
-operator|(
-name|ENXIO
 operator|)
 return|;
 return|return
@@ -6488,6 +6488,19 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
+comment|/* Bail out when the device slipped away. */
+if|if
+condition|(
+name|tty_gone
+argument_list|(
+name|tp
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* Restart the system call when we may have been revoked. */
 if|if
 condition|(
@@ -6500,19 +6513,6 @@ condition|)
 return|return
 operator|(
 name|ERESTART
-operator|)
-return|;
-comment|/* Bail out when the device slipped away. */
-if|if
-condition|(
-name|tty_gone
-argument_list|(
-name|tp
-argument_list|)
-condition|)
-return|return
-operator|(
-name|ENXIO
 operator|)
 return|;
 return|return
