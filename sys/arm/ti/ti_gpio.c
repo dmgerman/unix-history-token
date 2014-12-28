@@ -1278,7 +1278,7 @@ block|{
 if|if
 condition|(
 name|pin
-operator|>
+operator|>=
 name|sc
 operator|->
 name|sc_maxpin
@@ -2648,6 +2648,11 @@ name|sc
 operator|->
 name|sc_maxpin
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_maxpin
+operator|++
 expr_stmt|;
 comment|/* There are up to 6 different GPIO register sets located in different 	 * memory areas on the chip.  The memory range should have been set for 	 * the driver when it was added as a child. 	 */
 if|if
