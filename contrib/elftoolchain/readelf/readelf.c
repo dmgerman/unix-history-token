@@ -5537,10 +5537,10 @@ return|return
 literal|"MOVESZ"
 return|;
 case|case
-name|DT_FEATURE_1
+name|DT_FEATURE
 case|:
 return|return
-literal|"FEATURE_1"
+literal|"FEATURE"
 return|;
 case|case
 name|DT_POSFLAG_1
