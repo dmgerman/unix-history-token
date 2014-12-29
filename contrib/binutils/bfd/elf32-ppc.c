@@ -24178,6 +24178,9 @@ index|]
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|r_type
 condition|)
 block|{
