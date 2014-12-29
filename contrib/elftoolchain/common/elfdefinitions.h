@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: elfdefinitions.h 2950 2013-06-15 13:36:02Z jkoshy $  */
+comment|/*-  * Copyright (c) 2010 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: elfdefinitions.h 3110 2014-12-20 08:32:46Z kaiwang27 $  */
 end_comment
 
 begin_comment
@@ -470,8 +470,15 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* Older synonyms. */
+comment|/* Other synonyms. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_AMD64
+value|EM_X86_64
+end_define
 
 begin_define
 define|#
@@ -1930,18 +1937,23 @@ block|{
 name|Elf64_Word
 name|l_name
 decl_stmt|;
+comment|/* The name of a shared object. */
 name|Elf64_Word
 name|l_time_stamp
 decl_stmt|;
+comment|/* 32-bit timestamp. */
 name|Elf64_Word
 name|l_checksum
 decl_stmt|;
+comment|/* Checksum of visible symbols, sizes. */
 name|Elf64_Word
 name|l_version
 decl_stmt|;
+comment|/* Interface version string index. */
 name|Elf64_Word
 name|l_flags
 decl_stmt|;
+comment|/* Flags (LL_*). */
 block|}
 name|Elf64_Lib
 typedef|;
@@ -2521,27 +2533,27 @@ comment|/* Type of segment. */
 name|Elf64_Word
 name|p_flags
 decl_stmt|;
-comment|/* File offset to segment. */
+comment|/* Segment flags. */
 name|Elf64_Off
 name|p_offset
 decl_stmt|;
-comment|/* Virtual address in memory. */
+comment|/* File offset to segment. */
 name|Elf64_Addr
 name|p_vaddr
 decl_stmt|;
-comment|/* Physical address (if relevant). */
+comment|/* Virtual address in memory. */
 name|Elf64_Addr
 name|p_paddr
 decl_stmt|;
-comment|/* Size of segment in file. */
+comment|/* Physical address (if relevant). */
 name|Elf64_Xword
 name|p_filesz
 decl_stmt|;
-comment|/* Size of segment in memory. */
+comment|/* Size of segment in file. */
 name|Elf64_Xword
 name|p_memsz
 decl_stmt|;
-comment|/* Segment flags. */
+comment|/* Size of segment in memory. */
 name|Elf64_Xword
 name|p_align
 decl_stmt|;
@@ -2846,24 +2858,24 @@ name|unsigned
 name|char
 name|st_info
 decl_stmt|;
-comment|/* value for the symbol */
+comment|/* type and binding attributes */
 name|unsigned
 name|char
 name|st_other
 decl_stmt|;
-comment|/* size of associated data */
+comment|/* visibility */
 name|Elf64_Half
 name|st_shndx
 decl_stmt|;
-comment|/* type and binding attributes */
+comment|/* index of related section */
 name|Elf64_Addr
 name|st_value
 decl_stmt|;
-comment|/* visibility */
+comment|/* value for the symbol */
 name|Elf64_Xword
 name|st_size
 decl_stmt|;
-comment|/* index of related section */
+comment|/* size of associated data */
 block|}
 name|Elf64_Sym
 typedef|;

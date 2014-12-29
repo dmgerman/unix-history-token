@@ -25,7 +25,7 @@ name|void
 parameter_list|)
 block|{
 return|return
-literal|"libelftc r2974"
+literal|"libelftc r3130"
 return|;
 block|}
 end_function

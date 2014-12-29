@@ -60,7 +60,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: sections.c 2358 2011-12-19 18:22:32Z kaiwang27 $"
+literal|"$Id: sections.c 3126 2014-12-21 08:03:31Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1969,6 +1969,22 @@ name|ish
 operator|.
 name|sh_info
 argument_list|)
+condition|)
+continue|continue;
+comment|/* 		 * Section groups should be removed if symbol table will 		 * be removed. (section group's signature stored in symbol 		 * table) 		 */
+if|if
+condition|(
+name|ish
+operator|.
+name|sh_type
+operator|==
+name|SHT_GROUP
+operator|&&
+name|ecp
+operator|->
+name|strip
+operator|==
+name|STRIP_ALL
 condition|)
 continue|continue;
 comment|/* Get section flags set by user. */

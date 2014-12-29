@@ -60,7 +60,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elf_scn.c 2225 2011-11-26 18:55:54Z jkoshy $"
+literal|"$Id: elf_scn.c 3013 2014-03-23 06:16:59Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -82,24 +82,12 @@ modifier|*
 name|ehdr
 parameter_list|)
 block|{
-name|int
-name|ec
-decl_stmt|,
-name|swapbytes
-decl_stmt|;
-name|size_t
-name|fsz
-decl_stmt|,
-name|i
-decl_stmt|,
-name|shnum
+name|Elf_Scn
+modifier|*
+name|scn
 decl_stmt|;
 name|uint64_t
 name|shoff
-decl_stmt|;
-name|char
-modifier|*
-name|src
 decl_stmt|;
 name|Elf32_Ehdr
 modifier|*
@@ -109,9 +97,22 @@ name|Elf64_Ehdr
 modifier|*
 name|eh64
 decl_stmt|;
-name|Elf_Scn
+name|int
+name|ec
+decl_stmt|,
+name|swapbytes
+decl_stmt|;
+name|unsigned
+name|char
 modifier|*
-name|scn
+name|src
+decl_stmt|;
+name|size_t
+name|fsz
+decl_stmt|,
+name|i
+decl_stmt|,
+name|shnum
 decl_stmt|;
 name|int
 function_decl|(
@@ -119,6 +120,7 @@ modifier|*
 name|xlator
 function_decl|)
 parameter_list|(
+name|unsigned
 name|char
 modifier|*
 name|_d
@@ -126,6 +128,7 @@ parameter_list|,
 name|size_t
 name|_dsz
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|_s
@@ -402,6 +405,7 @@ name|xlator
 call|)
 argument_list|(
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)

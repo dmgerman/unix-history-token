@@ -30,13 +30,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"_libelf.h"
 end_include
 
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: gelf_cap.c 2272 2011-12-03 17:07:31Z jkoshy $"
+literal|"$Id: gelf_cap.c 2995 2014-03-18 02:16:31Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -236,6 +242,9 @@ if|if
 condition|(
 name|msz
 operator|*
+operator|(
+name|size_t
+operator|)
 name|ndx
 operator|>=
 name|d
@@ -528,6 +537,9 @@ if|if
 condition|(
 name|msz
 operator|*
+operator|(
+name|size_t
+operator|)
 name|ndx
 operator|>=
 name|d

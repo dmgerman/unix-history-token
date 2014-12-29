@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: symbols.c 2971 2013-12-01 15:22:21Z kaiwang27 $"
+literal|"$Id: symbols.c 3019 2014-04-17 14:53:40Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1437,8 +1437,6 @@ name|namelen
 decl_stmt|,
 name|ndx
 decl_stmt|,
-name|nsyms
-decl_stmt|,
 name|sc
 decl_stmt|,
 name|symndx
@@ -1590,10 +1588,6 @@ comment|/* '\0' at start. */
 name|st_buf
 operator|->
 name|gsz
-operator|=
-literal|0
-expr_stmt|;
-name|nsyms
 operator|=
 literal|0
 expr_stmt|;
