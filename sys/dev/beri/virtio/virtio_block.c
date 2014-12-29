@@ -198,7 +198,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/virtio/virtio.h>
+file|<dev/virtio/virtio_ids.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/virtio/virtio_config.h>
 end_include
 
 begin_include
