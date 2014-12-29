@@ -1647,7 +1647,7 @@ name|STPUTS_QUOTES
 argument_list|(
 name|home
 argument_list|,
-name|SQSYNTAX
+name|DQSYNTAX
 argument_list|,
 name|expdest
 argument_list|)
