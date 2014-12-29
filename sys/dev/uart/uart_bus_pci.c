@@ -946,11 +946,11 @@ literal|0x9710
 block|,
 literal|0x9922
 block|,
-literal|0xffff
+literal|0xa000
 block|,
-literal|0
+literal|0x1000
 block|,
-literal|"MosChip MCS9922 Multi I/O Controller"
+literal|"MosChip MCS9922 PCIe to Peripheral Controller"
 block|,
 literal|0x10
 block|}
