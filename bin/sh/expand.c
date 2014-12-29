@@ -4233,6 +4233,8 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
+operator||
+name|EXP_REDIR
 operator|)
 operator|&&
 name|subtype
