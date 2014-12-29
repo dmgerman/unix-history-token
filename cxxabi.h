@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdint.h>
 end_include
 
@@ -122,9 +128,18 @@ comment|/** 	 * The number of handlers that currently have references to this 	 
 name|int
 name|handlerCount
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__arm__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__ARM_DWARF_EH__
+argument_list|)
 comment|/** 	 * The ARM EH ABI requires the unwind library to keep track of exceptions 	 * during cleanups.  These support nesting, so we need to keep a list of 	 * them. 	 */
 name|_Unwind_Exception
 modifier|*
