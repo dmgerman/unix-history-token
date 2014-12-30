@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vpmtmr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmm_ioport.h"
 end_include
 
@@ -179,6 +185,12 @@ name|IO_ELCR2
 index|]
 operator|=
 name|vatpic_elc_handler
+block|,
+index|[
+name|IO_PMTMR
+index|]
+operator|=
+name|vpmtmr_handler
 block|, }
 decl_stmt|;
 end_decl_stmt
