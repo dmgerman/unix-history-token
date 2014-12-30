@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libdwarf_info.c 3041 2014-05-18 15:11:03Z kaiwang27 $"
+literal|"$Id: libdwarf_info.c 3136 2014-12-24 16:04:38Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -564,13 +564,17 @@ name|dbg
 operator|->
 name|dbg_info_sec
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|ds
-operator|!=
+operator|==
 name|NULL
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|DW_DLE_NO_ENTRY
+operator|)
+return|;
 block|}
 else|else
 block|{

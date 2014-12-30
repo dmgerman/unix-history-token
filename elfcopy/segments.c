@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: segments.c 3113 2014-12-20 08:33:29Z kaiwang27 $"
+literal|"$Id: segments.c 3134 2014-12-23 10:43:59Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -242,6 +242,21 @@ condition|)
 name|s
 operator|->
 name|seg
+operator|=
+name|seg
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|seg
+operator|->
+name|type
+operator|==
+name|PT_TLS
+condition|)
+name|s
+operator|->
+name|seg_tls
 operator|=
 name|seg
 expr_stmt|;
