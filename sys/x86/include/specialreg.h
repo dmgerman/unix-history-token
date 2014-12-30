@@ -368,6 +368,17 @@ begin_comment
 comment|/* PTE No-Execute bit enable (R/W) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EFER_SVM
+value|0x000001000
+end_define
+
+begin_comment
+comment|/* SVM enable bit for AMD, reserved for Intel */
+end_comment
+
 begin_comment
 comment|/*  * Intel Extended Features registers  */
 end_comment
@@ -4523,43 +4534,31 @@ name|MSR_PERFEVSEL3
 value|0xc0010003
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|MSR_PERFCTR0
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|MSR_PERFCTR1
-end_undef
-
 begin_define
 define|#
 directive|define
-name|MSR_PERFCTR0
+name|MSR_K7_PERFCTR0
 value|0xc0010004
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_PERFCTR1
+name|MSR_K7_PERFCTR1
 value|0xc0010005
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_PERFCTR2
+name|MSR_K7_PERFCTR2
 value|0xc0010006
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_PERFCTR3
+name|MSR_K7_PERFCTR3
 value|0xc0010007
 end_define
 
@@ -4630,6 +4629,97 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MSR_NB_CFG1
+value|0xc001001f
+end_define
+
+begin_comment
+comment|/* NB configuration 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_P_STATE_LIMIT
+value|0xc0010061
+end_define
+
+begin_comment
+comment|/* P-state Current Limit Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_P_STATE_CONTROL
+value|0xc0010062
+end_define
+
+begin_comment
+comment|/* P-state Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_P_STATE_STATUS
+value|0xc0010063
+end_define
+
+begin_comment
+comment|/* P-state Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_P_STATE_CONFIG
+parameter_list|(
+name|n
+parameter_list|)
+value|(0xc0010064 + (n))
+end_define
+
+begin_comment
+comment|/* P-state Config */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_SMM_ADDR
+value|0xc0010112
+end_define
+
+begin_comment
+comment|/* SMM TSEG base address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_SMM_MASK
+value|0xc0010113
+end_define
+
+begin_comment
+comment|/* SMM TSEG address mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_IC_CFG
+value|0xc0011021
+end_define
+
+begin_comment
+comment|/* Instruction Cache Configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MSR_K8_UCODE_UPDATE
 value|0xc0010020
 end_define
@@ -4644,6 +4734,43 @@ directive|define
 name|MSR_MC0_CTL_MASK
 value|0xc0010044
 end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_VM_CR
+value|0xc0010114
+end_define
+
+begin_comment
+comment|/* SVM: feature control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_VM_HSAVE_PA
+value|0xc0010117
+end_define
+
+begin_comment
+comment|/* SVM: host save area address */
+end_comment
+
+begin_comment
+comment|/* MSR_VM_CR related */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_CR_SVMDIS
+value|0x10
+end_define
+
+begin_comment
+comment|/* SVM: disabled by BIOS */
+end_comment
 
 begin_comment
 comment|/* VIA ACE crypto featureset: for via_feature_rng */
