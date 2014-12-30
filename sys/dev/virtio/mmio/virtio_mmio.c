@@ -2156,6 +2156,17 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|vtmmio_write_config_4
+argument_list|(
+name|sc
+argument_list|,
+name|VIRTIO_MMIO_GUEST_PAGE_SIZE
+argument_list|,
+literal|1
+operator|<<
+name|PAGE_SHIFT
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|idx
