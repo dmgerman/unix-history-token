@@ -208,7 +208,7 @@ name|class
 name|bad_array_new_length
 range|:
 name|public
-name|exception
+name|bad_alloc
 block|{
 name|public
 operator|:
