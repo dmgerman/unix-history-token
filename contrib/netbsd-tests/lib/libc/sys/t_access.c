@@ -72,6 +72,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -463,6 +469,24 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|<
+literal|1100033
+name|atf_tc_expect_fail
+argument_list|(
+literal|"arguments to access aren't validated; see "
+literal|"bug # 181155 for more details"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|errno
 operator|=
 literal|0
