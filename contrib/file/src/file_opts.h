@@ -320,6 +320,19 @@ end_macro
 begin_macro
 name|OPT
 argument_list|(
+literal|'R'
+argument_list|,
+literal|"recursion"
+argument_list|,
+literal|0
+argument_list|,
+literal|"            set maximum recursion level\n"
+argument_list|)
+end_macro
+
+begin_macro
+name|OPT
+argument_list|(
 literal|'s'
 argument_list|,
 literal|"special-files"

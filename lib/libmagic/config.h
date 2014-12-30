@@ -160,6 +160,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `freelocale' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FREELOCALE
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if fseeko (and presumably ftello) exists and is declared. */
 end_comment
 
@@ -344,6 +355,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `newlocale' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NEWLOCALE
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `pread' function. */
 end_comment
 
@@ -351,6 +373,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_PREAD
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `setlocale' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETLOCALE
 value|1
 end_define
 
@@ -660,6 +693,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `uselocale' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_USELOCALE
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `utime' function. */
 end_comment
 
@@ -789,6 +833,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<xlocale.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_XLOCALE_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<zlib.h> header file. */
 end_comment
 
@@ -867,7 +922,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"file 5.19"
+value|"file 5.21"
 end_define
 
 begin_comment
@@ -900,7 +955,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"5.19"
+value|"5.21"
 end_define
 
 begin_comment
@@ -1040,7 +1095,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"5.19"
+value|"5.21"
 end_define
 
 begin_comment

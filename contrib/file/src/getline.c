@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: fgetln.c,v 1.9 2008/04/29 06:53:03 martin Exp $	*/
+comment|/*	$NetBSD: getline.c,v 1.2 2014/09/16 17:23:50 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -158,21 +158,37 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+block|{
+name|ssize_t
+name|diff
+init|=
+call|(
+name|ssize_t
+call|)
+argument_list|(
+name|ptr
+operator|-
+operator|*
+name|buf
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|diff
+operator|!=
+literal|0
+condition|)
+block|{
+operator|*
+name|ptr
+operator|=
+literal|'\0'
+expr_stmt|;
 return|return
-name|ptr
-operator|==
-operator|*
-name|buf
-condition|?
-operator|-
-literal|1
-else|:
-name|ptr
-operator|-
-operator|*
-name|buf
+name|diff
 return|;
-else|else
+block|}
+block|}
 return|return
 operator|-
 literal|1
@@ -375,7 +391,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%zd %s"
+literal|"%"
+name|SIZE_T_FORMAT
+literal|"d %s"
 argument_list|,
 name|len
 argument_list|,

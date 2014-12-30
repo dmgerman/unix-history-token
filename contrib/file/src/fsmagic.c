@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: fsmagic.c,v 1.73 2014/05/14 23:15:42 christos Exp $"
+literal|"@(#)$File: fsmagic.c,v 1.75 2014/12/04 15:56:46 christos Exp $"
 argument_list|)
 end_macro
 
@@ -278,7 +278,7 @@ name|ms
 argument_list|,
 name|err
 argument_list|,
-literal|"broken symbolic link to `%s'"
+literal|"broken symbolic link to %s"
 argument_list|,
 name|buf
 argument_list|)
@@ -294,7 +294,7 @@ name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-literal|"broken symbolic link to `%s'"
+literal|"broken symbolic link to %s"
 argument_list|,
 name|buf
 argument_list|)
@@ -543,6 +543,9 @@ name|hFile
 init|=
 name|CreateFile
 argument_list|(
+operator|(
+name|LPCSTR
+operator|)
 name|fn
 argument_list|,
 literal|0
@@ -1721,7 +1724,7 @@ name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-literal|"%ssymbolic link to `%s'"
+literal|"%ssymbolic link to %s"
 argument_list|,
 name|COMMA
 argument_list|,

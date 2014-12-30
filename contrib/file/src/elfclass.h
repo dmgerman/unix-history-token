@@ -113,7 +113,9 @@ if|if
 condition|(
 name|phnum
 operator|>
-name|MAX_PHNUM
+name|ms
+operator|->
+name|elf_phnum_max
 condition|)
 return|return
 name|toomany
@@ -204,7 +206,9 @@ if|if
 condition|(
 name|phnum
 operator|>
-name|MAX_PHNUM
+name|ms
+operator|->
+name|elf_phnum_max
 condition|)
 return|return
 name|toomany
@@ -231,7 +235,9 @@ if|if
 condition|(
 name|shnum
 operator|>
-name|MAX_SHNUM
+name|ms
+operator|->
+name|elf_shnum_max
 condition|)
 return|return
 name|toomany
@@ -315,7 +321,9 @@ if|if
 condition|(
 name|shnum
 operator|>
-name|MAX_SHNUM
+name|ms
+operator|->
+name|elf_shnum_max
 condition|)
 return|return
 name|toomany
