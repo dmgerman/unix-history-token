@@ -2020,6 +2020,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|vcpu_trace_exceptions
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|vcpuid
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -2409,6 +2424,8 @@ name|VM_EXITCODE_MONITOR
 block|,
 name|VM_EXITCODE_MWAIT
 block|,
+name|VM_EXITCODE_SVM
+block|,
 name|VM_EXITCODE_MAX
 block|}
 enum|;
@@ -2621,6 +2638,21 @@ name|inst_error
 decl_stmt|;
 block|}
 name|vmx
+struct|;
+comment|/* 		 * SVM specific payload. 		 */
+struct|struct
+block|{
+name|uint64_t
+name|exitcode
+decl_stmt|;
+name|uint64_t
+name|exitinfo1
+decl_stmt|;
+name|uint64_t
+name|exitinfo2
+decl_stmt|;
+block|}
+name|svm
 struct|;
 struct|struct
 block|{
