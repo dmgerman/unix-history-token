@@ -59,7 +59,7 @@ end_endif
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elftc_copyfile.c 2318 2011-12-11 10:54:27Z jkoshy $"
+literal|"$Id: elftc_copyfile.c 2981 2014-02-01 02:41:13Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -186,9 +186,9 @@ directive|endif
 comment|/* 	 * If mmap() is not available, or if the mmap() operation 	 * failed, allocate a buffer, and read in input data. 	 */
 if|if
 condition|(
-name|buf
+name|buf_mmapped
 operator|==
-name|NULL
+name|false
 condition|)
 block|{
 if|if
@@ -229,12 +229,19 @@ name|sb
 operator|.
 name|st_size
 condition|)
+block|{
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 block|}
 comment|/* 	 * Write data to the output file descriptor. 	 */
 for|for

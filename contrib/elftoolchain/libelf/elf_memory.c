@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elf_memory.c 2368 2011-12-29 06:34:28Z jkoshy $"
+literal|"$Id: elf_memory.c 3013 2014-03-23 06:16:59Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -87,6 +87,11 @@ return|return
 operator|(
 name|_libelf_memory
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|image
 argument_list|,
 name|sz

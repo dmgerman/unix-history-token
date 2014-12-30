@@ -830,6 +830,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 comment|/* Ignore this record and skip to the next. */
 name|p
 operator|+=
@@ -840,6 +841,24 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
+comment|/* Avoid infinite loops with corrupted file systems */
+if|if
+condition|(
+name|isonum_711
+argument_list|(
+name|sh
+operator|->
+name|length
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 block|}
 return|return
 operator|(

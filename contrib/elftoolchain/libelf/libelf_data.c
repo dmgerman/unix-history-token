@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelf_data.c 2225 2011-11-26 18:55:54Z jkoshy $"
+literal|"$Id: libelf_data.c 3080 2014-07-28 08:46:17Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -37,6 +37,7 @@ name|uint32_t
 name|sht
 parameter_list|)
 block|{
+comment|/* 	 * Look for known section types. 	 */
 switch|switch
 condition|(
 name|sht
@@ -229,37 +230,24 @@ operator|(
 name|ELF_T_HALF
 operator|)
 return|;
-case|case
-name|SHT_ARM_PREEMPTMAP
-case|:
-case|case
-name|SHT_ARM_ATTRIBUTES
-case|:
-case|case
-name|SHT_ARM_DEBUGOVERLAY
-case|:
-case|case
-name|SHT_ARM_OVERLAYSECTION
-case|:
-case|case
-name|SHT_MIPS_DWARF
-case|:
-case|case
-name|SHT_MIPS_REGINFO
-case|:
-case|case
-name|SHT_MIPS_OPTIONS
-case|:
-case|case
-name|SHT_AMD64_UNWIND
-case|:
-comment|/* == SHT_IA_64_UNWIND == SHT_ARM_EXIDX */
+default|default:
+comment|/* 		 * Values in the range [SHT_LOOS..SHT_HIUSER] (i.e., 		 * OS, processor and user-defined section types) are 		 * legal, but since we do not know anything more about 		 * their semantics, we return a type of ELF_T_BYTE. 		 */
+if|if
+condition|(
+name|sht
+operator|>=
+name|SHT_LOOS
+operator|&&
+name|sht
+operator|<=
+name|SHT_HIUSER
+condition|)
 return|return
 operator|(
 name|ELF_T_BYTE
 operator|)
 return|;
-default|default:
+comment|/* 		 * Other values are unsupported. 		 */
 return|return
 operator|(
 operator|-

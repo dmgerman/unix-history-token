@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libdwarf_abbrev.c 2070 2011-10-27 03:05:32Z jkoshy $"
+literal|"$Id: libdwarf_abbrev.c 3136 2014-12-24 16:04:38Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -750,13 +750,17 @@ argument_list|,
 literal|".debug_abbrev"
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|ds
-operator|!=
+operator|==
 name|NULL
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|DW_DLE_NO_ENTRY
+operator|)
+return|;
 name|offset
 operator|=
 name|cu

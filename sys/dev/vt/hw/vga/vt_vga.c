@@ -6937,6 +6937,8 @@ argument_list|,
 name|VGA_MEM_BASE
 operator|+
 name|VGA_MEM_SIZE
+operator|-
+literal|1
 argument_list|,
 name|VGA_MEM_SIZE
 argument_list|,

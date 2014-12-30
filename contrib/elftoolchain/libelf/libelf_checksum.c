@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelf_checksum.c 2225 2011-11-26 18:55:54Z jkoshy $"
+literal|"$Id: libelf_checksum.c 3003 2014-03-22 07:43:10Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -84,7 +84,6 @@ block|}
 end_function
 
 begin_function
-name|unsigned
 name|long
 name|_libelf_checksum
 parameter_list|(
@@ -297,6 +296,9 @@ name|d
 operator|->
 name|d_buf
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|d
 operator|->
 name|d_size
@@ -305,7 +307,10 @@ expr_stmt|;
 block|}
 comment|/* 	 * Return a 16-bit checksum compatible with Solaris. 	 */
 return|return
-operator|(
+call|(
+name|long
+call|)
+argument_list|(
 operator|(
 operator|(
 name|checksum
@@ -321,7 +326,7 @@ name|checksum
 operator|&
 literal|0xFFFFUL
 operator|)
-operator|)
+argument_list|)
 return|;
 block|}
 end_function
