@@ -547,6 +547,31 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|vm_rtc_time
+block|{
+name|time_t
+name|secs
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vm_rtc_data
+block|{
+name|int
+name|offset
+decl_stmt|;
+name|uint8_t
+name|value
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
@@ -722,6 +747,23 @@ block|,
 name|IOCNUM_GET_CPUSET
 init|=
 literal|91
+block|,
+comment|/* RTC */
+name|IOCNUM_RTC_READ
+init|=
+literal|100
+block|,
+name|IOCNUM_RTC_WRITE
+init|=
+literal|101
+block|,
+name|IOCNUM_RTC_SETTIME
+init|=
+literal|102
+block|,
+name|IOCNUM_RTC_GETTIME
+init|=
+literal|103
 block|, }
 enum|;
 end_enum
@@ -1044,6 +1086,38 @@ directive|define
 name|VM_GET_INTINFO
 define|\
 value|_IOWR('v', IOCNUM_GET_INTINFO, struct vm_intinfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RTC_WRITE
+define|\
+value|_IOW('v', IOCNUM_RTC_WRITE, struct vm_rtc_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RTC_READ
+define|\
+value|_IOWR('v', IOCNUM_RTC_READ, struct vm_rtc_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RTC_SETTIME
+define|\
+value|_IOW('v', IOCNUM_RTC_SETTIME, struct vm_rtc_time)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RTC_GETTIME
+define|\
+value|_IOR('v', IOCNUM_RTC_GETTIME, struct vm_rtc_time)
 end_define
 
 begin_endif

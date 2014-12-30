@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vrtc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmm_ioport.h"
 end_include
 
@@ -191,6 +197,20 @@ name|IO_PMTMR
 index|]
 operator|=
 name|vpmtmr_handler
+block|,
+index|[
+name|IO_RTC
+index|]
+operator|=
+name|vrtc_addr_handler
+block|,
+index|[
+name|IO_RTC
+operator|+
+literal|1
+index|]
+operator|=
+name|vrtc_data_handler
 block|, }
 decl_stmt|;
 end_decl_stmt
