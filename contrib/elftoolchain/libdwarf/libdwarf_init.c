@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libdwarf_init.c 3061 2014-06-02 00:42:41Z kaiwang27 $"
+literal|"$Id: libdwarf_init.c 3136 2014-12-24 16:04:38Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -388,19 +388,6 @@ name|ds_name
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|_dwarf_find_section
-argument_list|(
-name|dbg
-argument_list|,
-literal|".debug_abbrev"
-argument_list|)
-operator|==
-name|NULL
-operator|||
-operator|(
-operator|(
 name|dbg
 operator|->
 name|dbg_info_sec
@@ -411,27 +398,7 @@ name|dbg
 argument_list|,
 literal|".debug_info"
 argument_list|)
-operator|)
-operator|==
-name|NULL
-operator|)
-condition|)
-block|{
-name|DWARF_SET_ERROR
-argument_list|(
-name|dbg
-argument_list|,
-name|error
-argument_list|,
-name|DW_DLE_DEBUG_INFO_NULL
-argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|DW_DLE_DEBUG_INFO_NULL
-operator|)
-return|;
-block|}
 comment|/* Try to find the optional DWARF4 .debug_types section. */
 name|dbg
 operator|->
