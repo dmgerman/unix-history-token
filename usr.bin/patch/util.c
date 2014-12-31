@@ -1900,10 +1900,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"patch 2.0-12u10 FreeBSD\n"
 argument_list|)
 expr_stmt|;
