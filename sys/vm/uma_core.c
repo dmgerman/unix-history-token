@@ -7867,16 +7867,6 @@ directive|ifdef
 name|UMA_DEBUG
 name|printf
 argument_list|(
-literal|"Initializing pcpu cache locks.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
-argument_list|(
 literal|"Creating slab and hash zones.\n"
 argument_list|)
 expr_stmt|;
