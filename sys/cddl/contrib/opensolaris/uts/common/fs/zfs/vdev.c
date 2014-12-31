@@ -12384,6 +12384,14 @@ name|VDEV_LABEL_START_SIZE
 operator|+
 name|VDEV_LABEL_END_SIZE
 expr_stmt|;
+if|if
+condition|(
+name|vd
+operator|->
+name|vdev_max_asize
+operator|!=
+literal|0
+condition|)
 name|vs
 operator|->
 name|vs_esize
