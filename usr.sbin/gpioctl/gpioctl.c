@@ -607,6 +607,11 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|cfgs
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
