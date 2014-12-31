@@ -3074,7 +3074,7 @@ argument_list|)
 expr_stmt|;
 name|my_exit
 argument_list|(
-name|EXIT_SUCCESS
+name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}

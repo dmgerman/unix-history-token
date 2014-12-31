@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -106,11 +112,6 @@ name|unsigned
 name|char
 modifier|*
 name|src
-decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|rawend
 decl_stmt|;
 name|size_t
 name|fsz
@@ -180,7 +181,7 @@ name|E
 parameter_list|,
 name|EH
 parameter_list|)
-value|do {				\ 		if (fsz != (EH)->e_shentsize ||			\ 		    shoff + fsz * shnum> e->e_rawsize) {	\ 			LIBELF_SET_ERROR(HEADER, 0);		\ 			return (0);				\ 		}						\ 	} while (0)
+value|do {				\ 		if (fsz != (EH)->e_shentsize ||			\ 		    shnum> SIZE_MAX / fsz ||			\ 		    fsz * shnum> e->e_rawsize - shoff) {	\ 			LIBELF_SET_ERROR(HEADER, 0);		\ 			return (0);				\ 		}						\ 	} while (0)
 name|ec
 operator|=
 name|e
@@ -308,16 +309,6 @@ name|e_rawfile
 operator|+
 name|shoff
 expr_stmt|;
-name|rawend
-operator|=
-name|e
-operator|->
-name|e_rawfile
-operator|+
-name|e
-operator|->
-name|e_rawsize
-expr_stmt|;
 comment|/* 	 * If the file is using extended numbering then section #0 	 * would have already been read in. 	 */
 name|i
 operator|=
@@ -394,24 +385,6 @@ operator|+=
 name|fsz
 control|)
 block|{
-if|if
-condition|(
-name|src
-operator|+
-sizeof|sizeof
-argument_list|(
-name|scn
-operator|->
-name|s_shdr
-argument_list|)
-operator|>
-name|rawend
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 if|if
 condition|(
 operator|(
