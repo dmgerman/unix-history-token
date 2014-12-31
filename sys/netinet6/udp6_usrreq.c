@@ -3682,10 +3682,8 @@ name|flowid
 operator|=
 name|rss_hash_ip6_2tuple
 argument_list|(
-operator|*
 name|faddr
 argument_list|,
-operator|*
 name|laddr
 argument_list|)
 expr_stmt|;
