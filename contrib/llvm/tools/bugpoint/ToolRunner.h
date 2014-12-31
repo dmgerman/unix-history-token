@@ -278,7 +278,7 @@ name|string
 operator|*
 name|Error
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 specifier|const
 name|std
@@ -407,7 +407,7 @@ operator|>
 operator|*
 name|Args
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 specifier|const
 name|std
@@ -421,7 +421,7 @@ operator|>
 operator|*
 name|GCCArgs
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|bool
 name|UseIntegratedAssembler
@@ -457,7 +457,7 @@ operator|>
 operator|*
 name|Args
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -488,7 +488,7 @@ operator|>
 operator|*
 name|Args
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -780,7 +780,6 @@ block|; }
 comment|/// compileProgram - Compile the specified program from bitcode to executable
 comment|/// code.  This does not produce any output, it is only used when debugging
 comment|/// the code generator.  Returns false if the code generator fails.
-name|virtual
 name|void
 name|compileProgram
 argument_list|(
@@ -794,8 +793,8 @@ argument_list|,
 argument|unsigned MemoryLimit =
 literal|0
 argument_list|)
+name|override
 block|;
-name|virtual
 name|int
 name|ExecuteProgram
 argument_list|(
@@ -809,9 +808,9 @@ argument|const std::string&OutputFile
 argument_list|,
 argument|std::string *Error
 argument_list|,
-argument|const std::vector<std::string>&GCCArgs =                                std::vector<std::string>()
+argument|const std::vector<std::string>&GCCArgs =                        std::vector<std::string>()
 argument_list|,
-argument|const std::vector<std::string>&SharedLibs =                                 std::vector<std::string>()
+argument|const std::vector<std::string>&SharedLibs =                         std::vector<std::string>()
 argument_list|,
 argument|unsigned Timeout =
 literal|0
@@ -819,12 +818,12 @@ argument_list|,
 argument|unsigned MemoryLimit =
 literal|0
 argument_list|)
+name|override
 block|;
 comment|/// OutputCode - Compile the specified program from bitcode to code
 comment|/// understood by the GCC driver (either C or asm).  If the code generator
 comment|/// fails, it sets Error, otherwise, this function returns the type of code
 comment|/// emitted.
-name|virtual
 name|GCC
 operator|::
 name|FileType
@@ -842,6 +841,7 @@ argument_list|,
 argument|unsigned MemoryLimit =
 literal|0
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

@@ -93,10 +93,10 @@ range|:
 name|public
 name|FunctionPass
 block|{
-name|class
+specifier|const
 name|DataLayout
 operator|*
-name|TD
+name|DL
 block|;
 name|class
 name|TargetLibraryInfo
@@ -139,7 +139,7 @@ argument_list|)
 block|,
 name|PImpl
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|initializeLazyValueInfoPass
@@ -157,9 +157,8 @@ argument_list|()
 block|{
 name|assert
 argument_list|(
+operator|!
 name|PImpl
-operator|==
-literal|0
 operator|&&
 literal|"releaseMemory not called"
 argument_list|)
@@ -262,27 +261,25 @@ name|BB
 argument_list|)
 block|;
 comment|// Implementation boilerplate.
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|releaseMemory
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|F
+argument|Function&F
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

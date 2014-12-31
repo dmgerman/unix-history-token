@@ -230,6 +230,21 @@ modifier|*
 name|BuiltinName
 parameter_list|)
 function_decl|;
+comment|/// Map a MS builtin name to an intrinsic ID.
+name|ID
+name|getIntrinsicForMSBuiltin
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Prefix
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|BuiltinName
+parameter_list|)
+function_decl|;
 comment|/// IITDescriptor - This is a type descriptor which explains the type
 comment|/// requirements of an intrinsic.  This is returned by
 comment|/// getIntrinsicInfoTableEntries.
@@ -263,9 +278,11 @@ name|Struct
 block|,
 name|Argument
 block|,
-name|ExtendVecArgument
+name|ExtendArgument
 block|,
-name|TruncVecArgument
+name|TruncArgument
+block|,
+name|HalfVecArgument
 block|}
 name|Kind
 enum|;
@@ -316,11 +333,15 @@ name|Argument
 operator|||
 name|Kind
 operator|==
-name|ExtendVecArgument
+name|ExtendArgument
 operator|||
 name|Kind
 operator|==
-name|TruncVecArgument
+name|TruncArgument
+operator|||
+name|Kind
+operator|==
+name|HalfVecArgument
 argument_list|)
 block|;
 return|return
@@ -342,11 +363,15 @@ name|Argument
 operator|||
 name|Kind
 operator|==
-name|ExtendVecArgument
+name|ExtendArgument
 operator|||
 name|Kind
 operator|==
-name|TruncVecArgument
+name|TruncArgument
+operator|||
+name|Kind
+operator|==
+name|HalfVecArgument
 argument_list|)
 block|;
 return|return

@@ -205,6 +205,8 @@ value|PD_##NAME,
 include|#
 directive|include
 file|"clang/StaticAnalyzer/Core/Analyses.def"
+name|PD_NONE
+block|,
 name|NUM_ANALYSIS_DIAG_CLIENTS
 block|}
 enum|;
@@ -507,12 +509,19 @@ name|bool
 operator|>
 name|InlineTemplateFunctions
 expr_stmt|;
-comment|/// \sa mayInlineCXXContainerCtorsAndDtors
+comment|/// \sa mayInlineCXXAllocator
 name|Optional
 operator|<
 name|bool
 operator|>
-name|InlineCXXContainerCtorsAndDtors
+name|InlineCXXAllocator
+expr_stmt|;
+comment|/// \sa mayInlineCXXContainerMethods
+name|Optional
+operator|<
+name|bool
+operator|>
+name|InlineCXXContainerMethods
 expr_stmt|;
 comment|/// \sa mayInlineCXXSharedPtrDtor
 name|Optional
@@ -577,6 +586,13 @@ operator|<
 name|bool
 operator|>
 name|ReportIssuesInMainSourceFile
+expr_stmt|;
+comment|/// \sa StableReportFilename
+name|Optional
+operator|<
+name|bool
+operator|>
+name|StableReportFilename
 expr_stmt|;
 comment|/// \sa getGraphTrimInterval
 name|Optional
@@ -700,13 +716,21 @@ name|bool
 name|mayInlineTemplateFunctions
 parameter_list|()
 function_decl|;
-comment|/// Returns whether or not constructors and destructors of C++ container
-comment|/// objects may be considered for inlining.
+comment|/// Returns whether or not allocator call may be considered for inlining.
+comment|///
+comment|/// This is controlled by the 'c++-allocator-inlining' config option, which
+comment|/// accepts the values "true" and "false".
+name|bool
+name|mayInlineCXXAllocator
+parameter_list|()
+function_decl|;
+comment|/// Returns whether or not methods of C++ container objects may be considered
+comment|/// for inlining.
 comment|///
 comment|/// This is controlled by the 'c++-container-inlining' config option, which
 comment|/// accepts the values "true" and "false".
 name|bool
-name|mayInlineCXXContainerCtorsAndDtors
+name|mayInlineCXXContainerMethods
 parameter_list|()
 function_decl|;
 comment|/// Returns whether or not the destructor of C++ 'shared_ptr' may be
@@ -771,6 +795,14 @@ comment|/// This is controlled by the 'report-in-main-source-file' config option
 comment|/// which accepts the values "true" and "false".
 name|bool
 name|shouldReportIssuesInMainSourceFile
+parameter_list|()
+function_decl|;
+comment|/// Returns whether or not the report filename should be random or not.
+comment|///
+comment|/// This is controlled by the 'stable-report-filename' config option,
+comment|/// which accepts the values "true" and "false". Default = false
+name|bool
+name|shouldWriteStableReportFilename
 parameter_list|()
 function_decl|;
 comment|/// Returns whether irrelevant parts of a bug report path should be pruned

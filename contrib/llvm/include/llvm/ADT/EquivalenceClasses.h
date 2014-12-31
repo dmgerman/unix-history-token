@@ -255,7 +255,7 @@ argument_list|(
 name|getNext
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 operator|&&
 literal|"Already has a next pointer!"
 argument_list|)
@@ -326,7 +326,7 @@ operator|.
 name|getNext
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 operator|&&
 literal|"Not a singleton!"
 argument_list|)
@@ -700,7 +700,7 @@ operator|&
 operator|*
 name|I
 else|:
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -715,7 +715,7 @@ block|{
 return|return
 name|member_iterator
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -1269,19 +1269,6 @@ argument_list|(
 argument|N
 argument_list|)
 block|{}
-name|member_iterator
-argument_list|(
-specifier|const
-name|member_iterator
-operator|&
-name|I
-argument_list|)
-operator|:
-name|Node
-argument_list|(
-argument|I.Node
-argument_list|)
-block|{}
 name|reference
 name|operator
 operator|*
@@ -1293,7 +1280,7 @@ name|assert
 argument_list|(
 name|Node
 operator|!=
-literal|0
+name|nullptr
 operator|&&
 literal|"Dereferencing end()!"
 argument_list|)
@@ -1333,7 +1320,7 @@ name|assert
 argument_list|(
 name|Node
 operator|!=
-literal|0
+name|nullptr
 operator|&&
 literal|"++'d off the end of the list!"
 argument_list|)

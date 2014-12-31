@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/PointerUnion.h"
 end_include
 
@@ -71,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -106,7 +106,9 @@ name|class
 name|FileRemapper
 block|{
 comment|// FIXME: Reuse the same FileManager for multiple ASTContexts.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|FileManager
 operator|>
@@ -253,14 +255,6 @@ name|PPOpts
 argument_list|)
 decl|const
 decl_stmt|;
-name|void
-name|transferMappingsAndClear
-parameter_list|(
-name|PreprocessorOptions
-modifier|&
-name|PPOpts
-parameter_list|)
-function_decl|;
 name|void
 name|clear
 parameter_list|(

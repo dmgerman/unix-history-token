@@ -333,6 +333,16 @@ literal|5
 operator|)
 operator||
 literal|7
+block|,
+comment|// When dealing with individual condition-register bits, we have simple set
+comment|// and unset predicates.
+name|PRED_BIT_SET
+init|=
+literal|1024
+block|,
+name|PRED_BIT_UNSET
+init|=
+literal|1025
 block|}
 enum|;
 comment|/// Invert the specified predicate.  != -> ==,< ->>=.

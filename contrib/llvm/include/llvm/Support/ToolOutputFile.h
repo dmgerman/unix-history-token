@@ -127,7 +127,7 @@ argument|const char *filename
 argument_list|,
 argument|std::string&ErrorInfo
 argument_list|,
-argument|sys::fs::OpenFlags Flags = sys::fs::F_None
+argument|sys::fs::OpenFlags Flags
 argument_list|)
 empty_stmt|;
 name|tool_output_file

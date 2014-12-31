@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCTargetOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -111,6 +117,28 @@ block|,
 comment|// Only allow fusion of 'blessed' ops (currently just fmuladd).
 name|Strict
 comment|// Never fuse FP-ops.
+block|}
+enum|;
+block|}
+name|namespace
+name|JumpTable
+block|{
+enum|enum
+name|JumpTableType
+block|{
+name|Single
+block|,
+comment|// Use a single table for all indirect jumptable calls.
+name|Arity
+block|,
+comment|// Use one table per number of function parameters.
+name|Simplified
+block|,
+comment|// Use one table per function type, with types projected
+comment|// into 4 types: pointer to non-function, struct,
+comment|// primitive, and function pointer.
+name|Full
+comment|// Use one table per unique function type
 block|}
 enum|;
 block|}
@@ -202,12 +230,32 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|EnableSegmentedStacks
+name|UseInitArray
 argument_list|(
 name|false
 argument_list|)
 operator|,
-name|UseInitArray
+name|DisableIntegratedAS
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|CompressDebugSections
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|FunctionSections
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|DataSections
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|TrapUnreachable
 argument_list|(
 name|false
 argument_list|)
@@ -226,7 +274,14 @@ argument_list|)
 operator|,
 name|AllowFPOpFusion
 argument_list|(
-argument|FPOpFusion::Standard
+name|FPOpFusion
+operator|::
+name|Standard
+argument_list|)
+operator|,
+name|JTType
+argument_list|(
+argument|JumpTable::Single
 argument_list|)
 block|{}
 comment|/// PrintMachineCode - This flag is enabled when the -print-machineinstrs
@@ -389,15 +444,40 @@ name|PositionIndependentExecutable
 range|:
 literal|1
 decl_stmt|;
-name|unsigned
-name|EnableSegmentedStacks
-range|:
-literal|1
-decl_stmt|;
 comment|/// UseInitArray - Use .init_array instead of .ctors for static
 comment|/// constructors.
 name|unsigned
 name|UseInitArray
+range|:
+literal|1
+decl_stmt|;
+comment|/// Disable the integrated assembler.
+name|unsigned
+name|DisableIntegratedAS
+range|:
+literal|1
+decl_stmt|;
+comment|/// Compress DWARF debug sections.
+name|unsigned
+name|CompressDebugSections
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit functions into separate sections.
+name|unsigned
+name|FunctionSections
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit data into separate sections.
+name|unsigned
+name|DataSections
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit target-specific trap instruction for 'unreachable' IR instructions.
+name|unsigned
+name|TrapUnreachable
 range|:
 literal|1
 decl_stmt|;
@@ -446,6 +526,17 @@ operator|::
 name|FPOpFusionMode
 name|AllowFPOpFusion
 expr_stmt|;
+comment|/// JTType - This flag specifies the type of jump-instruction table to
+comment|/// create for functions that have the jumptable attribute.
+name|JumpTable
+operator|::
+name|JumpTableType
+name|JTType
+expr_stmt|;
+comment|/// Machine level options.
+name|MCTargetOptions
+name|MCOptions
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|// Comparison operators:
@@ -540,12 +631,12 @@ argument_list|)
 operator|&&
 name|ARE_EQUAL
 argument_list|(
-name|EnableSegmentedStacks
+name|UseInitArray
 argument_list|)
 operator|&&
 name|ARE_EQUAL
 argument_list|(
-name|UseInitArray
+name|TrapUnreachable
 argument_list|)
 operator|&&
 name|ARE_EQUAL
@@ -561,6 +652,11 @@ operator|&&
 name|ARE_EQUAL
 argument_list|(
 name|AllowFPOpFusion
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|MCOptions
 argument_list|)
 return|;
 undef|#

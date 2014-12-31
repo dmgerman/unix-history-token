@@ -943,6 +943,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|InsertRow
+parameter_list|(
+specifier|const
+name|RowSP
+modifier|&
+name|row_sp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|// Returns a pointer to the best row for the given offset into the function's instructions.
 end_comment

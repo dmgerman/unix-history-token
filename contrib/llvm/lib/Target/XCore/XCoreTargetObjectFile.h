@@ -53,29 +53,94 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+specifier|static
+specifier|const
+name|unsigned
+name|CodeModelLargeSize
+init|=
+literal|256
+decl_stmt|;
 name|class
 name|XCoreTargetObjectFile
 range|:
 name|public
 name|TargetLoweringObjectFileELF
 block|{
+specifier|const
+name|MCSection
+operator|*
+name|BSSSectionLarge
+block|;
+specifier|const
+name|MCSection
+operator|*
+name|DataSectionLarge
+block|;
+specifier|const
+name|MCSection
+operator|*
+name|ReadOnlySectionLarge
+block|;
+specifier|const
+name|MCSection
+operator|*
+name|DataRelROSectionLarge
+block|;
 name|public
 operator|:
 name|void
 name|Initialize
 argument_list|(
-name|MCContext
-operator|&
-name|Ctx
+argument|MCContext&Ctx
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|const TargetMachine&TM
 argument_list|)
+name|override
 block|;
-comment|// TODO: Classify globals as xcore wishes.
-block|}
+specifier|const
+name|MCSection
+operator|*
+name|getExplicitSectionGlobal
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|SectionKind Kind
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|MCSection
+operator|*
+name|SelectSectionForGlobal
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|SectionKind Kind
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|MCSection
+operator|*
+name|getSectionForConstant
+argument_list|(
+argument|SectionKind Kind
+argument_list|,
+argument|const Constant *C
+argument_list|)
+specifier|const
+name|override
+block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt

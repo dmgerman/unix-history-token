@@ -138,65 +138,6 @@ value|""
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `arc4random' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ARC4RANDOM
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `argz_append' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ARGZ_APPEND */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `argz_create_sep' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ARGZ_CREATE_SEP */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the<argz.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ARGZ_H */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `argz_insert' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ARGZ_INSERT */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `argz_next' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ARGZ_NEXT */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `argz_stringify' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ARGZ_STRINGIFY */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `backtrace' function. */
 end_comment
 
@@ -212,25 +153,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_CEILF
-value|1
-end_define
-
-begin_comment
-comment|/* Define if the neat program is available */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_CIRCO */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `closedir' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_CLOSEDIR
 value|1
 end_define
 
@@ -261,6 +183,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_CXXABI_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `arc4random', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_ARC4RANDOM
 value|1
 end_define
 
@@ -309,25 +242,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the GNU dld library. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_DLD */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `dlerror' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_DLERROR
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
 end_comment
 
@@ -358,22 +272,6 @@ comment|/* #undef HAVE_DOT */
 end_comment
 
 begin_comment
-comment|/* Define if the dotty program is available */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_DOTTY */
-end_comment
-
-begin_comment
-comment|/* Define if you have the _dyld_func_lookup function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_DYLD */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the<errno.h> header file. */
 end_comment
 
@@ -383,14 +281,6 @@ directive|define
 name|HAVE_ERRNO_H
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if the system has the type `error_t'. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ERROR_T */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<execinfo.h> header file. */
@@ -432,14 +322,6 @@ directive|define
 name|HAVE_FCNTL_H
 value|1
 end_define
-
-begin_comment
-comment|/* Define if the neat program is available */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_FDP */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<fenv.h> header file. */
@@ -581,22 +463,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if the Graphviz program is available */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_GRAPHVIZ */
-end_comment
-
-begin_comment
-comment|/* Define if the gv program is available */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_GV */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if the system has the type `int64_t'. */
 end_comment
 
@@ -674,13 +540,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the libdl library or equivalent. */
+comment|/* Define if libedit is available on this platform. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_LIBDL
+name|HAVE_LIBEDIT
 value|1
 end_define
 
@@ -725,14 +591,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LIBSHELL32 */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `udis86' library (-ludis86). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBUDIS86 */
 end_comment
 
 begin_comment
@@ -852,14 +710,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_MACH_MACH_H */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the<mach-o/dyld.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_MACH_O_DYLD_H */
 end_comment
 
 begin_comment
@@ -987,25 +837,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if the neat program is available */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_NEATO */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `opendir' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_OPENDIR
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `posix_spawn' function. */
 end_comment
 
@@ -1032,17 +863,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_PREAD
-value|1
-end_define
-
-begin_comment
-comment|/* Define if libtool can extract symbol lists from object files. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PRELOADED_SYMBOLS
 value|1
 end_define
 
@@ -1097,17 +917,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_RAND48
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `readdir' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_READDIR
 value|1
 end_define
 
@@ -1209,14 +1018,6 @@ directive|define
 name|HAVE_SETRLIMIT
 value|1
 end_define
-
-begin_comment
-comment|/* Define if you have the shl_load function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_SHL_LOAD */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `siglongjmp' function. */
@@ -1521,14 +1322,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if the neat program is available */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_TWOPI */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if the system has the type `uint64_t'. */
 end_comment
 
@@ -1587,14 +1380,6 @@ directive|define
 name|HAVE_WRITEV
 value|1
 end_define
-
-begin_comment
-comment|/* Define if the xdot program is available */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_XDOT */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<zlib.h> header file. */
@@ -1964,75 +1749,11 @@ comment|/* #undef LLVM_ON_WIN32 */
 end_comment
 
 begin_comment
-comment|/* Define to path to circo program if found or 'echo circo' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_CIRCO */
-end_comment
-
-begin_comment
 comment|/* Define to path to dot program if found or 'echo dot' otherwise */
 end_comment
 
 begin_comment
 comment|/* #undef LLVM_PATH_DOT */
-end_comment
-
-begin_comment
-comment|/* Define to path to dotty program if found or 'echo dotty' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_DOTTY */
-end_comment
-
-begin_comment
-comment|/* Define to path to fdp program if found or 'echo fdp' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_FDP */
-end_comment
-
-begin_comment
-comment|/* Define to path to Graphviz program if found or 'echo Graphviz' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_GRAPHVIZ */
-end_comment
-
-begin_comment
-comment|/* Define to path to gv program if found or 'echo gv' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_GV */
-end_comment
-
-begin_comment
-comment|/* Define to path to neato program if found or 'echo neato' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_NEATO */
-end_comment
-
-begin_comment
-comment|/* Define to path to twopi program if found or 'echo twopi' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_TWOPI */
-end_comment
-
-begin_comment
-comment|/* Define to path to xdot program if found or 'echo xdot' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_XDOT */
 end_comment
 
 begin_comment
@@ -2087,7 +1808,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|4
+value|5
 end_define
 
 begin_comment
@@ -2098,33 +1819,11 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_PATCH
-value|1
+value|0
 end_define
 
 begin_comment
-comment|/* Define if the OS needs help to load dependent libraries for dlopen(). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LTDL_DLOPEN_DEPLIBS
-value|1
-end_define
-
-begin_comment
-comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LTDL_OBJDIR
-value|".libs/"
-end_define
-
-begin_comment
-comment|/* Define to the extension used for shared libraries, say, ".so". */
+comment|/* The shared library extension */
 end_comment
 
 begin_define
@@ -2132,17 +1831,6 @@ define|#
 directive|define
 name|LTDL_SHLIB_EXT
 value|".so"
-end_define
-
-begin_comment
-comment|/* Define to the system default library search path. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LTDL_SYSSEARCHPATH
-value|"/lib:/usr/lib"
 end_define
 
 begin_comment
@@ -2154,14 +1842,6 @@ comment|/* #undef NEED_DEV_ZERO_FOR_MMAP */
 end_comment
 
 begin_comment
-comment|/* Define if dlsym() requires a leading underscore in symbol names. */
-end_comment
-
-begin_comment
-comment|/* #undef NEED_USCORE */
-end_comment
-
-begin_comment
 comment|/* Define to the address where bug reports for this package should be sent. */
 end_comment
 
@@ -2169,7 +1849,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_BUGREPORT
-value|"http://llvm.org/bugs/"
+value|"https://bugs.freebsd.org/submit/"
 end_define
 
 begin_comment
@@ -2191,7 +1871,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.4.1"
+value|"LLVM 3.5.0"
 end_define
 
 begin_comment
@@ -2213,7 +1893,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.4.1"
+value|"3.5.0"
 end_define
 
 begin_comment
@@ -2266,42 +1946,12 @@ comment|/* #undef TM_IN_SYS_TIME */
 end_comment
 
 begin_comment
-comment|/* Define if use udis86 library */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USE_UDIS86
-value|0
-end_define
-
-begin_comment
 comment|/* Type of 1st arg on ELM Callback */
 end_comment
 
 begin_comment
 comment|/* #undef WIN32_ELMCB_PCSTR */
 end_comment
-
-begin_comment
-comment|/* Define to empty if `const' does not conform to ANSI C. */
-end_comment
-
-begin_comment
-comment|/* #undef const */
-end_comment
-
-begin_comment
-comment|/* Define to a type to use for `error_t' if it is not otherwise available. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|error_t
-value|int
-end_define
 
 begin_comment
 comment|/* Define to `int' if<sys/types.h> does not define. */

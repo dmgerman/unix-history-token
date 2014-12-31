@@ -458,13 +458,13 @@ name|processRegionChanges
 argument_list|(
 name|state
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
 name|MR
 argument_list|,
 name|MR
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}

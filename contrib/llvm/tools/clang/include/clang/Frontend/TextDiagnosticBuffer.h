@@ -126,6 +126,8 @@ name|Errors
 decl_stmt|,
 name|Warnings
 decl_stmt|,
+name|Remarks
+decl_stmt|,
 name|Notes
 decl_stmt|;
 name|public
@@ -179,6 +181,30 @@ argument_list|()
 return|;
 block|}
 name|const_iterator
+name|remark_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Remarks
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|const_iterator
+name|remark_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Remarks
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|const_iterator
 name|note_begin
 argument_list|()
 specifier|const
@@ -202,7 +228,6 @@ name|end
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
@@ -216,6 +241,7 @@ name|Diagnostic
 operator|&
 name|Info
 argument_list|)
+name|override
 decl_stmt|;
 comment|/// FlushDiagnostics - Flush the buffered diagnostics to an given
 comment|/// diagnostic engine.

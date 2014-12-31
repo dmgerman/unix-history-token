@@ -188,6 +188,7 @@ name|bool
 name|isBottomUp
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -198,6 +199,7 @@ name|initNodes
 argument_list|(
 argument|std::vector<SUnit>&sunits
 argument_list|)
+name|override
 block|{
 name|SUnits
 operator|=
@@ -221,6 +223,7 @@ name|addNode
 argument_list|(
 argument|const SUnit *SU
 argument_list|)
+name|override
 block|{
 name|NumNodesSolelyBlocking
 operator|.
@@ -239,14 +242,16 @@ name|updateNode
 argument_list|(
 argument|const SUnit *SU
 argument_list|)
+name|override
 block|{     }
 name|void
 name|releaseState
 argument_list|()
+name|override
 block|{
 name|SUnits
 operator|=
-literal|0
+name|nullptr
 block|;     }
 name|unsigned
 name|getLatency
@@ -309,6 +314,7 @@ name|bool
 name|empty
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Queue
@@ -317,37 +323,33 @@ name|empty
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|push
 argument_list|(
-name|SUnit
-operator|*
-name|U
+argument|SUnit *U
 argument_list|)
+name|override
 block|;
-name|virtual
 name|SUnit
 operator|*
 name|pop
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|remove
 argument_list|(
-name|SUnit
-operator|*
-name|SU
+argument|SUnit *SU
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|dump
 argument_list|(
 argument|ScheduleDAG* DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// scheduledNode - As nodes are scheduled, we look to see if there are any
 comment|// successor nodes that have a single unscheduled predecessor.  If so, that
@@ -356,10 +358,9 @@ comment|// the node available.
 name|void
 name|scheduledNode
 argument_list|(
-name|SUnit
-operator|*
-name|Node
+argument|SUnit *Node
 argument_list|)
+name|override
 block|;
 name|private
 operator|:

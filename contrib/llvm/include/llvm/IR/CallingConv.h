@@ -122,6 +122,18 @@ name|AnyReg
 init|=
 literal|13
 block|,
+comment|// PreserveMost - Calling convention for runtime calls that preserves most
+comment|// registers.
+name|PreserveMost
+init|=
+literal|14
+block|,
+comment|// PreserveAll - Calling convention for runtime calls that preserves
+comment|// (almost) all registers.
+name|PreserveAll
+init|=
+literal|15
+block|,
 comment|// Target - This is the start of the target-specific calling conventions,
 comment|// e.g. fastcall and thiscall on X86.
 name|FirstTargetCC

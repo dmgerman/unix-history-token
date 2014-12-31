@@ -43,13 +43,6 @@ directive|define
 name|INSTCOMBINE_WORKLIST_H
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEBUG_TYPE
-value|"instcombine"
-end_define
-
 begin_include
 include|#
 directive|include
@@ -85,6 +78,13 @@ include|#
 directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|DEBUG_TYPE
+value|"instcombine"
+end_define
 
 begin_decl_stmt
 name|namespace
@@ -378,7 +378,7 @@ operator|->
 name|second
 index|]
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|WorklistMap
 operator|.
@@ -427,29 +427,14 @@ parameter_list|)
 block|{
 for|for
 control|(
-name|Value
-operator|::
-name|use_iterator
-name|UI
-operator|=
+name|User
+modifier|*
+name|U
+range|:
 name|I
 operator|.
-name|use_begin
+name|users
 argument_list|()
-operator|,
-name|UE
-operator|=
-name|I
-operator|.
-name|use_end
-argument_list|()
-init|;
-name|UI
-operator|!=
-name|UE
-condition|;
-operator|++
-name|UI
 control|)
 name|Add
 argument_list|(
@@ -458,8 +443,7 @@ operator|<
 name|Instruction
 operator|>
 operator|(
-operator|*
-name|UI
+name|U
 operator|)
 argument_list|)
 expr_stmt|;
@@ -495,6 +479,12 @@ end_decl_stmt
 begin_comment
 comment|// end namespace llvm.
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEBUG_TYPE
+end_undef
 
 begin_endif
 endif|#

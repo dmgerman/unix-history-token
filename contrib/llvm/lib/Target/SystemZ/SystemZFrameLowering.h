@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"SystemZSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/IndexedMap.h"
 end_include
 
@@ -83,46 +77,22 @@ name|unsigned
 operator|>
 name|RegSpillOffsets
 block|;
-name|protected
-operator|:
-specifier|const
-name|SystemZTargetMachine
-operator|&
-name|TM
-block|;
-specifier|const
-name|SystemZSubtarget
-operator|&
-name|STI
-block|;
 name|public
 operator|:
 name|SystemZFrameLowering
-argument_list|(
-specifier|const
-name|SystemZTargetMachine
-operator|&
-name|tm
-argument_list|,
-specifier|const
-name|SystemZSubtarget
-operator|&
-name|sti
-argument_list|)
+argument_list|()
 block|;
 comment|// Override TargetFrameLowering.
-name|virtual
 name|bool
 name|isFPCloseToIncomingSP
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 specifier|const
 name|SpillSlot
 operator|*
@@ -131,9 +101,8 @@ argument_list|(
 argument|unsigned&NumEntries
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|processFunctionBeforeCalleeSavedScan
 argument_list|(
@@ -142,9 +111,8 @@ argument_list|,
 argument|RegScavenger *RS
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|spillCalleeSavedRegisters
 argument_list|(
@@ -157,9 +125,8 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|restoreCalleeSavedRegisters
 argument_list|(
@@ -172,9 +139,8 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|processFunctionBeforeFrameFinalized
 argument_list|(
@@ -183,17 +149,16 @@ argument_list|,
 argument|RegScavenger *RS
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|emitPrologue
 argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|emitEpilogue
 argument_list|(
@@ -202,18 +167,16 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|hasFP
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|int
 name|getFrameIndexOffset
 argument_list|(
@@ -222,18 +185,16 @@ argument_list|,
 argument|int FI
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|hasReservedCallFrame
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(
@@ -244,7 +205,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|// Return the number of bytes in the callee-allocated part of the frame.
 name|uint64_t

@@ -408,6 +408,20 @@ operator|&&
 literal|"Invalid twine!"
 argument_list|)
 block|;     }
+comment|/// Since the intended use of twines is as temporary objects, assignments
+comment|/// when concatenating might cause undefined behavior or stack corruptions
+name|Twine
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Twine
+operator|&
+name|Other
+operator|)
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
 comment|/// isNull - Check for the null twine.
 name|bool
 name|isNull
@@ -1173,7 +1187,7 @@ name|RHS
 operator|.
 name|twine
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 return|return
 name|Twine

@@ -89,10 +89,10 @@ range|:
 name|public
 name|AMDGPUMachineFunction
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:

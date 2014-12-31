@@ -87,6 +87,13 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|object
+block|{
+name|class
+name|ObjectFile
+decl_stmt|;
+block|}
 name|class
 name|RuntimeDyldImpl
 decl_stmt|;
@@ -96,6 +103,10 @@ decl_stmt|;
 name|class
 name|RuntimeDyld
 block|{
+name|friend
+name|class
+name|RuntimeDyldChecker
+decl_stmt|;
 name|RuntimeDyld
 argument_list|(
 argument|const RuntimeDyld&
@@ -121,6 +132,9 @@ decl_stmt|;
 name|RTDyldMemoryManager
 modifier|*
 name|MM
+decl_stmt|;
+name|bool
+name|ProcessAllSections
 decl_stmt|;
 name|protected
 label|:
@@ -161,6 +175,25 @@ modifier|*
 name|InputBuffer
 parameter_list|)
 function_decl|;
+comment|/// Prepare the referenced object file for execution.
+comment|/// Ownership of the input object is transferred to the ObjectImage
+comment|/// instance returned from this function if successful. In the case of load
+comment|/// failure, the input object will be deleted.
+name|ObjectImage
+modifier|*
+name|loadObject
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|object
+operator|::
+name|ObjectFile
+operator|>
+name|InputObject
+argument_list|)
+decl_stmt|;
 comment|/// Get the address of our local copy of the symbol. This may or may not
 comment|/// be the address used for relocation (clients can copy the data around
 comment|/// and resolve relocatons based on where they put it).
@@ -215,10 +248,44 @@ name|void
 name|deregisterEHFrames
 parameter_list|()
 function_decl|;
+name|bool
+name|hasError
+parameter_list|()
+function_decl|;
 name|StringRef
 name|getErrorString
 parameter_list|()
 function_decl|;
+comment|/// By default, only sections that are "required for execution" are passed to
+comment|/// the RTDyldMemoryManager, and other sections are discarded. Passing 'true'
+comment|/// to this method will cause RuntimeDyld to pass all sections to its
+comment|/// memory manager regardless of whether they are "required to execute" in the
+comment|/// usual sense. This is useful for inspecting metadata sections that may not
+comment|/// contain relocations, E.g. Debug info, stackmaps.
+comment|///
+comment|/// Must be called before the first object file is loaded.
+name|void
+name|setProcessAllSections
+parameter_list|(
+name|bool
+name|ProcessAllSections
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|Dyld
+operator|&&
+literal|"setProcessAllSections must be called before loadObject."
+argument_list|)
+expr_stmt|;
+name|this
+operator|->
+name|ProcessAllSections
+operator|=
+name|ProcessAllSections
+expr_stmt|;
+block|}
 block|}
 empty_stmt|;
 block|}

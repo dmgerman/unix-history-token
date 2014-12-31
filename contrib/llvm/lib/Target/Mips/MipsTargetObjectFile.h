@@ -69,25 +69,16 @@ name|MCSection
 operator|*
 name|SmallBSSSection
 block|;
-specifier|const
-name|MCSection
-operator|*
-name|ReginfoSection
-block|;
 name|public
 operator|:
 name|void
 name|Initialize
 argument_list|(
-name|MCContext
-operator|&
-name|Ctx
+argument|MCContext&Ctx
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|const TargetMachine&TM
 argument_list|)
+name|override
 block|;
 comment|/// IsGlobalInSmallSection - Return true if this global address should be
 comment|/// placed into small data/bss section.
@@ -120,26 +111,15 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|SectionKind Kind
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
-block|;
-comment|// TODO: Classify globals as mips wishes.
-specifier|const
-name|MCSection
-operator|*
-name|getReginfoSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ReginfoSection
-return|;
+name|override
+block|;   }
+decl_stmt|;
 block|}
-expr|}
-block|; }
 end_decl_stmt
 
 begin_comment

@@ -681,7 +681,7 @@ condition|(
 name|return_implementation_only_if_available
 condition|)
 block|{
-comment|// We found the one true definiton for this class, so
+comment|// We found the one true definition for this class, so
 comment|// only return that
 name|die_offsets
 operator|.
@@ -1361,7 +1361,7 @@ argument_list|)
 return|;
 block|}
 name|size_t
-name|GetMinumumHashDataByteSize
+name|GetMinimumHashDataByteSize
 argument_list|()
 decl|const
 block|{
@@ -1629,7 +1629,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 default|default:
-comment|// We can always skip atomes we don't know about
+comment|// We can always skip atoms we don't know about
 break|break;
 block|}
 block|}
@@ -2404,7 +2404,7 @@ name|m_header
 operator|.
 name|header_data
 operator|.
-name|GetMinumumHashDataByteSize
+name|GetMinimumHashDataByteSize
 argument_list|()
 decl_stmt|;
 if|if
@@ -2425,7 +2425,7 @@ argument_list|)
 condition|)
 block|{
 comment|// We have at least one HashData entry, and we have enough
-comment|// data to parse at leats "count" HashData enties.
+comment|// data to parse at least "count" HashData entries.
 comment|// First make sure the entire C string matches...
 specifier|const
 name|bool
@@ -2500,7 +2500,7 @@ name|die_info
 argument_list|)
 condition|)
 block|{
-comment|// Only happend the HashData if the string matched...
+comment|// Only happened if the HashData of the string matched...
 if|if
 condition|(
 name|match
@@ -2652,7 +2652,7 @@ name|m_header
 operator|.
 name|header_data
 operator|.
-name|GetMinumumHashDataByteSize
+name|GetMinimumHashDataByteSize
 argument_list|()
 decl_stmt|;
 if|if
@@ -2743,7 +2743,7 @@ name|die_info
 argument_list|)
 condition|)
 block|{
-comment|// Only happend the HashData if the string matched...
+comment|// Only happened if the HashData of the string matched...
 if|if
 condition|(
 name|match

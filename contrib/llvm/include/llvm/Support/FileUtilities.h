@@ -107,7 +107,7 @@ name|string
 operator|*
 name|Error
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// FileRemover - This class is a simple object meant to be stack allocated.
@@ -166,9 +166,6 @@ name|DeleteIt
 condition|)
 block|{
 comment|// Ignore problems deleting the file.
-name|bool
-name|existed
-decl_stmt|;
 name|sys
 operator|::
 name|fs
@@ -179,8 +176,6 @@ name|Filename
 operator|.
 name|str
 argument_list|()
-argument_list|,
-name|existed
 argument_list|)
 expr_stmt|;
 block|}
@@ -202,9 +197,6 @@ name|DeleteIt
 condition|)
 block|{
 comment|// Ignore problems deleting the file.
-name|bool
-name|existed
-decl_stmt|;
 name|sys
 operator|::
 name|fs
@@ -215,8 +207,6 @@ name|Filename
 operator|.
 name|str
 argument_list|()
-argument_list|,
-name|existed
 argument_list|)
 expr_stmt|;
 block|}

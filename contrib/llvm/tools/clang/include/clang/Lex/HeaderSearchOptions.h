@@ -271,6 +271,12 @@ operator|::
 name|string
 name|ModuleCachePath
 block|;
+comment|/// \brief The directory used for a user build.
+name|std
+operator|::
+name|string
+name|ModuleUserBuildPath
+block|;
 comment|/// \brief Whether we should disable the use of the hash string within the
 comment|/// module cache.
 comment|///
@@ -306,6 +312,13 @@ comment|/// regenerated often.
 name|unsigned
 name|ModuleCachePruneAfter
 block|;
+comment|/// \brief The time in seconds when the build session started.
+comment|///
+comment|/// This time is used by other optimizations in header search and module
+comment|/// loading.
+name|uint64_t
+name|BuildSessionTimestamp
+block|;
 comment|/// \brief The set of macro names that should be ignored for the purposes
 comment|/// of computing the module hash.
 name|llvm
@@ -328,6 +341,17 @@ operator|::
 name|string
 operator|>
 name|ModuleMapFiles
+block|;
+comment|/// \brief The set of user-provided virtual filesystem overlay files.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|VFSOverlayFiles
 block|;
 comment|/// Include the compiler builtin includes.
 name|unsigned
@@ -356,6 +380,20 @@ block|;
 comment|/// Whether header search information should be output as for -v.
 name|unsigned
 name|Verbose
+operator|:
+literal|1
+block|;
+comment|/// \brief If true, skip verifying input files used by modules if the
+comment|/// module was already verified during this build session (see
+comment|/// \c BuildSessionTimestamp).
+name|unsigned
+name|ModulesValidateOncePerBuildSession
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether to validate system input files when a module is loaded.
+name|unsigned
+name|ModulesValidateSystemHeaders
 operator|:
 literal|1
 block|;
@@ -404,6 +442,11 @@ operator|*
 literal|60
 argument_list|)
 block|,
+name|BuildSessionTimestamp
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|UseBuiltinIncludes
 argument_list|(
 name|true
@@ -425,6 +468,16 @@ name|false
 argument_list|)
 block|,
 name|Verbose
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|ModulesValidateOncePerBuildSession
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|ModulesValidateSystemHeaders
 argument_list|(
 argument|false
 argument_list|)
@@ -479,6 +532,19 @@ name|Prefix
 argument_list|,
 name|IsSystemHeader
 argument_list|)
+argument_list|)
+block|;   }
+name|void
+name|AddVFSOverlayFile
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|{
+name|VFSOverlayFiles
+operator|.
+name|push_back
+argument_list|(
+name|Name
 argument_list|)
 block|;   }
 block|}

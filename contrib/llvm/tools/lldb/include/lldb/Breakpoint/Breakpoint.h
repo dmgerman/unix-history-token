@@ -750,7 +750,7 @@ comment|///    A void * pointer that will get passed back to the callback functi
 comment|/// @param[in] is_synchronous
 comment|///    If \b true the callback will be run on the private event thread
 comment|///    before the stop event gets reported.  If false, the callback will get
-comment|///    handled on the public event thead after the stop has been posted.
+comment|///    handled on the public event thread after the stop has been posted.
 comment|///
 comment|/// @return
 comment|///    \b true if the process should stop when you hit the breakpoint.

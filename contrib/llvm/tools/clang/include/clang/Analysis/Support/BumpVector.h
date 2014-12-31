@@ -236,17 +236,17 @@ argument_list|)
 operator|:
 name|Begin
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 block|,
 name|End
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 block|,
 name|Capacity
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{
 name|reserve
@@ -262,7 +262,7 @@ argument_list|()
 block|{
 if|if
 condition|(
-name|llvm
+name|std
 operator|::
 name|is_class
 operator|<
@@ -591,7 +591,7 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|llvm
+name|std
 operator|::
 name|is_class
 operator|<
@@ -1062,7 +1062,7 @@ end_comment
 begin_if
 if|if
 condition|(
-name|llvm
+name|std
 operator|::
 name|is_class
 operator|<

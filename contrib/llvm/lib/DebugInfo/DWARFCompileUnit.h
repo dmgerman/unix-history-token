@@ -67,8 +67,6 @@ argument|const DWARFDebugAbbrev *DA
 argument_list|,
 argument|StringRef IS
 argument_list|,
-argument|StringRef AS
-argument_list|,
 argument|StringRef RS
 argument_list|,
 argument|StringRef SS
@@ -87,8 +85,6 @@ argument_list|(
 argument|DA
 argument_list|,
 argument|IS
-argument_list|,
-argument|AS
 argument_list|,
 argument|RS
 argument_list|,
@@ -115,7 +111,7 @@ comment|// VTable anchor.
 operator|~
 name|DWARFCompileUnit
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|; }
 decl_stmt|;
 block|}

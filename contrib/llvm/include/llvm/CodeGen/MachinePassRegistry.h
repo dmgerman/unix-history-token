@@ -195,7 +195,7 @@ argument_list|)
 block|:
 name|Next
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|Name
@@ -422,7 +422,7 @@ name|RegistryClass
 operator|::
 name|setListener
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 block|; }
 name|void
@@ -506,7 +506,6 @@ expr_stmt|;
 block|}
 comment|// Implement the MachinePassRegistryListener callbacks.
 comment|//
-name|virtual
 name|void
 name|NotifyAdd
 argument_list|(
@@ -516,6 +515,7 @@ argument|MachinePassCtor C
 argument_list|,
 argument|const char *D
 argument_list|)
+name|override
 block|{
 name|this
 operator|->
@@ -534,12 +534,12 @@ argument_list|,
 name|D
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|NotifyRemove
 argument_list|(
 argument|const char *N
 argument_list|)
+name|override
 block|{
 name|this
 operator|->

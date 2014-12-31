@@ -187,7 +187,12 @@ comment|///
 comment|/// @param[in] length
 comment|///     The size in bytes that should be mapped starting \a offset
 comment|///     bytes into the file. If \a length is \c SIZE_MAX, map
-comment|///     as many bytes as possible.
+comment|///     as many bytes as possible.  Even though it may be possible
+comment|///     for a 32-bit host debugger to debug a 64-bit target, size_t
+comment|///     still dictates the maximum possible size that can be mapped
+comment|///     into this process.  For this kind of cross-arch debugging
+comment|///     scenario, mappings and views should be managed at a higher
+comment|///     level.
 comment|///
 comment|/// @return
 comment|///     The number of bytes mapped starting from the \a offset.
@@ -200,7 +205,7 @@ argument_list|,
 argument|lldb::offset_t offset =
 literal|0
 argument_list|,
-argument|lldb::offset_t length = SIZE_MAX
+argument|size_t length = SIZE_MAX
 argument_list|,
 argument|bool writeable = false
 argument_list|)
@@ -235,7 +240,7 @@ argument|int fd
 argument_list|,
 argument|lldb::offset_t offset
 argument_list|,
-argument|lldb::offset_t length
+argument|size_t length
 argument_list|,
 argument|bool write
 argument_list|,

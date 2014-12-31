@@ -211,7 +211,7 @@ operator|::
 name|const_iterator
 name|RegRefIter
 expr_stmt|;
-comment|/// KillIndices - The index of the most recent kill (proceding bottom-up),
+comment|/// KillIndices - The index of the most recent kill (proceeding bottom-up),
 comment|/// or ~0u if the register is not live.
 name|std
 operator|::
@@ -221,8 +221,8 @@ name|unsigned
 operator|>
 name|KillIndices
 decl_stmt|;
-comment|/// DefIndices - The index of the most recent complete def (proceding bottom
-comment|/// up), or ~0u if the register is live.
+comment|/// DefIndices - The index of the most recent complete def (proceeding
+comment|/// bottom up), or ~0u if the register is live.
 name|std
 operator|::
 name|vector
@@ -256,12 +256,13 @@ expr_stmt|;
 comment|/// Start - Initialize anti-dep breaking for a new basic block.
 name|void
 name|StartBlock
-parameter_list|(
+argument_list|(
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|BB
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// BreakAntiDependencies - Identifiy anti-dependencies along the critical
 comment|/// path
 comment|/// of the ScheduleDAG and break them by renaming registers.
@@ -296,29 +297,32 @@ name|DbgValueVector
 operator|&
 name|DbgValues
 argument_list|)
+name|override
 decl_stmt|;
 comment|/// Observe - Update liveness information to account for the current
 comment|/// instruction, which will not be scheduled.
 comment|///
 name|void
 name|Observe
-parameter_list|(
+argument_list|(
 name|MachineInstr
-modifier|*
+operator|*
 name|MI
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Count
-parameter_list|,
+argument_list|,
 name|unsigned
 name|InsertPosIndex
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// Finish - Finish anti-dep breaking for a basic block.
 name|void
 name|FinishBlock
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 name|private
 label|:
 name|void

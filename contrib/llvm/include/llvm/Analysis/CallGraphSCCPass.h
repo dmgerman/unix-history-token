@@ -149,6 +149,7 @@ argument_list|,
 argument|const std::string&Banner
 argument_list|)
 specifier|const
+name|override
 block|;
 name|using
 name|llvm
@@ -210,7 +211,6 @@ name|false
 return|;
 block|}
 comment|/// Assign pass manager to manager this pass
-name|virtual
 name|void
 name|assignPassManager
 argument_list|(
@@ -218,13 +218,14 @@ argument|PMStack&PMS
 argument_list|,
 argument|PassManagerType PMT
 argument_list|)
+name|override
 block|;
 comment|///  Return what kind of Pass Manager can manage this pass.
-name|virtual
 name|PassManagerType
 name|getPotentialPassManagerType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|PMT_CallGraphPassManager
@@ -233,13 +234,13 @@ block|}
 comment|/// getAnalysisUsage - For this class, we declare that we require and preserve
 comment|/// the call graph.  If the derived class implements this method, it should
 comment|/// always explicitly call the implementation here.
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&Info
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 comment|/// CallGraphSCC - This is a single SCC that a CallGraphSCCPass is run on.

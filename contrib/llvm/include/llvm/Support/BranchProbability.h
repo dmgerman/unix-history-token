@@ -190,7 +190,8 @@ name|D
 argument_list|)
 return|;
 block|}
-name|void
+name|raw_ostream
+modifier|&
 name|print
 argument_list|(
 name|raw_ostream
@@ -204,6 +205,34 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Scale a large integer.
+comment|///
+comment|/// Scales \c Num.  Guarantees full precision.  Returns the floor of the
+comment|/// result.
+comment|///
+comment|/// \return \c Num times \c this.
+name|uint64_t
+name|scale
+argument_list|(
+name|uint64_t
+name|Num
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Scale a large integer by the inverse.
+comment|///
+comment|/// Scales \c Num by the inverse of \c this.  Guarantees full precision.
+comment|/// Returns the floor of the result.
+comment|///
+comment|/// \return \c Num divided by \c this.
+name|uint64_t
+name|scaleByInverse
+argument_list|(
+name|uint64_t
+name|Num
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|operator
 operator|==
@@ -307,23 +336,13 @@ operator|)
 specifier|const
 block|{
 return|return
+operator|!
 operator|(
-name|uint64_t
-operator|)
-name|N
-operator|*
 name|RHS
-operator|.
-name|D
-operator|<=
-operator|(
-name|uint64_t
-operator|)
-name|D
+operator|<
 operator|*
-name|RHS
-operator|.
-name|N
+name|this
+operator|)
 return|;
 block|}
 name|bool
@@ -336,14 +355,18 @@ operator|)
 specifier|const
 block|{
 return|return
-name|RHS
-operator|<=
+operator|!
+operator|(
 operator|*
 name|this
+operator|<
+name|RHS
+operator|)
 return|;
 block|}
 block|}
 empty_stmt|;
+specifier|inline
 name|raw_ostream
 operator|&
 name|operator
@@ -358,7 +381,16 @@ name|BranchProbability
 operator|&
 name|Prob
 operator|)
-expr_stmt|;
+block|{
+return|return
+name|Prob
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+return|;
+block|}
 block|}
 end_decl_stmt
 

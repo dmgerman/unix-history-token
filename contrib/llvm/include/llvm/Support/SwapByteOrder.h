@@ -367,7 +367,7 @@ block|}
 specifier|inline
 name|unsigned
 name|char
-name|SwapByteOrder
+name|getSwappedBytes
 parameter_list|(
 name|unsigned
 name|char
@@ -381,7 +381,7 @@ block|}
 specifier|inline
 name|signed
 name|char
-name|SwapByteOrder
+name|getSwappedBytes
 parameter_list|(
 name|signed
 name|char
@@ -394,7 +394,7 @@ return|;
 block|}
 specifier|inline
 name|char
-name|SwapByteOrder
+name|getSwappedBytes
 parameter_list|(
 name|char
 name|C
@@ -407,7 +407,7 @@ block|}
 specifier|inline
 name|unsigned
 name|short
-name|SwapByteOrder
+name|getSwappedBytes
 parameter_list|(
 name|unsigned
 name|short
@@ -424,7 +424,7 @@ block|}
 specifier|inline
 name|signed
 name|short
-name|SwapByteOrder
+name|getSwappedBytes
 parameter_list|(
 name|signed
 name|short
@@ -441,7 +441,7 @@ block|}
 specifier|inline
 name|unsigned
 name|int
-name|SwapByteOrder
+name|getSwappedBytes
 parameter_list|(
 name|unsigned
 name|int
@@ -458,7 +458,7 @@ block|}
 specifier|inline
 name|signed
 name|int
-name|SwapByteOrder
+name|getSwappedBytes
 parameter_list|(
 name|signed
 name|int
@@ -480,7 +480,7 @@ name|__INT_MAX__
 specifier|inline
 name|unsigned
 name|long
-name|SwapByteOrder
+name|getSwappedBytes
 parameter_list|(
 name|unsigned
 name|long
@@ -497,7 +497,7 @@ block|}
 specifier|inline
 name|signed
 name|long
-name|SwapByteOrder
+name|getSwappedBytes
 parameter_list|(
 name|signed
 name|long
@@ -519,7 +519,7 @@ name|__LONG_LONG_MAX__
 specifier|inline
 name|unsigned
 name|long
-name|SwapByteOrder
+name|getSwappedBytes
 parameter_list|(
 name|unsigned
 name|long
@@ -536,7 +536,7 @@ block|}
 specifier|inline
 name|signed
 name|long
-name|SwapByteOrder
+name|getSwappedBytes
 parameter_list|(
 name|signed
 name|long
@@ -561,7 +561,7 @@ specifier|inline
 name|unsigned
 name|long
 name|long
-name|SwapByteOrder
+name|getSwappedBytes
 parameter_list|(
 name|unsigned
 name|long
@@ -580,7 +580,7 @@ specifier|inline
 name|signed
 name|long
 name|long
-name|SwapByteOrder
+name|getSwappedBytes
 parameter_list|(
 name|signed
 name|long
@@ -595,6 +595,25 @@ name|C
 argument_list|)
 return|;
 block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|inline
+name|void
+name|swapByteOrder
+argument_list|(
+argument|T&Value
+argument_list|)
+block|{
+name|Value
+operator|=
+name|getSwappedBytes
+argument_list|(
+name|Value
+argument_list|)
+block|; }
 block|}
 comment|// end namespace sys
 block|}

@@ -78,7 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/TargetFolder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/IRBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/InstVisitor.h"
 end_include
 
 begin_include
@@ -90,25 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/InstVisitor.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/TargetFolder.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_decl_stmt
@@ -743,6 +743,8 @@ name|SizeOffset
 argument_list|)
 return|;
 block|}
+comment|// These are "private", except they can't actually be made private. Only
+comment|// compute() should be used by external users.
 name|SizeOffsetType
 name|visitAllocaInst
 parameter_list|(
@@ -971,17 +973,9 @@ name|std
 operator|::
 name|make_pair
 argument_list|(
-operator|(
-name|Value
-operator|*
-operator|)
-literal|0
+name|nullptr
 argument_list|,
-operator|(
-name|Value
-operator|*
-operator|)
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -1078,6 +1072,7 @@ name|SizeOffset
 argument_list|)
 return|;
 block|}
+comment|// The individual instruction visitors should be treated as private.
 name|SizeOffsetEvalType
 name|visitAllocaInst
 parameter_list|(

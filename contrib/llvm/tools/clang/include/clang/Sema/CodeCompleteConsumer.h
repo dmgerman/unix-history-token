@@ -790,7 +790,7 @@ argument_list|)
 operator|,
 name|Text
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|explicit
@@ -1395,7 +1395,7 @@ argument_list|)
 block|,
 name|BriefComment
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{ }
 name|CodeCompletionBuilder
@@ -1431,7 +1431,7 @@ argument_list|)
 block|,
 name|BriefComment
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{ }
 comment|/// \brief Retrieve the allocator into which the code completion
@@ -1716,8 +1716,7 @@ argument|const NamedDecl *Declaration
 argument_list|,
 argument|unsigned Priority
 argument_list|,
-argument|NestedNameSpecifier *Qualifier =
-literal|0
+argument|NestedNameSpecifier *Qualifier = nullptr
 argument_list|,
 argument|bool QualifierIsInformative = false
 argument_list|,
@@ -1794,7 +1793,7 @@ argument_list|)
 operator|:
 name|Declaration
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Keyword
@@ -1854,9 +1853,9 @@ argument_list|)
 block|,
 name|Qualifier
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
-block|{   }
+block|{}
 comment|/// \brief Build a result that refers to a macro.
 name|CodeCompletionResult
 argument_list|(
@@ -1867,7 +1866,7 @@ argument_list|)
 operator|:
 name|Declaration
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Macro
@@ -1927,9 +1926,9 @@ argument_list|)
 block|,
 name|Qualifier
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
-block|{   }
+block|{}
 comment|/// \brief Build a result that refers to a pattern.
 name|CodeCompletionResult
 argument_list|(
@@ -1941,8 +1940,7 @@ argument|CXCursorKind CursorKind = CXCursor_NotImplemented
 argument_list|,
 argument|CXAvailabilityKind Availability = CXAvailability_Available
 argument_list|,
-argument|const NamedDecl *D =
-literal|0
+argument|const NamedDecl *D = nullptr
 argument_list|)
 operator|:
 name|Declaration
@@ -2007,7 +2005,7 @@ argument_list|)
 block|,
 name|Qualifier
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{   }
 comment|/// \brief Build a result that refers to a pattern with an associated
@@ -2078,7 +2076,7 @@ argument_list|)
 block|,
 name|Qualifier
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|computeCursorKindAndAvailability
@@ -2646,7 +2644,6 @@ argument|new GlobalCodeCompletionAllocator
 argument_list|)
 block|{}
 comment|/// \brief Prints the finalized code-completion results.
-name|virtual
 name|void
 name|ProcessCodeCompleteResults
 argument_list|(
@@ -2658,8 +2655,8 @@ argument|CodeCompletionResult *Results
 argument_list|,
 argument|unsigned NumResults
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|ProcessOverloadCandidates
 argument_list|(
@@ -2671,12 +2668,13 @@ argument|OverloadCandidate *Candidates
 argument_list|,
 argument|unsigned NumCandidates
 argument_list|)
+name|override
 block|;
-name|virtual
 name|CodeCompletionAllocator
 operator|&
 name|getAllocator
 argument_list|()
+name|override
 block|{
 return|return
 name|CCTUInfo
@@ -2685,11 +2683,11 @@ name|getAllocator
 argument_list|()
 return|;
 block|}
-name|virtual
 name|CodeCompletionTUInfo
 operator|&
 name|getCodeCompletionTUInfo
 argument_list|()
+name|override
 block|{
 return|return
 name|CCTUInfo

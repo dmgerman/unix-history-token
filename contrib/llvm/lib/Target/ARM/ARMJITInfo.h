@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARMMachineFunctionInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -179,82 +173,63 @@ comment|/// whose machine code is at OLD turns into a call to NEW, perhaps by
 comment|/// overwriting OLD with a branch to NEW.  This is used for self-modifying
 comment|/// code.
 comment|///
-name|virtual
 name|void
 name|replaceMachineCodeForFunction
 argument_list|(
-name|void
-operator|*
-name|Old
+argument|void *Old
 argument_list|,
-name|void
-operator|*
-name|New
+argument|void *New
 argument_list|)
+name|override
 block|;
 comment|/// emitGlobalValueIndirectSym - Use the specified JITCodeEmitter object
 comment|/// to emit an indirect symbol which contains the address of the specified
 comment|/// ptr.
-name|virtual
 name|void
 operator|*
 name|emitGlobalValueIndirectSym
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
+argument|const GlobalValue* GV
 argument_list|,
-name|void
-operator|*
-name|ptr
+argument|void *ptr
 argument_list|,
-name|JITCodeEmitter
-operator|&
-name|JCE
+argument|JITCodeEmitter&JCE
 argument_list|)
+name|override
 block|;
 comment|// getStubLayout - Returns the size and alignment of the largest call stub
 comment|// on ARM.
-name|virtual
 name|StubLayout
 name|getStubLayout
 argument_list|()
+name|override
 block|;
 comment|/// emitFunctionStub - Use the specified JITCodeEmitter object to emit a
 comment|/// small native function that simply calls the function at the specified
 comment|/// address.
-name|virtual
 name|void
 operator|*
 name|emitFunctionStub
 argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
+argument|const Function* F
 argument_list|,
-name|void
-operator|*
-name|Fn
+argument|void *Fn
 argument_list|,
-name|JITCodeEmitter
-operator|&
-name|JCE
+argument|JITCodeEmitter&JCE
 argument_list|)
+name|override
 block|;
 comment|/// getLazyResolverFunction - Expose the lazy resolver to the JIT.
-name|virtual
 name|LazyResolverFn
 name|getLazyResolverFunction
 argument_list|(
-name|JITCompilerFn
+argument|JITCompilerFn
 argument_list|)
+name|override
 block|;
 comment|/// relocate - Before the JIT can run a block of code that has been emitted,
 comment|/// it must rewrite the code to contain the actual addresses of any
 comment|/// referenced global symbols.
-name|virtual
 name|void
 name|relocate
 argument_list|(
@@ -266,14 +241,15 @@ argument|unsigned NumRelocs
 argument_list|,
 argument|unsigned char* GOTBase
 argument_list|)
+name|override
 block|;
 comment|/// hasCustomConstantPool - Allows a target to specify that constant
 comment|/// pool address resolution is handled by the target.
-name|virtual
 name|bool
 name|hasCustomConstantPool
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -281,11 +257,11 @@ return|;
 block|}
 comment|/// hasCustomJumpTables - Allows a target to specify that jumptables
 comment|/// are emitted by the target.
-name|virtual
 name|bool
 name|hasCustomJumpTables
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -294,11 +270,11 @@ block|}
 comment|/// allocateSeparateGVMemory - If true, globals should be placed in
 comment|/// separately allocated heap memory rather than in the same
 comment|/// code memory allocated by JITCodeEmitter.
-name|virtual
 name|bool
 name|allocateSeparateGVMemory
 argument_list|()
 specifier|const
+name|override
 block|{
 ifdef|#
 directive|ifdef
@@ -329,46 +305,7 @@ parameter_list|,
 name|bool
 name|isPIC
 parameter_list|)
-block|{
-specifier|const
-name|ARMFunctionInfo
-modifier|*
-name|AFI
-init|=
-name|MF
-operator|.
-name|getInfo
-operator|<
-name|ARMFunctionInfo
-operator|>
-operator|(
-operator|)
-decl_stmt|;
-name|ConstPoolId2AddrMap
-operator|.
-name|resize
-argument_list|(
-name|AFI
-operator|->
-name|getNumPICLabels
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|JumpTableId2AddrMap
-operator|.
-name|resize
-argument_list|(
-name|AFI
-operator|->
-name|getNumJumpTables
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|IsPIC
-operator|=
-name|isPIC
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// getConstantPoolEntryAddr - The ARM target puts all constant
 comment|/// pool entries into constant islands. This returns the address of the
 comment|/// constant pool entry of the specified index.

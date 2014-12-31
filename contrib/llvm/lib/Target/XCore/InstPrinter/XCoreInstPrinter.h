@@ -138,7 +138,6 @@ argument_list|(
 argument|unsigned RegNo
 argument_list|)
 block|;
-name|virtual
 name|void
 name|printRegName
 argument_list|(
@@ -147,8 +146,8 @@ argument_list|,
 argument|unsigned RegNo
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|printInst
 argument_list|(
@@ -158,6 +157,7 @@ argument|raw_ostream&O
 argument_list|,
 argument|StringRef Annot
 argument_list|)
+name|override
 block|;
 name|private
 operator|:

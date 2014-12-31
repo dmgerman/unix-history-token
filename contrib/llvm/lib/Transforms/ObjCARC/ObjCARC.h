@@ -122,6 +122,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/CallSite.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/InstIterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Module.h"
 end_include
 
@@ -129,18 +141,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/CallSite.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/InstIterator.h"
 end_include
 
 begin_include
@@ -1216,6 +1216,11 @@ condition|(
 name|Arg
 operator|->
 name|hasByValAttr
+argument_list|()
+operator|||
+name|Arg
+operator|->
+name|hasInAllocaAttr
 argument_list|()
 operator|||
 name|Arg

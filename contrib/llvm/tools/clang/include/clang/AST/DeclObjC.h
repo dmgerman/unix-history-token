@@ -157,7 +157,7 @@ argument_list|()
 operator|:
 name|List
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NumElts
@@ -355,7 +355,7 @@ operator|)
 block|,
 name|Locations
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 typedef|typedef
@@ -598,14 +598,14 @@ name|HasSkippedBody
 range|:
 literal|1
 decl_stmt|;
-comment|// Result type of this method.
+comment|// Return type of this method.
 name|QualType
 name|MethodDeclType
 decl_stmt|;
-comment|// Type source information for the result type.
+comment|// Type source information for the return type.
 name|TypeSourceInfo
 modifier|*
-name|ResultTInfo
+name|ReturnTInfo
 decl_stmt|;
 comment|/// \brief Array of ParmVarDecls for the formal parameters of this method
 comment|/// and optionally followed by selector locations.
@@ -804,7 +804,7 @@ argument|Selector SelInfo
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|TypeSourceInfo *ResultTInfo
+argument|TypeSourceInfo *ReturnTInfo
 argument_list|,
 argument|DeclContext *contextDecl
 argument_list|,
@@ -912,14 +912,14 @@ argument_list|(
 name|T
 argument_list|)
 operator|,
-name|ResultTInfo
+name|ReturnTInfo
 argument_list|(
-name|ResultTInfo
+name|ReturnTInfo
 argument_list|)
 operator|,
 name|ParamsAndSelLocs
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NumParams
@@ -937,12 +937,12 @@ argument_list|()
 operator|,
 name|SelfDecl
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|CmdDecl
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|setImplicit
@@ -953,11 +953,11 @@ block|;   }
 comment|/// \brief A definition will return its interface declaration.
 comment|/// An interface declaration will return its definition.
 comment|/// Otherwise it will return itself.
-name|virtual
 name|ObjCMethodDecl
 operator|*
-name|getNextRedeclaration
+name|getNextRedeclarationImpl
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -990,7 +990,7 @@ name|T
 parameter_list|,
 name|TypeSourceInfo
 modifier|*
-name|ResultTInfo
+name|ReturnTInfo
 parameter_list|,
 name|DeclContext
 modifier|*
@@ -1050,14 +1050,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|ObjCMethodDecl
-modifier|*
+operator|*
 name|getCanonicalDecl
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 specifier|const
@@ -1234,11 +1234,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|{
 return|return
@@ -1319,23 +1319,8 @@ argument_list|()
 operator|==
 name|SelLoc_StandardWithSpace
 argument_list|,
-name|llvm
-operator|::
-name|makeArrayRef
-argument_list|(
-name|const_cast
-operator|<
-name|ParmVarDecl
-operator|*
-operator|*
-operator|>
-operator|(
-name|getParams
+name|parameters
 argument_list|()
-operator|)
-argument_list|,
-name|NumParams
-argument_list|)
 argument_list|,
 name|DeclEndLoc
 argument_list|)
@@ -1459,7 +1444,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|QualType
-name|getResultType
+name|getReturnType
 argument_list|()
 specifier|const
 block|{
@@ -1471,7 +1456,7 @@ end_expr_stmt
 
 begin_function
 name|void
-name|setResultType
+name|setReturnType
 parameter_list|(
 name|QualType
 name|T
@@ -1499,7 +1484,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getResultType
+name|getReturnType
 argument_list|()
 operator|.
 name|getNonLValueExprType
@@ -1514,26 +1499,26 @@ end_expr_stmt
 begin_expr_stmt
 name|TypeSourceInfo
 operator|*
-name|getResultTypeSourceInfo
+name|getReturnTypeSourceInfo
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ResultTInfo
+name|ReturnTInfo
 return|;
 block|}
 end_expr_stmt
 
 begin_function
 name|void
-name|setResultTypeSourceInfo
+name|setReturnTypeSourceInfo
 parameter_list|(
 name|TypeSourceInfo
 modifier|*
 name|TInfo
 parameter_list|)
 block|{
-name|ResultTInfo
+name|ReturnTInfo
 operator|=
 name|TInfo
 expr_stmt|;
@@ -1577,6 +1562,67 @@ name|param_iterator
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|param_iterator
+operator|>
+name|param_range
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|param_const_iterator
+operator|>
+name|param_const_range
+expr_stmt|;
+end_typedef
+
+begin_function
+name|param_range
+name|params
+parameter_list|()
+block|{
+return|return
+name|param_range
+argument_list|(
+name|param_begin
+argument_list|()
+argument_list|,
+name|param_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|param_const_range
+name|params
+argument_list|()
+specifier|const
+block|{
+return|return
+name|param_const_range
+argument_list|(
+name|param_begin
+argument_list|()
+argument_list|,
+name|param_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_expr_stmt
 name|param_const_iterator
 name|param_begin
@@ -1584,8 +1630,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|param_const_iterator
+argument_list|(
 name|getParams
 argument_list|()
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1597,10 +1646,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|param_const_iterator
+argument_list|(
 name|getParams
 argument_list|()
 operator|+
 name|NumParams
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1611,8 +1663,11 @@ name|param_begin
 parameter_list|()
 block|{
 return|return
+name|param_iterator
+argument_list|(
 name|getParams
 argument_list|()
+argument_list|)
 return|;
 block|}
 end_function
@@ -1623,10 +1678,13 @@ name|param_end
 parameter_list|()
 block|{
 return|return
+name|param_iterator
+argument_list|(
 name|getParams
 argument_list|()
 operator|+
 name|NumParams
+argument_list|)
 return|;
 block|}
 end_function
@@ -1654,6 +1712,46 @@ argument_list|()
 operator|.
 name|getNumArgs
 argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// ArrayRef access to formal parameters.  This should eventually
+end_comment
+
+begin_comment
+comment|// replace the iterator interface above.
+end_comment
+
+begin_expr_stmt
+name|ArrayRef
+operator|<
+name|ParmVarDecl
+operator|*
+operator|>
+name|parameters
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|const_cast
+operator|<
+name|ParmVarDecl
+operator|*
+operator|*
+operator|>
+operator|(
+name|getParams
+argument_list|()
+operator|)
+argument_list|,
+name|NumParams
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1729,13 +1827,13 @@ name|param_const_iterator
 operator|,
 name|deref_fun
 operator|>
-name|arg_type_iterator
+name|param_type_iterator
 expr_stmt|;
 end_typedef
 
 begin_expr_stmt
-name|arg_type_iterator
-name|arg_type_begin
+name|param_type_iterator
+name|param_type_begin
 argument_list|()
 specifier|const
 block|{
@@ -1760,8 +1858,8 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|arg_type_iterator
-name|arg_type_end
+name|param_type_iterator
+name|param_type_end
 argument_list|()
 specifier|const
 block|{
@@ -2215,15 +2313,71 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// Returns true if this specific method declaration is marked with the
+end_comment
+
+begin_comment
+comment|/// designated initializer attribute.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isThisDeclarationADesignatedInitializer
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Returns true if the method selector resolves to a designated initializer
+end_comment
+
+begin_comment
+comment|/// in the class's interface.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param InitMethod if non-null and the function returns true, it receives
+end_comment
+
+begin_comment
+comment|/// the method declaration that was marked with the designated initializer
+end_comment
+
+begin_comment
+comment|/// attribute.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isDesignatedInitializerForTheInterface
+argument_list|(
+specifier|const
+name|ObjCMethodDecl
+operator|*
+operator|*
+name|InitMethod
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether this method has a body.
 end_comment
 
 begin_expr_stmt
-name|virtual
 name|bool
 name|hasBody
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Body
@@ -2239,12 +2393,12 @@ comment|/// \brief Retrieve the body of this method, if it has one.
 end_comment
 
 begin_expr_stmt
-name|virtual
 name|Stmt
 operator|*
 name|getBody
 argument_list|()
 specifier|const
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -2462,11 +2616,11 @@ decl_stmt|,
 name|public
 name|DeclContext
 block|{
-name|virtual
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 name|SourceLocation
 name|AtStart
 decl_stmt|;
@@ -2519,6 +2673,33 @@ name|ObjCPropertyDecl
 operator|>
 name|prop_iterator
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|specific_decl_iterator
+operator|<
+name|ObjCPropertyDecl
+operator|>>
+name|prop_range
+expr_stmt|;
+name|prop_range
+name|properties
+argument_list|()
+specifier|const
+block|{
+return|return
+name|prop_range
+argument_list|(
+name|prop_begin
+argument_list|()
+argument_list|,
+name|prop_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|prop_iterator
 name|prop_begin
 argument_list|()
@@ -2553,6 +2734,33 @@ name|ObjCMethodDecl
 operator|>
 name|method_iterator
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|specific_decl_iterator
+operator|<
+name|ObjCMethodDecl
+operator|>>
+name|method_range
+expr_stmt|;
+name|method_range
+name|methods
+argument_list|()
+specifier|const
+block|{
+return|return
+name|method_range
+argument_list|(
+name|meth_begin
+argument_list|()
+argument_list|,
+name|meth_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|method_iterator
 name|meth_begin
 argument_list|()
@@ -2591,6 +2799,31 @@ name|isInstanceMethod
 operator|>
 name|instmeth_iterator
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|instmeth_iterator
+operator|>
+name|instmeth_range
+expr_stmt|;
+name|instmeth_range
+name|instance_methods
+argument_list|()
+specifier|const
+block|{
+return|return
+name|instmeth_range
+argument_list|(
+name|instmeth_begin
+argument_list|()
+argument_list|,
+name|instmeth_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|instmeth_iterator
 name|instmeth_begin
 argument_list|()
@@ -2629,6 +2862,31 @@ name|isClassMethod
 operator|>
 name|classmeth_iterator
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|classmeth_iterator
+operator|>
+name|classmeth_range
+expr_stmt|;
+name|classmeth_range
+name|class_methods
+argument_list|()
+specifier|const
+block|{
+return|return
+name|classmeth_range
+argument_list|(
+name|classmeth_begin
+argument_list|()
+argument_list|,
+name|classmeth_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|classmeth_iterator
 name|classmeth_begin
 argument_list|()
@@ -2854,11 +3112,11 @@ operator|=
 name|atEnd
 expr_stmt|;
 block|}
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|{
 return|return
@@ -3091,11 +3349,11 @@ decl|<
 name|ObjCInterfaceDecl
 decl|>
 block|{
-name|virtual
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 comment|/// TypeForDecl - This indicates the Type object that represents this
 comment|/// TypeDecl.  It is a cache maintained by ASTContext::getObjCInterfaceType
 name|mutable
@@ -3164,6 +3422,40 @@ name|IvarListMissingImplementation
 range|:
 literal|1
 decl_stmt|;
+comment|/// Indicates that this interface decl contains at least one initializer
+comment|/// marked with the 'objc_designated_initializer' attribute.
+name|bool
+name|HasDesignatedInitializers
+range|:
+literal|1
+decl_stmt|;
+enum|enum
+name|InheritedDesignatedInitializersState
+block|{
+comment|/// We didn't calculate whether the designated initializers should be
+comment|/// inherited or not.
+name|IDI_Unknown
+init|=
+literal|0
+block|,
+comment|/// Designated initializers are inherited for the super class.
+name|IDI_Inherited
+init|=
+literal|1
+block|,
+comment|/// The class does not inherit designated initializers.
+name|IDI_NotInherited
+init|=
+literal|2
+block|}
+enum|;
+comment|/// One of the \c InheritedDesignatedInitializersState enumeratos.
+name|mutable
+name|unsigned
+name|InheritedDesignatedInitializers
+range|:
+literal|2
+decl_stmt|;
 comment|/// \brief The location of the superclass, if any.
 name|SourceLocation
 name|SuperClassLoc
@@ -3194,16 +3486,26 @@ argument_list|()
 operator|,
 name|IvarListMissingImplementation
 argument_list|(
-argument|true
+name|true
+argument_list|)
+operator|,
+name|HasDesignatedInitializers
+argument_list|()
+operator|,
+name|InheritedDesignatedInitializers
+argument_list|(
+argument|IDI_Unknown
 argument_list|)
 block|{ }
 block|}
 struct|;
 name|ObjCInterfaceDecl
 argument_list|(
+argument|const ASTContext&C
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation atLoc
+argument|SourceLocation AtLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -3211,7 +3513,7 @@ argument|SourceLocation CLoc
 argument_list|,
 argument|ObjCInterfaceDecl *PrevDecl
 argument_list|,
-argument|bool isInternal
+argument|bool IsInternal
 argument_list|)
 empty_stmt|;
 name|void
@@ -3273,35 +3575,33 @@ name|ObjCInterfaceDecl
 operator|>
 name|redeclarable_base
 expr_stmt|;
-name|virtual
 name|ObjCInterfaceDecl
 modifier|*
-name|getNextRedeclaration
+name|getNextRedeclarationImpl
 parameter_list|()
+function|override
 block|{
 return|return
-name|RedeclLink
-operator|.
-name|getNext
+name|getNextRedeclaration
 argument_list|()
 return|;
 block|}
-name|virtual
 name|ObjCInterfaceDecl
 modifier|*
 name|getPreviousDeclImpl
 parameter_list|()
+function|override
 block|{
 return|return
 name|getPreviousDecl
 argument_list|()
 return|;
 block|}
-name|virtual
 name|ObjCInterfaceDecl
 modifier|*
 name|getMostRecentDeclImpl
 parameter_list|()
+function|override
 block|{
 return|return
 name|getMostRecentDecl
@@ -3352,6 +3652,7 @@ name|ObjCInterfaceDecl
 modifier|*
 name|CreateDeserialized
 parameter_list|(
+specifier|const
 name|ASTContext
 modifier|&
 name|C
@@ -3360,11 +3661,11 @@ name|unsigned
 name|ID
 parameter_list|)
 function_decl|;
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|{
 if|if
@@ -3409,6 +3710,61 @@ name|setExternallyCompleted
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// Indicate that this interface decl contains at least one initializer
+end_comment
+
+begin_comment
+comment|/// marked with the 'objc_designated_initializer' attribute.
+end_comment
+
+begin_function_decl
+name|void
+name|setHasDesignatedInitializers
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Returns true if this interface decl contains at least one initializer
+end_comment
+
+begin_comment
+comment|/// marked with the 'objc_designated_initializer' attribute.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasDesignatedInitializers
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Returns true if this interface decl declares a designated initializer
+end_comment
+
+begin_comment
+comment|/// or it inherites one from its super class.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|declaresOrInheritsDesignatedInitializers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasDesignatedInitializers
+argument_list|()
+operator|||
+name|inheritsDesignatedInitializers
+argument_list|()
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
 specifier|const
@@ -3546,6 +3902,37 @@ name|protocol_iterator
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|protocol_iterator
+operator|>
+name|protocol_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|protocol_range
+name|protocols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|protocol_range
+argument_list|(
+name|protocol_begin
+argument_list|()
+argument_list|,
+name|protocol_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_expr_stmt
 name|protocol_iterator
 name|protocol_begin
@@ -3644,6 +4031,37 @@ operator|::
 name|loc_iterator
 name|protocol_loc_iterator
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|protocol_loc_iterator
+operator|>
+name|protocol_loc_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|protocol_loc_range
+name|protocol_locs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|protocol_loc_range
+argument_list|(
+name|protocol_loc_begin
+argument_list|()
+argument_list|,
+name|protocol_loc_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 end_expr_stmt
 
 begin_expr_stmt
@@ -3747,6 +4165,37 @@ operator|::
 name|iterator
 name|all_protocol_iterator
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|all_protocol_iterator
+operator|>
+name|all_protocol_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|all_protocol_range
+name|all_referenced_protocols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|all_protocol_range
+argument_list|(
+name|all_referenced_protocol_begin
+argument_list|()
+argument_list|,
+name|all_referenced_protocol_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 end_expr_stmt
 
 begin_expr_stmt
@@ -3870,6 +4319,39 @@ name|ObjCIvarDecl
 operator|>
 name|ivar_iterator
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|specific_decl_iterator
+operator|<
+name|ObjCIvarDecl
+operator|>>
+name|ivar_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|ivar_range
+name|ivars
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ivar_range
+argument_list|(
+name|ivar_begin
+argument_list|()
+argument_list|,
+name|ivar_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 end_expr_stmt
 
 begin_expr_stmt
@@ -4123,6 +4605,116 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Produce a name to be used for class's metadata. It comes either via
+end_comment
+
+begin_comment
+comment|/// objc_runtime_name attribute or class name.
+end_comment
+
+begin_expr_stmt
+name|StringRef
+name|getObjCRuntimeNameAsString
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Returns the designated initializers for the interface.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If this declaration does not have methods marked as designated
+end_comment
+
+begin_comment
+comment|/// initializers then the interface inherits the designated initializers of
+end_comment
+
+begin_comment
+comment|/// its super class.
+end_comment
+
+begin_decl_stmt
+name|void
+name|getDesignatedInitializers
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|ObjCMethodDecl
+operator|*
+operator|>
+operator|&
+name|Methods
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Returns true if the given selector is a designated initializer for the
+end_comment
+
+begin_comment
+comment|/// interface.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If this declaration does not have methods marked as designated
+end_comment
+
+begin_comment
+comment|/// initializers then the interface inherits the designated initializers of
+end_comment
+
+begin_comment
+comment|/// its super class.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param InitMethod if non-null and the function returns true, it receives
+end_comment
+
+begin_comment
+comment|/// the method that was marked as a designated initializer.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isDesignatedInitializer
+argument_list|(
+name|Selector
+name|Sel
+argument_list|,
+specifier|const
+name|ObjCMethodDecl
+operator|*
+operator|*
+name|InitMethod
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether this particular declaration of this class is
 end_comment
 
@@ -4235,7 +4827,7 @@ argument_list|()
 operator|->
 name|Definition
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -4271,7 +4863,7 @@ argument_list|()
 operator|->
 name|Definition
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -4306,7 +4898,7 @@ name|hasDefinition
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 end_expr_stmt
 
@@ -4457,7 +5049,7 @@ argument_list|()
 operator|:
 name|Current
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|explicit
@@ -4645,6 +5237,37 @@ name|visible_categories_iterator
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|visible_categories_iterator
+operator|>
+name|visible_categories_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|visible_categories_range
+name|visible_categories
+argument_list|()
+specifier|const
+block|{
+return|return
+name|visible_categories_range
+argument_list|(
+name|visible_categories_begin
+argument_list|()
+argument_list|,
+name|visible_categories_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// \brief Retrieve an iterator to the beginning of the visible-categories
 end_comment
@@ -4761,6 +5384,37 @@ name|known_categories_iterator
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|known_categories_iterator
+operator|>
+name|known_categories_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|known_categories_range
+name|known_categories
+argument_list|()
+specifier|const
+block|{
+return|return
+name|known_categories_range
+argument_list|(
+name|known_categories_begin
+argument_list|()
+argument_list|,
+name|known_categories_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// \brief Retrieve an iterator to the beginning of the known-categories
 end_comment
@@ -4874,6 +5528,37 @@ name|visible_extensions_iterator
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|visible_extensions_iterator
+operator|>
+name|visible_extensions_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|visible_extensions_range
+name|visible_extensions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|visible_extensions_range
+argument_list|(
+name|visible_extensions_begin
+argument_list|()
+argument_list|,
+name|visible_extensions_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// \brief Retrieve an iterator to the beginning of the visible-extensions
 end_comment
@@ -4983,6 +5668,37 @@ name|known_extensions_iterator
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|known_extensions_iterator
+operator|>
+name|known_extensions_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|known_extensions_range
+name|known_extensions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|known_extensions_range
+argument_list|(
+name|known_extensions_begin
+argument_list|()
+argument_list|,
+name|known_extensions_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// \brief Retrieve an iterator to the beginning of the known-extensions
 end_comment
@@ -5067,7 +5783,7 @@ name|hasDefinition
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 end_expr_stmt
 
@@ -5136,7 +5852,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|virtual
 name|void
 name|collectPropertiesToImplement
 argument_list|(
@@ -5149,6 +5864,7 @@ operator|&
 name|PO
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 end_decl_stmt
 
@@ -5176,7 +5892,7 @@ while|while
 condition|(
 name|I
 operator|!=
-name|NULL
+name|nullptr
 condition|)
 block|{
 if|if
@@ -5321,16 +6037,25 @@ name|shallowCategoryLookup
 operator|=
 name|false
 argument_list|,
+name|bool
+name|followSuper
+operator|=
+name|true
+argument_list|,
 specifier|const
 name|ObjCCategoryDecl
 operator|*
 name|C
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// Lookup an instance method for a given selector.
+end_comment
 
 begin_decl_stmt
 name|ObjCMethodDecl
@@ -5339,11 +6064,6 @@ name|lookupInstanceMethod
 argument_list|(
 name|Selector
 name|Sel
-argument_list|,
-name|bool
-name|shallowCategoryLookup
-operator|=
-name|false
 argument_list|)
 decl|const
 block|{
@@ -5354,12 +6074,14 @@ name|Sel
 argument_list|,
 name|true
 comment|/*isInstance*/
-argument_list|,
-name|shallowCategoryLookup
 argument_list|)
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// Lookup a class method for a given selector.
+end_comment
 
 begin_decl_stmt
 name|ObjCMethodDecl
@@ -5368,11 +6090,6 @@ name|lookupClassMethod
 argument_list|(
 name|Selector
 name|Sel
-argument_list|,
-name|bool
-name|shallowCategoryLookup
-operator|=
-name|false
 argument_list|)
 decl|const
 block|{
@@ -5383,8 +6100,6 @@ name|Sel
 argument_list|,
 name|false
 comment|/*isInstance*/
-argument_list|,
-name|shallowCategoryLookup
 argument_list|)
 return|;
 block|}
@@ -5486,6 +6201,9 @@ comment|/*isInstance*/
 argument_list|,
 name|false
 comment|/*shallowCategoryLookup*/
+argument_list|,
+name|true
+comment|/* followsSuper */
 argument_list|,
 name|Cat
 argument_list|)
@@ -5644,6 +6362,15 @@ begin_typedef
 typedef|typedef
 name|redeclarable_base
 operator|::
+name|redecl_range
+name|redecl_range
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|redeclarable_base
+operator|::
 name|redecl_iterator
 name|redecl_iterator
 expr_stmt|;
@@ -5662,6 +6389,14 @@ name|using
 name|redeclarable_base
 operator|::
 name|redecls_end
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|using
+name|redeclarable_base
+operator|::
+name|redecls
 expr_stmt|;
 end_expr_stmt
 
@@ -5698,6 +6433,7 @@ name|ObjCInterfaceDecl
 modifier|*
 name|getCanonicalDecl
 parameter_list|()
+function|override
 block|{
 return|return
 name|getFirstDecl
@@ -5818,6 +6554,29 @@ name|ASTDeclWriter
 decl_stmt|;
 end_decl_stmt
 
+begin_label
+name|private
+label|:
+end_label
+
+begin_expr_stmt
+specifier|const
+name|ObjCInterfaceDecl
+operator|*
+name|findInterfaceWithDesignatedInitializers
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|inheritsDesignatedInitializers
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 unit|};
 comment|/// ObjCIvarDecl - Represents an ObjC instance variable. In general, ObjC
@@ -5886,10 +6645,10 @@ range|:
 name|public
 name|FieldDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -5928,8 +6687,6 @@ argument_list|,
 argument|Expr *BW
 argument_list|,
 argument|bool synthesized
-argument_list|,
-argument|bool backingIvarReferencedInAccessor
 argument_list|)
 operator|:
 name|FieldDecl
@@ -5959,7 +6716,7 @@ argument_list|)
 block|,
 name|NextIvar
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|DeclAccess
@@ -5969,12 +6726,7 @@ argument_list|)
 block|,
 name|Synthesized
 argument_list|(
-name|synthesized
-argument_list|)
-block|,
-name|BackingIvarReferencedInAccessor
-argument_list|(
-argument|backingIvarReferencedInAccessor
+argument|synthesized
 argument_list|)
 block|{}
 name|public
@@ -6000,11 +6752,9 @@ argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|AccessControl ac
 argument_list|,
-argument|Expr *BW = NULL
+argument|Expr *BW = nullptr
 argument_list|,
 argument|bool synthesized=false
-argument_list|,
-argument|bool backingIvarReferencedInAccessor=false
 argument_list|)
 block|;
 specifier|static
@@ -6099,25 +6849,6 @@ argument_list|)
 return|;
 block|}
 name|void
-name|setBackingIvarReferencedInAccessor
-argument_list|(
-argument|bool val
-argument_list|)
-block|{
-name|BackingIvarReferencedInAccessor
-operator|=
-name|val
-block|;   }
-name|bool
-name|getBackingIvarReferencedInAccessor
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BackingIvarReferencedInAccessor
-return|;
-block|}
-name|void
 name|setSynthesize
 argument_list|(
 argument|bool synth
@@ -6185,11 +6916,6 @@ name|unsigned
 name|Synthesized
 operator|:
 literal|1
-block|;
-name|unsigned
-name|BackingIvarReferencedInAccessor
-operator|:
-literal|1
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -6205,10 +6931,10 @@ range|:
 name|public
 name|FieldDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|ObjCAtDefsFieldDecl
 argument_list|(
@@ -6240,7 +6966,7 @@ argument_list|,
 argument|T
 argument_list|,
 comment|/*TInfo=*/
-literal|0
+argument|nullptr
 argument_list|,
 comment|// FIXME: Do ObjCAtDefs have declarators ?
 argument|BW
@@ -6359,10 +7085,10 @@ operator|<
 name|ObjCProtocolDecl
 operator|>
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;    struct
 name|DefinitionData
 block|{
@@ -6420,6 +7146,8 @@ return|;
 block|}
 name|ObjCProtocolDecl
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
 argument|IdentifierInfo *Id
@@ -6442,35 +7170,33 @@ name|ObjCProtocolDecl
 operator|>
 name|redeclarable_base
 expr_stmt|;
-name|virtual
 name|ObjCProtocolDecl
 operator|*
-name|getNextRedeclaration
+name|getNextRedeclarationImpl
 argument_list|()
+name|override
 block|{
 return|return
-name|RedeclLink
-operator|.
-name|getNext
+name|getNextRedeclaration
 argument_list|()
 return|;
 block|}
-name|virtual
 name|ObjCProtocolDecl
 operator|*
 name|getPreviousDeclImpl
 argument_list|()
+name|override
 block|{
 return|return
 name|getPreviousDecl
 argument_list|()
 return|;
 block|}
-name|virtual
 name|ObjCProtocolDecl
 operator|*
 name|getMostRecentDeclImpl
 argument_list|()
+name|override
 block|{
 return|return
 name|getMostRecentDecl
@@ -6535,6 +7261,40 @@ operator|::
 name|iterator
 name|protocol_iterator
 expr_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|protocol_iterator
+operator|>
+name|protocol_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|protocol_range
+name|protocols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|protocol_range
+argument_list|(
+name|protocol_begin
+argument_list|()
+argument_list|,
+name|protocol_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|protocol_iterator
 name|protocol_begin
 argument_list|()
@@ -6550,7 +7310,7 @@ return|return
 name|protocol_iterator
 argument_list|()
 return|;
-end_decl_stmt
+end_expr_stmt
 
 begin_return
 return|return
@@ -6604,6 +7364,37 @@ operator|::
 name|loc_iterator
 name|protocol_loc_iterator
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|protocol_loc_iterator
+operator|>
+name|protocol_loc_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|protocol_loc_range
+name|protocol_locs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|protocol_loc_range
+argument_list|(
+name|protocol_loc_begin
+argument_list|()
+argument_list|,
+name|protocol_loc_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 end_expr_stmt
 
 begin_expr_stmt
@@ -6914,7 +7705,7 @@ argument_list|()
 operator|->
 name|Definition
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -6942,7 +7733,7 @@ argument_list|()
 operator|->
 name|Definition
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -6981,12 +7772,28 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// Produce a name to be used for protocol's metadata. It comes either via
+end_comment
+
+begin_comment
+comment|/// objc_runtime_name attribute or protocol name.
+end_comment
+
 begin_expr_stmt
-name|virtual
+name|StringRef
+name|getObjCRuntimeNameAsString
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|{
 if|if
@@ -7019,10 +7826,19 @@ begin_expr_stmt
 unit|}       typedef
 name|redeclarable_base
 operator|::
+name|redecl_range
+name|redecl_range
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|redeclarable_base
+operator|::
 name|redecl_iterator
 name|redecl_iterator
 expr_stmt|;
-end_expr_stmt
+end_typedef
 
 begin_expr_stmt
 name|using
@@ -7037,6 +7853,14 @@ name|using
 name|redeclarable_base
 operator|::
 name|redecls_end
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|using
+name|redeclarable_base
+operator|::
+name|redecls
 expr_stmt|;
 end_expr_stmt
 
@@ -7073,6 +7897,7 @@ name|ObjCProtocolDecl
 modifier|*
 name|getCanonicalDecl
 parameter_list|()
+function|override
 block|{
 return|return
 name|getFirstDecl
@@ -7097,7 +7922,6 @@ block|}
 end_expr_stmt
 
 begin_decl_stmt
-name|virtual
 name|void
 name|collectPropertiesToImplement
 argument_list|(
@@ -7110,6 +7934,7 @@ operator|&
 name|PO
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 end_decl_stmt
 
@@ -7267,10 +8092,10 @@ range|:
 name|public
 name|ObjCContainerDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// Interface belonging to this category
 name|ObjCInterfaceDecl
@@ -7337,7 +8162,7 @@ argument_list|)
 block|,
 name|NextClassCategory
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|CategoryNameLoc
@@ -7469,6 +8294,40 @@ operator|::
 name|iterator
 name|protocol_iterator
 expr_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|protocol_iterator
+operator|>
+name|protocol_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|protocol_range
+name|protocols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|protocol_range
+argument_list|(
+name|protocol_begin
+argument_list|()
+argument_list|,
+name|protocol_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|protocol_iterator
 name|protocol_begin
 argument_list|()
@@ -7481,6 +8340,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|protocol_iterator
 name|protocol_end
 argument_list|()
@@ -7493,6 +8355,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|protocol_size
 argument_list|()
@@ -7505,7 +8370,7 @@ name|size
 argument_list|()
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
@@ -7515,6 +8380,37 @@ name|loc_iterator
 name|protocol_loc_iterator
 expr_stmt|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|protocol_loc_iterator
+operator|>
+name|protocol_loc_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|protocol_loc_range
+name|protocol_locs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|protocol_loc_range
+argument_list|(
+name|protocol_loc_begin
+argument_list|()
+argument_list|,
+name|protocol_loc_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
 name|protocol_loc_iterator
@@ -7590,7 +8486,7 @@ return|return
 name|getIdentifier
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -7604,6 +8500,39 @@ operator|>
 name|ivar_iterator
 expr_stmt|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|specific_decl_iterator
+operator|<
+name|ObjCIvarDecl
+operator|>>
+name|ivar_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|ivar_range
+name|ivars
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ivar_range
+argument_list|(
+name|ivar_begin
+argument_list|()
+argument_list|,
+name|ivar_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
 name|ivar_iterator
@@ -7817,10 +8746,10 @@ range|:
 name|public
 name|ObjCContainerDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// Class interface for this class/category implementation
 name|ObjCInterfaceDecl
@@ -7855,7 +8784,7 @@ operator|->
 name|getIdentifier
 argument_list|()
 else|:
-literal|0
+name|nullptr
 argument_list|,
 name|nameLoc
 argument_list|,
@@ -7967,6 +8896,42 @@ name|ObjCPropertyImplDecl
 operator|>
 name|propimpl_iterator
 expr_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|specific_decl_iterator
+operator|<
+name|ObjCPropertyImplDecl
+operator|>>
+name|propimpl_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|propimpl_range
+name|property_impls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|propimpl_range
+argument_list|(
+name|propimpl_begin
+argument_list|()
+argument_list|,
+name|propimpl_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|propimpl_iterator
 name|propimpl_begin
 argument_list|()
@@ -7980,6 +8945,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|propimpl_iterator
 name|propimpl_end
 argument_list|()
@@ -7993,12 +8961,18 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -8010,12 +8984,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -8027,14 +9005,10 @@ operator|<=
 name|lastObjCImpl
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
+unit|};
 comment|/// ObjCCategoryImplDecl - An object of this class encapsulates a category
 end_comment
 
@@ -8093,10 +9067,10 @@ range|:
 name|public
 name|ObjCImplDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|// Category name
 name|IdentifierInfo
@@ -8179,8 +9153,8 @@ argument_list|)
 block|;
 comment|/// getIdentifier - Get the identifier that names the category
 comment|/// interface associated with this implementation.
-comment|/// FIXME: This is a bad API, we are overriding the NamedDecl::getIdentifier()
-comment|/// to mean something different. For example:
+comment|/// FIXME: This is a bad API, we are hiding NamedDecl::getIdentifier()
+comment|/// with a different meaning. For example:
 comment|/// ((NamedDecl *)SomeCategoryImplDecl)->getIdentifier()
 comment|/// returns the class interface name, whereas
 comment|/// ((ObjCCategoryImplDecl *)SomeCategoryImplDecl)->getIdentifier()
@@ -8223,8 +9197,8 @@ block|}
 comment|/// getName - Get the name of identifier for the class interface associated
 comment|/// with this implementation as a StringRef.
 comment|//
-comment|// FIXME: This is a bad API, we are overriding the NamedDecl::getName, to mean
-comment|// something different.
+comment|// FIXME: This is a bad API, we are hiding NamedDecl::getName with a different
+comment|// meaning.
 name|StringRef
 name|getName
 argument_list|()
@@ -8235,10 +9209,11 @@ name|Id
 operator|?
 name|Id
 operator|->
-name|getNameStart
+name|getName
 argument_list|()
 operator|:
-literal|""
+name|StringRef
+argument_list|()
 return|;
 block|}
 comment|/// @brief Get the name of the class associated with this interface.
@@ -8352,23 +9327,35 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Typically, instance variables are specified in the class interface,
+comment|/// In a non-fragile runtime, instance variables can appear in the class
 end_comment
 
 begin_comment
-comment|/// *not* in the implementation. Nevertheless (for legacy reasons), we
+comment|/// interface, class extensions (nameless categories), and in the implementation
 end_comment
 
 begin_comment
-comment|/// allow instance variables to be specified in the implementation.  When
-end_comment
-
-begin_comment
-comment|/// specified, they need to be *identical* to the interface.
+comment|/// itself, as well as being synthesized as backing storage for properties.
 end_comment
 
 begin_comment
 comment|///
+end_comment
+
+begin_comment
+comment|/// In a fragile runtime, instance variables are specified in the class
+end_comment
+
+begin_comment
+comment|/// interface, \em not in the implementation. Nevertheless (for legacy reasons),
+end_comment
+
+begin_comment
+comment|/// we allow instance variables to be specified in the implementation. When
+end_comment
+
+begin_comment
+comment|/// specified, they need to be \em identical to the interface.
 end_comment
 
 begin_decl_stmt
@@ -8378,10 +9365,10 @@ range|:
 name|public
 name|ObjCImplDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// Implementation Class's super class.
 name|ObjCInterfaceDecl
@@ -8475,7 +9462,7 @@ argument_list|)
 block|,
 name|IvarInitializers
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|NumIvarInitializers
@@ -8551,6 +9538,67 @@ modifier|*
 name|init_const_iterator
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|init_iterator
+operator|>
+name|init_range
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|init_const_iterator
+operator|>
+name|init_const_range
+expr_stmt|;
+end_typedef
+
+begin_function
+name|init_range
+name|inits
+parameter_list|()
+block|{
+return|return
+name|init_range
+argument_list|(
+name|init_begin
+argument_list|()
+argument_list|,
+name|init_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|init_const_range
+name|inits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|init_const_range
+argument_list|(
+name|init_begin
+argument_list|()
+argument_list|,
+name|init_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// init_begin() - Retrieve an iterator to the first initializer.
@@ -8776,11 +9824,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// FIXME: This is a bad API, we are overriding the NamedDecl::getName, to mean
+comment|// FIXME: This is a bad API, we are hiding NamedDecl::getName with a different
 end_comment
 
 begin_comment
-comment|// something different.
+comment|// meaning.
 end_comment
 
 begin_expr_stmt
@@ -8832,6 +9880,22 @@ name|getName
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Produce a name to be used for class's metadata. It comes either via
+end_comment
+
+begin_comment
+comment|/// class's objc_runtime_name attribute or class name.
+end_comment
+
+begin_expr_stmt
+name|StringRef
+name|getObjCRuntimeNameAsString
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
@@ -8951,6 +10015,39 @@ operator|>
 name|ivar_iterator
 expr_stmt|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|specific_decl_iterator
+operator|<
+name|ObjCIvarDecl
+operator|>>
+name|ivar_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|ivar_range
+name|ivars
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ivar_range
+argument_list|(
+name|ivar_begin
+argument_list|()
+argument_list|,
+name|ivar_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
 name|ivar_iterator
@@ -9109,10 +10206,10 @@ range|:
 name|public
 name|NamedDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// Class that this is an alias of.
 name|ObjCInterfaceDecl
@@ -9248,10 +10345,10 @@ operator|:
 name|public
 name|NamedDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -9462,17 +10559,17 @@ argument_list|)
 block|,
 name|GetterMethodDecl
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|SetterMethodDecl
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|PropertyIvarDecl
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|public
@@ -9950,11 +11047,11 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|{
 return|return
@@ -10167,12 +11264,12 @@ argument_list|)
 block|,
 name|GetterCXXConstructor
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|SetterCXXAssignment
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|assert
@@ -10218,11 +11315,11 @@ argument_list|,
 argument|unsigned ID
 argument_list|)
 block|;
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|;
 name|SourceLocation

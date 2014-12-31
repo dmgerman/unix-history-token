@@ -55,6 +55,12 @@ directive|include
 file|"lldb/lldb-private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/Mutex.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -121,6 +127,16 @@ operator|&
 name|sc
 argument_list|)
 expr_stmt|;
+name|bool
+name|GetArchitecture
+argument_list|(
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|arch
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 name|void
@@ -173,11 +189,9 @@ name|bool
 name|m_initialized
 decl_stmt|;
 comment|// delay some initialization until ObjectFile is set up
-name|lldb
-operator|::
-name|UnwindAssemblySP
-name|m_assembly_profiler
-expr_stmt|;
+name|Mutex
+name|m_mutex
+decl_stmt|;
 name|DWARFCallFrameInfo
 modifier|*
 name|m_eh_frame

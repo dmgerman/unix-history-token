@@ -8,14 +8,25 @@ comment|/* tools/clang/include/clang/Config/config.h.  Generated from config.h.i
 end_comment
 
 begin_comment
-comment|/* include/clang/Config/config.h.in. */
+comment|/* This generated file is for internal use. Do not include it from headers. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|CONFIG_H
-end_ifndef
+end_ifdef
+
+begin_error
+error|#
+directive|error
+error|config.h can only be included once
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -81,6 +92,32 @@ define|#
 directive|define
 name|GCC_INSTALL_PREFIX
 value|""
+end_define
+
+begin_comment
+comment|/* Define if we have libxml2 */
+end_comment
+
+begin_comment
+comment|/* #undef CLANG_HAVE_LIBXML */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_STRING
+value|"LLVM 3.5.0"
+end_define
+
+begin_comment
+comment|/* The LLVM product name and version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BACKEND_PACKAGE_STRING
+value|PACKAGE_STRING
 end_define
 
 begin_endif

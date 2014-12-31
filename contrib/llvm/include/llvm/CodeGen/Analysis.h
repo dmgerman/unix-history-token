@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file declares several CodeGen-specific LLVM IR analysis utilties.
+comment|// This file declares several CodeGen-specific LLVM IR analysis utilities.
 end_comment
 
 begin_comment
@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|"llvm/IR/CallSite.h"
 end_include
 
 begin_include
@@ -95,12 +95,6 @@ directive|include
 file|"llvm/IR/Instructions.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/CallSite.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -109,10 +103,13 @@ name|class
 name|GlobalVariable
 decl_stmt|;
 name|class
+name|TargetLoweringBase
+decl_stmt|;
+name|class
 name|TargetLowering
 decl_stmt|;
 name|class
-name|TargetLoweringBase
+name|TargetMachine
 decl_stmt|;
 name|class
 name|SDNode
@@ -123,6 +120,9 @@ decl_stmt|;
 name|class
 name|SelectionDAG
 decl_stmt|;
+struct_decl|struct
+name|EVT
+struct_decl|;
 comment|/// ComputeLinearIndex - Given an LLVM IR aggregate type and a sequence
 comment|/// of insertvalue or extractvalue indices that identify a member, return
 comment|/// the linearized index of the start of the member.
@@ -222,7 +222,7 @@ operator|>
 operator|*
 name|Offsets
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|uint64_t
 name|StartingOffset
@@ -303,9 +303,9 @@ name|ImmutableCallSite
 name|CS
 parameter_list|,
 specifier|const
-name|TargetLowering
+name|TargetMachine
 modifier|&
-name|TLI
+name|TM
 parameter_list|)
 function_decl|;
 comment|/// Test if given that the input instruction is in the tail call position if the

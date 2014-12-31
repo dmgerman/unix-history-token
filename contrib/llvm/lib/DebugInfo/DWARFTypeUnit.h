@@ -75,8 +75,6 @@ argument|const DWARFDebugAbbrev *DA
 argument_list|,
 argument|StringRef IS
 argument_list|,
-argument|StringRef AS
-argument_list|,
 argument|StringRef RS
 argument_list|,
 argument|StringRef SS
@@ -96,8 +94,6 @@ argument|DA
 argument_list|,
 argument|IS
 argument_list|,
-argument|AS
-argument_list|,
 argument|RS
 argument_list|,
 argument|SS
@@ -112,15 +108,15 @@ argument|LE
 argument_list|)
 block|{}
 name|uint32_t
-name|getSize
+name|getHeaderSize
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 name|DWARFUnit
 operator|::
-name|getSize
+name|getHeaderSize
 argument_list|()
 operator|+
 literal|12
@@ -143,7 +139,7 @@ argument|DataExtractor debug_info
 argument_list|,
 argument|uint32_t *offset_ptr
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|; }
 decl_stmt|;
 block|}

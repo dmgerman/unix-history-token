@@ -302,6 +302,30 @@ operator|>
 name|class
 name|SparseSet
 block|{
+name|static_assert
+argument_list|(
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|SparseT
+operator|>
+operator|::
+name|is_integer
+operator|&&
+operator|!
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|SparseT
+operator|>
+operator|::
+name|is_signed
+argument_list|,
+literal|"SparseT must be an unsigned integer type"
+argument_list|)
+block|;
 typedef|typedef
 name|typename
 name|KeyFunctorT
@@ -318,6 +342,10 @@ literal|8
 operator|>
 name|DenseT
 expr_stmt|;
+typedef|typedef
+name|unsigned
+name|size_type
+typedef|;
 name|DenseT
 name|Dense
 block|;
@@ -393,7 +421,7 @@ argument_list|()
 operator|:
 name|Sparse
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Universe
@@ -614,7 +642,7 @@ comment|///
 end_comment
 
 begin_expr_stmt
-name|unsigned
+name|size_type
 name|size
 argument_list|()
 specifier|const
@@ -685,30 +713,6 @@ operator|<
 name|Universe
 operator|&&
 literal|"Key out of range"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|SparseT
-operator|>
-operator|::
-name|is_integer
-operator|&&
-operator|!
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|SparseT
-operator|>
-operator|::
-name|is_signed
-operator|&&
-literal|"SparseT must be an unsigned integer type"
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -874,7 +878,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// count - Returns true if this set contains an element identified by Key.
+comment|/// count - Returns 1 if this set contains an element identified by Key,
+end_comment
+
+begin_comment
+comment|/// 0 otherwise.
 end_comment
 
 begin_comment
@@ -882,7 +890,7 @@ comment|///
 end_comment
 
 begin_decl_stmt
-name|bool
+name|size_type
 name|count
 argument_list|(
 specifier|const
@@ -897,9 +905,13 @@ name|find
 argument_list|(
 name|Key
 argument_list|)
-operator|!=
+operator|==
 name|end
 argument_list|()
+condition|?
+literal|0
+else|:
+literal|1
 return|;
 block|}
 end_decl_stmt

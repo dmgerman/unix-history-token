@@ -68,6 +68,9 @@ block|{
 name|class
 name|Module
 decl_stmt|;
+name|class
+name|FileEntry
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Custom Consumer Actions
 comment|//===----------------------------------------------------------------------===//
@@ -77,12 +80,11 @@ range|:
 name|public
 name|FrontendAction
 block|{
-name|virtual
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|;
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -91,16 +93,17 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|;
 name|public
 operator|:
 comment|// Don't claim to only use the preprocessor, we want to follow the AST path,
 comment|// but do nothing.
-name|virtual
 name|bool
 name|usesPreprocessorOnly
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -119,7 +122,6 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -128,6 +130,7 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|; }
 block|;
 name|class
@@ -138,7 +141,6 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -147,6 +149,7 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|; }
 block|;
 name|class
@@ -157,7 +160,6 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -166,6 +168,7 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|; }
 block|;
 name|class
@@ -176,7 +179,6 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -185,6 +187,7 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|; }
 block|;
 name|class
@@ -195,7 +198,6 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -204,6 +206,7 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|; }
 block|;
 name|class
@@ -214,7 +217,6 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -223,21 +225,22 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|;
-name|virtual
 name|TranslationUnitKind
 name|getTranslationUnitKind
 argument_list|()
+name|override
 block|{
 return|return
 name|TU_Prefix
 return|;
 block|}
-name|virtual
 name|bool
 name|hasASTFileSupport
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -277,12 +280,16 @@ name|Module
 operator|*
 name|Module
 block|;
+specifier|const
+name|FileEntry
+operator|*
+name|ModuleMapForUniquing
+block|;
 name|bool
 name|IsSystem
 block|;
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -291,21 +298,22 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|;
-name|virtual
 name|TranslationUnitKind
 name|getTranslationUnitKind
 argument_list|()
+name|override
 block|{
 return|return
 name|TU_Module
 return|;
 block|}
-name|virtual
 name|bool
 name|hasASTFileSupport
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -313,21 +321,26 @@ return|;
 block|}
 name|public
 operator|:
-name|explicit
 name|GenerateModuleAction
 argument_list|(
+argument|const FileEntry *ModuleMap = nullptr
+argument_list|,
 argument|bool IsSystem = false
 argument_list|)
 operator|:
 name|ASTFrontendAction
 argument_list|()
 block|,
+name|ModuleMapForUniquing
+argument_list|(
+name|ModuleMap
+argument_list|)
+block|,
 name|IsSystem
 argument_list|(
 argument|IsSystem
 argument_list|)
 block|{ }
-name|virtual
 name|bool
 name|BeginSourceFileAction
 argument_list|(
@@ -335,12 +348,12 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef Filename
 argument_list|)
+name|override
 block|;
 comment|/// \brief Compute the AST consumer arguments that will be used to
 comment|/// create the PCHGenerator instance returned by CreateASTConsumer.
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
-specifier|static
 name|bool
 name|ComputeASTConsumerArguments
 argument_list|(
@@ -364,7 +377,6 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -373,14 +385,15 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|;
 name|public
 operator|:
-name|virtual
 name|bool
 name|hasCodeCompletionSupport
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -398,7 +411,6 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -407,49 +419,87 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
-name|virtual
 name|bool
 name|hasPCHSupport
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|hasASTFileSupport
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|hasIRSupport
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|hasCodeCompletionSupport
 argument_list|()
 specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|VerifyPCHAction
+operator|:
+name|public
+name|ASTFrontendAction
+block|{
+name|protected
+operator|:
+name|ASTConsumer
+operator|*
+name|CreateASTConsumer
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|)
+name|override
+block|;
+name|void
+name|ExecuteAction
+argument_list|()
+name|override
+block|;
+name|public
+operator|:
+name|bool
+name|hasCodeCompletionSupport
+argument_list|()
+specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -482,7 +532,6 @@ name|ASTFiles
 block|;
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -491,8 +540,8 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|BeginSourceFileAction
 argument_list|(
@@ -500,16 +549,17 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef Filename
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|EndSourceFileAction
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -533,34 +583,34 @@ operator|~
 name|ASTMergeAction
 argument_list|()
 block|;
-name|virtual
 name|bool
 name|usesPreprocessorOnly
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|TranslationUnitKind
 name|getTranslationUnitKind
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|hasPCHSupport
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|hasASTFileSupport
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|hasCodeCompletionSupport
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;
 name|class
@@ -574,8 +624,8 @@ operator|:
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|;
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -584,16 +634,17 @@ argument|CompilerInstance&
 argument_list|,
 argument|StringRef
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|bool
 name|usesPreprocessorOnly
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -615,6 +666,7 @@ operator|:
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|; }
 block|;
 name|class
@@ -628,6 +680,7 @@ operator|:
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|; }
 block|;
 name|class
@@ -641,6 +694,7 @@ operator|:
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|; }
 block|;
 name|class
@@ -654,6 +708,7 @@ operator|:
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|; }
 block|;
 name|class
@@ -667,12 +722,13 @@ operator|:
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|hasPCHSupport
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true

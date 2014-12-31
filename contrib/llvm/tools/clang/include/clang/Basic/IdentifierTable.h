@@ -76,19 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/OperatorKinds.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/TokenKinds.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallString.h"
 end_include
 
 begin_include
@@ -101,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/PointerLikeTypeTraits.h"
 end_include
 
 begin_include
@@ -1746,7 +1728,7 @@ name|IdentifierInfoLookup
 operator|*
 name|externalLookup
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|/// \brief Set the external identifier lookup mechanism.
@@ -2490,7 +2472,7 @@ name|ArgFlags
 operator|)
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_decl_stmt
@@ -2832,10 +2814,6 @@ begin_comment
 comment|/// it as an std::string.
 end_comment
 
-begin_comment
-comment|// FIXME: Add a print method that uses a raw_ostream.
-end_comment
-
 begin_expr_stmt
 name|std
 operator|::
@@ -2845,6 +2823,24 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Prints the full selector name (e.g. "foo:bar:").
+end_comment
+
+begin_decl_stmt
+name|void
+name|print
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Derive the conventional family of this method.
@@ -3252,6 +3248,17 @@ name|value
 operator|=
 name|true
 block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|PointerLikeTypeTraits
 expr_stmt|;
 end_expr_stmt
 

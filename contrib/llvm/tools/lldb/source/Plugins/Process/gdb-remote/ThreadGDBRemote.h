@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Target/Process.h"
 end_include
 
@@ -127,6 +133,19 @@ name|lldb
 operator|::
 name|queue_id_t
 name|GetQueueID
+argument_list|()
+block|;
+name|virtual
+name|lldb
+operator|::
+name|QueueSP
+name|GetQueue
+argument_list|()
+block|;
+name|lldb
+operator|::
+name|addr_t
+name|GetQueueLibdispatchQueueAddress
 argument_list|()
 block|;
 name|virtual
@@ -227,6 +246,14 @@ name|m_thread_dispatch_qaddr
 operator|=
 name|thread_dispatch_qaddr
 block|;     }
+name|lldb_private
+operator|::
+name|StructuredData
+operator|::
+name|ObjectSP
+name|FetchThreadExtendedInfo
+argument_list|()
+block|;
 name|protected
 operator|:
 name|friend

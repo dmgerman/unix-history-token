@@ -228,7 +228,7 @@ block|{
 return|return
 name|Info
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|unsigned

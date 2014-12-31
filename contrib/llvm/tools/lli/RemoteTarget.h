@@ -106,14 +106,10 @@ block|{
 name|class
 name|RemoteTarget
 block|{
-name|std
-operator|::
-name|string
-name|ErrorMsg
-expr_stmt|;
 name|bool
 name|IsRunning
 decl_stmt|;
+typedef|typedef
 name|SmallVector
 operator|<
 name|sys
@@ -122,7 +118,17 @@ name|MemoryBlock
 operator|,
 literal|16
 operator|>
+name|AllocMapType
+expr_stmt|;
+name|AllocMapType
 name|Allocations
+decl_stmt|;
+name|protected
+label|:
+name|std
+operator|::
+name|string
+name|ErrorMsg
 expr_stmt|;
 name|public
 label|:
@@ -141,7 +147,7 @@ comment|/// @param      Size      Amount of space, in bytes, to allocate.
 comment|/// @param      Alignment Required minimum alignment for allocated space.
 comment|/// @param[out] Address   Remote address of the allocated memory.
 comment|///
-comment|/// @returns False on success. On failure, ErrorMsg is updated with
+comment|/// @returns True on success. On failure, ErrorMsg is updated with
 comment|///          descriptive text of the encountered error.
 name|virtual
 name|bool
@@ -158,13 +164,92 @@ modifier|&
 name|Address
 parameter_list|)
 function_decl|;
+name|bool
+name|isAllocatedMemory
+parameter_list|(
+name|uint64_t
+name|Address
+parameter_list|,
+name|uint32_t
+name|Size
+parameter_list|)
+block|{
+name|uint64_t
+name|AddressEnd
+init|=
+name|Address
+operator|+
+name|Size
+decl_stmt|;
+for|for
+control|(
+name|AllocMapType
+operator|::
+name|const_iterator
+name|I
+operator|=
+name|Allocations
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|E
+operator|=
+name|Allocations
+operator|.
+name|end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+block|{
+if|if
+condition|(
+name|Address
+operator|>=
+operator|(
+name|uint64_t
+operator|)
+name|I
+operator|->
+name|base
+argument_list|()
+operator|&&
+name|AddressEnd
+operator|<=
+operator|(
+name|uint64_t
+operator|)
+name|I
+operator|->
+name|base
+argument_list|()
+operator|+
+name|I
+operator|->
+name|size
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
 comment|/// Load data into the target address space.
 comment|///
 comment|/// @param      Address   Destination address in the target process.
 comment|/// @param      Data      Source address in the host process.
 comment|/// @param      Size      Number of bytes to copy.
 comment|///
-comment|/// @returns False on success. On failure, ErrorMsg is updated with
+comment|/// @returns True on success. On failure, ErrorMsg is updated with
 comment|///          descriptive text of the encountered error.
 name|virtual
 name|bool
@@ -188,7 +273,7 @@ comment|/// @param      Address   Destination address in the target process.
 comment|/// @param      Data      Source address in the host process.
 comment|/// @param      Size      Number of bytes to copy.
 comment|///
-comment|/// @returns False on success. On failure, ErrorMsg is updated with
+comment|/// @returns True on success. On failure, ErrorMsg is updated with
 comment|///          descriptive text of the encountered error.
 name|virtual
 name|bool
@@ -213,7 +298,7 @@ comment|/// @param      Address   Address of the loaded function in the target
 comment|///                       process.
 comment|/// @param[out] RetVal    The integer return value of the called function.
 comment|///
-comment|/// @returns False on success. On failure, ErrorMsg is updated with
+comment|/// @returns True on success. On failure, ErrorMsg is updated with
 comment|///          descriptive text of the encountered error.
 name|virtual
 name|bool
@@ -227,7 +312,7 @@ modifier|&
 name|RetVal
 parameter_list|)
 function_decl|;
-comment|/// Minimum alignment for memory permissions. Used to seperate code and
+comment|/// Minimum alignment for memory permissions. Used to separate code and
 comment|/// data regions to make sure data doesn't get marked as code or vice
 comment|/// versa.
 comment|///
@@ -243,7 +328,7 @@ return|;
 block|}
 comment|/// Start the remote process.
 name|virtual
-name|void
+name|bool
 name|create
 parameter_list|()
 function_decl|;
@@ -256,14 +341,14 @@ function_decl|;
 name|RemoteTarget
 argument_list|()
 operator|:
+name|IsRunning
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|ErrorMsg
 argument_list|(
 literal|""
-argument_list|)
-operator|,
-name|IsRunning
-argument_list|(
-argument|false
 argument_list|)
 block|{}
 name|virtual
@@ -279,30 +364,6 @@ name|stop
 argument_list|()
 expr_stmt|;
 block|}
-comment|// Create an instance of the system-specific remote target class.
-specifier|static
-name|RemoteTarget
-modifier|*
-name|createRemoteTarget
-parameter_list|()
-function_decl|;
-specifier|static
-name|RemoteTarget
-modifier|*
-name|createExternalRemoteTarget
-argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|ChildName
-argument_list|)
-decl_stmt|;
-specifier|static
-name|bool
-name|hostSupportsExternalRemoteTarget
-parameter_list|()
-function_decl|;
 name|private
 label|:
 comment|// Main processing function for the remote target process. Command messages

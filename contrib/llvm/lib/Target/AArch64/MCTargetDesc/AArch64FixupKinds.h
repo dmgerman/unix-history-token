@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=- AArch64/AArch64FixupKinds.h - AArch64 Specific Fixup Entries -*- C++ -*-=//
+comment|//===-- AArch64FixupKinds.h - AArch64 Specific Fixup Entries ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -31,36 +31,16 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// This file describes the LLVM fixups applied to MCInsts in the AArch64
-end_comment
-
-begin_comment
-comment|// backend.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_AARCH64_AARCH64FIXUPKINDS_H
+name|LLVM_AArch64FIXUPKINDS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_AARCH64_AARCH64FIXUPKINDS_H
+name|LLVM_AArch64FIXUPKINDS_H
 end_define
 
 begin_include
@@ -79,144 +59,60 @@ block|{
 enum|enum
 name|Fixups
 block|{
-name|fixup_a64_ld_prel
+comment|// fixup_aarch64_pcrel_adr_imm21 - A 21-bit pc-relative immediate inserted into
+comment|// an ADR instruction.
+name|fixup_aarch64_pcrel_adr_imm21
 init|=
 name|FirstTargetFixupKind
 block|,
-name|fixup_a64_adr_prel
+comment|// fixup_aarch64_pcrel_adrp_imm21 - A 21-bit pc-relative immediate inserted into
+comment|// an ADRP instruction.
+name|fixup_aarch64_pcrel_adrp_imm21
 block|,
-name|fixup_a64_adr_prel_page
+comment|// fixup_aarch64_imm12 - 12-bit fixup for add/sub instructions.
+comment|//     No alignment adjustment. All value bits are encoded.
+name|fixup_aarch64_add_imm12
 block|,
-name|fixup_a64_add_lo12
+comment|// fixup_aarch64_ldst_imm12_* - unsigned 12-bit fixups for load and
+comment|// store instructions.
+name|fixup_aarch64_ldst_imm12_scale1
 block|,
-name|fixup_a64_ldst8_lo12
+name|fixup_aarch64_ldst_imm12_scale2
 block|,
-name|fixup_a64_ldst16_lo12
+name|fixup_aarch64_ldst_imm12_scale4
 block|,
-name|fixup_a64_ldst32_lo12
+name|fixup_aarch64_ldst_imm12_scale8
 block|,
-name|fixup_a64_ldst64_lo12
+name|fixup_aarch64_ldst_imm12_scale16
 block|,
-name|fixup_a64_ldst128_lo12
+comment|// fixup_aarch64_ldr_pcrel_imm19 - The high 19 bits of a 21-bit pc-relative
+comment|// immediate. Same encoding as fixup_aarch64_pcrel_adrhi, except this is used by
+comment|// pc-relative loads and generates relocations directly when necessary.
+name|fixup_aarch64_ldr_pcrel_imm19
 block|,
-name|fixup_a64_tstbr
+comment|// FIXME: comment
+name|fixup_aarch64_movw
 block|,
-name|fixup_a64_condbr
+comment|// fixup_aarch64_pcrel_imm14 - The high 14 bits of a 21-bit pc-relative
+comment|// immediate.
+name|fixup_aarch64_pcrel_branch14
 block|,
-name|fixup_a64_uncondbr
+comment|// fixup_aarch64_pcrel_branch19 - The high 19 bits of a 21-bit pc-relative
+comment|// immediate. Same encoding as fixup_aarch64_pcrel_adrhi, except this is use by
+comment|// b.cc and generates relocations directly when necessary.
+name|fixup_aarch64_pcrel_branch19
 block|,
-name|fixup_a64_call
+comment|// fixup_aarch64_pcrel_branch26 - The high 26 bits of a 28-bit pc-relative
+comment|// immediate.
+name|fixup_aarch64_pcrel_branch26
 block|,
-name|fixup_a64_movw_uabs_g0
+comment|// fixup_aarch64_pcrel_call26 - The high 26 bits of a 28-bit pc-relative
+comment|// immediate. Distinguished from branch26 only on ELF.
+name|fixup_aarch64_pcrel_call26
 block|,
-name|fixup_a64_movw_uabs_g0_nc
-block|,
-name|fixup_a64_movw_uabs_g1
-block|,
-name|fixup_a64_movw_uabs_g1_nc
-block|,
-name|fixup_a64_movw_uabs_g2
-block|,
-name|fixup_a64_movw_uabs_g2_nc
-block|,
-name|fixup_a64_movw_uabs_g3
-block|,
-name|fixup_a64_movw_sabs_g0
-block|,
-name|fixup_a64_movw_sabs_g1
-block|,
-name|fixup_a64_movw_sabs_g2
-block|,
-name|fixup_a64_adr_prel_got_page
-block|,
-name|fixup_a64_ld64_got_lo12_nc
-block|,
-comment|// Produce offsets relative to the module's dynamic TLS area.
-name|fixup_a64_movw_dtprel_g2
-block|,
-name|fixup_a64_movw_dtprel_g1
-block|,
-name|fixup_a64_movw_dtprel_g1_nc
-block|,
-name|fixup_a64_movw_dtprel_g0
-block|,
-name|fixup_a64_movw_dtprel_g0_nc
-block|,
-name|fixup_a64_add_dtprel_hi12
-block|,
-name|fixup_a64_add_dtprel_lo12
-block|,
-name|fixup_a64_add_dtprel_lo12_nc
-block|,
-name|fixup_a64_ldst8_dtprel_lo12
-block|,
-name|fixup_a64_ldst8_dtprel_lo12_nc
-block|,
-name|fixup_a64_ldst16_dtprel_lo12
-block|,
-name|fixup_a64_ldst16_dtprel_lo12_nc
-block|,
-name|fixup_a64_ldst32_dtprel_lo12
-block|,
-name|fixup_a64_ldst32_dtprel_lo12_nc
-block|,
-name|fixup_a64_ldst64_dtprel_lo12
-block|,
-name|fixup_a64_ldst64_dtprel_lo12_nc
-block|,
-comment|// Produce the GOT entry containing a variable's address in TLS's
-comment|// initial-exec mode.
-name|fixup_a64_movw_gottprel_g1
-block|,
-name|fixup_a64_movw_gottprel_g0_nc
-block|,
-name|fixup_a64_adr_gottprel_page
-block|,
-name|fixup_a64_ld64_gottprel_lo12_nc
-block|,
-name|fixup_a64_ld_gottprel_prel19
-block|,
-comment|// Produce offsets relative to the thread pointer: TPIDR_EL0.
-name|fixup_a64_movw_tprel_g2
-block|,
-name|fixup_a64_movw_tprel_g1
-block|,
-name|fixup_a64_movw_tprel_g1_nc
-block|,
-name|fixup_a64_movw_tprel_g0
-block|,
-name|fixup_a64_movw_tprel_g0_nc
-block|,
-name|fixup_a64_add_tprel_hi12
-block|,
-name|fixup_a64_add_tprel_lo12
-block|,
-name|fixup_a64_add_tprel_lo12_nc
-block|,
-name|fixup_a64_ldst8_tprel_lo12
-block|,
-name|fixup_a64_ldst8_tprel_lo12_nc
-block|,
-name|fixup_a64_ldst16_tprel_lo12
-block|,
-name|fixup_a64_ldst16_tprel_lo12_nc
-block|,
-name|fixup_a64_ldst32_tprel_lo12
-block|,
-name|fixup_a64_ldst32_tprel_lo12_nc
-block|,
-name|fixup_a64_ldst64_tprel_lo12
-block|,
-name|fixup_a64_ldst64_tprel_lo12_nc
-block|,
-comment|// Produce the special fixups used by the general-dynamic TLS model.
-name|fixup_a64_tlsdesc_adr_page
-block|,
-name|fixup_a64_tlsdesc_ld64_lo12_nc
-block|,
-name|fixup_a64_tlsdesc_add_lo12_nc
-block|,
-name|fixup_a64_tlsdesc_call
+comment|// fixup_aarch64_tlsdesc_call - zero-space placeholder for the ELF
+comment|// R_AARCH64_TLSDESC_CALL relocation.
+name|fixup_aarch64_tlsdesc_call
 block|,
 comment|// Marker
 name|LastTargetFixupKind
@@ -229,8 +125,13 @@ name|FirstTargetFixupKind
 block|}
 enum|;
 block|}
+comment|// end namespace AArch64
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

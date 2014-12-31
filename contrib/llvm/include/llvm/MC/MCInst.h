@@ -856,14 +856,14 @@ name|MCAsmInfo
 operator|*
 name|MAI
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 specifier|const
 name|MCInstPrinter
 operator|*
 name|Printer
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|StringRef
 name|Separator
@@ -896,7 +896,7 @@ name|print
 argument_list|(
 name|OS
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 block|;
 return|return
@@ -925,7 +925,7 @@ name|print
 argument_list|(
 name|OS
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 block|;
 return|return

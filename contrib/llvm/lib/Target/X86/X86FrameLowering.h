@@ -62,18 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"X86Subtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCDwarf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
@@ -93,73 +81,35 @@ range|:
 name|public
 name|TargetFrameLowering
 block|{
-specifier|const
-name|X86TargetMachine
-operator|&
-name|TM
-block|;
-specifier|const
-name|X86Subtarget
-operator|&
-name|STI
-block|;
 name|public
 operator|:
 name|explicit
 name|X86FrameLowering
 argument_list|(
-specifier|const
-name|X86TargetMachine
-operator|&
-name|tm
+argument|StackDirection D
 argument_list|,
-specifier|const
-name|X86Subtarget
-operator|&
-name|sti
+argument|unsigned StackAl
+argument_list|,
+argument|int LAO
 argument_list|)
 operator|:
 name|TargetFrameLowering
 argument_list|(
-name|StackGrowsDown
+argument|StackGrowsDown
 argument_list|,
-name|sti
-operator|.
-name|getStackAlignment
-argument_list|()
+argument|StackAl
 argument_list|,
-operator|(
-name|sti
-operator|.
-name|is64Bit
-argument_list|()
-condition|?
-operator|-
-literal|8
-else|:
-operator|-
-literal|4
-operator|)
+argument|LAO
 argument_list|)
-block|,
-name|TM
-argument_list|(
-name|tm
-argument_list|)
-block|,
-name|STI
-argument_list|(
-argument|sti
-argument_list|)
-block|{   }
+block|{}
 name|void
 name|emitCalleeSavedFrameMoves
 argument_list|(
-argument|MachineFunction&MF
+argument|MachineBasicBlock&MBB
 argument_list|,
-argument|MCSymbol *Label
+argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|unsigned FramePtr
+argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|;
@@ -171,6 +121,7 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|emitEpilogue
@@ -180,6 +131,7 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|adjustForSegmentedStacks
@@ -187,6 +139,7 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|adjustForHiPEPrologue
@@ -194,15 +147,29 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|processFunctionBeforeCalleeSavedScan
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+name|override
+block|;
+name|bool
+name|assignCalleeSavedSpillSlots
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|std::vector<CalleeSavedInfo>&CSI
+argument_list|)
+specifier|const
+name|override
 block|;
 name|bool
 name|spillCalleeSavedRegisters
@@ -216,6 +183,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|restoreCalleeSavedRegisters
@@ -229,6 +197,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasFP
@@ -236,6 +205,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasReservedCallFrame
@@ -243,6 +213,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|int
 name|getFrameIndexOffset
@@ -252,6 +223,7 @@ argument_list|,
 argument|int FI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|int
 name|getFrameIndexReference
@@ -263,6 +235,7 @@ argument_list|,
 argument|unsigned&FrameReg
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|eliminateCallFramePseudoInstr
@@ -274,6 +247,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

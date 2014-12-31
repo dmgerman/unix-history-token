@@ -289,12 +289,12 @@ argument_list|)
 block|:
 name|CachedLandingPad
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|CachedEHDispatchBlock
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|EnclosingEHScope
@@ -443,7 +443,7 @@ comment|/// A type info value, or null (C++ null, not an LLVM null pointer)
 comment|/// for a catch-all.
 name|llvm
 operator|::
-name|Value
+name|Constant
 operator|*
 name|Type
 block|;
@@ -462,7 +462,7 @@ block|{
 return|return
 name|Type
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 expr|}
@@ -579,7 +579,7 @@ argument_list|(
 name|I
 argument_list|,
 comment|/*catchall*/
-literal|0
+name|nullptr
 argument_list|,
 name|Block
 argument_list|)
@@ -589,7 +589,7 @@ name|setHandler
 argument_list|(
 argument|unsigned I
 argument_list|,
-argument|llvm::Value *Type
+argument|llvm::Constant *Type
 argument_list|,
 argument|llvm::BasicBlock *Block
 argument_list|)
@@ -646,6 +646,42 @@ index|[
 name|I
 index|]
 return|;
+block|}
+comment|// Clear all handler blocks.
+comment|// FIXME: it's better to always call clearHandlerBlocks in DTOR and have a
+comment|// 'takeHandler' or some such function which removes ownership from the
+comment|// EHCatchScope object if the handlers should live longer than EHCatchScope.
+name|void
+name|clearHandlerBlocks
+argument_list|()
+block|{
+for|for
+control|(
+name|unsigned
+name|I
+init|=
+literal|0
+init|,
+name|N
+init|=
+name|getNumHandlers
+argument_list|()
+init|;
+name|I
+operator|!=
+name|N
+condition|;
+operator|++
+name|I
+control|)
+name|delete
+name|getHandler
+argument_list|(
+name|I
+argument_list|)
+decl|.
+name|Block
+decl_stmt|;
 block|}
 typedef|typedef
 specifier|const
@@ -896,17 +932,17 @@ argument_list|)
 operator|,
 name|NormalBlock
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|ActiveFlag
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|ExtInfo
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|CleanupBits
@@ -1751,7 +1787,7 @@ argument_list|()
 operator|:
 name|Ptr
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|EHScope

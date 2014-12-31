@@ -81,48 +81,27 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|TargetInstrInfo
-decl_stmt|;
-name|class
-name|MSP430TargetMachine
-decl_stmt|;
 name|struct
 name|MSP430RegisterInfo
 range|:
 name|public
 name|MSP430GenRegisterInfo
 block|{
-name|private
-operator|:
-name|MSP430TargetMachine
-operator|&
-name|TM
-block|;
-comment|/// StackAlign - Default stack alignment.
-comment|///
-name|unsigned
-name|StackAlign
-block|;
 name|public
 operator|:
 name|MSP430RegisterInfo
-argument_list|(
-name|MSP430TargetMachine
-operator|&
-name|tm
-argument_list|)
+argument_list|()
 block|;
 comment|/// Code Generation virtual methods...
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF =
-literal|0
+argument|const MachineFunction *MF = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 name|BitVector
 name|getReservedRegs
@@ -130,6 +109,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|TargetRegisterClass
@@ -142,6 +122,7 @@ argument|unsigned Kind =
 literal|0
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|eliminateFrameIndex
@@ -152,9 +133,10 @@ argument|int SPAdj
 argument_list|,
 argument|unsigned FIOperandNum
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Debug information queries.
 name|unsigned
@@ -163,6 +145,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

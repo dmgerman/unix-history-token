@@ -432,10 +432,9 @@ comment|/// Start - Initialize anti-dep breaking for a new basic block.
 name|void
 name|StartBlock
 argument_list|(
-name|MachineBasicBlock
-operator|*
-name|BB
+argument|MachineBasicBlock *BB
 argument_list|)
+name|override
 block|;
 comment|/// BreakAntiDependencies - Identifiy anti-dependencies along the critical
 comment|/// path
@@ -454,6 +453,7 @@ argument|unsigned InsertPosIndex
 argument_list|,
 argument|DbgValueVector&DbgValues
 argument_list|)
+name|override
 block|;
 comment|/// Observe - Update liveness information to account for the current
 comment|/// instruction, which will not be scheduled.
@@ -467,11 +467,13 @@ argument|unsigned Count
 argument_list|,
 argument|unsigned InsertPosIndex
 argument_list|)
+name|override
 block|;
 comment|/// Finish - Finish anti-dep breaking for a basic block.
 name|void
 name|FinishBlock
 argument_list|()
+name|override
 block|;
 name|private
 operator|:
@@ -541,14 +543,14 @@ name|char
 modifier|*
 name|header
 init|=
-name|NULL
+name|nullptr
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|footer
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 name|void

@@ -177,9 +177,8 @@ comment|// occasionally hand out null pointers for pruned edges, so we catch tho
 comment|// here.
 if|if
 condition|(
+operator|!
 name|Block
-operator|==
-literal|0
 condition|)
 return|return
 name|false
@@ -324,6 +323,22 @@ name|iterator
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|CFGBlock
+operator|*
+operator|>
+operator|::
+name|const_reverse_iterator
+name|const_iterator
+expr_stmt|;
+end_typedef
+
 begin_expr_stmt
 name|PostOrderCFGView
 argument_list|(
@@ -363,10 +378,41 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_expr_stmt
+name|const_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Blocks
+operator|.
+name|rbegin
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|const_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Blocks
+operator|.
+name|rend
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|empty
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|begin
@@ -376,7 +422,7 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_struct_decl
 struct_decl|struct

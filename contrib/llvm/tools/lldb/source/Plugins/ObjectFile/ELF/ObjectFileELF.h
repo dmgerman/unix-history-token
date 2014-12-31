@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/ArchSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ELFHeader.h"
 end_include
 
@@ -508,6 +514,17 @@ argument_list|,
 argument|lldb::offset_t length
 argument_list|)
 block|;
+name|ObjectFileELF
+argument_list|(
+argument|const lldb::ModuleSP&module_sp
+argument_list|,
+argument|lldb::DataBufferSP& data_sp
+argument_list|,
+argument|const lldb::ProcessSP&process_sp
+argument_list|,
+argument|lldb::addr_t header_addr
+argument_list|)
+block|;
 typedef|typedef
 name|std
 operator|::
@@ -632,6 +649,14 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uint32_t
+name|g_core_uuid_magic
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/// ELF file header.
 end_comment
@@ -739,6 +764,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// The architecture detected from parsing elf file contents.
+end_comment
+
+begin_expr_stmt
+name|lldb_private
+operator|::
+name|ArchSpec
+name|m_arch_spec
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Returns a 1 based index of the given section header.
 end_comment
 
@@ -768,6 +805,58 @@ operator|&
 name|I
 argument_list|)
 decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Parses the ELF program headers.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|size_t
+name|GetProgramHeaderInfo
+argument_list|(
+name|ProgramHeaderColl
+operator|&
+name|program_headers
+argument_list|,
+name|lldb_private
+operator|::
+name|DataExtractor
+operator|&
+name|data
+argument_list|,
+specifier|const
+name|elf
+operator|::
+name|ELFHeader
+operator|&
+name|header
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Finds PT_NOTE segments and calculates their crc sum.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|uint32_t
+name|CalculateELFNotesSegmentsCRC32
+argument_list|(
+specifier|const
+name|ProgramHeaderColl
+operator|&
+name|program_headers
+argument_list|,
+name|lldb_private
+operator|::
+name|DataExtractor
+operator|&
+name|data
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -810,7 +899,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Parses the elf section headers and returns the uuid, debug link name, crc.
+comment|/// Parses the elf section headers and returns the uuid, debug link name, crc, archspec.
 end_comment
 
 begin_decl_stmt
@@ -850,6 +939,12 @@ argument_list|,
 name|uint32_t
 operator|&
 name|gnu_debuglink_crc
+argument_list|,
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|arch_spec
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -1013,6 +1108,154 @@ name|section_id
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// Relocates debug sections
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|RelocateDebugSections
+argument_list|(
+specifier|const
+name|elf
+operator|::
+name|ELFSectionHeader
+operator|*
+name|rel_hdr
+argument_list|,
+name|lldb
+operator|::
+name|user_id_t
+name|rel_id
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|RelocateSection
+argument_list|(
+name|lldb_private
+operator|::
+name|Symtab
+operator|*
+name|symtab
+argument_list|,
+specifier|const
+name|elf
+operator|::
+name|ELFHeader
+operator|*
+name|hdr
+argument_list|,
+specifier|const
+name|elf
+operator|::
+name|ELFSectionHeader
+operator|*
+name|rel_hdr
+argument_list|,
+specifier|const
+name|elf
+operator|::
+name|ELFSectionHeader
+operator|*
+name|symtab_hdr
+argument_list|,
+specifier|const
+name|elf
+operator|::
+name|ELFSectionHeader
+operator|*
+name|debug_hdr
+argument_list|,
+name|lldb_private
+operator|::
+name|DataExtractor
+operator|&
+name|rel_data
+argument_list|,
+name|lldb_private
+operator|::
+name|DataExtractor
+operator|&
+name|symtab_data
+argument_list|,
+name|lldb_private
+operator|::
+name|DataExtractor
+operator|&
+name|debug_data
+argument_list|,
+name|lldb_private
+operator|::
+name|Section
+operator|*
+name|rel_section
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Loads the section name string table into m_shstr_data.  Returns the
+end_comment
+
+begin_comment
+comment|/// number of bytes constituting the table.
+end_comment
+
+begin_function_decl
+name|size_t
+name|GetSectionHeaderStringTable
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Utility method for looking up a section given its name.  Returns the
+end_comment
+
+begin_comment
+comment|/// index of the corresponding section or zero if no section with the given
+end_comment
+
+begin_comment
+comment|/// name can be found (note that section indices are always 1 based, and so
+end_comment
+
+begin_comment
+comment|/// section index 0 is never valid).
+end_comment
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|user_id_t
+name|GetSectionIndexByName
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Returns the ID of the first section that has the given type.
+end_comment
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|user_id_t
+name|GetSectionIndexByType
+argument_list|(
+argument|unsigned type
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// Returns the section header with the given id or NULL.
@@ -1304,6 +1547,34 @@ name|PLTRelocationType
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+specifier|static
+name|lldb_private
+operator|::
+name|Error
+name|RefineModuleDetailsFromNote
+argument_list|(
+name|lldb_private
+operator|::
+name|DataExtractor
+operator|&
+name|data
+argument_list|,
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|arch_spec
+argument_list|,
+name|lldb_private
+operator|::
+name|UUID
+operator|&
+name|uuid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 unit|};

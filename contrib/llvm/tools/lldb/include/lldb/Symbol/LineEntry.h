@@ -121,7 +121,7 @@ comment|/// Dump a description of the contents of this object to the
 comment|/// supplied stream \a s.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|///
 comment|/// @param[in] comp_unit
 comment|///     The compile unit object that contains the support file
@@ -204,7 +204,7 @@ comment|/// Dumps information specific to a process that stops at this
 comment|/// line entry to the supplied stream \a s.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|///
 comment|/// @param[in] comp_unit
 comment|///     The compile unit object that contains the support file

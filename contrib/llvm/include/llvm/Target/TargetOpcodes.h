@@ -81,7 +81,7 @@ name|INLINEASM
 init|=
 literal|1
 block|,
-name|PROLOG_LABEL
+name|CFI_INSTRUCTION
 init|=
 literal|2
 block|,

@@ -70,7 +70,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|NVPTXTargetMachine
+name|NVPTXSubtarget
 decl_stmt|;
 name|class
 name|NVPTXFrameLowering
@@ -78,10 +78,6 @@ range|:
 name|public
 name|TargetFrameLowering
 block|{
-name|NVPTXTargetMachine
-operator|&
-name|tm
-block|;
 name|bool
 name|is64bit
 block|;
@@ -90,49 +86,27 @@ operator|:
 name|explicit
 name|NVPTXFrameLowering
 argument_list|(
-argument|NVPTXTargetMachine&_tm
-argument_list|,
-argument|bool _is64bit
+name|NVPTXSubtarget
+operator|&
+name|STI
 argument_list|)
-operator|:
-name|TargetFrameLowering
-argument_list|(
-name|TargetFrameLowering
-operator|::
-name|StackGrowsUp
-argument_list|,
-literal|8
-argument_list|,
-literal|0
-argument_list|)
-block|,
-name|tm
-argument_list|(
-name|_tm
-argument_list|)
-block|,
-name|is64bit
-argument_list|(
-argument|_is64bit
-argument_list|)
-block|{}
-name|virtual
+block|;
 name|bool
 name|hasFP
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|emitPrologue
 argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|emitEpilogue
 argument_list|(
@@ -141,6 +115,7 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|eliminateCallFramePseudoInstr
@@ -152,6 +127,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

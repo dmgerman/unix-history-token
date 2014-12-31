@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MathExtras.h"
 end_include
 
@@ -79,9 +85,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|BumpPtrAllocator
-decl_stmt|;
 comment|/// Recycle small arrays allocated from a BumpPtrAllocator.
 comment|///
 comment|/// Arrays are allocated in a small number of fixed sizes. For each supported
@@ -115,6 +118,35 @@ operator|*
 name|Next
 block|;   }
 block|;
+name|static_assert
+argument_list|(
+name|Align
+operator|>=
+name|AlignOf
+operator|<
+name|FreeList
+operator|>
+operator|::
+name|Alignment
+argument_list|,
+literal|"Object underaligned"
+argument_list|)
+block|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|FreeList
+argument_list|)
+argument_list|,
+literal|"Objects are too small"
+argument_list|)
+block|;
 comment|// Keep a free list for each array size.
 name|SmallVector
 operator|<
@@ -144,7 +176,7 @@ name|size
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|FreeList
 operator|*
@@ -161,7 +193,7 @@ operator|!
 name|Entry
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|Bucket
 index|[
@@ -206,35 +238,6 @@ argument_list|(
 name|Ptr
 operator|&&
 literal|"Cannot recycle NULL pointer"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|T
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|FreeList
-argument_list|)
-operator|&&
-literal|"Objects are too small"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|Align
-operator|>=
-name|AlignOf
-operator|<
-name|FreeList
-operator|>
-operator|::
-name|Alignment
-operator|&&
-literal|"Object underaligned"
 argument_list|)
 expr_stmt|;
 name|FreeList

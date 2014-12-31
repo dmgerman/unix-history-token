@@ -101,7 +101,7 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// FindAvailableLoadedValue - Scan the ScanBB block backwards (starting at
@@ -148,14 +148,14 @@ name|AliasAnalysis
 operator|*
 name|AA
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|MDNode
 operator|*
 operator|*
 name|TBAATag
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 block|}

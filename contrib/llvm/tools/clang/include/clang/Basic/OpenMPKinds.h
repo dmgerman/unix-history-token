@@ -77,10 +77,6 @@ comment|/// \brief OpenMP directives.
 enum|enum
 name|OpenMPDirectiveKind
 block|{
-name|OMPD_unknown
-init|=
-literal|0
-block|,
 define|#
 directive|define
 name|OPENMP_DIRECTIVE
@@ -89,20 +85,26 @@ name|Name
 parameter_list|)
 define|\
 value|OMPD_##Name,
+define|#
+directive|define
+name|OPENMP_DIRECTIVE_EXT
+parameter_list|(
+name|Name
+parameter_list|,
+name|Str
+parameter_list|)
+define|\
+value|OMPD_##Name,
 include|#
 directive|include
 file|"clang/Basic/OpenMPKinds.def"
-name|NUM_OPENMP_DIRECTIVES
+name|OMPD_unknown
 block|}
 enum|;
 comment|/// \brief OpenMP clauses.
 enum|enum
 name|OpenMPClauseKind
 block|{
-name|OMPC_unknown
-init|=
-literal|0
-block|,
 define|#
 directive|define
 name|OPENMP_CLAUSE
@@ -118,17 +120,13 @@ directive|include
 file|"clang/Basic/OpenMPKinds.def"
 name|OMPC_threadprivate
 block|,
-name|NUM_OPENMP_CLAUSES
+name|OMPC_unknown
 block|}
 enum|;
 comment|/// \brief OpenMP attributes for 'default' clause.
 enum|enum
 name|OpenMPDefaultClauseKind
 block|{
-name|OMPC_DEFAULT_unknown
-init|=
-literal|0
-block|,
 define|#
 directive|define
 name|OPENMP_DEFAULT_KIND
@@ -140,7 +138,43 @@ value|OMPC_DEFAULT_##Name,
 include|#
 directive|include
 file|"clang/Basic/OpenMPKinds.def"
-name|NUM_OPENMP_DEFAULT_KINDS
+name|OMPC_DEFAULT_unknown
+block|}
+enum|;
+comment|/// \brief OpenMP attributes for 'proc_bind' clause.
+enum|enum
+name|OpenMPProcBindClauseKind
+block|{
+define|#
+directive|define
+name|OPENMP_PROC_BIND_KIND
+parameter_list|(
+name|Name
+parameter_list|)
+define|\
+value|OMPC_PROC_BIND_##Name,
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.def"
+name|OMPC_PROC_BIND_unknown
+block|}
+enum|;
+comment|/// \brief OpenMP attributes for 'schedule' clause.
+enum|enum
+name|OpenMPScheduleClauseKind
+block|{
+define|#
+directive|define
+name|OPENMP_SCHEDULE_KIND
+parameter_list|(
+name|Name
+parameter_list|)
+define|\
+value|OMPC_SCHEDULE_##Name,
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.def"
+name|OMPC_SCHEDULE_unknown
 block|}
 enum|;
 name|OpenMPDirectiveKind
@@ -211,6 +245,73 @@ name|DKind
 parameter_list|,
 name|OpenMPClauseKind
 name|CKind
+parameter_list|)
+function_decl|;
+comment|/// \brief Checks if the specified directive is a directive with an associated
+comment|/// loop construct.
+comment|/// \param DKind Specified directive.
+comment|/// \return true - the directive is a loop-associated directive like 'omp simd'
+comment|/// or 'omp for' directive, otherwise - false.
+name|bool
+name|isOpenMPLoopDirective
+parameter_list|(
+name|OpenMPDirectiveKind
+name|DKind
+parameter_list|)
+function_decl|;
+comment|/// \brief Checks if the specified directive is a worksharing directive.
+comment|/// \param DKind Specified directive.
+comment|/// \return true - the directive is a worksharing directive like 'omp for',
+comment|/// otherwise - false.
+name|bool
+name|isOpenMPWorksharingDirective
+parameter_list|(
+name|OpenMPDirectiveKind
+name|DKind
+parameter_list|)
+function_decl|;
+comment|/// \brief Checks if the specified directive is a parallel-kind directive.
+comment|/// \param DKind Specified directive.
+comment|/// \return true - the directive is a parallel-like directive like 'omp
+comment|/// parallel', otherwise - false.
+name|bool
+name|isOpenMPParallelDirective
+parameter_list|(
+name|OpenMPDirectiveKind
+name|DKind
+parameter_list|)
+function_decl|;
+comment|/// \brief Checks if the specified directive is a simd directive.
+comment|/// \param DKind Specified directive.
+comment|/// \return true - the directive is a simd directive like 'omp simd',
+comment|/// otherwise - false.
+name|bool
+name|isOpenMPSimdDirective
+parameter_list|(
+name|OpenMPDirectiveKind
+name|DKind
+parameter_list|)
+function_decl|;
+comment|/// \brief Checks if the specified clause is one of private clauses like
+comment|/// 'private', 'firstprivate', 'reduction' etc..
+comment|/// \param Kind Clause kind.
+comment|/// \return true - the clause is a private clause, otherwise - false.
+name|bool
+name|isOpenMPPrivate
+parameter_list|(
+name|OpenMPClauseKind
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// \brief Checks if the specified clause is one of threadprivate clauses like
+comment|/// 'threadprivate', 'copyin' or 'copyprivate'.
+comment|/// \param Kind Clause kind.
+comment|/// \return true - the clause is a threadprivate clause, otherwise - false.
+name|bool
+name|isOpenMPThreadPrivate
+parameter_list|(
+name|OpenMPClauseKind
+name|Kind
 parameter_list|)
 function_decl|;
 block|}

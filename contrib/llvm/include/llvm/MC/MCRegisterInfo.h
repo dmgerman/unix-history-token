@@ -495,7 +495,7 @@ name|NumRegUnits
 decl_stmt|;
 comment|// Number of regunits.
 specifier|const
-name|uint16_t
+name|MCPhysReg
 argument_list|(
 operator|*
 name|RegUnitRoots
@@ -617,7 +617,7 @@ argument_list|)
 operator|,
 name|List
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// init - Point the iterator to InitVal, decoding subsequent values from
@@ -709,7 +709,7 @@ argument_list|()
 condition|)
 name|List
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 block|}
@@ -760,7 +760,7 @@ name|unsigned
 name|NC
 argument_list|,
 specifier|const
-name|uint16_t
+name|MCPhysReg
 argument_list|(
 operator|*
 name|RURoots

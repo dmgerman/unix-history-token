@@ -319,7 +319,7 @@ name|std
 operator|::
 name|map
 operator|<
-name|off_t
+name|dw_offset_t
 operator|,
 name|CIESP
 operator|>

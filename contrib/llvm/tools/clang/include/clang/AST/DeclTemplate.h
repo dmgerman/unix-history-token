@@ -315,8 +315,6 @@ return|return
 name|NumParams
 return|;
 block|}
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|NamedDecl
@@ -326,8 +324,6 @@ name|asArray
 argument_list|()
 block|{
 return|return
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|NamedDecl
@@ -342,8 +338,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 specifier|const
@@ -355,8 +349,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 specifier|const
@@ -745,8 +737,6 @@ argument_list|)
 return|;
 block|}
 comment|/// \brief Produce this as an array ref.
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|TemplateArgument
@@ -756,8 +746,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|TemplateArgument
@@ -813,10 +801,10 @@ range|:
 name|public
 name|NamedDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -845,14 +833,14 @@ argument_list|)
 block|,
 name|TemplatedDecl
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|TemplateParams
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
-block|{ }
+block|{}
 comment|// Construct a template decl with the given name and parameters.
 comment|// Used when there is not templated element (tt-params, alias?).
 name|TemplateDecl
@@ -881,14 +869,14 @@ argument_list|)
 block|,
 name|TemplatedDecl
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|TemplateParams
 argument_list|(
 argument|Params
 argument_list|)
-block|{ }
+block|{}
 comment|// Construct a template decl with name, parameters, and templated element.
 name|TemplateDecl
 argument_list|(
@@ -989,6 +977,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|{
 return|return
@@ -1033,18 +1022,16 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
+operator|!
 name|TemplatedDecl
-operator|==
-literal|0
 operator|&&
 literal|"TemplatedDecl already set!"
 argument_list|)
 block|;
 name|assert
 argument_list|(
+operator|!
 name|TemplateParams
-operator|==
-literal|0
 operator|&&
 literal|"TemplateParams already set!"
 argument_list|)
@@ -1326,12 +1313,7 @@ name|ID
 argument_list|,
 name|TemplateArguments
 operator|->
-name|data
-argument_list|()
-argument_list|,
-name|TemplateArguments
-operator|->
-name|size
+name|asArray
 argument_list|()
 argument_list|,
 name|Function
@@ -1346,9 +1328,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
-argument|const TemplateArgument *TemplateArgs
-argument_list|,
-argument|unsigned NumTemplateArgs
+argument|ArrayRef<TemplateArgument> TemplateArgs
 argument_list|,
 argument|ASTContext&Context
 argument_list|)
@@ -1357,7 +1337,10 @@ name|ID
 operator|.
 name|AddInteger
 argument_list|(
-name|NumTemplateArgs
+name|TemplateArgs
+operator|.
+name|size
+argument_list|()
 argument_list|)
 block|;
 for|for
@@ -1369,7 +1352,10 @@ literal|0
 init|;
 name|Arg
 operator|!=
-name|NumTemplateArgs
+name|TemplateArgs
+operator|.
+name|size
+argument_list|()
 condition|;
 operator|++
 name|Arg
@@ -1778,35 +1764,33 @@ name|RedeclarableTemplateDecl
 operator|>
 name|redeclarable_base
 expr_stmt|;
-name|virtual
 name|RedeclarableTemplateDecl
 operator|*
-name|getNextRedeclaration
+name|getNextRedeclarationImpl
 argument_list|()
+name|override
 block|{
 return|return
-name|RedeclLink
-operator|.
-name|getNext
+name|getNextRedeclaration
 argument_list|()
 return|;
 block|}
-name|virtual
 name|RedeclarableTemplateDecl
 operator|*
 name|getPreviousDeclImpl
 argument_list|()
+name|override
 block|{
 return|return
 name|getPreviousDecl
 argument_list|()
 return|;
 block|}
-name|virtual
 name|RedeclarableTemplateDecl
 operator|*
 name|getMostRecentDeclImpl
 argument_list|()
+name|override
 block|{
 return|return
 name|getMostRecentDecl
@@ -2090,13 +2074,25 @@ name|DeclType
 operator|*
 name|findSpecializationImpl
 argument_list|(
-argument|llvm::FoldingSetVector<EntryType>&Specs
+name|llvm
+operator|::
+name|FoldingSetVector
+operator|<
+name|EntryType
+operator|>
+operator|&
+name|Specs
 argument_list|,
-argument|const TemplateArgument *Args
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|Args
 argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|void *&InsertPos
+name|void
+operator|*
+operator|&
+name|InsertPos
 argument_list|)
 expr_stmt|;
 struct|struct
@@ -2107,7 +2103,7 @@ argument_list|()
 operator|:
 name|InstantiatedFromMember
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|,
 argument|false
 argument_list|)
@@ -2166,6 +2162,8 @@ name|RedeclarableTemplateDecl
 argument_list|(
 argument|Kind DK
 argument_list|,
+argument|ASTContext&C
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation L
@@ -2192,9 +2190,14 @@ argument_list|,
 name|Decl
 argument_list|)
 operator|,
+name|redeclarable_base
+argument_list|(
+name|C
+argument_list|)
+operator|,
 name|Common
 argument_list|()
-block|{ }
+block|{}
 name|public
 operator|:
 name|template
@@ -2211,6 +2214,7 @@ name|RedeclarableTemplateDecl
 modifier|*
 name|getCanonicalDecl
 parameter_list|()
+function|override
 block|{
 return|return
 name|getFirstDecl
@@ -2377,6 +2381,12 @@ block|}
 typedef|typedef
 name|redeclarable_base
 operator|::
+name|redecl_range
+name|redecl_range
+expr_stmt|;
+typedef|typedef
+name|redeclarable_base
+operator|::
 name|redecl_iterator
 name|redecl_iterator
 expr_stmt|;
@@ -2389,6 +2399,11 @@ name|using
 name|redeclarable_base
 operator|::
 name|redecls_end
+expr_stmt|;
+name|using
+name|redeclarable_base
+operator|::
+name|redecls
 expr_stmt|;
 name|using
 name|redeclarable_base
@@ -2574,6 +2589,8 @@ block|;   }
 block|;
 name|FunctionTemplateDecl
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation L
@@ -2589,6 +2606,8 @@ name|RedeclarableTemplateDecl
 argument_list|(
 argument|FunctionTemplate
 argument_list|,
+argument|C
+argument_list|,
 argument|DC
 argument_list|,
 argument|L
@@ -2599,7 +2618,7 @@ argument|Params
 argument_list|,
 argument|Decl
 argument_list|)
-block|{ }
+block|{}
 name|CommonBase
 operator|*
 name|newCommon
@@ -2607,6 +2626,7 @@ argument_list|(
 argument|ASTContext&C
 argument_list|)
 specifier|const
+name|override
 block|;
 name|Common
 operator|*
@@ -2708,17 +2728,23 @@ name|FunctionDecl
 operator|*
 name|findSpecialization
 argument_list|(
-argument|const TemplateArgument *Args
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|Args
 argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|void *&InsertPos
+name|void
+operator|*
+operator|&
+name|InsertPos
 argument_list|)
 block|;
 name|FunctionTemplateDecl
 operator|*
 name|getCanonicalDecl
 argument_list|()
+name|override
 block|{
 return|return
 name|cast
@@ -2835,6 +2861,40 @@ name|FunctionTemplateSpecializationInfo
 operator|>
 name|spec_iterator
 expr_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|spec_iterator
+operator|>
+name|spec_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|spec_range
+name|specializations
+argument_list|()
+specifier|const
+block|{
+return|return
+name|spec_range
+argument_list|(
+name|spec_begin
+argument_list|()
+argument_list|,
+name|spec_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|spec_iterator
 name|spec_begin
 argument_list|()
@@ -2850,6 +2910,9 @@ name|false
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|spec_iterator
 name|spec_end
 argument_list|()
@@ -2865,21 +2928,45 @@ name|true
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the "injected" template arguments that correspond to the
+end_comment
+
+begin_comment
 comment|/// template parameters of this function template.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Although the C++ standard has no notion of the "injected" template
+end_comment
+
+begin_comment
 comment|/// arguments for a function template, the notion is convenient when
+end_comment
+
+begin_comment
 comment|/// we need to perform substitutions inside the definition of a function
+end_comment
+
+begin_comment
 comment|/// template.
+end_comment
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 name|TemplateArgument
 operator|>
 name|getInjectedTemplateArgs
 argument_list|()
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Create a function template node.
@@ -3047,31 +3134,19 @@ begin_decl_stmt
 name|class
 name|TemplateParmPosition
 block|{
-name|protected
-label|:
-comment|// FIXME: This should probably never be called, but it's here as
 name|TemplateParmPosition
 argument_list|()
-operator|:
-name|Depth
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Position
-argument_list|(
-literal|0
-argument_list|)
-block|{
-comment|/* llvm_unreachable("Cannot create positionless template parameter"); */
-block|}
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
+name|protected
+label|:
 name|TemplateParmPosition
 argument_list|(
 argument|unsigned D
 argument_list|,
 argument|unsigned P
 argument_list|)
-operator|:
+block|:
 name|Depth
 argument_list|(
 name|D
@@ -3308,7 +3383,7 @@ block|{
 return|return
 name|DefaultArgument
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Retrieve the default argument, if any.
@@ -3378,7 +3453,7 @@ argument_list|()
 block|{
 name|DefaultArgument
 operator|=
-literal|0
+name|nullptr
 block|;
 name|InheritedDefault
 operator|=
@@ -3418,6 +3493,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|;
 comment|// Implement isa/cast/dyncast/etc.
@@ -3545,7 +3621,7 @@ argument_list|)
 block|,
 name|DefaultArgumentAndInherited
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 name|false
 argument_list|)
@@ -3703,6 +3779,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|;
 comment|/// \brief Determine whether this template parameter has a default
@@ -3718,7 +3795,7 @@ operator|.
 name|getPointer
 argument_list|()
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Retrieve the default argument, if any.
@@ -3789,7 +3866,7 @@ name|DefaultArgumentAndInherited
 operator|.
 name|setPointer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|DefaultArgumentAndInherited
@@ -4048,10 +4125,10 @@ block|,
 name|protected
 name|TemplateParmPosition
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// DefaultArgument - The default template argument, if any.
 name|TemplateArgumentLoc
@@ -4437,6 +4514,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|{
 name|SourceLocation
@@ -4597,7 +4675,7 @@ argument_list|()
 operator|:
 name|TypeAsWritten
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|ExternLoc
@@ -4659,6 +4737,8 @@ block|;
 name|explicit
 name|ClassTemplateSpecializationDecl
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|Kind DK
 argument_list|)
 block|;
@@ -4698,7 +4778,6 @@ argument_list|,
 argument|unsigned ID
 argument_list|)
 block|;
-name|virtual
 name|void
 name|getNameForDiagnostic
 argument_list|(
@@ -4709,7 +4788,13 @@ argument_list|,
 argument|bool Qualified
 argument_list|)
 specifier|const
+name|override
 block|;
+comment|// FIXME: This is broken. CXXRecordDecl::getMostRecentDecl() returns a
+comment|// different "most recent" declaration from this function for the same
+comment|// declaration, because we don't override getMostRecentDeclImpl(). But
+comment|// it's not clear that we should override that, because the most recent
+comment|// declaration as a CXXRecordDecl sometimes is the injected-class-name.
 name|ClassTemplateSpecializationDecl
 operator|*
 name|getMostRecentDecl
@@ -4927,20 +5012,12 @@ specifier|const
 block|{
 if|if
 condition|(
+operator|!
+name|isTemplateInstantiation
+argument_list|(
 name|getSpecializationKind
 argument_list|()
-operator|!=
-name|TSK_ImplicitInstantiation
-operator|&&
-name|getSpecializationKind
-argument_list|()
-operator|!=
-name|TSK_ExplicitInstantiationDefinition
-operator|&&
-name|getSpecializationKind
-argument_list|()
-operator|!=
-name|TSK_ExplicitInstantiationDeclaration
+argument_list|)
 condition|)
 return|return
 name|llvm
@@ -4956,6 +5033,27 @@ operator|>
 operator|(
 operator|)
 return|;
+return|return
+name|getSpecializedTemplateOrPartial
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the class template or class template partial
+comment|/// specialization which was specialized by this.
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|ClassTemplateDecl
+operator|*
+block|,
+name|ClassTemplatePartialSpecializationDecl
+operator|*
+operator|>
+name|getSpecializedTemplateOrPartial
+argument_list|()
+specifier|const
+block|{
 if|if
 condition|(
 name|SpecializedPartialSpecialization
@@ -4992,67 +5090,6 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Retrieve the class template or class template partial
-end_comment
-
-begin_comment
-comment|/// specialization which was specialized by this.
-end_comment
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|PointerUnion
-operator|<
-name|ClassTemplateDecl
-operator|*
-operator|,
-name|ClassTemplatePartialSpecializationDecl
-operator|*
-operator|>
-name|getSpecializedTemplateOrPartial
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|SpecializedPartialSpecialization
-modifier|*
-name|PartialSpec
-init|=
-name|SpecializedTemplate
-operator|.
-name|dyn_cast
-operator|<
-name|SpecializedPartialSpecialization
-operator|*
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|PartialSpec
-operator|->
-name|PartialSpecialization
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|SpecializedTemplate
-operator|.
-name|get
-operator|<
-name|ClassTemplateDecl
-operator|*
-operator|>
-operator|(
-operator|)
-return|;
-end_return
-
-begin_comment
-unit|}
 comment|/// \brief Retrieve the set of template arguments that should be used
 end_comment
 
@@ -5097,7 +5134,7 @@ comment|/// itself.
 end_comment
 
 begin_expr_stmt
-unit|const
+specifier|const
 name|TemplateArgumentList
 operator|&
 name|getTemplateInstantiationArgs
@@ -5307,7 +5344,7 @@ name|ExplicitInfo
 operator|->
 name|TypeAsWritten
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -5431,6 +5468,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 expr_stmt|;
 end_expr_stmt
@@ -5453,12 +5491,7 @@ name|ID
 argument_list|,
 name|TemplateArgs
 operator|->
-name|data
-argument_list|()
-argument_list|,
-name|TemplateArgs
-operator|->
-name|size
+name|asArray
 argument_list|()
 argument_list|,
 name|getASTContext
@@ -5479,13 +5512,11 @@ name|FoldingSetNodeID
 operator|&
 name|ID
 argument_list|,
-specifier|const
+name|ArrayRef
+operator|<
 name|TemplateArgument
-operator|*
+operator|>
 name|TemplateArgs
-argument_list|,
-name|unsigned
-name|NumTemplateArgs
 argument_list|,
 name|ASTContext
 operator|&
@@ -5496,7 +5527,10 @@ name|ID
 operator|.
 name|AddInteger
 argument_list|(
-name|NumTemplateArgs
+name|TemplateArgs
+operator|.
+name|size
+argument_list|()
 argument_list|)
 expr_stmt|;
 for|for
@@ -5508,7 +5542,10 @@ literal|0
 init|;
 name|Arg
 operator|!=
-name|NumTemplateArgs
+name|TemplateArgs
+operator|.
+name|size
+argument_list|()
 condition|;
 operator|++
 name|Arg
@@ -5594,10 +5631,10 @@ range|:
 name|public
 name|ClassTemplateSpecializationDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// \brief The list of template parameters
 name|TemplateParameterList
@@ -5655,30 +5692,36 @@ argument|ClassTemplatePartialSpecializationDecl *PrevDecl
 argument_list|)
 block|;
 name|ClassTemplatePartialSpecializationDecl
-argument_list|()
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
 operator|:
 name|ClassTemplateSpecializationDecl
 argument_list|(
+name|C
+argument_list|,
 name|ClassTemplatePartialSpecialization
 argument_list|)
 block|,
 name|TemplateParams
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|ArgsAsWritten
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|InstantiatedFromMember
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|,
 argument|false
 argument_list|)
-block|{ }
+block|{}
 name|public
 operator|:
 specifier|static
@@ -6100,6 +6143,8 @@ argument_list|()
 block|;
 name|ClassTemplateDecl
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation L
@@ -6115,6 +6160,8 @@ name|RedeclarableTemplateDecl
 argument_list|(
 argument|ClassTemplate
 argument_list|,
+argument|C
+argument_list|,
 argument|DC
 argument_list|,
 argument|L
@@ -6125,27 +6172,7 @@ argument|Params
 argument_list|,
 argument|Decl
 argument_list|)
-block|{ }
-name|ClassTemplateDecl
-argument_list|(
-argument|EmptyShell Empty
-argument_list|)
-operator|:
-name|RedeclarableTemplateDecl
-argument_list|(
-argument|ClassTemplate
-argument_list|,
-literal|0
-argument_list|,
-argument|SourceLocation()
-argument_list|,
-argument|DeclarationName()
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-block|{ }
+block|{}
 name|CommonBase
 operator|*
 name|newCommon
@@ -6153,6 +6180,7 @@ argument_list|(
 argument|ASTContext&C
 argument_list|)
 specifier|const
+name|override
 block|;
 name|Common
 operator|*
@@ -6247,11 +6275,16 @@ name|ClassTemplateSpecializationDecl
 operator|*
 name|findSpecialization
 argument_list|(
-argument|const TemplateArgument *Args
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|Args
 argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|void *&InsertPos
+name|void
+operator|*
+operator|&
+name|InsertPos
 argument_list|)
 block|;
 comment|/// \brief Insert the specified specialization knowing that it is not already
@@ -6272,6 +6305,7 @@ name|ClassTemplateDecl
 operator|*
 name|getCanonicalDecl
 argument_list|()
+name|override
 block|{
 return|return
 name|cast
@@ -6433,11 +6467,16 @@ name|ClassTemplatePartialSpecializationDecl
 operator|*
 name|findPartialSpecialization
 argument_list|(
-argument|const TemplateArgument *Args
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|Args
 argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|void *&InsertPos
+name|void
+operator|*
+operator|&
+name|InsertPos
 argument_list|)
 block|;
 comment|/// \brief Insert the specified partial specialization knowing that it is not
@@ -6524,6 +6563,40 @@ name|ClassTemplateSpecializationDecl
 operator|>
 name|spec_iterator
 expr_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|spec_iterator
+operator|>
+name|spec_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|spec_range
+name|specializations
+argument_list|()
+specifier|const
+block|{
+return|return
+name|spec_range
+argument_list|(
+name|spec_begin
+argument_list|()
+argument_list|,
+name|spec_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|spec_iterator
 name|spec_begin
 argument_list|()
@@ -6539,6 +6612,9 @@ name|false
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|spec_iterator
 name|spec_end
 argument_list|()
@@ -6554,51 +6630,7 @@ name|true
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|SpecIterator
-operator|<
-name|ClassTemplatePartialSpecializationDecl
-operator|>
-name|partial_spec_iterator
-expr_stmt|;
-end_typedef
-
-begin_function
-name|partial_spec_iterator
-name|partial_spec_begin
-parameter_list|()
-block|{
-return|return
-name|makeSpecIterator
-argument_list|(
-name|getPartialSpecializations
-argument_list|()
-argument_list|,
-name|false
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|partial_spec_iterator
-name|partial_spec_end
-parameter_list|()
-block|{
-return|return
-name|makeSpecIterator
-argument_list|(
-name|getPartialSpecializations
-argument_list|()
-argument_list|,
-name|true
-argument_list|)
-return|;
-block|}
-end_function
+end_expr_stmt
 
 begin_comment
 comment|// Implement isa/cast/dyncast support
@@ -6849,7 +6881,7 @@ argument_list|)
 operator|,
 name|Params
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|public
@@ -7114,6 +7146,8 @@ name|Common
 typedef|;
 name|TypeAliasTemplateDecl
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation L
@@ -7129,6 +7163,8 @@ name|RedeclarableTemplateDecl
 argument_list|(
 argument|TypeAliasTemplate
 argument_list|,
+argument|C
+argument_list|,
 argument|DC
 argument_list|,
 argument|L
@@ -7139,7 +7175,7 @@ argument|Params
 argument_list|,
 argument|Decl
 argument_list|)
-block|{ }
+block|{}
 name|CommonBase
 operator|*
 name|newCommon
@@ -7147,6 +7183,7 @@ argument_list|(
 argument|ASTContext&C
 argument_list|)
 specifier|const
+name|override
 decl_stmt|;
 end_decl_stmt
 
@@ -7206,6 +7243,7 @@ name|TypeAliasTemplateDecl
 modifier|*
 name|getCanonicalDecl
 parameter_list|()
+function|override
 block|{
 return|return
 name|cast
@@ -7464,7 +7502,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This is a non standard extension needed to support MSVC.
+comment|/// This is a non-standard extension needed to support MSVC.
 end_comment
 
 begin_comment
@@ -7646,6 +7684,8 @@ return|return
 name|new
 argument_list|(
 argument|C
+argument_list|,
+argument|DC
 argument_list|)
 name|ClassScopeFunctionSpecializationDecl
 argument_list|(
@@ -7814,7 +7854,7 @@ argument_list|()
 operator|:
 name|TypeAsWritten
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|ExternLoc
@@ -7855,9 +7895,9 @@ name|protected
 operator|:
 name|VarTemplateSpecializationDecl
 argument_list|(
-argument|ASTContext&Context
-argument_list|,
 argument|Kind DK
+argument_list|,
+argument|ASTContext&Context
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
@@ -7882,6 +7922,8 @@ name|explicit
 name|VarTemplateSpecializationDecl
 argument_list|(
 argument|Kind DK
+argument_list|,
+argument|ASTContext&Context
 argument_list|)
 block|;
 name|public
@@ -7922,7 +7964,6 @@ argument_list|,
 argument|unsigned ID
 argument_list|)
 block|;
-name|virtual
 name|void
 name|getNameForDiagnostic
 argument_list|(
@@ -7933,6 +7974,7 @@ argument_list|,
 argument|bool Qualified
 argument_list|)
 specifier|const
+name|override
 block|;
 name|VarTemplateSpecializationDecl
 operator|*
@@ -8598,7 +8640,7 @@ name|ExplicitInfo
 operator|->
 name|TypeAsWritten
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -8735,12 +8777,7 @@ name|ID
 argument_list|,
 name|TemplateArgs
 operator|->
-name|data
-argument_list|()
-argument_list|,
-name|TemplateArgs
-operator|->
-name|size
+name|asArray
 argument_list|()
 argument_list|,
 name|getASTContext
@@ -8761,13 +8798,11 @@ name|FoldingSetNodeID
 operator|&
 name|ID
 argument_list|,
-specifier|const
+name|ArrayRef
+operator|<
 name|TemplateArgument
-operator|*
+operator|>
 name|TemplateArgs
-argument_list|,
-name|unsigned
-name|NumTemplateArgs
 argument_list|,
 name|ASTContext
 operator|&
@@ -8778,7 +8813,10 @@ name|ID
 operator|.
 name|AddInteger
 argument_list|(
-name|NumTemplateArgs
+name|TemplateArgs
+operator|.
+name|size
+argument_list|()
 argument_list|)
 expr_stmt|;
 for|for
@@ -8790,7 +8828,10 @@ literal|0
 init|;
 name|Arg
 operator|!=
-name|NumTemplateArgs
+name|TemplateArgs
+operator|.
+name|size
+argument_list|()
 condition|;
 operator|++
 name|Arg
@@ -8876,10 +8917,10 @@ range|:
 name|public
 name|VarTemplateSpecializationDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// \brief The list of template parameters
 name|TemplateParameterList
@@ -8939,26 +8980,32 @@ argument|const ASTTemplateArgumentListInfo *ArgInfos
 argument_list|)
 block|;
 name|VarTemplatePartialSpecializationDecl
-argument_list|()
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
 operator|:
 name|VarTemplateSpecializationDecl
 argument_list|(
 name|VarTemplatePartialSpecialization
+argument_list|,
+name|Context
 argument_list|)
 block|,
 name|TemplateParams
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|ArgsAsWritten
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|InstantiatedFromMember
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|,
 argument|false
 argument_list|)
@@ -9349,6 +9396,8 @@ argument_list|()
 block|;
 name|VarTemplateDecl
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation L
@@ -9364,6 +9413,8 @@ name|RedeclarableTemplateDecl
 argument_list|(
 argument|VarTemplate
 argument_list|,
+argument|C
+argument_list|,
 argument|DC
 argument_list|,
 argument|L
@@ -9375,26 +9426,6 @@ argument_list|,
 argument|Decl
 argument_list|)
 block|{}
-name|VarTemplateDecl
-argument_list|(
-argument|EmptyShell Empty
-argument_list|)
-operator|:
-name|RedeclarableTemplateDecl
-argument_list|(
-argument|VarTemplate
-argument_list|,
-literal|0
-argument_list|,
-argument|SourceLocation()
-argument_list|,
-argument|DeclarationName()
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-block|{}
 name|CommonBase
 operator|*
 name|newCommon
@@ -9402,6 +9433,7 @@ argument_list|(
 argument|ASTContext&C
 argument_list|)
 specifier|const
+name|override
 block|;
 name|Common
 operator|*
@@ -9479,9 +9511,7 @@ argument|DeclarationName Name
 argument_list|,
 argument|TemplateParameterList *Params
 argument_list|,
-argument|NamedDecl *Decl
-argument_list|,
-argument|VarTemplateDecl *PrevDecl
+argument|VarDecl *Decl
 argument_list|)
 block|;
 comment|/// \brief Create an empty variable template node.
@@ -9501,11 +9531,16 @@ name|VarTemplateSpecializationDecl
 operator|*
 name|findSpecialization
 argument_list|(
-argument|const TemplateArgument *Args
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|Args
 argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|void *&InsertPos
+name|void
+operator|*
+operator|&
+name|InsertPos
 argument_list|)
 block|;
 comment|/// \brief Insert the specified specialization knowing that it is not already
@@ -9526,6 +9561,7 @@ name|VarTemplateDecl
 operator|*
 name|getCanonicalDecl
 argument_list|()
+name|override
 block|{
 return|return
 name|cast
@@ -9641,11 +9677,16 @@ name|VarTemplatePartialSpecializationDecl
 operator|*
 name|findPartialSpecialization
 argument_list|(
-argument|const TemplateArgument *Args
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|Args
 argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|void *&InsertPos
+name|void
+operator|*
+operator|&
+name|InsertPos
 argument_list|)
 block|;
 comment|/// \brief Insert the specified partial specialization knowing that it is not
@@ -9701,6 +9742,40 @@ name|VarTemplateSpecializationDecl
 operator|>
 name|spec_iterator
 expr_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|spec_iterator
+operator|>
+name|spec_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|spec_range
+name|specializations
+argument_list|()
+specifier|const
+block|{
+return|return
+name|spec_range
+argument_list|(
+name|spec_begin
+argument_list|()
+argument_list|,
+name|spec_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|spec_iterator
 name|spec_begin
 argument_list|()
@@ -9716,6 +9791,9 @@ name|false
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|spec_iterator
 name|spec_end
 argument_list|()
@@ -9731,51 +9809,7 @@ name|true
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|SpecIterator
-operator|<
-name|VarTemplatePartialSpecializationDecl
-operator|>
-name|partial_spec_iterator
-expr_stmt|;
-end_typedef
-
-begin_function
-name|partial_spec_iterator
-name|partial_spec_begin
-parameter_list|()
-block|{
-return|return
-name|makeSpecIterator
-argument_list|(
-name|getPartialSpecializations
-argument_list|()
-argument_list|,
-name|false
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|partial_spec_iterator
-name|partial_spec_end
-parameter_list|()
-block|{
-return|return
-name|makeSpecIterator
-argument_list|(
-name|getPartialSpecializations
-argument_list|()
-argument_list|,
-name|true
-argument_list|)
-return|;
-block|}
-end_function
+end_expr_stmt
 
 begin_comment
 comment|// Implement isa/cast/dyncast support

@@ -2031,16 +2031,9 @@ argument_list|,
 name|unsigned
 operator|&
 name|type_quals
-argument_list|,
-name|lldb_private
-operator|::
-name|ClangASTContext
-operator|::
-name|TemplateParameterInfos
-operator|&
-name|template_param_infos
 argument_list|)
 decl_stmt|;
+comment|// lldb_private::ClangASTContext::TemplateParameterInfos&template_param_infos); // not currently needed
 name|size_t
 name|ParseChildEnumerators
 argument_list|(
@@ -2727,14 +2720,7 @@ name|DWARFDebugInfoEntry
 operator|*
 name|dst_class_die
 argument_list|,
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-specifier|const
-name|DWARFDebugInfoEntry
-operator|*
-operator|>
+name|DWARFDIECollection
 operator|&
 name|failures
 argument_list|)

@@ -332,6 +332,7 @@ operator|::
 name|DataBufferSP
 name|GetAuxvData
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -429,6 +430,16 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ProcessElfCore
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|OSType
+name|m_os
 expr_stmt|;
 end_expr_stmt
 

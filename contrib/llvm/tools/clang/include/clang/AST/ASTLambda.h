@@ -181,6 +181,7 @@ specifier|inline
 name|bool
 name|isGenericLambdaCallOperatorSpecialization
 parameter_list|(
+specifier|const
 name|CXXMethodDecl
 modifier|*
 name|MD
@@ -194,6 +195,7 @@ condition|)
 return|return
 name|false
 return|;
+specifier|const
 name|CXXRecordDecl
 modifier|*
 name|LambdaClass

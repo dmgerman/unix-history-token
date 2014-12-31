@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm-c/Support.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Twine.h"
 end_include
 
@@ -86,24 +92,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm-c/Core.h"
+file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|error_code
-decl_stmt|;
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|class
-name|OwningPtr
-expr_stmt|;
 comment|/// MemoryBuffer - This interface provides simple read-only access to a block
 comment|/// of memory, and provides simple methods for reading files and standard input
 comment|/// into a memory buffer.  In addition to basic access to the characters in the
@@ -237,95 +244,92 @@ return|return
 literal|"Unknown buffer"
 return|;
 block|}
-comment|/// getFile - Open the specified file as a MemoryBuffer, returning a new
-comment|/// MemoryBuffer if successful, otherwise returning null.  If FileSize is
-comment|/// specified, this means that the client knows that the file exists and that
-comment|/// it has the specified size.
+comment|/// Open the specified file as a MemoryBuffer, returning a new MemoryBuffer
+comment|/// if successful, otherwise returning null. If FileSize is specified, this
+comment|/// means that the client knows that the file exists and that it has the
+comment|/// specified size.
+comment|///
+comment|/// \param IsVolatileSize Set to true to indicate that the file size may be
+comment|/// changing, e.g. when libclang tries to parse while the user is
+comment|/// editing/updating the file.
 specifier|static
-name|error_code
-name|getFile
-argument_list|(
-name|Twine
-name|Filename
-argument_list|,
-name|OwningPtr
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MemoryBuffer
-operator|>
-operator|&
-name|result
+operator|>>
+name|getFile
+argument_list|(
+argument|Twine Filename
 argument_list|,
-name|int64_t
-name|FileSize
-operator|=
-operator|-
+argument|int64_t FileSize = -
 literal|1
 argument_list|,
-name|bool
-name|RequiresNullTerminator
-operator|=
-name|true
+argument|bool RequiresNullTerminator = true
+argument_list|,
+argument|bool IsVolatileSize = false
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// Given an already-open file descriptor, map some slice of it into a
 comment|/// MemoryBuffer. The slice is specified by an \p Offset and \p MapSize.
 comment|/// Since this is in the middle of a file, the buffer is not null terminated.
+comment|///
+comment|/// \param IsVolatileSize Set to true to indicate that the file size may be
+comment|/// changing, e.g. when libclang tries to parse while the user is
+comment|/// editing/updating the file.
 specifier|static
-name|error_code
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>>
 name|getOpenFileSlice
 argument_list|(
-name|int
-name|FD
+argument|int FD
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|Filename
+argument|const char *Filename
 argument_list|,
-name|OwningPtr
-operator|<
-name|MemoryBuffer
-operator|>
-operator|&
-name|Result
+argument|uint64_t MapSize
 argument_list|,
-name|uint64_t
-name|MapSize
+argument|int64_t Offset
 argument_list|,
-name|int64_t
-name|Offset
+argument|bool IsVolatileSize = false
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// Given an already-open file descriptor, read the file and return a
 comment|/// MemoryBuffer.
+comment|///
+comment|/// \param IsVolatileSize Set to true to indicate that the file size may be
+comment|/// changing, e.g. when libclang tries to parse while the user is
+comment|/// editing/updating the file.
 specifier|static
-name|error_code
-name|getOpenFile
-argument_list|(
-name|int
-name|FD
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|Filename
-argument_list|,
-name|OwningPtr
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MemoryBuffer
-operator|>
-operator|&
-name|Result
+operator|>>
+name|getOpenFile
+argument_list|(
+argument|int FD
 argument_list|,
-name|uint64_t
-name|FileSize
+argument|const char *Filename
 argument_list|,
-name|bool
-name|RequiresNullTerminator
-operator|=
-name|true
+argument|uint64_t FileSize
+argument_list|,
+argument|bool RequiresNullTerminator = true
+argument_list|,
+argument|bool IsVolatileSize = false
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// getMemBuffer - Open the specified memory range as a MemoryBuffer.  Note
 comment|/// that InputData must be null terminated if RequiresNullTerminator is true.
 specifier|static
@@ -400,44 +404,38 @@ init|=
 literal|""
 parameter_list|)
 function_decl|;
-comment|/// getSTDIN - Read all of stdin into a file buffer, and return it.
-comment|/// If an error occurs, this returns null and sets ec.
+comment|/// Read all of stdin into a file buffer, and return it.
 specifier|static
-name|error_code
-name|getSTDIN
-argument_list|(
-name|OwningPtr
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MemoryBuffer
-operator|>
-operator|&
-name|result
-argument_list|)
-decl_stmt|;
-comment|/// getFileOrSTDIN - Open the specified file as a MemoryBuffer, or open stdin
-comment|/// if the Filename is "-".  If an error occurs, this returns null and sets
-comment|/// ec.
+operator|>>
+name|getSTDIN
+argument_list|()
+expr_stmt|;
+comment|/// Open the specified file as a MemoryBuffer, or open stdin if the Filename
+comment|/// is "-".
 specifier|static
-name|error_code
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>>
 name|getFileOrSTDIN
 argument_list|(
-name|StringRef
-name|Filename
+argument|StringRef Filename
 argument_list|,
-name|OwningPtr
-operator|<
-name|MemoryBuffer
-operator|>
-operator|&
-name|result
-argument_list|,
-name|int64_t
-name|FileSize
-operator|=
-operator|-
+argument|int64_t FileSize = -
 literal|1
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Provided for performance analysis.
 comment|//===--------------------------------------------------------------------===//

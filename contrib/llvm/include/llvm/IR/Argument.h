@@ -168,7 +168,7 @@ name|Function
 modifier|*
 name|F
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 specifier|inline
@@ -202,6 +202,22 @@ name|getArgNo
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Return true if this argument has the nonnull attribute on it in
+comment|/// its containing function. Also returns true if at least one byte is known
+comment|/// to be dereferenceable and the pointer is in addrspace(0).
+name|bool
+name|hasNonNullAttr
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief If this argument has the dereferenceable attribute on it in its
+comment|/// containing function, return the number of bytes known to be
+comment|/// dereferenceable. Otherwise, zero is returned.
+name|uint64_t
+name|getDereferenceableBytes
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Return true if this argument has the byval attribute on it in its
 comment|/// containing function.
 name|bool
@@ -209,7 +225,15 @@ name|hasByValAttr
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief If this is a byval argument, return its alignment.
+comment|/// \brief Return true if this argument has the byval attribute or inalloca
+comment|/// attribute on it in its containing function.  These attributes both
+comment|/// represent arguments being passed by value.
+name|bool
+name|hasByValOrInAllocaAttr
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief If this is a byval or inalloca argument, return its alignment.
 name|unsigned
 name|getParamAlignment
 argument_list|()
@@ -254,6 +278,13 @@ comment|/// \brief Return true if this argument has the readonly or readnone att
 comment|/// on it in its containing function.
 name|bool
 name|onlyReadsMemory
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Return true if this argument has the inalloca attribute on it in
+comment|/// its containing function.
+name|bool
+name|hasInAllocaAttr
 argument_list|()
 specifier|const
 expr_stmt|;

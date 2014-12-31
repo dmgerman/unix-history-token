@@ -74,19 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/TargetFolder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/IRBuilder.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/TargetFolder.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
@@ -312,12 +312,12 @@ argument_list|)
 operator|,
 name|IVIncInsertLoop
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|IVIncInsertPos
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|CanonicalMode
@@ -334,7 +334,7 @@ name|Builder
 argument_list|(
 argument|se.getContext()
 argument_list|,
-argument|TargetFolder(se.TD)
+argument|TargetFolder(se.DL)
 argument_list|)
 block|{
 ifndef|#
@@ -463,7 +463,7 @@ name|TargetTransformInfo
 operator|*
 name|TTI
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// expandCodeFor - Insert code to directly compute the specified SCEV
@@ -777,7 +777,7 @@ name|Type
 modifier|*
 name|Ty
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// getRelevantLoop - Determine the most "relevant" loop for the given SCEV.
@@ -987,6 +987,15 @@ parameter_list|,
 name|Type
 modifier|*
 name|IntTy
+parameter_list|,
+name|Type
+modifier|*
+modifier|&
+name|TruncTy
+parameter_list|,
+name|bool
+modifier|&
+name|InvertStep
 parameter_list|)
 function_decl|;
 name|Value

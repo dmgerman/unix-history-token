@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/OperatorKinds.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/FoldingSet.h"
 end_include
 
@@ -100,8 +94,16 @@ name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
+name|NamedDecl
+decl_stmt|;
+name|class
 name|NestedNameSpecifier
 decl_stmt|;
+enum_decl|enum
+name|OverloadedOperatorKind
+enum_decl|:
+name|int
+enum_decl|;
 name|class
 name|OverloadedTemplateStorage
 decl_stmt|;
@@ -112,13 +114,10 @@ name|class
 name|QualifiedTemplateName
 decl_stmt|;
 name|class
-name|NamedDecl
+name|SubstTemplateTemplateParmPackStorage
 decl_stmt|;
 name|class
 name|SubstTemplateTemplateParmStorage
-decl_stmt|;
-name|class
-name|SubstTemplateTemplateParmPackStorage
 decl_stmt|;
 name|class
 name|TemplateArgument
@@ -230,7 +229,7 @@ operator|(
 name|this
 operator|)
 else|:
-literal|0
+name|nullptr
 return|;
 block|}
 name|SubstTemplateTemplateParmStorage
@@ -254,7 +253,7 @@ operator|(
 name|this
 operator|)
 else|:
-literal|0
+name|nullptr
 return|;
 block|}
 name|SubstTemplateTemplateParmPackStorage
@@ -278,7 +277,7 @@ operator|(
 name|this
 operator|)
 else|:
-literal|0
+name|nullptr
 return|;
 block|}
 block|}
@@ -743,7 +742,7 @@ name|getAsOverloadedStorage
 argument_list|()
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Retrieve the substituted template template parameter, if
@@ -780,7 +779,7 @@ name|getAsSubstTemplateTemplateParm
 argument_list|()
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_decl_stmt
@@ -838,7 +837,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 

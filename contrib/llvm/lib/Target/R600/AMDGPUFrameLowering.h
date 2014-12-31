@@ -115,7 +115,6 @@ argument_list|()
 block|;
 comment|/// \returns The number of 32-bit sub-registers that are used when storing
 comment|/// values to the stack.
-name|virtual
 name|unsigned
 name|getStackWidth
 argument_list|(
@@ -123,7 +122,6 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|int
 name|getFrameIndexOffset
 argument_list|(
@@ -132,8 +130,8 @@ argument_list|,
 argument|int FI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|SpillSlot
 operator|*
@@ -142,16 +140,16 @@ argument_list|(
 argument|unsigned&NumEntries
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|emitPrologue
 argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|emitEpilogue
 argument_list|(
@@ -160,14 +158,15 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|hasFP
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

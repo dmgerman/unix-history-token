@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/OnDiskHashTable.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Serialization/ASTBitCodes.h"
 end_include
 
@@ -86,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|"llvm/Support/OnDiskHashTable.h"
 end_include
 
 begin_include
@@ -160,6 +154,14 @@ operator|*
 operator|>
 name|data_type
 expr_stmt|;
+typedef|typedef
+name|unsigned
+name|hash_value_type
+typedef|;
+typedef|typedef
+name|unsigned
+name|offset_type
+typedef|;
 comment|/// \brief Special internal key for declaration names.
 comment|/// The hash table creates keys for comparison; we do not create
 comment|/// a DeclarationName for the internal key to avoid deserializing types.
@@ -251,7 +253,7 @@ operator|.
 name|Data
 return|;
 block|}
-name|unsigned
+name|hash_value_type
 name|ComputeHash
 argument_list|(
 specifier|const
@@ -336,6 +338,14 @@ typedef|typedef
 name|StringRef
 name|internal_key_type
 typedef|;
+typedef|typedef
+name|unsigned
+name|hash_value_type
+typedef|;
+typedef|typedef
+name|unsigned
+name|offset_type
+typedef|;
 specifier|static
 name|bool
 name|EqualKey
@@ -358,7 +368,7 @@ name|b
 return|;
 block|}
 specifier|static
-name|unsigned
+name|hash_value_type
 name|ComputeHash
 parameter_list|(
 specifier|const
@@ -474,7 +484,7 @@ name|IdentifierInfo
 operator|*
 name|II
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|Reader
@@ -517,7 +527,9 @@ empty_stmt|;
 comment|/// \brief The on-disk hash table used to contain information about
 comment|/// all of the identifiers in the program.
 typedef|typedef
-name|OnDiskChainedHashTable
+name|llvm
+operator|::
+name|OnDiskIterableChainedHashTable
 operator|<
 name|ASTIdentifierLookupTrait
 operator|>
@@ -578,6 +590,14 @@ typedef|typedef
 name|external_key_type
 name|internal_key_type
 typedef|;
+typedef|typedef
+name|unsigned
+name|hash_value_type
+typedef|;
+typedef|typedef
+name|unsigned
+name|offset_type
+typedef|;
 name|ASTSelectorLookupTrait
 argument_list|(
 name|ASTReader
@@ -615,7 +635,7 @@ name|b
 return|;
 block|}
 specifier|static
-name|unsigned
+name|hash_value_type
 name|ComputeHash
 parameter_list|(
 name|Selector
@@ -683,6 +703,8 @@ block|}
 empty_stmt|;
 comment|/// \brief The on-disk hash table used for the global method pool.
 typedef|typedef
+name|llvm
+operator|::
 name|OnDiskChainedHashTable
 operator|<
 name|ASTSelectorLookupTrait
@@ -752,6 +774,14 @@ typedef|typedef
 name|HeaderFileInfo
 name|data_type
 typedef|;
+typedef|typedef
+name|unsigned
+name|hash_value_type
+typedef|;
+typedef|typedef
+name|unsigned
+name|offset_type
+typedef|;
 name|HeaderFileInfoTrait
 argument_list|(
 name|ASTReader
@@ -793,7 +823,7 @@ argument|FrameworkStrings
 argument_list|)
 block|{ }
 specifier|static
-name|unsigned
+name|hash_value_type
 name|ComputeHash
 argument_list|(
 argument|internal_key_ref ikey
@@ -865,6 +895,8 @@ block|}
 empty_stmt|;
 comment|/// \brief The on-disk hash table used for known header files.
 typedef|typedef
+name|llvm
+operator|::
 name|OnDiskChainedHashTable
 operator|<
 name|HeaderFileInfoTrait

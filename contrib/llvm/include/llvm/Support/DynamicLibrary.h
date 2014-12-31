@@ -102,6 +102,8 @@ name|void
 modifier|*
 name|Data
 decl_stmt|;
+name|public
+label|:
 name|explicit
 name|DynamicLibrary
 argument_list|(
@@ -118,12 +120,11 @@ argument_list|(
 argument|data
 argument_list|)
 block|{}
-name|public
-operator|:
 comment|/// Returns true if the object refers to a valid library.
 name|bool
 name|isValid
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Data
@@ -171,7 +172,7 @@ name|string
 operator|*
 name|errMsg
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// This function permanently loads the dynamic library at the given path.
@@ -194,7 +195,7 @@ name|string
 operator|*
 name|ErrMsg
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|{
 return|return

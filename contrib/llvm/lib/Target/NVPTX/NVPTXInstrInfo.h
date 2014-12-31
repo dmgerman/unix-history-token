@@ -99,10 +99,6 @@ range|:
 name|public
 name|NVPTXGenInstrInfo
 block|{
-name|NVPTXTargetMachine
-operator|&
-name|TM
-block|;
 specifier|const
 name|NVPTXRegisterInfo
 name|RegInfo
@@ -117,12 +113,11 @@ operator|:
 name|explicit
 name|NVPTXInstrInfo
 argument_list|(
-name|NVPTXTargetMachine
+name|NVPTXSubtarget
 operator|&
-name|TM
+name|STI
 argument_list|)
 block|;
-name|virtual
 specifier|const
 name|NVPTXRegisterInfo
 operator|&
@@ -135,7 +130,6 @@ name|RegInfo
 return|;
 block|}
 comment|/* The following virtual functions are used in register allocation.    * They are not implemented because the existing interface and the logic    * at the caller side do not work for the elementized vector load and store.    *    * virtual unsigned isLoadFromStackSlot(const MachineInstr *MI,    *                                  int&FrameIndex) const;    * virtual unsigned isStoreToStackSlot(const MachineInstr *MI,    *                                 int&FrameIndex) const;    * virtual void storeRegToStackSlot(MachineBasicBlock&MBB,    *                              MachineBasicBlock::iterator MBBI,    *                             unsigned SrcReg, bool isKill, int FrameIndex,    *                              const TargetRegisterClass *RC) const;    * virtual void loadRegFromStackSlot(MachineBasicBlock&MBB,    *                               MachineBasicBlock::iterator MBBI,    *                               unsigned DestReg, int FrameIndex,    *                               const TargetRegisterClass *RC) const;    */
-name|virtual
 name|void
 name|copyPhysReg
 argument_list|(
@@ -152,6 +146,7 @@ argument_list|,
 argument|bool KillSrc
 argument_list|)
 specifier|const
+name|override
 block|;
 name|virtual
 name|bool
@@ -199,7 +194,6 @@ argument_list|)
 specifier|const
 block|;
 comment|// Branch analysis.
-name|virtual
 name|bool
 name|AnalyzeBranch
 argument_list|(
@@ -214,16 +208,16 @@ argument_list|,
 argument|bool AllowModify
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|RemoveBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|InsertBranch
 argument_list|(
@@ -238,6 +232,7 @@ argument_list|,
 argument|DebugLoc DL
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getLdStCodeAddrSpace

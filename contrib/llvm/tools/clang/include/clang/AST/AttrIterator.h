@@ -225,7 +225,7 @@ operator|>
 name|ConstAttrVec
 expr_stmt|;
 comment|/// specific_attr_iterator - Iterates over a subrange of an AttrVec, only
-comment|/// providing attributes that are of a specifc type.
+comment|/// providing attributes that are of a specific type.
 name|template
 operator|<
 name|typename
@@ -251,7 +251,7 @@ comment|/// In order to ensure we don't dereference an invalid iterator unless
 comment|/// specifically requested, we don't necessarily advance this all the
 comment|/// way. Instead, we advance it when an operation is requested; if the
 comment|/// operation is acting on what should be a past-the-end iterator,
-comment|/// then we offer no guarantees, but this way we do not dererence a
+comment|/// then we offer no guarantees, but this way we do not dereference a
 comment|/// past-the-end iterator when we move to a past-the-end position.
 name|mutable
 name|Iterator
@@ -461,7 +461,7 @@ name|Left
 operator|.
 name|Current
 operator|==
-literal|0
+name|nullptr
 operator|)
 operator|==
 operator|(
@@ -469,7 +469,7 @@ name|Right
 operator|.
 name|Current
 operator|==
-literal|0
+name|nullptr
 operator|)
 argument_list|)
 block|;
@@ -704,7 +704,7 @@ name|i
 return|;
 else|else
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt

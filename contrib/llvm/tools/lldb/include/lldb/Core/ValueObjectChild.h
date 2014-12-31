@@ -95,7 +95,9 @@ name|m_byte_size
 return|;
 block|}
 name|virtual
-name|off_t
+name|lldb
+operator|::
+name|offset_t
 name|GetByteOffset
 argument_list|()
 block|{
@@ -142,6 +144,11 @@ block|;
 name|virtual
 name|ConstString
 name|GetQualifiedTypeName
+argument_list|()
+block|;
+name|virtual
+name|ConstString
+name|GetDisplayTypeName
 argument_list|()
 block|;
 name|virtual

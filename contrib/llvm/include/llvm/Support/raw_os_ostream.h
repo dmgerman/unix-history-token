@@ -91,7 +91,6 @@ operator|&
 name|OS
 block|;
 comment|/// write_impl - See raw_ostream::write_impl.
-name|virtual
 name|void
 name|write_impl
 argument_list|(
@@ -99,16 +98,15 @@ argument|const char *Ptr
 argument_list|,
 argument|size_t Size
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|/// current_pos - Return the current position within the stream, not
 comment|/// counting the bytes currently in the buffer.
-name|virtual
 name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 name|public
 operator|:

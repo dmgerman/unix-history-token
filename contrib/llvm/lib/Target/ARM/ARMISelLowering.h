@@ -66,25 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARM.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMSubtarget.h"
+file|"MCTargetDesc/ARMBaseInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/CallingConvLower.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/FastISel.h"
 end_include
 
 begin_include
@@ -102,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -117,6 +99,9 @@ name|llvm
 block|{
 name|class
 name|ARMConstantPoolValue
+decl_stmt|;
+name|class
+name|ARMSubtarget
 decl_stmt|;
 name|namespace
 name|ARMISD
@@ -136,10 +121,6 @@ name|Wrapper
 block|,
 comment|// Wrapper - A wrapper node for TargetConstantPool,
 comment|// TargetExternalSymbol, and TargetGlobalAddress.
-name|WrapperDYN
-block|,
-comment|// WrapperDYN - A wrapper node for TargetGlobalAddress in
-comment|// DYN mode.
 name|WrapperPIC
 block|,
 comment|// WrapperPIC - A wrapper node for TargetGlobalAddress in
@@ -265,6 +246,9 @@ comment|// Memory barrier (MCR)
 name|PRELOAD
 block|,
 comment|// Preload
+name|WIN__CHKSTK
+block|,
+comment|// Windows' __chkstk call to do stack probing.
 name|VCEQ
 block|,
 comment|// Vector compare equal.
@@ -308,18 +292,6 @@ comment|// ...right (signed)
 name|VSHRu
 block|,
 comment|// ...right (unsigned)
-name|VSHLLs
-block|,
-comment|// ...left long (signed)
-name|VSHLLu
-block|,
-comment|// ...left long (unsigned)
-name|VSHLLi
-block|,
-comment|// ...left long (with maximum shift count)
-name|VSHRN
-block|,
-comment|// ...right narrow
 comment|// Vector rounding shift by immediate:
 name|VRSHRs
 block|,
@@ -535,13 +507,12 @@ operator|&
 name|TM
 argument_list|)
 block|;
-name|virtual
 name|unsigned
 name|getJumpTableEncoding
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -550,11 +521,11 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// ReplaceNodeResults - Replace the results of node with an illegal result
 comment|/// type with new values built out of custom code.
 comment|///
-name|virtual
 name|void
 name|ReplaceNodeResults
 argument_list|(
@@ -565,8 +536,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -575,14 +546,15 @@ argument_list|(
 argument|unsigned Opcode
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isSelectSupported
 argument_list|(
 argument|SelectSupportKind Kind
 argument_list|)
 specifier|const
+name|override
 block|{
 comment|// ARM does not support scalar condition selects on vectors.
 return|return
@@ -594,7 +566,6 @@ operator|)
 return|;
 block|}
 comment|/// getSetCCResultType - Return the value type to use for ISD::SETCC.
-name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
@@ -603,8 +574,8 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -614,8 +585,8 @@ argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|AdjustInstrPostInstrSelection
 argument_list|(
@@ -624,6 +595,7 @@ argument_list|,
 argument|SDNode *Node
 argument_list|)
 specifier|const
+name|override
 block|;
 name|SDValue
 name|PerformCMOVCombine
@@ -634,7 +606,6 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|SDValue
 name|PerformDAGCombine
 argument_list|(
@@ -643,6 +614,7 @@ argument_list|,
 argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isDesirableToTransformToIntegerOp
@@ -652,21 +624,23 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// allowsUnalignedMemoryAccesses - Returns true if the target allows
 comment|/// unaligned memory accesses of the specified type. Returns whether it
 comment|/// is "fast" by reference in the second argument.
-name|virtual
 name|bool
 name|allowsUnalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
 argument_list|,
+argument|unsigned AddrSpace
+argument_list|,
 argument|bool *Fast
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|EVT
 name|getOptimalMemOpType
 argument_list|(
@@ -685,13 +659,13 @@ argument_list|,
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|using
 name|TargetLowering
 operator|::
 name|isZExtFree
 block|;
-name|virtual
 name|bool
 name|isZExtFree
 argument_list|(
@@ -700,8 +674,8 @@ argument_list|,
 argument|EVT VT2
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|allowTruncateForTailCall
 argument_list|(
@@ -710,10 +684,10 @@ argument_list|,
 argument|Type *Ty2
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isLegalAddressingMode - Return true if the addressing mode represented
 comment|/// by AM is legal for this target, for a load/store of the specified type.
-name|virtual
 name|bool
 name|isLegalAddressingMode
 argument_list|(
@@ -722,6 +696,7 @@ argument_list|,
 argument|Type *Ty
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isLegalT2ScaledAddressingMode
@@ -736,30 +711,29 @@ comment|/// isLegalICmpImmediate - Return true if the specified immediate is leg
 comment|/// icmp immediate, that is the target has icmp instructions which can
 comment|/// compare a register against the immediate without having to materialize
 comment|/// the immediate into a register.
-name|virtual
 name|bool
 name|isLegalICmpImmediate
 argument_list|(
 argument|int64_t Imm
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isLegalAddImmediate - Return true if the specified immediate is legal
 comment|/// add immediate, that is the target has add instructions which can
 comment|/// add a register and the immediate without having to materialize
 comment|/// the immediate into a register.
-name|virtual
 name|bool
 name|isLegalAddImmediate
 argument_list|(
 argument|int64_t Imm
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getPreIndexedAddressParts - returns true by value, base pointer and
 comment|/// offset pointer and addressing mode by reference if the node's address
 comment|/// can be legally represented as pre-indexed load / store address.
-name|virtual
 name|bool
 name|getPreIndexedAddressParts
 argument_list|(
@@ -774,11 +748,11 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getPostIndexedAddressParts - returns true by value, base pointer and
 comment|/// offset pointer and addressing mode by reference if this node can be
 comment|/// combined with a load / store to form a post-indexed load / store.
-name|virtual
 name|bool
 name|getPostIndexedAddressParts
 argument_list|(
@@ -795,10 +769,10 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
-name|computeMaskedBitsForTargetNode
+name|computeKnownBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
 argument_list|,
@@ -811,14 +785,15 @@ argument_list|,
 argument|unsigned Depth
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|ExpandInlineAsm
 argument_list|(
 argument|CallInst *CI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|ConstraintType
 name|getConstraintType
@@ -826,6 +801,7 @@ argument_list|(
 argument|const std::string&Constraint
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// Examine constraint string and operand type and determine a weight value.
 comment|/// The operand object must already have been set up with the operand type.
@@ -837,6 +813,7 @@ argument_list|,
 argument|const char *constraint
 argument_list|)
 specifier|const
+name|override
 block|;
 name|std
 operator|::
@@ -855,12 +832,12 @@ argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// LowerAsmOperandForConstraint - Lower the specified operand into the Ops
 comment|/// vector.  If it is invalid, don't add anything to Ops. If hasMemory is
 comment|/// true it means one of the asm constraint of the inline asm instruction
 comment|/// being processed is 'm'.
-name|virtual
 name|void
 name|LowerAsmOperandForConstraint
 argument_list|(
@@ -873,6 +850,7 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|ARMSubtarget
@@ -887,7 +865,6 @@ return|;
 block|}
 comment|/// getRegClassFor - Return the register class that should be used for the
 comment|/// specified value type.
-name|virtual
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -896,17 +873,17 @@ argument_list|(
 argument|MVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getMaximalGlobalOffset - Returns the maximal possible offset which can
 comment|/// be used for loads / stores from the global.
-name|virtual
 name|unsigned
 name|getMaximalGlobalOffset
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// Returns true if a cast between SrcAS and DestAS is a noop.
-name|virtual
 name|bool
 name|isNoopAddrSpaceCast
 argument_list|(
@@ -915,6 +892,7 @@ argument_list|,
 argument|unsigned DestAS
 argument_list|)
 specifier|const
+name|override
 block|{
 comment|// Addrspacecasts are always noops.
 return|return
@@ -923,7 +901,6 @@ return|;
 block|}
 comment|/// createFastISel - This method returns a target specific FastISel object,
 comment|/// or null if the target does not support "fast" ISel.
-name|virtual
 name|FastISel
 operator|*
 name|createFastISel
@@ -933,6 +910,7 @@ argument_list|,
 argument|const TargetLibraryInfo *libInfo
 argument_list|)
 specifier|const
+name|override
 block|;
 name|Sched
 operator|::
@@ -942,6 +920,7 @@ argument_list|(
 argument|SDNode *N
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isShuffleMaskLegal
@@ -951,6 +930,7 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isOffsetFoldingLegal
@@ -958,11 +938,11 @@ argument_list|(
 argument|const GlobalAddressSDNode *GA
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isFPImmLegal - Returns true if the target can instruction select the
 comment|/// specified FP immediate natively. If false, the legalizer will
 comment|/// materialize the FP immediate as a load from a constant pool.
-name|virtual
 name|bool
 name|isFPImmLegal
 argument_list|(
@@ -971,8 +951,8 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|getTgtMemIntrinsic
 argument_list|(
@@ -983,6 +963,69 @@ argument_list|,
 argument|unsigned Intrinsic
 argument_list|)
 specifier|const
+name|override
+block|;
+comment|/// \brief Returns true if it is beneficial to convert a load of a constant
+comment|/// to just the constant itself.
+name|bool
+name|shouldConvertConstantLoadToIntImm
+argument_list|(
+argument|const APInt&Imm
+argument_list|,
+argument|Type *Ty
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// \brief Returns true if an argument of type Ty needs to be passed in a
+comment|/// contiguous block of registers in calling convention CallConv.
+name|bool
+name|functionArgumentNeedsConsecutiveRegisters
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|)
+specifier|const
+name|override
+block|;
+name|Value
+operator|*
+name|emitLoadLinked
+argument_list|(
+argument|IRBuilder<>&Builder
+argument_list|,
+argument|Value *Addr
+argument_list|,
+argument|AtomicOrdering Ord
+argument_list|)
+specifier|const
+name|override
+block|;
+name|Value
+operator|*
+name|emitStoreConditional
+argument_list|(
+argument|IRBuilder<>&Builder
+argument_list|,
+argument|Value *Val
+argument_list|,
+argument|Value *Addr
+argument_list|,
+argument|AtomicOrdering Ord
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|shouldExpandAtomicInIR
+argument_list|(
+argument|Instruction *Inst
+argument_list|)
+specifier|const
+name|override
 block|;
 name|protected
 operator|:
@@ -1001,6 +1044,7 @@ argument_list|(
 argument|MVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 name|private
 operator|:
@@ -1047,6 +1091,24 @@ name|addQRTypeForNEON
 argument_list|(
 argument|MVT VT
 argument_list|)
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+block|,
+name|SDValue
+operator|>
+name|getARMXALUOOp
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDValue&ARMcc
+argument_list|)
+specifier|const
 block|;
 typedef|typedef
 name|SmallVector
@@ -1113,6 +1175,17 @@ name|dl
 argument_list|)
 decl|const
 decl_stmt|;
+name|CallingConv
+operator|::
+name|ID
+name|getEffectiveCallingConv
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|,
+argument|bool isVarArg
+argument_list|)
+specifier|const
+expr_stmt|;
 name|CCAssignFn
 modifier|*
 name|CCAssignFnForNode
@@ -1239,6 +1312,18 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
+name|LowerGlobalAddressWindows
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
 name|LowerGlobalTLSAddress
 argument_list|(
 name|SDValue
@@ -1295,6 +1380,18 @@ decl|const
 decl_stmt|;
 name|SDValue
 name|LowerBR_JT
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerXALUO
 argument_list|(
 name|SDValue
 name|Op
@@ -1471,6 +1568,32 @@ name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
+name|SDValue
+name|LowerDYNAMIC_STACKALLOC
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|getRegisterByName
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|RegName
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 comment|/// isFMAFasterThanFMulAndFAdd - Return true if an FMA operation is faster
 comment|/// than a pair of fmul and fadd instructions. fmuladd intrinsics will be
 comment|/// expanded to FMAs when this method returns true, otherwise fmuladd is
@@ -1480,7 +1603,6 @@ comment|/// ARM supports both fused and unfused multiply-add operations; we alre
 comment|/// lower a pair of fmul and fadd to the latter so it's not clear that there
 comment|/// would be a gain or that the gain would be worthwhile enough to risk
 comment|/// correctness bugs.
-name|virtual
 name|bool
 name|isFMAFasterThanFMulAndFAdd
 argument_list|(
@@ -1488,6 +1610,7 @@ name|EVT
 name|VT
 argument_list|)
 decl|const
+name|override
 block|{
 return|return
 name|false
@@ -1554,7 +1677,6 @@ name|ThisVal
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|SDValue
 name|LowerFormalArguments
 argument_list|(
@@ -1594,6 +1716,7 @@ operator|&
 name|InVals
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|int
 name|StoreByValRegs
@@ -1632,6 +1755,12 @@ name|ArgSize
 argument_list|,
 name|bool
 name|ForceMutable
+argument_list|,
+name|unsigned
+name|ByValStoreOffset
+argument_list|,
+name|unsigned
+name|TotalArgRegsSaveSize
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1655,6 +1784,9 @@ name|Chain
 argument_list|,
 name|unsigned
 name|ArgOffset
+argument_list|,
+name|unsigned
+name|TotalArgRegsSaveSize
 argument_list|,
 name|bool
 name|ForceMutable
@@ -1690,7 +1822,6 @@ name|ArgRegsSaveSize
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
@@ -1708,9 +1839,9 @@ operator|&
 name|InVals
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// HandleByVal - Target-specific cleanup for ByVal support.
-name|virtual
 name|void
 name|HandleByVal
 argument_list|(
@@ -1723,6 +1854,7 @@ argument_list|,
 name|unsigned
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// IsEligibleForTailCallOptimization - Check whether the call is eligible
 comment|/// for tail call optimization. Targets which want to do tail call
@@ -1781,7 +1913,6 @@ name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|bool
 name|CanLowerReturn
 argument_list|(
@@ -1812,8 +1943,8 @@ operator|&
 name|Context
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -1854,8 +1985,8 @@ operator|&
 name|DAG
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|isUsedByReturnOnly
 argument_list|(
@@ -1868,8 +1999,8 @@ operator|&
 name|Chain
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|mayBeEmittedAsTailCall
 argument_list|(
@@ -1878,6 +2009,7 @@ operator|*
 name|CI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|SDValue
 name|getARMCmp
@@ -1948,126 +2080,6 @@ name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
-name|MachineBasicBlock
-modifier|*
-name|EmitAtomicCmpSwap
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
-argument_list|,
-name|unsigned
-name|Size
-argument_list|)
-decl|const
-decl_stmt|;
-name|MachineBasicBlock
-modifier|*
-name|EmitAtomicBinary
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
-argument_list|,
-name|unsigned
-name|Size
-argument_list|,
-name|unsigned
-name|BinOpcode
-argument_list|)
-decl|const
-decl_stmt|;
-name|MachineBasicBlock
-modifier|*
-name|EmitAtomicBinary64
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
-argument_list|,
-name|unsigned
-name|Op1
-argument_list|,
-name|unsigned
-name|Op2
-argument_list|,
-name|bool
-name|NeedsCarry
-operator|=
-name|false
-argument_list|,
-name|bool
-name|IsCmpxchg
-operator|=
-name|false
-argument_list|,
-name|bool
-name|IsMinMax
-operator|=
-name|false
-argument_list|,
-name|ARMCC
-operator|::
-name|CondCodes
-name|CC
-operator|=
-name|ARMCC
-operator|::
-name|AL
-argument_list|)
-decl|const
-decl_stmt|;
-name|MachineBasicBlock
-modifier|*
-name|EmitAtomicBinaryMinMax
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
-argument_list|,
-name|unsigned
-name|Size
-argument_list|,
-name|bool
-name|signExtend
-argument_list|,
-name|ARMCC
-operator|::
-name|CondCodes
-name|Cond
-argument_list|)
-decl|const
-decl_stmt|;
-name|MachineBasicBlock
-modifier|*
-name|EmitAtomicLoad64
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
-argument_list|)
-decl|const
-decl_stmt|;
 name|void
 name|SetupEntryBlockForSjLj
 argument_list|(
@@ -2118,6 +2130,20 @@ decl_stmt|;
 name|MachineBasicBlock
 modifier|*
 name|EmitStructByval
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
+name|EmitLowered__chkstk
 argument_list|(
 name|MachineInstr
 operator|*

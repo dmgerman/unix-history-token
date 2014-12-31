@@ -154,6 +154,10 @@ block|}
 enum|;
 name|public
 label|:
+typedef|typedef
+name|unsigned
+name|size_type
+typedef|;
 comment|// Encapsulation of a single bit.
 name|class
 name|reference
@@ -568,9 +572,6 @@ argument|new BitVector(*RHS.getPointer())
 argument_list|)
 empty_stmt|;
 block|}
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
 name|SmallBitVector
 argument_list|(
 name|SmallBitVector
@@ -589,8 +590,6 @@ name|X
 operator|=
 literal|1
 block|;   }
-endif|#
-directive|endif
 operator|~
 name|SmallBitVector
 argument_list|()
@@ -649,7 +648,7 @@ argument_list|()
 return|;
 block|}
 comment|/// count - Returns the number of bits which are set.
-name|unsigned
+name|size_type
 name|count
 argument_list|()
 specifier|const
@@ -2738,12 +2737,6 @@ return|;
 block|}
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_decl_stmt
 specifier|const
 name|SmallBitVector
@@ -2779,11 +2772,6 @@ name|this
 return|;
 block|}
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void

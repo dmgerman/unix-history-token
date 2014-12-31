@@ -62,31 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARMFrameLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMISelLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ARMInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMJITInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMSelectionDAGInfo.h"
 end_include
 
 begin_include
@@ -98,37 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"Thumb1FrameLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"Thumb1InstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"Thumb2InstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/DataLayout.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCStreamer.h"
 end_include
 
 begin_include
@@ -152,14 +98,6 @@ operator|:
 name|ARMSubtarget
 name|Subtarget
 block|;
-name|private
-operator|:
-name|ARMJITInfo
-name|JITInfo
-block|;
-name|InstrItineraryData
-name|InstrItins
-block|;
 name|public
 operator|:
 name|ARMBaseTargetMachine
@@ -179,92 +117,174 @@ argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
 argument|CodeGenOpt::Level OL
+argument_list|,
+argument|bool isLittle
 argument_list|)
 block|;
-name|virtual
-name|ARMJITInfo
-operator|*
-name|getJITInfo
-argument_list|()
-block|{
-return|return
-operator|&
-name|JITInfo
-return|;
-block|}
-name|virtual
 specifier|const
 name|ARMSubtarget
 operator|*
 name|getSubtargetImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
 name|Subtarget
 return|;
 block|}
-name|virtual
+specifier|const
+name|ARMBaseRegisterInfo
+operator|*
+name|getRegisterInfo
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|getSubtargetImpl
+argument_list|()
+operator|->
+name|getRegisterInfo
+argument_list|()
+return|;
+block|}
 specifier|const
 name|ARMTargetLowering
 operator|*
 name|getTargetLowering
 argument_list|()
 specifier|const
+name|override
 block|{
-comment|// Implemented by derived classes
-name|llvm_unreachable
-argument_list|(
-literal|"getTargetLowering not implemented"
-argument_list|)
-block|;   }
-name|virtual
+return|return
+name|getSubtargetImpl
+argument_list|()
+operator|->
+name|getTargetLowering
+argument_list|()
+return|;
+block|}
+specifier|const
+name|ARMSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|getSubtargetImpl
+argument_list|()
+operator|->
+name|getSelectionDAGInfo
+argument_list|()
+return|;
+block|}
+specifier|const
+name|ARMBaseInstrInfo
+operator|*
+name|getInstrInfo
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|getSubtargetImpl
+argument_list|()
+operator|->
+name|getInstrInfo
+argument_list|()
+return|;
+block|}
+specifier|const
+name|ARMFrameLowering
+operator|*
+name|getFrameLowering
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|getSubtargetImpl
+argument_list|()
+operator|->
+name|getFrameLowering
+argument_list|()
+return|;
+block|}
 specifier|const
 name|InstrItineraryData
 operator|*
 name|getInstrItineraryData
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
-name|InstrItins
+name|getSubtargetImpl
+argument_list|()
+operator|->
+name|getInstrItineraryData
+argument_list|()
+return|;
+block|}
+specifier|const
+name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|getSubtargetImpl
+argument_list|()
+operator|->
+name|getDataLayout
+argument_list|()
+return|;
+block|}
+name|ARMJITInfo
+operator|*
+name|getJITInfo
+argument_list|()
+name|override
+block|{
+return|return
+name|Subtarget
+operator|.
+name|getJITInfo
+argument_list|()
 return|;
 block|}
 comment|/// \brief Register ARM analysis passes with a pass manager.
-name|virtual
 name|void
 name|addAnalysisPasses
 argument_list|(
-name|PassManagerBase
-operator|&
-name|PM
+argument|PassManagerBase&PM
 argument_list|)
+name|override
 block|;
 comment|// Pass Pipeline Configuration
-name|virtual
 name|TargetPassConfig
 operator|*
 name|createPassConfig
 argument_list|(
-name|PassManagerBase
-operator|&
-name|PM
+argument|PassManagerBase&PM
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|addCodeEmitter
 argument_list|(
-name|PassManagerBase
-operator|&
-name|PM
+argument|PassManagerBase&PM
 argument_list|,
-name|JITCodeEmitter
-operator|&
-name|MCE
+argument|JITCodeEmitter&MCE
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 comment|/// ARMTargetMachine - ARM target machine.
@@ -280,23 +300,6 @@ name|void
 name|anchor
 argument_list|()
 block|;
-name|ARMInstrInfo
-name|InstrInfo
-block|;
-specifier|const
-name|DataLayout
-name|DL
-block|;
-comment|// Calculates type size& alignment
-name|ARMTargetLowering
-name|TLInfo
-block|;
-name|ARMSelectionDAGInfo
-name|TSInfo
-block|;
-name|ARMFrameLowering
-name|FrameLowering
-block|;
 name|public
 operator|:
 name|ARMTargetMachine
@@ -316,98 +319,88 @@ argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
 argument|CodeGenOpt::Level OL
+argument_list|,
+argument|bool isLittle
 argument_list|)
+block|; }
+decl_stmt|;
+comment|/// ARMLETargetMachine - ARM little endian target machine.
+comment|///
+name|class
+name|ARMLETargetMachine
+range|:
+name|public
+name|ARMTargetMachine
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
 block|;
-name|virtual
-specifier|const
-name|ARMRegisterInfo
-operator|*
-name|getRegisterInfo
-argument_list|()
-specifier|const
+name|public
+operator|:
+name|ARMLETargetMachine
+argument_list|(
+argument|const Target&T
+argument_list|,
+argument|StringRef TT
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// ARMBETargetMachine - ARM big endian target machine.
+comment|///
+name|class
+name|ARMBETargetMachine
+range|:
+name|public
+name|ARMTargetMachine
 block|{
-return|return
-operator|&
-name|InstrInfo
-operator|.
-name|getRegisterInfo
+name|void
+name|anchor
 argument_list|()
-return|;
-block|}
-name|virtual
-specifier|const
-name|ARMTargetLowering
-operator|*
-name|getTargetLowering
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|TLInfo
-return|;
-block|}
-name|virtual
-specifier|const
-name|ARMSelectionDAGInfo
-operator|*
-name|getSelectionDAGInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|TSInfo
-return|;
-block|}
-name|virtual
-specifier|const
-name|ARMFrameLowering
-operator|*
-name|getFrameLowering
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|FrameLowering
-return|;
-block|}
-name|virtual
-specifier|const
-name|ARMInstrInfo
-operator|*
-name|getInstrInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|InstrInfo
-return|;
-block|}
-name|virtual
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|DL
-return|;
-block|}
-expr|}
+name|override
 block|;
+name|public
+operator|:
+name|ARMBETargetMachine
+argument_list|(
+argument|const Target&T
+argument_list|,
+argument|StringRef TT
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
+argument_list|)
+block|; }
+decl_stmt|;
 comment|/// ThumbTargetMachine - Thumb target machine.
 comment|/// Due to the way architectures are handled, this represents both
 comment|///   Thumb-1 and Thumb-2.
 comment|///
 name|class
 name|ThumbTargetMachine
-operator|:
+range|:
 name|public
 name|ARMBaseTargetMachine
 block|{
@@ -415,31 +408,6 @@ name|virtual
 name|void
 name|anchor
 argument_list|()
-block|;
-comment|// Either Thumb1InstrInfo or Thumb2InstrInfo.
-name|OwningPtr
-operator|<
-name|ARMBaseInstrInfo
-operator|>
-name|InstrInfo
-block|;
-specifier|const
-name|DataLayout
-name|DL
-block|;
-comment|// Calculates type size& alignment
-name|ARMTargetLowering
-name|TLInfo
-block|;
-name|ARMSelectionDAGInfo
-name|TSInfo
-block|;
-comment|// Either Thumb1FrameLowering or ARMFrameLowering.
-name|OwningPtr
-operator|<
-name|ARMFrameLowering
-operator|>
-name|FrameLowering
 block|;
 name|public
 operator|:
@@ -460,98 +428,82 @@ argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
 argument|CodeGenOpt::Level OL
+argument_list|,
+argument|bool isLittle
 argument_list|)
+block|; }
+decl_stmt|;
+comment|/// ThumbLETargetMachine - Thumb little endian target machine.
+comment|///
+name|class
+name|ThumbLETargetMachine
+range|:
+name|public
+name|ThumbTargetMachine
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
 block|;
-comment|/// returns either Thumb1RegisterInfo or Thumb2RegisterInfo
-name|virtual
-specifier|const
-name|ARMBaseRegisterInfo
-operator|*
-name|getRegisterInfo
-argument_list|()
-specifier|const
+name|public
+operator|:
+name|ThumbLETargetMachine
+argument_list|(
+argument|const Target&T
+argument_list|,
+argument|StringRef TT
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// ThumbBETargetMachine - Thumb big endian target machine.
+comment|///
+name|class
+name|ThumbBETargetMachine
+range|:
+name|public
+name|ThumbTargetMachine
 block|{
-return|return
-operator|&
-name|InstrInfo
-operator|->
-name|getRegisterInfo
+name|void
+name|anchor
 argument_list|()
-return|;
+name|override
+block|;
+name|public
+operator|:
+name|ThumbBETargetMachine
+argument_list|(
+argument|const Target&T
+argument_list|,
+argument|StringRef TT
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
-name|virtual
-specifier|const
-name|ARMTargetLowering
-operator|*
-name|getTargetLowering
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|TLInfo
-return|;
-block|}
-name|virtual
-specifier|const
-name|ARMSelectionDAGInfo
-operator|*
-name|getSelectionDAGInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|TSInfo
-return|;
-block|}
-comment|/// returns either Thumb1InstrInfo or Thumb2InstrInfo
-name|virtual
-specifier|const
-name|ARMBaseInstrInfo
-operator|*
-name|getInstrInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|InstrInfo
-operator|.
-name|get
-argument_list|()
-return|;
-block|}
-comment|/// returns either Thumb1FrameLowering or ARMFrameLowering
-name|virtual
-specifier|const
-name|ARMFrameLowering
-operator|*
-name|getFrameLowering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FrameLowering
-operator|.
-name|get
-argument_list|()
-return|;
-block|}
-name|virtual
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|DL
-return|;
-block|}
-expr|}
-block|;  }
 end_decl_stmt
 
 begin_comment

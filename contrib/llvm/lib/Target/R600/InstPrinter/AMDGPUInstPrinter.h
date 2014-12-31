@@ -135,7 +135,6 @@ argument_list|(
 argument|unsigned RegNo
 argument_list|)
 block|;
-name|virtual
 name|void
 name|printInst
 argument_list|(
@@ -145,13 +144,52 @@ argument|raw_ostream&O
 argument_list|,
 argument|StringRef Annot
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
 name|void
+name|printU8ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printU16ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printU32ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printRegOperand
 argument_list|(
 argument|unsigned RegNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printImmediate
+argument_list|(
+argument|uint32_t Imm
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -166,6 +204,17 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+name|void
+name|printOperandAndMods
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+specifier|static
 name|void
 name|printInterpSlot
 argument_list|(
@@ -186,6 +235,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printIfSet
 argument_list|(
@@ -201,6 +251,7 @@ argument|StringRef Default =
 literal|""
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printAbs
 argument_list|(
@@ -211,6 +262,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printClamp
 argument_list|(
@@ -221,6 +273,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printLiteral
 argument_list|(
@@ -231,6 +284,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printLast
 argument_list|(
@@ -241,6 +295,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printNeg
 argument_list|(
@@ -251,6 +306,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printOMOD
 argument_list|(
@@ -261,6 +317,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printRel
 argument_list|(
@@ -271,6 +328,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printUpdateExecMask
 argument_list|(
@@ -281,6 +339,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printUpdatePred
 argument_list|(
@@ -291,6 +350,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printWrite
 argument_list|(
@@ -301,6 +361,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printSel
 argument_list|(
@@ -311,6 +372,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printBankSwizzle
 argument_list|(
@@ -321,6 +383,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printRSel
 argument_list|(
@@ -331,6 +394,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printCT
 argument_list|(
@@ -341,6 +405,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printKCache
 argument_list|(
@@ -351,6 +416,18 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
+name|void
+name|printSendMsg
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+specifier|static
 name|void
 name|printWaitFlag
 argument_list|(

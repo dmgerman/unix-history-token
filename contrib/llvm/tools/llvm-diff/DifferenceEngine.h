@@ -229,7 +229,7 @@ argument_list|)
 operator|,
 name|globalValueOracle
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|void

@@ -149,8 +149,8 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// format_object_base - This is a helper class used for handling formatted
-comment|/// output.  It is the abstract base class of a templated derived class.
+comment|/// This is a helper class used for handling formatted output.  It is the
+comment|/// abstract base class of a templated derived class.
 name|class
 name|format_object_base
 block|{
@@ -167,7 +167,7 @@ name|home
 parameter_list|()
 function_decl|;
 comment|// Out of line virtual method.
-comment|/// snprint - Call snprintf() for this object, on the given buffer and size.
+comment|/// Call snprintf() for this object, on the given buffer and size.
 name|virtual
 name|int
 name|snprint
@@ -203,9 +203,9 @@ operator|~
 name|format_object_base
 argument_list|()
 block|{}
-comment|/// print - Format the object into the specified buffer.  On success, this
-comment|/// returns the length of the formatted string.  If the buffer is too small,
-comment|/// this returns a length to retry with, which will be larger than BufferSize.
+comment|/// Format the object into the specified buffer.  On success, this returns
+comment|/// the length of the formatted string.  If the buffer is too small, this
+comment|/// returns a length to retry with, which will be larger than BufferSize.
 name|unsigned
 name|print
 argument_list|(
@@ -245,7 +245,8 @@ name|BufferSize
 operator|*
 literal|2
 return|;
-comment|// Other impls yield number of bytes needed, not including the final '\0'.
+comment|// Other implementations yield number of bytes needed, not including the
+comment|// final '\0'.
 if|if
 condition|(
 name|unsigned
@@ -273,19 +274,19 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// format_object1 - This is a templated helper class used by the format
+comment|/// These are templated helper classes used by the format function that
 end_comment
 
 begin_comment
-comment|/// function that captures the object to be formated and the format string. When
+comment|/// capture the object to be formated and the format string. When actually
 end_comment
 
 begin_comment
-comment|/// actually printed, this synthesizes the string into a temporary buffer
+comment|/// printed, this synthesizes the string into a temporary buffer provided and
 end_comment
 
 begin_comment
-comment|/// provided and returns whether or not it is big enough.
+comment|/// returns whether or not it is big enough.
 end_comment
 
 begin_expr_stmt
@@ -328,7 +329,6 @@ argument_list|(
 argument|val
 argument_list|)
 block|{   }
-name|virtual
 name|int
 name|snprint
 argument_list|(
@@ -337,6 +337,7 @@ argument_list|,
 argument|unsigned BufferSize
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|snprintf
@@ -353,24 +354,8 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|};
-comment|/// format_object2 - This is a templated helper class used by the format
-end_comment
-
-begin_comment
-comment|/// function that captures the object to be formated and the format string. When
-end_comment
-
-begin_comment
-comment|/// actually printed, this synthesizes the string into a temporary buffer
-end_comment
-
-begin_comment
-comment|/// provided and returns whether or not it is big enough.
-end_comment
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -426,7 +411,6 @@ argument_list|(
 argument|val2
 argument_list|)
 block|{   }
-name|virtual
 name|int
 name|snprint
 argument_list|(
@@ -435,6 +419,7 @@ argument_list|,
 argument|unsigned BufferSize
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|snprintf
@@ -453,24 +438,8 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|};
-comment|/// format_object3 - This is a templated helper class used by the format
-end_comment
-
-begin_comment
-comment|/// function that captures the object to be formated and the format string. When
-end_comment
-
-begin_comment
-comment|/// actually printed, this synthesizes the string into a temporary buffer
-end_comment
-
-begin_comment
-comment|/// provided and returns whether or not it is big enough.
-end_comment
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -542,7 +511,6 @@ argument_list|(
 argument|val3
 argument_list|)
 block|{   }
-name|virtual
 name|int
 name|snprint
 argument_list|(
@@ -551,6 +519,7 @@ argument_list|,
 argument|unsigned BufferSize
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|snprintf
@@ -571,24 +540,8 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|};
-comment|/// format_object4 - This is a templated helper class used by the format
-end_comment
-
-begin_comment
-comment|/// function that captures the object to be formated and the format string. When
-end_comment
-
-begin_comment
-comment|/// actually printed, this synthesizes the string into a temporary buffer
-end_comment
-
-begin_comment
-comment|/// provided and returns whether or not it is big enough.
-end_comment
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -676,7 +629,6 @@ argument_list|(
 argument|val4
 argument_list|)
 block|{   }
-name|virtual
 name|int
 name|snprint
 argument_list|(
@@ -685,6 +637,7 @@ argument_list|,
 argument|unsigned BufferSize
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|snprintf
@@ -707,24 +660,8 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|};
-comment|/// format_object5 - This is a templated helper class used by the format
-end_comment
-
-begin_comment
-comment|/// function that captures the object to be formated and the format string. When
-end_comment
-
-begin_comment
-comment|/// actually printed, this synthesizes the string into a temporary buffer
-end_comment
-
-begin_comment
-comment|/// provided and returns whether or not it is big enough.
-end_comment
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -828,7 +765,6 @@ argument_list|(
 argument|val5
 argument_list|)
 block|{   }
-name|virtual
 name|int
 name|snprint
 argument_list|(
@@ -837,6 +773,7 @@ argument_list|,
 argument|unsigned BufferSize
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|snprintf
@@ -861,9 +798,173 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+unit|};
+name|template
+operator|<
+name|typename
+name|T1
+operator|,
+name|typename
+name|T2
+operator|,
+name|typename
+name|T3
+operator|,
+name|typename
+name|T4
+operator|,
+name|typename
+name|T5
+operator|,
+name|typename
+name|T6
+operator|>
+name|class
+name|format_object6
+operator|:
+name|public
+name|format_object_base
+block|{
+name|T1
+name|Val1
+block|;
+name|T2
+name|Val2
+block|;
+name|T3
+name|Val3
+block|;
+name|T4
+name|Val4
+block|;
+name|T5
+name|Val5
+block|;
+name|T6
+name|Val6
+block|;
+name|public
+operator|:
+name|format_object6
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Fmt
+argument_list|,
+specifier|const
+name|T1
+operator|&
+name|Val1
+argument_list|,
+specifier|const
+name|T2
+operator|&
+name|Val2
+argument_list|,
+specifier|const
+name|T3
+operator|&
+name|Val3
+argument_list|,
+specifier|const
+name|T4
+operator|&
+name|Val4
+argument_list|,
+specifier|const
+name|T5
+operator|&
+name|Val5
+argument_list|,
+specifier|const
+name|T6
+operator|&
+name|Val6
+argument_list|)
+operator|:
+name|format_object_base
+argument_list|(
+name|Fmt
+argument_list|)
+block|,
+name|Val1
+argument_list|(
+name|Val1
+argument_list|)
+block|,
+name|Val2
+argument_list|(
+name|Val2
+argument_list|)
+block|,
+name|Val3
+argument_list|(
+name|Val3
+argument_list|)
+block|,
+name|Val4
+argument_list|(
+name|Val4
+argument_list|)
+block|,
+name|Val5
+argument_list|(
+name|Val5
+argument_list|)
+block|,
+name|Val6
+argument_list|(
+argument|Val6
+argument_list|)
+block|{ }
+name|int
+name|snprint
+argument_list|(
+argument|char *Buffer
+argument_list|,
+argument|unsigned BufferSize
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|snprintf
+argument_list|(
+name|Buffer
+argument_list|,
+name|BufferSize
+argument_list|,
+name|Fmt
+argument_list|,
+name|Val1
+argument_list|,
+name|Val2
+argument_list|,
+name|Val3
+argument_list|,
+name|Val4
+argument_list|,
+name|Val5
+argument_list|,
+name|Val6
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 unit|};
-comment|/// This is a helper function that is used to produce formatted output.
+comment|/// These are helper functions used to produce formatted output.  They use
+end_comment
+
+begin_comment
+comment|/// template type deduction to construct the appropriate instance of the
+end_comment
+
+begin_comment
+comment|/// format_object class to simplify their construction.
 end_comment
 
 begin_comment
@@ -918,30 +1019,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-comment|/// This is a helper function that is used to produce formatted output.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This is typically used like:
-end_comment
-
-begin_comment
-comment|/// \code
-end_comment
-
-begin_comment
-comment|///   OS<< format("%0.4f", myfloat)<< '\n';
-end_comment
-
-begin_comment
-comment|/// \endcode
-end_comment
-
 begin_expr_stmt
 name|template
 operator|<
@@ -984,30 +1061,6 @@ operator|)
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// This is a helper function that is used to produce formatted output.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This is typically used like:
-end_comment
-
-begin_comment
-comment|/// \code
-end_comment
-
-begin_comment
-comment|///   OS<< format("%0.4f", myfloat)<< '\n';
-end_comment
-
-begin_comment
-comment|/// \endcode
-end_comment
 
 begin_expr_stmt
 name|template
@@ -1062,30 +1115,6 @@ operator|)
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// This is a helper function that is used to produce formatted output.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This is typically used like:
-end_comment
-
-begin_comment
-comment|/// \code
-end_comment
-
-begin_comment
-comment|///   OS<< format("%0.4f", myfloat)<< '\n';
-end_comment
-
-begin_comment
-comment|/// \endcode
-end_comment
 
 begin_expr_stmt
 name|template
@@ -1151,30 +1180,6 @@ operator|)
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// This is a helper function that is used to produce formatted output.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This is typically used like:
-end_comment
-
-begin_comment
-comment|/// \code
-end_comment
-
-begin_comment
-comment|///   OS<< format("%0.4f", myfloat)<< '\n';
-end_comment
-
-begin_comment
-comment|/// \endcode
-end_comment
 
 begin_expr_stmt
 name|template
@@ -1247,6 +1252,93 @@ operator|,
 name|Val4
 operator|,
 name|Val5
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T1
+operator|,
+name|typename
+name|T2
+operator|,
+name|typename
+name|T3
+operator|,
+name|typename
+name|T4
+operator|,
+name|typename
+name|T5
+operator|,
+name|typename
+name|T6
+operator|>
+specifier|inline
+name|format_object6
+operator|<
+name|T1
+operator|,
+name|T2
+operator|,
+name|T3
+operator|,
+name|T4
+operator|,
+name|T5
+operator|,
+name|T6
+operator|>
+name|format
+argument_list|(
+argument|const char *Fmt
+argument_list|,
+argument|const T1&Val1
+argument_list|,
+argument|const T2&Val2
+argument_list|,
+argument|const T3&Val3
+argument_list|,
+argument|const T4&Val4
+argument_list|,
+argument|const T5&Val5
+argument_list|,
+argument|const T6&Val6
+argument_list|)
+block|{
+return|return
+name|format_object6
+operator|<
+name|T1
+operator|,
+name|T2
+operator|,
+name|T3
+operator|,
+name|T4
+operator|,
+name|T5
+operator|,
+name|T6
+operator|>
+operator|(
+name|Fmt
+operator|,
+name|Val1
+operator|,
+name|Val2
+operator|,
+name|Val3
+operator|,
+name|Val4
+operator|,
+name|Val5
+operator|,
+name|Val6
 operator|)
 return|;
 block|}

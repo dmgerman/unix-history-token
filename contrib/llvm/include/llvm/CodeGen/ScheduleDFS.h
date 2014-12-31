@@ -219,18 +219,6 @@ operator|*
 name|this
 return|;
 block|}
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NDEBUG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|LLVM_ENABLE_DUMP
-argument_list|)
 name|void
 name|print
 argument_list|(
@@ -245,8 +233,6 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 comment|/// \brief Compute the values of each DAG node for various metrics during DFS.

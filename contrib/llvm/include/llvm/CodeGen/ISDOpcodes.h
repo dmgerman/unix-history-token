@@ -149,6 +149,12 @@ name|FRAMEADDR
 block|,
 name|RETURNADDR
 block|,
+comment|/// READ_REGISTER, WRITE_REGISTER - This node represents llvm.register on
+comment|/// the DAG, which implements the named register global variables extension.
+name|READ_REGISTER
+block|,
+name|WRITE_REGISTER
+block|,
 comment|/// FRAME_TO_ARGS_OFFSET - This node represents offset from frame pointer to
 comment|/// first (possible) on-stack argument. This is needed for correct stack
 comment|/// adjustment during unwind.
@@ -520,6 +526,37 @@ comment|/// with the 7th bit).  The size of the smaller type is indicated by the
 comment|/// operand, a ValueType node.
 name|SIGN_EXTEND_INREG
 block|,
+comment|/// ANY_EXTEND_VECTOR_INREG(Vector) - This operator represents an
+comment|/// in-register any-extension of the low lanes of an integer vector. The
+comment|/// result type must have fewer elements than the operand type, and those
+comment|/// elements must be larger integer types such that the total size of the
+comment|/// operand type and the result type match. Each of the low operand
+comment|/// elements is any-extended into the corresponding, wider result
+comment|/// elements with the high bits becoming undef.
+name|ANY_EXTEND_VECTOR_INREG
+block|,
+comment|/// SIGN_EXTEND_VECTOR_INREG(Vector) - This operator represents an
+comment|/// in-register sign-extension of the low lanes of an integer vector. The
+comment|/// result type must have fewer elements than the operand type, and those
+comment|/// elements must be larger integer types such that the total size of the
+comment|/// operand type and the result type match. Each of the low operand
+comment|/// elements is sign-extended into the corresponding, wider result
+comment|/// elements.
+comment|// FIXME: The SIGN_EXTEND_INREG node isn't specifically limited to
+comment|// scalars, but it also doesn't handle vectors well. Either it should be
+comment|// restricted to scalars or this node (and its handling) should be merged
+comment|// into it.
+name|SIGN_EXTEND_VECTOR_INREG
+block|,
+comment|/// ZERO_EXTEND_VECTOR_INREG(Vector) - This operator represents an
+comment|/// in-register zero-extension of the low lanes of an integer vector. The
+comment|/// result type must have fewer elements than the operand type, and those
+comment|/// elements must be larger integer types such that the total size of the
+comment|/// operand type and the result type match. Each of the low operand
+comment|/// elements is zero-extended into the corresponding, wider result
+comment|/// elements.
+name|ZERO_EXTEND_VECTOR_INREG
+block|,
 comment|/// FP_TO_[US]INT - Convert a floating point value to a signed or unsigned
 comment|/// integer.
 name|FP_TO_SINT
@@ -583,13 +620,13 @@ comment|///   4) saturation imm
 comment|///   5) ISD::CvtCode indicating the type of conversion to do
 name|CONVERT_RNDSAT
 block|,
-comment|/// FP16_TO_FP32, FP32_TO_FP16 - These operators are used to perform
-comment|/// promotions and truncation for half-precision (16 bit) floating
-comment|/// numbers. We need special nodes since FP16 is a storage-only type with
-comment|/// special semantics of operations.
-name|FP16_TO_FP32
+comment|/// FP16_TO_FP, FP_TO_FP16 - These operators are used to perform promotions
+comment|/// and truncation for half-precision (16 bit) floating numbers. These nodes
+comment|/// form a semi-softened interface for dealing with f16 (as an i16), which
+comment|/// is often a storage-only type but has native conversions.
+name|FP16_TO_FP
 block|,
-name|FP32_TO_FP16
+name|FP_TO_FP16
 block|,
 comment|/// FNEG, FABS, FSQRT, FSIN, FCOS, FPOWI, FPOW,
 comment|/// FLOG, FLOG2, FLOG10, FEXP, FEXP2,
@@ -790,7 +827,7 @@ comment|/// Val, OUTCHAIN = ATOMIC_LOAD(INCHAIN, ptr)
 comment|/// This corresponds to "load atomic" instruction.
 name|ATOMIC_LOAD
 block|,
-comment|/// OUTCHAIN = ATOMIC_LOAD(INCHAIN, ptr, val)
+comment|/// OUTCHAIN = ATOMIC_STORE(INCHAIN, ptr, val)
 comment|/// This corresponds to "store atomic" instruction.
 name|ATOMIC_STORE
 block|,
@@ -800,6 +837,12 @@ comment|/// ValLo, ValHi, OUTCHAIN = ATOMIC_CMP_SWAP(INCHAIN, ptr, cmpLo, cmpHi,
 comment|///                                          swapLo, swapHi)
 comment|/// This corresponds to the cmpxchg instruction.
 name|ATOMIC_CMP_SWAP
+block|,
+comment|/// Val, Success, OUTCHAIN
+comment|///     = ATOMIC_CMP_SWAP_WITH_SUCCESS(INCHAIN, ptr, cmp, swap)
+comment|/// N.b. this is still a strong cmpxchg operation, so
+comment|/// Success == "Val == cmp".
+name|ATOMIC_CMP_SWAP_WITH_SUCCESS
 block|,
 comment|/// Val, OUTCHAIN = ATOMIC_SWAP(INCHAIN, ptr, amt)
 comment|/// Val, OUTCHAIN = ATOMIC_LOAD_[OpName](INCHAIN, ptr, amt)
@@ -925,6 +968,12 @@ block|,
 name|LAST_LOADEXT_TYPE
 block|}
 enum|;
+name|NodeType
+name|getExtForLoadExtType
+parameter_list|(
+name|LoadExtType
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// ISD::CondCode enum - These are ordered carefully to make the bitfields
 comment|/// below work out, when considering SETFALSE (something that never exists

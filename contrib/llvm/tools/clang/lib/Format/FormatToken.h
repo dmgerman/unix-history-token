@@ -88,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -105,6 +105,8 @@ name|TT_ArrayInitializerLSquare
 block|,
 name|TT_ArraySubscriptLSquare
 block|,
+name|TT_AttributeParen
+block|,
 name|TT_BinaryOperator
 block|,
 name|TT_BitFieldColon
@@ -115,6 +117,12 @@ name|TT_CastRParen
 block|,
 name|TT_ConditionalExpr
 block|,
+name|TT_ConflictAlternative
+block|,
+name|TT_ConflictEnd
+block|,
+name|TT_ConflictStart
+block|,
 name|TT_CtorInitializerColon
 block|,
 name|TT_CtorInitializerComma
@@ -123,17 +131,23 @@ name|TT_DesignatedInitializerPeriod
 block|,
 name|TT_DictLiteral
 block|,
-name|TT_ImplicitStringLiteral
+name|TT_FunctionDeclarationName
 block|,
-name|TT_InlineASMColon
+name|TT_FunctionLBrace
+block|,
+name|TT_FunctionTypeLParen
+block|,
+name|TT_ImplicitStringLiteral
 block|,
 name|TT_InheritanceColon
 block|,
-name|TT_FunctionTypeLParen
+name|TT_InlineASMColon
 block|,
 name|TT_LambdaLSquare
 block|,
 name|TT_LineComment
+block|,
+name|TT_ObjCBlockLBrace
 block|,
 name|TT_ObjCBlockLParen
 block|,
@@ -147,8 +161,6 @@ name|TT_ObjCMethodSpecifier
 block|,
 name|TT_ObjCProperty
 block|,
-name|TT_ObjCSelectorName
-block|,
 name|TT_OverloadedOperator
 block|,
 name|TT_OverloadedOperatorLParen
@@ -159,11 +171,17 @@ name|TT_PureVirtualSpecifier
 block|,
 name|TT_RangeBasedForLoopColon
 block|,
+name|TT_RegexLiteral
+block|,
+name|TT_SelectorName
+block|,
 name|TT_StartOfName
 block|,
 name|TT_TemplateCloser
 block|,
 name|TT_TemplateOpener
+block|,
+name|TT_TrailingAnnotation
 block|,
 name|TT_TrailingReturnArrow
 block|,
@@ -213,7 +231,7 @@ name|class
 name|AnnotatedLine
 decl_stmt|;
 comment|/// \brief A wrapper around a \c Token storing information about the
-comment|/// whitespace characters preceeding it.
+comment|/// whitespace characters preceding it.
 struct|struct
 name|FormatToken
 block|{
@@ -295,6 +313,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|BlockParameterCount
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|PackingKind
 argument_list|(
 name|PPK_Inconclusive
@@ -311,6 +334,11 @@ literal|0
 argument_list|)
 operator|,
 name|BindingStrength
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NestingLevel
 argument_list|(
 literal|0
 argument_list|)
@@ -340,7 +368,12 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|LastInChainOfCalls
+name|OperatorIndex
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|LastOperator
 argument_list|(
 name|false
 argument_list|)
@@ -350,19 +383,24 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|IsForEachMacro
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|MatchingParen
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|Previous
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|Next
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|Decision
@@ -391,7 +429,7 @@ comment|/// Token.
 name|bool
 name|HasUnescapedNewline
 decl_stmt|;
-comment|/// \brief The range of the whitespace immediately preceeding the \c Token.
+comment|/// \brief The range of the whitespace immediately preceding the \c Token.
 name|SourceRange
 name|WhitespaceRange
 decl_stmt|;
@@ -480,11 +518,16 @@ comment|/// the number of commas.
 name|unsigned
 name|ParameterCount
 decl_stmt|;
+comment|/// \brief Number of parameters that are nested blocks,
+comment|/// if this is "(", "[" or "<".
+name|unsigned
+name|BlockParameterCount
+decl_stmt|;
 comment|/// \brief A token can have a special role that can carry extra information
 comment|/// about the token's formatting.
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 name|TokenRole
 operator|>
@@ -515,12 +558,20 @@ comment|/// operator precedence, parenthesis nesting, etc.
 name|unsigned
 name|BindingStrength
 decl_stmt|;
+comment|/// \brief The nesting level of this token, i.e. the number of surrounding (),
+comment|/// [], {} or<>.
+name|unsigned
+name|NestingLevel
+decl_stmt|;
 comment|/// \brief Penalty for inserting a line break before this token.
 name|unsigned
 name|SplitPenalty
 decl_stmt|;
 comment|/// \brief If this is the first ObjC selector name in an ObjC method
 comment|/// definition or call, this contains the length of the longest name.
+comment|///
+comment|/// This being set to 0 means that the selectors should not be colon-aligned,
+comment|/// e.g. because several of them are block-type.
 name|unsigned
 name|LongestObjCSelectorName
 decl_stmt|;
@@ -552,9 +603,15 @@ comment|/// \brief \c true if this token ends a binary expression.
 name|bool
 name|EndsBinaryExpression
 decl_stmt|;
-comment|/// \brief Is this the last "." or "->" in a builder-type call?
+comment|/// \brief Is this is an operator (or "."/"->") in a sequence of operators
+comment|/// with the same precedence, contains the 0-based operator index.
+name|unsigned
+name|OperatorIndex
+decl_stmt|;
+comment|/// \brief Is this the last operator (or "."/"->") in a sequence of operators
+comment|/// with the same precedence?
 name|bool
-name|LastInChainOfCalls
+name|LastOperator
 decl_stmt|;
 comment|/// \brief Is this token part of a \c DeclStmt defining multiple variables?
 comment|///
@@ -562,6 +619,10 @@ comment|/// Only set if \c Type == \c TT_StartOfName.
 name|bool
 name|PartOfMultiVariableDeclStmt
 decl_stmt|;
+comment|/// \brief Is this a foreach macro?
+name|bool
+name|IsForEachMacro
+decl_stmt|;
 name|bool
 name|is
 argument_list|(
@@ -820,6 +881,23 @@ operator|.
 name|isNot
 argument_list|(
 name|Kind
+argument_list|)
+return|;
+block|}
+name|bool
+name|isStringLiteral
+argument_list|()
+specifier|const
+block|{
+return|return
+name|tok
+operator|::
+name|isStringLiteral
+argument_list|(
+name|Tok
+operator|.
+name|getKind
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -887,6 +965,12 @@ operator|)
 operator|)
 return|;
 block|}
+comment|/// \brief Determine whether the token is a simple-type-specifier.
+name|bool
+name|isSimpleTypeSpecifier
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|isObjCAccessSpecifier
 argument_list|()
@@ -1011,6 +1095,10 @@ argument_list|,
 name|tok
 operator|::
 name|period
+argument_list|,
+name|tok
+operator|::
+name|arrowstar
 argument_list|)
 operator|&&
 name|Type
@@ -1157,8 +1245,6 @@ block|;
 while|while
 condition|(
 name|Tok
-operator|!=
-name|NULL
 operator|&&
 name|Tok
 operator|->
@@ -1197,8 +1283,6 @@ decl_stmt|;
 while|while
 condition|(
 name|Tok
-operator|!=
-name|NULL
 operator|&&
 name|Tok
 operator|->
@@ -1378,11 +1462,35 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Apply the special formatting that the given role demands.
 comment|///
+comment|/// Assumes that the token having this role is already formatted.
+comment|///
 comment|/// Continues formatting from \p State leaving indentation to \p Indenter and
 comment|/// returns the total penalty that this formatting incurs.
 name|virtual
 name|unsigned
-name|format
+name|formatFromToken
+parameter_list|(
+name|LineState
+modifier|&
+name|State
+parameter_list|,
+name|ContinuationIndenter
+modifier|*
+name|Indenter
+parameter_list|,
+name|bool
+name|DryRun
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|/// \brief Same as \c formatFromToken, but assumes that the first token has
+comment|/// already been set thereby deciding on the first line break.
+name|virtual
+name|unsigned
+name|formatAfterToken
 parameter_list|(
 name|LineState
 modifier|&
@@ -1438,22 +1546,23 @@ argument_list|)
 operator|:
 name|TokenRole
 argument_list|(
-argument|Style
+name|Style
+argument_list|)
+block|,
+name|HasNestedBracedList
+argument_list|(
+argument|false
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|precomputeFormattingInfos
 argument_list|(
-specifier|const
-name|FormatToken
-operator|*
-name|Token
+argument|const FormatToken *Token
 argument_list|)
+name|override
 block|;
-name|virtual
 name|unsigned
-name|format
+name|formatAfterToken
 argument_list|(
 argument|LineState&State
 argument_list|,
@@ -1461,14 +1570,26 @@ argument|ContinuationIndenter *Indenter
 argument_list|,
 argument|bool DryRun
 argument_list|)
+name|override
+block|;
+name|unsigned
+name|formatFromToken
+argument_list|(
+argument|LineState&State
+argument_list|,
+argument|ContinuationIndenter *Indenter
+argument_list|,
+argument|bool DryRun
+argument_list|)
+name|override
 block|;
 comment|/// \brief Adds \p Token as the next comma to the \c CommaSeparated list.
-name|virtual
 name|void
 name|CommaFound
 argument_list|(
 argument|const FormatToken *Token
 argument_list|)
+name|override
 block|{
 name|Commas
 operator|.
@@ -1476,7 +1597,7 @@ name|push_back
 argument_list|(
 name|Token
 argument_list|)
-block|; }
+block|;   }
 name|private
 operator|:
 comment|/// \brief A struct that holds information on how to format a given list with
@@ -1546,6 +1667,9 @@ block|,
 literal|4
 operator|>
 name|Formats
+block|;
+name|bool
+name|HasNestedBracedList
 block|; }
 decl_stmt|;
 block|}

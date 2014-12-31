@@ -69,6 +69,12 @@ decl_stmt|;
 name|class
 name|Use
 decl_stmt|;
+name|class
+name|Instruction
+decl_stmt|;
+name|class
+name|DominatorTree
+decl_stmt|;
 comment|/// PointerMayBeCaptured - Return true if this pointer value may be captured
 comment|/// by the enclosing function (which is required to exist).  This routine can
 comment|/// be expensive, so consider caching the results.  The boolean ReturnCaptures
@@ -89,6 +95,45 @@ name|ReturnCaptures
 parameter_list|,
 name|bool
 name|StoreCaptures
+parameter_list|)
+function_decl|;
+comment|/// PointerMayBeCapturedBefore - Return true if this pointer value may be
+comment|/// captured by the enclosing function (which is required to exist). If a
+comment|/// DominatorTree is provided, only captures which happen before the given
+comment|/// instruction are considered. This routine can be expensive, so consider
+comment|/// caching the results.  The boolean ReturnCaptures specifies whether
+comment|/// returning the value (or part of it) from the function counts as capturing
+comment|/// it or not.  The boolean StoreCaptures specified whether storing the value
+comment|/// (or part of it) into memory anywhere automatically counts as capturing it
+comment|/// or not. Captures by the provided instruction are considered if the
+comment|/// final parameter is true.
+name|bool
+name|PointerMayBeCapturedBefore
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|bool
+name|ReturnCaptures
+parameter_list|,
+name|bool
+name|StoreCaptures
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+name|DominatorTree
+modifier|*
+name|DT
+parameter_list|,
+name|bool
+name|IncludeI
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// This callback is used in conjunction with PointerMayBeCaptured. In
@@ -120,6 +165,7 @@ name|virtual
 name|bool
 name|shouldExplore
 parameter_list|(
+specifier|const
 name|Use
 modifier|*
 name|U
@@ -132,6 +178,7 @@ name|virtual
 name|bool
 name|captured
 parameter_list|(
+specifier|const
 name|Use
 modifier|*
 name|U

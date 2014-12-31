@@ -69,12 +69,6 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/ValueTypes.h"
-end_include
-
 begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
@@ -91,6 +85,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MVT
+decl_stmt|;
 enum|enum
 block|{
 name|SM_SentinelZero

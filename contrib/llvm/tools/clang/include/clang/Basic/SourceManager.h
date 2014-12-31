@@ -188,12 +188,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
@@ -201,6 +195,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/AlignOf.h"
 end_include
 
 begin_include
@@ -231,6 +231,12 @@ begin_include
 include|#
 directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -310,6 +316,23 @@ init|=
 literal|0x02
 block|}
 enum|;
+comment|// Note that the first member of this class is an aligned character buffer
+comment|// to ensure that this class has an alignment of 8 bytes. This wastes
+comment|// 8 bytes for every ContentCache object, but each of these corresponds to
+comment|// a file loaded into memory, so the 8 bytes doesn't seem terribly
+comment|// important. It is quite awkward to fit this aligner into any other part
+comment|// of the class due to the lack of portable ways to combine it with other
+comment|// members.
+name|llvm
+operator|::
+name|AlignedCharArray
+operator|<
+literal|8
+operator|,
+literal|1
+operator|>
+name|NonceAligner
+expr_stmt|;
 comment|/// \brief The actual buffer containing the characters from the input
 comment|/// file.
 comment|///
@@ -320,7 +343,6 @@ name|llvm
 operator|::
 name|PointerIntPair
 operator|<
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -392,12 +414,12 @@ name|FileEntry
 operator|*
 name|Ent
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|Buffer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 name|false
 argument_list|)
@@ -414,7 +436,7 @@ argument_list|)
 operator|,
 name|SourceLineCache
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NumLines
@@ -431,7 +453,14 @@ name|IsSystemFile
 argument_list|(
 argument|false
 argument_list|)
-block|{}
+block|{
+operator|(
+name|void
+operator|)
+name|NonceAligner
+block|;
+comment|// Silence warnings about unused member.
+block|}
 name|ContentCache
 argument_list|(
 specifier|const
@@ -447,7 +476,7 @@ argument_list|)
 operator|:
 name|Buffer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 name|false
 argument_list|)
@@ -464,7 +493,7 @@ argument_list|)
 operator|,
 name|SourceLineCache
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NumLines
@@ -499,14 +528,14 @@ argument_list|)
 operator|:
 name|Buffer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 name|false
 argument_list|)
 operator|,
 name|SourceLineCache
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|BufferOverridden
@@ -540,13 +569,13 @@ operator|.
 name|getPointer
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 operator|&&
 name|RHS
 operator|.
 name|SourceLineCache
 operator|==
-literal|0
+name|nullptr
 operator|&&
 literal|"Passed ContentCache object cannot own a buffer."
 argument_list|)
@@ -566,7 +595,6 @@ comment|/// \param Loc If specified, is the location that invalid file diagnosti
 comment|///   will be emitted at.
 comment|///
 comment|/// \param Invalid If non-NULL, will be set \c true if an error occurred.
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -579,8 +607,7 @@ argument|const SourceManager&SM
 argument_list|,
 argument|SourceLocation Loc = SourceLocation()
 argument_list|,
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -618,7 +645,6 @@ expr_stmt|;
 name|void
 name|setBuffer
 argument_list|(
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -654,7 +680,6 @@ expr_stmt|;
 block|}
 comment|/// \brief Get the underlying buffer, returning NULL if the buffer is not
 comment|/// yet available.
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -675,7 +700,6 @@ comment|/// with the given buffer.
 name|void
 name|replaceBuffer
 argument_list|(
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -739,6 +763,24 @@ name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|// Assert that the \c ContentCache objects will always be 8-byte aligned so
+comment|// that we can pack 3 bits of integer into pointers to such objects.
+name|static_assert
+argument_list|(
+name|llvm
+operator|::
+name|AlignOf
+operator|<
+name|ContentCache
+operator|>
+operator|::
+name|Alignment
+operator|>=
+literal|8
+argument_list|,
+literal|"ContentCache must be 8-byte aligned."
+argument_list|)
+expr_stmt|;
 comment|/// \brief Information about a FileID, basically just the logical file
 comment|/// that it represents and include stack information.
 comment|///
@@ -1720,7 +1762,7 @@ operator|*
 operator|>
 name|FileInfos
 block|;
-comment|/// \brief True if the ContentCache for files that are overriden by other
+comment|/// \brief True if the ContentCache for files that are overridden by other
 comment|/// files, should report the original file name. Defaults to true.
 name|bool
 name|OverridenFilesKeepOriginalName
@@ -1732,7 +1774,7 @@ name|UserFilesAreVolatile
 block|;    struct
 name|OverriddenFilesInfoTy
 block|{
-comment|/// \brief Files that have been overriden with the contents from another
+comment|/// \brief Files that have been overridden with the contents from another
 comment|/// file.
 name|llvm
 operator|::
@@ -1762,7 +1804,9 @@ block|;   }
 block|;
 comment|/// \brief Lazily create the object keeping overridden files info, since
 comment|/// it is uncommonly used.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|OverriddenFilesInfoTy
 operator|>
@@ -2121,7 +2165,8 @@ name|FileMgr
 return|;
 block|}
 comment|/// \brief Set true if the SourceManager should report the original file name
-comment|/// for contents of files that were overriden by other files.Defaults to true.
+comment|/// for contents of files that were overridden by other files. Defaults to
+comment|/// true.
 name|void
 name|setOverridenFilesKeepOriginalName
 parameter_list|(
@@ -2213,54 +2258,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// \brief Create the FileID for a memory buffer that will represent the
-comment|/// FileID for the main source.
-comment|///
-comment|/// One example of when this would be used is when the main source is read
-comment|/// from STDIN.
-name|FileID
-name|createMainFileIDForMemBuffer
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|*
-name|Buffer
-argument_list|,
-name|SrcMgr
-operator|::
-name|CharacteristicKind
-name|Kind
-operator|=
-name|SrcMgr
-operator|::
-name|C_User
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|MainFileID
-operator|.
-name|isInvalid
-argument_list|()
-operator|&&
-literal|"MainFileID already set!"
-argument_list|)
-expr_stmt|;
-name|MainFileID
-operator|=
-name|createFileIDForMemBuffer
-argument_list|(
-name|Buffer
-argument_list|,
-name|Kind
-argument_list|)
-expr_stmt|;
-return|return
-name|MainFileID
-return|;
-block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// MainFileID creation and querying methods.
 comment|//===--------------------------------------------------------------------===//
@@ -2270,51 +2267,6 @@ name|getMainFileID
 argument_list|()
 specifier|const
 block|{
-return|return
-name|MainFileID
-return|;
-block|}
-comment|/// \brief Create the FileID for the main source file.
-name|FileID
-name|createMainFileID
-argument_list|(
-specifier|const
-name|FileEntry
-operator|*
-name|SourceFile
-argument_list|,
-name|SrcMgr
-operator|::
-name|CharacteristicKind
-name|Kind
-operator|=
-name|SrcMgr
-operator|::
-name|C_User
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|MainFileID
-operator|.
-name|isInvalid
-argument_list|()
-operator|&&
-literal|"MainFileID already set!"
-argument_list|)
-expr_stmt|;
-name|MainFileID
-operator|=
-name|createFileID
-argument_list|(
-name|SourceFile
-argument_list|,
-name|SourceLocation
-argument_list|()
-argument_list|,
-name|Kind
-argument_list|)
-expr_stmt|;
 return|return
 name|MainFileID
 return|;
@@ -2455,9 +2407,8 @@ comment|///
 comment|/// This does no caching of the buffer and takes ownership of the
 comment|/// MemoryBuffer, so only pass a MemoryBuffer to this once.
 name|FileID
-name|createFileIDForMemBuffer
+name|createFileID
 argument_list|(
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -2558,7 +2509,6 @@ comment|/// \brief Retrieve the memory buffer associated with the given file.
 comment|///
 comment|/// \param Invalid If non-NULL, will be set \c true if an error
 comment|/// occurs while retrieving the memory buffer.
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -2574,13 +2524,13 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|/// \brief Override the contents of the given source file by providing an
 comment|/// already-allocated buffer.
 comment|///
-comment|/// \param SourceFile the source file whose contents will be overriden.
+comment|/// \param SourceFile the source file whose contents will be overridden.
 comment|///
 comment|/// \param Buffer the memory buffer whose contents will be used as the
 comment|/// data in the given source file.
@@ -2595,7 +2545,6 @@ name|FileEntry
 operator|*
 name|SourceFile
 argument_list|,
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -2610,7 +2559,7 @@ argument_list|)
 decl_stmt|;
 comment|/// \brief Override the given source file with another one.
 comment|///
-comment|/// \param SourceFile the source file which will be overriden.
+comment|/// \param SourceFile the source file which will be overridden.
 comment|///
 comment|/// \param NewFile the file whose contents will be used as the
 comment|/// data instead of the contents of the given source file.
@@ -2703,7 +2652,6 @@ comment|/// \brief Return the buffer for the specified FileID.
 comment|///
 comment|/// If there is an error opening this buffer the first time, this
 comment|/// manufactures a temporary buffer and returns a non-empty error string.
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -2714,8 +2662,7 @@ argument|FileID FID
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|{
@@ -2786,7 +2733,6 @@ name|Invalid
 argument_list|)
 return|;
 block|}
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -2795,8 +2741,7 @@ name|getBuffer
 argument_list|(
 argument|FileID FID
 argument_list|,
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|{
@@ -2910,7 +2855,7 @@ name|isFile
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 specifier|const
 name|SrcMgr
@@ -2933,7 +2878,7 @@ operator|!
 name|Content
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|Content
@@ -2977,7 +2922,7 @@ operator|!
 name|Content
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|Content
@@ -3000,7 +2945,7 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4173,7 +4118,7 @@ name|SourceLocation
 operator|*
 name|MacroBegin
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4210,7 +4155,7 @@ name|SourceLocation
 operator|*
 name|MacroEnd
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4253,7 +4198,7 @@ name|unsigned
 operator|*
 name|RelativeOffset
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 block|{
@@ -4489,7 +4434,7 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4533,7 +4478,7 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4550,7 +4495,7 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4567,7 +4512,7 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4584,7 +4529,7 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4628,7 +4573,7 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4645,7 +4590,7 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4662,7 +4607,7 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4679,7 +4624,7 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4718,7 +4663,7 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4817,7 +4762,7 @@ comment|/// \returns The presumed location of the specified SourceLocation. If t
 end_comment
 
 begin_comment
-comment|/// presumed location cannot be calculate (e.g., because \p Loc is invalid
+comment|/// presumed location cannot be calculated (e.g., because \p Loc is invalid
 end_comment
 
 begin_comment
@@ -5044,7 +4989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief The size of the SLocEnty that \p FID represents.
+comment|/// \brief The size of the SLocEntry that \p FID represents.
 end_comment
 
 begin_decl_stmt
@@ -5084,7 +5029,7 @@ name|unsigned
 operator|*
 name|RelativeOffset
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 block|{
@@ -5236,7 +5181,7 @@ block|{
 return|return
 name|LineTable
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -5759,8 +5704,7 @@ name|getLocalSLocEntry
 argument_list|(
 argument|unsigned Index
 argument_list|,
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|{
@@ -5818,8 +5762,7 @@ name|getLoadedSLocEntry
 argument_list|(
 argument|unsigned Index
 argument_list|,
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|{
@@ -5871,8 +5814,7 @@ name|getSLocEntry
 argument_list|(
 argument|FileID FID
 argument_list|,
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|{
@@ -6175,7 +6117,6 @@ label|:
 end_label
 
 begin_expr_stmt
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -6228,8 +6169,7 @@ name|getSLocEntryByID
 argument_list|(
 argument|int ID
 argument_list|,
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|{
@@ -6286,8 +6226,7 @@ name|getLoadedSLocEntryByID
 argument_list|(
 argument|int ID
 argument_list|,
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|{
@@ -6563,7 +6502,6 @@ name|ContentCache
 operator|*
 name|createMemBufferContentCache
 argument_list|(
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer

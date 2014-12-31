@@ -260,7 +260,7 @@ argument_list|()
 operator|:
 name|Dep
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|,
 argument|Data
 argument_list|)
@@ -590,6 +590,26 @@ name|MustAliasMem
 operator|)
 return|;
 block|}
+comment|/// isBarrier - Test if this is an Order dependence that is marked
+comment|/// as a barrier.
+name|bool
+name|isBarrier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getKind
+argument_list|()
+operator|==
+name|Order
+operator|&&
+name|Contents
+operator|.
+name|OrdKind
+operator|==
+name|Barrier
+return|;
+block|}
 comment|/// isMustAlias - Test if this is an Order dependence that is marked
 comment|/// as "must alias", meaning that the SUnits at either end of the edge
 comment|/// have a memory dependence on a known memory location.
@@ -839,18 +859,15 @@ name|SUnit
 block|{
 name|private
 label|:
-name|enum
-name|LLVM_ENUM_INT_TYPE
-function|(
+enum_decl|enum :
 name|unsigned
-function|)
 block|{
 name|BoundaryID
-operator|=
+init|=
 operator|~
 literal|0u
 block|}
-empty_stmt|;
+enum_decl|;
 name|SDNode
 modifier|*
 name|Node
@@ -1057,6 +1074,18 @@ range|:
 literal|1
 decl_stmt|;
 comment|// True if this node has been cloned.
+name|bool
+name|isUnbuffered
+range|:
+literal|1
+decl_stmt|;
+comment|// Uses an unbuffered resource.
+name|bool
+name|hasReservedResource
+range|:
+literal|1
+decl_stmt|;
+comment|// Uses a reserved resource.
 name|Sched
 operator|::
 name|Preference
@@ -1122,17 +1151,17 @@ argument_list|)
 operator|,
 name|Instr
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|OrigNode
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SchedClass
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NodeNum
@@ -1255,6 +1284,16 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|isUnbuffered
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|hasReservedResource
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|SchedulingPref
 argument_list|(
 name|Sched
@@ -1294,12 +1333,12 @@ argument_list|)
 operator|,
 name|CopyDstRC
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|CopySrcRC
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// SUnit - Construct an SUnit for post-regalloc scheduling to represent
@@ -1313,7 +1352,7 @@ argument_list|)
 operator|:
 name|Node
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Instr
@@ -1323,12 +1362,12 @@ argument_list|)
 operator|,
 name|OrigNode
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SchedClass
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NodeNum
@@ -1451,6 +1490,16 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|isUnbuffered
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|hasReservedResource
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|SchedulingPref
 argument_list|(
 name|Sched
@@ -1490,12 +1539,12 @@ argument_list|)
 operator|,
 name|CopyDstRC
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|CopySrcRC
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// SUnit - Construct a placeholder SUnit.
@@ -1504,22 +1553,22 @@ argument_list|()
 operator|:
 name|Node
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Instr
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|OrigNode
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SchedClass
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NodeNum
@@ -1642,6 +1691,16 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|isUnbuffered
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|hasReservedResource
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|SchedulingPref
 argument_list|(
 name|Sched
@@ -1681,12 +1740,12 @@ argument_list|)
 operator|,
 name|CopyDstRC
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|CopySrcRC
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// \brief Boundary nodes are placeholders for the boundary of the

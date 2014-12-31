@@ -230,6 +230,15 @@ name|GetBaseAddress
 argument_list|()
 return|;
 block|}
+name|lldb
+operator|::
+name|addr_t
+name|ResolveCallableAddress
+argument_list|(
+argument|Target&target
+argument_list|)
+specifier|const
+block|;
 specifier|const
 name|ConstString
 operator|&
@@ -315,10 +324,9 @@ name|Symbol
 operator|*
 name|ResolveReExportedSymbol
 argument_list|(
-name|Target
-operator|&
-name|target
+argument|Target&target
 argument_list|)
+specifier|const
 block|;
 name|uint32_t
 name|GetSiblingIndex
@@ -625,6 +633,22 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// This is the internal guts of ResolveReExportedSymbol, it assumes reexport_name is not null, and that module_spec
+comment|// is valid.  We track the modules we've already seen to make sure we don't get caught in a cycle.
+name|Symbol
+operator|*
+name|ResolveReExportedSymbolInModuleSpec
+argument_list|(
+argument|Target&target
+argument_list|,
+argument|ConstString&reexport_name
+argument_list|,
+argument|lldb_private::ModuleSpec&module_spec
+argument_list|,
+argument|lldb_private::ModuleList&seen_modules
+argument_list|)
+specifier|const
+block|;
 name|uint32_t
 name|m_uid
 block|;

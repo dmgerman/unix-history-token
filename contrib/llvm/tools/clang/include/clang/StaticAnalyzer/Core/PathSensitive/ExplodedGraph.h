@@ -130,12 +130,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -155,6 +149,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -567,7 +567,7 @@ name|AddPointer
 argument_list|(
 name|state
 operator|.
-name|getPtr
+name|get
 argument_list|()
 argument_list|)
 block|;
@@ -695,7 +695,7 @@ return|return
 name|pred_empty
 argument_list|()
 operator|?
-name|NULL
+name|nullptr
 operator|:
 operator|*
 operator|(
@@ -736,7 +736,7 @@ return|return
 name|succ_empty
 argument_list|()
 condition|?
-name|NULL
+name|nullptr
 else|:
 operator|*
 operator|(
@@ -1081,7 +1081,7 @@ name|bool
 modifier|*
 name|IsNew
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|ExplodedGraph
@@ -1440,13 +1440,13 @@ name|InterExplodedGraphMap
 operator|*
 name|ForwardMap
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|InterExplodedGraphMap
 operator|*
 name|InverseMap
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;

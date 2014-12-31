@@ -155,10 +155,9 @@ comment|/// implies that all passes MUST be allocated with 'new'.
 name|void
 name|add
 argument_list|(
-name|Pass
-operator|*
-name|P
+argument|Pass *P
 argument_list|)
+name|override
 block|;
 comment|/// run - Execute all of the passes scheduled for execution.  Keep track of
 comment|/// whether any of the passes modifies the module, and if so, return true.
@@ -210,10 +209,9 @@ comment|/// This implies that all passes MUST be allocated with 'new'.
 name|void
 name|add
 argument_list|(
-name|Pass
-operator|*
-name|P
+argument|Pass *P
 argument_list|)
+name|override
 block|;
 comment|/// run - Execute all of the passes scheduled for execution.  Keep
 comment|/// track of whether any of the passes modifies the function, and if

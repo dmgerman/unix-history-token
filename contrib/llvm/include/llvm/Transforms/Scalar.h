@@ -74,6 +74,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|BasicBlockPass
+decl_stmt|;
+name|class
 name|FunctionPass
 decl_stmt|;
 name|class
@@ -264,7 +267,7 @@ name|TargetMachine
 modifier|*
 name|TM
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -323,6 +326,12 @@ operator|-
 literal|1
 parameter_list|)
 function_decl|;
+comment|// Create an unrolling pass for full unrolling only.
+name|Pass
+modifier|*
+name|createSimpleLoopUnrollPass
+parameter_list|()
+function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
 comment|// LoopReroll - This pass is a simple loop rerolling pass.
@@ -339,7 +348,13 @@ comment|//
 name|Pass
 modifier|*
 name|createLoopRotatePass
-parameter_list|()
+parameter_list|(
+name|int
+name|MaxHeaderSize
+init|=
+operator|-
+literal|1
+parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -500,30 +515,13 @@ name|LowerSwitchID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// LowerInvoke - This pass converts invoke and unwind instructions to use sjlj
-comment|// exception handling mechanisms.  Note that after this pass runs the CFG is not
-comment|// entirely accurate (exceptional control flow edges are not correct anymore) so
-comment|// only very simple things should be done after the lowerinvoke pass has run
-comment|// (like generation of native code).  This should *NOT* be used as a general
-comment|// purpose "my LLVM-to-LLVM pass doesn't support the invoke instruction yet"
-comment|// lowering pass.
+comment|// LowerInvoke - This pass removes invoke instructions, converting them to call
+comment|// instructions.
 comment|//
 name|FunctionPass
 modifier|*
 name|createLowerInvokePass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-init|=
-literal|0
-parameter_list|,
-name|bool
-name|useExpensiveEHSupport
-init|=
-name|false
-parameter_list|)
+parameter_list|()
 function_decl|;
 specifier|extern
 name|char
@@ -553,6 +551,16 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createEarlyCSEPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// MergedLoadStoreMotion - This pass merges loads and stores in diamonds. Loads
+comment|// are hoisted into the header, while stores sink into the footer.
+comment|//
+name|FunctionPass
+modifier|*
+name|createMergedLoadStoreMotionPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -592,19 +600,12 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// CodeGenPrepare - This pass prepares a function for instruction selection.
+comment|// ConstantHoisting - This pass prepares a function for expensive constants.
 comment|//
 name|FunctionPass
 modifier|*
-name|createCodeGenPreparePass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-init|=
-literal|0
-parameter_list|)
+name|createConstantHoistingPass
+parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -696,6 +697,41 @@ parameter_list|(
 name|StringRef
 name|Name
 parameter_list|)
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// ScalarizerPass - Converts vector operations into scalar operations
+comment|//
+name|FunctionPass
+modifier|*
+name|createScalarizerPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// AddDiscriminators - Add DWARF path discriminators to the IR.
+name|FunctionPass
+modifier|*
+name|createAddDiscriminatorsPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// SeparateConstOffsetFromGEP - Split GEPs for better CSE
+comment|//
+name|FunctionPass
+modifier|*
+name|createSeparateConstOffsetFromGEPPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LoadCombine - Combine loads into bigger loads.
+comment|//
+name|BasicBlockPass
+modifier|*
+name|createLoadCombinePass
+parameter_list|()
 function_decl|;
 block|}
 end_decl_stmt

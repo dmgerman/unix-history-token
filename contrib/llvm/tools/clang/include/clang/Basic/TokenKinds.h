@@ -63,6 +63,12 @@ directive|define
 name|LLVM_CLANG_TOKENKINDS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -73,6 +79,9 @@ block|{
 comment|/// \brief Provides a simple uniform namespace for tokens from all C languages.
 enum|enum
 name|TokenKind
+enum|:
+name|unsigned
+name|short
 block|{
 define|#
 directive|define
@@ -149,12 +158,12 @@ specifier|const
 name|char
 modifier|*
 name|getTokenName
-parameter_list|(
-name|enum
+argument_list|(
 name|TokenKind
 name|Kind
-parameter_list|)
-function_decl|;
+argument_list|)
+name|LLVM_READNONE
+decl_stmt|;
 comment|/// \brief Determines the spelling of simple punctuation tokens like
 comment|/// '!' or '%', and returns NULL for literal and annotation tokens.
 comment|///
@@ -165,13 +174,25 @@ comment|/// Preprocessor::getSpelling().
 specifier|const
 name|char
 modifier|*
-name|getTokenSimpleSpelling
-parameter_list|(
-name|enum
+name|getPunctuatorSpelling
+argument_list|(
 name|TokenKind
 name|Kind
-parameter_list|)
-function_decl|;
+argument_list|)
+name|LLVM_READNONE
+decl_stmt|;
+comment|/// \brief Determines the spelling of simple keyword and contextual keyword
+comment|/// tokens like 'int' and 'dynamic_cast'. Returns NULL for other token kinds.
+specifier|const
+name|char
+modifier|*
+name|getKeywordSpelling
+argument_list|(
+name|TokenKind
+name|Kind
+argument_list|)
+name|LLVM_READNONE
+decl_stmt|;
 comment|/// \brief Return true if this is a raw identifier or an identifier kind.
 specifier|inline
 name|bool

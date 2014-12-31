@@ -134,7 +134,7 @@ comment|/// clients call:
 comment|///
 comment|///     bool Communication::StartReadThread (Error *);
 comment|///
-comment|/// If true is returned a read thead has been spawned that will
+comment|/// If true is returned a read thread has been spawned that will
 comment|/// continually execute a call to the pure virtual DoRead function:
 comment|///
 comment|///     size_t Communication::ReadFromConnection (void *, size_t, uint32_t);
@@ -562,7 +562,7 @@ function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// The static read thread function. This function will call
 comment|/// the "DoRead" function continuously and wait for data to become
-comment|/// avaialble. When data is received it will append the available
+comment|/// available. When data is received it will append the available
 comment|/// data to the internal cache and broadcast a
 comment|/// \b eBroadcastBitReadThreadGotBytes event.
 comment|///

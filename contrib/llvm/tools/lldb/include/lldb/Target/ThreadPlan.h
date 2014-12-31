@@ -808,6 +808,9 @@ name|GetStopInfo
 argument_list|()
 return|;
 block|}
+comment|// If the completion of the thread plan stepped out of a function, the return value of the function
+comment|// might have been captured by the thread plan (currently only ThreadPlanStepOut does this.)
+comment|// If so, the ReturnValueObject can be retrieved from here.
 function|virtual lldb::ValueObjectSP     GetReturnValueObject
 parameter_list|()
 block|{
@@ -815,6 +818,20 @@ return|return
 name|lldb
 operator|::
 name|ValueObjectSP
+argument_list|()
+return|;
+block|}
+comment|// If the thread plan managing the evaluation of a user expression lives longer than the command
+comment|// that instigated the expression (generally because the expression evaluation hit a breakpoint, and
+comment|// the user regained control at that point) a subsequent process control command step/continue/etc. might
+comment|// complete the expression evaluations.  If so, the result of the expression evaluation will show up here.
+function|virtual lldb::ClangExpressionVariableSP     GetExpressionVariable
+parameter_list|()
+block|{
+return|return
+name|lldb
+operator|::
+name|ClangExpressionVariableSP
 argument_list|()
 return|;
 block|}
@@ -834,6 +851,52 @@ parameter_list|()
 block|{
 return|return
 name|false
+return|;
+block|}
+function|virtual bool     SetIterationCount
+parameter_list|(
+name|size_t
+name|count
+parameter_list|)
+block|{
+if|if
+condition|(
+name|m_takes_iteration_count
+condition|)
+block|{
+comment|// Don't tell me to do something 0 times...
+if|if
+condition|(
+name|count
+operator|==
+literal|0
+condition|)
+return|return
+name|false
+return|;
+name|m_iteration_count
+operator|=
+name|count
+expr_stmt|;
+block|}
+return|return
+name|m_takes_iteration_count
+return|;
+block|}
+function|virtual size_t     GetIterationCount
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|m_takes_iteration_count
+condition|)
+return|return
+literal|0
+return|;
+else|else
+return|return
+name|m_iteration_count
 return|;
 block|}
 function|protected:
@@ -944,6 +1007,16 @@ name|m_stop_vote
 decl_stmt|;
 name|Vote
 name|m_run_vote
+decl_stmt|;
+name|bool
+name|m_takes_iteration_count
+init|=
+name|false
+decl_stmt|;
+name|int32_t
+name|m_iteration_count
+init|=
+literal|1
 decl_stmt|;
 name|private
 label|:

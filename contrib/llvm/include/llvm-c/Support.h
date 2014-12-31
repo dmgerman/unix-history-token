@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm-c/Core.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_ifdef
@@ -33,6 +33,19 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**  * @defgroup LLVMCSupportTypes Types and Enumerations  *  * @{  */
+typedef|typedef
+name|int
+name|LLVMBool
+typedef|;
+comment|/**  * Used to pass regions of memory through LLVM interfaces.  *  * @see llvm::MemoryBuffer  */
+typedef|typedef
+name|struct
+name|LLVMOpaqueMemoryBuffer
+modifier|*
+name|LLVMMemoryBufferRef
+typedef|;
+comment|/**  * @}  */
 comment|/**  * This function permanently loads the dynamic library at the given path.  * It is safe to call this function multiple times for the same library.  *  * @see sys::DynamicLibrary::LoadLibraryPermanently()   */
 name|LLVMBool
 name|LLVMLoadLibraryPermanently

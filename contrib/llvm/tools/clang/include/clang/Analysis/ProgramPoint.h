@@ -280,8 +280,7 @@ argument|Kind k
 argument_list|,
 argument|const LocationContext *l
 argument_list|,
-argument|const ProgramPointTag *tag =
-literal|0
+argument|const ProgramPointTag *tag = nullptr
 argument_list|)
 block|:
 name|Data1
@@ -291,7 +290,7 @@ argument_list|)
 operator|,
 name|Data2
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 operator|(
 operator|(
@@ -369,8 +368,7 @@ argument|Kind k
 argument_list|,
 argument|const LocationContext *l
 argument_list|,
-argument|const ProgramPointTag *tag =
-literal|0
+argument|const ProgramPointTag *tag = nullptr
 argument_list|)
 operator|:
 name|Data1
@@ -893,7 +891,7 @@ name|ProgramPointTag
 operator|*
 name|tag
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|ProgramPoint
@@ -1235,7 +1233,7 @@ name|Stmt
 operator|*
 name|SubStmt
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|StmtPoint
@@ -1316,8 +1314,7 @@ argument|Kind k
 argument_list|,
 argument|const LocationContext *L
 argument_list|,
-argument|const ProgramPointTag *tag =
-literal|0
+argument|const ProgramPointTag *tag = nullptr
 argument_list|)
 operator|:
 name|StmtPoint
@@ -1344,15 +1341,14 @@ argument|Kind k
 argument_list|,
 argument|const LocationContext *L
 argument_list|,
-argument|const ProgramPointTag *tag =
-literal|0
+argument|const ProgramPointTag *tag = nullptr
 argument_list|)
 operator|:
 name|StmtPoint
 argument_list|(
 argument|S
 argument_list|,
-argument|NULL
+argument|nullptr
 argument_list|,
 argument|k
 argument_list|,
@@ -1379,14 +1375,14 @@ name|ProgramPointTag
 operator|*
 name|tag
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|StmtPoint
 argument_list|(
 argument|S
 argument_list|,
-argument|NULL
+argument|nullptr
 argument_list|,
 argument|PostStmtKind
 argument_list|,
@@ -1454,7 +1450,7 @@ name|ProgramPointTag
 operator|*
 name|tag
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|PostStmt
@@ -1521,7 +1517,7 @@ name|StmtPoint
 argument_list|(
 argument|S
 argument_list|,
-argument|NULL
+argument|nullptr
 argument_list|,
 argument|K
 argument_list|,
@@ -1588,7 +1584,7 @@ name|ProgramPointTag
 operator|*
 name|tag
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|LocationCheck
@@ -1654,7 +1650,7 @@ name|ProgramPointTag
 operator|*
 name|tag
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|LocationCheck
@@ -1720,7 +1716,7 @@ name|ProgramPointTag
 operator|*
 name|tag
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|PostStmt
@@ -1795,7 +1791,7 @@ name|ProgramPointTag
 operator|*
 name|tag
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|PostStmt
@@ -1814,7 +1810,7 @@ argument_list|(
 name|getData2
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|setData2
@@ -1888,7 +1884,7 @@ name|ProgramPointTag
 operator|*
 name|tag
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|PostStmt
@@ -1956,14 +1952,14 @@ name|ProgramPointTag
 operator|*
 name|tag
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|StmtPoint
 argument_list|(
 argument|S
 argument_list|,
-literal|0
+argument|nullptr
 argument_list|,
 argument|PreStmtPurgeDeadSymbolsKind
 argument_list|,
@@ -2026,14 +2022,14 @@ name|ProgramPointTag
 operator|*
 name|tag
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|StmtPoint
 argument_list|(
 argument|S
 argument_list|,
-literal|0
+argument|nullptr
 argument_list|,
 argument|PostStmtPurgeDeadSymbolsKind
 argument_list|,
@@ -2416,8 +2412,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|const LocationContext *L
 argument_list|,
-argument|const ProgramPointTag *Tag =
-literal|0
+argument|const ProgramPointTag *Tag = nullptr
 argument_list|)
 operator|:
 name|ImplicitCallPoint
@@ -2479,8 +2474,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|const LocationContext *L
 argument_list|,
-argument|const ProgramPointTag *Tag =
-literal|0
+argument|const ProgramPointTag *Tag = nullptr
 argument_list|)
 operator|:
 name|ImplicitCallPoint
@@ -2561,7 +2555,7 @@ argument|CallEnterKind
 argument_list|,
 argument|callerCtx
 argument_list|,
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 specifier|const
@@ -2659,13 +2653,13 @@ argument_list|)
 operator|:
 name|ProgramPoint
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|,
 argument|CallExitBeginKind
 argument_list|,
 argument|L
 argument_list|,
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|private
@@ -2727,7 +2721,7 @@ argument|CallExitEndKind
 argument_list|,
 argument|CallerCtx
 argument_list|,
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 specifier|const
@@ -2804,14 +2798,14 @@ name|void
 operator|*
 name|Data2
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 specifier|const
 name|ProgramPointTag
 operator|*
 name|tag
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|ProgramPoint
@@ -2880,7 +2874,7 @@ name|void
 operator|*
 name|tagKind
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|TagKind
@@ -2931,19 +2925,22 @@ block|{
 name|std
 operator|::
 name|string
-name|desc
+name|Desc
 block|;
 name|public
 operator|:
 name|SimpleProgramPointTag
 argument_list|(
-argument|StringRef description
+argument|StringRef MsgProvider
+argument_list|,
+argument|StringRef Msg
 argument_list|)
 block|;
 name|StringRef
 name|getTagDescription
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;  }
 comment|// end namespace clang
@@ -3007,7 +3004,7 @@ operator|(
 name|x
 operator|)
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -3056,7 +3053,7 @@ operator|(
 name|x
 operator|)
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}

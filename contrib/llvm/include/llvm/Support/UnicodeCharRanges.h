@@ -98,6 +98,10 @@ block|{
 name|namespace
 name|sys
 block|{
+define|#
+directive|define
+name|DEBUG_TYPE
+value|"unicode"
 comment|/// \brief Represents a closed range of Unicode code points [Lower, Upper].
 struct|struct
 name|UnicodeCharRange
@@ -159,8 +163,6 @@ block|{
 name|public
 label|:
 typedef|typedef
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|UnicodeCharRange
@@ -279,8 +281,6 @@ condition|)
 block|{
 name|DEBUG
 argument_list|(
-name|llvm
-operator|::
 name|dbgs
 argument_list|()
 operator|<<
@@ -289,8 +289,6 @@ argument_list|)
 expr_stmt|;
 name|DEBUG
 argument_list|(
-name|llvm
-operator|::
 name|dbgs
 argument_list|()
 operator|.
@@ -302,8 +300,6 @@ argument_list|)
 expr_stmt|;
 name|DEBUG
 argument_list|(
-name|llvm
-operator|::
 name|dbgs
 argument_list|()
 operator|<<
@@ -312,8 +308,6 @@ argument_list|)
 expr_stmt|;
 name|DEBUG
 argument_list|(
-name|llvm
-operator|::
 name|dbgs
 argument_list|()
 operator|.
@@ -344,8 +338,6 @@ condition|)
 block|{
 name|DEBUG
 argument_list|(
-name|llvm
-operator|::
 name|dbgs
 argument_list|()
 operator|<<
@@ -354,8 +346,6 @@ argument_list|)
 expr_stmt|;
 name|DEBUG
 argument_list|(
-name|llvm
-operator|::
 name|dbgs
 argument_list|()
 operator|.
@@ -369,8 +359,6 @@ argument_list|)
 expr_stmt|;
 name|DEBUG
 argument_list|(
-name|llvm
-operator|::
 name|dbgs
 argument_list|()
 operator|<<
@@ -379,8 +367,6 @@ argument_list|)
 expr_stmt|;
 name|DEBUG
 argument_list|(
-name|llvm
-operator|::
 name|dbgs
 argument_list|()
 operator|.
@@ -415,6 +401,10 @@ name|Ranges
 decl_stmt|;
 block|}
 empty_stmt|;
+undef|#
+directive|undef
+name|DEBUG_TYPE
+comment|// "unicode"
 block|}
 comment|// namespace sys
 block|}

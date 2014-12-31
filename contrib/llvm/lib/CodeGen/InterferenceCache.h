@@ -198,7 +198,7 @@ argument_list|)
 operator|,
 name|Fixed
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|VirtI
@@ -262,12 +262,12 @@ argument_list|)
 operator|,
 name|Indexes
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|LIS
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|void
@@ -433,15 +433,14 @@ block|}
 enum|;
 comment|// Point to an entry for each physreg. The entry pointed to may not be up to
 comment|// date, and it may have been reused for a different physreg.
-name|SmallVector
-operator|<
 name|unsigned
 name|char
-operator|,
-literal|2
-operator|>
+modifier|*
 name|PhysRegEntries
-expr_stmt|;
+decl_stmt|;
+name|size_t
+name|PhysRegEntriesCount
+decl_stmt|;
 comment|// Next round-robin entry to be picked.
 name|unsigned
 name|RoundRobin
@@ -469,15 +468,25 @@ argument_list|()
 operator|:
 name|TRI
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|LIUArray
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|MF
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|PhysRegEntries
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|PhysRegEntriesCount
 argument_list|(
 literal|0
 argument_list|)
@@ -487,27 +496,40 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+operator|~
+name|InterferenceCache
+argument_list|()
+block|{
+name|free
+argument_list|(
+name|PhysRegEntries
+argument_list|)
+block|;   }
+name|void
+name|reinitPhysRegEntries
+argument_list|()
+expr_stmt|;
 comment|/// init - Prepare cache for a new function.
 name|void
 name|init
-argument_list|(
+parameter_list|(
 name|MachineFunction
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|LiveIntervalUnion
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|SlotIndexes
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|LiveIntervals
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 specifier|const
 name|TargetRegisterInfo
-operator|*
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/// getMaxCursors - Return the maximum number of concurrent cursors that can
 comment|/// be supported.
 name|unsigned
@@ -545,7 +567,7 @@ parameter_list|)
 block|{
 name|Current
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 comment|// Update reference counts. Nothing happens when RefCount reaches 0, so
 comment|// we don't have to check for E == CacheEntry etc.
@@ -586,12 +608,12 @@ argument_list|()
 operator|:
 name|CacheEntry
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Current
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 operator|~
@@ -600,7 +622,7 @@ argument_list|()
 block|{
 name|setEntry
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|; }
 name|Cursor
@@ -613,12 +635,12 @@ argument_list|)
 operator|:
 name|CacheEntry
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Current
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|setEntry
@@ -667,7 +689,7 @@ comment|// Release reference before getting a new one. That guarantees we can
 comment|// actually have CacheEntries live cursors.
 name|setEntry
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 if|if

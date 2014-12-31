@@ -192,7 +192,7 @@ name|bool
 name|is_terminal_entry
 argument_list|)
 decl_stmt|;
-comment|// Used to instantiate the LineSequence helper classw
+comment|// Used to instantiate the LineSequence helper class
 name|LineSequence
 modifier|*
 name|CreateLineSequenceContainer
@@ -250,7 +250,7 @@ comment|//------------------------------------------------------------------
 comment|/// Dump all line entries in this line table to the stream \a s.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|///
 comment|/// @param[in] style
 comment|///     The display style for the address.

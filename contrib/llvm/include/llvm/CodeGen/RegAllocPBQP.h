@@ -76,19 +76,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/PBQP/Graph.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/PBQP/Solution.h"
+file|"llvm/CodeGen/PBQP/RegAllocSolver.h"
 end_include
 
 begin_include
@@ -119,13 +119,13 @@ decl_stmt|;
 name|class
 name|TargetRegisterInfo
 decl_stmt|;
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|class
-name|OwningPtr
+typedef|typedef
+name|PBQP
+operator|::
+name|RegAlloc
+operator|::
+name|Graph
+name|PBQPRAGraph
 expr_stmt|;
 comment|/// This class wraps up a PBQP instance representing a register allocation
 comment|/// problem, plus the structures necessary to map back from the PBQP solution
@@ -145,21 +145,17 @@ literal|16
 operator|>
 name|AllowedSet
 expr_stmt|;
-name|PBQP
-operator|::
-name|Graph
-operator|&
+name|PBQPRAGraph
+modifier|&
 name|getGraph
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|graph
 return|;
 block|}
 specifier|const
-name|PBQP
-operator|::
-name|Graph
+name|PBQPRAGraph
 operator|&
 name|getGraph
 argument_list|()
@@ -185,7 +181,7 @@ name|recordVReg
 argument_list|(
 argument|unsigned vreg
 argument_list|,
-argument|PBQP::Graph::NodeId nodeId
+argument|PBQPRAGraph::NodeId nodeId
 argument_list|,
 argument|AllowedRegsItr arBegin
 argument_list|,
@@ -276,14 +272,12 @@ comment|/// Get the virtual register corresponding to the given PBQP node.
 name|unsigned
 name|getVRegForNode
 argument_list|(
-argument|PBQP::Graph::NodeId nodeId
+argument|PBQPRAGraph::NodeId nodeId
 argument_list|)
 specifier|const
 expr_stmt|;
 comment|/// Get the PBQP node corresponding to the given virtual register.
-name|PBQP
-operator|::
-name|Graph
+name|PBQPRAGraph
 operator|::
 name|NodeId
 name|getNodeForVReg
@@ -367,9 +361,7 @@ name|std
 operator|::
 name|map
 operator|<
-name|PBQP
-operator|::
-name|Graph
+name|PBQPRAGraph
 operator|::
 name|NodeId
 operator|,
@@ -382,9 +374,7 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
-name|PBQP
-operator|::
-name|Graph
+name|PBQPRAGraph
 operator|::
 name|NodeId
 operator|>
@@ -399,11 +389,9 @@ name|AllowedSet
 operator|>
 name|AllowedSetMap
 expr_stmt|;
-name|PBQP
-operator|::
-name|Graph
+name|PBQPRAGraph
 name|graph
-expr_stmt|;
+decl_stmt|;
 name|Node2VReg
 name|node2VReg
 decl_stmt|;
@@ -546,30 +534,19 @@ name|public
 operator|:
 comment|/// Build a PBQP instance to represent the register allocation problem for
 comment|/// the given MachineFunction.
-name|virtual
 name|PBQPRAProblem
 operator|*
 name|build
 argument_list|(
-name|MachineFunction
-operator|*
-name|mf
+argument|MachineFunction *mf
 argument_list|,
-specifier|const
-name|LiveIntervals
-operator|*
-name|lis
+argument|const LiveIntervals *lis
 argument_list|,
-specifier|const
-name|MachineBlockFrequencyInfo
-operator|*
-name|mbfi
+argument|const MachineBlockFrequencyInfo *mbfi
 argument_list|,
-specifier|const
-name|RegSet
-operator|&
-name|vregs
+argument|const RegSet&vregs
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -600,18 +577,19 @@ name|FunctionPass
 modifier|*
 name|createPBQPRegisterAllocator
 argument_list|(
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PBQPBuilder
 operator|>
-operator|&
 name|builder
 argument_list|,
 name|char
 operator|*
 name|customPassID
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 block|}

@@ -202,12 +202,12 @@ typedef|typedef
 struct|struct
 name|_LineNumberInfo
 block|{
-comment|/* x86 Offset from the begining of the method*/
+comment|/* x86 Offset from the beginning of the method*/
 name|unsigned
 name|int
 name|Offset
 decl_stmt|;
-comment|/* source line number from the begining of the source file */
+comment|/* source line number from the beginning of the source file */
 name|unsigned
 name|int
 name|LineNumber
@@ -250,7 +250,7 @@ name|unsigned
 name|int
 name|line_number_size
 decl_stmt|;
-comment|/* Pointer to the begining of the line numbers info array */
+comment|/* Pointer to the beginning of the line numbers info array */
 name|pLineNumberInfo
 name|line_number_table
 decl_stmt|;

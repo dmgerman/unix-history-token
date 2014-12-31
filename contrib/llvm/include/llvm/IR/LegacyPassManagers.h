@@ -399,16 +399,16 @@ name|PassDebuggingString
 block|{
 name|EXECUTION_MSG
 block|,
-comment|// "Executing Pass '"
+comment|// "Executing Pass '" + PassName
 name|MODIFICATION_MSG
 block|,
-comment|// "' Made Modification '"
+comment|// "Made Modification '" + PassName
 name|FREEING_MSG
 block|,
-comment|// " Freeing Pass '"
+comment|// " Freeing Pass '" + PassName
 name|ON_BASICBLOCK_MSG
 block|,
-comment|// "'  on BasicBlock '" + PassName + "'...\n"
+comment|// "' on BasicBlock '" + InstructionName + "'...\n"
 name|ON_FUNCTION_MSG
 block|,
 comment|// "' on Function '" + FunctionName + "'...\n"
@@ -417,12 +417,12 @@ block|,
 comment|// "' on Module '" + ModuleName + "'...\n"
 name|ON_REGION_MSG
 block|,
-comment|// " 'on Region ...\n'"
+comment|// "' on Region '" + Msg + "'...\n'"
 name|ON_LOOP_MSG
 block|,
-comment|// " 'on Loop ...\n'"
+comment|// "' on Loop '" + Msg + "'...\n'"
 name|ON_CG_MSG
-comment|// "' on Call Graph ...\n'"
+comment|// "' on Call Graph Nodes '" + Msg + "'...\n'"
 block|}
 enum|;
 comment|/// PassManagerPrettyStackEntry - This is used to print informative information
@@ -462,12 +462,12 @@ argument_list|)
 block|,
 name|V
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|M
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|// When P is releaseMemory'd.
@@ -495,7 +495,7 @@ argument_list|)
 block|,
 name|M
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|// When P is run on V
@@ -517,7 +517,7 @@ argument_list|)
 block|,
 name|V
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|M
@@ -527,13 +527,13 @@ argument_list|)
 block|{}
 comment|// When P is run on M
 comment|/// print - Emit information about this stack frame to OS.
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&OS
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -947,7 +947,7 @@ argument_list|()
 operator|:
 name|TPM
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|Depth
@@ -1105,7 +1105,7 @@ index|[
 name|i
 index|]
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 block|}
 comment|// Return true if P preserves high level analysis used by other
@@ -1510,12 +1510,13 @@ argument_list|)
 expr_stmt|;
 name|bool
 name|runOnModule
-parameter_list|(
+argument_list|(
 name|Module
-modifier|&
+operator|&
 name|M
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// cleanup - After running all passes, clean up pass manager cache.
 name|void
 name|cleanup
@@ -1533,12 +1534,13 @@ comment|/// doInitialization - Run all of the initializers for the function pass
 comment|///
 name|bool
 name|doInitialization
-parameter_list|(
+argument_list|(
 name|Module
-modifier|&
+operator|&
 name|M
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// doFinalization - Overrides ModulePass doFinalization for global
 comment|/// finalization tasks
 comment|///
@@ -1551,27 +1553,28 @@ comment|/// doFinalization - Run all of the finalizers for the function passes.
 comment|///
 name|bool
 name|doFinalization
-parameter_list|(
+argument_list|(
 name|Module
-modifier|&
+operator|&
 name|M
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|PMDataManager
 modifier|*
 name|getAsPMDataManager
 parameter_list|()
+function|override
 block|{
 return|return
 name|this
 return|;
 block|}
-name|virtual
 name|Pass
 modifier|*
 name|getAsPass
 parameter_list|()
+function|override
 block|{
 return|return
 name|this
@@ -1586,6 +1589,7 @@ operator|&
 name|Info
 argument_list|)
 decl|const
+name|override
 block|{
 name|Info
 operator|.
@@ -1596,18 +1600,19 @@ block|}
 comment|// Print passes managed by this manager
 name|void
 name|dumpPassStructure
-parameter_list|(
+argument_list|(
 name|unsigned
 name|Offset
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 specifier|const
 name|char
 operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"Function Pass Manager"
@@ -1653,11 +1658,11 @@ return|return
 name|FP
 return|;
 block|}
-name|virtual
 name|PassManagerType
 name|getPassManagerType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|PMT_FunctionPassManager

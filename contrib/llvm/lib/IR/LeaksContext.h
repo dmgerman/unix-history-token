@@ -51,6 +51,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_IR_LEAKSCONTEXT_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_IR_LEAKSCONTEXT_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -61,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_decl_stmt
@@ -135,7 +153,7 @@ argument_list|)
 operator|:
 name|Cache
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Name
@@ -149,7 +167,7 @@ argument_list|()
 block|{
 name|Cache
 operator|=
-literal|0
+name|nullptr
 block|;
 name|Ts
 operator|.
@@ -232,7 +250,7 @@ name|Cache
 condition|)
 name|Cache
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 comment|// Cache hit
 else|else
@@ -252,15 +270,14 @@ argument_list|)
 block|{
 name|addGarbage
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|;
 comment|// Flush the Cache
 name|assert
 argument_list|(
+operator|!
 name|Cache
-operator|==
-literal|0
 operator|&&
 literal|"No value should be cached anymore!"
 argument_list|)
@@ -382,6 +399,15 @@ block|; }
 expr_stmt|;
 block|}
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// LLVM_IR_LEAKSCONTEXT_H
+end_comment
 
 end_unit
 

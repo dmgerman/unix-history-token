@@ -121,10 +121,6 @@ name|MCContext
 operator|&
 name|Context
 argument_list|,
-name|MCTargetStreamer
-operator|*
-name|TargetStreamer
-argument_list|,
 name|MCAsmBackend
 operator|&
 name|TAB
@@ -141,8 +137,6 @@ operator|:
 name|MCObjectStreamer
 argument_list|(
 name|Context
-argument_list|,
-name|TargetStreamer
 argument_list|,
 name|TAB
 argument_list|,
@@ -161,10 +155,6 @@ argument_list|(
 name|MCContext
 operator|&
 name|Context
-argument_list|,
-name|MCTargetStreamer
-operator|*
-name|TargetStreamer
 argument_list|,
 name|MCAsmBackend
 operator|&
@@ -187,8 +177,6 @@ name|MCObjectStreamer
 argument_list|(
 name|Context
 argument_list|,
-name|TargetStreamer
-argument_list|,
 name|TAB
 argument_list|,
 name|OS
@@ -210,80 +198,50 @@ argument_list|()
 block|;
 comment|/// @name MCStreamer Interface
 comment|/// @{
-name|virtual
 name|void
 name|InitSections
 argument_list|()
+name|override
 block|;
-name|virtual
-name|void
-name|InitToTextSection
-argument_list|()
-block|;
-name|virtual
 name|void
 name|ChangeSection
 argument_list|(
-specifier|const
-name|MCSection
-operator|*
-name|Section
+argument|const MCSection *Section
 argument_list|,
-specifier|const
-name|MCExpr
-operator|*
-name|Subsection
+argument|const MCExpr *Subsection
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitLabel
 argument_list|(
-name|MCSymbol
-operator|*
-name|Symbol
+argument|MCSymbol *Symbol
 argument_list|)
+name|override
 block|;
-name|virtual
-name|void
-name|EmitDebugLabel
-argument_list|(
-name|MCSymbol
-operator|*
-name|Symbol
-argument_list|)
-block|;
-name|virtual
 name|void
 name|EmitAssemblerFlag
 argument_list|(
 argument|MCAssemblerFlag Flag
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitThumbFunc
 argument_list|(
-name|MCSymbol
-operator|*
-name|Func
+argument|MCSymbol *Func
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitWeakReference
 argument_list|(
-name|MCSymbol
-operator|*
-name|Alias
+argument|MCSymbol *Alias
 argument_list|,
-specifier|const
-name|MCSymbol
-operator|*
-name|Symbol
+argument|const MCSymbol *Symbol
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|EmitSymbolAttribute
 argument_list|(
@@ -291,8 +249,8 @@ argument|MCSymbol *Symbol
 argument_list|,
 argument|MCSymbolAttr Attribute
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitSymbolDesc
 argument_list|(
@@ -300,8 +258,8 @@ argument|MCSymbol *Symbol
 argument_list|,
 argument|unsigned DescValue
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitCommonSymbol
 argument_list|(
@@ -311,61 +269,43 @@ argument|uint64_t Size
 argument_list|,
 argument|unsigned ByteAlignment
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|BeginCOFFSymbolDef
 argument_list|(
-specifier|const
-name|MCSymbol
-operator|*
-name|Symbol
+argument|const MCSymbol *Symbol
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitCOFFSymbolStorageClass
 argument_list|(
 argument|int StorageClass
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitCOFFSymbolType
 argument_list|(
 argument|int Type
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EndCOFFSymbolDef
 argument_list|()
+name|override
 block|;
-name|virtual
-name|MCSymbolData
-operator|&
-name|getOrCreateSymbolData
-argument_list|(
-name|MCSymbol
-operator|*
-name|Symbol
-argument_list|)
-block|;
-name|virtual
 name|void
 name|EmitELFSize
 argument_list|(
-name|MCSymbol
-operator|*
-name|Symbol
+argument|MCSymbol *Symbol
 argument_list|,
-specifier|const
-name|MCExpr
-operator|*
-name|Value
+argument|const MCExpr *Value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitLocalCommonSymbol
 argument_list|(
@@ -375,15 +315,14 @@ argument|uint64_t Size
 argument_list|,
 argument|unsigned ByteAlignment
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitZerofill
 argument_list|(
 argument|const MCSection *Section
 argument_list|,
-argument|MCSymbol *Symbol =
-literal|0
+argument|MCSymbol *Symbol = nullptr
 argument_list|,
 argument|uint64_t Size =
 literal|0
@@ -391,8 +330,8 @@ argument_list|,
 argument|unsigned ByteAlignment =
 literal|0
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitTBSSSymbol
 argument_list|(
@@ -405,93 +344,94 @@ argument_list|,
 argument|unsigned ByteAlignment =
 literal|0
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitValueImpl
 argument_list|(
 argument|const MCExpr *Value
 argument_list|,
 argument|unsigned Size
+argument_list|,
+argument|const SMLoc&Loc = SMLoc()
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitFileDirective
 argument_list|(
 argument|StringRef Filename
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitIdent
 argument_list|(
 argument|StringRef IdentString
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitValueToAlignment
 argument_list|(
-name|unsigned
+argument|unsigned
 argument_list|,
-name|int64_t
+argument|int64_t
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|Flush
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|FinishImpl
 argument_list|()
+name|override
 block|;
-name|private
-operator|:
-name|virtual
-name|void
-name|EmitInstToFragment
-argument_list|(
-specifier|const
-name|MCInst
-operator|&
-name|Inst
-argument_list|)
-block|;
-name|virtual
-name|void
-name|EmitInstToData
-argument_list|(
-specifier|const
-name|MCInst
-operator|&
-name|Inst
-argument_list|)
-block|;
-name|virtual
 name|void
 name|EmitBundleAlignMode
 argument_list|(
 argument|unsigned AlignPow2
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitBundleLock
 argument_list|(
 argument|bool AlignToEnd
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitBundleUnlock
 argument_list|()
+name|override
+block|;
+name|private
+operator|:
+name|void
+name|EmitInstToFragment
+argument_list|(
+argument|const MCInst&Inst
+argument_list|,
+argument|const MCSubtargetInfo&
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitInstToData
+argument_list|(
+argument|const MCInst&Inst
+argument_list|,
+argument|const MCSubtargetInfo&
+argument_list|)
+name|override
 block|;
 name|void
 name|fixSymbolsInTLSFixups
@@ -534,30 +474,6 @@ block|,
 literal|16
 operator|>
 name|BindingExplicitlySet
-block|;
-name|void
-name|SetSection
-argument_list|(
-argument|StringRef Section
-argument_list|,
-argument|unsigned Type
-argument_list|,
-argument|unsigned Flags
-argument_list|,
-argument|SectionKind Kind
-argument_list|)
-block|;
-name|void
-name|SetSectionData
-argument_list|()
-block|;
-name|void
-name|SetSectionText
-argument_list|()
-block|;
-name|void
-name|SetSectionBss
-argument_list|()
 block|; }
 decl_stmt|;
 name|MCELFStreamer

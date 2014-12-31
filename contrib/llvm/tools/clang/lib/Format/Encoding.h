@@ -289,6 +289,10 @@ argument_list|(
 name|Text
 argument_list|)
 decl_stmt|;
+comment|// FIXME: Figure out the correct way to handle this in the presence of both
+comment|// printable and unprintable multi-byte UTF-8 characters. Falling back to
+comment|// returning the number of bytes may cause problems, as columnWidth suddenly
+comment|// becomes non-additive.
 if|if
 condition|(
 name|ContentWidth
@@ -372,9 +376,8 @@ argument_list|,
 name|Encoding
 argument_list|)
 return|;
-name|int
-name|Width
-init|=
+name|TotalWidth
+operator|+=
 name|columnWidth
 argument_list|(
 name|Tail
@@ -388,17 +391,6 @@ argument_list|)
 argument_list|,
 name|Encoding
 argument_list|)
-decl_stmt|;
-name|assert
-argument_list|(
-name|Width
-operator|>=
-literal|0
-argument_list|)
-expr_stmt|;
-name|TotalWidth
-operator|+=
-name|Width
 expr_stmt|;
 name|TotalWidth
 operator|+=

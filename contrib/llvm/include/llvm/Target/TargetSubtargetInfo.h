@@ -210,6 +210,24 @@ name|enableMachineScheduler
 argument_list|()
 specifier|const
 decl_stmt|;
+comment|/// \brief True if the subtarget should run PostMachineScheduler.
+comment|///
+comment|/// This only takes effect if the target has configured the
+comment|/// PostMachineScheduler pass to run, or if the global cl::opt flag,
+comment|/// MISchedPostRA, is set.
+name|virtual
+name|bool
+name|enablePostMachineScheduler
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief True if the subtarget should run the atomic expansion pass.
+name|virtual
+name|bool
+name|enableAtomicExpandLoadLinked
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Override generic scheduling policy within a region.
 comment|///
 comment|/// This is a convenient way for targets that don't provide any custom
@@ -236,32 +254,8 @@ name|NumRegionInstrs
 argument_list|)
 decl|const
 block|{}
-comment|// enablePostRAScheduler - If the target can benefit from post-regalloc
-comment|// scheduling and the specified optimization level meets the requirement
-comment|// return true to enable post-register-allocation scheduling. In
-comment|// CriticalPathRCs return any register classes that should only be broken
-comment|// if on the critical path.
-name|virtual
-name|bool
-name|enablePostRAScheduler
-argument_list|(
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
-argument_list|,
-name|AntiDepBreakMode
-operator|&
-name|Mode
-argument_list|,
-name|RegClassVector
-operator|&
-name|CriticalPathRCs
-argument_list|)
-decl|const
-decl_stmt|;
-comment|// adjustSchedDependency - Perform target specific adjustments to
-comment|// the latency of a schedule dependency.
+comment|// \brief Perform target specific adjustments to the latency of a schedule
+comment|// dependency.
 name|virtual
 name|void
 name|adjustSchedDependency
@@ -280,6 +274,69 @@ name|dep
 argument_list|)
 decl|const
 block|{ }
+comment|// For use with PostRAScheduling: get the anti-dependence breaking that should
+comment|// be performed before post-RA scheduling.
+name|virtual
+name|AntiDepBreakMode
+name|getAntiDepBreakMode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ANTIDEP_NONE
+return|;
+block|}
+comment|// For use with PostRAScheduling: in CriticalPathRCs, return any register
+comment|// classes that should only be considered for anti-dependence breaking if they
+comment|// are on the critical path.
+name|virtual
+name|void
+name|getCriticalPathRCs
+argument_list|(
+name|RegClassVector
+operator|&
+name|CriticalPathRCs
+argument_list|)
+decl|const
+block|{
+return|return
+name|CriticalPathRCs
+operator|.
+name|clear
+argument_list|()
+return|;
+block|}
+comment|// For use with PostRAScheduling: get the minimum optimization level needed
+comment|// to enable post-RA scheduling.
+name|virtual
+name|CodeGenOpt
+operator|::
+name|Level
+name|getOptLevelToEnablePostRAScheduler
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CodeGenOpt
+operator|::
+name|Default
+return|;
+block|}
+comment|/// \brief True if the subtarget should run the local reassignment
+comment|/// heuristic of the register allocator.
+comment|/// This heuristic may be compile time intensive, \p OptLevel provides
+comment|/// a finer grain to tune the register allocator.
+name|virtual
+name|bool
+name|enableRALocalReassignment
+argument_list|(
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Enable use of alias analysis during code generation (during MI
 comment|/// scheduling, DAGCombine, etc.).
 name|virtual
@@ -288,6 +345,17 @@ name|useAA
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Enable the use of the early if conversion pass.
+name|virtual
+name|bool
+name|enableEarlyIfConversion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Reset the features for the subtarget.
 name|virtual
 name|void

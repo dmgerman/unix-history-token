@@ -110,7 +110,7 @@ label|:
 comment|//------------------------------------------------------------------
 comment|/// Constructor
 comment|///
-comment|/// Initializes class variabes.
+comment|/// Initializes class variables.
 comment|///
 comment|/// @param[in] exe_scope,
 comment|///     If non-NULL, an execution context scope that can help to
@@ -122,15 +122,13 @@ comment|///     The expression to be parsed.
 comment|//------------------------------------------------------------------
 name|ClangExpressionParser
 argument_list|(
-name|ExecutionContextScope
-operator|*
-name|exe_scope
+argument|ExecutionContextScope *exe_scope
 argument_list|,
-name|ClangExpression
-operator|&
-name|expr
+argument|ClangExpression&expr
+argument_list|,
+argument|bool generate_debug_info
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Destructor
 comment|//------------------------------------------------------------------
@@ -169,9 +167,9 @@ comment|///     The end of the function's allocated memory region.  (func_addr
 comment|///     and func_end do not delimit an allocated region; the allocated
 comment|///     region may begin before func_addr.)
 comment|///
-comment|/// @param[in] execution_unit_ap
+comment|/// @param[in] execution_unit_sp
 comment|///     After parsing, ownership of the execution unit for
-comment|///     for the expression is handed to this unique pointer.
+comment|///     for the expression is handed to this shared pointer.
 comment|///
 comment|/// @param[in] exe_ctx
 comment|///     The execution context to write the function into.
@@ -211,12 +209,12 @@ name|func_end
 argument_list|,
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|IRExecutionUnit
 operator|>
 operator|&
-name|execution_unit_ap
+name|execution_unit_sp
 argument_list|,
 name|ExecutionContext
 operator|&
@@ -257,6 +255,11 @@ modifier|&
 name|exe_ctx
 parameter_list|)
 function_decl|;
+name|bool
+name|GetGenerateDebugInfo
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 name|ClangExpression
@@ -343,15 +346,6 @@ operator|>
 name|m_code_generator
 expr_stmt|;
 comment|///< The Clang object that generates IR
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|IRExecutionUnit
-operator|>
-name|m_execution_unit
-expr_stmt|;
-comment|///< The container for the finished Module
 block|}
 empty_stmt|;
 block|}

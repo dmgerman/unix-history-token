@@ -141,7 +141,9 @@ name|LipoJobClass
 block|,
 name|DsymutilJobClass
 block|,
-name|VerifyJobClass
+name|VerifyDebugInfoJobClass
+block|,
+name|VerifyPCHJobClass
 block|,
 name|JobClassFirst
 init|=
@@ -149,7 +151,7 @@ name|PreprocessJobClass
 block|,
 name|JobClassLast
 init|=
-name|VerifyJobClass
+name|VerifyPCHJobClass
 block|}
 enum|;
 specifier|static
@@ -602,10 +604,10 @@ operator|:
 name|public
 name|JobAction
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -640,10 +642,10 @@ operator|:
 name|public
 name|JobAction
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -678,10 +680,10 @@ operator|:
 name|public
 name|JobAction
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -716,10 +718,10 @@ operator|:
 name|public
 name|JobAction
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -754,10 +756,10 @@ operator|:
 name|public
 name|JobAction
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -792,10 +794,10 @@ operator|:
 name|public
 name|JobAction
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -830,10 +832,10 @@ operator|:
 name|public
 name|JobAction
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -868,10 +870,10 @@ operator|:
 name|public
 name|JobAction
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -906,10 +908,10 @@ operator|:
 name|public
 name|JobAction
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -944,15 +946,26 @@ operator|:
 name|public
 name|JobAction
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
 name|VerifyJobAction
 argument_list|(
+argument|ActionClass Kind
+argument_list|,
+argument|Action *Input
+argument_list|,
+argument|types::ID Type
+argument_list|)
+block|;
+name|VerifyJobAction
+argument_list|(
+argument|ActionClass Kind
+argument_list|,
 argument|ActionList&Inputs
 argument_list|,
 argument|types::ID Type
@@ -971,7 +984,90 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|VerifyJobClass
+name|VerifyDebugInfoJobClass
+operator|||
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|VerifyPCHJobClass
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|VerifyDebugInfoJobAction
+operator|:
+name|public
+name|VerifyJobAction
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
+block|;
+name|public
+operator|:
+name|VerifyDebugInfoJobAction
+argument_list|(
+argument|Action *Input
+argument_list|,
+argument|types::ID Type
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Action *A
+argument_list|)
+block|{
+return|return
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|VerifyDebugInfoJobClass
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|VerifyPCHJobAction
+operator|:
+name|public
+name|VerifyJobAction
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
+block|;
+name|public
+operator|:
+name|VerifyPCHJobAction
+argument_list|(
+argument|Action *Input
+argument_list|,
+argument|types::ID Type
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Action *A
+argument_list|)
+block|{
+return|return
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|VerifyPCHJobClass
 return|;
 block|}
 expr|}

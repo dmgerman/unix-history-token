@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/Support/AlignOf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/AlignOf.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -91,22 +91,11 @@ directive|include
 file|<cassert>
 end_include
 
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_include
 include|#
 directive|include
 file|<utility>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|namespace
@@ -200,9 +189,6 @@ name|O
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
 name|Optional
 argument_list|(
 name|T
@@ -367,8 +353,6 @@ operator|*
 name|this
 return|;
 block|}
-endif|#
-directive|endif
 specifier|static
 specifier|inline
 name|Optional

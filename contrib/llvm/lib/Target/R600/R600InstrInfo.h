@@ -121,18 +121,6 @@ specifier|const
 name|R600RegisterInfo
 name|RI
 block|;
-specifier|const
-name|AMDGPUSubtarget
-operator|&
-name|ST
-block|;
-name|int
-name|getBranchInstr
-argument_list|(
-argument|const MachineOperand&op
-argument_list|)
-specifier|const
-block|;
 name|std
 operator|::
 name|vector
@@ -155,6 +143,40 @@ argument_list|,
 argument|unsigned>&PV
 argument_list|,
 argument|unsigned&ConstCount
+argument_list|)
+specifier|const
+block|;
+name|MachineInstrBuilder
+name|buildIndirectRead
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned ValueReg
+argument_list|,
+argument|unsigned Address
+argument_list|,
+argument|unsigned OffsetReg
+argument_list|,
+argument|unsigned AddrChan
+argument_list|)
+specifier|const
+block|;
+name|MachineInstrBuilder
+name|buildIndirectWrite
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned ValueReg
+argument_list|,
+argument|unsigned Address
+argument_list|,
+argument|unsigned OffsetReg
+argument_list|,
+argument|unsigned AddrChan
 argument_list|)
 specifier|const
 block|;
@@ -181,9 +203,10 @@ block|;
 name|explicit
 name|R600InstrInfo
 argument_list|(
-name|AMDGPUTargetMachine
+specifier|const
+name|AMDGPUSubtarget
 operator|&
-name|tm
+name|st
 argument_list|)
 block|;
 specifier|const
@@ -192,8 +215,8 @@ operator|&
 name|getRegisterInfo
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|copyPhysReg
 argument_list|(
@@ -210,6 +233,7 @@ argument_list|,
 argument|bool KillSrc
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isLegalToSplitMBBAt
@@ -219,6 +243,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isTrig
@@ -507,7 +532,7 @@ argument|const std::vector<unsigned>&
 argument_list|)
 specifier|const
 block|;
-comment|/// \breif Vector instructions are instructions that must fill all
+comment|/// \brief Vector instructions are instructions that must fill all
 comment|/// instruction slots within an instruction group.
 name|bool
 name|isVector
@@ -516,19 +541,13 @@ argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|unsigned
-name|getIEQOpcode
-argument_list|()
-specifier|const
-block|;
-name|virtual
 name|bool
 name|isMov
 argument_list|(
 argument|unsigned Opcode
 argument_list|)
 specifier|const
+name|override
 block|;
 name|DFAPacketizer
 operator|*
@@ -539,6 +558,7 @@ argument_list|,
 argument|const ScheduleDAG *DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|ReverseBranchCondition
@@ -546,6 +566,7 @@ argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|AnalyzeBranch
@@ -561,6 +582,7 @@ argument_list|,
 argument|bool AllowModify
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|InsertBranch
@@ -576,6 +598,7 @@ argument_list|,
 argument|DebugLoc DL
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|RemoveBranch
@@ -583,6 +606,7 @@ argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isPredicated
@@ -590,6 +614,7 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isPredicable
@@ -597,6 +622,7 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isProfitableToDupForIfCvt
@@ -608,6 +634,7 @@ argument_list|,
 argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isProfitableToIfCvt
@@ -621,6 +648,7 @@ argument_list|,
 argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isProfitableToIfCvt
@@ -640,6 +668,7 @@ argument_list|,
 argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|DefinesPredicate
@@ -649,6 +678,7 @@ argument_list|,
 argument|std::vector<MachineOperand>&Pred
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|SubsumesPredicate
@@ -658,6 +688,7 @@ argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Pred2
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isProfitableToUnpredicate
@@ -667,6 +698,7 @@ argument_list|,
 argument|MachineBasicBlock&FMBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|PredicateInstruction
@@ -676,6 +708,7 @@ argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Pred
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|int
@@ -684,6 +717,7 @@ argument_list|(
 argument|const MachineInstr *
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|int
@@ -693,12 +727,11 @@ argument|const InstrItineraryData *ItinData
 argument_list|,
 argument|const MachineInstr *MI
 argument_list|,
-argument|unsigned *PredCost =
-literal|0
+argument|unsigned *PredCost = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|int
 name|getInstrLatency
 argument_list|(
@@ -707,11 +740,20 @@ argument_list|,
 argument|SDNode *Node
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 literal|1
 return|;
 block|}
+name|virtual
+name|bool
+name|expandPostRAPseudo
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief Reserve the registers that may be accesed using indirect addressing.
 name|void
 name|reserveIndirectRegisters
@@ -722,7 +764,6 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|unsigned
 name|calculateIndirectAddress
 argument_list|(
@@ -731,16 +772,16 @@ argument_list|,
 argument|unsigned Channel
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|TargetRegisterClass
 operator|*
 name|getIndirectAddrRegClass
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineInstrBuilder
 name|buildIndirectWrite
 argument_list|(
@@ -755,8 +796,8 @@ argument_list|,
 argument|unsigned OffsetReg
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineInstrBuilder
 name|buildIndirectRead
 argument_list|(
@@ -771,6 +812,7 @@ argument_list|,
 argument|unsigned OffsetReg
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getMaxAlusPerClause
@@ -843,6 +885,7 @@ argument_list|,
 argument|unsigned SrcReg
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// \brief Get the index of Op in the MachineInstr.
 comment|///

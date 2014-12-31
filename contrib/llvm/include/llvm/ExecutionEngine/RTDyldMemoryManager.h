@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm-c/ExecutionEngine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Memory.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm-c/ExecutionEngine.h"
 end_include
 
 begin_decl_stmt
@@ -178,6 +178,38 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// Inform the memory manager about the total amount of memory required to
+comment|/// allocate all sections to be loaded:
+comment|/// \p CodeSize - the total size of all code sections
+comment|/// \p DataSizeRO - the total size of all read-only data sections
+comment|/// \p DataSizeRW - the total size of all read-write data sections
+comment|///
+comment|/// Note that by default the callback is disabled. To enable it
+comment|/// redefine the method needsToReserveAllocationSpace to return true.
+name|virtual
+name|void
+name|reserveAllocationSpace
+parameter_list|(
+name|uintptr_t
+name|CodeSize
+parameter_list|,
+name|uintptr_t
+name|DataSizeRO
+parameter_list|,
+name|uintptr_t
+name|DataSizeRW
+parameter_list|)
+block|{ }
+comment|/// Override to return true to enable the reserveAllocationSpace callback.
+name|virtual
+name|bool
+name|needsToReserveAllocationSpace
+parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Register the EH frames with the runtime so that c++ exceptions work.
 comment|///
 comment|/// \p Addr parameter provides the local address of the EH frame section
@@ -297,7 +329,7 @@ name|string
 operator|*
 name|ErrMsg
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 init|=
 literal|0

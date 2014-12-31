@@ -81,6 +81,12 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -205,7 +211,7 @@ argument_list|)
 operator|,
 name|NextState
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|Stack
@@ -582,18 +588,28 @@ decl_stmt|;
 comment|/// \brief Remove the given set of modules.
 name|void
 name|removeModules
-parameter_list|(
+argument_list|(
 name|ModuleIterator
 name|first
-parameter_list|,
+argument_list|,
 name|ModuleIterator
 name|last
-parameter_list|,
+argument_list|,
+name|llvm
+operator|::
+name|SmallPtrSetImpl
+operator|<
+name|ModuleFile
+operator|*
+operator|>
+operator|&
+name|LoadedSuccessfully
+argument_list|,
 name|ModuleMap
-modifier|*
+operator|*
 name|modMap
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// \brief Add an in-memory buffer the list of known buffers
 name|void
 name|addInMemoryBuffer
@@ -684,7 +700,7 @@ operator|>
 operator|*
 name|ModuleFilesHit
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// \brief Visit each of the modules with a depth-first traversal.

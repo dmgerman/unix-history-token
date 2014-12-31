@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -92,7 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/Mangler.h"
+file|"llvm/MC/MCObjectFileInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/IRObjectFile.h"
 end_include
 
 begin_include
@@ -136,30 +136,15 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
-comment|/// LTOModule - C++ class which implements the opaque lto_module_t type.
-end_comment
-
-begin_comment
+comment|/// C++ class which implements the opaque lto_module_t type.
 comment|///
-end_comment
-
-begin_struct
 struct|struct
 name|LTOModule
 block|{
 name|private
 label|:
 typedef|typedef
-name|llvm
-operator|::
 name|StringMap
 operator|<
 name|uint8_t
@@ -181,33 +166,52 @@ name|bool
 name|isFunction
 decl_stmt|;
 specifier|const
-name|llvm
-operator|::
 name|GlobalValue
-operator|*
+modifier|*
 name|symbol
-expr_stmt|;
+decl_stmt|;
 block|}
 struct|;
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
-name|llvm
+name|object
 operator|::
-name|Module
+name|IRObjectFile
 operator|>
-name|_module
+name|IRFile
 expr_stmt|;
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
-name|llvm
-operator|::
 name|TargetMachine
 operator|>
 name|_target
+expr_stmt|;
+name|StringSet
+name|_linkeropt_strings
+decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|_deplibs
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|_linkeropts
 expr_stmt|;
 name|std
 operator|::
@@ -221,8 +225,6 @@ comment|// _defines and _undefines only needed to disambiguate tentative definit
 name|StringSet
 name|_defines
 decl_stmt|;
-name|llvm
-operator|::
 name|StringMap
 operator|<
 name|NameAndAttributes
@@ -239,36 +241,26 @@ operator|*
 operator|>
 name|_asm_undefines
 expr_stmt|;
-name|llvm
-operator|::
-name|MCContext
-name|_context
-expr_stmt|;
-comment|// Use mangler to add GlobalPrefix to names to match linker names.
-name|llvm
-operator|::
-name|Mangler
-name|_mangler
-expr_stmt|;
 name|LTOModule
 argument_list|(
-name|llvm
+name|std
 operator|::
-name|Module
-operator|*
-name|m
+name|unique_ptr
+operator|<
+name|object
+operator|::
+name|IRObjectFile
+operator|>
+name|Obj
 argument_list|,
-name|llvm
-operator|::
 name|TargetMachine
 operator|*
-name|t
+name|TM
 argument_list|)
 expr_stmt|;
 name|public
 label|:
-comment|/// isBitcodeFile - Returns 'true' if the file or memory contents is LLVM
-comment|/// bitcode.
+comment|/// Returns 'true' if the file or memory contents is LLVM bitcode.
 specifier|static
 name|bool
 name|isBitcodeFile
@@ -292,11 +284,25 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
-comment|/// isBitcodeFileForTarget - Returns 'true' if the file or memory contents
-comment|/// is LLVM bitcode for the specified triple.
+comment|/// Returns 'true' if the memory buffer is LLVM bitcode for the specified
+comment|/// triple.
 specifier|static
 name|bool
-name|isBitcodeFileForTarget
+name|isBitcodeForTarget
+parameter_list|(
+name|MemoryBuffer
+modifier|*
+name|memBuffer
+parameter_list|,
+name|StringRef
+name|triplePrefix
+parameter_list|)
+function_decl|;
+comment|/// Create a MemoryBuffer from a memory range with an optional name.
+specifier|static
+name|MemoryBuffer
+modifier|*
+name|makeBuffer
 parameter_list|(
 specifier|const
 name|void
@@ -306,30 +312,15 @@ parameter_list|,
 name|size_t
 name|length
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|triplePrefix
+name|StringRef
+name|name
+init|=
+literal|""
 parameter_list|)
 function_decl|;
-specifier|static
-name|bool
-name|isBitcodeFileForTarget
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|triplePrefix
-parameter_list|)
-function_decl|;
-comment|/// makeLTOModule - Create an LTOModule. N.B. These methods take ownership
-comment|/// of the buffer. The caller must have initialized the Targets, the
-comment|/// TargetMCs, the AsmPrinters, and the AsmParsers by calling:
+comment|/// Create an LTOModule. N.B. These methods take ownership of the buffer. The
+comment|/// caller must have initialized the Targets, the TargetMCs, the AsmPrinters,
+comment|/// and the AsmParsers by calling:
 comment|///
 comment|/// InitializeAllTargets();
 comment|/// InitializeAllTargetMCs();
@@ -338,15 +329,13 @@ comment|/// InitializeAllAsmParsers();
 specifier|static
 name|LTOModule
 modifier|*
-name|makeLTOModule
+name|createFromFile
 argument_list|(
 specifier|const
 name|char
 operator|*
 name|path
 argument_list|,
-name|llvm
-operator|::
 name|TargetOptions
 name|options
 argument_list|,
@@ -360,7 +349,7 @@ decl_stmt|;
 specifier|static
 name|LTOModule
 modifier|*
-name|makeLTOModule
+name|createFromOpenFile
 argument_list|(
 name|int
 name|fd
@@ -373,8 +362,6 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|llvm
-operator|::
 name|TargetOptions
 name|options
 argument_list|,
@@ -388,7 +375,7 @@ decl_stmt|;
 specifier|static
 name|LTOModule
 modifier|*
-name|makeLTOModule
+name|createFromOpenFileSlice
 argument_list|(
 name|int
 name|fd
@@ -404,8 +391,6 @@ argument_list|,
 name|off_t
 name|offset
 argument_list|,
-name|llvm
-operator|::
 name|TargetOptions
 name|options
 argument_list|,
@@ -419,7 +404,7 @@ decl_stmt|;
 specifier|static
 name|LTOModule
 modifier|*
-name|makeLTOModule
+name|createFromBuffer
 argument_list|(
 specifier|const
 name|void
@@ -429,8 +414,6 @@ argument_list|,
 name|size_t
 name|length
 argument_list|,
-name|llvm
-operator|::
 name|TargetOptions
 name|options
 argument_list|,
@@ -439,44 +422,81 @@ operator|::
 name|string
 operator|&
 name|errMsg
+argument_list|,
+name|StringRef
+name|path
+operator|=
+literal|""
 argument_list|)
 decl_stmt|;
-comment|/// getTargetTriple - Return the Module's target triple.
 specifier|const
-name|char
-modifier|*
-name|getTargetTriple
-parameter_list|()
+name|Module
+operator|&
+name|getModule
+argument_list|()
+specifier|const
 block|{
 return|return
-name|_module
+name|const_cast
+operator|<
+name|LTOModule
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
 operator|->
-name|getTargetTriple
-argument_list|()
-operator|.
-name|c_str
+name|getModule
 argument_list|()
 return|;
 block|}
-comment|/// setTargetTriple - Set the Module's target triple.
+name|Module
+modifier|&
+name|getModule
+parameter_list|()
+block|{
+return|return
+name|IRFile
+operator|->
+name|getModule
+argument_list|()
+return|;
+block|}
+comment|/// Return the Module's target triple.
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getTargetTriple
+argument_list|()
+block|{
+return|return
+name|getModule
+argument_list|()
+operator|.
+name|getTargetTriple
+argument_list|()
+return|;
+block|}
+comment|/// Set the Module's target triple.
 name|void
 name|setTargetTriple
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|triple
+name|StringRef
+name|Triple
 parameter_list|)
 block|{
-name|_module
-operator|->
+name|getModule
+argument_list|()
+operator|.
 name|setTargetTriple
 argument_list|(
-name|triple
+name|Triple
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// getSymbolCount - Get the number of symbols
+comment|/// Get the number of symbols
 name|uint32_t
 name|getSymbolCount
 parameter_list|()
@@ -488,8 +508,7 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// getSymbolAttributes - Get the attributes for a symbol at the specified
-comment|/// index.
+comment|/// Get the attributes for a symbol at the specified index.
 name|lto_symbol_attributes
 name|getSymbolAttributes
 parameter_list|(
@@ -524,7 +543,7 @@ literal|0
 argument_list|)
 return|;
 block|}
-comment|/// getSymbolName - Get the name of the symbol at the specified index.
+comment|/// Get the name of the symbol at the specified index.
 specifier|const
 name|char
 modifier|*
@@ -552,25 +571,91 @@ operator|.
 name|name
 return|;
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
-comment|/// getLLVVMModule - Return the Module.
-name|llvm
-operator|::
-name|Module
-operator|*
-name|getLLVVMModule
-argument_list|()
+comment|/// Get the number of dependent libraries
+name|uint32_t
+name|getDependentLibraryCount
+parameter_list|()
 block|{
 return|return
-name|_module
+name|_deplibs
 operator|.
-name|get
+name|size
 argument_list|()
 return|;
 block|}
-comment|/// getAsmUndefinedRefs -
+comment|/// Get the dependent library at the specified index.
+specifier|const
+name|char
+modifier|*
+name|getDependentLibrary
+parameter_list|(
+name|uint32_t
+name|index
+parameter_list|)
+block|{
+if|if
+condition|(
+name|index
+operator|<
+name|_deplibs
+operator|.
+name|size
+argument_list|()
+condition|)
+return|return
+name|_deplibs
+index|[
+name|index
+index|]
+return|;
+return|return
+name|nullptr
+return|;
+block|}
+comment|/// Get the number of linker options
+name|uint32_t
+name|getLinkerOptCount
+parameter_list|()
+block|{
+return|return
+name|_linkeropts
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// Get the linker option at the specified index.
+specifier|const
+name|char
+modifier|*
+name|getLinkerOpt
+parameter_list|(
+name|uint32_t
+name|index
+parameter_list|)
+block|{
+if|if
+condition|(
+name|index
+operator|<
+name|_linkeropts
+operator|.
+name|size
+argument_list|()
+condition|)
+return|return
+name|_linkeropts
+index|[
+name|index
+index|]
+return|;
+return|return
+name|nullptr
+return|;
+block|}
 specifier|const
 name|std
 operator|::
@@ -590,8 +675,14 @@ return|;
 block|}
 name|private
 label|:
-comment|/// parseSymbols - Parse the symbols from the module and model-level ASM and
-comment|/// add them to either the defined or undefined lists.
+comment|/// Parse metadata from the module
+comment|// FIXME: it only parses "Linker Options" metadata at the moment
+name|void
+name|parseMetadata
+parameter_list|()
+function_decl|;
+comment|/// Parse the symbols from the module and model-level ASM and add them to
+comment|/// either the defined or undefined lists.
 name|bool
 name|parseSymbols
 argument_list|(
@@ -602,75 +693,92 @@ operator|&
 name|errMsg
 argument_list|)
 decl_stmt|;
-comment|/// addPotentialUndefinedSymbol - Add a symbol which isn't defined just yet
-comment|/// to a list to be resolved later.
+comment|/// Add a symbol which isn't defined just yet to a list to be resolved later.
 name|void
 name|addPotentialUndefinedSymbol
 argument_list|(
 specifier|const
-name|llvm
+name|object
 operator|::
-name|GlobalValue
-operator|*
-name|dcl
+name|BasicSymbolRef
+operator|&
+name|Sym
 argument_list|,
 name|bool
 name|isFunc
 argument_list|)
 decl_stmt|;
-comment|/// addDefinedSymbol - Add a defined symbol to the list.
+comment|/// Add a defined symbol to the list.
 name|void
 name|addDefinedSymbol
-argument_list|(
+parameter_list|(
 specifier|const
-name|llvm
-operator|::
+name|char
+modifier|*
+name|Name
+parameter_list|,
+specifier|const
 name|GlobalValue
-operator|*
+modifier|*
 name|def
-argument_list|,
+parameter_list|,
 name|bool
 name|isFunction
-argument_list|)
-decl_stmt|;
-comment|/// addDefinedFunctionSymbol - Add a function symbol as defined to the list.
-name|void
-name|addDefinedFunctionSymbol
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Function
-operator|*
-name|f
-argument_list|)
-decl_stmt|;
-comment|/// addDefinedDataSymbol - Add a data symbol as defined to the list.
+parameter_list|)
+function_decl|;
+comment|/// Add a data symbol as defined to the list.
 name|void
 name|addDefinedDataSymbol
 argument_list|(
 specifier|const
-name|llvm
+name|object
 operator|::
-name|GlobalValue
-operator|*
-name|v
-argument_list|)
-decl_stmt|;
-comment|/// addAsmGlobalSymbols - Add global symbols from module-level ASM to the
-comment|/// defined or undefined lists.
-name|bool
-name|addAsmGlobalSymbols
-argument_list|(
-name|std
-operator|::
-name|string
+name|BasicSymbolRef
 operator|&
-name|errMsg
+name|Sym
 argument_list|)
 decl_stmt|;
-comment|/// addAsmGlobalSymbol - Add a global symbol from module-level ASM to the
-comment|/// defined list.
+name|void
+name|addDefinedDataSymbol
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Name
+parameter_list|,
+specifier|const
+name|GlobalValue
+modifier|*
+name|v
+parameter_list|)
+function_decl|;
+comment|/// Add a function symbol as defined to the list.
+name|void
+name|addDefinedFunctionSymbol
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|BasicSymbolRef
+operator|&
+name|Sym
+argument_list|)
+decl_stmt|;
+name|void
+name|addDefinedFunctionSymbol
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Name
+parameter_list|,
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
+comment|/// Add a global symbol from module-level ASM to the defined list.
 name|void
 name|addAsmGlobalSymbol
 parameter_list|(
@@ -682,8 +790,7 @@ name|lto_symbol_attributes
 name|scope
 parameter_list|)
 function_decl|;
-comment|/// addAsmGlobalSymbolUndef - Add a global symbol from module-level ASM to
-comment|/// the undefined list.
+comment|/// Add a global symbol from module-level ASM to the undefined list.
 name|void
 name|addAsmGlobalSymbolUndef
 parameter_list|(
@@ -692,50 +799,41 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/// addObjCClass - Parse i386/ppc ObjC class data structure.
+comment|/// Parse i386/ppc ObjC class data structure.
 name|void
 name|addObjCClass
-argument_list|(
+parameter_list|(
 specifier|const
-name|llvm
-operator|::
 name|GlobalVariable
-operator|*
+modifier|*
 name|clgv
-argument_list|)
-decl_stmt|;
-comment|/// addObjCCategory - Parse i386/ppc ObjC category data structure.
+parameter_list|)
+function_decl|;
+comment|/// Parse i386/ppc ObjC category data structure.
 name|void
 name|addObjCCategory
-argument_list|(
+parameter_list|(
 specifier|const
-name|llvm
-operator|::
 name|GlobalVariable
-operator|*
+modifier|*
 name|clgv
-argument_list|)
-decl_stmt|;
-comment|/// addObjCClassRef - Parse i386/ppc ObjC class list data structure.
+parameter_list|)
+function_decl|;
+comment|/// Parse i386/ppc ObjC class list data structure.
 name|void
 name|addObjCClassRef
-argument_list|(
+parameter_list|(
 specifier|const
-name|llvm
-operator|::
 name|GlobalVariable
-operator|*
+modifier|*
 name|clgv
-argument_list|)
-decl_stmt|;
-comment|/// objcClassNameFromExpression - Get string that the data pointer points
-comment|/// to.
+parameter_list|)
+function_decl|;
+comment|/// Get string that the data pointer points to.
 name|bool
 name|objcClassNameFromExpression
 argument_list|(
 specifier|const
-name|llvm
-operator|::
 name|Constant
 operator|*
 name|c
@@ -747,39 +845,21 @@ operator|&
 name|name
 argument_list|)
 decl_stmt|;
-comment|/// isTargetMatch - Returns 'true' if the memory buffer is for the specified
-comment|/// target triple.
-specifier|static
-name|bool
-name|isTargetMatch
-argument_list|(
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|*
-name|memBuffer
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|triplePrefix
-argument_list|)
-decl_stmt|;
-comment|/// makeLTOModule - Create an LTOModule (private version). N.B. This
-comment|/// method takes ownership of the buffer.
+comment|/// Create an LTOModule (private version). N.B. This method takes ownership of
+comment|/// the buffer.
 specifier|static
 name|LTOModule
 modifier|*
 name|makeLTOModule
 argument_list|(
-name|llvm
+name|std
 operator|::
+name|unique_ptr
+operator|<
 name|MemoryBuffer
-operator|*
-name|buffer
+operator|>
+name|Buffer
 argument_list|,
-name|llvm
-operator|::
 name|TargetOptions
 name|options
 argument_list|,
@@ -790,22 +870,10 @@ operator|&
 name|errMsg
 argument_list|)
 decl_stmt|;
-comment|/// makeBuffer - Create a MemoryBuffer from a memory range.
-specifier|static
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|*
-name|makeBuffer
-argument_list|(
-argument|const void *mem
-argument_list|,
-argument|size_t length
-argument_list|)
-expr_stmt|;
 block|}
 struct|;
-end_struct
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/Mutex.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/UserID.h"
 end_include
 
@@ -101,7 +107,7 @@ comment|///
 comment|/// The BreakpointSite class handles the physical breakpoint that is
 comment|/// actually inserted in the target program.  As such, it is also the
 comment|/// one that  gets hit, when the program stops. It keeps a list of all
-comment|/// BreakpointLocations that share this phsyical site. When the
+comment|/// BreakpointLocations that share this physical site. When the
 comment|/// breakpoint is hit, all the locations are informed by the breakpoint
 comment|/// site. Breakpoint sites are owned by the process.
 comment|//----------------------------------------------------------------------
@@ -133,7 +139,7 @@ block|,
 comment|// Breakpoint site is set as a hardware breakpoint
 name|eExternal
 comment|// Breakpoint site is managed by an external debug nub or
-comment|// debug interface where memory reads trasparently will not
+comment|// debug interface where memory reads transparently will not
 comment|// display any breakpoint opcodes.
 block|}
 enum|;
@@ -252,7 +258,7 @@ comment|//------------------------------------------------------------------
 comment|/// Sets whether the current breakpoint site is enabled or not
 comment|///
 comment|/// @param[in] enabled
-comment|///    \b true if the breakoint is enabled, \b false otherwise.
+comment|///    \b true if the breakpoint is enabled, \b false otherwise.
 comment|//------------------------------------------------------------------
 name|void
 name|SetEnabled
@@ -326,7 +332,7 @@ name|GetNumberOfOwners
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// This method returns the the breakpoint location at index \a index
+comment|/// This method returns the breakpoint location at index \a index
 comment|/// located at this breakpoint site.  The owners are listed ordinally
 comment|/// from 0 to GetNumberOfOwners() - 1 so you can use this method to iterate
 comment|/// over the owners
@@ -454,6 +460,10 @@ name|friend
 name|class
 name|Process
 decl_stmt|;
+name|friend
+name|class
+name|BreakpointLocation
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// The method removes the owner at \a break_loc_id from this breakpoint list.
 comment|///
@@ -504,6 +514,10 @@ name|BreakpointLocationCollection
 name|m_owners
 decl_stmt|;
 comment|///< This has the BreakpointLocations that share this breakpoint site.
+name|Mutex
+name|m_owners_mutex
+decl_stmt|;
+comment|///< This mutex protects the owners collection.
 specifier|static
 name|lldb
 operator|::

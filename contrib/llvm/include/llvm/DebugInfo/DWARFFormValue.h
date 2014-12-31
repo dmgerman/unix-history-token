@@ -110,7 +110,7 @@ argument_list|()
 operator|:
 name|data
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{
 name|uval
@@ -216,7 +216,7 @@ name|Value
 operator|.
 name|data
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|Value
 operator|.

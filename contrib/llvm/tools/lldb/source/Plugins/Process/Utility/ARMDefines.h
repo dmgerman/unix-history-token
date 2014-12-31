@@ -44,7 +44,7 @@ name|lldb_ARMDefines_h_
 end_define
 
 begin_comment
-comment|// Common defintions for the ARM/Thumb Instruction Set Architecture.
+comment|// Common definitions for the ARM/Thumb Instruction Set Architecture.
 end_comment
 
 begin_decl_stmt

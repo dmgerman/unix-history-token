@@ -175,8 +175,7 @@ name|CodeExtractor
 argument_list|(
 argument|ArrayRef<BasicBlock *> BBs
 argument_list|,
-argument|DominatorTree *DT =
-literal|0
+argument|DominatorTree *DT = nullptr
 argument_list|,
 argument|bool AggregateArgs = false
 argument_list|)

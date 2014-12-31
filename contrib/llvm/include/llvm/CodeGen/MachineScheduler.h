@@ -100,7 +100,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// The default scheduler, ScheduleDAGMI, builds the DAG and drives list
+comment|// The default scheduler, ScheduleDAGMILive, builds the DAG and drives list
 end_comment
 
 begin_comment
@@ -329,6 +329,12 @@ directive|include
 file|"llvm/CodeGen/ScheduleDAGInstrs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -355,6 +361,9 @@ name|ScheduleDAGInstrs
 decl_stmt|;
 name|class
 name|SchedDFSResult
+decl_stmt|;
+name|class
+name|ScheduleHazardRecognizer
 decl_stmt|;
 comment|/// MachineSchedContext provides enough context from the MachineScheduler pass
 comment|/// for the target to instantiate a scheduler.
@@ -739,6 +748,892 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|/// Mutate the DAG as a postpass after normal DAG building.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ScheduleDAGMutation
+block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
+name|public
+label|:
+name|virtual
+operator|~
+name|ScheduleDAGMutation
+argument_list|()
+block|{}
+name|virtual
+name|void
+name|apply
+argument_list|(
+name|ScheduleDAGMI
+operator|*
+name|DAG
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// ScheduleDAGMI is an implementation of ScheduleDAGInstrs that simply
+end_comment
+
+begin_comment
+comment|/// schedules machine instructions according to the given MachineSchedStrategy
+end_comment
+
+begin_comment
+comment|/// without much extra book-keeping. This is the common functionality between
+end_comment
+
+begin_comment
+comment|/// PreRA and PostRA MachineScheduler.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ScheduleDAGMI
+range|:
+name|public
+name|ScheduleDAGInstrs
+block|{
+name|protected
+operator|:
+name|AliasAnalysis
+operator|*
+name|AA
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MachineSchedStrategy
+operator|>
+name|SchedImpl
+block|;
+comment|/// Topo - A topological ordering for SUnits which permits fast IsReachable
+comment|/// and similar queries.
+name|ScheduleDAGTopologicalSort
+name|Topo
+block|;
+comment|/// Ordered list of DAG postprocessing steps.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ScheduleDAGMutation
+operator|>>
+name|Mutations
+block|;
+comment|/// The top of the unscheduled zone.
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|CurrentTop
+block|;
+comment|/// The bottom of the unscheduled zone.
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|CurrentBottom
+block|;
+comment|/// Record the next node in a scheduled cluster.
+specifier|const
+name|SUnit
+operator|*
+name|NextClusterPred
+block|;
+specifier|const
+name|SUnit
+operator|*
+name|NextClusterSucc
+block|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+comment|/// The number of instructions scheduled so far. Used to cut off the
+comment|/// scheduler at the point determined by misched-cutoff.
+name|unsigned
+name|NumInstrsScheduled
+block|;
+endif|#
+directive|endif
+name|public
+operator|:
+name|ScheduleDAGMI
+argument_list|(
+argument|MachineSchedContext *C
+argument_list|,
+argument|std::unique_ptr<MachineSchedStrategy> S
+argument_list|,
+argument|bool IsPostRA
+argument_list|)
+operator|:
+name|ScheduleDAGInstrs
+argument_list|(
+operator|*
+name|C
+operator|->
+name|MF
+argument_list|,
+operator|*
+name|C
+operator|->
+name|MLI
+argument_list|,
+operator|*
+name|C
+operator|->
+name|MDT
+argument_list|,
+name|IsPostRA
+argument_list|,
+comment|/*RemoveKillFlags=*/
+name|IsPostRA
+argument_list|,
+name|C
+operator|->
+name|LIS
+argument_list|)
+block|,
+name|AA
+argument_list|(
+name|C
+operator|->
+name|AA
+argument_list|)
+block|,
+name|SchedImpl
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|S
+argument_list|)
+argument_list|)
+block|,
+name|Topo
+argument_list|(
+name|SUnits
+argument_list|,
+operator|&
+name|ExitSU
+argument_list|)
+block|,
+name|CurrentTop
+argument_list|()
+block|,
+name|CurrentBottom
+argument_list|()
+block|,
+name|NextClusterPred
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|NextClusterSucc
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|NumInstrsScheduled
+operator|=
+literal|0
+block|;
+endif|#
+directive|endif
+block|}
+comment|// Provide a vtable anchor
+operator|~
+name|ScheduleDAGMI
+argument_list|()
+name|override
+block|;
+comment|/// Return true if this DAG supports VReg liveness and RegPressure.
+name|virtual
+name|bool
+name|hasVRegLiveness
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Add a postprocessing step to the DAG builder.
+comment|/// Mutations are applied in the order that they are added after normal DAG
+comment|/// building and before MachineSchedStrategy initialization.
+comment|///
+comment|/// ScheduleDAGMI takes ownership of the Mutation object.
+name|void
+name|addMutation
+argument_list|(
+argument|std::unique_ptr<ScheduleDAGMutation> Mutation
+argument_list|)
+block|{
+name|Mutations
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Mutation
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// \brief True if an edge can be added from PredSU to SuccSU without creating
+comment|/// a cycle.
+name|bool
+name|canAddEdge
+argument_list|(
+name|SUnit
+operator|*
+name|SuccSU
+argument_list|,
+name|SUnit
+operator|*
+name|PredSU
+argument_list|)
+block|;
+comment|/// \brief Add a DAG edge to the given SU with the given predecessor
+comment|/// dependence data.
+comment|///
+comment|/// \returns true if the edge may be added without creating a cycle OR if an
+comment|/// equivalent edge already existed (false indicates failure).
+name|bool
+name|addEdge
+argument_list|(
+name|SUnit
+operator|*
+name|SuccSU
+argument_list|,
+specifier|const
+name|SDep
+operator|&
+name|PredDep
+argument_list|)
+block|;
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|top
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurrentTop
+return|;
+block|}
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|bottom
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurrentBottom
+return|;
+block|}
+comment|/// Implement the ScheduleDAGInstrs interface for handling the next scheduling
+comment|/// region. This covers all instructions in a block, while schedule() may only
+comment|/// cover a subset.
+name|void
+name|enterRegion
+argument_list|(
+argument|MachineBasicBlock *bb
+argument_list|,
+argument|MachineBasicBlock::iterator begin
+argument_list|,
+argument|MachineBasicBlock::iterator end
+argument_list|,
+argument|unsigned regioninstrs
+argument_list|)
+name|override
+block|;
+comment|/// Implement ScheduleDAGInstrs interface for scheduling a sequence of
+comment|/// reorderable instructions.
+name|void
+name|schedule
+argument_list|()
+name|override
+block|;
+comment|/// Change the position of an instruction within the basic block and update
+comment|/// live ranges and region boundary iterators.
+name|void
+name|moveInstruction
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock::iterator InsertPos
+argument_list|)
+block|;
+specifier|const
+name|SUnit
+operator|*
+name|getNextClusterPred
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NextClusterPred
+return|;
+block|}
+specifier|const
+name|SUnit
+operator|*
+name|getNextClusterSucc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NextClusterSucc
+return|;
+block|}
+name|void
+name|viewGraph
+argument_list|(
+argument|const Twine&Name
+argument_list|,
+argument|const Twine&Title
+argument_list|)
+name|override
+block|;
+name|void
+name|viewGraph
+argument_list|()
+name|override
+block|;
+name|protected
+operator|:
+comment|// Top-Level entry points for the schedule() driver...
+comment|/// Apply each ScheduleDAGMutation step in order. This allows different
+comment|/// instances of ScheduleDAGMI to perform custom DAG postprocessing.
+name|void
+name|postprocessDAG
+argument_list|()
+block|;
+comment|/// Release ExitSU predecessors and setup scheduler queues.
+name|void
+name|initQueues
+argument_list|(
+name|ArrayRef
+operator|<
+name|SUnit
+operator|*
+operator|>
+name|TopRoots
+argument_list|,
+name|ArrayRef
+operator|<
+name|SUnit
+operator|*
+operator|>
+name|BotRoots
+argument_list|)
+block|;
+comment|/// Update scheduler DAG and queues after scheduling an instruction.
+name|void
+name|updateQueues
+argument_list|(
+argument|SUnit *SU
+argument_list|,
+argument|bool IsTopNode
+argument_list|)
+block|;
+comment|/// Reinsert debug_values recorded in ScheduleDAGInstrs::DbgValues.
+name|void
+name|placeDebugValues
+argument_list|()
+block|;
+comment|/// \brief dump the scheduled Sequence.
+name|void
+name|dumpSchedule
+argument_list|()
+specifier|const
+block|;
+comment|// Lesser helpers...
+name|bool
+name|checkSchedLimit
+argument_list|()
+block|;
+name|void
+name|findRootsAndBiasEdges
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|SUnit
+operator|*
+operator|>
+operator|&
+name|TopRoots
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|SUnit
+operator|*
+operator|>
+operator|&
+name|BotRoots
+argument_list|)
+block|;
+name|void
+name|releaseSucc
+argument_list|(
+name|SUnit
+operator|*
+name|SU
+argument_list|,
+name|SDep
+operator|*
+name|SuccEdge
+argument_list|)
+block|;
+name|void
+name|releaseSuccessors
+argument_list|(
+name|SUnit
+operator|*
+name|SU
+argument_list|)
+block|;
+name|void
+name|releasePred
+argument_list|(
+name|SUnit
+operator|*
+name|SU
+argument_list|,
+name|SDep
+operator|*
+name|PredEdge
+argument_list|)
+block|;
+name|void
+name|releasePredecessors
+argument_list|(
+name|SUnit
+operator|*
+name|SU
+argument_list|)
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// ScheduleDAGMILive is an implementation of ScheduleDAGInstrs that schedules
+end_comment
+
+begin_comment
+comment|/// machine instructions while updating LiveIntervals and tracking regpressure.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ScheduleDAGMILive
+range|:
+name|public
+name|ScheduleDAGMI
+block|{
+name|protected
+operator|:
+name|RegisterClassInfo
+operator|*
+name|RegClassInfo
+block|;
+comment|/// Information about DAG subtrees. If DFSResult is NULL, then SchedulerTrees
+comment|/// will be empty.
+name|SchedDFSResult
+operator|*
+name|DFSResult
+block|;
+name|BitVector
+name|ScheduledTrees
+block|;
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|LiveRegionEnd
+block|;
+comment|// Map each SU to its summary of pressure changes. This array is updated for
+comment|// liveness during bottom-up scheduling. Top-down scheduling may proceed but
+comment|// has no affect on the pressure diffs.
+name|PressureDiffs
+name|SUPressureDiffs
+block|;
+comment|/// Register pressure in this region computed by initRegPressure.
+name|bool
+name|ShouldTrackPressure
+block|;
+name|IntervalPressure
+name|RegPressure
+block|;
+name|RegPressureTracker
+name|RPTracker
+block|;
+comment|/// List of pressure sets that exceed the target's pressure limit before
+comment|/// scheduling, listed in increasing set ID order. Each pressure set is paired
+comment|/// with its max pressure in the currently scheduled regions.
+name|std
+operator|::
+name|vector
+operator|<
+name|PressureChange
+operator|>
+name|RegionCriticalPSets
+block|;
+comment|/// The top of the unscheduled zone.
+name|IntervalPressure
+name|TopPressure
+block|;
+name|RegPressureTracker
+name|TopRPTracker
+block|;
+comment|/// The bottom of the unscheduled zone.
+name|IntervalPressure
+name|BotPressure
+block|;
+name|RegPressureTracker
+name|BotRPTracker
+block|;
+name|public
+operator|:
+name|ScheduleDAGMILive
+argument_list|(
+name|MachineSchedContext
+operator|*
+name|C
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MachineSchedStrategy
+operator|>
+name|S
+argument_list|)
+operator|:
+name|ScheduleDAGMI
+argument_list|(
+name|C
+argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
+name|S
+argument_list|)
+argument_list|,
+comment|/*IsPostRA=*/
+name|false
+argument_list|)
+block|,
+name|RegClassInfo
+argument_list|(
+name|C
+operator|->
+name|RegClassInfo
+argument_list|)
+block|,
+name|DFSResult
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|ShouldTrackPressure
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|RPTracker
+argument_list|(
+name|RegPressure
+argument_list|)
+block|,
+name|TopRPTracker
+argument_list|(
+name|TopPressure
+argument_list|)
+block|,
+name|BotRPTracker
+argument_list|(
+argument|BotPressure
+argument_list|)
+block|{}
+name|virtual
+operator|~
+name|ScheduleDAGMILive
+argument_list|()
+block|;
+comment|/// Return true if this DAG supports VReg liveness and RegPressure.
+name|bool
+name|hasVRegLiveness
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// \brief Return true if register pressure tracking is enabled.
+name|bool
+name|isTrackingPressure
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ShouldTrackPressure
+return|;
+block|}
+comment|/// Get current register pressure for the top scheduled instructions.
+specifier|const
+name|IntervalPressure
+operator|&
+name|getTopPressure
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TopPressure
+return|;
+block|}
+specifier|const
+name|RegPressureTracker
+operator|&
+name|getTopRPTracker
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TopRPTracker
+return|;
+block|}
+comment|/// Get current register pressure for the bottom scheduled instructions.
+specifier|const
+name|IntervalPressure
+operator|&
+name|getBotPressure
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BotPressure
+return|;
+block|}
+specifier|const
+name|RegPressureTracker
+operator|&
+name|getBotRPTracker
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BotRPTracker
+return|;
+block|}
+comment|/// Get register pressure for the entire scheduling region before scheduling.
+specifier|const
+name|IntervalPressure
+operator|&
+name|getRegPressure
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RegPressure
+return|;
+block|}
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|PressureChange
+operator|>
+operator|&
+name|getRegionCriticalPSets
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RegionCriticalPSets
+return|;
+block|}
+name|PressureDiff
+operator|&
+name|getPressureDiff
+argument_list|(
+argument|const SUnit *SU
+argument_list|)
+block|{
+return|return
+name|SUPressureDiffs
+index|[
+name|SU
+operator|->
+name|NodeNum
+index|]
+return|;
+block|}
+comment|/// Compute a DFSResult after DAG building is complete, and before any
+comment|/// queue comparisons.
+name|void
+name|computeDFSResult
+argument_list|()
+block|;
+comment|/// Return a non-null DFS result if the scheduling strategy initialized it.
+specifier|const
+name|SchedDFSResult
+operator|*
+name|getDFSResult
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DFSResult
+return|;
+block|}
+name|BitVector
+operator|&
+name|getScheduledTrees
+argument_list|()
+block|{
+return|return
+name|ScheduledTrees
+return|;
+block|}
+comment|/// Implement the ScheduleDAGInstrs interface for handling the next scheduling
+comment|/// region. This covers all instructions in a block, while schedule() may only
+comment|/// cover a subset.
+name|void
+name|enterRegion
+argument_list|(
+argument|MachineBasicBlock *bb
+argument_list|,
+argument|MachineBasicBlock::iterator begin
+argument_list|,
+argument|MachineBasicBlock::iterator end
+argument_list|,
+argument|unsigned regioninstrs
+argument_list|)
+name|override
+block|;
+comment|/// Implement ScheduleDAGInstrs interface for scheduling a sequence of
+comment|/// reorderable instructions.
+name|void
+name|schedule
+argument_list|()
+name|override
+block|;
+comment|/// Compute the cyclic critical path through the DAG.
+name|unsigned
+name|computeCyclicCriticalPath
+argument_list|()
+block|;
+name|protected
+operator|:
+comment|// Top-Level entry points for the schedule() driver...
+comment|/// Call ScheduleDAGInstrs::buildSchedGraph with register pressure tracking
+comment|/// enabled. This sets up three trackers. RPTracker will cover the entire DAG
+comment|/// region, TopTracker and BottomTracker will be initialized to the top and
+comment|/// bottom of the DAG region without covereing any unscheduled instruction.
+name|void
+name|buildDAGWithRegPressure
+argument_list|()
+block|;
+comment|/// Move an instruction and update register pressure.
+name|void
+name|scheduleMI
+argument_list|(
+argument|SUnit *SU
+argument_list|,
+argument|bool IsTopNode
+argument_list|)
+block|;
+comment|// Lesser helpers...
+name|void
+name|initRegPressure
+argument_list|()
+block|;
+name|void
+name|updatePressureDiffs
+argument_list|(
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|LiveUses
+argument_list|)
+block|;
+name|void
+name|updateScheduledPressure
+argument_list|(
+specifier|const
+name|SUnit
+operator|*
+name|SU
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|NewMaxPressure
+argument_list|)
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Helpers for implementing custom MachineSchedStrategy classes. These take
+end_comment
+
+begin_comment
+comment|/// care of the book-keeping associated with list scheduling heuristics.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// ReadyQueue encapsulates vector of "ready" SUnits with basic convenience
 end_comment
 
@@ -1018,24 +1913,10 @@ operator|+
 name|idx
 return|;
 block|}
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NDEBUG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|LLVM_ENABLE_DUMP
-argument_list|)
 name|void
 name|dump
 parameter_list|()
 function_decl|;
-endif|#
-directive|endif
 block|}
 end_decl_stmt
 
@@ -1044,735 +1925,1525 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// Mutate the DAG as a postpass after normal DAG building.
+comment|/// Summarize the unscheduled region.
 end_comment
 
-begin_decl_stmt
-name|class
-name|ScheduleDAGMutation
+begin_struct
+struct|struct
+name|SchedRemainder
 block|{
-name|virtual
+comment|// Critical path through the DAG in expected latency.
+name|unsigned
+name|CriticalPath
+decl_stmt|;
+name|unsigned
+name|CyclicCritPath
+decl_stmt|;
+comment|// Scaled count of micro-ops left to schedule.
+name|unsigned
+name|RemIssueCount
+decl_stmt|;
+name|bool
+name|IsAcyclicLatencyLimited
+decl_stmt|;
+comment|// Unscheduled resources
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|16
+operator|>
+name|RemainingCounts
+expr_stmt|;
 name|void
-name|anchor
+name|reset
 parameter_list|()
-function_decl|;
-name|public
-label|:
-name|virtual
-operator|~
-name|ScheduleDAGMutation
-argument_list|()
-block|{}
-name|virtual
-name|void
-name|apply
-argument_list|(
-name|ScheduleDAGMI
-operator|*
-name|DAG
-argument_list|)
+block|{
+name|CriticalPath
 operator|=
 literal|0
 expr_stmt|;
+name|CyclicCritPath
+operator|=
+literal|0
+expr_stmt|;
+name|RemIssueCount
+operator|=
+literal|0
+expr_stmt|;
+name|IsAcyclicLatencyLimited
+operator|=
+name|false
+expr_stmt|;
+name|RemainingCounts
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+name|SchedRemainder
+argument_list|()
+block|{
+name|reset
+argument_list|()
+expr_stmt|;
+block|}
+name|void
+name|init
+parameter_list|(
+name|ScheduleDAGMI
+modifier|*
+name|DAG
+parameter_list|,
+specifier|const
+name|TargetSchedModel
+modifier|*
+name|SchedModel
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
 
 begin_comment
-comment|/// ScheduleDAGMI is an implementation of ScheduleDAGInstrs that schedules
+comment|/// Each Scheduling boundary is associated with ready queues. It tracks the
 end_comment
 
 begin_comment
-comment|/// machine instructions while updating LiveIntervals and tracking regpressure.
+comment|/// current cycle in the direction of movement, and maintains the state
+end_comment
+
+begin_comment
+comment|/// of "hazards" and other interlocks at the current cycle.
 end_comment
 
 begin_decl_stmt
 name|class
-name|ScheduleDAGMI
-range|:
-name|public
-name|ScheduleDAGInstrs
+name|SchedBoundary
 block|{
-name|protected
-operator|:
-name|AliasAnalysis
-operator|*
-name|AA
-block|;
-name|RegisterClassInfo
-operator|*
-name|RegClassInfo
-block|;
-name|MachineSchedStrategy
-operator|*
-name|SchedImpl
-block|;
-comment|/// Information about DAG subtrees. If DFSResult is NULL, then SchedulerTrees
-comment|/// will be empty.
-name|SchedDFSResult
-operator|*
-name|DFSResult
-block|;
-name|BitVector
-name|ScheduledTrees
-block|;
-comment|/// Topo - A topological ordering for SUnits which permits fast IsReachable
-comment|/// and similar queries.
-name|ScheduleDAGTopologicalSort
-name|Topo
-block|;
-comment|/// Ordered list of DAG postprocessing steps.
-name|std
-operator|::
-name|vector
-operator|<
-name|ScheduleDAGMutation
-operator|*
-operator|>
-name|Mutations
-block|;
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|LiveRegionEnd
-block|;
-comment|// Map each SU to its summary of pressure changes. This array is updated for
-comment|// liveness during bottom-up scheduling. Top-down scheduling may proceed but
-comment|// has no affect on the pressure diffs.
-name|PressureDiffs
-name|SUPressureDiffs
-block|;
-comment|/// Register pressure in this region computed by initRegPressure.
+name|public
+label|:
+comment|/// SUnit::NodeQueueId: 0 (none), 1 (top), 2 (bot), 3 (both)
+enum|enum
+block|{
+name|TopQID
+init|=
+literal|1
+block|,
+name|BotQID
+init|=
+literal|2
+block|,
+name|LogMaxQID
+init|=
+literal|2
+block|}
+enum|;
+name|ScheduleDAGMI
+modifier|*
+name|DAG
+decl_stmt|;
+specifier|const
+name|TargetSchedModel
+modifier|*
+name|SchedModel
+decl_stmt|;
+name|SchedRemainder
+modifier|*
+name|Rem
+decl_stmt|;
+name|ReadyQueue
+name|Available
+decl_stmt|;
+name|ReadyQueue
+name|Pending
+decl_stmt|;
+name|ScheduleHazardRecognizer
+modifier|*
+name|HazardRec
+decl_stmt|;
+name|private
+label|:
+comment|/// True if the pending Q should be checked/updated before scheduling another
+comment|/// instruction.
 name|bool
-name|ShouldTrackPressure
-block|;
-name|IntervalPressure
-name|RegPressure
-block|;
-name|RegPressureTracker
-name|RPTracker
-block|;
-comment|/// List of pressure sets that exceed the target's pressure limit before
-comment|/// scheduling, listed in increasing set ID order. Each pressure set is paired
-comment|/// with its max pressure in the currently scheduled regions.
-name|std
-operator|::
-name|vector
+name|CheckPending
+decl_stmt|;
+comment|// For heuristics, keep a list of the nodes that immediately depend on the
+comment|// most recently scheduled node.
+name|SmallPtrSet
 operator|<
-name|PressureChange
+specifier|const
+name|SUnit
+operator|*
+operator|,
+literal|8
 operator|>
-name|RegionCriticalPSets
-block|;
-comment|/// The top of the unscheduled zone.
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|CurrentTop
-block|;
-name|IntervalPressure
-name|TopPressure
-block|;
-name|RegPressureTracker
-name|TopRPTracker
-block|;
-comment|/// The bottom of the unscheduled zone.
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|CurrentBottom
-block|;
-name|IntervalPressure
-name|BotPressure
-block|;
-name|RegPressureTracker
-name|BotRPTracker
-block|;
-comment|/// Record the next node in a scheduled cluster.
-specifier|const
-name|SUnit
-operator|*
-name|NextClusterPred
-block|;
-specifier|const
-name|SUnit
-operator|*
-name|NextClusterSucc
-block|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
-comment|/// The number of instructions scheduled so far. Used to cut off the
-comment|/// scheduler at the point determined by misched-cutoff.
+name|NextSUs
+expr_stmt|;
+comment|/// Number of cycles it takes to issue the instructions scheduled in this
+comment|/// zone. It is defined as: scheduled-micro-ops / issue-width + stalls.
+comment|/// See getStalls().
 name|unsigned
-name|NumInstrsScheduled
-block|;
-endif|#
-directive|endif
-name|public
-operator|:
-name|ScheduleDAGMI
-argument_list|(
-name|MachineSchedContext
-operator|*
-name|C
-argument_list|,
-name|MachineSchedStrategy
-operator|*
-name|S
-argument_list|)
-operator|:
-name|ScheduleDAGInstrs
-argument_list|(
-operator|*
-name|C
-operator|->
-name|MF
-argument_list|,
-operator|*
-name|C
-operator|->
-name|MLI
-argument_list|,
-operator|*
-name|C
-operator|->
-name|MDT
-argument_list|,
-comment|/*IsPostRA=*/
-name|false
-argument_list|,
-name|C
-operator|->
-name|LIS
-argument_list|)
-block|,
-name|AA
-argument_list|(
-name|C
-operator|->
-name|AA
-argument_list|)
-block|,
-name|RegClassInfo
-argument_list|(
-name|C
-operator|->
-name|RegClassInfo
-argument_list|)
-block|,
-name|SchedImpl
-argument_list|(
-name|S
-argument_list|)
-block|,
-name|DFSResult
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Topo
-argument_list|(
-name|SUnits
-argument_list|,
-operator|&
-name|ExitSU
-argument_list|)
-block|,
-name|ShouldTrackPressure
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|RPTracker
-argument_list|(
-name|RegPressure
-argument_list|)
-block|,
-name|CurrentTop
-argument_list|()
-block|,
-name|TopRPTracker
-argument_list|(
-name|TopPressure
-argument_list|)
-block|,
-name|CurrentBottom
-argument_list|()
-block|,
-name|BotRPTracker
-argument_list|(
-name|BotPressure
-argument_list|)
-block|,
-name|NextClusterPred
-argument_list|(
-name|NULL
-argument_list|)
-block|,
-name|NextClusterSucc
-argument_list|(
-argument|NULL
-argument_list|)
-block|{
+name|CurrCycle
+decl_stmt|;
+comment|/// Micro-ops issued in the current cycle
+name|unsigned
+name|CurrMOps
+decl_stmt|;
+comment|/// MinReadyCycle - Cycle of the soonest available instruction.
+name|unsigned
+name|MinReadyCycle
+decl_stmt|;
+comment|// The expected latency of the critical path in this scheduled zone.
+name|unsigned
+name|ExpectedLatency
+decl_stmt|;
+comment|// The latency of dependence chains leading into this zone.
+comment|// For each node scheduled bottom-up: DLat = max DLat, N.Depth.
+comment|// For each cycle scheduled: DLat -= 1.
+name|unsigned
+name|DependentLatency
+decl_stmt|;
+comment|/// Count the scheduled (issued) micro-ops that can be retired by
+comment|/// time=CurrCycle assuming the first scheduled instr is retired at time=0.
+name|unsigned
+name|RetiredMOps
+decl_stmt|;
+comment|// Count scheduled resources that have been executed. Resources are
+comment|// considered executed if they become ready in the time that it takes to
+comment|// saturate any resource including the one in question. Counts are scaled
+comment|// for direct comparison with other resources. Counts can be compared with
+comment|// MOps * getMicroOpFactor and Latency * getLatencyFactor.
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|16
+operator|>
+name|ExecutedResCounts
+expr_stmt|;
+comment|/// Cache the max count for a single resource.
+name|unsigned
+name|MaxExecutedResCount
+decl_stmt|;
+comment|// Cache the critical resources ID in this scheduled zone.
+name|unsigned
+name|ZoneCritResIdx
+decl_stmt|;
+comment|// Is the scheduled region resource limited vs. latency limited.
+name|bool
+name|IsResourceLimited
+decl_stmt|;
+comment|// Record the highest cycle at which each resource has been reserved by a
+comment|// scheduled instruction.
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|16
+operator|>
+name|ReservedCycles
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
-name|NumInstrsScheduled
-operator|=
-literal|0
-block|;
+comment|// Remember the greatest possible stall as an upper bound on the number of
+comment|// times we should retry the pending queue because of a hazard.
+name|unsigned
+name|MaxObservedStall
+decl_stmt|;
 endif|#
 directive|endif
-block|}
-name|virtual
-operator|~
-name|ScheduleDAGMI
-argument_list|()
-block|;
-comment|/// \brief Return true if register pressure tracking is enabled.
-name|bool
-name|isTrackingPressure
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ShouldTrackPressure
-return|;
-block|}
-comment|/// Add a postprocessing step to the DAG builder.
-comment|/// Mutations are applied in the order that they are added after normal DAG
-comment|/// building and before MachineSchedStrategy initialization.
-comment|///
-comment|/// ScheduleDAGMI takes ownership of the Mutation object.
-name|void
-name|addMutation
+name|public
+label|:
+comment|/// Pending queues extend the ready queues with the same ID and the
+comment|/// PendingFlag set.
+name|SchedBoundary
 argument_list|(
-argument|ScheduleDAGMutation *Mutation
+argument|unsigned ID
+argument_list|,
+argument|const Twine&Name
+argument_list|)
+block|:
+name|DAG
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|SchedModel
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|Rem
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|Available
+argument_list|(
+name|ID
+argument_list|,
+name|Name
+operator|+
+literal|".A"
+argument_list|)
+operator|,
+name|Pending
+argument_list|(
+name|ID
+operator|<<
+name|LogMaxQID
+argument_list|,
+name|Name
+operator|+
+literal|".P"
+argument_list|)
+operator|,
+name|HazardRec
+argument_list|(
+argument|nullptr
 argument_list|)
 block|{
-name|Mutations
-operator|.
-name|push_back
-argument_list|(
-name|Mutation
-argument_list|)
+name|reset
+argument_list|()
 block|;   }
-comment|/// \brief True if an edge can be added from PredSU to SuccSU without creating
-comment|/// a cycle.
+operator|~
+name|SchedBoundary
+argument_list|()
+expr_stmt|;
+name|void
+name|reset
+parameter_list|()
+function_decl|;
+name|void
+name|init
+parameter_list|(
+name|ScheduleDAGMI
+modifier|*
+name|dag
+parameter_list|,
+specifier|const
+name|TargetSchedModel
+modifier|*
+name|smodel
+parameter_list|,
+name|SchedRemainder
+modifier|*
+name|rem
+parameter_list|)
+function_decl|;
 name|bool
-name|canAddEdge
-argument_list|(
-name|SUnit
-operator|*
-name|SuccSU
-argument_list|,
-name|SUnit
-operator|*
-name|PredSU
-argument_list|)
-block|;
-comment|/// \brief Add a DAG edge to the given SU with the given predecessor
-comment|/// dependence data.
-comment|///
-comment|/// \returns true if the edge may be added without creating a cycle OR if an
-comment|/// equivalent edge already existed (false indicates failure).
+name|isTop
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Available
+operator|.
+name|getID
+argument_list|()
+operator|==
+name|TopQID
+return|;
+block|}
+comment|/// Number of cycles to issue the instructions scheduled in this zone.
+name|unsigned
+name|getCurrCycle
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurrCycle
+return|;
+block|}
+comment|/// Micro-ops issued in the current cycle
+name|unsigned
+name|getCurrMOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurrMOps
+return|;
+block|}
+comment|/// Return true if the given SU is used by the most recently scheduled
+comment|/// instruction.
 name|bool
-name|addEdge
+name|isNextSU
 argument_list|(
+specifier|const
 name|SUnit
 operator|*
-name|SuccSU
-argument_list|,
-specifier|const
-name|SDep
-operator|&
-name|PredDep
+name|SU
 argument_list|)
-block|;
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|top
-argument_list|()
-specifier|const
+decl|const
 block|{
 return|return
-name|CurrentTop
-return|;
-block|}
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|bottom
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CurrentBottom
-return|;
-block|}
-comment|/// Implement the ScheduleDAGInstrs interface for handling the next scheduling
-comment|/// region. This covers all instructions in a block, while schedule() may only
-comment|/// cover a subset.
-name|void
-name|enterRegion
+name|NextSUs
+operator|.
+name|count
 argument_list|(
-argument|MachineBasicBlock *bb
-argument_list|,
-argument|MachineBasicBlock::iterator begin
-argument_list|,
-argument|MachineBasicBlock::iterator end
-argument_list|,
-argument|unsigned regioninstrs
+name|SU
 argument_list|)
-name|LLVM_OVERRIDE
-block|;
-comment|/// Implement ScheduleDAGInstrs interface for scheduling a sequence of
-comment|/// reorderable instructions.
-name|virtual
-name|void
-name|schedule
-argument_list|()
-block|;
-comment|/// Change the position of an instruction within the basic block and update
-comment|/// live ranges and region boundary iterators.
-name|void
-name|moveInstruction
-argument_list|(
-argument|MachineInstr *MI
-argument_list|,
-argument|MachineBasicBlock::iterator InsertPos
-argument_list|)
-block|;
-comment|/// Get current register pressure for the top scheduled instructions.
-specifier|const
-name|IntervalPressure
-operator|&
-name|getTopPressure
+return|;
+block|}
+comment|// The latency of dependence chains leading into this zone.
+name|unsigned
+name|getDependentLatency
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TopPressure
+name|DependentLatency
 return|;
 block|}
-specifier|const
-name|RegPressureTracker
-operator|&
-name|getTopRPTracker
+comment|/// Get the number of latency cycles "covered" by the scheduled
+comment|/// instructions. This is the larger of the critical path within the zone
+comment|/// and the number of cycles required to issue the instructions.
+name|unsigned
+name|getScheduledLatency
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TopRPTracker
-return|;
-block|}
-comment|/// Get current register pressure for the bottom scheduled instructions.
-specifier|const
-name|IntervalPressure
-operator|&
-name|getBotPressure
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BotPressure
-return|;
-block|}
-specifier|const
-name|RegPressureTracker
-operator|&
-name|getBotRPTracker
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BotRPTracker
-return|;
-block|}
-comment|/// Get register pressure for the entire scheduling region before scheduling.
-specifier|const
-name|IntervalPressure
-operator|&
-name|getRegPressure
-argument_list|()
-specifier|const
-block|{
-return|return
-name|RegPressure
-return|;
-block|}
-specifier|const
 name|std
 operator|::
-name|vector
-operator|<
-name|PressureChange
-operator|>
-operator|&
-name|getRegionCriticalPSets
-argument_list|()
-specifier|const
-block|{
-return|return
-name|RegionCriticalPSets
+name|max
+argument_list|(
+name|ExpectedLatency
+argument_list|,
+name|CurrCycle
+argument_list|)
 return|;
 block|}
-name|PressureDiff
-operator|&
-name|getPressureDiff
+name|unsigned
+name|getUnscheduledLatency
 argument_list|(
-argument|const SUnit *SU
+name|SUnit
+operator|*
+name|SU
 argument_list|)
+decl|const
 block|{
 return|return
-name|SUPressureDiffs
-index|[
+name|isTop
+argument_list|()
+condition|?
 name|SU
 operator|->
-name|NodeNum
+name|getHeight
+argument_list|()
+else|:
+name|SU
+operator|->
+name|getDepth
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getResourceCount
+argument_list|(
+name|unsigned
+name|ResIdx
+argument_list|)
+decl|const
+block|{
+return|return
+name|ExecutedResCounts
+index|[
+name|ResIdx
 index|]
 return|;
 block|}
-specifier|const
-name|SUnit
-operator|*
-name|getNextClusterPred
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NextClusterPred
-return|;
-block|}
-specifier|const
-name|SUnit
-operator|*
-name|getNextClusterSucc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NextClusterSucc
-return|;
-block|}
-comment|/// Compute a DFSResult after DAG building is complete, and before any
-comment|/// queue comparisons.
-name|void
-name|computeDFSResult
-argument_list|()
-block|;
-comment|/// Return a non-null DFS result if the scheduling strategy initialized it.
-specifier|const
-name|SchedDFSResult
-operator|*
-name|getDFSResult
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DFSResult
-return|;
-block|}
-name|BitVector
-operator|&
-name|getScheduledTrees
-argument_list|()
-block|{
-return|return
-name|ScheduledTrees
-return|;
-block|}
-comment|/// Compute the cyclic critical path through the DAG.
+comment|/// Get the scaled count of scheduled micro-ops and resources, including
+comment|/// executed resources.
 name|unsigned
-name|computeCyclicCriticalPath
-argument_list|()
-block|;
-name|void
-name|viewGraph
-argument_list|(
-argument|const Twine&Name
-argument_list|,
-argument|const Twine&Title
-argument_list|)
-name|LLVM_OVERRIDE
-block|;
-name|void
-name|viewGraph
-argument_list|()
-name|LLVM_OVERRIDE
-block|;
-name|protected
-operator|:
-comment|// Top-Level entry points for the schedule() driver...
-comment|/// Call ScheduleDAGInstrs::buildSchedGraph with register pressure tracking
-comment|/// enabled. This sets up three trackers. RPTracker will cover the entire DAG
-comment|/// region, TopTracker and BottomTracker will be initialized to the top and
-comment|/// bottom of the DAG region without covereing any unscheduled instruction.
-name|void
-name|buildDAGWithRegPressure
-argument_list|()
-block|;
-comment|/// Apply each ScheduleDAGMutation step in order. This allows different
-comment|/// instances of ScheduleDAGMI to perform custom DAG postprocessing.
-name|void
-name|postprocessDAG
-argument_list|()
-block|;
-comment|/// Release ExitSU predecessors and setup scheduler queues.
-name|void
-name|initQueues
-argument_list|(
-name|ArrayRef
-operator|<
-name|SUnit
-operator|*
-operator|>
-name|TopRoots
-argument_list|,
-name|ArrayRef
-operator|<
-name|SUnit
-operator|*
-operator|>
-name|BotRoots
-argument_list|)
-block|;
-comment|/// Move an instruction and update register pressure.
-name|void
-name|scheduleMI
-argument_list|(
-argument|SUnit *SU
-argument_list|,
-argument|bool IsTopNode
-argument_list|)
-block|;
-comment|/// Update scheduler DAG and queues after scheduling an instruction.
-name|void
-name|updateQueues
-argument_list|(
-argument|SUnit *SU
-argument_list|,
-argument|bool IsTopNode
-argument_list|)
-block|;
-comment|/// Reinsert debug_values recorded in ScheduleDAGInstrs::DbgValues.
-name|void
-name|placeDebugValues
-argument_list|()
-block|;
-comment|/// \brief dump the scheduled Sequence.
-name|void
-name|dumpSchedule
+name|getCriticalCount
 argument_list|()
 specifier|const
-block|;
-comment|// Lesser helpers...
-name|void
-name|initRegPressure
+block|{
+if|if
+condition|(
+operator|!
+name|ZoneCritResIdx
+condition|)
+return|return
+name|RetiredMOps
+operator|*
+name|SchedModel
+operator|->
+name|getMicroOpFactor
 argument_list|()
-block|;
-name|void
-name|updatePressureDiffs
+return|;
+return|return
+name|getResourceCount
 argument_list|(
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-name|LiveUses
+name|ZoneCritResIdx
 argument_list|)
-block|;
-name|void
-name|updateScheduledPressure
-argument_list|(
-specifier|const
-name|SUnit
-operator|*
-name|SU
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|NewMaxPressure
-argument_list|)
-block|;
-name|bool
-name|checkSchedLimit
-argument_list|()
-block|;
-name|void
-name|findRootsAndBiasEdges
-argument_list|(
-name|SmallVectorImpl
-operator|<
-name|SUnit
-operator|*
-operator|>
-operator|&
-name|TopRoots
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|SUnit
-operator|*
-operator|>
-operator|&
-name|BotRoots
-argument_list|)
-block|;
-name|void
-name|releaseSucc
-argument_list|(
-name|SUnit
-operator|*
-name|SU
-argument_list|,
-name|SDep
-operator|*
-name|SuccEdge
-argument_list|)
-block|;
-name|void
-name|releaseSuccessors
-argument_list|(
-name|SUnit
-operator|*
-name|SU
-argument_list|)
-block|;
-name|void
-name|releasePred
-argument_list|(
-name|SUnit
-operator|*
-name|SU
-argument_list|,
-name|SDep
-operator|*
-name|PredEdge
-argument_list|)
-block|;
-name|void
-name|releasePredecessors
-argument_list|(
-name|SUnit
-operator|*
-name|SU
-argument_list|)
-block|; }
-decl_stmt|;
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
-unit|}
+comment|/// Get a scaled count for the minimum execution time of the scheduled
+end_comment
+
+begin_comment
+comment|/// micro-ops that are ready to execute by getExecutedCount. Notice the
+end_comment
+
+begin_comment
+comment|/// feedback loop.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getExecutedCount
+argument_list|()
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|max
+argument_list|(
+name|CurrCycle
+operator|*
+name|SchedModel
+operator|->
+name|getLatencyFactor
+argument_list|()
+argument_list|,
+name|MaxExecutedResCount
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|unsigned
+name|getZoneCritResIdx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ZoneCritResIdx
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Is the scheduled region resource limited vs. latency limited.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isResourceLimited
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsResourceLimited
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Get the difference between the given SUnit's ready time and the current
+end_comment
+
+begin_comment
+comment|/// cycle.
+end_comment
+
+begin_function_decl
+name|unsigned
+name|getLatencyStallCycles
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|getNextResourceCycle
+parameter_list|(
+name|unsigned
+name|PIdx
+parameter_list|,
+name|unsigned
+name|Cycles
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|checkHazard
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|unsigned
+name|findMaxLatency
+argument_list|(
+name|ArrayRef
+operator|<
+name|SUnit
+operator|*
+operator|>
+name|ReadySUs
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|unsigned
+name|getOtherResourceCount
+parameter_list|(
+name|unsigned
+modifier|&
+name|OtherCritIdx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|releaseNode
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
+parameter_list|,
+name|unsigned
+name|ReadyCycle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|releaseTopNode
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|releaseBottomNode
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bumpCycle
+parameter_list|(
+name|unsigned
+name|NextCycle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|incExecutedResources
+parameter_list|(
+name|unsigned
+name|PIdx
+parameter_list|,
+name|unsigned
+name|Count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|countResource
+parameter_list|(
+name|unsigned
+name|PIdx
+parameter_list|,
+name|unsigned
+name|Cycles
+parameter_list|,
+name|unsigned
+name|ReadyCycle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bumpNode
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|releasePending
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|removeReady
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Call this before applying any other heuristics to the Available queue.
+end_comment
+
+begin_comment
+comment|/// Updates the Available/Pending Q's if necessary and returns the single
+end_comment
+
+begin_comment
+comment|/// available instruction, or NULL if there are multiple candidates.
+end_comment
+
+begin_function_decl
+name|SUnit
+modifier|*
+name|pickOnlyChoice
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NDEBUG
+end_ifndef
+
+begin_function_decl
+name|void
+name|dumpScheduledState
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+unit|};
+comment|/// Base class for GenericScheduler. This class maintains information about
+end_comment
+
+begin_comment
+comment|/// scheduling candidates based on TargetSchedModel making it easy to implement
+end_comment
+
+begin_comment
+comment|/// heuristics for either preRA or postRA scheduling.
+end_comment
+
+begin_decl_stmt
+name|class
+name|GenericSchedulerBase
+range|:
+name|public
+name|MachineSchedStrategy
+block|{
+name|public
+operator|:
+comment|/// Represent the type of SchedCandidate found within a single queue.
+comment|/// pickNodeBidirectional depends on these listed by decreasing priority.
+expr|enum
+name|CandReason
+block|{
+name|NoCand
+block|,
+name|PhysRegCopy
+block|,
+name|RegExcess
+block|,
+name|RegCritical
+block|,
+name|Stall
+block|,
+name|Cluster
+block|,
+name|Weak
+block|,
+name|RegMax
+block|,
+name|ResourceReduce
+block|,
+name|ResourceDemand
+block|,
+name|BotHeightReduce
+block|,
+name|BotPathReduce
+block|,
+name|TopDepthReduce
+block|,
+name|TopPathReduce
+block|,
+name|NextDefUse
+block|,
+name|NodeOrder
+block|}
+block|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getReasonStr
+argument_list|(
+argument|GenericSchedulerBase::CandReason Reason
+argument_list|)
+block|;
+endif|#
+directive|endif
+comment|/// Policy for scheduling the next instruction in the candidate's zone.
+block|struct
+name|CandPolicy
+block|{
+name|bool
+name|ReduceLatency
+block|;
+name|unsigned
+name|ReduceResIdx
+block|;
+name|unsigned
+name|DemandResIdx
+block|;
+name|CandPolicy
+argument_list|()
+operator|:
+name|ReduceLatency
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|ReduceResIdx
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|DemandResIdx
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+block|}
+block|;
+comment|/// Status of an instruction's critical resource consumption.
+block|struct
+name|SchedResourceDelta
+block|{
+comment|// Count critical resources in the scheduled region required by SU.
+name|unsigned
+name|CritResources
+block|;
+comment|// Count critical resources from another region consumed by SU.
+name|unsigned
+name|DemandedResources
+block|;
+name|SchedResourceDelta
+argument_list|()
+operator|:
+name|CritResources
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|DemandedResources
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|SchedResourceDelta
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|CritResources
+operator|==
+name|RHS
+operator|.
+name|CritResources
+operator|&&
+name|DemandedResources
+operator|==
+name|RHS
+operator|.
+name|DemandedResources
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|SchedResourceDelta
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+name|operator
+operator|==
+operator|(
+name|RHS
+operator|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// Store the state used by GenericScheduler heuristics, required for the
+comment|/// lifetime of one invocation of pickNode().
+block|struct
+name|SchedCandidate
+block|{
+name|CandPolicy
+name|Policy
+block|;
+comment|// The best SUnit candidate.
+name|SUnit
+operator|*
+name|SU
+block|;
+comment|// The reason for this candidate.
+name|CandReason
+name|Reason
+block|;
+comment|// Set of reasons that apply to multiple candidates.
+name|uint32_t
+name|RepeatReasonSet
+block|;
+comment|// Register pressure values for the best candidate.
+name|RegPressureDelta
+name|RPDelta
+block|;
+comment|// Critical resource consumption of the best candidate.
+name|SchedResourceDelta
+name|ResDelta
+block|;
+name|SchedCandidate
+argument_list|(
+specifier|const
+name|CandPolicy
+operator|&
+name|policy
+argument_list|)
+operator|:
+name|Policy
+argument_list|(
+name|policy
+argument_list|)
+block|,
+name|SU
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|Reason
+argument_list|(
+name|NoCand
+argument_list|)
+block|,
+name|RepeatReasonSet
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SU
+return|;
+block|}
+comment|// Copy the status of another candidate without changing policy.
+name|void
+name|setBest
+argument_list|(
+argument|SchedCandidate&Best
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Best
+operator|.
+name|Reason
+operator|!=
+name|NoCand
+operator|&&
+literal|"uninitialized Sched candidate"
+argument_list|)
+block|;
+name|SU
+operator|=
+name|Best
+operator|.
+name|SU
+block|;
+name|Reason
+operator|=
+name|Best
+operator|.
+name|Reason
+block|;
+name|RPDelta
+operator|=
+name|Best
+operator|.
+name|RPDelta
+block|;
+name|ResDelta
+operator|=
+name|Best
+operator|.
+name|ResDelta
+block|;     }
+name|bool
+name|isRepeat
+argument_list|(
+argument|CandReason R
+argument_list|)
+block|{
+return|return
+name|RepeatReasonSet
+operator|&
+operator|(
+literal|1
+operator|<<
+name|R
+operator|)
+return|;
+block|}
+name|void
+name|setRepeat
+argument_list|(
+argument|CandReason R
+argument_list|)
+block|{
+name|RepeatReasonSet
+operator||=
+operator|(
+literal|1
+operator|<<
+name|R
+operator|)
+block|; }
+name|void
+name|initResourceDelta
+argument_list|(
+specifier|const
+name|ScheduleDAGMI
+operator|*
+name|DAG
+argument_list|,
+specifier|const
+name|TargetSchedModel
+operator|*
+name|SchedModel
+argument_list|)
+block|;   }
+block|;
+name|protected
+operator|:
+specifier|const
+name|MachineSchedContext
+operator|*
+name|Context
+block|;
+specifier|const
+name|TargetSchedModel
+operator|*
+name|SchedModel
+block|;
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+block|;
+name|SchedRemainder
+name|Rem
+block|;
+name|protected
+operator|:
+name|GenericSchedulerBase
+argument_list|(
+specifier|const
+name|MachineSchedContext
+operator|*
+name|C
+argument_list|)
+operator|:
+name|Context
+argument_list|(
+name|C
+argument_list|)
+block|,
+name|SchedModel
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|TRI
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+name|void
+name|setPolicy
+argument_list|(
+argument|CandPolicy&Policy
+argument_list|,
+argument|bool IsPostRA
+argument_list|,
+argument|SchedBoundary&CurrZone
+argument_list|,
+argument|SchedBoundary *OtherZone
+argument_list|)
+block|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|void
+name|traceCandidate
+argument_list|(
+specifier|const
+name|SchedCandidate
+operator|&
+name|Cand
+argument_list|)
+block|;
+endif|#
+directive|endif
+block|}
+block|;
+comment|/// GenericScheduler shrinks the unscheduled zone using heuristics to balance
+comment|/// the schedule.
+name|class
+name|GenericScheduler
+operator|:
+name|public
+name|GenericSchedulerBase
+block|{
+name|ScheduleDAGMILive
+operator|*
+name|DAG
+block|;
+comment|// State of the top and bottom scheduled instruction boundaries.
+name|SchedBoundary
+name|Top
+block|;
+name|SchedBoundary
+name|Bot
+block|;
+name|MachineSchedPolicy
+name|RegionPolicy
+block|;
+name|public
+operator|:
+name|GenericScheduler
+argument_list|(
+specifier|const
+name|MachineSchedContext
+operator|*
+name|C
+argument_list|)
+operator|:
+name|GenericSchedulerBase
+argument_list|(
+name|C
+argument_list|)
+block|,
+name|DAG
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|Top
+argument_list|(
+name|SchedBoundary
+operator|::
+name|TopQID
+argument_list|,
+literal|"TopQ"
+argument_list|)
+block|,
+name|Bot
+argument_list|(
+argument|SchedBoundary::BotQID
+argument_list|,
+literal|"BotQ"
+argument_list|)
+block|{}
+name|void
+name|initPolicy
+argument_list|(
+argument|MachineBasicBlock::iterator Begin
+argument_list|,
+argument|MachineBasicBlock::iterator End
+argument_list|,
+argument|unsigned NumRegionInstrs
+argument_list|)
+name|override
+block|;
+name|bool
+name|shouldTrackPressure
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|RegionPolicy
+operator|.
+name|ShouldTrackPressure
+return|;
+block|}
+name|void
+name|initialize
+argument_list|(
+argument|ScheduleDAGMI *dag
+argument_list|)
+name|override
+block|;
+name|SUnit
+operator|*
+name|pickNode
+argument_list|(
+argument|bool&IsTopNode
+argument_list|)
+name|override
+block|;
+name|void
+name|schedNode
+argument_list|(
+argument|SUnit *SU
+argument_list|,
+argument|bool IsTopNode
+argument_list|)
+name|override
+block|;
+name|void
+name|releaseTopNode
+argument_list|(
+argument|SUnit *SU
+argument_list|)
+name|override
+block|{
+name|Top
+operator|.
+name|releaseTopNode
+argument_list|(
+name|SU
+argument_list|)
+block|;   }
+name|void
+name|releaseBottomNode
+argument_list|(
+argument|SUnit *SU
+argument_list|)
+name|override
+block|{
+name|Bot
+operator|.
+name|releaseBottomNode
+argument_list|(
+name|SU
+argument_list|)
+block|;   }
+name|void
+name|registerRoots
+argument_list|()
+name|override
+block|;
+name|protected
+operator|:
+name|void
+name|checkAcyclicLatency
+argument_list|()
+block|;
+name|void
+name|tryCandidate
+argument_list|(
+name|SchedCandidate
+operator|&
+name|Cand
+argument_list|,
+name|SchedCandidate
+operator|&
+name|TryCand
+argument_list|,
+name|SchedBoundary
+operator|&
+name|Zone
+argument_list|,
+specifier|const
+name|RegPressureTracker
+operator|&
+name|RPTracker
+argument_list|,
+name|RegPressureTracker
+operator|&
+name|TempTracker
+argument_list|)
+block|;
+name|SUnit
+operator|*
+name|pickNodeBidirectional
+argument_list|(
+name|bool
+operator|&
+name|IsTopNode
+argument_list|)
+block|;
+name|void
+name|pickNodeFromQueue
+argument_list|(
+name|SchedBoundary
+operator|&
+name|Zone
+argument_list|,
+specifier|const
+name|RegPressureTracker
+operator|&
+name|RPTracker
+argument_list|,
+name|SchedCandidate
+operator|&
+name|Candidate
+argument_list|)
+block|;
+name|void
+name|reschedulePhysRegCopies
+argument_list|(
+argument|SUnit *SU
+argument_list|,
+argument|bool isTop
+argument_list|)
+block|; }
+block|;
+comment|/// PostGenericScheduler - Interface to the scheduling algorithm used by
+comment|/// ScheduleDAGMI.
+comment|///
+comment|/// Callbacks from ScheduleDAGMI:
+comment|///   initPolicy -> initialize(DAG) -> registerRoots -> pickNode ...
+name|class
+name|PostGenericScheduler
+operator|:
+name|public
+name|GenericSchedulerBase
+block|{
+name|ScheduleDAGMI
+operator|*
+name|DAG
+block|;
+name|SchedBoundary
+name|Top
+block|;
+name|SmallVector
+operator|<
+name|SUnit
+operator|*
+block|,
+literal|8
+operator|>
+name|BotRoots
+block|;
+name|public
+operator|:
+name|PostGenericScheduler
+argument_list|(
+specifier|const
+name|MachineSchedContext
+operator|*
+name|C
+argument_list|)
+operator|:
+name|GenericSchedulerBase
+argument_list|(
+name|C
+argument_list|)
+block|,
+name|Top
+argument_list|(
+argument|SchedBoundary::TopQID
+argument_list|,
+literal|"TopQ"
+argument_list|)
+block|{}
+name|virtual
+operator|~
+name|PostGenericScheduler
+argument_list|()
+block|{}
+name|void
+name|initPolicy
+argument_list|(
+argument|MachineBasicBlock::iterator Begin
+argument_list|,
+argument|MachineBasicBlock::iterator End
+argument_list|,
+argument|unsigned NumRegionInstrs
+argument_list|)
+name|override
+block|{
+comment|/* no configurable policy */
+block|}
+block|;
+comment|/// PostRA scheduling does not track pressure.
+name|bool
+name|shouldTrackPressure
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|void
+name|initialize
+argument_list|(
+argument|ScheduleDAGMI *Dag
+argument_list|)
+name|override
+block|;
+name|void
+name|registerRoots
+argument_list|()
+name|override
+block|;
+name|SUnit
+operator|*
+name|pickNode
+argument_list|(
+argument|bool&IsTopNode
+argument_list|)
+name|override
+block|;
+name|void
+name|scheduleTree
+argument_list|(
+argument|unsigned SubtreeID
+argument_list|)
+name|override
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"PostRA scheduler does not support subtree analysis."
+argument_list|)
+block|;   }
+name|void
+name|schedNode
+argument_list|(
+argument|SUnit *SU
+argument_list|,
+argument|bool IsTopNode
+argument_list|)
+name|override
+block|;
+name|void
+name|releaseTopNode
+argument_list|(
+argument|SUnit *SU
+argument_list|)
+name|override
+block|{
+name|Top
+operator|.
+name|releaseTopNode
+argument_list|(
+name|SU
+argument_list|)
+block|;   }
+comment|// Only called for roots.
+name|void
+name|releaseBottomNode
+argument_list|(
+argument|SUnit *SU
+argument_list|)
+name|override
+block|{
+name|BotRoots
+operator|.
+name|push_back
+argument_list|(
+name|SU
+argument_list|)
+block|;   }
+name|protected
+operator|:
+name|void
+name|tryCandidate
+argument_list|(
+name|SchedCandidate
+operator|&
+name|Cand
+argument_list|,
+name|SchedCandidate
+operator|&
+name|TryCand
+argument_list|)
+block|;
+name|void
+name|pickNodeFromQueue
+argument_list|(
+name|SchedCandidate
+operator|&
+name|Cand
+argument_list|)
+block|; }
+block|;  }
+end_decl_stmt
+
+begin_comment
 comment|// namespace llvm
 end_comment
 

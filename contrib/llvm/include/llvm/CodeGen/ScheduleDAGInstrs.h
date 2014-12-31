@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SparseSet.h"
+file|"llvm/ADT/SparseMultiSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SparseMultiSet.h"
+file|"llvm/ADT/SparseSet.h"
 end_include
 
 begin_include
@@ -166,7 +166,7 @@ block|}
 block|}
 struct|;
 comment|/// Record a physical register access.
-comment|/// For non data-dependent uses, OpIdx == -1.
+comment|/// For non-data-dependent uses, OpIdx == -1.
 struct|struct
 name|PhysRegSUOper
 block|{
@@ -297,9 +297,14 @@ comment|/// isPostRA flag indicates vregs cannot be present.
 name|bool
 name|IsPostRA
 block|;
+comment|/// True if the DAG builder should remove kill flags (in preparation for
+comment|/// rescheduling).
+name|bool
+name|RemoveKillFlags
+block|;
 comment|/// The standard DAG builder does not normally include terminators as DAG
 comment|/// nodes because it does not create the necessary dependencies to prevent
-comment|/// reordering. A specialized scheduler can overide
+comment|/// reordering. A specialized scheduler can override
 comment|/// TargetInstrInfo::isSchedulingBoundary then enable this flag to indicate
 comment|/// it has taken responsibility for scheduling the terminator correctly.
 name|bool
@@ -402,6 +407,10 @@ name|MachineInstr
 modifier|*
 name|FirstDbgValue
 decl_stmt|;
+comment|/// Set of live physical registers for updating kill flags.
+name|BitVector
+name|LiveRegs
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -424,11 +433,16 @@ parameter_list|,
 name|bool
 name|IsPostRAFlag
 parameter_list|,
+name|bool
+name|RemoveKillFlags
+init|=
+name|false
+parameter_list|,
 name|LiveIntervals
 modifier|*
 name|LIS
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|virtual
@@ -436,6 +450,15 @@ operator|~
 name|ScheduleDAGInstrs
 argument_list|()
 block|{}
+name|bool
+name|isPostRA
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsPostRA
+return|;
+block|}
 comment|/// \brief Expose LiveIntervals for use in DAG mutators and such.
 name|LiveIntervals
 operator|*
@@ -607,13 +630,13 @@ name|RegPressureTracker
 modifier|*
 name|RPTracker
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|PressureDiffs
 modifier|*
 name|PDiffs
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// addSchedBarrierDeps - Add dependencies from instructions in the current
@@ -646,7 +669,6 @@ name|void
 name|finalizeSchedule
 parameter_list|()
 block|{}
-name|virtual
 name|void
 name|dumpNode
 argument_list|(
@@ -656,9 +678,9 @@ operator|*
 name|SU
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// Return a label for a DAG node that points to an instruction.
-name|virtual
 name|std
 operator|::
 name|string
@@ -667,16 +689,26 @@ argument_list|(
 argument|const SUnit *SU
 argument_list|)
 specifier|const
+name|override
 expr_stmt|;
 comment|/// Return a label for the region of code covered by the DAG.
-name|virtual
 name|std
 operator|::
 name|string
 name|getDAGName
 argument_list|()
 specifier|const
+name|override
 expr_stmt|;
+comment|/// \brief Fix register kill flags that scheduling has made invalid.
+name|void
+name|fixupKills
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|MBB
+parameter_list|)
+function_decl|;
 name|protected
 label|:
 name|void
@@ -727,6 +759,31 @@ name|unsigned
 name|OperIdx
 parameter_list|)
 function_decl|;
+comment|/// \brief PostRA helper for rewriting kill flags.
+name|void
+name|startBlockForKills
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|BB
+parameter_list|)
+function_decl|;
+comment|/// \brief Toggle a register operand kill flag.
+comment|///
+comment|/// Other adjustments may be made to the instruction if necessary. Return
+comment|/// true if the operand has been deleted, false if not.
+name|bool
+name|toggleKillFlag
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|MachineOperand
+modifier|&
+name|MO
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -762,7 +819,7 @@ operator|.
 name|empty
 argument_list|()
 operator|?
-literal|0
+name|nullptr
 operator|:
 operator|&
 name|SUnits
@@ -795,7 +852,7 @@ argument_list|(
 operator|(
 name|Addr
 operator|==
-literal|0
+name|nullptr
 operator|||
 name|Addr
 operator|==
@@ -877,7 +934,7 @@ name|end
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 end_expr_stmt
 

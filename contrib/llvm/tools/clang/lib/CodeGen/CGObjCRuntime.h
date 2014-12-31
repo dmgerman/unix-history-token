@@ -524,11 +524,9 @@ argument|llvm::Value *Receiver
 argument_list|,
 argument|const CallArgList&CallArgs
 argument_list|,
-argument|const ObjCInterfaceDecl *Class =
-literal|0
+argument|const ObjCInterfaceDecl *Class = nullptr
 argument_list|,
-argument|const ObjCMethodDecl *Method =
-literal|0
+argument|const ObjCMethodDecl *Method = nullptr
 argument_list|)
 operator|=
 literal|0
@@ -563,8 +561,7 @@ argument|bool IsClassMessage
 argument_list|,
 argument|const CallArgList&CallArgs
 argument_list|,
-argument|const ObjCMethodDecl *Method =
-literal|0
+argument|const ObjCMethodDecl *Method = nullptr
 argument_list|)
 operator|=
 literal|0
@@ -1106,12 +1103,9 @@ name|GlobalVariable
 operator|*
 name|GetClassGlobal
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
+argument_list|,
+argument|bool Weak = false
 argument_list|)
 operator|=
 literal|0

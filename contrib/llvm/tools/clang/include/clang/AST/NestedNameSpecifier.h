@@ -219,16 +219,16 @@ argument_list|()
 operator|:
 name|Prefix
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 name|StoredIdentifier
 argument_list|)
 block|,
 name|Specifier
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
-block|{ }
+block|{}
 comment|/// \brief Copy constructor used internally to clone nested name
 comment|/// specifiers.
 name|NestedNameSpecifier
@@ -453,7 +453,7 @@ operator|)
 name|Specifier
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Retrieve the namespace stored in this nested name
@@ -505,7 +505,7 @@ operator|)
 name|Specifier
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_decl_stmt
@@ -686,12 +686,12 @@ argument_list|()
 operator|:
 name|Qualifier
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Data
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 comment|/// \brief Construct a nested-name-specifier with source location information
@@ -1026,12 +1026,12 @@ argument_list|()
 operator|:
 name|Representation
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Buffer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|BufferSize
@@ -1043,7 +1043,7 @@ name|BufferCapacity
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 name|NestedNameSpecifierLocBuilder
 argument_list|(
 specifier|const
@@ -1307,7 +1307,7 @@ parameter_list|()
 block|{
 name|Representation
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|BufferSize
 operator|=

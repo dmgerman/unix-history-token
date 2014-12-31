@@ -104,6 +104,11 @@ parameter_list|)
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createXCoreFrameToArgsOffsetEliminationPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createXCoreISelDag
 argument_list|(
 name|XCoreTargetMachine

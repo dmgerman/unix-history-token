@@ -150,13 +150,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/DebugLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DebugLoc.h"
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -650,9 +656,12 @@ name|std
 operator|::
 name|vector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|GCStrategy
-operator|*
-operator|>
+operator|>>
 name|list_type
 expr_stmt|;
 typedef|typedef
@@ -705,10 +714,6 @@ specifier|static
 name|char
 name|ID
 decl_stmt|;
-name|GCModuleInfo
-argument_list|()
-expr_stmt|;
-operator|~
 name|GCModuleInfo
 argument_list|()
 expr_stmt|;

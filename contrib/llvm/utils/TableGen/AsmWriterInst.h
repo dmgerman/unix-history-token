@@ -314,8 +314,6 @@ argument|const CodeGenInstruction&CGI
 argument_list|,
 argument|unsigned Variant
 argument_list|,
-argument|int FirstOperandColumn
-argument_list|,
 argument|int OperandSpacing
 argument_list|)
 empty_stmt|;

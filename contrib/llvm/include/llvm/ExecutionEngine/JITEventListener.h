@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/IR/DebugLoc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DebugLoc.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -263,7 +263,7 @@ name|createIntelJITEventListener
 parameter_list|()
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|static
@@ -277,7 +277,7 @@ name|AlternativeImpl
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 endif|#
@@ -313,7 +313,7 @@ name|createOProfileJITEventListener
 parameter_list|()
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|static
@@ -327,7 +327,7 @@ name|AlternativeImpl
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 endif|#

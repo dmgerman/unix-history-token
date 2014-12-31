@@ -98,25 +98,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DebugLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Metadata.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DebugLoc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unordered_map>
 end_include
 
 begin_decl_stmt
@@ -131,9 +143,6 @@ name|MachineBasicBlock
 decl_stmt|;
 name|class
 name|MachineFunction
-decl_stmt|;
-name|class
-name|LexicalScope
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// InsnRange - This is used to track range of instructions with identical
@@ -155,385 +164,11 @@ operator|>
 name|InsnRange
 expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// LexicalScopes -  This class provides interface to collect and use lexical
-comment|/// scoping information from machine instruction.
-comment|///
-name|class
-name|LexicalScopes
-block|{
-name|public
-label|:
-name|LexicalScopes
-argument_list|()
-operator|:
-name|MF
-argument_list|(
-name|NULL
-argument_list|)
-operator|,
-name|CurrentFnLexicalScope
-argument_list|(
-argument|NULL
-argument_list|)
-block|{ }
-name|virtual
-operator|~
-name|LexicalScopes
-argument_list|()
-expr_stmt|;
-comment|/// initialize - Scan machine function and constuct lexical scope nest.
-name|virtual
-name|void
-name|initialize
-parameter_list|(
-specifier|const
-name|MachineFunction
-modifier|&
-parameter_list|)
-function_decl|;
-comment|/// releaseMemory - release memory.
-name|virtual
-name|void
-name|releaseMemory
-parameter_list|()
-function_decl|;
-comment|/// empty - Return true if there is any lexical scope information available.
-name|bool
-name|empty
-parameter_list|()
-block|{
-return|return
-name|CurrentFnLexicalScope
-operator|==
-name|NULL
-return|;
-block|}
-comment|/// isCurrentFunctionScope - Return true if given lexical scope represents
-comment|/// current function.
-name|bool
-name|isCurrentFunctionScope
-parameter_list|(
-specifier|const
-name|LexicalScope
-modifier|*
-name|LS
-parameter_list|)
-block|{
-return|return
-name|LS
-operator|==
-name|CurrentFnLexicalScope
-return|;
-block|}
-comment|/// getCurrentFunctionScope - Return lexical scope for the current function.
-name|LexicalScope
-operator|*
-name|getCurrentFunctionScope
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CurrentFnLexicalScope
-return|;
-block|}
-comment|/// getMachineBasicBlocks - Populate given set using machine basic blocks
-comment|/// which have machine instructions that belong to lexical scope identified by
-comment|/// DebugLoc.
-name|void
-name|getMachineBasicBlocks
-argument_list|(
-name|DebugLoc
-name|DL
-argument_list|,
-name|SmallPtrSet
-operator|<
-specifier|const
-name|MachineBasicBlock
-operator|*
-argument_list|,
-literal|4
-operator|>
-operator|&
-name|MBBs
-argument_list|)
-decl_stmt|;
-comment|/// dominates - Return true if DebugLoc's lexical scope dominates at least one
-comment|/// machine instruction's lexical scope in a given machine basic block.
-name|bool
-name|dominates
-parameter_list|(
-name|DebugLoc
-name|DL
-parameter_list|,
-name|MachineBasicBlock
-modifier|*
-name|MBB
-parameter_list|)
-function_decl|;
-comment|/// findLexicalScope - Find lexical scope, either regular or inlined, for the
-comment|/// given DebugLoc. Return NULL if not found.
-name|LexicalScope
-modifier|*
-name|findLexicalScope
-parameter_list|(
-name|DebugLoc
-name|DL
-parameter_list|)
-function_decl|;
-comment|/// getAbstractScopesList - Return a reference to list of abstract scopes.
-name|ArrayRef
-operator|<
-name|LexicalScope
-operator|*
-operator|>
-name|getAbstractScopesList
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AbstractScopesList
-return|;
-block|}
-comment|/// findAbstractScope - Find an abstract scope or return NULL.
-name|LexicalScope
-modifier|*
-name|findAbstractScope
-parameter_list|(
-specifier|const
-name|MDNode
-modifier|*
-name|N
-parameter_list|)
-block|{
-return|return
-name|AbstractScopeMap
-operator|.
-name|lookup
-argument_list|(
-name|N
-argument_list|)
-return|;
-block|}
-comment|/// findInlinedScope - Find an inlined scope for the given DebugLoc or return
-comment|/// NULL.
-name|LexicalScope
-modifier|*
-name|findInlinedScope
-parameter_list|(
-name|DebugLoc
-name|DL
-parameter_list|)
-block|{
-return|return
-name|InlinedLexicalScopeMap
-operator|.
-name|lookup
-argument_list|(
-name|DL
-argument_list|)
-return|;
-block|}
-comment|/// findLexicalScope - Find regular lexical scope or return NULL.
-name|LexicalScope
-modifier|*
-name|findLexicalScope
-parameter_list|(
-specifier|const
-name|MDNode
-modifier|*
-name|N
-parameter_list|)
-block|{
-return|return
-name|LexicalScopeMap
-operator|.
-name|lookup
-argument_list|(
-name|N
-argument_list|)
-return|;
-block|}
-comment|/// dump - Print data structures to dbgs().
-name|void
-name|dump
-parameter_list|()
-function_decl|;
-name|private
-label|:
-comment|/// getOrCreateLexicalScope - Find lexical scope for the given DebugLoc. If
-comment|/// not available then create new lexical scope.
-name|LexicalScope
-modifier|*
-name|getOrCreateLexicalScope
-parameter_list|(
-name|DebugLoc
-name|DL
-parameter_list|)
-function_decl|;
-comment|/// getOrCreateRegularScope - Find or create a regular lexical scope.
-name|LexicalScope
-modifier|*
-name|getOrCreateRegularScope
-parameter_list|(
-name|MDNode
-modifier|*
-name|Scope
-parameter_list|)
-function_decl|;
-comment|/// getOrCreateInlinedScope - Find or create an inlined lexical scope.
-name|LexicalScope
-modifier|*
-name|getOrCreateInlinedScope
-parameter_list|(
-name|MDNode
-modifier|*
-name|Scope
-parameter_list|,
-name|MDNode
-modifier|*
-name|InlinedAt
-parameter_list|)
-function_decl|;
-comment|/// getOrCreateAbstractScope - Find or create an abstract lexical scope.
-name|LexicalScope
-modifier|*
-name|getOrCreateAbstractScope
-parameter_list|(
-specifier|const
-name|MDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// extractLexicalScopes - Extract instruction ranges for each lexical scopes
-comment|/// for the given machine function.
-name|void
-name|extractLexicalScopes
-argument_list|(
-name|SmallVectorImpl
-operator|<
-name|InsnRange
-operator|>
-operator|&
-name|MIRanges
-argument_list|,
-name|DenseMap
-operator|<
-specifier|const
-name|MachineInstr
-operator|*
-argument_list|,
-name|LexicalScope
-operator|*
-operator|>
-operator|&
-name|M
-argument_list|)
-decl_stmt|;
-name|void
-name|constructScopeNest
-parameter_list|(
-name|LexicalScope
-modifier|*
-name|Scope
-parameter_list|)
-function_decl|;
-name|void
-name|assignInstructionRanges
-argument_list|(
-name|SmallVectorImpl
-operator|<
-name|InsnRange
-operator|>
-operator|&
-name|MIRanges
-argument_list|,
-name|DenseMap
-operator|<
-specifier|const
-name|MachineInstr
-operator|*
-argument_list|,
-name|LexicalScope
-operator|*
-operator|>
-operator|&
-name|M
-argument_list|)
-decl_stmt|;
-name|private
-label|:
-specifier|const
-name|MachineFunction
-modifier|*
-name|MF
-decl_stmt|;
-comment|/// LexicalScopeMap - Tracks the scopes in the current function.  Owns the
-comment|/// contained LexicalScope*s.
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
-operator|*
-operator|,
-name|LexicalScope
-operator|*
-operator|>
-name|LexicalScopeMap
-expr_stmt|;
-comment|/// InlinedLexicalScopeMap - Tracks inlined function scopes in current function.
-name|DenseMap
-operator|<
-name|DebugLoc
-operator|,
-name|LexicalScope
-operator|*
-operator|>
-name|InlinedLexicalScopeMap
-expr_stmt|;
-comment|/// AbstractScopeMap - These scopes are  not included LexicalScopeMap.
-comment|/// AbstractScopes owns its LexicalScope*s.
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
-operator|*
-operator|,
-name|LexicalScope
-operator|*
-operator|>
-name|AbstractScopeMap
-expr_stmt|;
-comment|/// AbstractScopesList - Tracks abstract scopes constructed while processing
-comment|/// a function.
-name|SmallVector
-operator|<
-name|LexicalScope
-operator|*
-operator|,
-literal|4
-operator|>
-name|AbstractScopesList
-expr_stmt|;
-comment|/// CurrentFnLexicalScope - Top level scope for the current function.
-comment|///
-name|LexicalScope
-modifier|*
-name|CurrentFnLexicalScope
-decl_stmt|;
-block|}
-empty_stmt|;
-comment|//===----------------------------------------------------------------------===//
 comment|/// LexicalScope - This class is used to track scope information.
 comment|///
 name|class
 name|LexicalScope
 block|{
-name|virtual
-name|void
-name|anchor
-parameter_list|()
-function_decl|;
 name|public
 label|:
 name|LexicalScope
@@ -569,12 +204,12 @@ argument_list|)
 operator|,
 name|LastInsn
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|FirstInsn
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|DFSIn
@@ -599,11 +234,6 @@ name|this
 argument_list|)
 expr_stmt|;
 block|}
-name|virtual
-operator|~
-name|LexicalScope
-argument_list|()
-block|{}
 comment|// Accessors.
 name|LexicalScope
 operator|*
@@ -774,7 +404,7 @@ name|LexicalScope
 modifier|*
 name|NewScope
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 block|{
 name|assert
@@ -798,11 +428,11 @@ argument_list|)
 expr_stmt|;
 name|FirstInsn
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 name|LastInsn
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 comment|// If Parent dominates NewScope then do not close Parent's instruction
 comment|// range.
@@ -994,6 +624,419 @@ name|DFSOut
 decl_stmt|;
 comment|// In& Out Depth use to determine
 comment|// scope nesting.
+block|}
+empty_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// LexicalScopes -  This class provides interface to collect and use lexical
+comment|/// scoping information from machine instruction.
+comment|///
+name|class
+name|LexicalScopes
+block|{
+name|public
+label|:
+name|LexicalScopes
+argument_list|()
+operator|:
+name|MF
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|CurrentFnLexicalScope
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+comment|/// initialize - Scan machine function and constuct lexical scope nest, resets
+comment|/// the instance if necessary.
+name|void
+name|initialize
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+argument_list|)
+expr_stmt|;
+comment|/// releaseMemory - release memory.
+name|void
+name|reset
+parameter_list|()
+function_decl|;
+comment|/// empty - Return true if there is any lexical scope information available.
+name|bool
+name|empty
+parameter_list|()
+block|{
+return|return
+name|CurrentFnLexicalScope
+operator|==
+name|nullptr
+return|;
+block|}
+comment|/// isCurrentFunctionScope - Return true if given lexical scope represents
+comment|/// current function.
+name|bool
+name|isCurrentFunctionScope
+parameter_list|(
+specifier|const
+name|LexicalScope
+modifier|*
+name|LS
+parameter_list|)
+block|{
+return|return
+name|LS
+operator|==
+name|CurrentFnLexicalScope
+return|;
+block|}
+comment|/// getCurrentFunctionScope - Return lexical scope for the current function.
+name|LexicalScope
+operator|*
+name|getCurrentFunctionScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurrentFnLexicalScope
+return|;
+block|}
+comment|/// getMachineBasicBlocks - Populate given set using machine basic blocks
+comment|/// which have machine instructions that belong to lexical scope identified by
+comment|/// DebugLoc.
+name|void
+name|getMachineBasicBlocks
+argument_list|(
+name|DebugLoc
+name|DL
+argument_list|,
+name|SmallPtrSet
+operator|<
+specifier|const
+name|MachineBasicBlock
+operator|*
+argument_list|,
+literal|4
+operator|>
+operator|&
+name|MBBs
+argument_list|)
+decl_stmt|;
+comment|/// dominates - Return true if DebugLoc's lexical scope dominates at least one
+comment|/// machine instruction's lexical scope in a given machine basic block.
+name|bool
+name|dominates
+parameter_list|(
+name|DebugLoc
+name|DL
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|MBB
+parameter_list|)
+function_decl|;
+comment|/// findLexicalScope - Find lexical scope, either regular or inlined, for the
+comment|/// given DebugLoc. Return NULL if not found.
+name|LexicalScope
+modifier|*
+name|findLexicalScope
+parameter_list|(
+name|DebugLoc
+name|DL
+parameter_list|)
+function_decl|;
+comment|/// getAbstractScopesList - Return a reference to list of abstract scopes.
+name|ArrayRef
+operator|<
+name|LexicalScope
+operator|*
+operator|>
+name|getAbstractScopesList
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AbstractScopesList
+return|;
+block|}
+comment|/// findAbstractScope - Find an abstract scope or return null.
+name|LexicalScope
+modifier|*
+name|findAbstractScope
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+block|{
+name|auto
+name|I
+init|=
+name|AbstractScopeMap
+operator|.
+name|find
+argument_list|(
+name|N
+argument_list|)
+decl_stmt|;
+return|return
+name|I
+operator|!=
+name|AbstractScopeMap
+operator|.
+name|end
+argument_list|()
+condition|?
+operator|&
+name|I
+operator|->
+name|second
+else|:
+name|nullptr
+return|;
+block|}
+comment|/// findInlinedScope - Find an inlined scope for the given DebugLoc or return
+comment|/// NULL.
+name|LexicalScope
+modifier|*
+name|findInlinedScope
+parameter_list|(
+name|DebugLoc
+name|DL
+parameter_list|)
+function_decl|;
+comment|/// findLexicalScope - Find regular lexical scope or return null.
+name|LexicalScope
+modifier|*
+name|findLexicalScope
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+block|{
+name|auto
+name|I
+init|=
+name|LexicalScopeMap
+operator|.
+name|find
+argument_list|(
+name|N
+argument_list|)
+decl_stmt|;
+return|return
+name|I
+operator|!=
+name|LexicalScopeMap
+operator|.
+name|end
+argument_list|()
+condition|?
+operator|&
+name|I
+operator|->
+name|second
+else|:
+name|nullptr
+return|;
+block|}
+comment|/// dump - Print data structures to dbgs().
+name|void
+name|dump
+parameter_list|()
+function_decl|;
+comment|/// getOrCreateAbstractScope - Find or create an abstract lexical scope.
+name|LexicalScope
+modifier|*
+name|getOrCreateAbstractScope
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|private
+label|:
+comment|/// getOrCreateLexicalScope - Find lexical scope for the given DebugLoc. If
+comment|/// not available then create new lexical scope.
+name|LexicalScope
+modifier|*
+name|getOrCreateLexicalScope
+parameter_list|(
+name|DebugLoc
+name|DL
+parameter_list|)
+function_decl|;
+comment|/// getOrCreateRegularScope - Find or create a regular lexical scope.
+name|LexicalScope
+modifier|*
+name|getOrCreateRegularScope
+parameter_list|(
+name|MDNode
+modifier|*
+name|Scope
+parameter_list|)
+function_decl|;
+comment|/// getOrCreateInlinedScope - Find or create an inlined lexical scope.
+name|LexicalScope
+modifier|*
+name|getOrCreateInlinedScope
+parameter_list|(
+name|MDNode
+modifier|*
+name|Scope
+parameter_list|,
+name|MDNode
+modifier|*
+name|InlinedAt
+parameter_list|)
+function_decl|;
+comment|/// extractLexicalScopes - Extract instruction ranges for each lexical scopes
+comment|/// for the given machine function.
+name|void
+name|extractLexicalScopes
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|InsnRange
+operator|>
+operator|&
+name|MIRanges
+argument_list|,
+name|DenseMap
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+argument_list|,
+name|LexicalScope
+operator|*
+operator|>
+operator|&
+name|M
+argument_list|)
+decl_stmt|;
+name|void
+name|constructScopeNest
+parameter_list|(
+name|LexicalScope
+modifier|*
+name|Scope
+parameter_list|)
+function_decl|;
+name|void
+name|assignInstructionRanges
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|InsnRange
+operator|>
+operator|&
+name|MIRanges
+argument_list|,
+name|DenseMap
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+argument_list|,
+name|LexicalScope
+operator|*
+operator|>
+operator|&
+name|M
+argument_list|)
+decl_stmt|;
+name|private
+label|:
+specifier|const
+name|MachineFunction
+modifier|*
+name|MF
+decl_stmt|;
+comment|/// LexicalScopeMap - Tracks the scopes in the current function.
+comment|// Use an unordered_map to ensure value pointer validity over insertion.
+name|std
+operator|::
+name|unordered_map
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|LexicalScope
+operator|>
+name|LexicalScopeMap
+expr_stmt|;
+comment|/// InlinedLexicalScopeMap - Tracks inlined function scopes in current
+comment|/// function.
+name|std
+operator|::
+name|unordered_map
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+specifier|const
+name|MDNode
+operator|*
+operator|>
+operator|,
+name|LexicalScope
+operator|,
+name|pair_hash
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+specifier|const
+name|MDNode
+operator|*
+operator|>>
+name|InlinedLexicalScopeMap
+expr_stmt|;
+comment|/// AbstractScopeMap - These scopes are  not included LexicalScopeMap.
+comment|// Use an unordered_map to ensure value pointer validity over insertion.
+name|std
+operator|::
+name|unordered_map
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|LexicalScope
+operator|>
+name|AbstractScopeMap
+expr_stmt|;
+comment|/// AbstractScopesList - Tracks abstract scopes constructed while processing
+comment|/// a function.
+name|SmallVector
+operator|<
+name|LexicalScope
+operator|*
+operator|,
+literal|4
+operator|>
+name|AbstractScopesList
+expr_stmt|;
+comment|/// CurrentFnLexicalScope - Top level scope for the current function.
+comment|///
+name|LexicalScope
+modifier|*
+name|CurrentFnLexicalScope
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

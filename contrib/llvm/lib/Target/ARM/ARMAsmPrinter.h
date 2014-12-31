@@ -46,13 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARM.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMTargetMachine.h"
+file|"ARMSubtarget.h"
 end_include
 
 begin_include
@@ -64,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/Target/TargetMachine.h"
 end_include
 
 begin_decl_stmt
@@ -72,7 +66,16 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|ARMFunctionInfo
+decl_stmt|;
+name|class
 name|MCOperand
+decl_stmt|;
+name|class
+name|MachineConstantPool
+decl_stmt|;
+name|class
+name|MachineOperand
 decl_stmt|;
 name|namespace
 name|ARM
@@ -145,12 +148,12 @@ argument_list|)
 block|,
 name|AFI
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 block|,
 name|MCP
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 block|,
 name|InConstantPool
@@ -169,15 +172,14 @@ name|ARMSubtarget
 operator|>
 operator|(
 operator|)
-block|;     }
-name|virtual
+block|;   }
 specifier|const
 name|char
 operator|*
 name|getPassName
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 literal|"ARM Assembly / Object Emitter"
@@ -192,11 +194,9 @@ argument|int OpNum
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier =
-literal|0
+argument|const char *Modifier = nullptr
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|PrintAsmOperand
 argument_list|(
@@ -210,9 +210,8 @@ argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|PrintAsmMemoryOperand
 argument_list|(
@@ -226,7 +225,17 @@ argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
+block|;
+name|void
+name|emitInlineAsmEnd
+argument_list|(
+argument|const MCSubtargetInfo&StartInfo
+argument_list|,
+argument|const MCSubtargetInfo *EndInfo
+argument_list|)
+specifier|const
+name|override
 block|;
 name|void
 name|EmitJumpTable
@@ -246,65 +255,57 @@ operator|*
 name|MI
 argument_list|)
 block|;
-name|virtual
 name|void
 name|EmitInstruction
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
 argument|MachineFunction&F
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|EmitConstantPool
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|{
 comment|// we emit constant pools customly!
 block|}
-name|virtual
 name|void
 name|EmitFunctionBodyEnd
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|EmitFunctionEntryLabel
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|EmitStartOfAsmFile
 argument_list|(
 argument|Module&M
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|EmitEndOfAsmFile
 argument_list|(
 argument|Module&M
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|EmitXXStructor
 argument_list|(
 argument|const Constant *CV
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|// lowerOperand - Convert a MachineOperand into the equivalent MCOperand.
 name|bool
@@ -325,11 +326,6 @@ operator|:
 comment|// Helpers for EmitStartOfAsmFile() and EmitEndOfAsmFile()
 name|void
 name|emitAttributes
-argument_list|()
-block|;
-comment|// Helper for ELF .o only
-name|void
-name|emitARMAttributeSection
 argument_list|()
 block|;
 comment|// Generic helper used to emit e.g. ARMv5 mul pseudos
@@ -366,23 +362,10 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// EmitDwarfRegOp - Emit dwarf register operation.
-name|virtual
-name|void
-name|EmitDwarfRegOp
-argument_list|(
-argument|const MachineLocation&MLoc
-argument_list|,
-argument|bool Indirect
-argument_list|)
-specifier|const
-name|LLVM_OVERRIDE
-block|;
-name|virtual
 name|unsigned
 name|getISAEncoding
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|{
 comment|// ARM/Darwin adds ISA to the DWARF info for each function.
 if|if
@@ -390,7 +373,7 @@ condition|(
 operator|!
 name|Subtarget
 operator|->
-name|isTargetDarwin
+name|isTargetMachO
 argument_list|()
 condition|)
 return|return
@@ -453,13 +436,16 @@ specifier|const
 name|GlobalValue
 modifier|*
 name|GV
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
 parameter_list|)
 function_decl|;
 name|public
 label|:
 comment|/// EmitMachineConstantPoolValue - Print a machine constantpool value to
 comment|/// the .s file.
-name|virtual
 name|void
 name|EmitMachineConstantPoolValue
 argument_list|(
@@ -467,7 +453,7 @@ name|MachineConstantPoolValue
 operator|*
 name|MCPV
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 decl_stmt|;
 block|}
 end_decl_stmt

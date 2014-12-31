@@ -226,15 +226,20 @@ name|FromASTFile
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether this macro was used as header guard.
+name|bool
+name|UsedForHeaderGuard
+range|:
+literal|1
+decl_stmt|;
 operator|~
 name|MacroInfo
 argument_list|()
 block|{
 name|assert
 argument_list|(
+operator|!
 name|ArgumentList
-operator|==
-literal|0
 operator|&&
 literal|"Didn't call destroy before dtor!"
 argument_list|)
@@ -256,7 +261,7 @@ parameter_list|()
 block|{
 name|ArgumentList
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|NumArguments
 operator|=
@@ -438,7 +443,7 @@ name|assert
 argument_list|(
 name|ArgumentList
 operator|==
-literal|0
+name|nullptr
 operator|&&
 name|NumArguments
 operator|==
@@ -907,6 +912,28 @@ return|return
 name|FromASTFile
 return|;
 block|}
+comment|/// \brief Determine whether this macro was used for a header guard.
+name|bool
+name|isUsedForHeaderGuard
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsedForHeaderGuard
+return|;
+block|}
+name|void
+name|setUsedForHeaderGuard
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
+block|{
+name|UsedForHeaderGuard
+operator|=
+name|Val
+expr_stmt|;
+block|}
 comment|/// \brief Retrieve the global ID of the module that owns this particular
 comment|/// macro info.
 name|unsigned
@@ -936,6 +963,11 @@ return|return
 literal|0
 return|;
 block|}
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 name|unsigned
@@ -1085,15 +1117,6 @@ name|IsFromPCH
 range|:
 literal|1
 decl_stmt|;
-comment|/// \brief Whether the macro directive is currently "hidden".
-comment|///
-comment|/// Note that this is transient state that is never serialized to the AST
-comment|/// file.
-name|bool
-name|IsHidden
-range|:
-literal|1
-decl_stmt|;
 comment|// Used by DefMacroDirective -----------------------------------------------//
 comment|/// \brief True if this macro was imported from a module.
 name|bool
@@ -1125,7 +1148,7 @@ argument_list|)
 block|:
 name|Previous
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Loc
@@ -1139,11 +1162,6 @@ name|K
 argument_list|)
 operator|,
 name|IsFromPCH
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|IsHidden
 argument_list|(
 name|false
 argument_list|)
@@ -1241,29 +1259,6 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-comment|/// \brief Determine whether this macro directive is hidden.
-name|bool
-name|isHidden
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsHidden
-return|;
-block|}
-comment|/// \brief Set whether this macro directive is hidden.
-name|void
-name|setHidden
-parameter_list|(
-name|bool
-name|Val
-parameter_list|)
-block|{
-name|IsHidden
-operator|=
-name|Val
-expr_stmt|;
-block|}
 name|class
 name|DefInfo
 block|{
@@ -1284,7 +1279,7 @@ argument_list|()
 operator|:
 name|DefDirective
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|DefInfo
@@ -1402,7 +1397,7 @@ block|{
 return|return
 name|DefDirective
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|bool
@@ -1430,23 +1425,13 @@ block|}
 specifier|inline
 name|DefInfo
 name|getPreviousDefinition
-parameter_list|(
-name|bool
-name|AllowHidden
-init|=
-name|false
-parameter_list|)
+parameter_list|()
 function_decl|;
 specifier|const
 name|DefInfo
 name|getPreviousDefinition
-argument_list|(
-name|bool
-name|AllowHidden
-operator|=
-name|false
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 return|return
 name|const_cast
@@ -1459,9 +1444,7 @@ name|this
 operator|)
 operator|->
 name|getPreviousDefinition
-argument_list|(
-name|AllowHidden
-argument_list|)
+argument_list|()
 return|;
 block|}
 block|}
@@ -1471,23 +1454,13 @@ comment|/// macro definition directive along with info about its undefined locat
 comment|/// (if there is one) and if it is public or private.
 name|DefInfo
 name|getDefinition
-parameter_list|(
-name|bool
-name|AllowHidden
-init|=
-name|false
-parameter_list|)
+parameter_list|()
 function_decl|;
 specifier|const
 name|DefInfo
 name|getDefinition
-argument_list|(
-name|bool
-name|AllowHidden
-operator|=
-name|false
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 return|return
 name|const_cast
@@ -1500,20 +1473,13 @@ name|this
 operator|)
 operator|->
 name|getDefinition
-argument_list|(
-name|AllowHidden
-argument_list|)
+argument_list|()
 return|;
 block|}
 name|bool
 name|isDefined
-argument_list|(
-name|bool
-name|AllowHidden
-operator|=
-name|false
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 if|if
 condition|(
@@ -1522,9 +1488,7 @@ name|DefInfo
 name|Def
 init|=
 name|getDefinition
-argument_list|(
-name|AllowHidden
-argument_list|)
+argument_list|()
 condition|)
 return|return
 operator|!
@@ -1537,50 +1501,51 @@ return|return
 name|false
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 specifier|const
 name|MacroInfo
-modifier|*
+operator|*
 name|getMacroInfo
-argument_list|(
-name|bool
-name|AllowHidden
-operator|=
-name|false
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 return|return
 name|getDefinition
-argument_list|(
-name|AllowHidden
-argument_list|)
+argument_list|()
 operator|.
 name|getMacroInfo
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|MacroInfo
 modifier|*
 name|getMacroInfo
-parameter_list|(
-name|bool
-name|AllowHidden
-init|=
-name|false
-parameter_list|)
+parameter_list|()
 block|{
 return|return
 name|getDefinition
-argument_list|(
-name|AllowHidden
-argument_list|)
+argument_list|()
 operator|.
 name|getMacroInfo
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Find macro definition active in the specified source location. If
+end_comment
+
+begin_comment
 comment|/// this macro was not defined there, return NULL.
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|DefInfo
 name|findDirectiveAtLoc
@@ -1594,6 +1559,17 @@ name|SM
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -1607,14 +1583,10 @@ return|return
 name|true
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
+unit|};
 comment|/// \brief A directive for a defined macro or a macro imported from a module.
 end_comment
 
@@ -1946,7 +1918,7 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|DefDirective
@@ -1964,9 +1936,7 @@ operator|::
 name|DefInfo
 operator|::
 name|getPreviousDefinition
-argument_list|(
-argument|bool AllowHidden
-argument_list|)
+argument_list|()
 block|{
 if|if
 condition|(
@@ -1978,7 +1948,7 @@ operator|->
 name|getPrevious
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 condition|)
 return|return
 name|DefInfo
@@ -1991,9 +1961,7 @@ name|getPrevious
 argument_list|()
 operator|->
 name|getDefinition
-argument_list|(
-name|AllowHidden
-argument_list|)
+argument_list|()
 return|;
 block|}
 end_decl_stmt

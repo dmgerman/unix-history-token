@@ -276,7 +276,7 @@ argument_list|)
 block|:
 name|Resolver
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|PassID
@@ -682,6 +682,7 @@ argument_list|,
 argument|const std::string&Banner
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// runOnModule - Virtual method overriden by subclasses to process the module
 comment|/// being operated on.
@@ -696,7 +697,6 @@ argument_list|)
 operator|=
 literal|0
 block|;
-name|virtual
 name|void
 name|assignPassManager
 argument_list|(
@@ -704,13 +704,14 @@ argument|PMStack&PMS
 argument_list|,
 argument|PassManagerType T
 argument_list|)
+name|override
 block|;
 comment|///  Return what kind of Pass Manager can manage this pass.
-name|virtual
 name|PassManagerType
 name|getPotentialPassManagerType
 argument_list|()
 specifier|const
+name|override
 block|;
 name|explicit
 name|ModulePass
@@ -758,11 +759,11 @@ name|void
 name|initializePass
 argument_list|()
 block|;
-name|virtual
 name|ImmutablePass
 operator|*
 name|getAsImmutablePass
 argument_list|()
+name|override
 block|{
 return|return
 name|this
@@ -775,6 +776,7 @@ name|runOnModule
 argument_list|(
 argument|Module&
 argument_list|)
+name|override
 block|{
 return|return
 name|false
@@ -842,6 +844,7 @@ argument_list|,
 argument|const std::string&Banner
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// runOnFunction - Virtual method overriden by subclasses to do the
 comment|/// per-function processing of the pass.
@@ -857,7 +860,6 @@ argument_list|)
 operator|=
 literal|0
 block|;
-name|virtual
 name|void
 name|assignPassManager
 argument_list|(
@@ -865,12 +867,24 @@ argument|PMStack&PMS
 argument_list|,
 argument|PassManagerType T
 argument_list|)
+name|override
 block|;
 comment|///  Return what kind of Pass Manager can manage this pass.
-name|virtual
 name|PassManagerType
 name|getPotentialPassManagerType
 argument_list|()
+specifier|const
+name|override
+block|;
+name|protected
+operator|:
+comment|/// skipOptnoneFunction - This function has Attribute::OptimizeNone
+comment|/// and most transformation passes should skip it.
+name|bool
+name|skipOptnoneFunction
+argument_list|(
+argument|const Function&F
+argument_list|)
 specifier|const
 block|; }
 decl_stmt|;
@@ -917,6 +931,7 @@ argument_list|,
 argument|const std::string&Banner
 argument_list|)
 specifier|const
+name|override
 block|;
 name|using
 name|llvm
@@ -968,7 +983,6 @@ name|Function
 operator|&
 argument_list|)
 block|;
-name|virtual
 name|void
 name|assignPassManager
 argument_list|(
@@ -976,12 +990,24 @@ argument|PMStack&PMS
 argument_list|,
 argument|PassManagerType T
 argument_list|)
+name|override
 block|;
 comment|///  Return what kind of Pass Manager can manage this pass.
-name|virtual
 name|PassManagerType
 name|getPotentialPassManagerType
 argument_list|()
+specifier|const
+name|override
+block|;
+name|protected
+operator|:
+comment|/// skipOptnoneFunction - Containing function has Attribute::OptimizeNone
+comment|/// and most transformation passes should skip it.
+name|bool
+name|skipOptnoneFunction
+argument_list|(
+argument|const BasicBlock&BB
+argument_list|)
 specifier|const
 block|; }
 decl_stmt|;

@@ -101,6 +101,90 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+name|class
+name|ObjectFileJITDelegate
+block|{
+name|public
+label|:
+name|ObjectFileJITDelegate
+argument_list|()
+block|{     }
+name|virtual
+operator|~
+name|ObjectFileJITDelegate
+argument_list|()
+block|{     }
+name|virtual
+name|lldb
+operator|::
+name|ByteOrder
+name|GetByteOrder
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|uint32_t
+name|GetAddressByteSize
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|void
+name|PopulateSymtab
+argument_list|(
+name|lldb_private
+operator|::
+name|ObjectFile
+operator|*
+name|obj_file
+argument_list|,
+name|lldb_private
+operator|::
+name|Symtab
+operator|&
+name|symtab
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+name|virtual
+name|void
+name|PopulateSectionList
+argument_list|(
+name|lldb_private
+operator|::
+name|ObjectFile
+operator|*
+name|obj_file
+argument_list|,
+name|lldb_private
+operator|::
+name|SectionList
+operator|&
+name|section_list
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+name|virtual
+name|bool
+name|GetArchitecture
+argument_list|(
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|arch
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+block|}
+empty_stmt|;
 comment|//----------------------------------------------------------------------
 comment|/// @class ObjectFile ObjectFile.h "lldb/Symbol/ObjectFile.h"
 comment|/// @brief A plug-in interface definition class for object file parsers.
@@ -111,23 +195,11 @@ comment|/// used by operating system runtime. The symbol table and section list
 comment|/// for an object file.
 comment|///
 comment|/// Object files can be represented by the entire file, or by part of a
-comment|/// file. Examples of object files that are part of a file include
-comment|/// object files that contain information for multiple architectures in
-comment|/// the same file, or archive files that contain multiple objects
-comment|/// (ranlib archives) (possibly for multiple architectures as well).
+comment|/// file. An example of a partial file ObjectFile is one that contains
+comment|/// information for one of multiple architectures in the same file.
 comment|///
-comment|/// Object archive files (e.g. ranlib archives) can contain
-comment|/// multiple .o (object) files that must be selected by index or by name.
-comment|/// The number of objects that an ObjectFile contains can be determined
-comment|/// using the ObjectFile::GetNumObjects() const
-comment|/// function, and followed by a call to
-comment|/// ObjectFile::SelectObjectAtIndex (uint32_t) to change the currently
-comment|/// selected object. Objects can also be selected by name using the
-comment|/// ObjectFile::SelectObject(const char *) function.
-comment|///
-comment|/// Once an architecture is selected (and an object is selected for
-comment|/// for archives), the object file information can be extracted from
-comment|/// this abstract class.
+comment|/// Once an architecture is selected the object file information can be
+comment|/// extracted from this abstract class.
 comment|//----------------------------------------------------------------------
 name|class
 name|ObjectFile
@@ -182,6 +254,9 @@ comment|/// A shared library that can be used during execution
 name|eTypeStubLibrary
 block|,
 comment|/// A library that can be linked against but not used for execution
+name|eTypeJIT
+block|,
+comment|/// JIT code that has symbols, sections and possibly debug info
 name|eTypeUnknown
 block|}
 name|Type
@@ -200,6 +275,8 @@ block|,
 name|eStrataKernel
 block|,
 name|eStrataRawImage
+block|,
+name|eStrataJIT
 block|}
 name|Strata
 typedef|;
@@ -220,7 +297,7 @@ argument|lldb::offset_t file_offset
 argument_list|,
 argument|lldb::offset_t length
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|const lldb::DataBufferSP& data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|)
@@ -256,7 +333,7 @@ comment|/// section list if it has been parsed, and the symbol table
 comment|/// if it has been parsed.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|//------------------------------------------------------------------
 name|virtual
 name|void
@@ -665,6 +742,15 @@ init|=
 literal|0
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|/// Notify the ObjectFile that the file addresses in the Sections
+comment|/// for this module have been changed.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|SectionFileAddressesChanged
+parameter_list|()
+block|{     }
+comment|//------------------------------------------------------------------
 comment|/// Gets the symbol table for the currently selected architecture
 comment|/// (and object for archives).
 comment|///
@@ -782,7 +868,7 @@ comment|//------------------------------------------------------------------
 comment|/// Gets the symbol file spec list for this object file.
 comment|///
 comment|/// If the object file format contains a debug symbol file link,
-comment|/// the values will be return in the FileSpecList.
+comment|/// the values will be returned in the FileSpecList.
 comment|///
 comment|/// @return
 comment|///     Returns filespeclist.
@@ -792,6 +878,27 @@ name|lldb_private
 operator|::
 name|FileSpecList
 name|GetDebugSymbolFilePaths
+argument_list|()
+block|{
+return|return
+name|FileSpecList
+argument_list|()
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Gets the file spec list of libraries re-exported by this object file.
+comment|///
+comment|/// If the object file format has the notion of one library re-exporting the symbols from another,
+comment|/// the re-exported libraries will be returned in the FileSpecList.
+comment|///
+comment|/// @return
+comment|///     Returns filespeclist.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb_private
+operator|::
+name|FileSpecList
+name|GetReExportedLibraries
 argument_list|()
 block|{
 return|return
@@ -855,7 +962,7 @@ comment|/// recognize that magic bytes in a header, false should be returned
 comment|/// and the next plug-in can attempt to parse an object file.
 comment|///
 comment|/// @return
-comment|///     Returns \b true if the header was parsed succesfully, \b
+comment|///     Returns \b true if the header was parsed successfully, \b
 comment|///     false otherwise.
 comment|//------------------------------------------------------------------
 name|virtual
@@ -1327,7 +1434,9 @@ expr_stmt|;
 name|size_t
 name|GetData
 argument_list|(
-name|off_t
+name|lldb
+operator|::
+name|offset_t
 name|offset
 argument_list|,
 name|size_t
@@ -1342,7 +1451,9 @@ decl_stmt|;
 name|size_t
 name|CopyData
 argument_list|(
-name|off_t
+name|lldb
+operator|::
+name|offset_t
 name|offset
 argument_list|,
 name|size_t
@@ -1354,6 +1465,7 @@ name|dst
 argument_list|)
 decl|const
 decl_stmt|;
+name|virtual
 name|size_t
 name|ReadSectionData
 argument_list|(
@@ -1362,7 +1474,9 @@ name|Section
 operator|*
 name|section
 argument_list|,
-name|off_t
+name|lldb
+operator|::
+name|offset_t
 name|section_offset
 argument_list|,
 name|void
@@ -1374,6 +1488,7 @@ name|dst_len
 argument_list|)
 decl|const
 decl_stmt|;
+name|virtual
 name|size_t
 name|ReadSectionData
 argument_list|(

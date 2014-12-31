@@ -177,7 +177,7 @@ name|uint32_t
 name|event_mask
 argument_list|)
 decl_stmt|;
-comment|// Returns true if an event was recieved, false if we timed out.
+comment|// Returns true if an event was received, false if we timed out.
 name|bool
 name|WaitForEvent
 argument_list|(

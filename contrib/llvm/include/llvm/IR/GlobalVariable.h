@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/GlobalValue.h"
+file|"llvm/IR/GlobalObject.h"
 end_include
 
 begin_include
@@ -132,7 +132,7 @@ name|class
 name|GlobalVariable
 range|:
 name|public
-name|GlobalValue
+name|GlobalObject
 decl_stmt|,
 name|public
 name|ilist_node
@@ -190,14 +190,6 @@ range|:
 literal|1
 decl_stmt|;
 comment|// Is this a global constant?
-name|unsigned
-name|threadLocalMode
-range|:
-literal|3
-decl_stmt|;
-comment|// Is this symbol "Thread Local",
-comment|// if so, what is the desired
-comment|// model?
 name|bool
 name|isExternallyInitializedConstant
 range|:
@@ -231,22 +223,6 @@ literal|1
 argument_list|)
 return|;
 block|}
-enum|enum
-name|ThreadLocalMode
-block|{
-name|NotThreadLocal
-init|=
-literal|0
-block|,
-name|GeneralDynamicTLSModel
-block|,
-name|LocalDynamicTLSModel
-block|,
-name|InitialExecTLSModel
-block|,
-name|LocalExecTLSModel
-block|}
-enum|;
 comment|/// GlobalVariable ctor - If a parent module is specified, the global is
 comment|/// automatically inserted into the end of the specified modules global list.
 name|GlobalVariable
@@ -257,8 +233,7 @@ argument|bool isConstant
 argument_list|,
 argument|LinkageTypes Linkage
 argument_list|,
-argument|Constant *Initializer =
-literal|0
+argument|Constant *Initializer = nullptr
 argument_list|,
 argument|const Twine&Name =
 literal|""
@@ -288,8 +263,7 @@ argument_list|,
 argument|const Twine&Name =
 literal|""
 argument_list|,
-argument|GlobalVariable *InsertBefore =
-literal|0
+argument|GlobalVariable *InsertBefore = nullptr
 argument_list|,
 argument|ThreadLocalMode = NotThreadLocal
 argument_list|,
@@ -506,61 +480,6 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-comment|/// If the value is "Thread Local", its value isn't shared by the threads.
-name|bool
-name|isThreadLocal
-argument_list|()
-specifier|const
-block|{
-return|return
-name|threadLocalMode
-operator|!=
-name|NotThreadLocal
-return|;
-block|}
-name|void
-name|setThreadLocal
-parameter_list|(
-name|bool
-name|Val
-parameter_list|)
-block|{
-name|threadLocalMode
-operator|=
-name|Val
-condition|?
-name|GeneralDynamicTLSModel
-else|:
-name|NotThreadLocal
-expr_stmt|;
-block|}
-name|void
-name|setThreadLocalMode
-parameter_list|(
-name|ThreadLocalMode
-name|Val
-parameter_list|)
-block|{
-name|threadLocalMode
-operator|=
-name|Val
-expr_stmt|;
-block|}
-name|ThreadLocalMode
-name|getThreadLocalMode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|ThreadLocalMode
-operator|>
-operator|(
-name|threadLocalMode
-operator|)
-return|;
-block|}
 name|bool
 name|isExternallyInitialized
 argument_list|()
@@ -586,48 +505,49 @@ comment|/// copyAttributesFrom - copy all additional attributes (those not neede
 comment|/// create a GlobalVariable) from the GlobalVariable Src to this one.
 name|void
 name|copyAttributesFrom
-parameter_list|(
+argument_list|(
 specifier|const
 name|GlobalValue
-modifier|*
+operator|*
 name|Src
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// removeFromParent - This method unlinks 'this' from the containing module,
 comment|/// but does not delete it.
 comment|///
-name|virtual
 name|void
 name|removeFromParent
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 comment|/// eraseFromParent - This method unlinks 'this' from the containing module
 comment|/// and deletes it.
 comment|///
-name|virtual
 name|void
 name|eraseFromParent
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 comment|/// Override Constant's implementation of this method so we can
 comment|/// replace constant initializers.
-name|virtual
 name|void
 name|replaceUsesOfWithOnConstant
-parameter_list|(
+argument_list|(
 name|Value
-modifier|*
+operator|*
 name|From
-parameter_list|,
+argument_list|,
 name|Value
-modifier|*
+operator|*
 name|To
-parameter_list|,
+argument_list|,
 name|Use
-modifier|*
+operator|*
 name|U
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline

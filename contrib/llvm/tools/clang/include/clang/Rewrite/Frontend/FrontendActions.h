@@ -70,7 +70,6 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -79,6 +78,7 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -89,19 +89,22 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|FixItRewriter
 operator|>
 name|Rewriter
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|FixItOptions
 operator|>
 name|FixItOpts
 block|;
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -110,8 +113,8 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|BeginSourceFileAction
 argument_list|(
@@ -119,17 +122,18 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef Filename
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EndSourceFileAction
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|hasASTFileSupport
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -169,14 +173,12 @@ argument_list|)
 block|{}
 name|protected
 operator|:
-name|virtual
 name|bool
 name|BeginInvocation
 argument_list|(
-name|CompilerInstance
-operator|&
-name|CI
+argument|CompilerInstance&CI
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -187,7 +189,6 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -196,6 +197,7 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -209,6 +211,7 @@ operator|:
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -222,6 +225,7 @@ operator|:
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -235,6 +239,7 @@ operator|:
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
 block|}
