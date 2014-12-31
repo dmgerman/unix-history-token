@@ -179,7 +179,7 @@ name|vm_page_t
 name|vm_phys_alloc_freelist_pages
 parameter_list|(
 name|int
-name|flind
+name|freelist
 parameter_list|,
 name|int
 name|pool
