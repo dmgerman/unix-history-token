@@ -6640,6 +6640,8 @@ name|file
 argument_list|,
 name|line
 argument_list|,
+literal|"%s"
+argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
@@ -9812,6 +9814,8 @@ name|NULL
 condition|)
 name|as_bad
 argument_list|(
+literal|"%s"
+argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
@@ -9872,6 +9876,8 @@ name|NULL
 condition|)
 name|as_bad
 argument_list|(
+literal|"%s"
+argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
