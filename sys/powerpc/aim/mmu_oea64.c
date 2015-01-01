@@ -436,6 +436,13 @@ name|dumpsys_minidump
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ofw_real_mode
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Map of physical memory regions.  */
 end_comment
@@ -4161,7 +4168,7 @@ decl_stmt|;
 name|phandle_t
 name|mmu
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|sz
 decl_stmt|;
 name|int
@@ -4186,6 +4193,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|ofw_real_mode
+operator|&&
 name|chosen
 operator|!=
 operator|-
