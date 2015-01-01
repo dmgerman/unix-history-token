@@ -3428,7 +3428,7 @@ comment|/* 	         * No we can't use negative caching, as the fs 	         * c
 if|#
 directive|if
 literal|0
-block|if ((cnp->cn_flags& MAKEENTRY)&& nameiop != CREATE) { 			FS_DEBUG("inserting NULL into cache\n"); 			cache_enter(dvp, NULL, cnp); 		}
+block|if ((cnp->cn_flags& MAKEENTRY) != 0) { 			FS_DEBUG("inserting NULL into cache\n"); 			cache_enter(dvp, NULL, cnp); 		}
 endif|#
 directive|endif
 name|err

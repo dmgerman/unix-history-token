@@ -6296,10 +6296,8 @@ name|cn_flags
 operator|&
 name|MAKEENTRY
 operator|)
-operator|&&
-name|nameiop
 operator|!=
-name|CREATE
+literal|0
 condition|)
 name|cache_enter
 argument_list|(

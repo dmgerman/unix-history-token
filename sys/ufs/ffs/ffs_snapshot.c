@@ -1288,6 +1288,8 @@ argument_list|,
 name|LOCKPARENT
 operator||
 name|LOCKLEAF
+operator||
+name|NOCACHE
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
