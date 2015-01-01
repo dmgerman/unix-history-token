@@ -28179,18 +28179,15 @@ operator|(
 name|rc
 operator|)
 return|;
-comment|/* bufring size must be powerof2 */
 if|if
 condition|(
 name|qsize
 operator|<
 literal|128
 operator|||
-operator|!
-name|powerof2
-argument_list|(
 name|qsize
-argument_list|)
+operator|>
+literal|65536
 condition|)
 return|return
 operator|(
