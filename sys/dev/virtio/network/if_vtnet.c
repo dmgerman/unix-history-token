@@ -13978,7 +13978,7 @@ name|ifp
 operator|->
 name|if_hwassist
 operator||=
-name|CSUM_TSO
+name|CSUM_IP_TSO
 expr_stmt|;
 if|if
 condition|(
@@ -13992,9 +13992,8 @@ name|ifp
 operator|->
 name|if_hwassist
 operator||=
-name|CSUM_TSO
+name|CSUM_IP6_TSO
 expr_stmt|;
-comment|/* No CSUM_TSO_IPV6. */
 if|if
 condition|(
 name|sc
