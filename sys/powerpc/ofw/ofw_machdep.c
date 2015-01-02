@@ -448,17 +448,10 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|int
-name|apple_hack_mode
-decl_stmt|;
 name|phandle_t
 name|phandle
 decl_stmt|;
 name|sz
-operator|=
-literal|0
-expr_stmt|;
-name|apple_hack_mode
 operator|=
 literal|0
 expr_stmt|;
