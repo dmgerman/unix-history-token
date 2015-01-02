@@ -8828,48 +8828,12 @@ case|:
 return|return
 literal|"NT_PRPSINFO (Process information)"
 return|;
-case|case
-name|NT_AUXV
-case|:
-return|return
-literal|"NT_AUXV (Auxiliary vector)"
-return|;
-case|case
-name|NT_PRXFPREG
-case|:
-return|return
-literal|"NT_PRXFPREG (Linux user_xfpregs structure)"
-return|;
-case|case
-name|NT_PSTATUS
-case|:
-return|return
-literal|"NT_PSTATUS (Linux process status)"
-return|;
-case|case
-name|NT_FPREGS
-case|:
-return|return
-literal|"NT_FPREGS (Linux floating point regset)"
-return|;
-case|case
-name|NT_PSINFO
-case|:
-return|return
-literal|"NT_PSINFO (Linux process information)"
-return|;
-case|case
-name|NT_LWPSTATUS
-case|:
-return|return
-literal|"NT_LWPSTATUS (Linux lwpstatus_t type)"
-return|;
-case|case
-name|NT_LWPSINFO
-case|:
-return|return
-literal|"NT_LWPSINFO (Linux lwpinfo_t type)"
-return|;
+if|#
+directive|if
+literal|0
+block|case NT_AUXV: 			return "NT_AUXV (Auxiliary vector)"; 		case NT_PRXFPREG: 			return "NT_PRXFPREG (Linux user_xfpregs structure)"; 		case NT_PSTATUS: 			return "NT_PSTATUS (Linux process status)"; 		case NT_FPREGS: 			return "NT_FPREGS (Linux floating point regset)"; 		case NT_PSINFO: 			return "NT_PSINFO (Linux process information)"; 		case NT_LWPSTATUS: 			return "NT_LWPSTATUS (Linux lwpstatus_t type)"; 		case NT_LWPSINFO: 			return "NT_LWPSINFO (Linux lwpinfo_t type)";
+endif|#
+directive|endif
 default|default:
 name|snprintf
 argument_list|(
@@ -8899,55 +8863,12 @@ condition|(
 name|nt
 condition|)
 block|{
-case|case
-name|NT_ABI_TAG
-case|:
-switch|switch
-condition|(
-name|osabi
-condition|)
-block|{
-case|case
-name|ELFOSABI_FREEBSD
-case|:
-return|return
-literal|"NT_FREEBSD_ABI_TAG"
-return|;
-case|case
-name|ELFOSABI_NETBSD
-case|:
-return|return
-literal|"NT_NETBSD_IDENT"
-return|;
-case|case
-name|ELFOSABI_OPENBSD
-case|:
-return|return
-literal|"NT_OPENBSD_IDENT"
-return|;
-default|default:
-return|return
-literal|"NT_GNU_ABI_TAG"
-return|;
-block|}
-case|case
-name|NT_GNU_HWCAP
-case|:
-return|return
-literal|"NT_GNU_HWCAP (Hardware capabilities)"
-return|;
-case|case
-name|NT_GNU_BUILD_ID
-case|:
-return|return
-literal|"NT_GNU_BUILD_ID (Build id set by ld(1))"
-return|;
-case|case
-name|NT_GNU_GOLD_VERSION
-case|:
-return|return
-literal|"NT_GNU_GOLD_VERSION (GNU gold version)"
-return|;
+if|#
+directive|if
+literal|0
+block|case NT_ABI_TAG: 			switch (osabi) { 			case ELFOSABI_FREEBSD: 				return "NT_FREEBSD_ABI_TAG"; 			case ELFOSABI_NETBSD: 				return "NT_NETBSD_IDENT"; 			case ELFOSABI_OPENBSD: 				return "NT_OPENBSD_IDENT"; 			default: 				return "NT_GNU_ABI_TAG"; 			} 		case NT_GNU_HWCAP: 			return "NT_GNU_HWCAP (Hardware capabilities)"; 		case NT_GNU_BUILD_ID: 			return "NT_GNU_BUILD_ID (Build id set by ld(1))"; 		case NT_GNU_GOLD_VERSION: 			return "NT_GNU_GOLD_VERSION (GNU gold version)";
+endif|#
+directive|endif
 default|default:
 name|snprintf
 argument_list|(
@@ -8970,6 +8891,11 @@ operator|)
 return|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
+name|osabi
+expr_stmt|;
 block|}
 end_function
 
@@ -19715,17 +19641,7 @@ sizeof|sizeof
 argument_list|(
 name|Elf_Note
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|re
-operator|->
-name|ec
-operator|==
-name|ELFCLASS32
-condition|)
-name|buf
-operator|+=
+operator|+
 name|roundup2
 argument_list|(
 name|note
@@ -19742,27 +19658,6 @@ operator|->
 name|n_descsz
 argument_list|,
 literal|4
-argument_list|)
-expr_stmt|;
-else|else
-name|buf
-operator|+=
-name|roundup2
-argument_list|(
-name|note
-operator|->
-name|n_namesz
-argument_list|,
-literal|8
-argument_list|)
-operator|+
-name|roundup2
-argument_list|(
-name|note
-operator|->
-name|n_descsz
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
 block|}
