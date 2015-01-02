@@ -296,6 +296,7 @@ block|}
 end_function
 
 begin_function
+name|public
 name|ssize_t
 name|getline
 parameter_list|(
