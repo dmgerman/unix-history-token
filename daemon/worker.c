@@ -5633,6 +5633,15 @@ name|query_info_hash
 argument_list|(
 operator|&
 name|qinfo
+argument_list|,
+name|sldns_buffer_read_u16_at
+argument_list|(
+name|c
+operator|->
+name|buffer
+argument_list|,
+literal|2
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

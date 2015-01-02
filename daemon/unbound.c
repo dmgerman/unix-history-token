@@ -1405,8 +1405,10 @@ name|HAVE_SETRLIMIT
 block|}
 endif|#
 directive|endif
-name|log_warn
+name|verbose
 argument_list|(
+name|VERB_ALGO
+argument_list|,
 literal|"increased limit(open files) from %u to %u"
 argument_list|,
 operator|(

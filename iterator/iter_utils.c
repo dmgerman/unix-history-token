@@ -2009,6 +2009,9 @@ name|struct
 name|regional
 modifier|*
 name|region
+parameter_list|,
+name|uint16_t
+name|flags
 parameter_list|)
 block|{
 if|if
@@ -2029,6 +2032,8 @@ argument_list|,
 name|pside
 argument_list|,
 name|region
+argument_list|,
+name|flags
 argument_list|)
 condition|)
 name|log_err
@@ -2183,6 +2188,10 @@ argument_list|,
 name|qstate
 operator|->
 name|is_priming
+argument_list|,
+name|qstate
+operator|->
+name|is_valrec
 argument_list|)
 return|;
 block|}

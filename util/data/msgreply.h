@@ -538,7 +538,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** calculate hash value of query_info, lowercases the qname */
+comment|/** calculate hash value of query_info, lowercases the qname,  * uses CD flag for AAAA qtype */
 end_comment
 
 begin_function_decl
@@ -549,6 +549,9 @@ name|struct
 name|query_info
 modifier|*
 name|q
+parameter_list|,
+name|uint16_t
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

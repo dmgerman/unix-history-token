@@ -1491,6 +1491,9 @@ parameter_list|,
 name|int
 name|prime
 parameter_list|,
+name|int
+name|valrec
+parameter_list|,
 name|struct
 name|module_qstate
 modifier|*
@@ -1573,6 +1576,9 @@ name|flags
 parameter_list|,
 name|int
 name|prime
+parameter_list|,
+name|int
+name|valrec
 parameter_list|)
 parameter_list|)
 block|{

@@ -264,7 +264,7 @@ modifier|*
 name|qstate
 parameter_list|)
 function_decl|;
-comment|/** 	 * Attach subquery. 	 * Creates it if it does not exist already. 	 * Keeps sub and super references correct. 	 * Updates stat items in mesh_area structure. 	 * Pass if it is priming query or not. 	 * return: 	 * o if error (malloc) happened. 	 * o need to initialise the new state (module init; it is a new state). 	 *   so that the next run of the query with this module is successful. 	 * o no init needed, attachment successful. 	 *  	 * @param qstate: the state to find mesh state, and that wants to  	 * 	receive the results from the new subquery. 	 * @param qinfo: what to query for (copied). 	 * @param qflags: what flags to use (RD, CD flag or not). 	 * @param prime: if it is a (stub) priming query. 	 * @param newq: If the new subquery needs initialisation, it is  	 * 	returned, otherwise NULL is returned. 	 * @return: false on error, true if success (and init may be needed). 	 */
+comment|/** 	 * Attach subquery. 	 * Creates it if it does not exist already. 	 * Keeps sub and super references correct. 	 * Updates stat items in mesh_area structure. 	 * Pass if it is priming query or not. 	 * return: 	 * o if error (malloc) happened. 	 * o need to initialise the new state (module init; it is a new state). 	 *   so that the next run of the query with this module is successful. 	 * o no init needed, attachment successful. 	 *  	 * @param qstate: the state to find mesh state, and that wants to  	 * 	receive the results from the new subquery. 	 * @param qinfo: what to query for (copied). 	 * @param qflags: what flags to use (RD, CD flag or not). 	 * @param prime: if it is a (stub) priming query. 	 * @param valrec: validation lookup recursion, does not need validation 	 * @param newq: If the new subquery needs initialisation, it is  	 * 	returned, otherwise NULL is returned. 	 * @return: false on error, true if success (and init may be needed). 	 */
 name|int
 function_decl|(
 modifier|*
@@ -287,6 +287,9 @@ parameter_list|,
 name|int
 name|prime
 parameter_list|,
+name|int
+name|valrec
+parameter_list|,
 name|struct
 name|module_qstate
 modifier|*
@@ -307,7 +310,7 @@ modifier|*
 name|newq
 parameter_list|)
 function_decl|;
-comment|/** 	 * Detect if adding a dependency for qstate on name,type,class will 	 * create a dependency cycle. 	 * @param qstate: given mesh querystate. 	 * @param qinfo: query info for dependency.  	 * @param flags: query flags of dependency, RD/CD flags. 	 * @param prime: if dependency is a priming query or not. 	 * @return true if the name,type,class exists and the given  	 * 	qstate mesh exists as a dependency of that name. Thus  	 * 	if qstate becomes dependent on name,type,class then a  	 * 	cycle is created. 	 */
+comment|/** 	 * Detect if adding a dependency for qstate on name,type,class will 	 * create a dependency cycle. 	 * @param qstate: given mesh querystate. 	 * @param qinfo: query info for dependency.  	 * @param flags: query flags of dependency, RD/CD flags. 	 * @param prime: if dependency is a priming query or not. 	 * @param valrec: validation lookup recursion, does not need validation 	 * @return true if the name,type,class exists and the given  	 * 	qstate mesh exists as a dependency of that name. Thus  	 * 	if qstate becomes dependent on name,type,class then a  	 * 	cycle is created. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -329,6 +332,9 @@ name|flags
 parameter_list|,
 name|int
 name|prime
+parameter_list|,
+name|int
+name|valrec
 parameter_list|)
 function_decl|;
 comment|/** region for temporary usage. May be cleared after operate() call. */
@@ -539,6 +545,10 @@ decl_stmt|;
 comment|/** if this is a (stub or root) priming query (with hints) */
 name|int
 name|is_priming
+decl_stmt|;
+comment|/** if this is a validation recursion query that does not get 	 * validation itself */
+name|int
+name|is_valrec
 decl_stmt|;
 comment|/** comm_reply contains server replies */
 name|struct

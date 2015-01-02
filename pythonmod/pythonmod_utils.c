@@ -165,6 +165,10 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+name|qstate
+operator|->
+name|query_flags
 argument_list|)
 return|;
 block|}
@@ -212,6 +216,10 @@ operator|=
 name|query_info_hash
 argument_list|(
 name|qinfo
+argument_list|,
+name|qstate
+operator|->
+name|query_flags
 argument_list|)
 expr_stmt|;
 if|if

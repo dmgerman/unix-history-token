@@ -2187,7 +2187,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/** Main routine for checkconf */
+comment|/** Main routine for unbound-host */
 end_comment
 
 begin_function

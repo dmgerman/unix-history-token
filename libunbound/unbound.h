@@ -288,7 +288,7 @@ modifier|*
 name|fname
 parameter_list|)
 function_decl|;
-comment|/**  * Add trust anchor to the give context that is tracked with RFC5011  * automated trust anchor maintenance.  The file is written to when the  * trust anchor is changed.  * Pass the name of a file that was output from eg. unbound-anchor,  * or you can start it by providing a trusted DNSKEY or DS record on one  * line in the file.  * @param ctx: context.  *	At this time it is only possible to add trusted keys before the  *	first resolve is done.  * @param fname: filename of file with trust anchor.  * @return 0 if OK, else error.  */
+comment|/**  * Add trust anchor to the given context that is tracked with RFC5011  * automated trust anchor maintenance.  The file is written to when the  * trust anchor is changed.  * Pass the name of a file that was output from eg. unbound-anchor,  * or you can start it by providing a trusted DNSKEY or DS record on one  * line in the file.  * @param ctx: context.  *	At this time it is only possible to add trusted keys before the  *	first resolve is done.  * @param fname: filename of file with trust anchor.  * @return 0 if OK, else error.  */
 name|int
 name|ub_ctx_add_ta_autr
 parameter_list|(

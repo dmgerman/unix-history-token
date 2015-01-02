@@ -1454,6 +1454,8 @@ name|query_flags
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|subq
 argument_list|)
@@ -1732,6 +1734,8 @@ name|query_flags
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|subq
 argument_list|)
@@ -1951,7 +1955,7 @@ name|int
 name|id
 parameter_list|)
 block|{
-comment|/*      * In many cases we have nothing special to do. From most to least common:      *      *   - An internal query.      *   - A query for a record type other than AAAA.      *   - An AAAA query for which an error was returned.      *   - A successful AAAA query with an answer.      */
+comment|/*      * In many cases we have nothing special to do. From most to least common:      *      *   - An internal query.      *   - A query for a record type other than AAAA.      *   - CD FLAG was set on querier      *   - An AAAA query for which an error was returned.      *   - A successful AAAA query with an answer.      */
 if|if
 condition|(
 operator|(
@@ -1974,6 +1978,14 @@ operator|.
 name|qtype
 operator|!=
 name|LDNS_RR_TYPE_AAAA
+operator|||
+operator|(
+name|qstate
+operator|->
+name|query_flags
+operator|&
+name|BIT_CD
+operator|)
 operator|||
 name|qstate
 operator|->
@@ -3453,6 +3465,10 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+name|super
+operator|->
+name|query_flags
 argument_list|)
 condition|)
 name|log_err

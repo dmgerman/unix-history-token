@@ -4430,8 +4430,6 @@ name|verifypem
 argument_list|,
 name|NULL
 argument_list|)
-operator|!=
-literal|1
 condition|)
 block|{
 name|log_crypto_err

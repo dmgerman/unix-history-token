@@ -107,7 +107,7 @@ name|PROV_RSA_FULL
 argument_list|,
 name|CRYPT_VERIFYCONTEXT
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
 goto|goto
@@ -123,7 +123,7 @@ name|len
 argument_list|,
 name|buf
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{

@@ -169,6 +169,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/random.h>
 end_include
 
@@ -338,7 +344,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CTL_MAXNAME
+name|SYS__sysctl
 end_ifdef
 
 begin_function_decl
@@ -434,7 +440,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|CTL_MAXNAME
+name|SYS__sysctl
 comment|/* 	 * Try to use sysctl CTL_KERN, KERN_RANDOM, RANDOM_UUID. 	 * sysctl is a failsafe API, so it guarantees a result.  This 	 * should work inside a chroot, or when file descriptors are 	 * exhuasted. 	 * 	 * However this can fail if the Linux kernel removes support 	 * for sysctl.  Starting in 2007, there have been efforts to 	 * deprecate the sysctl API/ABI, and push callers towards use 	 * of the chroot-unavailable fd-using /proc mechanism -- 	 * essentially the same problems as /dev/urandom. 	 * 	 * Numerous setbacks have been encountered in their deprecation 	 * schedule, so as of June 2014 the kernel ABI still exists on 	 * most Linux architectures. The sysctl() stub in libc is missing 	 * on some systems.  There are also reports that some kernels 	 * spew messages to the console. 	 */
 name|ret
 operator|=
@@ -459,7 +465,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* CTL_MAXNAME */
+comment|/* SYS__sysctl */
 comment|/* 	 * Entropy collection via /dev/urandom and sysctl have failed. 	 * 	 * No other API exists for collecting entropy.  See the large 	 * comment block above. 	 * 	 * We have very few options: 	 *     - Even syslog_r is unsafe to call at this low level, so 	 *	 there is no way to alert the user or program. 	 *     - Cannot call abort() because some systems have unsafe 	 *	 corefiles. 	 *     - Could raise(SIGKILL) resulting in silent program termination. 	 *     - Return EIO, to hint that arc4random's stir function 	 *       should raise(SIGKILL) 	 *     - Do the best under the circumstances.... 	 * 	 * This code path exists to bring light to the issue that Linux 	 * does not provide a failsafe API for entropy collection. 	 * 	 * We hope this demonstrates that Linux should either retain their 	 * sysctl ABI, or consider providing a new failsafe API which 	 * works in a chroot or when file descriptors are exhausted. 	 */
 undef|#
 directive|undef
@@ -846,7 +852,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CTL_MAXNAME
+name|SYS__sysctl
 end_ifdef
 
 begin_function
@@ -999,7 +1005,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CTL_MAXNAME */
+comment|/* SYS__sysctl */
 end_comment
 
 begin_decl_stmt

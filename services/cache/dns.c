@@ -812,6 +812,9 @@ parameter_list|,
 name|uint16_t
 name|qclass
 parameter_list|,
+name|uint16_t
+name|flags
+parameter_list|,
 name|time_t
 name|now
 parameter_list|,
@@ -861,6 +864,8 @@ name|query_info_hash
 argument_list|(
 operator|&
 name|k
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|e
@@ -1089,6 +1094,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* BIT_CD on false because delegpt lookup does 			 * not use dns64 translation */
 name|neg
 operator|=
 name|msg_cache_lookup
@@ -1106,6 +1112,8 @@ argument_list|,
 name|LDNS_RR_TYPE_A
 argument_list|,
 name|qclass
+argument_list|,
+literal|0
 argument_list|,
 name|now
 argument_list|,
@@ -1226,6 +1234,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* BIT_CD on false because delegpt lookup does 			 * not use dns64 translation */
 name|neg
 operator|=
 name|msg_cache_lookup
@@ -1243,6 +1252,8 @@ argument_list|,
 name|LDNS_RR_TYPE_AAAA
 argument_list|,
 name|qclass
+argument_list|,
+literal|0
 argument_list|,
 name|now
 argument_list|,
@@ -1438,6 +1449,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* BIT_CD on false because delegpt lookup does 			 * not use dns64 translation */
 name|neg
 operator|=
 name|msg_cache_lookup
@@ -1455,6 +1467,8 @@ argument_list|,
 name|LDNS_RR_TYPE_A
 argument_list|,
 name|qclass
+argument_list|,
+literal|0
 argument_list|,
 name|now
 argument_list|,
@@ -1576,6 +1590,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* BIT_CD on false because delegpt lookup does 			 * not use dns64 translation */
 name|neg
 operator|=
 name|msg_cache_lookup
@@ -1593,6 +1608,8 @@ argument_list|,
 name|LDNS_RR_TYPE_AAAA
 argument_list|,
 name|qclass
+argument_list|,
+literal|0
 argument_list|,
 name|now
 argument_list|,
@@ -3946,6 +3963,9 @@ parameter_list|,
 name|uint16_t
 name|qclass
 parameter_list|,
+name|uint16_t
+name|flags
+parameter_list|,
 name|struct
 name|regional
 modifier|*
@@ -4013,6 +4033,8 @@ name|query_info_hash
 argument_list|(
 operator|&
 name|k
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|e
@@ -4449,6 +4471,8 @@ name|query_info_hash
 argument_list|(
 operator|&
 name|k
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|e
@@ -4614,6 +4638,9 @@ name|struct
 name|regional
 modifier|*
 name|region
+parameter_list|,
+name|uint16_t
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -4862,6 +4889,8 @@ name|query_info_hash
 argument_list|(
 operator|&
 name|qinf
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|dns_cache_store_msg
@@ -4915,6 +4944,9 @@ name|qinfo
 parameter_list|,
 name|time_t
 name|adjust
+parameter_list|,
+name|uint16_t
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -4943,6 +4975,8 @@ argument_list|,
 name|qinfo
 operator|->
 name|qclass
+argument_list|,
+name|flags
 argument_list|,
 operator|*
 name|env

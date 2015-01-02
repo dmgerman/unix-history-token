@@ -5103,9 +5103,14 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* Always include RCODEs 0-5 */
 if|if
 condition|(
 name|inhibit_zero
+operator|&&
+name|i
+operator|>
+name|LDNS_RCODE_REFUSED
 operator|&&
 name|s
 operator|->
@@ -6703,6 +6708,8 @@ name|query_info_hash
 argument_list|(
 operator|&
 name|k
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|slabhash_remove
@@ -6719,6 +6726,39 @@ operator|&
 name|k
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|t
+operator|==
+name|LDNS_RR_TYPE_AAAA
+condition|)
+block|{
+comment|/* for AAAA also flush dns64 bit_cd packet */
+name|h
+operator|=
+name|query_info_hash
+argument_list|(
+operator|&
+name|k
+argument_list|,
+name|BIT_CD
+argument_list|)
+expr_stmt|;
+name|slabhash_remove
+argument_list|(
+name|worker
+operator|->
+name|env
+operator|.
+name|msg_cache
+argument_list|,
+name|h
+argument_list|,
+operator|&
+name|k
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
