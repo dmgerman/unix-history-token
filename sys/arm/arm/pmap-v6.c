@@ -200,6 +200,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_phys.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_extern.h>
 end_include
 
@@ -4911,42 +4917,26 @@ operator|=
 name|NBPDR
 expr_stmt|;
 block|}
-comment|/* 	 * Calculate the size of the pv head table for superpages. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|phys_avail
-index|[
-name|i
-operator|+
-literal|1
-index|]
-condition|;
-name|i
-operator|+=
-literal|2
-control|)
-empty_stmt|;
+comment|/* 	 * Calculate the size of the pv head table for superpages. 	 * Handle the possibility that "vm_phys_segs[...].end" is zero. 	 */
 name|pv_npg
 operator|=
-name|round_1mpage
+name|trunc_1mpage
 argument_list|(
-name|phys_avail
+name|vm_phys_segs
 index|[
-operator|(
-name|i
+name|vm_phys_nsegs
 operator|-
-literal|2
-operator|)
-operator|+
 literal|1
 index|]
+operator|.
+name|end
+operator|-
+name|PAGE_SIZE
 argument_list|)
 operator|/
 name|NBPDR
+operator|+
+literal|1
 expr_stmt|;
 comment|/* 	 * Allocate memory for the pv head table for superpages. 	 */
 name|s

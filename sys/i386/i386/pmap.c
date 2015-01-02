@@ -236,6 +236,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_phys.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_radix.h>
 end_include
 
@@ -1949,6 +1955,19 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Add a physical memory segment (vm_phys_seg) corresponding to the 	 * preallocated kernel page table pages so that vm_page structures 	 * representing these pages will be created.  The vm_page structures 	 * are required for promotion of the corresponding kernel virtual 	 * addresses to superpage mappings. 	 */
+name|vm_phys_add_seg
+argument_list|(
+name|KPTphys
+argument_list|,
+name|KPTphys
+operator|+
+name|ptoa
+argument_list|(
+name|nkpt
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize the first available kernel virtual address.  However, 	 * using "firstaddr" may waste a few pages of the kernel virtual 	 * address space, because locore may not have mapped every physical 	 * page that it allocated.  Preferably, locore would provide a first 	 * unused virtual address in addition to "firstaddr". 	 */
 name|virtual_avail
 operator|=
@@ -3382,42 +3401,26 @@ operator|=
 name|NBPDR
 expr_stmt|;
 block|}
-comment|/* 	 * Calculate the size of the pv head table for superpages. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|phys_avail
-index|[
-name|i
-operator|+
-literal|1
-index|]
-condition|;
-name|i
-operator|+=
-literal|2
-control|)
-empty_stmt|;
+comment|/* 	 * Calculate the size of the pv head table for superpages. 	 * Handle the possibility that "vm_phys_segs[...].end" is zero. 	 */
 name|pv_npg
 operator|=
-name|round_4mpage
+name|trunc_4mpage
 argument_list|(
-name|phys_avail
+name|vm_phys_segs
 index|[
-operator|(
-name|i
+name|vm_phys_nsegs
 operator|-
-literal|2
-operator|)
-operator|+
 literal|1
 index|]
+operator|.
+name|end
+operator|-
+name|PAGE_SIZE
 argument_list|)
 operator|/
 name|NBPDR
+operator|+
+literal|1
 expr_stmt|;
 comment|/* 	 * Allocate memory for the pv head table for superpages. 	 */
 name|s
