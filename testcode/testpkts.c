@@ -347,7 +347,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 operator|*
@@ -772,7 +773,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|parse
@@ -1455,7 +1457,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|parse
@@ -1505,7 +1508,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|parse
@@ -2056,6 +2060,10 @@ operator|&&
 operator|!
 name|isascii
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -2400,7 +2408,8 @@ operator|!
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|end
@@ -3046,7 +3055,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|parse

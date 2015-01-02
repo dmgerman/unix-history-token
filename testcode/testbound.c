@@ -264,7 +264,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p
@@ -404,7 +405,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p
@@ -528,7 +530,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|id
@@ -687,7 +690,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|parse
@@ -912,6 +916,13 @@ argument_list|,
 literal|"		val-log-level: 2\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|cfg
+argument_list|,
+literal|"remote-control:	control-enable: no\n"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -941,7 +952,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|parse

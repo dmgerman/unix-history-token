@@ -87,6 +87,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"util/fptr_wlist.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"util/data/msgreply.h"
 end_include
 
@@ -246,11 +252,45 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_EVENT_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<event.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"event2/event.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"event2/event_struct.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"event2/event_compat.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -295,6 +335,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SBRK
+end_ifdef
+
 begin_comment
 comment|/** global debug value to keep track of heap memory allocation */
 end_comment
@@ -307,6 +353,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -739,17 +790,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"configured for %s on %s with options:%s\n"
-argument_list|,
-name|CONFIGURE_TARGET
-argument_list|,
-name|CONFIGURE_DATE
-argument_list|,
-name|CONFIGURE_BUILD_WITH
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1286,13 +1326,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-literal|1
-condition|)
-block|{
 endif|#
 directive|endif
 name|log_warn
@@ -1366,7 +1399,12 @@ literal|"ports in config to remove this warning"
 argument_list|)
 expr_stmt|;
 return|return;
+ifdef|#
+directive|ifdef
+name|HAVE_SETRLIMIT
 block|}
+endif|#
+directive|endif
 name|log_warn
 argument_list|(
 literal|"increased limit(open files) from %u to %u"
@@ -1399,7 +1437,13 @@ endif|#
 directive|endif
 comment|/* S_SPLINT_S */
 block|}
+end_function
+
+begin_comment
 comment|/** set verbosity, check rlimits, cache settings */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|apply_settings
@@ -1416,6 +1460,9 @@ name|cfg
 parameter_list|,
 name|int
 name|cmdline_verbose
+parameter_list|,
+name|int
+name|debug_mode
 parameter_list|)
 block|{
 comment|/* apply if they have changed */
@@ -1427,6 +1474,26 @@ name|cfg
 operator|->
 name|verbosity
 expr_stmt|;
+if|if
+condition|(
+name|debug_mode
+operator|>
+literal|1
+condition|)
+block|{
+name|cfg
+operator|->
+name|use_syslog
+operator|=
+literal|0
+expr_stmt|;
+name|cfg
+operator|->
+name|logfile
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|daemon_apply_cfg
 argument_list|(
 name|daemon
@@ -1440,10 +1507,19 @@ name|cfg
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|HAVE_KILL
+end_ifdef
+
+begin_comment
 comment|/** Read existing pid from pidfile.   * @param file: file name of pid file.  * @return: the pid from the file or -1 if none.  */
+end_comment
+
+begin_function
 specifier|static
 name|pid_t
 name|readpid
@@ -1630,7 +1706,13 @@ return|return
 name|pid
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/** write pid to file.   * @param pidfile: file name of pid file.  * @param pid: pid to write to file.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|writepid
@@ -1715,7 +1797,13 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/**  * check old pid file.  * @param pidfile: the file name of the pid file.  * @param inchroot: if pidfile is inchroot and we can thus expect to  *	be able to delete it.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|checkoldpid
@@ -1789,10 +1877,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* HAVE_KILL */
+end_comment
+
+begin_comment
 comment|/** detach from command line */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|detach
@@ -1971,7 +2071,13 @@ endif|#
 directive|endif
 comment|/* HAVE_DAEMON */
 block|}
+end_function
+
+begin_comment
 comment|/** daemonize, drop user priviliges and chroot if needed */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|perform_setup
@@ -3153,7 +3259,13 @@ name|chrootdir
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/**  * Run the daemon.   * @param cfgfile: the config file name.  * @param cmdline_verbose: verbosity resulting from commandline -v.  *    These increase verbosity as specified in the config file.  * @param debug_mode: if set, do not daemonize.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|run_daemon
@@ -3292,6 +3404,8 @@ argument_list|,
 name|cfg
 argument_list|,
 name|cmdline_verbose
+argument_list|,
+name|debug_mode
 argument_list|)
 expr_stmt|;
 comment|/* prepare */
@@ -3441,18 +3555,36 @@ name|daemon
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/** getopt global, in case header files fail to declare it. */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|optind
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/** getopt global, in case header files fail to declare it. */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|optarg
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**  * main program. Set options given commandline arguments.  * @param argc: number of commandline arguments.  * @param argv: array of commandline arguments.  * @return: exit status of the program.  */
+end_comment
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -3610,8 +3742,7 @@ case|case
 literal|'d'
 case|:
 name|debug_mode
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 break|break;
 case|case

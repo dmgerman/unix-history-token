@@ -400,7 +400,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|p
 index|[
@@ -591,7 +592,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|parse
@@ -637,7 +639,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|parse
@@ -1266,7 +1269,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|remain
@@ -1450,7 +1454,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|remain
@@ -1475,7 +1480,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|remain
@@ -1566,7 +1572,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|remain
@@ -1736,7 +1743,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|remain
@@ -1783,7 +1791,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|remain
@@ -1826,7 +1835,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|m
@@ -1963,7 +1973,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|remain
@@ -1988,7 +1999,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|remain
@@ -2238,7 +2250,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|line
@@ -2442,7 +2455,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|parse
@@ -3558,7 +3572,8 @@ operator|(
 name|isalnum
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|at
@@ -3897,7 +3912,8 @@ operator|(
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|at
@@ -3980,7 +3996,8 @@ condition|(
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|operator
 argument_list|)
@@ -4557,7 +4574,8 @@ condition|(
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|at
@@ -4589,7 +4607,8 @@ operator|(
 name|isalnum
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|at
@@ -4614,7 +4633,8 @@ operator|(
 name|isalnum
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|at

@@ -347,6 +347,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/**  * Adjust the prefetch_ttl for a cached message.  This adds a value to the  * prefetch ttl - postponing the time when it will be prefetched for future  * incoming queries.  * @param env: module environment with caches and time.  * @param qinfo: query info for the query that needs adjustment.  * @param adjust: time in seconds to add to the prefetch_leeway.  * @return false if not in cache. true if added.  */
+end_comment
+
+begin_function_decl
+name|int
+name|dns_cache_prefetch_adjust
+parameter_list|(
+name|struct
+name|module_env
+modifier|*
+name|env
+parameter_list|,
+name|struct
+name|query_info
+modifier|*
+name|qinfo
+parameter_list|,
+name|time_t
+name|adjust
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

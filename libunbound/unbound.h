@@ -288,6 +288,21 @@ modifier|*
 name|fname
 parameter_list|)
 function_decl|;
+comment|/**  * Add trust anchor to the give context that is tracked with RFC5011  * automated trust anchor maintenance.  The file is written to when the  * trust anchor is changed.  * Pass the name of a file that was output from eg. unbound-anchor,  * or you can start it by providing a trusted DNSKEY or DS record on one  * line in the file.  * @param ctx: context.  *	At this time it is only possible to add trusted keys before the  *	first resolve is done.  * @param fname: filename of file with trust anchor.  * @return 0 if OK, else error.  */
+name|int
+name|ub_ctx_add_ta_autr
+parameter_list|(
+name|struct
+name|ub_ctx
+modifier|*
+name|ctx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fname
+parameter_list|)
+function_decl|;
 comment|/**  * Add trust anchors to the given context.  * Pass the name of a bind-style config file with trusted-keys{}.  * @param ctx: context.  *	At this time it is only possible to add trusted keys before the  *	first resolve is done.  * @param fname: filename of file with bind-style config entries with trust  * 	anchors.  * @return 0 if OK, else error.  */
 name|int
 name|ub_ctx_trustedkeys
@@ -465,7 +480,7 @@ modifier|*
 name|result
 parameter_list|)
 function_decl|;
-comment|/**   * Convert error value to a human readable string.  * @param err: error code from one of the ub_val* functions.  * @return pointer to constant text string, zero terminated.  */
+comment|/**   * Convert error value to a human readable string.  * @param err: error code from one of the libunbound functions.  * @return pointer to constant text string, zero terminated.  */
 specifier|const
 name|char
 modifier|*

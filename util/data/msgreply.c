@@ -256,7 +256,6 @@ comment|/** constructor for replyinfo */
 end_comment
 
 begin_function
-specifier|static
 name|struct
 name|reply_info
 modifier|*

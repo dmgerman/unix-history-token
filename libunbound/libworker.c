@@ -51,6 +51,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"libunbound/worker.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libunbound/unbound-event.h"
 end_include
 
@@ -82,6 +88,12 @@ begin_include
 include|#
 directive|include
 file|"services/outbound_list.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"util/fptr_wlist.h"
 end_include
 
 begin_include
@@ -1276,6 +1288,8 @@ argument_list|,
 name|cfg
 operator|->
 name|delay_close
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4903,6 +4917,9 @@ parameter_list|,
 name|int
 name|want_dnssec
 parameter_list|,
+name|int
+name|nocaps
+parameter_list|,
 name|struct
 name|sockaddr_storage
 modifier|*
@@ -5000,6 +5017,8 @@ argument_list|,
 name|dnssec
 argument_list|,
 name|want_dnssec
+argument_list|,
+name|nocaps
 argument_list|,
 name|q
 operator|->
@@ -5738,6 +5757,12 @@ argument_list|(
 name|want_dnssec
 argument_list|)
 argument_list|,
+name|int
+name|ATTR_UNUSED
+argument_list|(
+name|nocaps
+argument_list|)
+argument_list|,
 expr|struct
 name|sockaddr_storage
 operator|*
@@ -5750,6 +5775,19 @@ name|socklen_t
 name|ATTR_UNUSED
 argument_list|(
 name|addrlen
+argument_list|)
+argument_list|,
+name|uint8_t
+operator|*
+name|ATTR_UNUSED
+argument_list|(
+name|zone
+argument_list|)
+argument_list|,
+name|size_t
+name|ATTR_UNUSED
+argument_list|(
+name|zonelen
 argument_list|)
 argument_list|,
 expr|struct

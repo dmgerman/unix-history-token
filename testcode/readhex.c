@@ -69,7 +69,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 operator|*
@@ -199,7 +200,8 @@ operator|!
 name|isalnum
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p
@@ -231,7 +233,8 @@ operator|&&
 name|isalnum
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p

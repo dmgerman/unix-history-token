@@ -512,6 +512,10 @@ name|config_strlist
 modifier|*
 name|local_data
 decl_stmt|;
+comment|/** unblock lan zones (reverse lookups for 10/8 and so on) */
+name|int
+name|unblock_lan_zones
+decl_stmt|;
 comment|/** remote control section. enable toggle. */
 name|int
 name|remote_control_enable
@@ -566,6 +570,66 @@ decl_stmt|;
 comment|/* maximum UDP response size */
 name|size_t
 name|max_udp_size
+decl_stmt|;
+comment|/* DNS64 prefix */
+name|char
+modifier|*
+name|dns64_prefix
+decl_stmt|;
+comment|/* Synthetize all AAAA record despite the presence of an authoritative one */
+name|int
+name|dns64_synthall
+decl_stmt|;
+comment|/** true to enable dnstap support */
+name|int
+name|dnstap
+decl_stmt|;
+comment|/** dnstap socket path */
+name|char
+modifier|*
+name|dnstap_socket_path
+decl_stmt|;
+comment|/** true to send "identity" via dnstap */
+name|int
+name|dnstap_send_identity
+decl_stmt|;
+comment|/** true to send "version" via dnstap */
+name|int
+name|dnstap_send_version
+decl_stmt|;
+comment|/** dnstap "identity", hostname is used if "". */
+name|char
+modifier|*
+name|dnstap_identity
+decl_stmt|;
+comment|/** dnstap "version", package version is used if "". */
+name|char
+modifier|*
+name|dnstap_version
+decl_stmt|;
+comment|/** true to log dnstap RESOLVER_QUERY message events */
+name|int
+name|dnstap_log_resolver_query_messages
+decl_stmt|;
+comment|/** true to log dnstap RESOLVER_RESPONSE message events */
+name|int
+name|dnstap_log_resolver_response_messages
+decl_stmt|;
+comment|/** true to log dnstap CLIENT_QUERY message events */
+name|int
+name|dnstap_log_client_query_messages
+decl_stmt|;
+comment|/** true to log dnstap CLIENT_RESPONSE message events */
+name|int
+name|dnstap_log_client_response_messages
+decl_stmt|;
+comment|/** true to log dnstap FORWARDER_QUERY message events */
+name|int
+name|dnstap_log_forwarder_query_messages
+decl_stmt|;
+comment|/** true to log dnstap FORWARDER_RESPONSE message events */
+name|int
+name|dnstap_log_forwarder_response_messages
 decl_stmt|;
 block|}
 struct|;
@@ -1396,6 +1460,82 @@ modifier|*
 name|cfg_parser
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/** init lex state */
+end_comment
+
+begin_function_decl
+name|void
+name|init_cfg_parse
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** lex in file */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|ub_c_in
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/** lex out file */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|ub_c_out
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/** the yacc lex generated parse function */
+end_comment
+
+begin_function_decl
+name|int
+name|ub_c_parse
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** the lexer function */
+end_comment
+
+begin_function_decl
+name|int
+name|ub_c_lex
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** wrap function */
+end_comment
+
+begin_function_decl
+name|int
+name|ub_c_wrap
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/** parsing helpers: print error with file and line numbers */

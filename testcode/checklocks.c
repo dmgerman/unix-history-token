@@ -85,6 +85,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/** if the key was deleted, i.e. we have quit */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|key_deleted
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/** we hide the thread debug info with this key. */
 end_comment
 
@@ -1416,6 +1429,29 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|thr
+condition|)
+block|{
+comment|/* this is called when log_init() calls lock_init() 		 * functions, and the test check code has not yet 		 * been initialised.  But luckily, the checklock_start() 		 * routine can be called multiple times without ill effect. 		 */
+name|checklock_start
+argument_list|()
+expr_stmt|;
+name|thr
+operator|=
+operator|(
+expr|struct
+name|thr_check
+operator|*
+operator|)
+name|pthread_getspecific
+argument_list|(
+name|thr_debug_key
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -3910,6 +3946,11 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|key_deleted
+condition|)
+return|return;
+if|if
+condition|(
 operator|!
 name|key_created
 condition|)
@@ -4014,6 +4055,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|key_deleted
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|check_locking_order

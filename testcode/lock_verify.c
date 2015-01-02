@@ -2052,6 +2052,16 @@ argument_list|(
 name|NULL
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_THREAD_DEBUG
+comment|/* do not overwrite the ublocktrace files with the ones generated 	 * by this program (i.e. when the log code creates a lock) */
+name|check_locking_order
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|argc

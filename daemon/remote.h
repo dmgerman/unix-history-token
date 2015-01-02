@@ -330,54 +330,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/** handle remote control accept callbacks */
-end_comment
-
-begin_function_decl
-name|int
-name|remote_accept_callback
-parameter_list|(
-name|struct
-name|comm_point
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|comm_reply
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/** handle remote control data callbacks */
-end_comment
-
-begin_function_decl
-name|int
-name|remote_control_callback
-parameter_list|(
-name|struct
-name|comm_point
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|comm_reply
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -467,25 +419,6 @@ end_endif
 begin_comment
 comment|/* HAVE_SSL */
 end_comment
-
-begin_comment
-comment|/** routine to printout option values over SSL */
-end_comment
-
-begin_function_decl
-name|void
-name|remote_get_opt_ssl
-parameter_list|(
-name|char
-modifier|*
-name|line
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

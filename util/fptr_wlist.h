@@ -416,6 +416,9 @@ operator|,
 name|int
 name|want_dnssec
 operator|,
+name|int
+name|nocaps
+operator|,
 expr|struct
 name|sockaddr_storage
 operator|*

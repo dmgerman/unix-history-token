@@ -196,7 +196,7 @@ modifier|*
 name|key_cache
 decl_stmt|;
 comment|/* --- services --- */
-comment|/**  	 * Send serviced DNS query to server. UDP/TCP and EDNS is handled. 	 * operate() should return with wait_reply. Later on a callback  	 * will cause operate() to be called with event timeout or reply. 	 * The time until a timeout is calculated from roundtrip timing, 	 * several UDP retries are attempted. 	 * @param qname: query name. (host order) 	 * @param qnamelen: length in bytes of qname, including trailing 0. 	 * @param qtype: query type. (host order) 	 * @param qclass: query class. (host order) 	 * @param flags: host order flags word, with opcode and CD bit. 	 * @param dnssec: if set, EDNS record will have bits set. 	 *	If EDNS_DO bit is set, DO bit is set in EDNS records. 	 *	If BIT_CD is set, CD bit is set in queries with EDNS records. 	 * @param want_dnssec: if set, the validator wants DNSSEC.  Without 	 * 	EDNS, the answer is likely to be useless for this domain. 	 * @param addr: where to. 	 * @param addrlen: length of addr. 	 * @param zone: delegation point name. 	 * @param zonelen: length of zone name. 	 * @param q: wich query state to reactivate upon return. 	 * @return: false on failure (memory or socket related). no query was 	 *	sent. Or returns an outbound entry with qsent and qstate set. 	 *	This outbound_entry will be used on later module invocations 	 *	that involve this query (timeout, error or reply). 	 */
+comment|/**  	 * Send serviced DNS query to server. UDP/TCP and EDNS is handled. 	 * operate() should return with wait_reply. Later on a callback  	 * will cause operate() to be called with event timeout or reply. 	 * The time until a timeout is calculated from roundtrip timing, 	 * several UDP retries are attempted. 	 * @param qname: query name. (host order) 	 * @param qnamelen: length in bytes of qname, including trailing 0. 	 * @param qtype: query type. (host order) 	 * @param qclass: query class. (host order) 	 * @param flags: host order flags word, with opcode and CD bit. 	 * @param dnssec: if set, EDNS record will have bits set. 	 *	If EDNS_DO bit is set, DO bit is set in EDNS records. 	 *	If BIT_CD is set, CD bit is set in queries with EDNS records. 	 * @param want_dnssec: if set, the validator wants DNSSEC.  Without 	 * 	EDNS, the answer is likely to be useless for this domain. 	 * @param nocaps: do not use caps_for_id, use the qname as given. 	 *	(ignored if caps_for_id is disabled). 	 * @param addr: where to. 	 * @param addrlen: length of addr. 	 * @param zone: delegation point name. 	 * @param zonelen: length of zone name. 	 * @param q: wich query state to reactivate upon return. 	 * @return: false on failure (memory or socket related). no query was 	 *	sent. Or returns an outbound entry with qsent and qstate set. 	 *	This outbound_entry will be used on later module invocations 	 *	that involve this query (timeout, error or reply). 	 */
 name|struct
 name|outbound_entry
 modifier|*
@@ -226,6 +226,9 @@ name|dnssec
 parameter_list|,
 name|int
 name|want_dnssec
+parameter_list|,
+name|int
+name|nocaps
 parameter_list|,
 name|struct
 name|sockaddr_storage

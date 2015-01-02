@@ -1159,6 +1159,16 @@ argument_list|,
 name|SSL_OP_NO_SSLv2
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|SSL_CTX_set_options
+argument_list|(
+name|ctx
+argument_list|,
+name|SSL_OP_NO_SSLv3
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
