@@ -1526,6 +1526,10 @@ name|kern___getcwd
 argument_list|(
 name|td
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|path
 argument_list|,
 name|UIO_SYSSPACE
