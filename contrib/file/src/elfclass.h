@@ -86,6 +86,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|notecount
+operator|=
+name|ms
+operator|->
+name|elf_notes_max
+expr_stmt|;
+end_expr_stmt
+
 begin_switch
 switch|switch
 condition|(
@@ -122,7 +131,7 @@ name|toomany
 argument_list|(
 name|ms
 argument_list|,
-literal|"program"
+literal|"program headers"
 argument_list|,
 name|phnum
 argument_list|)
@@ -173,6 +182,9 @@ name|fsize
 argument_list|,
 operator|&
 name|flags
+argument_list|,
+operator|&
+name|notecount
 argument_list|)
 operator|==
 operator|-
@@ -289,10 +301,13 @@ argument_list|)
 argument_list|,
 name|fsize
 argument_list|,
+name|shnum
+argument_list|,
 operator|&
 name|flags
 argument_list|,
-name|shnum
+operator|&
+name|notecount
 argument_list|)
 operator|==
 operator|-
@@ -330,7 +345,7 @@ name|toomany
 argument_list|(
 name|ms
 argument_list|,
-literal|"section"
+literal|"section headers"
 argument_list|,
 name|shnum
 argument_list|)
@@ -375,9 +390,6 @@ argument_list|)
 argument_list|,
 name|fsize
 argument_list|,
-operator|&
-name|flags
-argument_list|,
 name|elf_getu16
 argument_list|(
 name|swap
@@ -398,6 +410,12 @@ name|elfhdr
 operator|.
 name|e_shstrndx
 argument_list|)
+argument_list|,
+operator|&
+name|flags
+argument_list|,
+operator|&
+name|notecount
 argument_list|)
 operator|==
 operator|-
@@ -412,6 +430,27 @@ default|default:
 break|break;
 block|}
 end_switch
+
+begin_if
+if|if
+condition|(
+name|notecount
+operator|==
+literal|0
+condition|)
+return|return
+name|toomany
+argument_list|(
+name|ms
+argument_list|,
+literal|"notes"
+argument_list|,
+name|ms
+operator|->
+name|elf_notes_max
+argument_list|)
+return|;
+end_if
 
 begin_return
 return|return

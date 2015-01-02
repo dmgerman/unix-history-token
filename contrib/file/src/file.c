@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: file.c,v 1.159 2014/11/28 02:46:39 christos Exp $"
+literal|"@(#)$File: file.c,v 1.160 2014/12/16 23:18:40 christos Exp $"
 argument_list|)
 end_macro
 
@@ -520,6 +520,14 @@ block|{
 literal|"elf_shnum"
 block|,
 name|MAGIC_PARAM_ELF_SHNUM_MAX
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"elf_notes"
+block|,
+name|MAGIC_PARAM_ELF_NOTES_MAX
 block|,
 literal|0
 block|}

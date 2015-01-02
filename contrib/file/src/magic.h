@@ -508,6 +508,10 @@ define|#
 directive|define
 name|MAGIC_PARAM_ELF_SHNUM_MAX
 value|3
+define|#
+directive|define
+name|MAGIC_PARAM_ELF_NOTES_MAX
+value|4
 name|int
 name|magic_setparam
 parameter_list|(
