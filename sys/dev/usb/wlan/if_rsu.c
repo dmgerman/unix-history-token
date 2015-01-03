@@ -2167,6 +2167,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|RSU_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -2185,11 +2190,6 @@ goto|goto
 name|fail_rom
 goto|;
 block|}
-name|RSU_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|sc
