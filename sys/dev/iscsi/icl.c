@@ -666,7 +666,7 @@ specifier|static
 name|struct
 name|icl_pdu
 modifier|*
-name|icl_pdu_new
+name|icl_pdu_new_empty
 parameter_list|(
 name|struct
 name|icl_conn
@@ -848,7 +848,7 @@ name|ip
 decl_stmt|;
 name|ip
 operator|=
-name|icl_pdu_new
+name|icl_pdu_new_empty
 argument_list|(
 name|ic
 argument_list|,
@@ -2271,7 +2271,7 @@ argument_list|)
 expr_stmt|;
 name|request
 operator|=
-name|icl_pdu_new
+name|icl_pdu_new_empty
 argument_list|(
 name|ic
 argument_list|,
