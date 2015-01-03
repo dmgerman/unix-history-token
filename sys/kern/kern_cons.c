@@ -2119,6 +2119,16 @@ condition|(
 name|use_cnputs_mtx
 condition|)
 block|{
+comment|/* 		 * NOTE: Debug prints and/or witness printouts in 		 * console driver clients can cause the "cnputs_mtx" 		 * mutex to recurse. Simply return if that happens. 		 */
+if|if
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|cnputs_mtx
+argument_list|)
+condition|)
+return|return;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2489,7 +2499,6 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-comment|/* 	 * NOTE: Debug prints and/or witness printouts in console 	 * driver clients can cause the "cnputs_mtx" mutex to 	 * recurse. Make sure the "MTX_RECURSE" flags is set! 	 */
 name|mtx_init
 argument_list|(
 operator|&
@@ -2502,8 +2511,6 @@ argument_list|,
 name|MTX_SPIN
 operator||
 name|MTX_NOWITNESS
-operator||
-name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 name|use_cnputs_mtx
