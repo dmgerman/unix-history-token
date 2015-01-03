@@ -301,6 +301,7 @@ comment|/*  * Note that these are default values only.  The actual values will b
 end_comment
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|copan_debugconf_subpage
@@ -361,6 +362,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|copan_debugconf_subpage
@@ -417,6 +419,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_da_rw_recovery_page
@@ -472,6 +475,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_da_rw_recovery_page
@@ -525,6 +529,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_format_page
@@ -630,6 +635,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_format_page
@@ -727,6 +733,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_rigid_disk_page
@@ -826,6 +833,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_rigid_disk_page
@@ -917,6 +925,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_caching_page
@@ -1000,6 +1009,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_caching_page
@@ -1083,6 +1093,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_control_page
@@ -1138,6 +1149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_control_page
@@ -1193,6 +1205,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_info_exceptions_page
@@ -1243,6 +1256,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|scsi_info_exceptions_page
@@ -1300,6 +1314,7 @@ value|(sizeof(struct ctl_logical_block_provisioning_page) - 4)
 end_define
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|ctl_logical_block_provisioning_page
@@ -1466,6 +1481,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|struct
 name|ctl_logical_block_provisioning_page
