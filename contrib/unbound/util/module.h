@@ -196,7 +196,7 @@ modifier|*
 name|key_cache
 decl_stmt|;
 comment|/* --- services --- */
-comment|/**  	 * Send serviced DNS query to server. UDP/TCP and EDNS is handled. 	 * operate() should return with wait_reply. Later on a callback  	 * will cause operate() to be called with event timeout or reply. 	 * The time until a timeout is calculated from roundtrip timing, 	 * several UDP retries are attempted. 	 * @param qname: query name. (host order) 	 * @param qnamelen: length in bytes of qname, including trailing 0. 	 * @param qtype: query type. (host order) 	 * @param qclass: query class. (host order) 	 * @param flags: host order flags word, with opcode and CD bit. 	 * @param dnssec: if set, EDNS record will have bits set. 	 *	If EDNS_DO bit is set, DO bit is set in EDNS records. 	 *	If BIT_CD is set, CD bit is set in queries with EDNS records. 	 * @param want_dnssec: if set, the validator wants DNSSEC.  Without 	 * 	EDNS, the answer is likely to be useless for this domain. 	 * @param addr: where to. 	 * @param addrlen: length of addr. 	 * @param zone: delegation point name. 	 * @param zonelen: length of zone name. 	 * @param q: wich query state to reactivate upon return. 	 * @return: false on failure (memory or socket related). no query was 	 *	sent. Or returns an outbound entry with qsent and qstate set. 	 *	This outbound_entry will be used on later module invocations 	 *	that involve this query (timeout, error or reply). 	 */
+comment|/**  	 * Send serviced DNS query to server. UDP/TCP and EDNS is handled. 	 * operate() should return with wait_reply. Later on a callback  	 * will cause operate() to be called with event timeout or reply. 	 * The time until a timeout is calculated from roundtrip timing, 	 * several UDP retries are attempted. 	 * @param qname: query name. (host order) 	 * @param qnamelen: length in bytes of qname, including trailing 0. 	 * @param qtype: query type. (host order) 	 * @param qclass: query class. (host order) 	 * @param flags: host order flags word, with opcode and CD bit. 	 * @param dnssec: if set, EDNS record will have bits set. 	 *	If EDNS_DO bit is set, DO bit is set in EDNS records. 	 *	If BIT_CD is set, CD bit is set in queries with EDNS records. 	 * @param want_dnssec: if set, the validator wants DNSSEC.  Without 	 * 	EDNS, the answer is likely to be useless for this domain. 	 * @param nocaps: do not use caps_for_id, use the qname as given. 	 *	(ignored if caps_for_id is disabled). 	 * @param addr: where to. 	 * @param addrlen: length of addr. 	 * @param zone: delegation point name. 	 * @param zonelen: length of zone name. 	 * @param q: wich query state to reactivate upon return. 	 * @return: false on failure (memory or socket related). no query was 	 *	sent. Or returns an outbound entry with qsent and qstate set. 	 *	This outbound_entry will be used on later module invocations 	 *	that involve this query (timeout, error or reply). 	 */
 name|struct
 name|outbound_entry
 modifier|*
@@ -226,6 +226,9 @@ name|dnssec
 parameter_list|,
 name|int
 name|want_dnssec
+parameter_list|,
+name|int
+name|nocaps
 parameter_list|,
 name|struct
 name|sockaddr_storage
@@ -261,7 +264,7 @@ modifier|*
 name|qstate
 parameter_list|)
 function_decl|;
-comment|/** 	 * Attach subquery. 	 * Creates it if it does not exist already. 	 * Keeps sub and super references correct. 	 * Updates stat items in mesh_area structure. 	 * Pass if it is priming query or not. 	 * return: 	 * o if error (malloc) happened. 	 * o need to initialise the new state (module init; it is a new state). 	 *   so that the next run of the query with this module is successful. 	 * o no init needed, attachment successful. 	 *  	 * @param qstate: the state to find mesh state, and that wants to  	 * 	receive the results from the new subquery. 	 * @param qinfo: what to query for (copied). 	 * @param qflags: what flags to use (RD, CD flag or not). 	 * @param prime: if it is a (stub) priming query. 	 * @param newq: If the new subquery needs initialisation, it is  	 * 	returned, otherwise NULL is returned. 	 * @return: false on error, true if success (and init may be needed). 	 */
+comment|/** 	 * Attach subquery. 	 * Creates it if it does not exist already. 	 * Keeps sub and super references correct. 	 * Updates stat items in mesh_area structure. 	 * Pass if it is priming query or not. 	 * return: 	 * o if error (malloc) happened. 	 * o need to initialise the new state (module init; it is a new state). 	 *   so that the next run of the query with this module is successful. 	 * o no init needed, attachment successful. 	 *  	 * @param qstate: the state to find mesh state, and that wants to  	 * 	receive the results from the new subquery. 	 * @param qinfo: what to query for (copied). 	 * @param qflags: what flags to use (RD, CD flag or not). 	 * @param prime: if it is a (stub) priming query. 	 * @param valrec: validation lookup recursion, does not need validation 	 * @param newq: If the new subquery needs initialisation, it is  	 * 	returned, otherwise NULL is returned. 	 * @return: false on error, true if success (and init may be needed). 	 */
 name|int
 function_decl|(
 modifier|*
@@ -284,6 +287,9 @@ parameter_list|,
 name|int
 name|prime
 parameter_list|,
+name|int
+name|valrec
+parameter_list|,
 name|struct
 name|module_qstate
 modifier|*
@@ -304,7 +310,7 @@ modifier|*
 name|newq
 parameter_list|)
 function_decl|;
-comment|/** 	 * Detect if adding a dependency for qstate on name,type,class will 	 * create a dependency cycle. 	 * @param qstate: given mesh querystate. 	 * @param qinfo: query info for dependency.  	 * @param flags: query flags of dependency, RD/CD flags. 	 * @param prime: if dependency is a priming query or not. 	 * @return true if the name,type,class exists and the given  	 * 	qstate mesh exists as a dependency of that name. Thus  	 * 	if qstate becomes dependent on name,type,class then a  	 * 	cycle is created. 	 */
+comment|/** 	 * Detect if adding a dependency for qstate on name,type,class will 	 * create a dependency cycle. 	 * @param qstate: given mesh querystate. 	 * @param qinfo: query info for dependency.  	 * @param flags: query flags of dependency, RD/CD flags. 	 * @param prime: if dependency is a priming query or not. 	 * @param valrec: validation lookup recursion, does not need validation 	 * @return true if the name,type,class exists and the given  	 * 	qstate mesh exists as a dependency of that name. Thus  	 * 	if qstate becomes dependent on name,type,class then a  	 * 	cycle is created. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -326,6 +332,9 @@ name|flags
 parameter_list|,
 name|int
 name|prime
+parameter_list|,
+name|int
+name|valrec
 parameter_list|)
 function_decl|;
 comment|/** region for temporary usage. May be cleared after operate() call. */
@@ -536,6 +545,10 @@ decl_stmt|;
 comment|/** if this is a (stub or root) priming query (with hints) */
 name|int
 name|is_priming
+decl_stmt|;
+comment|/** if this is a validation recursion query that does not get 	 * validation itself */
+name|int
+name|is_valrec
 decl_stmt|;
 comment|/** comm_reply contains server replies */
 name|struct

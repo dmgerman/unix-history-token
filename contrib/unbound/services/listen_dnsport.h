@@ -192,7 +192,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Create commpoints with for this thread for the shared ports.  * @param base: the comm_base that provides event functionality.  *	for default all ifs.  * @param ports: the list of shared ports.  * @param bufsize: size of datagram buffer.  * @param tcp_accept_count: max number of simultaneous TCP connections   * 	from clients.  * @param sslctx: nonNULL if ssl context.  * @param cb: callback function when a request arrives. It is passed  *	  the packet and user argument. Return true to send a reply.  * @param cb_arg: user data argument for callback function.  * @return: the malloced listening structure, ready for use. NULL on error.  */
+comment|/**  * Create commpoints with for this thread for the shared ports.  * @param base: the comm_base that provides event functionality.  *	for default all ifs.  * @param ports: the list of shared ports.  * @param bufsize: size of datagram buffer.  * @param tcp_accept_count: max number of simultaneous TCP connections   * 	from clients.  * @param sslctx: nonNULL if ssl context.  * @param dtenv: nonNULL if dnstap enabled.  * @param cb: callback function when a request arrives. It is passed  *	  the packet and user argument. Return true to send a reply.  * @param cb_arg: user data argument for callback function.  * @return: the malloced listening structure, ready for use. NULL on error.  */
 end_comment
 
 begin_function_decl
@@ -220,6 +220,11 @@ parameter_list|,
 name|void
 modifier|*
 name|sslctx
+parameter_list|,
+name|struct
+name|dt_env
+modifier|*
+name|dtenv
 parameter_list|,
 name|comm_point_callback_t
 modifier|*

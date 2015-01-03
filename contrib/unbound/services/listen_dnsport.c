@@ -109,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|TCP_BACKLOG
-value|5
+value|256
 end_define
 
 begin_comment
@@ -655,18 +655,10 @@ block|}
 endif|#
 directive|endif
 comment|/* SO_REUSEADDR */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|SO_REUSEPORT
-argument_list|)
-comment|/* Linux specific: try to set SO_REUSEPORT so that incoming 		 * queries are distributed evenly among the receiving threads. 		 * Each thread must have its own socket bound to the same port, 		 * with SO_REUSEPORT set on each socket. 		 */
+comment|/* try to set SO_REUSEPORT so that incoming 		 * queries are distributed evenly among the receiving threads. 		 * Each thread must have its own socket bound to the same port, 		 * with SO_REUSEPORT set on each socket. 		 */
 if|if
 condition|(
 name|reuseport
@@ -742,7 +734,7 @@ name|reuseport
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(__linux__)&& defined(SO_REUSEPORT) */
+comment|/* defined(SO_REUSEPORT) */
 block|}
 if|if
 condition|(
@@ -1596,11 +1588,27 @@ name|defined
 argument_list|(
 name|IP_PMTUDISC_DONT
 argument_list|)
+comment|/* linux 3.15 has IP_PMTUDISC_OMIT, Hannes Frederic Sowa made it so that  * PMTU information is not accepted, but fragmentation is allowed  * if and only if the packet size exceeds the outgoing interface MTU  * (and also uses the interface mtu to determine the size of the packets).  * So there won't be any EMSGSIZE error.  Against DNS fragmentation attacks.  * FreeBSD already has same semantics without setting the option. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IP_PMTUDISC_OMIT
+argument_list|)
+name|int
+name|action
+init|=
+name|IP_PMTUDISC_OMIT
+decl_stmt|;
+else|#
+directive|else
 name|int
 name|action
 init|=
 name|IP_PMTUDISC_DONT
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|setsockopt
@@ -1629,7 +1637,19 @@ block|{
 name|log_err
 argument_list|(
 literal|"setsockopt(..., IP_MTU_DISCOVER, "
-literal|"IP_PMTUDISC_DONT...) failed: %s"
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IP_PMTUDISC_OMIT
+argument_list|)
+literal|"IP_PMTUDISC_OMIT"
+else|#
+directive|else
+literal|"IP_PMTUDISC_DONT"
+endif|#
+directive|endif
+literal|"...) failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1819,21 +1839,14 @@ operator|!=
 name|EADDRINUSE
 condition|)
 block|{
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"can't bind socket: %s"
+literal|"can't bind socket"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"failed address"
 argument_list|,
 operator|(
 expr|struct
@@ -1870,22 +1883,15 @@ operator|!=
 name|WSAEADDRNOTAVAIL
 condition|)
 block|{
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"can't bind socket: %s"
+literal|"can't bind socket"
 argument_list|,
 name|wsa_strerror
 argument_list|(
 name|WSAGetLastError
 argument_list|()
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"failed address"
 argument_list|,
 operator|(
 expr|struct
@@ -2193,18 +2199,10 @@ block|}
 endif|#
 directive|endif
 comment|/* SO_REUSEADDR */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|SO_REUSEPORT
-argument_list|)
-comment|/* Linux specific: try to set SO_REUSEPORT so that incoming 	 * connections are distributed evenly among the receiving threads. 	 * Each thread must have its own socket bound to the same port, 	 * with SO_REUSEPORT set on each socket. 	 */
+comment|/* try to set SO_REUSEPORT so that incoming 	 * connections are distributed evenly among the receiving threads. 	 * Each thread must have its own socket bound to the same port, 	 * with SO_REUSEPORT set on each socket. 	 */
 if|if
 condition|(
 name|reuseport
@@ -2280,7 +2278,7 @@ name|reuseport
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(__linux__)&& defined(SO_REUSEPORT) */
+comment|/* defined(SO_REUSEPORT) */
 if|#
 directive|if
 name|defined
@@ -2422,21 +2420,14 @@ literal|1
 expr_stmt|;
 else|else
 block|{
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"can't bind socket: %s"
+literal|"can't bind socket"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"failed address"
 argument_list|,
 operator|(
 expr|struct
@@ -2460,22 +2451,15 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"can't bind socket: %s"
+literal|"can't bind socket"
 argument_list|,
 name|wsa_strerror
 argument_list|(
 name|WSAGetLastError
 argument_list|()
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"failed address"
 argument_list|,
 operator|(
 expr|struct
@@ -4081,6 +4065,11 @@ name|void
 modifier|*
 name|sslctx
 parameter_list|,
+name|struct
+name|dt_env
+modifier|*
+name|dtenv
+parameter_list|,
 name|comm_point_callback_t
 modifier|*
 name|cb
@@ -4301,6 +4290,12 @@ return|return
 name|NULL
 return|;
 block|}
+name|cp
+operator|->
+name|dtenv
+operator|=
+name|dtenv
+expr_stmt|;
 name|cp
 operator|->
 name|do_not_close

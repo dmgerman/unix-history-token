@@ -19,6 +19,14 @@ value|"/var/unbound"
 end_define
 
 begin_comment
+comment|/* Do sha512 definitions in config.h */
+end_comment
+
+begin_comment
+comment|/* #undef COMPAT_SHA512 */
+end_comment
+
+begin_comment
 comment|/* Pathname to the Unbound configuration file */
 end_comment
 
@@ -46,6 +54,14 @@ comment|/* #undef DEPRECATED_DAEMON */
 end_comment
 
 begin_comment
+comment|/* default dnstap socket path */
+end_comment
+
+begin_comment
+comment|/* #undef DNSTAP_SOCKET_PATH */
+end_comment
+
+begin_comment
 comment|/* Define if you want to use debug lock checking (slow). */
 end_comment
 
@@ -60,6 +76,28 @@ end_comment
 begin_comment
 comment|/* #undef EXPORT_ALL_SYMBOLS */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `arc4random' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ARC4RANDOM
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `arc4random_uniform' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ARC4RANDOM_UNIFORM
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<arpa/inet.h> header file. */
@@ -139,6 +177,22 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `arc4random', and to 0 if you    don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_ARC4RANDOM */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `arc4random_uniform', and to 0    if you don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_ARC4RANDOM_UNIFORM */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `NID_secp384r1', and to 0 if you    don't. */
 end_comment
 
@@ -183,6 +237,22 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `strlcat', and to 0 if you    don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_STRLCAT */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `strlcpy', and to 0 if you    don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_STRLCPY */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
 end_comment
 
@@ -192,6 +262,14 @@ directive|define
 name|HAVE_DLFCN_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<endian.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ENDIAN_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `endprotoent' function. */
@@ -371,6 +449,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `getentropy' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETENTROPY */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<getopt.h> header file. */
 end_comment
 
@@ -539,6 +625,14 @@ directive|define
 name|HAVE_KILL
 value|1
 end_define
+
+begin_comment
+comment|/* Define if we have LibreSSL */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBRESSL */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `localtime_r' function. */
@@ -867,6 +961,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `SHA512_Update' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SHA512_UPDATE */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `sigprocmask' function. */
 end_comment
 
@@ -1103,6 +1205,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/sha2.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_SHA2_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/socket.h> header file. */
 end_comment
 
@@ -1123,6 +1233,14 @@ directive|define
 name|HAVE_SYS_STAT_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/sysctl.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_SYSCTL_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/types.h> header file. */
@@ -1305,7 +1423,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+comment|/* Define to the sub-directory where libtool stores uninstalled libraries. */
 end_comment
 
 begin_define
@@ -1444,7 +1562,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"unbound 1.4.22"
+value|"unbound 1.5.1"
 end_define
 
 begin_comment
@@ -1477,7 +1595,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.4.22"
+value|"1.5.1"
 end_define
 
 begin_comment
@@ -1540,7 +1658,7 @@ begin_define
 define|#
 directive|define
 name|RSRC_PACKAGE_VERSION
-value|1,4,22,0
+value|1,5,1,0
 end_define
 
 begin_comment
@@ -1647,6 +1765,14 @@ end_comment
 
 begin_comment
 comment|/* #undef UNBOUND_DEBUG */
+end_comment
+
+begin_comment
+comment|/* Define to 1 to enable dnstap support */
+end_comment
+
+begin_comment
+comment|/* #undef USE_DNSTAP */
 end_comment
 
 begin_comment
@@ -3469,6 +3595,378 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBRESSL
+end_ifdef
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_STRLCPY
+end_if
+
+begin_function_decl
+name|size_t
+name|strlcpy
+parameter_list|(
+name|char
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|siz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_STRLCAT
+end_if
+
+begin_function_decl
+name|size_t
+name|strlcat
+parameter_list|(
+name|char
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|siz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_ARC4RANDOM
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_ARC4RANDOM
+argument_list|)
+end_if
+
+begin_function_decl
+name|uint32_t
+name|arc4random
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_ARC4RANDOM_UNIFORM
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_ARC4RANDOM_UNIFORM
+argument_list|)
+end_if
+
+begin_function_decl
+name|uint32_t
+name|arc4random_uniform
+parameter_list|(
+name|uint32_t
+name|upper_bound
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_LIBRESSL */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ARC4RANDOM
+end_ifndef
+
+begin_function_decl
+name|void
+name|explicit_bzero
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|getentropy
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|arc4random
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|arc4random_buf
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_ARC4_LOCK
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_ARC4_UNLOCK
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ARC4RANDOM_UNIFORM
+end_ifndef
+
+begin_function_decl
+name|uint32_t
+name|arc4random_uniform
+parameter_list|(
+name|uint32_t
+name|upper_bound
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_SHA512
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SHA512_DIGEST_LENGTH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SHA512_BLOCK_LENGTH
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA512_DIGEST_LENGTH
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA512_DIGEST_STRING_LENGTH
+value|(SHA512_DIGEST_LENGTH * 2 + 1)
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_SHA512_CTX
+block|{
+name|uint64_t
+name|state
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint64_t
+name|bitcount
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint8_t
+name|buffer
+index|[
+name|SHA512_BLOCK_LENGTH
+index|]
+decl_stmt|;
+block|}
+name|SHA512_CTX
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SHA512_DIGEST_LENGTH */
+end_comment
+
+begin_function_decl
+name|void
+name|SHA512_Init
+parameter_list|(
+name|SHA512_CTX
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|SHA512_Update
+parameter_list|(
+name|SHA512_CTX
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|SHA512_Final
+parameter_list|(
+name|uint8_t
+index|[
+name|SHA512_DIGEST_LENGTH
+index|]
+parameter_list|,
+name|SHA512_CTX
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|char
+modifier|*
+name|SHA512
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|unsigned
+name|int
+name|data_len
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|digest
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_SHA512 */
+end_comment
 
 begin_if
 if|#

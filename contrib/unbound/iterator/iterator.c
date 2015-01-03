@@ -943,6 +943,55 @@ name|struct
 name|reply_info
 name|err
 decl_stmt|;
+if|if
+condition|(
+name|qstate
+operator|->
+name|prefetch_leeway
+operator|>
+name|NORR_TTL
+condition|)
+block|{
+name|verbose
+argument_list|(
+name|VERB_ALGO
+argument_list|,
+literal|"error response for prefetch in cache"
+argument_list|)
+expr_stmt|;
+comment|/* attempt to adjust the cache entry prefetch */
+if|if
+condition|(
+name|dns_cache_prefetch_adjust
+argument_list|(
+name|qstate
+operator|->
+name|env
+argument_list|,
+operator|&
+name|qstate
+operator|->
+name|qinfo
+argument_list|,
+name|NORR_TTL
+argument_list|,
+name|qstate
+operator|->
+name|query_flags
+argument_list|)
+condition|)
+return|return
+name|error_response
+argument_list|(
+name|qstate
+argument_list|,
+name|id
+argument_list|,
+name|rcode
+argument_list|)
+return|;
+comment|/* if that fails (not in cache), fall through to store err */
+block|}
 name|memset
 argument_list|(
 operator|&
@@ -1036,6 +1085,10 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+name|qstate
+operator|->
+name|query_flags
 argument_list|)
 expr_stmt|;
 return|return
@@ -2224,6 +2277,11 @@ literal|1
 else|:
 literal|0
 decl_stmt|;
+name|int
+name|valrec
+init|=
+literal|0
+decl_stmt|;
 name|qinf
 operator|.
 name|qname
@@ -2265,10 +2323,16 @@ condition|(
 operator|!
 name|v
 condition|)
+block|{
 name|qflags
 operator||=
 name|BIT_CD
 expr_stmt|;
+name|valrec
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* attach subquery, lookup existing or make a new one */
 name|fptr_ok
 argument_list|(
@@ -2302,6 +2366,8 @@ argument_list|,
 name|qflags
 argument_list|,
 name|prime
+argument_list|,
+name|valrec
 argument_list|,
 operator|&
 name|subq
@@ -4369,6 +4435,10 @@ operator|->
 name|qchase
 operator|.
 name|qclass
+argument_list|,
+name|qstate
+operator|->
+name|query_flags
 argument_list|,
 name|qstate
 operator|->
@@ -8767,6 +8837,10 @@ name|iq
 operator|->
 name|dnssec_expected
 argument_list|,
+name|iq
+operator|->
+name|caps_fallback
+argument_list|,
 operator|&
 name|target
 operator|->
@@ -9553,6 +9627,10 @@ argument_list|,
 name|qstate
 operator|->
 name|region
+argument_list|,
+name|qstate
+operator|->
+name|query_flags
 argument_list|)
 expr_stmt|;
 comment|/* close down outstanding requests to be discarded */
@@ -9784,6 +9862,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -10412,6 +10492,10 @@ operator|->
 name|has_parent_side_NS
 argument_list|,
 name|NULL
+argument_list|,
+name|qstate
+operator|->
+name|query_flags
 argument_list|)
 expr_stmt|;
 comment|/* set the current request's qname to the new value. */
@@ -10836,7 +10920,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Return priming query results to interestes super querystates.  *   * Sets the delegation point and delegation message (not nonRD queries).  * This is a callback from walk_supers.  *  * @param qstate: priming query state that finished.  * @param id: module id.  * @param forq: the qstate for which priming has been done.  */
+comment|/**  * Return priming query results to interested super querystates.  *   * Sets the delegation point and delegation message (not nonRD queries).  * This is a callback from walk_supers.  *  * @param qstate: priming query state that finished.  * @param id: module id.  * @param forq: the qstate for which priming has been done.  */
 end_comment
 
 begin_function
@@ -12960,6 +13044,10 @@ argument_list|,
 name|qstate
 operator|->
 name|region
+argument_list|,
+name|qstate
+operator|->
+name|query_flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -13471,6 +13559,83 @@ operator|==
 name|module_event_error
 condition|)
 block|{
+if|if
+condition|(
+name|event
+operator|==
+name|module_event_noreply
+operator|&&
+name|iq
+operator|->
+name|sent_count
+operator|>=
+literal|3
+operator|&&
+name|qstate
+operator|->
+name|env
+operator|->
+name|cfg
+operator|->
+name|use_caps_bits_for_id
+operator|&&
+operator|!
+name|iq
+operator|->
+name|caps_fallback
+condition|)
+block|{
+comment|/* start fallback */
+name|iq
+operator|->
+name|caps_fallback
+operator|=
+literal|1
+expr_stmt|;
+name|iq
+operator|->
+name|caps_server
+operator|=
+literal|0
+expr_stmt|;
+name|iq
+operator|->
+name|caps_reply
+operator|=
+name|NULL
+expr_stmt|;
+name|iq
+operator|->
+name|state
+operator|=
+name|QUERYTARGETS_STATE
+expr_stmt|;
+name|iq
+operator|->
+name|num_current_queries
+operator|--
+expr_stmt|;
+comment|/* need fresh attempts for the 0x20 fallback, if 			 * that was the cause for the failure */
+name|iter_dec_attempts
+argument_list|(
+name|iq
+operator|->
+name|dp
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+name|verbose
+argument_list|(
+name|VERB_DETAIL
+argument_list|,
+literal|"Capsforid: timeouts, starting fallback"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|handle_it
+goto|;
+block|}
 goto|goto
 name|handle_it
 goto|;
@@ -13787,6 +13952,10 @@ condition|(
 name|event
 operator|==
 name|module_event_capsfail
+operator|||
+name|iq
+operator|->
+name|caps_fallback
 condition|)
 block|{
 if|if
@@ -13845,6 +14014,34 @@ block|}
 else|else
 block|{
 comment|/* check if reply is the same, otherwise, fail */
+if|if
+condition|(
+operator|!
+name|iq
+operator|->
+name|caps_reply
+condition|)
+block|{
+name|iq
+operator|->
+name|caps_reply
+operator|=
+name|iq
+operator|->
+name|response
+operator|->
+name|rep
+expr_stmt|;
+name|iq
+operator|->
+name|caps_server
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/*become zero at ++, 				so that we start the full set of trials */
+block|}
+elseif|else
 if|if
 condition|(
 operator|!

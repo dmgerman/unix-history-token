@@ -248,7 +248,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Allocate a dns_msg with malloc/alloc structure and store in dns cache.  * @param env: environment, with alloc structure and dns cache.  * @param qinf: query info, the query for which answer is stored.  * @param rep: reply in dns_msg from dns_alloc_msg for example.  * @param is_referral: If true, then the given message to be stored is a  *	referral. The cache implementation may use this as a hint.  * @param leeway: prefetch TTL leeway to expire old rrsets quicker.  * @param pside: true if dp is parentside, thus message is 'fresh' and NS  * 	can be prefetch-updates.  * @param region: to copy modified (cache is better) rrs back to.  * @return void, because we are not interested in alloc errors,  * 	the iterator and validator can operate on the results in their  * 	scratch space (the qstate.region) and are not dependent on the cache.  * 	It is useful to log the alloc failure (for the server operator),  * 	but the query resolution can continue without cache storage.  */
+comment|/**  * Allocate a dns_msg with malloc/alloc structure and store in dns cache.  * @param env: environment, with alloc structure and dns cache.  * @param qinf: query info, the query for which answer is stored.  * @param rep: reply in dns_msg from dns_alloc_msg for example.  * @param is_referral: If true, then the given message to be stored is a  *	referral. The cache implementation may use this as a hint.  * @param leeway: prefetch TTL leeway to expire old rrsets quicker.  * @param pside: true if dp is parentside, thus message is 'fresh' and NS  * 	can be prefetch-updates.  * @param region: to copy modified (cache is better) rrs back to.  * @param flags: with BIT_CD for dns64 AAAA translated queries.  * @return void, because we are not interested in alloc errors,  * 	the iterator and validator can operate on the results in their  * 	scratch space (the qstate.region) and are not dependent on the cache.  * 	It is useful to log the alloc failure (for the server operator),  * 	but the query resolution can continue without cache storage.  */
 end_comment
 
 begin_function_decl
@@ -283,6 +283,9 @@ name|struct
 name|regional
 modifier|*
 name|region
+parameter_list|,
+name|uint16_t
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

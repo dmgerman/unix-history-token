@@ -2159,6 +2159,28 @@ literal|"validator iterator"
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|cfg
+operator|->
+name|module_conf
+argument_list|,
+literal|"dns64 validator iterator"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|cfg
+operator|->
+name|module_conf
+argument_list|,
+literal|"dns64 iterator"
+argument_list|)
+operator|!=
+literal|0
 ifdef|#
 directive|ifdef
 name|WITH_PYTHONMODULE
@@ -2192,6 +2214,61 @@ operator|->
 name|module_conf
 argument_list|,
 literal|"validator python iterator"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|cfg
+operator|->
+name|module_conf
+argument_list|,
+literal|"dns64 python iterator"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|cfg
+operator|->
+name|module_conf
+argument_list|,
+literal|"dns64 python validator iterator"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|cfg
+operator|->
+name|module_conf
+argument_list|,
+literal|"dns64 validator python iterator"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|cfg
+operator|->
+name|module_conf
+argument_list|,
+literal|"python dns64 iterator"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|cfg
+operator|->
+name|module_conf
+argument_list|,
+literal|"python dns64 validator iterator"
 argument_list|)
 operator|!=
 literal|0
@@ -2503,6 +2580,25 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|opt
+condition|)
+block|{
+name|print_option
+argument_list|(
+name|cfg
+argument_list|,
+name|opt
+argument_list|)
+expr_stmt|;
+name|config_delete
+argument_list|(
+name|cfg
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|morechecks
 argument_list|(
 name|cfg
@@ -2560,18 +2656,6 @@ argument_list|(
 name|cfg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|opt
-condition|)
-name|print_option
-argument_list|(
-name|cfg
-argument_list|,
-name|opt
-argument_list|)
-expr_stmt|;
-else|else
 name|printf
 argument_list|(
 literal|"unbound-checkconf: no errors in %s\n"

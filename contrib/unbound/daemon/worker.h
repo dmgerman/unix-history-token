@@ -67,6 +67,12 @@ directive|include
 file|"util/module.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"dnstap/dnstap.h"
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|listen_dnsport
@@ -248,6 +254,16 @@ name|struct
 name|module_env
 name|env
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_DNSTAP
+comment|/** dnstap environment, changed for this thread */
+name|struct
+name|dt_env
+name|dtenv
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

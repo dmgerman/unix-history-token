@@ -279,6 +279,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"  flush_negative		flush all negative data\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"  flush_stats 			flush statistics, make zero\n"
 argument_list|)
 expr_stmt|;
@@ -571,6 +576,25 @@ condition|)
 name|ssl_err
 argument_list|(
 literal|"could not set SSL_OP_NO_SSLv2"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|SSL_CTX_set_options
+argument_list|(
+name|ctx
+argument_list|,
+name|SSL_OP_NO_SSLv3
+argument_list|)
+operator|&
+name|SSL_OP_NO_SSLv3
+operator|)
+condition|)
+name|ssl_err
+argument_list|(
+literal|"could not set SSL_OP_NO_SSLv3"
 argument_list|)
 expr_stmt|;
 if|if
@@ -911,29 +935,22 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"address"
-argument_list|,
-operator|&
-name|addr
-argument_list|,
-name|addrlen
-argument_list|)
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|USE_WINSOCK
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"connect: %s"
+literal|"connect"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+operator|&
+name|addr
+argument_list|,
+name|addrlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -958,15 +975,20 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"connect: %s"
+literal|"connect"
 argument_list|,
 name|wsa_strerror
 argument_list|(
 name|WSAGetLastError
 argument_list|()
 argument_list|)
+argument_list|,
+operator|&
+name|addr
+argument_list|,
+name|addrlen
 argument_list|)
 expr_stmt|;
 if|if
