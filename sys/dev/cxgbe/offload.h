@@ -411,6 +411,9 @@ decl_stmt|;
 name|int
 name|rx_coalesce
 decl_stmt|;
+name|int
+name|tx_align
+decl_stmt|;
 block|}
 struct|;
 end_struct
