@@ -63,6 +63,30 @@ end_endif
 begin_define
 define|#
 directive|define
+name|ISCSI_SNGT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((int32_t)(x) - (int32_t)(y)> 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISCSI_SNLT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((int32_t)(x) - (int32_t)(y)< 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISCSI_BHS_SIZE
 value|48
 end_define

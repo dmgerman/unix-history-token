@@ -179,16 +179,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ISCSI_SNLT
+argument_list|(
 name|ntohl
 argument_list|(
 name|bhstr
 operator|->
 name|bhstr_cmdsn
 argument_list|)
-operator|<
+argument_list|,
 name|conn
 operator|->
 name|conn_cmdsn
+argument_list|)
 condition|)
 block|{
 name|log_errx
@@ -196,7 +199,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Text PDU with decreasing CmdSN: "
-literal|"was %d, is %d"
+literal|"was %u, is %u"
 argument_list|,
 name|conn
 operator|->
@@ -230,7 +233,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Text PDU with wrong StatSN: "
-literal|"is %d, should be %d"
+literal|"is %u, should be %u"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -510,16 +513,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ISCSI_SNLT
+argument_list|(
 name|ntohl
 argument_list|(
 name|bhslr
 operator|->
 name|bhslr_cmdsn
 argument_list|)
-operator|<
+argument_list|,
 name|conn
 operator|->
 name|conn_cmdsn
+argument_list|)
 condition|)
 block|{
 name|log_errx
@@ -527,7 +533,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Logout PDU with decreasing CmdSN: "
-literal|"was %d, is %d"
+literal|"was %u, is %u"
 argument_list|,
 name|conn
 operator|->
@@ -561,7 +567,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Logout PDU with wrong StatSN: "
-literal|"is %d, should be %d"
+literal|"is %u, should be %u"
 argument_list|,
 name|ntohl
 argument_list|(
