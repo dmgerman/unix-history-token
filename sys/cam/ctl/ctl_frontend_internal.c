@@ -2059,7 +2059,7 @@ name|kern_ptr
 decl_stmt|;
 name|len_to_copy
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|ext_sglist
 index|[
@@ -4633,7 +4633,7 @@ name|scsiio
 operator|.
 name|sense_data
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(

@@ -1524,7 +1524,7 @@ index|]
 operator|.
 name|len
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|PAGE_SIZE
 argument_list|,
@@ -2931,7 +2931,7 @@ name|serial_num
 argument_list|,
 name|tmpstr
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2962,7 +2962,7 @@ name|serial_num
 argument_list|,
 name|tmpstr
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2997,7 +2997,7 @@ name|params
 operator|->
 name|serial_num
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3061,7 +3061,7 @@ name|device_id
 argument_list|,
 name|tmpstr
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3092,7 +3092,7 @@ name|device_id
 argument_list|,
 name|tmpstr
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3127,7 +3127,7 @@ name|params
 operator|->
 name|device_id
 argument_list|,
-name|ctl_min
+name|MIN
 argument_list|(
 sizeof|sizeof
 argument_list|(
