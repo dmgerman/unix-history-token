@@ -315,7 +315,7 @@ argument_list|)
 expr_stmt|;
 name|vd
 operator|=
-name|PHYS_TO_DMAP
+name|PHYS_TO_DMAP_RAW
 argument_list|(
 name|v
 argument_list|)
@@ -414,7 +414,7 @@ condition|)
 block|{
 name|v
 operator|=
-name|DMAP_TO_PHYS
+name|DMAP_TO_PHYS_RAW
 argument_list|(
 name|v
 argument_list|)
