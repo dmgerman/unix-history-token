@@ -1052,16 +1052,6 @@ name|ic
 operator|->
 name|dev
 expr_stmt|;
-name|PIO_CONFIGURE
-argument_list|(
-operator|*
-name|pio_dev
-argument_list|,
-name|PIO_OUT_ALL
-argument_list|,
-name|PIO_UNMASK_ALL
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
