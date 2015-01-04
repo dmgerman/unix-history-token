@@ -15283,6 +15283,8 @@ name|oflags
 operator|=
 name|VN_OPEN_NOAUDIT
 operator||
+name|VN_OPEN_NAMECACHE
+operator||
 operator|(
 name|capmode_coredump
 condition|?
