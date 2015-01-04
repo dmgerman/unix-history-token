@@ -1463,6 +1463,23 @@ name|__noinline
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|__sys_openat
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Data declarations.  */
 end_comment
@@ -14354,7 +14371,7 @@ condition|)
 break|break;
 name|fd
 operator|=
-name|openat
+name|__sys_openat
 argument_list|(
 name|dirfd
 argument_list|,
