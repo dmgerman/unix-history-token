@@ -558,7 +558,8 @@ parameter_list|,
 name|int
 name|devtype
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|td
 parameter_list|)
@@ -610,7 +611,8 @@ parameter_list|,
 name|int
 name|devtype
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|td
 parameter_list|)
