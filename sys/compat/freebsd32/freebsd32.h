@@ -1285,6 +1285,26 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|procctl_reaper_pids32
+block|{
+name|u_int
+name|rp_count
+decl_stmt|;
+name|u_int
+name|rp_pad0
+index|[
+literal|15
+index|]
+decl_stmt|;
+name|uint32_t
+name|rp_pids
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif

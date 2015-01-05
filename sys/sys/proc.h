@@ -2729,6 +2729,31 @@ name|u_int
 name|p_treeflag
 decl_stmt|;
 comment|/* (e) P_TREE flags */
+name|struct
+name|proc
+modifier|*
+name|p_reaper
+decl_stmt|;
+comment|/* (e) My reaper. */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|proc
+argument_list|)
+name|p_reaplist
+expr_stmt|;
+comment|/* (e) List of my descendants 					       (if I am reaper). */
+name|LIST_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_reapsibling
+expr_stmt|;
+comment|/* (e) List of siblings - descendants of 					       the same reaper. */
+name|pid_t
+name|p_reapsubtree
+decl_stmt|;
+comment|/* (e) Pid of the direct child of the 					       reaper which spawned 					       our subtree. */
 block|}
 struct|;
 end_struct
@@ -3212,6 +3237,17 @@ end_define
 
 begin_comment
 comment|/* First element of orphan 						   list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_TREE_REAPER
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Reaper of subtree */
 end_comment
 
 begin_comment
@@ -5003,6 +5039,21 @@ name|struct
 name|pstats
 modifier|*
 name|ps
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|reaper_abandon_children
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|bool
+name|exiting
 parameter_list|)
 function_decl|;
 end_function_decl
