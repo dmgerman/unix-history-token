@@ -611,6 +611,15 @@ argument_list|,
 name|VM_MEMATTR_WRITE_COMBINING
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|fb_info
+operator|.
+name|fb_flags
+operator|&=
+operator|~
+name|FB_FLAG_NOWRITE
+expr_stmt|;
 block|}
 end_function
 
@@ -717,7 +726,7 @@ name|fb_width
 operator|*
 literal|8
 expr_stmt|;
-comment|/* 	 * The loader puts the FB at 0x10000000, so use that for now. 	 */
+comment|/* 	 * Arbitrarily choose address for the framebuffer 	 */
 name|sc
 operator|->
 name|fb_info
@@ -725,6 +734,23 @@ operator|.
 name|fb_vbase
 operator|=
 literal|0x10000000
+expr_stmt|;
+name|sc
+operator|->
+name|fb_info
+operator|.
+name|fb_flags
+operator||=
+name|FB_FLAG_NOWRITE
+expr_stmt|;
+comment|/* Not available yet */
+name|sc
+operator|->
+name|fb_info
+operator|.
+name|fb_cmsize
+operator|=
+literal|16
 expr_stmt|;
 comment|/* 32-bit VGA palette */
 name|vt_generate_cons_palette

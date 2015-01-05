@@ -549,6 +549,16 @@ decl_stmt|;
 name|uint32_t
 name|fb_flags
 decl_stmt|;
+define|#
+directive|define
+name|FB_FLAG_NOMMAP
+value|1
+comment|/* mmap unsupported. */
+define|#
+directive|define
+name|FB_FLAG_NOWRITE
+value|2
+comment|/* disable writes for the time being */
 name|int
 name|fb_stride
 decl_stmt|;
@@ -556,11 +566,6 @@ name|int
 name|fb_bpp
 decl_stmt|;
 comment|/* bits per pixel */
-define|#
-directive|define
-name|FB_FLAG_NOMMAP
-value|1
-comment|/* mmap unsupported. */
 name|uint32_t
 name|fb_cmap
 index|[
