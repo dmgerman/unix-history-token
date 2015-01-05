@@ -143,19 +143,31 @@ end_include
 
 begin_decl_stmt
 name|int
-name|cpu_can_deep_sleep
+name|cpu_deepest_sleep
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* C3 state is available. */
+comment|/* Deepest Cx state available. */
 end_comment
 
 begin_decl_stmt
 name|int
-name|cpu_disable_deep_sleep
+name|cpu_disable_c2_sleep
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Timer dies in C2. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|cpu_disable_c3_sleep
 init|=
 literal|0
 decl_stmt|;
@@ -2857,7 +2869,7 @@ name|et_flags
 operator|&
 name|ET_FLAGS_C3STOP
 condition|)
-name|cpu_disable_deep_sleep
+name|cpu_disable_c3_sleep
 operator|++
 expr_stmt|;
 comment|/* 	 * We honor the requested 'hz' value. 	 * We want to run stathz in the neighborhood of 128hz. 	 * We would like profhz to run as often as possible. 	 */
@@ -3988,7 +4000,7 @@ name|et_flags
 operator|&
 name|ET_FLAGS_C3STOP
 condition|)
-name|cpu_disable_deep_sleep
+name|cpu_disable_c3_sleep
 operator|++
 expr_stmt|;
 if|if
@@ -3999,7 +4011,7 @@ name|et_flags
 operator|&
 name|ET_FLAGS_C3STOP
 condition|)
-name|cpu_disable_deep_sleep
+name|cpu_disable_c3_sleep
 operator|--
 expr_stmt|;
 name|periodic

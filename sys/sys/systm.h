@@ -2395,14 +2395,21 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|int
-name|cpu_can_deep_sleep
+name|cpu_deepest_sleep
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|cpu_disable_deep_sleep
+name|cpu_disable_c2_sleep
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cpu_disable_c3_sleep
 decl_stmt|;
 end_decl_stmt
 
