@@ -215,7 +215,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_mouse_debug
@@ -250,7 +250,7 @@ name|OID_AUTO
 argument_list|,
 name|mode
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_mouse_mode
@@ -280,7 +280,7 @@ name|OID_AUTO
 argument_list|,
 name|button_press_interval
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_mouse_button_press_interval
@@ -310,7 +310,7 @@ name|OID_AUTO
 argument_list|,
 name|cursor_update_interval
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_mouse_cursor_update_interval
@@ -340,7 +340,7 @@ name|OID_AUTO
 argument_list|,
 name|cursor_radius
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_mouse_cursor_radius

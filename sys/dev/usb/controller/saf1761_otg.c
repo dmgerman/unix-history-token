@@ -324,7 +324,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|saf1761_otg_debug
@@ -345,7 +345,7 @@ name|OID_AUTO
 argument_list|,
 name|forcefs
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|saf1761_otg_forcefs

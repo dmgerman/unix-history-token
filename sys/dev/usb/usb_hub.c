@@ -358,7 +358,7 @@ name|OID_AUTO
 argument_list|,
 name|power_timeout
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_power_timeout
