@@ -3864,7 +3864,9 @@ name|bus_mtx
 argument_list|,
 name|NULL
 argument_list|,
-literal|32
+name|bus
+operator|->
+name|dma_bits
 argument_list|,
 name|USB_BUS_DMA_TAG_MAX
 argument_list|)

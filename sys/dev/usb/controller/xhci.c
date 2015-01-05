@@ -1767,7 +1767,7 @@ operator|&
 name|buf_res
 argument_list|)
 expr_stmt|;
-comment|/* setup command ring control base address */
+comment|/* set up command ring control base address */
 name|addr
 operator|=
 name|buf_res
@@ -1938,84 +1938,6 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|sc_capa_off
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|sc_oper_off
-operator|=
-name|XREAD1
-argument_list|(
-name|sc
-argument_list|,
-name|capa
-argument_list|,
-name|XHCI_CAPLENGTH
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_runt_off
-operator|=
-name|XREAD4
-argument_list|(
-name|sc
-argument_list|,
-name|capa
-argument_list|,
-name|XHCI_RTSOFF
-argument_list|)
-operator|&
-operator|~
-literal|0x1F
-expr_stmt|;
-name|sc
-operator|->
-name|sc_door_off
-operator|=
-name|XREAD4
-argument_list|(
-name|sc
-argument_list|,
-name|capa
-argument_list|,
-name|XHCI_DBOFF
-argument_list|)
-operator|&
-operator|~
-literal|0x3
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"CAPLENGTH=0x%x\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_oper_off
-argument_list|)
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"RUNTIMEOFFSET=0x%x\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_runt_off
-argument_list|)
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"DOOROFFSET=0x%x\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_door_off
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
 name|sc_event_ccs
 operator|=
 literal|1
@@ -2038,84 +1960,6 @@ name|sc_command_idx
 operator|=
 literal|0
 expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"xHCI version = 0x%04x\n"
-argument_list|,
-name|XREAD2
-argument_list|(
-name|sc
-argument_list|,
-name|capa
-argument_list|,
-name|XHCI_HCIVERSION
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|temp
-operator|=
-name|XREAD4
-argument_list|(
-name|sc
-argument_list|,
-name|capa
-argument_list|,
-name|XHCI_HCSPARAMS0
-argument_list|)
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"HCS0 = 0x%08x\n"
-argument_list|,
-name|temp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|XHCI_HCS0_CSZ
-argument_list|(
-name|temp
-argument_list|)
-condition|)
-block|{
-name|sc
-operator|->
-name|sc_ctx_is_64_byte
-operator|=
-literal|1
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|parent
-argument_list|,
-literal|"64 byte context size.\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|sc
-operator|->
-name|sc_ctx_is_64_byte
-operator|=
-literal|0
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|parent
-argument_list|,
-literal|"32 byte context size.\n"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Reset controller */
 name|XWRITE4
 argument_list|(
@@ -2318,7 +2162,7 @@ name|sc_noslot
 operator|=
 name|XHCI_MAX_DEVICES
 expr_stmt|;
-comment|/* setup number of device slots */
+comment|/* set up number of device slots */
 name|DPRINTF
 argument_list|(
 literal|"CONFIG=0x%08x -> 0x%08x\n"
@@ -2478,7 +2322,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* setup device context base address */
+comment|/* set up device context base address */
 name|usbd_get_page
 argument_list|(
 operator|&
@@ -3025,7 +2869,7 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-comment|/* setup command ring control base address */
+comment|/* set up command ring control base address */
 name|addr
 operator|=
 name|buf_res
@@ -3433,7 +3277,15 @@ name|device_t
 name|self
 parameter_list|)
 block|{
-comment|/* initialise some bus fields */
+name|uint32_t
+name|temp
+decl_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+comment|/* initialize some bus fields */
 name|sc
 operator|->
 name|sc_bus
@@ -3461,7 +3313,7 @@ operator|=
 operator|&
 name|xhci_bus_methods
 expr_stmt|;
-comment|/* setup devices array */
+comment|/* set up devices array */
 name|sc
 operator|->
 name|sc_bus
@@ -3493,25 +3345,180 @@ name|sc_command_ccs
 operator|=
 literal|1
 expr_stmt|;
-comment|/* setup command queue mutex and condition varible */
-name|cv_init
-argument_list|(
-operator|&
+comment|/* set up bus space offsets */
 name|sc
 operator|->
-name|sc_cmd_cv
+name|sc_capa_off
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_oper_off
+operator|=
+name|XREAD1
+argument_list|(
+name|sc
 argument_list|,
-literal|"CMDQ"
+name|capa
+argument_list|,
+name|XHCI_CAPLENGTH
 argument_list|)
 expr_stmt|;
-name|sx_init
-argument_list|(
-operator|&
 name|sc
 operator|->
-name|sc_cmd_sx
+name|sc_runt_off
+operator|=
+name|XREAD4
+argument_list|(
+name|sc
 argument_list|,
-literal|"CMDQ lock"
+name|capa
+argument_list|,
+name|XHCI_RTSOFF
+argument_list|)
+operator|&
+operator|~
+literal|0x1F
+expr_stmt|;
+name|sc
+operator|->
+name|sc_door_off
+operator|=
+name|XREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|capa
+argument_list|,
+name|XHCI_DBOFF
+argument_list|)
+operator|&
+operator|~
+literal|0x3
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"CAPLENGTH=0x%x\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_oper_off
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"RUNTIMEOFFSET=0x%x\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_runt_off
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"DOOROFFSET=0x%x\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_door_off
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"xHCI version = 0x%04x\n"
+argument_list|,
+name|XREAD2
+argument_list|(
+name|sc
+argument_list|,
+name|capa
+argument_list|,
+name|XHCI_HCIVERSION
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|temp
+operator|=
+name|XREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|capa
+argument_list|,
+name|XHCI_HCSPARAMS0
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"HCS0 = 0x%08x\n"
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+comment|/* set up context size */
+if|if
+condition|(
+name|XHCI_HCS0_CSZ
+argument_list|(
+name|temp
+argument_list|)
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_ctx_is_64_byte
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sc
+operator|->
+name|sc_ctx_is_64_byte
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* get DMA bits */
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|dma_bits
+operator|=
+name|XHCI_HCS0_AC64
+argument_list|(
+name|temp
+argument_list|)
+condition|?
+literal|64
+else|:
+literal|32
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|self
+argument_list|,
+literal|"%d bytes context size, %d-bit DMA\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_ctx_is_64_byte
+condition|?
+literal|64
+else|:
+literal|32
+argument_list|,
+operator|(
+name|int
+operator|)
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|dma_bits
 argument_list|)
 expr_stmt|;
 comment|/* get all DMA memory */
@@ -3540,6 +3547,27 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+comment|/* set up command queue mutex and condition varible */
+name|cv_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_cmd_cv
+argument_list|,
+literal|"CMDQ"
+argument_list|)
+expr_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_cmd_sx
+argument_list|,
+literal|"CMDQ lock"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_config_msg
@@ -8206,7 +8234,7 @@ operator|.
 name|length
 expr_stmt|;
 block|}
-comment|/* setup npkt */
+comment|/* set up npkt */
 name|npkt
 operator|=
 operator|(
@@ -8709,7 +8737,7 @@ name|precompute
 operator|=
 literal|0
 expr_stmt|;
-comment|/* setup alt next pointer, if any */
+comment|/* set up alt next pointer, if any */
 if|if
 condition|(
 name|temp
@@ -9574,7 +9602,7 @@ operator|->
 name|nframes
 condition|)
 block|{
-comment|/* setup page_cache pointer */
+comment|/* set up page_cache pointer */
 name|temp
 operator|.
 name|pc
@@ -12132,7 +12160,7 @@ goto|goto
 name|error
 goto|;
 block|}
-comment|/* initialise all endpoint LINK TRBs */
+comment|/* initialize all endpoint LINK TRBs */
 for|for
 control|(
 name|i
@@ -13769,7 +13797,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* setup TD's and QH */
+comment|/* set up TD's and QH */
 name|xhci_setup_generic_chain
 argument_list|(
 name|xfer
