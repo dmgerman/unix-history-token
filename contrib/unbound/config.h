@@ -1265,6 +1265,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/un.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_UN_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/wait.h> header file. */
 end_comment
 
@@ -1423,7 +1434,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to the sub-directory where libtool stores uninstalled libraries. */
+comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
 end_comment
 
 begin_define

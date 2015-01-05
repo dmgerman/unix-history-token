@@ -335,6 +335,12 @@ name|char
 modifier|*
 name|username
 decl_stmt|;
+name|uid_t
+name|uid
+decl_stmt|;
+name|gid_t
+name|gid
+decl_stmt|;
 comment|/** working directory */
 name|char
 modifier|*
@@ -529,6 +535,10 @@ decl_stmt|;
 comment|/** port number for the control port */
 name|int
 name|control_port
+decl_stmt|;
+comment|/** use certificates for remote control */
+name|int
+name|remote_control_use_cert
 decl_stmt|;
 comment|/** private key file for server */
 name|char

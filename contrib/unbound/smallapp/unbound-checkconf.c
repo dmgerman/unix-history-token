@@ -2334,6 +2334,10 @@ condition|(
 name|cfg
 operator|->
 name|remote_control_enable
+operator|&&
+name|cfg
+operator|->
+name|remote_control_use_cert
 condition|)
 block|{
 name|check_chroot_string

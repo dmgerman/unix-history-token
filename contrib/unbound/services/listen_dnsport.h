@@ -393,6 +393,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/**  * Create and bind local listening socket  * @param path: path to the socket.  * @param noproto: on error, this is set true if cause is that local sockets  *	are not supported.  * @return: the socket. -1 on error.  */
+end_comment
+
+begin_function_decl
+name|int
+name|create_local_accept_sock
+parameter_list|(
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|int
+modifier|*
+name|noproto
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
