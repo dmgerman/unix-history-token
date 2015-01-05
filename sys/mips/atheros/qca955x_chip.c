@@ -597,6 +597,10 @@ name|u_ar71xx_mdio_freq
 operator|=
 name|ref_rate
 expr_stmt|;
+name|u_ar71xx_refclk
+operator|=
+name|ref_rate
+expr_stmt|;
 block|}
 end_function
 
