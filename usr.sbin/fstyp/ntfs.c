@@ -327,11 +327,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 name|mftrecsz
 operator|=
 name|bf
