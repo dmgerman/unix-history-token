@@ -248,6 +248,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|iovec
+modifier|*
+name|getcopy
+parameter_list|(
+name|struct
+name|iovec
+modifier|*
+name|iov
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|setup_pio
 parameter_list|(
