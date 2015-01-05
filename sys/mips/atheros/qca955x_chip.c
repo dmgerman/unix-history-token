@@ -567,12 +567,6 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|ath79_add_sys_clkdev("ref", ref_rate); 	ath79_add_sys_clkdev("cpu", cpu_rate); 	ath79_add_sys_clkdev("ddr", ddr_rate); 	ath79_add_sys_clkdev("ahb", ahb_rate);  	clk_add_alias("wdt", NULL, "ref", NULL); 	clk_add_alias("uart", NULL, "ref", NULL);
-endif|#
-directive|endif
 name|u_ar71xx_ddr_freq
 operator|=
 name|ddr_rate
