@@ -5692,7 +5692,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,

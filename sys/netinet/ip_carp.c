@@ -4135,7 +4135,7 @@ name|m_len
 operator|=
 name|len
 expr_stmt|;
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -4497,7 +4497,7 @@ name|m_len
 operator|=
 name|len
 expr_stmt|;
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,

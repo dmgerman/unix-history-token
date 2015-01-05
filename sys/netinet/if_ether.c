@@ -1213,7 +1213,7 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,

@@ -6417,7 +6417,7 @@ operator|=
 name|md
 expr_stmt|;
 comment|/* 	 * FUTURE: Consider increasing alignment by ETHER_HDR_LEN, so 	 * that ether_output() does not need to allocate another mbuf 	 * for the header in the most common case. 	 */
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|mh
 argument_list|,
@@ -11965,7 +11965,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|mh
 argument_list|,

@@ -1999,7 +1999,7 @@ name|m_data
 operator|+=
 name|max_linkhdr
 expr_stmt|;
-comment|/* or MH_ALIGN() equivalent? */
+comment|/* or M_ALIGN() equivalent? */
 comment|/* fill neighbor solicitation packet */
 name|ip6
 operator|=
@@ -4367,7 +4367,7 @@ name|m_data
 operator|+=
 name|max_linkhdr
 expr_stmt|;
-comment|/* or MH_ALIGN() equivalent? */
+comment|/* or M_ALIGN() equivalent? */
 comment|/* fill neighbor advertisement packet */
 name|ip6
 operator|=

@@ -474,7 +474,7 @@ operator|<
 name|MHLEN
 condition|)
 block|{
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|mh
 argument_list|,
@@ -544,7 +544,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|mh
 argument_list|,

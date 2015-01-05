@@ -8018,7 +8018,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -10252,7 +10252,7 @@ if|if
 condition|(
 name|m
 condition|)
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -10836,7 +10836,7 @@ if|if
 condition|(
 name|m
 condition|)
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -11593,7 +11593,7 @@ if|if
 condition|(
 name|m
 condition|)
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
