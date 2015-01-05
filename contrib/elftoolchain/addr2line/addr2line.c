@@ -1847,6 +1847,7 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
+block|{
 name|translate
 argument_list|(
 name|dbg
@@ -1854,6 +1855,12 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 name|dwarf_finish
 argument_list|(
 name|dbg
