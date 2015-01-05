@@ -25,6 +25,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 modifier|*
 name|__error_unthreaded
@@ -42,6 +43,7 @@ block|}
 end_function
 
 begin_function_decl
+specifier|static
 name|int
 modifier|*
 function_decl|(
@@ -55,6 +57,28 @@ init|=
 name|__error_unthreaded
 function_decl|;
 end_function_decl
+
+begin_function
+name|void
+name|__set_error_selector
+parameter_list|(
+name|int
+modifier|*
+function_decl|(
+modifier|*
+name|arg
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|)
+block|{
+name|__error_selector
+operator|=
+name|arg
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|int

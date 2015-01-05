@@ -3792,15 +3792,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|int
 modifier|*
 name|__error_threaded
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void

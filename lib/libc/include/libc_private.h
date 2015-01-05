@@ -355,15 +355,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
+name|void
+name|__set_error_selector
+parameter_list|(
 name|int
 modifier|*
 function_decl|(
 modifier|*
-name|__error_selector
+name|arg
 function_decl|)
 parameter_list|(
 name|void
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -419,6 +422,7 @@ specifier|extern
 name|interpos_func_t
 name|__libc_interposing
 index|[]
+name|__hidden
 decl_stmt|;
 end_decl_stmt
 

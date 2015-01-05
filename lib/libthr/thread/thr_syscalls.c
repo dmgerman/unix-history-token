@@ -2482,9 +2482,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|__error_selector
-operator|=
+name|__set_error_selector
+argument_list|(
 name|__error_threaded
+argument_list|)
 expr_stmt|;
 define|#
 directive|define
