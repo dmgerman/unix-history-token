@@ -643,11 +643,11 @@ name|sin6_addr
 expr_stmt|;
 break|break;
 case|case
-name|AF_UNIX
+name|AF_LOCAL
 case|:
 name|family
 operator|=
-literal|"unix"
+literal|"local"
 expr_stmt|;
 break|break;
 default|default:
@@ -1808,11 +1808,11 @@ name|sin6_addr
 expr_stmt|;
 break|break;
 case|case
-name|AF_UNIX
+name|AF_LOCAL
 case|:
 name|family
 operator|=
-literal|"unix_family "
+literal|"local "
 expr_stmt|;
 break|break;
 default|default:
