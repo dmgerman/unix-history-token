@@ -44,13 +44,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|G_LABEL_ISO9660_DIR
-value|"iso9660"
-end_define
-
-begin_define
-define|#
-directive|define
 name|ISO9660_MAGIC
 value|"\x01" "CD001" "\x01\x00"
 end_define

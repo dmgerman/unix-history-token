@@ -68,13 +68,6 @@ name|NTFS_VOLUMEINO
 value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|G_LABEL_NTFS_DIR
-value|"ntfs"
-end_define
-
 begin_struct
 struct|struct
 name|ntfs_attr
