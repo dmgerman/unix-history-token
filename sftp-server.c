@@ -82,6 +82,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_PRCTL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/prctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -8070,6 +8087,37 @@ argument_list|,
 name|log_stderr
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_PRCTL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|PR_SET_DUMPABLE
+argument_list|)
+comment|/* 	 * On Linux, we should try to avoid making /proc/self/{mem,maps} 	 * available to the user so that sftp access doesn't automatically 	 * imply arbitrary code execution access that will break 	 * restricted configurations. 	 */
+if|if
+condition|(
+name|prctl
+argument_list|(
+name|PR_SET_DUMPABLE
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"unable to make the process undumpable"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(HAVE_PRCTL)&& defined(PR_SET_DUMPABLE) */
 if|if
 condition|(
 operator|(

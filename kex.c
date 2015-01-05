@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.c,v 1.98 2014/02/02 03:44:31 djm Exp $ */
+comment|/* $OpenBSD: kex.c,v 1.99 2014/04/29 18:01:49 markus Exp $ */
 end_comment
 
 begin_comment
@@ -49,11 +49,22 @@ directive|include
 file|<string.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<openssl/crypto.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -252,6 +263,9 @@ name|kexalgs
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 block|{
 name|KEX_DH1
 block|,
@@ -297,6 +311,7 @@ block|}
 block|,
 endif|#
 directive|endif
+comment|/* HAVE_EVP_SHA256 */
 ifdef|#
 directive|ifdef
 name|OPENSSL_HAS_ECC
@@ -335,8 +350,10 @@ block|}
 block|,
 endif|#
 directive|endif
+comment|/* OPENSSL_HAS_NISTP521 */
 endif|#
 directive|endif
+comment|/* OPENSSL_HAS_ECC */
 block|{
 name|KEX_DH1
 block|,
@@ -347,6 +364,9 @@ block|,
 name|SSH_DIGEST_SHA1
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* WITH_OPENSSL */
 ifdef|#
 directive|ifdef
 name|HAVE_EVP_SHA256
@@ -362,6 +382,7 @@ block|}
 block|,
 endif|#
 directive|endif
+comment|/* HAVE_EVP_SHA256 */
 block|{
 name|NULL
 block|,
@@ -3431,6 +3452,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_function
 name|void
 name|kex_derive_keys_bn
@@ -3499,6 +3526,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|Newkeys
 modifier|*
@@ -3531,6 +3563,12 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
 
 begin_function
 name|void
@@ -3790,6 +3828,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

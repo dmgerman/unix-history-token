@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2013 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: cipher-chachapoly.c,v 1.4 2014/01/31 16:39:19 tedu Exp $ */
+comment|/* $OpenBSD: cipher-chachapoly.c,v 1.6 2014/07/03 12:42:16 jsing Exp $ */
 end_comment
 
 begin_include
@@ -54,7 +54,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"misc.h"
+file|"sshbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssherr.h"
 end_include
 
 begin_include
@@ -64,7 +70,7 @@ file|"cipher-chachapoly.h"
 end_include
 
 begin_function
-name|void
+name|int
 name|chachapoly_init
 parameter_list|(
 name|struct
@@ -92,15 +98,9 @@ literal|32
 operator|)
 condition|)
 comment|/* 2 x 256 bit keys */
-name|fatal
-argument_list|(
-literal|"%s: invalid keylen %u"
-argument_list|,
-name|__func__
-argument_list|,
-name|keylen
-argument_list|)
-expr_stmt|;
+return|return
+name|SSH_ERR_INVALID_ARGUMENT
+return|;
 name|chacha_keysetup
 argument_list|(
 operator|&
@@ -127,6 +127,9 @@ argument_list|,
 literal|256
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -214,8 +217,7 @@ decl_stmt|;
 name|int
 name|r
 init|=
-operator|-
-literal|1
+name|SSH_ERR_INTERNAL_ERROR
 decl_stmt|;
 comment|/* 	 * Run ChaCha20 once to generate the Poly1305 key. The IV is the 	 * packet sequence number. 	 */
 name|memset
@@ -230,7 +232,7 @@ name|poly_key
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|put_u64
+name|POKE_U64
 argument_list|(
 name|seqbuf
 argument_list|,
@@ -264,19 +266,6 @@ sizeof|sizeof
 argument_list|(
 name|poly_key
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Set Chacha's block counter to 1 */
-name|chacha_ivsetup
-argument_list|(
-operator|&
-name|ctx
-operator|->
-name|main_ctx
-argument_list|,
-name|seqbuf
-argument_list|,
-name|one
 argument_list|)
 expr_stmt|;
 comment|/* If decrypting, check tag before anything else */
@@ -323,9 +312,15 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|r
+operator|=
+name|SSH_ERR_MAC_INVALID
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 block|}
 comment|/* Crypt additional data */
 if|if
@@ -360,6 +355,19 @@ name|aadlen
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Set Chacha's block counter to 1 */
+name|chacha_ivsetup
+argument_list|(
+operator|&
+name|ctx
+operator|->
+name|main_ctx
+argument_list|,
+name|seqbuf
+argument_list|,
+name|one
+argument_list|)
+expr_stmt|;
 name|chacha_encrypt_bytes
 argument_list|(
 operator|&
@@ -491,11 +499,9 @@ operator|<
 literal|4
 condition|)
 return|return
-operator|-
-literal|1
+name|SSH_ERR_MESSAGE_INCOMPLETE
 return|;
-comment|/* Insufficient length */
-name|put_u64
+name|POKE_U64
 argument_list|(
 name|seqbuf
 argument_list|,
@@ -531,7 +537,7 @@ expr_stmt|;
 operator|*
 name|plenp
 operator|=
-name|get_u32
+name|PEEK_U32
 argument_list|(
 name|buf
 argument_list|)

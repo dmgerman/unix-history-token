@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.c,v 1.103 2013/05/19 02:42:42 djm Exp $ */
+comment|/* $OpenBSD: auth.c,v 1.106 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -180,6 +180,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
 end_include
 
@@ -217,12 +223,6 @@ begin_include
 include|#
 directive|include
 file|"uidswap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"misc.h"
 end_include
 
 begin_include
@@ -1473,6 +1473,49 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_function
+name|void
+name|auth_maxtries_exceeded
+parameter_list|(
+name|Authctxt
+modifier|*
+name|authctxt
+parameter_list|)
+block|{
+name|packet_disconnect
+argument_list|(
+literal|"Too many authentication failures for "
+literal|"%s%.100s from %.200s port %d %s"
+argument_list|,
+name|authctxt
+operator|->
+name|valid
+condition|?
+literal|""
+else|:
+literal|"invalid user "
+argument_list|,
+name|authctxt
+operator|->
+name|user
+argument_list|,
+name|get_remote_ipaddr
+argument_list|()
+argument_list|,
+name|get_remote_port
+argument_list|()
+argument_list|,
+name|compat20
+condition|?
+literal|"ssh2"
+else|:
+literal|"ssh1"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -3054,6 +3097,9 @@ modifier|*
 name|key
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 name|char
 modifier|*
 name|key_fp
@@ -3099,6 +3145,8 @@ goto|goto
 name|revoked
 goto|;
 block|}
+endif|#
+directive|endif
 name|debug3
 argument_list|(
 literal|"%s: treating %s as a key list"
@@ -3145,6 +3193,9 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 case|case
 literal|1
 case|:
@@ -3183,6 +3234,8 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+endif|#
+directive|endif
 block|}
 name|fatal
 argument_list|(

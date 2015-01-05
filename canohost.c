@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: canohost.c,v 1.70 2014/01/19 04:17:29 dtucker Exp $ */
+comment|/* $OpenBSD: canohost.c,v 1.71 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
 end_include
 
 begin_include
@@ -1161,6 +1167,33 @@ expr|struct
 name|sockaddr_in6
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|.
+name|ss_family
+operator|==
+name|AF_UNIX
+condition|)
+block|{
+comment|/* Get the Unix domain socket path. */
+return|return
+name|xstrdup
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|sockaddr_un
+operator|*
+operator|)
+operator|&
+name|addr
+operator|)
+operator|->
+name|sun_path
+argument_list|)
+return|;
+block|}
 name|ipv64_normalise_mapped
 argument_list|(
 operator|&
@@ -1694,6 +1727,18 @@ expr|struct
 name|sockaddr_in6
 argument_list|)
 expr_stmt|;
+comment|/* Unix domain sockets don't have a port number. */
+if|if
+condition|(
+name|from
+operator|.
+name|ss_family
+operator|==
+name|AF_UNIX
+condition|)
+return|return
+literal|0
+return|;
 comment|/* Return port number. */
 if|if
 condition|(

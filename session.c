@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.c,v 1.270 2014/01/31 16:39:19 tedu Exp $ */
+comment|/* $OpenBSD: session.c,v 1.274 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -82,6 +82,12 @@ begin_include
 include|#
 directive|include
 file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_ifdef
@@ -283,6 +289,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
 end_include
 
@@ -302,12 +314,6 @@ begin_include
 include|#
 directive|include
 file|"canohost.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"misc.h"
 end_include
 
 begin_include
@@ -859,10 +865,6 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|struct
-name|sockaddr_un
-name|sunaddr
-decl_stmt|;
 if|if
 condition|(
 name|auth_sock_name
@@ -947,149 +949,32 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* Create the socket. */
+comment|/* Start a Unix listener on auth_sock_name. */
 name|sock
 operator|=
-name|socket
+name|unix_listener
 argument_list|(
-name|AF_UNIX
-argument_list|,
-name|SOCK_STREAM
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sock
-operator|<
-literal|0
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"socket: %.100s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|restore_uid
-argument_list|()
-expr_stmt|;
-goto|goto
-name|authsock_err
-goto|;
-block|}
-comment|/* Bind it to the name. */
-name|memset
-argument_list|(
-operator|&
-name|sunaddr
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sunaddr
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sunaddr
-operator|.
-name|sun_family
-operator|=
-name|AF_UNIX
-expr_stmt|;
-name|strlcpy
-argument_list|(
-name|sunaddr
-operator|.
-name|sun_path
-argument_list|,
 name|auth_sock_name
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sunaddr
-operator|.
-name|sun_path
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bind
-argument_list|(
-name|sock
+name|SSH_LISTEN_BACKLOG
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-operator|&
-name|sunaddr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sunaddr
-argument_list|)
-argument_list|)
-operator|<
 literal|0
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"bind: %.100s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|restore_uid
-argument_list|()
-expr_stmt|;
-goto|goto
-name|authsock_err
-goto|;
-block|}
 comment|/* Restore the privileged uid. */
 name|restore_uid
 argument_list|()
 expr_stmt|;
-comment|/* Start listening on the socket. */
+comment|/* Check for socket/bind/listen failure. */
 if|if
 condition|(
-name|listen
-argument_list|(
 name|sock
-argument_list|,
-name|SSH_LISTEN_BACKLOG
-argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|error
-argument_list|(
-literal|"listen: %.100s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|authsock_err
 goto|;
-block|}
 comment|/* Allocate a channel for the authentication agent socket. */
 name|nc
 operator|=
@@ -1255,6 +1140,7 @@ name|pw_name
 argument_list|)
 expr_stmt|;
 comment|/* setup the channel layer */
+comment|/* XXX - streamlocal? */
 if|if
 condition|(
 name|no_port_forwarding_flag
@@ -1676,9 +1562,10 @@ name|pw_uid
 operator|==
 literal|0
 argument_list|,
+operator|&
 name|options
 operator|.
-name|gateway_ports
+name|fwd_opts
 argument_list|)
 operator|<
 literal|0
@@ -6173,6 +6060,10 @@ operator|&&
 operator|!
 name|no_user_rc
 operator|&&
+name|options
+operator|.
+name|permit_user_rc
+operator|&&
 name|stat
 argument_list|(
 name|_PATH_SSH_USER_RC
@@ -6978,6 +6869,16 @@ decl_stmt|,
 modifier|*
 name|tmp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_LIBIAF
+name|int
+name|doing_chroot
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 name|platform_setusercontext
 argument_list|(
 name|pw
@@ -7205,6 +7106,15 @@ name|chroot_directory
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_LIBIAF
+name|doing_chroot
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 ifdef|#
 directive|ifdef
@@ -7260,8 +7170,15 @@ directive|else
 ifdef|#
 directive|ifdef
 name|USE_LIBIAF
+comment|/* In a chroot environment, the set_id() will always fail; typically   * because of the lack of necessary authentication services and runtime  * such as ./usr/lib/libiaf.so, ./usr/lib/libpam.so.1, and ./etc/passwd  * We skip it in the internal sftp chroot case.  * We'll lose auditing and ACLs but permanently_set_uid will  * take care of the rest.  */
 if|if
 condition|(
+operator|(
+name|doing_chroot
+operator|==
+literal|0
+operator|)
+operator|&&
 name|set_id
 argument_list|(
 name|pw
@@ -12339,7 +12256,7 @@ decl_stmt|;
 name|char
 name|hostname
 index|[
-name|MAXHOSTNAMELEN
+name|NI_MAXHOST
 index|]
 decl_stmt|;
 name|u_int

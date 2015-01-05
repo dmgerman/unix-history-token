@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect2.c,v 1.204 2014/02/02 03:44:32 djm Exp $ */
+comment|/* $OpenBSD: sshconnect2.c,v 1.210 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -221,13 +221,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"readconf.h"
+file|"misc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"misc.h"
+file|"readconf.h"
 end_include
 
 begin_include
@@ -739,6 +739,17 @@ name|u_short
 name|port
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|myproposal
+index|[
+name|PROPOSAL_MAX
+index|]
+init|=
+block|{
+name|KEX_CLIENT
+block|}
+decl_stmt|;
 name|Kex
 modifier|*
 name|kex
@@ -992,6 +1003,9 @@ argument_list|(
 name|myproposal
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 name|kex
 operator|->
 name|kex
@@ -1037,6 +1051,8 @@ index|]
 operator|=
 name|kexecdh_client
 expr_stmt|;
+endif|#
+directive|endif
 name|kex
 operator|->
 name|kex
@@ -4695,7 +4711,7 @@ name|key
 operator|->
 name|flags
 operator|&
-name|KEY_FLAG_EXT
+name|SSHKEY_FLAG_EXT
 operator|)
 condition|)
 return|return
@@ -5885,7 +5901,7 @@ name|key
 operator|->
 name|flags
 operator|&
-name|KEY_FLAG_EXT
+name|SSHKEY_FLAG_EXT
 operator|)
 operator|==
 literal|0
@@ -5919,9 +5935,9 @@ name|key
 operator|->
 name|flags
 operator|&
-name|KEY_FLAG_EXT
+name|SSHKEY_FLAG_EXT
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 continue|continue;

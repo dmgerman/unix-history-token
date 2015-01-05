@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: buffer.h,v 1.23 2014/01/12 08:13:13 djm Exp $ */
+comment|/* $OpenBSD: buffer.h,v 1.25 2014/04/30 05:29:56 djm Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Code for manipulating FIFO buffers.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
+comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+end_comment
+
+begin_comment
+comment|/* Emulation wrappers for legacy OpenSSH buffer API atop sshbuf */
 end_comment
 
 begin_ifndef
@@ -19,84 +23,83 @@ directive|define
 name|BUFFER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"sshbuf.h"
+end_include
+
 begin_typedef
 typedef|typedef
-struct|struct
-block|{
-name|u_char
-modifier|*
-name|buf
-decl_stmt|;
-comment|/* Buffer for data. */
-name|u_int
-name|alloc
-decl_stmt|;
-comment|/* Number of bytes allocated for data. */
-name|u_int
-name|offset
-decl_stmt|;
-comment|/* Offset of first byte containing data. */
-name|u_int
-name|end
-decl_stmt|;
-comment|/* Offset of last byte containing data. */
-block|}
+name|struct
+name|sshbuf
 name|Buffer
 typedef|;
 end_typedef
 
-begin_function_decl
-name|void
+begin_define
+define|#
+directive|define
 name|buffer_init
 parameter_list|(
-name|Buffer
-modifier|*
+name|b
 parameter_list|)
-function_decl|;
-end_function_decl
+value|sshbuf_init(b)
+end_define
 
-begin_function_decl
-name|void
+begin_define
+define|#
+directive|define
 name|buffer_clear
 parameter_list|(
-name|Buffer
-modifier|*
+name|b
 parameter_list|)
-function_decl|;
-end_function_decl
+value|sshbuf_reset(b)
+end_define
 
-begin_function_decl
-name|void
+begin_define
+define|#
+directive|define
 name|buffer_free
 parameter_list|(
-name|Buffer
-modifier|*
+name|b
 parameter_list|)
-function_decl|;
-end_function_decl
+value|sshbuf_free(b)
+end_define
 
-begin_function_decl
-name|u_int
+begin_define
+define|#
+directive|define
+name|buffer_dump
+parameter_list|(
+name|b
+parameter_list|)
+value|sshbuf_dump(b, stderr)
+end_define
+
+begin_comment
+comment|/* XXX cast is safe: sshbuf never stores more than len 2^31 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|buffer_len
 parameter_list|(
-specifier|const
-name|Buffer
-modifier|*
+name|b
 parameter_list|)
-function_decl|;
-end_function_decl
+value|((u_int) sshbuf_len(b))
+end_define
 
-begin_function_decl
-name|void
-modifier|*
+begin_define
+define|#
+directive|define
 name|buffer_ptr
 parameter_list|(
-specifier|const
-name|Buffer
-modifier|*
+name|b
 parameter_list|)
-function_decl|;
-end_function_decl
+value|sshbuf_mutable_ptr(b)
+end_define
 
 begin_function_decl
 name|void
@@ -174,17 +177,6 @@ name|Buffer
 modifier|*
 parameter_list|,
 name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|buffer_dump
-parameter_list|(
-specifier|const
-name|Buffer
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -284,6 +276,22 @@ modifier|*
 parameter_list|,
 name|BIGNUM
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|buffer_put_bignum2_from_string
+parameter_list|(
+name|Buffer
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -391,6 +399,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|void
 modifier|*
 name|buffer_get_string_ptr
@@ -455,8 +464,7 @@ name|buffer_skip_string
 parameter_list|(
 name|b
 parameter_list|)
-define|\
-value|do { u_int l = buffer_get_int(b); buffer_consume(b, l); } while (0)
+value|(void)buffer_get_string_ptr(b, NULL);
 end_define
 
 begin_function_decl
@@ -581,6 +589,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|void
 modifier|*
 name|buffer_get_string_ptr_ret
@@ -598,55 +607,11 @@ begin_function_decl
 name|int
 name|buffer_get_char_ret
 parameter_list|(
-name|u_char
+name|char
 modifier|*
 parameter_list|,
 name|Buffer
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|buffer_get_bignum2_as_string_ret
-parameter_list|(
-name|Buffer
-modifier|*
-parameter_list|,
-name|u_int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|buffer_get_bignum2_as_string
-parameter_list|(
-name|Buffer
-modifier|*
-parameter_list|,
-name|u_int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|buffer_put_bignum2_from_string
-parameter_list|(
-name|Buffer
-modifier|*
-parameter_list|,
-specifier|const
-name|u_char
-modifier|*
-parameter_list|,
-name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keysign.c,v 1.39 2013/12/06 13:39:49 markus Exp $ */
+comment|/* $OpenBSD: ssh-keysign.c,v 1.42 2014/04/29 18:01:49 markus Exp $ */
 end_comment
 
 begin_comment
@@ -677,6 +677,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|host
+decl_stmt|,
+modifier|*
+name|fp
 decl_stmt|;
 name|u_int
 name|slen
@@ -923,26 +926,15 @@ expr_stmt|;
 name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|256
-condition|;
-name|i
-operator|++
-control|)
+name|arc4random_buf
+argument_list|(
 name|rnd
-index|[
-name|i
-index|]
-operator|=
-name|arc4random
-argument_list|()
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rnd
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|RAND_seed
 argument_list|(
@@ -990,6 +982,10 @@ operator|-
 literal|1
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+comment|/* XXX wrong api */
 name|keys
 index|[
 name|i
@@ -1009,6 +1005,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|close
 argument_list|(
 name|key_fd
@@ -1213,11 +1211,31 @@ condition|(
 operator|!
 name|found
 condition|)
-name|fatal
+block|{
+name|fp
+operator|=
+name|key_fingerprint
 argument_list|(
-literal|"no matching hostkey found"
+name|key
+argument_list|,
+name|SSH_FP_MD5
+argument_list|,
+name|SSH_FP_HEX
 argument_list|)
 expr_stmt|;
+name|fatal
+argument_list|(
+literal|"no matching hostkey found for key %s %s"
+argument_list|,
+name|key_type
+argument_list|(
+name|key
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|key_sign

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.420 2014/02/26 21:53:37 markus Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.428 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -166,6 +166,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -189,6 +195,11 @@ include|#
 directive|include
 file|"openbsd-compat/openssl-compat.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -270,6 +281,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
 end_include
 
@@ -307,12 +324,6 @@ begin_include
 include|#
 directive|include
 file|"kex.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dh.h"
 end_include
 
 begin_include
@@ -361,12 +372,6 @@ begin_include
 include|#
 directive|include
 file|"authfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"misc.h"
 end_include
 
 begin_include
@@ -445,45 +450,6 @@ include|#
 directive|include
 file|"version.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LIBWRAP
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<tcpd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_decl_stmt
-name|int
-name|allow_severity
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|deny_severity
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LIBWRAP */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -1021,6 +987,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -1030,6 +1002,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -3878,10 +3855,18 @@ literal|"%s, %s\n"
 argument_list|,
 name|SSH_RELEASE
 argument_list|,
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 name|SSLeay_version
 argument_list|(
 name|SSLEAY_VERSION
 argument_list|)
+else|#
+directive|else
+literal|"without OpenSSL"
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3947,6 +3932,9 @@ name|conf
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 if|if
 condition|(
 name|sensitive_data
@@ -4058,6 +4046,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 name|buffer_put_int
 argument_list|(
 operator|&
@@ -4229,6 +4219,9 @@ name|m
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 if|if
 condition|(
 name|sensitive_data
@@ -4337,6 +4330,8 @@ operator|->
 name|q
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|rsa_generate_additional_parameters
 argument_list|(
 name|sensitive_data
@@ -4345,7 +4340,26 @@ name|server_key
 operator|->
 name|rsa
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: rsa_generate_additional_parameters "
+literal|"error"
+argument_list|,
+name|__func__
+argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|fatal
+argument_list|(
+literal|"ssh1 not supported"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 ifndef|#
 directive|ifndef
@@ -6736,9 +6750,14 @@ argument_list|(
 name|REEXEC_DEVCRYPTO_RESERVED_FD
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* If requested, redirect the logs to the specified logfile. */
 if|if
 condition|(
@@ -7100,10 +7119,18 @@ literal|"sshd version %s, %s"
 argument_list|,
 name|SSH_VERSION
 argument_list|,
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 name|SSLeay_version
 argument_list|(
 name|SSLEAY_VERSION
 argument_list|)
+else|#
+directive|else
+literal|"without OpenSSL"
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 comment|/* Store privilege separation user for later use if required. */
@@ -7800,6 +7827,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 comment|/* Check certain values for sanity. */
 if|if
 condition|(
@@ -7904,6 +7934,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|use_privsep
@@ -8908,90 +8940,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|LIBWRAP
-name|allow_severity
-operator|=
-name|options
-operator|.
-name|log_facility
-operator||
-name|LOG_INFO
-expr_stmt|;
-name|deny_severity
-operator|=
-name|options
-operator|.
-name|log_facility
-operator||
-name|LOG_WARNING
-expr_stmt|;
-comment|/* Check whether logins are denied from this host. */
-if|if
-condition|(
-name|packet_connection_is_on_socket
-argument_list|()
-condition|)
-block|{
-name|struct
-name|request_info
-name|req
-decl_stmt|;
-name|request_init
-argument_list|(
-operator|&
-name|req
-argument_list|,
-name|RQ_DAEMON
-argument_list|,
-name|__progname
-argument_list|,
-name|RQ_FILE
-argument_list|,
-name|sock_in
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|fromhost
-argument_list|(
-operator|&
-name|req
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hosts_access
-argument_list|(
-operator|&
-name|req
-argument_list|)
-condition|)
-block|{
-name|debug
-argument_list|(
-literal|"Connection refused by tcp wrapper"
-argument_list|)
-expr_stmt|;
-name|refuse
-argument_list|(
-operator|&
-name|req
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-name|fatal
-argument_list|(
-literal|"libwrap refuse returns"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* LIBWRAP */
 comment|/* Log the connection. */
 name|verbose
 argument_list|(
@@ -9141,6 +9089,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 name|do_ssh1_kex
 argument_list|()
 expr_stmt|;
@@ -9149,6 +9100,15 @@ argument_list|(
 name|authctxt
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|fatal
+argument_list|(
+literal|"ssh1 not supported"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * If we use privilege separation, the unprivileged child transfers 	 * the current keystate and exits 	 */
 if|if
@@ -9403,6 +9363,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 comment|/*  * Decrypt session_key_int using our private server key and private host key  * (key with larger modulus first).  */
 name|int
 name|ssh1_session_key
@@ -9517,7 +9480,7 @@ name|server_key
 operator|->
 name|rsa
 argument_list|)
-operator|<=
+operator|!=
 literal|0
 condition|)
 name|rsafail
@@ -9537,7 +9500,7 @@ name|ssh1_host_key
 operator|->
 name|rsa
 argument_list|)
-operator|<=
+operator|!=
 literal|0
 condition|)
 name|rsafail
@@ -9622,7 +9585,7 @@ name|ssh1_host_key
 operator|->
 name|rsa
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|rsafail
@@ -9642,7 +9605,7 @@ name|server_key
 operator|->
 name|rsa
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|rsafail
@@ -10449,6 +10412,8 @@ name|packet_write_wait
 argument_list|()
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|void
 name|sshd_hostkey_sign
 parameter_list|(
@@ -10577,6 +10542,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|myproposal
+index|[
+name|PROPOSAL_MAX
+index|]
+init|=
+block|{
+name|KEX_SERVER
+block|}
+decl_stmt|;
 name|Kex
 modifier|*
 name|kex
@@ -10776,6 +10752,9 @@ argument_list|(
 name|myproposal
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 name|kex
 operator|->
 name|kex
@@ -10821,6 +10800,8 @@ index|]
 operator|=
 name|kexecdh_server
 expr_stmt|;
+endif|#
+directive|endif
 name|kex
 operator|->
 name|kex
@@ -10954,6 +10935,10 @@ condition|(
 name|use_privsep
 operator|&&
 name|privsep_is_preauth
+operator|&&
+name|pmonitor
+operator|!=
+name|NULL
 operator|&&
 name|pmonitor
 operator|->

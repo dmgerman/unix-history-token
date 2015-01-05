@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11-helper.c,v 1.7 2013/12/02 02:56:17 djm Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11-helper.c,v 1.8 2014/06/24 01:13:21 djm Exp $ */
 end_comment
 
 begin_comment
@@ -796,8 +796,6 @@ name|ok
 init|=
 operator|-
 literal|1
-decl_stmt|,
-name|ret
 decl_stmt|;
 name|Key
 modifier|*
@@ -862,6 +860,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+name|int
+name|ret
+decl_stmt|;
 name|slen
 operator|=
 name|RSA_size
@@ -912,6 +916,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* WITH_OPENSSL */
 block|}
 name|key_free
 argument_list|(

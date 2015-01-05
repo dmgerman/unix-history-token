@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: gss-serv.c,v 1.26 2014/02/26 20:28:44 djm Exp $ */
+comment|/* $OpenBSD: gss-serv.c,v 1.27 2014/07/03 03:34:09 djm Exp $ */
 end_comment
 
 begin_comment
@@ -302,7 +302,7 @@ decl_stmt|;
 name|char
 name|lname
 index|[
-name|MAXHOSTNAMELEN
+name|NI_MAXHOST
 index|]
 decl_stmt|;
 name|gss_OID_set
@@ -336,7 +336,10 @@ name|gethostname
 argument_list|(
 name|lname
 argument_list|,
-name|MAXHOSTNAMELEN
+sizeof|sizeof
+argument_list|(
+name|lname
+argument_list|)
 argument_list|)
 condition|)
 block|{

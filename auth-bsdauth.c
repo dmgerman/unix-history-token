@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-bsdauth.c,v 1.11 2007/09/21 08:15:29 djm Exp $ */
+comment|/* $OpenBSD: auth-bsdauth.c,v 1.13 2014/06/24 01:13:21 djm Exp $ */
 end_comment
 
 begin_comment
@@ -17,6 +17,18 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -153,6 +165,26 @@ name|challenge
 init|=
 name|NULL
 decl_stmt|;
+operator|*
+name|infotxt
+operator|=
+name|NULL
+expr_stmt|;
+operator|*
+name|numprompts
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|prompts
+operator|=
+name|NULL
+expr_stmt|;
+operator|*
+name|echo_on
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|authctxt

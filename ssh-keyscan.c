@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keyscan.c,v 1.89 2013/12/06 13:39:49 markus Exp $ */
+comment|/* $OpenBSD: ssh-keyscan.c,v 1.92 2014/04/29 18:01:49 markus Exp $ */
 end_comment
 
 begin_comment
@@ -266,12 +266,10 @@ init|=
 name|KT_RSA
 operator||
 name|KT_ECDSA
+operator||
+name|KT_ED25519
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Get RSA and ECDSA keys by default */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -821,6 +819,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
+
 begin_function
 specifier|static
 name|Key
@@ -1017,6 +1021,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -1097,6 +1106,17 @@ modifier|*
 name|c
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|myproposal
+index|[
+name|PROPOSAL_MAX
+index|]
+init|=
+block|{
+name|KEX_CLIENT
+block|}
+decl_stmt|;
 name|int
 name|j
 decl_stmt|;
@@ -1158,6 +1178,9 @@ argument_list|(
 name|myproposal
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 name|c
 operator|->
 name|c_kex
@@ -1213,6 +1236,8 @@ index|]
 operator|=
 name|kexecdh_client
 expr_stmt|;
+endif|#
+directive|endif
 name|c
 operator|->
 name|c_kex
@@ -2784,6 +2809,9 @@ operator|=
 name|CS_KEYS
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 case|case
 name|CS_KEYS
 case|:
@@ -2803,6 +2831,8 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return;
+endif|#
+directive|endif
 default|default:
 name|fatal
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2.c,v 1.130 2014/01/29 06:18:35 djm Exp $ */
+comment|/* $OpenBSD: auth2.c,v 1.132 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -95,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|"buffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_include
@@ -1714,13 +1720,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|packet_disconnect
+name|auth_maxtries_exceeded
 argument_list|(
-name|AUTH_FAIL_MSG
-argument_list|,
 name|authctxt
-operator|->
-name|user
 argument_list|)
 expr_stmt|;
 block|}

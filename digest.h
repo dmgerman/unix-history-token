@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: digest.h,v 1.2 2014/01/27 18:58:14 markus Exp $ */
+comment|/* $OpenBSD: digest.h,v 1.6 2014/07/03 04:36:45 djm Exp $ */
 end_comment
 
 begin_comment
@@ -82,6 +82,12 @@ directive|define
 name|SSH_DIGEST_MAX
 value|6
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|sshbuf
+struct_decl|;
+end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -203,7 +209,8 @@ name|int
 name|alg
 parameter_list|,
 specifier|const
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 name|b
 parameter_list|,
@@ -289,7 +296,8 @@ modifier|*
 name|ctx
 parameter_list|,
 specifier|const
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 name|b
 parameter_list|)

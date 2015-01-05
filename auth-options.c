@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.62 2013/12/19 00:27:57 djm Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.64 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"channels.h"
 end_include
 
@@ -95,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|"servconf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"misc.h"
 end_include
 
 begin_include
@@ -1589,6 +1589,7 @@ name|p
 operator|=
 name|patterns
 expr_stmt|;
+comment|/* XXX - add streamlocal support */
 name|host
 operator|=
 name|hpdelim
@@ -2792,7 +2793,6 @@ name|parse_option_list
 argument_list|(
 name|buffer_ptr
 argument_list|(
-operator|&
 name|k
 operator|->
 name|cert
@@ -2802,7 +2802,6 @@ argument_list|)
 argument_list|,
 name|buffer_len
 argument_list|(
-operator|&
 name|k
 operator|->
 name|cert
@@ -2857,7 +2856,6 @@ name|parse_option_list
 argument_list|(
 name|buffer_ptr
 argument_list|(
-operator|&
 name|k
 operator|->
 name|cert
@@ -2867,7 +2865,6 @@ argument_list|)
 argument_list|,
 name|buffer_len
 argument_list|(
-operator|&
 name|k
 operator|->
 name|cert
@@ -2911,7 +2908,6 @@ name|parse_option_list
 argument_list|(
 name|buffer_ptr
 argument_list|(
-operator|&
 name|k
 operator|->
 name|cert
@@ -2921,7 +2917,6 @@ argument_list|)
 argument_list|,
 name|buffer_len
 argument_list|(
-operator|&
 name|k
 operator|->
 name|cert

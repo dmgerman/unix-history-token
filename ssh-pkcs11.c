@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11.c,v 1.11 2013/11/13 13:48:20 markus Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11.c,v 1.14 2014/06/24 01:13:21 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2886,7 +2886,7 @@ name|key
 operator|->
 name|flags
 operator||=
-name|KEY_FLAG_EXT
+name|SSHKEY_FLAG_EXT
 expr_stmt|;
 if|if
 condition|(

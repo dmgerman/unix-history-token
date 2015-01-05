@@ -11,6 +11,10 @@ begin_comment
 comment|/* #define SANDBOX_SECCOMP_FILTER_DEBUG 1 */
 end_comment
 
+begin_comment
+comment|/* XXX it should be possible to do logging via the log socket safely */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -338,6 +342,13 @@ argument_list|,
 name|EACCES
 argument_list|)
 block|,
+name|SC_DENY
+argument_list|(
+name|stat
+argument_list|,
+name|EACCES
+argument_list|)
+block|,
 name|SC_ALLOW
 argument_list|(
 name|getpid
@@ -439,6 +450,21 @@ name|__NR_mmap
 name|SC_ALLOW
 argument_list|(
 name|mmap
+argument_list|)
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__dietlibc__
+name|SC_ALLOW
+argument_list|(
+name|mremap
+argument_list|)
+block|,
+name|SC_ALLOW
+argument_list|(
+name|exit
 argument_list|)
 block|,
 endif|#

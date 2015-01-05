@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.131 2014/02/02 03:44:31 djm Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.135 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -87,12 +87,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -100,6 +94,18 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -164,11 +170,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<openssl/dh.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -332,6 +349,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
 end_include
 
@@ -374,12 +397,6 @@ begin_include
 include|#
 directive|include
 file|"monitor_fdpass.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"misc.h"
 end_include
 
 begin_include
@@ -1017,6 +1034,12 @@ name|authctxt
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|BIGNUM
@@ -1030,6 +1053,11 @@ end_decl_stmt
 begin_comment
 comment|/* used for ssh1 rsa auth */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* local state for key verify */
@@ -1225,6 +1253,9 @@ name|mon_dispatch_proto20
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 block|{
 name|MONITOR_REQ_MODULI
 block|,
@@ -1233,6 +1264,8 @@ block|,
 name|mm_answer_moduli
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|MONITOR_REQ_SIGN
 block|,
@@ -1454,6 +1487,9 @@ name|mon_dispatch_postauth20
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 block|{
 name|MONITOR_REQ_MODULI
 block|,
@@ -1462,6 +1498,8 @@ block|,
 name|mm_answer_moduli
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|MONITOR_REQ_SIGN
 block|,
@@ -1533,6 +1571,9 @@ name|mon_dispatch_proto15
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 block|{
 name|MONITOR_REQ_PWNAM
 block|,
@@ -1713,6 +1754,9 @@ block|}
 block|,
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* WITH_SSH1 */
 block|{
 literal|0
 block|,
@@ -1731,6 +1775,9 @@ name|mon_dispatch_postauth15
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 block|{
 name|MONITOR_REQ_PTY
 block|,
@@ -1778,6 +1825,9 @@ block|}
 block|,
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* WITH_SSH1 */
 block|{
 literal|0
 block|,
@@ -2464,6 +2514,18 @@ operator|&
 name|monitor_child_handler
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGXFSZ
+name|signal
+argument_list|(
+name|SIGXFSZ
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|compat20
@@ -3316,6 +3378,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_function
 name|int
 name|mm_answer_moduli
@@ -3487,6 +3555,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -5899,6 +5972,9 @@ operator|=
 literal|"hostbased"
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 case|case
 name|MM_RSAHOSTKEY
 case|:
@@ -5946,6 +6022,8 @@ operator|=
 literal|"rsa"
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|fatal
 argument_list|(
@@ -7727,6 +7805,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
+
 begin_function
 name|int
 name|mm_answer_sesskey
@@ -8599,6 +8683,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|mm_answer_term
@@ -9029,6 +9118,9 @@ operator|->
 name|m_zlib
 argument_list|)
 expr_stmt|;
+name|packet_set_postauth
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|options
@@ -9241,6 +9333,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 name|kex
 operator|->
 name|kex
@@ -9286,6 +9381,8 @@ index|]
 operator|=
 name|kexecdh_server
 expr_stmt|;
+endif|#
+directive|endif
 name|kex
 operator|->
 name|kex
