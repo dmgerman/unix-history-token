@@ -2422,20 +2422,10 @@ modifier|*
 name|list
 parameter_list|)
 block|{
-specifier|register
 name|Elf_Addr
 modifier|*
 modifier|*
 name|tp
-name|__asm__
-argument_list|(
-literal|"r2"
-argument_list|)
-decl_stmt|;
-name|Elf_Addr
-modifier|*
-modifier|*
-name|_tp
 decl_stmt|;
 comment|/* 	* Fix the size of the static TLS block by using the maximum 	* offset allocated so far and adding a bit for dynamic modules to 	* use. 	*/
 name|tls_static_space
@@ -2446,7 +2436,7 @@ name|tls_last_size
 operator|+
 name|RTLD_STATIC_TLS_EXTRA
 expr_stmt|;
-name|_tp
+name|tp
 operator|=
 operator|(
 name|Elf_Addr
@@ -2475,7 +2465,7 @@ name|TLS_TCB_SIZE
 operator|)
 expr_stmt|;
 comment|/* 	 * XXX gcc seems to ignore 'tp = _tp;'  	 */
-asm|__asm __volatile("mr %0,%1" : "=r"(tp) : "r"(_tp));
+asm|__asm __volatile("mr 2,%0" :: "r"(tp));
 block|}
 end_function
 
@@ -2494,15 +2484,12 @@ name|Elf_Addr
 modifier|*
 modifier|*
 name|tp
-name|__asm__
-argument_list|(
-literal|"r2"
-argument_list|)
 decl_stmt|;
 name|char
 modifier|*
 name|p
 decl_stmt|;
+asm|__asm __volatile("mr %0,2" : "=r"(tp));
 name|p
 operator|=
 name|tls_get_addr_common
