@@ -136,29 +136,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|__powerpc64__
-specifier|register
-name|uint8_t
-modifier|*
-name|_tp
-name|__asm__
-argument_list|(
-literal|"%r13"
-argument_list|)
-decl_stmt|;
-else|#
-directive|else
-specifier|register
-name|uint8_t
-modifier|*
-name|_tp
-name|__asm__
-argument_list|(
-literal|"%r2"
-argument_list|)
-decl_stmt|;
-endif|#
-directive|endif
-asm|__asm __volatile("mr %0,%1" : "=r"(_tp) :
+asm|__asm __volatile("mr 13,%0" ::
 literal|"r"
 operator|(
 operator|(
@@ -173,6 +151,38 @@ block|)
 function|;
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_asm
+asm|__asm __volatile("mr 2,%0" ::
+end_asm
+
+begin_expr_stmt
+literal|"r"
+operator|(
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|tcb
+operator|+
+name|TP_OFFSET
+operator|)
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 unit|}  static
 name|__inline
@@ -184,29 +194,18 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|register
+name|uint8_t
+modifier|*
+name|_tp
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__powerpc64__
-specifier|register
-name|uint8_t
-modifier|*
-name|_tp
-name|__asm__
-argument_list|(
-literal|"%r13"
-argument_list|)
-decl_stmt|;
+asm|__asm __volatile("mr %0,13" : "=r"(_tp));
 else|#
 directive|else
-specifier|register
-name|uint8_t
-modifier|*
-name|_tp
-name|__asm__
-argument_list|(
-literal|"%r2"
-argument_list|)
-decl_stmt|;
+asm|__asm __volatile("mr %0,2" : "=r"(_tp));
 endif|#
 directive|endif
 return|return
