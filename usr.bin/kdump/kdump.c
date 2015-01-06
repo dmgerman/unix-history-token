@@ -839,6 +839,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|linux_syscallnames
@@ -846,10 +847,30 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_include
+include|#
+directive|include
+file|<linux_syscalls.c>
+end_include
+
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|nlinux_syscalls
+init|=
+sizeof|sizeof
+argument_list|(
+name|linux_syscallnames
+argument_list|)
+operator|/
+expr|\
+sizeof|sizeof
+argument_list|(
+name|linux_syscallnames
+index|[
+literal|0
+index|]
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -9611,6 +9632,9 @@ name|printf
 argument_list|(
 literal|"0x%jx "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ktr
 operator|->
 name|vaddr
