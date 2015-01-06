@@ -85,37 +85,6 @@ value|10
 end_define
 
 begin_comment
-comment|/************************************************************************  * Compatibility with older versions of FreeBSD  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|440001
-end_if
-
-begin_warning
-warning|#
-directive|warning
-warning|testing old-FreeBSD compat
-end_warning
-
-begin_typedef
-typedef|typedef
-name|struct
-name|proc
-name|d_thread_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/************************************************************************  * Driver version.  Only really significant to the ACU interface.  */
 end_comment
 
