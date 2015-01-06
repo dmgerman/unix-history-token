@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -314,6 +320,21 @@ name|mtx
 name|pf_frag_mtx
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|pf_frag_mtx
+argument_list|,
+operator|&
+name|pf_frag_mtx
+argument_list|,
+literal|"pf fragments"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -766,7 +787,7 @@ end_define
 
 begin_function
 name|void
-name|pf_normalize_init
+name|pf_vnet_normalize_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -932,12 +953,6 @@ expr_stmt|;
 name|uma_zdestroy
 argument_list|(
 name|V_pf_frag_z
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|pf_frag_mtx
 argument_list|)
 expr_stmt|;
 block|}
