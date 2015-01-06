@@ -3156,13 +3156,6 @@ name|pflog_packet_ptr
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|V_pf_end_threads
-value|VNET(pf_end_threads)
-end_define
-
 begin_endif
 endif|#
 directive|endif

@@ -878,6 +878,13 @@ argument_list|,
 literal|"PF frag entries limit reached"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
 name|mtx_init
 argument_list|(
 operator|&

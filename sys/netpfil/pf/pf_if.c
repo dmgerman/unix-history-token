@@ -618,6 +618,13 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
 name|mtx_init
 argument_list|(
 operator|&
@@ -692,6 +699,14 @@ expr_stmt|;
 name|IFNET_RUNLOCK
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
+block|{
 name|pfi_attach_cookie
 operator|=
 name|EVENTHANDLER_REGISTER
@@ -770,6 +785,7 @@ argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

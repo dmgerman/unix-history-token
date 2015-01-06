@@ -1888,16 +1888,6 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|pf_end_threads
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
 expr|struct
