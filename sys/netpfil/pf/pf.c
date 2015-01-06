@@ -7635,6 +7635,7 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+name|__unused
 parameter_list|)
 block|{
 name|u_int
@@ -7642,14 +7643,9 @@ name|idx
 init|=
 literal|0
 decl_stmt|;
-name|CURVNET_SET
+name|VNET_ITERATOR_DECL
 argument_list|(
-operator|(
-expr|struct
-name|vnet
-operator|*
-operator|)
-name|v
+name|vnet_iter
 argument_list|)
 expr_stmt|;
 for|for
@@ -7658,17 +7654,11 @@ init|;
 condition|;
 control|)
 block|{
-name|PF_RULES_RLOCK
-argument_list|()
-expr_stmt|;
-name|rw_sleep
+name|tsleep
 argument_list|(
 name|pf_purge_thread
 argument_list|,
-operator|&
-name|pf_rules_lock
-argument_list|,
-literal|0
+name|PWAIT
 argument_list|,
 literal|"pftm"
 argument_list|,
@@ -7677,65 +7667,18 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|V_pf_end_threads
-condition|)
+name|VNET_LIST_RLOCK
+argument_list|()
+expr_stmt|;
+name|VNET_FOREACH
+argument_list|(
+argument|vnet_iter
+argument_list|)
 block|{
-comment|/* 			 * To cleanse up all kifs and rules we need 			 * two runs: first one clears reference flags, 			 * then pf_purge_expired_states() doesn't 			 * raise them, and then second run frees. 			 */
-name|PF_RULES_RUNLOCK
-argument_list|()
-expr_stmt|;
-name|pf_purge_unlinked_rules
-argument_list|()
-expr_stmt|;
-name|pfi_kif_purge
-argument_list|()
-expr_stmt|;
-comment|/* 			 * Now purge everything. 			 */
-name|pf_purge_expired_states
+name|CURVNET_SET
 argument_list|(
-literal|0
-argument_list|,
-name|pf_hashmask
+name|vnet_iter
 argument_list|)
-expr_stmt|;
-name|pf_purge_expired_fragments
-argument_list|()
-expr_stmt|;
-name|pf_purge_expired_src_nodes
-argument_list|()
-expr_stmt|;
-comment|/* 			 * Now all kifs& rules should be unreferenced, 			 * thus should be successfully freed. 			 */
-name|pf_purge_unlinked_rules
-argument_list|()
-expr_stmt|;
-name|pfi_kif_purge
-argument_list|()
-expr_stmt|;
-comment|/* 			 * Announce success and exit. 			 */
-name|PF_RULES_RLOCK
-argument_list|()
-expr_stmt|;
-name|V_pf_end_threads
-operator|++
-expr_stmt|;
-name|PF_RULES_RUNLOCK
-argument_list|()
-expr_stmt|;
-name|wakeup
-argument_list|(
-name|pf_purge_thread
-argument_list|)
-expr_stmt|;
-name|kproc_exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-name|PF_RULES_RUNLOCK
-argument_list|()
 expr_stmt|;
 comment|/* Process 1/interval fraction of the state table every run. */
 name|idx
@@ -7766,7 +7709,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Order is important: 			 * - states and src nodes reference rules 			 * - states and rules reference kifs 			 */
+comment|/* 				 * Order is important: 				 * - states and src nodes reference rules 				 * - states and rules reference kifs 				 */
 name|pf_purge_expired_fragments
 argument_list|()
 expr_stmt|;
@@ -7780,11 +7723,15 @@ name|pfi_kif_purge
 argument_list|()
 expr_stmt|;
 block|}
-block|}
-comment|/* not reached */
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
+block|}
+name|VNET_LIST_RUNLOCK
+argument_list|()
+expr_stmt|;
+block|}
+comment|/* not reached */
 block|}
 end_function
 
