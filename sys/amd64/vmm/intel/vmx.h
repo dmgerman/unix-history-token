@@ -137,6 +137,10 @@ begin_struct
 struct|struct
 name|vmxstate
 block|{
+name|uint64_t
+name|nextrip
+decl_stmt|;
+comment|/* next instruction to be executed by guest */
 name|int
 name|lastcpu
 decl_stmt|;

@@ -2509,6 +2509,13 @@ argument_list|)
 expr_stmt|;
 name|vcpu
 operator|->
+name|nextrip
+operator|=
+operator|~
+literal|0
+expr_stmt|;
+name|vcpu
+operator|->
 name|lastcpu
 operator|=
 name|NOCPU
@@ -6861,6 +6868,11 @@ name|vmcb_state
 modifier|*
 name|state
 decl_stmt|;
+name|struct
+name|svm_vcpu
+modifier|*
+name|vcpustate
+decl_stmt|;
 name|uint8_t
 name|v_tpr
 decl_stmt|;
@@ -6889,6 +6901,15 @@ argument_list|,
 name|vcpu
 argument_list|)
 expr_stmt|;
+name|vcpustate
+operator|=
+name|svm_get_vcpu
+argument_list|(
+name|sc
+argument_list|,
+name|vcpu
+argument_list|)
+expr_stmt|;
 name|need_intr_window
 operator|=
 literal|0
@@ -6897,6 +6918,44 @@ name|pending_apic_vector
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|vcpustate
+operator|->
+name|nextrip
+operator|!=
+name|state
+operator|->
+name|rip
+condition|)
+block|{
+name|ctrl
+operator|->
+name|intr_shadow
+operator|=
+literal|0
+expr_stmt|;
+name|VCPU_CTR2
+argument_list|(
+name|sc
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|,
+literal|"Guest interrupt blocking "
+literal|"cleared due to rip change: %#lx/%#lx"
+argument_list|,
+name|vcpustate
+operator|->
+name|nextrip
+argument_list|,
+name|state
+operator|->
+name|rip
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Inject pending events or exceptions for this vcpu. 	 * 	 * An event might be pending because the previous #VMEXIT happened 	 * during event delivery (i.e. ctrl->exitintinfo). 	 * 	 * An event might also be pending because an exception was injected 	 * by the hypervisor (e.g. #PF during instruction emulation). 	 */
 name|svm_inj_intinfo
 argument_list|(
@@ -8330,6 +8389,15 @@ expr_stmt|;
 comment|/* #VMEXIT disables interrupts so re-enable them here. */
 name|enable_gintr
 argument_list|()
+expr_stmt|;
+comment|/* Update 'nextrip' */
+name|vcpustate
+operator|->
+name|nextrip
+operator|=
+name|state
+operator|->
+name|rip
 expr_stmt|;
 comment|/* Handle #VMEXIT and if required return to user space. */
 name|handled
