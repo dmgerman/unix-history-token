@@ -841,14 +841,7 @@ name|qca955x_chip_init_usb_peripheral
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-if|#
-directive|if
-literal|0
-block|uint32_t reg;  	reg = ATH_READ_REG(AR934X_RESET_REG_BOOTSTRAP); 	if (reg& AR934X_BOOTSTRAP_USB_MODE_DEVICE) 		return;  	ar71xx_device_stop(AR934X_RESET_USBSUS_OVERRIDE); 	DELAY(100);  	ar71xx_device_start(AR934X_RESET_USB_PHY); 	DELAY(100);  	ar71xx_device_start(AR934X_RESET_USB_PHY_ANALOG); 	DELAY(100);  	ar71xx_device_start(AR934X_RESET_USB_HOST); 	DELAY(100);
-endif|#
-directive|endif
-block|}
+block|{ }
 end_function
 
 begin_function
