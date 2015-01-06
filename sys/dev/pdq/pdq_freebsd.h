@@ -885,7 +885,7 @@ name|pdq
 parameter_list|,
 name|b
 parameter_list|)
-value|do { \     PDQ_OS_DATABUF_T *x_m0; \     MGETHDR(x_m0, M_NOWAIT, MT_DATA); \     if (x_m0 != NULL) { \ 	MCLGET(x_m0, M_NOWAIT);	\ 	if ((x_m0->m_flags& M_EXT) == 0) { \ 	    m_free(x_m0); \ 	    (b) = NULL; \ 	} else { \ 	    (b) = x_m0; \ 	    x_m0->m_len = PDQ_OS_DATABUF_SIZE; \ 	} \     } else { \ 	(b) = NULL; \     } \ } while (0)
+value|do { \     PDQ_OS_DATABUF_T *x_m0; \     MGETHDR(x_m0, M_NOWAIT, MT_DATA); \     if (x_m0 != NULL) { \ 	if (!(MCLGET(x_m0, M_NOWAIT))) { \ 	    m_free(x_m0); \ 	    (b) = NULL; \ 	} else { \ 	    (b) = x_m0; \ 	    x_m0->m_len = PDQ_OS_DATABUF_SIZE; \ 	} \     } else { \ 	(b) = NULL; \     } \ } while (0)
 end_define
 
 begin_define

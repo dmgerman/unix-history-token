@@ -2978,7 +2978,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|__inline
-name|void
+name|int
 name|m_clget
 parameter_list|(
 name|struct
@@ -3063,6 +3063,15 @@ name|how
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_EXT
+operator|)
+return|;
 block|}
 end_function
 

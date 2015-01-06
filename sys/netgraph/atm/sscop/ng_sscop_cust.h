@@ -955,7 +955,7 @@ define|#
 directive|define
 name|DECL_MBUF_ALLOC
 define|\
-value|static __inline struct mbuf *						\ ng_sscop_mbuf_alloc(size_t n)						\ {									\ 	struct mbuf *m;							\ 									\ 	MGETHDR(m, M_NOWAIT, MT_DATA);					\ 	if (m != NULL) {						\ 		m->m_len = 0;						\ 		m->m_pkthdr.len = 0;					\ 		if (n> MHLEN) {					\ 			MCLGET(m, M_NOWAIT);				\ 			if (!(m->m_flags& M_EXT)){			\ 				m_free(m);				\ 				m = NULL;				\ 			}						\ 		}							\ 	}								\ 	return (m);							\ }
+value|static __inline struct mbuf *						\ ng_sscop_mbuf_alloc(size_t n)						\ {									\ 	struct mbuf *m;							\ 									\ 	MGETHDR(m, M_NOWAIT, MT_DATA);					\ 	if (m != NULL) {						\ 		m->m_len = 0;						\ 		m->m_pkthdr.len = 0;					\ 		if (n> MHLEN) {					\ 			if (!(MCLGET(m, M_NOWAIT))){			\ 				m_free(m);				\ 				m = NULL;				\ 			}						\ 		}							\ 	}								\ 	return (m);							\ }
 end_define
 
 begin_ifdef
