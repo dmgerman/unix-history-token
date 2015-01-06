@@ -775,12 +775,6 @@ decl_stmt|;
 name|u8
 name|revision
 decl_stmt|;
-name|struct
-name|pci_devinfo
-modifier|*
-name|bus
-decl_stmt|;
-comment|/* bus this device is on, equivalent to linux struct pci_bus */
 block|}
 struct|;
 end_struct
@@ -2877,6 +2871,27 @@ condition|)
 return|return
 name|error
 return|;
+comment|/* 	 * Handle case where "pci_alloc_msix()" may allocate less 	 * interrupts than available and return with no error: 	 */
+if|if
+condition|(
+name|avail
+operator|<
+name|nreq
+condition|)
+block|{
+name|pci_release_msi
+argument_list|(
+name|pdev
+operator|->
+name|dev
+operator|.
+name|bsddev
+argument_list|)
+expr_stmt|;
+return|return
+name|avail
+return|;
+block|}
 name|rle
 operator|=
 name|_pci_get_rle
