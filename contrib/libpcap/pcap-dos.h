@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Internal details for libpcap on DOS.  * 32-bit targets: djgpp, Pharlap or DOS4GW.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-dos.h,v 1.1 2004-12-18 08:52:10 guy Exp $ (LBL)  */
+comment|/*  * Internal details for libpcap on DOS.  * 32-bit targets: djgpp, Pharlap or DOS4GW.  */
 end_comment
 
 begin_ifndef

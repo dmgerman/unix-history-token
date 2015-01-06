@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.h       7.1 (Berkeley) 5/7/91  *  * @(#) $Header: /tcpdump/master/libpcap/pcap/bpf.h,v 1.32 2008-12-23 20:13:29 guy Exp $ (LBL)  */
+comment|/*-  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.h       7.1 (Berkeley) 5/7/91  */
 end_comment
 
 begin_comment
@@ -1066,10 +1066,81 @@ define|#
 directive|define
 name|DLT_SCTP
 value|248
+comment|/*  * USB packets, beginning with a USBPcap header.  *  * Requested by Tomasz Mon<desowin@gmail.com>  */
+define|#
+directive|define
+name|DLT_USBPCAP
+value|249
+comment|/*  * Schweitzer Engineering Laboratories "RTAC" product serial-line  * packets.  *  * Requested by Chris Bontje<chris_bontje@selinc.com>.  */
+define|#
+directive|define
+name|DLT_RTAC_SERIAL
+value|250
+comment|/*  * Bluetooth Low Energy air interface link-layer packets.  *  * Requested by Mike Kershaw<dragorn@kismetwireless.net>.  */
+define|#
+directive|define
+name|DLT_BLUETOOTH_LE_LL
+value|251
+comment|/*  * DLT type for upper-protocol layer PDU saves from wireshark.  *   * the actual contents are determined by two TAGs stored with each  * packet:  *   EXP_PDU_TAG_LINKTYPE          the link type (LINKTYPE_ value) of the  *				   original packet.  *  *   EXP_PDU_TAG_PROTO_NAME        the name of the wireshark dissector  * 				   that can make sense of the data stored.  */
+define|#
+directive|define
+name|DLT_WIRESHARK_UPPER_PDU
+value|252
+comment|/*  * DLT type for the netlink protocol (nlmon devices).  */
+define|#
+directive|define
+name|DLT_NETLINK
+value|253
+comment|/*  * Bluetooth Linux Monitor headers for the BlueZ stack.  */
+define|#
+directive|define
+name|DLT_BLUETOOTH_LINUX_MONITOR
+value|254
+comment|/*  * Bluetooth Basic Rate/Enhanced Data Rate baseband packets, as  * captured by Ubertooth.  */
+define|#
+directive|define
+name|DLT_BLUETOOTH_BREDR_BB
+value|255
+comment|/*  * Bluetooth Low Energy link layer packets, as captured by Ubertooth.  */
+define|#
+directive|define
+name|DLT_BLUETOOTH_LE_LL_WITH_PHDR
+value|256
+comment|/*  * PROFIBUS data link layer.  */
+define|#
+directive|define
+name|DLT_PROFIBUS_DL
+value|257
+comment|/*  * Apple's DLT_PKTAP headers.  *  * Sadly, the folks at Apple either had no clue that the DLT_USERn values  * are for internal use within an organization and partners only, and  * didn't know that the right way to get a link-layer header type is to  * ask tcpdump.org for one, or knew and didn't care, so they just  * used DLT_USER2, which causes problems for everything except for  * their version of tcpdump.  *  * So I'll just give them one; hopefully this will show up in a  * libpcap release in time for them to get this into 10.10 Big Sur  * or whatever Mavericks' successor is called.  LINKTYPE_PKTAP  * will be 258 *even on OS X*; that is *intentional*, so that  * PKTAP files look the same on *all* OSes (different OSes can have  * different numerical values for a given DLT_, but *MUST NOT* have  * different values for what goes in a file, as files can be moved  * between OSes!).  *  * When capturing, on a system with a Darwin-based OS, on a device  * that returns 149 (DLT_USER2 and Apple's DLT_PKTAP) with this  * version of libpcap, the DLT_ value for the pcap_t  will be DLT_PKTAP,  * and that will continue to be DLT_USER2 on Darwin-based OSes. That way,  * binary compatibility with Mavericks is preserved for programs using  * this version of libpcap.  This does mean that if you were using  * DLT_USER2 for some capture device on OS X, you can't do so with  * this version of libpcap, just as you can't with Apple's libpcap -  * on OS X, they define DLT_PKTAP to be DLT_USER2, so programs won't  * be able to distinguish between PKTAP and whatever you were using  * DLT_USER2 for.  *  * If the program saves the capture to a file using this version of  * libpcap's pcap_dump code, the LINKTYPE_ value in the file will be  * LINKTYPE_PKTAP, which will be 258, even on Darwin-based OSes.  * That way, the file will *not* be a DLT_USER2 file.  That means  * that the latest version of tcpdump, when built with this version  * of libpcap, and sufficiently recent versions of Wireshark will  * be able to read those files and interpret them correctly; however,  * Apple's version of tcpdump in OS X 10.9 won't be able to handle  * them.  (Hopefully, Apple will pick up this version of libpcap,  * and the corresponding version of tcpdump, so that tcpdump will  * be able to handle the old LINKTYPE_USER2 captures *and* the new  * LINKTYPE_PKTAP captures.)  */
+ifdef|#
+directive|ifdef
+name|__APPLE__
+define|#
+directive|define
+name|DLT_PKTAP
+value|DLT_USER2
+else|#
+directive|else
+define|#
+directive|define
+name|DLT_PKTAP
+value|258
+endif|#
+directive|endif
+comment|/*  * Ethernet packets preceded by a header giving the last 6 octets  * of the preamble specified by 802.3-2012 Clause 65, section  * 65.1.3.2 "Transmit".  */
+define|#
+directive|define
+name|DLT_EPON
+value|259
+comment|/*  * IPMI trace packets, as specified by Table 3-20 "Trace Data Block Format"  * in the PICMG HPM.2 specification.  */
+define|#
+directive|define
+name|DLT_IPMI_HPM_2
+value|260
 define|#
 directive|define
 name|DLT_MATCHING_MAX
-value|248
+value|260
 comment|/* highest value in the "matching" range */
 comment|/*  * DLT and savefile link type values are split into a class and  * a member of that class.  A class value of 0 indicates a regular  * DLT_/LINKTYPE_ value.  */
 define|#
@@ -1105,7 +1176,8 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(DLT_CLASS(x) == DLT_CLASS_NETBSD_RAWAF)
-comment|/*  * The instruction encodings.  */
+comment|/*  * The instruction encodings.  *  * Please inform tcpdump-workers@lists.tcpdump.org if you use any  * of the reserved values, so that we can note that they're used  * (and perhaps implement it in the reference BPF implementation  * and encourage its implementation elsewhere).  */
+comment|/*  * The upper 8 bits of the opcode aren't used. BSD/OS used 0x8000.  */
 comment|/* instruction classes */
 define|#
 directive|define
@@ -1166,6 +1238,7 @@ define|#
 directive|define
 name|BPF_B
 value|0x10
+comment|/*				0x18	reserved; used by BSD/OS */
 define|#
 directive|define
 name|BPF_MODE
@@ -1197,6 +1270,8 @@ define|#
 directive|define
 name|BPF_MSH
 value|0xa0
+comment|/*				0xc0	reserved; used by BSD/OS */
+comment|/*				0xe0	reserved; used by BSD/OS */
 comment|/* alu/jmp fields */
 define|#
 directive|define
@@ -1243,6 +1318,19 @@ name|BPF_NEG
 value|0x80
 define|#
 directive|define
+name|BPF_MOD
+value|0x90
+define|#
+directive|define
+name|BPF_XOR
+value|0xa0
+comment|/*				0xb0	reserved */
+comment|/*				0xc0	reserved */
+comment|/*				0xd0	reserved */
+comment|/*				0xe0	reserved */
+comment|/*				0xf0	reserved */
+define|#
+directive|define
 name|BPF_JA
 value|0x00
 define|#
@@ -1261,6 +1349,17 @@ define|#
 directive|define
 name|BPF_JSET
 value|0x40
+comment|/*				0x50	reserved; used on BSD/OS */
+comment|/*				0x60	reserved */
+comment|/*				0x70	reserved */
+comment|/*				0x80	reserved */
+comment|/*				0x90	reserved */
+comment|/*				0xa0	reserved */
+comment|/*				0xb0	reserved */
+comment|/*				0xc0	reserved */
+comment|/*				0xd0	reserved */
+comment|/*				0xe0	reserved */
+comment|/*				0xf0	reserved */
 define|#
 directive|define
 name|BPF_SRC
@@ -1288,6 +1387,7 @@ define|#
 directive|define
 name|BPF_A
 value|0x10
+comment|/*				0x18	reserved */
 comment|/* misc */
 define|#
 directive|define
@@ -1300,10 +1400,41 @@ define|#
 directive|define
 name|BPF_TAX
 value|0x00
+comment|/*				0x08	reserved */
+comment|/*				0x10	reserved */
+comment|/*				0x18	reserved */
+comment|/* #define	BPF_COP		0x20	NetBSD "coprocessor" extensions */
+comment|/*				0x28	reserved */
+comment|/*				0x30	reserved */
+comment|/*				0x38	reserved */
+comment|/* #define	BPF_COPX	0x40	NetBSD "coprocessor" extensions */
+comment|/*					also used on BSD/OS */
+comment|/*				0x48	reserved */
+comment|/*				0x50	reserved */
+comment|/*				0x58	reserved */
+comment|/*				0x60	reserved */
+comment|/*				0x68	reserved */
+comment|/*				0x70	reserved */
+comment|/*				0x78	reserved */
 define|#
 directive|define
 name|BPF_TXA
 value|0x80
+comment|/*				0x88	reserved */
+comment|/*				0x90	reserved */
+comment|/*				0x98	reserved */
+comment|/*				0xa0	reserved */
+comment|/*				0xa8	reserved */
+comment|/*				0xb0	reserved */
+comment|/*				0xb8	reserved */
+comment|/*				0xc0	reserved; used on BSD/OS */
+comment|/*				0xc8	reserved */
+comment|/*				0xd0	reserved */
+comment|/*				0xd8	reserved */
+comment|/*				0xe0	reserved */
+comment|/*				0xe8	reserved */
+comment|/*				0xf0	reserved */
+comment|/*				0xf8	reserved */
 comment|/*  * The instruction data structure.  */
 struct|struct
 name|bpf_insn

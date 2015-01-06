@@ -7,29 +7,6 @@ begin_comment
 comment|/*  * Copyright (c) 1994, 1995, 1996, 1997, 1998  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/fad-getad.c,v 1.12 2007-09-14 00:44:55 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -130,11 +107,30 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_comment
+comment|/*  * We don't do this on Solaris 11 and later, as it appears there aren't  * any AF_PACKET addresses on interfaces, so we don't need this, and  * we end up including both the OS's<net/bpf.h> and our<pcap/bpf.h>,  * and their definitions of some data structures collide.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__Lynx__
+argument_list|)
+operator|)
+operator|&&
+name|defined
+argument_list|(
 name|AF_PACKET
-end_ifdef
+argument_list|)
+end_if
 
 begin_ifdef
 ifdef|#
@@ -143,7 +139,7 @@ name|HAVE_NETPACKET_PACKET_H
 end_ifdef
 
 begin_comment
-comment|/* Solaris 11 and later, Linux distributions with newer glibc */
+comment|/* Linux distributions with newer glibc */
 end_comment
 
 begin_include
@@ -230,7 +226,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AF_PACKET */
+comment|/* (defined(linux) || defined(__Lynx__))&& defined(AF_PACKET) */
 end_comment
 
 begin_comment
@@ -326,9 +322,24 @@ operator|)
 return|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__Lynx__
+argument_list|)
+operator|)
+operator|&&
+name|defined
+argument_list|(
 name|AF_PACKET
+argument_list|)
 case|case
 name|AF_PACKET
 case|:
@@ -414,7 +425,7 @@ comment|/* SA_LEN */
 end_comment
 
 begin_comment
-comment|/*  * Get a list of all interfaces that are up and that we can open.  * Returns -1 on error, 0 otherwise.  * The list, as returned through "alldevsp", may be null if no interfaces  * were up and could be opened.  */
+comment|/*  * Get a list of all interfaces that are up and that we can open.  * Returns -1 on error, 0 otherwise.  * The list, as returned through "alldevsp", may be null if no interfaces  * could be opened.  */
 end_comment
 
 begin_function
@@ -478,7 +489,7 @@ decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
-comment|/* 	 * Get the list of interface addresses. 	 * 	 * Note: this won't return information about interfaces 	 * with no addresses; are there any such interfaces 	 * that would be capable of receiving packets? 	 * (Interfaces incapable of receiving packets aren't 	 * very interesting from libpcap's point of view.) 	 * 	 * LAN interfaces will probably have link-layer 	 * addresses; I don't know whether all implementations 	 * of "getifaddrs()" now, or in the future, will return 	 * those. 	 */
+comment|/* 	 * Get the list of interface addresses. 	 * 	 * Note: this won't return information about interfaces 	 * with no addresses, so, if a platform has interfaces 	 * with no interfaces on which traffic can be captured, 	 * we must check for those interfaces as well (see, for 	 * example, what's done on Linux). 	 * 	 * LAN interfaces will probably have link-layer 	 * addresses; I don't know whether all implementations 	 * of "getifaddrs()" now, or in the future, will return 	 * those. 	 */
 if|if
 condition|(
 name|getifaddrs
@@ -531,23 +542,7 @@ operator|->
 name|ifa_next
 control|)
 block|{
-comment|/* 		 * Is this interface up? 		 */
-if|if
-condition|(
-operator|!
-operator|(
-name|ifa
-operator|->
-name|ifa_flags
-operator|&
-name|IFF_UP
-operator|)
-condition|)
-block|{
-comment|/* 			 * No, so don't add it to the list. 			 */
-continue|continue;
-block|}
-comment|/* 		 * "ifa_addr" was apparently null on at least one 		 * interface on some system. 		 * 		 * "ifa_broadaddr" may be non-null even on 		 * non-broadcast interfaces, and was null on 		 * at least one OpenBSD 3.4 system on at least 		 * one interface with IFF_BROADCAST set. 		 * 		 * "ifa_dstaddr" was, on at least one FreeBSD 4.1 		 * system, non-null on a non-point-to-point 		 * interface. 		 * 		 * Therefore, we supply the address and netmask only 		 * if "ifa_addr" is non-null (if there's no address, 		 * there's obviously no netmask), and supply the 		 * broadcast and destination addresses if the appropriate 		 * flag is set *and* the appropriate "ifa_" entry doesn't 		 * evaluate to a null pointer. 		 */
+comment|/* 		 * "ifa_addr" was apparently null on at least one 		 * interface on some system.  Therefore, we supply 		 * the address and netmask only if "ifa_addr" is 		 * non-null (if there's no address, there's obviously 		 * no netmask). 		 */
 if|if
 condition|(
 name|ifa
@@ -592,6 +587,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* 		 * Note that, on some platforms, ifa_broadaddr and 		 * ifa_dstaddr could be the same field (true on at 		 * least some versions of *BSD and OS X), so we 		 * can't just check whether the broadcast address 		 * is null and add it if so and check whether the 		 * destination address is null and add it if so. 		 * 		 * Therefore, we must also check the IFF_BROADCAST 		 * flag, and only add a broadcast address if it's 		 * set, and check the IFF_POINTTOPOINT flag, and 		 * only add a destination address if it's set (as 		 * per man page recommendations on some of those 		 * platforms). 		 */
 if|if
 condition|(
 name|ifa

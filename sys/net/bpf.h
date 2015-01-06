@@ -2445,7 +2445,7 @@ value|241
 end_define
 
 begin_comment
-comment|/*  * IP-over-Infiniband, as specified by RFC 4391.  *  * Requested by Petr Sumbera<petr.sumbera@oracle.com>.  */
+comment|/*  * IP-over-InfiniBand, as specified by RFC 4391.  *  * Requested by Petr Sumbera<petr.sumbera@oracle.com>.  */
 end_comment
 
 begin_define
@@ -2538,11 +2538,188 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Raw InfiniBand packets, starting with the Local Routing Header.  *  * Requested by Oren Kladnitsky<orenk@mellanox.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_INFINIBAND
+value|247
+end_define
+
+begin_comment
+comment|/*  * SCTP, with no lower-level protocols (i.e., no IPv4 or IPv6).  *  * Requested by Michael Tuexen<Michael.Tuexen@lurchi.franken.de>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_SCTP
+value|248
+end_define
+
+begin_comment
+comment|/*  * USB packets, beginning with a USBPcap header.  *  * Requested by Tomasz Mon<desowin@gmail.com>  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_USBPCAP
+value|249
+end_define
+
+begin_comment
+comment|/*  * Schweitzer Engineering Laboratories "RTAC" product serial-line  * packets.  *  * Requested by Chris Bontje<chris_bontje@selinc.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_RTAC_SERIAL
+value|250
+end_define
+
+begin_comment
+comment|/*  * Bluetooth Low Energy air interface link-layer packets.  *  * Requested by Mike Kershaw<dragorn@kismetwireless.net>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_BLUETOOTH_LE_LL
+value|251
+end_define
+
+begin_comment
+comment|/*  * DLT type for upper-protocol layer PDU saves from wireshark.  *   * the actual contents are determined by two TAGs stored with each  * packet:  *   EXP_PDU_TAG_LINKTYPE          the link type (LINKTYPE_ value) of the  *				   original packet.  *  *   EXP_PDU_TAG_PROTO_NAME        the name of the wireshark dissector  * 				   that can make sense of the data stored.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_WIRESHARK_UPPER_PDU
+value|252
+end_define
+
+begin_comment
+comment|/*  * DLT type for the netlink protocol (nlmon devices).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_NETLINK
+value|253
+end_define
+
+begin_comment
+comment|/*  * Bluetooth Linux Monitor headers for the BlueZ stack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_BLUETOOTH_LINUX_MONITOR
+value|254
+end_define
+
+begin_comment
+comment|/*  * Bluetooth Basic Rate/Enhanced Data Rate baseband packets, as  * captured by Ubertooth.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_BLUETOOTH_BREDR_BB
+value|255
+end_define
+
+begin_comment
+comment|/*  * Bluetooth Low Energy link layer packets, as captured by Ubertooth.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_BLUETOOTH_LE_LL_WITH_PHDR
+value|256
+end_define
+
+begin_comment
+comment|/*  * PROFIBUS data link layer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PROFIBUS_DL
+value|257
+end_define
+
+begin_comment
+comment|/*  * Apple's DLT_PKTAP headers.  *  * Sadly, the folks at Apple either had no clue that the DLT_USERn values  * are for internal use within an organization and partners only, and  * didn't know that the right way to get a link-layer header type is to  * ask tcpdump.org for one, or knew and didn't care, so they just  * used DLT_USER2, which causes problems for everything except for  * their version of tcpdump.  *  * So I'll just give them one; hopefully this will show up in a  * libpcap release in time for them to get this into 10.10 Big Sur  * or whatever Mavericks' successor is called.  LINKTYPE_PKTAP  * will be 258 *even on OS X*; that is *intentional*, so that  * PKTAP files look the same on *all* OSes (different OSes can have  * different numerical values for a given DLT_, but *MUST NOT* have  * different values for what goes in a file, as files can be moved  * between OSes!).  *  * When capturing, on a system with a Darwin-based OS, on a device  * that returns 149 (DLT_USER2 and Apple's DLT_PKTAP) with this  * version of libpcap, the DLT_ value for the pcap_t  will be DLT_PKTAP,  * and that will continue to be DLT_USER2 on Darwin-based OSes. That way,  * binary compatibility with Mavericks is preserved for programs using  * this version of libpcap.  This does mean that if you were using  * DLT_USER2 for some capture device on OS X, you can't do so with  * this version of libpcap, just as you can't with Apple's libpcap -  * on OS X, they define DLT_PKTAP to be DLT_USER2, so programs won't  * be able to distinguish between PKTAP and whatever you were using  * DLT_USER2 for.  *  * If the program saves the capture to a file using this version of  * libpcap's pcap_dump code, the LINKTYPE_ value in the file will be  * LINKTYPE_PKTAP, which will be 258, even on Darwin-based OSes.  * That way, the file will *not* be a DLT_USER2 file.  That means  * that the latest version of tcpdump, when built with this version  * of libpcap, and sufficiently recent versions of Wireshark will  * be able to read those files and interpret them correctly; however,  * Apple's version of tcpdump in OS X 10.9 won't be able to handle  * them.  (Hopefully, Apple will pick up this version of libpcap,  * and the corresponding version of tcpdump, so that tcpdump will  * be able to handle the old LINKTYPE_USER2 captures *and* the new  * LINKTYPE_PKTAP captures.)  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__APPLE__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DLT_PKTAP
+value|DLT_USER2
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DLT_PKTAP
+value|258
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Ethernet packets preceded by a header giving the last 6 octets  * of the preamble specified by 802.3-2012 Clause 65, section  * 65.1.3.2 "Transmit".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_EPON
+value|259
+end_define
+
+begin_comment
+comment|/*  * IPMI trace packets, as specified by Table 3-20 "Trace Data Block Format"  * in the PICMG HPM.2 specification.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IPMI_HPM_2
+value|260
+end_define
+
 begin_define
 define|#
 directive|define
 name|DLT_MATCHING_MAX
-value|246
+value|260
 end_define
 
 begin_comment
@@ -2564,7 +2741,11 @@ value|((x)& 0x03ff0000)
 end_define
 
 begin_comment
-comment|/*  * The instruction encodings.  */
+comment|/*  * The instruction encodings.  *  * Please inform tcpdump-workers@lists.tcpdump.org if you use any  * of the reserved values, so that we can note that they're used  * (and perhaps implement it in the reference BPF implementation  * and encourage its implementation elsewhere).  */
+end_comment
+
+begin_comment
+comment|/*  * The upper 8 bits of the opcode aren't used. BSD/OS used 0x8000.  */
 end_comment
 
 begin_comment
@@ -2672,6 +2853,10 @@ name|BPF_B
 value|0x10
 end_define
 
+begin_comment
+comment|/*				0x18	reserved; used by BSD/OS */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2723,6 +2908,14 @@ directive|define
 name|BPF_MSH
 value|0xa0
 end_define
+
+begin_comment
+comment|/*				0xc0	reserved; used by BSD/OS */
+end_comment
+
+begin_comment
+comment|/*				0xe0	reserved; used by BSD/OS */
+end_comment
 
 begin_comment
 comment|/* alu/jmp fields */
@@ -2804,6 +2997,40 @@ end_define
 begin_define
 define|#
 directive|define
+name|BPF_MOD
+value|0x90
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_XOR
+value|0xa0
+end_define
+
+begin_comment
+comment|/*				0xb0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xc0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xd0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xe0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xf0	reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BPF_JA
 value|0x00
 end_define
@@ -2835,6 +3062,50 @@ directive|define
 name|BPF_JSET
 value|0x40
 end_define
+
+begin_comment
+comment|/*				0x50	reserved; used on BSD/OS */
+end_comment
+
+begin_comment
+comment|/*				0x60	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x70	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x80	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x90	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xa0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xb0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xc0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xd0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xe0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xf0	reserved */
+end_comment
 
 begin_define
 define|#
@@ -2882,6 +3153,10 @@ value|0x10
 end_define
 
 begin_comment
+comment|/*				0x18	reserved */
+end_comment
+
+begin_comment
 comment|/* misc */
 end_comment
 
@@ -2902,12 +3177,136 @@ name|BPF_TAX
 value|0x00
 end_define
 
+begin_comment
+comment|/*				0x08	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x10	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x18	reserved */
+end_comment
+
+begin_comment
+comment|/* #define	BPF_COP		0x20	NetBSD "coprocessor" extensions */
+end_comment
+
+begin_comment
+comment|/*				0x28	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x30	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x38	reserved */
+end_comment
+
+begin_comment
+comment|/* #define	BPF_COPX	0x40	NetBSD "coprocessor" extensions */
+end_comment
+
+begin_comment
+comment|/*					also used on BSD/OS */
+end_comment
+
+begin_comment
+comment|/*				0x48	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x50	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x58	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x60	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x68	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x70	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x78	reserved */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BPF_TXA
 value|0x80
 end_define
+
+begin_comment
+comment|/*				0x88	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x90	reserved */
+end_comment
+
+begin_comment
+comment|/*				0x98	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xa0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xa8	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xb0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xb8	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xc0	reserved; used on BSD/OS */
+end_comment
+
+begin_comment
+comment|/*				0xc8	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xd0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xd8	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xe0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xe8	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xf0	reserved */
+end_comment
+
+begin_comment
+comment|/*				0xf8	reserved */
+end_comment
 
 begin_comment
 comment|/*  * The instruction data structure.  */
