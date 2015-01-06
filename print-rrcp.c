@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 2007 - Andrey "nording" Chernyak<andrew@nording.ru>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Format and print Realtek Remote Control Protocol (RRCP)  * and Realtek Echo Protocol (RRCP-REP) packets.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rrcp.c,v 1.2 2008-04-11 17:21:34 gianluca Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -52,19 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"netdissect.h"
+file|"interface.h"
 end_include
 
 begin_include
@@ -84,24 +55,6 @@ include|#
 directive|include
 file|"ether.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ETH_ALEN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ETH_ALEN
-value|6
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -359,10 +312,10 @@ name|u_char
 modifier|*
 name|rrcp
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|rrcp_proto
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|rrcp_opcode
 decl_stmt|;
 specifier|register
@@ -451,6 +404,8 @@ literal|"%s> %s, %s %s"
 operator|,
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|ESRC
 argument_list|(
 name|ep
@@ -459,6 +414,8 @@ argument_list|)
 operator|,
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|EDST
 argument_list|(
 name|ep
@@ -675,6 +632,8 @@ operator|)
 operator|,
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|rrcp
 operator|+
 name|RRCP_UPLINK_MAC_OFFSET
@@ -749,14 +708,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|ndo
-operator|->
-name|ndo_vflag
-condition|)
-return|return;
 return|return;
 name|trunc
 label|:

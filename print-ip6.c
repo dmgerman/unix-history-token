@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip6.c,v 1.52 2007-09-21 07:05:33 hannes Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -58,25 +41,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"netdissect.h"
 end_include
 
 begin_include
@@ -124,12 +89,15 @@ modifier|*
 name|ip6
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|data
 parameter_list|,
 name|u_int
 name|len
+parameter_list|,
+name|u_int
+name|covlen
 parameter_list|,
 name|u_int
 name|next_proto
@@ -145,16 +113,16 @@ name|struct
 name|in6_addr
 name|ph_dst
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ph_len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ph_zero
 index|[
 literal|3
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ph_nxt
 decl_stmt|;
 block|}
@@ -181,21 +149,43 @@ name|ph
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|UNALIGNED_MEMCPY
+argument_list|(
+operator|&
 name|ph
 operator|.
 name|ph_src
-operator|=
+argument_list|,
+operator|&
 name|ip6
 operator|->
 name|ip6_src
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|UNALIGNED_MEMCPY
+argument_list|(
+operator|&
 name|ph
 operator|.
 name|ph_dst
-operator|=
+argument_list|,
+operator|&
 name|ip6
 operator|->
 name|ip6_dst
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ph
 operator|.
@@ -221,7 +211,7 @@ name|ptr
 operator|=
 operator|(
 specifier|const
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|(
@@ -259,7 +249,7 @@ index|]
 operator|.
 name|len
 operator|=
-name|len
+name|covlen
 expr_stmt|;
 return|return
 name|in_cksum
@@ -343,7 +333,7 @@ operator|*
 operator|)
 name|bp
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|ip6
@@ -360,9 +350,6 @@ name|ip6_hdr
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -392,6 +379,32 @@ literal|"IP6 "
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|IP6_VERSION
+argument_list|(
+name|ip6
+argument_list|)
+operator|!=
+literal|6
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"version error: %u != 6"
+operator|,
+name|IP6_VERSION
+argument_list|(
+name|ip6
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|payload_len
 operator|=
 name|EXTRACT_16BITS
@@ -418,9 +431,6 @@ name|length
 operator|<
 name|len
 condition|)
-operator|(
-name|void
-operator|)
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -464,7 +474,7 @@ if|#
 directive|if
 literal|0
 comment|/* rfc1883 */
-block|if (flow& 0x0f000000) 		(void)ND_PRINT((ndo, "pri 0x%02x, ", (flow& 0x0f000000)>> 24));             if (flow& 0x00ffffff) 		(void)ND_PRINT((ndo, "flowlabel 0x%06x, ", flow& 0x00ffffff));
+block|if (flow& 0x0f000000) 		ND_PRINT((ndo, "pri 0x%02x, ", (flow& 0x0f000000)>> 24));             if (flow& 0x00ffffff) 		ND_PRINT((ndo, "flowlabel 0x%06x, ", flow& 0x00ffffff));
 else|#
 directive|else
 comment|/* RFC 2460 */
@@ -474,9 +484,6 @@ name|flow
 operator|&
 literal|0x0ff00000
 condition|)
-operator|(
-name|void
-operator|)
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -500,9 +507,6 @@ name|flow
 operator|&
 literal|0x000fffff
 condition|)
-operator|(
-name|void
-operator|)
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -518,9 +522,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -649,9 +650,6 @@ operator|!=
 name|IPPROTO_SCTP
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -661,6 +659,8 @@ literal|"%s> %s: "
 operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -669,6 +669,8 @@ argument_list|)
 operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ip6
 operator|->
@@ -690,6 +692,8 @@ name|advance
 operator|=
 name|hbhopt_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
@@ -706,6 +710,8 @@ name|advance
 operator|=
 name|dstopt_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
@@ -722,6 +728,8 @@ name|advance
 operator|=
 name|frag6_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 operator|(
@@ -764,6 +772,8 @@ name|advance
 operator|=
 name|mobility_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 operator|(
@@ -787,6 +797,8 @@ name|advance
 operator|=
 name|rt6_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 operator|(
@@ -808,6 +820,8 @@ name|IPPROTO_SCTP
 case|:
 name|sctp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 operator|(
@@ -826,6 +840,8 @@ name|IPPROTO_DCCP
 case|:
 name|dccp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 operator|(
@@ -844,6 +860,8 @@ name|IPPROTO_TCP
 case|:
 name|tcp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|len
@@ -864,6 +882,8 @@ name|IPPROTO_UDP
 case|:
 name|udp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|len
@@ -908,6 +928,8 @@ name|advance
 operator|=
 name|ah_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
@@ -973,6 +995,8 @@ name|advance
 operator|=
 name|ipcomp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 operator|&
@@ -992,6 +1016,8 @@ name|IPPROTO_PIM
 case|:
 name|pim_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|len
@@ -1001,6 +1027,8 @@ argument_list|(
 name|ip6
 argument_list|,
 name|cp
+argument_list|,
+name|len
 argument_list|,
 name|len
 argument_list|,
@@ -1014,6 +1042,8 @@ name|IPPROTO_OSPF
 case|:
 name|ospf6_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|len
@@ -1051,6 +1081,8 @@ name|IPPROTO_PGM
 case|:
 name|pgm_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|len
@@ -1069,6 +1101,8 @@ name|IPPROTO_GRE
 case|:
 name|gre_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|len
@@ -1080,6 +1114,8 @@ name|IPPROTO_RSVP
 case|:
 name|rsvp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|len
@@ -1089,9 +1125,6 @@ return|return;
 case|case
 name|IPPROTO_NONE
 case|:
-operator|(
-name|void
-operator|)
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1103,9 +1136,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 default|default:
-operator|(
-name|void
-operator|)
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1125,9 +1155,6 @@ block|}
 return|return;
 name|trunc
 label|:
-operator|(
-name|void
-operator|)
 name|ND_PRINT
 argument_list|(
 operator|(

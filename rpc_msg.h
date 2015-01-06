@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/rpc_msg.h,v 1.2 2005-04-27 21:43:48 guy Exp $ (LBL) */
-end_comment
-
-begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)rpc_msg.h 1.7 86/07/16 SMI  *	from: @(#)rpc_msg.h	2.1 88/07/29 4.0 RPCSRC  * $FreeBSD: src/include/rpc/rpc_msg.h,v 1.11.2.1 1999/08/29 14:39:07 peter Exp $  */
 end_comment
 
@@ -15,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|SUNRPC_MSG_VERSION
-value|((u_int32_t) 2)
+value|((uint32_t) 2)
 end_define
 
 begin_comment
@@ -110,7 +106,7 @@ begin_struct
 struct|struct
 name|sunrpc_rejected_reply
 block|{
-name|u_int32_t
+name|uint32_t
 name|rj_stat
 decl_stmt|;
 comment|/* enum reject_stat */
@@ -118,16 +114,16 @@ union|union
 block|{
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|low
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|high
 decl_stmt|;
 block|}
 name|RJ_versions
 struct|;
-name|u_int32_t
+name|uint32_t
 name|RJ_why
 decl_stmt|;
 comment|/* enum auth_stat - why authentication did not work */
@@ -154,7 +150,7 @@ begin_struct
 struct|struct
 name|sunrpc_reply_body
 block|{
-name|u_int32_t
+name|uint32_t
 name|rp_stat
 decl_stmt|;
 comment|/* enum reply_stat */
@@ -175,17 +171,17 @@ begin_struct
 struct|struct
 name|sunrpc_call_body
 block|{
-name|u_int32_t
+name|uint32_t
 name|cb_rpcvers
 decl_stmt|;
 comment|/* must be equal to two */
-name|u_int32_t
+name|uint32_t
 name|cb_prog
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|cb_vers
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|cb_proc
 decl_stmt|;
 name|struct
@@ -205,10 +201,10 @@ begin_struct
 struct|struct
 name|sunrpc_msg
 block|{
-name|u_int32_t
+name|uint32_t
 name|rm_xid
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rm_direction
 decl_stmt|;
 comment|/* enum msg_type */

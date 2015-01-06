@@ -1,30 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Functions for signature and digest verification.  *   * Original code by Hannes Gredler (hannes@juniper.net)  */
+comment|/*  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Functions for signature and digest verification.  *  * Original code by Hannes Gredler (hannes@juniper.net)  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/signature.c,v 1.2 2008-09-22 20:22:10 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -130,12 +113,13 @@ comment|/*  * Compute a HMAC MD5 sum.  * Taken from rfc2104, Appendix.  */
 end_comment
 
 begin_function
+name|USES_APPLE_DEPRECATED_API
 specifier|static
 name|void
 name|signature_compute_hmac_md5
 parameter_list|(
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|text
 parameter_list|,
@@ -151,7 +135,7 @@ name|unsigned
 name|int
 name|key_len
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|digest
 parameter_list|)
@@ -380,25 +364,21 @@ comment|/* finish up 2nd pass */
 block|}
 end_function
 
-begin_endif
+begin_function
+name|USES_APPLE_RST
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|HAVE_LIBCRYPTO
-end_ifdef
-
-begin_comment
 comment|/*  * Verify a cryptographic signature of the packet.  * Currently only MD5 is supported.  */
-end_comment
-
-begin_function
 name|int
 name|signature_verify
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -412,13 +392,13 @@ modifier|*
 name|sig_ptr
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|rcvsig
 index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|sig
 index|[
 literal|16
@@ -456,7 +436,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|sigsecret
+name|ndo
+operator|->
+name|ndo_sigsecret
 condition|)
 block|{
 return|return
@@ -476,11 +458,15 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|sigsecret
+name|ndo
+operator|->
+name|ndo_sigsecret
 argument_list|,
 name|strlen
 argument_list|(
-name|sigsecret
+name|ndo
+operator|->
+name|ndo_sigsecret
 argument_list|)
 argument_list|,
 name|sig
@@ -528,17 +514,18 @@ operator|++
 name|i
 control|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%02x"
-argument_list|,
+operator|,
 name|sig
 index|[
 name|i
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

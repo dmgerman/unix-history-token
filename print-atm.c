@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-atm.c,v 1.49 2007-10-22 19:37:51 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -52,24 +35,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pcap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
 end_include
 
@@ -83,12 +48,6 @@ begin_include
 include|#
 directive|include
 file|"addrtoname.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ethertype.h"
 end_include
 
 begin_include
@@ -109,11 +68,16 @@ directive|include
 file|"llc.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ether.h"
-end_include
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|"[|atm]"
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -148,6 +112,8 @@ value|1
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|oam_f_values
@@ -176,6 +142,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|atm_pty_values
@@ -262,6 +230,8 @@ value|0xf
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|oam_celltype_values
@@ -330,6 +300,8 @@ value|0x8
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|oam_fm_functype_values
@@ -370,6 +342,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|oam_pm_functype_values
@@ -404,6 +378,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|oam_ad_functype_values
@@ -439,6 +415,8 @@ value|0x1
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|oam_fm_loopback_indicator_values
@@ -525,6 +503,10 @@ specifier|static
 name|void
 name|atm_llc_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -545,6 +527,8 @@ condition|(
 operator|!
 name|llc_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -566,10 +550,13 @@ condition|(
 name|extracted_ethertype
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(LLC %s) "
-argument_list|,
+operator|,
 name|etherproto_string
 argument_list|(
 name|htons
@@ -577,15 +564,18 @@ argument_list|(
 name|extracted_ethertype
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
 operator|!
-name|suppress_default_print
+name|ndo
+operator|->
+name|ndo_suppress_default_print
 condition|)
-name|default_print
+name|ND_DEFAULTPRINT
 argument_list|(
 name|p
 argument_list|,
@@ -618,6 +608,10 @@ begin_function
 name|u_int
 name|atm_if_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -644,7 +638,7 @@ name|h
 operator|->
 name|len
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|llchdr
 decl_stmt|;
 name|u_int
@@ -659,9 +653,15 @@ operator|<
 literal|8
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"[|atm]"
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -681,15 +681,23 @@ condition|)
 block|{
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"CNLPID "
+operator|)
 argument_list|)
 expr_stmt|;
 name|isoclns_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|+
 literal|1
@@ -742,37 +750,43 @@ block|{
 comment|/* 		 * XXX - assume 802.6 MAC header from Fore driver. 		 * 		 * Unfortunately, the above list doesn't check for 		 * all known SAPs, doesn't check for headers where 		 * the source and destination SAP aren't the same, 		 * and doesn't check for non-UI frames.  It also 		 * runs the risk of an 802.6 MAC header that happens 		 * to begin with one of those values being 		 * incorrectly treated as an 802.2 header. 		 * 		 * So is that Fore driver still around?  And, if so, 		 * is it still putting 802.6 MAC headers on ATM 		 * packets?  If so, could it be changed to use a 		 * new DLT_IEEE802_6 value if we added it? 		 */
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%08x%08x %08x%08x "
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|p
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|p
 operator|+
 literal|4
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|p
 operator|+
 literal|8
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|p
 operator|+
 literal|12
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -794,6 +808,8 @@ expr_stmt|;
 block|}
 name|atm_llc_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -815,6 +831,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|msgtype2str
@@ -925,6 +942,10 @@ specifier|static
 name|void
 name|sig_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -934,7 +955,7 @@ name|int
 name|caplen
 parameter_list|)
 block|{
-name|bpf_u_int32
+name|uint32_t
 name|call_ref
 decl_stmt|;
 if|if
@@ -944,9 +965,15 @@ operator|<
 name|PROTO_POS
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"[|atm]"
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -961,10 +988,14 @@ operator|==
 name|Q2931
 condition|)
 block|{
-comment|/* 		 * protocol:Q.2931 for User to Network Interface  		 * (UNI 3.1) signalling 		 */
-name|printf
+comment|/* 		 * protocol:Q.2931 for User to Network Interface 		 * (UNI 3.1) signalling 		 */
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Q.2931"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -974,17 +1005,26 @@ operator|<
 name|MSG_TYPE_POS
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|" [|atm]"
+operator|(
+name|ndo
+operator|,
+literal|" %s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|":%s "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|msgtype2str
@@ -996,6 +1036,7 @@ index|[
 name|MSG_TYPE_POS
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * The call reference comes before the message type, 		 * so if we know we have the message type, which we 		 * do from the caplen test above, we also know we have 		 * the call reference. 		 */
@@ -1010,25 +1051,33 @@ name|CALL_REF_POS
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"CALL_REF:0x%06x"
-argument_list|,
+operator|,
 name|call_ref
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* SCCOP with some unknown protocol atop it */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"SSCOP, proto %d "
-argument_list|,
+operator|,
 name|p
 index|[
 name|PROTO_POS
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1043,6 +1092,10 @@ begin_function
 name|void
 name|atm_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|u_int
 name|vpi
 parameter_list|,
@@ -1066,15 +1119,21 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"VPI:%u VCI:%u "
-argument_list|,
+operator|,
 name|vpi
-argument_list|,
+operator|,
 name|vci
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1094,6 +1153,8 @@ name|VCI_PPC
 case|:
 name|sig_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|caplen
@@ -1103,9 +1164,13 @@ return|return;
 case|case
 name|VCI_BCC
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"broadcast sig: "
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1118,6 +1183,8 @@ name|VCI_OAMF4EC
 case|:
 name|oam_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1129,22 +1196,32 @@ return|return;
 case|case
 name|VCI_METAC
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"meta: "
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 case|case
 name|VCI_ILMIC
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ilmi: "
+operator|)
 argument_list|)
 expr_stmt|;
 name|snmp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1165,6 +1242,8 @@ default|default:
 comment|/* 		 * Assumes traffic is LLC if unknown. 		 */
 name|atm_llc_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1178,6 +1257,8 @@ name|ATM_LANE
 case|:
 name|lane_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1194,28 +1275,28 @@ begin_struct
 struct|struct
 name|oam_fm_loopback_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|loopback_indicator
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|correlation_tag
 index|[
 literal|4
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|loopback_id
 index|[
 literal|12
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|source_id
 index|[
 literal|12
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|unused
 index|[
 literal|16
@@ -1229,16 +1310,16 @@ begin_struct
 struct|struct
 name|oam_fm_ais_rdi_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|failure_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|failure_location
 index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|unused
 index|[
 literal|28
@@ -1252,6 +1333,10 @@ begin_function
 name|int
 name|oam_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -1264,10 +1349,10 @@ name|u_int
 name|hec
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|cell_header
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|vpi
 decl_stmt|,
 name|vci
@@ -1278,7 +1363,7 @@ name|cksum_shouldbe
 decl_stmt|,
 name|idx
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|cell_type
 decl_stmt|,
 name|func_type
@@ -1383,10 +1468,13 @@ name|cell_header
 operator|&
 literal|0x1
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s, vpi %u, vci %u, payload [ %s ], clp %u, length %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|oam_f_values
@@ -1395,11 +1483,11 @@ literal|"OAM F5"
 argument_list|,
 name|vci
 argument_list|)
-argument_list|,
+operator|,
 name|vpi
-argument_list|,
+operator|,
 name|vci
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|atm_pty_values
@@ -1408,26 +1496,32 @@ literal|"Unknown"
 argument_list|,
 name|payload
 argument_list|)
-argument_list|,
+operator|,
 name|clp
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
 return|return
 literal|1
 return|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tcell-type %s (%u)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|oam_celltype_values
@@ -1436,8 +1530,9 @@ literal|"unknown"
 argument_list|,
 name|cell_type
 argument_list|)
-argument_list|,
+operator|,
 name|cell_type
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1449,18 +1544,25 @@ index|]
 operator|==
 name|NULL
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", func-type unknown (%u)"
-argument_list|,
+operator|,
 name|func_type
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", func-type %s (%u)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|oam_functype_values
@@ -1472,8 +1574,9 @@ literal|"none"
 argument_list|,
 name|func_type
 argument_list|)
-argument_list|,
+operator|,
 name|func_type
+operator|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -1516,10 +1619,13 @@ operator|+
 name|OAM_CELLTYPE_FUNCTYPE_LEN
 operator|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tLoopback-Indicator %s, Correlation-Tag 0x%08x"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|oam_fm_loopback_indicator_values
@@ -1534,7 +1640,7 @@ name|loopback_indicator
 operator|&
 name|OAM_FM_LOOPBACK_INDICATOR_MASK
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1544,11 +1650,16 @@ name|oam_fm_loopback
 operator|->
 name|correlation_tag
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tLocation-ID "
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1579,10 +1690,13 @@ operator|%
 literal|2
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%04x "
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -1595,13 +1709,18 @@ index|[
 name|idx
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tSource-ID   "
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1632,10 +1751,13 @@ operator|%
 literal|2
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%04x "
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -1648,6 +1770,7 @@ index|[
 name|idx
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1687,20 +1810,28 @@ operator|+
 name|OAM_CELLTYPE_FUNCTYPE_LEN
 operator|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tFailure-type 0x%02x"
-argument_list|,
+operator|,
 name|oam_ptr
 operator|.
 name|oam_fm_ais_rdi
 operator|->
 name|failure_type
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tLocation-ID "
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1731,10 +1862,13 @@ operator|%
 literal|2
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%04x "
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -1747,6 +1881,7 @@ index|[
 name|idx
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1791,12 +1926,15 @@ argument_list|,
 name|OAM_PAYLOAD_LEN
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tcksum 0x%03x (%scorrect)"
-argument_list|,
+operator|,
 name|cksum
-argument_list|,
+operator|,
 name|cksum_shouldbe
 operator|==
 literal|0
@@ -1804,6 +1942,7 @@ condition|?
 literal|""
 else|:
 literal|"in"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return

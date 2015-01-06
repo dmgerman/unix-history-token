@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1990, 1991, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#)$Header: /tcpdump/master/tcpdump/print-fr.c,v 1.51 2006-06-23 22:20:32 hannes Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -64,19 +47,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pcap.h>
+file|"interface.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"addrtoname.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"interface.h"
 end_include
 
 begin_include
@@ -108,6 +85,10 @@ specifier|static
 name|void
 name|frf15_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -164,6 +145,8 @@ value|0x00000002
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|fr_header_flag_values
@@ -256,6 +239,8 @@ value|(MFR_B_BIT | MFR_E_BIT )
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|frf_flag_values
@@ -311,7 +296,7 @@ name|u_int
 modifier|*
 name|addr_len
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|flags
 parameter_list|)
@@ -546,7 +531,7 @@ decl_stmt|,
 name|addr_len
 decl_stmt|;
 specifier|static
-name|u_int8_t
+name|uint8_t
 name|flags
 index|[
 literal|4
@@ -672,6 +657,10 @@ specifier|static
 name|void
 name|fr_hdr_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|int
 name|length
 parameter_list|,
@@ -681,29 +670,32 @@ parameter_list|,
 name|u_int
 name|dlci
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|flags
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|nlpid
 parameter_list|)
 block|{
 if|if
 condition|(
-name|qflag
+name|ndo
+operator|->
+name|ndo_qflag
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Q.922, DLCI %u, length %u: "
-argument_list|,
+operator|,
 name|dlci
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -716,17 +708,17 @@ operator|<=
 literal|0xff
 condition|)
 comment|/* if its smaller than 256 then its a NLPID */
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Q.922, hdr-len %u, DLCI %u, Flags [%s], NLPID %s (0x%02x), length %u: "
-argument_list|,
+operator|,
 name|addr_len
-argument_list|,
+operator|,
 name|dlci
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|fr_header_flag_values
@@ -738,7 +730,7 @@ argument_list|(
 name|flags
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|nlpid_values
@@ -747,25 +739,26 @@ literal|"unknown"
 argument_list|,
 name|nlpid
 argument_list|)
-argument_list|,
+operator|,
 name|nlpid
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
 comment|/* must be an ethertype */
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Q.922, hdr-len %u, DLCI %u, Flags [%s], cisco-ethertype %s (0x%04x), length %u: "
-argument_list|,
+operator|,
 name|addr_len
-argument_list|,
+operator|,
 name|dlci
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|fr_header_flag_values
@@ -777,7 +770,7 @@ argument_list|(
 name|flags
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ethertype_values
@@ -786,10 +779,11 @@ literal|"unknown"
 argument_list|,
 name|nlpid
 argument_list|)
-argument_list|,
+operator|,
 name|nlpid
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -800,6 +794,10 @@ begin_function
 name|u_int
 name|fr_if_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -829,7 +827,7 @@ name|h
 operator|->
 name|caplen
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|p
@@ -845,6 +843,8 @@ name|length
 operator|=
 name|fr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -864,9 +864,13 @@ name|length
 return|;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|fr]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -879,6 +883,10 @@ begin_function
 name|u_int
 name|fr_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -889,7 +897,7 @@ name|u_int
 name|length
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|extracted_ethertype
 decl_stmt|;
 name|u_int
@@ -898,13 +906,13 @@ decl_stmt|;
 name|u_int
 name|addr_len
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nlpid
 decl_stmt|;
 name|u_int
 name|hdr_len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|flags
 index|[
 literal|4
@@ -926,16 +934,20 @@ name|flags
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Q.922, invalid address"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|p
@@ -956,7 +968,7 @@ argument_list|,
 name|addr_len
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|p
@@ -990,10 +1002,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 name|fr_hdr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|length
 argument_list|,
 name|addr_len
@@ -1009,7 +1025,7 @@ if|if
 condition|(
 name|ethertype_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|extracted_ethertype
 argument_list|,
@@ -1035,14 +1051,18 @@ operator|==
 literal|0
 condition|)
 comment|/* ether_type not known, probably it wasn't one */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"UI %02x! "
-argument_list|,
+operator|,
 name|p
 index|[
 name|addr_len
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1068,9 +1088,13 @@ name|addr_len
 operator|!=
 literal|3
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Pad! "
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1081,9 +1105,13 @@ name|addr_len
 operator|==
 literal|3
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"No pad! "
+operator|)
 argument_list|)
 expr_stmt|;
 name|nlpid
@@ -1097,10 +1125,14 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 name|fr_hdr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|length
 argument_list|,
 name|addr_len
@@ -1130,7 +1162,7 @@ name|NLPID_IP
 case|:
 name|ip_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -1146,7 +1178,7 @@ name|NLPID_IP6
 case|:
 name|ip6_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -1167,6 +1199,8 @@ name|NLPID_ISIS
 case|:
 name|isoclns_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|-
 literal|1
@@ -1189,6 +1223,8 @@ if|if
 condition|(
 name|snap_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1205,10 +1241,14 @@ comment|/* ether_type not known, print raw packet */
 if|if
 condition|(
 operator|!
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 name|fr_hdr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|length
 operator|+
 name|hdr_len
@@ -1225,9 +1265,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|suppress_default_print
+name|ndo
+operator|->
+name|ndo_suppress_default_print
 condition|)
-name|default_print
+name|ND_DEFAULTPRINT
 argument_list|(
 name|p
 operator|-
@@ -1245,6 +1287,8 @@ name|NLPID_Q933
 case|:
 name|q933_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1256,6 +1300,8 @@ name|NLPID_MFR
 case|:
 name|frf15_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1267,6 +1313,8 @@ name|NLPID_PPP
 case|:
 name|ppp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1277,10 +1325,14 @@ default|default:
 if|if
 condition|(
 operator|!
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 name|fr_hdr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|length
 operator|+
 name|hdr_len
@@ -1297,9 +1349,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|xflag
+name|ndo
+operator|->
+name|ndo_xflag
 condition|)
-name|default_print
+name|ND_DEFAULTPRINT
 argument_list|(
 name|p
 argument_list|,
@@ -1312,9 +1366,13 @@ name|hdr_len
 return|;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|fr]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1327,6 +1385,10 @@ begin_function
 name|u_int
 name|mfr_if_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -1356,7 +1418,7 @@ name|h
 operator|->
 name|caplen
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|p
@@ -1372,6 +1434,8 @@ name|length
 operator|=
 name|mfr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1391,9 +1455,13 @@ name|length
 return|;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|mfr]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1452,6 +1520,8 @@ value|7
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|mfr_ctrl_msg_values
@@ -1552,6 +1622,8 @@ value|7
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|mfr_ctrl_ie_values
@@ -1614,10 +1686,10 @@ begin_struct
 struct|struct
 name|ie_tlv_header_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|ie_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ie_len
 decl_stmt|;
 block|}
@@ -1628,6 +1700,10 @@ begin_function
 name|u_int
 name|mfr_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -1647,21 +1723,21 @@ name|hdr_len
 init|=
 literal|0
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|sequence_num
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ie_type
 decl_stmt|,
 name|ie_len
 decl_stmt|;
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tptr
 decl_stmt|;
-comment|/*  * FRF.16 Link Integrity Control Frame  *   *      7    6    5    4    3    2    1    0  *    +----+----+----+----+----+----+----+----+  *    | B  | E  | C=1| 0    0    0    0  | EA |  *    +----+----+----+----+----+----+----+----+  *    | 0    0    0    0    0    0    0    0  |  *    +----+----+----+----+----+----+----+----+  *    |              message type             |  *    +----+----+----+----+----+----+----+----+  */
-name|TCHECK2
+comment|/*  * FRF.16 Link Integrity Control Frame  *  *      7    6    5    4    3    2    1    0  *    +----+----+----+----+----+----+----+----+  *    | B  | E  | C=1| 0    0    0    0  | EA |  *    +----+----+----+----+----+----+----+----+  *    | 0    0    0    0    0    0    0    0  |  *    +----+----+----+----+----+----+----+----+  *    |              message type             |  *    +----+----+----+----+----+----+----+----+  */
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|p
@@ -1691,10 +1767,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"FRF.16 Control, Flags [%s], %s, length %u"
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|frf_flag_values
@@ -1710,7 +1789,7 @@ operator|&
 name|MFR_BEC_MASK
 operator|)
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|mfr_ctrl_msg_values
@@ -1722,8 +1801,9 @@ index|[
 literal|2
 index|]
 argument_list|)
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -1745,7 +1825,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 return|return
 name|hdr_len
@@ -1761,7 +1843,7 @@ name|ie_tlv_header_t
 argument_list|)
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -1787,10 +1869,13 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tIE %s (%u), length %u: "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|mfr_ctrl_ie_values
@@ -1799,10 +1884,11 @@ literal|"Unknown"
 argument_list|,
 name|ie_type
 argument_list|)
-argument_list|,
+operator|,
 name|ie_type
-argument_list|,
+operator|,
 name|ie_len
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* infinite loop check */
@@ -1823,7 +1909,7 @@ condition|)
 return|return
 name|hdr_len
 return|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -1864,14 +1950,18 @@ block|{
 case|case
 name|MFR_CTRL_IE_MAGIC_NUM
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"0x%08x"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1914,6 +2004,8 @@ condition|)
 comment|/* don't print null termination */
 name|safeputchar
 argument_list|(
+name|ndo
+argument_list|,
 operator|*
 operator|(
 name|tptr
@@ -1942,6 +2034,8 @@ condition|)
 block|{
 name|ts_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 specifier|const
 expr|struct
@@ -1964,12 +2058,16 @@ case|:
 default|default:
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t  "
@@ -1982,12 +2080,16 @@ block|}
 comment|/* do we want to see a hexdump of the IE ? */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t  "
@@ -2008,7 +2110,7 @@ return|return
 name|hdr_len
 return|;
 block|}
-comment|/*  * FRF.16 Fragmentation Frame  *   *      7    6    5    4    3    2    1    0  *    +----+----+----+----+----+----+----+----+  *    | B  | E  | C=0|seq. (high 4 bits) | EA  |  *    +----+----+----+----+----+----+----+----+  *    |        sequence  (low 8 bits)         |  *    +----+----+----+----+----+----+----+----+  *    |        DLCI (6 bits)        | CR | EA  |  *    +----+----+----+----+----+----+----+----+  *    |   DLCI (4 bits)   |FECN|BECN| DE | EA |  *    +----+----+----+----+----+----+----+----+  */
+comment|/*  * FRF.16 Fragmentation Frame  *  *      7    6    5    4    3    2    1    0  *    +----+----+----+----+----+----+----+----+  *    | B  | E  | C=0|seq. (high 4 bits) | EA  |  *    +----+----+----+----+----+----+----+----+  *    |        sequence  (low 8 bits)         |  *    +----+----+----+----+----+----+----+----+  *    |        DLCI (6 bits)        | CR | EA  |  *    +----+----+----+----+----+----+----+----+  *    |   DLCI (4 bits)   |FECN|BECN| DE | EA |  *    +----+----+----+----+----+----+----+----+  */
 name|sequence_num
 operator|=
 operator|(
@@ -2053,12 +2155,15 @@ operator|==
 name|MFR_B_BIT
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"FRF.16 Frag, seq %u, Flags [%s], "
-argument_list|,
+operator|,
 name|sequence_num
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|frf_flag_values
@@ -2074,6 +2179,7 @@ operator|&
 name|MFR_BEC_MASK
 operator|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|hdr_len
@@ -2082,6 +2188,8 @@ literal|2
 expr_stmt|;
 name|fr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|+
 name|hdr_len
@@ -2096,12 +2204,15 @@ name|hdr_len
 return|;
 block|}
 comment|/* must be a middle or the last fragment */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"FRF.16 Frag, seq %u, Flags [%s]"
-argument_list|,
+operator|,
 name|sequence_num
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|frf_flag_values
@@ -2117,10 +2228,13 @@ operator|&
 name|MFR_BEC_MASK
 operator|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 literal|"\n\t"
@@ -2133,9 +2247,13 @@ name|hdr_len
 return|;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|mfr]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2145,7 +2263,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* an NLPID of 0xb1 indicates a 2-byte  * FRF.15 header  *   *      7    6    5    4    3    2    1    0  *    +----+----+----+----+----+----+----+----+  *    ~              Q.922 header             ~  *    +----+----+----+----+----+----+----+----+  *    |             NLPID (8 bits)            | NLPID=0xb1  *    +----+----+----+----+----+----+----+----+  *    | B  | E  | C  |seq. (high 4 bits) | R  |  *    +----+----+----+----+----+----+----+----+  *    |        sequence  (low 8 bits)         |  *    +----+----+----+----+----+----+----+----+  */
+comment|/* an NLPID of 0xb1 indicates a 2-byte  * FRF.15 header  *  *      7    6    5    4    3    2    1    0  *    +----+----+----+----+----+----+----+----+  *    ~              Q.922 header             ~  *    +----+----+----+----+----+----+----+----+  *    |             NLPID (8 bits)            | NLPID=0xb1  *    +----+----+----+----+----+----+----+----+  *    | B  | E  | C  |seq. (high 4 bits) | R  |  *    +----+----+----+----+----+----+----+----+  *    |        sequence  (low 8 bits)         |  *    +----+----+----+----+----+----+----+----+  */
 end_comment
 
 begin_define
@@ -2160,6 +2278,10 @@ specifier|static
 name|void
 name|frf15_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2169,7 +2291,7 @@ name|u_int
 name|length
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|sequence_num
 decl_stmt|,
 name|flags
@@ -2201,12 +2323,15 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"FRF.15, seq 0x%03x, Flags [%s],%s Fragmentation, length %u"
-argument_list|,
+operator|,
 name|sequence_num
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|frf_flag_values
@@ -2215,7 +2340,7 @@ literal|"none"
 argument_list|,
 name|flags
 argument_list|)
-argument_list|,
+operator|,
 name|p
 index|[
 literal|0
@@ -2226,8 +2351,9 @@ condition|?
 literal|"Interface"
 else|:
 literal|"End-to-End"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* TODO:  * depending on all permutations of the B, E and C bit  * dig as deep as we can - e.g. on the first (B) fragment  * there is enough payload to print the IP header  * on non (B) fragments it depends if the fragmentation  * model is end-to-end or interface based wether we want to print  * another Q.922 header  */
@@ -2239,7 +2365,7 @@ comment|/*  * Q.933 decoding portion for framerelay specific.  */
 end_comment
 
 begin_comment
-comment|/* Q.933 packet format                       Format of Other Protocols                              using Q.933 NLPID                   +-------------------------------+                               |        Q.922 Address          |                    +---------------+---------------+                   |Control  0x03  | NLPID   0x08  |                           +---------------+---------------+                           |          L2 Protocol ID       |                   | octet 1       |  octet 2      |                   +-------------------------------+                   |          L3 Protocol ID       |                   | octet 2       |  octet 2      |                   +-------------------------------+                   |         Protocol Data         |                   +-------------------------------+                   | FCS                           |                   +-------------------------------+  */
+comment|/* Q.933 packet format                       Format of Other Protocols                           using Q.933 NLPID                   +-------------------------------+                   |        Q.922 Address          |                   +---------------+---------------+                   |Control  0x03  | NLPID   0x08  |                   +---------------+---------------+                   |          L2 Protocol ID       |                   | octet 1       |  octet 2      |                   +-------------------------------+                   |          L3 Protocol ID       |                   | octet 2       |  octet 2      |                   +-------------------------------+                   |         Protocol Data         |                   +-------------------------------+                   | FCS                           |                   +-------------------------------+  */
 end_comment
 
 begin_comment
@@ -2361,6 +2487,8 @@ value|0x75
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|fr_q933_msg_values
@@ -2521,6 +2649,8 @@ value|0x57
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|fr_q933_ie_values_codeset5
@@ -2600,6 +2730,8 @@ value|2
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|fr_lmi_report_type_ie_values
@@ -2639,6 +2771,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 modifier|*
@@ -2686,6 +2819,10 @@ specifier|static
 name|int
 name|fr_q933_print_ie_codeset5
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|ie_tlv_header_t
@@ -2708,6 +2845,9 @@ modifier|*
 name|codeset_pr_func_t
 function_decl|)
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|struct
 name|ie_tlv_header_t
@@ -2728,6 +2868,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|codeset_pr_func_t
 name|fr_q933_print_ie_codeset
 index|[]
@@ -2772,6 +2913,10 @@ begin_function
 name|void
 name|q933_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2817,9 +2962,13 @@ literal|9
 condition|)
 block|{
 comment|/* shortest: Q.933a LINK VERIFY */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|q.933]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2849,29 +2998,39 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s"
-argument_list|,
-name|eflag
+operator|,
+name|ndo
+operator|->
+name|ndo_eflag
 condition|?
 literal|""
 else|:
 literal|"Q.933, "
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* printing out header part */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s, codeset %u"
-argument_list|,
+operator|,
 name|is_ansi
 condition|?
 literal|"ANSI"
 else|:
 literal|"CCITT"
-argument_list|,
+operator|,
 name|codeset
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2882,26 +3041,35 @@ literal|0
 index|]
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Call Ref: 0x%02x"
-argument_list|,
+operator|,
 name|p
 index|[
 literal|0
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s (0x%02x), length %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|fr_q933_msg_values
@@ -2913,22 +3081,26 @@ index|[
 literal|1
 index|]
 argument_list|)
-argument_list|,
+operator|,
 name|p
 index|[
 literal|1
 index|]
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|fr_q933_msg_values
@@ -2940,6 +3112,7 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2962,9 +3135,13 @@ name|is_ansi
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|q.933]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3027,23 +3204,33 @@ condition|)
 block|{
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
 comment|/* not bark if there is just a trailer */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n[|q.933]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", length %u"
-argument_list|,
+operator|,
 name|olen
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3052,13 +3239,18 @@ block|}
 comment|/* lets do the full IE parsing only in verbose mode                  * however some IEs (DLCI Status, Link Verify)                  * are also interestting in non-verbose mode */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t%s IE (0x%02x), length %u: "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|fr_q933_ie_codesets
@@ -3072,14 +3264,15 @@ name|ie_p
 operator|->
 name|ie_type
 argument_list|)
-argument_list|,
+operator|,
 name|ie_p
 operator|->
 name|ie_type
-argument_list|,
+operator|,
 name|ie_p
 operator|->
 name|ie_len
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3118,6 +3311,8 @@ index|[
 name|codeset
 index|]
 operator|(
+name|ndo
+operator|,
 name|ie_p
 operator|,
 name|ptemp
@@ -3126,7 +3321,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>=
 literal|1
 operator|&&
@@ -3136,6 +3333,8 @@ condition|)
 block|{
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|ptemp
 operator|+
 literal|2
@@ -3151,7 +3350,9 @@ block|}
 comment|/* do we want to see a hexdump of the IE ? */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 operator|&&
@@ -3160,6 +3361,8 @@ condition|)
 block|{
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|ptemp
 operator|+
 literal|2
@@ -3196,14 +3399,20 @@ block|}
 if|if
 condition|(
 operator|!
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", length %u"
-argument_list|,
+operator|,
 name|olen
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3215,6 +3424,10 @@ specifier|static
 name|int
 name|fr_q933_print_ie_codeset5
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|ie_tlv_header_t
@@ -3246,13 +3459,18 @@ name|FR_LMI_CCITT_REPORT_TYPE_IE
 case|:
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s (%u)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|fr_lmi_report_type_ie_values
@@ -3264,11 +3482,12 @@ index|[
 literal|2
 index|]
 argument_list|)
-argument_list|,
+operator|,
 name|p
 index|[
 literal|2
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3288,28 +3507,38 @@ case|:
 if|if
 condition|(
 operator|!
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", "
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"TX Seq: %3d, RX Seq: %3d"
-argument_list|,
+operator|,
 name|p
 index|[
 literal|2
 index|]
-argument_list|,
+operator|,
 name|p
 index|[
 literal|3
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3325,12 +3554,18 @@ case|:
 if|if
 condition|(
 operator|!
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", "
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3468,9 +3703,13 @@ literal|0x80
 operator|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Invalid DLCI IE"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3574,12 +3813,15 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"DLCI %u: status %s%s"
-argument_list|,
+operator|,
 name|dlci
-argument_list|,
+operator|,
 name|p
 index|[
 name|ie_p
@@ -3594,7 +3836,7 @@ condition|?
 literal|"New, "
 else|:
 literal|""
-argument_list|,
+operator|,
 name|p
 index|[
 name|ie_p
@@ -3609,6 +3851,7 @@ condition|?
 literal|"Active"
 else|:
 literal|"Inactive"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3620,6 +3863,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */
+end_comment
 
 end_unit
 

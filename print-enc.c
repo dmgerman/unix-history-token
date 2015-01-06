@@ -7,28 +7,11 @@ begin_comment
 comment|/*  * Copyright (c) 1990, 1991, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-enc.c,v 1.6 2008-11-18 07:35:32 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -56,12 +39,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pcap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
 end_include
 
@@ -71,17 +48,63 @@ directive|include
 file|"extract.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"addrtoname.h"
-end_include
+begin_comment
+comment|/* From $OpenBSD: if_enc.h,v 1.8 2001/06/25 05:14:00 angelos Exp $ */
+end_comment
 
-begin_include
-include|#
-directive|include
-file|"enc.h"
-end_include
+begin_comment
+comment|/*  * The authors of this code are John Ioannidis (ji@tla.org),  * Angelos D. Keromytis (kermit@csd.uch.gr) and  * Niels Provos (provos@physnet.uni-hamburg.de).  *  * This code was written by John Ioannidis for BSD/OS in Athens, Greece,  * in November 1995.  *  * Ported to OpenBSD and NetBSD, with additional transforms, in December 1996,  * by Angelos D. Keromytis.  *  * Additional transforms and features in 1997 and 1998 by Angelos D. Keromytis  * and Niels Provos.  *  * Copyright (C) 1995, 1996, 1997, 1998 by John Ioannidis, Angelos D. Keromytis  * and Niels Provos.  * Copyright (c) 2001, Angelos D. Keromytis.  *  * Permission to use, copy, and modify this software with or without fee  * is hereby granted, provided that this entire notice is included in  * all copies of any software which is or includes a copy or  * modification of this software.  * You may use this code under the GNU public license if you so wish. Please  * contribute changes back to the authors under this freer than GPL license  * so that we may further the use of strong encryption without limitations to  * all.  *  * THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTY. IN PARTICULAR, NONE OF THE AUTHORS MAKES ANY  * REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE  * MERCHANTABILITY OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR  * PURPOSE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENC_HDRLEN
+value|12
+end_define
+
+begin_comment
+comment|/* From $OpenBSD: mbuf.h,v 1.56 2002/01/25 15:50:23 art Exp $	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_CONF
+value|0x0400
+end_define
+
+begin_comment
+comment|/* packet was encrypted (ESP-transport) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_AUTH
+value|0x0800
+end_define
+
+begin_comment
+comment|/* packet was authenticated (AH) */
+end_comment
+
+begin_struct
+struct|struct
+name|enchdr
+block|{
+name|uint32_t
+name|af
+decl_stmt|;
+name|uint32_t
+name|spi
+decl_stmt|;
+name|uint32_t
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -95,13 +118,17 @@ parameter_list|,
 name|nam
 parameter_list|)
 define|\
-value|if ((wh)& (xf)) { \ 		printf("%s%s", nam, (wh) == (xf) ? "): " : ","); \ 		(wh)&= ~(xf); \ 	}
+value|if ((wh)& (xf)) { \ 		ND_PRINT((ndo, "%s%s", nam, (wh) == (xf) ? "): " : ",")); \ 		(wh)&= ~(xf); \ 	}
 end_define
 
 begin_function
 name|u_int
 name|enc_if_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -147,9 +174,13 @@ operator|<
 name|ENC_HDRLEN
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|enc]"
+operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -177,15 +208,23 @@ name|flags
 operator|==
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(unprotected): "
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"("
+operator|)
 argument_list|)
 expr_stmt|;
 name|ENC_PRINT_TYPE
@@ -207,10 +246,13 @@ literal|"confidential"
 argument_list|)
 expr_stmt|;
 comment|/* ENC_PRINT_TYPE(flags, M_TUNNEL, "tunnel"); */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"SPI 0x%08x: "
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -218,6 +260,7 @@ name|hdr
 operator|->
 name|spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|length
@@ -244,7 +287,7 @@ name|AF_INET
 case|:
 name|ip_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -260,7 +303,7 @@ name|AF_INET6
 case|:
 name|ip6_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,

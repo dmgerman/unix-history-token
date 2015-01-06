@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ip6.h,v 1.8 2007-08-29 02:31:44 mcr Exp $ (LBL) */
-end_comment
-
-begin_comment
 comment|/*	NetBSD: ip6.h,v 1.9 2000/07/13 05:34:21 itojun Exp 	*/
 end_comment
 
@@ -44,26 +40,26 @@ block|{
 struct|struct
 name|ip6_hdrctl
 block|{
-name|u_int32_t
+name|uint32_t
 name|ip6_un1_flow
 decl_stmt|;
 comment|/* 20 bits of flow-ID */
-name|u_int16_t
+name|uint16_t
 name|ip6_un1_plen
 decl_stmt|;
 comment|/* payload length */
-name|u_int8_t
+name|uint8_t
 name|ip6_un1_nxt
 decl_stmt|;
 comment|/* next header */
-name|u_int8_t
+name|uint8_t
 name|ip6_un1_hlim
 decl_stmt|;
 comment|/* hop limit */
 block|}
 name|ip6_un1
 struct|;
-name|u_int8_t
+name|uint8_t
 name|ip6_un2_vfc
 decl_stmt|;
 comment|/* 4 bits version, top 4 bits class */
@@ -90,6 +86,16 @@ define|#
 directive|define
 name|ip6_vfc
 value|ip6_ctlun.ip6_un2_vfc
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP6_VERSION
+parameter_list|(
+name|ip6_hdr
+parameter_list|)
+value|(((ip6_hdr)->ip6_vfc& 0xf0)>> 4)
 end_define
 
 begin_define
@@ -135,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|IPV6_FLOWINFO_MASK
-value|((u_int32_t)htonl(0x0fffffff))
+value|((uint32_t)htonl(0x0fffffff))
 end_define
 
 begin_comment
@@ -146,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|IPV6_FLOWLABEL_MASK
-value|((u_int32_t)htonl(0x000fffff))
+value|((uint32_t)htonl(0x000fffff))
 end_define
 
 begin_comment
@@ -198,10 +204,10 @@ begin_struct
 struct|struct
 name|ip6_ext
 block|{
-name|u_int8_t
+name|uint8_t
 name|ip6e_nxt
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ip6e_len
 decl_stmt|;
 block|}
@@ -217,11 +223,11 @@ begin_struct
 struct|struct
 name|ip6_hbh
 block|{
-name|u_int8_t
+name|uint8_t
 name|ip6h_nxt
 decl_stmt|;
 comment|/* next header */
-name|u_int8_t
+name|uint8_t
 name|ip6h_len
 decl_stmt|;
 comment|/* length in units of 8 octets */
@@ -239,11 +245,11 @@ begin_struct
 struct|struct
 name|ip6_dest
 block|{
-name|u_int8_t
+name|uint8_t
 name|ip6d_nxt
 decl_stmt|;
 comment|/* next header */
-name|u_int8_t
+name|uint8_t
 name|ip6d_len
 decl_stmt|;
 comment|/* length in units of 8 octets */
@@ -252,6 +258,10 @@ block|}
 name|UNALIGNED
 struct|;
 end_struct
+
+begin_comment
+comment|/* http://www.iana.org/assignments/ipv6-parameters/ipv6-parameters.xhtml */
+end_comment
 
 begin_comment
 comment|/* Option types and related macros */
@@ -296,6 +306,28 @@ directive|define
 name|IP6OPT_JUMBO_LEN
 value|6
 end_define
+
+begin_define
+define|#
+directive|define
+name|IP6OPT_RPL
+value|0x63
+end_define
+
+begin_comment
+comment|/* 01 1 00011 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP6OPT_TUN_ENC_LIMIT
+value|0x04
+end_define
+
+begin_comment
+comment|/* 00 0 00100 */
+end_comment
 
 begin_define
 define|#
@@ -358,18 +390,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|IP6OPT_BINDING_UPDATE
-value|0xc6
+name|IP6OPT_QUICK_START
+value|0x26
 end_define
 
 begin_comment
-comment|/* 11 0 00110 */
+comment|/* 00 1 00110 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IP6OPT_BINDING_ACK
+name|IP6OPT_CALIPSO
 value|0x07
 end_define
 
@@ -380,7 +412,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP6OPT_BINDING_REQ
+name|IP6OPT_SMF_DPD
 value|0x08
 end_define
 
@@ -402,12 +434,63 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP6OPT_HOMEADDR_MINLEN
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
 name|IP6OPT_EID
 value|0x8a
 end_define
 
 begin_comment
 comment|/* 10 0 01010 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP6OPT_ILNP_NOTICE
+value|0x8b
+end_define
+
+begin_comment
+comment|/* 10 0 01011 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP6OPT_LINE_ID
+value|0x8c
+end_define
+
+begin_comment
+comment|/* 10 0 01100 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP6OPT_MPL
+value|0x6d
+end_define
+
+begin_comment
+comment|/* 01 1 01101 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP6OPT_IP_DFF
+value|0xee
+end_define
+
+begin_comment
+comment|/* 11 1 01110 */
 end_comment
 
 begin_define
@@ -463,19 +546,19 @@ begin_struct
 struct|struct
 name|ip6_rthdr
 block|{
-name|u_int8_t
+name|uint8_t
 name|ip6r_nxt
 decl_stmt|;
 comment|/* next header */
-name|u_int8_t
+name|uint8_t
 name|ip6r_len
 decl_stmt|;
 comment|/* length in units of 8 octets */
-name|u_int8_t
+name|uint8_t
 name|ip6r_type
 decl_stmt|;
 comment|/* routing type */
-name|u_int8_t
+name|uint8_t
 name|ip6r_segleft
 decl_stmt|;
 comment|/* segments left */
@@ -493,27 +576,27 @@ begin_struct
 struct|struct
 name|ip6_rthdr0
 block|{
-name|u_int8_t
+name|uint8_t
 name|ip6r0_nxt
 decl_stmt|;
 comment|/* next header */
-name|u_int8_t
+name|uint8_t
 name|ip6r0_len
 decl_stmt|;
 comment|/* length in units of 8 octets */
-name|u_int8_t
+name|uint8_t
 name|ip6r0_type
 decl_stmt|;
 comment|/* always zero */
-name|u_int8_t
+name|uint8_t
 name|ip6r0_segleft
 decl_stmt|;
 comment|/* segments left */
-name|u_int8_t
+name|uint8_t
 name|ip6r0_reserved
 decl_stmt|;
 comment|/* reserved field */
-name|u_int8_t
+name|uint8_t
 name|ip6r0_slmap
 index|[
 literal|3
@@ -541,19 +624,19 @@ begin_struct
 struct|struct
 name|ip6_frag
 block|{
-name|u_int8_t
+name|uint8_t
 name|ip6f_nxt
 decl_stmt|;
 comment|/* next header */
-name|u_int8_t
+name|uint8_t
 name|ip6f_reserved
 decl_stmt|;
 comment|/* reserved field */
-name|u_int16_t
+name|uint16_t
 name|ip6f_offlg
 decl_stmt|;
 comment|/* offset, reserved, and flag */
-name|u_int32_t
+name|uint32_t
 name|ip6f_ident
 decl_stmt|;
 comment|/* identification */
@@ -610,8 +693,10 @@ name|ip6_hdr
 modifier|*
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,

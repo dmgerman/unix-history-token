@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/tcpdump/extract.h,v 1.25 2006-01-30 16:20:07 hannes Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_comment
@@ -17,21 +17,53 @@ begin_comment
 comment|/*  * The processor doesn't natively handle unaligned loads.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|HAVE___ATTRIBUTE__
-end_ifdef
+argument_list|)
+operator|&&
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|__alpha
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__mips
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+operator|)
+end_if
 
 begin_comment
-comment|/*  * We have __attribute__; we assume that means we have __attribute__((packed)).  * Declare packed structures containing a u_int16_t and a u_int32_t,  * cast the pointer to point to one of those, and fetch through it;  * the GCC manual doesn't appear to explicitly say that  * __attribute__((packed)) causes the compiler to generate unaligned-safe  * code, but it apppears to do so.  *  * We do this in case the compiler can generate, for this instruction set,  * better code to do an unaligned load and pass stuff to "ntohs()" or  * "ntohl()" than the code to fetch the bytes one at a time and  * assemble them.  (That might not be the case on a little-endian platform,  * where "ntohs()" and "ntohl()" might not be done inline.)  */
+comment|/*  * This is a GCC-compatible compiler and we have __attribute__, which  * we assume that mean we have __attribute__((packed)), and this is  * MIPS or Alpha, which has instructions that can help when doing  * unaligned loads.  *  * Declare packed structures containing a uint16_t and a uint32_t,  * cast the pointer to point to one of those, and fetch through it;  * the GCC manual doesn't appear to explicitly say that  * __attribute__((packed)) causes the compiler to generate unaligned-safe  * code, but it apppears to do so.  *  * We do this in case the compiler can generate code using those  * instructions to do an unaligned load and pass stuff to "ntohs()" or  * "ntohl()", which might be better than than the code to fetch the  * bytes one at a time and assemble them.  (That might not be the  * case on a little-endian platform, such as DEC's MIPS machines and  * Alpha machines, where "ntohs()" and "ntohl()" might not be done  * inline.)  *  * We do this only for specific architectures because, for example,  * at least some versions of GCC, when compiling for 64-bit SPARC,  * generate code that assumes alignment if we do this.  *  * XXX - add other architectures and compilers as possible and  * appropriate.  *  * HP's C compiler, indicated by __HP_cc being defined, supports  * "#pragma unaligned N" in version A.05.50 and later, where "N"  * specifies a number of bytes at which the typedef on the next  * line is aligned, e.g.  *  *	#pragma unalign 1  *	typedef uint16_t unaligned_uint16_t;  *  * to define unaligned_uint16_t as a 16-bit unaligned data type.  * This could be presumably used, in sufficiently recent versions of  * the compiler, with macros similar to those below.  This would be  * useful only if that compiler could generate better code for PA-RISC  * or Itanium than would be generated by a bunch of shifts-and-ORs.  *  * DEC C, indicated by __DECC being defined, has, at least on Alpha,  * an __unaligned qualifier that can be applied to pointers to get the  * compiler to generate code that does unaligned loads and stores when  * dereferencing the pointer in question.  *  * XXX - what if the native C compiler doesn't support  * __attribute__((packed))?  How can we get it to generate unaligned  * accesses for *specific* items?  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int16_t
+name|uint16_t
 name|val
 decl_stmt|;
 block|}
@@ -39,7 +71,7 @@ name|__attribute__
 typedef|((
 name|packed
 typedef|))
-name|unaligned_u_int16_t
+name|unaligned_uint16_t
 typedef|;
 end_typedef
 
@@ -47,7 +79,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|val
 decl_stmt|;
 block|}
@@ -55,14 +87,14 @@ name|__attribute__
 typedef|((
 name|packed
 typedef|))
-name|unaligned_u_int32_t
+name|unaligned_uint32_t
 typedef|;
 end_typedef
 
 begin_function
 specifier|static
 specifier|inline
-name|u_int16_t
+name|uint16_t
 name|EXTRACT_16BITS
 parameter_list|(
 specifier|const
@@ -74,14 +106,14 @@ block|{
 return|return
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|ntohs
 argument_list|(
 operator|(
 operator|(
 specifier|const
-name|unaligned_u_int16_t
+name|unaligned_uint16_t
 operator|*
 operator|)
 operator|(
@@ -99,7 +131,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|u_int32_t
+name|uint32_t
 name|EXTRACT_32BITS
 parameter_list|(
 specifier|const
@@ -111,14 +143,14 @@ block|{
 return|return
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|ntohl
 argument_list|(
 operator|(
 operator|(
 specifier|const
-name|unaligned_u_int32_t
+name|unaligned_uint32_t
 operator|*
 operator|)
 operator|(
@@ -136,7 +168,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|u_int64_t
+name|uint64_t
 name|EXTRACT_64BITS
 parameter_list|(
 specifier|const
@@ -148,19 +180,19 @@ block|{
 return|return
 operator|(
 call|(
-name|u_int64_t
+name|uint64_t
 call|)
 argument_list|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|ntohl
 argument_list|(
 operator|(
 operator|(
 specifier|const
-name|unaligned_u_int32_t
+name|unaligned_uint32_t
 operator|*
 operator|)
 operator|(
@@ -179,14 +211,14 @@ operator||
 expr|\
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|ntohl
 argument_list|(
 operator|(
 operator|(
 specifier|const
-name|unaligned_u_int32_t
+name|unaligned_uint32_t
 operator|*
 operator|)
 operator|(
@@ -213,11 +245,11 @@ directive|else
 end_else
 
 begin_comment
-comment|/* HAVE___ATTRIBUTE__ */
+comment|/* have to do it a byte at a time */
 end_comment
 
 begin_comment
-comment|/*  * We don't have __attribute__, so do unaligned loads of big-endian  * quantities the hard way - fetch the bytes one at a time and  * assemble them.  */
+comment|/*  * This isn't a GCC-compatible compiler, we don't have __attribute__,  * or we do but we don't know of any better way with this instruction  * set to do unaligned loads, so do unaligned loads of big-endian  * quantities the hard way - fetch the bytes one at a time and  * assemble them.  */
 end_comment
 
 begin_define
@@ -228,7 +260,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((u_int16_t)((u_int16_t)*((const u_int8_t *)(p) + 0)<< 8 | \ 		     (u_int16_t)*((const u_int8_t *)(p) + 1)))
+value|((uint16_t)((uint16_t)*((const uint8_t *)(p) + 0)<< 8 | \ 		     (uint16_t)*((const uint8_t *)(p) + 1)))
 end_define
 
 begin_define
@@ -239,7 +271,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((u_int32_t)((u_int32_t)*((const u_int8_t *)(p) + 0)<< 24 | \ 		     (u_int32_t)*((const u_int8_t *)(p) + 1)<< 16 | \ 		     (u_int32_t)*((const u_int8_t *)(p) + 2)<< 8 | \ 		     (u_int32_t)*((const u_int8_t *)(p) + 3)))
+value|((uint32_t)((uint32_t)*((const uint8_t *)(p) + 0)<< 24 | \ 		     (uint32_t)*((const uint8_t *)(p) + 1)<< 16 | \ 		     (uint32_t)*((const uint8_t *)(p) + 2)<< 8 | \ 		     (uint32_t)*((const uint8_t *)(p) + 3)))
 end_define
 
 begin_define
@@ -250,7 +282,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((u_int64_t)((u_int64_t)*((const u_int8_t *)(p) + 0)<< 56 | \ 		     (u_int64_t)*((const u_int8_t *)(p) + 1)<< 48 | \ 		     (u_int64_t)*((const u_int8_t *)(p) + 2)<< 40 | \ 		     (u_int64_t)*((const u_int8_t *)(p) + 3)<< 32 | \ 	             (u_int64_t)*((const u_int8_t *)(p) + 4)<< 24 | \ 		     (u_int64_t)*((const u_int8_t *)(p) + 5)<< 16 | \ 		     (u_int64_t)*((const u_int8_t *)(p) + 6)<< 8 | \ 		     (u_int64_t)*((const u_int8_t *)(p) + 7)))
+value|((uint64_t)((uint64_t)*((const uint8_t *)(p) + 0)<< 56 | \ 		     (uint64_t)*((const uint8_t *)(p) + 1)<< 48 | \ 		     (uint64_t)*((const uint8_t *)(p) + 2)<< 40 | \ 		     (uint64_t)*((const uint8_t *)(p) + 3)<< 32 | \ 	             (uint64_t)*((const uint8_t *)(p) + 4)<< 24 | \ 		     (uint64_t)*((const uint8_t *)(p) + 5)<< 16 | \ 		     (uint64_t)*((const uint8_t *)(p) + 6)<< 8 | \ 		     (uint64_t)*((const uint8_t *)(p) + 7)))
 end_define
 
 begin_endif
@@ -259,7 +291,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE___ATTRIBUTE__ */
+comment|/* must special-case unaligned accesses */
 end_comment
 
 begin_else
@@ -278,7 +310,7 @@ end_comment
 begin_function
 specifier|static
 specifier|inline
-name|u_int16_t
+name|uint16_t
 name|EXTRACT_16BITS
 parameter_list|(
 specifier|const
@@ -290,14 +322,14 @@ block|{
 return|return
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|ntohs
 argument_list|(
 operator|*
 operator|(
 specifier|const
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|(
@@ -312,7 +344,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|u_int32_t
+name|uint32_t
 name|EXTRACT_32BITS
 parameter_list|(
 specifier|const
@@ -324,14 +356,14 @@ block|{
 return|return
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|ntohl
 argument_list|(
 operator|*
 operator|(
 specifier|const
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -346,7 +378,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|u_int64_t
+name|uint64_t
 name|EXTRACT_64BITS
 parameter_list|(
 specifier|const
@@ -358,12 +390,12 @@ block|{
 return|return
 operator|(
 call|(
-name|u_int64_t
+name|uint64_t
 call|)
 argument_list|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|ntohl
 argument_list|(
@@ -371,7 +403,7 @@ operator|*
 operator|(
 operator|(
 specifier|const
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -388,7 +420,7 @@ operator||
 expr|\
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|ntohl
 argument_list|(
@@ -396,7 +428,7 @@ operator|*
 operator|(
 operator|(
 specifier|const
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -432,7 +464,40 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((u_int32_t)((u_int32_t)*((const u_int8_t *)(p) + 0)<< 16 | \ 		     (u_int32_t)*((const u_int8_t *)(p) + 1)<< 8 | \ 		     (u_int32_t)*((const u_int8_t *)(p) + 2)))
+value|((uint32_t)((uint32_t)*((const uint8_t *)(p) + 0)<< 16 | \ 		     (uint32_t)*((const uint8_t *)(p) + 1)<< 8 | \ 		     (uint32_t)*((const uint8_t *)(p) + 2)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXTRACT_40BITS
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|((uint64_t)((uint64_t)*((const uint8_t *)(p) + 0)<< 32 | \ 		     (uint64_t)*((const uint8_t *)(p) + 1)<< 24 | \ 		     (uint64_t)*((const uint8_t *)(p) + 2)<< 16 | \ 		     (uint64_t)*((const uint8_t *)(p) + 3)<< 8 | \ 		     (uint64_t)*((const uint8_t *)(p) + 4)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXTRACT_48BITS
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|((uint64_t)((uint64_t)*((const uint8_t *)(p) + 0)<< 40 | \ 		     (uint64_t)*((const uint8_t *)(p) + 1)<< 32 | \ 		     (uint64_t)*((const uint8_t *)(p) + 2)<< 24 | \ 		     (uint64_t)*((const uint8_t *)(p) + 3)<< 16 | \ 		     (uint64_t)*((const uint8_t *)(p) + 4)<< 8 | \ 		     (uint64_t)*((const uint8_t *)(p) + 5)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXTRACT_56BITS
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|((uint64_t)((uint64_t)*((const uint8_t *)(p) + 0)<< 48 | \ 		     (uint64_t)*((const uint8_t *)(p) + 1)<< 40 | \ 		     (uint64_t)*((const uint8_t *)(p) + 2)<< 32 | \ 		     (uint64_t)*((const uint8_t *)(p) + 3)<< 24 | \ 		     (uint64_t)*((const uint8_t *)(p) + 4)<< 16 | \ 		     (uint64_t)*((const uint8_t *)(p) + 5)<< 8 | \ 		     (uint64_t)*((const uint8_t *)(p) + 6)))
 end_define
 
 begin_comment
@@ -457,7 +522,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((u_int16_t)((u_int16_t)*((const u_int8_t *)(p) + 1)<< 8 | \ 		     (u_int16_t)*((const u_int8_t *)(p) + 0)))
+value|((uint16_t)((uint16_t)*((const uint8_t *)(p) + 1)<< 8 | \ 		     (uint16_t)*((const uint8_t *)(p) + 0)))
 end_define
 
 begin_define
@@ -468,7 +533,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((u_int32_t)((u_int32_t)*((const u_int8_t *)(p) + 3)<< 24 | \ 		     (u_int32_t)*((const u_int8_t *)(p) + 2)<< 16 | \ 		     (u_int32_t)*((const u_int8_t *)(p) + 1)<< 8 | \ 		     (u_int32_t)*((const u_int8_t *)(p) + 0)))
+value|((uint32_t)((uint32_t)*((const uint8_t *)(p) + 3)<< 24 | \ 		     (uint32_t)*((const uint8_t *)(p) + 2)<< 16 | \ 		     (uint32_t)*((const uint8_t *)(p) + 1)<< 8 | \ 		     (uint32_t)*((const uint8_t *)(p) + 0)))
 end_define
 
 begin_define
@@ -479,7 +544,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((u_int32_t)((u_int32_t)*((const u_int8_t *)(p) + 2)<< 16 | \ 		     (u_int32_t)*((const u_int8_t *)(p) + 1)<< 8 | \ 		     (u_int32_t)*((const u_int8_t *)(p) + 0)))
+value|((uint32_t)((uint32_t)*((const uint8_t *)(p) + 2)<< 16 | \ 		     (uint32_t)*((const uint8_t *)(p) + 1)<< 8 | \ 		     (uint32_t)*((const uint8_t *)(p) + 0)))
 end_define
 
 begin_define
@@ -490,7 +555,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((u_int64_t)((u_int64_t)*((const u_int8_t *)(p) + 7)<< 56 | \ 		     (u_int64_t)*((const u_int8_t *)(p) + 6)<< 48 | \ 		     (u_int64_t)*((const u_int8_t *)(p) + 5)<< 40 | \ 		     (u_int64_t)*((const u_int8_t *)(p) + 4)<< 32 | \ 	             (u_int64_t)*((const u_int8_t *)(p) + 3)<< 24 | \ 		     (u_int64_t)*((const u_int8_t *)(p) + 2)<< 16 | \ 		     (u_int64_t)*((const u_int8_t *)(p) + 1)<< 8 | \ 		     (u_int64_t)*((const u_int8_t *)(p) + 0)))
+value|((uint64_t)((uint64_t)*((const uint8_t *)(p) + 7)<< 56 | \ 		     (uint64_t)*((const uint8_t *)(p) + 6)<< 48 | \ 		     (uint64_t)*((const uint8_t *)(p) + 5)<< 40 | \ 		     (uint64_t)*((const uint8_t *)(p) + 4)<< 32 | \ 	             (uint64_t)*((const uint8_t *)(p) + 3)<< 24 | \ 		     (uint64_t)*((const uint8_t *)(p) + 2)<< 16 | \ 		     (uint64_t)*((const uint8_t *)(p) + 1)<< 8 | \ 		     (uint64_t)*((const uint8_t *)(p) + 0)))
 end_define
 
 end_unit

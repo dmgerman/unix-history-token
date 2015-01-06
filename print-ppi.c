@@ -3,6 +3,12 @@ begin_comment
 comment|/*  * Oracle  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -29,24 +35,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pcap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"netdissect.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
 end_include
 
@@ -56,11 +44,34 @@ directive|include
 file|"extract.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ppi.h"
-end_include
+begin_typedef
+typedef|typedef
+struct|struct
+name|ppi_header
+block|{
+name|uint8_t
+name|ppi_ver
+decl_stmt|;
+name|uint8_t
+name|ppi_flags
+decl_stmt|;
+name|uint16_t
+name|ppi_len
+decl_stmt|;
+name|uint32_t
+name|ppi_dlt
+decl_stmt|;
+block|}
+name|ppi_header_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|PPI_HDRLEN
+value|8
+end_define
 
 begin_ifdef
 ifdef|#
@@ -74,7 +85,6 @@ specifier|inline
 name|void
 name|ppi_header_print
 parameter_list|(
-name|struct
 name|netdissect_options
 modifier|*
 name|ndo
@@ -93,10 +103,10 @@ name|ppi_header_t
 modifier|*
 name|hdr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|dlt
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|len
 decl_stmt|;
 name|hdr
@@ -110,7 +120,7 @@ name|bp
 expr_stmt|;
 name|len
 operator|=
-name|EXTRACT_16BITS
+name|EXTRACT_LE_16BITS
 argument_list|(
 operator|&
 name|hdr
@@ -120,7 +130,7 @@ argument_list|)
 expr_stmt|;
 name|dlt
 operator|=
-name|EXTRACT_32BITS
+name|EXTRACT_LE_32BITS
 argument_list|(
 operator|&
 name|hdr
@@ -195,7 +205,6 @@ specifier|static
 name|void
 name|ppi_print
 parameter_list|(
-name|struct
 name|netdissect_options
 modifier|*
 name|ndo
@@ -236,7 +245,7 @@ name|h
 operator|->
 name|len
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|dlt
 decl_stmt|;
 if|if
@@ -270,7 +279,7 @@ name|p
 expr_stmt|;
 name|dlt
 operator|=
-name|EXTRACT_32BITS
+name|EXTRACT_LE_32BITS
 argument_list|(
 operator|&
 name|hdr
@@ -395,12 +404,8 @@ name|ndo
 operator|->
 name|ndo_suppress_default_print
 condition|)
-name|ndo
-operator|->
-name|ndo_default_print
+name|ND_DEFAULTPRINT
 argument_list|(
-name|ndo
-argument_list|,
 name|p
 argument_list|,
 name|caplen
@@ -418,7 +423,6 @@ begin_function
 name|u_int
 name|ppi_if_print
 parameter_list|(
-name|struct
 name|netdissect_options
 modifier|*
 name|ndo

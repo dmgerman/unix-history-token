@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Code by Matt Thomas, Digital Equipment Corporation  *	with an awful lot of hacking by Jeffrey Mogul, DECWRL  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-llc.c,v 1.75 2007-04-13 09:43:11 hannes Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -47,18 +30,6 @@ begin_include
 include|#
 directive|include
 file|<tcpdump-stdinc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -103,6 +74,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|llc_values
@@ -210,6 +182,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|llc_cmd_values
@@ -437,6 +410,12 @@ literal|"PVST"
 block|}
 block|,
 block|{
+name|PID_CISCO_VLANBRIDGE
+block|,
+literal|"VLAN Bridge"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
@@ -551,7 +530,7 @@ begin_struct
 struct|struct
 name|oui_tok
 block|{
-name|u_int32_t
+name|uint32_t
 name|oui
 decl_stmt|;
 specifier|const
@@ -623,6 +602,10 @@ begin_function
 name|int
 name|llc_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -649,7 +632,7 @@ modifier|*
 name|extracted_ethertype
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|dsap_field
 decl_stmt|,
 name|dsap
@@ -658,7 +641,7 @@ name|ssap_field
 decl_stmt|,
 name|ssap
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|control
 decl_stmt|;
 name|int
@@ -680,15 +663,16 @@ operator|<
 literal|3
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|llc]"
+operator|)
 argument_list|)
 expr_stmt|;
-name|default_print
+name|ND_DEFAULTPRINT
 argument_list|(
 operator|(
 name|u_char
@@ -756,15 +740,16 @@ operator|<
 literal|4
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|llc]"
+operator|)
 argument_list|)
 expr_stmt|;
-name|default_print
+name|ND_DEFAULTPRINT
 argument_list|(
 operator|(
 name|u_char
@@ -810,15 +795,23 @@ block|{
 comment|/* 		 * This is an Ethernet_802.3 IPX frame; it has an 		 * 802.3 header (i.e., an Ethernet header where the 		 * type/length field is<= ETHERMTU, i.e. it's a length 		 * field, not a type field), but has no 802.2 header - 		 * the IPX packet starts right after the Ethernet header, 		 * with a signature of two bytes of 0xFF (which is 		 * LLCSAP_GLOBAL). 		 * 		 * (It might also have been an Ethernet_802.3 IPX at 		 * one time, but got bridged onto another network, 		 * such as an 802.11 network; this has appeared in at 		 * least one capture file.) 		 */
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"IPX 802.3: "
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipx_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -846,13 +839,18 @@ name|LLC_GSAP
 expr_stmt|;
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"LLC, dsap %s (0x%02x) %s, ssap %s (0x%02x) %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_values
@@ -861,9 +859,9 @@ literal|"Unknown"
 argument_list|,
 name|dsap
 argument_list|)
-argument_list|,
+operator|,
 name|dsap
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_ig_flag_values
@@ -874,7 +872,7 @@ name|dsap_field
 operator|&
 name|LLC_IG
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_values
@@ -883,9 +881,9 @@ literal|"Unknown"
 argument_list|,
 name|ssap
 argument_list|)
-argument_list|,
+operator|,
 name|ssap
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_flag_values
@@ -896,6 +894,7 @@ name|ssap_field
 operator|&
 name|LLC_GSAP
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -903,21 +902,29 @@ condition|(
 name|is_u
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", ctrl 0x%02x: "
-argument_list|,
+operator|,
 name|control
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", ctrl 0x%04x: "
-argument_list|,
+operator|,
 name|control
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -939,6 +946,8 @@ condition|)
 block|{
 name|stp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|+
 literal|3
@@ -971,7 +980,7 @@ condition|)
 block|{
 name|ip_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 operator|+
@@ -1006,15 +1015,23 @@ block|{
 comment|/* 		 * This is an Ethernet_802.2 IPX frame, with an 802.3 		 * header and an 802.2 LLC header with the source and 		 * destination SAPs being the IPX SAP. 		 * 		 * Skip DSAP, LSAP, and control field. 		 */
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"IPX 802.2: "
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipx_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|+
 literal|3
@@ -1072,10 +1089,6 @@ name|length
 operator|-=
 literal|3
 expr_stmt|;
-name|caplen
-operator|-=
-literal|3
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1087,13 +1100,11 @@ name|length
 operator|-=
 literal|4
 expr_stmt|;
-name|caplen
-operator|-=
-literal|4
-expr_stmt|;
 block|}
 name|netbeui_print
 argument_list|(
+name|ndo
+argument_list|,
 name|control
 argument_list|,
 name|p
@@ -1126,6 +1137,8 @@ condition|)
 block|{
 name|isoclns_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|+
 literal|3
@@ -1165,6 +1178,8 @@ name|ret
 operator|=
 name|snap_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|+
 literal|3
@@ -1193,7 +1208,9 @@ block|}
 if|if
 condition|(
 operator|!
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 block|{
 if|if
@@ -1213,13 +1230,13 @@ name|edst
 operator|==
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_values
@@ -1228,26 +1245,31 @@ literal|"Unknown DSAP 0x%02x"
 argument_list|,
 name|dsap
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s> %s %s "
-argument_list|,
+operator|,
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|esrc
 argument_list|)
-argument_list|,
+operator|,
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|edst
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_values
@@ -1256,6 +1278,7 @@ literal|"Unknown DSAP 0x%02x"
 argument_list|,
 name|dsap
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1271,13 +1294,13 @@ name|edst
 operator|==
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s> %s "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_values
@@ -1286,7 +1309,7 @@ literal|"Unknown SSAP 0x%02x"
 argument_list|,
 name|ssap
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_values
@@ -1295,21 +1318,24 @@ literal|"Unknown DSAP 0x%02x"
 argument_list|,
 name|dsap
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s %s> %s %s "
-argument_list|,
+operator|,
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|esrc
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_values
@@ -1318,12 +1344,14 @@ literal|"Unknown SSAP 0x%02x"
 argument_list|,
 name|ssap
 argument_list|)
-argument_list|,
+operator|,
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|edst
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_values
@@ -1332,6 +1360,7 @@ literal|"Unknown DSAP 0x%02x"
 argument_list|,
 name|dsap
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1341,10 +1370,13 @@ condition|(
 name|is_u
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Unnumbered, %s, Flags [%s], length %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_cmd_values
@@ -1356,7 +1388,7 @@ argument_list|(
 name|control
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_flag_values
@@ -1375,20 +1407,13 @@ operator|&
 name|LLC_U_POLL
 operator|)
 argument_list|)
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 name|p
 operator|+=
-literal|3
-expr_stmt|;
-name|length
-operator|-=
-literal|3
-expr_stmt|;
-name|caplen
-operator|-=
 literal|3
 expr_stmt|;
 if|if
@@ -1411,32 +1436,24 @@ operator|==
 name|LLC_XID_FI
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": %02x %02x"
-argument_list|,
+operator|,
 name|p
 index|[
 literal|1
 index|]
-argument_list|,
+operator|,
 name|p
 index|[
 literal|2
 index|]
+operator|)
 argument_list|)
-expr_stmt|;
-name|p
-operator|+=
-literal|3
-expr_stmt|;
-name|length
-operator|-=
-literal|3
-expr_stmt|;
-name|caplen
-operator|-=
-literal|3
 expr_stmt|;
 block|}
 block|}
@@ -1454,13 +1471,13 @@ operator|==
 name|LLC_S_FMT
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Supervisory, %s, rcv seq %u, Flags [%s], length %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_supervisory_values
@@ -1472,12 +1489,12 @@ argument_list|(
 name|control
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|LLC_IS_NR
 argument_list|(
 name|control
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_flag_values
@@ -1496,30 +1513,31 @@ operator|&
 name|LLC_IS_POLL
 operator|)
 argument_list|)
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Information, send seq %u, rcv seq %u, Flags [%s], length %u"
-argument_list|,
+operator|,
 name|LLC_I_NS
 argument_list|(
 name|control
 argument_list|)
-argument_list|,
+operator|,
 name|LLC_IS_NR
 argument_list|(
 name|control
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|llc_flag_values
@@ -1538,23 +1556,12 @@ operator|&
 name|LLC_IS_POLL
 operator|)
 argument_list|)
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|p
-operator|+=
-literal|4
-expr_stmt|;
-name|length
-operator|-=
-literal|4
-expr_stmt|;
-name|caplen
-operator|-=
-literal|4
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1568,6 +1575,10 @@ begin_function
 name|int
 name|snap_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -1583,7 +1594,7 @@ name|u_int
 name|bridge_pad
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|orgcode
 decl_stmt|;
 specifier|register
@@ -1594,7 +1605,7 @@ specifier|register
 name|int
 name|ret
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|p
@@ -1620,7 +1631,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 block|{
 specifier|const
@@ -1675,13 +1688,13 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"oui %s (0x%06x), %s %s (0x%04x): "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|oui_values
@@ -1690,9 +1703,9 @@ literal|"Unknown"
 argument_list|,
 name|orgcode
 argument_list|)
-argument_list|,
+operator|,
 name|orgcode
-argument_list|,
+operator|,
 operator|(
 name|orgcode
 operator|==
@@ -1702,7 +1715,7 @@ literal|"ethertype"
 else|:
 literal|"pid"
 operator|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|tok
@@ -1711,8 +1724,9 @@ literal|"Unknown"
 argument_list|,
 name|et
 argument_list|)
-argument_list|,
+operator|,
 name|et
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1744,7 +1758,7 @@ name|ret
 operator|=
 name|ethertype_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|et
 argument_list|,
@@ -1780,7 +1794,7 @@ name|ret
 operator|=
 name|ethertype_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|et
 argument_list|,
@@ -1815,6 +1829,8 @@ name|PID_CISCO_CDP
 case|:
 name|cdp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1832,6 +1848,8 @@ name|PID_CISCO_DTP
 case|:
 name|dtp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1847,6 +1865,8 @@ name|PID_CISCO_UDLD
 case|:
 name|udld_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1862,6 +1882,8 @@ name|PID_CISCO_VTP
 case|:
 name|vtp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1875,8 +1897,13 @@ return|;
 case|case
 name|PID_CISCO_PVST
 case|:
+case|case
+name|PID_CISCO_VLANBRIDGE
+case|:
 name|stp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1890,6 +1917,7 @@ return|;
 default|default:
 break|break;
 block|}
+break|break;
 case|case
 name|OUI_RFC2684
 case|:
@@ -1906,7 +1934,7 @@ name|PID_RFC2684_ETH_NOFCS
 case|:
 comment|/* 			 * XXX - remove the last two bytes for 			 * PID_RFC2684_ETH_FCS? 			 */
 comment|/* 			 * Skip the padding. 			 */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|p
@@ -1929,7 +1957,7 @@ expr_stmt|;
 comment|/* 			 * What remains is an Ethernet packet. 			 */
 name|ether_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -1955,7 +1983,7 @@ name|PID_RFC2684_802_5_NOFCS
 case|:
 comment|/* 			 * XXX - remove the last two bytes for 			 * PID_RFC2684_ETH_FCS? 			 */
 comment|/* 			 * Skip the padding, but not the Access 			 * Control field. 			 */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|p
@@ -1978,6 +2006,8 @@ expr_stmt|;
 comment|/* 			 * What remains is an 802.5 Token Ring 			 * packet. 			 */
 name|token_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1998,7 +2028,7 @@ name|PID_RFC2684_FDDI_NOFCS
 case|:
 comment|/* 			 * XXX - remove the last two bytes for 			 * PID_RFC2684_ETH_FCS? 			 */
 comment|/* 			 * Skip the padding. 			 */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|p
@@ -2029,6 +2059,8 @@ expr_stmt|;
 comment|/* 			 * What remains is an FDDI packet. 			 */
 name|fddi_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -2046,6 +2078,8 @@ name|PID_RFC2684_BPDU
 case|:
 name|stp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -2065,12 +2099,13 @@ operator|)
 return|;
 name|trunc
 label|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|snap]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ppp.h,v 1.16 2004-10-20 16:14:16 hannes Exp $ (LBL) */
-end_comment
-
-begin_comment
 comment|/*  * Point to Point Protocol (PPP) RFC1331  *  * Copyright 1989 by Carnegie Mellon.  *  * Permission to use, copy, modify, and distribute this program for any  * purpose and without fee is hereby granted, provided that this copyright  * and permission notice appear on all copies and supporting documentation,  * the name of Carnegie Mellon not be used in advertising or publicity  * pertaining to distribution of the program without specific prior  * permission, and notice be given in supporting documentation that copying  * and distribution is by permission of Carnegie Mellon and Stanford  * University.  Carnegie Mellon makes no representations about the  * suitability of this software for any purpose.  It is provided "as is"  * without express or implied warranty.  */
 end_comment
 
@@ -493,15 +489,6 @@ directive|define
 name|PPP_EAP
 value|0xc227
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|tok
-name|ppptype2str
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 

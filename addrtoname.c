@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  Internet, ethernet, port, and protocol string to address  *  and address to string conversion routines  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/addrtoname.c,v 1.119 2007-08-08 14:06:34 hannes Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -301,7 +284,7 @@ begin_struct
 struct|struct
 name|hnamemem
 block|{
-name|u_int32_t
+name|uint32_t
 name|addr
 decl_stmt|;
 specifier|const
@@ -700,7 +683,7 @@ begin_struct
 struct|struct
 name|protoidmem
 block|{
-name|u_int32_t
+name|uint32_t
 name|p_oui
 decl_stmt|;
 name|u_short
@@ -741,7 +724,7 @@ name|char
 modifier|*
 name|intoa
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|addr
 parameter_list|)
 block|{
@@ -879,14 +862,14 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|f_netmask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|f_localnet
 decl_stmt|;
 end_decl_stmt
@@ -901,6 +884,10 @@ name|char
 modifier|*
 name|getname
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -913,7 +900,7 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|addr
 decl_stmt|;
 specifier|static
@@ -997,7 +984,9 @@ comment|/* 	 * Print names unless: 	 *	(1) -n was given. 	 *      (2) Address is
 if|if
 condition|(
 operator|!
-name|nflag
+name|ndo
+operator|->
+name|ndo_nflag
 operator|&&
 operator|(
 name|addr
@@ -1046,7 +1035,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Nflag
+name|ndo
+operator|->
+name|ndo_Nflag
 condition|)
 block|{
 comment|/* Remove domain qualifications */
@@ -1118,6 +1109,10 @@ name|char
 modifier|*
 name|getname6
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -1130,10 +1125,30 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+union|union
+block|{
 name|struct
 name|in6_addr
 name|addr
 decl_stmt|;
+struct|struct
+name|for_hash_addr
+block|{
+name|char
+name|fill
+index|[
+literal|14
+index|]
+decl_stmt|;
+name|uint16_t
+name|d
+decl_stmt|;
+block|}
+name|addra
+struct|;
+block|}
+name|addr
+union|;
 specifier|static
 name|struct
 name|h6namemem
@@ -1171,18 +1186,11 @@ operator|=
 operator|&
 name|h6nametable
 index|[
-operator|*
-operator|(
-name|u_int16_t
-operator|*
-operator|)
-operator|&
 name|addr
 operator|.
-name|s6_addr
-index|[
-literal|14
-index|]
+name|addra
+operator|.
+name|d
 operator|&
 operator|(
 name|HASHNAMESIZE
@@ -1238,6 +1246,8 @@ operator|->
 name|addr
 operator|=
 name|addr
+operator|.
+name|addr
 expr_stmt|;
 name|p
 operator|->
@@ -1250,7 +1260,9 @@ comment|/* 	 * Do not print names if -n was given. 	 */
 if|if
 condition|(
 operator|!
-name|nflag
+name|ndo
+operator|->
+name|ndo_nflag
 condition|)
 block|{
 name|hp
@@ -1294,7 +1306,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Nflag
+name|ndo
+operator|->
+name|ndo_Nflag
 condition|)
 block|{
 comment|/* Remove domain qualifications */
@@ -2396,6 +2410,10 @@ name|char
 modifier|*
 name|etheraddr_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -2453,7 +2471,9 @@ name|USE_ETHER_NTOHOST
 if|if
 condition|(
 operator|!
-name|nflag
+name|ndo
+operator|->
+name|ndo_nflag
 condition|)
 block|{
 name|char
@@ -2584,7 +2604,9 @@ block|}
 if|if
 condition|(
 operator|!
-name|nflag
+name|ndo
+operator|->
+name|ndo_nflag
 condition|)
 block|{
 name|snprintf
@@ -2795,6 +2817,10 @@ name|char
 modifier|*
 name|linkaddr_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2851,6 +2877,8 @@ return|return
 operator|(
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|ep
 argument_list|)
 operator|)
@@ -3031,7 +3059,7 @@ modifier|*
 name|tp
 decl_stmt|;
 specifier|register
-name|u_int32_t
+name|uint32_t
 name|i
 init|=
 name|port
@@ -3561,7 +3589,7 @@ modifier|*
 name|tp
 decl_stmt|;
 specifier|register
-name|u_int32_t
+name|uint32_t
 name|i
 init|=
 name|port
@@ -3683,7 +3711,7 @@ modifier|*
 name|tp
 decl_stmt|;
 specifier|register
-name|u_int32_t
+name|uint32_t
 name|i
 init|=
 name|port
@@ -3809,7 +3837,7 @@ modifier|*
 name|tp
 decl_stmt|;
 specifier|register
-name|u_int32_t
+name|uint32_t
 name|i
 init|=
 name|port
@@ -3966,7 +3994,9 @@ specifier|static
 name|void
 name|init_servarray
 parameter_list|(
-name|void
+name|netdissect_options
+modifier|*
+name|ndo
 parameter_list|)
 block|{
 name|struct
@@ -4084,7 +4114,9 @@ name|nxt
 expr_stmt|;
 if|if
 condition|(
-name|nflag
+name|ndo
+operator|->
+name|ndo_nflag
 condition|)
 block|{
 operator|(
@@ -4165,14 +4197,12 @@ name|USE_STATIC_LIBPCAP
 argument_list|)
 end_if
 
-begin_macro
-name|__declspec
-argument_list|(
-argument|dllimport
-argument_list|)
-end_macro
+begin_extern
+extern|extern __declspec(dllimport
+end_extern
 
 begin_else
+unit|)
 else|#
 directive|else
 end_else
@@ -6277,23 +6307,29 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize the address to name translation machinery.  We map all  * non-local IP addresses to numeric addresses if fflag is true (i.e.,  * to prevent blocking on the nameserver).  localnet is the IP address  * of the local network.  mask is its subnet mask.  */
+comment|/*  * Initialize the address to name translation machinery.  We map all  * non-local IP addresses to numeric addresses if ndo->ndo_fflag is true  * (i.e., to prevent blocking on the nameserver).  localnet is the IP address  * of the local network.  mask is its subnet mask.  */
 end_comment
 
 begin_function
 name|void
 name|init_addrtoname
 parameter_list|(
-name|u_int32_t
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
+name|uint32_t
 name|localnet
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|mask
 parameter_list|)
 block|{
 if|if
 condition|(
-name|fflag
+name|ndo
+operator|->
+name|ndo_fflag
 condition|)
 block|{
 name|f_localnet
@@ -6307,7 +6343,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|nflag
+name|ndo
+operator|->
+name|ndo_nflag
 condition|)
 comment|/* 		 * Simplest way to suppress names. 		 */
 return|return;
@@ -6315,7 +6353,9 @@ name|init_etherarray
 argument_list|()
 expr_stmt|;
 name|init_servarray
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 name|init_eprotoarray
 argument_list|()
@@ -6335,6 +6375,10 @@ name|char
 modifier|*
 name|dnaddr_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|u_short
 name|dnaddr
 parameter_list|)
@@ -6403,7 +6447,9 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|nflag
+name|ndo
+operator|->
+name|ndo_nflag
 condition|)
 name|tp
 operator|->

@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-fddi.c,v 1.66 2005-11-13 12:12:41 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -52,18 +35,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pcap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -82,20 +53,268 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ethertype.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ether.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"fddi.h"
-end_include
+begin_comment
+comment|/*  * Based on Ultrix if_fddi.h  */
+end_comment
+
+begin_struct
+struct|struct
+name|fddi_header
+block|{
+name|u_char
+name|fddi_fc
+decl_stmt|;
+comment|/* frame control */
+name|u_char
+name|fddi_dhost
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|u_char
+name|fddi_shost
+index|[
+literal|6
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Length of an FDDI header; note that some compilers may pad  * "struct fddi_header" to a multiple of 4 bytes, for example, so  * "sizeof (struct fddi_header)" may not give the right  * answer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDI_HDRLEN
+value|13
+end_define
+
+begin_comment
+comment|/* Useful values for fddi_fc (frame control) field */
+end_comment
+
+begin_comment
+comment|/*  * FDDI Frame Control bits  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_C
+value|0x80
+end_define
+
+begin_comment
+comment|/* Class bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_L
+value|0x40
+end_define
+
+begin_comment
+comment|/* Address length bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_F
+value|0x30
+end_define
+
+begin_comment
+comment|/* Frame format bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_Z
+value|0x0f
+end_define
+
+begin_comment
+comment|/* Control bits */
+end_comment
+
+begin_comment
+comment|/*  * FDDI Frame Control values. (48-bit addressing only).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_VOID
+value|0x40
+end_define
+
+begin_comment
+comment|/* Void frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_NRT
+value|0x80
+end_define
+
+begin_comment
+comment|/* Nonrestricted token */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_RT
+value|0xc0
+end_define
+
+begin_comment
+comment|/* Restricted token */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_SMT_INFO
+value|0x41
+end_define
+
+begin_comment
+comment|/* SMT Info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_SMT_NSA
+value|0x4F
+end_define
+
+begin_comment
+comment|/* SMT Next station adrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_MAC_BEACON
+value|0xc2
+end_define
+
+begin_comment
+comment|/* MAC Beacon frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_MAC_CLAIM
+value|0xc3
+end_define
+
+begin_comment
+comment|/* MAC Claim frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_LLC_ASYNC
+value|0x50
+end_define
+
+begin_comment
+comment|/* Async. LLC frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_LLC_SYNC
+value|0xd0
+end_define
+
+begin_comment
+comment|/* Sync. LLC frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_IMP_ASYNC
+value|0x60
+end_define
+
+begin_comment
+comment|/* Implementor Async. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_IMP_SYNC
+value|0xe0
+end_define
+
+begin_comment
+comment|/* Implementor Synch. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_SMT
+value|0x40
+end_define
+
+begin_comment
+comment|/* SMT frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_MAC
+value|0xc0
+end_define
+
+begin_comment
+comment|/* MAC frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_CLFF
+value|0xF0
+end_define
+
+begin_comment
+comment|/* Class/Length/Format bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_ZZZZ
+value|0x0F
+end_define
+
+begin_comment
+comment|/* Control bits */
+end_comment
 
 begin_comment
 comment|/*  * Some FDDI interfaces use bit-swapped addresses.  */
@@ -162,6 +381,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 name|fddi_bit_swap
 index|[]
@@ -692,6 +912,10 @@ specifier|inline
 name|void
 name|print_fddi_fc
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|u_char
 name|fc
 parameter_list|)
@@ -705,9 +929,13 @@ case|case
 name|FDDIFC_VOID
 case|:
 comment|/* Void frame */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"void "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -715,9 +943,13 @@ case|case
 name|FDDIFC_NRT
 case|:
 comment|/* Nonrestricted token */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"nrt "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -725,9 +957,13 @@ case|case
 name|FDDIFC_RT
 case|:
 comment|/* Restricted token */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"rt "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -735,9 +971,13 @@ case|case
 name|FDDIFC_SMT_INFO
 case|:
 comment|/* SMT Info */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"info "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -745,9 +985,13 @@ case|case
 name|FDDIFC_SMT_NSA
 case|:
 comment|/* SMT Next station adrs */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"nsa "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -755,9 +999,13 @@ case|case
 name|FDDIFC_MAC_BEACON
 case|:
 comment|/* MAC Beacon frame */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"beacon "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -765,9 +1013,13 @@ case|case
 name|FDDIFC_MAC_CLAIM
 case|:
 comment|/* MAC Claim frame */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"claim "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -782,87 +1034,115 @@ block|{
 case|case
 name|FDDIFC_MAC
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"mac%1x "
-argument_list|,
+operator|,
 name|fc
 operator|&
 name|FDDIFC_ZZZZ
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|FDDIFC_SMT
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"smt%1x "
-argument_list|,
+operator|,
 name|fc
 operator|&
 name|FDDIFC_ZZZZ
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|FDDIFC_LLC_ASYNC
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"async%1x "
-argument_list|,
+operator|,
 name|fc
 operator|&
 name|FDDIFC_ZZZZ
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|FDDIFC_LLC_SYNC
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"sync%1x "
-argument_list|,
+operator|,
 name|fc
 operator|&
 name|FDDIFC_ZZZZ
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|FDDIFC_IMP_ASYNC
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"imp_async%1x "
-argument_list|,
+operator|,
 name|fc
 operator|&
 name|FDDIFC_ZZZZ
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|FDDIFC_IMP_SYNC
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"imp_sync%1x "
-argument_list|,
+operator|,
 name|fc
 operator|&
 name|FDDIFC_ZZZZ
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%02x "
-argument_list|,
+operator|,
 name|fc
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1011,6 +1291,10 @@ specifier|inline
 name|void
 name|fddi_hdr_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|struct
@@ -1047,6 +1331,8 @@ name|srcname
 operator|=
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|fsrc
 argument_list|)
 expr_stmt|;
@@ -1054,71 +1340,82 @@ name|dstname
 operator|=
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|fdst
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%02x %s %s %d: "
-argument_list|,
+operator|,
 name|fddip
 operator|->
 name|fddi_fc
-argument_list|,
+operator|,
 name|srcname
-argument_list|,
+operator|,
 name|dstname
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|qflag
+name|ndo
+operator|->
+name|ndo_qflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s %s %d: "
-argument_list|,
+operator|,
 name|srcname
-argument_list|,
+operator|,
 name|dstname
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|print_fddi_fc
 argument_list|(
+name|ndo
+argument_list|,
 name|fddip
 operator|->
 name|fddi_fc
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s %s %d: "
-argument_list|,
+operator|,
 name|srcname
-argument_list|,
+operator|,
 name|dstname
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1131,6 +1428,10 @@ specifier|inline
 name|void
 name|fddi_smt_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -1142,9 +1443,13 @@ name|length
 name|_U_
 parameter_list|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<SMT printer not yet implemented>"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1154,6 +1459,10 @@ begin_function
 name|void
 name|fddi_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -1194,9 +1503,13 @@ operator|<
 name|FDDI_HDRLEN
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|fddi]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1229,10 +1542,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 name|fddi_hdr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|fddip
 argument_list|,
 name|length
@@ -1282,6 +1599,8 @@ if|if
 condition|(
 name|llc_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -1311,10 +1630,14 @@ comment|/* 			 * Some kinds of LLC packet we cannot 			 * handle intelligently 	
 if|if
 condition|(
 operator|!
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 name|fddi_hdr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|fddip
 argument_list|,
 name|length
@@ -1339,10 +1662,13 @@ condition|(
 name|extracted_ethertype
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(LLC %s) "
-argument_list|,
+operator|,
 name|etherproto_string
 argument_list|(
 name|htons
@@ -1350,15 +1676,18 @@ argument_list|(
 name|extracted_ethertype
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
 operator|!
-name|suppress_default_print
+name|ndo
+operator|->
+name|ndo_suppress_default_print
 condition|)
-name|default_print
+name|ND_DEFAULTPRINT
 argument_list|(
 name|p
 argument_list|,
@@ -1382,6 +1711,8 @@ name|FDDIFC_SMT
 condition|)
 name|fddi_smt_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|caplen
@@ -1393,10 +1724,14 @@ comment|/* Some kinds of FDDI packet we cannot handle intelligently */
 if|if
 condition|(
 operator|!
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 name|fddi_hdr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|fddip
 argument_list|,
 name|length
@@ -1419,9 +1754,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|suppress_default_print
+name|ndo
+operator|->
+name|ndo_suppress_default_print
 condition|)
-name|default_print
+name|ND_DEFAULTPRINT
 argument_list|(
 name|p
 argument_list|,
@@ -1440,6 +1777,10 @@ begin_function
 name|u_int
 name|fddi_if_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -1455,6 +1796,8 @@ parameter_list|)
 block|{
 name|fddi_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h

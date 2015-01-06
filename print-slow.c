@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1998-2006 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * support for the IEEE "slow protocols" LACP, MARKER as per 802.3ad  *                                       OAM as per 802.3ah  *  * Original code by Hannes Gredler (hannes@juniper.net)  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-slow.c,v 1.8 2006-10-12 05:44:33 hannes Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -47,24 +30,6 @@ begin_include
 include|#
 directive|include
 file|<tcpdump-stdinc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -101,10 +66,10 @@ begin_struct
 struct|struct
 name|slow_common_header_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|proto_subtype
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|version
 decl_stmt|;
 block|}
@@ -342,40 +307,40 @@ begin_struct
 struct|struct
 name|slow_oam_info_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|info_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|info_length
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|oam_version
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|revision
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|state
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|oam_config
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|oam_pdu_config
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|oui
 index|[
 literal|3
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|vendor_private
 index|[
 literal|4
@@ -700,43 +665,43 @@ begin_struct
 struct|struct
 name|slow_oam_link_event_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|event_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|event_length
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|time_stamp
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|window
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|threshold
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|errors
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|errors_running_total
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|event_running_total
 index|[
 literal|4
@@ -750,10 +715,10 @@ begin_struct
 struct|struct
 name|slow_oam_variablerequest_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|branch
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|leaf
 index|[
 literal|2
@@ -767,16 +732,16 @@ begin_struct
 struct|struct
 name|slow_oam_variableresponse_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|branch
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|leaf
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|length
 decl_stmt|;
 block|}
@@ -787,7 +752,7 @@ begin_struct
 struct|struct
 name|slow_oam_loopbackctrl_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|command
 decl_stmt|;
 block|}
@@ -828,10 +793,10 @@ begin_struct
 struct|struct
 name|tlv_header_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|length
 decl_stmt|;
 block|}
@@ -974,40 +939,40 @@ begin_struct
 struct|struct
 name|lacp_tlv_actor_partner_info_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|sys_pri
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|sys
 index|[
 name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|key
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|port_pri
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|port
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|state
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|pad
 index|[
 literal|3
@@ -1087,13 +1052,13 @@ begin_struct
 struct|struct
 name|lacp_tlv_collector_info_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|max_delay
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|pad
 index|[
 literal|12
@@ -1107,25 +1072,25 @@ begin_struct
 struct|struct
 name|marker_tlv_marker_info_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|req_port
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|req_sys
 index|[
 name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|req_trans_id
 index|[
 literal|4
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|pad
 index|[
 literal|2
@@ -1139,7 +1104,7 @@ begin_struct
 struct|struct
 name|lacp_marker_tlv_terminator_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|pad
 index|[
 literal|50
@@ -1150,9 +1115,13 @@ struct|;
 end_struct
 
 begin_function_decl
+specifier|static
 name|void
 name|slow_marker_lacp_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -1165,9 +1134,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|slow_oam_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -1192,6 +1165,10 @@ begin_function
 name|void
 name|slow_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -1216,7 +1193,7 @@ operator|*
 operator|)
 name|pptr
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|slow_com_header
@@ -1242,13 +1219,17 @@ operator|!=
 name|LACP_VERSION
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"LACP version %u packet not supported"
-argument_list|,
+operator|,
 name|slow_com_header
 operator|->
 name|version
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1270,13 +1251,17 @@ operator|!=
 name|MARKER_VERSION
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"MARKER version %u packet not supported"
-argument_list|,
+operator|,
 name|slow_com_header
 operator|->
 name|version
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1309,10 +1294,13 @@ condition|(
 name|print_version
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%sv%u, length %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|slow_proto_values
@@ -1323,22 +1311,26 @@ name|slow_com_header
 operator|->
 name|proto_subtype
 argument_list|)
-argument_list|,
+operator|,
 name|slow_com_header
 operator|->
 name|version
-argument_list|,
+operator|,
 name|len
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* some slow protos don't have a version number in the header */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s, length %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|slow_proto_values
@@ -1349,8 +1341,9 @@ name|slow_com_header
 operator|->
 name|proto_subtype
 argument_list|)
-argument_list|,
+operator|,
 name|len
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1365,6 +1358,8 @@ condition|)
 block|{
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|,
 literal|"\n\t"
@@ -1377,7 +1372,9 @@ block|}
 if|if
 condition|(
 operator|!
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 return|return;
 switch|switch
@@ -1396,6 +1393,8 @@ case|:
 comment|/* skip proto_subtype */
 name|slow_oam_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 operator|+
 literal|1
@@ -1434,6 +1433,8 @@ argument_list|)
 expr_stmt|;
 name|slow_marker_lacp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|,
 name|len
@@ -1444,18 +1445,27 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t packet exceeded snapshot"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|slow_marker_lacp_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -1520,7 +1530,7 @@ literal|0
 condition|)
 block|{
 comment|/* did we capture enough for fully decoding the tlv header ? */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -1548,10 +1558,13 @@ name|tlv_header
 operator|->
 name|length
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t%s TLV (0x%02x), length %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|slow_tlv_values
@@ -1570,12 +1583,13 @@ name|tlv_header
 operator|->
 name|type
 argument_list|)
-argument_list|,
+operator|,
 name|tlv_header
 operator|->
 name|type
-argument_list|,
+operator|,
 name|tlv_len
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1607,13 +1621,19 @@ operator|!=
 name|MARKER_TLV_TERMINATOR
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t-----trailing data-----"
+operator|)
 argument_list|)
 expr_stmt|;
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 sizeof|sizeof
@@ -1650,7 +1670,7 @@ name|tlv_header_t
 argument_list|)
 expr_stmt|;
 comment|/* did we capture enough for fully decoding the tlv ? */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -1708,21 +1728,26 @@ operator|*
 operator|)
 name|tlv_tptr
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  System %s, System Priority %u, Key %u"
 expr|\
 literal|", Port %u, Port Priority %u\n\t  State Flags [%s]"
-argument_list|,
+operator|,
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tlv_ptr
 operator|.
 name|lacp_tlv_actor_partner_info
 operator|->
 name|sys
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tlv_ptr
@@ -1731,7 +1756,7 @@ name|lacp_tlv_actor_partner_info
 operator|->
 name|sys_pri
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tlv_ptr
@@ -1740,7 +1765,7 @@ name|lacp_tlv_actor_partner_info
 operator|->
 name|key
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tlv_ptr
@@ -1749,7 +1774,7 @@ name|lacp_tlv_actor_partner_info
 operator|->
 name|port
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tlv_ptr
@@ -1758,7 +1783,7 @@ name|lacp_tlv_actor_partner_info
 operator|->
 name|port_pri
 argument_list|)
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|lacp_tlv_actor_partner_info_state_values
@@ -1771,6 +1796,7 @@ name|lacp_tlv_actor_partner_info
 operator|->
 name|state
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1797,10 +1823,13 @@ operator|*
 operator|)
 name|tlv_tptr
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Max Delay %u"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tlv_ptr
@@ -1809,6 +1838,7 @@ name|lacp_tlv_collector_info
 operator|->
 name|max_delay
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1835,19 +1865,24 @@ operator|*
 operator|)
 name|tlv_tptr
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Request System %s, Request Port %u, Request Transaction ID 0x%08x"
-argument_list|,
+operator|,
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tlv_ptr
 operator|.
 name|marker_tlv_marker_info
 operator|->
 name|req_sys
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tlv_ptr
@@ -1856,7 +1891,7 @@ name|marker_tlv_marker_info
 operator|->
 name|req_port
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tlv_ptr
@@ -1865,6 +1900,7 @@ name|marker_tlv_marker_info
 operator|->
 name|req_trans_id
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1930,19 +1966,25 @@ expr_stmt|;
 comment|/* tell the user that we modified the length field  */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" (=%u)"
-argument_list|,
+operator|,
 name|tlv_len
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* we have messed around with the length field - now we need to check                  * again if there are enough bytes on the wire for the hexdump */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tlv_ptr
 operator|.
@@ -1968,12 +2010,16 @@ break|break;
 default|default:
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tlv_tptr
 argument_list|,
 literal|"\n\t  "
@@ -1986,13 +2032,17 @@ block|}
 comment|/* do we want to see an additional hexdump ? */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
 block|{
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 sizeof|sizeof
@@ -2025,18 +2075,27 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t packet exceeded snapshot"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|slow_oam_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -2054,13 +2113,13 @@ decl_stmt|;
 struct|struct
 name|slow_oam_common_header_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|flags
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|code
 decl_stmt|;
 block|}
@@ -2068,10 +2127,10 @@ struct|;
 struct|struct
 name|slow_oam_tlv_header_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|length
 decl_stmt|;
 block|}
@@ -2155,10 +2214,13 @@ expr|struct
 name|slow_oam_common_header_t
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tCode %s OAM PDU, Flags [%s]"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|slow_oam_code_values
@@ -2171,7 +2233,7 @@ name|slow_oam_common_header
 operator|->
 name|code
 argument_list|)
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|slow_oam_flag_values
@@ -2188,6 +2250,7 @@ operator|->
 name|flags
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2221,10 +2284,13 @@ operator|*
 operator|)
 name|tptr
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  %s Information Type (%u), length %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|slow_oam_info_type_values
@@ -2237,18 +2303,19 @@ name|slow_oam_tlv_header
 operator|->
 name|type
 argument_list|)
-argument_list|,
+operator|,
 name|ptr
 operator|.
 name|slow_oam_tlv_header
 operator|->
 name|type
-argument_list|,
+operator|,
 name|ptr
 operator|.
 name|slow_oam_tlv_header
 operator|->
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 name|hexdump
@@ -2278,9 +2345,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    ERROR: illegal length - should be 0"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2319,10 +2390,13 @@ name|slow_oam_info_t
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    ERROR: illegal length - should be %lu"
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -2332,20 +2406,24 @@ argument_list|(
 expr|struct
 name|slow_oam_info_t
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    OAM-Version %u, Revision %u"
-argument_list|,
+operator|,
 name|tlv
 operator|.
 name|slow_oam_info
 operator|->
 name|oam_version
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -2355,12 +2433,16 @@ name|slow_oam_info
 operator|->
 name|revision
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    State-Parser-Action %s, State-MUX-Action %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|slow_oam_info_type_state_parser_values
@@ -2375,7 +2457,7 @@ name|state
 operator|&
 name|OAM_INFO_TYPE_PARSER_MASK
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|slow_oam_info_type_state_mux_values
@@ -2390,12 +2472,16 @@ name|state
 operator|&
 name|OAM_INFO_TYPE_MUX_MASK
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    OAM-Config Flags [%s], OAM-PDU-Config max-PDU size %u"
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|slow_oam_info_type_oam_config_values
@@ -2408,7 +2494,7 @@ name|slow_oam_info
 operator|->
 name|oam_config
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -2420,12 +2506,16 @@ name|oam_pdu_config
 argument_list|)
 operator|&
 name|OAM_INFO_TYPE_PDU_SIZE_MASK
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    OUI %s (0x%06x), Vendor-Private 0x%08x"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|oui_values
@@ -2442,7 +2532,7 @@ operator|->
 name|oui
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_24BITS
 argument_list|(
 operator|&
@@ -2452,7 +2542,7 @@ name|slow_oam_info
 operator|->
 name|oui
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -2462,6 +2552,7 @@ name|slow_oam_info
 operator|->
 name|vendor_private
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2496,7 +2587,9 @@ block|}
 comment|/* do we also want to see a hex dump ? */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 operator|||
@@ -2507,6 +2600,8 @@ condition|)
 block|{
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t  "
@@ -2559,10 +2654,13 @@ operator|*
 operator|)
 name|tptr
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  %s Link Event Type (%u), length %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|slow_oam_link_event_values
@@ -2575,18 +2673,19 @@ name|slow_oam_tlv_header
 operator|->
 name|type
 argument_list|)
-argument_list|,
+operator|,
 name|ptr
 operator|.
 name|slow_oam_tlv_header
 operator|->
 name|type
-argument_list|,
+operator|,
 name|ptr
 operator|.
 name|slow_oam_tlv_header
 operator|->
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 name|hexdump
@@ -2616,9 +2715,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    ERROR: illegal length - should be 0"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2663,10 +2766,13 @@ name|slow_oam_link_event_t
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    ERROR: illegal length - should be %lu"
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -2676,12 +2782,16 @@ argument_list|(
 expr|struct
 name|slow_oam_link_event_t
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Timestamp %u ms, Errored Window %"
 name|PRIu64
 literal|"\n\t    Errored Threshold %"
@@ -2691,7 +2801,7 @@ name|PRIu64
 literal|"\n\t    Error Running Total %"
 name|PRIu64
 literal|"\n\t    Event Running Total %u"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -2703,7 +2813,7 @@ name|time_stamp
 argument_list|)
 operator|*
 literal|100
-argument_list|,
+operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|&
@@ -2713,7 +2823,7 @@ name|slow_oam_link_event
 operator|->
 name|window
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|&
@@ -2723,7 +2833,7 @@ name|slow_oam_link_event
 operator|->
 name|threshold
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|&
@@ -2733,7 +2843,7 @@ name|slow_oam_link_event
 operator|->
 name|errors
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|&
@@ -2743,7 +2853,7 @@ name|slow_oam_link_event
 operator|->
 name|errors_running_total
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -2753,6 +2863,7 @@ name|slow_oam_link_event
 operator|->
 name|event_running_total
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2787,7 +2898,9 @@ block|}
 comment|/* do we also want to see a hex dump ? */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 operator|||
@@ -2798,6 +2911,8 @@ condition|)
 block|{
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t  "
@@ -2843,10 +2958,13 @@ operator|*
 operator|)
 name|tptr
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Command %s (%u)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|slow_oam_loopbackctrl_cmd_values
@@ -2859,12 +2977,13 @@ name|slow_oam_loopbackctrl
 operator|->
 name|command
 argument_list|)
-argument_list|,
+operator|,
 name|tlv
 operator|.
 name|slow_oam_loopbackctrl
 operator|->
 name|command
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -2887,13 +3006,17 @@ case|:
 default|default:
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
 block|{
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t  "

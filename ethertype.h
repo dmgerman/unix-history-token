@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/tcpdump/ethertype.h,v 1.30 2008-02-06 10:47:53 guy Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1993, 1994, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_comment
@@ -812,6 +812,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|ETHERTYPE_AOE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_AOE
+value|0x88a2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ETHERTYPE_LOOPBACK
 end_ifndef
 
@@ -896,6 +914,28 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|ETHERTYPE_IEEE1905_1
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_IEEE1905_1
+value|0x893a
+end_define
+
+begin_comment
+comment|/* IEEE 1905.1 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ETHERTYPE_ISO
 end_ifndef
 
@@ -908,6 +948,72 @@ end_define
 
 begin_comment
 comment|/* nonstandard - used in Cisco HDLC encapsulation */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHERTYPE_CALM_FAST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_CALM_FAST
+value|0x1111
+end_define
+
+begin_comment
+comment|/* ISO CALM FAST */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHERTYPE_GEONET_OLD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_GEONET_OLD
+value|0x0707
+end_define
+
+begin_comment
+comment|/* ETSI GeoNetworking (before Jan 2013) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHERTYPE_GEONET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_GEONET
+value|0x8947
+end_define
+
+begin_comment
+comment|/* ETSI GeoNetworking (Official IEEE registration from Jan 2013) */
 end_comment
 
 begin_endif
