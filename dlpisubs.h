@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*  * @(#) $Header: /tcpdump/master/libpcap/dlpisubs.h,v 1.2 2008-04-04 19:37:45 guy Exp $  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -27,7 +23,35 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/*  * Functions used by dlpisubs.c.  */
+comment|/*  * Private data for capturing on DLPI devices.  */
+struct|struct
+name|pcap_dlpi
+block|{
+ifdef|#
+directive|ifdef
+name|HAVE_LIBDLPI
+name|dlpi_handle_t
+name|dlpi_hd
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_LIBDLPI */
+ifdef|#
+directive|ifdef
+name|DL_HP_RAWDLS
+name|int
+name|send_fd
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* DL_HP_RAWDLS */
+name|struct
+name|pcap_stat
+name|stat
+decl_stmt|;
+block|}
+struct|;
+comment|/*  * Functions defined by dlpisubs.c.  */
 name|int
 name|pcap_stats_dlpi
 parameter_list|(
@@ -75,8 +99,6 @@ name|pcap_conf_bufmod
 parameter_list|(
 name|pcap_t
 modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 parameter_list|)

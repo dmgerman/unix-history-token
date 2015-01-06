@@ -3,29 +3,6 @@ begin_comment
 comment|/*  * Copyright (c) 2006 Paolo Abeni (Italy)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  * notice, this list of conditions and the following disclaimer in the  * documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   * products derived from this software without specific prior written   * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Bluetooth sniffing API implementation for Linux platform  * By Paolo Abeni<paolo.abeni@email.it>  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-bt-linux.c,v 1.15 2008-07-01 07:05:54 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -230,6 +207,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Private data for capturing on Linux Bluetooth devices.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pcap_bt
+block|{
+name|int
+name|dev_id
+decl_stmt|;
+comment|/* device ID of device we're bound to */
+block|}
+struct|;
+end_struct
+
 begin_function
 name|int
 name|bt_findalldevs
@@ -244,13 +237,6 @@ modifier|*
 name|err_str
 parameter_list|)
 block|{
-name|pcap_if_t
-modifier|*
-name|found_dev
-init|=
-operator|*
-name|alldevsp
-decl_stmt|;
 name|struct
 name|hci_dev_list_req
 modifier|*
@@ -487,8 +473,7 @@ if|if
 condition|(
 name|pcap_add_if
 argument_list|(
-operator|&
-name|found_dev
+name|alldevsp
 argument_list|,
 name|dev_name
 argument_list|,
@@ -685,6 +670,12 @@ argument_list|(
 name|device
 argument_list|,
 name|ebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcap_bt
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -722,6 +713,15 @@ modifier|*
 name|handle
 parameter_list|)
 block|{
+name|struct
+name|pcap_bt
+modifier|*
+name|handlep
+init|=
+name|handle
+operator|->
+name|priv
+decl_stmt|;
 name|struct
 name|sockaddr_hci
 name|addr
@@ -861,11 +861,9 @@ name|stats_op
 operator|=
 name|bt_stats_linux
 expr_stmt|;
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
-name|ifindex
+name|dev_id
 operator|=
 name|dev_id
 expr_stmt|;
@@ -1158,11 +1156,9 @@ name|addr
 operator|.
 name|hci_dev
 operator|=
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
-name|ifindex
+name|dev_id
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1210,11 +1206,9 @@ name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"Can't attach to device %d: %s"
 argument_list|,
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
-name|ifindex
+name|dev_id
 argument_list|,
 name|strerror
 argument_list|(
@@ -1808,6 +1802,15 @@ modifier|*
 name|stats
 parameter_list|)
 block|{
+name|struct
+name|pcap_bt
+modifier|*
+name|handlep
+init|=
+name|handle
+operator|->
+name|priv
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -1829,11 +1832,9 @@ name|dev_info
 operator|.
 name|dev_id
 operator|=
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
-name|ifindex
+name|dev_id
 expr_stmt|;
 comment|/* ignore eintr */
 do|do

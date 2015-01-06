@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/libpcap/Win32/Include/Gnuc.h,v 1.1 2002-08-01 08:33:05 risso Exp $ (LBL) */
-end_comment
-
-begin_comment
 comment|/* Define __P() macro, if necessary */
 end_comment
 
