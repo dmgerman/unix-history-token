@@ -2692,7 +2692,7 @@ name|mp
 operator|->
 name|m_len
 operator|=
-name|NFSMSIZ
+name|M_SIZE
 argument_list|(
 name|mp
 argument_list|)
