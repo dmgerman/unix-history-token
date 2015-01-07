@@ -278,6 +278,9 @@ name|uint32_t
 name|tag
 decl_stmt|;
 comment|/* includes color, page pod addr, and DDP page size */
+name|u_int
+name|ppod_addr
+decl_stmt|;
 name|int
 name|nppods
 decl_stmt|;
@@ -676,6 +679,9 @@ name|int
 name|lctx_count
 decl_stmt|;
 comment|/* # of lctx in the hash table */
+name|u_int
+name|ppod_start
+decl_stmt|;
 name|vmem_t
 modifier|*
 name|ppod_arena
