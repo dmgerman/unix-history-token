@@ -155,10 +155,15 @@ typedef|typedef
 name|u64
 name|Type
 typedef|;
+comment|// On 32-bit platforms u64 is not necessary aligned on 8 bytes.
 specifier|volatile
+name|ALIGNED
+argument_list|(
+literal|8
+argument_list|)
 name|Type
 name|val_dont_use
-decl_stmt|;
+expr_stmt|;
 block|}
 struct|;
 struct|struct

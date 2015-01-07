@@ -163,6 +163,18 @@ name|uptr
 name|n
 parameter_list|)
 function_decl|;
+comment|// Set [s, s + n) to 0. Both s and n should be 16-aligned.
+name|void
+name|internal_bzero_aligned16
+parameter_list|(
+name|void
+modifier|*
+name|s
+parameter_list|,
+name|uptr
+name|n
+parameter_list|)
+function_decl|;
 comment|// Should not be used in performance-critical places.
 name|void
 modifier|*
@@ -526,6 +538,16 @@ name|uptr
 name|count
 parameter_list|)
 function_decl|;
+name|uptr
+name|internal_ftruncate
+parameter_list|(
+name|fd_t
+name|fd
+parameter_list|,
+name|uptr
+name|size
+parameter_list|)
+function_decl|;
 comment|// OS
 name|uptr
 name|internal_filesize
@@ -607,6 +629,20 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
+name|uptr
+name|internal_rename
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|oldpath
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|newpath
+parameter_list|)
+function_decl|;
 name|void
 name|NORETURN
 name|internal__exit
@@ -668,6 +704,10 @@ name|uptr
 name|internal_getppid
 parameter_list|()
 function_decl|;
+name|int
+name|internal_fork
+parameter_list|()
+function_decl|;
 comment|// Threading
 name|uptr
 name|internal_sched_yield
@@ -685,6 +725,22 @@ modifier|*
 name|rverrno
 init|=
 literal|0
+parameter_list|)
+function_decl|;
+name|int
+name|internal_sigaction
+parameter_list|(
+name|int
+name|signum
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|act
+parameter_list|,
+name|void
+modifier|*
+name|oldact
 parameter_list|)
 function_decl|;
 block|}

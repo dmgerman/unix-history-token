@@ -173,22 +173,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// We can use .preinit_array section on Linux to call sanitizer initialization
+end_comment
+
+begin_comment
+comment|// functions very early in the process startup (unless PIC macro is defined).
+end_comment
+
+begin_comment
+comment|// FIXME: do we have anything like this on Mac?
+end_comment
+
 begin_if
 if|#
 directive|if
-name|__LP64__
-operator|||
+name|SANITIZER_LINUX
+operator|&&
+operator|!
+name|SANITIZER_ANDROID
+operator|&&
+operator|!
 name|defined
 argument_list|(
-name|_WIN64
+name|PIC
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|SANITIZER_WORDSIZE
-value|64
+name|SANITIZER_CAN_USE_PREINIT_ARRAY
+value|1
 end_define
 
 begin_else
@@ -199,8 +215,8 @@ end_else
 begin_define
 define|#
 directive|define
-name|SANITIZER_WORDSIZE
-value|32
+name|SANITIZER_CAN_USE_PREINIT_ARRAY
+value|0
 end_define
 
 begin_endif
@@ -297,7 +313,7 @@ name|defined
 argument_list|(
 name|__x86_64__
 argument_list|)
-comment|// Since x32 uses ILP32 data model in 64-bit hardware mode,  we must use
+comment|// Since x32 uses ILP32 data model in 64-bit hardware mode, we must use
 comment|// 64-bit pointer to unwind stack frame.
 typedef|typedef
 name|unsigned
@@ -441,17 +457,33 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
-comment|// Notify the tools that the sandbox is going to be turned on. The reserved
-comment|// parameter will be used in the future to hold a structure with functions
-comment|// that the tools may call to bypass the sandbox.
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|coverage_sandboxed
+decl_stmt|;
+name|__sanitizer
+operator|::
+name|sptr
+name|coverage_fd
+expr_stmt|;
+name|unsigned
+name|int
+name|coverage_max_block_size
+decl_stmt|;
+block|}
+name|__sanitizer_sandbox_arguments
+typedef|;
+comment|// Notify the tools that the sandbox is going to be turned on.
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|SANITIZER_WEAK_ATTRIBUTE
 name|void
 name|__sanitizer_sandbox_on_notify
 parameter_list|(
-name|void
+name|__sanitizer_sandbox_arguments
 modifier|*
-name|reserved
+name|args
 parameter_list|)
 function_decl|;
 comment|// This function is called by the tool when it has just finished reporting
@@ -475,32 +507,63 @@ parameter_list|()
 function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|void
-name|__sanitizer_cov
-parameter_list|(
-name|void
-modifier|*
-name|pc
-parameter_list|)
+name|__sanitizer_cov_init
+parameter_list|()
 function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
+name|__sanitizer_cov
+argument_list|(
+name|__sanitizer
+operator|::
+name|u8
+operator|*
+name|guard
+argument_list|)
+decl_stmt|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|void
 name|__sanitizer_annotate_contiguous_container
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|beg
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|end
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|old_mid
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|new_mid
+parameter_list|)
+function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|int
+name|__sanitizer_verify_contiguous_container
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|beg
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|mid
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|end
 parameter_list|)
 function_decl|;
 block|}
@@ -658,18 +721,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|UNUSED
-end_define
-
-begin_define
-define|#
-directive|define
-name|USED
-end_define
-
-begin_define
-define|#
-directive|define
 name|PREFETCH
 parameter_list|(
 name|x
@@ -784,20 +835,6 @@ parameter_list|)
 value|__builtin_expect(!!(x), 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|UNUSED
-value|__attribute__((unused))
-end_define
-
-begin_define
-define|#
-directive|define
-name|USED
-value|__attribute__((used))
-end_define
-
 begin_if
 if|#
 directive|if
@@ -854,6 +891,57 @@ end_endif
 begin_comment
 comment|// _MSC_VER
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|UNUSED
+value|__attribute__((unused))
+end_define
+
+begin_define
+define|#
+directive|define
+name|USED
+value|__attribute__((used))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UNUSED
+end_define
+
+begin_define
+define|#
+directive|define
+name|USED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// Unaligned versions of basic types.
@@ -1064,7 +1152,7 @@ name|expr
 parameter_list|,
 name|msg
 parameter_list|)
-value|do { \   if (!(expr)) { \     RawWrite(msg); \     Die(); \   } \ } while (0)
+value|do { \   if (UNLIKELY(!(expr))) { \     RawWrite(msg); \     Die(); \   } \ } while (0)
 end_define
 
 begin_define
@@ -1089,7 +1177,7 @@ parameter_list|,
 name|c2
 parameter_list|)
 define|\
-value|do { \     __sanitizer::u64 v1 = (u64)(c1); \     __sanitizer::u64 v2 = (u64)(c2); \     if (!(v1 op v2)) \       __sanitizer::CheckFailed(__FILE__, __LINE__, \         "(" #c1 ") " #op " (" #c2 ")", v1, v2); \   } while (false)
+value|do { \     __sanitizer::u64 v1 = (u64)(c1); \     __sanitizer::u64 v2 = (u64)(c2); \     if (UNLIKELY(!(v1 op v2))) \       __sanitizer::CheckFailed(__FILE__, __LINE__, \         "(" #c1 ") " #op " (" #c2 ")", v1, v2); \   } while (false)
 end_define
 
 begin_comment

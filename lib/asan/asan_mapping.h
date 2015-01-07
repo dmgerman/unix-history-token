@@ -178,7 +178,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Default Linux/i386 mapping:
+comment|// Default Linux/i386 mapping on x86_64 machine:
 end_comment
 
 begin_comment
@@ -206,27 +206,119 @@ comment|//
 end_comment
 
 begin_comment
+comment|// Default Linux/i386 mapping on i386 machine
+end_comment
+
+begin_comment
+comment|// (addresses starting with 0xc0000000 are reserved
+end_comment
+
+begin_comment
+comment|// for kernel and thus not sanitized):
+end_comment
+
+begin_comment
+comment|// || `[0x38000000, 0xbfffffff]` || HighMem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x27000000, 0x37ffffff]` || HighShadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x24000000, 0x26ffffff]` || ShadowGap  ||
+end_comment
+
+begin_comment
+comment|// || `[0x20000000, 0x23ffffff]` || LowShadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x00000000, 0x1fffffff]` || LowMem     ||
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// Default Linux/MIPS mapping:
 end_comment
 
 begin_comment
-comment|// || `[0x2aaa8000, 0xffffffff]` || HighMem    ||
+comment|// || `[0x2aaa0000, 0xffffffff]` || HighMem    ||
 end_comment
 
 begin_comment
-comment|// || `[0x0fffd000, 0x2aaa7fff]` || HighShadow ||
+comment|// || `[0x0fff4000, 0x2aa9ffff]` || HighShadow ||
 end_comment
 
 begin_comment
-comment|// || `[0x0bffd000, 0x0fffcfff]` || ShadowGap  ||
+comment|// || `[0x0bff4000, 0x0fff3fff]` || ShadowGap  ||
 end_comment
 
 begin_comment
-comment|// || `[0x0aaa8000, 0x0bffcfff]` || LowShadow  ||
+comment|// || `[0x0aaa0000, 0x0bff3fff]` || LowShadow  ||
 end_comment
 
 begin_comment
-comment|// || `[0x00000000, 0x0aaa7fff]` || LowMem     ||
+comment|// || `[0x00000000, 0x0aa9ffff]` || LowMem     ||
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Shadow mapping on FreeBSD/x86-64 with SHADOW_OFFSET == 0x400000000000:
+end_comment
+
+begin_comment
+comment|// || `[0x500000000000, 0x7fffffffffff]` || HighMem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x4a0000000000, 0x4fffffffffff]` || HighShadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x480000000000, 0x49ffffffffff]` || ShadowGap  ||
+end_comment
+
+begin_comment
+comment|// || `[0x400000000000, 0x47ffffffffff]` || LowShadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x000000000000, 0x3fffffffffff]` || LowMem     ||
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Shadow mapping on FreeBSD/i386 with SHADOW_OFFSET == 0x40000000:
+end_comment
+
+begin_comment
+comment|// || `[0x60000000, 0xffffffff]` || HighMem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x4c000000, 0x5fffffff]` || HighShadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x48000000, 0x4bffffff]` || ShadowGap  ||
+end_comment
+
+begin_comment
+comment|// || `[0x40000000, 0x47ffffff]` || LowShadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x00000000, 0x3fffffff]` || LowMem     ||
 end_comment
 
 begin_decl_stmt
@@ -250,6 +342,26 @@ operator|<<
 literal|29
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// 0x20000000
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u64
+name|kIosShadowOffset32
+init|=
+literal|1ULL
+operator|<<
+literal|30
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// 0x40000000
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -281,6 +393,40 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|u64
+name|kAArch64_ShadowOffset64
+init|=
+literal|1ULL
+operator|<<
+literal|36
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u64
+name|kMIPS32_ShadowOffset32
+init|=
+literal|0x0aaa0000
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u64
+name|kMIPS64_ShadowOffset64
+init|=
+literal|1ULL
+operator|<<
+literal|36
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u64
 name|kPPC64_ShadowOffset64
 init|=
 literal|1ULL
@@ -293,54 +439,33 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|u64
-name|kMIPS32_ShadowOffset32
+name|kFreeBSD_ShadowOffset32
 init|=
-literal|0x0aaa8000
+literal|1ULL
+operator|<<
+literal|30
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|ASAN_FLEXIBLE_MAPPING_AND_OFFSET
-operator|==
-literal|1
-end_if
+begin_comment
+comment|// 0x40000000
+end_comment
 
 begin_decl_stmt
-specifier|extern
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|uptr
-name|__asan_mapping_scale
+specifier|static
+specifier|const
+name|u64
+name|kFreeBSD_ShadowOffset64
+init|=
+literal|1ULL
+operator|<<
+literal|46
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|uptr
-name|__asan_mapping_offset
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|SHADOW_SCALE
-value|(__asan_mapping_scale)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SHADOW_OFFSET
-value|(__asan_mapping_offset)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|// 0x400000000000
+end_comment
 
 begin_define
 define|#
@@ -391,6 +516,37 @@ name|SHADOW_OFFSET
 value|kMIPS32_ShadowOffset32
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|SANITIZER_FREEBSD
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SHADOW_OFFSET
+value|kFreeBSD_ShadowOffset32
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|SANITIZER_IOS
+end_if
+
+begin_define
+define|#
+directive|define
+name|SHADOW_OFFSET
+value|kIosShadowOffset32
+end_define
+
 begin_else
 else|#
 directive|else
@@ -408,6 +564,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -418,7 +579,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__powerpc64__
+name|__aarch64__
 argument_list|)
 end_if
 
@@ -426,7 +587,36 @@ begin_define
 define|#
 directive|define
 name|SHADOW_OFFSET
+value|kAArch64_ShadowOffset64
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SHADOW_OFFSET
 value|kPPC64_ShadowOffset64
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|SANITIZER_FREEBSD
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SHADOW_OFFSET
+value|kFreeBSD_ShadowOffset64
 end_define
 
 begin_elif
@@ -440,6 +630,22 @@ define|#
 directive|define
 name|SHADOW_OFFSET
 value|kDefaultShadowOffset64
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__mips64
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SHADOW_OFFSET
+value|kMIPS64_ShadowOffset64
 end_define
 
 begin_else
@@ -468,15 +674,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// ASAN_FLEXIBLE_MAPPING_AND_OFFSET
-end_comment
 
 begin_define
 define|#

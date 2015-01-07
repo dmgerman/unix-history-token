@@ -132,6 +132,10 @@ name|u64
 name|unique_id
 decl_stmt|;
 comment|// Unique thread ID.
+name|u32
+name|reuse_count
+decl_stmt|;
+comment|// Number of times this tid was reused.
 name|uptr
 name|os_id
 decl_stmt|;
@@ -152,9 +156,6 @@ name|status
 decl_stmt|;
 name|bool
 name|detached
-decl_stmt|;
-name|int
-name|reuse_count
 decl_stmt|;
 name|u32
 name|parent_tid
@@ -269,6 +270,15 @@ name|void
 name|OnReset
 parameter_list|()
 block|{}
+name|virtual
+name|void
+name|OnDetached
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{}
 block|}
 empty_stmt|;
 typedef|typedef
@@ -300,6 +310,9 @@ argument_list|,
 argument|u32 max_threads
 argument_list|,
 argument|u32 thread_quarantine_size
+argument_list|,
+argument|u32 max_reuse =
+literal|0
 argument_list|)
 empty_stmt|;
 name|void
@@ -507,6 +520,10 @@ name|DetachThread
 parameter_list|(
 name|u32
 name|tid
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 name|void
@@ -554,6 +571,10 @@ decl_stmt|;
 specifier|const
 name|u32
 name|thread_quarantine_size_
+decl_stmt|;
+specifier|const
+name|u32
+name|max_reuse_
 decl_stmt|;
 name|BlockingMutex
 name|mtx_

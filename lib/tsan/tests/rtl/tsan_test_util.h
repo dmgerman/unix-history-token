@@ -184,7 +184,7 @@ name|void
 name|StaticInit
 parameter_list|()
 function_decl|;
-comment|// Emulates static initalization (tsan invisible).
+comment|// Emulates static initialization (tsan invisible).
 name|void
 name|Destroy
 parameter_list|()

@@ -124,6 +124,26 @@ name|userdata
 decl_stmt|;
 block|}
 struct|;
+comment|/// Signature of the callback argument to dfsan_set_write_callback().
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|dfsan_write_callback_t
+function_decl|)
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|count
+parameter_list|)
+function_decl|;
 comment|/// Computes the union of \c l1 and \c l2, possibly creating a union label in
 comment|/// the process.
 name|dfsan_label
@@ -241,6 +261,34 @@ specifier|const
 name|char
 modifier|*
 name|desc
+parameter_list|)
+function_decl|;
+comment|/// Returns the number of labels allocated.
+name|size_t
+name|dfsan_get_label_count
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/// Sets a callback to be invoked on calls to write().  The callback is invoked
+comment|/// before the write is done.  The write is not guaranteed to succeed when the
+comment|/// callback executes.  Pass in NULL to remove any callback.
+name|void
+name|dfsan_set_write_callback
+parameter_list|(
+name|dfsan_write_callback_t
+name|labeled_write_callback
+parameter_list|)
+function_decl|;
+comment|/// Writes the labels currently used by the program to the given file
+comment|/// descriptor. The lines of the output have the following format:
+comment|///
+comment|///<label><parent label 1><parent label 2><label description if any>
+name|void
+name|dfsan_dump_labels
+parameter_list|(
+name|int
+name|fd
 parameter_list|)
 function_decl|;
 ifdef|#

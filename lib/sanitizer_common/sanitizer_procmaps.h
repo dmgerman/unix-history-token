@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"sanitizer_common.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sanitizer_internal_defs.h"
 end_include
 
@@ -81,58 +87,8 @@ name|__sanitizer
 block|{
 if|#
 directive|if
-name|SANITIZER_WINDOWS
-name|class
-name|MemoryMappingLayout
-block|{
-name|public
-label|:
-name|explicit
-name|MemoryMappingLayout
-parameter_list|(
-name|bool
-name|cache_enabled
-parameter_list|)
-block|{
-operator|(
-name|void
-operator|)
-name|cache_enabled
-expr_stmt|;
-block|}
-name|bool
-name|GetObjectNameAndOffset
-parameter_list|(
-name|uptr
-name|addr
-parameter_list|,
-name|uptr
-modifier|*
-name|offset
-parameter_list|,
-name|char
-name|filename
-index|[]
-parameter_list|,
-name|uptr
-name|filename_size
-parameter_list|,
-name|uptr
-modifier|*
-name|protection
-parameter_list|)
-block|{
-name|UNIMPLEMENTED
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-empty_stmt|;
-else|#
-directive|else
-comment|// SANITIZER_WINDOWS
-if|#
-directive|if
+name|SANITIZER_FREEBSD
+operator|||
 name|SANITIZER_LINUX
 struct|struct
 name|ProcSelfMapsBuff
@@ -149,9 +105,18 @@ name|len
 decl_stmt|;
 block|}
 struct|;
+comment|// Reads process memory map in an OS-specific way.
+name|void
+name|ReadProcMaps
+parameter_list|(
+name|ProcSelfMapsBuff
+modifier|*
+name|proc_maps
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
-comment|// SANITIZER_LINUX
+comment|// SANITIZER_FREEBSD || SANITIZER_LINUX
 name|class
 name|MemoryMappingLayout
 block|{
@@ -164,6 +129,10 @@ name|bool
 name|cache_enabled
 parameter_list|)
 function_decl|;
+operator|~
+name|MemoryMappingLayout
+argument_list|()
+expr_stmt|;
 name|bool
 name|Next
 parameter_list|(
@@ -195,30 +164,6 @@ name|void
 name|Reset
 parameter_list|()
 function_decl|;
-comment|// Gets the object file name and the offset in that object for a given
-comment|// address 'addr'. Returns true on success.
-name|bool
-name|GetObjectNameAndOffset
-parameter_list|(
-name|uptr
-name|addr
-parameter_list|,
-name|uptr
-modifier|*
-name|offset
-parameter_list|,
-name|char
-name|filename
-index|[]
-parameter_list|,
-name|uptr
-name|filename_size
-parameter_list|,
-name|uptr
-modifier|*
-name|protection
-parameter_list|)
-function_decl|;
 comment|// In some cases, e.g. when running under a sandbox on Linux, ASan is unable
 comment|// to obtain the memory mappings. It should fall back to pre-cached data
 comment|// instead of aborting.
@@ -227,10 +172,21 @@ name|void
 name|CacheMemoryMappings
 parameter_list|()
 function_decl|;
-operator|~
-name|MemoryMappingLayout
-argument_list|()
-expr_stmt|;
+comment|// Stores the list of mapped objects into an array.
+name|uptr
+name|DumpListOfModules
+parameter_list|(
+name|LoadedModule
+modifier|*
+name|modules
+parameter_list|,
+name|uptr
+name|max_modules
+parameter_list|,
+name|string_predicate_t
+name|filter
+parameter_list|)
+function_decl|;
 comment|// Memory protection masks.
 specifier|static
 specifier|const
@@ -266,135 +222,17 @@ name|void
 name|LoadFromCache
 parameter_list|()
 function_decl|;
-comment|// Default implementation of GetObjectNameAndOffset.
-comment|// Quite slow, because it iterates through the whole process map for each
-comment|// lookup.
-name|bool
-name|IterateForObjectNameAndOffset
-parameter_list|(
-name|uptr
-name|addr
-parameter_list|,
-name|uptr
-modifier|*
-name|offset
-parameter_list|,
-name|char
-name|filename
-index|[]
-parameter_list|,
-name|uptr
-name|filename_size
-parameter_list|,
-name|uptr
-modifier|*
-name|protection
-parameter_list|)
-block|{
-name|Reset
-argument_list|()
-expr_stmt|;
-name|uptr
-name|start
-decl_stmt|,
-name|end
-decl_stmt|,
-name|file_offset
-decl_stmt|;
-for|for
-control|(
-name|int
-name|i
-init|=
-literal|0
-init|;
-name|Next
-argument_list|(
-operator|&
-name|start
-argument_list|,
-operator|&
-name|end
-argument_list|,
-operator|&
-name|file_offset
-argument_list|,
-name|filename
-argument_list|,
-name|filename_size
-argument_list|,
-name|protection
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|addr
-operator|>=
-name|start
-operator|&&
-name|addr
-operator|<
-name|end
-condition|)
-block|{
-comment|// Don't subtract 'start' for the first entry:
-comment|// * If a binary is compiled w/o -pie, then the first entry in
-comment|//   process maps is likely the binary itself (all dynamic libs
-comment|//   are mapped higher in address space). For such a binary,
-comment|//   instruction offset in binary coincides with the actual
-comment|//   instruction address in virtual memory (as code section
-comment|//   is mapped to a fixed memory range).
-comment|// * If a binary is compiled with -pie, all the modules are
-comment|//   mapped high at address space (in particular, higher than
-comment|//   shadow memory of the tool), so the module can't be the
-comment|//   first entry.
-operator|*
-name|offset
-operator|=
-operator|(
-name|addr
-operator|-
-operator|(
-name|i
-condition|?
-name|start
-else|:
-literal|0
-operator|)
-operator|)
-operator|+
-name|file_offset
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
-block|}
-if|if
-condition|(
-name|filename_size
-condition|)
-name|filename
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-return|return
-name|false
-return|;
-block|}
+comment|// FIXME: Hide implementation details for different platforms in
+comment|// platform-specific files.
 if|#
 directive|if
+name|SANITIZER_FREEBSD
+operator|||
 name|SANITIZER_LINUX
 name|ProcSelfMapsBuff
 name|proc_self_maps_
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|current_
@@ -516,9 +354,40 @@ modifier|*
 name|end
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
-comment|// SANITIZER_WINDOWS
+name|bool
+name|IsDecimal
+parameter_list|(
+name|char
+name|c
+parameter_list|)
+function_decl|;
+name|uptr
+name|ParseDecimal
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+name|bool
+name|IsHex
+parameter_list|(
+name|char
+name|c
+parameter_list|)
+function_decl|;
+name|uptr
+name|ParseHex
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

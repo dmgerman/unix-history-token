@@ -152,11 +152,35 @@ name|i
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|MutexSet
+operator|&
+name|other
+operator|)
+block|{
+name|internal_memcpy
+argument_list|(
+name|this
+argument_list|,
+operator|&
+name|other
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+block|;   }
 name|private
-label|:
+operator|:
 ifndef|#
 directive|ifndef
-name|TSAN_GO
+name|SANITIZER_GO
 name|uptr
 name|size_
 decl_stmt|;
@@ -175,6 +199,13 @@ name|uptr
 name|i
 parameter_list|)
 function_decl|;
+name|MutexSet
+argument_list|(
+specifier|const
+name|MutexSet
+operator|&
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|// Go does not have mutexes, so do not spend memory and time.
@@ -182,7 +213,7 @@ comment|// (Go sync.Mutex is actually a semaphore -- can be unlocked
 comment|// in different goroutine).
 ifdef|#
 directive|ifdef
-name|TSAN_GO
+name|SANITIZER_GO
 name|MutexSet
 operator|::
 name|MutexSet
@@ -268,7 +299,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// TSAN_REPORT_H
+comment|// TSAN_MUTEXSET_H
 end_comment
 
 end_unit

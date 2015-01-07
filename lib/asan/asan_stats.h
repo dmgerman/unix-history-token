@@ -159,14 +159,14 @@ decl_stmt|;
 name|uptr
 name|malloc_small_slow
 decl_stmt|;
-comment|// Ctor for global AsanStats (accumulated stats and main thread stats).
+comment|// Ctor for global AsanStats (accumulated stats for dead threads).
 name|explicit
 name|AsanStats
 parameter_list|(
 name|LinkerInitialized
 parameter_list|)
 block|{ }
-comment|// Default ctor for thread-local stats.
+comment|// Creates empty stats.
 name|AsanStats
 argument_list|()
 expr_stmt|;

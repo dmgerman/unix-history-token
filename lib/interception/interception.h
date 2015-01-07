@@ -75,6 +75,13 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
 name|__APPLE__
 argument_list|)
 operator|&&
@@ -509,19 +516,6 @@ name|_WIN32
 argument_list|)
 end_elif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_DLL
-argument_list|)
-end_if
-
-begin_comment
-comment|// DLL CRT
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -529,7 +523,7 @@ name|WRAP
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|__asan_wrap_##x
 end_define
 
 begin_define
@@ -539,54 +533,15 @@ name|WRAPPER_NAME
 parameter_list|(
 name|x
 parameter_list|)
-value|#x
+value|"__asan_wrap_"#x
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTERCEPTOR_ATTRIBUTE
+value|__declspec(dllexport)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|// Static CRT
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WRAP
-parameter_list|(
-name|x
-parameter_list|)
-value|wrap_##x
-end_define
-
-begin_define
-define|#
-directive|define
-name|WRAPPER_NAME
-parameter_list|(
-name|x
-parameter_list|)
-value|"wrap_"#x
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTERCEPTOR_ATTRIBUTE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -616,6 +571,69 @@ modifier|...
 parameter_list|)
 define|\
 value|extern "C" __declspec(dllimport) ret_type __stdcall func(__VA_ARGS__);
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|WRAP
+parameter_list|(
+name|x
+parameter_list|)
+value|__interceptor_ ## x
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRAPPER_NAME
+parameter_list|(
+name|x
+parameter_list|)
+value|"__interceptor_" #x
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTERCEPTOR_ATTRIBUTE
+value|__attribute__((visibility("default")))
+end_define
+
+begin_comment
+comment|// FreeBSD's dynamic linker (incompliantly) gives non-weak symbols higher
+end_comment
+
+begin_comment
+comment|// priority than weak ones so weak aliases won't work for indirect calls
+end_comment
+
+begin_comment
+comment|// in position-independent (-fPIC / -fPIE) mode.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECLARE_WRAPPER
+parameter_list|(
+name|ret_type
+parameter_list|,
+name|func
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|extern "C" ret_type func(__VA_ARGS__) \      __attribute__((alias("__interceptor_" #func), visibility("default")));
 end_define
 
 begin_else
@@ -1068,6 +1086,11 @@ name|defined
 argument_list|(
 name|__linux__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 end_if
 
 begin_include
@@ -1083,7 +1106,7 @@ name|INTERCEPT_FUNCTION
 parameter_list|(
 name|func
 parameter_list|)
-value|INTERCEPT_FUNCTION_LINUX(func)
+value|INTERCEPT_FUNCTION_LINUX_OR_FREEBSD(func)
 end_define
 
 begin_define
@@ -1096,7 +1119,7 @@ parameter_list|,
 name|symver
 parameter_list|)
 define|\
-value|INTERCEPT_FUNCTION_VER_LINUX(func, symver)
+value|INTERCEPT_FUNCTION_VER_LINUX_OR_FREEBSD(func, symver)
 end_define
 
 begin_elif

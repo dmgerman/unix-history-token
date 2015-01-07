@@ -102,6 +102,12 @@ name|defined
 argument_list|(
 name|__x86_64__
 argument_list|)
+operator|&&
+operator|(
+name|SANITIZER_WORDSIZE
+operator|==
+literal|64
+operator|)
 end_if
 
 begin_define
@@ -190,12 +196,6 @@ comment|// If nonzero kill the process with this exit code upon finding leaks.
 name|int
 name|exitcode
 decl_stmt|;
-comment|// Suppressions file name.
-specifier|const
-name|char
-modifier|*
-name|suppressions
-decl_stmt|;
 comment|// Flags controlling the root set of reachable memory.
 comment|// Global variables (.data and .bss).
 name|bool
@@ -213,13 +213,17 @@ comment|// TLS and thread-specific storage.
 name|bool
 name|use_tls
 decl_stmt|;
+comment|// Regions added via __lsan_register_root_region().
+name|bool
+name|use_root_regions
+decl_stmt|;
 comment|// Consider unaligned pointers valid.
 name|bool
 name|use_unaligned
 decl_stmt|;
-comment|// User-visible verbosity.
-name|int
-name|verbosity
+comment|// Consider pointers found in poisoned memory to be valid.
+name|bool
+name|use_poisoned
 decl_stmt|;
 comment|// Debug logging.
 name|bool
@@ -248,6 +252,9 @@ block|}
 struct|struct
 name|Leak
 block|{
+name|u32
+name|id
+decl_stmt|;
 name|uptr
 name|hit_count
 decl_stmt|;
@@ -265,6 +272,20 @@ name|is_suppressed
 decl_stmt|;
 block|}
 struct|;
+struct|struct
+name|LeakedObject
+block|{
+name|u32
+name|leak_id
+decl_stmt|;
+name|uptr
+name|addr
+decl_stmt|;
+name|uptr
+name|size
+decl_stmt|;
+block|}
+struct|;
 comment|// Aggregates leaks by stack trace prefix.
 name|class
 name|LeakReport
@@ -274,14 +295,26 @@ label|:
 name|LeakReport
 argument_list|()
 operator|:
+name|next_id_
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|leaks_
+argument_list|(
+literal|1
+argument_list|)
+operator|,
+name|leaked_objects_
 argument_list|(
 literal|1
 argument_list|)
 block|{}
 name|void
-name|Add
+name|AddLeakedChunk
 argument_list|(
+argument|uptr chunk
+argument_list|,
 argument|u32 stack_trace_id
 argument_list|,
 argument|uptr leaked_size
@@ -290,7 +323,7 @@ argument|ChunkTag tag
 argument_list|)
 expr_stmt|;
 name|void
-name|PrintLargest
+name|ReportTopLeaks
 parameter_list|(
 name|uptr
 name|max_leaks
@@ -300,30 +333,44 @@ name|void
 name|PrintSummary
 parameter_list|()
 function_decl|;
-name|bool
-name|IsEmpty
-parameter_list|()
-block|{
-return|return
-name|leaks_
-operator|.
-name|size
-argument_list|()
-operator|==
-literal|0
-return|;
-block|}
-name|uptr
+name|void
 name|ApplySuppressions
+parameter_list|()
+function_decl|;
+name|uptr
+name|UnsuppressedLeakCount
 parameter_list|()
 function_decl|;
 name|private
 label|:
+name|void
+name|PrintReportForLeak
+parameter_list|(
+name|uptr
+name|index
+parameter_list|)
+function_decl|;
+name|void
+name|PrintLeakedObjectsForLeak
+parameter_list|(
+name|uptr
+name|index
+parameter_list|)
+function_decl|;
+name|u32
+name|next_id_
+decl_stmt|;
 name|InternalMmapVector
 operator|<
 name|Leak
 operator|>
 name|leaks_
+expr_stmt|;
+name|InternalMmapVector
+operator|<
+name|LeakedObject
+operator|>
+name|leaked_objects_
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -390,7 +437,10 @@ enum|;
 comment|// Functions called from the parent tool.
 name|void
 name|InitCommonLsan
-parameter_list|()
+parameter_list|(
+name|bool
+name|standalone
+parameter_list|)
 function_decl|;
 name|void
 name|DoLeakCheck
@@ -400,6 +450,50 @@ name|bool
 name|DisabledInThisThread
 parameter_list|()
 function_decl|;
+comment|// Special case for "new T[0]" where T is a type with DTOR.
+comment|// new T[0] will allocate one word for the array size (0) and store a pointer
+comment|// to the end of allocated chunk.
+specifier|inline
+name|bool
+name|IsSpecialCaseOfOperatorNew0
+parameter_list|(
+name|uptr
+name|chunk_beg
+parameter_list|,
+name|uptr
+name|chunk_size
+parameter_list|,
+name|uptr
+name|addr
+parameter_list|)
+block|{
+return|return
+name|chunk_size
+operator|==
+sizeof|sizeof
+argument_list|(
+name|uptr
+argument_list|)
+operator|&&
+name|chunk_beg
+operator|+
+name|chunk_size
+operator|==
+name|addr
+operator|&&
+operator|*
+name|reinterpret_cast
+operator|<
+name|uptr
+operator|*
+operator|>
+operator|(
+name|chunk_beg
+operator|)
+operator|==
+literal|0
+return|;
+block|}
 comment|// The following must be implemented in the parent tool.
 name|void
 name|ForEachChunk
@@ -433,6 +527,14 @@ function_decl|;
 name|void
 name|UnlockAllocator
 parameter_list|()
+function_decl|;
+comment|// Returns true if [addr, addr + sizeof(void *)) is poisoned.
+name|bool
+name|WordIsPoisoned
+parameter_list|(
+name|uptr
+name|addr
+parameter_list|)
 function_decl|;
 comment|// Wrappers for ThreadRegistry access.
 name|void

@@ -63,6 +63,37 @@ directive|include
 file|"sanitizer_common/sanitizer_stacktrace.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_STACK_TRACE
+parameter_list|(
+name|max_size
+parameter_list|,
+name|fast
+parameter_list|)
+define|\
+value|BufferedStackTrace stack;                                                    \   {                                                                            \     uptr stack_top = 0, stack_bottom = 0;                                      \     ThreadContext *t;                                                          \     if (fast&& (t = CurrentThreadContext())) {                                \       stack_top = t->stack_end();                                              \       stack_bottom = t->stack_begin();                                         \     }                                                                          \     stack.Unwind(max_size, StackTrace::GetCurrentPc(), GET_CURRENT_FRAME(),    \
+comment|/* context */
+value|0, stack_top, stack_bottom, fast);              \   }
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_TRACE_FATAL
+define|\
+value|GET_STACK_TRACE(kStackTraceMax, common_flags()->fast_unwind_on_fatal)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_TRACE_MALLOC
+define|\
+value|GET_STACK_TRACE(__sanitizer::common_flags()->malloc_context_size, \                   common_flags()->fast_unwind_on_malloc)
+end_define
+
 begin_decl_stmt
 name|namespace
 name|__lsan

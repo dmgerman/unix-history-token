@@ -178,9 +178,10 @@ define|\
 value|((void)(addr), (void)(size))
 endif|#
 directive|endif
-comment|// Returns true iff addr is poisoned (i.e. 1-byte read/write access to this
+comment|// Returns 1 if addr is poisoned (i.e. 1-byte read/write access to this
 comment|// address will result in error report from AddressSanitizer).
-name|bool
+comment|// Otherwise returns 0.
+name|int
 name|__asan_address_is_poisoned
 parameter_list|(
 name|void
@@ -190,7 +191,7 @@ modifier|*
 name|addr
 parameter_list|)
 function_decl|;
-comment|// If at least on byte in [beg, beg+size) is poisoned, return the address
+comment|// If at least one byte in [beg, beg+size) is poisoned, return the address
 comment|// of the first such byte. Otherwise return 0.
 name|void
 modifier|*
@@ -211,6 +212,143 @@ parameter_list|(
 name|void
 modifier|*
 name|addr
+parameter_list|)
+function_decl|;
+comment|// Useful for calling from a debugger to get information about an ASan error.
+comment|// Returns 1 if an error has been (or is being) reported, otherwise returns 0.
+name|int
+name|__asan_report_present
+parameter_list|()
+function_decl|;
+comment|// Useful for calling from a debugger to get information about an ASan error.
+comment|// If an error has been (or is being) reported, the following functions return
+comment|// the pc, bp, sp, address, access type (0 = read, 1 = write), access size and
+comment|// bug description (e.g. "heap-use-after-free"). Otherwise they return 0.
+name|void
+modifier|*
+name|__asan_get_report_pc
+parameter_list|()
+function_decl|;
+name|void
+modifier|*
+name|__asan_get_report_bp
+parameter_list|()
+function_decl|;
+name|void
+modifier|*
+name|__asan_get_report_sp
+parameter_list|()
+function_decl|;
+name|void
+modifier|*
+name|__asan_get_report_address
+parameter_list|()
+function_decl|;
+name|int
+name|__asan_get_report_access_type
+parameter_list|()
+function_decl|;
+name|size_t
+name|__asan_get_report_access_size
+parameter_list|()
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|__asan_get_report_description
+parameter_list|()
+function_decl|;
+comment|// Useful for calling from the debugger to get information about a pointer.
+comment|// Returns the category of the given pointer as a constant string.
+comment|// Possible return values are "global", "stack", "stack-fake", "heap",
+comment|// "heap-invalid", "shadow-low", "shadow-gap", "shadow-high", "unknown".
+comment|// If global or stack, tries to also return the variable name, address and
+comment|// size. If heap, tries to return the chunk address and size. 'name' should
+comment|// point to an allocated buffer of size 'name_size'.
+specifier|const
+name|char
+modifier|*
+name|__asan_locate_address
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|size_t
+name|name_size
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|region_address
+parameter_list|,
+name|size_t
+modifier|*
+name|region_size
+parameter_list|)
+function_decl|;
+comment|// Useful for calling from the debugger to get the allocation stack trace
+comment|// and thread ID for a heap address. Stores up to 'size' frames into 'trace',
+comment|// returns the number of stored frames or 0 on error.
+name|size_t
+name|__asan_get_alloc_stack
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|trace
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|int
+modifier|*
+name|thread_id
+parameter_list|)
+function_decl|;
+comment|// Useful for calling from the debugger to get the free stack trace
+comment|// and thread ID for a heap address. Stores up to 'size' frames into 'trace',
+comment|// returns the number of stored frames or 0 on error.
+name|size_t
+name|__asan_get_free_stack
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|trace
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|int
+modifier|*
+name|thread_id
+parameter_list|)
+function_decl|;
+comment|// Useful for calling from the debugger to get the current shadow memory
+comment|// mapping.
+name|void
+name|__asan_get_shadow_mapping
+parameter_list|(
+name|size_t
+modifier|*
+name|shadow_scale
+parameter_list|,
+name|size_t
+modifier|*
+name|shadow_offset
 parameter_list|)
 function_decl|;
 comment|// This is an internal function that is called to report an error.
@@ -235,7 +373,7 @@ name|void
 modifier|*
 name|addr
 parameter_list|,
-name|bool
+name|int
 name|is_write
 parameter_list|,
 name|size_t
@@ -288,87 +426,6 @@ name|void
 name|__asan_on_error
 parameter_list|()
 function_decl|;
-comment|// User may provide its own implementation for symbolization function.
-comment|// It should print the description of instruction at address "pc" to
-comment|// "out_buffer". Description should be at most "out_size" bytes long.
-comment|// User-specified function should return true if symbolization was
-comment|// successful.
-name|bool
-name|__asan_symbolize
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|pc
-parameter_list|,
-name|char
-modifier|*
-name|out_buffer
-parameter_list|,
-name|int
-name|out_size
-parameter_list|)
-function_decl|;
-comment|// Returns the estimated number of bytes that will be reserved by allocator
-comment|// for request of "size" bytes. If ASan allocator can't allocate that much
-comment|// memory, returns the maximal possible allocation size, otherwise returns
-comment|// "size".
-name|size_t
-name|__asan_get_estimated_allocated_size
-parameter_list|(
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-comment|// Returns true if p was returned by the ASan allocator and
-comment|// is not yet freed.
-name|bool
-name|__asan_get_ownership
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-comment|// Returns the number of bytes reserved for the pointer p.
-comment|// Requires (get_ownership(p) == true) or (p == 0).
-name|size_t
-name|__asan_get_allocated_size
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-comment|// Number of bytes, allocated and not yet freed by the application.
-name|size_t
-name|__asan_get_current_allocated_bytes
-parameter_list|()
-function_decl|;
-comment|// Number of bytes, mmaped by asan allocator to fulfill allocation requests.
-comment|// Generally, for request of X bytes, allocator can reserve and add to free
-comment|// lists a large number of chunks of size X to use them for future requests.
-comment|// All these chunks count toward the heap size. Currently, allocator never
-comment|// releases memory to OS (instead, it just puts freed chunks to free lists).
-name|size_t
-name|__asan_get_heap_size
-parameter_list|()
-function_decl|;
-comment|// Number of bytes, mmaped by asan allocator, which can be used to fulfill
-comment|// allocation requests. When a user program frees memory chunk, it can first
-comment|// fall into quarantine and will count toward __asan_get_free_bytes() later.
-name|size_t
-name|__asan_get_free_bytes
-parameter_list|()
-function_decl|;
-comment|// Number of bytes in unmapped pages, that are released to OS. Currently,
-comment|// always returns 0.
-name|size_t
-name|__asan_get_unmapped_bytes
-parameter_list|()
-function_decl|;
 comment|// Prints accumulated stats to stderr. Used for debugging.
 name|void
 name|__asan_print_accumulated_stats
@@ -382,28 +439,43 @@ modifier|*
 name|__asan_default_options
 parameter_list|()
 function_decl|;
-comment|// Malloc hooks that may be optionally provided by user.
-comment|// __asan_malloc_hook(ptr, size) is called immediately after
-comment|//   allocation of "size" bytes, which returned "ptr".
-comment|// __asan_free_hook(ptr) is called immediately before
-comment|//   deallocation of "ptr".
-name|void
-name|__asan_malloc_hook
-parameter_list|(
+comment|// The following 2 functions facilitate garbage collection in presence of
+comment|// asan's fake stack.
+comment|// Returns an opaque handler to be used later in __asan_addr_is_in_fake_stack.
+comment|// Returns NULL if the current thread does not have a fake stack.
 name|void
 modifier|*
-name|ptr
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
+name|__asan_get_current_fake_stack
+parameter_list|()
 function_decl|;
+comment|// If fake_stack is non-NULL and addr belongs to a fake frame in
+comment|// fake_stack, returns the address on real stack that corresponds to
+comment|// the fake frame and sets beg/end to the boundaries of this fake frame.
+comment|// Otherwise returns NULL and does not touch beg/end.
+comment|// If beg/end are NULL, they are not touched.
+comment|// This function may be called from a thread other than the owner of
+comment|// fake_stack, but the owner thread need to be alive.
 name|void
-name|__asan_free_hook
+modifier|*
+name|__asan_addr_is_in_fake_stack
 parameter_list|(
 name|void
 modifier|*
-name|ptr
+name|fake_stack
+parameter_list|,
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|beg
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|end
 parameter_list|)
 function_decl|;
 ifdef|#

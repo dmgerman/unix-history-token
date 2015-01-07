@@ -68,6 +68,8 @@ end_include
 begin_if
 if|#
 directive|if
+name|SANITIZER_FREEBSD
+operator|||
 name|SANITIZER_LINUX
 end_if
 
@@ -132,6 +134,48 @@ name|count
 parameter_list|)
 function_decl|;
 name|uptr
+name|internal_sigaltstack
+parameter_list|(
+specifier|const
+name|struct
+name|sigaltstack
+modifier|*
+name|ss
+parameter_list|,
+name|struct
+name|sigaltstack
+modifier|*
+name|oss
+parameter_list|)
+function_decl|;
+name|uptr
+name|internal_sigprocmask
+parameter_list|(
+name|int
+name|how
+parameter_list|,
+name|__sanitizer_sigset_t
+modifier|*
+name|set
+parameter_list|,
+name|__sanitizer_sigset_t
+modifier|*
+name|oldset
+parameter_list|)
+function_decl|;
+name|void
+name|internal_sigfillset
+parameter_list|(
+name|__sanitizer_sigset_t
+modifier|*
+name|set
+parameter_list|)
+function_decl|;
+comment|// Linux-only syscalls.
+if|#
+directive|if
+name|SANITIZER_LINUX
+name|uptr
 name|internal_prctl
 parameter_list|(
 name|int
@@ -150,64 +194,29 @@ name|uptr
 name|arg5
 parameter_list|)
 function_decl|;
-name|uptr
-name|internal_sigaltstack
-parameter_list|(
-specifier|const
-name|struct
-name|sigaltstack
-modifier|*
-name|ss
-parameter_list|,
-name|struct
-name|sigaltstack
-modifier|*
-name|oss
-parameter_list|)
-function_decl|;
-name|uptr
-name|internal_sigaction
+comment|// Used only by sanitizer_stoptheworld. Signal handlers that are actually used
+comment|// (like the process-wide error reporting SEGV handler) must use
+comment|// internal_sigaction instead.
+name|int
+name|internal_sigaction_norestorer
 parameter_list|(
 name|int
 name|signum
 parameter_list|,
 specifier|const
-name|__sanitizer_kernel_sigaction_t
+name|void
 modifier|*
 name|act
 parameter_list|,
-name|__sanitizer_kernel_sigaction_t
+name|void
 modifier|*
 name|oldact
-parameter_list|)
-function_decl|;
-name|uptr
-name|internal_sigprocmask
-parameter_list|(
-name|int
-name|how
-parameter_list|,
-name|__sanitizer_kernel_sigset_t
-modifier|*
-name|set
-parameter_list|,
-name|__sanitizer_kernel_sigset_t
-modifier|*
-name|oldset
-parameter_list|)
-function_decl|;
-name|void
-name|internal_sigfillset
-parameter_list|(
-name|__sanitizer_kernel_sigset_t
-modifier|*
-name|set
 parameter_list|)
 function_decl|;
 name|void
 name|internal_sigdelset
 parameter_list|(
-name|__sanitizer_kernel_sigset_t
+name|__sanitizer_sigset_t
 modifier|*
 name|set
 parameter_list|,
@@ -215,9 +224,12 @@ name|int
 name|signum
 parameter_list|)
 function_decl|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__x86_64__
+argument_list|)
 name|uptr
 name|internal_clone
 parameter_list|(
@@ -257,6 +269,9 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|// SANITIZER_LINUX
 comment|// This class reads thread IDs from /proc/<pid>/task using only syscalls.
 name|class
 name|ThreadLister
@@ -319,14 +334,6 @@ name|bytes_read_
 decl_stmt|;
 block|}
 empty_stmt|;
-name|void
-name|AdjustStackSizeLinux
-parameter_list|(
-name|void
-modifier|*
-name|attr
-parameter_list|)
-function_decl|;
 comment|// Exposed for testing.
 name|uptr
 name|ThreadDescriptorSize
@@ -409,7 +416,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// SANITIZER_LINUX
+comment|// SANITIZER_FREEBSD || SANITIZER_LINUX
 end_comment
 
 begin_endif

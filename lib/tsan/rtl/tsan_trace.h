@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tsan_sync.h"
+file|"tsan_stack_trace.h"
 end_include
 
 begin_include
@@ -150,10 +150,20 @@ typedef|;
 struct|struct
 name|TraceHeader
 block|{
-name|StackTrace
+ifndef|#
+directive|ifndef
+name|SANITIZER_GO
+name|BufferedStackTrace
 name|stack0
 decl_stmt|;
 comment|// Start stack for the trace.
+else|#
+directive|else
+name|VarSizeStackTrace
+name|stack0
+decl_stmt|;
+endif|#
+directive|endif
 name|u64
 name|epoch0
 decl_stmt|;
@@ -161,40 +171,15 @@ comment|// Start epoch for the trace.
 name|MutexSet
 name|mset0
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|TSAN_GO
-name|uptr
-name|stack0buf
-index|[
-name|kTraceStackSize
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|TraceHeader
 argument_list|()
-ifndef|#
-directive|ifndef
-name|TSAN_GO
-operator|:
-name|stack0
-argument_list|(
-name|stack0buf
-argument_list|,
-name|kTraceStackSize
-argument_list|)
-else|#
-directive|else
 operator|:
 name|stack0
 argument_list|()
-endif|#
-directive|endif
 operator|,
 name|epoch0
 argument_list|()
-block|{   }
+block|{}
 block|}
 struct|;
 struct|struct
@@ -211,7 +196,7 @@ name|mtx
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|TSAN_GO
+name|SANITIZER_GO
 comment|// Must be last to catch overflow as paging fault.
 comment|// Go shadow stack is dynamically allocated.
 name|uptr

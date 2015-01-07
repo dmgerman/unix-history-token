@@ -117,11 +117,6 @@ modifier|*
 name|sp
 parameter_list|)
 function_decl|;
-name|SuppressionContext
-modifier|*
-name|GetSuppressionContext
-parameter_list|()
-function_decl|;
 block|}
 end_decl_stmt
 

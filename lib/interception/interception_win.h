@@ -94,21 +94,9 @@ begin_decl_stmt
 name|namespace
 name|__interception
 block|{
-comment|// returns true if a function with the given name was found.
-name|bool
-name|GetRealFunctionAddress
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|func_name
-parameter_list|,
-name|uptr
-modifier|*
-name|func_addr
-parameter_list|)
-function_decl|;
-comment|// returns true if the old function existed, false on failure.
+comment|// All the functions in the OverrideFunction() family return true on success,
+comment|// false on failure (including "couldn't find the function").
+comment|// Overrides a function by its address.
 name|bool
 name|OverrideFunction
 parameter_list|(
@@ -121,6 +109,27 @@ parameter_list|,
 name|uptr
 modifier|*
 name|orig_old_func
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|// Overrides a function in a system DLL or DLL CRT by its exported name.
+name|bool
+name|OverrideFunction
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|uptr
+name|new_func
+parameter_list|,
+name|uptr
+modifier|*
+name|orig_old_func
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 block|}
@@ -135,7 +144,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_DLL
+name|INTERCEPTION_DYNAMIC_CRT
 argument_list|)
 end_if
 
@@ -147,7 +156,7 @@ parameter_list|(
 name|func
 parameter_list|)
 define|\
-value|::__interception::GetRealFunctionAddress( \         #func, (::__interception::uptr*)&REAL(func))
+value|::__interception::OverrideFunction(#func,                                    \                                      (::__interception::uptr)WRAP(func),       \                                      (::__interception::uptr *)&REAL(func))
 end_define
 
 begin_else
@@ -163,7 +172,7 @@ parameter_list|(
 name|func
 parameter_list|)
 define|\
-value|::__interception::OverrideFunction( \         (::__interception::uptr)func, \         (::__interception::uptr)WRAP(func), \         (::__interception::uptr*)&REAL(func))
+value|::__interception::OverrideFunction((::__interception::uptr)func,             \                                      (::__interception::uptr)WRAP(func),       \                                      (::__interception::uptr *)&REAL(func))
 end_define
 
 begin_endif
@@ -180,7 +189,6 @@ name|func
 parameter_list|,
 name|symver
 parameter_list|)
-define|\
 value|INTERCEPT_FUNCTION_WIN(func)
 end_define
 

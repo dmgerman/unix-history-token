@@ -188,7 +188,7 @@ name|INTERFACE_ATTRIBUTE
 decl_stmt|;
 comment|// Callback for memory move by GC.
 comment|// Can be aggregated for several objects (preferably).
-comment|// The ranges must not overlap.
+comment|// The ranges can overlap.
 name|void
 name|__tsan_java_move
 argument_list|(
@@ -203,6 +203,15 @@ name|size
 argument_list|)
 name|INTERFACE_ATTRIBUTE
 decl_stmt|;
+comment|// This function must be called on the finalizer thread
+comment|// before executing a batch of finalizers.
+comment|// It ensures necessary synchronization between
+comment|// java object creation and finalization.
+name|void
+name|__tsan_java_finalize
+argument_list|()
+name|INTERFACE_ATTRIBUTE
+expr_stmt|;
 comment|// Mutex lock.
 comment|// Addr is any unique address associated with the mutex.
 comment|// Can be called on recursive reentry.

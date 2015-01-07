@@ -75,6 +75,16 @@ begin_decl_stmt
 name|namespace
 name|__tsan
 block|{
+comment|// Denotes fake PC values that come from JIT/JAVA/etc.
+comment|// For such PC values __tsan_symbolize_external() will be called.
+specifier|const
+name|uptr
+name|kExternalPCBit
+init|=
+literal|1ULL
+operator|<<
+literal|60
+decl_stmt|;
 name|void
 name|EnterSymbolizer
 parameter_list|()
@@ -83,7 +93,7 @@ name|void
 name|ExitSymbolizer
 parameter_list|()
 function_decl|;
-name|ReportStack
+name|SymbolizedStack
 modifier|*
 name|SymbolizeCode
 parameter_list|(
@@ -102,14 +112,6 @@ function_decl|;
 name|void
 name|SymbolizeFlush
 parameter_list|()
-function_decl|;
-name|ReportStack
-modifier|*
-name|SymbolizeCodeAddr2Line
-parameter_list|(
-name|uptr
-name|addr
-parameter_list|)
 function_decl|;
 name|ReportStack
 modifier|*

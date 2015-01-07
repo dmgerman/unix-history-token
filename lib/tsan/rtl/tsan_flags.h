@@ -59,30 +59,16 @@ directive|define
 name|TSAN_FLAGS_H
 end_define
 
-begin_comment
-comment|// ----------- ATTENTION -------------
-end_comment
-
-begin_comment
-comment|// ThreadSanitizer user may provide its implementation of weak
-end_comment
-
-begin_comment
-comment|// symbol __tsan::OverrideFlags(__tsan::Flags). Therefore, this
-end_comment
-
-begin_comment
-comment|// header may be included in the user code, and shouldn't include
-end_comment
-
-begin_comment
-comment|// other headers from TSan or common sanitizer runtime.
-end_comment
-
 begin_include
 include|#
 directive|include
 file|"sanitizer_common/sanitizer_flags.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sanitizer_common/sanitizer_deadlock_detector_interface.h"
 end_include
 
 begin_decl_stmt
@@ -92,26 +78,21 @@ block|{
 name|struct
 name|Flags
 range|:
-name|CommonFlags
+name|DDFlags
 block|{
 comment|// Enable dynamic annotations, otherwise they are no-ops.
 name|bool
 name|enable_annotations
 block|;
-comment|// Supress a race report if we've already output another race report
+comment|// Suppress a race report if we've already output another race report
 comment|// with the same stack.
 name|bool
 name|suppress_equal_stacks
 block|;
-comment|// Supress a race report if we've already output another race report
+comment|// Suppress a race report if we've already output another race report
 comment|// on the same address.
 name|bool
 name|suppress_equal_addresses
-block|;
-comment|// Suppress weird race reports that can be seen if JVM is embed
-comment|// into the process.
-name|bool
-name|suppress_java
 block|;
 comment|// Turns off bug reporting entirely (useful for benchmarking).
 name|bool
@@ -124,6 +105,10 @@ block|;
 comment|// Report destruction of a locked mutex?
 name|bool
 name|report_destroy_locked
+block|;
+comment|// Report incorrect usages of mutexes and mutex annotations?
+name|bool
+name|report_mutex_bugs
 block|;
 comment|// Report violations of async signal-safety
 comment|// (e.g. malloc() call from a signal handler).
@@ -138,16 +123,6 @@ comment|// If set, all atomics are effectively sequentially consistent (seq_cst)
 comment|// regardless of what user actually specified.
 name|bool
 name|force_seq_cst_atomics
-block|;
-comment|// Suppressions filename.
-specifier|const
-name|char
-operator|*
-name|suppressions
-block|;
-comment|// Print matched suppressions at exit.
-name|bool
-name|print_suppressions
 block|;
 comment|// Print matched "benign" races at exit.
 name|bool
@@ -207,6 +182,10 @@ comment|// 1 - reasonable level of synchronization (write->read)
 comment|// 2 - global synchronization of all IO operations
 name|int
 name|io_sync
+block|;
+comment|// Die after multi-threaded fork if the child creates new threads.
+name|bool
+name|die_after_fork
 block|; }
 decl_stmt|;
 name|Flags

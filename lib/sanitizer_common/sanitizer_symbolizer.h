@@ -86,19 +86,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"sanitizer_allocator_internal.h"
+file|"sanitizer_common.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sanitizer_internal_defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sanitizer_libc.h"
+file|"sanitizer_mutex.h"
 end_include
 
 begin_decl_stmt
@@ -108,6 +102,8 @@ block|{
 struct|struct
 name|AddressInfo
 block|{
+comment|// Owns all the string members. Storage for them is
+comment|// (de)allocated using sanitizer internal allocator.
 name|uptr
 name|address
 decl_stmt|;
@@ -118,9 +114,23 @@ decl_stmt|;
 name|uptr
 name|module_offset
 decl_stmt|;
+specifier|static
+specifier|const
+name|uptr
+name|kUnknown
+init|=
+operator|~
+operator|(
+name|uptr
+operator|)
+literal|0
+decl_stmt|;
 name|char
 modifier|*
 name|function
+decl_stmt|;
+name|uptr
+name|function_offset
 decl_stmt|;
 name|char
 modifier|*
@@ -134,53 +144,12 @@ name|column
 decl_stmt|;
 name|AddressInfo
 argument_list|()
-block|{
-name|internal_memset
-argument_list|(
-name|this
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|AddressInfo
-argument_list|)
-argument_list|)
 expr_stmt|;
-block|}
-comment|// Deletes all strings and sets all fields to zero.
+comment|// Deletes all strings and resets all fields.
 name|void
 name|Clear
 parameter_list|()
-block|{
-name|InternalFree
-argument_list|(
-name|module
-argument_list|)
-expr_stmt|;
-name|InternalFree
-argument_list|(
-name|function
-argument_list|)
-expr_stmt|;
-name|InternalFree
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
-name|internal_memset
-argument_list|(
-name|this
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|AddressInfo
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 name|void
 name|FillAddressAndModuleInfo
 parameter_list|(
@@ -195,31 +164,48 @@ parameter_list|,
 name|uptr
 name|mod_offset
 parameter_list|)
-block|{
-name|address
-operator|=
-name|addr
-expr_stmt|;
-name|module
-operator|=
-name|internal_strdup
-argument_list|(
-name|mod_name
-argument_list|)
-expr_stmt|;
-name|module_offset
-operator|=
-name|mod_offset
-expr_stmt|;
-block|}
+function_decl|;
 block|}
 struct|;
+comment|// Linked list of symbolized frames (each frame is described by AddressInfo).
+struct|struct
+name|SymbolizedStack
+block|{
+name|SymbolizedStack
+modifier|*
+name|next
+decl_stmt|;
+name|AddressInfo
+name|info
+decl_stmt|;
+specifier|static
+name|SymbolizedStack
+modifier|*
+name|New
+parameter_list|(
+name|uptr
+name|addr
+parameter_list|)
+function_decl|;
+comment|// Deletes current, and all subsequent frames in the linked list.
+comment|// The object cannot be accessed after the call to this function.
+name|void
+name|ClearAll
+parameter_list|()
+function_decl|;
+name|private
+label|:
+name|SymbolizedStack
+argument_list|()
+expr_stmt|;
+block|}
+struct|;
+comment|// For now, DataInfo is used to describe global variable.
 struct|struct
 name|DataInfo
 block|{
-name|uptr
-name|address
-decl_stmt|;
+comment|// Owns all the string members. Storage for them is
+comment|// (de)allocated using sanitizer internal allocator.
 name|char
 modifier|*
 name|module
@@ -237,6 +223,13 @@ decl_stmt|;
 name|uptr
 name|size
 decl_stmt|;
+name|DataInfo
+argument_list|()
+expr_stmt|;
+name|void
+name|Clear
+parameter_list|()
+function_decl|;
 block|}
 struct|;
 name|class
@@ -244,74 +237,32 @@ name|Symbolizer
 block|{
 name|public
 label|:
-comment|/// Returns platform-specific implementation of Symbolizer. The symbolizer
-comment|/// must be initialized (with init or disable) before calling this function.
-specifier|static
-name|Symbolizer
-modifier|*
-name|Get
-parameter_list|()
-function_decl|;
-comment|/// Returns platform-specific implementation of Symbolizer, or null if not
-comment|/// initialized.
-specifier|static
-name|Symbolizer
-modifier|*
-name|GetOrNull
-parameter_list|()
-function_decl|;
-comment|/// Returns platform-specific implementation of Symbolizer.  Will
-comment|/// automatically initialize symbolizer as if by calling Init(0) if needed.
+comment|/// Initialize and return platform-specific implementation of symbolizer
+comment|/// (if it wasn't already initialized).
 specifier|static
 name|Symbolizer
 modifier|*
 name|GetOrInit
 parameter_list|()
 function_decl|;
-comment|/// Initialize and return the symbolizer, given an optional path to an
-comment|/// external symbolizer.  The path argument is only required for legacy
-comment|/// reasons as this function will check $PATH for an external symbolizer.  Not
-comment|/// thread safe.
-specifier|static
-name|Symbolizer
-modifier|*
-name|Init
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path_to_external
-init|=
-literal|0
-parameter_list|)
-function_decl|;
-comment|/// Initialize the symbolizer in a disabled state.  Not thread safe.
-specifier|static
-name|Symbolizer
-modifier|*
-name|Disable
-parameter_list|()
-function_decl|;
-comment|// Fills at most "max_frames" elements of "frames" with descriptions
-comment|// for a given address (in all inlined functions). Returns the number
-comment|// of descriptions actually filled.
+comment|// Returns a list of symbolized frames for a given address (containing
+comment|// all inlined functions, if necessary).
 name|virtual
-name|uptr
-name|SymbolizeCode
+name|SymbolizedStack
+modifier|*
+name|SymbolizePC
 parameter_list|(
 name|uptr
 name|address
-parameter_list|,
-name|AddressInfo
-modifier|*
-name|frames
-parameter_list|,
-name|uptr
-name|max_frames
 parameter_list|)
 block|{
 return|return
-literal|0
+name|SymbolizedStack
+operator|::
+name|New
+argument_list|(
+name|address
+argument_list|)
 return|;
 block|}
 name|virtual
@@ -332,8 +283,21 @@ return|;
 block|}
 name|virtual
 name|bool
-name|IsAvailable
-parameter_list|()
+name|GetModuleNameAndOffsetForPC
+parameter_list|(
+name|uptr
+name|pc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|module_name
+parameter_list|,
+name|uptr
+modifier|*
+name|module_address
+parameter_list|)
 block|{
 return|return
 name|false
@@ -341,7 +305,7 @@ return|;
 block|}
 name|virtual
 name|bool
-name|IsExternalAvailable
+name|CanReturnFileLineInfo
 parameter_list|()
 block|{
 return|return
@@ -414,25 +378,14 @@ specifier|static
 name|Symbolizer
 modifier|*
 name|PlatformInit
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path_to_external
-parameter_list|)
+parameter_list|()
 function_decl|;
-comment|/// Create a symbolizer and store it to symbolizer_ without checking if one
-comment|/// already exists.  Not thread safe.
+comment|/// Initialize the symbolizer in a disabled state.  Not thread safe.
 specifier|static
 name|Symbolizer
 modifier|*
-name|CreateAndStore
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path_to_external
-parameter_list|)
+name|Disable
+parameter_list|()
 function_decl|;
 specifier|static
 name|Symbolizer

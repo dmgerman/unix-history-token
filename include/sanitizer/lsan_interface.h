@@ -101,13 +101,40 @@ modifier|*
 name|p
 parameter_list|)
 function_decl|;
-comment|// The user may optionally provide this function to disallow leak checking
-comment|// for the program it is linked into (if the return value is non-zero). This
-comment|// function must be defined as returning a constant value; any behavior beyond
-comment|// that is unsupported.
-name|int
-name|__lsan_is_turned_off
-parameter_list|()
+comment|// Memory regions registered through this interface will be treated as sources
+comment|// of live pointers during leak checking. Useful if you store pointers in
+comment|// mapped memory.
+comment|// Points of note:
+comment|// - __lsan_unregister_root_region() must be called with the same pointer and
+comment|// size that have earlier been passed to __lsan_register_root_region()
+comment|// - LSan will skip any inaccessible memory when scanning a root region. E.g.,
+comment|// if you map memory within a larger region that you have mprotect'ed, you can
+comment|// register the entire large region.
+comment|// - the implementation is not optimized for performance. This interface is
+comment|// intended to be used for a small number of relatively static regions.
+name|void
+name|__lsan_register_root_region
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+name|void
+name|__lsan_unregister_root_region
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
 function_decl|;
 comment|// Calling this function makes LSan enter the leak checking phase immediately.
 comment|// Use this if normal end-of-process leak checking happens too late (e.g. if
@@ -117,6 +144,22 @@ comment|// most once per process. This function will terminate the process if th
 comment|// are memory leaks and the exit_code flag is non-zero.
 name|void
 name|__lsan_do_leak_check
+parameter_list|()
+function_decl|;
+comment|// The user may optionally provide this function to disallow leak checking
+comment|// for the program it is linked into (if the return value is non-zero). This
+comment|// function must be defined as returning a constant value; any behavior beyond
+comment|// that is unsupported.
+name|int
+name|__lsan_is_turned_off
+parameter_list|()
+function_decl|;
+comment|// This function may be optionally provided by the user and should return
+comment|// a string containing LSan suppressions.
+specifier|const
+name|char
+modifier|*
+name|__lsan_default_suppressions
 parameter_list|()
 function_decl|;
 ifdef|#

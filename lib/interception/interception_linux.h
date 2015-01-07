@@ -51,11 +51,19 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__linux__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
 
 begin_if
 if|#
@@ -139,12 +147,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTERCEPT_FUNCTION_LINUX
+name|INTERCEPT_FUNCTION_LINUX_OR_FREEBSD
 parameter_list|(
 name|func
 parameter_list|)
 define|\
-value|::__interception::GetRealFunctionAddress( \           #func, (::__interception::uptr*)&REAL(func), \           (::__interception::uptr)&(func), \           (::__interception::uptr)&WRAP(func))
+value|::__interception::GetRealFunctionAddress(                                \       #func, (::__interception::uptr *)&__interception::PTR_TO_REAL(func), \       (::__interception::uptr)& (func),                                   \       (::__interception::uptr)& WRAP(func))
 end_define
 
 begin_if
@@ -164,7 +172,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTERCEPT_FUNCTION_VER_LINUX
+name|INTERCEPT_FUNCTION_VER_LINUX_OR_FREEBSD
 parameter_list|(
 name|func
 parameter_list|,
@@ -182,14 +190,14 @@ end_else
 begin_define
 define|#
 directive|define
-name|INTERCEPT_FUNCTION_VER_LINUX
+name|INTERCEPT_FUNCTION_VER_LINUX_OR_FREEBSD
 parameter_list|(
 name|func
 parameter_list|,
 name|symver
 parameter_list|)
 define|\
-value|INTERCEPT_FUNCTION_LINUX(func)
+value|INTERCEPT_FUNCTION_LINUX_OR_FREEBSD(func)
 end_define
 
 begin_endif
@@ -216,7 +224,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// __linux__
+comment|// __linux__ || __FreeBSD__
 end_comment
 
 end_unit

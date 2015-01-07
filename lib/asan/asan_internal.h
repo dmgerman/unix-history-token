@@ -131,29 +131,6 @@ literal|" instrumented by AddressSanitizer"
 endif|#
 directive|endif
 comment|// Build-time configuration options.
-comment|// If set, asan will install its own SEGV signal handler.
-ifndef|#
-directive|ifndef
-name|ASAN_NEEDS_SEGV
-if|#
-directive|if
-name|SANITIZER_ANDROID
-operator|==
-literal|1
-define|#
-directive|define
-name|ASAN_NEEDS_SEGV
-value|0
-else|#
-directive|else
-define|#
-directive|define
-name|ASAN_NEEDS_SEGV
-value|1
-endif|#
-directive|endif
-endif|#
-directive|endif
 comment|// If set, asan will intercept C++ exception api call(s).
 ifndef|#
 directive|ifndef
@@ -162,17 +139,6 @@ define|#
 directive|define
 name|ASAN_HAS_EXCEPTIONS
 value|1
-endif|#
-directive|endif
-comment|// If set, asan uses the values of SHADOW_SCALE and SHADOW_OFFSET
-comment|// provided by the instrumented objects. Otherwise constants are used.
-ifndef|#
-directive|ifndef
-name|ASAN_FLEXIBLE_MAPPING_AND_OFFSET
-define|#
-directive|define
-name|ASAN_FLEXIBLE_MAPPING_AND_OFFSET
-value|0
 endif|#
 directive|endif
 comment|// If set, values like allocator chunk size, as well as defaults for some flags
@@ -201,16 +167,27 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|ASAN_USE_PREINIT_ARRAY
+name|ASAN_DYNAMIC
+ifdef|#
+directive|ifdef
+name|PIC
 define|#
 directive|define
-name|ASAN_USE_PREINIT_ARRAY
-value|(SANITIZER_LINUX&& !SANITIZER_ANDROID)
+name|ASAN_DYNAMIC
+value|1
+else|#
+directive|else
+define|#
+directive|define
+name|ASAN_DYNAMIC
+value|0
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|// All internal functions in asan reside inside the __asan namespace
 comment|// to avoid namespace collisions with the user programs.
-comment|// Seperate namespace also makes it simpler to distinguish the asan run-time
+comment|// Separate namespace also makes it simpler to distinguish the asan run-time
 comment|// functions from the instrumented user code in a profile.
 name|namespace
 name|__asan
@@ -222,15 +199,86 @@ name|using
 name|__sanitizer
 operator|::
 name|StackTrace
+block|;  struct
+name|SignalContext
+block|{
+name|void
+operator|*
+name|context
+block|;
+name|uptr
+name|addr
+block|;
+name|uptr
+name|pc
+block|;
+name|uptr
+name|sp
+block|;
+name|uptr
+name|bp
+block|;
+name|SignalContext
+argument_list|(
+argument|void *context
+argument_list|,
+argument|uptr addr
+argument_list|,
+argument|uptr pc
+argument_list|,
+argument|uptr sp
+argument_list|,
+argument|uptr bp
+argument_list|)
+operator|:
+name|context
+argument_list|(
+name|context
+argument_list|)
+block|,
+name|addr
+argument_list|(
+name|addr
+argument_list|)
+block|,
+name|pc
+argument_list|(
+name|pc
+argument_list|)
+block|,
+name|sp
+argument_list|(
+name|sp
+argument_list|)
+block|,
+name|bp
+argument_list|(
+argument|bp
+argument_list|)
+block|{   }
+comment|// Creates signal context in a platform-specific manner.
+specifier|static
+name|SignalContext
+name|Create
+argument_list|(
+name|void
+operator|*
+name|siginfo
+argument_list|,
+name|void
+operator|*
+name|context
+argument_list|)
+block|; }
+block|;
+name|void
+name|AsanInitFromRtl
+argument_list|()
 block|;
 comment|// asan_rtl.cc
 name|void
 name|NORETURN
 name|ShowStatsAndAbort
-argument_list|()
-block|;
-name|void
-name|ReplaceOperatorsNewAndDelete
 argument_list|()
 block|;
 comment|// asan_malloc_linux.cc / asan_malloc_mac.cc
@@ -242,6 +290,14 @@ comment|// asan_linux.cc / asan_mac.cc / asan_win.cc
 name|void
 operator|*
 name|AsanDoesNotSupportStaticLinkage
+argument_list|()
+block|;
+name|void
+name|AsanCheckDynamicRTPrereqs
+argument_list|()
+block|;
+name|void
+name|AsanCheckIncompatibleRT
 argument_list|()
 block|;
 name|void
@@ -265,6 +321,20 @@ name|bp
 argument_list|)
 block|;
 name|void
+name|AsanOnSIGSEGV
+argument_list|(
+name|int
+argument_list|,
+name|void
+operator|*
+name|siginfo
+argument_list|,
+name|void
+operator|*
+name|context
+argument_list|)
+block|;
+name|void
 name|MaybeReexec
 argument_list|()
 block|;
@@ -273,18 +343,6 @@ name|AsanInterceptsSignal
 argument_list|(
 argument|int signum
 argument_list|)
-block|;
-name|void
-name|SetAlternateSignalStack
-argument_list|()
-block|;
-name|void
-name|UnsetAlternateSignalStack
-argument_list|()
-block|;
-name|void
-name|InstallSignalHandlers
-argument_list|()
 block|;
 name|void
 name|ReadContextStack
@@ -356,7 +414,21 @@ operator|*
 name|buffer
 argument_list|)
 block|;
-comment|// Platfrom-specific options.
+name|void
+name|ParseExtraActivationFlags
+argument_list|()
+block|;
+name|void
+operator|*
+name|AsanDlSymNext
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|sym
+argument_list|)
+block|;
+comment|// Platform-specific options.
 if|#
 directive|if
 name|SANITIZER_MAC
@@ -389,7 +461,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|if (&__asan_malloc_hook) __asan_malloc_hook(ptr, size)
+value|if (&__sanitizer_malloc_hook) __sanitizer_malloc_hook(ptr, size)
 define|#
 directive|define
 name|ASAN_FREE_HOOK
@@ -397,7 +469,7 @@ parameter_list|(
 name|ptr
 parameter_list|)
 define|\
-value|if (&__asan_free_hook) __asan_free_hook(ptr)
+value|if (&__sanitizer_free_hook) __sanitizer_free_hook(ptr)
 define|#
 directive|define
 name|ASAN_ON_ERROR
@@ -486,6 +558,12 @@ literal|0xf7
 block|;
 specifier|const
 name|int
+name|kAsanContiguousContainerOOBMagic
+operator|=
+literal|0xfc
+block|;
+specifier|const
+name|int
 name|kAsanStackUseAfterScopeMagic
 operator|=
 literal|0xf8
@@ -501,6 +579,30 @@ name|int
 name|kAsanInternalHeapMagic
 operator|=
 literal|0xfe
+block|;
+specifier|const
+name|int
+name|kAsanArrayCookieMagic
+operator|=
+literal|0xac
+block|;
+specifier|const
+name|int
+name|kAsanIntraObjectRedzone
+operator|=
+literal|0xbb
+block|;
+specifier|const
+name|int
+name|kAsanAllocaLeftMagic
+operator|=
+literal|0xca
+block|;
+specifier|const
+name|int
+name|kAsanAllocaRightMagic
+operator|=
+literal|0xcb
 block|;
 specifier|static
 specifier|const

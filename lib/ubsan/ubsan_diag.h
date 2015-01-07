@@ -65,6 +65,18 @@ directive|include
 file|"ubsan_value.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"sanitizer_common/sanitizer_stacktrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sanitizer_common/sanitizer_suppressions.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|__ubsan
@@ -924,6 +936,70 @@ return|;
 block|}
 block|}
 empty_stmt|;
+struct|struct
+name|ReportOptions
+block|{
+comment|/// If DieAfterReport is specified, UBSan will terminate the program after the
+comment|/// report is printed.
+name|bool
+name|DieAfterReport
+decl_stmt|;
+comment|/// pc/bp are used to unwind the stack trace.
+name|uptr
+name|pc
+decl_stmt|;
+name|uptr
+name|bp
+decl_stmt|;
+block|}
+struct|;
+define|#
+directive|define
+name|GET_REPORT_OPTIONS
+parameter_list|(
+name|die_after_report
+parameter_list|)
+define|\
+value|GET_CALLER_PC_BP; \     ReportOptions Opts = {die_after_report, pc, bp}
+comment|/// \brief Instantiate this class before printing diagnostics in the error
+comment|/// report. This class ensures that reports from different threads and from
+comment|/// different sanitizers won't be mixed.
+name|class
+name|ScopedReport
+block|{
+name|ReportOptions
+name|Opts
+decl_stmt|;
+name|Location
+name|SummaryLoc
+decl_stmt|;
+name|public
+label|:
+name|ScopedReport
+argument_list|(
+argument|ReportOptions Opts
+argument_list|,
+argument|Location SummaryLoc
+argument_list|)
+empty_stmt|;
+operator|~
+name|ScopedReport
+argument_list|()
+expr_stmt|;
+block|}
+empty_stmt|;
+name|bool
+name|MatchSuppression
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Str
+parameter_list|,
+name|SuppressionType
+name|Type
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

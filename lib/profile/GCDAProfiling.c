@@ -36,19 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_ifdef
@@ -68,11 +56,49 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_define
+define|#
+directive|define
+name|I386_FREEBSD
+value|(defined(__FreeBSD__)&& defined(__i386__))
+end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|I386_FREEBSD
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_MSC_VER
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|I386_FREEBSD
+end_if
 
 begin_include
 include|#
@@ -80,10 +106,19 @@ directive|include
 file|<stdint.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef
@@ -96,10 +131,60 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|unsigned
-name|int
+name|long
+name|long
 name|uint64_t
 typedef|;
 end_typedef
+
+begin_elif
+elif|#
+directive|elif
+name|I386_FREEBSD
+end_elif
+
+begin_comment
+comment|/* System headers define 'size_t' incorrectly on x64 FreeBSD (prior to  * FreeBSD 10, r232261) when compiled in 32-bit mode.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|uint8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|uint32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|uint64_t
+typedef|;
+end_typedef
+
+begin_function_decl
+name|int
+name|mkdir
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|unsigned
+name|short
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -639,19 +724,15 @@ parameter_list|)
 block|{
 name|char
 modifier|*
-name|filename
-init|=
-literal|0
+name|new_filename
 decl_stmt|;
-name|int
+name|size_t
+name|filename_len
+decl_stmt|,
 name|prefix_len
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|prefix_strip
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|level
@@ -662,13 +743,9 @@ specifier|const
 name|char
 modifier|*
 name|fname
-init|=
-name|orig_filename
 decl_stmt|,
 modifier|*
 name|ptr
-init|=
-name|NULL
 decl_stmt|;
 specifier|const
 name|char
@@ -692,8 +769,16 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|prefix
+operator|==
+name|NULL
+operator|||
+name|prefix
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
 condition|)
 return|return
 name|strdup
@@ -725,6 +810,68 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
+block|{
+name|prefix_strip
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|fname
+operator|=
+name|orig_filename
+expr_stmt|;
+for|for
+control|(
+name|level
+operator|=
+literal|0
+operator|,
+name|ptr
+operator|=
+name|fname
+operator|+
+literal|1
+init|;
+name|level
+operator|<
+name|prefix_strip
+condition|;
+operator|++
+name|ptr
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|ptr
+operator|==
+literal|'\0'
+condition|)
+break|break;
+if|if
+condition|(
+operator|*
+name|ptr
+operator|!=
+literal|'/'
+condition|)
+continue|continue;
+name|fname
+operator|=
+name|ptr
+expr_stmt|;
+operator|++
+name|level
+expr_stmt|;
+block|}
+name|filename_len
+operator|=
+name|strlen
+argument_list|(
+name|fname
+argument_list|)
+expr_stmt|;
 name|prefix_len
 operator|=
 name|strlen
@@ -732,7 +879,7 @@ argument_list|(
 name|prefix
 argument_list|)
 expr_stmt|;
-name|filename
+name|new_filename
 operator|=
 name|malloc
 argument_list|(
@@ -740,19 +887,18 @@ name|prefix_len
 operator|+
 literal|1
 operator|+
-name|strlen
-argument_list|(
-name|orig_filename
-argument_list|)
+name|filename_len
 operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|memcpy
 argument_list|(
-name|filename
+name|new_filename
 argument_list|,
 name|prefix
+argument_list|,
+name|prefix_len
 argument_list|)
 expr_stmt|;
 if|if
@@ -766,59 +912,29 @@ index|]
 operator|!=
 literal|'/'
 condition|)
-name|strcat
-argument_list|(
-name|filename
-argument_list|,
-literal|"/"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|ptr
+name|new_filename
+index|[
+name|prefix_len
+operator|++
+index|]
 operator|=
+literal|'/'
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|new_filename
+operator|+
+name|prefix_len
+argument_list|,
 name|fname
+argument_list|,
+name|filename_len
 operator|+
 literal|1
-init|;
-operator|*
-name|ptr
-operator|!=
-literal|'\0'
-operator|&&
-name|level
-operator|<
-name|prefix_strip
-condition|;
-operator|++
-name|ptr
-control|)
-block|{
-if|if
-condition|(
-operator|*
-name|ptr
-operator|!=
-literal|'/'
-condition|)
-continue|continue;
-name|fname
-operator|=
-name|ptr
-expr_stmt|;
-operator|++
-name|level
-expr_stmt|;
-block|}
-name|strcat
-argument_list|(
-name|filename
-argument_list|,
-name|fname
 argument_list|)
 expr_stmt|;
 return|return
-name|filename
+name|new_filename
 return|;
 block|}
 end_function
@@ -830,7 +946,7 @@ name|recursive_mkdir
 parameter_list|(
 name|char
 modifier|*
-name|filename
+name|path
 parameter_list|)
 block|{
 name|int
@@ -842,7 +958,7 @@ name|i
 operator|=
 literal|1
 init|;
-name|filename
+name|path
 index|[
 name|i
 index|]
@@ -855,7 +971,7 @@ control|)
 block|{
 if|if
 condition|(
-name|filename
+name|path
 index|[
 name|i
 index|]
@@ -863,7 +979,7 @@ operator|!=
 literal|'/'
 condition|)
 continue|continue;
-name|filename
+name|path
 index|[
 name|i
 index|]
@@ -875,14 +991,14 @@ directive|ifdef
 name|_WIN32
 name|_mkdir
 argument_list|(
-name|filename
+name|path
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
 name|mkdir
 argument_list|(
-name|filename
+name|path
 argument_list|,
 literal|0755
 argument_list|)
@@ -890,7 +1006,7 @@ expr_stmt|;
 comment|/* Some of these will fail, ignore it. */
 endif|#
 directive|endif
-name|filename
+name|path
 index|[
 name|i
 index|]
@@ -1083,6 +1199,9 @@ name|version
 index|[
 literal|4
 index|]
+parameter_list|,
+name|uint32_t
+name|checksum
 parameter_list|)
 block|{
 specifier|const
@@ -1284,7 +1403,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* gcda file, version, stamp LLVM. */
+comment|/* gcda file, version, stamp checksum. */
 name|write_bytes
 argument_list|(
 literal|"adcg"
@@ -1299,11 +1418,9 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|write_bytes
+name|write_32bit_value
 argument_list|(
-literal|"MVLL"
-argument_list|,
-literal|4
+name|checksum
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1410,8 +1527,14 @@ name|char
 modifier|*
 name|function_name
 parameter_list|,
+name|uint32_t
+name|func_checksum
+parameter_list|,
 name|uint8_t
 name|use_extra_checksum
+parameter_list|,
+name|uint32_t
+name|cfg_checksum
 parameter_list|)
 block|{
 name|uint32_t
@@ -1485,7 +1608,7 @@ argument_list|)
 expr_stmt|;
 name|write_32bit_value
 argument_list|(
-literal|0
+name|func_checksum
 argument_list|)
 expr_stmt|;
 if|if
@@ -1494,7 +1617,7 @@ name|use_extra_checksum
 condition|)
 name|write_32bit_value
 argument_list|(
-literal|0
+name|cfg_checksum
 argument_list|)
 expr_stmt|;
 if|if
@@ -1574,7 +1697,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"profiling:invalid arc tag (0x%08x)\n"
+literal|"profiling: %s: cannot merge previous GCDA file: "
+literal|"corrupt arc tag (0x%08x)\n"
+argument_list|,
+name|filename
 argument_list|,
 name|val
 argument_list|)
@@ -1607,7 +1733,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"profiling:invalid number of counters (%d)\n"
+literal|"profiling: %s: cannot merge previous GCDA file: "
+literal|"mismatched number of counters (%d)\n"
+argument_list|,
+name|filename
 argument_list|,
 name|val
 argument_list|)
@@ -1764,12 +1893,12 @@ name|llvm_gcda_summary_info
 parameter_list|()
 block|{
 specifier|const
-name|int
+name|uint32_t
 name|obj_summary_len
 init|=
 literal|9
 decl_stmt|;
-comment|// length for gcov compatibility
+comment|/* Length for gcov compatibility. */
 name|uint32_t
 name|i
 decl_stmt|;
@@ -1822,7 +1951,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"profiling:invalid object tag (0x%08x)\n"
+literal|"profiling: %s: cannot merge previous run count: "
+literal|"corrupt object tag (0x%08x)\n"
+argument_list|,
+name|filename
 argument_list|,
 name|val
 argument_list|)
@@ -1834,7 +1966,7 @@ operator|=
 name|read_32bit_value
 argument_list|()
 expr_stmt|;
-comment|// length
+comment|/* length */
 if|if
 condition|(
 name|val
@@ -1846,28 +1978,30 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"profiling:invalid object length (%d)\n"
+literal|"profiling: %s: cannot merge previous run count: "
+literal|"mismatched object length (%d)\n"
+argument_list|,
+name|filename
 argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-comment|// length
 return|return;
 block|}
 name|read_32bit_value
 argument_list|()
 expr_stmt|;
-comment|// checksum, unused
+comment|/* checksum, unused */
 name|read_32bit_value
 argument_list|()
 expr_stmt|;
-comment|// num, unused
+comment|/* num, unused */
 name|runs
 operator|+=
 name|read_32bit_value
 argument_list|()
 expr_stmt|;
-comment|// add previous run count to new counter
+comment|/* Add previous run count to new counter. */
 block|}
 name|cur_pos
 operator|=
@@ -1891,13 +2025,13 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// checksum, unused
+comment|/* checksum, unused */
 name|write_32bit_value
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// num, unused
+comment|/* num, unused */
 name|write_32bit_value
 argument_list|(
 name|runs
@@ -1929,13 +2063,13 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// tag indicates 1 program
+comment|/* tag indicates 1 program */
 name|write_32bit_value
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// 0 length
+comment|/* 0 length */
 ifdef|#
 directive|ifdef
 name|DEBUG_GCDAPROFILING

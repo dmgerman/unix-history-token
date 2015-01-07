@@ -409,6 +409,7 @@ function_decl|;
 name|uptr
 name|File2addr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path
@@ -417,6 +418,7 @@ function_decl|;
 name|uptr
 name|Dir2addr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path

@@ -74,6 +74,12 @@ block|{
 name|int
 name|exit_code
 decl_stmt|;
+name|int
+name|origin_history_size
+decl_stmt|;
+name|int
+name|origin_history_per_stack_limit
+decl_stmt|;
 name|bool
 name|poison_heap_with_zeroes
 decl_stmt|;
@@ -97,8 +103,18 @@ name|bool
 name|wrap_signals
 decl_stmt|;
 name|bool
+name|print_stats
+decl_stmt|;
+name|bool
 name|halt_on_error
 decl_stmt|;
+name|bool
+name|atexit
+decl_stmt|;
+name|int
+name|store_context_size
+decl_stmt|;
+comment|// like malloc_context_size, but for uninit stores
 block|}
 struct|;
 name|Flags

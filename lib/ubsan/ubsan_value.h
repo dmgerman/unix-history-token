@@ -64,11 +64,11 @@ name|UBSAN_VALUE_H
 end_define
 
 begin_comment
-comment|// For now, only support linux and darwin. Other platforms should be easy to
+comment|// For now, only support Linux, FreeBSD and Darwin. Other platforms should
 end_comment
 
 begin_comment
-comment|// add, and probably work as-is.
+comment|// be easy to add, and probably work as-is.
 end_comment
 
 begin_if
@@ -78,6 +78,12 @@ operator|!
 name|defined
 argument_list|(
 name|__linux__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
 argument_list|)
 operator|&&
 operator|!
@@ -120,12 +126,20 @@ directive|if
 name|__SIZEOF_INT128__
 end_if
 
+begin_macro
+name|__extension__
+end_macro
+
 begin_typedef
 typedef|typedef
 name|__int128
 name|s128
 typedef|;
 end_typedef
+
+begin_macro
+name|__extension__
+end_macro
 
 begin_typedef
 typedef|typedef

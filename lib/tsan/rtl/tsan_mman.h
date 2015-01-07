@@ -118,6 +118,11 @@ name|uptr
 name|align
 init|=
 name|kDefaultAlignment
+parameter_list|,
+name|bool
+name|signal
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|// Does not accept NULL.
@@ -134,6 +139,11 @@ parameter_list|,
 name|void
 modifier|*
 name|p
+parameter_list|,
+name|bool
+name|signal
+init|=
+name|true
 parameter_list|)
 function_decl|;
 name|void
@@ -176,28 +186,7 @@ function_decl|;
 name|uptr
 name|user_alloc_usable_size
 parameter_list|(
-name|ThreadState
-modifier|*
-name|thr
-parameter_list|,
-name|uptr
-name|pc
-parameter_list|,
-name|void
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-comment|// Given the pointer p into a valid allocated block,
-comment|// returns the descriptor of the block.
-name|MBlock
-modifier|*
-name|user_mblock
-parameter_list|(
-name|ThreadState
-modifier|*
-name|thr
-parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|p
@@ -267,8 +256,6 @@ block|,
 name|MBlockExpectRace
 block|,
 name|MBlockSignal
-block|,
-name|MBlockFD
 block|,
 name|MBlockJmpBuf
 block|,

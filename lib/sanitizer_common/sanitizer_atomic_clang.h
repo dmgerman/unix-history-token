@@ -63,10 +63,56 @@ directive|define
 name|SANITIZER_ATOMIC_CLANG_H
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"sanitizer_atomic_clang_x86.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"sanitizer_atomic_clang_other.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|namespace
 name|__sanitizer
 block|{
+comment|// We would like to just use compiler builtin atomic operations
+comment|// for loads and stores, but they are mostly broken in clang:
+comment|// - they lead to vastly inefficient code generation
+comment|// (http://llvm.org/bugs/show_bug.cgi?id=17281)
+comment|// - 64-bit atomic operations are not implemented on x86_32
+comment|// (http://llvm.org/bugs/show_bug.cgi?id=15034)
+comment|// - they are not implemented on ARM
+comment|// error: undefined reference to '__atomic_load_4'
+comment|// See http://www.cl.cam.ac.uk/~pes20/cpp/cpp0xmappings.html
+comment|// for mappings of the memory model to different processors.
 name|INLINE
 name|void
 name|atomic_signal_fence
@@ -87,245 +133,6 @@ parameter_list|)
 block|{
 name|__sync_synchronize
 argument_list|()
-expr_stmt|;
-block|}
-name|INLINE
-name|void
-name|proc_yield
-parameter_list|(
-name|int
-name|cnt
-parameter_list|)
-block|{
-asm|__asm__
-specifier|__volatile__
-asm|("" ::: "memory");
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__x86_64__
-argument_list|)
-for|for
-control|(
-name|int
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|<
-name|cnt
-condition|;
-name|i
-operator|++
-control|)
-asm|__asm__
-specifier|__volatile__
-asm|("pause");
-endif|#
-directive|endif
-asm|__asm__
-specifier|__volatile__
-asm|("" ::: "memory");
-block|}
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|INLINE
-name|typename
-name|T
-operator|::
-name|Type
-name|atomic_load
-argument_list|(
-argument|const volatile T *a
-argument_list|,
-argument|memory_order mo
-argument_list|)
-block|{
-name|DCHECK
-argument_list|(
-name|mo
-operator|&
-operator|(
-name|memory_order_relaxed
-operator||
-name|memory_order_consume
-operator||
-name|memory_order_acquire
-operator||
-name|memory_order_seq_cst
-operator|)
-argument_list|)
-block|;
-name|DCHECK
-argument_list|(
-operator|!
-operator|(
-operator|(
-name|uptr
-operator|)
-name|a
-operator|%
-sizeof|sizeof
-argument_list|(
-operator|*
-name|a
-argument_list|)
-operator|)
-argument_list|)
-block|;
-name|typename
-name|T
-operator|::
-name|Type
-name|v
-block|;
-comment|// FIXME:
-comment|// 64-bit atomic operations are not atomic on 32-bit platforms.
-comment|// The implementation lacks necessary memory fences on ARM/PPC.
-comment|// We would like to use compiler builtin atomic operations,
-comment|// but they are mostly broken:
-comment|// - they lead to vastly inefficient code generation
-comment|// (http://llvm.org/bugs/show_bug.cgi?id=17281)
-comment|// - 64-bit atomic operations are not implemented on x86_32
-comment|// (http://llvm.org/bugs/show_bug.cgi?id=15034)
-comment|// - they are not implemented on ARM
-comment|// error: undefined reference to '__atomic_load_4'
-if|if
-condition|(
-name|mo
-operator|==
-name|memory_order_relaxed
-condition|)
-block|{
-name|v
-operator|=
-name|a
-operator|->
-name|val_dont_use
-expr_stmt|;
-block|}
-else|else
-block|{
-name|atomic_signal_fence
-argument_list|(
-name|memory_order_seq_cst
-argument_list|)
-expr_stmt|;
-name|v
-operator|=
-name|a
-operator|->
-name|val_dont_use
-expr_stmt|;
-name|atomic_signal_fence
-argument_list|(
-name|memory_order_seq_cst
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|v
-return|;
-block|}
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|INLINE
-name|void
-name|atomic_store
-argument_list|(
-argument|volatile T *a
-argument_list|,
-argument|typename T::Type v
-argument_list|,
-argument|memory_order mo
-argument_list|)
-block|{
-name|DCHECK
-argument_list|(
-name|mo
-operator|&
-operator|(
-name|memory_order_relaxed
-operator||
-name|memory_order_release
-operator||
-name|memory_order_seq_cst
-operator|)
-argument_list|)
-block|;
-name|DCHECK
-argument_list|(
-operator|!
-operator|(
-operator|(
-name|uptr
-operator|)
-name|a
-operator|%
-sizeof|sizeof
-argument_list|(
-operator|*
-name|a
-argument_list|)
-operator|)
-argument_list|)
-block|;
-if|if
-condition|(
-name|mo
-operator|==
-name|memory_order_relaxed
-condition|)
-block|{
-name|a
-operator|->
-name|val_dont_use
-operator|=
-name|v
-expr_stmt|;
-block|}
-else|else
-block|{
-name|atomic_signal_fence
-argument_list|(
-name|memory_order_seq_cst
-argument_list|)
-expr_stmt|;
-name|a
-operator|->
-name|val_dont_use
-operator|=
-name|v
-expr_stmt|;
-name|atomic_signal_fence
-argument_list|(
-name|memory_order_seq_cst
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|mo
-operator|==
-name|memory_order_seq_cst
-condition|)
-name|atomic_thread_fence
-argument_list|(
-name|memory_order_seq_cst
-argument_list|)
 expr_stmt|;
 block|}
 name|template

@@ -108,6 +108,20 @@ extern|extern
 literal|"C"
 block|{
 name|void
+name|dfsan_add_label
+parameter_list|(
+name|dfsan_label
+name|label
+parameter_list|,
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|uptr
+name|size
+parameter_list|)
+function_decl|;
+name|void
 name|dfsan_set_label
 parameter_list|(
 name|dfsan_label
@@ -197,6 +211,12 @@ argument_list|(
 argument|void *ptr
 argument_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
 return|return
 operator|(
 name|dfsan_label
@@ -218,15 +238,50 @@ operator|<<
 literal|1
 operator|)
 return|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__mips64
+argument_list|)
+return|return
+operator|(
+name|dfsan_label
+operator|*
+operator|)
+operator|(
+operator|(
+operator|(
+operator|(
+name|uptr
+operator|)
+name|ptr
+operator|)
+operator|&
+operator|~
+literal|0xF000000000
+operator|)
+operator|<<
+literal|1
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
+end_expr_stmt
+
+begin_function
 specifier|inline
 specifier|const
 name|dfsan_label
-operator|*
+modifier|*
 name|shadow_for
-argument_list|(
-argument|const void *ptr
-argument_list|)
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|ptr
+parameter_list|)
 block|{
 return|return
 name|shadow_for
@@ -242,7 +297,7 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_struct
 struct|struct
@@ -255,6 +310,19 @@ decl_stmt|;
 comment|// Whether to warn on non-zero labels.
 name|bool
 name|warn_nonzero_labels
+decl_stmt|;
+comment|// Whether to propagate labels only when there is an obvious data dependency
+comment|// (e.g., when comparing strings, ignore the fact that the output of the
+comment|// comparison might be data-dependent on the content of the strings). This
+comment|// applies only to the custom functions defined in 'custom.c'.
+name|bool
+name|strict_data_dependencies
+decl_stmt|;
+comment|// The path of the file where to dump the labels when the program terminates.
+specifier|const
+name|char
+modifier|*
+name|dump_labels_at_exit
 decl_stmt|;
 block|}
 struct|;

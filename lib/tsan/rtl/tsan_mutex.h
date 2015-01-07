@@ -106,6 +106,8 @@ name|MutexTypeMBlock
 block|,
 name|MutexTypeJavaMBlock
 block|,
+name|MutexTypeDDetector
+block|,
 comment|// This must be the last.
 name|MutexTypeCount
 block|}
@@ -203,11 +205,11 @@ operator|>
 name|ReadLock
 expr_stmt|;
 name|class
-name|DeadlockDetector
+name|InternalDeadlockDetector
 block|{
 name|public
 label|:
-name|DeadlockDetector
+name|InternalDeadlockDetector
 argument_list|()
 expr_stmt|;
 name|void
@@ -223,6 +225,10 @@ parameter_list|(
 name|MutexType
 name|t
 parameter_list|)
+function_decl|;
+name|void
+name|CheckNoLocks
+parameter_list|()
 function_decl|;
 name|private
 label|:
@@ -240,6 +246,16 @@ empty_stmt|;
 name|void
 name|InitializeMutex
 parameter_list|()
+function_decl|;
+comment|// Checks that the current thread does not hold any runtime locks
+comment|// (e.g. when returning from an interceptor).
+name|void
+name|CheckNoLocks
+parameter_list|(
+name|ThreadState
+modifier|*
+name|thr
+parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

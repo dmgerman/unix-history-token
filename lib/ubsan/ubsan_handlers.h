@@ -91,6 +91,16 @@ block|}
 struct|;
 define|#
 directive|define
+name|UNRECOVERABLE
+parameter_list|(
+name|checkname
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|extern "C" SANITIZER_INTERFACE_ATTRIBUTE NORETURN \     void __ubsan_handle_ ## checkname( __VA_ARGS__ );
+define|#
+directive|define
 name|RECOVERABLE
 parameter_list|(
 name|checkname
@@ -98,7 +108,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|extern "C" SANITIZER_INTERFACE_ATTRIBUTE \     void __ubsan_handle_ ## checkname( __VA_ARGS__ ); \   extern "C" SANITIZER_INTERFACE_ATTRIBUTE \     void __ubsan_handle_ ## checkname ## _abort( __VA_ARGS__ );
+value|extern "C" SANITIZER_INTERFACE_ATTRIBUTE \     void __ubsan_handle_ ## checkname( __VA_ARGS__ ); \   extern "C" SANITIZER_INTERFACE_ATTRIBUTE NORETURN \     void __ubsan_handle_ ## checkname ## _abort( __VA_ARGS__ );
 comment|/// \brief Handle a runtime type check failure, caused by either a misaligned
 comment|/// pointer, a null pointer, or a pointer to insufficient storage for the
 comment|/// type.
@@ -242,29 +252,19 @@ decl_stmt|;
 block|}
 struct|;
 comment|/// \brief Handle a __builtin_unreachable which is reached.
-extern|extern
-literal|"C"
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|void
-name|__ubsan_handle_builtin_unreachable
-parameter_list|(
-name|UnreachableData
-modifier|*
-name|Data
-parameter_list|)
-function_decl|;
+name|UNRECOVERABLE
+argument_list|(
+argument|builtin_unreachable
+argument_list|,
+argument|UnreachableData *Data
+argument_list|)
 comment|/// \brief Handle reaching the end of a value-returning function.
-extern|extern
-literal|"C"
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|void
-name|__ubsan_handle_missing_return
-parameter_list|(
-name|UnreachableData
-modifier|*
-name|Data
-parameter_list|)
-function_decl|;
+name|UNRECOVERABLE
+argument_list|(
+argument|missing_return
+argument_list|,
+argument|UnreachableData *Data
+argument_list|)
 struct|struct
 name|VLABoundData
 block|{
@@ -354,6 +354,45 @@ argument_list|,
 argument|FunctionTypeMismatchData *Data
 argument_list|,
 argument|ValueHandle Val
+argument_list|)
+struct|struct
+name|NonNullReturnData
+block|{
+name|SourceLocation
+name|Loc
+decl_stmt|;
+name|SourceLocation
+name|AttrLoc
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief Handle returning null from function with returns_nonnull attribute.
+name|RECOVERABLE
+argument_list|(
+argument|nonnull_return
+argument_list|,
+argument|NonNullReturnData *Data
+argument_list|)
+struct|struct
+name|NonNullArgData
+block|{
+name|SourceLocation
+name|Loc
+decl_stmt|;
+name|SourceLocation
+name|AttrLoc
+decl_stmt|;
+name|int
+name|ArgIndex
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief Handle passing null pointer to function with nonnull attribute.
+name|RECOVERABLE
+argument_list|(
+argument|nonnull_arg
+argument_list|,
+argument|NonNullArgData *Data
 argument_list|)
 block|}
 end_decl_stmt

@@ -142,6 +142,36 @@ end_endif
 begin_if
 if|#
 directive|if
+name|SANITIZER_FREEBSD
+end_if
+
+begin_define
+define|#
+directive|define
+name|SI_FREEBSD
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SI_FREEBSD
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|SANITIZER_LINUX
 end_if
 
@@ -239,8 +269,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|SANITIZER_INTERCEPT_TEXTDOMAIN
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
 name|SANITIZER_INTERCEPT_STRCASECMP
 value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_MEMCHR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_MEMRCHR
+value|SI_LINUX
 end_define
 
 begin_define
@@ -359,8 +410,33 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_ISOC99_SCANF
-value|SI_LINUX
+value|SI_LINUX_NOT_ANDROID
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SANITIZER_INTERCEPT_PRINTF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PRINTF
+value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_ISOC99_PRINTF
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -388,6 +464,34 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETPWNAM_R_AND_FRIENDS
 define|\
+value|SI_MAC || SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_GETPWENT
+value|SI_MAC || SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_FGETPWENT
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_GETPWENT_R
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_SETPWENT
 value|SI_MAC || SI_LINUX_NOT_ANDROID
 end_define
 
@@ -478,6 +582,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|SANITIZER_INTERCEPT_GETHOSTBYNAME2_R
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_GETHOSTBYADDR_R
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_GETHOSTENT_R
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
 name|SANITIZER_INTERCEPT_GETSOCKOPT
 value|SI_NOT_WINDOWS
 end_define
@@ -493,7 +618,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_ACCEPT4
-value|SI_LINUX
+value|SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -556,7 +681,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_PTRACE
-value|SI_LINUX_NOT_ANDROID&& \   (defined(__i386) || defined (__x86_64))
+value|SI_LINUX_NOT_ANDROID&& \    (defined(__i386) || defined (__x86_64))
 end_define
 
 begin_comment
@@ -581,7 +706,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GET_CURRENT_DIR_NAME
-value|SI_LINUX
+value|SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -623,7 +748,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_TCGETATTR
-value|SI_LINUX
+value|SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -671,6 +796,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SANITIZER_INTERCEPT_XPG_STRERROR_R
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
 name|SANITIZER_INTERCEPT_SCANDIR
 value|SI_LINUX_NOT_ANDROID
 end_define
@@ -707,7 +839,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_WORDEXP
-value|SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_MAC&& !SI_IOS) || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -735,7 +867,8 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_SIGSETOPS
-value|SI_NOT_WINDOWS
+define|\
+value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -777,7 +910,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_STATFS
-value|SI_NOT_WINDOWS
+value|SI_MAC || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -812,8 +945,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SANITIZER_INTERCEPT_ETHER
+name|SANITIZER_INTERCEPT_ETHER_NTOA_ATON
 value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_ETHER_HOST
+value|SI_MAC || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -827,7 +967,8 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_SHMCTL
-value|SI_LINUX_NOT_ANDROID
+define|\
+value|((SI_FREEBSD || SI_LINUX_NOT_ANDROID)&& SANITIZER_WORDSIZE == 64)
 end_define
 
 begin_define
@@ -856,6 +997,85 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_PTHREAD_ATTR_GETAFFINITY_NP
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PTHREAD_MUTEXATTR_GETPSHARED
+value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PTHREAD_MUTEXATTR_GETTYPE
+value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PTHREAD_MUTEXATTR_GETPROTOCOL
+define|\
+value|SI_MAC || SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PTHREAD_MUTEXATTR_GETPRIOCEILING
+define|\
+value|SI_MAC || SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PTHREAD_MUTEXATTR_GETROBUST
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PTHREAD_MUTEXATTR_GETROBUST_NP
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PTHREAD_RWLOCKATTR_GETPSHARED
+value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PTHREAD_RWLOCKATTR_GETKIND_NP
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PTHREAD_CONDATTR_GETPSHARED
+value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PTHREAD_CONDATTR_GETCLOCK
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PTHREAD_BARRIERATTR_GETPSHARED
 value|SI_LINUX_NOT_ANDROID
 end_define
 
@@ -911,8 +1131,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|SANITIZER_INTERCEPT_LGAMMAL_R
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
 name|SANITIZER_INTERCEPT_DRAND48_R
 value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_RAND_R
+value|SI_MAC || SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_ICONV
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_TIMES
+value|SI_NOT_WINDOWS
 end_define
 
 begin_comment
@@ -930,7 +1178,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT__EXIT
-value|SI_LINUX
+value|SI_LINUX || SI_FREEBSD
 end_define
 
 begin_define
@@ -943,15 +1191,172 @@ end_define
 begin_define
 define|#
 directive|define
-name|SANITIZER_INTERCEPT_PTHREAD_COND
+name|SANITIZER_INTERCEPT_PTHREAD_SETNAME_NP
+define|\
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_TLS_GET_ADDR
+define|\
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_LISTXATTR
+value|SI_LINUX
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_GETXATTR
+value|SI_LINUX
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_GETRESID
+value|SI_LINUX
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_GETIFADDRS
+value|SI_LINUX_NOT_ANDROID || SI_MAC
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_IF_INDEXTONAME
+value|SI_LINUX_NOT_ANDROID || SI_MAC
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_CAPGET
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_AEABI_MEM
+value|SI_LINUX&& defined(__arm__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT___BZERO
+value|SI_MAC
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_FTIME
 value|SI_NOT_WINDOWS
 end_define
 
 begin_define
 define|#
 directive|define
-name|SANITIZER_INTERCEPT_PTHREAD_SETNAME_NP
+name|SANITIZER_INTERCEPT_XDR
 value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_TSEARCH
+value|SI_LINUX_NOT_ANDROID || SI_MAC
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_LIBIO_INTERNALS
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_FOPEN
+value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_FOPEN64
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_OPEN_MEMSTREAM
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_OBSTACK
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_FFLUSH
+value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_FCLOSE
+value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_DLOPEN_DLCLOSE
+define|\
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID || SI_MAC
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_GETPASS
+value|SI_LINUX_NOT_ANDROID || SI_MAC
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_TIMERFD
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_MLOCKX
+value|SI_NOT_WINDOWS
 end_define
 
 begin_endif

@@ -65,7 +65,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|ASAN_EXTERNAL_TEST_CONFIG
+name|SANITIZER_EXTERNAL_TEST_CONFIG
 argument_list|)
 end_if
 
@@ -101,6 +101,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sanitizer_pthread_wrappers.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -125,25 +131,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
 end_include
 
 begin_include
@@ -158,11 +146,38 @@ directive|include
 file|<algorithm>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
 begin_include
 include|#
 directive|include
 file|<sys/mman.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -205,11 +220,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__APPLE__
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -221,38 +246,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// Check that pthread_create/pthread_join return success.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_CREATE
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|ASSERT_EQ(0, pthread_create(a, b, c, d))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_JOIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|ASSERT_EQ(0, pthread_join(a, b))
-end_define
 
 begin_if
 if|#

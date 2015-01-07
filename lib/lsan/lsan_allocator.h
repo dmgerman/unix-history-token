@@ -129,6 +129,7 @@ function_decl|;
 name|uptr
 name|GetMallocUsableSize
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
