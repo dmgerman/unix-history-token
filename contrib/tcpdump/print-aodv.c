@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 2003 Bruce M. Simpson<bms@spc.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by Bruce M. Simpson.  * 4. Neither the name of Bruce M. Simpson nor the names of co-  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bruce M. Simpson AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL Bruce M. Simpson OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-aodv.c,v 1.11 2004-03-24 00:30:19 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -49,28 +32,14 @@ directive|include
 file|<tcpdump-stdinc.h>
 end_include
 
+begin_comment
+comment|/* for offsetof */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<stddef.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -95,17 +64,735 @@ begin_comment
 comment|/* must come after interface.h */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"aodv.h"
-end_include
+begin_struct
+struct|struct
+name|aodv_rreq
+block|{
+name|uint8_t
+name|rreq_type
+decl_stmt|;
+comment|/* AODV message type (1) */
+name|uint8_t
+name|rreq_flags
+decl_stmt|;
+comment|/* various flags */
+name|uint8_t
+name|rreq_zero0
+decl_stmt|;
+comment|/* reserved, set to zero */
+name|uint8_t
+name|rreq_hops
+decl_stmt|;
+comment|/* number of hops from originator */
+name|uint32_t
+name|rreq_id
+decl_stmt|;
+comment|/* request ID */
+name|uint32_t
+name|rreq_da
+decl_stmt|;
+comment|/* destination IPv4 address */
+name|uint32_t
+name|rreq_ds
+decl_stmt|;
+comment|/* destination sequence number */
+name|uint32_t
+name|rreq_oa
+decl_stmt|;
+comment|/* originator IPv4 address */
+name|uint32_t
+name|rreq_os
+decl_stmt|;
+comment|/* originator sequence number */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_struct
+struct|struct
+name|aodv_rreq6
+block|{
+name|uint8_t
+name|rreq_type
+decl_stmt|;
+comment|/* AODV message type (1) */
+name|uint8_t
+name|rreq_flags
+decl_stmt|;
+comment|/* various flags */
+name|uint8_t
+name|rreq_zero0
+decl_stmt|;
+comment|/* reserved, set to zero */
+name|uint8_t
+name|rreq_hops
+decl_stmt|;
+comment|/* number of hops from originator */
+name|uint32_t
+name|rreq_id
+decl_stmt|;
+comment|/* request ID */
+name|struct
+name|in6_addr
+name|rreq_da
+decl_stmt|;
+comment|/* destination IPv6 address */
+name|uint32_t
+name|rreq_ds
+decl_stmt|;
+comment|/* destination sequence number */
+name|struct
+name|in6_addr
+name|rreq_oa
+decl_stmt|;
+comment|/* originator IPv6 address */
+name|uint32_t
+name|rreq_os
+decl_stmt|;
+comment|/* originator sequence number */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|aodv_rreq6_draft_01
+block|{
+name|uint8_t
+name|rreq_type
+decl_stmt|;
+comment|/* AODV message type (16) */
+name|uint8_t
+name|rreq_flags
+decl_stmt|;
+comment|/* various flags */
+name|uint8_t
+name|rreq_zero0
+decl_stmt|;
+comment|/* reserved, set to zero */
+name|uint8_t
+name|rreq_hops
+decl_stmt|;
+comment|/* number of hops from originator */
+name|uint32_t
+name|rreq_id
+decl_stmt|;
+comment|/* request ID */
+name|uint32_t
+name|rreq_ds
+decl_stmt|;
+comment|/* destination sequence number */
+name|uint32_t
+name|rreq_os
+decl_stmt|;
+comment|/* originator sequence number */
+name|struct
+name|in6_addr
+name|rreq_da
+decl_stmt|;
+comment|/* destination IPv6 address */
+name|struct
+name|in6_addr
+name|rreq_oa
+decl_stmt|;
+comment|/* originator IPv6 address */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|RREQ_JOIN
+value|0x80
+end_define
+
+begin_comment
+comment|/* join (reserved for multicast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RREQ_REPAIR
+value|0x40
+end_define
+
+begin_comment
+comment|/* repair (reserved for multicast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RREQ_GRAT
+value|0x20
+end_define
+
+begin_comment
+comment|/* gratuitous RREP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RREQ_DEST
+value|0x10
+end_define
+
+begin_comment
+comment|/* destination only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RREQ_UNKNOWN
+value|0x08
+end_define
+
+begin_comment
+comment|/* unknown destination sequence num */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RREQ_FLAGS_MASK
+value|0xF8
+end_define
+
+begin_comment
+comment|/* mask for rreq_flags */
+end_comment
+
+begin_struct
+struct|struct
+name|aodv_rrep
+block|{
+name|uint8_t
+name|rrep_type
+decl_stmt|;
+comment|/* AODV message type (2) */
+name|uint8_t
+name|rrep_flags
+decl_stmt|;
+comment|/* various flags */
+name|uint8_t
+name|rrep_ps
+decl_stmt|;
+comment|/* prefix size */
+name|uint8_t
+name|rrep_hops
+decl_stmt|;
+comment|/* number of hops from o to d */
+name|uint32_t
+name|rrep_da
+decl_stmt|;
+comment|/* destination IPv4 address */
+name|uint32_t
+name|rrep_ds
+decl_stmt|;
+comment|/* destination sequence number */
+name|uint32_t
+name|rrep_oa
+decl_stmt|;
+comment|/* originator IPv4 address */
+name|uint32_t
+name|rrep_life
+decl_stmt|;
+comment|/* lifetime of this route */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_struct
+struct|struct
+name|aodv_rrep6
+block|{
+name|uint8_t
+name|rrep_type
+decl_stmt|;
+comment|/* AODV message type (2) */
+name|uint8_t
+name|rrep_flags
+decl_stmt|;
+comment|/* various flags */
+name|uint8_t
+name|rrep_ps
+decl_stmt|;
+comment|/* prefix size */
+name|uint8_t
+name|rrep_hops
+decl_stmt|;
+comment|/* number of hops from o to d */
+name|struct
+name|in6_addr
+name|rrep_da
+decl_stmt|;
+comment|/* destination IPv6 address */
+name|uint32_t
+name|rrep_ds
+decl_stmt|;
+comment|/* destination sequence number */
+name|struct
+name|in6_addr
+name|rrep_oa
+decl_stmt|;
+comment|/* originator IPv6 address */
+name|uint32_t
+name|rrep_life
+decl_stmt|;
+comment|/* lifetime of this route */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|aodv_rrep6_draft_01
+block|{
+name|uint8_t
+name|rrep_type
+decl_stmt|;
+comment|/* AODV message type (17) */
+name|uint8_t
+name|rrep_flags
+decl_stmt|;
+comment|/* various flags */
+name|uint8_t
+name|rrep_ps
+decl_stmt|;
+comment|/* prefix size */
+name|uint8_t
+name|rrep_hops
+decl_stmt|;
+comment|/* number of hops from o to d */
+name|uint32_t
+name|rrep_ds
+decl_stmt|;
+comment|/* destination sequence number */
+name|struct
+name|in6_addr
+name|rrep_da
+decl_stmt|;
+comment|/* destination IPv6 address */
+name|struct
+name|in6_addr
+name|rrep_oa
+decl_stmt|;
+comment|/* originator IPv6 address */
+name|uint32_t
+name|rrep_life
+decl_stmt|;
+comment|/* lifetime of this route */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|RREP_REPAIR
+value|0x80
+end_define
+
+begin_comment
+comment|/* repair (reserved for multicast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RREP_ACK
+value|0x40
+end_define
+
+begin_comment
+comment|/* acknowledgement required */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RREP_FLAGS_MASK
+value|0xC0
+end_define
+
+begin_comment
+comment|/* mask for rrep_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RREP_PREFIX_MASK
+value|0x1F
+end_define
+
+begin_comment
+comment|/* mask for prefix size */
+end_comment
+
+begin_struct
+struct|struct
+name|rerr_unreach
+block|{
+name|uint32_t
+name|u_da
+decl_stmt|;
+comment|/* IPv4 address */
+name|uint32_t
+name|u_ds
+decl_stmt|;
+comment|/* sequence number */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_struct
+struct|struct
+name|rerr_unreach6
+block|{
+name|struct
+name|in6_addr
+name|u_da
+decl_stmt|;
+comment|/* IPv6 address */
+name|uint32_t
+name|u_ds
+decl_stmt|;
+comment|/* sequence number */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|rerr_unreach6_draft_01
+block|{
+name|struct
+name|in6_addr
+name|u_da
+decl_stmt|;
+comment|/* IPv6 address */
+name|uint32_t
+name|u_ds
+decl_stmt|;
+comment|/* sequence number */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|aodv_rerr
+block|{
+name|uint8_t
+name|rerr_type
+decl_stmt|;
+comment|/* AODV message type (3 or 18) */
+name|uint8_t
+name|rerr_flags
+decl_stmt|;
+comment|/* various flags */
+name|uint8_t
+name|rerr_zero0
+decl_stmt|;
+comment|/* reserved, set to zero */
+name|uint8_t
+name|rerr_dc
+decl_stmt|;
+comment|/* destination count */
+union|union
+block|{
+name|struct
+name|rerr_unreach
+name|dest
+index|[
+literal|1
+index|]
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|struct
+name|rerr_unreach6
+name|dest6
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|struct
+name|rerr_unreach6_draft_01
+name|dest6_draft_01
+index|[
+literal|1
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|r
+union|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|RERR_NODELETE
+value|0x80
+end_define
+
+begin_comment
+comment|/* don't delete the link */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RERR_FLAGS_MASK
+value|0x80
+end_define
+
+begin_comment
+comment|/* mask for rerr_flags */
+end_comment
+
+begin_struct
+struct|struct
+name|aodv_rrep_ack
+block|{
+name|uint8_t
+name|ra_type
+decl_stmt|;
+name|uint8_t
+name|ra_zero0
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_union
+union|union
+name|aodv
+block|{
+name|struct
+name|aodv_rreq
+name|rreq
+decl_stmt|;
+name|struct
+name|aodv_rrep
+name|rrep
+decl_stmt|;
+name|struct
+name|aodv_rerr
+name|rerr
+decl_stmt|;
+name|struct
+name|aodv_rrep_ack
+name|rrep_ack
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|struct
+name|aodv_rreq6
+name|rreq6
+decl_stmt|;
+name|struct
+name|aodv_rreq6_draft_01
+name|rreq6_draft_01
+decl_stmt|;
+name|struct
+name|aodv_rrep6
+name|rrep6
+decl_stmt|;
+name|struct
+name|aodv_rrep6_draft_01
+name|rrep6_draft_01
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+union|;
+end_union
+
+begin_define
+define|#
+directive|define
+name|AODV_RREQ
+value|1
+end_define
+
+begin_comment
+comment|/* route request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AODV_RREP
+value|2
+end_define
+
+begin_comment
+comment|/* route response */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AODV_RERR
+value|3
+end_define
+
+begin_comment
+comment|/* error report */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AODV_RREP_ACK
+value|4
+end_define
+
+begin_comment
+comment|/* route response acknowledgement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AODV_V6_DRAFT_01_RREQ
+value|16
+end_define
+
+begin_comment
+comment|/* IPv6 route request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AODV_V6_DRAFT_01_RREP
+value|17
+end_define
+
+begin_comment
+comment|/* IPv6 route response */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AODV_V6_DRAFT_01_RERR
+value|18
+end_define
+
+begin_comment
+comment|/* IPv6 error report */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AODV_V6_DRAFT_01_RREP_ACK
+value|19
+end_define
+
+begin_comment
+comment|/* IPV6 route response acknowledgment */
+end_comment
+
+begin_struct
+struct|struct
+name|aodv_ext
+block|{
+name|uint8_t
+name|type
+decl_stmt|;
+comment|/* extension type */
+name|uint8_t
+name|length
+decl_stmt|;
+comment|/* extension length */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|aodv_hello
+block|{
+name|struct
+name|aodv_ext
+name|eh
+decl_stmt|;
+comment|/* extension header */
+name|uint8_t
+name|interval
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* expect my next hello in 						 * (n) ms 						 * NOTE: this is not aligned */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|AODV_EXT_HELLO
+value|1
+end_define
 
 begin_function
 specifier|static
 name|void
 name|aodv_extension
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|aodv_ext
@@ -137,7 +824,9 @@ name|AODV_EXT_HELLO
 case|:
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|<
 operator|(
 name|u_char
@@ -146,9 +835,13 @@ operator|)
 name|ep
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|hello]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -163,7 +856,9 @@ call|(
 name|u_int
 call|)
 argument_list|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 operator|(
 name|u_char
@@ -184,9 +879,13 @@ name|aodv_hello
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|hello]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -207,10 +906,13 @@ operator|*
 operator|)
 name|ep
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\text HELLO %ld ms"
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -222,21 +924,26 @@ name|ah
 operator|->
 name|interval
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\text %u %u"
-argument_list|,
+operator|,
 name|ep
 operator|->
 name|type
-argument_list|,
+operator|,
 name|ep
 operator|->
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -249,6 +956,10 @@ specifier|static
 name|void
 name|aodv_rreq
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -269,14 +980,20 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|<
 name|dat
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|aodv]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -291,7 +1008,9 @@ call|(
 name|u_int
 call|)
 argument_list|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|dat
 argument_list|)
@@ -309,9 +1028,13 @@ name|rreq
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|rreq]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -325,13 +1048,16 @@ operator|->
 name|rreq
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rreq %u %s%s%s%s%shops %u id 0x%08lx\n"
 literal|"\tdst %s seq %lu src %s seq %lu"
-argument_list|,
+operator|,
 name|length
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq
@@ -343,7 +1069,7 @@ condition|?
 literal|"[J]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq
@@ -355,7 +1081,7 @@ condition|?
 literal|"[R]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq
@@ -367,7 +1093,7 @@ condition|?
 literal|"[G]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq
@@ -379,7 +1105,7 @@ condition|?
 literal|"[D]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq
@@ -391,13 +1117,13 @@ condition|?
 literal|"[U] "
 else|:
 literal|" "
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq
 operator|.
 name|rreq_hops
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -411,9 +1137,11 @@ name|rreq
 operator|.
 name|rreq_id
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ap
 operator|->
@@ -421,7 +1149,7 @@ name|rreq
 operator|.
 name|rreq_da
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -435,9 +1163,11 @@ name|rreq
 operator|.
 name|rreq_ds
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ap
 operator|->
@@ -445,7 +1175,7 @@ name|rreq
 operator|.
 name|rreq_oa
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -459,6 +1189,7 @@ name|rreq
 operator|.
 name|rreq_os
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -473,6 +1204,8 @@ argument_list|)
 condition|)
 name|aodv_extension
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -497,6 +1230,10 @@ specifier|static
 name|void
 name|aodv_rrep
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -517,14 +1254,20 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|<
 name|dat
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|aodv]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -539,7 +1282,9 @@ call|(
 name|u_int
 call|)
 argument_list|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|dat
 argument_list|)
@@ -557,9 +1302,13 @@ name|rrep
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|rrep]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -573,13 +1322,16 @@ operator|->
 name|rrep
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rrep %u %s%sprefix %u hops %u\n"
 literal|"\tdst %s dseq %lu src %s %lu ms"
-argument_list|,
+operator|,
 name|length
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rrep
@@ -591,7 +1343,7 @@ condition|?
 literal|"[R]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rrep
@@ -603,7 +1355,7 @@ condition|?
 literal|"[A] "
 else|:
 literal|" "
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rrep
@@ -611,15 +1363,17 @@ operator|.
 name|rrep_ps
 operator|&
 name|RREP_PREFIX_MASK
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rrep
 operator|.
 name|rrep_hops
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ap
 operator|->
@@ -627,7 +1381,7 @@ name|rrep
 operator|.
 name|rrep_da
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -641,9 +1395,11 @@ name|rrep
 operator|.
 name|rrep_ds
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ap
 operator|->
@@ -651,7 +1407,7 @@ name|rrep
 operator|.
 name|rrep_oa
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -665,6 +1421,7 @@ name|rrep
 operator|.
 name|rrep_life
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -679,6 +1436,8 @@ argument_list|)
 condition|)
 name|aodv_extension
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -703,6 +1462,10 @@ specifier|static
 name|void
 name|aodv_rerr
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -736,14 +1499,20 @@ name|trunc
 decl_stmt|;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|<
 name|dat
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|aodv]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -758,7 +1527,9 @@ call|(
 name|u_int
 call|)
 argument_list|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|dat
 argument_list|)
@@ -777,9 +1548,13 @@ name|r
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|rerr]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -830,10 +1605,13 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rerr %s [items %u] [%u]:"
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rerr
@@ -845,14 +1623,15 @@ condition|?
 literal|"[D]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rerr
 operator|.
 name|rerr_dc
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 name|trunc
@@ -916,18 +1695,23 @@ index|]
 argument_list|)
 control|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" {%s}(%ld)"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|dp
 operator|->
 name|u_da
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -939,6 +1723,7 @@ name|dp
 operator|->
 name|u_ds
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -946,9 +1731,13 @@ if|if
 condition|(
 name|trunc
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|rerr]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -962,6 +1751,10 @@ directive|ifdef
 name|INET6
 name|aodv_v6_rreq
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -980,6 +1773,10 @@ else|#
 directive|else
 function|aodv_v6_rreq
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -1007,14 +1804,20 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|<
 name|dat
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|aodv]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1029,7 +1832,9 @@ call|(
 name|u_int
 call|)
 argument_list|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|dat
 argument_list|)
@@ -1047,9 +1852,13 @@ name|rreq6
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|rreq6]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1063,13 +1872,16 @@ operator|->
 name|rreq6
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" v6 rreq %u %s%s%s%s%shops %u id 0x%08lx\n"
 literal|"\tdst %s seq %lu src %s seq %lu"
-argument_list|,
+operator|,
 name|length
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq6
@@ -1081,7 +1893,7 @@ condition|?
 literal|"[J]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq6
@@ -1093,7 +1905,7 @@ condition|?
 literal|"[R]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq6
@@ -1105,7 +1917,7 @@ condition|?
 literal|"[G]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq6
@@ -1117,7 +1929,7 @@ condition|?
 literal|"[D]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq6
@@ -1129,13 +1941,13 @@ condition|?
 literal|"[U] "
 else|:
 literal|" "
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq6
 operator|.
 name|rreq_hops
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -1149,9 +1961,11 @@ name|rreq6
 operator|.
 name|rreq_id
 argument_list|)
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ap
 operator|->
@@ -1159,7 +1973,7 @@ name|rreq6
 operator|.
 name|rreq_da
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -1173,9 +1987,11 @@ name|rreq6
 operator|.
 name|rreq_ds
 argument_list|)
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ap
 operator|->
@@ -1183,7 +1999,7 @@ name|rreq6
 operator|.
 name|rreq_oa
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -1197,6 +2013,7 @@ name|rreq6
 operator|.
 name|rreq_os
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1211,6 +2028,8 @@ argument_list|)
 condition|)
 name|aodv_extension
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -1229,11 +2048,15 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" v6 rreq %u"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1249,6 +2072,10 @@ directive|ifdef
 name|INET6
 name|aodv_v6_rrep
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -1267,6 +2094,10 @@ else|#
 directive|else
 function|aodv_v6_rrep
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -1294,14 +2125,20 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|<
 name|dat
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|aodv]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1316,7 +2153,9 @@ call|(
 name|u_int
 call|)
 argument_list|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|dat
 argument_list|)
@@ -1334,9 +2173,13 @@ name|rrep6
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|rrep6]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1350,13 +2193,16 @@ operator|->
 name|rrep6
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rrep %u %s%sprefix %u hops %u\n"
 literal|"\tdst %s dseq %lu src %s %lu ms"
-argument_list|,
+operator|,
 name|length
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rrep6
@@ -1368,7 +2214,7 @@ condition|?
 literal|"[R]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rrep6
@@ -1380,7 +2226,7 @@ condition|?
 literal|"[A] "
 else|:
 literal|" "
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rrep6
@@ -1388,15 +2234,17 @@ operator|.
 name|rrep_ps
 operator|&
 name|RREP_PREFIX_MASK
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rrep6
 operator|.
 name|rrep_hops
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ap
 operator|->
@@ -1404,7 +2252,7 @@ name|rrep6
 operator|.
 name|rrep_da
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -1418,9 +2266,11 @@ name|rrep6
 operator|.
 name|rrep_ds
 argument_list|)
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ap
 operator|->
@@ -1428,7 +2278,7 @@ name|rrep6
 operator|.
 name|rrep_oa
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -1442,6 +2292,7 @@ name|rrep6
 operator|.
 name|rrep_life
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1456,6 +2307,8 @@ argument_list|)
 condition|)
 name|aodv_extension
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -1474,11 +2327,15 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rrep %u"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1494,6 +2351,10 @@ directive|ifdef
 name|INET6
 name|aodv_v6_rerr
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -1507,6 +2368,10 @@ else|#
 directive|else
 function|aodv_v6_rerr
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -1592,10 +2457,13 @@ name|rerr_dc
 operator|*
 name|j
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rerr %s [items %u] [%u]:"
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rerr
@@ -1607,14 +2475,15 @@ condition|?
 literal|"[D]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rerr
 operator|.
 name|rerr_dc
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 name|trunc
@@ -1640,18 +2509,23 @@ operator|++
 name|dp6
 control|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" {%s}(%ld)"
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|dp6
 operator|->
 name|u_da
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -1663,6 +2537,7 @@ name|dp6
 operator|->
 name|u_ds
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1670,18 +2545,26 @@ if|if
 condition|(
 name|trunc
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|rerr]"
+operator|)
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rerr %u"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1697,6 +2580,10 @@ directive|ifdef
 name|INET6
 name|aodv_v6_draft_01_rreq
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -1715,6 +2602,10 @@ else|#
 directive|else
 function|aodv_v6_draft_01_rreq
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -1742,14 +2633,20 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|<
 name|dat
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|aodv]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1764,7 +2661,9 @@ call|(
 name|u_int
 call|)
 argument_list|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|dat
 argument_list|)
@@ -1782,9 +2681,13 @@ name|rreq6_draft_01
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|rreq6]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1798,13 +2701,16 @@ operator|->
 name|rreq6_draft_01
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rreq %u %s%s%s%s%shops %u id 0x%08lx\n"
 literal|"\tdst %s seq %lu src %s seq %lu"
-argument_list|,
+operator|,
 name|length
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq6_draft_01
@@ -1816,7 +2722,7 @@ condition|?
 literal|"[J]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq6_draft_01
@@ -1828,7 +2734,7 @@ condition|?
 literal|"[R]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq6_draft_01
@@ -1840,7 +2746,7 @@ condition|?
 literal|"[G]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq6_draft_01
@@ -1852,7 +2758,7 @@ condition|?
 literal|"[D]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq6_draft_01
@@ -1864,13 +2770,13 @@ condition|?
 literal|"[U] "
 else|:
 literal|" "
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq6_draft_01
 operator|.
 name|rreq_hops
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -1884,9 +2790,11 @@ name|rreq6_draft_01
 operator|.
 name|rreq_id
 argument_list|)
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ap
 operator|->
@@ -1894,7 +2802,7 @@ name|rreq6_draft_01
 operator|.
 name|rreq_da
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -1908,9 +2816,11 @@ name|rreq6_draft_01
 operator|.
 name|rreq_ds
 argument_list|)
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ap
 operator|->
@@ -1918,7 +2828,7 @@ name|rreq6_draft_01
 operator|.
 name|rreq_oa
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -1932,6 +2842,7 @@ name|rreq6_draft_01
 operator|.
 name|rreq_os
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1946,6 +2857,8 @@ argument_list|)
 condition|)
 name|aodv_extension
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -1964,11 +2877,15 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rreq %u"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1984,6 +2901,10 @@ directive|ifdef
 name|INET6
 name|aodv_v6_draft_01_rrep
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -2002,6 +2923,10 @@ else|#
 directive|else
 function|aodv_v6_draft_01_rrep
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -2029,14 +2954,20 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|<
 name|dat
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|aodv]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2051,7 +2982,9 @@ call|(
 name|u_int
 call|)
 argument_list|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|dat
 argument_list|)
@@ -2069,9 +3002,13 @@ name|rrep6_draft_01
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|rrep6]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2085,13 +3022,16 @@ operator|->
 name|rrep6_draft_01
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rrep %u %s%sprefix %u hops %u\n"
 literal|"\tdst %s dseq %lu src %s %lu ms"
-argument_list|,
+operator|,
 name|length
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rrep6_draft_01
@@ -2103,7 +3043,7 @@ condition|?
 literal|"[R]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rrep6_draft_01
@@ -2115,7 +3055,7 @@ condition|?
 literal|"[A] "
 else|:
 literal|" "
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rrep6_draft_01
@@ -2123,15 +3063,17 @@ operator|.
 name|rrep_ps
 operator|&
 name|RREP_PREFIX_MASK
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rrep6_draft_01
 operator|.
 name|rrep_hops
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ap
 operator|->
@@ -2139,7 +3081,7 @@ name|rrep6_draft_01
 operator|.
 name|rrep_da
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -2153,9 +3095,11 @@ name|rrep6_draft_01
 operator|.
 name|rrep_ds
 argument_list|)
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ap
 operator|->
@@ -2163,7 +3107,7 @@ name|rrep6_draft_01
 operator|.
 name|rrep_oa
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -2177,6 +3121,7 @@ name|rrep6_draft_01
 operator|.
 name|rrep_life
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2191,6 +3136,8 @@ argument_list|)
 condition|)
 name|aodv_extension
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -2209,11 +3156,15 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rrep %u"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2229,6 +3180,10 @@ directive|ifdef
 name|INET6
 name|aodv_v6_draft_01_rerr
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -2242,6 +3197,10 @@ else|#
 directive|else
 function|aodv_v6_draft_01_rerr
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|aodv
@@ -2327,10 +3286,13 @@ name|rerr_dc
 operator|*
 name|j
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rerr %s [items %u] [%u]:"
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rerr
@@ -2342,14 +3304,15 @@ condition|?
 literal|"[D]"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rerr
 operator|.
 name|rerr_dc
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 name|trunc
@@ -2375,18 +3338,23 @@ operator|++
 name|dp6
 control|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" {%s}(%ld)"
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|dp6
 operator|->
 name|u_da
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -2398,6 +3366,7 @@ name|dp6
 operator|->
 name|u_ds
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2405,18 +3374,26 @@ if|if
 condition|(
 name|trunc
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|rerr]"
+operator|)
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rerr %u"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2428,6 +3405,10 @@ begin_function
 name|void
 name|aodv_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2457,14 +3438,20 @@ name|dat
 expr_stmt|;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|<
 name|dat
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|aodv]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2479,7 +3466,9 @@ call|(
 name|u_int
 call|)
 argument_list|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|dat
 argument_list|)
@@ -2493,16 +3482,24 @@ name|rrep_ack
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|aodv]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" aodv"
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2523,6 +3520,8 @@ name|is_ip6
 condition|)
 name|aodv_v6_rreq
 argument_list|(
+name|ndo
+argument_list|,
 name|ap
 argument_list|,
 name|dat
@@ -2533,6 +3532,8 @@ expr_stmt|;
 else|else
 name|aodv_rreq
 argument_list|(
+name|ndo
+argument_list|,
 name|ap
 argument_list|,
 name|dat
@@ -2550,6 +3551,8 @@ name|is_ip6
 condition|)
 name|aodv_v6_rrep
 argument_list|(
+name|ndo
+argument_list|,
 name|ap
 argument_list|,
 name|dat
@@ -2560,6 +3563,8 @@ expr_stmt|;
 else|else
 name|aodv_rrep
 argument_list|(
+name|ndo
+argument_list|,
 name|ap
 argument_list|,
 name|dat
@@ -2577,6 +3582,8 @@ name|is_ip6
 condition|)
 name|aodv_v6_rerr
 argument_list|(
+name|ndo
+argument_list|,
 name|ap
 argument_list|,
 name|length
@@ -2585,6 +3592,8 @@ expr_stmt|;
 else|else
 name|aodv_rerr
 argument_list|(
+name|ndo
+argument_list|,
 name|ap
 argument_list|,
 name|dat
@@ -2596,11 +3605,15 @@ break|break;
 case|case
 name|AODV_RREP_ACK
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rrep-ack %u"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2609,6 +3622,8 @@ name|AODV_V6_DRAFT_01_RREQ
 case|:
 name|aodv_v6_draft_01_rreq
 argument_list|(
+name|ndo
+argument_list|,
 name|ap
 argument_list|,
 name|dat
@@ -2622,6 +3637,8 @@ name|AODV_V6_DRAFT_01_RREP
 case|:
 name|aodv_v6_draft_01_rrep
 argument_list|(
+name|ndo
+argument_list|,
 name|ap
 argument_list|,
 name|dat
@@ -2635,6 +3652,8 @@ name|AODV_V6_DRAFT_01_RERR
 case|:
 name|aodv_v6_draft_01_rerr
 argument_list|(
+name|ndo
+argument_list|,
 name|ap
 argument_list|,
 name|length
@@ -2644,26 +3663,34 @@ break|break;
 case|case
 name|AODV_V6_DRAFT_01_RREP_ACK
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rrep-ack %u"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %u %u"
-argument_list|,
+operator|,
 name|ap
 operator|->
 name|rreq
 operator|.
 name|rreq_type
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

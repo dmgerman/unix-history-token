@@ -54,12 +54,6 @@ directive|include
 file|<net/if_pfsync.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
 begin_define
 define|#
 directive|define

@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp.c,v 1.87 2007-09-13 17:42:31 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -119,21 +102,21 @@ begin_struct
 struct|struct
 name|icmp
 block|{
-name|u_int8_t
+name|uint8_t
 name|icmp_type
 decl_stmt|;
 comment|/* type of message, see below */
-name|u_int8_t
+name|uint8_t
 name|icmp_code
 decl_stmt|;
 comment|/* type sub code */
-name|u_int16_t
+name|uint16_t
 name|icmp_cksum
 decl_stmt|;
 comment|/* ones complement cksum of struct */
 union|union
 block|{
-name|u_int8_t
+name|uint8_t
 name|ih_pptr
 decl_stmt|;
 comment|/* ICMP_PARAMPROB */
@@ -145,16 +128,16 @@ comment|/* ICMP_REDIRECT */
 struct|struct
 name|ih_idseq
 block|{
-name|u_int16_t
+name|uint16_t
 name|icd_id
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|icd_seq
 decl_stmt|;
 block|}
 name|ih_idseq
 struct|;
-name|u_int32_t
+name|uint32_t
 name|ih_void
 decl_stmt|;
 block|}
@@ -185,13 +168,13 @@ block|{
 struct|struct
 name|id_ts
 block|{
-name|u_int32_t
+name|uint32_t
 name|its_otime
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|its_rtime
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|its_ttime
 decl_stmt|;
 block|}
@@ -208,10 +191,10 @@ comment|/* options and then 64 bits of data */
 block|}
 name|id_ip
 struct|;
-name|u_int32_t
+name|uint32_t
 name|id_mask
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|id_data
 index|[
 literal|1
@@ -295,7 +278,7 @@ begin_define
 define|#
 directive|define
 name|ICMP_TSLEN
-value|(8 + 3 * sizeof (u_int32_t))
+value|(8 + 3 * sizeof (uint32_t))
 end_define
 
 begin_comment
@@ -990,6 +973,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|icmp2str
@@ -1065,6 +1049,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|unreach2str
@@ -1164,6 +1149,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|type2str
@@ -1211,10 +1197,10 @@ begin_struct
 struct|struct
 name|mtu_discovery
 block|{
-name|u_int16_t
+name|uint16_t
 name|unused
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nexthopmtu
 decl_stmt|;
 block|}
@@ -1229,13 +1215,13 @@ begin_struct
 struct|struct
 name|ih_rdiscovery
 block|{
-name|u_int8_t
+name|uint8_t
 name|ird_addrnum
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ird_addrsiz
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ird_lifetime
 decl_stmt|;
 block|}
@@ -1246,10 +1232,10 @@ begin_struct
 struct|struct
 name|id_rdiscovery
 block|{
-name|u_int32_t
+name|uint32_t
 name|ird_addr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ird_pref
 decl_stmt|;
 block|}
@@ -1264,50 +1250,50 @@ begin_struct
 struct|struct
 name|icmp_ext_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|icmp_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|icmp_code
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|icmp_checksum
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|icmp_reserved
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|icmp_length
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|icmp_reserved2
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|icmp_ext_legacy_header
 index|[
 literal|128
 index|]
 decl_stmt|;
 comment|/* extension header starts 128 bytes after ICMP header */
-name|u_int8_t
+name|uint8_t
 name|icmp_ext_version_res
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|icmp_ext_checksum
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|icmp_ext_data
 index|[
 literal|1
@@ -1321,16 +1307,16 @@ begin_struct
 struct|struct
 name|icmp_mpls_ext_object_header_t
 block|{
-name|u_int8_t
+name|uint8_t
 name|length
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|class_num
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ctype
 decl_stmt|;
 block|}
@@ -1478,6 +1464,10 @@ begin_function
 name|void
 name|icmp_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -1538,11 +1528,11 @@ modifier|*
 name|ouh
 decl_stmt|;
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|obj_tptr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|raw_label
 decl_stmt|;
 specifier|const
@@ -1615,7 +1605,7 @@ name|str
 operator|=
 name|buf
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|dp
 operator|->
@@ -1635,7 +1625,7 @@ case|:
 case|case
 name|ICMP_ECHOREPLY
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|dp
 operator|->
@@ -1687,7 +1677,7 @@ break|break;
 case|case
 name|ICMP_UNREACH
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|dp
 operator|->
@@ -1706,7 +1696,7 @@ block|{
 case|case
 name|ICMP_UNREACH_PROTOCOL
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|dp
 operator|->
@@ -1731,6 +1721,8 @@ literal|"%s protocol %d unreachable"
 argument_list|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|dp
 operator|->
@@ -1750,7 +1742,7 @@ break|break;
 case|case
 name|ICMP_UNREACH_PORT
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|dp
 operator|->
@@ -1794,7 +1786,7 @@ operator|+
 name|hlen
 operator|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|ouh
 operator|->
@@ -1837,6 +1829,8 @@ literal|"%s tcp port %s unreachable"
 argument_list|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|oip
 operator|->
@@ -1869,6 +1863,8 @@ literal|"%s udp port %s unreachable"
 argument_list|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|oip
 operator|->
@@ -1899,6 +1895,8 @@ literal|"%s protocol %d port %d unreachable"
 argument_list|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|oip
 operator|->
@@ -1973,6 +1971,8 @@ literal|"%s unreachable - need to frag (mtu %d)"
 argument_list|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|dp
 operator|->
@@ -2003,6 +2003,8 @@ literal|"%s unreachable - need to frag"
 argument_list|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|dp
 operator|->
@@ -2045,6 +2047,8 @@ name|fmt
 argument_list|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|dp
 operator|->
@@ -2060,7 +2064,7 @@ break|break;
 case|case
 name|ICMP_REDIRECT
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|dp
 operator|->
@@ -2098,6 +2102,8 @@ name|fmt
 argument_list|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|dp
 operator|->
@@ -2108,6 +2114,8 @@ argument_list|)
 argument_list|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|dp
 operator|->
@@ -2177,7 +2185,7 @@ name|dp
 operator|->
 name|icmp_void
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|ihp
@@ -2439,7 +2447,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|idp
@@ -2467,6 +2475,8 @@ literal|" {%s %u}"
 argument_list|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|idp
 operator|->
@@ -2500,7 +2510,7 @@ break|break;
 case|case
 name|ICMP_TIMXCEED
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|dp
 operator|->
@@ -2585,7 +2595,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|dp
 operator|->
@@ -2616,7 +2626,7 @@ break|break;
 case|case
 name|ICMP_MASKREPLY
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|dp
 operator|->
@@ -2650,7 +2660,7 @@ break|break;
 case|case
 name|ICMP_TSTAMP
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|dp
 operator|->
@@ -2692,7 +2702,7 @@ break|break;
 case|case
 name|ICMP_TSTAMPREPLY
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|dp
 operator|->
@@ -2830,28 +2840,31 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ICMP %s, length %u"
-argument_list|,
+operator|,
 name|str
-argument_list|,
+operator|,
 name|plen
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|&&
 operator|!
 name|fragmented
 condition|)
 block|{
 comment|/* don't attempt checksumming if this is a frag */
-name|u_int16_t
+name|uint16_t
 name|sum
 decl_stmt|,
 name|icmp_sum
@@ -2865,7 +2878,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|bp
@@ -2883,7 +2896,7 @@ name|ptr
 operator|=
 operator|(
 specifier|const
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|(
@@ -2927,21 +2940,22 @@ operator|->
 name|icmp_cksum
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" (wrong icmp cksum %x (->%x)!)"
-argument_list|,
+operator|,
 name|icmp_sum
-argument_list|,
+operator|,
 name|in_cksum_shouldbe
 argument_list|(
 name|icmp_sum
 argument_list|,
 name|sum
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2950,7 +2964,9 @@ block|}
 comment|/*          * print the remnants of the IP packet.          * save the snaplength as this may get overidden in the IP printer.          */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>=
 literal|1
 operator|&&
@@ -2967,12 +2983,13 @@ name|bp
 operator|+=
 literal|8
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ip
@@ -2984,19 +3001,25 @@ operator|*
 operator|)
 name|bp
 expr_stmt|;
-name|snaplen
+name|ndo
+operator|->
+name|ndo_snaplen
 operator|=
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|bp
 expr_stmt|;
 name|snapend_save
 operator|=
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 expr_stmt|;
 name|ip_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|bp
 argument_list|,
@@ -3009,7 +3032,9 @@ name|ip_len
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|=
 name|snapend_save
 expr_stmt|;
@@ -3017,7 +3042,9 @@ block|}
 comment|/*          * Attempt to decode the MPLS extensions only for some ICMP types.          */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>=
 literal|1
 operator|&&
@@ -3033,7 +3060,7 @@ name|icmp_type
 argument_list|)
 condition|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|ext_dp
@@ -3057,7 +3084,7 @@ name|ptr
 operator|=
 operator|(
 specifier|const
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|(
@@ -3093,10 +3120,13 @@ block|{
 return|return;
 block|}
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tMPLS extension v%u"
-argument_list|,
+operator|,
 name|ICMP_MPLS_EXT_EXTRACT_VERSION
 argument_list|(
 operator|*
@@ -3106,6 +3136,7 @@ operator|->
 name|icmp_ext_version_res
 operator|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/*              * Sanity checking of the header.              */
@@ -3124,9 +3155,13 @@ operator|!=
 name|ICMP_MPLS_EXT_VERSION
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" packet not supported"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3146,7 +3181,7 @@ name|ptr
 operator|=
 operator|(
 specifier|const
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|(
@@ -3167,17 +3202,20 @@ name|len
 operator|=
 name|hlen
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", checksum 0x%04x (%scorrect), length %u"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|ext_dp
 operator|->
 name|icmp_ext_checksum
 argument_list|)
-argument_list|,
+operator|,
 name|in_cksum
 argument_list|(
 name|vec
@@ -3188,8 +3226,9 @@ condition|?
 literal|"in"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|hlen
+operator|)
 argument_list|)
 expr_stmt|;
 name|hlen
@@ -3200,7 +3239,7 @@ comment|/* subtract common header size */
 name|obj_tptr
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|ext_dp
@@ -3227,7 +3266,7 @@ operator|*
 operator|)
 name|obj_tptr
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|icmp_mpls_ext_object_header
@@ -3262,10 +3301,13 @@ expr|struct
 name|icmp_mpls_ext_object_header_t
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  %s Object (%u), Class-Type: %u, length %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|icmp_mpls_ext_obj_values
@@ -3274,12 +3316,13 @@ literal|"unknown"
 argument_list|,
 name|obj_class_num
 argument_list|)
-argument_list|,
+operator|,
 name|obj_class_num
-argument_list|,
+operator|,
 name|obj_ctype
-argument_list|,
+operator|,
 name|obj_tlen
+operator|)
 argument_list|)
 expr_stmt|;
 name|hlen
@@ -3337,7 +3380,7 @@ block|{
 case|case
 literal|1
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|obj_tptr
@@ -3352,19 +3395,23 @@ argument_list|(
 name|obj_tptr
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    label %u, exp %u"
-argument_list|,
+operator|,
 name|MPLS_LABEL
 argument_list|(
 name|raw_label
 argument_list|)
-argument_list|,
+operator|,
 name|MPLS_EXP
 argument_list|(
 name|raw_label
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3374,25 +3421,35 @@ argument_list|(
 name|raw_label
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", [S]"
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", ttl %u"
-argument_list|,
+operator|,
 name|MPLS_TTL
 argument_list|(
 name|raw_label
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|obj_tptr
 argument_list|,
 literal|"\n\t    "
@@ -3409,6 +3466,8 @@ case|:
 default|default:
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|obj_tptr
 argument_list|,
 literal|"\n\t    "
@@ -3438,15 +3497,21 @@ block|}
 return|return;
 name|trunc
 label|:
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|icmp]"
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */
+end_comment
 
 end_unit
 

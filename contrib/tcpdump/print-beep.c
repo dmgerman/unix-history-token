@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (C) 2000, Richard Sharpe  *  * This software may be distributed either under the terms of the  * BSD-style licence that accompanies tcpdump or under the GNU GPL  * version 2 or later.  *  * print-beep.c  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-beep.c,v 1.6 2003-11-16 09:36:13 guy Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -49,35 +32,6 @@ directive|include
 file|<tcpdump-stdinc.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_MEMORY_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<memory.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -90,35 +44,9 @@ directive|include
 file|"interface.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"extract.h"
-end_include
-
 begin_comment
 comment|/* Check for a string but not go beyond length  * Return TRUE on match, FALSE otherwise  *  * Looks at the first few chars up to tl1 ...  */
 end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|l_strnstart
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -176,6 +104,10 @@ begin_function
 name|void
 name|beep_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -204,9 +136,13 @@ name|length
 argument_list|)
 condition|)
 comment|/* A REQuest */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" BEEP MSG"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -228,9 +164,13 @@ argument_list|,
 name|length
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" BEEP RPY"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -252,9 +192,13 @@ argument_list|,
 name|length
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" BEEP ERR"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -276,9 +220,13 @@ argument_list|,
 name|length
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" BEEP ANS"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -300,9 +248,13 @@ argument_list|,
 name|length
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" BEEP NUL"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -324,9 +276,13 @@ argument_list|,
 name|length
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" BEEP SEQ"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -348,15 +304,23 @@ argument_list|,
 name|length
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" BEEP END"
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" BEEP (payload or undecoded)"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

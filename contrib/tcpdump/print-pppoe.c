@@ -1,30 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *   * Original code by Greg Stark<gsstark@mit.edu>   */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Original code by Greg Stark<gsstark@mit.edu>  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pppoe.c,v 1.31 2005-04-26 19:48:38 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -52,43 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"addrtoname.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ppp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ethertype.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ether.h"
 end_include
 
 begin_include
@@ -133,6 +80,7 @@ end_enum
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|pppoecode2str
@@ -241,6 +189,7 @@ end_enum
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|pppoetag2str
@@ -340,6 +289,10 @@ begin_function
 name|u_int
 name|pppoe_if_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -357,6 +310,8 @@ return|return
 operator|(
 name|pppoe_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -372,6 +327,10 @@ begin_function
 name|u_int
 name|pppoe_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -382,7 +341,7 @@ name|u_int
 name|length
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|pppoe_ver
 decl_stmt|,
 name|pppoe_type
@@ -409,14 +368,15 @@ operator|<
 name|PPPOE_HDRLEN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"truncated-pppoe %u"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -433,7 +393,7 @@ name|pppoe_packet
 operator|=
 name|bp
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|pppoe_packet
@@ -503,11 +463,15 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [ver %d]"
-argument_list|,
+operator|,
 name|pppoe_ver
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -518,18 +482,25 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [type %d]"
-argument_list|,
+operator|,
 name|pppoe_type
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"PPPoE %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|pppoecode2str
@@ -538,6 +509,7 @@ literal|"PAD-%x"
 argument_list|,
 name|pppoe_code
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -553,11 +525,15 @@ operator|-
 name|PPPOE_HDRLEN
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [len %u!]"
-argument_list|,
+operator|,
 name|pppoe_length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -568,13 +544,17 @@ operator|>
 name|length
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [len %u> %u!]"
-argument_list|,
+operator|,
 name|pppoe_length
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 name|pppoe_length
@@ -587,11 +567,15 @@ condition|(
 name|pppoe_sessionid
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [ses 0x%x]"
-argument_list|,
+operator|,
 name|pppoe_sessionid
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -627,7 +611,7 @@ operator|+
 name|pppoe_length
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|p
@@ -687,7 +671,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* TODO print UTF-8 decoded text */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|p
@@ -770,10 +754,13 @@ operator|>
 name|isgarbage
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [%s \"%*.*s\"]"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|pppoetag2str
@@ -782,28 +769,32 @@ literal|"TAG-0x%x"
 argument_list|,
 name|tag_type
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|int
 operator|)
 name|tag_str_len
-argument_list|,
+operator|,
 operator|(
 name|int
 operator|)
 name|tag_str_len
-argument_list|,
+operator|,
 name|tag_str
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* Print hex, not fast to abuse printf but this doesn't get used much */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [%s 0x"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|pppoetag2str
@@ -812,6 +803,7 @@ literal|"TAG-0x%x"
 argument_list|,
 name|tag_type
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -830,27 +822,38 @@ name|v
 operator|++
 control|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%02X"
-argument_list|,
+operator|,
 operator|*
 name|v
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [%s]"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|pppoetag2str
@@ -859,6 +862,7 @@ literal|"TAG-0x%x"
 argument_list|,
 name|tag_type
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -876,9 +880,13 @@ block|}
 else|else
 block|{
 comment|/* PPPoE data */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -887,6 +895,8 @@ name|PPPOE_HDRLEN
 operator|+
 name|ppp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pppoe_payload
 argument_list|,
 name|pppoe_length
@@ -896,9 +906,13 @@ return|;
 block|}
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|pppoe]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return

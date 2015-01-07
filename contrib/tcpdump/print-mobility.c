@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2002 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -20,29 +26,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mobility.c,v 1.12 2005-04-20 22:21:00 guy Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -53,12 +36,6 @@ begin_include
 include|#
 directive|include
 file|<tcpdump-stdinc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include
@@ -97,42 +74,42 @@ begin_struct
 struct|struct
 name|ip6_mobility
 block|{
-name|u_int8_t
+name|uint8_t
 name|ip6m_pproto
 decl_stmt|;
 comment|/* following payload protocol (for PG) */
-name|u_int8_t
+name|uint8_t
 name|ip6m_len
 decl_stmt|;
 comment|/* length in units of 8 octets */
-name|u_int8_t
+name|uint8_t
 name|ip6m_type
 decl_stmt|;
 comment|/* message type */
-name|u_int8_t
+name|uint8_t
 name|reserved
 decl_stmt|;
 comment|/* reserved */
-name|u_int16_t
+name|uint16_t
 name|ip6m_cksum
 decl_stmt|;
 comment|/* sum of IPv6 pseudo-header and MH */
 union|union
 block|{
-name|u_int16_t
+name|uint16_t
 name|ip6m_un_data16
 index|[
 literal|1
 index|]
 decl_stmt|;
 comment|/* type-specific field */
-name|u_int8_t
+name|uint8_t
 name|ip6m_un_data8
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* type-specific fiedl */
+comment|/* type-specific field */
 block|}
 name|ip6m_dataun
 union|;
@@ -160,6 +137,10 @@ directive|define
 name|IP6M_MINLEN
 value|8
 end_define
+
+begin_comment
+comment|/* http://www.iana.org/assignments/mobility-parameters/mobility-parameters.xhtml */
+end_comment
 
 begin_comment
 comment|/* message type */
@@ -252,6 +233,31 @@ end_define
 begin_comment
 comment|/* Binding Error */
 end_comment
+
+begin_comment
+comment|/* XXX: unused */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP6MOPT_BU_MINLEN
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP6MOPT_BA_MINLEN
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP6MOPT_BR_MINLEN
+value|2
+end_define
 
 begin_comment
 comment|/* Mobility Header Options */
@@ -363,19 +369,23 @@ specifier|static
 name|void
 name|mobility_opt_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
 name|bp
 parameter_list|,
-name|int
+specifier|const
+name|unsigned
 name|len
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|i
-decl_stmt|;
-name|int
+decl_stmt|,
 name|optlen
 decl_stmt|;
 for|for
@@ -454,9 +464,13 @@ block|{
 case|case
 name|IP6MOPT_PAD1
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(pad1)"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -472,18 +486,26 @@ operator|<
 name|IP6MOPT_MINLEN
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(padn: trunc)"
+operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
 name|trunc
 goto|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(padn)"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -499,9 +521,13 @@ operator|<
 name|IP6MOPT_REFRESH_MINLEN
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(refresh: trunc)"
+operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -509,10 +535,13 @@ name|trunc
 goto|;
 block|}
 comment|/* units of 4 secs */
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"(refresh: %d)"
-argument_list|,
+operator|(
+name|ndo
+operator|,
+literal|"(refresh: %u)"
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -525,6 +554,7 @@ index|]
 argument_list|)
 operator|<<
 literal|2
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -540,21 +570,30 @@ operator|<
 name|IP6MOPT_ALTCOA_MINLEN
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(altcoa: trunc)"
+operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
 name|trunc
 goto|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(alt-CoA: %s)"
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|bp
 index|[
@@ -563,6 +602,7 @@ operator|+
 literal|2
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -578,19 +618,26 @@ operator|<
 name|IP6MOPT_NONCEID_MINLEN
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(ni: trunc)"
+operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
 name|trunc
 goto|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(ni: ho=0x%04x co=0x%04x)"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -601,7 +648,7 @@ operator|+
 literal|2
 index|]
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -612,6 +659,7 @@ operator|+
 literal|4
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -627,18 +675,26 @@ operator|<
 name|IP6MOPT_AUTH_MINLEN
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(auth: trunc)"
+operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
 name|trunc
 goto|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(auth)"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -652,35 +708,43 @@ operator|<
 name|IP6MOPT_MINLEN
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"(sopt_type %d: trunc)"
-argument_list|,
+operator|(
+name|ndo
+operator|,
+literal|"(sopt_type %u: trunc)"
+operator|,
 name|bp
 index|[
 name|i
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
 name|trunc
 goto|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"(type-0x%02x: len=%d)"
-argument_list|,
+operator|(
+name|ndo
+operator|,
+literal|"(type-0x%02x: len=%u)"
+operator|,
 name|bp
 index|[
 name|i
 index|]
-argument_list|,
+operator|,
 name|bp
 index|[
 name|i
 operator|+
 literal|1
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -689,9 +753,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[trunc] "
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -705,6 +773,10 @@ begin_function
 name|int
 name|mobility_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -728,11 +800,12 @@ name|u_char
 modifier|*
 name|ep
 decl_stmt|;
-name|int
+name|unsigned
 name|mhlen
 decl_stmt|,
 name|hlen
-decl_stmt|,
+decl_stmt|;
+name|uint8_t
 name|type
 decl_stmt|;
 name|mh
@@ -747,12 +820,14 @@ expr_stmt|;
 comment|/* 'ep' points to the end of available data. */
 name|ep
 operator|=
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST
+name|ND_TTEST
 argument_list|(
 name|mh
 operator|->
@@ -773,10 +848,6 @@ goto|;
 block|}
 name|mhlen
 operator|=
-call|(
-name|int
-call|)
-argument_list|(
 operator|(
 name|mh
 operator|->
@@ -786,10 +857,9 @@ literal|1
 operator|)
 operator|<<
 literal|3
-argument_list|)
 expr_stmt|;
 comment|/* XXX ip6m_cksum */
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|mh
 operator|->
@@ -810,9 +880,13 @@ block|{
 case|case
 name|IP6M_BINDING_REQUEST
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"mobility: BRR"
+operator|)
 argument_list|)
 expr_stmt|;
 name|hlen
@@ -826,10 +900,13 @@ case|:
 case|case
 name|IP6M_CAREOF_TEST_INIT
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"mobility: %soTI"
-argument_list|,
+operator|,
 name|type
 operator|==
 name|IP6M_HOME_TEST_INIT
@@ -837,6 +914,7 @@ condition|?
 literal|"H"
 else|:
 literal|"C"
+operator|)
 argument_list|)
 expr_stmt|;
 name|hlen
@@ -845,10 +923,12 @@ name|IP6M_MINLEN
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|mh
@@ -858,10 +938,13 @@ operator|+
 literal|8
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s Init Cookie=%08x:%08x"
-argument_list|,
+operator|,
 name|type
 operator|==
 name|IP6M_HOME_TEST_INIT
@@ -869,7 +952,7 @@ condition|?
 literal|"Home"
 else|:
 literal|"Care-of"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -878,7 +961,7 @@ index|[
 name|hlen
 index|]
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -889,6 +972,7 @@ operator|+
 literal|4
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -903,10 +987,13 @@ case|:
 case|case
 name|IP6M_CAREOF_TEST
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"mobility: %soT"
-argument_list|,
+operator|,
 name|type
 operator|==
 name|IP6M_HOME_TEST
@@ -914,9 +1001,10 @@ condition|?
 literal|"H"
 else|:
 literal|"C"
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|mh
 operator|->
@@ -926,10 +1014,13 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" nonce id=0x%x"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -940,6 +1031,7 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|hlen
@@ -948,10 +1040,12 @@ name|IP6M_MINLEN
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|mh
@@ -961,10 +1055,13 @@ operator|+
 literal|8
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s Init Cookie=%08x:%08x"
-argument_list|,
+operator|,
 name|type
 operator|==
 name|IP6M_HOME_TEST
@@ -972,7 +1069,7 @@ condition|?
 literal|"Home"
 else|:
 literal|"Care-of"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -981,7 +1078,7 @@ index|[
 name|hlen
 index|]
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -992,6 +1089,7 @@ operator|+
 literal|4
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1001,10 +1099,12 @@ literal|8
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|mh
@@ -1014,10 +1114,13 @@ operator|+
 literal|8
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s Keygen Token=%08x:%08x"
-argument_list|,
+operator|,
 name|type
 operator|==
 name|IP6M_HOME_TEST
@@ -1025,7 +1128,7 @@ condition|?
 literal|"Home"
 else|:
 literal|"Care-of"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1034,7 +1137,7 @@ index|[
 name|hlen
 index|]
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1045,6 +1148,7 @@ operator|+
 literal|4
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1056,12 +1160,16 @@ break|break;
 case|case
 name|IP6M_BINDING_UPDATE
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"mobility: BU"
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|mh
 operator|->
@@ -1071,10 +1179,13 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|" seq#=%d"
-argument_list|,
+operator|(
+name|ndo
+operator|,
+literal|" seq#=%u"
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -1085,13 +1196,14 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|hlen
 operator|=
 name|IP6M_MINLEN
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|mh
@@ -1110,9 +1222,13 @@ index|]
 operator|&
 literal|0xf0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1124,9 +1240,13 @@ index|]
 operator|&
 literal|0x80
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"A"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1138,9 +1258,13 @@ index|]
 operator|&
 literal|0x40
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"H"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1152,9 +1276,13 @@ index|]
 operator|&
 literal|0x20
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"L"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1166,9 +1294,13 @@ index|]
 operator|&
 literal|0x10
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"K"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Reserved (4bits) */
@@ -1181,7 +1313,7 @@ name|hlen
 operator|+=
 literal|1
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|mh
@@ -1192,10 +1324,13 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* units of 4 secs */
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|" lifetime=%d"
-argument_list|,
+operator|(
+name|ndo
+operator|,
+literal|" lifetime=%u"
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -1206,6 +1341,7 @@ index|]
 argument_list|)
 operator|<<
 literal|2
+operator|)
 argument_list|)
 expr_stmt|;
 name|hlen
@@ -1216,12 +1352,16 @@ break|break;
 case|case
 name|IP6M_BINDING_ACK
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"mobility: BA"
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|mh
 operator|->
@@ -1231,16 +1371,20 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|" status=%d"
-argument_list|,
+operator|(
+name|ndo
+operator|,
+literal|" status=%u"
+operator|,
 name|mh
 operator|->
 name|ip6m_data8
 index|[
 literal|0
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1254,9 +1398,13 @@ index|]
 operator|&
 literal|0x80
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" K"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Reserved (7bits) */
@@ -1264,7 +1412,7 @@ name|hlen
 operator|=
 name|IP6M_MINLEN
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|mh
@@ -1274,10 +1422,13 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|" seq#=%d"
-argument_list|,
+operator|(
+name|ndo
+operator|,
+literal|" seq#=%u"
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -1286,13 +1437,14 @@ index|[
 name|hlen
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|hlen
 operator|+=
 literal|2
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|mh
@@ -1303,10 +1455,13 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* units of 4 secs */
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|" lifetime=%d"
-argument_list|,
+operator|(
+name|ndo
+operator|,
+literal|" lifetime=%u"
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -1317,6 +1472,7 @@ index|]
 argument_list|)
 operator|<<
 literal|2
+operator|)
 argument_list|)
 expr_stmt|;
 name|hlen
@@ -1327,12 +1483,16 @@ break|break;
 case|case
 name|IP6M_BINDING_ERROR
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"mobility: BE"
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|mh
 operator|->
@@ -1342,16 +1502,20 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|" status=%d"
-argument_list|,
+operator|(
+name|ndo
+operator|,
+literal|" status=%u"
+operator|,
 name|mh
 operator|->
 name|ip6m_data8
 index|[
 literal|0
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Reserved */
@@ -1359,7 +1523,7 @@ name|hlen
 operator|=
 name|IP6M_MINLEN
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|mh
@@ -1369,18 +1533,24 @@ operator|+
 literal|16
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" homeaddr %s"
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|bp
 index|[
 name|hlen
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|hlen
@@ -1389,15 +1559,19 @@ literal|16
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"mobility: type-#%d len=%d"
-argument_list|,
+operator|(
+name|ndo
+operator|,
+literal|"mobility: type-#%u len=%u"
+operator|,
 name|type
-argument_list|,
+operator|,
 name|mh
 operator|->
 name|ip6m_len
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1409,10 +1583,14 @@ break|break;
 block|}
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 name|mobility_opt_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|bp
 index|[
@@ -1431,11 +1609,13 @@ operator|)
 return|;
 name|trunc
 label|:
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|MOBILITY]"
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 return|return

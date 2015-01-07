@@ -3,6 +3,12 @@ begin_comment
 comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Dynamic Trunk Protocol (DTP)  *  * Original code by Carles Kishimoto<carles.kishimoto@gmail.com>  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -29,18 +35,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
 end_include
 
@@ -54,12 +48,6 @@ begin_include
 include|#
 directive|include
 file|"extract.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"nlpid.h"
 end_include
 
 begin_define
@@ -99,6 +87,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|dtp_tlv_values
@@ -142,6 +131,10 @@ begin_function
 name|void
 name|dtp_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -174,36 +167,36 @@ name|tptr
 operator|=
 name|pptr
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|TTEST2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
 argument_list|,
 name|DTP_HEADER_LEN
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
-name|printf
+expr_stmt|;
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"DTPv%u, length %u"
-argument_list|,
+operator|,
 operator|(
 operator|*
 name|tptr
 operator|)
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * In non-verbose mode, just print version.      */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<
 literal|1
 condition|)
@@ -225,20 +218,14 @@ name|length
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|TTEST2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
 argument_list|,
 literal|4
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 name|type
 operator|=
 name|EXTRACT_16BITS
@@ -269,10 +256,13 @@ condition|)
 block|{
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t%s (0x%04x) TLV, length %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|dtp_tlv_values
@@ -281,10 +271,11 @@ literal|"Unknown"
 argument_list|,
 name|type
 argument_list|)
-argument_list|,
+operator|,
 name|type
-argument_list|,
+operator|,
 name|len
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -295,13 +286,17 @@ block|{
 case|case
 name|DTP_DOMAIN_TLV
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s"
-argument_list|,
+operator|,
 name|tptr
 operator|+
 literal|4
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -311,15 +306,19 @@ case|:
 case|case
 name|DTP_DTP_TYPE_TLV
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", 0x%x"
-argument_list|,
+operator|,
 operator|*
 operator|(
 name|tptr
 operator|+
 literal|4
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -327,16 +326,22 @@ break|break;
 case|case
 name|DTP_NEIGHBOR_TLV
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s"
-argument_list|,
+operator|,
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -351,9 +356,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|dtp]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
