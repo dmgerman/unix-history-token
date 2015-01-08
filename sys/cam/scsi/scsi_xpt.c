@@ -2644,6 +2644,7 @@ comment|/* 		 * If the device is currently configured, we calculate an 		 * MD5 
 if|if
 condition|(
 operator|(
+operator|(
 name|periph
 operator|->
 name|path
@@ -2656,6 +2657,19 @@ name|CAM_DEV_UNCONFIGURED
 operator|)
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|softc
+operator|->
+name|flags
+operator|&
+name|PROBE_INQUIRY_CKSUM
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|MD5Init
