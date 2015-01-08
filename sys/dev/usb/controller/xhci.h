@@ -1563,7 +1563,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"The XHCI driver needs a pagesize above 4K"
+literal|"The XHCI driver needs a pagesize above or equal to 4K"
 end_error
 
 begin_endif
