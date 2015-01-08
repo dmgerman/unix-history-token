@@ -4604,7 +4604,7 @@ literal|2
 operator|+
 name|precision
 argument_list|,
-literal|".%ld"
+literal|".%06ld"
 argument_list|,
 name|usec
 argument_list|)

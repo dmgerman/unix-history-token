@@ -1680,6 +1680,14 @@ operator|=
 name|X509_NAME_ENTRY_new
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tmpentry
+condition|)
+goto|goto
+name|err
+goto|;
 name|tmpentry
 operator|->
 name|object

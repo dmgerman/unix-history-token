@@ -525,6 +525,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ECDH
+end_ifndef
+
 begin_function
 specifier|static
 name|int
@@ -682,6 +688,11 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1224,8 +1235,17 @@ literal|0
 block|,
 literal|0
 block|,
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ECDH
 name|pkey_ec_derive
 block|,
+else|#
+directive|else
+literal|0
+block|,
+endif|#
+directive|endif
 name|pkey_ec_ctrl
 block|,
 name|pkey_ec_ctrl_str

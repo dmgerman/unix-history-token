@@ -554,6 +554,11 @@ name|SSL3_RT_MAX_PLAIN_LENGTH
 argument_list|)
 condition|)
 block|{
+name|BUF_MEM_free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 operator|-
@@ -591,6 +596,23 @@ block|}
 name|s
 operator|->
 name|init_num
+operator|=
+literal|0
+expr_stmt|;
+name|s
+operator|->
+name|d1
+operator|->
+name|change_cipher_spec_ok
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Should have been reset by ssl3_get_finished, too. */
+name|s
+operator|->
+name|s3
+operator|->
+name|change_cipher_spec
 operator|=
 literal|0
 expr_stmt|;
@@ -1410,42 +1432,7 @@ name|new_cipher
 operator|->
 name|algorithm_mkey
 expr_stmt|;
-comment|/* clear this, it may get reset by 			 * send_server_key_exchange */
-if|if
-condition|(
-operator|(
-name|s
-operator|->
-name|options
-operator|&
-name|SSL_OP_EPHEMERAL_RSA
-operator|)
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_KRB5
-operator|&&
-operator|!
-operator|(
-name|alg_k
-operator|&
-name|SSL_kKRB5
-operator|)
-endif|#
-directive|endif
-comment|/* OPENSSL_NO_KRB5 */
-condition|)
-comment|/* option SSL_OP_EPHEMERAL_RSA sends temporary RSA key 				 * even when forbidden by protocol specs 				 * (handshake may fail as clients are not required to 				 * be able to handle this) */
-name|s
-operator|->
-name|s3
-operator|->
-name|tmp
-operator|.
-name|use_rsa_tmp
-operator|=
-literal|1
-expr_stmt|;
-else|else
+comment|/* 			 * clear this, it may get reset by 			 * send_server_key_exchange 			 */
 name|s
 operator|->
 name|s3
@@ -1459,13 +1446,7 @@ expr_stmt|;
 comment|/* only send if a DH key exchange or 			 * RSA but we have a sign only certificate */
 if|if
 condition|(
-name|s
-operator|->
-name|s3
-operator|->
-name|tmp
-operator|.
-name|use_rsa_tmp
+literal|0
 comment|/* PSK: send ServerKeyExchange if PSK identity 			 * hint if provided */
 ifndef|#
 directive|ifndef
@@ -2313,6 +2294,16 @@ case|:
 case|case
 name|SSL3_ST_SR_CERT_VRFY_B
 case|:
+comment|/* 			 * This *should* be the first time we enable CCS, but be 			 * extra careful about surrounding code changes. We need 			 * to set this here because we don't know if we're 			 * expecting a CertificateVerify or not. 			 */
+if|if
+condition|(
+operator|!
+name|s
+operator|->
+name|s3
+operator|->
+name|change_cipher_spec
+condition|)
 name|s
 operator|->
 name|d1
@@ -2383,6 +2374,16 @@ case|:
 case|case
 name|SSL3_ST_SR_FINISHED_B
 case|:
+comment|/* 			 * Enable CCS for resumed handshakes. 			 * In a full handshake, we end up here through 			 * SSL3_ST_SR_CERT_VRFY_B, so change_cipher_spec_ok was 			 * already set. Receiving a CCS clears the flag, so make 			 * sure not to re-enable it to ban duplicates. 			 * s->s3->change_cipher_spec is set when a CCS is 			 * processed in d1_pkt.c, and remains set until 			 * the client's Finished message is read. 			 */
+if|if
+condition|(
+operator|!
+name|s
+operator|->
+name|s3
+operator|->
+name|change_cipher_spec
+condition|)
 name|s
 operator|->
 name|d1
@@ -6765,6 +6766,25 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|l
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_DTLS1_SEND_SERVER_CERTIFICATE
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|s
 operator|->
 name|state

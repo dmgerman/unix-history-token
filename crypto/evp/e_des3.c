@@ -438,13 +438,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
-literal|"des_ede_cbc_cipher(ctx=%lx, buflen=%d)\n"
+name|stderr
+argument_list|,
+literal|"des_ede_cbc_cipher(ctx=%p, buflen=%d)\n"
 argument_list|,
 name|ctx
 argument_list|,
@@ -453,8 +451,10 @@ operator|->
 name|buf_len
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\t iv= "
 argument_list|)
 expr_stmt|;
@@ -471,8 +471,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02X"
 argument_list|,
 name|ctx
@@ -483,8 +485,10 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1466,15 +1470,19 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
-literal|"des_ede3_init_key(ctx=%lx)\n"
+name|stderr
+argument_list|,
+literal|"des_ede3_init_key(ctx=%p)\n"
 argument_list|,
 name|ctx
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tKEY= "
 argument_list|)
 expr_stmt|;
@@ -1491,8 +1499,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02X"
 argument_list|,
 name|key
@@ -1501,13 +1511,22 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+if|if
+condition|(
+name|iv
+condition|)
+block|{
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\t IV= "
 argument_list|)
 expr_stmt|;
@@ -1524,8 +1543,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02X"
 argument_list|,
 name|iv
@@ -1534,11 +1555,14 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif

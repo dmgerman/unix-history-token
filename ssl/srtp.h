@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ssl/tls1.h */
+comment|/* ssl/srtp.h */
 end_comment
 
 begin_comment
@@ -26,6 +26,12 @@ define|#
 directive|define
 name|HEADER_D1_SRTP_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<openssl/ssl.h>
+end_include
 
 begin_ifdef
 ifdef|#

@@ -9800,8 +9800,10 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|CIPHER_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Server has %d from %p:\n"
 argument_list|,
 name|sk_SSL_CIPHER_num
@@ -9842,8 +9844,10 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%p:%s\n"
 argument_list|,
 operator|(
@@ -9858,8 +9862,10 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Client sent %d from %p:\n"
 argument_list|,
 name|sk_SSL_CIPHER_num
@@ -9900,8 +9906,10 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%p:%s\n"
 argument_list|,
 operator|(
@@ -10061,7 +10069,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-comment|/*		printf("ssl3_choose_cipher %d alg= %lx\n", i,c->algorithms);*/
+comment|/*		fprintf(stderr,"ssl3_choose_cipher %d alg= %lx\n", i,c->algorithms);*/
 endif|#
 directive|endif
 comment|/* KSSL_DEBUG */
@@ -10149,8 +10157,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CIPHER_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%d:[%08lX:%08lX:%08lX:%08lX]%p:%s (export)\n"
 argument_list|,
 name|ok
@@ -10196,8 +10206,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CIPHER_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%d:[%08lX:%08lX:%08lX:%08lX]%p:%s\n"
 argument_list|,
 name|ok
@@ -10962,6 +10974,9 @@ operator|&&
 name|ec_ok
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ECDH
 if|if
 condition|(
 comment|/* if we are considering an ECC cipher suite that uses an ephemeral EC key */
@@ -11215,6 +11230,9 @@ operator|&&
 name|ec_ok
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* OPENSSL_NO_ECDH */
 endif|#
 directive|endif
 comment|/* OPENSSL_NO_EC */
