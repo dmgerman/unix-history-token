@@ -1422,6 +1422,16 @@ literal|'D'
 block|}
 block|,
 block|{
+literal|"extern-only"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'g'
+block|}
+block|,
+block|{
 literal|"format"
 block|,
 name|required_argument
@@ -10166,7 +10176,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ \n  -f                        Produce full output (default).\ \n      --format=format       Display output in specific format.  Allowed\ \n                            formats are: \"bsd\", \"posix\" and \"sysv\".\ \n  -g                        Display only global symbol information.\ \n  -h, --help                Show this help message.\ \n  -l, --line-numbers        Display filename and linenumber using\ \n                            debugging information.\ \n  -n, --numeric-sort        Sort symbols numerically by value."
+literal|"\ \n  -f                        Produce full output (default).\ \n      --format=format       Display output in specific format.  Allowed\ \n                            formats are: \"bsd\", \"posix\" and \"sysv\".\ \n  -g, --extern-only         Display only global symbol information.\ \n  -h, --help                Show this help message.\ \n  -l, --line-numbers        Display filename and linenumber using\ \n                            debugging information.\ \n  -n, --numeric-sort        Sort symbols numerically by value."
 argument_list|)
 expr_stmt|;
 name|printf
