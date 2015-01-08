@@ -2183,7 +2183,8 @@ name|int
 name|error
 decl_stmt|,
 name|optval
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
 name|size_val
 decl_stmt|;
 name|size_val
@@ -3778,7 +3779,7 @@ operator|.
 name|alen
 operator|=
 operator|(
-name|int
+name|socklen_t
 operator|*
 operator|)
 name|PTRIN
