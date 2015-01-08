@@ -4,7 +4,7 @@ comment|/*-  * Copyright 2014 Svatopluk Kraus<onwahe@gmail.com>  * Copyright 201
 end_comment
 
 begin_comment
-comment|/*  * Macros to make working with the System Control Registers simpler.  */
+comment|/*  * Macros to make working with the System Control Registers simpler.  *  * Note that when register r0 is hard-coded in these definitions it means the  * cp15 operation neither reads nor writes the register, and r0 is used only  * because some syntatically-valid register name has to appear at that point to  * keep the asm parser happy.  */
 end_comment
 
 begin_ifndef
@@ -1314,6 +1314,218 @@ end_define
 
 begin_comment
 comment|/* Invalidate unified TLB by MVA, all ASID */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * CP15 C9 registers  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|==
+literal|6
+operator|&&
+name|defined
+argument_list|(
+name|CPU_ARM1176
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|CP15_PMCCNTR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr, c15, c12, 1
+end_define
+
+begin_comment
+comment|/* PM Cycle Count Register */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|__ARM_ARCH
+operator|>
+literal|6
+end_elif
+
+begin_define
+define|#
+directive|define
+name|CP15_PMCR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr,  c9, c12, 0
+end_define
+
+begin_comment
+comment|/* Performance Monitor Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_PMCNTENSET
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr,  c9, c12, 1
+end_define
+
+begin_comment
+comment|/* PM Count Enable Set Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_PMCNTENCLR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr,  c9, c12, 2
+end_define
+
+begin_comment
+comment|/* PM Count Enable Clear Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_PMOVSR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr,  c9, c12, 3
+end_define
+
+begin_comment
+comment|/* PM Overflow Flag Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_PMSWINC
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr,  c9, c12, 4
+end_define
+
+begin_comment
+comment|/* PM Software Increment Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_PMSELR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr,  c9, c12, 5
+end_define
+
+begin_comment
+comment|/* PM Event Counter Selection Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_PMCCNTR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr,  c9, c13, 0
+end_define
+
+begin_comment
+comment|/* PM Cycle Count Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_PMXEVTYPER
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr,  c9, c13, 1
+end_define
+
+begin_comment
+comment|/* PM Event Type Select Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_PMXEVCNTRR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr,  c9, c13, 2
+end_define
+
+begin_comment
+comment|/* PM Event Count Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_PMUSERENR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr,  c9, c14, 0
+end_define
+
+begin_comment
+comment|/* PM User Enable Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_PMINTENSET
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr,  c9, c14, 1
+end_define
+
+begin_comment
+comment|/* PM Interrupt Enable Set Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_PMINTENCLR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr,  c9, c14, 2
+end_define
+
+begin_comment
+comment|/* PM Interrupt Enable Clear Register */
 end_comment
 
 begin_endif
