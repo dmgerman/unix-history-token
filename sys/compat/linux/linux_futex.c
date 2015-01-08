@@ -1281,7 +1281,7 @@ literal|"struct proc *"
 argument_list|,
 literal|"uint32_t *"
 argument_list|,
-literal|"int"
+literal|"unsigned int"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1330,7 +1330,7 @@ literal|"struct linux_robust_list **"
 argument_list|,
 literal|"struct linux_robust_list **"
 argument_list|,
-literal|"int *"
+literal|"unsigned int *"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6123,6 +6123,7 @@ name|uint32_t
 modifier|*
 name|uaddr
 parameter_list|,
+name|unsigned
 name|int
 name|pi
 parameter_list|)
@@ -6384,6 +6385,7 @@ modifier|*
 modifier|*
 name|head
 parameter_list|,
+name|unsigned
 name|int
 modifier|*
 name|pi
