@@ -633,25 +633,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|IS_DEFAULT_VNET
-argument_list|(
-name|curvnet
-argument_list|)
-condition|)
-name|mtx_init
-argument_list|(
-operator|&
-name|pfi_unlnkdkifs_mtx
-argument_list|,
-literal|"pf unlinked interfaces"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 name|kif
 operator|=
 name|malloc

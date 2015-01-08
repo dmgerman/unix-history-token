@@ -899,25 +899,6 @@ argument_list|,
 literal|"PF frag entries limit reached"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|IS_DEFAULT_VNET
-argument_list|(
-name|curvnet
-argument_list|)
-condition|)
-name|mtx_init
-argument_list|(
-operator|&
-name|pf_frag_mtx
-argument_list|,
-literal|"pf fragments"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
