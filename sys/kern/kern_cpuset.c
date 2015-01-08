@@ -155,6 +155,30 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_page.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_phys.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -255,6 +279,15 @@ begin_decl_stmt
 name|cpuset_t
 modifier|*
 name|cpuset_root
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|cpuset_t
+name|cpuset_domain
+index|[
+name|MAXMEMDOM
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1716,6 +1749,9 @@ return|;
 block|}
 case|case
 name|CPU_WHICH_IRQ
+case|:
+case|case
+name|CPU_WHICH_DOMAIN
 case|:
 return|return
 operator|(
@@ -3213,7 +3249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Creates the cpuset for thread0.  We make two sets:  *   * 0 - The root set which should represent all valid processors in the  *     system.  It is initially created with a mask of all processors  *     because we don't know what processors are valid until cpuset_init()  *     runs.  This set is immutable.  * 1 - The default set which all processes are a member of until changed.  *     This allows an administrator to move all threads off of given cpus to  *     dedicate them to high priority tasks or save power etc.  */
+comment|/*  * Creates system-wide cpusets and the cpuset for thread0 including two  * sets:  *   * 0 - The root set which should represent all valid processors in the  *     system.  It is initially created with a mask of all processors  *     because we don't know what processors are valid until cpuset_init()  *     runs.  This set is immutable.  * 1 - The default set which all processes are a member of until changed.  *     This allows an administrator to move all threads off of given cpus to  *     dedicate them to high priority tasks or save power etc.  */
 end_comment
 
 begin_function
@@ -3386,6 +3422,25 @@ argument_list|,
 name|INT_MAX
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* MD Code is responsible for initializing sets if vm_ndomains> 1. */
+if|if
+condition|(
+name|vm_ndomains
+operator|==
+literal|1
+condition|)
+name|CPU_COPY
+argument_list|(
+operator|&
+name|all_cpus
+argument_list|,
+operator|&
+name|cpuset_domain
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 return|return
@@ -4101,6 +4156,9 @@ break|break;
 case|case
 name|CPU_WHICH_IRQ
 case|:
+case|case
+name|CPU_WHICH_DOMAIN
+case|:
 return|return
 operator|(
 name|EINVAL
@@ -4393,6 +4451,9 @@ break|break;
 case|case
 name|CPU_WHICH_IRQ
 case|:
+case|case
+name|CPU_WHICH_DOMAIN
+case|:
 name|error
 operator|=
 name|EINVAL
@@ -4537,6 +4598,36 @@ argument_list|(
 name|uap
 operator|->
 name|id
+argument_list|,
+name|mask
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CPU_WHICH_DOMAIN
+case|:
+if|if
+condition|(
+name|uap
+operator|->
+name|id
+operator|>=
+name|vm_ndomains
+condition|)
+name|error
+operator|=
+name|ESRCH
+expr_stmt|;
+else|else
+name|CPU_COPY
+argument_list|(
+operator|&
+name|cpuset_domain
+index|[
+name|uap
+operator|->
+name|id
+index|]
 argument_list|,
 name|mask
 argument_list|)
@@ -4902,6 +4993,9 @@ case|:
 break|break;
 case|case
 name|CPU_WHICH_IRQ
+case|:
+case|case
+name|CPU_WHICH_DOMAIN
 case|:
 name|error
 operator|=
