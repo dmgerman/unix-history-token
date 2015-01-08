@@ -2010,10 +2010,12 @@ function_decl|;
 name|int
 name|ASN1_TYPE_cmp
 parameter_list|(
+specifier|const
 name|ASN1_TYPE
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|ASN1_TYPE
 modifier|*
 name|b
@@ -5379,6 +5381,10 @@ name|ASN1_R_INTEGER_TOO_LARGE_FOR_LONG
 value|128
 define|#
 directive|define
+name|ASN1_R_INVALID_BIT_STRING_BITS_LEFT
+value|220
+define|#
+directive|define
 name|ASN1_R_INVALID_BMPSTRING_LENGTH
 value|129
 define|#
@@ -5573,6 +5579,10 @@ define|#
 directive|define
 name|ASN1_R_TYPE_NOT_CONSTRUCTED
 value|156
+define|#
+directive|define
+name|ASN1_R_TYPE_NOT_PRIMITIVE
+value|218
 define|#
 directive|define
 name|ASN1_R_UNABLE_TO_DECODE_RSA_KEY

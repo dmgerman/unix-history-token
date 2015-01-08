@@ -25,18 +25,11 @@ directive|include
 file|"ssl_locl.h"
 end_include
 
-begin_function_decl
-specifier|static
-specifier|const
-name|SSL_METHOD
-modifier|*
-name|ssl3_get_method
-parameter_list|(
-name|int
-name|ver
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SSL3_METHOD
+end_ifndef
 
 begin_function
 specifier|static
@@ -82,6 +75,11 @@ argument_list|,
 argument|ssl3_get_method
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

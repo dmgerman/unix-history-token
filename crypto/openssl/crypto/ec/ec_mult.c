@@ -1501,6 +1501,19 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* Ensure wNAF is initialised in case we end up going to err */
+if|if
+condition|(
+name|wNAF
+condition|)
+name|wNAF
+index|[
+literal|0
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* preliminary pivot */
 if|if
 condition|(
 operator|!
@@ -1527,14 +1540,6 @@ goto|goto
 name|err
 goto|;
 block|}
-name|wNAF
-index|[
-literal|0
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* preliminary pivot */
 comment|/* num_val will be the total number of temporarily precomputed points */
 name|num_val
 operator|=

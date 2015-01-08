@@ -1616,6 +1616,12 @@ literal|1
 expr_stmt|;
 name|s
 operator|->
+name|state
+operator|=
+name|stn
+expr_stmt|;
+name|s
+operator|->
 name|init_msg
 operator|=
 name|s

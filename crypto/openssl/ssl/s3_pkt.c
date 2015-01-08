@@ -352,6 +352,17 @@ block|{
 if|if
 condition|(
 name|left
+operator|==
+literal|0
+operator|&&
+name|extend
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|left
 operator|>
 literal|0
 operator|&&
@@ -3011,7 +3022,8 @@ operator|+=
 name|eivlen
 expr_stmt|;
 block|}
-comment|/* ssl3_enc can only have an error on read */
+if|if
+condition|(
 name|s
 operator|->
 name|method
@@ -3024,7 +3036,12 @@ name|s
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|<
+literal|1
+condition|)
+goto|goto
+name|err
+goto|;
 comment|/* record length after mac and block padding */
 name|s2n
 argument_list|(
