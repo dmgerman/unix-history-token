@@ -4611,6 +4611,12 @@ condition|(
 name|uap
 operator|->
 name|id
+operator|<
+literal|0
+operator|||
+name|uap
+operator|->
+name|id
 operator|>=
 name|vm_ndomains
 condition|)
