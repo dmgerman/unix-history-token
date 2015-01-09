@@ -74,6 +74,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Disabled for FIPS capable builds because they use the FIPS BIGNUM library  * which will fail this test.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
+
+begin_comment
 comment|/* test_exp_mod_zero tests that x**0 mod 1 == 0. It returns zero on success. */
 end_comment
 
@@ -231,6 +241,11 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -953,6 +968,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
 if|if
 condition|(
 name|test_exp_mod_zero
@@ -963,6 +981,8 @@ condition|)
 goto|goto
 name|err
 goto|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"done\n"
