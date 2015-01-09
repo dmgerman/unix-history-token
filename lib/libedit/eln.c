@@ -238,11 +238,6 @@ name|wchar_t
 modifier|*
 name|tmp
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|ret
-decl_stmt|;
 name|int
 name|nwread
 decl_stmt|;
