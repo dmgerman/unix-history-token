@@ -201,8 +201,6 @@ name|addr
 decl_stmt|,
 name|eaddr
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|error
 operator|=
 literal|0
