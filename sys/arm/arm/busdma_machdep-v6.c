@@ -2962,6 +2962,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|dmat
+operator|->
+name|map_count
+operator|++
+expr_stmt|;
 return|return
 operator|(
 literal|0
