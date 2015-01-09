@@ -3863,8 +3863,6 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"DEBUG: unique_subject undefined\n"
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 endif|#

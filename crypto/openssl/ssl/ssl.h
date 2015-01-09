@@ -1635,11 +1635,11 @@ define|#
 directive|define
 name|SSL_OP_SINGLE_DH_USE
 value|0x00100000L
-comment|/* Set to always use the tmp_rsa key when doing RSA operations,  * even when this violates protocol specs */
+comment|/* Does nothing: retained for compatibiity */
 define|#
 directive|define
 name|SSL_OP_EPHEMERAL_RSA
-value|0x00200000L
+value|0x0
 comment|/* Set on servers to choose the cipher according to the server's  * preferences */
 define|#
 directive|define
@@ -1727,7 +1727,7 @@ define|#
 directive|define
 name|SSL_MODE_SEND_SERVERHELLO_TIME
 value|0x00000040L
-comment|/* Send TLS_FALLBACK_SCSV in the ClientHello.  * To be set by applications that reconnect with a downgraded protocol  * version; see draft-ietf-tls-downgrade-scsv-00 for details. */
+comment|/* Send TLS_FALLBACK_SCSV in the ClientHello.  * To be set only by applications that reconnect with a downgraded protocol  * version; see draft-ietf-tls-downgrade-scsv-00 for details.  *  * DO NOT ENABLE THIS if your application attempts a normal handshake.  * Only use this in explicit fallback retries, following the guidance  * in draft-ietf-tls-downgrade-scsv-00.  */
 define|#
 directive|define
 name|SSL_MODE_SEND_FALLBACK_SCSV
@@ -1855,6 +1855,24 @@ name|mtu
 parameter_list|)
 define|\
 value|SSL_ctrl((ssl),SSL_CTRL_SET_MTU,(mtu),NULL)
+define|#
+directive|define
+name|DTLS_set_link_mtu
+parameter_list|(
+name|ssl
+parameter_list|,
+name|mtu
+parameter_list|)
+define|\
+value|SSL_ctrl((ssl),DTLS_CTRL_SET_LINK_MTU,(mtu),NULL)
+define|#
+directive|define
+name|DTLS_get_link_min_mtu
+parameter_list|(
+name|ssl
+parameter_list|)
+define|\
+value|SSL_ctrl((ssl),DTLS_CTRL_GET_LINK_MIN_MTU,0,NULL)
 define|#
 directive|define
 name|SSL_get_secure_renegotiation_support
@@ -5589,6 +5607,14 @@ name|SSL_CTRL_CHECK_PROTO_VERSION
 value|119
 define|#
 directive|define
+name|DTLS_CTRL_SET_LINK_MTU
+value|120
+define|#
+directive|define
+name|DTLS_CTRL_GET_LINK_MIN_MTU
+value|121
+define|#
+directive|define
 name|DTLSv1_get_timeout
 parameter_list|(
 name|ssl
@@ -7584,6 +7610,9 @@ function_decl|;
 comment|/* SSLv2 */
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SSL3_METHOD
 specifier|const
 name|SSL_METHOD
 modifier|*
@@ -7611,6 +7640,8 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/* SSLv3 */
+endif|#
+directive|endif
 specifier|const
 name|SSL_METHOD
 modifier|*
@@ -7619,7 +7650,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* SSLv3 but can rollback to v2 */
+comment|/* Negotiate highest available SSL/TLS version */
 specifier|const
 name|SSL_METHOD
 modifier|*
@@ -7628,7 +7659,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* SSLv3 but can rollback to v2 */
+comment|/* Negotiate highest available SSL/TLS version */
 specifier|const
 name|SSL_METHOD
 modifier|*
@@ -7637,7 +7668,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* SSLv3 but can rollback to v2 */
+comment|/* Negotiate highest available SSL/TLS version */
 specifier|const
 name|SSL_METHOD
 modifier|*

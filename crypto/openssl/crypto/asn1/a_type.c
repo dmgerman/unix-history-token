@@ -305,10 +305,12 @@ begin_function
 name|int
 name|ASN1_TYPE_cmp
 parameter_list|(
+specifier|const
 name|ASN1_TYPE
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|ASN1_TYPE
 modifier|*
 name|b

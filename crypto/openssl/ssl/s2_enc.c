@@ -414,11 +414,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* read/writes from s->s2->mac_data using length for encrypt and   * decrypt.  It sets s->s2->padding and s->[rw]length  * if we are encrypting */
+comment|/* read/writes from s->s2->mac_data using length for encrypt and   * decrypt.  It sets s->s2->padding and s->[rw]length  * if we are encrypting  * Returns 0 on error and 1 on success */
 end_comment
 
 begin_function
-name|void
+name|int
 name|ssl2_enc
 parameter_list|(
 name|SSL
@@ -484,7 +484,9 @@ name|ds
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+literal|1
+return|;
 name|bs
 operator|=
 name|ds
@@ -512,6 +514,8 @@ literal|8
 operator|*
 literal|8
 expr_stmt|;
+if|if
+condition|(
 name|EVP_Cipher
 argument_list|(
 name|ds
@@ -530,7 +534,15 @@ name|mac_data
 argument_list|,
 name|l
 argument_list|)
-expr_stmt|;
+operator|<
+literal|1
+condition|)
+return|return
+literal|0
+return|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
