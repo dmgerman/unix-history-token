@@ -634,6 +634,24 @@ name|INET6
 case|case
 name|AF_INET6
 case|:
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_MCAST
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|adst
+operator|=
+name|arcbroadcastaddr
+expr_stmt|;
+comment|/* ARCnet broadcast address */
+else|else
 name|error
 operator|=
 name|nd6_storelladdr

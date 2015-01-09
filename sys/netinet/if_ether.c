@@ -1510,12 +1510,6 @@ operator|->
 name|m_flags
 operator|&
 name|M_MCAST
-operator|&&
-name|ifp
-operator|->
-name|if_type
-operator|!=
-name|IFT_ARCNET
 condition|)
 block|{
 comment|/* multicast */
