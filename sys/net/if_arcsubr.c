@@ -644,7 +644,7 @@ operator|&
 name|M_MCAST
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|adst
 operator|=
