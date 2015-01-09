@@ -1327,11 +1327,11 @@ define|#
 directive|define
 name|SSL_OP_SINGLE_DH_USE
 value|0x00100000L
-comment|/* Set to always use the tmp_rsa key when doing RSA operations,  * even when this violates protocol specs */
+comment|/* Does nothing: retained for compatibiity */
 define|#
 directive|define
 name|SSL_OP_EPHEMERAL_RSA
-value|0x00200000L
+value|0x0
 comment|/* Set on servers to choose the cipher according to the server's  * preferences */
 define|#
 directive|define
@@ -1391,7 +1391,7 @@ define|#
 directive|define
 name|SSL_MODE_NO_AUTO_CHAIN
 value|0x00000008L
-comment|/* Send TLS_FALLBACK_SCSV in the ClientHello.  * To be set by applications that reconnect with a downgraded protocol  * version; see draft-ietf-tls-downgrade-scsv-00 for details. */
+comment|/* Send TLS_FALLBACK_SCSV in the ClientHello.  * To be set only by applications that reconnect with a downgraded protocol  * version; see draft-ietf-tls-downgrade-scsv-00 for details.  *  * DO NOT ENABLE THIS if your application attempts a normal handshake.  * Only use this in explicit fallback retries, following the guidance  * in draft-ietf-tls-downgrade-scsv-00.  */
 define|#
 directive|define
 name|SSL_MODE_SEND_FALLBACK_SCSV

@@ -2619,6 +2619,10 @@ begin_comment
 comment|/* sqr_add_c2(a,i,c0,c1,c2) -- c+=2*a[i]*a[j] for three word number c=(c2,c1,c0) */
 end_comment
 
+begin_comment
+comment|/*  * Keep in mind that carrying into high part of multiplication result  * can not overflow, because it cannot be all-ones.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2745,7 +2749,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|{	\ 	BN_ULONG ta=(a),tb=(b),t0;	\ 	BN_UMULT_LOHI(t0,t1,ta,tb);	\ 	t2 = t1+t1; c2 += (t2<t1)?1:0;	\ 	t1 = t0+t0; t2 += (t1<t0)?1:0;	\ 	c0 += t1; t2 += (c0<t1)?1:0;	\ 	c1 += t2; c2 += (c1<t2)?1:0;	\ 	}
+value|{	\ 	BN_ULONG ta=(a),tb=(b),t0;	\ 	BN_UMULT_LOHI(t0,t1,ta,tb);	\ 	c0 += t0; t2 = t1+((c0<t0)?1:0);\ 	c1 += t2; c2 += (c1<t2)?1:0;	\ 	c0 += t0; t1 += (c0<t0)?1:0;	\ 	c1 += t1; c2 += (c1<t1)?1:0;	\ 	}
 end_define
 
 begin_define
@@ -2829,7 +2833,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|{	\ 	BN_ULONG ta=(a),tb=(b),t0;	\ 	t1 = BN_UMULT_HIGH(ta,tb);	\ 	t0 = ta * tb;			\ 	t2 = t1+t1; c2 += (t2<t1)?1:0;	\ 	t1 = t0+t0; t2 += (t1<t0)?1:0;	\ 	c0 += t1; t2 += (c0<t1)?1:0;	\ 	c1 += t2; c2 += (c1<t2)?1:0;	\ 	}
+value|{	\ 	BN_ULONG ta=(a),tb=(b),t0;	\ 	t1 = BN_UMULT_HIGH(ta,tb);	\ 	t0 = ta * tb;			\ 	c0 += t0; t2 = t1+((c0<t0)?1:0);\ 	c1 += t2; c2 += (c1<t2)?1:0;	\ 	c0 += t0; t1 += (c0<t0)?1:0;	\ 	c1 += t1; c2 += (c1<t1)?1:0;	\ 	}
 end_define
 
 begin_define

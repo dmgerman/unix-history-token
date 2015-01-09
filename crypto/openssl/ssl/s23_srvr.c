@@ -2051,9 +2051,11 @@ operator|)
 condition|)
 block|{
 comment|/* we have SSLv3/TLSv1 (type 2: SSL2 style, type 3: SSL3/TLS style) */
-name|s
-operator|->
-name|method
+name|SSL_METHOD
+modifier|*
+name|new_method
+decl_stmt|;
+name|new_method
 operator|=
 name|ssl23_get_server_method
 argument_list|(
@@ -2064,9 +2066,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|s
-operator|->
-name|method
+name|new_method
 operator|==
 name|NULL
 condition|)
@@ -2082,6 +2082,12 @@ goto|goto
 name|err
 goto|;
 block|}
+name|s
+operator|->
+name|method
+operator|=
+name|new_method
+expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -1954,18 +1954,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|n
-operator|<=
-literal|0
-condition|)
-return|return
-operator|(
-name|n
-operator|)
-return|;
-comment|/* error or non-blocking io */
 comment|/* this packet contained a partial record, dump it */
 if|if
 condition|(
@@ -2054,8 +2042,18 @@ name|type
 operator|==
 name|SSL3_RT_HANDSHAKE
 operator|&&
-operator|*
-name|p
+name|s
+operator|->
+name|packet_length
+operator|>
+name|DTLS1_RT_HEADER_LENGTH
+operator|&&
+name|s
+operator|->
+name|packet
+index|[
+name|DTLS1_RT_HEADER_LENGTH
+index|]
 operator|==
 name|SSL3_MT_CLIENT_HELLO
 operator|)
