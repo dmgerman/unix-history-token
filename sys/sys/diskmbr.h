@@ -231,6 +231,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DOSPTYP_EFI
+value|0xef
+end_define
+
+begin_comment
+comment|/* EFI FAT parition */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DOSPTYP_VMFS
 value|0xfb
 end_define
