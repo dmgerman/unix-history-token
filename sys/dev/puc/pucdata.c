@@ -3765,6 +3765,28 @@ block|,
 block|{
 literal|0x5372
 block|,
+literal|0x6872
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Feasso PCI FPP-02 2S1P"
+block|,
+name|DEFAULT_RCLK
+block|,
+name|PUC_PORT_2S1P
+block|,
+literal|0x10
+block|,
+literal|4
+block|,
+literal|0
+block|, 	}
+block|,
+block|{
+literal|0x5372
+block|,
 literal|0x6873
 block|,
 literal|0xffff
