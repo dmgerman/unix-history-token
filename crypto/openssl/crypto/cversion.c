@@ -86,7 +86,7 @@ directive|ifdef
 name|CFLAGS
 return|return
 operator|(
-name|cflags
+name|CFLAGS
 operator|)
 return|;
 else|#
