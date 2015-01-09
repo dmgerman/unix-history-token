@@ -1609,12 +1609,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* 		 * 5th argument here is "max number of vnodes to traverse". 		 * Since each entry takes up at least 2 bytes in the output buffer, 		 * limit it to N/2 vnodes for an N byte buffer. 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|linux_getcwd_common
@@ -1641,12 +1635,6 @@ argument_list|,
 name|GETCWD_CHECK_ACCESS
 argument_list|,
 name|td
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if
