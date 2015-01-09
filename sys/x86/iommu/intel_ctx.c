@@ -1424,7 +1424,10 @@ name|dmar_ensure_ctx_page
 argument_list|(
 name|dmar
 argument_list|,
-name|bus
+name|PCI_RID2BUS
+argument_list|(
+name|rid
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ctx1
