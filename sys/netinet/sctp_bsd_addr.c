@@ -1513,14 +1513,6 @@ operator|&
 name|SCTP_MBUF_LOGGING_ENABLE
 condition|)
 block|{
-if|if
-condition|(
-name|SCTP_BUF_IS_EXTENDED
-argument_list|(
-name|m
-argument_list|)
-condition|)
-block|{
 name|sctp_log_mb
 argument_list|(
 name|m
@@ -1528,7 +1520,6 @@ argument_list|,
 name|SCTP_MBUF_IALLOC
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 endif|#
 directive|endif
