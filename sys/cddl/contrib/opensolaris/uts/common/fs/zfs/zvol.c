@@ -8639,13 +8639,11 @@ name|uio_loffset
 expr_stmt|;
 name|error
 operator|=
-name|dmu_read_uio
+name|dmu_read_uio_dbuf
 argument_list|(
 name|zv
 operator|->
-name|zv_objset
-argument_list|,
-name|ZVOL_OBJ
+name|zv_dbuf
 argument_list|,
 name|uio
 argument_list|,
