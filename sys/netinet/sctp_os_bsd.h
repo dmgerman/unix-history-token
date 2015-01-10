@@ -1363,11 +1363,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_BUF_EXTEND_SIZE
-parameter_list|(
-name|m
-parameter_list|)
-value|(m->m_ext.ext_size)
+name|SCTP_BUF_SIZE
+value|M_SIZE
 end_define
 
 begin_define
