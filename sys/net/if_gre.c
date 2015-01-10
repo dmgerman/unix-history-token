@@ -3689,7 +3689,7 @@ name|MTAG_GRE
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+name|mtag
 argument_list|)
 operator|)
 operator|!=
