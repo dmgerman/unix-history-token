@@ -1859,7 +1859,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"dmar%d pci%d:%d:%d:%d domain %d mgaw %d "
+literal|"dmar%d pci%d:%d:%d:%d rid %x domain %d mgaw %d "
 literal|"agaw %d %s-mapped\n"
 argument_list|,
 name|dmar
@@ -1875,6 +1875,8 @@ argument_list|,
 name|slot
 argument_list|,
 name|func
+argument_list|,
+name|rid
 argument_list|,
 name|ctx
 operator|->
