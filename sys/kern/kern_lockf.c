@@ -3254,6 +3254,8 @@ expr_stmt|;
 if|if
 condition|(
 name|freestate
+operator|!=
+name|NULL
 condition|)
 block|{
 name|sx_xlock
@@ -3289,6 +3291,10 @@ name|freestate
 argument_list|,
 name|M_LOCKF
 argument_list|)
+expr_stmt|;
+name|freestate
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 if|if
