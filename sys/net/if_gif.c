@@ -2306,9 +2306,10 @@ name|LOG_NOTICE
 argument_list|,
 literal|"%s: loop detected\n"
 argument_list|,
+name|if_name
+argument_list|(
 name|ifp
-operator|->
-name|if_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
