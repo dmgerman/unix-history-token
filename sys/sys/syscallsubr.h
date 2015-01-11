@@ -180,7 +180,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|u_char
+name|char
 modifier|*
 name|buf
 parameter_list|,
