@@ -37,6 +37,27 @@ end_define
 
 begin_struct
 struct|struct
+name|mlx4_alloc_ucontext_resp_v3
+block|{
+name|struct
+name|ibv_get_context_resp
+name|ibv_resp
+decl_stmt|;
+name|__u32
+name|qp_tab_size
+decl_stmt|;
+name|__u16
+name|bf_reg_size
+decl_stmt|;
+name|__u16
+name|bf_regs_per_page
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|mlx4_alloc_ucontext_resp
 block|{
 name|struct
