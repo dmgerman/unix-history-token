@@ -6061,17 +6061,6 @@ name|sctp_hashmark
 argument_list|)
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|head
-operator|==
-name|NULL
-condition|)
-block|{
-goto|goto
-name|null_return
-goto|;
-block|}
 name|LIST_FOREACH
 argument_list|(
 argument|stcb
