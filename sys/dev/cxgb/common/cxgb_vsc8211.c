@@ -489,7 +489,7 @@ name|cphy
 parameter_list|,
 name|int
 modifier|*
-name|link_ok
+name|link_state
 parameter_list|,
 name|int
 modifier|*
@@ -573,7 +573,7 @@ name|err
 return|;
 if|if
 condition|(
-name|link_ok
+name|link_state
 condition|)
 block|{
 comment|/* 		 * BMSR_LSTATUS is latch-low, so if it is 0 we need to read it 		 * once more to get the current link state. 		 */
@@ -608,15 +608,15 @@ return|return
 name|err
 return|;
 operator|*
-name|link_ok
+name|link_state
 operator|=
-operator|(
 name|status
 operator|&
 name|BMSR_LSTATUS
-operator|)
-operator|!=
-literal|0
+condition|?
+name|PHY_LINK_UP
+else|:
+name|PHY_LINK_DOWN
 expr_stmt|;
 block|}
 if|if
@@ -896,7 +896,7 @@ name|cphy
 parameter_list|,
 name|int
 modifier|*
-name|link_ok
+name|link_state
 parameter_list|,
 name|int
 modifier|*
@@ -980,7 +980,7 @@ name|err
 return|;
 if|if
 condition|(
-name|link_ok
+name|link_state
 condition|)
 block|{
 comment|/* 		 * BMSR_LSTATUS is latch-low, so if it is 0 we need to read it 		 * once more to get the current link state. 		 */
@@ -1015,15 +1015,15 @@ return|return
 name|err
 return|;
 operator|*
-name|link_ok
+name|link_state
 operator|=
-operator|(
 name|status
 operator|&
 name|BMSR_LSTATUS
-operator|)
-operator|!=
-literal|0
+condition|?
+name|PHY_LINK_UP
+else|:
+name|PHY_LINK_DOWN
 expr_stmt|;
 block|}
 if|if
