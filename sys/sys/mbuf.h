@@ -731,12 +731,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_FLOWID
+name|M_UNUSED_8
 value|0x00000100
 end_define
 
 begin_comment
-comment|/* deprecated: flowid is valid */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -903,7 +903,7 @@ define|#
 directive|define
 name|M_COPYFLAGS
 define|\
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_PROMISC|M_VLANTAG|M_FLOWID| \      M_PROTOFLAGS)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_PROMISC|M_VLANTAG| \      M_PROTOFLAGS)
 end_define
 
 begin_comment
@@ -915,7 +915,7 @@ define|#
 directive|define
 name|M_FLAG_BITS
 define|\
-value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_BCAST\6M_MCAST" \     "\7M_PROMISC\10M_VLANTAG\11M_FLOWID"
+value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_BCAST\6M_MCAST" \     "\7M_PROMISC\10M_VLANTAG"
 end_define
 
 begin_define
