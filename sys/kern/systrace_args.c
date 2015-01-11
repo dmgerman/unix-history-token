@@ -8794,7 +8794,7 @@ name|p
 operator|->
 name|buf
 expr_stmt|;
-comment|/* u_char * */
+comment|/* char * */
 name|uarg
 index|[
 literal|1
@@ -24169,7 +24169,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"u_char *"
+literal|"char *"
 expr_stmt|;
 break|break;
 case|case
