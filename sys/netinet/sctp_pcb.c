@@ -9017,23 +9017,6 @@ argument_list|)
 argument_list|)
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|head
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* invalid vtag */
-name|SCTP_INP_INFO_RUNLOCK
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|LIST_FOREACH
 argument_list|(
 argument|stcb
@@ -30900,18 +30883,6 @@ argument_list|)
 argument_list|)
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|head
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* invalid vtag */
-goto|goto
-name|skip_vtag_check
-goto|;
-block|}
 name|LIST_FOREACH
 argument_list|(
 argument|stcb
@@ -30982,8 +30953,6 @@ operator|)
 return|;
 block|}
 block|}
-name|skip_vtag_check
-label|:
 name|chain
 operator|=
 operator|&
