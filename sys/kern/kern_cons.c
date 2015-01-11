@@ -1805,6 +1805,16 @@ condition|(
 name|use_cnputs_mtx
 condition|)
 block|{
+comment|/* 		 * NOTE: Debug prints and/or witness printouts in 		 * console driver clients can cause the "cnputs_mtx" 		 * mutex to recurse. Simply return if that happens. 		 */
+if|if
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|cnputs_mtx
+argument_list|)
+condition|)
+return|return;
 name|mtx_lock_spin
 argument_list|(
 operator|&
