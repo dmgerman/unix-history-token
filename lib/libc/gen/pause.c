@@ -54,12 +54,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"namespace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -67,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"un-namespace.h"
 end_include
 
 begin_include
@@ -87,7 +75,7 @@ end_comment
 
 begin_function
 name|int
-name|__libc_pause
+name|__pause
 parameter_list|(
 name|void
 parameter_list|)
@@ -97,7 +85,7 @@ name|oset
 decl_stmt|;
 if|if
 condition|(
-name|_sigprocmask
+name|sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -118,7 +106,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|_sigsuspend
+name|sigsuspend
 argument_list|(
 operator|&
 name|oset
@@ -128,50 +116,12 @@ return|;
 block|}
 end_function
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pause
-end_pragma
-
-begin_function
-name|int
-name|pause
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-argument_list|)
-operator|)
-name|__libc_interposing
-index|[
-name|INTERPOS_pause
-index|]
-operator|)
-operator|(
-operator|)
-operator|)
-return|;
-block|}
-end_function
-
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__libc_pause
-argument_list|,
 name|__pause
+argument_list|,
+name|pause
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -179,7 +129,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__libc_pause
+name|__pause
 argument_list|,
 name|_pause
 argument_list|)

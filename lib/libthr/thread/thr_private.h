@@ -3822,26 +3822,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|int
-name|__thr_pause
-argument_list|(
-name|void
-argument_list|)
-name|__hidden
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-name|__thr_raise
-parameter_list|(
-name|int
-name|sig
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|int
 name|__thr_setcontext

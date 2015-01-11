@@ -128,6 +128,8 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
+name|int
+argument_list|,
 specifier|const
 name|char
 operator|*
@@ -139,10 +141,12 @@ argument_list|)
 operator|)
 name|__libc_interposing
 index|[
-name|INTERPOS_open
+name|INTERPOS_openat
 index|]
 operator|)
 operator|(
+name|AT_FDCWD
+operator|,
 name|path
 operator|,
 name|flags
