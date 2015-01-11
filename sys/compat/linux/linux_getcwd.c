@@ -591,10 +591,6 @@ name|va_blocksize
 expr_stmt|;
 name|dirbuf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|dirbuflen
@@ -1428,11 +1424,14 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-name|caddr_t
+name|char
+modifier|*
 name|bp
 decl_stmt|,
+modifier|*
 name|bend
 decl_stmt|,
+modifier|*
 name|path
 decl_stmt|;
 name|int
@@ -1507,10 +1506,6 @@ name|ERANGE
 return|;
 name|path
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|len
