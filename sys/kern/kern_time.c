@@ -4711,7 +4711,7 @@ literal|0
 operator|||
 operator|*
 name|curpps
-operator|<
+operator|<=
 name|maxpps
 operator|)
 return|;
