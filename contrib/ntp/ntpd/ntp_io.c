@@ -5098,9 +5098,9 @@ sizeof|sizeof
 argument_list|(
 name|in6addr_any
 argument_list|)
+argument_list|)
 operator|==
 literal|0
-argument_list|)
 condition|)
 return|return
 literal|1
