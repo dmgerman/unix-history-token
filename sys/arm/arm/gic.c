@@ -2411,7 +2411,7 @@ end_function
 
 begin_function
 name|void
-name|gic_init_secondary
+name|arm_init_secondary_ic
 parameter_list|(
 name|void
 parameter_list|)
