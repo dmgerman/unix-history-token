@@ -389,6 +389,22 @@ literal|"AMD SB7x0/SB8x0/SB9x0 USB 2.0 controller"
 operator|)
 return|;
 case|case
+literal|0x1d268086
+case|:
+return|return
+operator|(
+literal|"Intel Patsburg USB 2.0 controller"
+operator|)
+return|;
+case|case
+literal|0x1d2d8086
+case|:
+return|return
+operator|(
+literal|"Intel Patsburg USB 2.0 controller"
+operator|)
+return|;
+case|case
 literal|0x1e268086
 case|:
 return|return
