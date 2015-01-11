@@ -195,6 +195,24 @@ name|flags
 decl_stmt|,
 name|rc
 decl_stmt|;
+comment|/* 	 * POSIX says we shall return EINVAL if size is 0. 	 */
+if|if
+condition|(
+name|size
+operator|==
+literal|0
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* 	 * Retrieve the flags as used by open(2) from the mode argument, and 	 * validate them. 	 */
 name|rc
 operator|=
@@ -389,26 +407,6 @@ block|{
 case|case
 literal|'a'
 case|:
-if|if
-condition|(
-name|ck
-operator|->
-name|bin
-condition|)
-block|{
-comment|/* 			 * This isn't useful, since the buffer isn't allowed 			 * to grow. 			 */
-name|ck
-operator|->
-name|off
-operator|=
-name|ck
-operator|->
-name|len
-operator|=
-name|size
-expr_stmt|;
-block|}
-else|else
 name|ck
 operator|->
 name|off
