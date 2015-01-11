@@ -13371,6 +13371,7 @@ comment|/********************************************************************** 
 end_comment
 
 begin_function
+specifier|static
 specifier|inline
 name|uint32_t
 name|osmtest_path_rec_key_get
