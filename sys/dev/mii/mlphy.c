@@ -362,23 +362,13 @@ return|;
 comment|/* 	 * Make sure the parent is a `tl'. So far, I have only 	 * encountered the 6692 on an Olicom card with a ThunderLAN 	 * controller chip. 	 */
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|device_get_name
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|device_get_parent
+operator|!
+name|mii_dev_mac_match
 argument_list|(
 name|dev
-argument_list|)
-argument_list|)
-argument_list|)
 argument_list|,
 literal|"tl"
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(
