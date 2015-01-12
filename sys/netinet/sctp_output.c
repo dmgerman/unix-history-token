@@ -44471,6 +44471,11 @@ name|ptype
 decl_stmt|,
 name|plen
 decl_stmt|;
+name|SCTP_TCB_LOCK_ASSERT
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 comment|/* First find the cookie in the param area */
 name|cookie
 operator|=
@@ -44486,12 +44491,11 @@ expr|struct
 name|sctp_init_chunk
 argument_list|)
 expr_stmt|;
-name|SCTP_TCB_LOCK_ASSERT
-argument_list|(
-name|stcb
-argument_list|)
-expr_stmt|;
-do|do
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|phdr
 operator|=
@@ -44633,26 +44637,6 @@ argument_list|(
 name|plen
 argument_list|)
 expr_stmt|;
-block|}
-do|while
-condition|(
-name|phdr
-condition|)
-do|;
-if|if
-condition|(
-name|cookie
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* Did not find the cookie */
-return|return
-operator|(
-operator|-
-literal|3
-operator|)
-return|;
 block|}
 comment|/* ok, we got the cookie lets change it into a cookie echo chunk */
 comment|/* first the change from param to cookie */
