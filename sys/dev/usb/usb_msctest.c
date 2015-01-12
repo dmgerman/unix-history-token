@@ -3495,7 +3495,8 @@ name|error
 goto|;
 name|DPRINTF
 argument_list|(
-literal|"Device doesn't handle synchronize cache\n"
+literal|"Device doesn't handle synchronize cache "
+literal|"and prevent allow medium removal\n"
 argument_list|)
 expr_stmt|;
 name|usbd_add_dynamic_quirk
@@ -3503,6 +3504,13 @@ argument_list|(
 name|udev
 argument_list|,
 name|UQ_MSC_NO_SYNC_CACHE
+argument_list|)
+expr_stmt|;
+name|usbd_add_dynamic_quirk
+argument_list|(
+name|udev
+argument_list|,
+name|UQ_MSC_NO_PREVENT_ALLOW
 argument_list|)
 expr_stmt|;
 block|}
@@ -3597,7 +3605,8 @@ goto|;
 name|DPRINTF
 argument_list|(
 literal|"Device most likely doesn't "
-literal|"handle synchronize cache\n"
+literal|"handle synchronize cache nor"
+literal|"prevent allow medium removal\n"
 argument_list|)
 expr_stmt|;
 name|usbd_add_dynamic_quirk
@@ -3605,6 +3614,13 @@ argument_list|(
 name|udev
 argument_list|,
 name|UQ_MSC_NO_SYNC_CACHE
+argument_list|)
+expr_stmt|;
+name|usbd_add_dynamic_quirk
+argument_list|(
+name|udev
+argument_list|,
+name|UQ_MSC_NO_PREVENT_ALLOW
 argument_list|)
 expr_stmt|;
 block|}
@@ -3754,6 +3770,13 @@ argument_list|(
 name|udev
 argument_list|,
 name|UQ_MSC_NO_SYNC_CACHE
+argument_list|)
+expr_stmt|;
+name|usbd_add_dynamic_quirk
+argument_list|(
+name|udev
+argument_list|,
+name|UQ_MSC_NO_PREVENT_ALLOW
 argument_list|)
 expr_stmt|;
 name|usbd_add_dynamic_quirk
