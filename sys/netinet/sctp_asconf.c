@@ -2750,9 +2750,6 @@ name|struct
 name|sctp_asconf_paramhdr
 modifier|*
 name|aph
-decl_stmt|,
-modifier|*
-name|ack_aph
 decl_stmt|;
 name|struct
 name|sctp_ipv6addr_param
@@ -3181,45 +3178,6 @@ name|param_length
 argument_list|)
 expr_stmt|;
 comment|/* skip lookup addr */
-comment|/* get pointer to first asconf param in ASCONF-ACK */
-name|ack_aph
-operator|=
-operator|(
-expr|struct
-name|sctp_asconf_paramhdr
-operator|*
-operator|)
-operator|(
-name|mtod
-argument_list|(
-name|m_ack
-argument_list|,
-name|caddr_t
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sctp_asconf_ack_chunk
-argument_list|)
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|ack_aph
-operator|==
-name|NULL
-condition|)
-block|{
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-literal|"Gak in asconf2\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* get pointer to first asconf param in ASCONF */
 name|aph
 operator|=
