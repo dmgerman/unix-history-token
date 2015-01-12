@@ -819,9 +819,6 @@ decl_stmt|;
 name|u8
 name|loopback
 decl_stmt|;
-name|bool
-name|an_enabled
-decl_stmt|;
 comment|/* is Link Status Event notification to SW enabled */
 name|bool
 name|lse_enable
@@ -834,6 +831,9 @@ name|crc_enable
 decl_stmt|;
 name|u8
 name|pacing
+decl_stmt|;
+name|u8
+name|requested_speeds
 decl_stmt|;
 block|}
 struct|;
@@ -947,6 +947,10 @@ decl_stmt|;
 name|bool
 name|fcoe
 decl_stmt|;
+name|bool
+name|iscsi
+decl_stmt|;
+comment|/* Indicates iSCSI enabled */
 name|bool
 name|mfp_mode_1
 decl_stmt|;
@@ -1114,11 +1118,7 @@ block|{
 name|u64
 name|hw_semaphore_timeout
 decl_stmt|;
-comment|/* 2usec global time (GTIME resolution) */
-name|u64
-name|hw_semaphore_wait
-decl_stmt|;
-comment|/* - || - */
+comment|/* usec global time (GTIME resolution) */
 name|u32
 name|timeout
 decl_stmt|;
@@ -1530,13 +1530,76 @@ name|I40E_LLDPDU_SIZE
 value|1500
 end_define
 
+begin_define
+define|#
+directive|define
+name|I40E_TLV_STATUS_OPER
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_TLV_STATUS_SYNC
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_TLV_STATUS_ERR
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_CEE_OPER_MAX_APPS
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_APP_PROTOID_FCOE
+value|0x8906
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_APP_PROTOID_ISCSI
+value|0x0cbc
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_APP_PROTOID_FIP
+value|0x8914
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_APP_SEL_ETHTYPE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_APP_SEL_TCPIP
+value|0x2
+end_define
+
 begin_comment
-comment|/* IEEE 802.1Qaz ETS Configuration data */
+comment|/* CEE or IEEE 802.1Qaz ETS Configuration data */
 end_comment
 
 begin_struct
 struct|struct
-name|i40e_ieee_ets_config
+name|i40e_dcb_ets_config
 block|{
 name|u8
 name|willing
@@ -1570,42 +1633,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* IEEE 802.1Qaz ETS Recommendation data */
+comment|/* CEE or IEEE 802.1Qaz PFC Configuration data */
 end_comment
 
 begin_struct
 struct|struct
-name|i40e_ieee_ets_recommend
-block|{
-name|u8
-name|prioritytable
-index|[
-name|I40E_MAX_TRAFFIC_CLASS
-index|]
-decl_stmt|;
-name|u8
-name|tcbwtable
-index|[
-name|I40E_MAX_TRAFFIC_CLASS
-index|]
-decl_stmt|;
-name|u8
-name|tsatable
-index|[
-name|I40E_MAX_TRAFFIC_CLASS
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* IEEE 802.1Qaz PFC Configuration data */
-end_comment
-
-begin_struct
-struct|struct
-name|i40e_ieee_pfc_config
+name|i40e_dcb_pfc_config
 block|{
 name|u8
 name|willing
@@ -1624,12 +1657,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* IEEE 802.1Qaz Application Priority data */
+comment|/* CEE or IEEE 802.1Qaz Application Priority data */
 end_comment
 
 begin_struct
 struct|struct
-name|i40e_ieee_app_priority_table
+name|i40e_dcb_app_priority_table
 block|{
 name|u8
 name|priority
@@ -1648,23 +1681,34 @@ begin_struct
 struct|struct
 name|i40e_dcbx_config
 block|{
+name|u8
+name|dcbx_mode
+decl_stmt|;
+define|#
+directive|define
+name|I40E_DCBX_MODE_CEE
+value|0x1
+define|#
+directive|define
+name|I40E_DCBX_MODE_IEEE
+value|0x2
 name|u32
 name|numapps
 decl_stmt|;
 name|struct
-name|i40e_ieee_ets_config
+name|i40e_dcb_ets_config
 name|etscfg
 decl_stmt|;
 name|struct
-name|i40e_ieee_ets_recommend
+name|i40e_dcb_ets_config
 name|etsrec
 decl_stmt|;
 name|struct
-name|i40e_ieee_pfc_config
+name|i40e_dcb_pfc_config
 name|pfc
 decl_stmt|;
 name|struct
-name|i40e_ieee_app_priority_table
+name|i40e_dcb_app_priority_table
 name|app
 index|[
 name|I40E_DCBX_MAX_APPS
@@ -1690,7 +1734,7 @@ name|void
 modifier|*
 name|back
 decl_stmt|;
-comment|/* function pointer structs */
+comment|/* subsystem structs */
 name|struct
 name|i40e_phy_info
 name|phy
@@ -1752,6 +1796,16 @@ name|pf_id
 decl_stmt|;
 name|u16
 name|main_vsi_seid
+decl_stmt|;
+comment|/* for multi-function MACs */
+name|u16
+name|partition_id
+decl_stmt|;
+name|u16
+name|num_partitions
+decl_stmt|;
+name|u16
+name|num_ports
 decl_stmt|;
 comment|/* Closest numa node to the device */
 name|u16
@@ -2102,7 +2156,7 @@ name|I40E_RX_DESC_STATUS_TSYNVALID_SHIFT
 init|=
 literal|7
 block|,
-name|I40E_RX_DESC_STATUS_PIF_SHIFT
+name|I40E_RX_DESC_STATUS_RESERVED1_SHIFT
 init|=
 literal|8
 block|,
@@ -2128,7 +2182,7 @@ name|I40E_RX_DESC_STATUS_IPV6EXADD_SHIFT
 init|=
 literal|15
 block|,
-name|I40E_RX_DESC_STATUS_RESERVED_SHIFT
+name|I40E_RX_DESC_STATUS_RESERVED2_SHIFT
 init|=
 literal|16
 block|,
@@ -4078,6 +4132,42 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Statistics collected per VEB per TC */
+end_comment
+
+begin_struct
+struct|struct
+name|i40e_veb_tc_stats
+block|{
+name|u64
+name|tc_rx_packets
+index|[
+name|I40E_MAX_TRAFFIC_CLASS
+index|]
+decl_stmt|;
+name|u64
+name|tc_rx_bytes
+index|[
+name|I40E_MAX_TRAFFIC_CLASS
+index|]
+decl_stmt|;
+name|u64
+name|tc_tx_packets
+index|[
+name|I40E_MAX_TRAFFIC_CLASS
+index|]
+decl_stmt|;
+name|u64
+name|tc_tx_bytes
+index|[
+name|I40E_MAX_TRAFFIC_CLASS
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* Statistics collected by the MAC */
 end_comment
 
@@ -4381,6 +4471,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|I40E_SR_PBA_FLAGS
+value|0x15
+end_define
+
+begin_define
+define|#
+directive|define
 name|I40E_SR_PBA_BLOCK_PTR
 value|0x16
 end_define
@@ -4395,7 +4492,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_SR_NVM_IMAGE_VERSION
+name|I40E_SR_NVM_DEV_STARTER_VERSION
 value|0x18
 end_define
 
@@ -4418,6 +4515,27 @@ define|#
 directive|define
 name|I40E_SR_PERMANENT_SAN_MAC_ADDRESS_PTR
 value|0x28
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_SR_NVM_MAP_VERSION
+value|0x29
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_SR_NVM_IMAGE_VERSION
+value|0x2A
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_SR_NVM_STRUCTURE_VERSION
+value|0x2B
 end_define
 
 begin_define
@@ -4453,6 +4571,20 @@ define|#
 directive|define
 name|I40E_SR_PXE_CONFIG_CUST_OPTIONS_PTR
 value|0x31
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_SR_NVM_ORIGINAL_EETRACK_LO
+value|0x34
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_SR_NVM_ORIGINAL_EETRACK_HI
+value|0x35
 end_define
 
 begin_define
@@ -4537,6 +4669,27 @@ define|#
 directive|define
 name|I40E_SR_EMP_SR_SETTINGS_PTR
 value|0x48
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_SR_FEATURE_CONFIGURATION_PTR
+value|0x49
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_SR_CONFIGURATION_METADATA_PTR
+value|0x4D
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_SR_IMMEDIATE_VALUES_PTR
+value|0x4E
 end_define
 
 begin_comment
@@ -4962,6 +5115,46 @@ literal|3
 block|, }
 enum|;
 end_enum
+
+begin_comment
+comment|/* IEEE 802.1AB LLDP Agent Variables from NVM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I40E_NVM_LLDP_CFG_PTR
+value|0xD
+end_define
+
+begin_struct
+struct|struct
+name|i40e_lldp_variables
+block|{
+name|u16
+name|length
+decl_stmt|;
+name|u16
+name|adminstatus
+decl_stmt|;
+name|u16
+name|msgfasttx
+decl_stmt|;
+name|u16
+name|msgtxinterval
+decl_stmt|;
+name|u16
+name|txparams
+decl_stmt|;
+name|u16
+name|timers
+decl_stmt|;
+name|u16
+name|crc8
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* Offsets into Alternate Ram */
