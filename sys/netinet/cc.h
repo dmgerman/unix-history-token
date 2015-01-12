@@ -199,6 +199,50 @@ begin_comment
 comment|/* Are we currently cwnd limited? */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CCF_DELACK
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Is this ack delayed? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCF_ACKNOW
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Will this ack be sent now? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCF_IPHDR_CE
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Does this packet set CE bit? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCF_TCPHDR_CWR
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Does this packet set CWR bit? */
+end_comment
+
 begin_comment
 comment|/* ACK types passed to the ack_received() hook. */
 end_comment
@@ -429,6 +473,19 @@ name|void
 function_decl|(
 modifier|*
 name|after_idle
+function_decl|)
+parameter_list|(
+name|struct
+name|cc_var
+modifier|*
+name|ccv
+parameter_list|)
+function_decl|;
+comment|/* Called for an additional ECN processing apart from RFC3168. */
+name|void
+function_decl|(
+modifier|*
+name|ecnpkt_handler
 function_decl|)
 parameter_list|(
 name|struct
