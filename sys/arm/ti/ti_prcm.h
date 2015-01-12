@@ -237,6 +237,11 @@ name|TSC_ADC_CLK
 init|=
 literal|1800
 block|,
+comment|/* RTC module */
+name|RTC_CLK
+init|=
+literal|1900
+block|,
 name|INVALID_CLK_IDENT
 block|}
 name|clk_ident_t

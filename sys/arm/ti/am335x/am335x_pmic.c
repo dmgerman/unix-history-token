@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -61,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/reboot.h>
 end_include
 
 begin_include
@@ -103,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/ofw_bus_subr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/ti/am335x/am335x_rtcvar.h>
 end_include
 
 begin_include
@@ -160,6 +178,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|TPS65217_STATUS_OFF
+value|(1U<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TPS65217_STATUS_ACPWR
+value|(1U<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TPS65217_STATUS_USBPWR
+value|(1U<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TPS65217_STATUS_BT
+value|(1U<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_IIC_DATA_SIZE
 value|2
 end_define
@@ -181,6 +227,19 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+specifier|static
+name|void
+name|am335x_pmic_shutdown
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -257,12 +316,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
 
 begin_function
 specifier|static
@@ -365,11 +418,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -615,6 +663,17 @@ literal|0x03
 index|]
 argument_list|)
 expr_stmt|;
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|shutdown_final
+argument_list|,
+name|am335x_pmic_shutdown
+argument_list|,
+name|dev
+argument_list|,
+name|SHUTDOWN_PRI_LAST
+argument_list|)
+expr_stmt|;
 name|config_intrhook_disestablish
 argument_list|(
 operator|&
@@ -685,6 +744,66 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|am335x_pmic_shutdown
+parameter_list|(
+name|void
+modifier|*
+name|xdev
+parameter_list|,
+name|int
+name|howto
+parameter_list|)
+block|{
+name|device_t
+name|dev
+decl_stmt|;
+name|uint8_t
+name|reg
+decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|howto
+operator|&
+name|RB_POWEROFF
+operator|)
+condition|)
+return|return;
+name|dev
+operator|=
+operator|(
+name|device_t
+operator|)
+name|xdev
+expr_stmt|;
+comment|/* Set the OFF bit on status register to start the shutdown sequence. */
+name|reg
+operator|=
+name|TPS65217_STATUS_OFF
+expr_stmt|;
+name|am335x_pmic_write
+argument_list|(
+name|dev
+argument_list|,
+name|TPS65217_STATUS_REG
+argument_list|,
+operator|&
+name|reg
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Toggle pmic_pwr_enable to shutdown the PMIC. */
+name|am335x_rtc_pmic_pwr_toggle
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
