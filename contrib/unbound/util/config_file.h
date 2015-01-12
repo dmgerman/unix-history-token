@@ -852,6 +852,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Find username, sets uid and gid.  * @param config: the config structure.  */
+end_comment
+
+begin_function_decl
+name|void
+name|config_lookup_uid
+parameter_list|(
+name|struct
+name|config_file
+modifier|*
+name|config
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Set the given keyword to the given value.  * @param config: where to store config  * @param option: option name, including the ':' character.  * @param value: value, this string is copied if needed, or parsed.  * 	The caller owns the value string.  * @return 0 on error (malloc or syntax error).  */
 end_comment
 

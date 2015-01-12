@@ -401,6 +401,7 @@ begin_function_decl
 name|int
 name|create_local_accept_sock
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path

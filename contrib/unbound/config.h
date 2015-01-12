@@ -1164,6 +1164,17 @@ comment|/* #undef HAVE_STRUCT_IN_PKTINFO_IPI_SPEC_DST */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if `sun_len' is a member of `struct sockaddr_un'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_SOCKADDR_UN_SUN_LEN
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have Swig libraries and header files. */
 end_comment
 
