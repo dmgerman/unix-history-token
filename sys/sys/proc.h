@@ -1889,12 +1889,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_DEVMEMIO
+name|TDP_UNUSED29
 value|0x20000000
 end_define
 
 begin_comment
-comment|/* Accessing memory for /dev/mem */
+comment|/* --available-- */
 end_comment
 
 begin_define

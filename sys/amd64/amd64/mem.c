@@ -207,19 +207,10 @@ name|c
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|sflags
 decl_stmt|;
 name|error
 operator|=
 literal|0
-expr_stmt|;
-name|sflags
-operator|=
-name|curthread_pflags_set
-argument_list|(
-name|TDP_DEVMEMIO
-argument_list|)
 expr_stmt|;
 name|orig_resid
 operator|=
@@ -487,11 +478,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|curthread_pflags_restore
-argument_list|(
-name|sflags
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Don't return error if any byte was written.  Read and write 	 * can return error only if no i/o was performed. 	 */
 if|if
 condition|(
