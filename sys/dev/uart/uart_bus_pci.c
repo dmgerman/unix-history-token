@@ -658,6 +658,20 @@ literal|16384000
 block|}
 block|,
 block|{
+literal|0x1415
+block|,
+literal|0xc120
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Oxford Semiconductor OXPCIe952 PCIe 16950 UART"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x14e4
 block|,
 literal|0x4344
