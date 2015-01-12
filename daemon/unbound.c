@@ -2104,11 +2104,6 @@ modifier|*
 name|cfgfile
 parameter_list|)
 block|{
-name|log_assert
-argument_list|(
-name|cfg
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_GETPWNAM
@@ -3347,6 +3342,11 @@ argument_list|,
 name|cmdline_verbose
 argument_list|,
 name|debug_mode
+argument_list|)
+expr_stmt|;
+name|config_lookup_uid
+argument_list|(
+name|cfg
 argument_list|)
 expr_stmt|;
 comment|/* prepare */

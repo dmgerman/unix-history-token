@@ -524,6 +524,12 @@ begin_comment
 comment|/*  * The following function was generated using the openssl utility, using  * the command : "openssl dhparam -dsaparam -C 512"  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S_SPLINT_S
+end_ifndef
+
 begin_function
 name|DH
 modifier|*
@@ -897,6 +903,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SPLINT */
+end_comment
 
 begin_function
 name|struct
@@ -1511,7 +1526,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Add and open a new control port  * @param ip: ip str  * @param nr: port nr  * @param list: list head  * @param noproto_is_err: if lack of protocol support is an error.  * @return false on failure.  */
+comment|/**  * Add and open a new control port  * @param ip: ip str  * @param nr: port nr  * @param list: list head  * @param noproto_is_err: if lack of protocol support is an error.  * @param cfg: config with username for chown of unix-sockets.  * @return false on failure.  */
 end_comment
 
 begin_function
@@ -1669,6 +1684,10 @@ name|chmod
 argument_list|(
 name|ip
 argument_list|,
+call|(
+name|mode_t
+call|)
+argument_list|(
 name|S_IRUSR
 operator||
 name|S_IWUSR
@@ -1676,6 +1695,7 @@ operator||
 name|S_IRGRP
 operator||
 name|S_IWGRP
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
