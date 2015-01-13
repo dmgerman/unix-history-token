@@ -727,6 +727,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_CORTEXA17
+value|0x410fc0d0
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_KRAIT
 value|0x510f06f0
 end_define

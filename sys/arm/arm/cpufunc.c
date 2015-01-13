@@ -3248,6 +3248,10 @@ name|CPU_ID_CORTEXA15R3
 operator|||
 name|cputype
 operator|==
+name|CPU_ID_CORTEXA17
+operator|||
+name|cputype
+operator|==
 name|CPU_ID_KRAIT
 condition|)
 block|{
