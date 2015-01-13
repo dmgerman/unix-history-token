@@ -8699,9 +8699,6 @@ break|break;
 case|case
 name|SIOCSIFADDR
 case|:
-case|case
-name|SIOCGIFADDR
-case|:
 ifdef|#
 directive|ifdef
 name|INET
