@@ -500,9 +500,6 @@ name|mii_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|if_t
-name|ifp
-decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -521,14 +518,6 @@ name|e1000phy_funcs
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|=
-name|sc
-operator|->
-name|mii_pdata
-operator|->
-name|mii_ifp
 expr_stmt|;
 if|if
 condition|(
