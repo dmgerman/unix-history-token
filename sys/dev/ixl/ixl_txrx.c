@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_rss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ixl.h"
 end_include
 
