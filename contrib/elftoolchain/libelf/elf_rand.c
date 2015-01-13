@@ -30,7 +30,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elf_rand.c 2225 2011-11-26 18:55:54Z jkoshy $"
+literal|"$Id: elf_rand.c 2991 2014-03-17 09:57:04Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -74,6 +74,9 @@ name|offset
 operator|<
 name|SARMAG
 operator|||
+operator|(
+name|size_t
+operator|)
 name|offset
 operator|+
 sizeof|sizeof

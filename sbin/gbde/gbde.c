@@ -1126,7 +1126,6 @@ name|ffd
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* gctl_dump(r, stdout); */
 name|errstr
 operator|=
 name|gctl_issue
@@ -1541,6 +1540,8 @@ name|printf
 argument_list|(
 literal|"Opened with key %u\n"
 argument_list|,
+literal|1
+operator|+
 operator|*
 name|nkey
 argument_list|)
@@ -1682,6 +1683,8 @@ name|printf
 argument_list|(
 literal|"Nuked key %d\n"
 argument_list|,
+literal|1
+operator|+
 name|key
 argument_list|)
 expr_stmt|;
@@ -2301,18 +2304,11 @@ operator|->
 name|keyoffset
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
 name|gl
 operator|->
 name|flags
-argument_list|,
-sizeof|sizeof
-name|gl
-operator|->
-name|flags
-argument_list|)
+operator|&=
+name|GBDE_F_SECT0
 expr_stmt|;
 name|bzero
 argument_list|(

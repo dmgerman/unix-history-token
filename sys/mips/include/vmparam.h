@@ -456,7 +456,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * we support 2 free lists:  *  *	- DEFAULT for direct mapped (KSEG0) pages.  *	  Note: This usage of DEFAULT may be misleading because we use  *	  DEFAULT for allocating direct mapped pages. The normal page  *	  allocations use HIGHMEM if available, and then DEFAULT.   *	- HIGHMEM for other pages   */
+comment|/*  * Create up to two free lists on !__mips_n64: VM_FREELIST_DEFAULT is for  * physical pages that are above the largest physical address that is  * accessible through the direct map (KSEG0) and VM_FREELIST_LOWMEM is for  * physical pages that are below that address.  VM_LOWMEM_BOUNDARY is the  * physical address for the end of the direct map (KSEG0).  */
 end_comment
 
 begin_ifdef
@@ -502,27 +502,27 @@ begin_define
 define|#
 directive|define
 name|VM_FREELIST_DEFAULT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_FREELIST_HIGHMEM
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_FREELIST_DIRECT
-value|VM_FREELIST_DEFAULT
+name|VM_FREELIST_LOWMEM
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_HIGHMEM_ADDRESS
+name|VM_FREELIST_DIRECT
+value|VM_FREELIST_LOWMEM
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_LOWMEM_BOUNDARY
 value|((vm_paddr_t)0x20000000)
 end_define
 

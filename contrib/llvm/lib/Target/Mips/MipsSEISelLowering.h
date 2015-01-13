@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MipsSEISELLOWERING_H
+name|MIPSSEISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MipsSEISELLOWERING_H
+name|MIPSSEISELLOWERING_H
 end_define
 
 begin_include
@@ -89,6 +89,11 @@ argument_list|(
 name|MipsTargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|MipsSubtarget
+operator|&
+name|STI
 argument_list|)
 block|;
 comment|/// \brief Enable MSA support for the given integer type and Register
@@ -111,17 +116,19 @@ argument_list|,
 argument|const TargetRegisterClass *RC
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|allowsUnalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
 argument_list|,
-argument|bool *Fast
+argument|unsigned AS =
+literal|0
+argument_list|,
+argument|bool *Fast = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -130,8 +137,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|PerformDAGCombine
 argument_list|(
@@ -140,8 +147,8 @@ argument_list|,
 argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -151,8 +158,8 @@ argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isShuffleMaskLegal
 argument_list|(
@@ -161,12 +168,12 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -175,388 +182,265 @@ argument_list|(
 argument|MVT VT
 argument_list|)
 specifier|const
-block|{
-if|if
-condition|(
-name|VT
-operator|==
-name|MVT
-operator|::
-name|Untyped
-condition|)
-return|return
-name|Subtarget
-operator|->
-name|hasDSP
-argument_list|()
-operator|?
-operator|&
-name|Mips
-operator|::
-name|ACC64DSPRegClass
-operator|:
-operator|&
-name|Mips
-operator|::
-name|ACC64RegClass
-return|;
-return|return
-name|TargetLowering
-operator|::
-name|getRepRegClassFor
-argument_list|(
-name|VT
-argument_list|)
-return|;
-block|}
+name|override
+block|;
 name|private
-label|:
-name|virtual
+operator|:
 name|bool
 name|isEligibleForTailCallOptimization
 argument_list|(
-specifier|const
-name|MipsCC
-operator|&
-name|MipsCCInfo
+argument|const MipsCC&MipsCCInfo
 argument_list|,
-name|unsigned
-name|NextStackOffset
+argument|unsigned NextStackOffset
 argument_list|,
-specifier|const
-name|MipsFunctionInfo
-operator|&
-name|FI
+argument|const MipsFunctionInfo& FI
 argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
+specifier|const
+name|override
+block|;
 name|void
 name|getOpndList
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|Ops
+argument|SmallVectorImpl<SDValue>&Ops
 argument_list|,
-name|std
-operator|::
-name|deque
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
+argument|std::deque< std::pair<unsigned
 argument_list|,
-name|SDValue
-operator|>
-expr|>
-operator|&
-name|RegsToPass
+argument|SDValue>>&RegsToPass
 argument_list|,
-name|bool
-name|IsPICCall
+argument|bool IsPICCall
 argument_list|,
-name|bool
-name|GlobalOrExternal
+argument|bool GlobalOrExternal
 argument_list|,
-name|bool
-name|InternalLinkage
+argument|bool InternalLinkage
 argument_list|,
-name|CallLoweringInfo
-operator|&
-name|CLI
+argument|CallLoweringInfo&CLI
 argument_list|,
-name|SDValue
-name|Callee
+argument|SDValue Callee
 argument_list|,
-name|SDValue
-name|Chain
+argument|SDValue Chain
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+name|override
+block|;
 name|SDValue
 name|lowerLOAD
 argument_list|(
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|SDValue
 name|lowerSTORE
 argument_list|(
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|SDValue
 name|lowerMulDiv
 argument_list|(
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|unsigned
-name|NewOpc
+argument|unsigned NewOpc
 argument_list|,
-name|bool
-name|HasLo
+argument|bool HasLo
 argument_list|,
-name|bool
-name|HasHi
+argument|bool HasHi
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|SDValue
 name|lowerINTRINSIC_WO_CHAIN
 argument_list|(
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|SDValue
 name|lowerINTRINSIC_W_CHAIN
 argument_list|(
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|SDValue
 name|lowerINTRINSIC_VOID
 argument_list|(
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|SDValue
 name|lowerEXTRACT_VECTOR_ELT
 argument_list|(
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|SDValue
 name|lowerBUILD_VECTOR
 argument_list|(
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// \brief Lower VECTOR_SHUFFLE into one of a number of instructions
 comment|/// depending on the indices in the shuffle.
 name|SDValue
 name|lowerVECTOR_SHUFFLE
 argument_list|(
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|emitBPOSGE32
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
 name|MachineBasicBlock
 operator|*
-name|BB
-argument_list|)
-decl|const
-decl_stmt|;
-name|MachineBasicBlock
-modifier|*
 name|emitMSACBranchPseudo
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
+argument|MachineBasicBlock *BB
 argument_list|,
-name|unsigned
-name|BranchOp
+argument|unsigned BranchOp
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// \brief Emit the COPY_FW pseudo instruction
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|emitCOPY_FW
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
+argument|MachineBasicBlock *BB
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// \brief Emit the COPY_FD pseudo instruction
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|emitCOPY_FD
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
+argument|MachineBasicBlock *BB
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// \brief Emit the INSERT_FW pseudo instruction
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|emitINSERT_FW
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
+argument|MachineBasicBlock *BB
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// \brief Emit the INSERT_FD pseudo instruction
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|emitINSERT_FD
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Emit the INSERT_([BHWD]|F[WD])_VIDX pseudo instruction
 name|MachineBasicBlock
 operator|*
-name|BB
+name|emitINSERT_DF_VIDX
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned EltSizeInBytes
+argument_list|,
+argument|bool IsFP
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// \brief Emit the FILL_FW pseudo instruction
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|emitFILL_FW
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
+argument|MachineBasicBlock *BB
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// \brief Emit the FILL_FD pseudo instruction
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|emitFILL_FD
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
+argument|MachineBasicBlock *BB
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// \brief Emit the FEXP2_W_1 pseudo instructions.
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|emitFEXP2_W_1
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
+argument|MachineBasicBlock *BB
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// \brief Emit the FEXP2_D_1 pseudo instructions.
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|emitFEXP2_D_1
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+argument|MachineInstr *MI
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
+argument|MachineBasicBlock *BB
 argument_list|)
-decl|const
+specifier|const
+block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

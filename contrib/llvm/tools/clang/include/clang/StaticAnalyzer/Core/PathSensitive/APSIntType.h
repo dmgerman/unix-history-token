@@ -49,6 +49,12 @@ directive|include
 file|"llvm/ADT/APSInt.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<tuple>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -371,55 +377,38 @@ name|Other
 operator|)
 specifier|const
 block|{
-if|if
-condition|(
+return|return
+name|std
+operator|::
+name|tie
+argument_list|(
 name|BitWidth
+argument_list|,
+name|IsUnsigned
+argument_list|)
 operator|<
+name|std
+operator|::
+name|tie
+argument_list|(
 name|Other
 operator|.
 name|BitWidth
-condition|)
-return|return
-name|true
-return|;
-if|if
-condition|(
-name|BitWidth
-operator|>
-name|Other
-operator|.
-name|BitWidth
-condition|)
-return|return
-name|false
-return|;
-if|if
-condition|(
-operator|!
-name|IsUnsigned
-operator|&&
+argument_list|,
 name|Other
 operator|.
 name|IsUnsigned
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|false
+argument_list|)
 return|;
 block|}
 block|}
 empty_stmt|;
 block|}
+comment|// end ento namespace
+block|}
 end_decl_stmt
 
 begin_comment
-comment|// end ento namespace
-end_comment
-
-begin_comment
-unit|}
 comment|// end clang namespace
 end_comment
 

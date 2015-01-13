@@ -112,6 +112,9 @@ name|class
 name|MCSchedModel
 decl_stmt|;
 name|class
+name|MCSymbolRefExpr
+decl_stmt|;
+name|class
 name|SDNode
 decl_stmt|;
 name|class
@@ -131,6 +134,9 @@ name|TargetRegisterInfo
 decl_stmt|;
 name|class
 name|BranchProbability
+decl_stmt|;
+name|class
+name|TargetSubtargetInfo
 decl_stmt|;
 name|template
 operator|<
@@ -217,8 +223,7 @@ name|isTriviallyReMaterializable
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
-argument|AliasAnalysis *AA =
-literal|0
+argument|AliasAnalysis *AA = nullptr
 argument_list|)
 specifier|const
 block|{
@@ -567,7 +572,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// commuteInstruction - If a target has any instructions that are
@@ -617,8 +622,7 @@ argument|const MachineInstr *MI0
 argument_list|,
 argument|const MachineInstr *MI1
 argument_list|,
-argument|const MachineRegisterInfo *MRI =
-literal|0
+argument|const MachineRegisterInfo *MRI = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -727,6 +731,38 @@ argument|MachineBasicBlock *NewDest
 argument_list|)
 specifier|const
 block|;
+comment|/// getUnconditionalBranch - Get an instruction that performs an unconditional
+comment|/// branch to the given symbol.
+name|virtual
+name|void
+name|getUnconditionalBranch
+argument_list|(
+argument|MCInst&MI
+argument_list|,
+argument|const MCSymbolRefExpr *BranchTarget
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement "
+literal|"TargetInstrInfo::getUnconditionalBranch!"
+argument_list|)
+block|;   }
+comment|/// getTrap - Get a machine trap instruction
+name|virtual
+name|void
+name|getTrap
+argument_list|(
+argument|MCInst&MI
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement TargetInstrInfo::getTrap!"
+argument_list|)
+block|;   }
 comment|/// isLegalToSplitMBBAt - Return true if it's legal to split the given basic
 comment|/// block at the specified instruction (i.e. instruction would be the start
 comment|/// of a new basic block).
@@ -1171,7 +1207,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// foldMemoryOperandImpl - Target-dependent implementation for
@@ -1193,7 +1229,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|public
@@ -1267,8 +1303,7 @@ argument|bool UnfoldLoad
 argument_list|,
 argument|bool UnfoldStore
 argument_list|,
-argument|unsigned *LoadRegIndex =
-literal|0
+argument|unsigned *LoadRegIndex = nullptr
 argument_list|)
 specifier|const
 block|{
@@ -1565,7 +1600,7 @@ name|ScheduleHazardRecognizer
 operator|*
 name|CreateTargetHazardRecognizer
 argument_list|(
-argument|const TargetMachine *TM
+argument|const TargetSubtargetInfo *STI
 argument_list|,
 argument|const ScheduleDAG *DAG
 argument_list|)
@@ -1678,7 +1713,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// FoldImmediate - 'Reg' is known to be defined by a move immediate
@@ -1806,8 +1841,7 @@ argument|const InstrItineraryData *ItinData
 argument_list|,
 argument|const MachineInstr *MI
 argument_list|,
-argument|unsigned *PredCost =
-literal|0
+argument|unsigned *PredCost = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -2107,7 +2141,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|private

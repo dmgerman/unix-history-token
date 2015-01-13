@@ -688,9 +688,6 @@ operator|=
 name|ctl_port_register
 argument_list|(
 name|port
-argument_list|,
-comment|/*master_SC*/
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1793,7 +1790,7 @@ name|ctl_ptr
 decl_stmt|;
 name|len_to_copy
 operator|=
-name|ctl_min
+name|MIN
 argument_list|(
 name|cam_sglist
 index|[
@@ -2452,7 +2449,7 @@ return|return;
 block|}
 name|io
 operator|=
-name|ctl_alloc_io
+name|ctl_alloc_io_nowait
 argument_list|(
 name|softc
 operator|->
@@ -2921,7 +2918,7 @@ return|return;
 block|}
 name|io
 operator|=
-name|ctl_alloc_io
+name|ctl_alloc_io_nowait
 argument_list|(
 name|softc
 operator|->
@@ -3397,7 +3394,7 @@ return|return;
 block|}
 name|io
 operator|=
-name|ctl_alloc_io
+name|ctl_alloc_io_nowait
 argument_list|(
 name|softc
 operator|->

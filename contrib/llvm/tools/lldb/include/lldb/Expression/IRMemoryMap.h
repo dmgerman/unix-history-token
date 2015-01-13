@@ -79,7 +79,8 @@ comment|///
 comment|/// This class encapsulates a group of memory objects that must be readable
 comment|/// or writable from the host process regardless of whether the process
 comment|/// exists.  This allows the IR interpreter as well as JITted code to access
-comment|/// the same memory.
+comment|/// the same memory.  All allocations made by this class are represented as
+comment|/// disjoint intervals.
 comment|///
 comment|/// Point queries against this group of memory objects can be made by the
 comment|/// address in the tar at which they reside.  If the inferior does not
@@ -312,10 +313,11 @@ parameter_list|()
 function_decl|;
 comment|// This function can return NULL.
 name|ExecutionContextScope
-modifier|*
+operator|*
 name|GetBestExecutionContextScope
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 comment|// This function should only be used if you know you are using the JIT.
@@ -477,6 +479,7 @@ argument_list|,
 argument|size_t size
 argument_list|)
 expr_stmt|;
+comment|// Returns true if the given allocation intersects any allocation in the memory map.
 name|bool
 name|IntersectsAllocation
 argument_list|(
@@ -487,6 +490,29 @@ name|addr
 argument_list|,
 name|size_t
 name|size
+argument_list|)
+decl|const
+decl_stmt|;
+comment|// Returns true if the two given allocations intersect each other.
+specifier|static
+name|bool
+name|AllocationsIntersect
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+name|addr1
+argument_list|,
+name|size_t
+name|size1
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+name|addr2
+argument_list|,
+name|size_t
+name|size2
 argument_list|)
 decl_stmt|;
 block|}

@@ -76,14 +76,14 @@ file|<machine/cpu.h>
 end_include
 
 begin_comment
-comment|/*  * This is a temporary hack until memory barriers are cleaned up.  *  * atomic_load_acq_int at least on amd64 provides a full memory barrier,  * in a way which affects perforance.  *  * Hack below covers all architectures and avoids most of the penalty at least  * on amd64.  */
+comment|/*  * Stuff below is going away when we gain suitable memory barriers.  *  * atomic_load_acq_int at least on amd64 provides a full memory barrier,  * in a way which affects performance.  *  * Hack below covers all architectures and avoids most of the penalty at least  * on amd64 but still has unnecessary cost.  */
 end_comment
 
 begin_function
 specifier|static
 name|__inline
 name|int
-name|atomic_load_acq_rmb_int
+name|atomic_load_rmb_int
 parameter_list|(
 specifier|volatile
 name|u_int
@@ -105,6 +105,43 @@ argument_list|(
 operator|&
 name|v
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|v
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|atomic_rmb_load_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|)
+block|{
+specifier|volatile
+name|u_int
+name|v
+init|=
+literal|0
+decl_stmt|;
+name|atomic_load_acq_int
+argument_list|(
+operator|&
+name|v
+argument_list|)
+expr_stmt|;
+name|v
+operator|=
+operator|*
+name|p
 expr_stmt|;
 return|return
 operator|(
@@ -218,7 +255,7 @@ control|)
 block|{
 name|ret
 operator|=
-name|atomic_load_acq_rmb_int
+name|atomic_load_rmb_int
 argument_list|(
 name|seqp
 argument_list|)
@@ -262,7 +299,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|atomic_load_acq_rmb_int
+name|atomic_rmb_load_int
 argument_list|(
 name|seqp
 argument_list|)

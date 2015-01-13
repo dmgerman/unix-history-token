@@ -3651,7 +3651,11 @@ argument_list|,
 operator|&
 name|usb_bdma_done_event
 argument_list|,
-literal|32
+name|udev
+operator|->
+name|bus
+operator|->
+name|dma_bits
 argument_list|,
 name|parm
 operator|->

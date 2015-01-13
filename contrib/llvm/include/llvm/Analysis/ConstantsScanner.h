@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/InstIterator.h"
+file|"llvm/IR/InstIterator.h"
 end_include
 
 begin_decl_stmt

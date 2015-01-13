@@ -1748,7 +1748,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_cc_htcp
 argument_list|,
@@ -1756,6 +1756,8 @@ name|OID_AUTO
 argument_list|,
 name|adaptive_backoff
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1772,7 +1774,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_cc_htcp
 argument_list|,
@@ -1780,6 +1782,8 @@ name|OID_AUTO
 argument_list|,
 name|rtt_scaling
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

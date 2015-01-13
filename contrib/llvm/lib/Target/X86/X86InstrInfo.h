@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"X86.h"
+file|"MCTargetDesc/X86BaseInfo.h"
 end_include
 
 begin_include
@@ -103,7 +103,7 @@ name|class
 name|X86RegisterInfo
 decl_stmt|;
 name|class
-name|X86TargetMachine
+name|X86Subtarget
 decl_stmt|;
 name|namespace
 name|X86
@@ -177,6 +177,10 @@ name|COND_S
 init|=
 literal|15
 block|,
+name|LAST_VALID_COND
+init|=
+name|COND_S
+block|,
 comment|// Artificial condition codes. These are used by AnalyzeBranch
 comment|// to indicate a block terminated with two conditional branches to
 comment|// the same location. This occurs in code using FCMP_OEQ or FCMP_UNE,
@@ -197,6 +201,37 @@ name|CondCode
 name|CC
 parameter_list|)
 function_decl|;
+comment|/// \brief Return a set opcode for the given condition and whether it has
+comment|/// a memory operand.
+name|unsigned
+name|getSETFromCond
+parameter_list|(
+name|CondCode
+name|CC
+parameter_list|,
+name|bool
+name|HasMemoryOperand
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Return a cmov opcode for the given condition, register size in
+comment|/// bytes, and operand type.
+name|unsigned
+name|getCMovFromCond
+parameter_list|(
+name|CondCode
+name|CC
+parameter_list|,
+name|unsigned
+name|RegBytes
+parameter_list|,
+name|bool
+name|HasMemoryOperand
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|// Turn CMov opcode into condition code.
 name|CondCode
 name|getCondFromCMovOpc
@@ -209,13 +244,11 @@ comment|/// GetOppositeBranchCondition - Return the inverse of the specified con
 comment|/// e.g. turning COND_E to COND_NE.
 name|CondCode
 name|GetOppositeBranchCondition
-argument_list|(
-name|X86
-operator|::
+parameter_list|(
 name|CondCode
 name|CC
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 comment|// end namespace X86;
 comment|/// isGlobalStubReference - Return true if the specified TargetFlag operand is
@@ -423,7 +456,9 @@ return|;
 return|return
 name|Op
 operator|+
-literal|4
+name|X86
+operator|::
+name|AddrSegmentReg
 operator|<=
 name|MI
 operator|->
@@ -435,6 +470,10 @@ operator|->
 name|getOperand
 argument_list|(
 name|Op
+operator|+
+name|X86
+operator|::
+name|AddrBaseReg
 argument_list|)
 operator|.
 name|isReg
@@ -448,7 +487,9 @@ name|getOperand
 argument_list|(
 name|Op
 operator|+
-literal|1
+name|X86
+operator|::
+name|AddrScaleAmt
 argument_list|)
 argument_list|)
 operator|&&
@@ -458,7 +499,9 @@ name|getOperand
 argument_list|(
 name|Op
 operator|+
-literal|2
+name|X86
+operator|::
+name|AddrIndexReg
 argument_list|)
 operator|.
 name|isReg
@@ -471,7 +514,9 @@ name|getOperand
 argument_list|(
 name|Op
 operator|+
-literal|3
+name|X86
+operator|::
+name|AddrDisp
 argument_list|)
 operator|.
 name|isImm
@@ -483,7 +528,9 @@ name|getOperand
 argument_list|(
 name|Op
 operator|+
-literal|3
+name|X86
+operator|::
+name|AddrDisp
 argument_list|)
 operator|.
 name|isGlobal
@@ -495,7 +542,9 @@ name|getOperand
 argument_list|(
 name|Op
 operator|+
-literal|3
+name|X86
+operator|::
+name|AddrDisp
 argument_list|)
 operator|.
 name|isCPI
@@ -507,7 +556,9 @@ name|getOperand
 argument_list|(
 name|Op
 operator|+
-literal|3
+name|X86
+operator|::
+name|AddrDisp
 argument_list|)
 operator|.
 name|isJTI
@@ -547,7 +598,9 @@ return|;
 return|return
 name|Op
 operator|+
-literal|5
+name|X86
+operator|::
+name|AddrNumOperands
 operator|<=
 name|MI
 operator|->
@@ -560,7 +613,9 @@ name|getOperand
 argument_list|(
 name|Op
 operator|+
-literal|4
+name|X86
+operator|::
+name|AddrSegmentReg
 argument_list|)
 operator|.
 name|isReg
@@ -576,13 +631,14 @@ return|;
 block|}
 name|class
 name|X86InstrInfo
+name|final
 range|:
 name|public
 name|X86GenInstrInfo
 block|{
-name|X86TargetMachine
+name|X86Subtarget
 operator|&
-name|TM
+name|Subtarget
 block|;
 specifier|const
 name|X86RegisterInfo
@@ -675,16 +731,15 @@ label|:
 name|explicit
 name|X86InstrInfo
 parameter_list|(
-name|X86TargetMachine
+name|X86Subtarget
 modifier|&
-name|tm
+name|STI
 parameter_list|)
 function_decl|;
 comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
 comment|/// such, whenever a client has an instance of instruction info, it should
 comment|/// always be able to get register info as well (through this method).
 comment|///
-name|virtual
 specifier|const
 name|X86RegisterInfo
 operator|&
@@ -702,7 +757,6 @@ comment|/// source to overlap the destination. e.g. X86::MOVSX64rr32. If this re
 comment|/// true, then it's expected the pre-extension value is available as a subreg
 comment|/// of the result register. This also returns the sub-register index in
 comment|/// SubIdx.
-name|virtual
 name|bool
 name|isCoalescableExtInstr
 argument_list|(
@@ -724,6 +778,7 @@ operator|&
 name|SubIdx
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|unsigned
 name|isLoadFromStackSlot
@@ -738,6 +793,7 @@ operator|&
 name|FrameIndex
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// isLoadFromStackSlotPostFE - Check for post-frame ptr elimination
 comment|/// stack locations as well.  This uses a heuristic so it isn't
@@ -755,6 +811,7 @@ operator|&
 name|FrameIndex
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|unsigned
 name|isStoreToStackSlot
@@ -769,6 +826,7 @@ operator|&
 name|FrameIndex
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// isStoreToStackSlotPostFE - Check for post-frame ptr elimination
 comment|/// stack locations as well.  This uses a heuristic so it isn't
@@ -786,6 +844,7 @@ operator|&
 name|FrameIndex
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|bool
 name|isReallyTriviallyReMaterializable
@@ -800,6 +859,7 @@ operator|*
 name|AA
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|void
 name|reMaterialize
@@ -830,6 +890,7 @@ operator|&
 name|TRI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// Given an operand within a MachineInstr, insert preceding code to put it
 comment|/// into the right format for a particular kind of LEA instruction. This may
@@ -885,7 +946,6 @@ comment|///
 comment|/// This method returns a null pointer if the transformation cannot be
 comment|/// performed, otherwise it returns the new instruction.
 comment|///
-name|virtual
 name|MachineInstr
 modifier|*
 name|convertToThreeAddress
@@ -907,11 +967,11 @@ operator|*
 name|LV
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// commuteInstruction - We have a few instructions that must be hacked on to
 comment|/// commute them.
 comment|///
-name|virtual
 name|MachineInstr
 modifier|*
 name|commuteInstruction
@@ -924,9 +984,27 @@ name|bool
 name|NewMI
 argument_list|)
 decl|const
+name|override
+decl_stmt|;
+name|bool
+name|findCommutedOpIndices
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|unsigned
+operator|&
+name|SrcOpIdx1
+argument_list|,
+name|unsigned
+operator|&
+name|SrcOpIdx2
+argument_list|)
+decl|const
+name|override
 decl_stmt|;
 comment|// Branch analysis.
-name|virtual
 name|bool
 name|isUnpredicatedTerminator
 argument_list|(
@@ -936,8 +1014,8 @@ operator|*
 name|MI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|AnalyzeBranch
 argument_list|(
@@ -966,8 +1044,8 @@ name|bool
 name|AllowModify
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|unsigned
 name|RemoveBranch
 argument_list|(
@@ -976,8 +1054,8 @@ operator|&
 name|MBB
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|unsigned
 name|InsertBranch
 argument_list|(
@@ -1005,8 +1083,8 @@ name|DebugLoc
 name|DL
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|canInsertSelect
 argument_list|(
@@ -1036,8 +1114,8 @@ name|int
 operator|&
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|insertSelect
 argument_list|(
@@ -1071,8 +1149,8 @@ name|unsigned
 name|FalseReg
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|copyPhysReg
 argument_list|(
@@ -1098,8 +1176,8 @@ name|bool
 name|KillSrc
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|storeRegToStackSlot
 argument_list|(
@@ -1132,8 +1210,8 @@ operator|*
 name|TRI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|storeRegToAddr
 argument_list|(
@@ -1179,7 +1257,6 @@ name|NewMIs
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|void
 name|loadRegFromStackSlot
 argument_list|(
@@ -1209,8 +1286,8 @@ operator|*
 name|TRI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|loadRegFromAddr
 argument_list|(
@@ -1253,7 +1330,6 @@ name|NewMIs
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|bool
 name|expandPostRAPseudo
 argument_list|(
@@ -1263,6 +1339,7 @@ name|iterator
 name|MI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// foldMemoryOperand - If this target supports it, fold a load or store of
 comment|/// the specified stack slot into the specified machine instruction for the
@@ -1270,7 +1347,6 @@ comment|/// specified operand(s).  If this is possible, the target should perfor
 comment|/// folding and return true, otherwise it should return false.  If it folds
 comment|/// the instruction, it is likely that the MachineInstruction the iterator
 comment|/// references has been changed.
-name|virtual
 name|MachineInstr
 modifier|*
 name|foldMemoryOperandImpl
@@ -1295,11 +1371,11 @@ name|int
 name|FrameIndex
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// foldMemoryOperand - Same as the previous version except it allows folding
 comment|/// of any load and store from / to any address, not just from a specific
 comment|/// stack slot.
-name|virtual
 name|MachineInstr
 modifier|*
 name|foldMemoryOperandImpl
@@ -1325,10 +1401,10 @@ operator|*
 name|LoadMI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// canFoldMemoryOperand - Returns true if the specified load / store is
 comment|/// folding is possible.
-name|virtual
 name|bool
 name|canFoldMemoryOperand
 argument_list|(
@@ -1344,11 +1420,11 @@ operator|>
 operator|&
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// unfoldMemoryOperand - Separate a single instruction which folded a load or
 comment|/// a store or a load and a store into two or more instruction. If this is
 comment|/// possible, returns true as well as the new instructions by reference.
-name|virtual
 name|bool
 name|unfoldMemoryOperand
 argument_list|(
@@ -1378,8 +1454,8 @@ operator|&
 name|NewMIs
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|unfoldMemoryOperand
 argument_list|(
@@ -1400,6 +1476,7 @@ operator|&
 name|NewNodes
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// getOpcodeAfterMemoryUnfold - Returns the opcode of the would be new
 comment|/// instruction after load / store are unfolded from an instruction of the
@@ -1407,7 +1484,6 @@ comment|/// specified opcode. It returns zero if the specified unfolding is not
 comment|/// possible. If LoadRegIndex is non-null, it is filled in with the operand
 comment|/// index of the operand which will hold the register holding the loaded
 comment|/// value.
-name|virtual
 name|unsigned
 name|getOpcodeAfterMemoryUnfold
 argument_list|(
@@ -1424,16 +1500,16 @@ name|unsigned
 operator|*
 name|LoadRegIndex
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// areLoadsFromSameBasePtr - This is used by the pre-regalloc scheduler
 comment|/// to determine if two loads are loading from the same base address. It
 comment|/// should only return true if the base pointers are the same and the
 comment|/// only differences between the two addresses are the offset. It also returns
 comment|/// the offsets by reference.
-name|virtual
 name|bool
 name|areLoadsFromSameBasePtr
 argument_list|(
@@ -1454,6 +1530,7 @@ operator|&
 name|Offset2
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// shouldScheduleLoadsNear - This is a used by the pre-regalloc scheduler to
 comment|/// determine (in conjunction with areLoadsFromSameBasePtr) if two loads should
@@ -1463,7 +1540,6 @@ comment|/// together. This function takes two integers that represent the load o
 comment|/// from the common base address. It returns true if it decides it's desirable
 comment|/// to schedule the two loads together. "NumLoads" is the number of loads that
 comment|/// have already been scheduled after Load1.
-name|virtual
 name|bool
 name|shouldScheduleLoadsNear
 argument_list|(
@@ -1485,8 +1561,8 @@ name|unsigned
 name|NumLoads
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|shouldScheduleAdjacent
 argument_list|(
@@ -1499,9 +1575,8 @@ operator|*
 name|Second
 argument_list|)
 decl|const
-name|LLVM_OVERRIDE
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|getNoopForMachoTarget
 argument_list|(
@@ -1510,8 +1585,8 @@ operator|&
 name|NopInst
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|ReverseBranchCondition
 argument_list|(
@@ -1523,6 +1598,7 @@ operator|&
 name|Cond
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// isSafeToMoveRegClassDefs - Return true if it's safe to move a machine
 comment|/// instruction that defines the specified register class.
@@ -1533,6 +1609,25 @@ specifier|const
 name|TargetRegisterClass
 operator|*
 name|RC
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+comment|/// isSafeToClobberEFLAGS - Return true if it's safe insert an instruction tha
+comment|/// would clobber the EFLAGS condition register. Note the result may be
+comment|/// conservative. If it cannot definitely determine the safety after visiting
+comment|/// a few instructions in each direction it assumes it's not safe.
+name|bool
+name|isSafeToClobberEFLAGS
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1595,6 +1690,7 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 expr_stmt|;
 name|void
 name|setExecutionDomain
@@ -1607,6 +1703,7 @@ name|unsigned
 name|Domain
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|unsigned
 name|getPartialRegUpdateClearance
@@ -1625,6 +1722,7 @@ operator|*
 name|TRI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|unsigned
 name|getUndefRegClearance
@@ -1644,6 +1742,7 @@ operator|*
 name|TRI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|void
 name|breakPartialRegDependency
@@ -1662,6 +1761,7 @@ operator|*
 name|TRI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|MachineInstr
 modifier|*
@@ -1694,6 +1794,31 @@ name|Alignment
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|getUnconditionalBranch
+argument_list|(
+name|MCInst
+operator|&
+name|Branch
+argument_list|,
+specifier|const
+name|MCSymbolRefExpr
+operator|*
+name|BranchTarget
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|void
+name|getTrap
+argument_list|(
+name|MCInst
+operator|&
+name|MI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|bool
 name|isHighLatencyDef
 argument_list|(
@@ -1701,6 +1826,7 @@ name|int
 name|opc
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|bool
 name|hasHighOperandLatency
@@ -1732,12 +1858,12 @@ name|unsigned
 name|UseIdx
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// analyzeCompare - For a comparison instruction, return the source registers
 comment|/// in SrcReg and SrcReg2 if having two register operands, and the value it
 comment|/// compares against in CmpValue. Return true if the comparison instruction
 comment|/// can be analyzed.
-name|virtual
 name|bool
 name|analyzeCompare
 argument_list|(
@@ -1763,11 +1889,11 @@ operator|&
 name|CmpValue
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// optimizeCompareInstr - Check if there exists an earlier instruction that
 comment|/// operates on the same source operands and sets flags in the same way as
 comment|/// Compare; remove Compare if possible.
-name|virtual
 name|bool
 name|optimizeCompareInstr
 argument_list|(
@@ -1793,6 +1919,7 @@ operator|*
 name|MRI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// optimizeLoadInstr - Try to remove the load by folding it to a register
 comment|/// operand at the use. We fold the load instructions if and only if the
@@ -1801,7 +1928,6 @@ comment|/// whether it can be folded into MI. FoldAsLoadDefReg is the virtual re
 comment|/// defined by the load we are trying to fold. DefMI returns the machine
 comment|/// instruction that defines FoldAsLoadDefReg, and the function returns
 comment|/// the machine instruction generated due to folding.
-name|virtual
 name|MachineInstr
 modifier|*
 name|optimizeLoadInstr
@@ -1825,6 +1951,7 @@ operator|&
 name|DefMI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|private
 label|:

@@ -9213,13 +9213,15 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* check if flowid is set */
 if|if
 condition|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 name|qidx
 operator|=
@@ -15756,13 +15758,15 @@ name|adap
 operator|->
 name|timestamp
 condition|)
+block|{
+name|M_HASHTYPE_SET
+argument_list|(
 name|mh
 operator|->
 name|mh_head
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 name|mh
 operator|->
@@ -15774,6 +15778,7 @@ name|flowid
 operator|=
 name|rss_hash
 expr_stmt|;
+block|}
 block|}
 name|ethpad
 operator|=
@@ -18532,7 +18537,6 @@ literal|"firmware_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|fw_version
@@ -18578,7 +18582,6 @@ literal|"port_types"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|port_types
@@ -19372,7 +19375,7 @@ argument_list|,
 literal|"#times starved"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
+name|SYSCTL_ADD_UAUTO
 argument_list|(
 name|ctx
 argument_list|,
@@ -19603,7 +19606,7 @@ argument_list|,
 literal|"#tunneled packet slots in use"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -19709,7 +19712,7 @@ argument_list|,
 literal|"tx queues stopped"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
+name|SYSCTL_ADD_UAUTO
 argument_list|(
 name|ctx
 argument_list|,

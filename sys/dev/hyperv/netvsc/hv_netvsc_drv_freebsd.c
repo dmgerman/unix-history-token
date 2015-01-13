@@ -691,7 +691,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -812,12 +812,6 @@ operator|=
 name|sc
 operator|->
 name|hn_ifp
-operator|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_ifp
 operator|=
 name|if_alloc
 argument_list|(
@@ -2098,14 +2092,6 @@ operator|=
 name|sc
 operator|->
 name|hn_ifp
-expr_stmt|;
-name|ifp
-operator|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_ifp
 expr_stmt|;
 if|if
 condition|(

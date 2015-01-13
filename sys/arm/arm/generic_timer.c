@@ -332,6 +332,8 @@ block|,
 literal|3
 block|,
 name|RF_ACTIVE
+operator||
+name|RF_OPTIONAL
 block|}
 block|,
 comment|/* Hyp */
@@ -1384,6 +1386,28 @@ argument_list|(
 name|timer
 argument_list|,
 name|simplebus
+argument_list|,
+name|arm_tmr_driver
+argument_list|,
+name|arm_tmr_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|BUS_PASS_TIMER
+operator|+
+name|BUS_PASS_ORDER_MIDDLE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|EARLY_DRIVER_MODULE
+argument_list|(
+name|timer
+argument_list|,
+name|ofwbus
 argument_list|,
 name|arm_tmr_driver
 argument_list|,

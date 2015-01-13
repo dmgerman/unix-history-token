@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
@@ -98,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/Pass.h"
 end_include
 
 begin_decl_stmt
@@ -250,7 +244,7 @@ argument_list|()
 operator|:
 name|Value
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|,
 argument|Invalid
 argument_list|)
@@ -524,7 +518,7 @@ operator|==
 name|Other
 condition|)
 return|return
-name|NULL
+name|nullptr
 return|;
 return|return
 name|Value
@@ -1108,7 +1102,7 @@ argument_list|)
 operator|,
 name|TBAATag
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 block|}
@@ -1277,9 +1271,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 decl_stmt|;
 end_decl_stmt
 
@@ -1291,7 +1286,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PredIteratorCache
 operator|>
@@ -1328,26 +1325,28 @@ begin_comment
 comment|/// Pass Implementation stuff.  This doesn't do any analysis eagerly.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|bool
 name|runOnFunction
-parameter_list|(
+argument_list|(
 name|Function
-modifier|&
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|&
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Clean up memory in between runs
 end_comment
 
-begin_function_decl
+begin_expr_stmt
 name|void
 name|releaseMemory
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// getAnalysisUsage - Does not modify anything.  It uses Value Numbering
@@ -1362,7 +1361,6 @@ comment|///
 end_comment
 
 begin_decl_stmt
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
@@ -1371,6 +1369,7 @@ operator|&
 name|AU
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 end_decl_stmt
 
@@ -1641,7 +1640,7 @@ name|Instruction
 operator|*
 name|QueryInst
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -1698,7 +1697,7 @@ parameter_list|,
 specifier|const
 name|DataLayout
 modifier|&
-name|TD
+name|DL
 parameter_list|)
 function_decl|;
 end_function_decl

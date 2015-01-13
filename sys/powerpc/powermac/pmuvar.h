@@ -544,6 +544,17 @@ begin_comment
 comment|/* The lid is closed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PMU_ENV_POWER
+value|0x08
+end_define
+
+begin_comment
+comment|/* Power Button pressed */
+end_comment
+
 begin_comment
 comment|/* PMU PMU_POWER_EVENTS commands */
 end_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- AMDGPUCodeEmitter.h - AMDGPU Code Emitter interface -----------------===//
+comment|//===-- AMDGPUCodeEmitter.h - AMDGPU Code Emitter interface -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -86,6 +86,9 @@ name|class
 name|MCOperand
 decl_stmt|;
 name|class
+name|MCSubtargetInfo
+decl_stmt|;
+name|class
 name|AMDGPUMCCodeEmitter
 range|:
 name|public
@@ -104,6 +107,8 @@ argument_list|(
 argument|const MCInst&MI
 argument_list|,
 argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|)
 specifier|const
 block|;
@@ -116,6 +121,26 @@ argument_list|,
 argument|const MCOperand&MO
 argument_list|,
 argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|virtual
+name|unsigned
+name|getSOPPBrEncoding
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|)
 specifier|const
 block|{

@@ -411,6 +411,10 @@ directive|define
 name|BIO_CTRL_DGRAM_SET_NEXT_TIMEOUT
 value|45
 comment|/* Next DTLS handshake timeout to                                               * adjust socket timeouts */
+define|#
+directive|define
+name|BIO_CTRL_DGRAM_GET_MTU_OVERHEAD
+value|49
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SCTP
@@ -2224,6 +2228,14 @@ name|peer
 parameter_list|)
 define|\
 value|(int)BIO_ctrl(b, BIO_CTRL_DGRAM_SET_PEER, 0, (char *)peer)
+define|#
+directive|define
+name|BIO_dgram_get_mtu_overhead
+parameter_list|(
+name|b
+parameter_list|)
+define|\
+value|(unsigned int)BIO_ctrl((b), BIO_CTRL_DGRAM_GET_MTU_OVERHEAD, 0, NULL)
 comment|/* These two aren't currently implemented */
 comment|/* int BIO_get_ex_num(BIO *bio); */
 comment|/* void BIO_set_ex_free_func(BIO *bio,int idx,void (*cb)()); */

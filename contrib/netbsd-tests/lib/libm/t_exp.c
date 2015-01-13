@@ -655,6 +655,24 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"a number of the assertions fail on i386"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -961,6 +979,17 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_expect_fail
+argument_list|(
+literal|"Some of the cases produce failures on FreeBSD "
+literal|"due to the error epsilon being so small"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i

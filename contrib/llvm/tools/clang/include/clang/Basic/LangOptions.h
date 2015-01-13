@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/IntrusiveRefCntPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -210,23 +204,17 @@ name|class
 name|LangOptions
 range|:
 name|public
-name|RefCountedBase
-operator|<
-name|LangOptions
-operator|>
-decl_stmt|,
-name|public
 name|LangOptionsBase
 block|{
 name|public
-label|:
+operator|:
 typedef|typedef
 name|clang
 operator|::
 name|Visibility
 name|Visibility
 expr_stmt|;
-enum|enum
+block|enum
 name|GCMode
 block|{
 name|NonGC
@@ -235,13 +223,15 @@ name|GCOnly
 block|,
 name|HybridGC
 block|}
-enum|;
+decl_stmt|;
 enum|enum
 name|StackProtectorMode
 block|{
 name|SSPOff
 block|,
 name|SSPOn
+block|,
+name|SSPStrong
 block|,
 name|SSPReq
 block|}
@@ -257,6 +247,18 @@ block|,
 comment|// -fwrapv
 name|SOB_Trapping
 comment|// -ftrapv
+block|}
+enum|;
+enum|enum
+name|PragmaMSPointersToMembersKind
+block|{
+name|PPTMK_BestCase
+block|,
+name|PPTMK_FullGeneralitySingleInheritance
+block|,
+name|PPTMK_FullGeneralityMultipleInheritance
+block|,
+name|PPTMK_FullGeneralityVirtualInheritance
 block|}
 enum|;
 enum|enum
@@ -369,8 +371,17 @@ name|resetNonModularOptions
 parameter_list|()
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Floating point control options
+end_comment
+
+begin_decl_stmt
 name|class
 name|FPOptions
 block|{
@@ -403,8 +414,17 @@ argument|LangOpts.DefaultFPContract
 argument_list|)
 block|{}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief OpenCL volatile options
+end_comment
+
+begin_decl_stmt
 name|class
 name|OpenCLOptions
 block|{
@@ -435,8 +455,17 @@ directive|include
 file|"clang/Basic/OpenCLExtensions.def"
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Describes the kind of translation unit being processed.
+end_comment
+
+begin_enum
 enum|enum
 name|TranslationUnitKind
 block|{
@@ -451,10 +480,10 @@ comment|/// \brief The translation unit is a module.
 name|TU_Module
 block|}
 enum|;
-block|}
-end_decl_stmt
+end_enum
 
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

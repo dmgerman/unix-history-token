@@ -330,6 +330,16 @@ literal|0
 block|}
 block|,
 block|{
+name|HDA_INTEL_WCPT
+block|,
+literal|"Intel Wildcat Point"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_INTEL_WELLS1
 block|,
 literal|"Intel Wellsburg"

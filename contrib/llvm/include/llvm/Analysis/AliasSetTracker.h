@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
@@ -180,17 +180,17 @@ argument_list|)
 block|,
 name|PrevInList
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|NextInList
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|AS
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Size
@@ -231,7 +231,7 @@ block|{
 return|return
 name|AS
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|PointerRec
@@ -355,7 +355,7 @@ name|getTombstoneKey
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|TBAAInfo
@@ -426,9 +426,8 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
+operator|!
 name|AS
-operator|==
-literal|0
 operator|&&
 literal|"Already have an alias set!"
 argument_list|)
@@ -480,7 +479,7 @@ name|AS
 operator|->
 name|PtrListEnd
 operator|==
-literal|0
+name|nullptr
 operator|&&
 literal|"List not terminated right!"
 argument_list|)
@@ -909,7 +908,7 @@ block|{
 return|return
 name|PtrList
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -969,7 +968,7 @@ name|PointerRec
 operator|*
 name|CN
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|CurNode
@@ -1213,7 +1212,7 @@ argument_list|()
 operator|:
 name|PtrList
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|PtrListEnd
@@ -1224,7 +1223,7 @@ argument_list|)
 operator|,
 name|Forward
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|RefCount
@@ -1590,18 +1589,17 @@ name|AliasSetTracker
 operator|*
 name|AST
 block|;
-name|virtual
 name|void
 name|deleted
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|allUsesReplacedWith
 argument_list|(
-name|Value
-operator|*
+argument|Value *
 argument_list|)
+name|override
 block|;
 name|public
 operator|:
@@ -1615,7 +1613,7 @@ name|AliasSetTracker
 operator|*
 name|AST
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|ASTCallbackVH
@@ -1890,7 +1888,7 @@ name|bool
 modifier|*
 name|New
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// getAliasSetForPointerIfExists - Return the alias set containing the
@@ -2108,9 +2106,8 @@ index|]
 block|;
 if|if
 condition|(
+operator|!
 name|Entry
-operator|==
-literal|0
 condition|)
 name|Entry
 operator|=

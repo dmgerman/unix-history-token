@@ -84,9 +84,9 @@ name|explicit
 name|SparcSelectionDAGInfo
 argument_list|(
 specifier|const
-name|SparcTargetMachine
+name|DataLayout
 operator|&
-name|TM
+name|DL
 argument_list|)
 block|;
 operator|~

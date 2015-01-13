@@ -227,6 +227,8 @@ name|gssd_syscall_sysent
 argument_list|,
 operator|&
 name|gssd_syscall_prev_sysent
+argument_list|,
+name|SY_THR_STATIC_KLD
 argument_list|)
 expr_stmt|;
 if|if

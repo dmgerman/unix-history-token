@@ -1222,7 +1222,7 @@ name|UPGT_DEV
 argument_list|(
 name|NETGEAR
 argument_list|,
-name|WG111V2_2
+name|WG111V1_2
 argument_list|)
 block|,
 name|UPGT_DEV

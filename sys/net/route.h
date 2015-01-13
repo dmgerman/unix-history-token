@@ -564,8 +564,15 @@ begin_comment
 comment|/* protocol specific routing flag */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RTF_FIXEDMTU
+value|0x80000
+end_define
+
 begin_comment
-comment|/*			0x80000		   unused */
+comment|/* MTU was explicitly specified */
 end_comment
 
 begin_define
@@ -1755,6 +1762,17 @@ modifier|*
 parameter_list|,
 name|struct
 name|sockaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rt_updatemtu
+parameter_list|(
+name|struct
+name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;

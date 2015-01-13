@@ -1809,15 +1809,8 @@ begin_comment
 comment|/* user can do MTU discovery */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|INP_FAITH
-value|0x00000200
-end_define
-
 begin_comment
-comment|/* accept FAITH'ed connections */
+comment|/* 0x000200 unused: was INP_FAITH */
 end_comment
 
 begin_define
@@ -2021,23 +2014,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INP_SW_FLOWID
+name|INP_RESERVED_0
 value|0x10000000
 end_define
 
 begin_comment
-comment|/* software generated flow id */
+comment|/* reserved field */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INP_HW_FLOWID
+name|INP_RESERVED_1
 value|0x20000000
 end_define
 
 begin_comment
-comment|/* hardware generated flow id */
+comment|/* reserved field */
 end_comment
 
 begin_define

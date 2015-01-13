@@ -8541,8 +8541,15 @@ name|matchjump
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* Not a fatal error */
+name|free
+argument_list|(
+name|pmatches
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* Set maximum possible jump for each character in the pattern */
 for|for
 control|(

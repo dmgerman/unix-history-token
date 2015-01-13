@@ -1705,7 +1705,7 @@ name|it_value
 argument_list|)
 condition|)
 block|{
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -1733,7 +1733,7 @@ name|TDF_ALRMPEND
 operator||
 name|TDF_ASTPENDING
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -1755,7 +1755,7 @@ name|it_value
 argument_list|)
 condition|)
 block|{
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -1783,7 +1783,7 @@ name|TDF_PROFPEND
 operator||
 name|TDF_ASTPENDING
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2100,7 +2100,7 @@ name|it_value
 argument_list|)
 condition|)
 block|{
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2130,7 +2130,7 @@ name|TDF_ALRMPEND
 operator||
 name|TDF_ASTPENDING
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2152,7 +2152,7 @@ name|it_value
 argument_list|)
 condition|)
 block|{
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2182,7 +2182,7 @@ name|TDF_PROFPEND
 operator||
 name|TDF_ASTPENDING
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2685,12 +2685,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|p
-operator|->
-name|p_flag
-operator||=
-name|P_STOPPROF
-expr_stmt|;
 while|while
 condition|(
 name|p
@@ -2699,6 +2693,13 @@ name|p_profthreads
 operator|!=
 literal|0
 condition|)
+block|{
+name|p
+operator|->
+name|p_flag
+operator||=
+name|P_STOPPROF
+expr_stmt|;
 name|msleep
 argument_list|(
 operator|&
@@ -2718,13 +2719,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_flag
-operator|&=
-operator|~
-name|P_STOPPROF
-expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

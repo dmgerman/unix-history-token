@@ -152,29 +152,21 @@ range|:
 name|public
 name|TargetSelectionDAGInfo
 block|{
-comment|/// Subtarget - Keep a pointer to the ARMSubtarget around so that we can
-comment|/// make the right decision when generating code for different targets.
-specifier|const
-name|ARMSubtarget
-operator|*
-name|Subtarget
-block|;
 name|public
 operator|:
 name|explicit
 name|ARMSelectionDAGInfo
 argument_list|(
 specifier|const
-name|TargetMachine
+name|DataLayout
 operator|&
-name|TM
+name|DL
 argument_list|)
 block|;
 operator|~
 name|ARMSelectionDAGInfo
 argument_list|()
 block|;
-name|virtual
 name|SDValue
 name|EmitTargetCodeForMemcpy
 argument_list|(
@@ -201,9 +193,9 @@ argument_list|,
 argument|MachinePointerInfo SrcPtrInfo
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Adjust parameters for memset, see RTABI section 4.3.4
-name|virtual
 name|SDValue
 name|EmitTargetCodeForMemset
 argument_list|(
@@ -226,6 +218,7 @@ argument_list|,
 argument|MachinePointerInfo DstPtrInfo
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

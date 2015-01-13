@@ -62,13 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/StaticAnalyzer/Core/BugReporter/CommonBugCategories.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LLVM.h"
+file|"clang/StaticAnalyzer/Core/Checker.h"
 end_include
 
 begin_include
@@ -105,6 +111,10 @@ block|{
 name|private
 label|:
 specifier|const
+name|CheckName
+name|Check
+decl_stmt|;
+specifier|const
 name|std
 operator|::
 name|string
@@ -128,11 +138,50 @@ name|public
 label|:
 name|BugType
 argument_list|(
+argument|class CheckName check
+argument_list|,
 argument|StringRef name
 argument_list|,
 argument|StringRef cat
 argument_list|)
 block|:
+name|Check
+argument_list|(
+name|check
+argument_list|)
+operator|,
+name|Name
+argument_list|(
+name|name
+argument_list|)
+operator|,
+name|Category
+argument_list|(
+name|cat
+argument_list|)
+operator|,
+name|SuppressonSink
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|BugType
+argument_list|(
+argument|const CheckerBase *checker
+argument_list|,
+argument|StringRef name
+argument_list|,
+argument|StringRef cat
+argument_list|)
+operator|:
+name|Check
+argument_list|(
+name|checker
+operator|->
+name|getCheckName
+argument_list|()
+argument_list|)
+operator|,
 name|Name
 argument_list|(
 name|name
@@ -170,6 +219,18 @@ specifier|const
 block|{
 return|return
 name|Category
+return|;
+block|}
+name|StringRef
+name|getCheckName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Check
+operator|.
+name|getName
+argument_list|()
 return|;
 block|}
 comment|/// isSuppressOnSink - Returns true if bug reports associated with this bug
@@ -219,28 +280,26 @@ operator|::
 name|string
 name|desc
 block|;
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
 name|BuiltinBug
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|name
+argument|class CheckName check
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|description
+argument|const char *name
+argument_list|,
+argument|const char *description
 argument_list|)
 operator|:
 name|BugType
 argument_list|(
+name|check
+argument_list|,
 name|name
 argument_list|,
 name|categories
@@ -256,6 +315,45 @@ block|{}
 name|BuiltinBug
 argument_list|(
 specifier|const
+name|CheckerBase
+operator|*
+name|checker
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|description
+argument_list|)
+operator|:
+name|BugType
+argument_list|(
+name|checker
+argument_list|,
+name|name
+argument_list|,
+name|categories
+operator|::
+name|LogicError
+argument_list|)
+block|,
+name|desc
+argument_list|(
+argument|description
+argument_list|)
+block|{}
+name|BuiltinBug
+argument_list|(
+specifier|const
+name|CheckerBase
+operator|*
+name|checker
+argument_list|,
+specifier|const
 name|char
 operator|*
 name|name
@@ -263,6 +361,8 @@ argument_list|)
 operator|:
 name|BugType
 argument_list|(
+name|checker
+argument_list|,
 name|name
 argument_list|,
 name|categories

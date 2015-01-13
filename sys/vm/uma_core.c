@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rwlock.h>
 end_include
 
@@ -444,6 +450,14 @@ specifier|static
 name|struct
 name|mtx_padalign
 name|uma_boot_pages_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sx
+name|uma_drain_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -7853,16 +7867,6 @@ directive|ifdef
 name|UMA_DEBUG
 name|printf
 argument_list|(
-literal|"Initializing pcpu cache locks.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|UMA_DEBUG
-name|printf
-argument_list|(
 literal|"Creating slab and hash zones.\n"
 argument_list|)
 expr_stmt|;
@@ -7998,6 +8002,14 @@ name|UMA_STARTUP2
 expr_stmt|;
 name|bucket_enable
 argument_list|()
+expr_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|uma_drain_lock
+argument_list|,
+literal|"umadrain"
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -8221,6 +8233,12 @@ name|struct
 name|uma_zctor_args
 name|args
 decl_stmt|;
+name|uma_zone_t
+name|res
+decl_stmt|;
+name|bool
+name|locked
+decl_stmt|;
 comment|/* This stuff is essential for the zone ctor */
 name|memset
 argument_list|(
@@ -8289,8 +8307,33 @@ name|keg
 operator|=
 name|NULL
 expr_stmt|;
-return|return
-operator|(
+if|if
+condition|(
+name|booted
+operator|<
+name|UMA_STARTUP2
+condition|)
+block|{
+name|locked
+operator|=
+name|false
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sx_slock
+argument_list|(
+operator|&
+name|uma_drain_lock
+argument_list|)
+expr_stmt|;
+name|locked
+operator|=
+name|true
+expr_stmt|;
+block|}
+name|res
+operator|=
 name|zone_alloc_item
 argument_list|(
 name|zones
@@ -8300,6 +8343,20 @@ name|args
 argument_list|,
 name|M_WAITOK
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|locked
+condition|)
+name|sx_sunlock
+argument_list|(
+operator|&
+name|uma_drain_lock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|res
 operator|)
 return|;
 block|}
@@ -8339,6 +8396,12 @@ name|args
 decl_stmt|;
 name|uma_keg_t
 name|keg
+decl_stmt|;
+name|uma_zone_t
+name|res
+decl_stmt|;
+name|bool
+name|locked
 decl_stmt|;
 name|keg
 operator|=
@@ -8422,9 +8485,34 @@ name|keg
 operator|=
 name|keg
 expr_stmt|;
+if|if
+condition|(
+name|booted
+operator|<
+name|UMA_STARTUP2
+condition|)
+block|{
+name|locked
+operator|=
+name|false
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sx_slock
+argument_list|(
+operator|&
+name|uma_drain_lock
+argument_list|)
+expr_stmt|;
+name|locked
+operator|=
+name|true
+expr_stmt|;
+block|}
 comment|/* XXX Attaches only one keg of potentially many. */
-return|return
-operator|(
+name|res
+operator|=
 name|zone_alloc_item
 argument_list|(
 name|zones
@@ -8434,6 +8522,20 @@ name|args
 argument_list|,
 name|M_WAITOK
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|locked
+condition|)
+name|sx_sunlock
+argument_list|(
+operator|&
+name|uma_drain_lock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|res
 operator|)
 return|;
 block|}
@@ -8907,6 +9009,12 @@ name|uma_zone_t
 name|zone
 parameter_list|)
 block|{
+name|sx_slock
+argument_list|(
+operator|&
+name|uma_drain_lock
+argument_list|)
+expr_stmt|;
 name|zone_free_item
 argument_list|(
 name|zones
@@ -8916,6 +9024,12 @@ argument_list|,
 name|NULL
 argument_list|,
 name|SKIP_NONE
+argument_list|)
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|uma_drain_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -8957,6 +9071,14 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
+comment|/* The entropy here is desirable, but the harvesting is expensive */
+block|random_harvest(&(zone->uz_name), sizeof(void *), 1, RANDOM_UMA_ALLOC);
+endif|#
+directive|endif
 comment|/* This is the fast path allocation */
 ifdef|#
 directive|ifdef
@@ -9125,6 +9247,14 @@ name|NULL
 operator|)
 return|;
 block|}
+if|#
+directive|if
+literal|0
+comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
+comment|/* The entropy here is desirable, but the harvesting is expensive */
+block|random_harvest(&item, sizeof(void *), 1, RANDOM_UMA_ALLOC);
+endif|#
+directive|endif
 return|return
 operator|(
 name|item
@@ -9305,6 +9435,14 @@ argument_list|,
 name|zone
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
+comment|/* The entropy here is desirable, but the harvesting is expensive */
+block|random_harvest(&item, sizeof(void *), 1, RANDOM_UMA_ALLOC);
+endif|#
+directive|endif
 return|return
 operator|(
 name|item
@@ -9683,6 +9821,14 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
+comment|/* The entropy here is desirable, but the harvesting is expensive */
+block|random_harvest(&item, sizeof(void *), 1, RANDOM_UMA_ALLOC);
+endif|#
+directive|endif
 return|return
 operator|(
 name|item
@@ -11096,6 +11242,14 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
+comment|/* The entropy here is desirable, but the harvesting is expensive */
+block|struct entropy { 		const void *uz_name; 		const void *item; 	} entropy;  	entropy.uz_name = zone->uz_name; 	entropy.item = item; 	random_harvest(&entropy, sizeof(struct entropy), 2, RANDOM_UMA_ALLOC);
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|UMA_DEBUG_ALLOC_1
@@ -13321,6 +13475,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|sx_xlock
+argument_list|(
+operator|&
+name|uma_drain_lock
+argument_list|)
+expr_stmt|;
 name|bucket_enable
 argument_list|()
 expr_stmt|;
@@ -13359,6 +13519,12 @@ argument_list|)
 expr_stmt|;
 name|bucket_zone_drain
 argument_list|()
+expr_stmt|;
+name|sx_xunlock
+argument_list|(
+operator|&
+name|uma_drain_lock
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* See uma.h */

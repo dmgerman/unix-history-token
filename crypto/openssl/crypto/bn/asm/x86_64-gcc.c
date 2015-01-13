@@ -824,7 +824,9 @@ condition|)
 return|return
 literal|0
 return|;
-asm|asm ( 	"	subq	%2,%2		\n" 	".p2align 4			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	adcq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "=&a"(ret),"+c"(n),"=&r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc" 	);
+asm|asm
+specifier|volatile
+asm|( 	"	subq	%2,%2		\n" 	".p2align 4			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	adcq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "=&a"(ret),"+c"(n),"=&r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc", "memory" 	);
 return|return
 name|ret
 operator|&
@@ -879,7 +881,9 @@ condition|)
 return|return
 literal|0
 return|;
-asm|asm ( 	"	subq	%2,%2		\n" 	".p2align 4			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	sbbq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "=&a"(ret),"+c"(n),"=&r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc" 	);
+asm|asm
+specifier|volatile
+asm|( 	"	subq	%2,%2		\n" 	".p2align 4			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	sbbq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "=&a"(ret),"+c"(n),"=&r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc", "memory" 	);
 return|return
 name|ret
 operator|&
@@ -1200,6 +1204,10 @@ begin_comment
 comment|/* sqr_add_c2(a,i,c0,c1,c2) -- c+=2*a[i]*a[j] for three word number c=(c2,c1,c0) */
 end_comment
 
+begin_comment
+comment|/*  * Keep in mind that carrying into high part of multiplication result  * can not overflow, because it cannot be all-ones.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -1243,7 +1251,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|{	\ 	BN_ULONG ta=(a),tb=(b),t0;	\ 	t1 = BN_UMULT_HIGH(ta,tb);	\ 	t0 = ta * tb;			\ 	t2 = t1+t1; c2 += (t2<t1)?1:0;	\ 	t1 = t0+t0; t2 += (t1<t0)?1:0;	\ 	c0 += t1; t2 += (c0<t1)?1:0;	\ 	c1 += t2; c2 += (c1<t2)?1:0;	\ 	}
+value|{	\ 	BN_ULONG ta=(a),tb=(b),t0;	\ 	t1 = BN_UMULT_HIGH(ta,tb);	\ 	t0 = ta * tb;			\ 	c0 += t0; t2 = t1+((c0<t0)?1:0);\ 	c1 += t2; c2 += (c1<t2)?1:0;	\ 	c0 += t0; t1 += (c0<t0)?1:0;	\ 	c1 += t1; c2 += (c1<t1)?1:0;	\ 	}
 end_define
 
 begin_else
@@ -1302,7 +1310,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|do {	\ 	asm ("mulq %3"			\ 		: "=a"(t1),"=d"(t2)	\ 		: "a"(a),"m"(b)		\ 		: "cc");		\ 	asm ("addq %0,%0; adcq %2,%1"	\ 		: "+d"(t2),"+r"(c2)	\ 		: "g"(0)		\ 		: "cc");		\ 	asm ("addq %0,%0; adcq %2,%1"	\ 		: "+a"(t1),"+d"(t2)	\ 		: "g"(0)		\ 		: "cc");		\ 	asm ("addq %2,%0; adcq %3,%1"	\ 		: "+r"(c0),"+d"(t2)	\ 		: "a"(t1),"g"(0)	\ 		: "cc");		\ 	asm ("addq %2,%0; adcq %3,%1"	\ 		: "+r"(c1),"+r"(c2)	\ 		: "d"(t2),"g"(0)	\ 		: "cc");		\ 	} while (0)
+value|do {	\ 	asm ("mulq %3"			\ 		: "=a"(t1),"=d"(t2)	\ 		: "a"(a),"m"(b)		\ 		: "cc");		\ 	asm ("addq %3,%0; adcq %4,%1; adcq %5,%2"	\ 		: "+r"(c0),"+r"(c1),"+r"(c2)		\ 		: "r"(t1),"r"(t2),"g"(0)		\ 		: "cc");				\ 	asm ("addq %3,%0; adcq %4,%1; adcq %5,%2"	\ 		: "+r"(c0),"+r"(c1),"+r"(c2)		\ 		: "r"(t1),"r"(t2),"g"(0)		\ 		: "cc");				\ 	} while (0)
 end_define
 
 begin_endif

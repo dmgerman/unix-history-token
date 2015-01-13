@@ -2184,13 +2184,6 @@ name|txg
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Update the global config cache to reflect the new mosconfig. 	 */
-if|if
-condition|(
-operator|!
-name|spa
-operator|->
-name|spa_is_root
-condition|)
 name|spa_config_sync
 argument_list|(
 name|spa

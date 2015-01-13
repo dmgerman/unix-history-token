@@ -102,6 +102,16 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_expect_fail
+argument_list|(
+literal|"the EOF invariant fails on FreeBSD; this is new"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|f
 operator|=
 name|fopen

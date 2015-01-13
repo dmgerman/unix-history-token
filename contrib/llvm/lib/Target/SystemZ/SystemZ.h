@@ -467,6 +467,7 @@ literal|0
 return|;
 block|}
 block|}
+comment|// end namespace SystemZ
 name|FunctionPass
 modifier|*
 name|createSystemZISelDag
@@ -512,7 +513,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace llvm;
+comment|// end namespace llvm
 end_comment
 
 begin_endif

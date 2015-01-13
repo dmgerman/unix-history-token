@@ -159,6 +159,14 @@ name|X509_VERIFY_PARAM
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|param
+condition|)
+return|return
+name|NULL
+return|;
 name|memset
 argument_list|(
 name|param

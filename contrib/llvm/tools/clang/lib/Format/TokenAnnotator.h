@@ -166,7 +166,17 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|StartsDefinition
+name|Affected
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|LeadingEmptyLinesAffected
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ChildrenAffected
 argument_list|(
 argument|false
 argument_list|)
@@ -189,7 +199,7 @@ name|First
 operator|->
 name|Previous
 operator|=
-name|NULL
+name|nullptr
 block|;
 name|FormatToken
 operator|*
@@ -334,7 +344,7 @@ name|Last
 operator|->
 name|Next
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 block|}
 operator|~
@@ -403,8 +413,19 @@ decl_stmt|;
 name|bool
 name|MightBeFunctionDecl
 decl_stmt|;
+comment|/// \c True if this line should be formatted, i.e. intersects directly or
+comment|/// indirectly with one of the input ranges.
 name|bool
-name|StartsDefinition
+name|Affected
+decl_stmt|;
+comment|/// \c True if the leading empty lines of this line intersect with one of the
+comment|/// input ranges.
+name|bool
+name|LeadingEmptyLinesAffected
+decl_stmt|;
+comment|/// \c True if a one of this line's children intersects with an input range.
+name|bool
+name|ChildrenAffected
 decl_stmt|;
 name|private
 label|:

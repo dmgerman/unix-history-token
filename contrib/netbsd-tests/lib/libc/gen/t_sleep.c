@@ -145,6 +145,29 @@ begin_comment
 comment|/* scheduling fuzz accepted - 40 ms */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Timer notes  *  * Most tests use FUZZ as their initial delay value, but 'sleep'  * starts at 1sec (since it cannot handle sub-second intervals).  * Subsequent passes double the previous interval, up to MAXSLEEP.  *  * The current values result in 5 passes for the 'sleep' test (at 1,  * 2, 4, 8, and 16 seconds) and 10 passes for the other tests (at  * 0.04, 0.08, 0.16, 0.32, 0.64, 1.28, 2.56, 5.12, 10.24, and 20.48  * seconds).  *  * The ALARM is only set if the current pass's delay is longer, and  * only if the ALARM has not already been triggered.  *  * The 'kevent' test needs the ALARM to be set on a different pass  * from when the KEVNT_TIMEOUT fires.  So set ALARM to fire on the  * penultimate pass, and the KEVNT_TIMEOUT on the final pass.  We  * set KEVNT_TIMEOUT just barely long enough to put it into the  * last test pass, and set MAXSLEEP a couple seconds longer than  * necessary, in order to avoid a QEMU bug which nearly doubles  * some timers.  */
 end_comment
@@ -212,6 +235,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_function_decl
 name|int
 name|do_poll
@@ -226,6 +255,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -405,6 +439,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_function
 name|int
 name|do_poll
@@ -473,6 +513,11 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -841,6 +886,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -903,6 +954,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|ATF_TC
@@ -1430,6 +1486,9 @@ argument_list|,
 name|select
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -1437,6 +1496,8 @@ argument_list|,
 name|poll
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp

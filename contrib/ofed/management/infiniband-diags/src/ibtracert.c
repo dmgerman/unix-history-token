@@ -105,7 +105,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<infiniband/complib/cl_nodenamemap.h>
+file|<complib/cl_nodenamemap.h>
 end_include
 
 begin_include

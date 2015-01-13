@@ -661,8 +661,6 @@ name|OID_AUTO
 argument_list|,
 name|pmtud_blackhole_detection
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_VNET
@@ -708,8 +706,6 @@ name|OID_AUTO
 argument_list|,
 name|pmtud_blackhole_activated
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 operator||
 name|CTLFLAG_VNET
@@ -755,8 +751,6 @@ name|OID_AUTO
 argument_list|,
 name|pmtud_blackhole_activated_min_mss
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 operator||
 name|CTLFLAG_VNET
@@ -801,8 +795,6 @@ name|OID_AUTO
 argument_list|,
 name|pmtud_blackhole_failed
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 operator||
 name|CTLFLAG_VNET
@@ -855,8 +847,6 @@ name|OID_AUTO
 argument_list|,
 name|pmtud_blackhole_mss
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_VNET
@@ -914,8 +904,6 @@ name|OID_AUTO
 argument_list|,
 name|v6pmtud_blackhole_mss
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_VNET
@@ -1156,8 +1144,13 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tcp_tw_2msl_scan
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()

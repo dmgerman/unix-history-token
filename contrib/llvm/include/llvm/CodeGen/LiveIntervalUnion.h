@@ -501,11 +501,11 @@ argument_list|()
 block|{
 name|LiveUnion
 operator|=
-name|NULL
+name|nullptr
 block|;
 name|VirtReg
 operator|=
-name|NULL
+name|nullptr
 block|;
 name|InterferingVRegs
 operator|.
@@ -730,7 +730,7 @@ argument_list|)
 operator|,
 name|LIUs
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 operator|~

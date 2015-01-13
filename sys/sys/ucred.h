@@ -27,6 +27,13 @@ name|loginclass
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|XU_NGROUPS
+value|16
+end_define
+
 begin_comment
 comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  The  * priv(9) interface should be used to check for privilege.  */
 end_comment
@@ -141,6 +148,13 @@ name|int
 name|cr_agroups
 decl_stmt|;
 comment|/* Available groups */
+name|gid_t
+name|cr_smallgroups
+index|[
+name|XU_NGROUPS
+index|]
+decl_stmt|;
+comment|/* storage for small groups */
 block|}
 struct|;
 end_struct
@@ -175,13 +189,6 @@ end_endif
 begin_comment
 comment|/* _KERNEL || _WANT_UCRED */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|XU_NGROUPS
-value|16
-end_define
 
 begin_comment
 comment|/*  * Flags for cr_flags.  */

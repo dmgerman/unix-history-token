@@ -961,12 +961,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|pfr_ktablehead
+argument_list|,
 name|pfr_ktables
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_pfr_ktables
+value|VNET(pfr_ktables)
+end_define
 
 begin_decl_stmt
 name|struct
@@ -975,11 +986,22 @@ name|pfr_nulltable
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|pfr_ktable_cnt
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_pfr_ktable_cnt
+value|VNET(pfr_ktable_cnt)
+end_define
 
 begin_function
 name|void
@@ -6149,7 +6171,7 @@ argument|p
 argument_list|,
 argument|pfr_ktablehead
 argument_list|,
-argument|&pfr_ktables
+argument|&V_pfr_ktables
 argument_list|)
 block|{
 if|if
@@ -6387,7 +6409,7 @@ argument_list|(
 name|pfr_ktablehead
 argument_list|,
 operator|&
-name|pfr_ktables
+name|V_pfr_ktables
 argument_list|,
 operator|&
 name|key
@@ -6496,7 +6518,7 @@ argument_list|(
 name|pfr_ktablehead
 argument_list|,
 operator|&
-name|pfr_ktables
+name|V_pfr_ktables
 argument_list|,
 operator|&
 name|key
@@ -6850,7 +6872,7 @@ argument_list|(
 name|pfr_ktablehead
 argument_list|,
 operator|&
-name|pfr_ktables
+name|V_pfr_ktables
 argument_list|,
 operator|&
 name|key
@@ -7058,7 +7080,7 @@ argument|p
 argument_list|,
 argument|pfr_ktablehead
 argument_list|,
-argument|&pfr_ktables
+argument|&V_pfr_ktables
 argument_list|)
 block|{
 if|if
@@ -7243,7 +7265,7 @@ argument|p
 argument_list|,
 argument|pfr_ktablehead
 argument_list|,
-argument|&pfr_ktables
+argument|&V_pfr_ktables
 argument_list|)
 block|{
 if|if
@@ -7457,7 +7479,7 @@ argument_list|(
 name|pfr_ktablehead
 argument_list|,
 operator|&
-name|pfr_ktables
+name|V_pfr_ktables
 argument_list|,
 operator|&
 name|key
@@ -7681,7 +7703,7 @@ argument_list|(
 name|pfr_ktablehead
 argument_list|,
 operator|&
-name|pfr_ktables
+name|V_pfr_ktables
 argument_list|,
 operator|&
 name|key
@@ -7922,7 +7944,7 @@ argument|p
 argument_list|,
 argument|pfr_ktablehead
 argument_list|,
-argument|&pfr_ktables
+argument|&V_pfr_ktables
 argument_list|)
 block|{
 if|if
@@ -8210,7 +8232,7 @@ argument_list|(
 name|pfr_ktablehead
 argument_list|,
 operator|&
-name|pfr_ktables
+name|V_pfr_ktables
 argument_list|,
 operator|(
 expr|struct
@@ -8312,7 +8334,7 @@ argument_list|(
 name|pfr_ktablehead
 argument_list|,
 operator|&
-name|pfr_ktables
+name|V_pfr_ktables
 argument_list|,
 operator|&
 name|key
@@ -8780,7 +8802,7 @@ argument|p
 argument_list|,
 argument|pfr_ktablehead
 argument_list|,
-argument|&pfr_ktables
+argument|&V_pfr_ktables
 argument_list|)
 block|{
 if|if
@@ -8984,7 +9006,7 @@ argument|p
 argument_list|,
 argument|pfr_ktablehead
 argument_list|,
-argument|&pfr_ktables
+argument|&V_pfr_ktables
 argument_list|)
 block|{
 if|if
@@ -9841,7 +9863,7 @@ name|PFR_FLAG_ALLRSETS
 condition|)
 return|return
 operator|(
-name|pfr_ktable_cnt
+name|V_pfr_ktable_cnt
 operator|)
 return|;
 if|if
@@ -9997,12 +10019,12 @@ argument_list|(
 name|pfr_ktablehead
 argument_list|,
 operator|&
-name|pfr_ktables
+name|V_pfr_ktables
 argument_list|,
 name|kt
 argument_list|)
 expr_stmt|;
-name|pfr_ktable_cnt
+name|V_pfr_ktable_cnt
 operator|++
 expr_stmt|;
 if|if
@@ -10172,7 +10194,7 @@ argument_list|(
 name|pfr_ktablehead
 argument_list|,
 operator|&
-name|pfr_ktables
+name|V_pfr_ktables
 argument_list|,
 name|kt
 argument_list|)
@@ -10221,7 +10243,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|pfr_ktable_cnt
+name|V_pfr_ktable_cnt
 operator|--
 expr_stmt|;
 return|return;
@@ -10912,7 +10934,7 @@ argument_list|(
 name|pfr_ktablehead
 argument_list|,
 operator|&
-name|pfr_ktables
+name|V_pfr_ktables
 argument_list|,
 operator|(
 expr|struct

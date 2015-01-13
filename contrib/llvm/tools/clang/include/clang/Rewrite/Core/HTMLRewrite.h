@@ -261,7 +261,7 @@ name|char
 modifier|*
 name|title
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// SyntaxHighlight - Relex the specified FileID and annotate the HTML with

@@ -85,6 +85,7 @@ name|struct
 name|randomdev_hash
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,
@@ -115,6 +116,7 @@ name|struct
 name|randomdev_key
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|)
@@ -130,13 +132,14 @@ name|randomdev_key
 modifier|*
 name|context
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|unsigned
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

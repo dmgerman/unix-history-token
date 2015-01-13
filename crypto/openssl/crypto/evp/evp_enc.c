@@ -2328,6 +2328,7 @@ operator|->
 name|final
 argument_list|)
 expr_stmt|;
+comment|/* 		 * The following assumes that the ciphertext has been authenticated. 		 * Otherwise it provides a padding oracle. 		 */
 name|n
 operator|=
 name|ctx

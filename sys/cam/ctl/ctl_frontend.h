@@ -494,9 +494,6 @@ name|struct
 name|ctl_port
 modifier|*
 name|port
-parameter_list|,
-name|int
-name|master_SC
 parameter_list|)
 function_decl|;
 end_function_decl

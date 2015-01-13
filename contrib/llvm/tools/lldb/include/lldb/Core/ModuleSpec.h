@@ -1226,10 +1226,6 @@ name|GetAsSecondsSinceJan1_1970
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|dumped_something
-operator|=
-name|true
-expr_stmt|;
 block|}
 block|}
 end_block
@@ -1331,6 +1327,9 @@ return|;
 block|}
 if|if
 condition|(
+name|GetPlatformFileSpec
+argument_list|()
+operator|&&
 name|match_module_spec
 operator|.
 name|GetPlatformFileSpecPtr
@@ -1374,8 +1373,12 @@ return|return
 name|false
 return|;
 block|}
+comment|// Only match the symbol file spec if there is one in this ModuleSpec
 if|if
 condition|(
+name|GetSymbolFileSpec
+argument_list|()
+operator|&&
 name|match_module_spec
 operator|.
 name|GetSymbolFileSpecPtr

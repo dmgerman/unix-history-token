@@ -533,6 +533,8 @@ name|nfssvc_sysent
 argument_list|,
 operator|&
 name|nfssvc_prev_sysent
+argument_list|,
+name|SY_THR_STATIC_KLD
 argument_list|)
 expr_stmt|;
 if|if

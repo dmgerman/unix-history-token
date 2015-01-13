@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ValueMap.h"
+file|"llvm/IR/ValueMap.h"
 end_include
 
 begin_include
@@ -669,7 +669,7 @@ name|string
 operator|*
 name|Error
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -814,7 +814,7 @@ specifier|const
 operator|*
 name|ExtraArgs
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// runPasses - Run the specified passes on Program, outputting a bitcode
@@ -873,7 +873,7 @@ specifier|const
 operator|*
 name|ExtraArgs
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;

@@ -1715,8 +1715,6 @@ name|OID_AUTO
 argument_list|,
 literal|"enable_aim"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2690,15 +2688,12 @@ decl_stmt|;
 comment|/* Which queue to use */
 if|if
 condition|(
-operator|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
-operator|)
+argument_list|)
 operator|!=
-literal|0
+name|M_HASHTYPE_NONE
 condition|)
 name|i
 operator|=
@@ -15683,11 +15678,12 @@ name|que
 operator|->
 name|msix
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|sendmp
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -18098,8 +18094,6 @@ name|OID_AUTO
 argument_list|,
 name|name
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 name|limit

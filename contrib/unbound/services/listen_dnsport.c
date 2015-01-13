@@ -101,6 +101,23 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_UN_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/** number of queued TCP connections for listen() */
 end_comment
@@ -109,7 +126,7 @@ begin_define
 define|#
 directive|define
 name|TCP_BACKLOG
-value|5
+value|256
 end_define
 
 begin_comment
@@ -655,18 +672,10 @@ block|}
 endif|#
 directive|endif
 comment|/* SO_REUSEADDR */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|SO_REUSEPORT
-argument_list|)
-comment|/* Linux specific: try to set SO_REUSEPORT so that incoming 		 * queries are distributed evenly among the receiving threads. 		 * Each thread must have its own socket bound to the same port, 		 * with SO_REUSEPORT set on each socket. 		 */
+comment|/* try to set SO_REUSEPORT so that incoming 		 * queries are distributed evenly among the receiving threads. 		 * Each thread must have its own socket bound to the same port, 		 * with SO_REUSEPORT set on each socket. 		 */
 if|if
 condition|(
 name|reuseport
@@ -742,7 +751,7 @@ name|reuseport
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(__linux__)&& defined(SO_REUSEPORT) */
+comment|/* defined(SO_REUSEPORT) */
 block|}
 if|if
 condition|(
@@ -1596,11 +1605,27 @@ name|defined
 argument_list|(
 name|IP_PMTUDISC_DONT
 argument_list|)
+comment|/* linux 3.15 has IP_PMTUDISC_OMIT, Hannes Frederic Sowa made it so that  * PMTU information is not accepted, but fragmentation is allowed  * if and only if the packet size exceeds the outgoing interface MTU  * (and also uses the interface mtu to determine the size of the packets).  * So there won't be any EMSGSIZE error.  Against DNS fragmentation attacks.  * FreeBSD already has same semantics without setting the option. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IP_PMTUDISC_OMIT
+argument_list|)
+name|int
+name|action
+init|=
+name|IP_PMTUDISC_OMIT
+decl_stmt|;
+else|#
+directive|else
 name|int
 name|action
 init|=
 name|IP_PMTUDISC_DONT
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|setsockopt
@@ -1629,7 +1654,19 @@ block|{
 name|log_err
 argument_list|(
 literal|"setsockopt(..., IP_MTU_DISCOVER, "
-literal|"IP_PMTUDISC_DONT...) failed: %s"
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IP_PMTUDISC_OMIT
+argument_list|)
+literal|"IP_PMTUDISC_OMIT"
+else|#
+directive|else
+literal|"IP_PMTUDISC_DONT"
+endif|#
+directive|endif
+literal|"...) failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1819,21 +1856,14 @@ operator|!=
 name|EADDRINUSE
 condition|)
 block|{
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"can't bind socket: %s"
+literal|"can't bind socket"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"failed address"
 argument_list|,
 operator|(
 expr|struct
@@ -1870,22 +1900,15 @@ operator|!=
 name|WSAEADDRNOTAVAIL
 condition|)
 block|{
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"can't bind socket: %s"
+literal|"can't bind socket"
 argument_list|,
 name|wsa_strerror
 argument_list|(
 name|WSAGetLastError
 argument_list|()
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"failed address"
 argument_list|,
 operator|(
 expr|struct
@@ -2193,18 +2216,10 @@ block|}
 endif|#
 directive|endif
 comment|/* SO_REUSEADDR */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|SO_REUSEPORT
-argument_list|)
-comment|/* Linux specific: try to set SO_REUSEPORT so that incoming 	 * connections are distributed evenly among the receiving threads. 	 * Each thread must have its own socket bound to the same port, 	 * with SO_REUSEPORT set on each socket. 	 */
+comment|/* try to set SO_REUSEPORT so that incoming 	 * connections are distributed evenly among the receiving threads. 	 * Each thread must have its own socket bound to the same port, 	 * with SO_REUSEPORT set on each socket. 	 */
 if|if
 condition|(
 name|reuseport
@@ -2280,7 +2295,7 @@ name|reuseport
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(__linux__)&& defined(SO_REUSEPORT) */
+comment|/* defined(SO_REUSEPORT) */
 if|#
 directive|if
 name|defined
@@ -2422,21 +2437,14 @@ literal|1
 expr_stmt|;
 else|else
 block|{
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"can't bind socket: %s"
+literal|"can't bind socket"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"failed address"
 argument_list|,
 operator|(
 expr|struct
@@ -2460,22 +2468,15 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"can't bind socket: %s"
+literal|"can't bind socket"
 argument_list|,
 name|wsa_strerror
 argument_list|(
 name|WSAGetLastError
 argument_list|()
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"failed address"
 argument_list|,
 operator|(
 expr|struct
@@ -2593,6 +2594,262 @@ block|}
 return|return
 name|s
 return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|create_local_accept_sock
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|int
+modifier|*
+name|noproto
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_UN_H
+name|int
+name|s
+decl_stmt|;
+name|struct
+name|sockaddr_un
+name|sun
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRUCT_SOCKADDR_UN_SUN_LEN
+comment|/* this member exists on BSDs, not Linux */
+name|sun
+operator|.
+name|sun_len
+operator|=
+operator|(
+name|sa_family_t
+operator|)
+sizeof|sizeof
+argument_list|(
+name|sun
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|sun
+operator|.
+name|sun_family
+operator|=
+name|AF_LOCAL
+expr_stmt|;
+comment|/* length is 92-108, 104 on FreeBSD */
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|sun
+operator|.
+name|sun_path
+argument_list|,
+name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sun
+operator|.
+name|sun_path
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|s
+operator|=
+name|socket
+argument_list|(
+name|PF_LOCAL
+argument_list|,
+name|SOCK_STREAM
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|log_err
+argument_list|(
+literal|"Cannot create local socket %s (%s)"
+argument_list|,
+name|path
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|unlink
+argument_list|(
+name|path
+argument_list|)
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+block|{
+comment|/* The socket already exists and cannot be removed */
+name|log_err
+argument_list|(
+literal|"Cannot remove old local socket %s (%s)"
+argument_list|,
+name|path
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|bind
+argument_list|(
+name|s
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|sun
+argument_list|,
+operator|(
+name|socklen_t
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_un
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|log_err
+argument_list|(
+literal|"Cannot bind local socket %s (%s)"
+argument_list|,
+name|path
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|fd_set_nonblock
+argument_list|(
+name|s
+argument_list|)
+condition|)
+block|{
+name|log_err
+argument_list|(
+literal|"Cannot set non-blocking mode"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|listen
+argument_list|(
+name|s
+argument_list|,
+name|TCP_BACKLOG
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|log_err
+argument_list|(
+literal|"can't listen: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+operator|(
+name|void
+operator|)
+name|noproto
+expr_stmt|;
+comment|/*unused*/
+return|return
+name|s
+return|;
+else|#
+directive|else
+name|log_err
+argument_list|(
+literal|"Local sockets are not supported"
+argument_list|)
+expr_stmt|;
+operator|*
+name|noproto
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4081,6 +4338,11 @@ name|void
 modifier|*
 name|sslctx
 parameter_list|,
+name|struct
+name|dt_env
+modifier|*
+name|dtenv
+parameter_list|,
 name|comm_point_callback_t
 modifier|*
 name|cb
@@ -4301,6 +4563,12 @@ return|return
 name|NULL
 return|;
 block|}
+name|cp
+operator|->
+name|dtenv
+operator|=
+name|dtenv
+expr_stmt|;
 name|cp
 operator|->
 name|do_not_close

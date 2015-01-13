@@ -1385,6 +1385,11 @@ name|error
 operator|)
 return|;
 block|}
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check mnt_flag 	 */
 if|if
 condition|(
@@ -1417,6 +1422,44 @@ operator|->
 name|mnt_flag
 operator||=
 name|MNT_LOCAL
+expr_stmt|;
+comment|/* 	 * Check mnt_kern_flag 	 */
+if|if
+condition|(
+operator|(
+name|ump
+operator|->
+name|um_lowervp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNTK_SUSPENDABLE
+operator|)
+operator|||
+operator|(
+name|ump
+operator|->
+name|um_uppervp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNTK_SUSPENDABLE
+operator|)
+condition|)
+name|mp
+operator|->
+name|mnt_kern_flag
+operator||=
+name|MNTK_SUSPENDABLE
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Get new fsid 	 */
 name|vfs_getnewfsid

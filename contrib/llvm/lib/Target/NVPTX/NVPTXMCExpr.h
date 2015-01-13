@@ -202,6 +202,7 @@ argument_list|(
 argument|raw_ostream&OS
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|EvaluateAsRelocatableImpl
@@ -211,17 +212,19 @@ argument_list|,
 argument|const MCAsmLayout *Layout
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
 name|void
-name|AddValueSymbols
+name|visitUsedExpr
 argument_list|(
-argument|MCAssembler *
+argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
+name|override
 block|{}
 block|;
 specifier|const
@@ -230,9 +233,10 @@ operator|*
 name|FindAssociatedSection
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|// There are no TLS NVPTXMCExprs at the moment.
@@ -242,6 +246,7 @@ argument_list|(
 argument|MCAssembler&Asm
 argument_list|)
 specifier|const
+name|override
 block|{}
 specifier|static
 name|bool

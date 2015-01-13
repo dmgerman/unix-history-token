@@ -116,7 +116,6 @@ argument_list|,
 argument|Options
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|addPassesToEmitFile
 argument_list|(
@@ -132,17 +131,18 @@ argument|AnalysisID StartAfter
 argument_list|,
 argument|AnalysisID StopAfter
 argument_list|)
+name|override
 block|;
-name|virtual
 specifier|const
 name|DataLayout
 operator|*
 name|getDataLayout
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 expr|}

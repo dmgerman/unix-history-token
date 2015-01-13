@@ -7242,7 +7242,6 @@ comment|/*   * Add an ssid element to a frame.  */
 end_comment
 
 begin_function
-specifier|static
 name|uint8_t
 modifier|*
 name|ieee80211_add_ssid

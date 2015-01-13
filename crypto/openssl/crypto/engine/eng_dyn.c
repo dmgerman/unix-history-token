@@ -284,27 +284,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|ENGINE_CMD_DEFN
-name|dynamic_cmd_defns_empty
-index|[]
-init|=
-block|{
-block|{
-literal|0
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Loading code stores state inside the ENGINE structure via the "ex_data"  * element. We load all our state into a single structure and use that as a  * single context in the "ex_data" stack. */
 end_comment

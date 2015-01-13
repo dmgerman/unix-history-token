@@ -248,6 +248,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Private data for capturing on Linux CANbus devices.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pcap_can
+block|{
+name|int
+name|ifindex
+decl_stmt|;
+comment|/* interface index of device we're bound to */
+block|}
+struct|;
+end_struct
+
 begin_function
 name|int
 name|can_findalldevs
@@ -444,6 +460,12 @@ argument_list|(
 name|device
 argument_list|,
 name|ebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcap_can
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -481,6 +503,15 @@ modifier|*
 name|handle
 parameter_list|)
 block|{
+name|struct
+name|pcap_can
+modifier|*
+name|handlep
+init|=
+name|handle
+operator|->
+name|priv
+decl_stmt|;
 name|struct
 name|sockaddr_can
 name|addr
@@ -677,10 +708,8 @@ return|return
 name|PCAP_ERROR
 return|;
 block|}
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|ifindex
 operator|=
 name|ifr
@@ -743,10 +772,8 @@ name|addr
 operator|.
 name|can_ifindex
 operator|=
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|ifindex
 expr_stmt|;
 if|if
@@ -784,10 +811,8 @@ name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"Can't attach to device %d %d:%s"
 argument_list|,
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|ifindex
 argument_list|,
 name|errno
@@ -823,7 +848,7 @@ name|handle
 argument_list|)
 expr_stmt|;
 return|return
-name|PCAP_ERROR
+name|PCAP_ERROR_RFMON_NOTSUP
 return|;
 block|}
 name|handle
@@ -1001,8 +1026,9 @@ condition|(
 name|pkth
 operator|.
 name|caplen
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|snprintf

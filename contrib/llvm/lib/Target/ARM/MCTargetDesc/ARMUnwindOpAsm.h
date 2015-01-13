@@ -66,19 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARMUnwindOp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/Support/ARMEHABI.h"
 end_include
 
 begin_include
@@ -165,7 +159,7 @@ name|HasPersonality
 operator|=
 literal|0
 block|;   }
-comment|/// Set the personality index
+comment|/// Set the personality
 name|void
 name|setPersonality
 argument_list|(
@@ -207,6 +201,55 @@ name|int64_t
 name|Offset
 parameter_list|)
 function_decl|;
+comment|/// Emit unwind raw opcodes
+name|void
+name|EmitRaw
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|uint8_t
+operator|>
+operator|&
+name|Opcodes
+argument_list|)
+block|{
+name|Ops
+operator|.
+name|insert
+argument_list|(
+name|Ops
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|Opcodes
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Opcodes
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|OpBegins
+operator|.
+name|push_back
+argument_list|(
+name|OpBegins
+operator|.
+name|back
+argument_list|()
+operator|+
+name|Opcodes
+operator|.
+name|size
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// Finalize the unwind opcode sequence for EmitBytes()
 name|void
 name|Finalize

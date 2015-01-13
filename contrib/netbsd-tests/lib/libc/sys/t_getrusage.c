@@ -102,11 +102,24 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|sighandler
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
+else|#
+directive|else
+function|sighandler
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
+endif|#
+directive|endif
 block|{
 comment|/* Nothing. */
 block|}
@@ -445,11 +458,16 @@ name|size_t
 name|i
 decl_stmt|;
 comment|/* 	 * Test that two consecutive calls are sane. 	 */
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|atf_tc_expect_fail
 argument_list|(
 literal|"PR kern/30115"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -555,11 +573,16 @@ literal|"user time went backwards"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|atf_tc_fail
 argument_list|(
 literal|"anticipated error did not occur"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -612,6 +635,17 @@ decl_stmt|;
 name|size_t
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_skip
+argument_list|(
+literal|"this testcase passes/fails sporadically on FreeBSD/i386 "
+literal|"@ r273153 (at least)"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Test that getrusage(2) does not return 	 * zero user time for the calling process. 	 * 	 * See also (duplicate) PR port-amd64/41734. 	 */
 name|atf_tc_expect_fail
 argument_list|(

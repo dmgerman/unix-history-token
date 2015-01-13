@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2012 Ian Lepore  * Copyright (c) 2010 Mark Tinguely  * Copyright (c) 2004 Olivier Houchard  * Copyright (c) 2002 Peter Grehan  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  From i386/busdma_machdep.c 191438 2009-04-23 20:24:19Z jhb  */
+comment|/*-  * Copyright (c) 2012-2014 Ian Lepore  * Copyright (c) 2010 Mark Tinguely  * Copyright (c) 2004 Olivier Houchard  * Copyright (c) 2002 Peter Grehan  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  From i386/busdma_machdep.c 191438 2009-04-23 20:24:19Z jhb  */
 end_comment
 
 begin_include
@@ -1810,20 +1810,72 @@ literal|0
 block|if (!parent) 		parent = arm_root_dma_tag;
 endif|#
 directive|endif
-comment|/* Basic sanity checking */
-if|if
-condition|(
+comment|/* Basic sanity checking. */
+name|KASSERT
+argument_list|(
 name|boundary
+operator|==
+literal|0
+operator|||
+name|powerof2
+argument_list|(
+name|boundary
+argument_list|)
+argument_list|,
+operator|(
+literal|"dma tag boundary %lu, must be a power of 2"
+operator|,
+name|boundary
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|boundary
+operator|==
+literal|0
+operator|||
+name|boundary
+operator|>=
+name|maxsegsz
+argument_list|,
+operator|(
+literal|"dma tag boundary %lu is< maxsegsz %lu\n"
+operator|,
+name|boundary
+operator|,
+name|maxsegsz
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|alignment
 operator|!=
 literal|0
 operator|&&
-name|boundary
-operator|<
+name|powerof2
+argument_list|(
+name|alignment
+argument_list|)
+argument_list|,
+operator|(
+literal|"dma tag alignment %lu, must be non-zero power of 2"
+operator|,
+name|alignment
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 name|maxsegsz
-condition|)
-name|maxsegsz
-operator|=
-name|boundary
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"dma tag maxsegsz must not be zero"
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* Return a NULL tag on failure */
 operator|*
@@ -1831,19 +1883,6 @@ name|dmat
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|maxsegsz
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
 name|newtag
 operator|=
 operator|(
@@ -3014,6 +3053,11 @@ name|maps_total
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|dmat
+operator|->
+name|map_count
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -5477,7 +5521,7 @@ name|notyetbounceuser
 end_ifdef
 
 begin_comment
-comment|/* If busdma uses user pages, then the interrupt handler could 	 * be use the kernel vm mapping. Both bounce pages and sync list 	 * do not cross page boundaries. 	 * Below is a rough sequence that a person would do to fix the 	 * user page reference in the kernel vmspace. This would be 	 * done in the dma post routine. 	 */
+comment|/* If busdma uses user pages, then the interrupt handler could  * be use the kernel vm mapping. Both bounce pages and sync list  * do not cross page boundaries.  * Below is a rough sequence that a person would do to fix the  * user page reference in the kernel vmspace. This would be  * done in the dma post routine.  */
 end_comment
 
 begin_function
@@ -5506,7 +5550,7 @@ decl_stmt|;
 name|vm_offset_t
 name|va
 decl_stmt|;
-comment|/* each synclist entry is contained within a single page. 		 * 		 * this would be needed if BUS_DMASYNC_POSTxxxx was implemented 		*/
+comment|/*  	 * each synclist entry is contained within a single page. 	 * this would be needed if BUS_DMASYNC_POSTxxxx was implemented 	 */
 name|curaddr
 operator|=
 name|pmap_extract
@@ -5724,7 +5768,7 @@ decl_stmt|,
 modifier|*
 name|end
 decl_stmt|;
-comment|/* 	 * If the buffer was from user space, it is possible that this is not 	 * the same vm map, especially on a POST operation.  It's not clear that 	 * dma on userland buffers can work at all right now, certainly not if a 	 * partial cacheline flush has to be handled.  To be safe, until we're 	 * able to test direct userland dma, panic on a map mismatch. 	 */
+comment|/* 	 * If the buffer was from user space, it is possible that this is not 	 * the same vm map, especially on a POST operation.  It's not clear that 	 * dma on userland buffers can work at all right now.  To be safe, until 	 * we're able to test direct userland dma, panic on a map mismatch. 	 */
 if|if
 condition|(
 operator|(
@@ -5757,7 +5801,6 @@ argument_list|(
 literal|"_bus_dmamap_sync: wrong user map for bounce sync."
 argument_list|)
 expr_stmt|;
-comment|/* Handle data bouncing. */
 name|CTR4
 argument_list|(
 name|KTR_BUSDMA
@@ -5776,6 +5819,7 @@ argument_list|,
 name|op
 argument_list|)
 expr_stmt|;
+comment|/* 		 * For PREWRITE do a writeback.  Clean the caches from the 		 * innermost to the outermost levels. 		 */
 if|if
 condition|(
 name|op
@@ -5894,11 +5938,21 @@ name|total_bounced
 operator|++
 expr_stmt|;
 block|}
+comment|/* 		 * Do an invalidate for PREREAD unless a writeback was already 		 * done above due to PREWRITE also being set.  The reason for a 		 * PREREAD invalidate is to prevent dirty lines currently in the 		 * cache from being evicted during the DMA.  If a writeback was 		 * done due to PREWRITE also being set there will be no dirty 		 * lines and the POSTREAD invalidate handles the rest. The 		 * invalidate is done from the innermost to outermost level. If 		 * L2 were done first, a dirty cacheline could be automatically 		 * evicted from L1 before we invalidated it, re-dirtying the L2. 		 */
 if|if
 condition|(
+operator|(
 name|op
 operator|&
 name|BUS_DMASYNC_PREREAD
+operator|)
+operator|&&
+operator|!
+operator|(
+name|op
+operator|&
+name|BUS_DMASYNC_PREWRITE
+operator|)
 condition|)
 block|{
 name|bpage
@@ -5964,6 +6018,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 		 * Re-invalidate the caches on a POSTREAD, even though they were 		 * already invalidated at PREREAD time.  Aggressive prefetching 		 * due to accesses to other data near the dma buffer could have 		 * brought buffer data into the caches which is now stale.  The 		 * caches are invalidated from the outermost to innermost; the 		 * prefetches could be happening right now, and if L1 were 		 * invalidated first, stale L2 data could be prefetched into L1. 		 */
 if|if
 condition|(
 name|op
@@ -6047,18 +6102,18 @@ operator|)
 operator|+
 name|arm_dcache_align
 expr_stmt|;
-name|cpu_dcache_inv_range
-argument_list|(
-name|startv
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
 name|l2cache_inv_range
 argument_list|(
 name|startv
 argument_list|,
 name|startp
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|cpu_dcache_inv_range
+argument_list|(
+name|startv
 argument_list|,
 name|len
 argument_list|)
@@ -6133,6 +6188,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * For COHERENT memory no cache maintenance is necessary, but ensure all 	 * writes have reached memory for the PREWRITE case.  No action is 	 * needed for a PREREAD without PREWRITE also set, because that would 	 * imply that the cpu had written to the COHERENT buffer and expected 	 * the dma device to see that change, and by definition a PREWRITE sync 	 * is required to make that happen. 	 */
 if|if
 condition|(
 name|map
@@ -6141,7 +6197,24 @@ name|flags
 operator|&
 name|DMAMAP_COHERENT
 condition|)
+block|{
+if|if
+condition|(
+name|op
+operator|&
+name|BUS_DMASYNC_PREWRITE
+condition|)
+block|{
+name|dsb
+argument_list|()
+expr_stmt|;
+name|cpu_l2cache_drain_writebuf
+argument_list|()
+expr_stmt|;
+block|}
 return|return;
+block|}
+comment|/* 	 * Cache maintenance for normal (non-COHERENT non-bounce) buffers.  All 	 * the comments about the sequences for flushing cache levels in the 	 * bounce buffer code above apply here as well.  In particular, the fact 	 * that the sequence is inner-to-outer for PREREAD invalidation and 	 * outer-to-inner for POSTREAD invalidation is not a mistake. 	 */
 if|if
 condition|(
 name|map
@@ -6166,7 +6239,6 @@ argument_list|(
 literal|"_bus_dmamap_sync: wrong user map for sync."
 argument_list|)
 expr_stmt|;
-comment|/* ARM caches are not self-snooping for dma */
 name|sl
 operator|=
 operator|&
@@ -6215,6 +6287,11 @@ block|{
 case|case
 name|BUS_DMASYNC_PREWRITE
 case|:
+case|case
+name|BUS_DMASYNC_PREWRITE
+operator||
+name|BUS_DMASYNC_PREREAD
+case|:
 while|while
 condition|(
 name|sl
@@ -6256,6 +6333,7 @@ break|break;
 case|case
 name|BUS_DMASYNC_PREREAD
 case|:
+comment|/* 			 * An mbuf may start in the middle of a cacheline. There 			 * will be no cpu writes to the beginning of that line 			 * (which contains the mbuf header) while dma is in 			 * progress.  Handle that case by doing a writeback of 			 * just the first cacheline before invalidating the 			 * overall buffer.  Any mbuf in a chain may have this 			 * misalignment.  Buffers which are not mbufs bounce if 			 * they are not aligned to a cacheline. 			 */
 while|while
 condition|(
 name|sl
@@ -6263,6 +6341,51 @@ operator|!=
 name|end
 condition|)
 block|{
+if|if
+condition|(
+name|sl
+operator|->
+name|vaddr
+operator|&
+name|arm_dcache_align_mask
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|map
+operator|->
+name|flags
+operator|&
+name|DMAMAP_MBUF
+argument_list|,
+operator|(
+literal|"unaligned buffer is not an mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|cpu_dcache_wb_range
+argument_list|(
+name|sl
+operator|->
+name|vaddr
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|l2cache_wb_range
+argument_list|(
+name|sl
+operator|->
+name|vaddr
+argument_list|,
+name|sl
+operator|->
+name|busaddr
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|cpu_dcache_inv_range
 argument_list|(
 name|sl
@@ -6295,9 +6418,16 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|BUS_DMASYNC_PREWRITE
+name|BUS_DMASYNC_POSTWRITE
+case|:
+break|break;
+case|case
+name|BUS_DMASYNC_POSTREAD
+case|:
+case|case
+name|BUS_DMASYNC_POSTREAD
 operator||
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_POSTWRITE
 case|:
 while|while
 condition|(
@@ -6306,18 +6436,7 @@ operator|!=
 name|end
 condition|)
 block|{
-name|cpu_dcache_wbinv_range
-argument_list|(
-name|sl
-operator|->
-name|vaddr
-argument_list|,
-name|sl
-operator|->
-name|datacount
-argument_list|)
-expr_stmt|;
-name|l2cache_wbinv_range
+name|l2cache_inv_range
 argument_list|(
 name|sl
 operator|->
@@ -6332,22 +6451,21 @@ operator|->
 name|datacount
 argument_list|)
 expr_stmt|;
+name|cpu_dcache_inv_range
+argument_list|(
+name|sl
+operator|->
+name|vaddr
+argument_list|,
+name|sl
+operator|->
+name|datacount
+argument_list|)
+expr_stmt|;
 name|sl
 operator|++
 expr_stmt|;
 block|}
-break|break;
-case|case
-name|BUS_DMASYNC_POSTREAD
-case|:
-case|case
-name|BUS_DMASYNC_POSTWRITE
-case|:
-case|case
-name|BUS_DMASYNC_POSTREAD
-operator||
-name|BUS_DMASYNC_POSTWRITE
-case|:
 break|break;
 default|default:
 name|panic
@@ -6947,7 +7065,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|busdma_sysctl_tree
 argument_list|(
@@ -6972,8 +7090,6 @@ operator|&
 name|bz
 operator|->
 name|alignment
-argument_list|,
-literal|0
 argument_list|,
 literal|""
 argument_list|)

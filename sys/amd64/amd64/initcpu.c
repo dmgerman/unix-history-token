@@ -348,6 +348,16 @@ begin_comment
 comment|/* MONITOR minimum range size, bytes */
 end_comment
 
+begin_decl_stmt
+name|u_int
+name|cpu_maxphyaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Max phys addr width in bits */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(

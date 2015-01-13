@@ -13500,11 +13500,12 @@ name|fp
 operator|->
 name|index
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -14461,11 +14462,12 @@ name|fp
 operator|->
 name|index
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -25016,20 +25018,16 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* default is the first queue */
-comment|/* change the queue if using flow ID */
+comment|/* check if flowid is set */
 if|if
 condition|(
-operator|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
-operator|)
+argument_list|)
 operator|!=
-literal|0
+name|M_HASHTYPE_NONE
 condition|)
-block|{
 name|fp_index
 operator|=
 operator|(
@@ -25044,7 +25042,6 @@ operator|->
 name|num_queues
 operator|)
 expr_stmt|;
-block|}
 name|fp
 operator|=
 operator|&
@@ -70390,7 +70387,6 @@ literal|"bc_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|devinfo
@@ -70438,7 +70434,6 @@ literal|"fw_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|fw_ver_str
@@ -70536,7 +70531,6 @@ literal|"mf_mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|mf_mode_str
@@ -70584,7 +70578,6 @@ literal|"mac_addr"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|mac_addr_str
@@ -70668,7 +70661,6 @@ literal|"pci_link"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|pci_link_str
@@ -70684,7 +70676,7 @@ name|debug
 operator|=
 name|bxe_debug
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -70700,8 +70692,6 @@ operator|&
 name|sc
 operator|->
 name|debug
-argument_list|,
-literal|0
 argument_list|,
 literal|"debug logging mode"
 argument_list|)

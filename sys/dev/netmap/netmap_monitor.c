@@ -572,7 +572,7 @@ name|mlim
 argument_list|)
 expr_stmt|;
 block|}
-name|wmb
+name|mb
 argument_list|()
 expr_stmt|;
 name|mkring
@@ -778,7 +778,7 @@ name|kring
 operator|->
 name|rcur
 expr_stmt|;
-name|rmb
+name|mb
 argument_list|()
 expr_stmt|;
 name|nm_rxsync_finalize

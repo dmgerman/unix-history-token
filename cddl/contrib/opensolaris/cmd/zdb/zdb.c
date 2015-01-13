@@ -297,6 +297,13 @@ name|zfs_arc_meta_limit
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|zfs_vdev_async_read_max_active
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -313,6 +320,12 @@ name|uint64_t
 name|zfs_arc_max
 decl_stmt|,
 name|zfs_arc_meta_limit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|zfs_vdev_async_read_max_active
 decl_stmt|;
 end_decl_stmt
 
@@ -6510,10 +6523,10 @@ name|bp
 argument_list|)
 condition|)
 block|{
-name|uint32_t
+name|arc_flags_t
 name|flags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|int
 name|i
@@ -10672,6 +10685,8 @@ argument_list|)
 expr_stmt|;
 name|refdbytes
 operator|=
+name|dsl_dir_phys
+argument_list|(
 name|os
 operator|->
 name|os_spa
@@ -10679,8 +10694,7 @@ operator|->
 name|spa_dsl_pool
 operator|->
 name|dp_mos_dir
-operator|->
-name|dd_phys
+argument_list|)
 operator|->
 name|dd_used_bytes
 expr_stmt|;
@@ -12218,6 +12232,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|uint64_t
+name|num_large_blocks
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
@@ -12283,6 +12304,18 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|dmu_objset_ds
+argument_list|(
+name|os
+argument_list|)
+operator|->
+name|ds_large_blocks
+condition|)
+name|num_large_blocks
+operator|++
+expr_stmt|;
 name|dump_dir
 argument_list|(
 name|os
@@ -12318,7 +12351,7 @@ begin_define
 define|#
 directive|define
 name|PSIZE_HISTO_SIZE
-value|(SPA_MAXBLOCKSIZE / SPA_MINBLOCKSIZE + 1)
+value|(SPA_OLD_MAXBLOCKSIZE / SPA_MINBLOCKSIZE + 2)
 end_define
 
 begin_typedef
@@ -12624,16 +12657,35 @@ operator|->
 name|zb_count
 operator|++
 expr_stmt|;
-name|zb
-operator|->
-name|zb_psize_histogram
-index|[
+comment|/* 		 * The histogram is only big enough to record blocks up to 		 * SPA_OLD_MAXBLOCKSIZE; larger blocks go into the last, 		 * "other", bucket. 		 */
+name|int
+name|idx
+init|=
 name|BP_GET_PSIZE
 argument_list|(
 name|bp
 argument_list|)
 operator|>>
 name|SPA_MINBLOCKSHIFT
+decl_stmt|;
+name|idx
+operator|=
+name|MIN
+argument_list|(
+name|idx
+argument_list|,
+name|SPA_OLD_MAXBLOCKSIZE
+operator|/
+name|SPA_MINBLOCKSIZE
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|zb
+operator|->
+name|zb_psize_histogram
+index|[
+name|idx
 index|]
 operator|++
 expr_stmt|;
@@ -13493,6 +13545,28 @@ name|zcb_readfails
 operator|=
 literal|0
 expr_stmt|;
+comment|/* only call gethrtime() every 100 blocks */
+specifier|static
+name|int
+name|iters
+decl_stmt|;
+if|if
+condition|(
+operator|++
+name|iters
+operator|>
+literal|100
+condition|)
+name|iters
+operator|=
+literal|0
+expr_stmt|;
+else|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|dump_opt
@@ -14087,6 +14161,15 @@ name|ms_ops
 operator|=
 operator|&
 name|zdb_metaslab_ops
+expr_stmt|;
+comment|/* 					 * We don't want to spend the CPU 					 * manipulating the size-ordered 					 * tree, so clear the range_tree 					 * ops. 					 */
+name|msp
+operator|->
+name|ms_tree
+operator|->
+name|rt_ops
+operator|=
+name|NULL
 expr_stmt|;
 name|VERIFY0
 argument_list|(
@@ -16447,6 +16530,9 @@ literal|'i'
 index|]
 condition|)
 block|{
+name|uint64_t
+name|refcount
+decl_stmt|;
 name|dump_dir
 argument_list|(
 name|dp
@@ -16556,9 +16642,79 @@ operator||
 name|DS_FIND_CHILDREN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|feature_get_refcount
+argument_list|(
+name|spa
+argument_list|,
+operator|&
+name|spa_feature_table
+index|[
+name|SPA_FEATURE_LARGE_BLOCKS
+index|]
+argument_list|,
+operator|&
+name|refcount
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|num_large_blocks
+operator|!=
+name|refcount
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"large_blocks feature refcount mismatch: "
+literal|"expected %lld != actual %lld\n"
+argument_list|,
+operator|(
+name|longlong_t
+operator|)
+name|num_large_blocks
+argument_list|,
+operator|(
+name|longlong_t
+operator|)
+name|refcount
+argument_list|)
+expr_stmt|;
+name|rc
+operator|=
+literal|2
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"Verified large_blocks feature refcount "
+literal|"is correct (%llu)\n"
+argument_list|,
+operator|(
+name|longlong_t
+operator|)
+name|refcount
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
+name|rc
+operator|==
+literal|0
+operator|&&
+operator|(
 name|dump_opt
 index|[
 literal|'b'
@@ -16568,6 +16724,7 @@ name|dump_opt
 index|[
 literal|'c'
 index|]
+operator|)
 condition|)
 name|rc
 operator|=
@@ -19473,6 +19630,11 @@ operator|*
 literal|1024
 operator|*
 literal|1024
+expr_stmt|;
+comment|/* 	 * "zdb -c" uses checksum-verifying scrub i/os which are async reads. 	 * "zdb -b" uses traversal prefetch which uses async reads. 	 * For good performance, let several of them be active at once. 	 */
+name|zfs_vdev_async_read_max_active
+operator|=
+literal|10
 expr_stmt|;
 name|kernel_init
 argument_list|(

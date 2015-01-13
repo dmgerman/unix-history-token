@@ -146,7 +146,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The VFMXR command using coprocessor commands */
+comment|/*  * About .fpu directives in this file...  *  * We should need simply .fpu vfpv3, but clang 3.5 has a quirk where setting  * vfpv3 doesn't imply that vfp2 features are also available -- both have to be  * explicitly set to get all the features of both.  This is probably a bug in  * clang, so it may get fixed and require changes here some day.  Other changes  * are probably coming in clang too, because there is email and open PRs  * indicating they want to completely disable the ability to use .fpu and  * similar directives in inline asm.  That would be catastrophic for us,  * hopefully they come to their senses.  There was also some discusion of a new  * syntax such as .push fpu=vfpv3; ...; .pop fpu; and that would be ideal for  * us, better than what we have now really.  *  * For gcc, each .fpu directive completely overrides the prior directive, unlike  * with clang, but luckily on gcc saying v3 implies all the v2 features as well.  */
 end_comment
 
 begin_define
@@ -159,12 +159,8 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|__asm __volatile("mcr p10, 7, %0, " __STRING(reg) " , c0, 0" :: "r"(val));
+value|__asm __volatile("	.fpu vfpv2\n .fpu vfpv3\n"			\ 		     "	vmsr	" __STRING(reg) ", %0"   :: "r"(val));
 end_define
-
-begin_comment
-comment|/* The VFMRX command using coprocessor commands */
-end_comment
 
 begin_define
 define|#
@@ -174,56 +170,8 @@ parameter_list|(
 name|reg
 parameter_list|)
 define|\
-value|({ u_int val = 0;\     __asm __volatile("mrc p10, 7, %0, " __STRING(reg) " , c0, 0" : "=r"(val));\     val; \ })
+value|({ u_int val = 0;\     __asm __volatile(" .fpu vfpv2\n .fpu vfpv3\n"			\ 		     "	vmrs	%0, " __STRING(reg) : "=r"(val));	\     val; \ })
 end_define
-
-begin_comment
-comment|/*  * Work around an issue with GCC where the asm it generates is not unified  * syntax and fails to assemble because it expects the ldcleq instruction in the  * form ldc<c>l, not in the UAL form ldcl<c>, and similar for stcleq.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__clang__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LDCLNE
-value|"ldclne "
-end_define
-
-begin_define
-define|#
-directive|define
-name|STCLNE
-value|"stclne "
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LDCLNE
-value|"ldcnel "
-end_define
-
-begin_define
-define|#
-directive|define
-name|STCLNE
-value|"stcnel "
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -317,7 +265,7 @@ name|fpsid
 operator|=
 name|fmrx
 argument_list|(
-name|VFPSID
+name|fpsid
 argument_list|)
 expr_stmt|;
 comment|/* read the vfp system id */
@@ -325,7 +273,7 @@ name|fpexc
 operator|=
 name|fmrx
 argument_list|(
-name|VFPEXC
+name|fpexc
 argument_list|)
 expr_stmt|;
 comment|/* read the vfp exception reg */
@@ -354,7 +302,7 @@ argument_list|,
 name|fpsid
 argument_list|)
 expr_stmt|;
-comment|/* save the VFPSID */
+comment|/* save the fpsid */
 name|vfp_arch
 operator|=
 operator|(
@@ -376,7 +324,7 @@ name|tmp
 operator|=
 name|fmrx
 argument_list|(
-name|VMVFR0
+name|mvfr0
 argument_list|)
 expr_stmt|;
 name|PCPU_SET
@@ -404,7 +352,7 @@ name|tmp
 operator|=
 name|fmrx
 argument_list|(
-name|VMVFR1
+name|mvfr1
 argument_list|)
 expr_stmt|;
 name|PCPU_SET
@@ -534,7 +482,7 @@ name|fpexc
 operator|=
 name|fmrx
 argument_list|(
-name|VFPEXC
+name|fpexc
 argument_list|)
 expr_stmt|;
 if|if
@@ -547,7 +495,7 @@ block|{
 comment|/* Clear any exceptions */
 name|fmxr
 argument_list|(
-name|VFPEXC
+name|fpexc
 argument_list|,
 name|fpexc
 operator|&
@@ -650,7 +598,7 @@ block|}
 comment|/* 	 * If the last time this thread used the VFP it was on this core, and 	 * the last thread to use the VFP on this core was this thread, then the 	 * VFP state is valid, otherwise restore this thread's state to the VFP. 	 */
 name|fmxr
 argument_list|(
-name|VFPEXC
+name|fpexc
 argument_list|,
 name|fpexc
 operator||
@@ -737,7 +685,7 @@ block|{
 name|uint32_t
 name|fpexc
 decl_stmt|;
-comment|/* On VFPv2 we may need to restore FPINST and FPINST2 */
+comment|/* On vfpv3 we may need to restore FPINST and FPINST2 */
 name|fpexc
 operator|=
 name|vfpsave
@@ -753,7 +701,7 @@ condition|)
 block|{
 name|fmxr
 argument_list|(
-name|VFPINST
+name|fpinst
 argument_list|,
 name|vfpsave
 operator|->
@@ -768,7 +716,7 @@ name|VFPEXC_FP2V
 condition|)
 name|fmxr
 argument_list|(
-name|VFPINST2
+name|fpinst2
 argument_list|,
 name|vfpsave
 operator|->
@@ -778,29 +726,30 @@ expr_stmt|;
 block|}
 name|fmxr
 argument_list|(
-name|VFPSCR
+name|fpscr
 argument_list|,
 name|vfpsave
 operator|->
 name|fpscr
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("ldc	p10, c0, [%0], #128\n"
+asm|__asm __volatile(
+literal|" .fpu	vfpv2\n"
+literal|" .fpu	vfpv3\n"
+literal|" vldmia	%0!, {d0-d15}\n"
 comment|/* d0-d15 */
-literal|"cmp	%1, #0\n"
+literal|" cmp	%1, #0\n"
 comment|/* -D16 or -D32? */
-name|LDCLNE
-literal|"p11, c0, [%0], #128\n"
+literal|" vldmiane	%0!, {d16-d31}\n"
 comment|/* d16-d31 */
-literal|"addeq	%0, %0, #128\n"
+literal|" addeq	%0, %0, #128\n"
 comment|/* skip missing regs */
 operator|:
-operator|:
-literal|"r"
+literal|"+&r"
 operator|(
 name|vfpsave
 operator|)
-operator|,
+operator|:
 literal|"r"
 operator|(
 name|is_d32
@@ -814,7 +763,7 @@ end_function
 begin_expr_stmt
 name|fmxr
 argument_list|(
-name|VFPEXC
+name|fpexc
 argument_list|,
 name|fpexc
 argument_list|)
@@ -845,7 +794,7 @@ name|fpexc
 operator|=
 name|fmrx
 argument_list|(
-name|VFPEXC
+name|fpexc
 argument_list|)
 expr_stmt|;
 comment|/* Is the vfp enabled? */
@@ -868,10 +817,10 @@ name|fpscr
 operator|=
 name|fmrx
 argument_list|(
-name|VFPSCR
+name|fpscr
 argument_list|)
 expr_stmt|;
-comment|/* On VFPv2 we may need to save FPINST and FPINST2 */
+comment|/* On vfpv3 we may need to save FPINST and FPINST2 */
 if|if
 condition|(
 name|fpexc
@@ -885,7 +834,7 @@ name|fpinst
 operator|=
 name|fmrx
 argument_list|(
-name|VFPINST
+name|fpinst
 argument_list|)
 expr_stmt|;
 if|if
@@ -900,7 +849,7 @@ name|fpinst2
 operator|=
 name|fmrx
 argument_list|(
-name|VFPINST2
+name|fpinst2
 argument_list|)
 expr_stmt|;
 name|fpexc
@@ -910,22 +859,22 @@ name|VFPEXC_EX
 expr_stmt|;
 block|}
 asm|__asm __volatile(
-literal|"stc	p11, c0, [%0], #128\n"
+literal|" .fpu	vfpv2\n"
+literal|" .fpu	vfpv3\n"
+literal|" vstmia	%0!, {d0-d15}\n"
 comment|/* d0-d15 */
-literal|"cmp	%1, #0\n"
+literal|" cmp	%1, #0\n"
 comment|/* -D16 or -D32? */
-name|STCLNE
-literal|"p11, c0, [%0], #128\n"
+literal|" vstmiane	r0!, {d16-d31}\n"
 comment|/* d16-d31 */
-literal|"addeq	%0, %0, #128\n"
+literal|" addeq	%0, %0, #128\n"
 comment|/* skip missing regs */
 operator|:
-operator|:
-literal|"r"
+literal|"+&r"
 operator|(
 name|vfpsave
 operator|)
-operator|,
+operator|:
 literal|"r"
 operator|(
 name|is_d32
@@ -940,7 +889,7 @@ name|disable_vfp
 condition|)
 name|fmxr
 argument_list|(
-name|VFPEXC
+name|fpexc
 argument_list|,
 name|fpexc
 operator|&
@@ -989,7 +938,7 @@ name|tmp
 operator|=
 name|fmrx
 argument_list|(
-name|VFPEXC
+name|fpexc
 argument_list|)
 expr_stmt|;
 if|if
@@ -1000,7 +949,7 @@ name|VFPEXC_EN
 condition|)
 name|fmxr
 argument_list|(
-name|VFPEXC
+name|fpexc
 argument_list|,
 name|tmp
 operator|&

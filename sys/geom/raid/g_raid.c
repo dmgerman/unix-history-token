@@ -8491,7 +8491,7 @@ operator|->
 name|v_global_id
 argument_list|)
 expr_stmt|;
-name|setenv
+name|kern_setenv
 argument_list|(
 name|announce_buf
 argument_list|,

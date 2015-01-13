@@ -258,6 +258,13 @@ name|NDIS_DUMMY_PATH
 value|"\\\\some\\bogus\\path"
 end_define
 
+begin_define
+define|#
+directive|define
+name|NDIS_FLAG_RDONLY
+value|1
+end_define
+
 begin_function_decl
 specifier|static
 name|void
@@ -1210,7 +1217,7 @@ literal|"Windows environment"
 argument_list|,
 literal|"1"
 argument_list|,
-name|CTLFLAG_RD
+name|NDIS_FLAG_RDONLY
 argument_list|)
 expr_stmt|;
 comment|/* NDIS version should be 5.1. */
@@ -1224,7 +1231,7 @@ literal|"NDIS API Version"
 argument_list|,
 literal|"0x00050001"
 argument_list|,
-name|CTLFLAG_RD
+name|NDIS_FLAG_RDONLY
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Some miniport drivers rely on the existence of the SlotNumber, 	 * NetCfgInstanceId and DriverDesc keys. 	 */
@@ -1238,7 +1245,7 @@ literal|"Slot Numer"
 argument_list|,
 literal|"01"
 argument_list|,
-name|CTLFLAG_RD
+name|NDIS_FLAG_RDONLY
 argument_list|)
 expr_stmt|;
 name|ndis_add_sysctl
@@ -1251,7 +1258,7 @@ literal|"NetCfgInstanceId"
 argument_list|,
 literal|"{12345678-1234-5678-CAFE0-123456789ABC}"
 argument_list|,
-name|CTLFLAG_RD
+name|NDIS_FLAG_RDONLY
 argument_list|)
 expr_stmt|;
 name|ndis_add_sysctl
@@ -1264,7 +1271,7 @@ literal|"Driver Description"
 argument_list|,
 literal|"NDIS Network Adapter"
 argument_list|,
-name|CTLFLAG_RD
+name|NDIS_FLAG_RDONLY
 argument_list|)
 expr_stmt|;
 comment|/* Bus type (PCI, PCMCIA, etc...) */
@@ -1292,7 +1299,7 @@ literal|"Bus Type"
 argument_list|,
 name|buf
 argument_list|,
-name|CTLFLAG_RD
+name|NDIS_FLAG_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -1328,7 +1335,7 @@ literal|"Base I/O Address"
 argument_list|,
 name|buf
 argument_list|,
-name|CTLFLAG_RD
+name|NDIS_FLAG_RDONLY
 argument_list|)
 expr_stmt|;
 block|}
@@ -1365,7 +1372,7 @@ literal|"Interrupt Number"
 argument_list|,
 name|buf
 argument_list|,
-name|CTLFLAG_RD
+name|NDIS_FLAG_RDONLY
 argument_list|)
 expr_stmt|;
 block|}
@@ -1389,7 +1396,7 @@ name|desc
 parameter_list|,
 name|val
 parameter_list|,
-name|flag
+name|flag_rdonly
 parameter_list|)
 name|void
 modifier|*
@@ -1408,7 +1415,7 @@ modifier|*
 name|val
 decl_stmt|;
 name|int
-name|flag
+name|flag_rdonly
 decl_stmt|;
 block|{
 name|struct
@@ -1553,6 +1560,13 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flag_rdonly
+operator|!=
+literal|0
+condition|)
+block|{
 name|cfg
 operator|->
 name|ndis_oid
@@ -1584,7 +1598,7 @@ name|ndis_cfg
 operator|.
 name|nc_cfgkey
 argument_list|,
-name|flag
+name|CTLFLAG_RD
 argument_list|,
 name|cfg
 operator|->
@@ -1608,6 +1622,65 @@ operator|.
 name|nc_cfgdesc
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|cfg
+operator|->
+name|ndis_oid
+operator|=
+name|SYSCTL_ADD_STRING
+argument_list|(
+name|device_get_sysctl_ctx
+argument_list|(
+name|sc
+operator|->
+name|ndis_dev
+argument_list|)
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|device_get_sysctl_tree
+argument_list|(
+name|sc
+operator|->
+name|ndis_dev
+argument_list|)
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|cfg
+operator|->
+name|ndis_cfg
+operator|.
+name|nc_cfgkey
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+name|cfg
+operator|->
+name|ndis_cfg
+operator|.
+name|nc_val
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cfg
+operator|->
+name|ndis_cfg
+operator|.
+name|nc_val
+argument_list|)
+argument_list|,
+name|cfg
+operator|->
+name|ndis_cfg
+operator|.
+name|nc_cfgdesc
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0

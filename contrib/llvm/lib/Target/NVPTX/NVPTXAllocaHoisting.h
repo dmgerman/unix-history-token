@@ -116,15 +116,23 @@ argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|{
 name|AU
 operator|.
 name|addRequired
 operator|<
-name|DataLayout
+name|DataLayoutPass
 operator|>
 operator|(
 operator|)
+block|;
+name|AU
+operator|.
+name|addPreserved
+argument_list|(
+literal|"stack-protector"
+argument_list|)
 block|;
 name|AU
 operator|.
@@ -135,26 +143,24 @@ operator|>
 operator|(
 operator|)
 block|;   }
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"NVPTX specific alloca hoisting"
 return|;
 block|}
-name|virtual
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|function
+argument|Function&function
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 specifier|extern

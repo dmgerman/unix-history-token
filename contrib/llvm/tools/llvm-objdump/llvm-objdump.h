@@ -84,19 +84,18 @@ name|class
 name|RelocationRef
 decl_stmt|;
 block|}
-name|class
-name|error_code
-decl_stmt|;
 extern|extern cl::opt<std::string> TripleName;
 extern|extern cl::opt<std::string> ArchName;
 comment|// Various helper functions.
 name|bool
 name|error
-parameter_list|(
+argument_list|(
+name|std
+operator|::
 name|error_code
 name|ec
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|bool
 name|RelocAddressLess
 argument_list|(

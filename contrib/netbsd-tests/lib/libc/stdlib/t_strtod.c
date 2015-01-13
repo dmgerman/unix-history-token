@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_strtod.c,v 1.31 2012/09/26 07:24:38 jruoho Exp $ */
+comment|/*	$NetBSD: t_strtod.c,v 1.32 2014/11/04 00:20:19 justin Exp $ */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_strtod.c,v 1.31 2012/09/26 07:24:38 jruoho Exp $"
+literal|"$NetBSD: t_strtod.c,v 1.32 2014/11/04 00:20:19 justin Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -59,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|<atf-c.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<atf-c/config.h>
 end_include
 
 begin_if
@@ -149,6 +143,23 @@ init|=
 literal|"NaN(x)y"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__HAVE_LONG_DOUBLE
+end_define
 
 begin_endif
 endif|#
@@ -1037,13 +1048,23 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
+name|ATF_REQUIRE
+argument_list|(
+name|strcmp
+argument_list|(
+name|end
+argument_list|,
+literal|"y"
 argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ATF_REQUIRE
 argument_list|(
 name|__isnanl

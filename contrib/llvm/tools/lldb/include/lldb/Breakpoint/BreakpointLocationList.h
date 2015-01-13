@@ -267,7 +267,7 @@ name|ClearAllBreakpointSites
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Tells all the breakopint locations in this list to attempt to
+comment|/// Tells all the breakpoint locations in this list to attempt to
 comment|/// resolve any possible breakpoint sites.
 comment|//------------------------------------------------------------------
 name|void

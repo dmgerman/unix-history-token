@@ -122,7 +122,7 @@ comment|//
 comment|// IntervalPartition - This class builds and holds an "interval partition" for
 comment|// a function.  This partition divides the control flow graph into a set of
 comment|// maximal intervals, as defined with the properties above.  Intuitively, an
-comment|// interval is a (possibly nonexistent) loop with a "tail" of non looping
+comment|// interval is a (possibly nonexistent) loop with a "tail" of non-looping
 comment|// nodes following it.
 comment|//
 name|class
@@ -187,7 +187,7 @@ argument_list|)
 operator|,
 name|RootInterval
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|initializeIntervalPartitionPass
@@ -200,14 +200,12 @@ argument_list|()
 argument_list|)
 block|;   }
 comment|// run - Calculate the interval partition for this function
-name|virtual
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|F
+argument|Function&F
 argument_list|)
+name|override
 expr_stmt|;
 comment|// IntervalPartition ctor - Build a reduced interval partition from an
 comment|// existing interval graph.  This takes an additional boolean parameter to
@@ -223,7 +221,6 @@ name|bool
 argument_list|)
 expr_stmt|;
 comment|// print - Show contents in human readable format...
-name|virtual
 name|void
 name|print
 argument_list|(
@@ -235,9 +232,10 @@ specifier|const
 name|Module
 operator|*
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|// getRootInterval() - Return the root interval that contains the starting
 comment|// block of the function.
@@ -302,11 +300,10 @@ name|I
 operator|->
 name|second
 else|:
-literal|0
+name|nullptr
 return|;
 block|}
 comment|// getAnalysisUsage - Implement the Pass API
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
@@ -315,6 +312,7 @@ operator|&
 name|AU
 argument_list|)
 decl|const
+name|override
 block|{
 name|AU
 operator|.
@@ -343,8 +341,9 @@ block|}
 comment|// releaseMemory - Reset state back to before function was analyzed
 name|void
 name|releaseMemory
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 name|private
 label|:
 comment|// addIntervalToPartition - Add an interval to the internal list of intervals,

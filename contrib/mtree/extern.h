@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: extern.h,v 1.38 2013/02/03 19:15:17 christos Exp $	*/
+comment|/*	$NetBSD: extern.h,v 1.39 2014/04/24 17:22:41 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -178,7 +178,8 @@ begin_function_decl
 name|void
 name|cwalk
 parameter_list|(
-name|void
+name|FILE
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -187,6 +188,9 @@ begin_function_decl
 name|void
 name|dump_nodes
 parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*

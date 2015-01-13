@@ -19655,8 +19655,11 @@ typedef|typedef
 struct|struct
 name|upgrade_cbdata
 block|{
-name|int
+name|boolean_t
 name|cb_first
+decl_stmt|;
+name|boolean_t
+name|cb_unavail
 decl_stmt|;
 name|char
 name|cb_poolname
@@ -20270,6 +20273,48 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+if|if
+condition|(
+name|zpool_get_state
+argument_list|(
+name|zhp
+argument_list|)
+operator|==
+name|POOL_STATE_UNAVAIL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"cannot upgrade '%s': pool is "
+literal|"currently unavailable.\n\n"
+argument_list|)
+argument_list|,
+name|zpool_get_name
+argument_list|(
+name|zhp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cbp
+operator|->
+name|cb_unavail
+operator|=
+name|B_TRUE
+expr_stmt|;
+comment|/* Allow iteration to continue. */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|config
 operator|=
 name|zpool_get_config
@@ -20503,6 +20548,122 @@ end_function
 begin_function
 specifier|static
 name|int
+name|upgrade_list_unavail
+parameter_list|(
+name|zpool_handle_t
+modifier|*
+name|zhp
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|upgrade_cbdata_t
+modifier|*
+name|cbp
+init|=
+name|arg
+decl_stmt|;
+if|if
+condition|(
+name|zpool_get_state
+argument_list|(
+name|zhp
+argument_list|)
+operator|==
+name|POOL_STATE_UNAVAIL
+condition|)
+block|{
+if|if
+condition|(
+name|cbp
+operator|->
+name|cb_first
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"The following pools "
+literal|"are unavailable and cannot be upgraded as this "
+literal|"time.\n\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"POOL\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"------------\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cbp
+operator|->
+name|cb_first
+operator|=
+name|B_FALSE
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"%s\n"
+argument_list|)
+argument_list|,
+name|zpool_get_name
+argument_list|(
+name|zhp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cbp
+operator|->
+name|cb_unavail
+operator|=
+name|B_TRUE
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|upgrade_list_older_cb
 parameter_list|(
 name|zpool_handle_t
@@ -20527,6 +20688,29 @@ decl_stmt|;
 name|uint64_t
 name|version
 decl_stmt|;
+if|if
+condition|(
+name|zpool_get_state
+argument_list|(
+name|zhp
+argument_list|)
+operator|==
+name|POOL_STATE_UNAVAIL
+condition|)
+block|{
+comment|/* 		 * This will have been reported by upgrade_list_unavail so 		 * just allow iteration to continue. 		 */
+name|cbp
+operator|->
+name|cb_unavail
+operator|=
+name|B_TRUE
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|config
 operator|=
 name|zpool_get_config
@@ -20672,6 +20856,29 @@ decl_stmt|;
 name|uint64_t
 name|version
 decl_stmt|;
+if|if
+condition|(
+name|zpool_get_state
+argument_list|(
+name|zhp
+argument_list|)
+operator|==
+name|POOL_STATE_UNAVAIL
+condition|)
+block|{
+comment|/* 		 * This will have been reported by upgrade_list_unavail so 		 * just allow iteration to continue. 		 */
+name|cbp
+operator|->
+name|cb_unavail
+operator|=
+name|B_TRUE
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|config
 operator|=
 name|zpool_get_config
@@ -20913,6 +21120,47 @@ name|ret
 decl_stmt|;
 if|if
 condition|(
+name|zpool_get_state
+argument_list|(
+name|zhp
+argument_list|)
+operator|==
+name|POOL_STATE_UNAVAIL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"cannot upgrade '%s': pool is "
+literal|"is currently unavailable.\n\n"
+argument_list|)
+argument_list|,
+name|zpool_get_name
+argument_list|(
+name|zhp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cbp
+operator|->
+name|cb_unavail
+operator|=
+name|B_TRUE
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|strcmp
 argument_list|(
 literal|"log"
@@ -20935,7 +21183,7 @@ name|gettext
 argument_list|(
 literal|"'log' is now a reserved word\n"
 literal|"Pool 'log' must be renamed using export and import"
-literal|" to upgrade.\n"
+literal|" to upgrade.\n\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -21175,7 +21423,7 @@ argument_list|(
 name|gettext
 argument_list|(
 literal|"Pool '%s' already has all "
-literal|"supported features enabled.\n"
+literal|"supported features enabled.\n\n"
 argument_list|)
 argument_list|,
 name|zpool_get_name
@@ -22089,9 +22337,20 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"All pools are already "
+literal|"All %spools are already "
 literal|"formatted using feature flags.\n\n"
 argument_list|)
+argument_list|,
+name|cb
+operator|.
+name|cb_unavail
+condition|?
+name|gettext
+argument_list|(
+literal|"available "
+argument_list|)
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 operator|(
@@ -22101,10 +22360,21 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"Every feature flags "
+literal|"Every %sfeature flags "
 literal|"pool already has all supported features "
 literal|"enabled.\n"
 argument_list|)
+argument_list|,
+name|cb
+operator|.
+name|cb_unavail
+condition|?
+name|gettext
+argument_list|(
+literal|"available "
+argument_list|)
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -22149,6 +22419,50 @@ name|zpool_iter
 argument_list|(
 name|g_zfs
 argument_list|,
+name|upgrade_list_unavail
+argument_list|,
+operator|&
+name|cb
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|ret
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cb
+operator|.
+name|cb_first
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|cb
+operator|.
+name|cb_first
+operator|=
+name|B_TRUE
+expr_stmt|;
+name|ret
+operator|=
+name|zpool_iter
+argument_list|(
+name|g_zfs
+argument_list|,
 name|upgrade_list_older_cb
 argument_list|,
 operator|&
@@ -22176,9 +22490,20 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"All pools are formatted "
-literal|"using feature flags.\n\n"
+literal|"All %spools are formatted using "
+literal|"feature flags.\n\n"
 argument_list|)
+argument_list|,
+name|cb
+operator|.
+name|cb_unavail
+condition|?
+name|gettext
+argument_list|(
+literal|"available "
+argument_list|)
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -22236,9 +22561,20 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"Every feature flags pool has "
+literal|"Every %sfeature flags pool has "
 literal|"all supported features enabled.\n"
 argument_list|)
+argument_list|,
+name|cb
+operator|.
+name|cb_unavail
+condition|?
+name|gettext
+argument_list|(
+literal|"available "
+argument_list|)
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -22267,7 +22603,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|B_FALSE
+name|B_TRUE
 argument_list|,
 name|NULL
 argument_list|,

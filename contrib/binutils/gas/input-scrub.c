@@ -1185,7 +1185,7 @@ condition|(
 name|partial_size
 condition|)
 block|{
-name|memcpy
+name|memmove
 argument_list|(
 name|buffer_start
 operator|+

@@ -169,39 +169,6 @@ begin_comment
 comment|/* 0x1000, but gets underflows */
 end_comment
 
-begin_comment
-comment|/* compatibility */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_define
-define|#
-directive|define
-name|critical_enter
-parameter_list|()
-value|disable_intr()
-end_define
-
-begin_define
-define|#
-directive|define
-name|critical_exit
-parameter_list|()
-value|enable_intr()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -9175,19 +9142,12 @@ argument_list|,
 comment|/*flags */
 literal|0
 argument_list|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|501102
 comment|/*lock  */
 name|busdma_lock_mutex
 argument_list|,
 operator|&
 name|Giant
 argument_list|,
-endif|#
-directive|endif
 operator|&
 name|ess
 operator|->
@@ -9259,19 +9219,12 @@ argument_list|,
 comment|/*flags */
 literal|0
 argument_list|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|501102
 comment|/*lock  */
 name|busdma_lock_mutex
 argument_list|,
 operator|&
 name|Giant
 argument_list|,
-endif|#
-directive|endif
 operator|&
 name|ess
 operator|->

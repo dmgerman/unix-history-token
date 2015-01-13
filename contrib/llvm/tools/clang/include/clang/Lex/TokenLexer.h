@@ -171,6 +171,17 @@ name|HasLeadingSpace
 range|:
 literal|1
 decl_stmt|;
+comment|// NextTokGetsSpace - When this is true, the next token appended to the
+comment|// output list during function argument expansion will get a leading space,
+comment|// regardless of whether it had one to begin with or not. This is used for
+comment|// placemarker support. If still true after function argument expansion, the
+comment|// leading space will be applied to the first token following the macro
+comment|// expansion.
+name|bool
+name|NextTokGetsSpace
+range|:
+literal|1
+decl_stmt|;
 comment|/// OwnsTokens - This is true if this TokenLexer allocated the Tokens
 comment|/// array, and thus needs to free it when destroyed.  For simple object-like
 comment|/// macros (for example) we just point into the token buffer of the macro
@@ -224,12 +235,12 @@ argument_list|)
 block|:
 name|Macro
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|ActualArgs
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|PP
@@ -287,12 +298,12 @@ argument_list|)
 block|:
 name|Macro
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|ActualArgs
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|PP
@@ -446,6 +457,33 @@ modifier|*
 name|end_tokens
 parameter_list|)
 function_decl|;
+comment|/// Remove comma ahead of __VA_ARGS__, if present, according to compiler
+comment|/// dialect settings.  Returns true if the comma is removed.
+name|bool
+name|MaybeRemoveCommaBeforeVaArgs
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|Token
+operator|>
+operator|&
+name|ResultToks
+argument_list|,
+name|bool
+name|HasPasteOperator
+argument_list|,
+name|MacroInfo
+operator|*
+name|Macro
+argument_list|,
+name|unsigned
+name|MacroArgNo
+argument_list|,
+name|Preprocessor
+operator|&
+name|PP
+argument_list|)
+decl_stmt|;
 name|void
 name|PropagateLineStartLeadingSpaceInfo
 parameter_list|(

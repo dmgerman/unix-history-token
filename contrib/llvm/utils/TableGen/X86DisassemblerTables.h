@@ -122,16 +122,14 @@ comment|/// [0] one-byte opcodes
 comment|/// [1] two-byte opcodes of the form 0f __
 comment|/// [2] three-byte opcodes of the form 0f 38 __
 comment|/// [3] three-byte opcodes of the form 0f 3a __
-comment|/// [4] three-byte opcodes of the form 0f a6 __
-comment|/// [5] three-byte opcodes of the form 0f a7 __
-comment|/// [6] XOP8 map opcode
-comment|/// [7] XOP9 map opcode
-comment|/// [8] XOPA map opcode
+comment|/// [4] XOP8 map opcode
+comment|/// [5] XOP9 map opcode
+comment|/// [6] XOPA map opcode
 name|ContextDecision
 modifier|*
 name|Tables
 index|[
-literal|9
+literal|7
 index|]
 decl_stmt|;
 comment|// Table of ModRM encodings.
@@ -295,8 +293,7 @@ comment|///     }
 comment|///   }
 comment|///
 comment|///   NAME is the name of the ContextDecision (typically one of the four names
-comment|///   ONEBYTE_SYM, TWOBYTE_SYM, THREEBYTE38_SYM, THREEBYTE3A_SYM,
-comment|///   THREEBYTEA6_SYM, and THREEBYTEA7_SYM from
+comment|///   ONEBYTE_SYM, TWOBYTE_SYM, THREEBYTE38_SYM, THREEBYTE3A_SYM from
 comment|///   X86DisassemblerDecoderCommon.h).
 comment|///   IC is one of the contexts in InstructionContext.  There is an opcode
 comment|///   decision for each possible context.

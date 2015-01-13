@@ -70,15 +70,6 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
-name|int
-name|gnttab_init
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Allocate a grant table reference and return it in *result. Returns  * zero on success or errno on error.  */
 end_comment

@@ -4,6 +4,50 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
+comment|/* Get __FreeBSD_version. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_comment
+comment|/* Only specific versions of FreeBSD support xlocale */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000002
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|1000000
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|900506
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|FREEBSD_XLOCALE_SUPPORT
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* config.h.  Generated from config.h.in by configure.  */
 end_comment
 
@@ -158,6 +202,28 @@ directive|define
 name|HAVE_FORK
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `freelocale' function. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_XLOCALE_SUPPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HAVE_FREELOCALE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if fseeko (and presumably ftello) exists and is declared. */
@@ -344,6 +410,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `newlocale' function. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_XLOCALE_SUPPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HAVE_NEWLOCALE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Define to 1 if you have the `pread' function. */
 end_comment
 
@@ -351,6 +439,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_PREAD
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `setlocale' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETLOCALE
 value|1
 end_define
 
@@ -660,6 +759,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `uselocale' function. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_XLOCALE_SUPPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HAVE_USELOCALE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Define to 1 if you have the `utime' function. */
 end_comment
 
@@ -789,6 +910,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<xlocale.h> header file. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_XLOCALE_SUPPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HAVE_XLOCALE_H
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Define to 1 if you have the<zlib.h> header file. */
 end_comment
 
@@ -867,7 +1010,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"file 5.19"
+value|"file 5.22"
 end_define
 
 begin_comment
@@ -900,7 +1043,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"5.19"
+value|"5.22"
 end_define
 
 begin_comment
@@ -1040,7 +1183,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"5.19"
+value|"5.22"
 end_define
 
 begin_comment

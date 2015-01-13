@@ -191,6 +191,23 @@ name|FM
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// If the specified relative filename is located in this HeaderMap return
+comment|/// the filename it is mapped to, otherwise return an empty StringRef.
+name|StringRef
+name|lookupFilename
+argument_list|(
+name|StringRef
+name|Filename
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|DestPath
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getFileName - Return the filename of the headermap.
 specifier|const
 name|char

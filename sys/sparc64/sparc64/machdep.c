@@ -2221,7 +2221,7 @@ argument_list|)
 expr_stmt|;
 name|env
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"kernelname"
 argument_list|)

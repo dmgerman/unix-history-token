@@ -61,6 +61,9 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
+name|device_t
+name|sc_iicbus
+decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx

@@ -25,6 +25,12 @@ directive|define
 name|_CTL_ERROR_H_
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|ctl_lun
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|ctl_set_sense_data_va
@@ -174,9 +180,13 @@ begin_function_decl
 name|ctl_ua_type
 name|ctl_build_ua
 parameter_list|(
-name|ctl_ua_type
+name|struct
+name|ctl_lun
 modifier|*
-name|ua_type
+name|lun
+parameter_list|,
+name|uint32_t
+name|initidx
 parameter_list|,
 name|struct
 name|scsi_sense_data
@@ -468,6 +478,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|ctl_set_task_aborted
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ctl_set_space_alloc_fail
 parameter_list|(
 name|struct
 name|ctl_scsiio

@@ -204,6 +204,10 @@ expr_stmt|;
 name|public
 operator|:
 typedef|typedef
+name|unsigned
+name|size_type
+typedef|;
+typedef|typedef
 name|KeyT
 name|key_type
 typedef|;
@@ -349,7 +353,7 @@ comment|/// Grow the densemap so that it has at least Size buckets. Does not shr
 name|void
 name|resize
 parameter_list|(
-name|size_t
+name|size_type
 name|Size
 parameter_list|)
 block|{
@@ -507,8 +511,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// count - Return true if the specified key is in the map.
-name|bool
+comment|/// Return 1 if the specified key is in the map, 0 otherwise.
+name|size_type
 name|count
 argument_list|(
 specifier|const
@@ -530,6 +534,10 @@ name|Val
 argument_list|,
 name|TheBucket
 argument_list|)
+condition|?
+literal|1
+else|:
+literal|0
 return|;
 block|}
 name|iterator
@@ -854,14 +862,8 @@ argument_list|)
 return|;
 end_return
 
-begin_if
-unit|}
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_comment
+unit|}
 comment|// Inserts key,value pair into the map if the key isn't already in the map.
 end_comment
 
@@ -972,13 +974,8 @@ argument_list|)
 return|;
 end_return
 
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
 begin_comment
+unit|}
 comment|/// insert - Range insertion of pairs.
 end_comment
 
@@ -1176,12 +1173,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_decl_stmt
 name|value_type
 modifier|&
@@ -1255,11 +1246,6 @@ name|second
 return|;
 block|}
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/// isPointerIntoBucketsArray - Return true if the specified pointer points
@@ -1648,7 +1634,9 @@ name|DestBucket
 operator|->
 name|first
 operator|=
-name|llvm_move
+name|std
+operator|::
+name|move
 argument_list|(
 name|B
 operator|->
@@ -1661,7 +1649,9 @@ argument|&DestBucket->second
 argument_list|)
 name|ValueT
 argument_list|(
-name|llvm_move
+name|std
+operator|::
+name|move
 argument_list|(
 name|B
 operator|->
@@ -2378,12 +2368,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_decl_stmt
 name|BucketT
 modifier|*
@@ -2495,11 +2479,6 @@ name|TheBucket
 return|;
 block|}
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|BucketT
@@ -2700,7 +2679,7 @@ condition|)
 block|{
 name|FoundBucket
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 return|return
 name|false
@@ -2712,7 +2691,7 @@ name|BucketT
 operator|*
 name|FoundTombstone
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 end_expr_stmt
 
@@ -3146,9 +3125,6 @@ argument_list|(
 name|other
 argument_list|)
 block|;   }
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
 name|DenseMap
 argument_list|(
 name|DenseMap
@@ -3169,8 +3145,6 @@ argument_list|(
 name|other
 argument_list|)
 block|;   }
-endif|#
-directive|endif
 name|template
 operator|<
 name|typename
@@ -3295,12 +3269,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_decl_stmt
 name|DenseMap
 modifier|&
@@ -3339,11 +3307,6 @@ name|this
 return|;
 block|}
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -3704,7 +3667,7 @@ condition|)
 block|{
 name|Buckets
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 return|return
 name|false
@@ -3930,9 +3893,6 @@ argument_list|(
 name|other
 argument_list|)
 block|;   }
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
 name|SmallDenseMap
 argument_list|(
 name|SmallDenseMap
@@ -3953,8 +3913,6 @@ argument_list|(
 name|other
 argument_list|)
 block|;   }
-endif|#
-directive|endif
 name|template
 operator|<
 name|typename
@@ -4217,7 +4175,9 @@ argument|&RHSB->second
 argument_list|)
 name|ValueT
 argument_list|(
-name|llvm_move
+name|std
+operator|::
+name|move
 argument_list|(
 name|LHSB
 operator|->
@@ -4246,7 +4206,9 @@ argument|&LHSB->second
 argument_list|)
 name|ValueT
 argument_list|(
-name|llvm_move
+name|std
+operator|::
+name|move
 argument_list|(
 name|RHSB
 operator|->
@@ -4356,7 +4318,9 @@ begin_decl_stmt
 name|LargeRep
 name|TmpRep
 init|=
-name|llvm_move
+name|std
+operator|::
+name|move
 argument_list|(
 operator|*
 name|LargeSide
@@ -4455,7 +4419,9 @@ argument|&NewB->first
 argument_list|)
 name|KeyT
 argument_list|(
-name|llvm_move
+name|std
+operator|::
+name|move
 argument_list|(
 name|OldB
 operator|->
@@ -4504,7 +4470,9 @@ argument|&NewB->second
 argument_list|)
 name|ValueT
 argument_list|(
-name|llvm_move
+name|std
+operator|::
+name|move
 argument_list|(
 name|OldB
 operator|->
@@ -4551,7 +4519,9 @@ end_macro
 begin_expr_stmt
 name|LargeRep
 argument_list|(
-name|llvm_move
+name|std
+operator|::
+name|move
 argument_list|(
 name|TmpRep
 argument_list|)
@@ -4582,12 +4552,6 @@ name|this
 return|;
 block|}
 end_expr_stmt
-
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
 
 begin_decl_stmt
 name|SmallDenseMap
@@ -4625,11 +4589,6 @@ return|;
 block|}
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|copyFrom
@@ -4666,12 +4625,19 @@ name|Small
 operator|=
 name|false
 expr_stmt|;
+name|new
+argument_list|(
+argument|getLargeRep()
+argument_list|)
+name|LargeRep
+argument_list|(
 name|allocateBuckets
 argument_list|(
 name|other
 operator|.
 name|getNumBuckets
 argument_list|()
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4901,7 +4867,9 @@ argument|&TmpEnd->first
 argument_list|)
 name|KeyT
 argument_list|(
-name|llvm_move
+name|std
+operator|::
+name|move
 argument_list|(
 name|P
 operator|->
@@ -4915,7 +4883,9 @@ argument|&TmpEnd->second
 argument_list|)
 name|ValueT
 argument_list|(
-name|llvm_move
+name|std
+operator|::
+name|move
 argument_list|(
 name|P
 operator|->
@@ -4976,7 +4946,9 @@ block|}
 name|LargeRep
 name|OldRep
 init|=
-name|llvm_move
+name|std
+operator|::
+name|move
 argument_list|(
 operator|*
 name|getLargeRep
@@ -5564,6 +5536,8 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
+name|std
+operator|::
 name|conditional
 operator|<
 name|IsConst
@@ -5628,12 +5602,12 @@ argument_list|()
 operator|:
 name|Ptr
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|End
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|DenseMapIterator

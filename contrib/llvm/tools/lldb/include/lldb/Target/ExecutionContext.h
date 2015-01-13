@@ -80,7 +80,7 @@ comment|/// contexts: ExecutionContextRef and ExecutionContext. Both of these
 end_comment
 
 begin_comment
-comment|/// objects are deascribed below.
+comment|/// objects are described below.
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ comment|/// Not all objects in an ExectionContext objects will be valid. If you 
 end_comment
 
 begin_comment
-comment|/// to refer stronly (ExectionContext) or weakly (ExectionContextRef) to
+comment|/// to refer strongly (ExectionContext) or weakly (ExectionContextRef) to
 end_comment
 
 begin_comment
@@ -165,7 +165,7 @@ comment|/// ExecutionContextRef objects are designed to hold onto an execution
 comment|/// context that might change over time. For example, if an object wants
 comment|/// to refer to a stack frame, it should hold onto an ExecutionContextRef
 comment|/// to a frame object. The backing object that represents the stack frame
-comment|/// might change over time and instaces of this object can track the logical
+comment|/// might change over time and instances of this object can track the logical
 comment|/// object that refers to a frame even if it does change.
 comment|///
 comment|/// These objects also don't keep execution objects around longer than they
@@ -180,7 +180,7 @@ comment|/// references to the execution objects (target, process, thread and fra
 comment|/// don't keep these objects around, they are safe to keep around.
 comment|///
 comment|/// The general rule of thumb is all long lived objects that want to
-comment|/// refer to execution contexts should use ExecutionContextRef objcts.
+comment|/// refer to execution contexts should use ExecutionContextRef objects.
 comment|/// The ExecutionContext class is used to temporarily get shared
 comment|/// pointers to any execution context objects that are still around
 comment|/// so they are guaranteed to exist during a function that requires the
@@ -214,7 +214,7 @@ comment|//------------------------------------------------------------------
 comment|/// Construct using an ExecutionContext object that might be NULL.
 comment|///
 comment|/// If \a exe_ctx_ptr is valid, then make weak references to any
-comment|/// valid objects in the ExecutionContext, othewise no weak
+comment|/// valid objects in the ExecutionContext, otherwise no weak
 comment|/// references to any execution context objects will be made.
 comment|//------------------------------------------------------------------
 name|ExecutionContextRef
@@ -241,7 +241,7 @@ expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Assignment operator
 comment|///
-comment|/// Copy all weak refernces in \a rhs.
+comment|/// Copy all weak references in \a rhs.
 comment|//------------------------------------------------------------------
 name|ExecutionContextRef
 modifier|&
@@ -257,7 +257,7 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Assignment operator from a ExecutionContext
 comment|///
-comment|/// Make weak refernces to any stringly referenced objects in \a exe_ctx.
+comment|/// Make weak references to any strongly referenced objects in \a exe_ctx.
 comment|//------------------------------------------------------------------
 name|ExecutionContextRef
 modifier|&
@@ -287,13 +287,13 @@ comment|//------------------------------------------------------------------
 comment|/// Construct using an execution context scope.
 comment|///
 comment|/// If the ExecutionContextScope object is valid and refers to a frame,
-comment|/// make weak refernces too the frame, thread, process and target.
+comment|/// make weak references too the frame, thread, process and target.
 comment|/// If the ExecutionContextScope object is valid and refers to a thread,
-comment|/// make weak refernces too the thread, process and target.
+comment|/// make weak references too the thread, process and target.
 comment|/// If the ExecutionContextScope object is valid and refers to a process,
-comment|/// make weak refernces too the process and target.
+comment|/// make weak references too the process and target.
 comment|/// If the ExecutionContextScope object is valid and refers to a target,
-comment|/// make weak refernces too the target.
+comment|/// make weak references too the target.
 comment|//------------------------------------------------------------------
 name|ExecutionContextRef
 argument_list|(
@@ -306,13 +306,13 @@ comment|//------------------------------------------------------------------
 comment|/// Construct using an execution context scope.
 comment|///
 comment|/// If the ExecutionContextScope object refers to a frame,
-comment|/// make weak refernces too the frame, thread, process and target.
+comment|/// make weak references too the frame, thread, process and target.
 comment|/// If the ExecutionContextScope object refers to a thread,
-comment|/// make weak refernces too the thread, process and target.
+comment|/// make weak references too the thread, process and target.
 comment|/// If the ExecutionContextScope object refers to a process,
-comment|/// make weak refernces too the process and target.
+comment|/// make weak references too the process and target.
 comment|/// If the ExecutionContextScope object refers to a target,
-comment|/// make weak refernces too the target.
+comment|/// make weak references too the target.
 comment|//------------------------------------------------------------------
 name|ExecutionContextRef
 argument_list|(
@@ -550,8 +550,8 @@ decl|const
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Returns true if this object has a weak reference to a thread.
-comment|/// The return value is only an indication of wether this object has
-comment|/// a weak reference and does not indicate wether the weak rerference
+comment|/// The return value is only an indication of whether this object has
+comment|/// a weak reference and does not indicate whether the weak reference
 comment|/// is valid or not.
 comment|//------------------------------------------------------------------
 name|bool
@@ -567,8 +567,8 @@ return|;
 block|}
 comment|//------------------------------------------------------------------
 comment|/// Returns true if this object has a weak reference to a frame.
-comment|/// The return value is only an indication of wether this object has
-comment|/// a weak reference and does not indicate wether the weak rerference
+comment|/// The return value is only an indication of whether this object has
+comment|/// a weak reference and does not indicate whether the weak reference
 comment|/// is valid or not.
 comment|//------------------------------------------------------------------
 name|bool

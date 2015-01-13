@@ -165,12 +165,12 @@ argument_list|)
 operator|,
 name|Section
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Value
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|IsTemporary
@@ -260,7 +260,7 @@ block|{
 return|return
 name|Section
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// isInSection - Check if this symbol is defined in some section (i.e., it
@@ -348,7 +348,7 @@ parameter_list|()
 block|{
 name|Section
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 comment|/// setAbsolute - Mark the symbol as absolute.
@@ -373,7 +373,7 @@ block|{
 return|return
 name|Value
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getVariableValue() - Get the value for variable symbols.
@@ -401,7 +401,7 @@ name|Value
 return|;
 block|}
 comment|// AliasedSymbol() - If this is an alias (a = b), return the symbol
-comment|// we ultimately point to. For a non alias, this just returns the symbol
+comment|// we ultimately point to. For a non-alias, this just returns the symbol
 comment|// itself.
 specifier|const
 name|MCSymbol

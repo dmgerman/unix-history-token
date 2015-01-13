@@ -892,5 +892,29 @@ return|;
 block|}
 end_function
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_rtld_is_dlopened
+end_pragma
+
+begin_function
+name|int
+name|_rtld_is_dlopened
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

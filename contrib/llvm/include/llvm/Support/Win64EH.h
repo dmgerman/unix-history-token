@@ -372,7 +372,9 @@ operator|*
 name|reinterpret_cast
 operator|<
 specifier|const
-name|uint32_t
+name|support
+operator|::
+name|ulittle32_t
 operator|*
 operator|>
 operator|(
@@ -392,7 +394,9 @@ block|{
 operator|*
 name|reinterpret_cast
 operator|<
-name|uint32_t
+name|support
+operator|::
+name|ulittle32_t
 operator|*
 operator|>
 operator|(

@@ -2135,7 +2135,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|setenv
+name|kern_setenv
 argument_list|(
 name|name
 argument_list|,

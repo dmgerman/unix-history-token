@@ -3948,6 +3948,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+name|ieee80211_channel_type_char
+parameter_list|(
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ieee80211_radiotap_attach
 parameter_list|(

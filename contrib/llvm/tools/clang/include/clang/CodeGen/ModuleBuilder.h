@@ -101,6 +101,9 @@ name|class
 name|TargetOptions
 decl_stmt|;
 name|class
+name|Decl
+decl_stmt|;
+name|class
 name|CodeGenerator
 range|:
 name|public
@@ -130,6 +133,17 @@ name|Module
 operator|*
 name|ReleaseModule
 argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+specifier|const
+name|Decl
+operator|*
+name|GetDeclForMangledName
+argument_list|(
+argument|llvm::StringRef MangledName
+argument_list|)
 operator|=
 literal|0
 block|;   }

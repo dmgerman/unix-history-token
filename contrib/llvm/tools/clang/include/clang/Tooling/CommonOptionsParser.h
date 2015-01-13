@@ -117,6 +117,12 @@ directive|include
 file|"clang/Tooling/CompilationDatabase.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CommandLine.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -139,13 +145,14 @@ comment|///
 comment|/// using namespace clang::tooling;
 comment|/// using namespace llvm;
 comment|///
+comment|/// static cl::OptionCategory MyToolCategory("My tool options");
 comment|/// static cl::extrahelp CommonHelp(CommonOptionsParser::HelpMessage);
 comment|/// static cl::extrahelp MoreHelp("\nMore help text...");
-comment|/// static cl:opt<bool> YourOwnOption(...);
+comment|/// static cl::opt<bool> YourOwnOption(...);
 comment|/// ...
 comment|///
 comment|/// int main(int argc, const char **argv) {
-comment|///   CommonOptionsParser OptionsParser(argc, argv);
+comment|///   CommonOptionsParser OptionsParser(argc, argv, MyToolCategory);
 comment|///   ClangTool Tool(OptionsParser.getCompilations(),
 comment|///                  OptionsParser.getSourcePathListi());
 comment|///   return Tool.run(newFrontendActionFactory<clang::SyntaxOnlyAction>());
@@ -157,8 +164,12 @@ block|{
 name|public
 label|:
 comment|/// \brief Parses command-line, initializes a compilation database.
+comment|///
 comment|/// This constructor can change argc and argv contents, e.g. consume
 comment|/// command-line options used for creating FixedCompilationDatabase.
+comment|///
+comment|/// All options not belonging to \p Category become hidden.
+comment|///
 comment|/// This constructor exits program in case of error.
 name|CommonOptionsParser
 argument_list|(
@@ -172,12 +183,20 @@ operator|*
 operator|*
 name|argv
 argument_list|,
+name|llvm
+operator|::
+name|cl
+operator|::
+name|OptionCategory
+operator|&
+name|Category
+argument_list|,
 specifier|const
 name|char
 operator|*
 name|Overview
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|/// Returns a reference to the loaded compilations database.
@@ -216,7 +235,9 @@ name|HelpMessage
 decl_stmt|;
 name|private
 label|:
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|CompilationDatabase
 operator|>

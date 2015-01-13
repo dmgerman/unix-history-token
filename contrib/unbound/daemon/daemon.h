@@ -114,6 +114,29 @@ name|daemon_remote
 struct_decl|;
 end_struct_decl
 
+begin_include
+include|#
+directive|include
+file|"dnstap/dnstap_config.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_DNSTAP
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|dt_env
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/**  * Structure holding worker list.  * Holds globally visible information.  */
 end_comment
@@ -152,6 +175,10 @@ decl_stmt|;
 comment|/** size of ports array */
 name|size_t
 name|num_ports
+decl_stmt|;
+comment|/** reuseport is enabled if true */
+name|int
+name|reuseport
 decl_stmt|;
 comment|/** port number for remote that has ports opened. */
 name|int
@@ -236,6 +263,17 @@ name|struct
 name|timeval
 name|time_boot
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_DNSTAP
+comment|/** the dnstap environment master value, copied and changed by threads*/
+name|struct
+name|dt_env
+modifier|*
+name|dtenv
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

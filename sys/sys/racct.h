@@ -876,35 +876,23 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|void
+begin_define
+define|#
+directive|define
 name|racct_create
 parameter_list|(
-name|struct
-name|racct
-modifier|*
-modifier|*
-name|racctp
+name|x
 parameter_list|)
-block|{ }
-end_function
+end_define
 
-begin_function
-specifier|static
-specifier|inline
-name|void
+begin_define
+define|#
+directive|define
 name|racct_destroy
 parameter_list|(
-name|struct
-name|racct
-modifier|*
-modifier|*
-name|racctp
+name|x
 parameter_list|)
-block|{ }
-end_function
+end_define
 
 begin_function
 specifier|static

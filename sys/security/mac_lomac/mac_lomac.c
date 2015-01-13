@@ -2512,7 +2512,7 @@ argument_list|(
 name|LOG_INFO
 argument_list|,
 literal|"LOMAC: level-%s subject p%dg%du%d:%s demoted to"
-literal|" level %s after %s a level-%s %s (inode=%ld, "
+literal|" level %s after %s a level-%s %s (inode=%ju, "
 literal|"mountpount=%s)\n"
 argument_list|,
 name|subjlabeltext
@@ -2541,6 +2541,9 @@ name|objlabeltext
 argument_list|,
 name|objname
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|va
 operator|.
 name|va_fileid

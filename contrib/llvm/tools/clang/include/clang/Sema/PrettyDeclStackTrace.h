@@ -152,13 +152,13 @@ argument_list|(
 argument|Msg
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&OS
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

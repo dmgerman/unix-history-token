@@ -6561,9 +6561,6 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|is_elf_obj
-operator|&&
-operator|(
 name|sh
 operator|.
 name|sh_type
@@ -6575,7 +6572,6 @@ operator|.
 name|sh_type
 operator|==
 name|SHT_NOBITS
-operator|)
 condition|)
 block|{
 name|alignmask
@@ -6601,6 +6597,10 @@ name|sh_addr
 operator|=
 name|mapbase
 expr_stmt|;
+if|if
+condition|(
+name|is_elf_obj
+condition|)
 name|dmp
 operator|->
 name|dm_sec_offsets

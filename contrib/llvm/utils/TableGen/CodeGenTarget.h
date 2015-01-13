@@ -734,6 +734,31 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|iterator_range
+operator|<
+name|inst_iterator
+operator|>
+name|instructions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|inst_iterator
+operator|>
+operator|(
+name|inst_begin
+argument_list|()
+operator|,
+name|inst_end
+argument_list|()
+operator|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// isLittleEndianEncoding - are instruction bit patterns defined as  [0..n]?
 end_comment
@@ -749,6 +774,21 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// reverseBitsForLittleEndianEncoding - For little-endian instruction bit
+end_comment
+
+begin_comment
+comment|/// encodings, reverse the bit order of all instructions.
+end_comment
+
+begin_function_decl
+name|void
+name|reverseBitsForLittleEndianEncoding
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// guessInstructionProperties - should we just guess unset instruction

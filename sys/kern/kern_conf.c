@@ -6572,8 +6572,11 @@ operator|&
 name|SI_NAMED
 argument_list|,
 operator|(
-literal|"Driver has goofed in cloning underways udev %x unit %x"
+literal|"Driver has goofed in cloning underways udev %jx unit %x"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|dev2udev
 argument_list|(
 name|dev

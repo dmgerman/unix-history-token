@@ -270,6 +270,21 @@ define|\
 value|atomic_set_long(&(p)->__bits[__bitset_word(_s, n)],		\ 	    __bitset_mask((_s), n))
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIT_SET_ATOMIC_ACQ
+parameter_list|(
+name|_s
+parameter_list|,
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|atomic_set_acq_long(&(p)->__bits[__bitset_word(_s, n)],		\ 	    __bitset_mask((_s), n))
+end_define
+
 begin_comment
 comment|/* Convenience functions catering special cases. */
 end_comment

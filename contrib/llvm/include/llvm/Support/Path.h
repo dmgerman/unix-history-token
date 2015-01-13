@@ -680,6 +680,14 @@ name|char
 name|value
 parameter_list|)
 function_decl|;
+comment|/// @brief Return the preferred separator for this platform.
+comment|///
+comment|/// @result StringRef of the preferred separator, null-terminated.
+specifier|const
+name|StringRef
+name|get_separator
+parameter_list|()
+function_decl|;
 comment|/// @brief Get the typical temporary directory for the system, e.g.,
 comment|/// "/var/tmp" or "C:/TEMP"
 comment|///
@@ -695,6 +703,21 @@ argument_list|(
 name|bool
 name|erasedOnReboot
 argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|result
+argument_list|)
+decl_stmt|;
+comment|/// @brief Get the user's home directory.
+comment|///
+comment|/// @param result Holds the resulting path name.
+comment|/// @result True if a home directory is set, false otherwise.
+name|bool
+name|home_directory
+argument_list|(
 name|SmallVectorImpl
 operator|<
 name|char

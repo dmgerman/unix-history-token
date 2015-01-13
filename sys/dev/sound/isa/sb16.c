@@ -635,11 +635,6 @@ literal|1
 return|;
 block|}
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|500000
 if|if
 condition|(
 name|curthread
@@ -655,8 +650,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;

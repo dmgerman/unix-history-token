@@ -186,6 +186,11 @@ comment|// Alignment - Alignment of record in characters.
 name|CharUnits
 name|Alignment
 decl_stmt|;
+comment|/// RequiredAlignment - The required alignment of the object.  In the MS-ABI
+comment|/// the __declspec(align()) trumps #pramga pack and must always be obeyed.
+name|CharUnits
+name|RequiredAlignment
+decl_stmt|;
 comment|/// FieldOffsets - Array of field offsets in bits.
 name|uint64_t
 modifier|*
@@ -204,10 +209,10 @@ comment|/// the size of the object without virtual bases.
 name|CharUnits
 name|NonVirtualSize
 decl_stmt|;
-comment|/// NonVirtualAlign - The non-virtual alignment (in chars) of an object,
+comment|/// NonVirtualAlignment - The non-virtual alignment (in chars) of an object,
 comment|/// which is the alignment of the object without virtual bases.
 name|CharUnits
-name|NonVirtualAlign
+name|NonVirtualAlignment
 decl_stmt|;
 comment|/// SizeOfLargestEmptySubobject - The size of the largest empty subobject
 comment|/// (either a base or a member). Will be zero if the class doesn't contain
@@ -235,10 +240,18 @@ name|HasExtendableVFPtr
 range|:
 literal|1
 decl_stmt|;
-comment|/// AlignAfterVBases - Force appropriate alignment after virtual bases are
-comment|/// laid out in MS-C++-ABI.
+comment|/// HasZeroSizedSubObject - True if this class contains a zero sized member
+comment|/// or base or a base with a zero sized member or base.  Only used for
+comment|/// MS-ABI.
 name|bool
-name|AlignAfterVBases
+name|HasZeroSizedSubObject
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief True if this class is zero sized or first base is zero sized or
+comment|/// has this property.  Only used for MS-ABI.
+name|bool
+name|LeadsWithZeroSizedBase
 range|:
 literal|1
 decl_stmt|;
@@ -305,6 +318,8 @@ argument|CharUnits size
 argument_list|,
 argument|CharUnits alignment
 argument_list|,
+argument|CharUnits requiredAlignment
+argument_list|,
 argument|CharUnits datasize
 argument_list|,
 argument|const uint64_t *fieldoffsets
@@ -327,6 +342,8 @@ argument|CharUnits size
 argument_list|,
 argument|CharUnits alignment
 argument_list|,
+argument|CharUnits requiredAlignment
+argument_list|,
 argument|bool hasOwnVFPtr
 argument_list|,
 argument|bool hasExtendableVFPtr
@@ -341,7 +358,7 @@ argument|unsigned fieldcount
 argument_list|,
 argument|CharUnits nonvirtualsize
 argument_list|,
-argument|CharUnits nonvirtualalign
+argument|CharUnits nonvirtualalignment
 argument_list|,
 argument|CharUnits SizeOfLargestEmptySubobject
 argument_list|,
@@ -351,7 +368,9 @@ argument|bool IsPrimaryBaseVirtual
 argument_list|,
 argument|const CXXRecordDecl *BaseSharingVBPtr
 argument_list|,
-argument|bool ForceAlign
+argument|bool HasZeroSizedSubObject
+argument_list|,
+argument|bool LeadsWithZeroSizedBase
 argument_list|,
 argument|const BaseOffsetsMapTy& BaseOffsets
 argument_list|,
@@ -478,7 +497,7 @@ block|}
 comment|/// getNonVirtualSize - Get the non-virtual alignment (in chars) of an object,
 comment|/// which is the alignment of the object without virtual bases.
 name|CharUnits
-name|getNonVirtualAlign
+name|getNonVirtualAlignment
 argument_list|()
 specifier|const
 block|{
@@ -492,7 +511,7 @@ block|;
 return|return
 name|CXXInfo
 operator|->
-name|NonVirtualAlign
+name|NonVirtualAlignment
 return|;
 block|}
 comment|/// getPrimaryBase - Get the primary base for this record.
@@ -742,8 +761,30 @@ name|isNegative
 argument_list|()
 return|;
 block|}
+name|CharUnits
+name|getRequiredAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RequiredAlignment
+return|;
+block|}
 name|bool
-name|getAlignAfterVBases
+name|hasZeroSizedSubObject
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CXXInfo
+operator|&&
+name|CXXInfo
+operator|->
+name|HasZeroSizedSubObject
+return|;
+block|}
+name|bool
+name|leadsWithZeroSizedBase
 argument_list|()
 specifier|const
 block|{
@@ -757,7 +798,7 @@ block|;
 return|return
 name|CXXInfo
 operator|->
-name|AlignAfterVBases
+name|LeadsWithZeroSizedBase
 return|;
 block|}
 comment|/// getVBPtrOffset - Get the offset for virtual base table pointer.

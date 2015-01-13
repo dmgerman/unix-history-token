@@ -330,42 +330,37 @@ block|;
 name|void
 name|enterContext
 argument_list|(
-name|Value
-operator|*
-name|L
+argument|Value *L
 argument_list|,
-name|Value
-operator|*
-name|R
+argument|Value *R
 argument_list|)
+name|override
 block|;
 name|void
 name|exitContext
 argument_list|()
+name|override
 block|;
 name|void
 name|log
 argument_list|(
 argument|StringRef text
 argument_list|)
+name|override
 block|;
 name|void
 name|logf
 argument_list|(
-specifier|const
-name|LogBuilder
-operator|&
-name|Log
+argument|const LogBuilder&Log
 argument_list|)
+name|override
 block|;
 name|void
 name|logd
 argument_list|(
-specifier|const
-name|DiffLogBuilder
-operator|&
-name|Log
+argument|const DiffLogBuilder&Log
 argument_list|)
+name|override
 block|;   }
 decl_stmt|;
 block|}

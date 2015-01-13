@@ -411,7 +411,7 @@ operator|(
 operator|(
 name|p
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"machdep.bios.pci"
 argument_list|)
@@ -492,7 +492,7 @@ operator|(
 operator|(
 name|p
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"machdep.bios.pnp"
 argument_list|)

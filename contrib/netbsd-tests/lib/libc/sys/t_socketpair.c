@@ -155,6 +155,16 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|closefrom
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ATF_REQUIRE
 argument_list|(
 name|fcntl
@@ -168,6 +178,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_REQUIRE
 argument_list|(
 name|socketpair

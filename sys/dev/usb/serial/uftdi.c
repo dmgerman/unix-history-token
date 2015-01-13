@@ -253,7 +253,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|uftdi_debug
@@ -1427,6 +1427,15 @@ argument_list|(
 name|DRESDENELEKTRONIK
 argument_list|,
 name|WIRELESSHANDHELDTERMINAL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|DRESDENELEKTRONIK
+argument_list|,
+name|DE_RFNODE
 argument_list|,
 literal|0
 argument_list|)

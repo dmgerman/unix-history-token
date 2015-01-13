@@ -791,7 +791,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Transmit routine used by generic_netmap_txsync(). Returns 0 on success  * and non-zero on error (which may be packet drops or other errors).  * addr and len identify the netmap buffer, m is the (preallocated)  * mbuf to use for transmissions.  *  * We should add a reference to the mbuf so the m_freem() at the end  * of the transmission does not consume resources.  *  * On FreeBSD, and on multiqueue cards, we can force the queue using  *      if ((m->m_flags& M_FLOWID) != 0)  *              i = m->m_pkthdr.flowid % adapter->num_queues;  *      else  *              i = curcpu % adapter->num_queues;  *  */
+comment|/*  * Transmit routine used by generic_netmap_txsync(). Returns 0 on success  * and non-zero on error (which may be packet drops or other errors).  * addr and len identify the netmap buffer, m is the (preallocated)  * mbuf to use for transmissions.  *  * We should add a reference to the mbuf so the m_freem() at the end  * of the transmission does not consume resources.  *  * On FreeBSD, and on multiqueue cards, we can force the queue using  *      if (M_HASHTYPE_GET(m) != M_HASHTYPE_NONE)  *              i = m->m_pkthdr.flowid % adapter->num_queues;  *      else  *              i = curcpu % adapter->num_queues;  *  */
 end_comment
 
 begin_function
@@ -943,11 +943,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 name|m
 operator|->
@@ -1896,6 +1897,15 @@ operator|)
 name|foff
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|color
+condition|)
+operator|*
+name|color
+operator|=
+literal|0
+expr_stmt|;
 name|dev_ref
 argument_list|(
 name|vmh
@@ -2604,27 +2614,12 @@ begin_comment
 comment|/*  * The OS_selwakeup also needs to issue a KNOTE_UNLOCKED.  * We use a non-zero argument to distinguish the call from the one  * in kevent_scan() which instead also needs to run netmap_poll().  * The knote uses a global mutex for the time being. We might  * try to reuse the one in the si, but it is not allocated  * permanently so it might be a bit tricky.  *  * The *kqfilter function registers one or another f_event  * depending on read or write mode.  * In the call to f_event() td_fpop is NULL so any child function  * calling devfs_get_cdevpriv() would fail - and we need it in  * netmap_poll(). As a workaround we store priv into kn->kn_hook  * and pass it as first argument to netmap_poll(), which then  * uses the failure to tell that we are called from f_event()  * and do not need the selrecord().  */
 end_comment
 
-begin_function_decl
-name|void
-name|freebsd_selwakeup
-parameter_list|(
-name|struct
-name|selinfo
-modifier|*
-name|si
-parameter_list|,
-name|int
-name|pri
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|void
 name|freebsd_selwakeup
 parameter_list|(
 name|struct
-name|selinfo
+name|nm_selinfo
 modifier|*
 name|si
 parameter_list|,
@@ -2643,11 +2638,16 @@ argument_list|,
 operator|&
 name|si
 operator|->
+name|si
+operator|.
 name|si_note
 argument_list|)
 expr_stmt|;
 name|selwakeuppri
 argument_list|(
+operator|&
+name|si
+operator|->
 name|si
 argument_list|,
 name|pri
@@ -2659,6 +2659,8 @@ argument_list|(
 operator|&
 name|si
 operator|->
+name|si
+operator|.
 name|si_note
 argument_list|,
 literal|0x100
@@ -2698,9 +2700,12 @@ name|selinfo
 modifier|*
 name|si
 init|=
+operator|&
 name|priv
 operator|->
 name|np_rxsi
+operator|->
+name|si
 decl_stmt|;
 name|D
 argument_list|(
@@ -2754,9 +2759,12 @@ name|selinfo
 modifier|*
 name|si
 init|=
+operator|&
 name|priv
 operator|->
 name|np_txsi
+operator|->
+name|si
 decl_stmt|;
 name|D
 argument_list|(
@@ -3032,7 +3040,7 @@ modifier|*
 name|na
 decl_stmt|;
 name|struct
-name|selinfo
+name|nm_selinfo
 modifier|*
 name|si
 decl_stmt|;
@@ -3159,6 +3167,8 @@ argument_list|(
 operator|&
 name|si
 operator|->
+name|si
+operator|.
 name|si_note
 argument_list|,
 name|kn

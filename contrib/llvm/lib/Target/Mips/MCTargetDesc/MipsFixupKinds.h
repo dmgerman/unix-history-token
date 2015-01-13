@@ -174,6 +174,24 @@ block|,
 comment|// resulting in - R_MIPS_CALL_LO16
 name|fixup_Mips_CALL_LO16
 block|,
+comment|// resulting in - R_MIPS_PC18_S3
+name|fixup_MIPS_PC18_S3
+block|,
+comment|// resulting in - R_MIPS_PC19_S2
+name|fixup_MIPS_PC19_S2
+block|,
+comment|// resulting in - R_MIPS_PC21_S2
+name|fixup_MIPS_PC21_S2
+block|,
+comment|// resulting in - R_MIPS_PC26_S2
+name|fixup_MIPS_PC26_S2
+block|,
+comment|// resulting in - R_MIPS_PCHI16
+name|fixup_MIPS_PCHI16
+block|,
+comment|// resulting in - R_MIPS_PCLO16
+name|fixup_MIPS_PCLO16
+block|,
 comment|// resulting in - R_MICROMIPS_26_S1
 name|fixup_MICROMIPS_26_S1
 block|,
@@ -200,6 +218,12 @@ name|fixup_MICROMIPS_GOT_PAGE
 block|,
 comment|// resulting in - R_MICROMIPS_GOT_OFST
 name|fixup_MICROMIPS_GOT_OFST
+block|,
+comment|// resulting in - R_MICROMIPS_TLS_GD
+name|fixup_MICROMIPS_TLS_GD
+block|,
+comment|// resulting in - R_MICROMIPS_TLS_LDM
+name|fixup_MICROMIPS_TLS_LDM
 block|,
 comment|// resulting in - R_MICROMIPS_TLS_DTPREL_HI16
 name|fixup_MICROMIPS_TLS_DTPREL_HI16

@@ -1367,6 +1367,25 @@ operator|++
 operator|=
 name|ch
 expr_stmt|;
+comment|/* Negation operator is a word by itself. */
+if|if
+condition|(
+name|ch
+operator|==
+literal|'!'
+condition|)
+block|{
+operator|*
+name|cp
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|line
+operator|)
+return|;
+block|}
 while|while
 condition|(
 operator|(

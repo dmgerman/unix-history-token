@@ -331,7 +331,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by proc slock  *      k - only accessed by curthread  *	k*- only accessed by curthread and from an interrupt  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      q - td_contested lock  *      r - p_peers lock  *      t - thread lock  *      x - created at fork, only changes during single threading in exec  *      y - created at first aio, doesn't change until exit or exec at which  *          point we are single-threaded and only curthread changes it  *      z - zombie threads lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by proc slock  *      k - only accessed by curthread  *	k*- only accessed by curthread and from an interrupt  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      q - td_contested lock  *      r - p_peers lock  *      t - thread lock  *	u - process stat lock  *	w - process timer lock  *      x - created at fork, only changes during single threading in exec  *      y - created at first aio, doesn't change until exit or exec at which  *          point we are single-threaded and only curthread changes it  *      z - zombie threads lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
 end_comment
 
 begin_struct_decl
@@ -437,7 +437,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking for p_rux: (cj) means (j) for p_rux and (c) for p_crux.  * Locking for td_rux: (t) for all fields.  */
+comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking for p_rux: (cu) means (u) for p_rux and (c) for p_crux.  * Locking for td_rux: (t) for all fields.  */
 end_comment
 
 begin_struct
@@ -447,19 +447,19 @@ block|{
 name|uint64_t
 name|rux_runtime
 decl_stmt|;
-comment|/* (cj) Real time. */
+comment|/* (cu) Real time. */
 name|uint64_t
 name|rux_uticks
 decl_stmt|;
-comment|/* (cj) Statclock hits in user mode. */
+comment|/* (cu) Statclock hits in user mode. */
 name|uint64_t
 name|rux_sticks
 decl_stmt|;
-comment|/* (cj) Statclock hits in sys mode. */
+comment|/* (cu) Statclock hits in sys mode. */
 name|uint64_t
 name|rux_iticks
 decl_stmt|;
-comment|/* (cj) Statclock hits in intr mode. */
+comment|/* (cu) Statclock hits in intr mode. */
 name|uint64_t
 name|rux_uu
 decl_stmt|;
@@ -620,11 +620,11 @@ modifier|*
 name|td_wmesg
 decl_stmt|;
 comment|/* (t) Reason for sleep. */
-name|u_char
+name|int
 name|td_lastcpu
 decl_stmt|;
 comment|/* (t) Last cpu we were on. */
-name|u_char
+name|int
 name|td_oncpu
 decl_stmt|;
 comment|/* (t) Which cpu we are on. */
@@ -1221,12 +1221,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED09
+name|TDF_ALLPROCSUSP
 value|0x00000200
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* suspended by SINGLE_ALLPROC */
 end_comment
 
 begin_define
@@ -1889,12 +1889,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_DEVMEMIO
+name|TDP_UNUSED29
 value|0x20000000
 end_define
 
 begin_comment
-comment|/* Accessing memory for /dev/mem */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -2383,10 +2383,46 @@ name|p_children
 expr_stmt|;
 comment|/* (e) Pointer to list of children. */
 name|struct
+name|proc
+modifier|*
+name|p_reaper
+decl_stmt|;
+comment|/* (e) My reaper. */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|proc
+argument_list|)
+name|p_reaplist
+expr_stmt|;
+comment|/* (e) List of my descendants 					       (if I am reaper). */
+name|LIST_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_reapsibling
+expr_stmt|;
+comment|/* (e) List of siblings - descendants of 					       the same reaper. */
+name|struct
 name|mtx
 name|p_mtx
 decl_stmt|;
 comment|/* (n) Lock for this struct. */
+name|struct
+name|mtx
+name|p_statmtx
+decl_stmt|;
+comment|/* Lock for the stats */
+name|struct
+name|mtx
+name|p_itimmtx
+decl_stmt|;
+comment|/* Lock for the virt/prof timers */
+name|struct
+name|mtx
+name|p_profmtx
+decl_stmt|;
+comment|/* Lock for the profiling */
 name|struct
 name|ksiginfo
 modifier|*
@@ -2434,7 +2470,7 @@ name|struct
 name|rusage_ext
 name|p_rux
 decl_stmt|;
-comment|/* (cj) Internal resource usage. */
+comment|/* (cu) Internal resource usage. */
 name|struct
 name|rusage_ext
 name|p_crux
@@ -2618,6 +2654,10 @@ name|int
 name|p_fibnum
 decl_stmt|;
 comment|/* in this routing domain XXX MRT */
+name|pid_t
+name|p_reapsubtree
+decl_stmt|;
+comment|/* (e) Pid of the direct child of the 					       reaper which spawned 					       our subtree. */
 comment|/* End area that is copied on creation. */
 define|#
 directive|define
@@ -2763,12 +2803,26 @@ begin_define
 define|#
 directive|define
 name|NOCPU
-value|0xff
+value|(-1)
 end_define
 
 begin_comment
 comment|/* For when we aren't on a CPU. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NOCPU_OLD
+value|(255)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXCPU_OLD
+value|(254)
+end_define
 
 begin_define
 define|#
@@ -2800,6 +2854,102 @@ parameter_list|,
 name|type
 parameter_list|)
 value|mtx_assert(&(p)->p_slock, (type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_STATLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_lock_spin(&(p)->p_statmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_STATUNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_unlock_spin(&(p)->p_statmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_STATLOCK_ASSERT
+parameter_list|(
+name|p
+parameter_list|,
+name|type
+parameter_list|)
+value|mtx_assert(&(p)->p_statmtx, (type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_ITIMLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_lock_spin(&(p)->p_itimmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_ITIMUNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_unlock_spin(&(p)->p_itimmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_ITIMLOCK_ASSERT
+parameter_list|(
+name|p
+parameter_list|,
+name|type
+parameter_list|)
+value|mtx_assert(&(p)->p_itimmtx, (type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_PROFLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_lock_spin(&(p)->p_profmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_PROFUNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_unlock_spin(&(p)->p_profmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_PROFLOCK_ASSERT
+parameter_list|(
+name|p
+parameter_list|,
+name|type
+parameter_list|)
+value|mtx_assert(&(p)->p_profmtx, (type))
 end_define
 
 begin_comment
@@ -3084,9 +3234,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_UNUSED1
+name|P_TOTAL_STOP
 value|0x2000000
 end_define
+
+begin_comment
+comment|/* Stopped in proc_stop_total. */
+end_comment
 
 begin_define
 define|#
@@ -3220,6 +3374,17 @@ end_define
 
 begin_comment
 comment|/* First element of orphan 						   list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_TREE_REAPER
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Reaper of subtree */
 end_comment
 
 begin_comment
@@ -3545,6 +3710,13 @@ define|#
 directive|define
 name|SINGLE_BOUNDARY
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SINGLE_ALLPROC
+value|3
 end_define
 
 begin_ifdef
@@ -4064,6 +4236,13 @@ specifier|extern
 name|struct
 name|sx
 name|allproc_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|allproc_gen
 decl_stmt|;
 end_decl_stmt
 
@@ -5002,6 +5181,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|reaper_abandon_children
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|bool
+name|exiting
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|securelevel_ge
 parameter_list|(
@@ -5557,6 +5751,11 @@ begin_function_decl
 name|int
 name|thread_single
 parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
 name|int
 name|how
 parameter_list|)
@@ -5567,7 +5766,13 @@ begin_function_decl
 name|void
 name|thread_single_end
 parameter_list|(
-name|void
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|how
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5646,12 +5851,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bool
+name|thread_suspend_check_needed
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|thread_suspend_switch
 parameter_list|(
 name|struct
 name|thread
 modifier|*
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5700,6 +5919,11 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5729,6 +5953,24 @@ name|p
 parameter_list|,
 name|lwpid_t
 name|tid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|stop_all_proc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|resume_all_proc
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

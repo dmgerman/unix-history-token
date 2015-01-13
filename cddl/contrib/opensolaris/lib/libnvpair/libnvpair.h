@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -96,6 +96,17 @@ function_decl|;
 specifier|extern
 name|void
 name|nvlist_print
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|nvlist_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|nvlist_print_json
 parameter_list|(
 name|FILE
 modifier|*

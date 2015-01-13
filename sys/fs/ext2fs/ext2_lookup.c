@@ -2084,10 +2084,8 @@ name|cn_flags
 operator|&
 name|MAKEENTRY
 operator|)
-operator|&&
-name|nameiop
 operator|!=
-name|CREATE
+literal|0
 condition|)
 name|cache_enter
 argument_list|(
@@ -3284,7 +3282,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ext2_dirbad: %s: bad dir ino %lu at offset %ld: %s\n"
+literal|"ext2_dirbad: %s: bad dir ino %ju at offset %ld: %s\n"
 argument_list|,
 name|mp
 operator|->
@@ -3293,7 +3291,7 @@ operator|.
 name|f_mntonname
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|ip
 operator|->
@@ -3313,7 +3311,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s: bad dir ino %lu at offset %ld: %s\n"
+literal|"%s: bad dir ino %ju at offset %ld: %s\n"
 argument_list|,
 name|mp
 operator|->
@@ -3322,7 +3320,7 @@ operator|.
 name|f_mntonname
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|ip
 operator|->

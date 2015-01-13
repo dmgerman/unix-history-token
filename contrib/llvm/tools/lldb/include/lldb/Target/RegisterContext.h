@@ -263,19 +263,56 @@ name|RegisterContextSP
 name|context
 argument_list|)
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Convert from a given register numbering scheme to the lldb register
+comment|/// numbering scheme
+comment|///
+comment|/// There may be multiple ways to enumerate the registers for a given
+comment|/// architecture.  ABI references will specify one to be used with
+comment|/// DWARF, the register numberings from stabs (aka "gcc"), there may
+comment|/// be a variation used for eh_frame unwind instructions (e.g. on Darwin),
+comment|/// and so on.  Register 5 by itself is meaningless - RegisterKind
+comment|/// enumeration tells you what context that number should be translated as.
+comment|///
+comment|/// Inside lldb, register numbers are in the eRegisterKindLLDB scheme;
+comment|/// arguments which take a register number should take one in that
+comment|/// scheme.
+comment|///
+comment|/// eRegisterKindGeneric is a special numbering scheme which gives us
+comment|/// constant values for the pc, frame register, stack register, etc., for
+comment|/// use within lldb.  They may not be defined for all architectures but
+comment|/// it allows generic code to translate these common registers into the
+comment|/// lldb numbering scheme.
+comment|///
+comment|/// This method translates a given register kind + register number into
+comment|/// the eRegisterKindLLDB register numbering.
+comment|///
+comment|/// @param [in] kind
+comment|///     The register numbering scheme (RegisterKind) that the following
+comment|///     register number is in.
+comment|///
+comment|/// @param [in] num
+comment|///     A register number in the 'kind' register numbering scheme.
+comment|///
+comment|/// @return
+comment|///     The equivalent register number in the eRegisterKindLLDB
+comment|///     numbering scheme, if possible, else LLDB_INVALID_REGNUM.
+comment|//------------------------------------------------------------------
 name|virtual
 name|uint32_t
 name|ConvertRegisterKindToRegisterNumber
-parameter_list|(
-name|uint32_t
+argument_list|(
+name|lldb
+operator|::
+name|RegisterKind
 name|kind
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|num
-parameter_list|)
+argument_list|)
 init|=
 literal|0
-function_decl|;
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Subclasses can override these functions if desired
 comment|//------------------------------------------------------------------
@@ -435,14 +472,16 @@ specifier|const
 name|RegisterInfo
 modifier|*
 name|GetRegisterInfo
-parameter_list|(
-name|uint32_t
+argument_list|(
+name|lldb
+operator|::
+name|RegisterKind
 name|reg_kind
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|reg_num
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|uint64_t
 name|GetPC
 parameter_list|(
@@ -571,21 +610,25 @@ parameter_list|)
 function_decl|;
 name|bool
 name|ConvertBetweenRegisterKinds
-parameter_list|(
-name|int
+argument_list|(
+name|lldb
+operator|::
+name|RegisterKind
 name|source_rk
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|source_regnum
-parameter_list|,
-name|int
+argument_list|,
+name|lldb
+operator|::
+name|RegisterKind
 name|target_rk
-parameter_list|,
+argument_list|,
 name|uint32_t
-modifier|&
+operator|&
 name|target_regnum
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// lldb::ExecutionContextScope pure virtual functions
 comment|//------------------------------------------------------------------

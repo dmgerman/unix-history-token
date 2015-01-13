@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_siginfo.c,v 1.23 2014/02/09 21:26:07 jmmv Exp $ */
+comment|/* $NetBSD: t_siginfo.c,v 1.24 2014/11/04 00:20:19 justin Exp $ */
 end_comment
 
 begin_comment
@@ -13,17 +13,22 @@ directive|include
 file|<atf-c.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<atf-c/config.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<sys/inttypes.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -361,6 +366,9 @@ operator|.
 name|ss_flags
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 for|for
 control|(
 name|i
@@ -400,6 +408,8 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -663,6 +673,9 @@ operator|->
 name|si_status
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|printf
 argument_list|(
 literal|"si_utime=%lu\n"
@@ -691,6 +704,8 @@ operator|->
 name|si_stime
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|ATF_REQUIRE_EQ
 argument_list|(

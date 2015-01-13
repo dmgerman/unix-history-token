@@ -34,12 +34,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Note: if you add or remove members of esource, remember to also update the  * KASSERT regarding what valid members are in random_harvest_internal().  */
+comment|/*  * Note: if you add or remove members of random_entropy_source, remember to also update the  * KASSERT regarding what valid members are in random_harvest_internal(), and remember the  * strings in the static array random_source_descr[] in random_harvestq.c.  *  * NOTE: complain loudly to markm@ or on the lists if this enum gets more than 32  * distinct values (0-31)! ENTROPYSOURCE may be == 32, but not> 32.  */
 end_comment
 
 begin_enum
 enum|enum
-name|esource
+name|random_entropy_source
 block|{
 name|RANDOM_START
 init|=
@@ -49,6 +49,7 @@ name|RANDOM_CACHED
 init|=
 literal|0
 block|,
+comment|/* Environmental sources */
 name|RANDOM_ATTACH
 block|,
 name|RANDOM_KEYBOARD
@@ -65,6 +66,12 @@ name|RANDOM_INTERRUPT
 block|,
 name|RANDOM_SWI
 block|,
+name|RANDOM_UMA_ALLOC
+block|,
+name|RANDOM_ENVIRONMENTAL_END
+block|,
+comment|/* This one is wasted */
+comment|/* High-quality HW RNGs from here on. */
 name|RANDOM_PURE_OCTEON
 block|,
 name|RANDOM_PURE_SAFE
@@ -101,45 +108,10 @@ parameter_list|,
 name|u_int
 parameter_list|,
 name|enum
-name|esource
+name|random_entropy_source
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Allow the sysadmin to select the broad category of  * entropy types to harvest  */
-end_comment
-
-begin_struct
-struct|struct
-name|harvest_select
-block|{
-name|int
-name|ethernet
-decl_stmt|;
-name|int
-name|point_to_point
-decl_stmt|;
-name|int
-name|interrupt
-decl_stmt|;
-name|int
-name|swi
-decl_stmt|;
-name|int
-name|namei
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|harvest_select
-name|harvest
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#

@@ -691,7 +691,7 @@ argument_list|()
 operator|:
 name|Method
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|ThunkInfo
@@ -711,7 +711,7 @@ name|CXXMethodDecl
 operator|*
 name|Method
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|This
@@ -789,7 +789,7 @@ argument_list|()
 operator|&&
 name|Method
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 block|}

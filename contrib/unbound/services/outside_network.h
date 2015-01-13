@@ -31,6 +31,12 @@ directive|include
 file|"util/netevent.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"dnstap/dnstap_config.h"
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|pending
@@ -88,6 +94,18 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|sldns_buffer
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|serviced_query
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|dt_env
 struct_decl|;
 end_struct_decl
 
@@ -240,6 +258,17 @@ name|void
 modifier|*
 name|sslctx
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_DNSTAP
+comment|/** dnstap environment */
+name|struct
+name|dt_env
+modifier|*
+name|dtenv
+decl_stmt|;
+endif|#
+directive|endif
 comment|/** 	 * Array of tcp pending used for outgoing TCP connections. 	 * Each can be used to establish a TCP connection with a server. 	 * The file descriptors are -1 if they are free, and need to be  	 * opened for the tcp connection. Can be used for ip4 and ip6. 	 */
 name|struct
 name|pending_tcp
@@ -250,6 +279,10 @@ decl_stmt|;
 comment|/** number of tcp communication points. */
 name|size_t
 name|num_tcp
+decl_stmt|;
+comment|/** number of tcp communication points in use. */
+name|size_t
+name|num_tcp_outgoing
 decl_stmt|;
 comment|/** list of tcp comm points that are free for use */
 name|struct
@@ -413,6 +446,12 @@ name|struct
 name|outside_network
 modifier|*
 name|outnet
+decl_stmt|;
+comment|/** the corresponding serviced_query */
+name|struct
+name|serviced_query
+modifier|*
+name|sq
 decl_stmt|;
 comment|/*---- filled if udp pending is waiting -----*/
 comment|/** next in waiting list. */
@@ -613,6 +652,10 @@ comment|/** We want signatures, or else the answer is likely useless */
 name|int
 name|want_dnssec
 decl_stmt|;
+comment|/** ignore capsforid */
+name|int
+name|nocaps
+decl_stmt|;
 comment|/** tcp upstream used, use tcp, or ssl_upstream for SSL */
 name|int
 name|tcp_upstream
@@ -718,7 +761,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * Create outside_network structure with N udp ports.  * @param base: the communication base to use for event handling.  * @param bufsize: size for network buffers.  * @param num_ports: number of udp ports to open per interface.  * @param ifs: interface names (or NULL for default interface).  *    These interfaces must be able to access all authoritative servers.  * @param num_ifs: number of names in array ifs.  * @param do_ip4: service IP4.  * @param do_ip6: service IP6.  * @param num_tcp: number of outgoing tcp buffers to preallocate.  * @param infra: pointer to infra cached used for serviced queries.  * @param rnd: stored to create random numbers for serviced queries.  * @param use_caps_for_id: enable to use 0x20 bits to encode id randomness.  * @param availports: array of available ports.   * @param numavailports: number of available ports in array.  * @param unwanted_threshold: when to take defensive action.  * @param unwanted_action: the action to take.  * @param unwanted_param: user parameter to action.  * @param do_udp: if udp is done.  * @param sslctx: context to create outgoing connections with (if enabled).  * @param delayclose: if not 0, udp sockets are delayed before timeout closure.  * 	msec to wait on timeouted udp sockets.  * @return: the new structure (with no pending answers) or NULL on error.  */
+comment|/**  * Create outside_network structure with N udp ports.  * @param base: the communication base to use for event handling.  * @param bufsize: size for network buffers.  * @param num_ports: number of udp ports to open per interface.  * @param ifs: interface names (or NULL for default interface).  *    These interfaces must be able to access all authoritative servers.  * @param num_ifs: number of names in array ifs.  * @param do_ip4: service IP4.  * @param do_ip6: service IP6.  * @param num_tcp: number of outgoing tcp buffers to preallocate.  * @param infra: pointer to infra cached used for serviced queries.  * @param rnd: stored to create random numbers for serviced queries.  * @param use_caps_for_id: enable to use 0x20 bits to encode id randomness.  * @param availports: array of available ports.   * @param numavailports: number of available ports in array.  * @param unwanted_threshold: when to take defensive action.  * @param unwanted_action: the action to take.  * @param unwanted_param: user parameter to action.  * @param do_udp: if udp is done.  * @param sslctx: context to create outgoing connections with (if enabled).  * @param delayclose: if not 0, udp sockets are delayed before timeout closure.  * 	msec to wait on timeouted udp sockets.  * @param dtenv: environment to send dnstap events with (if enabled).  * @return: the new structure (with no pending answers) or NULL on error.  */
 end_comment
 
 begin_function_decl
@@ -801,6 +844,11 @@ name|sslctx
 parameter_list|,
 name|int
 name|delayclose
+parameter_list|,
+name|struct
+name|dt_env
+modifier|*
+name|dtenv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -838,7 +886,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Send UDP query, create pending answer.  * Changes the ID for the query to be random and unique for that destination.  * @param outnet: provides the event handling  * @param packet: wireformat query to send to destination.  * @param addr: address to send to.  * @param addrlen: length of addr.  * @param timeout: in milliseconds from now.  * @param callback: function to call on error, timeout or reply.  * @param callback_arg: user argument for callback function.  * @return: NULL on error for malloc or socket. Else the pending query object.  */
+comment|/**  * Send UDP query, create pending answer.  * Changes the ID for the query to be random and unique for that destination.  * @param sq: serviced query.  * @param packet: wireformat query to send to destination.  * @param timeout: in milliseconds from now.  * @param callback: function to call on error, timeout or reply.  * @param callback_arg: user argument for callback function.  * @return: NULL on error for malloc or socket. Else the pending query object.  */
 end_comment
 
 begin_function_decl
@@ -848,22 +896,14 @@ modifier|*
 name|pending_udp_query
 parameter_list|(
 name|struct
-name|outside_network
+name|serviced_query
 modifier|*
-name|outnet
+name|sq
 parameter_list|,
 name|struct
 name|sldns_buffer
 modifier|*
 name|packet
-parameter_list|,
-name|struct
-name|sockaddr_storage
-modifier|*
-name|addr
-parameter_list|,
-name|socklen_t
-name|addrlen
 parameter_list|,
 name|int
 name|timeout
@@ -880,7 +920,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Send TCP query. May wait for TCP buffer. Selects ID to be random, and   * checks id.  * @param outnet: provides the event handling.  * @param packet: wireformat query to send to destination. copied from.  * @param addr: address to send to.  * @param addrlen: length of addr.  * @param timeout: in seconds from now.  *    Timer starts running now. Timer may expire if all buffers are used,  *    without any query been sent to the server yet.  * @param callback: function to call on error, timeout or reply.  * @param callback_arg: user argument for callback function.  * @param ssl_upstream: if the tcp connection must use SSL.  * @return: false on error for malloc or socket. Else the pending TCP object.  */
+comment|/**  * Send TCP query. May wait for TCP buffer. Selects ID to be random, and   * checks id.  * @param sq: serviced query.  * @param packet: wireformat query to send to destination. copied from.  * @param timeout: in seconds from now.  *    Timer starts running now. Timer may expire if all buffers are used,  *    without any query been sent to the server yet.  * @param callback: function to call on error, timeout or reply.  * @param callback_arg: user argument for callback function.  * @return: false on error for malloc or socket. Else the pending TCP object.  */
 end_comment
 
 begin_function_decl
@@ -890,22 +930,14 @@ modifier|*
 name|pending_tcp_query
 parameter_list|(
 name|struct
-name|outside_network
+name|serviced_query
 modifier|*
-name|outnet
+name|sq
 parameter_list|,
 name|struct
 name|sldns_buffer
 modifier|*
 name|packet
-parameter_list|,
-name|struct
-name|sockaddr_storage
-modifier|*
-name|addr
-parameter_list|,
-name|socklen_t
-name|addrlen
 parameter_list|,
 name|int
 name|timeout
@@ -917,9 +949,6 @@ parameter_list|,
 name|void
 modifier|*
 name|callback_arg
-parameter_list|,
-name|int
-name|ssl_upstream
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -946,7 +975,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Perform a serviced query to the authoritative servers.  * Duplicate efforts are detected, and EDNS, TCP and UDP retry is performed.  * @param outnet: outside network, with rbtree of serviced queries.  * @param qname: what qname to query.  * @param qnamelen: length of qname in octets including 0 root label.  * @param qtype: rrset type to query (host format)  * @param qclass: query class. (host format)  * @param flags: flags u16 (host format), includes opcode, CD bit.  * @param dnssec: if set, DO bit is set in EDNS queries.  *	If the value includes BIT_CD, CD bit is set when in EDNS queries.  *	If the value includes BIT_DO, DO bit is set when in EDNS queries.  * @param want_dnssec: signatures are needed, without EDNS the answer is  * 	likely to be useless.  * @param tcp_upstream: use TCP for upstream queries.  * @param ssl_upstream: use SSL for upstream queries.  * @param callback: callback function.  * @param callback_arg: user argument to callback function.  * @param addr: to which server to send the query.  * @param addrlen: length of addr.  * @param zone: name of the zone of the delegation point. wireformat dname. 	This is the delegation point name for which the server is deemed 	authoritative.  * @param zonelen: length of zone.  * @param buff: scratch buffer to create query contents in. Empty on exit.  * @return 0 on error, or pointer to serviced query that is used to answer  *	this serviced query may be shared with other callbacks as well.  */
+comment|/**  * Perform a serviced query to the authoritative servers.  * Duplicate efforts are detected, and EDNS, TCP and UDP retry is performed.  * @param outnet: outside network, with rbtree of serviced queries.  * @param qname: what qname to query.  * @param qnamelen: length of qname in octets including 0 root label.  * @param qtype: rrset type to query (host format)  * @param qclass: query class. (host format)  * @param flags: flags u16 (host format), includes opcode, CD bit.  * @param dnssec: if set, DO bit is set in EDNS queries.  *	If the value includes BIT_CD, CD bit is set when in EDNS queries.  *	If the value includes BIT_DO, DO bit is set when in EDNS queries.  * @param want_dnssec: signatures are needed, without EDNS the answer is  * 	likely to be useless.  * @param nocaps: ignore use_caps_for_id and use unperturbed qname.  * @param tcp_upstream: use TCP for upstream queries.  * @param ssl_upstream: use SSL for upstream queries.  * @param callback: callback function.  * @param callback_arg: user argument to callback function.  * @param addr: to which server to send the query.  * @param addrlen: length of addr.  * @param zone: name of the zone of the delegation point. wireformat dname. 	This is the delegation point name for which the server is deemed 	authoritative.  * @param zonelen: length of zone.  * @param buff: scratch buffer to create query contents in. Empty on exit.  * @return 0 on error, or pointer to serviced query that is used to answer  *	this serviced query may be shared with other callbacks as well.  */
 end_comment
 
 begin_function_decl
@@ -981,6 +1010,9 @@ name|dnssec
 parameter_list|,
 name|int
 name|want_dnssec
+parameter_list|,
+name|int
+name|nocaps
 parameter_list|,
 name|int
 name|tcp_upstream

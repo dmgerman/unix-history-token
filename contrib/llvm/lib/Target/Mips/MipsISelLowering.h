@@ -66,19 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"Mips.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MipsSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MCTargetDesc/MipsBaseInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"Mips.h"
 end_include
 
 begin_include
@@ -359,6 +353,10 @@ comment|// Pack even elements
 name|PCKOD
 block|,
 comment|// Pack odd elements
+comment|// Vector Lane Copy
+name|INSVE
+block|,
+comment|// Copy element from one vector to another
 comment|// Combined (XOR (OR $a, $b), -1)
 name|VNOR
 block|,
@@ -397,11 +395,17 @@ name|class
 name|MipsFunctionInfo
 decl_stmt|;
 name|class
+name|MipsSubtarget
+decl_stmt|;
+name|class
 name|MipsTargetLowering
 range|:
 name|public
 name|TargetLowering
 block|{
+name|bool
+name|isMicroMips
+block|;
 name|public
 operator|:
 name|explicit
@@ -410,6 +414,11 @@ argument_list|(
 name|MipsTargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|MipsSubtarget
+operator|&
+name|STI
 argument_list|)
 block|;
 specifier|static
@@ -421,15 +430,33 @@ argument_list|(
 name|MipsTargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|MipsSubtarget
+operator|&
+name|STI
 argument_list|)
 block|;
-name|virtual
+comment|/// createFastISel - This method returns a target specific FastISel object,
+comment|/// or null if the target does not support "fast" ISel.
+name|FastISel
+operator|*
+name|createFastISel
+argument_list|(
+argument|FunctionLoweringInfo&funcInfo
+argument_list|,
+argument|const TargetLibraryInfo *libInfo
+argument_list|)
+specifier|const
+name|override
+block|;
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
 argument|EVT LHSTy
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|MVT
@@ -437,7 +464,6 @@ operator|::
 name|i32
 return|;
 block|}
-name|virtual
 name|void
 name|LowerOperationWrapper
 argument_list|(
@@ -448,9 +474,9 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// LowerOperation - Provide custom lowering hooks for some operations.
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -459,11 +485,11 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// ReplaceNodeResults - Replace the results of node with an illegal result
 comment|/// type with new values built out of custom code.
 comment|///
-name|virtual
 name|void
 name|ReplaceNodeResults
 argument_list|(
@@ -474,10 +500,10 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getTargetNodeName - This method returns the name of a target specific
 comment|//  DAG node.
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -486,6 +512,7 @@ argument_list|(
 argument|unsigned Opcode
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getSetCCResultType - get the ISD::SETCC result ValueType
 name|EVT
@@ -496,8 +523,8 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|PerformDAGCombine
 argument_list|(
@@ -506,8 +533,8 @@ argument_list|,
 argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -517,6 +544,7 @@ argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
+name|override
 block|;      struct
 name|LTStr
 block|{
@@ -578,7 +606,7 @@ argument|EVT Ty
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|bool HasMips64
+argument|bool IsN32OrN64
 argument_list|)
 specifier|const
 block|{
@@ -591,7 +619,7 @@ block|;
 name|unsigned
 name|GOTFlag
 operator|=
-name|HasMips64
+name|IsN32OrN64
 condition|?
 name|MipsII
 operator|::
@@ -670,7 +698,7 @@ block|;
 name|unsigned
 name|LoFlag
 operator|=
-name|HasMips64
+name|IsN32OrN64
 condition|?
 name|MipsII
 operator|::
@@ -1252,7 +1280,7 @@ specifier|const
 block|;
 comment|/// Return pointer to array of integer argument registers.
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|intArgRegs
 argument_list|()
@@ -1341,7 +1369,7 @@ argument_list|()
 specifier|const
 block|;
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|shadowRegs
 argument_list|()
@@ -1441,15 +1469,8 @@ block|;
 comment|// Subtarget Info
 specifier|const
 name|MipsSubtarget
-operator|*
+operator|&
 name|Subtarget
-block|;
-name|bool
-name|HasMips64
-block|,
-name|IsN64
-block|,
-name|IsO32
 block|;
 name|private
 operator|:
@@ -1842,7 +1863,6 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|SDValue
 name|LowerFormalArguments
 argument_list|(
@@ -1861,6 +1881,7 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
 name|SDValue
 name|passArgOnStack
@@ -1881,7 +1902,6 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
@@ -1890,8 +1910,8 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|CanLowerReturn
 argument_list|(
@@ -1906,8 +1926,8 @@ argument_list|,
 argument|LLVMContext&Context
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -1926,6 +1946,7 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Inline asm support
 name|ConstraintType
@@ -1934,6 +1955,7 @@ argument_list|(
 argument|const std::string&Constraint
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// Examine constraint string and operand type and determine a weight value.
 comment|/// The operand object must already have been set up with the operand type.
@@ -1945,6 +1967,7 @@ argument_list|,
 argument|const char *constraint
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// This function parses registers that appear in inline-asm constraints.
 comment|/// It returns pair (0, 0) on failure.
@@ -1983,12 +2006,12 @@ argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// LowerAsmOperandForConstraint - Lower the specified operand into the Ops
 comment|/// vector.  If it is invalid, don't add anything to Ops. If hasMemory is
 comment|/// true it means one of the asm constraint of the inline asm instruction
 comment|/// being processed is 'm'.
-name|virtual
 name|void
 name|LowerAsmOperandForConstraint
 argument_list|(
@@ -2001,8 +2024,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isLegalAddressingMode
 argument_list|(
@@ -2011,16 +2034,16 @@ argument_list|,
 argument|Type *Ty
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isOffsetFoldingLegal
 argument_list|(
 argument|const GlobalAddressSDNode *GA
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|EVT
 name|getOptimalMemOpType
 argument_list|(
@@ -2039,11 +2062,11 @@ argument_list|,
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isFPImmLegal - Returns true if the target can instruction select the
 comment|/// specified FP immediate natively. If false, the legalizer will
 comment|/// materialize the FP immediate as a load from a constant pool.
-name|virtual
 name|bool
 name|isFPImmLegal
 argument_list|(
@@ -2052,11 +2075,29 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getJumpTableEncoding
 argument_list|()
+specifier|const
+name|override
+block|;
+comment|/// Emit a sign-extension using sll/sra, seb, or seh appropriately.
+name|MachineBasicBlock
+operator|*
+name|emitSignExtendToI32InReg
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|unsigned DstReg
+argument_list|,
+argument|unsigned SrcRec
+argument_list|)
 specifier|const
 block|;
 name|MachineBasicBlock
@@ -2114,6 +2155,16 @@ argument_list|,
 argument|unsigned Size
 argument_list|)
 specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|emitSEL_D
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 comment|/// Create MipsTargetLowering objects.
@@ -2125,6 +2176,11 @@ parameter_list|(
 name|MipsTargetMachine
 modifier|&
 name|TM
+parameter_list|,
+specifier|const
+name|MipsSubtarget
+modifier|&
+name|STI
 parameter_list|)
 function_decl|;
 specifier|const
@@ -2135,8 +2191,31 @@ parameter_list|(
 name|MipsTargetMachine
 modifier|&
 name|TM
+parameter_list|,
+specifier|const
+name|MipsSubtarget
+modifier|&
+name|STI
 parameter_list|)
 function_decl|;
+name|namespace
+name|Mips
+block|{
+name|FastISel
+modifier|*
+name|createFastISel
+parameter_list|(
+name|FunctionLoweringInfo
+modifier|&
+name|funcInfo
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|libInfo
+parameter_list|)
+function_decl|;
+block|}
 block|}
 end_decl_stmt
 

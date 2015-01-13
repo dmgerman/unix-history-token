@@ -233,6 +233,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_SET_ATOMIC_ACQ
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|BIT_SET_ATOMIC_ACQ(CPU_SETSIZE, n, p)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_AND_ATOMIC
 parameter_list|(
 name|n
@@ -370,6 +382,17 @@ end_define
 
 begin_comment
 comment|/* Specifies a jail id. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_WHICH_DOMAIN
+value|6
+end_define
+
+begin_comment
+comment|/* Specifies a NUMA domain id. */
 end_comment
 
 begin_comment

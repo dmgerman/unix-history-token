@@ -9780,12 +9780,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u] refs=%ju %s\n"
+literal|"[%u] refs=%lu %s\n"
 argument_list|,
 name|v
 operator|->
 name|spare1
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|v
 operator|->
 name|refcnt

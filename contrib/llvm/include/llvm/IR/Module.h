@@ -66,7 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Comdat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -102,7 +114,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CodeGen.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -117,6 +141,9 @@ name|GVMaterializer
 decl_stmt|;
 name|class
 name|LLVMContext
+decl_stmt|;
+name|class
+name|RandomNumberGenerator
 decl_stmt|;
 name|class
 name|StructType
@@ -549,6 +576,14 @@ name|NamedMDNode
 operator|>
 name|NamedMDListType
 expr_stmt|;
+comment|/// The type of the comdat "symbol" table.
+typedef|typedef
+name|StringMap
+operator|<
+name|Comdat
+operator|>
+name|ComdatSymTabType
+expr_stmt|;
 comment|/// The Global Variable iterator.
 typedef|typedef
 name|GlobalListType
@@ -605,28 +640,6 @@ operator|::
 name|const_iterator
 name|const_named_metadata_iterator
 expr_stmt|;
-comment|/// An enumeration for describing the endianess of the target machine.
-enum|enum
-name|Endianness
-block|{
-name|AnyEndianness
-block|,
-name|LittleEndian
-block|,
-name|BigEndian
-block|}
-enum|;
-comment|/// An enumeration for describing the size of a pointer on the target machine.
-enum|enum
-name|PointerSize
-block|{
-name|AnyPointerSize
-block|,
-name|Pointer32
-block|,
-name|Pointer64
-block|}
-enum|;
 comment|/// This enumeration defines the supported behaviors of module flags.
 enum|enum
 name|ModFlagBehavior
@@ -752,7 +765,13 @@ modifier|*
 name|ValSymTab
 decl_stmt|;
 comment|///< Symbol table for values
-name|OwningPtr
+name|ComdatSymTabType
+name|ComdatSymTab
+decl_stmt|;
+comment|///< Symbol table for COMDATs
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|GVMaterializer
 operator|>
@@ -771,17 +790,31 @@ name|string
 name|TargetTriple
 expr_stmt|;
 comment|///< Platform target triple Module compiled on
-name|std
-operator|::
-name|string
-name|DataLayout
-expr_stmt|;
-comment|///< Target data description
 name|void
 modifier|*
 name|NamedMDSymTab
 decl_stmt|;
 comment|///< NamedMDNode names.
+comment|// Allow lazy initialization in const method.
+name|mutable
+name|RandomNumberGenerator
+modifier|*
+name|RNG
+decl_stmt|;
+comment|///< The random number generator for this module.
+comment|// We need to keep the string because the C API expects us to own the string
+comment|// representation.
+comment|// Since we have it, we also use an empty string to represent a module without
+comment|// a DataLayout. If it has a DataLayout, these variables are in sync and the
+comment|// string is just a cache of getDataLayout()->getStringRepresentation().
+name|std
+operator|::
+name|string
+name|DataLayoutStr
+expr_stmt|;
+name|DataLayout
+name|DL
+decl_stmt|;
 name|friend
 name|class
 name|Constant
@@ -827,22 +860,29 @@ return|return
 name|ModuleID
 return|;
 block|}
-comment|/// Get the data layout string for the module's target platform.  This encodes
-comment|/// the type sizes and alignments expected by this module.
-comment|/// @returns the data layout as a string
+comment|/// Get the data layout string for the module's target platform. This is
+comment|/// equivalent to getDataLayout()->getStringRepresentation().
 specifier|const
 name|std
 operator|::
 name|string
 operator|&
-name|getDataLayout
+name|getDataLayoutStr
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DataLayout
+name|DataLayoutStr
 return|;
 block|}
+comment|/// Get the data layout for the module's target platform.
+specifier|const
+name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Get the target triple which is a string describing the target host.
 comment|/// @returns a string containing the target triple.
 specifier|const
@@ -858,20 +898,6 @@ return|return
 name|TargetTriple
 return|;
 block|}
-comment|/// Get the target endian information.
-comment|/// @returns Endianess - an enumeration for the endianess of the target
-name|Endianness
-name|getEndianness
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// Get the target pointer size.
-comment|/// @returns PointerSize - an enumeration for the size of the target's pointer
-name|PointerSize
-name|getPointerSize
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// Get the global data context.
 comment|/// @returns LLVMContext - a container for LLVM's global information
 name|LLVMContext
@@ -899,6 +925,15 @@ return|return
 name|GlobalScopeAsm
 return|;
 block|}
+comment|/// Get the RandomNumberGenerator for this module. The RNG can be
+comment|/// seeded via -rng-seed=<uint64> and is salted with the ModuleID.
+comment|/// The returned RNG should not be shared across threads.
+name|RandomNumberGenerator
+operator|&
+name|getRNG
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// @}
 comment|/// @name Module Level Mutators
 comment|/// @{
@@ -920,14 +955,18 @@ name|void
 name|setDataLayout
 parameter_list|(
 name|StringRef
-name|DL
+name|Desc
 parameter_list|)
-block|{
+function_decl|;
+name|void
+name|setDataLayout
+parameter_list|(
+specifier|const
 name|DataLayout
-operator|=
-name|DL
-expr_stmt|;
-block|}
+modifier|*
+name|Other
+parameter_list|)
+function_decl|;
 comment|/// Set the target triple.
 name|void
 name|setTargetTriple
@@ -1019,9 +1058,9 @@ block|}
 comment|/// @}
 comment|/// @name Generic Value Accessors
 comment|/// @{
-comment|/// getNamedValue - Return the global value in the module with
-comment|/// the specified name, of arbitrary type.  This method returns null
-comment|/// if a global with the specified name is not found.
+comment|/// Return the global value in the module with the specified name, of
+comment|/// arbitrary type. This method returns null if a global with the specified
+comment|/// name is not found.
 name|GlobalValue
 modifier|*
 name|getNamedValue
@@ -1031,8 +1070,8 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.
-comment|/// This ID is uniqued across modules in the current LLVMContext.
+comment|/// Return a unique non-zero ID for the specified metadata kind. This ID is
+comment|/// uniqued across modules in the current LLVMContext.
 name|unsigned
 name|getMDKindID
 argument_list|(
@@ -1041,8 +1080,8 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getMDKindNames - Populate client supplied SmallVector with the name for
-comment|/// custom metadata IDs registered in this LLVMContext.
+comment|/// Populate client supplied SmallVector with the name for custom metadata IDs
+comment|/// registered in this LLVMContext.
 name|void
 name|getMDKindNames
 argument_list|(
@@ -1055,24 +1094,8 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
-typedef|typedef
-name|DenseMap
-operator|<
-name|StructType
-operator|*
-operator|,
-name|unsigned
-operator|,
-name|DenseMapInfo
-operator|<
-name|StructType
-operator|*
-operator|>
-expr|>
-name|NumeredTypesMapTy
-expr_stmt|;
-comment|/// getTypeByName - Return the type with the specified name, or null if there
-comment|/// is none by that name.
+comment|/// Return the type with the specified name, or null if there is none by that
+comment|/// name.
 name|StructType
 modifier|*
 name|getTypeByName
@@ -1085,8 +1108,8 @@ decl_stmt|;
 comment|/// @}
 comment|/// @name Function Accessors
 comment|/// @{
-comment|/// getOrInsertFunction - Look up the specified function in the module symbol
-comment|/// table.  Four possibilities:
+comment|/// Look up the specified function in the module symbol table. Four
+comment|/// possibilities:
 comment|///   1. If it does not exist, add a prototype for the function and return it.
 comment|///   2. If it exists, and has a local linkage, the existing function is
 comment|///      renamed and a new one is inserted.
@@ -1121,13 +1144,12 @@ modifier|*
 name|T
 parameter_list|)
 function_decl|;
-comment|/// getOrInsertFunction - Look up the specified function in the module symbol
-comment|/// table.  If it does not exist, add a prototype for the function and return
-comment|/// it.  This function guarantees to return a constant of pointer to the
-comment|/// specified function type or a ConstantExpr BitCast of that type if the
-comment|/// named function has a different type.  This version of the method takes a
-comment|/// null terminated list of function arguments, which makes it easier for
-comment|/// clients to use.
+comment|/// Look up the specified function in the module symbol table. If it does not
+comment|/// exist, add a prototype for the function and return it. This function
+comment|/// guarantees to return a constant of pointer to the specified function type
+comment|/// or a ConstantExpr BitCast of that type if the named function has a
+comment|/// different type. This version of the method takes a null terminated list of
+comment|/// function arguments, which makes it easier for clients to use.
 name|Constant
 modifier|*
 name|getOrInsertFunction
@@ -1146,7 +1168,7 @@ operator|...
 argument_list|)
 name|END_WITH_NULL
 decl_stmt|;
-comment|/// getOrInsertFunction - Same as above, but without the attributes.
+comment|/// Same as above, but without the attributes.
 name|Constant
 modifier|*
 name|getOrInsertFunction
@@ -1162,8 +1184,8 @@ operator|...
 argument_list|)
 name|END_WITH_NULL
 decl_stmt|;
-comment|/// getFunction - Look up the specified function in the module symbol table.
-comment|/// If it does not exist, return null.
+comment|/// Look up the specified function in the module symbol table. If it does not
+comment|/// exist, return null.
 name|Function
 modifier|*
 name|getFunction
@@ -1176,10 +1198,10 @@ decl_stmt|;
 comment|/// @}
 comment|/// @name Global Variable Accessors
 comment|/// @{
-comment|/// getGlobalVariable - Look up the specified global variable in the module
-comment|/// symbol table.  If it does not exist, return null. If AllowInternal is set
-comment|/// to true, this function will return types that have InternalLinkage. By
-comment|/// default, these types are not returned.
+comment|/// Look up the specified global variable in the module symbol table. If it
+comment|/// does not exist, return null. If AllowInternal is set to true, this
+comment|/// function will return types that have InternalLinkage. By default, these
+comment|/// types are not returned.
 specifier|const
 name|GlobalVariable
 modifier|*
@@ -1226,9 +1248,9 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// getNamedGlobal - Return the global variable in the module with the
-comment|/// specified name, of arbitrary type.  This method returns null if a global
-comment|/// with the specified name is not found.
+comment|/// Return the global variable in the module with the specified name, of
+comment|/// arbitrary type. This method returns null if a global with the specified
+comment|/// name is not found.
 name|GlobalVariable
 modifier|*
 name|getNamedGlobal
@@ -1272,8 +1294,7 @@ name|Name
 argument_list|)
 return|;
 block|}
-comment|/// getOrInsertGlobal - Look up the specified global in the module symbol
-comment|/// table.
+comment|/// Look up the specified global in the module symbol table.
 comment|///   1. If it does not exist, add a declaration of the global and return it.
 comment|///   2. Else, the global exists but has the wrong type: return the function
 comment|///      with a constantexpr cast to the right type.
@@ -1294,9 +1315,9 @@ function_decl|;
 comment|/// @}
 comment|/// @name Global Alias Accessors
 comment|/// @{
-comment|/// getNamedAlias - Return the global alias in the module with the
-comment|/// specified name, of arbitrary type.  This method returns null if a global
-comment|/// with the specified name is not found.
+comment|/// Return the global alias in the module with the specified name, of
+comment|/// arbitrary type. This method returns null if a global with the specified
+comment|/// name is not found.
 name|GlobalAlias
 modifier|*
 name|getNamedAlias
@@ -1309,9 +1330,8 @@ decl_stmt|;
 comment|/// @}
 comment|/// @name Named Metadata Accessors
 comment|/// @{
-comment|/// getNamedMetadata - Return the first NamedMDNode in the module with the
-comment|/// specified name. This method returns null if a NamedMDNode with the
-comment|/// specified name is not found.
+comment|/// Return the first NamedMDNode in the module with the specified name. This
+comment|/// method returns null if a NamedMDNode with the specified name is not found.
 name|NamedMDNode
 modifier|*
 name|getNamedMetadata
@@ -1323,9 +1343,9 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getOrInsertNamedMetadata - Return the named MDNode in the module
-comment|/// with the specified name. This method returns a new NamedMDNode if a
-comment|/// NamedMDNode with the specified name is not found.
+comment|/// Return the named MDNode in the module with the specified name. This method
+comment|/// returns a new NamedMDNode if a NamedMDNode with the specified name is not
+comment|/// found.
 name|NamedMDNode
 modifier|*
 name|getOrInsertNamedMetadata
@@ -1334,8 +1354,7 @@ name|StringRef
 name|Name
 parameter_list|)
 function_decl|;
-comment|/// eraseNamedMetadata - Remove the given NamedMDNode from this module
-comment|/// and delete it.
+comment|/// Remove the given NamedMDNode from this module and delete it.
 name|void
 name|eraseNamedMetadata
 parameter_list|(
@@ -1345,9 +1364,22 @@ name|NMD
 parameter_list|)
 function_decl|;
 comment|/// @}
+comment|/// @name Comdat Accessors
+comment|/// @{
+comment|/// Return the Comdat in the module with the specified name. It is created
+comment|/// if it didn't already exist.
+name|Comdat
+modifier|*
+name|getOrInsertComdat
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
+comment|/// @}
 comment|/// @name Module Flags Accessors
 comment|/// @{
-comment|/// getModuleFlagsMetadata - Returns the module flags in the provided vector.
+comment|/// Returns the module flags in the provided vector.
 name|void
 name|getModuleFlagsMetadata
 argument_list|(
@@ -1371,26 +1403,24 @@ name|Key
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getModuleFlagsMetadata - Returns the NamedMDNode in the module that
-comment|/// represents module-level flags. This method returns null if there are no
-comment|/// module-level flags.
+comment|/// Returns the NamedMDNode in the module that represents module-level flags.
+comment|/// This method returns null if there are no module-level flags.
 name|NamedMDNode
 operator|*
 name|getModuleFlagsMetadata
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getOrInsertModuleFlagsMetadata - Returns the NamedMDNode in the module
-comment|/// that represents module-level flags. If module-level flags aren't found,
-comment|/// it creates the named metadata that contains them.
+comment|/// Returns the NamedMDNode in the module that represents module-level flags.
+comment|/// If module-level flags aren't found, it creates the named metadata that
+comment|/// contains them.
 name|NamedMDNode
 modifier|*
 name|getOrInsertModuleFlagsMetadata
 parameter_list|()
 function_decl|;
-comment|/// addModuleFlag - Add a module-level flag to the module-level flags
-comment|/// metadata. It will create the module-level flags named metadata if it
-comment|/// doesn't already exist.
+comment|/// Add a module-level flag to the module-level flags metadata. It will create
+comment|/// the module-level flags named metadata if it doesn't already exist.
 name|void
 name|addModuleFlag
 parameter_list|(
@@ -1429,13 +1459,13 @@ function_decl|;
 comment|/// @}
 comment|/// @name Materialization
 comment|/// @{
-comment|/// setMaterializer - Sets the GVMaterializer to GVM.  This module must not
-comment|/// yet have a Materializer.  To reset the materializer for a module that
-comment|/// already has one, call MaterializeAllPermanently first.  Destroying this
-comment|/// module will destroy its materializer without materializing any more
-comment|/// GlobalValues.  Without destroying the Module, there is no way to detach or
-comment|/// destroy a materializer without materializing all the GVs it controls, to
-comment|/// avoid leaving orphan unmaterialized GVs.
+comment|/// Sets the GVMaterializer to GVM. This module must not yet have a
+comment|/// Materializer. To reset the materializer for a module that already has one,
+comment|/// call MaterializeAllPermanently first. Destroying this module will destroy
+comment|/// its materializer without materializing any more GlobalValues. Without
+comment|/// destroying the Module, there is no way to detach or destroy a materializer
+comment|/// without materializing all the GVs it controls, to avoid leaving orphan
+comment|/// unmaterialized GVs.
 name|void
 name|setMaterializer
 parameter_list|(
@@ -1444,7 +1474,7 @@ modifier|*
 name|GVM
 parameter_list|)
 function_decl|;
-comment|/// getMaterializer - Retrieves the GVMaterializer, if any, for this Module.
+comment|/// Retrieves the GVMaterializer, if any, for this Module.
 name|GVMaterializer
 operator|*
 name|getMaterializer
@@ -1458,8 +1488,8 @@ name|get
 argument_list|()
 return|;
 block|}
-comment|/// isMaterializable - True if the definition of GV has yet to be materialized
-comment|/// from the GVMaterializer.
+comment|/// True if the definition of GV has yet to be materializedfrom the
+comment|/// GVMaterializer.
 name|bool
 name|isMaterializable
 argument_list|(
@@ -1470,8 +1500,8 @@ name|GV
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isDematerializable - Returns true if this GV was loaded from this Module's
-comment|/// GVMaterializer and the GVMaterializer knows how to dematerialize the GV.
+comment|/// Returns true if this GV was loaded from this Module's GVMaterializer and
+comment|/// the GVMaterializer knows how to dematerialize the GV.
 name|bool
 name|isDematerializable
 argument_list|(
@@ -1482,9 +1512,9 @@ name|GV
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Materialize - Make sure the GlobalValue is fully read.  If the module is
-comment|/// corrupt, this returns true and fills in the optional string with
-comment|/// information about the problem.  If successful, this returns false.
+comment|/// Make sure the GlobalValue is fully read. If the module is corrupt, this
+comment|/// returns true and fills in the optional string with information about the
+comment|/// problem. If successful, this returns false.
 name|bool
 name|Materialize
 argument_list|(
@@ -1498,12 +1528,12 @@ name|string
 operator|*
 name|ErrInfo
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// Dematerialize - If the GlobalValue is read in, and if the GVMaterializer
-comment|/// supports it, release the memory for the function, and set it up to be
-comment|/// materialized lazily.  If !isDematerializable(), this method is a noop.
+comment|/// If the GlobalValue is read in, and if the GVMaterializer supports it,
+comment|/// release the memory for the function, and set it up to be materialized
+comment|/// lazily. If !isDematerializable(), this method is a noop.
 name|void
 name|Dematerialize
 parameter_list|(
@@ -1512,39 +1542,24 @@ modifier|*
 name|GV
 parameter_list|)
 function_decl|;
-comment|/// MaterializeAll - Make sure all GlobalValues in this Module are fully read.
-comment|/// If the module is corrupt, this returns true and fills in the optional
-comment|/// string with information about the problem.  If successful, this returns
-comment|/// false.
-name|bool
-name|MaterializeAll
-argument_list|(
+comment|/// Make sure all GlobalValues in this Module are fully read.
 name|std
 operator|::
-name|string
-operator|*
-name|ErrInfo
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
-comment|/// MaterializeAllPermanently - Make sure all GlobalValues in this Module are
-comment|/// fully read and clear the Materializer.  If the module is corrupt, this
-comment|/// returns true, fills in the optional string with information about the
-comment|/// problem, and DOES NOT clear the old Materializer.  If successful, this
-comment|/// returns false.
-name|bool
-name|MaterializeAllPermanently
-argument_list|(
+name|error_code
+name|materializeAll
+argument_list|()
+expr_stmt|;
+comment|/// Make sure all GlobalValues in this Module are fully read and clear the
+comment|/// Materializer. If the module is corrupt, this DOES NOT clear the old
+comment|/// Materializer.
 name|std
 operator|::
-name|string
-operator|*
-name|ErrInfo
-operator|=
-literal|0
+name|error_code
+name|materializeAllPermanently
+argument_list|(
+argument|bool ReleaseBuffer = false
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// @}
 comment|/// @name Direct access to the globals list, functions list, and symbol table
 comment|/// @{
@@ -1740,6 +1755,28 @@ operator|*
 name|ValSymTab
 return|;
 block|}
+comment|/// Get the Module's symbol table for COMDATs (constant).
+specifier|const
+name|ComdatSymTabType
+operator|&
+name|getComdatSymbolTable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ComdatSymTab
+return|;
+block|}
+comment|/// Get the Module's symbol table for COMDATs.
+name|ComdatSymTabType
+modifier|&
+name|getComdatSymbolTable
+parameter_list|()
+block|{
+return|return
+name|ComdatSymTab
+return|;
+block|}
 comment|/// @}
 comment|/// @name Global Variable Iteration
 comment|/// @{
@@ -1799,6 +1836,49 @@ name|GlobalList
 operator|.
 name|empty
 argument_list|()
+return|;
+block|}
+name|iterator_range
+operator|<
+name|global_iterator
+operator|>
+name|globals
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|global_iterator
+operator|>
+operator|(
+name|global_begin
+argument_list|()
+operator|,
+name|global_end
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|const_global_iterator
+operator|>
+name|globals
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|const_global_iterator
+operator|>
+operator|(
+name|global_begin
+argument_list|()
+operator|,
+name|global_end
+argument_list|()
+operator|)
 return|;
 block|}
 comment|/// @}
@@ -1947,6 +2027,49 @@ name|empty
 argument_list|()
 return|;
 block|}
+name|iterator_range
+operator|<
+name|alias_iterator
+operator|>
+name|aliases
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|alias_iterator
+operator|>
+operator|(
+name|alias_begin
+argument_list|()
+operator|,
+name|alias_end
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|const_alias_iterator
+operator|>
+name|aliases
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|const_alias_iterator
+operator|>
+operator|(
+name|alias_begin
+argument_list|()
+operator|,
+name|alias_end
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// @}
 comment|/// @name Named Metadata Iteration
 comment|/// @{
@@ -2020,6 +2143,49 @@ name|empty
 argument_list|()
 return|;
 block|}
+name|iterator_range
+operator|<
+name|named_metadata_iterator
+operator|>
+name|named_metadata
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|named_metadata_iterator
+operator|>
+operator|(
+name|named_metadata_begin
+argument_list|()
+operator|,
+name|named_metadata_end
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|const_named_metadata_iterator
+operator|>
+name|named_metadata
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|const_named_metadata_iterator
+operator|>
+operator|(
+name|named_metadata_begin
+argument_list|()
+operator|,
+name|named_metadata_end
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// @}
 comment|/// @name Utility functions for printing and dumping Module objects
 comment|/// @{
@@ -2055,6 +2221,36 @@ name|dropAllReferences
 parameter_list|()
 function_decl|;
 comment|/// @}
+comment|/// @name Utility functions for querying Debug information.
+comment|/// @{
+comment|/// \brief Returns the Dwarf Version by checking module flags.
+name|unsigned
+name|getDwarfVersion
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// @}
+comment|/// @name Utility functions for querying and setting PIC level
+comment|/// @{
+comment|/// \brief Returns the PIC level (small or large model)
+name|PICLevel
+operator|::
+name|Level
+name|getPICLevel
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Set the PIC level (small or large model)
+name|void
+name|setPICLevel
+argument_list|(
+name|PICLevel
+operator|::
+name|Level
+name|PL
+argument_list|)
+decl_stmt|;
+comment|/// @}
 block|}
 empty_stmt|;
 comment|/// An raw_ostream inserter for modules.
@@ -2080,7 +2276,7 @@ name|print
 argument_list|(
 name|O
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 block|;
 return|return

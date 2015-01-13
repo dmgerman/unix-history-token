@@ -349,6 +349,9 @@ name|CK_BuiltinFnToFnPtr
 block|,
 comment|// Convert a zero value for OpenCL event_t initialization.
 name|CK_ZeroToOCLEvent
+block|,
+comment|// Convert a pointer to a different address space.
+name|CK_AddressSpaceConversion
 block|}
 enum|;
 specifier|static

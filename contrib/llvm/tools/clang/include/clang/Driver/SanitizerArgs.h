@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Option/Arg.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Option/ArgList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -173,6 +173,16 @@ operator||
 name|Memory
 operator||
 name|DataFlow
+block|,
+name|NeedsUnwindTables
+init|=
+name|Address
+operator||
+name|Thread
+operator||
+name|Memory
+operator||
+name|DataFlow
 block|}
 enum|;
 name|unsigned
@@ -183,7 +193,7 @@ operator|::
 name|string
 name|BlacklistFile
 expr_stmt|;
-name|bool
+name|int
 name|MsanTrackOrigins
 decl_stmt|;
 name|bool
@@ -191,6 +201,9 @@ name|AsanZeroBaseShadow
 decl_stmt|;
 name|bool
 name|UbsanTrapOnError
+decl_stmt|;
+name|bool
+name|AsanSharedRuntime
 decl_stmt|;
 name|public
 label|:
@@ -224,6 +237,15 @@ return|return
 name|Kind
 operator|&
 name|NeedsAsanRt
+return|;
+block|}
+name|bool
+name|needsSharedAsanRt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AsanSharedRuntime
 return|;
 block|}
 name|bool
@@ -337,6 +359,17 @@ operator|||
 name|AsanZeroBaseShadow
 return|;
 block|}
+name|bool
+name|needsUnwindTables
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|&
+name|NeedsUnwindTables
+return|;
+block|}
 name|void
 name|addArgs
 argument_list|(
@@ -446,7 +479,7 @@ argument_list|)
 decl_stmt|;
 comment|/// Produce an argument string from ArgList \p Args, which shows how it
 comment|/// provides a sanitizer kind in \p Mask. For example, the argument list
-comment|/// "-fsanitize=thread,vptr -faddress-sanitizer" with mask \c NeedsUbsanRt
+comment|/// "-fsanitize=thread,vptr -fsanitize=address" with mask \c NeedsUbsanRt
 comment|/// would produce "-fsanitize=vptr".
 specifier|static
 name|std

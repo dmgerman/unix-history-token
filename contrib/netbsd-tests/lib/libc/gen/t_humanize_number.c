@@ -49,14 +49,11 @@ directive|include
 file|<string.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -339,13 +336,9 @@ literal|"1 K"
 block|}
 block|,
 comment|/* 	 * Truncated output.  Rev. 1.7 produces "1.0 K". 	 */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
 block|{
 literal|6
 block|,

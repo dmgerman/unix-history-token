@@ -110,15 +110,11 @@ decl_stmt|;
 name|class
 name|Twine
 decl_stmt|;
-comment|/// MCAsmParserSemaCallback - Generic Sema callback for assembly parser.
 name|class
-name|MCAsmParserSemaCallback
+name|InlineAsmIdentifierInfo
 block|{
 name|public
 label|:
-typedef|typedef
-struct|struct
-block|{
 name|void
 modifier|*
 name|OpDecl
@@ -139,7 +135,7 @@ parameter_list|()
 block|{
 name|OpDecl
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|IsVarDecl
 operator|=
@@ -159,8 +155,13 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|InlineAsmIdentifierInfo
-typedef|;
+empty_stmt|;
+comment|/// MCAsmParserSemaCallback - Generic Sema callback for assembly parser.
+name|class
+name|MCAsmParserSemaCallback
+block|{
+name|public
+label|:
 name|virtual
 operator|~
 name|MCAsmParserSemaCallback
@@ -204,12 +205,6 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
-typedef|typedef
-name|MCAsmParserSemaCallback
-operator|::
-name|InlineAsmIdentifierInfo
-name|InlineAsmIdentifierInfo
-expr_stmt|;
 comment|/// MCAsmParser - Generic assembler parser interface, for use by target specific
 comment|/// assembly parsers.
 name|class
@@ -489,6 +484,30 @@ argument_list|,
 name|MCAsmParserSemaCallback
 operator|&
 name|SI
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+comment|/// Note - Emit a note at the location \p L, with the message \p Msg.
+name|virtual
+name|void
+name|Note
+argument_list|(
+name|SMLoc
+name|L
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Msg
+argument_list|,
+name|ArrayRef
+operator|<
+name|SMRange
+operator|>
+name|Ranges
+operator|=
+name|None
 argument_list|)
 init|=
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: mtree.c,v 1.48 2013/04/08 17:39:11 christos Exp $	*/
+comment|/*	$NetBSD: mtree.c,v 1.49 2014/04/24 17:22:41 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: mtree.c,v 1.48 2013/04/08 17:39:11 christos Exp $"
+literal|"$NetBSD: mtree.c,v 1.49 2014/04/24 17:22:41 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1188,7 +1188,9 @@ name|cflag
 condition|)
 block|{
 name|cwalk
-argument_list|()
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
@@ -1205,6 +1207,8 @@ condition|)
 block|{
 name|dump_nodes
 argument_list|(
+name|stdout
+argument_list|,
 literal|""
 argument_list|,
 name|spec

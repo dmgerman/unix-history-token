@@ -74,11 +74,16 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/* Signalling cipher suite value: from draft-ietf-tls-renegotiation-03.txt */
+comment|/* Signalling cipher suite value from RFC 5746  * (TLS_EMPTY_RENEGOTIATION_INFO_SCSV) */
 define|#
 directive|define
 name|SSL3_CK_SCSV
 value|0x030000FF
+comment|/* Signalling cipher suite value from draft-ietf-tls-downgrade-scsv-00  * (TLS_FALLBACK_SCSV) */
+define|#
+directive|define
+name|SSL3_CK_FALLBACK_SCSV
+value|0x03005600
 define|#
 directive|define
 name|SSL3_CK_RSA_NULL_MD5
@@ -823,6 +828,7 @@ define|#
 directive|define
 name|TLS1_FLAGS_KEEP_HANDSHAKE
 value|0x0020
+comment|/*  * Set when the handshake is ready to process peer's ChangeCipherSpec message.  * Cleared after the message has been processed.  */
 define|#
 directive|define
 name|SSL3_FLAGS_CCS_OK
@@ -977,7 +983,7 @@ modifier|*
 modifier|*
 name|handshake_dgst
 decl_stmt|;
-comment|/* this is set whenerver we see a change_cipher_spec message 	 * come in when we are not looking for one */
+comment|/* 	 * Set whenever an expected ChangeCipherSpec message is processed. 	 * Unset when the peer's Finished message is received. 	 * Unexpected ChangeCipherSpec messages trigger a fatal alert. 	 */
 name|int
 name|change_cipher_spec
 decl_stmt|;

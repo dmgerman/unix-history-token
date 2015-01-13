@@ -2052,14 +2052,14 @@ literal|0
 expr_stmt|;
 name|m
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"smbios.planar.maker"
 argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"smbios.planar.product"
 argument_list|)
@@ -4627,14 +4627,14 @@ decl_stmt|;
 comment|/* 	 * Search base board manufacturer and product name table 	 * to see this system has a known MSI/MSI-X issue. 	 */
 name|maker
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"smbios.planar.maker"
 argument_list|)
 expr_stmt|;
 name|product
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"smbios.planar.product"
 argument_list|)

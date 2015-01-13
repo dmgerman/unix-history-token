@@ -1200,6 +1200,12 @@ directive|ifndef
 name|OPENSSL_NO_AES
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AES_ASM
+end_ifndef
+
 begin_comment
 comment|/* Our own htonl()/ntohl() */
 end_comment
@@ -1259,6 +1265,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

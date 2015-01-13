@@ -152,12 +152,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_gif.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in_var.h>
 end_include
 
@@ -217,6 +211,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|in_gif_input
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -226,6 +238,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|protosw
 name|in_gif_protosw
@@ -279,7 +292,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|GIF_TTL
+value|30
+end_define
+
 begin_expr_stmt
+specifier|static
 name|VNET_DEFINE
 argument_list|(
 name|int
@@ -299,7 +320,7 @@ value|VNET(ip_gif_ttl)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -307,6 +328,8 @@ name|IPCTL_GIF_TTL
 argument_list|,
 name|gifttl
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -393,27 +416,6 @@ argument_list|,
 name|len
 argument_list|,
 name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|!=
-name|NULL
-operator|&&
-name|m
-operator|->
-name|m_len
-operator|<
-name|len
-condition|)
-name|m
-operator|=
-name|m_pullup
-argument_list|(
-name|m
-argument_list|,
-name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -593,6 +595,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|in_gif_input
 parameter_list|(
@@ -770,11 +773,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|struct
-name|in_ifaddr
-modifier|*
-name|ia4
-decl_stmt|;
 name|GIF_RLOCK_ASSERT
 argument_list|(
 name|sc
@@ -869,67 +867,6 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* reject packets with broadcast on source */
-comment|/* XXXRW: should use hash lists? */
-name|IN_IFADDR_RLOCK
-argument_list|()
-expr_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|ia4
-argument_list|,
-argument|&V_in_ifaddrhead
-argument_list|,
-argument|ia_link
-argument_list|)
-block|{
-if|if
-condition|(
-operator|(
-name|ia4
-operator|->
-name|ia_ifa
-operator|.
-name|ifa_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_BROADCAST
-operator|)
-operator|==
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
-name|ip
-operator|->
-name|ip_src
-operator|.
-name|s_addr
-operator|==
-name|ia4
-operator|->
-name|ia_broadaddr
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-condition|)
-block|{
-name|IN_IFADDR_RUNLOCK
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-block|}
-name|IN_IFADDR_RUNLOCK
-argument_list|()
-expr_stmt|;
 comment|/* ingress filters on outer source */
 if|if
 condition|(

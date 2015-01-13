@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: create.c,v 1.72 2013/10/17 17:22:59 christos Exp $	*/
+comment|/*	$NetBSD: create.c,v 1.73 2014/04/24 17:22:41 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: create.c,v 1.72 2013/10/17 17:22:59 christos Exp $"
+literal|"$NetBSD: create.c,v 1.73 2014/04/24 17:22:41 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -345,6 +345,9 @@ specifier|static
 name|void
 name|output
 parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
 name|int
 parameter_list|,
 name|int
@@ -356,19 +359,15 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|__attribute__
+function_decl|__printflike
 parameter_list|(
-function_decl|(__format__
-parameter_list|(
-name|__printf__
-parameter_list|,
-function_decl|3
-operator|,
 function_decl|4
+operator|,
+function_decl|5
 end_function_decl
 
 begin_empty_stmt
-unit|)))
+unit|)
 empty_stmt|;
 end_empty_stmt
 
@@ -377,6 +376,9 @@ specifier|static
 name|int
 name|statd
 parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
 name|FTS
 modifier|*
 parameter_list|,
@@ -403,6 +405,9 @@ specifier|static
 name|void
 name|statf
 parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
 name|int
 parameter_list|,
 name|FTSENT
@@ -415,7 +420,9 @@ begin_function
 name|void
 name|cwalk
 parameter_list|(
-name|void
+name|FILE
+modifier|*
+name|fp
 parameter_list|)
 block|{
 name|FTS
@@ -545,8 +552,10 @@ condition|(
 operator|!
 name|nflag
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"#\t   user: %s\n#\tmachine: %s\n#\t   tree: %s\n"
 literal|"#\t   date: %s"
 argument_list|,
@@ -678,8 +687,10 @@ condition|(
 operator|!
 name|bflag
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -688,8 +699,10 @@ condition|(
 operator|!
 name|nflag
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"# %s\n"
 argument_list|,
 name|p
@@ -699,6 +712,8 @@ argument_list|)
 expr_stmt|;
 name|statd
 argument_list|(
+name|fp
+argument_list|,
 name|t
 argument_list|,
 name|p
@@ -718,6 +733,8 @@ argument_list|)
 expr_stmt|;
 name|statf
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 name|p
@@ -740,8 +757,10 @@ condition|(
 operator|!
 name|nflag
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%*s# %s\n"
 argument_list|,
 name|indent
@@ -766,8 +785,10 @@ operator|==
 name|F_FREEBSD9
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%*s..\n"
 argument_list|,
 name|indent
@@ -780,8 +801,10 @@ condition|(
 operator|!
 name|bflag
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -821,6 +844,8 @@ name|dflag
 condition|)
 name|statf
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 name|p
@@ -859,6 +884,10 @@ specifier|static
 name|void
 name|statf
 parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|,
 name|int
 name|indent
 parameter_list|,
@@ -917,8 +946,10 @@ endif|#
 directive|endif
 name|offset
 operator|=
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%*s%s%s"
 argument_list|,
 name|indent
@@ -963,8 +994,10 @@ expr_stmt|;
 else|else
 name|offset
 operator|+=
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%*s"
 argument_list|,
 operator|(
@@ -1001,6 +1034,8 @@ operator|)
 condition|)
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1062,6 +1097,8 @@ name|NULL
 condition|)
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1090,6 +1127,8 @@ operator|)
 condition|)
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1149,6 +1188,8 @@ name|NULL
 condition|)
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1177,6 +1218,8 @@ operator|)
 condition|)
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1212,6 +1255,8 @@ name|mode
 condition|)
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1256,6 +1301,8 @@ operator|)
 condition|)
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1289,6 +1336,8 @@ literal|1
 condition|)
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1326,6 +1375,8 @@ operator|)
 condition|)
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1363,6 +1414,8 @@ name|HAVE_NBTOOL_CONFIG_H
 argument_list|)
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1394,6 +1447,8 @@ else|#
 directive|else
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1485,6 +1540,8 @@ argument_list|)
 expr_stmt|;
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1551,6 +1608,8 @@ argument_list|)
 expr_stmt|;
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1624,6 +1683,8 @@ argument_list|)
 expr_stmt|;
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1697,6 +1758,8 @@ argument_list|)
 expr_stmt|;
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1770,6 +1833,8 @@ argument_list|)
 expr_stmt|;
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1840,6 +1905,8 @@ argument_list|)
 expr_stmt|;
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1909,6 +1976,8 @@ argument_list|)
 expr_stmt|;
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -1952,6 +2021,8 @@ operator|)
 condition|)
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -2005,6 +2076,8 @@ argument_list|)
 decl_stmt|;
 name|output
 argument_list|(
+name|fp
+argument_list|,
 name|indent
 argument_list|,
 operator|&
@@ -2112,6 +2185,10 @@ specifier|static
 name|int
 name|statd
 parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|,
 name|FTS
 modifier|*
 name|t
@@ -2606,14 +2683,18 @@ name|F_NETBSD6
 operator|&&
 name|dflag
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"/set type=dir"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"/set type=file"
 argument_list|)
 expr_stmt|;
@@ -2647,8 +2728,10 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" uname=%s"
 argument_list|,
 name|name
@@ -2670,8 +2753,10 @@ operator|==
 name|NULL
 operator|)
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" uid=%lu"
 argument_list|,
 operator|(
@@ -2711,8 +2796,10 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" gname=%s"
 argument_list|,
 name|name
@@ -2734,8 +2821,10 @@ operator|==
 name|NULL
 operator|)
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" gid=%lu"
 argument_list|,
 operator|(
@@ -2751,8 +2840,10 @@ name|keys
 operator|&
 name|F_MODE
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" mode=%#lo"
 argument_list|,
 operator|(
@@ -2767,8 +2858,10 @@ name|keys
 operator|&
 name|F_NLINK
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" nlink=1"
 argument_list|)
 expr_stmt|;
@@ -2790,8 +2883,10 @@ argument_list|,
 literal|"none"
 argument_list|)
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" flags=%s"
 argument_list|,
 name|str
@@ -2803,8 +2898,10 @@ name|str
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -2945,6 +3042,10 @@ begin_function
 name|void
 name|output
 parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|,
 name|int
 name|indent
 parameter_list|,
@@ -3010,8 +3111,10 @@ operator|-
 literal|3
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" \\\n%*s"
 argument_list|,
 name|INDENTNAMELEN
@@ -3032,8 +3135,10 @@ block|}
 operator|*
 name|offset
 operator|+=
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" %s"
 argument_list|,
 name|buf

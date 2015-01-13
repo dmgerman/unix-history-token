@@ -49,6 +49,12 @@ directive|include
 file|"ldns/sbuffer.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"dnstap/dnstap.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4374,14 +4380,19 @@ return|;
 block|}
 endif|#
 directive|endif
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"accept failed: %s"
+literal|"accept failed"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+name|addr
+argument_list|,
+operator|*
+name|addrlen
 argument_list|)
 expr_stmt|;
 else|#
@@ -4428,24 +4439,15 @@ operator|-
 literal|1
 return|;
 block|}
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"accept failed: %s"
+literal|"accept failed"
 argument_list|,
 name|wsa_strerror
 argument_list|(
 name|WSAGetLastError
 argument_list|()
 argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"remote address is"
 argument_list|,
 name|addr
 argument_list|,
@@ -4453,6 +4455,8 @@ operator|*
 name|addrlen
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|-
 literal|1
@@ -6874,14 +6878,27 @@ return|;
 comment|/* silence reset by peer */
 endif|#
 directive|endif
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"read (in tcp s): %s"
+literal|"read (in tcp s)"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+operator|&
+name|c
+operator|->
+name|repinfo
+operator|.
+name|addr
+argument_list|,
+name|c
+operator|->
+name|repinfo
+operator|.
+name|addrlen
 argument_list|)
 expr_stmt|;
 else|#
@@ -6931,24 +6948,15 @@ return|return
 literal|1
 return|;
 block|}
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"read (in tcp s): %s"
+literal|"read (in tcp s)"
 argument_list|,
 name|wsa_strerror
 argument_list|(
 name|WSAGetLastError
 argument_list|()
 argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"remote address is"
 argument_list|,
 operator|&
 name|c
@@ -6964,6 +6972,8 @@ operator|.
 name|addrlen
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -7153,14 +7163,27 @@ condition|)
 return|return
 literal|1
 return|;
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"read (in tcp r): %s"
+literal|"read (in tcp r)"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+operator|&
+name|c
+operator|->
+name|repinfo
+operator|.
+name|addr
+argument_list|,
+name|c
+operator|->
+name|repinfo
+operator|.
+name|addrlen
 argument_list|)
 expr_stmt|;
 else|#
@@ -7210,24 +7233,15 @@ return|return
 literal|1
 return|;
 block|}
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"read (in tcp r): %s"
+literal|"read (in tcp r)"
 argument_list|,
 name|wsa_strerror
 argument_list|(
 name|WSAGetLastError
 argument_list|()
 argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"remote address is"
 argument_list|,
 operator|&
 name|c
@@ -7243,6 +7257,8 @@ operator|.
 name|addrlen
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -7459,14 +7475,27 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"tcp connect: %s"
+literal|"tcp connect"
 argument_list|,
 name|strerror
 argument_list|(
 name|error
 argument_list|)
+argument_list|,
+operator|&
+name|c
+operator|->
+name|repinfo
+operator|.
+name|addr
+argument_list|,
+name|c
+operator|->
+name|repinfo
+operator|.
+name|addrlen
 argument_list|)
 expr_stmt|;
 else|#
@@ -7528,24 +7557,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"tcp connect: %s"
+literal|"tcp connect"
 argument_list|,
 name|wsa_strerror
 argument_list|(
 name|error
 argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* USE_WINSOCK */
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"remote address is"
 argument_list|,
 operator|&
 name|c
@@ -7561,6 +7580,9 @@ operator|.
 name|addrlen
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* USE_WINSOCK */
 return|return
 literal|0
 return|;
@@ -7796,16 +7818,61 @@ condition|)
 return|return
 literal|1
 return|;
-name|log_err
+ifdef|#
+directive|ifdef
+name|HAVE_WRITEV
+name|log_err_addr
 argument_list|(
-literal|"tcp writev: %s"
+literal|"tcp writev"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+operator|&
+name|c
+operator|->
+name|repinfo
+operator|.
+name|addr
+argument_list|,
+name|c
+operator|->
+name|repinfo
+operator|.
+name|addrlen
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* HAVE_WRITEV */
+name|log_err_addr
+argument_list|(
+literal|"tcp send s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+operator|&
+name|c
+operator|->
+name|repinfo
+operator|.
+name|addr
+argument_list|,
+name|c
+operator|->
+name|repinfo
+operator|.
+name|addrlen
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_WRITEV */
 else|#
 directive|else
 if|if
@@ -7852,24 +7919,15 @@ return|return
 literal|1
 return|;
 block|}
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"tcp send s: %s"
+literal|"tcp send s"
 argument_list|,
 name|wsa_strerror
 argument_list|(
 name|WSAGetLastError
 argument_list|()
 argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"remote address is"
 argument_list|,
 operator|&
 name|c
@@ -7885,6 +7943,8 @@ operator|.
 name|addrlen
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -8010,14 +8070,27 @@ condition|)
 return|return
 literal|1
 return|;
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"tcp send r: %s"
+literal|"tcp send r"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+operator|&
+name|c
+operator|->
+name|repinfo
+operator|.
+name|addr
+argument_list|,
+name|c
+operator|->
+name|repinfo
+operator|.
+name|addrlen
 argument_list|)
 expr_stmt|;
 else|#
@@ -8056,24 +8129,15 @@ return|return
 literal|1
 return|;
 block|}
-name|log_err
+name|log_err_addr
 argument_list|(
-literal|"tcp send r: %s"
+literal|"tcp send r"
 argument_list|,
 name|wsa_strerror
 argument_list|(
 name|WSAGetLastError
 argument_list|()
 argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|log_addr
-argument_list|(
-literal|0
-argument_list|,
-literal|"remote address is"
 argument_list|,
 operator|&
 name|c
@@ -8089,6 +8153,8 @@ operator|.
 name|addrlen
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -11206,9 +11272,113 @@ operator|->
 name|addrlen
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_DNSTAP
+if|if
+condition|(
+name|repinfo
+operator|->
+name|c
+operator|->
+name|dtenv
+operator|!=
+name|NULL
+operator|&&
+name|repinfo
+operator|->
+name|c
+operator|->
+name|dtenv
+operator|->
+name|log_client_response_messages
+condition|)
+name|dt_msg_send_client_response
+argument_list|(
+name|repinfo
+operator|->
+name|c
+operator|->
+name|dtenv
+argument_list|,
+operator|&
+name|repinfo
+operator|->
+name|addr
+argument_list|,
+name|repinfo
+operator|->
+name|c
+operator|->
+name|type
+argument_list|,
+name|repinfo
+operator|->
+name|c
+operator|->
+name|buffer
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|USE_DNSTAP
+if|if
+condition|(
+name|repinfo
+operator|->
+name|c
+operator|->
+name|tcp_parent
+operator|->
+name|dtenv
+operator|!=
+name|NULL
+operator|&&
+name|repinfo
+operator|->
+name|c
+operator|->
+name|tcp_parent
+operator|->
+name|dtenv
+operator|->
+name|log_client_response_messages
+condition|)
+name|dt_msg_send_client_response
+argument_list|(
+name|repinfo
+operator|->
+name|c
+operator|->
+name|tcp_parent
+operator|->
+name|dtenv
+argument_list|,
+operator|&
+name|repinfo
+operator|->
+name|addr
+argument_list|,
+name|repinfo
+operator|->
+name|c
+operator|->
+name|type
+argument_list|,
+name|repinfo
+operator|->
+name|c
+operator|->
+name|buffer
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|comm_point_start_listening
 argument_list|(
 name|repinfo

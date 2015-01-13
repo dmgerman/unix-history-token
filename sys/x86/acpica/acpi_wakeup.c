@@ -921,7 +921,6 @@ name|DEV_NPX
 argument_list|)
 name|npxsuspend
 argument_list|(
-operator|&
 name|susppcbs
 index|[
 literal|0
@@ -1136,7 +1135,6 @@ name|DEV_NPX
 argument_list|)
 name|npxresume
 argument_list|(
-operator|&
 name|susppcbs
 index|[
 literal|0
@@ -1488,9 +1486,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__amd64__
 name|susppcbs
 index|[
 name|i
@@ -1503,8 +1498,6 @@ argument_list|(
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 return|return
 operator|(

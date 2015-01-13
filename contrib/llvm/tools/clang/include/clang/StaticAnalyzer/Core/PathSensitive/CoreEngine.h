@@ -102,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -205,7 +205,9 @@ modifier|&
 name|SubEng
 decl_stmt|;
 comment|/// G - The simulation graph.  Each node is a (location,state) pair.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|ExplodedGraph
 operator|>
@@ -214,7 +216,9 @@ expr_stmt|;
 comment|/// WList - A set of queued nodes that need to be processed by the
 comment|///  worklist algorithm.  It is up to the implementation of WList to decide
 comment|///  the order that nodes are processed.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|WorkList
 operator|>
@@ -453,7 +457,7 @@ block|{
 return|return
 name|G
 operator|.
-name|take
+name|release
 argument_list|()
 return|;
 block|}
@@ -1275,10 +1279,10 @@ range|:
 name|public
 name|NodeBuilder
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -1339,8 +1343,7 @@ argument|ProgramStateRef State
 argument_list|,
 argument|ExplodedNode *Pred
 argument_list|,
-argument|const ProgramPointTag *Tag =
-literal|0
+argument|const ProgramPointTag *Tag = nullptr
 argument_list|)
 block|{
 specifier|const
@@ -1382,8 +1385,7 @@ argument|ProgramStateRef State
 argument_list|,
 argument|ExplodedNode *Pred
 argument_list|,
-argument|const ProgramPointTag *Tag =
-literal|0
+argument|const ProgramPointTag *Tag = nullptr
 argument_list|)
 block|{
 specifier|const
@@ -1494,7 +1496,7 @@ name|NodeBuilder
 operator|*
 name|Enclosing
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|NodeBuilder
@@ -1542,7 +1544,7 @@ name|NodeBuilder
 operator|*
 name|Enclosing
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|NodeBuilder
@@ -1623,8 +1625,7 @@ argument|ExplodedNode *Pred
 argument_list|,
 argument|ProgramStateRef St
 argument_list|,
-argument|const ProgramPointTag *tag =
-literal|0
+argument|const ProgramPointTag *tag = nullptr
 argument_list|,
 argument|ProgramPoint::Kind K = ProgramPoint::PostStmtKind
 argument_list|)
@@ -1673,8 +1674,7 @@ argument|ExplodedNode *Pred
 argument_list|,
 argument|ProgramStateRef St
 argument_list|,
-argument|const ProgramPointTag *tag =
-literal|0
+argument|const ProgramPointTag *tag = nullptr
 argument_list|,
 argument|ProgramPoint::Kind K = ProgramPoint::PostStmtKind
 argument_list|)
@@ -1723,10 +1723,10 @@ operator|:
 name|public
 name|NodeBuilder
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 specifier|const
 name|CFGBlock

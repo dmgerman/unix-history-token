@@ -2154,8 +2154,6 @@ name|OID_AUTO
 argument_list|,
 literal|"enable_lro"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -3510,6 +3508,8 @@ goto|goto
 name|no_mbuf
 goto|;
 block|}
+if|if
+condition|(
 name|m_cljget
 argument_list|(
 name|m_new
@@ -3518,18 +3518,8 @@ name|M_NOWAIT
 argument_list|,
 name|MJUMPAGESIZE
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|m_new
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
-operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|printf
@@ -7401,9 +7391,6 @@ condition|)
 block|{
 case|case
 name|SIOCSIFADDR
-case|:
-case|case
-name|SIOCGIFADDR
 case|:
 ifdef|#
 directive|ifdef

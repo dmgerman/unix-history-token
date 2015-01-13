@@ -144,6 +144,13 @@ operator|~
 name|SBThread
 argument_list|()
 expr_stmt|;
+name|lldb
+operator|::
+name|SBQueue
+name|GetQueue
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|IsValid
 argument_list|()
@@ -238,6 +245,19 @@ name|GetQueueID
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|GetInfoItemByPathAsString
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|SBStream
+modifier|&
+name|strm
+parameter_list|)
+function_decl|;
 name|void
 name|StepOver
 argument_list|(
@@ -363,8 +383,8 @@ comment|/// call here tells our process to suspend a thread and not let it run w
 comment|/// the other threads in a process are allowed to run. So when
 comment|/// SBProcess::Continue() is called, any threads that aren't suspended will
 comment|/// be allowed to run. If any of the SBThread functions for stepping are
-comment|/// called (StepOver, StepInto, StepOut, StepInstruction, RunToAddres), the
-comment|/// thread will not be allowed to run and these funtions will simply return.
+comment|/// called (StepOver, StepInto, StepOut, StepInstruction, RunToAddress), the
+comment|/// thread will not be allowed to run and these functions will simply return.
 comment|///
 comment|/// Eventually we plan to add support for thread centric debugging where
 comment|/// each thread is controlled individually and each thread would broadcast
@@ -530,6 +550,10 @@ parameter_list|)
 function_decl|;
 name|uint32_t
 name|GetExtendedBacktraceOriginatingIndexID
+parameter_list|()
+function_decl|;
+name|bool
+name|SafeToCallFunctions
 parameter_list|()
 function_decl|;
 name|protected

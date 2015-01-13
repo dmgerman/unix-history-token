@@ -1550,39 +1550,71 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|XHCI_TD_PAGE_NBUF
-value|17
-end_define
+begin_if
+if|#
+directive|if
+operator|(
+name|USB_PAGE_SIZE
+operator|<
+literal|4096
+operator|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"The XHCI driver needs a pagesize above or equal to 4K"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* units, room enough for 64Kbytes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XHCI_TD_PAGE_SIZE
-value|4096
-end_define
-
-begin_comment
-comment|/* bytes */
+comment|/* Define the maximum payload which we will handle in a single TRB */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XHCI_TD_PAYLOAD_MAX
-value|(XHCI_TD_PAGE_SIZE * (XHCI_TD_PAGE_NBUF - 1))
+value|65536
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_comment
+comment|/* Define the maximum payload of a single scatter-gather list element */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XHCI_TD_PAGE_SIZE
+define|\
+value|((USB_PAGE_SIZE< XHCI_TD_PAYLOAD_MAX) ? USB_PAGE_SIZE : XHCI_TD_PAYLOAD_MAX)
+end_define
+
+begin_comment
+comment|/* Define the maximum length of the scatter-gather list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XHCI_TD_PAGE_NBUF
+define|\
+value|(((XHCI_TD_PAYLOAD_MAX + XHCI_TD_PAGE_SIZE - 1) / XHCI_TD_PAGE_SIZE) + 1)
 end_define
 
 begin_struct
 struct|struct
 name|xhci_td
 block|{
+comment|/* one LINK TRB has been added to the TRB array */
 name|struct
 name|xhci_trb
 name|td_trb
@@ -2035,9 +2067,6 @@ name|struct
 name|resource
 modifier|*
 name|sc_io_res
-decl_stmt|;
-name|int
-name|sc_irq_rid
 decl_stmt|;
 name|struct
 name|resource

@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -106,6 +100,12 @@ end_include
 begin_comment
 comment|// FIXME: Kill when CompilationInfo
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
 
 begin_comment
 comment|// lands.
@@ -535,8 +535,7 @@ name|getFinalPhase
 argument_list|(
 argument|const llvm::opt::DerivedArgList&DAL
 argument_list|,
-argument|llvm::opt::Arg **FinalPhaseArg =
-literal|0
+argument|llvm::opt::Arg **FinalPhaseArg = nullptr
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -547,8 +546,6 @@ argument_list|(
 argument|StringRef _ClangExecutable
 argument_list|,
 argument|StringRef _DefaultTargetTriple
-argument_list|,
-argument|StringRef _DefaultImageName
 argument_list|,
 argument|DiagnosticsEngine&_Diags
 argument_list|)
@@ -775,7 +772,6 @@ name|ToolChain
 operator|&
 name|TC
 argument_list|,
-specifier|const
 name|llvm
 operator|::
 name|opt

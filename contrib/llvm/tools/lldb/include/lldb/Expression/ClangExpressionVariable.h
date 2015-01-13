@@ -431,7 +431,9 @@ argument_list|(
 literal|0
 argument_list|)
 block|{         }
-name|off_t
+name|lldb
+operator|::
+name|offset_t
 name|m_alignment
 expr_stmt|;
 comment|///< The required alignment of the variable, in bytes
@@ -439,9 +441,11 @@ name|size_t
 name|m_size
 decl_stmt|;
 comment|///< The space required for the variable, in bytes
-name|off_t
+name|lldb
+operator|::
+name|offset_t
 name|m_offset
-decl_stmt|;
+expr_stmt|;
 comment|///< The offset of the variable in the struct, in bytes
 block|}
 struct|;
@@ -613,8 +617,8 @@ function_decl|;
 comment|// this function is used to copy the address-of m_live_sp into m_frozen_sp
 comment|// this is necessary because the results of certain cast and pointer-arithmetic
 comment|// operations (such as those described in bugzilla issues 11588 and 11618) generate
-comment|// frozen objcts that do not have a valid address-of, which can be troublesome when
-comment|// using synthetic children providers. transferring the address-of the live object
+comment|// frozen objects that do not have a valid address-of, which can be troublesome when
+comment|// using synthetic children providers. Transferring the address-of the live object
 comment|// solves these issues and provides the expected user-level behavior
 name|void
 name|TransferAddress

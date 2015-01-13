@@ -45,9 +45,13 @@ name|__uint32_t
 name|_magic
 decl_stmt|;
 name|struct
-name|_usem
+name|_usem2
 name|_kern
 decl_stmt|;
+name|__uint32_t
+name|_padding
+decl_stmt|;
+comment|/* Preserve structure size */
 block|}
 struct|;
 end_struct

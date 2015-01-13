@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"libc_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"thr_private.h"
 end_include
 
@@ -204,7 +210,13 @@ name|_thr_isthreaded
 argument_list|()
 operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+name|_malloc_first_thread
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|_thr_setthreaded
 argument_list|(
 literal|1
@@ -215,6 +227,7 @@ operator|(
 name|EAGAIN
 operator|)
 return|;
+block|}
 name|curthread
 operator|=
 name|_get_curthread

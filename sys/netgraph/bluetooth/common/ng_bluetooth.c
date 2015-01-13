@@ -164,7 +164,7 @@ name|version
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 name|NG_BLUETOOTH_VERSION
 argument_list|,

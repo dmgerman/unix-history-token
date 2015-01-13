@@ -152,12 +152,12 @@ argument_list|()
 operator|:
 name|STI
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|TII
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// \brief Initialize the machine model for instruction scheduling.
@@ -257,7 +257,7 @@ operator|&
 name|InstrItins
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Identify the processor corresponding to the current subtarget.
@@ -299,7 +299,7 @@ name|MCSchedClassDesc
 operator|*
 name|SC
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -336,6 +336,40 @@ name|PIdx
 argument_list|)
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|NDEBUG
+specifier|const
+name|char
+modifier|*
+name|getResourceName
+argument_list|(
+name|unsigned
+name|PIdx
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|PIdx
+condition|)
+return|return
+literal|"MOps"
+return|;
+return|return
+name|SchedModel
+operator|.
+name|getProcResource
+argument_list|(
+name|PIdx
+argument_list|)
+operator|->
+name|Name
+return|;
+block|}
+endif|#
+directive|endif
 typedef|typedef
 specifier|const
 name|MCWriteProcResEntry
@@ -485,7 +519,7 @@ comment|/// \brief Compute the instruction latency based on the available machin
 comment|/// model.
 comment|///
 comment|/// Compute and return the expected latency of this instruction independent of
-comment|/// a particular use. computeOperandLatency is the prefered API, but this is
+comment|/// a particular use. computeOperandLatency is the preferred API, but this is
 comment|/// occasionally useful to help estimate instruction cost.
 comment|///
 comment|/// If UseDefaultDefLatency is false and no new machine sched model is

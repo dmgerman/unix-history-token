@@ -113,9 +113,6 @@ expr_stmt|;
 comment|/// install_fatal_error_handler - Installs a new error handler to be used
 comment|/// whenever a serious (non-recoverable) error is encountered by LLVM.
 comment|///
-comment|/// If you are using llvm_start_multithreaded, you should register the handler
-comment|/// before doing that.
-comment|///
 comment|/// If no error handler is installed the default is to print the error message
 comment|/// to stderr, and call exit(1).  If an error handler is installed then it is
 comment|/// the handler's responsibility to log the message, it will no longer be
@@ -139,12 +136,10 @@ name|void
 modifier|*
 name|user_data
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// Restores default error handling behaviour.
-comment|/// This must not be called between llvm_start_multithreaded() and
-comment|/// llvm_stop_multithreaded().
 name|void
 name|remove_fatal_error_handler
 parameter_list|()
@@ -165,7 +160,7 @@ name|void
 modifier|*
 name|user_data
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 name|install_fatal_error_handler
@@ -265,14 +260,14 @@ name|char
 modifier|*
 name|msg
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|file
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|unsigned
 name|line

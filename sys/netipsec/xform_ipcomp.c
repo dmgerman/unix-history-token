@@ -114,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/vnet.h>
 end_include
 
@@ -263,7 +257,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipcomp
 argument_list|,
@@ -271,6 +265,8 @@ name|OID_AUTO
 argument_list|,
 name|ipcomp_enable
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -995,11 +991,6 @@ decl_stmt|,
 name|protoff
 decl_stmt|;
 name|struct
-name|mtag
-modifier|*
-name|mtag
-decl_stmt|;
-name|struct
 name|mbuf
 modifier|*
 name|m
@@ -1068,17 +1059,6 @@ operator|=
 name|tc
 operator|->
 name|tc_protoff
-expr_stmt|;
-name|mtag
-operator|=
-operator|(
-expr|struct
-name|mtag
-operator|*
-operator|)
-name|tc
-operator|->
-name|tc_ptr
 expr_stmt|;
 name|m
 operator|=
@@ -1487,8 +1467,6 @@ argument_list|,
 name|skip
 argument_list|,
 name|protoff
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1511,8 +1489,6 @@ argument_list|,
 name|skip
 argument_list|,
 name|protoff
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 break|break;

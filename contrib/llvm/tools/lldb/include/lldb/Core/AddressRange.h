@@ -287,7 +287,7 @@ comment|/// offset based address range, and \a style lets the user choose
 comment|/// how the base address gets displayed.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|///
 comment|/// @param[in] style
 comment|///     The display style for the address.
@@ -337,7 +337,7 @@ comment|/// The debug description contains verbose internal state such
 comment|/// and pointer values, reference counts, etc.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|//------------------------------------------------------------------
 name|void
 name|DumpDebug

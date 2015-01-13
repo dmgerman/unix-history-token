@@ -504,6 +504,8 @@ literal|1
 block|}
 enum|;
 comment|// Machine architectures
+comment|// See current registered ELF machine architectures at:
+comment|//    http://www.uxsglobal.com/developers/gabi/latest/ch4.eheader.html
 enum|enum
 block|{
 name|EM_NONE
@@ -1287,7 +1289,102 @@ comment|// Renesas 78KOR family
 name|EM_56800EX
 init|=
 literal|200
+block|,
 comment|// Freescale 56800EX Digital Signal Controller (DSC)
+name|EM_BA1
+init|=
+literal|201
+block|,
+comment|// Beyond BA1 CPU architecture
+name|EM_BA2
+init|=
+literal|202
+block|,
+comment|// Beyond BA2 CPU architecture
+name|EM_XCORE
+init|=
+literal|203
+block|,
+comment|// XMOS xCORE processor family
+name|EM_MCHP_PIC
+init|=
+literal|204
+block|,
+comment|// Microchip 8-bit PIC(r) family
+name|EM_INTEL205
+init|=
+literal|205
+block|,
+comment|// Reserved by Intel
+name|EM_INTEL206
+init|=
+literal|206
+block|,
+comment|// Reserved by Intel
+name|EM_INTEL207
+init|=
+literal|207
+block|,
+comment|// Reserved by Intel
+name|EM_INTEL208
+init|=
+literal|208
+block|,
+comment|// Reserved by Intel
+name|EM_INTEL209
+init|=
+literal|209
+block|,
+comment|// Reserved by Intel
+name|EM_KM32
+init|=
+literal|210
+block|,
+comment|// KM211 KM32 32-bit processor
+name|EM_KMX32
+init|=
+literal|211
+block|,
+comment|// KM211 KMX32 32-bit processor
+name|EM_KMX16
+init|=
+literal|212
+block|,
+comment|// KM211 KMX16 16-bit processor
+name|EM_KMX8
+init|=
+literal|213
+block|,
+comment|// KM211 KMX8 8-bit processor
+name|EM_KVARC
+init|=
+literal|214
+block|,
+comment|// KM211 KVARC processor
+name|EM_CDP
+init|=
+literal|215
+block|,
+comment|// Paneve CDP architecture family
+name|EM_COGE
+init|=
+literal|216
+block|,
+comment|// Cognitive Smart Memory Processor
+name|EM_COOL
+init|=
+literal|217
+block|,
+comment|// iCelero CoolEngine
+name|EM_NORC
+init|=
+literal|218
+block|,
+comment|// Nanoradio Optimized RISC
+name|EM_CSR_KALIMBA
+init|=
+literal|219
+comment|// CSR Kalimba architecture family
 block|}
 enum|;
 comment|// Object file classes.
@@ -1841,6 +1938,14 @@ name|R_PPC_PLTREL24
 init|=
 literal|18
 block|,
+name|R_PPC_JMP_SLOT
+init|=
+literal|21
+block|,
+name|R_PPC_LOCAL24PC
+init|=
+literal|23
+block|,
 name|R_PPC_REL32
 init|=
 literal|26
@@ -1982,6 +2087,138 @@ init|=
 literal|252
 block|}
 enum|;
+comment|// Specific e_flags for PPC64
+enum|enum
+block|{
+comment|// e_flags bits specifying ABI:
+comment|// 1 for original ABI using function descriptors,
+comment|// 2 for revised ABI without function descriptors,
+comment|// 0 for unspecified or not using any features affected by the differences.
+name|EF_PPC64_ABI
+init|=
+literal|3
+block|}
+enum|;
+comment|// Special values for the st_other field in the symbol table entry for PPC64.
+enum|enum
+block|{
+name|STO_PPC64_LOCAL_BIT
+init|=
+literal|5
+block|,
+name|STO_PPC64_LOCAL_MASK
+init|=
+operator|(
+literal|7
+operator|<<
+name|STO_PPC64_LOCAL_BIT
+operator|)
+block|}
+enum|;
+specifier|static
+specifier|inline
+name|int64_t
+name|decodePPC64LocalEntryOffset
+parameter_list|(
+name|unsigned
+name|Other
+parameter_list|)
+block|{
+name|unsigned
+name|Val
+init|=
+operator|(
+name|Other
+operator|&
+name|STO_PPC64_LOCAL_MASK
+operator|)
+operator|>>
+name|STO_PPC64_LOCAL_BIT
+decl_stmt|;
+return|return
+operator|(
+operator|(
+literal|1
+operator|<<
+name|Val
+operator|)
+operator|>>
+literal|2
+operator|)
+operator|<<
+literal|2
+return|;
+block|}
+specifier|static
+specifier|inline
+name|unsigned
+name|encodePPC64LocalEntryOffset
+parameter_list|(
+name|int64_t
+name|Offset
+parameter_list|)
+block|{
+name|unsigned
+name|Val
+init|=
+operator|(
+name|Offset
+operator|>=
+literal|4
+operator|*
+literal|4
+condition|?
+operator|(
+name|Offset
+operator|>=
+literal|8
+operator|*
+literal|4
+condition|?
+operator|(
+name|Offset
+operator|>=
+literal|16
+operator|*
+literal|4
+condition|?
+literal|6
+else|:
+literal|5
+operator|)
+else|:
+literal|4
+operator|)
+else|:
+operator|(
+name|Offset
+operator|>=
+literal|2
+operator|*
+literal|4
+condition|?
+literal|3
+else|:
+operator|(
+name|Offset
+operator|>=
+literal|1
+operator|*
+literal|4
+condition|?
+literal|2
+else|:
+literal|0
+operator|)
+operator|)
+operator|)
+decl_stmt|;
+return|return
+name|Val
+operator|<<
+name|STO_PPC64_LOCAL_BIT
+return|;
+block|}
 comment|// ELF Relocation types for PPC64
 enum|enum
 block|{
@@ -2056,6 +2293,10 @@ block|,
 name|R_PPC64_GOT16_HA
 init|=
 literal|17
+block|,
+name|R_PPC64_JMP_SLOT
+init|=
+literal|21
 block|,
 name|R_PPC64_REL32
 init|=
@@ -2437,6 +2678,14 @@ name|R_AARCH64_LDST128_ABS_LO12_NC
 init|=
 literal|0x12b
 block|,
+name|R_AARCH64_GOTREL64
+init|=
+literal|0x133
+block|,
+name|R_AARCH64_GOTREL32
+init|=
+literal|0x134
+block|,
 name|R_AARCH64_ADR_GOT_PAGE
 init|=
 literal|0x137
@@ -2608,52 +2857,85 @@ block|,
 name|R_AARCH64_TLSDESC_CALL
 init|=
 literal|0x239
+block|,
+name|R_AARCH64_COPY
+init|=
+literal|0x400
+block|,
+name|R_AARCH64_GLOB_DAT
+init|=
+literal|0x401
+block|,
+name|R_AARCH64_JUMP_SLOT
+init|=
+literal|0x402
+block|,
+name|R_AARCH64_RELATIVE
+init|=
+literal|0x403
+block|,
+name|R_AARCH64_TLS_DTPREL64
+init|=
+literal|0x404
+block|,
+name|R_AARCH64_TLS_DTPMOD64
+init|=
+literal|0x405
+block|,
+name|R_AARCH64_TLS_TPREL64
+init|=
+literal|0x406
+block|,
+name|R_AARCH64_TLSDESC
+init|=
+literal|0x407
+block|,
+name|R_AARCH64_IRELATIVE
+init|=
+literal|0x408
 block|}
 enum|;
 comment|// ARM Specific e_flags
-name|enum
-name|LLVM_ENUM_INT_TYPE
-function|(
+enum_decl|enum :
 name|unsigned
-function|)
 block|{
 name|EF_ARM_SOFT_FLOAT
-operator|=
+init|=
 literal|0x00000200U
-operator|,
+block|,
 name|EF_ARM_VFP_FLOAT
-operator|=
+init|=
 literal|0x00000400U
-operator|,
+block|,
 name|EF_ARM_EABI_UNKNOWN
-operator|=
+init|=
 literal|0x00000000U
-operator|,
+block|,
 name|EF_ARM_EABI_VER1
-operator|=
+init|=
 literal|0x01000000U
-operator|,
+block|,
 name|EF_ARM_EABI_VER2
-operator|=
+init|=
 literal|0x02000000U
-operator|,
+block|,
 name|EF_ARM_EABI_VER3
-operator|=
+init|=
 literal|0x03000000U
-operator|,
+block|,
 name|EF_ARM_EABI_VER4
-operator|=
+init|=
 literal|0x04000000U
-operator|,
+block|,
 name|EF_ARM_EABI_VER5
-operator|=
+init|=
 literal|0x05000000U
-operator|,
+block|,
 name|EF_ARM_EABIMASK
-operator|=
+init|=
 literal|0xFF000000U
 block|}
-empty_stmt|;
+enum_decl|;
 comment|// ELF Relocation types for ARM
 comment|// Meets 2.08 ABI Specs.
 enum|enum
@@ -3184,97 +3466,116 @@ literal|0x82
 block|}
 enum|;
 comment|// Mips Specific e_flags
-name|enum
-name|LLVM_ENUM_INT_TYPE
-function|(
+enum_decl|enum :
 name|unsigned
-function|)
 block|{
 name|EF_MIPS_NOREORDER
-operator|=
+init|=
 literal|0x00000001
-operator|,
+block|,
 comment|// Don't reorder instructions
 name|EF_MIPS_PIC
-operator|=
+init|=
 literal|0x00000002
-operator|,
+block|,
 comment|// Position independent code
 name|EF_MIPS_CPIC
-operator|=
+init|=
 literal|0x00000004
-operator|,
+block|,
 comment|// Call object with Position independent code
+name|EF_MIPS_ABI2
+init|=
+literal|0x00000020
+block|,
+name|EF_MIPS_32BITMODE
+init|=
+literal|0x00000100
+block|,
+name|EF_MIPS_NAN2008
+init|=
+literal|0x00000400
+block|,
+comment|// Uses IEE 754-2008 NaN encoding
 name|EF_MIPS_ABI_O32
-operator|=
+init|=
 literal|0x00001000
-operator|,
+block|,
 comment|// This file follows the first MIPS 32 bit ABI
 comment|//ARCH_ASE
 name|EF_MIPS_MICROMIPS
-operator|=
+init|=
 literal|0x02000000
-operator|,
+block|,
 comment|// microMIPS
 name|EF_MIPS_ARCH_ASE_M16
-operator|=
+init|=
 literal|0x04000000
-operator|,
+block|,
 comment|// Has Mips-16 ISA extensions
 comment|//ARCH
 name|EF_MIPS_ARCH_1
-operator|=
+init|=
 literal|0x00000000
-operator|,
+block|,
 comment|// MIPS1 instruction set
 name|EF_MIPS_ARCH_2
-operator|=
+init|=
 literal|0x10000000
-operator|,
+block|,
 comment|// MIPS2 instruction set
 name|EF_MIPS_ARCH_3
-operator|=
+init|=
 literal|0x20000000
-operator|,
+block|,
 comment|// MIPS3 instruction set
 name|EF_MIPS_ARCH_4
-operator|=
+init|=
 literal|0x30000000
-operator|,
+block|,
 comment|// MIPS4 instruction set
 name|EF_MIPS_ARCH_5
-operator|=
+init|=
 literal|0x40000000
-operator|,
+block|,
 comment|// MIPS5 instruction set
 name|EF_MIPS_ARCH_32
-operator|=
+init|=
 literal|0x50000000
-operator|,
+block|,
 comment|// MIPS32 instruction set per linux not elf.h
 name|EF_MIPS_ARCH_64
-operator|=
+init|=
 literal|0x60000000
-operator|,
+block|,
 comment|// MIPS64 instruction set per linux not elf.h
 name|EF_MIPS_ARCH_32R2
-operator|=
+init|=
 literal|0x70000000
-operator|,
+block|,
 comment|// mips32r2
 name|EF_MIPS_ARCH_64R2
-operator|=
+init|=
 literal|0x80000000
-operator|,
+block|,
 comment|// mips64r2
+name|EF_MIPS_ARCH_32R6
+init|=
+literal|0x90000000
+block|,
+comment|// mips32r6
+name|EF_MIPS_ARCH_64R6
+init|=
+literal|0xa0000000
+block|,
+comment|// mips64r6
 name|EF_MIPS_ARCH
-operator|=
+init|=
 literal|0xf0000000
 comment|// Mask for applying EF_MIPS_ARCH_ variant
 block|}
-empty_stmt|;
+enum_decl|;
 comment|// ELF Relocation types for Mips
-comment|// .
 enum|enum
 block|{
 name|R_MIPS_NONE
@@ -3314,10 +3615,6 @@ init|=
 literal|8
 block|,
 name|R_MIPS_GOT16
-init|=
-literal|9
-block|,
-name|R_MIPS_GOT
 init|=
 literal|9
 block|,
@@ -3485,6 +3782,42 @@ name|R_MIPS_GLOB_DAT
 init|=
 literal|51
 block|,
+name|R_MIPS_PC21_S2
+init|=
+literal|60
+block|,
+name|R_MIPS_PC26_S2
+init|=
+literal|61
+block|,
+name|R_MIPS_PC18_S3
+init|=
+literal|62
+block|,
+name|R_MIPS_PC19_S2
+init|=
+literal|63
+block|,
+name|R_MIPS_PCHI16
+init|=
+literal|64
+block|,
+name|R_MIPS_PCLO16
+init|=
+literal|65
+block|,
+name|R_MIPS16_GOT16
+init|=
+literal|102
+block|,
+name|R_MIPS16_HI16
+init|=
+literal|104
+block|,
+name|R_MIPS16_LO16
+init|=
+literal|105
+block|,
 name|R_MIPS_COPY
 init|=
 literal|126
@@ -3529,6 +3862,14 @@ name|R_MICROMIPS_GOT_OFST
 init|=
 literal|147
 block|,
+name|R_MICROMIPS_TLS_GD
+init|=
+literal|162
+block|,
+name|R_MICROMIPS_TLS_LDM
+init|=
+literal|163
+block|,
 name|R_MICROMIPS_TLS_DTPREL_HI16
 init|=
 literal|164
@@ -3548,15 +3889,39 @@ block|,
 name|R_MIPS_NUM
 init|=
 literal|218
+block|,
+name|R_MIPS_PC32
+init|=
+literal|248
 block|}
 enum|;
 comment|// Special values for the st_other field in the symbol table entry for MIPS.
 enum|enum
 block|{
+name|STO_MIPS_OPTIONAL
+init|=
+literal|0x04
+block|,
+comment|// Symbol whose definition is optional
+name|STO_MIPS_PLT
+init|=
+literal|0x08
+block|,
+comment|// PLT entry related dynamic table record
+name|STO_MIPS_PIC
+init|=
+literal|0x20
+block|,
+comment|// PIC func in an object mixes PIC/non-PIC
 name|STO_MIPS_MICROMIPS
 init|=
 literal|0x80
+block|,
 comment|// MIPS Specific ISA for MicroMips
+name|STO_MIPS_MIPS16
+init|=
+literal|0xf0
+comment|// MIPS Specific ISA for Mips16
 block|}
 enum|;
 comment|// Hexagon Specific e_flags
@@ -4720,285 +5085,284 @@ comment|// Highest reserved index
 block|}
 enum|;
 comment|// Section types.
-name|enum
-name|LLVM_ENUM_INT_TYPE
-function|(
+enum_decl|enum :
 name|unsigned
-function|)
 block|{
 name|SHT_NULL
-operator|=
+init|=
 literal|0
-operator|,
+block|,
 comment|// No associated section (inactive entry).
 name|SHT_PROGBITS
-operator|=
+init|=
 literal|1
-operator|,
+block|,
 comment|// Program-defined contents.
 name|SHT_SYMTAB
-operator|=
+init|=
 literal|2
-operator|,
+block|,
 comment|// Symbol table.
 name|SHT_STRTAB
-operator|=
+init|=
 literal|3
-operator|,
+block|,
 comment|// String table.
 name|SHT_RELA
-operator|=
+init|=
 literal|4
-operator|,
+block|,
 comment|// Relocation entries; explicit addends.
 name|SHT_HASH
-operator|=
+init|=
 literal|5
-operator|,
+block|,
 comment|// Symbol hash table.
 name|SHT_DYNAMIC
-operator|=
+init|=
 literal|6
-operator|,
+block|,
 comment|// Information for dynamic linking.
 name|SHT_NOTE
-operator|=
+init|=
 literal|7
-operator|,
+block|,
 comment|// Information about the file.
 name|SHT_NOBITS
-operator|=
+init|=
 literal|8
-operator|,
+block|,
 comment|// Data occupies no space in the file.
 name|SHT_REL
-operator|=
+init|=
 literal|9
-operator|,
+block|,
 comment|// Relocation entries; no explicit addends.
 name|SHT_SHLIB
-operator|=
+init|=
 literal|10
-operator|,
+block|,
 comment|// Reserved.
 name|SHT_DYNSYM
-operator|=
+init|=
 literal|11
-operator|,
+block|,
 comment|// Symbol table.
 name|SHT_INIT_ARRAY
-operator|=
+init|=
 literal|14
-operator|,
+block|,
 comment|// Pointers to initialization functions.
 name|SHT_FINI_ARRAY
-operator|=
+init|=
 literal|15
-operator|,
+block|,
 comment|// Pointers to termination functions.
 name|SHT_PREINIT_ARRAY
-operator|=
+init|=
 literal|16
-operator|,
+block|,
 comment|// Pointers to pre-init functions.
 name|SHT_GROUP
-operator|=
+init|=
 literal|17
-operator|,
+block|,
 comment|// Section group.
 name|SHT_SYMTAB_SHNDX
-operator|=
+init|=
 literal|18
-operator|,
+block|,
 comment|// Indices for SHN_XINDEX entries.
 name|SHT_LOOS
-operator|=
+init|=
 literal|0x60000000
-operator|,
+block|,
 comment|// Lowest operating system-specific type.
 name|SHT_GNU_ATTRIBUTES
-operator|=
+init|=
 literal|0x6ffffff5
-operator|,
+block|,
 comment|// Object attributes.
 name|SHT_GNU_HASH
-operator|=
+init|=
 literal|0x6ffffff6
-operator|,
+block|,
 comment|// GNU-style hash table.
 name|SHT_GNU_verdef
-operator|=
+init|=
 literal|0x6ffffffd
-operator|,
+block|,
 comment|// GNU version definitions.
 name|SHT_GNU_verneed
-operator|=
+init|=
 literal|0x6ffffffe
-operator|,
+block|,
 comment|// GNU version references.
 name|SHT_GNU_versym
-operator|=
+init|=
 literal|0x6fffffff
-operator|,
+block|,
 comment|// GNU symbol versions table.
 name|SHT_HIOS
-operator|=
+init|=
 literal|0x6fffffff
-operator|,
+block|,
 comment|// Highest operating system-specific type.
 name|SHT_LOPROC
-operator|=
+init|=
 literal|0x70000000
-operator|,
+block|,
 comment|// Lowest processor arch-specific type.
 comment|// Fixme: All this is duplicated in MCSectionELF. Why??
 comment|// Exception Index table
 name|SHT_ARM_EXIDX
-operator|=
+init|=
 literal|0x70000001U
-operator|,
+block|,
 comment|// BPABI DLL dynamic linking pre-emption map
 name|SHT_ARM_PREEMPTMAP
-operator|=
+init|=
 literal|0x70000002U
-operator|,
+block|,
 comment|//  Object file compatibility attributes
 name|SHT_ARM_ATTRIBUTES
-operator|=
+init|=
 literal|0x70000003U
-operator|,
+block|,
 name|SHT_ARM_DEBUGOVERLAY
-operator|=
+init|=
 literal|0x70000004U
-operator|,
+block|,
 name|SHT_ARM_OVERLAYSECTION
-operator|=
+init|=
 literal|0x70000005U
-operator|,
+block|,
 name|SHT_HEX_ORDERED
-operator|=
+init|=
 literal|0x70000000
-operator|,
+block|,
 comment|// Link editor is to sort the entries in
 comment|// this section based on their sizes
 name|SHT_X86_64_UNWIND
-operator|=
+init|=
 literal|0x70000001
-operator|,
+block|,
 comment|// Unwind information
 name|SHT_MIPS_REGINFO
-operator|=
+init|=
 literal|0x70000006
-operator|,
+block|,
 comment|// Register usage information
 name|SHT_MIPS_OPTIONS
-operator|=
+init|=
 literal|0x7000000d
-operator|,
+block|,
 comment|// General options
+name|SHT_MIPS_ABIFLAGS
+init|=
+literal|0x7000002a
+block|,
+comment|// ABI information.
 name|SHT_HIPROC
-operator|=
+init|=
 literal|0x7fffffff
-operator|,
+block|,
 comment|// Highest processor arch-specific type.
 name|SHT_LOUSER
-operator|=
+init|=
 literal|0x80000000
-operator|,
+block|,
 comment|// Lowest type reserved for applications.
 name|SHT_HIUSER
-operator|=
+init|=
 literal|0xffffffff
 comment|// Highest type reserved for applications.
 block|}
-empty_stmt|;
+enum_decl|;
 comment|// Section flags.
-name|enum
-name|LLVM_ENUM_INT_TYPE
-function|(
+enum_decl|enum :
 name|unsigned
-function|)
 block|{
 comment|// Section data should be writable during execution.
 name|SHF_WRITE
-operator|=
+init|=
 literal|0x1
-operator|,
+block|,
 comment|// Section occupies memory during program execution.
 name|SHF_ALLOC
-operator|=
+init|=
 literal|0x2
-operator|,
+block|,
 comment|// Section contains executable machine instructions.
 name|SHF_EXECINSTR
-operator|=
+init|=
 literal|0x4
-operator|,
+block|,
 comment|// The data in this section may be merged.
 name|SHF_MERGE
-operator|=
+init|=
 literal|0x10
-operator|,
+block|,
 comment|// The data in this section is null-terminated strings.
 name|SHF_STRINGS
-operator|=
+init|=
 literal|0x20
-operator|,
+block|,
 comment|// A field in this section holds a section header table index.
 name|SHF_INFO_LINK
-operator|=
+init|=
 literal|0x40U
-operator|,
+block|,
 comment|// Adds special ordering requirements for link editors.
 name|SHF_LINK_ORDER
-operator|=
+init|=
 literal|0x80U
-operator|,
+block|,
 comment|// This section requires special OS-specific processing to avoid incorrect
 comment|// behavior.
 name|SHF_OS_NONCONFORMING
-operator|=
+init|=
 literal|0x100U
-operator|,
+block|,
 comment|// This section is a member of a section group.
 name|SHF_GROUP
-operator|=
+init|=
 literal|0x200U
-operator|,
+block|,
 comment|// This section holds Thread-Local Storage.
 name|SHF_TLS
-operator|=
+init|=
 literal|0x400U
-operator|,
+block|,
 comment|// This section is excluded from the final executable or shared library.
 name|SHF_EXCLUDE
-operator|=
+init|=
 literal|0x80000000U
-operator|,
+block|,
 comment|// Start of target-specific flags.
 comment|/// XCORE_SHF_CP_SECTION - All sections with the "c" flag are grouped
 comment|/// together by the linker to form the constant pool and the cp register is
 comment|/// set to the start of the constant pool by the boot code.
 name|XCORE_SHF_CP_SECTION
-operator|=
+init|=
 literal|0x800U
-operator|,
+block|,
 comment|/// XCORE_SHF_DP_SECTION - All sections with the "d" flag are grouped
 comment|/// together by the linker to form the data section and the dp register is
 comment|/// set to the start of the section by the boot code.
 name|XCORE_SHF_DP_SECTION
-operator|=
+init|=
 literal|0x1000U
-operator|,
+block|,
 name|SHF_MASKOS
-operator|=
+init|=
 literal|0x0ff00000
-operator|,
+block|,
 comment|// Bits indicating processor-specific flags.
 name|SHF_MASKPROC
-operator|=
+init|=
 literal|0xf0000000
-operator|,
+block|,
 comment|// If an object file section does not have this flag set, then it may not hold
 comment|// more than 2GB and can be freely referred to in objects using smaller code
 comment|// models. Otherwise, only objects using larger code models can refer to them.
@@ -5007,77 +5371,74 @@ comment|// sets this flag besides being able to refer to data in a section that 
 comment|// not set it; likewise, a small code model object can refer only to code in a
 comment|// section that does not set this flag.
 name|SHF_X86_64_LARGE
-operator|=
+init|=
 literal|0x10000000
-operator|,
+block|,
 comment|// All sections with the GPREL flag are grouped into a global data area
 comment|// for faster accesses
 name|SHF_HEX_GPREL
-operator|=
+init|=
 literal|0x10000000
-operator|,
+block|,
 comment|// Section contains text/data which may be replicated in other sections.
 comment|// Linker must retain only one copy.
 name|SHF_MIPS_NODUPES
-operator|=
+init|=
 literal|0x01000000
-operator|,
+block|,
 comment|// Linker must generate implicit hidden weak names.
 name|SHF_MIPS_NAMES
-operator|=
+init|=
 literal|0x02000000
-operator|,
+block|,
 comment|// Section data local to process.
 name|SHF_MIPS_LOCAL
-operator|=
+init|=
 literal|0x04000000
-operator|,
+block|,
 comment|// Do not strip this section.
 name|SHF_MIPS_NOSTRIP
-operator|=
+init|=
 literal|0x08000000
-operator|,
+block|,
 comment|// Section must be part of global data area.
 name|SHF_MIPS_GPREL
-operator|=
+init|=
 literal|0x10000000
-operator|,
+block|,
 comment|// This section should be merged.
 name|SHF_MIPS_MERGE
-operator|=
+init|=
 literal|0x20000000
-operator|,
+block|,
 comment|// Address size to be inferred from section entry size.
 name|SHF_MIPS_ADDR
-operator|=
+init|=
 literal|0x40000000
-operator|,
+block|,
 comment|// Section data is string data by default.
 name|SHF_MIPS_STRING
-operator|=
+init|=
 literal|0x80000000
 block|}
-empty_stmt|;
+enum_decl|;
 comment|// Section Group Flags
-name|enum
-name|LLVM_ENUM_INT_TYPE
-function|(
+enum_decl|enum :
 name|unsigned
-function|)
 block|{
 name|GRP_COMDAT
-operator|=
+init|=
 literal|0x1
-operator|,
+block|,
 name|GRP_MASKOS
-operator|=
+init|=
 literal|0x0ff00000
-operator|,
+block|,
 name|GRP_MASKPROC
-operator|=
+init|=
 literal|0xf0000000
 block|}
-empty_stmt|;
+enum_decl|;
 comment|// Symbol table entries for ELF32.
 struct|struct
 name|Elf32_Sym
@@ -6078,42 +6439,44 @@ comment|// Runtime procedure table.
 name|PT_MIPS_OPTIONS
 init|=
 literal|0x70000002
+block|,
 comment|// Options segment.
+name|PT_MIPS_ABIFLAGS
+init|=
+literal|0x70000003
+comment|// Abiflags segment.
 block|}
 enum|;
 comment|// Segment flag bits.
-name|enum
-name|LLVM_ENUM_INT_TYPE
-function|(
+enum_decl|enum :
 name|unsigned
-function|)
 block|{
 name|PF_X
-operator|=
+init|=
 literal|1
-operator|,
+block|,
 comment|// Execute
 name|PF_W
-operator|=
+init|=
 literal|2
-operator|,
+block|,
 comment|// Write
 name|PF_R
-operator|=
+init|=
 literal|4
-operator|,
+block|,
 comment|// Read
 name|PF_MASKOS
-operator|=
+init|=
 literal|0x0ff00000
-operator|,
+block|,
 comment|// Bits for operating system-specific semantics.
 name|PF_MASKPROC
-operator|=
+init|=
 literal|0xf0000000
 comment|// Bits for processor-specific semantics.
 block|}
-empty_stmt|;
+enum_decl|;
 comment|// Dynamic table entry for ELF32.
 struct|struct
 name|Elf32_Dyn
@@ -6354,6 +6717,11 @@ init|=
 literal|0x7FFFFFFF
 block|,
 comment|// End of processor specific tags.
+name|DT_GNU_HASH
+init|=
+literal|0x6FFFFEF5
+block|,
+comment|// Reference to the GNU hash table.
 name|DT_RELACOUNT
 init|=
 literal|0x6FFFFFF9

@@ -854,6 +854,13 @@ name|LK_TIMELOCK
 value|0x001000
 end_define
 
+begin_define
+define|#
+directive|define
+name|LK_NODDLKTREAT
+value|0x002000
+end_define
+
 begin_comment
 comment|/*  * Operations for lockmgr().  */
 end_comment

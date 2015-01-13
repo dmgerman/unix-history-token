@@ -195,6 +195,7 @@ argument_list|(
 argument|raw_ostream&OS
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|EvaluateAsRelocatableImpl
@@ -204,13 +205,15 @@ argument_list|,
 argument|const MCAsmLayout *Layout
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
-name|AddValueSymbols
+name|visitUsedExpr
 argument_list|(
-argument|MCAssembler *
+argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|MCSection
@@ -218,6 +221,7 @@ operator|*
 name|FindAssociatedSection
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getSubExpr
@@ -234,6 +238,7 @@ argument_list|(
 argument|MCAssembler&Asm
 argument_list|)
 specifier|const
+name|override
 block|{}
 specifier|static
 name|bool

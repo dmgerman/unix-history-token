@@ -4478,9 +4478,7 @@ name|st
 operator|.
 name|st_size
 operator|>
-literal|100
-operator|*
-literal|1024
+name|LINKER_HINTS_MAX
 operator|||
 operator|(
 name|fd

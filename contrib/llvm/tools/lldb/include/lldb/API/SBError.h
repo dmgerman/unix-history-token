@@ -279,6 +279,20 @@ name|SBWatchpoint
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|friend
+name|class
+name|SBBreakpoint
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|SBBreakpointLocation
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|lldb_private
 operator|::

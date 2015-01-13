@@ -247,10 +247,12 @@ define|#
 directive|define
 name|aintc_read_4
 parameter_list|(
+name|_sc
+parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(ti_aintc_sc->aintc_bst, ti_aintc_sc->aintc_bsh, reg)
+value|bus_space_read_4((_sc)->aintc_bst, (_sc)->aintc_bsh, (reg))
 end_define
 
 begin_define
@@ -258,12 +260,14 @@ define|#
 directive|define
 name|aintc_write_4
 parameter_list|(
+name|_sc
+parameter_list|,
 name|reg
 parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(ti_aintc_sc->aintc_bst, ti_aintc_sc->aintc_bsh, reg, val)
+value|bus_space_write_4((_sc)->aintc_bst, (_sc)->aintc_bsh, (reg), (val))
 end_define
 
 begin_function
@@ -418,6 +422,8 @@ name|x
 operator|=
 name|aintc_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_REVISION
 argument_list|)
 expr_stmt|;
@@ -443,6 +449,8 @@ expr_stmt|;
 comment|/* SoftReset */
 name|aintc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_SYSCONFIG
 argument_list|,
 literal|2
@@ -455,6 +463,8 @@ operator|!
 operator|(
 name|aintc_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_SYSSTATUS
 argument_list|)
 operator|&
@@ -465,6 +475,8 @@ empty_stmt|;
 comment|/*Set Priority Threshold */
 name|aintc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_THRESHOLD
 argument_list|,
 literal|0xFF
@@ -560,6 +572,13 @@ name|int
 name|last_irq
 parameter_list|)
 block|{
+name|struct
+name|ti_aintc_softc
+modifier|*
+name|sc
+init|=
+name|ti_aintc_sc
+decl_stmt|;
 name|uint32_t
 name|active_irq
 decl_stmt|;
@@ -573,6 +592,8 @@ condition|)
 block|{
 name|aintc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_ISR_CLEAR
 argument_list|(
 name|last_irq
@@ -591,6 +612,8 @@ argument_list|)
 expr_stmt|;
 name|aintc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_CONTROL
 argument_list|,
 literal|1
@@ -602,6 +625,8 @@ name|active_irq
 operator|=
 name|aintc_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_SIR_IRQ
 argument_list|)
 expr_stmt|;
@@ -617,7 +642,7 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|ti_aintc_sc
+name|sc
 operator|->
 name|sc_dev
 argument_list|,
@@ -628,6 +653,8 @@ argument_list|)
 expr_stmt|;
 name|aintc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_SIR_IRQ
 argument_list|,
 literal|0
@@ -663,8 +690,17 @@ name|uintptr_t
 name|nb
 parameter_list|)
 block|{
+name|struct
+name|ti_aintc_softc
+modifier|*
+name|sc
+init|=
+name|ti_aintc_sc
+decl_stmt|;
 name|aintc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_MIR_SET
 argument_list|(
 name|nb
@@ -694,6 +730,13 @@ name|uintptr_t
 name|nb
 parameter_list|)
 block|{
+name|struct
+name|ti_aintc_softc
+modifier|*
+name|sc
+init|=
+name|ti_aintc_sc
+decl_stmt|;
 name|arm_irq_memory_barrier
 argument_list|(
 name|nb
@@ -701,6 +744,8 @@ argument_list|)
 expr_stmt|;
 name|aintc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_MIR_CLEAR
 argument_list|(
 name|nb

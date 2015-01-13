@@ -778,7 +778,7 @@ begin_define
 define|#
 directive|define
 name|BSAES_CAPABLE
-value|VPAES_CAPABLE
+value|(OPENSSL_ia32cap_P[1]&(1<<(41-32)))
 end_define
 
 begin_endif

@@ -150,6 +150,38 @@ name|fde_change_size
 value|(offsetof(struct filedescent, fde_seq))
 end_define
 
+begin_struct
+struct|struct
+name|fdescenttbl
+block|{
+name|int
+name|fdt_nfiles
+decl_stmt|;
+comment|/* number of open files allocated */
+name|struct
+name|filedescent
+name|fdt_ofiles
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|/* open files */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|fd_seq
+parameter_list|(
+name|fdt
+parameter_list|,
+name|fd
+parameter_list|)
+value|(&(fdt)->fdt_ofiles[(fd)].fde_seq)
+end_define
+
 begin_comment
 comment|/*  * This structure is used for the management of descriptors.  It may be  * shared by multiple processes.  */
 end_comment
@@ -166,11 +198,11 @@ struct|struct
 name|filedesc
 block|{
 name|struct
-name|filedescent
+name|fdescenttbl
 modifier|*
-name|fd_ofiles
+name|fd_files
 decl_stmt|;
-comment|/* open files */
+comment|/* open files table */
 name|struct
 name|vnode
 modifier|*
@@ -189,10 +221,6 @@ modifier|*
 name|fd_jdir
 decl_stmt|;
 comment|/* jail root directory */
-name|int
-name|fd_nfiles
-decl_stmt|;
-comment|/* number of open files allocated */
 name|NDSLOTTYPE
 modifier|*
 name|fd_map
@@ -240,18 +268,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|fd_seq
-parameter_list|(
-name|fdp
-parameter_list|,
-name|fd
-parameter_list|)
-value|(&(fdp)->fd_ofiles[(fd)].fde_seq)
-end_define
-
 begin_comment
 comment|/*  * Structure to keep track of (process leader, struct fildedesc) tuples.  * Each process has a pointer to such a structure when detailed tracking  * is needed, e.g., when rfork(RFPROC | RFMEM) causes a file descriptor  * table to be shared by processes having different "p_leader" pointers  * and thus distinct POSIX style locks.  *  * fdl_refcount and fdl_holdcount are protected by struct filedesc mtx.  */
 end_comment
@@ -292,6 +308,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|fd_nfiles
+value|fd_files->fdt_nfiles
+end_define
+
+begin_define
+define|#
+directive|define
+name|fd_ofiles
+value|fd_files->fdt_ofiles
+end_define
 
 begin_comment
 comment|/*  * Per-process open flags.  */
@@ -693,6 +723,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|fdsetugidsafety
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|filedesc
 modifier|*
@@ -740,6 +782,9 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
+parameter_list|,
+name|bool
+name|prepfiles
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -820,18 +865,6 @@ name|struct
 name|vnode
 modifier|*
 name|newdp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|setugidsafety
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl

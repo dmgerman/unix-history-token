@@ -96,6 +96,7 @@ argument_list|(
 argument|MCContext&CTX
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

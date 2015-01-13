@@ -166,7 +166,7 @@ argument_list|()
 operator|:
 name|P
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|IsInstance
@@ -398,20 +398,6 @@ name|TM
 operator|)
 return|;
 block|}
-specifier|const
-name|TargetLowering
-operator|*
-name|getTargetLowering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TM
-operator|->
-name|getTargetLowering
-argument_list|()
-return|;
-block|}
 comment|//
 name|void
 name|setInitialized
@@ -462,7 +448,7 @@ operator|=
 operator|(
 name|StartAfter
 operator|==
-literal|0
+name|nullptr
 operator|)
 block|;   }
 name|void
@@ -608,9 +594,9 @@ name|void
 name|addMachinePasses
 argument_list|()
 block|;
-comment|/// createTargetScheduler - Create an instance of ScheduleDAGInstrs to be run
-comment|/// within the standard MachineScheduler pass for this function and target at
-comment|/// the current optimization level.
+comment|/// Create an instance of ScheduleDAGInstrs to be run within the standard
+comment|/// MachineScheduler pass for this function and target at the current
+comment|/// optimization level.
 comment|///
 comment|/// This can also be used to plug a new MachineSchedStrategy into an instance
 comment|/// of the standard ScheduleDAGMI:
@@ -627,7 +613,22 @@ argument_list|)
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
+return|;
+block|}
+comment|/// Similar to createMachineScheduler but used when postRA machine scheduling
+comment|/// is enabled.
+name|virtual
+name|ScheduleDAGInstrs
+operator|*
+name|createPostMachineScheduler
+argument_list|(
+argument|MachineSchedContext *C
+argument_list|)
+specifier|const
+block|{
+return|return
+name|nullptr
 return|;
 block|}
 name|protected
@@ -857,6 +858,16 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|FunctionPass
+modifier|*
+name|createAtomicExpandLoadLinkedPass
+parameter_list|(
+specifier|const
+name|TargetMachine
+modifier|*
+name|TM
+parameter_list|)
+function_decl|;
 comment|/// \brief Create a basic TargetTransformInfo analysis pass.
 comment|///
 comment|/// This pass implements the target transform info analysis using the target
@@ -902,6 +913,26 @@ operator|=
 literal|""
 argument_list|)
 decl_stmt|;
+comment|/// createCodeGenPreparePass - Transform the code to expose more pattern
+comment|/// matching during instruction selection.
+name|FunctionPass
+modifier|*
+name|createCodeGenPreparePass
+parameter_list|(
+specifier|const
+name|TargetMachine
+modifier|*
+name|TM
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// AtomicExpandLoadLinkedID -- FIXME
+specifier|extern
+name|char
+modifier|&
+name|AtomicExpandLoadLinkedID
+decl_stmt|;
 comment|/// MachineLoopInfo - This pass is a loop analysis pass.
 specifier|extern
 name|char
@@ -913,6 +944,12 @@ specifier|extern
 name|char
 modifier|&
 name|MachineDominatorsID
+decl_stmt|;
+comment|/// MachineDominanaceFrontier - This pass is a machine dominators analysis pass.
+specifier|extern
+name|char
+modifier|&
+name|MachineDominanceFrontierID
 decl_stmt|;
 comment|/// EdgeBundles analysis - Bundle machine CFG edges.
 specifier|extern
@@ -974,6 +1011,12 @@ specifier|extern
 name|char
 modifier|&
 name|MachineSchedulerID
+decl_stmt|;
+comment|/// PostMachineScheduler - This pass schedules machine instructions postRA.
+specifier|extern
+name|char
+modifier|&
+name|PostMachineSchedulerID
 decl_stmt|;
 comment|/// SpillPlacement analysis. Suggest optimal placement of spill code between
 comment|/// basic blocks.
@@ -1216,7 +1259,7 @@ name|char
 modifier|*
 name|Banner
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// createDwarfEHPass - This pass mulches exception handling code into a form
@@ -1288,12 +1331,65 @@ name|char
 modifier|&
 name|FinalizeMachineBundlesID
 decl_stmt|;
+comment|/// StackMapLiveness - This pass analyses the register live-out set of
+comment|/// stackmap/patchpoint intrinsics and attaches the calculated information to
+comment|/// the intrinsic for later emission to the StackMap.
+specifier|extern
+name|char
+modifier|&
+name|StackMapLivenessID
+decl_stmt|;
+comment|/// createJumpInstrTables - This pass creates jump-instruction tables.
+name|ModulePass
+modifier|*
+name|createJumpInstrTablesPass
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 
 begin_comment
 comment|// End llvm namespace
 end_comment
+
+begin_comment
+comment|/// This initializer registers TargetMachine constructor, so the pass being
+end_comment
+
+begin_comment
+comment|/// initialized can use target dependent interfaces. Please do not move this
+end_comment
+
+begin_comment
+comment|/// macro to be together with INITIALIZE_PASS, which is a complete target
+end_comment
+
+begin_comment
+comment|/// independent initializer, and we don't want to make libScalarOpts depend
+end_comment
+
+begin_comment
+comment|/// on libCodeGen.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INITIALIZE_TM_PASS
+parameter_list|(
+name|passName
+parameter_list|,
+name|arg
+parameter_list|,
+name|name
+parameter_list|,
+name|cfg
+parameter_list|,
+name|analysis
+parameter_list|)
+define|\
+value|static void* initialize##passName##PassOnce(PassRegistry&Registry) { \     PassInfo *PI = new PassInfo(name, arg,& passName ::ID, \       PassInfo::NormalCtor_t(callDefaultCtor< passName>), cfg, analysis, \       PassInfo::TargetMachineCtor_t(callTargetMachineCtor< passName>)); \     Registry.registerPass(*PI, true); \     return PI; \   } \   void llvm::initialize##passName##Pass(PassRegistry&Registry) { \     CALL_ONCE_INITIALIZATION(initialize##passName##PassOnce) \   }
+end_define
 
 begin_endif
 endif|#

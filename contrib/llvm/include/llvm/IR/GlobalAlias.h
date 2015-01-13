@@ -150,6 +150,21 @@ modifier|*
 name|parent
 parameter_list|)
 function_decl|;
+name|GlobalAlias
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|unsigned AddressSpace
+argument_list|,
+argument|LinkageTypes Linkage
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|Constant *Aliasee
+argument_list|,
+argument|Module *Parent
+argument_list|)
+empty_stmt|;
 name|public
 label|:
 comment|// allocate space for exactly one operand
@@ -174,24 +189,124 @@ literal|1
 argument_list|)
 return|;
 block|}
-comment|/// GlobalAlias ctor - If a parent module is specified, the alias is
-comment|/// automatically inserted into the end of the specified module's alias list.
+comment|/// If a parent module is specified, the alias is automatically inserted into
+comment|/// the end of the specified module's alias list.
+specifier|static
 name|GlobalAlias
-argument_list|(
-argument|Type *Ty
-argument_list|,
-argument|LinkageTypes Linkage
-argument_list|,
-argument|const Twine&Name =
-literal|""
-argument_list|,
-argument|Constant* Aliasee =
-literal|0
-argument_list|,
-argument|Module *Parent =
-literal|0
-argument_list|)
-empty_stmt|;
+modifier|*
+name|create
+parameter_list|(
+name|Type
+modifier|*
+name|Ty
+parameter_list|,
+name|unsigned
+name|AddressSpace
+parameter_list|,
+name|LinkageTypes
+name|Linkage
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Name
+parameter_list|,
+name|Constant
+modifier|*
+name|Aliasee
+parameter_list|,
+name|Module
+modifier|*
+name|Parent
+parameter_list|)
+function_decl|;
+comment|// Without the Aliasee.
+specifier|static
+name|GlobalAlias
+modifier|*
+name|create
+parameter_list|(
+name|Type
+modifier|*
+name|Ty
+parameter_list|,
+name|unsigned
+name|AddressSpace
+parameter_list|,
+name|LinkageTypes
+name|Linkage
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Name
+parameter_list|,
+name|Module
+modifier|*
+name|Parent
+parameter_list|)
+function_decl|;
+comment|// The module is taken from the Aliasee.
+specifier|static
+name|GlobalAlias
+modifier|*
+name|create
+parameter_list|(
+name|Type
+modifier|*
+name|Ty
+parameter_list|,
+name|unsigned
+name|AddressSpace
+parameter_list|,
+name|LinkageTypes
+name|Linkage
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Name
+parameter_list|,
+name|GlobalValue
+modifier|*
+name|Aliasee
+parameter_list|)
+function_decl|;
+comment|// Type, Parent and AddressSpace taken from the Aliasee.
+specifier|static
+name|GlobalAlias
+modifier|*
+name|create
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Name
+parameter_list|,
+name|GlobalValue
+modifier|*
+name|Aliasee
+parameter_list|)
+function_decl|;
+comment|// Linkage, Type, Parent and AddressSpace taken from the Aliasee.
+specifier|static
+name|GlobalAlias
+modifier|*
+name|create
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Name
+parameter_list|,
+name|GlobalValue
+modifier|*
+name|Aliasee
+parameter_list|)
+function_decl|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -201,65 +316,32 @@ expr_stmt|;
 comment|/// removeFromParent - This method unlinks 'this' from the containing module,
 comment|/// but does not delete it.
 comment|///
-name|virtual
 name|void
 name|removeFromParent
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 comment|/// eraseFromParent - This method unlinks 'this' from the containing module
 comment|/// and deletes it.
 comment|///
-name|virtual
 name|void
 name|eraseFromParent
-parameter_list|()
-function_decl|;
-comment|/// set/getAliasee - These methods retrive and set alias target.
+argument_list|()
+name|override
+expr_stmt|;
+comment|/// These methods retrive and set alias target.
 name|void
 name|setAliasee
 parameter_list|(
 name|Constant
 modifier|*
-name|GV
+name|Aliasee
 parameter_list|)
 function_decl|;
 specifier|const
 name|Constant
 operator|*
 name|getAliasee
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-return|;
-block|}
-name|Constant
-modifier|*
-name|getAliasee
-parameter_list|()
-block|{
-return|return
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-return|;
-block|}
-comment|/// getAliasedGlobal() - Aliasee can be either global or bitcast of
-comment|/// global. This method retrives the global for both aliasee flavours.
-name|GlobalValue
-modifier|*
-name|getAliasedGlobal
-parameter_list|()
-function_decl|;
-specifier|const
-name|GlobalValue
-operator|*
-name|getAliasedGlobal
 argument_list|()
 specifier|const
 block|{
@@ -273,34 +355,75 @@ operator|(
 name|this
 operator|)
 operator|->
-name|getAliasedGlobal
+name|getAliasee
 argument_list|()
 return|;
 block|}
-comment|/// resolveAliasedGlobal() - This method tries to ultimately resolve the alias
-comment|/// by going through the aliasing chain and trying to find the very last
-comment|/// global. Returns NULL if a cycle was found. If stopOnWeak is false, then
-comment|/// the whole chain aliasing chain is traversed, otherwise - only strong
-comment|/// aliases.
-name|GlobalValue
+name|Constant
 modifier|*
-name|resolveAliasedGlobal
-parameter_list|(
-name|bool
-name|stopOnWeak
-init|=
-name|true
-parameter_list|)
-function_decl|;
-specifier|const
-name|GlobalValue
-modifier|*
-name|resolveAliasedGlobal
+name|getAliasee
+parameter_list|()
+block|{
+return|return
+name|getOperand
 argument_list|(
-name|bool
-name|stopOnWeak
-operator|=
-name|true
+literal|0
+argument_list|)
+return|;
+block|}
+specifier|const
+name|GlobalObject
+operator|*
+name|getBaseObject
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|GlobalAlias
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getBaseObject
+argument_list|()
+return|;
+block|}
+name|GlobalObject
+modifier|*
+name|getBaseObject
+parameter_list|()
+block|{
+return|return
+name|dyn_cast
+operator|<
+name|GlobalObject
+operator|>
+operator|(
+name|getAliasee
+argument_list|()
+operator|->
+name|stripInBoundsOffsets
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|const
+name|GlobalObject
+modifier|*
+name|getBaseObject
+argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+name|APInt
+operator|&
+name|Offset
 argument_list|)
 decl|const
 block|{
@@ -314,10 +437,44 @@ operator|(
 name|this
 operator|)
 operator|->
-name|resolveAliasedGlobal
+name|getBaseObject
 argument_list|(
-name|stopOnWeak
+name|DL
+argument_list|,
+name|Offset
 argument_list|)
+return|;
+block|}
+name|GlobalObject
+modifier|*
+name|getBaseObject
+parameter_list|(
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+name|APInt
+modifier|&
+name|Offset
+parameter_list|)
+block|{
+return|return
+name|dyn_cast
+operator|<
+name|GlobalObject
+operator|>
+operator|(
+name|getAliasee
+argument_list|()
+operator|->
+name|stripAndAccumulateInBoundsConstantOffsets
+argument_list|(
+name|DL
+argument_list|,
+name|Offset
+argument_list|)
+operator|)
 return|;
 block|}
 specifier|static

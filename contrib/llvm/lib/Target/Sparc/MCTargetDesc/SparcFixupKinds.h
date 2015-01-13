@@ -72,6 +72,11 @@ comment|/// fixup_sparc_br19 - 19-bit PC relative relocation for
 comment|/// branches on icc/xcc
 name|fixup_sparc_br19
 block|,
+comment|/// fixup_sparc_bpr  - 16-bit fixup for bpr
+name|fixup_sparc_br16_2
+block|,
+name|fixup_sparc_br16_14
+block|,
 comment|/// fixup_sparc_hi22  - 22-bit fixup corresponding to %hi(foo)
 comment|/// for sethi
 name|fixup_sparc_hi22

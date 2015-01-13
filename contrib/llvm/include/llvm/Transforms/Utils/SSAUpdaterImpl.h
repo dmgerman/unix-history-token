@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/ValueHandle.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -87,16 +93,14 @@ directive|include
 file|"llvm/Support/Debug.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ValueHandle.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+define|#
+directive|define
+name|DEBUG_TYPE
+value|"ssaupdater"
 name|class
 name|CastInst
 decl_stmt|;
@@ -222,7 +226,7 @@ name|V
 condition|?
 name|this
 else|:
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|BlkNum
@@ -232,7 +236,7 @@ argument_list|)
 operator|,
 name|IDom
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NumPreds
@@ -242,14 +246,14 @@ argument_list|)
 operator|,
 name|Preds
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|PHITag
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
-block|{ }
+block|{}
 block|}
 empty_stmt|;
 typedef|typedef
@@ -567,7 +571,7 @@ name|Info
 operator|->
 name|Preds
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 else|else
 name|Info
@@ -745,7 +749,7 @@ argument|Allocator
 argument_list|)
 name|BBInfo
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 literal|0
 argument_list|)
@@ -1095,7 +1099,7 @@ name|BBInfo
 modifier|*
 name|NewIDom
 init|=
-literal|0
+name|nullptr
 decl_stmt|;
 comment|// Iterate through the block's predecessors.
 for|for
@@ -1846,7 +1850,7 @@ operator|)
 operator|->
 name|PHITag
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 block|}
@@ -2162,6 +2166,16 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|DEBUG_TYPE
+end_undef
+
+begin_comment
+comment|// "ssaupdater"
+end_comment
 
 begin_comment
 unit|}

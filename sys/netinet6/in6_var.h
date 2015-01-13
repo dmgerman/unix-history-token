@@ -3009,17 +3009,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|in6_purgeif
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|in6_savemkludge
 parameter_list|(
 name|struct
@@ -3050,6 +3039,17 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in6_domifmtu
+parameter_list|(
+name|struct
+name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;

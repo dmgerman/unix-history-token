@@ -2601,15 +2601,12 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m_head
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
-operator|)
+argument_list|)
 operator|!=
-literal|0
+name|M_HASHTYPE_NONE
 condition|)
 block|{
 name|i
@@ -4387,11 +4384,12 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|800000
+name|M_HASHTYPE_SET
+argument_list|(
 name|mbuf_up
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 name|mbuf_up
 operator|->
@@ -15010,7 +15008,6 @@ literal|"Driver version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15037,7 +15034,6 @@ literal|"Serial number"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15064,7 +15060,6 @@ literal|"Part number"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15091,7 +15086,6 @@ literal|"Firmware version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15118,7 +15112,6 @@ literal|"Firmware date"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15145,7 +15138,6 @@ literal|"Link width"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15179,7 +15171,6 @@ literal|"Function mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15207,7 +15198,6 @@ literal|"Interrupt type"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15234,7 +15224,6 @@ literal|"VPath(s) opened"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15261,7 +15250,6 @@ literal|"Adapter Type"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15288,7 +15276,6 @@ literal|"pmd port 0"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15324,7 +15311,6 @@ literal|"pmd port 1"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15358,7 +15344,6 @@ literal|"Port Mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15393,7 +15378,6 @@ literal|"Port Failure"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15420,7 +15404,6 @@ literal|"L2 Switch"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15449,7 +15432,6 @@ literal|"LRO mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15476,7 +15458,6 @@ literal|"RTH mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15503,7 +15484,6 @@ literal|"TSO mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config

@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo.h"
+file|"llvm/IR/DebugInfo.h"
 end_include
 
 begin_include
@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Path.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/Support/Path.h"
 end_include
 
 begin_decl_stmt

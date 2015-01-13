@@ -4707,25 +4707,17 @@ name|MHLEN
 condition|)
 block|{
 comment|/* Attach an mbuf cluster */
+if|if
+condition|(
+operator|!
+operator|(
 name|MCLGET
 argument_list|(
 name|m
 argument_list|,
 name|M_NOWAIT
 argument_list|)
-expr_stmt|;
-comment|/* Insist on getting a cluster */
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
 operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|m_freem

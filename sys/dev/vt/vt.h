@@ -582,6 +582,10 @@ name|int
 name|vd_unit
 decl_stmt|;
 comment|/* (c) Device unit. */
+name|int
+name|vd_altbrk
+decl_stmt|;
+comment|/* (?) Alt break seq. state */
 block|}
 struct|;
 end_struct
@@ -666,10 +670,6 @@ name|unsigned
 name|int
 name|vb_history_size
 decl_stmt|;
-define|#
-directive|define
-name|VBF_DEFAULT_HISTORY_SIZE
-value|500
 name|int
 name|vb_roffset
 decl_stmt|;
@@ -712,6 +712,36 @@ comment|/* (u) Array of rows */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SC_HISTORY_SIZE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VBF_DEFAULT_HISTORY_SIZE
+value|SC_HISTORY_SIZE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VBF_DEFAULT_HISTORY_SIZE
+value|500
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

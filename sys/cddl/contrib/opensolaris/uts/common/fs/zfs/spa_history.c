@@ -204,7 +204,7 @@ name|mos
 argument_list|,
 name|DMU_OT_SPA_HISTORY
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|DMU_OT_SPA_HISTORY_OFFSETS
 argument_list|,
@@ -2356,9 +2356,10 @@ name|nvl
 argument_list|,
 name|ZPOOL_HIST_DSID
 argument_list|,
+name|dsl_dir_phys
+argument_list|(
 name|dd
-operator|->
-name|dd_phys
+argument_list|)
 operator|->
 name|dd_head_dataset_obj
 argument_list|)

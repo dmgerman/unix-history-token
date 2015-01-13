@@ -133,9 +133,13 @@ name|PROPERTY_ISREADONLY_IMAGE_PARAM
 block|,
 name|PROPERTY_ISWRITEONLY_IMAGE_PARAM
 block|,
+name|PROPERTY_ISREADWRITE_IMAGE_PARAM
+block|,
 name|PROPERTY_ISKERNEL_FUNCTION
 block|,
 name|PROPERTY_ALIGN
+block|,
+name|PROPERTY_MANAGED
 block|,
 comment|// last property
 name|PROPERTY_LAST
@@ -145,7 +149,7 @@ specifier|const
 name|unsigned
 name|AnnotationNameLen
 init|=
-literal|8
+literal|9
 decl_stmt|;
 comment|// length of each annotation name
 specifier|const
@@ -199,12 +203,18 @@ comment|// PROPERTY_ISREADONLY_IMAGE_PARAM
 literal|"wroimage"
 block|,
 comment|// PROPERTY_ISWRITEONLY_IMAGE_PARAM
+literal|"rdwrimage"
+block|,
+comment|// PROPERTY_ISREADWRITE_IMAGE_PARAM
 literal|"kernel"
 block|,
 comment|// PROPERTY_ISKERNEL_FUNCTION
 literal|"align"
 block|,
 comment|// PROPERTY_ALIGN
+literal|"managed"
+block|,
+comment|// PROPERTY_MANAGED
 comment|// last property
 literal|"proplast"
 block|,
@@ -235,6 +245,38 @@ name|NamedMDForAnnotations
 init|=
 literal|"nvvm.annotations"
 decl_stmt|;
+name|namespace
+name|NVPTXII
+block|{
+enum|enum
+block|{
+comment|// These must be kept in sync with TSFlags in NVPTXInstrFormats.td
+name|IsTexFlag
+init|=
+literal|0x80
+block|,
+name|IsSuldMask
+init|=
+literal|0x300
+block|,
+name|IsSuldShift
+init|=
+literal|8
+block|,
+name|IsSustFlag
+init|=
+literal|0x400
+block|,
+name|IsSurfTexQueryFlag
+init|=
+literal|0x800
+block|,
+name|IsTexModeUnifiedFlag
+init|=
+literal|0x1000
+block|}
+enum|;
+block|}
 block|}
 end_decl_stmt
 

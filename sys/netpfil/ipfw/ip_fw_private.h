@@ -109,10 +109,6 @@ name|ip6_pktopts
 modifier|*
 name|opt_or
 decl_stmt|;
-name|struct
-name|route_in6
-name|ro_or
-decl_stmt|;
 name|int
 name|flags_or
 decl_stmt|;
@@ -137,10 +133,6 @@ name|dst_or
 decl_stmt|;
 name|u_long
 name|mtu_or
-decl_stmt|;
-name|struct
-name|route_in6
-name|ro_pmtu_or
 decl_stmt|;
 block|}
 struct|;
@@ -889,28 +881,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|ip_fw_cntr
-block|{
-name|uint64_t
-name|pcnt
-decl_stmt|;
-comment|/* Packet counter		*/
-name|uint64_t
-name|bcnt
-decl_stmt|;
-comment|/* Byte counter		 */
-name|uint64_t
-name|timestamp
-decl_stmt|;
-comment|/* tv_sec of last match	 */
-block|}
-name|ip_fw_cntr
-typedef|;
-end_typedef
-
 begin_comment
 comment|/*  * Here we have the structure representing an ipfw rule.  *  * It starts with a general area   * followed by an array of one or more instructions, which the code  * accesses as an array of 32-bit values.  *  * Given a rule pointer  r:  *  *  r->cmd		is the start of the first instruction.  *  ACTION_PTR(r)	is the start of the first action (things to do  *			once a rule matched).  */
 end_comment
@@ -969,6 +939,13 @@ comment|/* storage for commands		*/
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IPFW_RULE_CNTR_SIZE
+value|(2 * sizeof(counter_u64_t))
+end_define
 
 begin_endif
 endif|#
@@ -1379,61 +1356,6 @@ begin_comment
 comment|/* Macro for working with various counters */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USERSPACE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IPFW_INC_RULE_COUNTER
-parameter_list|(
-name|_cntr
-parameter_list|,
-name|_bytes
-parameter_list|)
-value|do {	\ 	(_cntr)->pcnt++;				\ 	(_cntr)->bcnt += _bytes;			\ 	(_cntr)->timestamp = time_uptime;		\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPFW_INC_DYN_COUNTER
-parameter_list|(
-name|_cntr
-parameter_list|,
-name|_bytes
-parameter_list|)
-value|do {		\ 	(_cntr)->pcnt++;				\ 	(_cntr)->bcnt += _bytes;			\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPFW_ZERO_RULE_COUNTER
-parameter_list|(
-name|_cntr
-parameter_list|)
-value|do {		\ 	(_cntr)->pcnt = 0;				\ 	(_cntr)->bcnt = 0;				\ 	(_cntr)->timestamp = 0;				\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPFW_ZERO_DYN_COUNTER
-parameter_list|(
-name|_cntr
-parameter_list|)
-value|do {		\ 	(_cntr)->pcnt = 0;				\ 	(_cntr)->bcnt = 0;				\ 	} while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -1477,11 +1399,6 @@ name|_cntr
 parameter_list|)
 value|do {		\ 	(_cntr)->pcnt = 0;				\ 	(_cntr)->bcnt = 0;				\ 	} while (0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

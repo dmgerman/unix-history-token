@@ -102,9 +102,9 @@ name|tc_flags
 decl_stmt|;
 define|#
 directive|define
-name|TC_FLAGS_C3STOP
+name|TC_FLAGS_C2STOP
 value|1
-comment|/* Timer dies in C3. */
+comment|/* Timer dies in C2+. */
 define|#
 directive|define
 name|TC_FLAGS_SUSPEND_SAFE

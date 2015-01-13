@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdlib>
 end_include
 
@@ -139,11 +145,11 @@ modifier|*
 name|PtrData
 decl_stmt|;
 comment|/// Kind - The actual flavor of token this is.
-comment|///
-name|unsigned
-name|short
+name|tok
+operator|::
+name|TokenKind
 name|Kind
-decl_stmt|;
+expr_stmt|;
 comment|/// Flags - Bits we track about this token, members of the TokenFlags enum.
 name|unsigned
 name|char
@@ -206,11 +212,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|tok
-operator|::
-name|TokenKind
-operator|)
 name|Kind
 return|;
 block|}
@@ -243,9 +244,6 @@ block|{
 return|return
 name|Kind
 operator|==
-operator|(
-name|unsigned
-operator|)
 name|K
 return|;
 block|}
@@ -262,9 +260,6 @@ block|{
 return|return
 name|Kind
 operator|!=
-operator|(
-name|unsigned
-operator|)
 name|K
 return|;
 block|}
@@ -495,11 +490,6 @@ name|tok
 operator|::
 name|getTokenName
 argument_list|(
-operator|(
-name|tok
-operator|::
-name|TokenKind
-operator|)
 name|Kind
 argument_list|)
 return|;
@@ -521,7 +511,7 @@ literal|0
 expr_stmt|;
 name|PtrData
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|UintData
 operator|=
@@ -566,7 +556,7 @@ name|isLiteral
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 operator|(
@@ -593,13 +583,11 @@ operator|)
 name|II
 expr_stmt|;
 block|}
-comment|/// getRawIdentifierData - For a raw identifier token (i.e., an identifier
-comment|/// lexed in raw mode), returns a pointer to the start of it in the text
-comment|/// buffer if known, null otherwise.
-specifier|const
-name|char
-operator|*
-name|getRawIdentifierData
+comment|/// getRawIdentifier - For a raw identifier token (i.e., an identifier
+comment|/// lexed in raw mode), returns a reference to the text substring in the
+comment|/// buffer if known.
+name|StringRef
+name|getRawIdentifier
 argument_list|()
 specifier|const
 block|{
@@ -614,6 +602,8 @@ argument_list|)
 argument_list|)
 block|;
 return|return
+name|StringRef
+argument_list|(
 name|reinterpret_cast
 operator|<
 specifier|const
@@ -623,6 +613,10 @@ operator|>
 operator|(
 name|PtrData
 operator|)
+argument_list|,
+name|getLength
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|void

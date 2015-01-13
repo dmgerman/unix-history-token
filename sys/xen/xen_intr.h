@@ -378,6 +378,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/**  * Bind an event channel port with a handler  *  * \param dev       The device making this bind request.  * \param filter    An interrupt filter handler.  Specify NULL  *                  to always dispatch to the ithread handler.  * \param handler   An interrupt ithread handler.  Optional (can  *                  specify NULL) if all necessary event actions  *                  are performed by filter.  * \param arg       Argument to present to both filter and handler.  * \param irqflags  Interrupt handler flags.  See sys/bus.h.  * \param handle    Opaque handle used to manage this registration.  *  * \returns  0 on success, otherwise an errno.  */
+end_comment
+
+begin_function_decl
+name|int
+name|xen_intr_add_handler
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|driver_filter_t
+name|filter
+parameter_list|,
+name|driver_intr_t
+name|handler
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|enum
+name|intr_type
+name|flags
+parameter_list|,
+name|xen_intr_handle_t
+name|handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

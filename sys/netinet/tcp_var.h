@@ -577,6 +577,14 @@ name|t_tsomax
 decl_stmt|;
 comment|/* TSO total burst length limit in bytes */
 name|u_int
+name|t_tsomaxsegcount
+decl_stmt|;
+comment|/* TSO maximum segment count */
+name|u_int
+name|t_tsomaxsegsize
+decl_stmt|;
+comment|/* TSO maximum segment size in bytes */
+name|u_int
 name|t_pmtud_saved_maxopd
 decl_stmt|;
 comment|/* pre-blackhole MSS */
@@ -587,18 +595,10 @@ comment|/* More tcpcb flags storage */
 name|uint32_t
 name|t_ispare
 index|[
-literal|6
+literal|8
 index|]
 decl_stmt|;
-comment|/* 5 UTO, 1 TBD */
-name|uint32_t
-name|t_tsomaxsegcount
-decl_stmt|;
-comment|/* TSO maximum segment count */
-name|uint32_t
-name|t_tsomaxsegsize
-decl_stmt|;
-comment|/* TSO maximum segment size in bytes */
+comment|/* 5 UTO, 3 TBD */
 name|void
 modifier|*
 name|t_pspare2
@@ -1401,10 +1401,16 @@ argument|tcptw
 argument_list|)
 name|tw_2msl
 expr_stmt|;
-name|u_int
-name|tw_refcount
+name|void
+modifier|*
+name|tw_pspare
 decl_stmt|;
-comment|/* refcount */
+comment|/* TCP_SIGNATURE */
+name|u_int
+modifier|*
+name|tw_spare
+decl_stmt|;
+comment|/* TCP_SIGNATURE */
 block|}
 struct|;
 end_struct
@@ -2755,10 +2761,8 @@ parameter_list|(
 name|struct
 name|tcptw
 modifier|*
-name|_tw
 parameter_list|,
 name|int
-name|_reuse
 parameter_list|)
 function_decl|;
 end_function_decl

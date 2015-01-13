@@ -1119,6 +1119,13 @@ name|RW_RECURSE
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|RW_NEW
+value|0x20
+end_define
+
 begin_comment
 comment|/*  * The INVARIANTS-enabled rw_assert() functionality.  *  * The constants need to be defined for INVARIANT_SUPPORT infrastructure  * support as _rw_assert() itself uses them and the latter implies that  * _rw_assert() must build.  */
 end_comment

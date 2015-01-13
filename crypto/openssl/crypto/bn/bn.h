@@ -3712,7 +3712,9 @@ parameter_list|,
 name|words
 parameter_list|)
 define|\
-value|do { \ 		const BIGNUM *_bnum2 = (bn); \ 		assert(words<= (_bnum2)->dmax&& words>= (_bnum2)->top); \ 	} while(0)
+value|do { \ 		const BIGNUM *_bnum2 = (bn); \ 		assert((words)<= (_bnum2)->dmax&& (words)>= (_bnum2)->top); \
+comment|/* avoid unused variable warning with NDEBUG */
+value|\ 		(void)(_bnum2); \ 	} while(0)
 else|#
 directive|else
 comment|/* !BN_DEBUG */

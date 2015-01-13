@@ -1138,6 +1138,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -2031,6 +2037,11 @@ expr_stmt|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|ATF_TP_ADD_TCS
 argument_list|(
@@ -2061,6 +2072,9 @@ argument_list|,
 name|poll_err
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -2082,6 +2096,8 @@ argument_list|,
 name|pollts_sigmask
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|atf_no_error
 argument_list|()

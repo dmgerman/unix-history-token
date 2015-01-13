@@ -219,6 +219,14 @@ argument|lldb::offset_t src_len
 argument_list|)
 block|;
 name|void
+name|AppendData
+argument_list|(
+argument|const void *src
+argument_list|,
+argument|uint64_t src_len
+argument_list|)
+block|;
+name|void
 name|Clear
 argument_list|()
 block|;

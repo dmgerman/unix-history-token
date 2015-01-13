@@ -1812,6 +1812,10 @@ operator||=
 name|LK_EXCLUSIVE
 expr_stmt|;
 block|}
+name|lkflags
+operator||=
+name|LK_NODDLKTREAT
+expr_stmt|;
 return|return
 operator|(
 name|lkflags

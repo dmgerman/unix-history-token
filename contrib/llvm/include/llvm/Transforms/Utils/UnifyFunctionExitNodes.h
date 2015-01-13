@@ -118,12 +118,12 @@ argument_list|)
 block|,
 name|ReturnBlock
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|UnwindBlock
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|initializeUnifyFunctionExitNodesPass
@@ -136,13 +136,13 @@ argument_list|()
 argument_list|)
 block|;   }
 comment|// We can preserve non-critical-edgeness when we unify function exit nodes
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// getReturn|Unwind|UnreachableBlock - Return the new single (or nonexistent)
 comment|// return, unwind, or unreachable  basic blocks in the CFG.
@@ -177,14 +177,12 @@ return|return
 name|UnreachableBlock
 return|;
 block|}
-name|virtual
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|F
+argument|Function&F
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 name|Pass

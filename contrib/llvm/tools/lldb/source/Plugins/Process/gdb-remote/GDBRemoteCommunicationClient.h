@@ -214,7 +214,7 @@ comment|// This packet is usually sent first and the boolean return value
 comment|// indicates if the packet was send and any response was received
 comment|// even in the response is UNIMPLEMENTED. If the packet failed to
 comment|// get a response, then false is returned. This quickly tells us
-comment|// if we were able to connect and communicte with the remote GDB
+comment|// if we were able to connect and communicate with the remote GDB
 comment|// server
 name|bool
 name|QueryNoAckModeSupported
@@ -337,6 +337,21 @@ operator|*
 name|arch
 argument_list|)
 block|;
+name|int
+name|SendLaunchEventDataPacket
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|data
+argument_list|,
+name|bool
+operator|*
+name|was_supported
+operator|=
+name|NULL
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Sends a "vAttach:PID" where PID is in hex.
 comment|///
@@ -402,13 +417,28 @@ comment|/// Sets the disable ASLR flag to \a enable for a process that will
 comment|/// be launched with the 'A' packet.
 comment|///
 comment|/// @param[in] enable
-comment|///     A boolean value indicating wether to disable ASLR or not.
+comment|///     A boolean value indicating whether to disable ASLR or not.
 comment|///
 comment|/// @return
 comment|///     Zero if the for success, or an error code for failure.
 comment|//------------------------------------------------------------------
 name|int
 name|SetDisableASLR
+argument_list|(
+argument|bool enable
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Sets the DetachOnError flag to \a enable for the process controlled by the stub.
+comment|///
+comment|/// @param[in] enable
+comment|///     A boolean value indicating whether to detach on error or not.
+comment|///
+comment|/// @return
+comment|///     Zero if the for success, or an error code for failure.
+comment|//------------------------------------------------------------------
+name|int
+name|SetDetachOnError
 argument_list|(
 argument|bool enable
 argument_list|)
@@ -421,7 +451,7 @@ comment|/// implements the platform, it will change the current working
 comment|/// directory for the platform process.
 comment|///
 comment|/// @param[in] path
-comment|///     The path to a directory to use when launching our processs
+comment|///     The path to a directory to use when launching our process
 comment|///
 comment|/// @return
 comment|///     Zero if the for success, or an error code for failure.
@@ -558,6 +588,10 @@ name|GetpPacketSupported
 argument_list|(
 argument|lldb::tid_t tid
 argument_list|)
+block|;
+name|bool
+name|GetxPacketSupported
+argument_list|()
 block|;
 name|bool
 name|GetVAttachOrWaitSupported
@@ -810,6 +844,10 @@ name|SetCurrentThreadForRun
 argument_list|(
 argument|uint64_t tid
 argument_list|)
+block|;
+name|bool
+name|GetQXferAuxvReadSupported
+argument_list|()
 block|;
 name|bool
 name|GetQXferLibrariesReadSupported
@@ -1095,6 +1133,28 @@ argument_list|,
 argument|uint32_t save_id
 argument_list|)
 block|;
+specifier|const
+name|char
+operator|*
+name|GetGDBServerProgramName
+argument_list|()
+block|;
+name|uint32_t
+name|GetGDBServerProgramVersion
+argument_list|()
+block|;
+name|bool
+name|AvoidGPackets
+argument_list|(
+name|ProcessGDBRemote
+operator|*
+name|process
+argument_list|)
+block|;
+name|bool
+name|GetThreadExtendedInfoSupported
+argument_list|()
+block|;
 name|protected
 operator|:
 name|PacketResult
@@ -1109,6 +1169,10 @@ argument_list|)
 block|;
 name|bool
 name|GetCurrentProcessInfo
+argument_list|()
+block|;
+name|bool
+name|GetGDBServerVersion
 argument_list|()
 block|;
 comment|//------------------------------------------------------------------
@@ -1167,7 +1231,17 @@ block|;
 name|lldb_private
 operator|::
 name|LazyBool
+name|m_curr_pid_is_valid
+block|;
+name|lldb_private
+operator|::
+name|LazyBool
 name|m_qProcessInfo_is_valid
+block|;
+name|lldb_private
+operator|::
+name|LazyBool
+name|m_qGDBServerVersion_is_valid
 block|;
 name|lldb_private
 operator|::
@@ -1212,7 +1286,22 @@ block|;
 name|lldb_private
 operator|::
 name|LazyBool
+name|m_supports_x
+block|;
+name|lldb_private
+operator|::
+name|LazyBool
+name|m_avoid_g_packets
+block|;
+name|lldb_private
+operator|::
+name|LazyBool
 name|m_supports_QSaveRegisterState
+block|;
+name|lldb_private
+operator|::
+name|LazyBool
+name|m_supports_qXfer_auxv_read
 block|;
 name|lldb_private
 operator|::
@@ -1228,6 +1317,11 @@ name|lldb_private
 operator|::
 name|LazyBool
 name|m_supports_augmented_libraries_svr4_read
+block|;
+name|lldb_private
+operator|::
+name|LazyBool
+name|m_supports_jThreadExtendedInfo
 block|;
 name|bool
 name|m_supports_qProcessInfoPID
@@ -1277,6 +1371,11 @@ block|,
 name|m_supports_QEnvironmentHexEncoded
 operator|:
 literal|1
+block|;
+name|lldb
+operator|::
+name|pid_t
+name|m_curr_pid
 block|;
 name|lldb
 operator|::
@@ -1375,6 +1474,16 @@ operator|::
 name|string
 name|m_hostname
 block|;
+name|std
+operator|::
+name|string
+name|m_gdb_server_name
+block|;
+comment|// from reply to qGDBServerVersion, empty if qGDBServerVersion is not supported
+name|uint32_t
+name|m_gdb_server_version
+block|;
+comment|// from reply to qGDBServerVersion, zero if qGDBServerVersion is not supported
 name|uint32_t
 name|m_default_packet_timeout
 block|;

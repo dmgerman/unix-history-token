@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<list>
 end_include
 
@@ -91,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -144,7 +144,9 @@ name|TokenAtLoc
 expr_stmt|;
 comment|/// ScratchBuf - This is the buffer that we create scratch tokens from.
 comment|///
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|ScratchBuffer
 operator|>

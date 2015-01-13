@@ -501,6 +501,7 @@ name|linker_file
 modifier|*
 name|parent
 parameter_list|,
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -525,6 +526,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -1232,7 +1234,7 @@ operator|&
 name|kld_sx
 argument_list|)
 expr_stmt|;
-name|sysctl_lock
+name|sysctl_xlock
 argument_list|()
 expr_stmt|;
 for|for
@@ -1254,7 +1256,7 @@ operator|*
 name|oidp
 argument_list|)
 expr_stmt|;
-name|sysctl_unlock
+name|sysctl_xunlock
 argument_list|()
 expr_stmt|;
 name|sx_xlock
@@ -1337,7 +1339,7 @@ operator|&
 name|kld_sx
 argument_list|)
 expr_stmt|;
-name|sysctl_lock
+name|sysctl_xlock
 argument_list|()
 expr_stmt|;
 for|for
@@ -1359,7 +1361,7 @@ operator|*
 name|oidp
 argument_list|)
 expr_stmt|;
-name|sysctl_unlock
+name|sysctl_xunlock
 argument_list|()
 expr_stmt|;
 name|sx_xlock
@@ -2441,6 +2443,18 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|lf
+operator|->
+name|ctors_addr
+operator|=
+literal|0
+expr_stmt|;
+name|lf
+operator|->
+name|ctors_size
+operator|=
+literal|0
+expr_stmt|;
 name|lf
 operator|->
 name|refs
@@ -4250,7 +4264,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|sx_xlock
+name|sx_slock
 argument_list|(
 operator|&
 name|kld_sx
@@ -4269,7 +4283,7 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-name|sx_xunlock
+name|sx_sunlock
 argument_list|(
 operator|&
 name|kld_sx
@@ -6096,6 +6110,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -6488,6 +6503,7 @@ modifier|*
 modifier|*
 name|nmdp
 decl_stmt|;
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -7782,6 +7798,7 @@ parameter_list|,
 name|int
 name|modnamelen
 parameter_list|,
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -8041,9 +8058,7 @@ name|vattr
 operator|.
 name|va_size
 operator|>
-literal|100
-operator|*
-literal|1024
+name|LINKER_HINTS_MAX
 condition|)
 block|{
 name|printf
@@ -8570,6 +8585,7 @@ parameter_list|,
 name|int
 name|modnamelen
 parameter_list|,
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -9050,6 +9066,7 @@ name|linker_file
 modifier|*
 name|parent
 parameter_list|,
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -9342,6 +9359,7 @@ decl_stmt|,
 modifier|*
 name|nmp
 decl_stmt|;
+specifier|const
 name|struct
 name|mod_depend
 modifier|*

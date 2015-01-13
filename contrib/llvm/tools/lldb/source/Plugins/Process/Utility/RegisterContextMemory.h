@@ -163,7 +163,7 @@ name|virtual
 name|uint32_t
 name|ConvertRegisterKindToRegisterNumber
 argument_list|(
-argument|uint32_t kind
+argument|lldb::RegisterKind kind
 argument_list|,
 argument|uint32_t num
 argument_list|)

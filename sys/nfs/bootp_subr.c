@@ -7180,7 +7180,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"vfs.root.mountfrom"
 argument_list|)
@@ -8540,7 +8540,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|setenv
+name|kern_setenv
 argument_list|(
 literal|"boot.netif.name"
 argument_list|,
@@ -8615,18 +8615,6 @@ index|]
 operator|=
 literal|"nfs:"
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFSCLIENT
-name|rootdevnames
-index|[
-literal|1
-index|]
-operator|=
-literal|"oldnfs:"
-expr_stmt|;
-endif|#
-directive|endif
 name|nfs_diskless_valid
 operator|=
 literal|3

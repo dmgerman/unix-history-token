@@ -692,7 +692,7 @@ name|StandardConversionSequence
 name|Before
 decl_stmt|;
 comment|/// EllipsisConversion - When this is true, it means user-defined
-comment|/// conversion sequence starts with a ... (elipsis) conversion, instead of
+comment|/// conversion sequence starts with a ... (ellipsis) conversion, instead of
 comment|/// a standard conversion. In this case, 'Before' field must be ignored.
 comment|// FIXME. I much rather put this as the first field. But there seems to be
 comment|// a gcc code gen. bug which causes a crash in a test. Putting it here seems
@@ -970,8 +970,6 @@ name|no_conversion
 block|,
 name|unrelated_class
 block|,
-name|suppressed_user
-block|,
 name|bad_qualifiers
 block|,
 name|lvalue_ref_to_rvalue
@@ -1051,7 +1049,7 @@ name|K
 expr_stmt|;
 name|FromExpr
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|setFromType
 argument_list|(
@@ -1755,6 +1753,10 @@ comment|/// (CUDA) This candidate was not viable because the callee
 comment|/// was not accessible from the caller's target (i.e. host->device,
 comment|/// global->host, device->host).
 name|ovl_fail_bad_target
+block|,
+comment|/// This candidate function was not viable because an enable_if
+comment|/// attribute disabled it.
+name|ovl_fail_enable_if
 block|}
 enum|;
 comment|/// OverloadCandidate - A single candidate in an overload set (C++ 13.3).
@@ -1981,13 +1983,107 @@ return|return
 name|CanFix
 return|;
 block|}
+name|unsigned
+name|getNumParams
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|IsSurrogate
+condition|)
+block|{
+name|auto
+name|STy
+init|=
+name|Surrogate
+operator|->
+name|getConversionType
+argument_list|()
+decl_stmt|;
+while|while
+condition|(
+name|STy
+operator|->
+name|isPointerType
+argument_list|()
+operator|||
+name|STy
+operator|->
+name|isReferenceType
+argument_list|()
+condition|)
+name|STy
+operator|=
+name|STy
+operator|->
+name|getPointeeType
+argument_list|()
+expr_stmt|;
+return|return
+name|STy
+operator|->
+name|getAs
+operator|<
+name|FunctionProtoType
+operator|>
+operator|(
+operator|)
+operator|->
+name|getNumParams
+argument_list|()
+return|;
 block|}
-struct|;
+if|if
+condition|(
+name|Function
+condition|)
+return|return
+name|Function
+operator|->
+name|getNumParams
+argument_list|()
+return|;
+return|return
+name|ExplicitCallArguments
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// OverloadCandidateSet - A set of overload candidates, used in C++
+end_comment
+
+begin_comment
 comment|/// overload resolution (C++ 13.3).
+end_comment
+
+begin_decl_stmt
 name|class
 name|OverloadCandidateSet
 block|{
+name|public
+label|:
+enum|enum
+name|CandidateSetKind
+block|{
+comment|/// Normal lookup.
+name|CSK_Normal
+block|,
+comment|/// Lookup for candidates for a call using operator syntax. Candidates
+comment|/// that have no parameters of class type will be skipped unless there
+comment|/// is a parameter of (reference to) enum type and the corresponding
+comment|/// argument is of the same enum type.
+name|CSK_Operator
+block|}
+enum|;
+name|private
+label|:
 name|SmallVector
 operator|<
 name|OverloadCandidate
@@ -2016,6 +2112,9 @@ name|ConversionSequenceAllocator
 expr_stmt|;
 name|SourceLocation
 name|Loc
+decl_stmt|;
+name|CandidateSetKind
+name|Kind
 decl_stmt|;
 name|unsigned
 name|NumInlineSequences
@@ -2056,11 +2155,18 @@ label|:
 name|OverloadCandidateSet
 argument_list|(
 argument|SourceLocation Loc
+argument_list|,
+argument|CandidateSetKind CSK
 argument_list|)
 block|:
 name|Loc
 argument_list|(
 name|Loc
+argument_list|)
+operator|,
+name|Kind
+argument_list|(
+name|CSK
 argument_list|)
 operator|,
 name|NumInlineSequences
@@ -2082,6 +2188,15 @@ specifier|const
 block|{
 return|return
 name|Loc
+return|;
+block|}
+name|CandidateSetKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
 return|;
 block|}
 comment|/// \brief Determine when this overload candidate will be new to the
@@ -2334,7 +2449,13 @@ argument_list|()
 argument_list|)
 decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 name|bool
 name|isBetterOverloadCandidate
 parameter_list|(
@@ -2361,10 +2482,10 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
+end_function_decl
 
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

@@ -62,6 +62,52 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+end_if
+
+begin_comment
+comment|// features.h will define _POSIX_C_SOURCE if _GNU_SOURCE is defined.  This value
+end_comment
+
+begin_comment
+comment|// may be different from the value that Python defines it to be which results
+end_comment
+
+begin_comment
+comment|// in a warning.  Undefine _POSIX_C_SOURCE before including Python.h  The same
+end_comment
+
+begin_comment
+comment|// holds for _XOPEN_SOURCE.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_POSIX_C_SOURCE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|_XOPEN_SOURCE
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// Include python for non windows machines
+end_comment
+
 begin_include
 include|#
 directive|include

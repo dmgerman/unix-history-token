@@ -1088,7 +1088,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -srp_strength int - minimal mength in bits for N (default %d).\n"
+literal|" -srp_strength int - minimal length in bits for N (default %d).\n"
 argument_list|,
 name|SRP_MINIMAL_N
 argument_list|)
@@ -1102,6 +1102,9 @@ argument_list|,
 literal|" -ssl2         - just use SSLv2\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SSL3_METHOD
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1109,6 +1112,8 @@ argument_list|,
 literal|" -ssl3         - just use SSLv3\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1135,6 +1140,13 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|" -dtls1        - just use DTLSv1\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -fallback_scsv - send TLS_FALLBACK_SCSV\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -2615,6 +2627,11 @@ name|peer
 argument_list|)
 decl_stmt|;
 name|int
+name|fallback_scsv
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|enable_timeouts
 init|=
 literal|0
@@ -3752,7 +3769,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|OPENSSL_NO_SSL3
+name|OPENSSL_NO_SSL3_METHOD
 elseif|else
 if|if
 condition|(
@@ -3857,6 +3874,25 @@ expr_stmt|;
 name|socket_type
 operator|=
 name|SOCK_DGRAM
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-fallback_scsv"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|fallback_scsv
+operator|=
+literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -5854,6 +5890,17 @@ name|sess
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fallback_scsv
+condition|)
+name|SSL_set_mode
+argument_list|(
+name|con
+argument_list|,
+name|SSL_MODE_SEND_FALLBACK_SCSV
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_TLSEXT
@@ -6179,10 +6226,39 @@ block|}
 if|if
 condition|(
 name|socket_mtu
-operator|>
-literal|28
 condition|)
 block|{
+if|if
+condition|(
+name|socket_mtu
+operator|<
+name|DTLS_get_link_min_mtu
+argument_list|(
+name|con
+argument_list|)
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"MTU too small. Must be at least %ld\n"
+argument_list|,
+name|DTLS_get_link_min_mtu
+argument_list|(
+name|con
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|BIO_free
+argument_list|(
+name|sbio
+argument_list|)
+expr_stmt|;
+goto|goto
+name|shut
+goto|;
+block|}
 name|SSL_set_options
 argument_list|(
 name|con
@@ -6190,15 +6266,33 @@ argument_list|,
 name|SSL_OP_NO_QUERY_MTU
 argument_list|)
 expr_stmt|;
-name|SSL_set_mtu
+if|if
+condition|(
+operator|!
+name|DTLS_set_link_mtu
 argument_list|(
 name|con
 argument_list|,
 name|socket_mtu
-operator|-
-literal|28
+argument_list|)
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"Failed to set MTU\n"
 argument_list|)
 expr_stmt|;
+name|BIO_free
+argument_list|(
+name|sbio
+argument_list|)
+expr_stmt|;
+goto|goto
+name|shut
+goto|;
+block|}
 block|}
 else|else
 comment|/* want to do MTU discovery */

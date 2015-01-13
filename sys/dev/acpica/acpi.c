@@ -3336,7 +3336,7 @@ condition|(
 operator|(
 name|env
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"hw.acpi.verbose"
 argument_list|)
@@ -3752,8 +3752,6 @@ parameter_list|)
 block|{
 name|device_t
 name|child
-decl_stmt|,
-name|parent
 decl_stmt|;
 name|device_t
 modifier|*
@@ -3783,13 +3781,6 @@ literal|0
 condition|)
 return|return;
 comment|/* 	 * Retrieve and set D-state for the sleep state if _SxD is present. 	 * Skip children who aren't attached since they are handled separately. 	 */
-name|parent
-operator|=
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -3824,9 +3815,9 @@ argument_list|)
 operator|&&
 name|acpi_device_pwr_for_sleep
 argument_list|(
-name|parent
-argument_list|,
 name|dev
+argument_list|,
+name|child
 argument_list|,
 operator|&
 name|dstate
@@ -14577,7 +14568,7 @@ condition|(
 operator|(
 name|env
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"debug.acpi.avoid"
 argument_list|)
@@ -14720,7 +14711,7 @@ condition|(
 operator|(
 name|env
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"debug.acpi.disabled"
 argument_list|)
@@ -16558,14 +16549,14 @@ expr_stmt|;
 block|}
 name|layer
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"debug.acpi.layer"
 argument_list|)
 expr_stmt|;
 name|level
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"debug.acpi.level"
 argument_list|)
@@ -16723,6 +16714,12 @@ name|struct
 name|sbuf
 name|sb
 decl_stmt|;
+name|char
+name|temp
+index|[
+literal|128
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|sbuf_new
@@ -16875,12 +16872,9 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* Copy out the old values to the user. */
-name|error
-operator|=
-name|SYSCTL_OUT
+name|strlcpy
 argument_list|(
-name|req
+name|temp
 argument_list|,
 name|sbuf_data
 argument_list|(
@@ -16888,10 +16882,9 @@ operator|&
 name|sb
 argument_list|)
 argument_list|,
-name|sbuf_len
+sizeof|sizeof
 argument_list|(
-operator|&
-name|sb
+name|temp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -16901,7 +16894,23 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* If the user is setting a string, parse it. */
+name|error
+operator|=
+name|sysctl_handle_string
+argument_list|(
+name|oidp
+argument_list|,
+name|temp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+comment|/* Check for error or no change */
 if|if
 condition|(
 name|error
@@ -16920,7 +16929,7 @@ name|dbg
 operator|=
 literal|0
 expr_stmt|;
-name|setenv
+name|kern_setenv
 argument_list|(
 operator|(
 name|char
@@ -16930,13 +16939,7 @@ name|oidp
 operator|->
 name|oid_arg1
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|req
-operator|->
-name|newptr
+name|temp
 argument_list|)
 expr_stmt|;
 name|acpi_set_debugging

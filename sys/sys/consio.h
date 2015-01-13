@@ -911,6 +911,13 @@ name|GIO_VFONT
 value|_IOR('c', 71, vfnt_t)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PIO_VFONT_DEFAULT
+value|_IO('c', 72)
+end_define
+
 begin_comment
 comment|/* get video mode information */
 end_comment

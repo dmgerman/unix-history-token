@@ -1082,8 +1082,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_generate_key_block() ==> %d byte master_key =\n\t"
 argument_list|,
 name|s
@@ -1115,8 +1117,10 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02X"
 argument_list|,
 name|s
@@ -1130,8 +1134,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1345,15 +1351,19 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_change_cipher_state(which= %d) w/\n"
 argument_list|,
 name|which
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\talg= %ld/%ld, comp= %p\n"
 argument_list|,
 name|s
@@ -1379,15 +1389,19 @@ argument_list|,
 name|comp
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tevp_cipher == %p ==?&d_cbc_ede_cipher3\n"
 argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tevp_cipher: nid, blksz= %d, %d, keylen=%d, ivlen=%d\n"
 argument_list|,
 name|c
@@ -1407,8 +1421,10 @@ operator|->
 name|iv_len
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tkey_block: len= %d, data= "
 argument_list|,
 name|s
@@ -1443,8 +1459,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x"
 argument_list|,
 name|s
@@ -1459,8 +1477,10 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -2505,13 +2525,17 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"EVP_CipherInit_ex(dd,c,key=,iv=,which)\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tkey= "
 argument_list|)
 expr_stmt|;
@@ -2530,8 +2554,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x"
 argument_list|,
 name|key
@@ -2540,13 +2566,17 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\t iv= "
 argument_list|)
 expr_stmt|;
@@ -2565,8 +2595,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x"
 argument_list|,
 name|iv
@@ -2575,8 +2607,10 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -2898,8 +2932,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_setup_key_block()\n"
 argument_list|)
 expr_stmt|;
@@ -3734,8 +3770,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_enc(%d)\n"
 argument_list|,
 name|send
@@ -4163,8 +4201,10 @@ name|unsigned
 name|long
 name|ui
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"EVP_Cipher(ds=%p,rec->data=%p,rec->input=%p,l=%ld) ==>\n"
 argument_list|,
 name|ds
@@ -4180,9 +4220,11 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
-literal|"\tEVP_CIPHER_CTX: %d buf_len, %d key_len [%d %d], %d iv_len\n"
+name|stderr
+argument_list|,
+literal|"\tEVP_CIPHER_CTX: %d buf_len, %d key_len [%lu %lu], %d iv_len\n"
 argument_list|,
 name|ds
 operator|->
@@ -4205,8 +4247,10 @@ operator|->
 name|iv_len
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\t\tIV: "
 argument_list|)
 expr_stmt|;
@@ -4227,8 +4271,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02X"
 argument_list|,
 name|ds
@@ -4239,13 +4285,17 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\trec->input="
 argument_list|)
 expr_stmt|;
@@ -4262,8 +4312,10 @@ condition|;
 name|ui
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|" %02x"
 argument_list|,
 name|rec
@@ -4274,8 +4326,10 @@ name|ui
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -4392,8 +4446,10 @@ name|unsigned
 name|long
 name|i
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\trec->data="
 argument_list|)
 expr_stmt|;
@@ -4410,8 +4466,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|" %02x"
 argument_list|,
 name|rec
@@ -4422,8 +4480,10 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -5498,8 +5558,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TLS_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"seq="
 argument_list|)
 expr_stmt|;
@@ -5520,8 +5582,10 @@ condition|;
 name|z
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02X "
 argument_list|,
 name|seq
@@ -5530,14 +5594,18 @@ name|z
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"rec="
 argument_list|)
 expr_stmt|;
@@ -5561,8 +5629,10 @@ condition|;
 name|z
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02X "
 argument_list|,
 name|rec
@@ -5573,8 +5643,10 @@ name|z
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -5649,8 +5721,10 @@ condition|;
 name|z
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02X "
 argument_list|,
 name|md
@@ -5659,8 +5733,10 @@ name|z
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -5728,8 +5804,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_generate_master_secret(%p,%p, %p, %d)\n"
 argument_list|,
 name|s
@@ -5973,8 +6051,10 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_generate_master_secret() complete\n"
 argument_list|)
 expr_stmt|;
@@ -6049,9 +6129,11 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
-literal|"tls1_export_keying_material(%p,%p,%d,%s,%d,%p,%d)\n"
+name|stderr
+argument_list|,
+literal|"tls1_export_keying_material(%p,%p,%lu,%s,%lu,%p,%lu)\n"
 argument_list|,
 name|s
 argument_list|,
@@ -6363,8 +6445,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_export_keying_material() complete\n"
 argument_list|)
 expr_stmt|;
@@ -6687,6 +6771,14 @@ case|:
 return|return
 operator|(
 name|TLS1_AD_UNKNOWN_PSK_IDENTITY
+operator|)
+return|;
+case|case
+name|SSL_AD_INAPPROPRIATE_FALLBACK
+case|:
+return|return
+operator|(
+name|TLS1_AD_INAPPROPRIATE_FALLBACK
 operator|)
 return|;
 if|#

@@ -240,6 +240,14 @@ name|size_t
 name|size
 decl_stmt|;
 comment|/* size of file */
+name|caddr_t
+name|ctors_addr
+decl_stmt|;
+comment|/* address of .ctors */
+name|size_t
+name|ctors_size
+decl_stmt|;
+comment|/* size of .ctors */
 name|int
 name|ndeps
 decl_stmt|;
@@ -889,6 +897,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MODINFOMD_CTORS_ADDR
+value|0x000a
+end_define
+
+begin_comment
+comment|/* address of .ctors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MODINFOMD_CTORS_SIZE
+value|0x000b
+end_define
+
+begin_comment
+comment|/* size of .ctors */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MODINFOMD_NOCOPY
 value|0x8000
 end_define
@@ -942,6 +972,17 @@ end_define
 
 begin_comment
 comment|/* linker.hints file version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKER_HINTS_MAX
+value|(1<< 20)
+end_define
+
+begin_comment
+comment|/* Allow at most 1MB for linker.hints */
 end_comment
 
 begin_ifdef

@@ -115,16 +115,16 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|register_t
-name|vrsave
-decl_stmt|;
-name|register_t
+name|uint32_t
 name|spare
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|register_t
+name|uint32_t
+name|vrsave
+decl_stmt|;
+name|uint32_t
 name|vscr
 decl_stmt|;
 comment|/* aligned at vector element 3 */

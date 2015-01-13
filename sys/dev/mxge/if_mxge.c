@@ -6768,7 +6768,6 @@ literal|"firmware_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|fw_version
@@ -6790,7 +6789,6 @@ literal|"serial_number"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|serial_number_string
@@ -6812,7 +6810,6 @@ literal|"product_code"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|product_code_string
@@ -13271,11 +13268,12 @@ operator|->
 name|ss
 operator|)
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* pass the frame up the stack */
@@ -13638,11 +13636,12 @@ operator|->
 name|ss
 operator|)
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* pass the frame up the stack */

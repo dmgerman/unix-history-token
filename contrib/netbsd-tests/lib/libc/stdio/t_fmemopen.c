@@ -12,6 +12,11 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__NetBSD__
 argument_list|)
 end_if
@@ -3075,6 +3080,12 @@ block|}
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -3457,6 +3468,11 @@ block|}
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -3504,9 +3520,14 @@ name|testcase
 modifier|*
 name|t
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|off_t
 name|i
 decl_stmt|;
+endif|#
+directive|endif
 specifier|const
 name|char
 modifier|*
@@ -3729,6 +3750,11 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 comment|/* positive */
 for|for
 control|(
@@ -4065,6 +4091,9 @@ operator|==
 name|len
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 comment|/* positive */
 for|for
 control|(
@@ -4107,6 +4136,8 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* negative */
 for|for
 control|(
@@ -4193,6 +4224,12 @@ name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
 
 begin_comment
 comment|/* test15 - 18:  * When a stream open for writing is flushed or closed, a null byte is written  * at the current position or at the end of the buffer, depending on the size  * of the contents.  */
@@ -7194,6 +7231,11 @@ block|}
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|ATF_TP_ADD_TCS
 argument_list|(
@@ -7287,6 +7329,9 @@ argument_list|,
 name|test11
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -7294,6 +7339,8 @@ argument_list|,
 name|test12
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -7308,6 +7355,9 @@ argument_list|,
 name|test14
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -7364,6 +7414,8 @@ argument_list|,
 name|test22
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|atf_no_error
 argument_list|()

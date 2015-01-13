@@ -119,7 +119,6 @@ argument_list|(
 argument|MII
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|printInst
 argument_list|(
@@ -129,6 +128,7 @@ argument|raw_ostream&O
 argument_list|,
 argument|StringRef Annot
 argument_list|)
+name|override
 block|;
 name|void
 name|printInst

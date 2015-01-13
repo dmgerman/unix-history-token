@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1998-2006 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * miscellaneous checksumming routines  *  * Original code by Hannes Gredler (hannes@juniper.net)  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/checksum.c,v 1.4 2006-09-25 09:23:32 hannes Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -86,7 +69,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u_int16_t
+name|uint16_t
 name|crc10_table
 index|[
 literal|256
@@ -627,10 +610,10 @@ decl_stmt|,
 name|j
 decl_stmt|;
 specifier|register
-name|u_int16_t
+name|uint16_t
 name|accum
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|verify_crc10_table
 index|[
 literal|256
@@ -723,10 +706,10 @@ block|}
 end_function
 
 begin_function
-name|u_int16_t
+name|uint16_t
 name|verify_crc10_cksum
 parameter_list|(
-name|u_int16_t
+name|uint16_t
 name|accum
 parameter_list|,
 specifier|const
@@ -812,11 +795,11 @@ comment|/*  * Creates the OSI Fletcher checksum. See 8473-1, Appendix C, section
 end_comment
 
 begin_function
-name|u_int16_t
+name|uint16_t
 name|create_osi_cksum
 parameter_list|(
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|pptr
 parameter_list|,
@@ -833,16 +816,16 @@ decl_stmt|;
 name|int
 name|y
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|mul
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|c0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|c1
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|checksum
 decl_stmt|;
 name|int

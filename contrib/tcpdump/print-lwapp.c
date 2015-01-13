@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Support for the Light Weight Access Point Protocol as per draft-ohara-capwap-lwapp-04  *  * Original code by Carles Kishimoto<carles.kishimoto@gmail.com>  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lwapp.c,v 1.1 2007-07-24 16:07:30 hannes Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -52,24 +35,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
 end_include
 
@@ -86,26 +51,26 @@ file|"addrtoname.h"
 end_include
 
 begin_comment
-comment|/*   * LWAPP transport (common) header  *      0                   1                   2                   3  *     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |VER| RID |C|F|L|    Frag ID    |            Length             |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |          Status/WLANs         |   Payload...  |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  */
+comment|/*  * LWAPP transport (common) header  *      0                   1                   2                   3  *     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |VER| RID |C|F|L|    Frag ID    |            Length             |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |          Status/WLANs         |   Payload...  |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  */
 end_comment
 
 begin_struct
 struct|struct
 name|lwapp_transport_header
 block|{
-name|u_int8_t
+name|uint8_t
 name|version
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|frag_id
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|length
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|;
 block|}
@@ -120,19 +85,19 @@ begin_struct
 struct|struct
 name|lwapp_control_header
 block|{
-name|u_int8_t
+name|uint8_t
 name|msg_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|seq_num
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|len
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|session_id
 index|[
 literal|4
@@ -637,17 +602,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * LWAPP message elements  *   * 0                   1                   2                   3  * 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |      Type     |             Length            |   Value ...   |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  */
+comment|/*  * LWAPP message elements  *  * 0                   1                   2                   3  * 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |      Type     |             Length            |   Value ...   |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  */
 end_comment
 
 begin_struct
 struct|struct
 name|lwapp_message_header
 block|{
-name|u_int8_t
+name|uint8_t
 name|type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|length
 index|[
 literal|2
@@ -661,6 +626,10 @@ begin_function
 name|void
 name|lwapp_control_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -706,20 +675,14 @@ name|has_ap_ident
 condition|)
 block|{
 comment|/* check if enough bytes for AP identity */
-if|if
-condition|(
-operator|!
-name|TTEST2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
 argument_list|,
 literal|6
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 name|lwapp_trans_header
 operator|=
 operator|(
@@ -748,7 +711,7 @@ operator|)
 name|pptr
 expr_stmt|;
 block|}
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|lwapp_trans_header
@@ -767,16 +730,20 @@ operator|!=
 name|LWAPP_VERSION
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"LWAPP version %u packet not supported"
-argument_list|,
+operator|,
 name|LWAPP_EXTRACT_VERSION
 argument_list|(
 name|lwapp_trans_header
 operator|->
 name|version
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -784,22 +751,27 @@ block|}
 comment|/* non-verbose */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<
 literal|1
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"LWAPPv%u, %s frame, Flags [%s], length %u"
-argument_list|,
+operator|,
 name|LWAPP_EXTRACT_VERSION
 argument_list|(
 name|lwapp_trans_header
 operator|->
 name|version
 argument_list|)
-argument_list|,
+operator|,
 name|LWAPP_EXTRACT_CONTROL_BIT
 argument_list|(
 name|lwapp_trans_header
@@ -810,7 +782,7 @@ condition|?
 literal|"Control"
 else|:
 literal|"Data"
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|lwapp_header_bits_values
@@ -825,8 +797,9 @@ operator|)
 operator|&
 literal|0x07
 argument_list|)
-argument_list|,
+operator|,
 name|len
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -841,17 +814,20 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"LWAPPv%u, %s frame, Radio-id %u, Flags [%s], Frag-id %u, length %u"
-argument_list|,
+operator|,
 name|LWAPP_EXTRACT_VERSION
 argument_list|(
 name|lwapp_trans_header
 operator|->
 name|version
 argument_list|)
-argument_list|,
+operator|,
 name|LWAPP_EXTRACT_CONTROL_BIT
 argument_list|(
 name|lwapp_trans_header
@@ -862,14 +838,14 @@ condition|?
 literal|"Control"
 else|:
 literal|"Data"
-argument_list|,
+operator|,
 name|LWAPP_EXTRACT_RID
 argument_list|(
 name|lwapp_trans_header
 operator|->
 name|version
 argument_list|)
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|lwapp_header_bits_values
@@ -884,12 +860,13 @@ operator|)
 operator|&
 literal|0x07
 argument_list|)
-argument_list|,
+operator|,
 name|lwapp_trans_header
 operator|->
 name|frag_id
-argument_list|,
+operator|,
 name|tlen
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -897,14 +874,20 @@ condition|(
 name|has_ap_ident
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tAP identity: %s"
-argument_list|,
+operator|,
 name|etheraddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -939,10 +922,7 @@ literal|0
 condition|)
 block|{
 comment|/* did we capture enough for fully decoding the object header ? */
-if|if
-condition|(
-operator|!
-name|TTEST2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -953,10 +933,7 @@ expr|struct
 name|lwapp_control_header
 argument_list|)
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 name|lwapp_control_header
 operator|=
 operator|(
@@ -977,10 +954,13 @@ name|len
 argument_list|)
 expr_stmt|;
 comment|/* print message header */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Msg type: %s (%u), Seqnum: %u, Msg len: %d, Session: 0x%08x"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|lwapp_msg_type_values
@@ -991,40 +971,35 @@ name|lwapp_control_header
 operator|->
 name|msg_type
 argument_list|)
-argument_list|,
+operator|,
 name|lwapp_control_header
 operator|->
 name|msg_type
-argument_list|,
+operator|,
 name|lwapp_control_header
 operator|->
 name|seq_num
-argument_list|,
+operator|,
 name|msg_tlen
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|lwapp_control_header
 operator|->
 name|session_id
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* did we capture enough for fully decoding the message */
-if|if
-condition|(
-operator|!
-name|TTEST2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
 argument_list|,
 name|msg_tlen
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 comment|/* XXX - Decode sub messages for each message */
 switch|switch
 condition|(
@@ -1153,9 +1128,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t packet exceeded snapshot"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1165,6 +1144,10 @@ begin_function
 name|void
 name|lwapp_data_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -1193,20 +1176,14 @@ operator|=
 name|pptr
 expr_stmt|;
 comment|/* check if enough bytes for AP identity */
-if|if
-condition|(
-operator|!
-name|TTEST2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
 argument_list|,
 literal|6
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 name|lwapp_trans_header
 operator|=
 operator|(
@@ -1217,7 +1194,7 @@ operator|*
 operator|)
 name|pptr
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|lwapp_trans_header
@@ -1236,16 +1213,20 @@ operator|!=
 name|LWAPP_VERSION
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"LWAPP version %u packet not supported"
-argument_list|,
+operator|,
 name|LWAPP_EXTRACT_VERSION
 argument_list|(
 name|lwapp_trans_header
 operator|->
 name|version
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1253,22 +1234,27 @@ block|}
 comment|/* non-verbose */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<
 literal|1
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"LWAPPv%u, %s frame, Flags [%s], length %u"
-argument_list|,
+operator|,
 name|LWAPP_EXTRACT_VERSION
 argument_list|(
 name|lwapp_trans_header
 operator|->
 name|version
 argument_list|)
-argument_list|,
+operator|,
 name|LWAPP_EXTRACT_CONTROL_BIT
 argument_list|(
 name|lwapp_trans_header
@@ -1279,7 +1265,7 @@ condition|?
 literal|"Control"
 else|:
 literal|"Data"
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|lwapp_header_bits_values
@@ -1294,8 +1280,9 @@ operator|)
 operator|&
 literal|0x07
 argument_list|)
-argument_list|,
+operator|,
 name|len
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1310,17 +1297,20 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"LWAPPv%u, %s frame, Radio-id  %u, Flags [%s], Frag-id  %u, length %u"
-argument_list|,
+operator|,
 name|LWAPP_EXTRACT_VERSION
 argument_list|(
 name|lwapp_trans_header
 operator|->
 name|version
 argument_list|)
-argument_list|,
+operator|,
 name|LWAPP_EXTRACT_CONTROL_BIT
 argument_list|(
 name|lwapp_trans_header
@@ -1331,14 +1321,14 @@ condition|?
 literal|"Control"
 else|:
 literal|"Data"
-argument_list|,
+operator|,
 name|LWAPP_EXTRACT_RID
 argument_list|(
 name|lwapp_trans_header
 operator|->
 name|version
 argument_list|)
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|lwapp_header_bits_values
@@ -1353,12 +1343,13 @@ operator|)
 operator|&
 literal|0x07
 argument_list|)
-argument_list|,
+operator|,
 name|lwapp_trans_header
 operator|->
 name|frag_id
-argument_list|,
+operator|,
 name|tlen
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -1382,6 +1373,8 @@ expr_stmt|;
 comment|/* FIX - An IEEE 802.11 frame follows - hexdump for now */
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t"
@@ -1392,9 +1385,13 @@ expr_stmt|;
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t packet exceeded snapshot"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

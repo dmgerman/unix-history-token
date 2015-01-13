@@ -43,6 +43,12 @@ directive|define
 name|LLVM_OPTION_OPTSPECIFIER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm

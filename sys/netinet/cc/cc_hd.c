@@ -854,7 +854,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp_cc_hd
 argument_list|,
@@ -862,6 +862,8 @@ name|OID_AUTO
 argument_list|,
 name|queue_threshold
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -885,7 +887,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp_cc_hd
 argument_list|,
@@ -893,6 +895,8 @@ name|OID_AUTO
 argument_list|,
 name|pmax
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -916,7 +920,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp_cc_hd
 argument_list|,
@@ -924,6 +928,8 @@ name|OID_AUTO
 argument_list|,
 name|queue_min
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW

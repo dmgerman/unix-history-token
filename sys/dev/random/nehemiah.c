@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2013 Mark R V Murray  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2013 Mark R V Murray  * Copyright (c) 2013 David E. O'Brien<obrien@NUXI.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -51,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<sys/random.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/selinfo.h>
 end_include
 
 begin_include
@@ -104,19 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/random/random_harvestq.h>
+file|<dev/random/random_adaptors.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<dev/random/live_entropy_sources.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/random/random_adaptors.h>
 end_include
 
 begin_function_decl
@@ -141,13 +135,13 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int
 name|random_nehemiah_read
 parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -155,22 +149,22 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|struct
-name|random_hardware_source
+name|live_entropy_source
 name|random_nehemiah
 init|=
 block|{
 operator|.
-name|ident
+name|les_ident
 operator|=
-literal|"Hardware, VIA Nehemiah Padlock RNG"
+literal|"VIA Nehemiah Padlock RNG"
 block|,
 operator|.
-name|source
+name|les_source
 operator|=
 name|RANDOM_PURE_NEHEMIAH
 block|,
 operator|.
-name|read
+name|les_read
 operator|=
 name|random_nehemiah_read
 block|}
@@ -178,7 +172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* TODO: now that the Davies-Meyer hash is gone and we only use  * the 'xstore' instruction, do we still need to preserve the  * FPU state with fpu_kern_(enter|leave)() ?  */
+comment|/* XXX: FIX? Now that the Davies-Meyer hash is gone and we only use  * the 'xstore' instruction, do we still need to preserve the  * FPU state with fpu_kern_(enter|leave)() ?  */
 end_comment
 
 begin_decl_stmt
@@ -224,8 +218,7 @@ directive|ifdef
 name|__GNUCLIKE_ASM
 asm|__asm __volatile(
 literal|"movl	$0,%%edx\n\t"
-literal|".byte	0x0f, 0xa7, 0xc0"
-comment|/* xstore */
+literal|"xstore"
 operator|:
 literal|"=a"
 operator|(
@@ -311,16 +304,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* It is specifically allowed that buf is a multiple of sizeof(long) */
+end_comment
+
 begin_function
 specifier|static
-name|int
+name|u_int
 name|random_nehemiah_read
 parameter_list|(
 name|void
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|u_int
 name|c
 parameter_list|)
 block|{
@@ -462,29 +459,19 @@ operator|&
 name|random_nehemiah
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"random: live provider: \"%s\"\n"
+argument_list|,
+name|random_nehemiah
+operator|.
+name|les_ident
+argument_list|)
+expr_stmt|;
 name|random_nehemiah_init
 argument_list|()
 expr_stmt|;
 block|}
-elseif|else
-ifndef|#
-directive|ifndef
-name|KLD_MODULE
-if|if
-condition|(
-name|bootverbose
-condition|)
-endif|#
-directive|endif
-name|printf
-argument_list|(
-literal|"%s: VIA Padlock RNG not present\n"
-argument_list|,
-name|random_nehemiah
-operator|.
-name|ident
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
@@ -525,11 +512,37 @@ block|}
 end_function
 
 begin_expr_stmt
-name|LIVE_ENTROPY_SRC_MODULE
+name|DEV_MODULE
 argument_list|(
 name|nehemiah
 argument_list|,
 name|nehemiah_modevent
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|nehemiah
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|nehemiah
+argument_list|,
+name|randomdev
+argument_list|,
+literal|1
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|)

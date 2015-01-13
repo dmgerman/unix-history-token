@@ -175,12 +175,9 @@ name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 comment|/*  		 * Sanity checks to ensure that the wrong invariant isn't being 		 * tested for per PR # 181127 		 */
 name|ATF_REQUIRE_EQ
 argument_list|(
@@ -418,12 +415,9 @@ name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|ATF_REQUIRE
 argument_list|(
 name|setdomainname

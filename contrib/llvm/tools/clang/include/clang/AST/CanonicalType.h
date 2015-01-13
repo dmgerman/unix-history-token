@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/type_traits.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<iterator>
 end_include
 
@@ -162,11 +156,11 @@ name|U
 operator|>
 name|CanQual
 argument_list|(
-argument|const CanQual<U>& Other
+argument|const CanQual<U>&Other
 argument_list|,
-argument|typename llvm::enable_if<llvm::is_base_of<T
+argument|typename std::enable_if<std::is_base_of<T
 argument_list|,
-argument|U>
+argument|U>::value
 argument_list|,
 argument|int>::type =
 literal|0
@@ -2420,7 +2414,7 @@ operator|>
 block|{
 name|LLVM_CLANG_CANPROXY_TYPE_ACCESSOR
 argument_list|(
-argument|getResultType
+argument|getReturnType
 argument_list|)
 name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
 argument_list|(
@@ -2450,7 +2444,7 @@ operator|>
 block|{
 name|LLVM_CLANG_CANPROXY_TYPE_ACCESSOR
 argument_list|(
-argument|getResultType
+argument|getReturnType
 argument_list|)
 name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
 argument_list|(
@@ -2480,7 +2474,7 @@ operator|>
 block|{
 name|LLVM_CLANG_CANPROXY_TYPE_ACCESSOR
 argument_list|(
-argument|getResultType
+argument|getReturnType
 argument_list|)
 name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
 argument_list|(
@@ -2492,10 +2486,10 @@ name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
 argument_list|(
 argument|unsigned
 argument_list|,
-argument|getNumArgs
+argument|getNumParams
 argument_list|)
 name|CanQualType
-name|getArgType
+name|getParamType
 argument_list|(
 argument|unsigned i
 argument_list|)
@@ -2511,7 +2505,7 @@ operator|->
 name|getTypePtr
 argument_list|()
 operator|->
-name|getArgType
+name|getParamType
 argument_list|(
 name|i
 argument_list|)
@@ -2538,27 +2532,27 @@ name|CanTypeIterator
 operator|<
 name|FunctionProtoType
 operator|::
-name|arg_type_iterator
+name|param_type_iterator
 operator|>
-name|arg_type_iterator
+name|param_type_iterator
 expr_stmt|;
 end_typedef
 
 begin_expr_stmt
-name|arg_type_iterator
-name|arg_type_begin
+name|param_type_iterator
+name|param_type_begin
 argument_list|()
 specifier|const
 block|{
 return|return
-name|arg_type_iterator
+name|param_type_iterator
 argument_list|(
 name|this
 operator|->
 name|getTypePtr
 argument_list|()
 operator|->
-name|arg_type_begin
+name|param_type_begin
 argument_list|()
 argument_list|)
 return|;
@@ -2566,20 +2560,20 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|arg_type_iterator
-name|arg_type_end
+name|param_type_iterator
+name|param_type_end
 argument_list|()
 specifier|const
 block|{
 return|return
-name|arg_type_iterator
+name|param_type_iterator
 argument_list|(
 name|this
 operator|->
 name|getTypePtr
 argument_list|()
 operator|->
-name|arg_type_end
+name|param_type_end
 argument_list|()
 argument_list|)
 return|;

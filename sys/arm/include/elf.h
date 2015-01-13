@@ -477,13 +477,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EF_ARM_EABIMASK
-value|0xff000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|EF_ARM_EABI_VERSION
 parameter_list|(
 name|x

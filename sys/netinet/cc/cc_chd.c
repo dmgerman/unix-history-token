@@ -1907,7 +1907,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp_cc_chd
 argument_list|,
@@ -1915,6 +1915,8 @@ name|OID_AUTO
 argument_list|,
 name|loss_fair
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -1938,7 +1940,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp_cc_chd
 argument_list|,
@@ -1946,6 +1948,8 @@ name|OID_AUTO
 argument_list|,
 name|pmax
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -1969,7 +1973,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp_cc_chd
 argument_list|,
@@ -1977,6 +1981,8 @@ name|OID_AUTO
 argument_list|,
 name|queue_threshold
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -2000,7 +2006,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_cc_chd
 argument_list|,
@@ -2008,7 +2014,7 @@ name|OID_AUTO
 argument_list|,
 name|queue_min
 argument_list|,
-name|CTLTYPE_UINT
+name|CTLFLAG_VNET
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -2026,7 +2032,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_cc_chd
 argument_list|,
@@ -2034,7 +2040,7 @@ name|OID_AUTO
 argument_list|,
 name|use_max
 argument_list|,
-name|CTLTYPE_UINT
+name|CTLFLAG_VNET
 operator||
 name|CTLFLAG_RW
 argument_list|,

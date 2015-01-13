@@ -77,6 +77,10 @@ comment|/* 	 * Identifier, copied from adr_id. 	 */
 name|int
 name|add_id
 decl_stmt|;
+comment|/* 	 * Set to 1 if the map may contain wildcard entries; 	 * otherwise autofs will do negative caching. 	 */
+name|int
+name|add_wildcards
+decl_stmt|;
 comment|/* 	 * Error number, possibly returned to userland. 	 */
 name|int
 name|add_error

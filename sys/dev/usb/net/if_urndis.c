@@ -468,7 +468,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|urndis_debug
@@ -897,13 +897,7 @@ name|urndis_host_devs
 index|[]
 init|=
 block|{
-if|#
-directive|if
-literal|0
-comment|/* XXX this entry has a conflict an entry the umodem driver XXX */
-block|{USB_IFACE_CLASS(UICLASS_CDC), USB_IFACE_SUBCLASS(UISUBCLASS_ABSTRACT_CONTROL_MODEL), 	USB_IFACE_PROTOCOL(0xff)},
-endif|#
-directive|endif
+comment|/* Generic RNDIS class match */
 block|{
 name|USB_IFACE_CLASS
 argument_list|(
@@ -935,6 +929,29 @@ block|,
 name|USB_IFACE_PROTOCOL
 argument_list|(
 argument|UIPROTO_ACTIVESYNC
+argument_list|)
+block|}
+block|,
+comment|/* HP-WebOS */
+block|{
+name|USB_VENDOR
+argument_list|(
+name|USB_VENDOR_PALM
+argument_list|)
+block|,
+name|USB_IFACE_CLASS
+argument_list|(
+name|UICLASS_CDC
+argument_list|)
+block|,
+name|USB_IFACE_SUBCLASS
+argument_list|(
+name|UISUBCLASS_ABSTRACT_CONTROL_MODEL
+argument_list|)
+block|,
+name|USB_IFACE_PROTOCOL
+argument_list|(
+literal|0xff
 argument_list|)
 block|}
 block|, }

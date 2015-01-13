@@ -50,6 +50,10 @@ block|,
 name|AR71XX_SOC_AR9342
 block|,
 name|AR71XX_SOC_AR9344
+block|,
+name|AR71XX_SOC_QCA9556
+block|,
+name|AR71XX_SOC_QCA9558
 block|, }
 enum|;
 end_enum

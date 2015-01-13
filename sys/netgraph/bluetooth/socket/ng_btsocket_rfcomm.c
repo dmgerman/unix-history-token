@@ -14183,13 +14183,15 @@ name|pcb
 operator|->
 name|mtu
 argument_list|,
+name|sbavail
+argument_list|(
+operator|&
 name|pcb
 operator|->
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

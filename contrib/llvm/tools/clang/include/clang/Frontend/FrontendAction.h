@@ -96,13 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|<memory>
 end_include
 
 begin_include
@@ -140,7 +140,9 @@ block|{
 name|FrontendInputFile
 name|CurrentInput
 decl_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|ASTUnit
 operator|>
@@ -339,10 +341,10 @@ literal|"No current file!"
 argument_list|)
 block|;
 return|return
+operator|(
+name|bool
+operator|)
 name|CurrentASTUnit
-operator|.
-name|isValid
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -429,7 +431,7 @@ block|{
 return|return
 name|CurrentASTUnit
 operator|.
-name|take
+name|release
 argument_list|()
 return|;
 block|}
@@ -445,7 +447,7 @@ name|ASTUnit
 modifier|*
 name|AST
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// @}
@@ -584,18 +586,18 @@ comment|/// the already-initialized AST consumer.
 comment|///
 comment|/// This will also take care of instantiating a code completion consumer if
 comment|/// the user requested it and the action supports it.
-name|virtual
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
-name|virtual
 name|bool
 name|usesPreprocessorOnly
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -616,7 +618,6 @@ argument_list|()
 block|;
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -625,6 +626,7 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 operator|=
 literal|0
 block|;
@@ -672,7 +674,6 @@ name|protected
 operator|:
 comment|/// \brief Provide a default implementation which returns aborts;
 comment|/// this method should never be called by FrontendAction clients.
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -681,14 +682,15 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|;
 name|public
 operator|:
-name|virtual
 name|bool
 name|usesPreprocessorOnly
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -708,7 +710,9 @@ operator|:
 name|public
 name|FrontendAction
 block|{
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|FrontendAction
 operator|>
@@ -716,7 +720,6 @@ name|WrappedAction
 block|;
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -725,17 +728,15 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|BeginInvocation
 argument_list|(
-name|CompilerInstance
-operator|&
-name|CI
+argument|CompilerInstance&CI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|BeginSourceFileAction
 argument_list|(
@@ -743,16 +744,17 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef Filename
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|EndSourceFileAction
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -765,40 +767,40 @@ operator|*
 name|WrappedAction
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|usesPreprocessorOnly
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|TranslationUnitKind
 name|getTranslationUnitKind
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|hasPCHSupport
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|hasASTFileSupport
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|hasIRSupport
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|hasCodeCompletionSupport
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;  }
 end_decl_stmt

@@ -210,41 +210,61 @@ name|DIAG
 block|}
 enum|;
 comment|/// Enum values that allow the client to map NOTEs, WARNINGs, and EXTENSIONs
-comment|/// to either MAP_IGNORE (nothing), MAP_WARNING (emit a warning), MAP_ERROR
-comment|/// (emit as an error).  It allows clients to map errors to
-comment|/// MAP_ERROR/MAP_DEFAULT or MAP_FATAL (stop emitting diagnostics after this
-comment|/// one).
-enum|enum
-name|Mapping
+comment|/// to either Ignore (nothing), Remark (emit a remark), Warning
+comment|/// (emit a warning) or Error (emit as an error).  It allows clients to
+comment|/// map ERRORs to Error or Fatal (stop emitting diagnostics after this one).
+name|enum
+name|class
+name|Severity
 block|{
 comment|// NOTE: 0 means "uncomputed".
-name|MAP_IGNORE
-init|=
+name|Ignored
+operator|=
 literal|1
-block|,
-comment|///< Map this diagnostic to nothing, ignore it.
-name|MAP_WARNING
-init|=
+operator|,
+comment|///< Do not present this diagnostic, ignore it.
+name|Remark
+operator|=
 literal|2
-block|,
-comment|///< Map this diagnostic to a warning.
-name|MAP_ERROR
-init|=
+operator|,
+comment|///< Present this diagnostic as a remark.
+name|Warning
+operator|=
 literal|3
-block|,
-comment|///< Map this diagnostic to an error.
-name|MAP_FATAL
-init|=
+operator|,
+comment|///< Present this diagnostic as a warning.
+name|Error
+operator|=
 literal|4
-comment|///< Map this diagnostic to a fatal error.
+operator|,
+comment|///< Present this diagnostic as an error.
+name|Fatal
+operator|=
+literal|5
+comment|///< Present this diagnostic as a fatal error.
 block|}
-enum|;
+empty_stmt|;
+comment|/// Flavors of diagnostics we can emit. Used to filter for a particular
+comment|/// kind of diagnostic (for instance, for -W/-R flags).
+name|enum
+name|class
+name|Flavor
+block|{
+name|WarningOrError
+operator|,
+comment|///< A diagnostic that indicates a problem or potential
+comment|///< problem. Can be made fatal by -Werror.
+name|Remark
+comment|///< A diagnostic that indicates normal progress through
+comment|///< compilation.
+block|}
+empty_stmt|;
 block|}
 name|class
-name|DiagnosticMappingInfo
+name|DiagnosticMapping
 block|{
 name|unsigned
-name|Mapping
+name|Severity
 range|:
 literal|3
 decl_stmt|;
@@ -255,11 +275,6 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|IsPragma
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|HasShowInSystemHeader
 range|:
 literal|1
 decl_stmt|;
@@ -276,13 +291,13 @@ decl_stmt|;
 name|public
 label|:
 specifier|static
-name|DiagnosticMappingInfo
+name|DiagnosticMapping
 name|Make
 argument_list|(
 name|diag
 operator|::
-name|Mapping
-name|Mapping
+name|Severity
+name|Severity
 argument_list|,
 name|bool
 name|IsUser
@@ -291,14 +306,17 @@ name|bool
 name|IsPragma
 argument_list|)
 block|{
-name|DiagnosticMappingInfo
+name|DiagnosticMapping
 name|Result
 decl_stmt|;
 name|Result
 operator|.
-name|Mapping
+name|Severity
 operator|=
-name|Mapping
+operator|(
+name|unsigned
+operator|)
+name|Severity
 expr_stmt|;
 name|Result
 operator|.
@@ -311,12 +329,6 @@ operator|.
 name|IsPragma
 operator|=
 name|IsPragma
-expr_stmt|;
-name|Result
-operator|.
-name|HasShowInSystemHeader
-operator|=
-literal|0
 expr_stmt|;
 name|Result
 operator|.
@@ -336,31 +348,34 @@ return|;
 block|}
 name|diag
 operator|::
-name|Mapping
-name|getMapping
+name|Severity
+name|getSeverity
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|diag
 operator|::
-name|Mapping
-argument_list|(
-name|Mapping
-argument_list|)
+name|Severity
+operator|)
+name|Severity
 return|;
 block|}
 name|void
-name|setMapping
+name|setSeverity
 argument_list|(
 name|diag
 operator|::
-name|Mapping
+name|Severity
 name|Value
 argument_list|)
 block|{
-name|Mapping
+name|Severity
 operator|=
+operator|(
+name|unsigned
+operator|)
 name|Value
 expr_stmt|;
 block|}
@@ -381,27 +396,6 @@ block|{
 return|return
 name|IsPragma
 return|;
-block|}
-name|bool
-name|hasShowInSystemHeader
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasShowInSystemHeader
-return|;
-block|}
-name|void
-name|setShowInSystemHeader
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|HasShowInSystemHeader
-operator|=
-name|Value
-expr_stmt|;
 block|}
 name|bool
 name|hasNoWarningAsError
@@ -469,6 +463,8 @@ name|Ignored
 block|,
 name|Note
 block|,
+name|Remark
+block|,
 name|Warning
 block|,
 name|Error
@@ -494,16 +490,20 @@ operator|~
 name|DiagnosticIDs
 argument_list|()
 block|;
-comment|/// \brief Return an ID for a diagnostic with the specified message and level.
+comment|/// \brief Return an ID for a diagnostic with the specified format string and
+comment|/// level.
 comment|///
 comment|/// If this is the first request for this diagnostic, it is registered and
 comment|/// created, otherwise the existing ID is returned.
+comment|// FIXME: Replace this function with a create-only facilty like
+comment|// createCustomDiagIDFromFormatString() to enforce safe usage. At the time of
+comment|// writing, nearly all callers of this function were invalid.
 name|unsigned
 name|getCustomDiagID
 argument_list|(
 argument|Level L
 argument_list|,
-argument|StringRef Message
+argument|StringRef FormatString
 argument_list|)
 block|;
 comment|//===--------------------------------------------------------------------===//
@@ -676,6 +676,8 @@ comment|/// \returns \c true if the given group is unknown, \c false otherwise.
 name|bool
 name|getDiagnosticsInGroup
 argument_list|(
+argument|diag::Flavor Flavor
+argument_list|,
 argument|StringRef Group
 argument_list|,
 argument|SmallVectorImpl<diag::kind>&Diags
@@ -686,16 +688,20 @@ comment|/// \brief Get the set of all diagnostic IDs.
 name|void
 name|getAllDiagnostics
 argument_list|(
+argument|diag::Flavor Flavor
+argument_list|,
 argument|SmallVectorImpl<diag::kind>&Diags
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Get the warning option with the closest edit distance to the given
-comment|/// group name.
+comment|/// \brief Get the diagnostic option with the closest edit distance to the
+comment|/// given group name.
 specifier|static
 name|StringRef
-name|getNearestWarningOption
+name|getNearestOption
 argument_list|(
+argument|diag::Flavor Flavor
+argument_list|,
 argument|StringRef Group
 argument_list|)
 block|;
@@ -721,23 +727,21 @@ argument_list|,
 argument|const DiagnosticsEngine&Diag
 argument_list|)
 specifier|const
+name|LLVM_READONLY
 block|;
-comment|/// \brief An internal implementation helper used when \p DiagClass is
-comment|/// already known.
-name|DiagnosticIDs
+name|diag
 operator|::
-name|Level
-name|getDiagnosticLevel
+name|Severity
+name|getDiagnosticSeverity
 argument_list|(
 argument|unsigned DiagID
-argument_list|,
-argument|unsigned DiagClass
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
 argument|const DiagnosticsEngine&Diag
 argument_list|)
 specifier|const
+name|LLVM_READONLY
 block|;
 comment|/// \brief Used to report a diagnostic that is finally fully formed.
 comment|///

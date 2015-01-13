@@ -40,7 +40,7 @@ comment|/// \file
 end_comment
 
 begin_comment
-comment|/// \brief Forward declares and imports various common LLVM datatypes that
+comment|/// \brief Forward-declares and imports various common LLVM datatypes that
 end_comment
 
 begin_comment
@@ -124,7 +124,7 @@ name|typename
 name|T
 operator|>
 name|class
-name|OwningPtr
+name|MutableArrayRef
 expr_stmt|;
 name|template
 operator|<
@@ -263,7 +263,7 @@ expr_stmt|;
 name|using
 name|llvm
 operator|::
-name|OwningPtr
+name|MutableArrayRef
 expr_stmt|;
 name|using
 name|llvm

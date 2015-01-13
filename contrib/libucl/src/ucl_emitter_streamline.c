@@ -401,7 +401,6 @@ name|print_key
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|LL_PREPEND
 argument_list|(
 name|sctx
@@ -411,6 +410,7 @@ argument_list|,
 name|st
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

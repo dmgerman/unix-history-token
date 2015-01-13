@@ -75,7 +75,7 @@ return|;
 else|else
 return|return
 operator|(
-name|cpackl
+name|CMPLXL
 argument_list|(
 name|INFINITY
 argument_list|,

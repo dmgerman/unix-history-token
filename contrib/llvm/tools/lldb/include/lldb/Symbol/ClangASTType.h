@@ -519,6 +519,15 @@ name|NULL
 argument_list|)
 decl|const
 decl_stmt|;
+name|uint32_t
+name|IsHomogeneousAggregate
+argument_list|(
+name|ClangASTType
+operator|*
+name|base_type_ptr
+argument_list|)
+decl|const
+decl_stmt|;
 name|size_t
 name|GetNumberOfFunctionArguments
 argument_list|()
@@ -661,7 +670,13 @@ name|ClangASTType
 operator|*
 name|pointee_type
 operator|=
-name|NULL
+name|nullptr
+argument_list|,
+name|bool
+operator|*
+name|is_rvalue
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -744,6 +759,11 @@ specifier|const
 expr_stmt|;
 name|ConstString
 name|GetTypeName
+argument_list|()
+specifier|const
+expr_stmt|;
+name|ConstString
+name|GetDisplayTypeName
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -866,8 +886,10 @@ name|ClangASTType
 name|GetArrayElementType
 argument_list|(
 name|uint64_t
-operator|&
+operator|*
 name|stride
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -881,7 +903,7 @@ name|GetFullyUnqualifiedType
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// Returns -1 if this isn't a function of if the fucntion doesn't have a prototype
+comment|// Returns -1 if this isn't a function of if the function doesn't have a prototype
 comment|// Returns a value>= 0 if there is a prototype.
 name|int
 name|GetFunctionArgumentCount
@@ -1121,11 +1143,6 @@ name|ExecutionContext
 operator|*
 name|exe_ctx
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|parent_name
-argument_list|,
 name|size_t
 name|idx
 argument_list|,
@@ -1167,6 +1184,10 @@ argument_list|,
 name|bool
 operator|&
 name|child_is_deref_of_parent
+argument_list|,
+name|ValueObject
+operator|*
+name|valobj
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1718,6 +1739,14 @@ operator|&
 name|new_value
 argument_list|)
 decl_stmt|;
+name|clang
+operator|::
+name|EnumDecl
+operator|*
+name|GetAsEnumDecl
+argument_list|()
+specifier|const
+expr_stmt|;
 name|clang
 operator|::
 name|RecordDecl

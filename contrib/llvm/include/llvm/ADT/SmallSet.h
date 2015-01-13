@@ -156,10 +156,15 @@ name|mutable_iterator
 expr_stmt|;
 name|public
 label|:
+typedef|typedef
+name|size_t
+name|size_type
+typedef|;
 name|SmallSet
 argument_list|()
 block|{}
 name|bool
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|empty
 argument_list|()
 specifier|const
@@ -176,7 +181,7 @@ name|empty
 argument_list|()
 return|;
 block|}
-name|unsigned
+name|size_type
 name|size
 argument_list|()
 specifier|const
@@ -196,8 +201,8 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// count - Return true if the element is in the set.
-name|bool
+comment|/// count - Return 1 if the element is in the set, 0 otherwise.
+name|size_type
 name|count
 argument_list|(
 specifier|const
@@ -219,11 +224,15 @@ name|vfind
 argument_list|(
 name|V
 argument_list|)
-operator|!=
+operator|==
 name|Vector
 operator|.
 name|end
 argument_list|()
+condition|?
+literal|0
+else|:
+literal|1
 return|;
 block|}
 else|else

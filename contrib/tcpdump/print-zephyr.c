@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Decode and print Zephyr packets.  *  *	http://web.mit.edu/zephyr/doc/protocol  *  * Copyright (c) 2001 Nickolai Zeldovich<kolya@MIT.EDU>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * The name of the author(s) may not be used to endorse or promote  * products derived from this software without specific prior written  * permission.  THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-zephyr.c,v 1.10 2007-08-09 18:47:27 hannes Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -173,6 +156,7 @@ end_enum
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|z_types
@@ -237,6 +221,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|z_buf
 index|[
@@ -251,6 +236,10 @@ name|char
 modifier|*
 name|parse_field
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|char
 modifier|*
 modifier|*
@@ -291,7 +280,9 @@ operator|(
 name|char
 operator|*
 operator|)
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 return|return
 name|NULL
@@ -310,7 +301,9 @@ operator|(
 name|char
 operator|*
 operator|)
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|&&
 operator|*
 name|len
@@ -361,7 +354,9 @@ operator|(
 name|char
 operator|*
 operator|)
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 return|return
 name|NULL
@@ -514,6 +509,10 @@ begin_function
 name|void
 name|zephyr_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -592,7 +591,7 @@ define|#
 directive|define
 name|PARSE_STRING
 define|\
-value|s = parse_field(&parse,&parselen);	\ 	if (!s) lose = 1;
+value|s = parse_field(ndo,&parse,&parselen);	\ 	if (!s) lose = 1;
 define|#
 directive|define
 name|PARSE_FIELD_INT
@@ -752,18 +751,26 @@ condition|(
 name|lose
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|zephyr] (%d)"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" zephyr"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -782,23 +789,30 @@ literal|3
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" v%s"
-argument_list|,
+operator|,
 name|z
 operator|.
 name|version
 operator|+
 literal|4
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|z_types
@@ -809,6 +823,7 @@ name|z
 operator|.
 name|kind
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -844,14 +859,18 @@ argument_list|,
 literal|"SENT"
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"/%s"
-argument_list|,
+operator|,
 name|str_to_lower
 argument_list|(
 name|ackdata
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -862,13 +881,17 @@ name|z
 operator|.
 name|sender
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|z
 operator|.
 name|sender
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -896,9 +919,13 @@ argument_list|,
 literal|"USER_HIDE"
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" hide"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -914,19 +941,27 @@ argument_list|,
 literal|"USER_UNHIDE"
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" unhide"
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" locate %s"
-argument_list|,
+operator|,
 name|z
 operator|.
 name|inst
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -944,16 +979,20 @@ literal|"ZEPHYR_ADMIN"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" zephyr-admin %s"
-argument_list|,
+operator|,
 name|str_to_lower
 argument_list|(
 name|z
 operator|.
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1017,10 +1056,13 @@ literal|"UNSUBSCRIBE"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %ssub%s"
-argument_list|,
+operator|,
 name|strcmp
 argument_list|(
 name|z
@@ -1033,7 +1075,7 @@ condition|?
 literal|"un"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|strcmp
 argument_list|(
 name|z
@@ -1046,6 +1088,7 @@ condition|?
 literal|""
 else|:
 literal|"-nodefs"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1094,10 +1137,13 @@ condition|(
 operator|!
 name|lose
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|z_triple
 argument_list|(
 name|c
@@ -1106,6 +1152,7 @@ name|i
 argument_list|,
 name|r
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1124,9 +1171,13 @@ literal|"GIMME"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" ret"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1144,9 +1195,13 @@ literal|"GIMMEDEFS"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" gimme-defs"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1164,23 +1219,31 @@ literal|"CLEARSUB"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" clear-subs"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|str_to_lower
 argument_list|(
 name|z
 operator|.
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1198,16 +1261,20 @@ literal|"HM"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|str_to_lower
 argument_list|(
 name|z
 operator|.
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1237,9 +1304,13 @@ argument_list|,
 literal|"ADD_SUBSCRIBE"
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" realm add-subs"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1254,9 +1325,13 @@ argument_list|,
 literal|"REQ_SUBSCRIBE"
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" realm req-subs"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1271,9 +1346,13 @@ argument_list|,
 literal|"RLM_SUBSCRIBE"
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" realm rlm-sub"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1288,9 +1367,13 @@ argument_list|,
 literal|"RLM_UNSUBSCRIBE"
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" realm rlm-unsub"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1309,28 +1392,36 @@ literal|"HM_CTL"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" hm_ctl %s"
-argument_list|,
+operator|,
 name|str_to_lower
 argument_list|(
 name|z
 operator|.
 name|inst
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|str_to_lower
 argument_list|(
 name|z
 operator|.
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1371,9 +1462,13 @@ literal|"GIMMESTATS"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" get-client-stats"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1392,28 +1487,36 @@ literal|"WG_CTL"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" wg_ctl %s"
-argument_list|,
+operator|,
 name|str_to_lower
 argument_list|(
 name|z
 operator|.
 name|inst
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|str_to_lower
 argument_list|(
 name|z
 operator|.
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1444,9 +1547,13 @@ literal|"USER_FLUSH"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" flush_locs"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1514,16 +1621,20 @@ literal|"NET-ANNOUNCED"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" set-exposure %s"
-argument_list|,
+operator|,
 name|str_to_lower
 argument_list|(
 name|z
 operator|.
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1543,10 +1654,13 @@ name|recipient
 operator|=
 literal|"*"
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" to %s"
-argument_list|,
+operator|,
 name|z_triple
 argument_list|(
 name|z
@@ -1561,6 +1675,7 @@ name|z
 operator|.
 name|recipient
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1570,16 +1685,19 @@ name|z
 operator|.
 name|opcode
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" op %s"
-argument_list|,
+operator|,
 name|z
 operator|.
 name|opcode
+operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

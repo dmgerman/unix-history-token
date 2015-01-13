@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_opts.c,v 1.12 2011/09/18 14:14:15 schwarze Exp $ */
+comment|/*	$Id: tbl_opts.c,v 1.15 2014/11/26 17:51:55 schwarze Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
@@ -19,10 +13,11 @@ directive|include
 file|"config.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -431,9 +426,7 @@ name|key
 condition|)
 block|{
 case|case
-operator|(
 name|KEY_DELIM
-operator|)
 case|:
 if|if
 condition|(
@@ -513,9 +506,7 @@ return|;
 block|}
 break|break;
 case|case
-operator|(
 name|KEY_TAB
-operator|)
 case|:
 if|if
 condition|(
@@ -563,9 +554,7 @@ literal|0
 operator|)
 return|;
 case|case
-operator|(
 name|KEY_LINESIZE
-operator|)
 case|:
 for|for
 control|(
@@ -670,9 +659,7 @@ literal|0
 operator|)
 return|;
 case|case
-operator|(
 name|KEY_DPOINT
-operator|)
 case|:
 if|if
 condition|(
@@ -807,7 +794,7 @@ decl_stmt|;
 comment|/* 	 * Parse individual options from the stream as surrounded by 	 * this goto.  Each pass through the routine parses out a single 	 * option and registers it.  Option arguments are processed in 	 * the arg() function. 	 */
 name|again
 label|:
-comment|/* 	 * EBNF describing this section: 	 * 	 * options	::= option_list [:space:]* [;][\n] 	 * option_list	::= option option_tail 	 * option_tail	::= [:space:]+ option_list | 	 * 		::= epsilon 	 * option	::= [:alpha:]+ args 	 * args		::= [:space:]* [(] [:alpha:]+ [)] 	 */
+comment|/* 	 * EBNF describing this section: 	 * 	 * options	::= option_list [:space:]* [;][\n] 	 * option_list	::= option option_tail 	 * option_tail	::= [,:space:]+ option_list | 	 *		::= epsilon 	 * option	::= [:alpha:]+ args 	 * args		::= [:space:]* [(] [:alpha:]+ [)] 	 */
 while|while
 condition|(
 name|isspace
@@ -956,6 +943,14 @@ operator|*
 name|pos
 index|]
 argument_list|)
+operator|||
+name|p
+index|[
+operator|*
+name|pos
+index|]
+operator|==
+literal|','
 condition|)
 operator|(
 operator|*
@@ -963,7 +958,7 @@ name|pos
 operator|)
 operator|++
 expr_stmt|;
-comment|/*  	 * Look through all of the available keys to find one that 	 * matches the input.  FIXME: hashtable this. 	 */
+comment|/* 	 * Look through all of the available keys to find one that 	 * matches the input.  FIXME: hashtable this. 	 */
 for|for
 control|(
 name|i
@@ -1041,7 +1036,7 @@ condition|)
 return|return;
 break|break;
 block|}
-comment|/*  	 * Allow us to recover from bad options by continuing to another 	 * parse sequence. 	 */
+comment|/* 	 * Allow us to recover from bad options by continuing to another 	 * parse sequence. 	 */
 if|if
 condition|(
 name|KEY_MAXKEYS

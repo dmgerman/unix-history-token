@@ -96,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/Lambda.h"
+file|"clang/AST/LambdaCapture.h"
 end_include
 
 begin_include
@@ -1856,7 +1856,7 @@ argument_list|)
 block|,
 name|SubExpr
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|public
@@ -2186,7 +2186,7 @@ operator|(
 name|Expr
 operator|*
 operator|)
-literal|0
+name|nullptr
 expr_stmt|;
 else|else
 name|Operand
@@ -2195,7 +2195,7 @@ operator|(
 name|TypeSourceInfo
 operator|*
 operator|)
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 comment|/// Determine whether this typeid has a type operand which is potentially
@@ -2874,7 +2874,7 @@ operator|(
 name|Expr
 operator|*
 operator|)
-literal|0
+name|nullptr
 expr_stmt|;
 else|else
 name|Operand
@@ -2883,7 +2883,7 @@ operator|(
 name|TypeSourceInfo
 operator|*
 operator|)
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 name|bool
@@ -3082,14 +3082,14 @@ block|}
 comment|/// Grabs __declspec(uuid()) off a type, or returns 0 if we cannot resolve to
 comment|/// a single GUID.
 specifier|static
+specifier|const
 name|UuidAttr
 operator|*
 name|GetUuidAttrOfType
 argument_list|(
 argument|QualType QT
 argument_list|,
-argument|bool *HasMultipleGUIDsPtr =
-literal|0
+argument|bool *HasMultipleGUIDsPtr = nullptr
 argument_list|)
 block|;
 comment|// Iterators
@@ -3484,10 +3484,9 @@ name|LLVM_READONLY
 block|{
 if|if
 condition|(
+operator|!
 name|getSubExpr
 argument_list|()
-operator|==
-literal|0
 condition|)
 return|return
 name|ThrowLoc
@@ -4299,12 +4298,12 @@ argument_list|)
 block|,
 name|Temp
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|SubExpr
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 specifier|static
@@ -4515,6 +4514,11 @@ operator|:
 literal|1
 block|;
 name|bool
+name|StdInitListInitialization
+operator|:
+literal|1
+block|;
+name|bool
 name|ZeroInitialization
 operator|:
 literal|1
@@ -4551,6 +4555,8 @@ argument|bool HadMultipleCandidates
 argument_list|,
 argument|bool ListInitialization
 argument_list|,
+argument|bool StdInitListInitialization
+argument_list|,
 argument|bool ZeroInitialization
 argument_list|,
 argument|ConstructionKind ConstructKind
@@ -4575,7 +4581,7 @@ argument_list|)
 block|,
 name|Constructor
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|NumArgs
@@ -4610,7 +4616,7 @@ argument_list|)
 block|,
 name|Args
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|public
@@ -4631,7 +4637,7 @@ argument_list|)
 block|,
 name|Constructor
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|NumArgs
@@ -4666,7 +4672,7 @@ argument_list|)
 block|,
 name|Args
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 specifier|static
@@ -4689,6 +4695,8 @@ argument_list|,
 argument|bool HadMultipleCandidates
 argument_list|,
 argument|bool ListInitialization
+argument_list|,
+argument|bool StdInitListInitialization
 argument_list|,
 argument|bool ZeroInitialization
 argument_list|,
@@ -4799,6 +4807,29 @@ name|ListInitialization
 operator|=
 name|V
 block|; }
+comment|/// \brief Whether this constructor call was written as list-initialization,
+comment|/// but was interpreted as forming a std::initializer_list<T> from the list
+comment|/// and passing that as a single constructor argument.
+comment|/// See C++11 [over.match.list]p1 bullet 1.
+name|bool
+name|isStdInitListInitialization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StdInitListInitialization
+return|;
+block|}
+name|void
+name|setStdInitListInitialization
+argument_list|(
+argument|bool V
+argument_list|)
+block|{
+name|StdInitListInitialization
+operator|=
+name|V
+block|; }
 comment|/// \brief Whether this construction first requires
 comment|/// zero-initialization before the initializer is called.
 name|bool
@@ -4895,7 +4926,6 @@ operator|*
 operator|*
 name|getArgs
 argument_list|()
-specifier|const
 block|{
 return|return
 name|reinterpret_cast
@@ -4907,6 +4937,29 @@ operator|>
 operator|(
 name|Args
 operator|)
+return|;
+block|}
+specifier|const
+name|Expr
+operator|*
+specifier|const
+operator|*
+name|getArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|CXXConstructExpr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getArgs
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -5316,6 +5369,8 @@ argument|bool HadMultipleCandidates
 argument_list|,
 argument|bool ListInitialization
 argument_list|,
+argument|bool StdInitListInitialization
+argument_list|,
 argument|bool ZeroInitialization
 argument_list|)
 block|;
@@ -5404,23 +5459,7 @@ name|LambdaExpr
 operator|:
 name|public
 name|Expr
-block|{   enum
 block|{
-comment|/// \brief Flag used by the Capture class to indicate that the given
-comment|/// capture was implicit.
-name|Capture_Implicit
-operator|=
-literal|0x01
-block|,
-comment|/// \brief Flag used by the Capture class to indicate that the
-comment|/// given capture was by-copy.
-comment|///
-comment|/// This includes the case of a non-reference init-capture.
-name|Capture_ByCopy
-operator|=
-literal|0x02
-block|}
-block|;
 comment|/// \brief The source range that covers the lambda introducer ([...]).
 name|SourceRange
 name|IntroducerRange
@@ -5476,240 +5515,10 @@ block|;
 comment|// Note: The capture initializers are stored directly after the lambda
 comment|// expression, along with the index variables used to initialize by-copy
 comment|// array captures.
-name|public
-operator|:
-comment|/// \brief Describes the capture of a variable or of \c this, or of a
-comment|/// C++1y init-capture.
-name|class
+typedef|typedef
+name|LambdaCapture
 name|Capture
-block|{
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
-name|Decl
-operator|*
-block|,
-literal|2
-operator|>
-name|DeclAndBits
-block|;
-name|SourceLocation
-name|Loc
-block|;
-name|SourceLocation
-name|EllipsisLoc
-block|;
-name|friend
-name|class
-name|ASTStmtReader
-block|;
-name|friend
-name|class
-name|ASTStmtWriter
-block|;
-name|public
-operator|:
-comment|/// \brief Create a new capture of a variable or of \c this.
-comment|///
-comment|/// \param Loc The source location associated with this capture.
-comment|///
-comment|/// \param Kind The kind of capture (this, byref, bycopy), which must
-comment|/// not be init-capture.
-comment|///
-comment|/// \param Implicit Whether the capture was implicit or explicit.
-comment|///
-comment|/// \param Var The local variable being captured, or null if capturing
-comment|/// \c this.
-comment|///
-comment|/// \param EllipsisLoc The location of the ellipsis (...) for a
-comment|/// capture that is a pack expansion, or an invalid source
-comment|/// location to indicate that this is not a pack expansion.
-name|Capture
-argument_list|(
-argument|SourceLocation Loc
-argument_list|,
-argument|bool Implicit
-argument_list|,
-argument|LambdaCaptureKind Kind
-argument_list|,
-argument|VarDecl *Var =
-literal|0
-argument_list|,
-argument|SourceLocation EllipsisLoc = SourceLocation()
-argument_list|)
-block|;
-comment|/// \brief Determine the kind of capture.
-name|LambdaCaptureKind
-name|getCaptureKind
-argument_list|()
-specifier|const
-block|;
-comment|/// \brief Determine whether this capture handles the C++ \c this
-comment|/// pointer.
-name|bool
-name|capturesThis
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DeclAndBits
-operator|.
-name|getPointer
-argument_list|()
-operator|==
-literal|0
-return|;
-block|}
-comment|/// \brief Determine whether this capture handles a variable.
-name|bool
-name|capturesVariable
-argument_list|()
-specifier|const
-block|{
-return|return
-name|dyn_cast_or_null
-operator|<
-name|VarDecl
-operator|>
-operator|(
-name|DeclAndBits
-operator|.
-name|getPointer
-argument_list|()
-operator|)
-return|;
-block|}
-comment|/// \brief Determine whether this is an init-capture.
-name|bool
-name|isInitCapture
-argument_list|()
-specifier|const
-block|{
-return|return
-name|capturesVariable
-argument_list|()
-operator|&&
-name|getCapturedVar
-argument_list|()
-operator|->
-name|isInitCapture
-argument_list|()
-return|;
-block|}
-comment|/// \brief Retrieve the declaration of the local variable being
-comment|/// captured.
-comment|///
-comment|/// This operation is only valid if this capture is a variable capture
-comment|/// (other than a capture of \c this).
-name|VarDecl
-operator|*
-name|getCapturedVar
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|capturesVariable
-argument_list|()
-operator|&&
-literal|"No variable available for 'this' capture"
-argument_list|)
-block|;
-return|return
-name|cast
-operator|<
-name|VarDecl
-operator|>
-operator|(
-name|DeclAndBits
-operator|.
-name|getPointer
-argument_list|()
-operator|)
-return|;
-block|}
-comment|/// \brief Determine whether this was an implicit capture (not
-comment|/// written between the square brackets introducing the lambda).
-name|bool
-name|isImplicit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DeclAndBits
-operator|.
-name|getInt
-argument_list|()
-operator|&
-name|Capture_Implicit
-return|;
-block|}
-comment|/// \brief Determine whether this was an explicit capture (written
-comment|/// between the square brackets introducing the lambda).
-name|bool
-name|isExplicit
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|isImplicit
-argument_list|()
-return|;
-block|}
-comment|/// \brief Retrieve the source location of the capture.
-comment|///
-comment|/// For an explicit capture, this returns the location of the
-comment|/// explicit capture in the source. For an implicit capture, this
-comment|/// returns the location at which the variable or \c this was first
-comment|/// used.
-name|SourceLocation
-name|getLocation
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Loc
-return|;
-block|}
-comment|/// \brief Determine whether this capture is a pack expansion,
-comment|/// which captures a function parameter pack.
-name|bool
-name|isPackExpansion
-argument_list|()
-specifier|const
-block|{
-return|return
-name|EllipsisLoc
-operator|.
-name|isValid
-argument_list|()
-return|;
-block|}
-comment|/// \brief Retrieve the location of the ellipsis for a capture
-comment|/// that is a pack expansion.
-name|SourceLocation
-name|getEllipsisLoc
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isPackExpansion
-argument_list|()
-operator|&&
-literal|"No ellipsis location for a non-expansion"
-argument_list|)
-block|;
-return|return
-name|EllipsisLoc
-return|;
-block|}
-expr|}
-block|;
-name|private
-operator|:
+typedef|;
 comment|/// \brief Construct a lambda expression.
 name|LambdaExpr
 argument_list|(
@@ -5786,7 +5595,7 @@ index|[
 name|NumCaptures
 index|]
 operator|=
-literal|0
+name|nullptr
 block|;   }
 name|Stmt
 operator|*
@@ -5982,6 +5791,22 @@ name|Capture
 modifier|*
 name|capture_iterator
 typedef|;
+comment|/// \brief An iterator over a range of lambda captures.
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|capture_iterator
+operator|>
+name|capture_range
+expr_stmt|;
+comment|/// \brief Retrieve this lambda's captures.
+name|capture_range
+name|captures
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Retrieve an iterator pointing to the first lambda capture.
 name|capture_iterator
 name|capture_begin
@@ -6005,6 +5830,12 @@ return|return
 name|NumCaptures
 return|;
 block|}
+comment|/// \brief Retrieve this lambda's explicit captures.
+name|capture_range
+name|explicit_captures
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Retrieve an iterator pointing to the first explicit
 comment|/// lambda capture.
 name|capture_iterator
@@ -6016,6 +5847,12 @@ comment|/// \brief Retrieve an iterator pointing past the end of the sequence of
 comment|/// explicit lambda captures.
 name|capture_iterator
 name|explicit_capture_end
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Retrieve this lambda's implicit captures.
+name|capture_range
+name|implicit_captures
 argument_list|()
 specifier|const
 block|;
@@ -6041,6 +5878,33 @@ modifier|*
 modifier|*
 name|capture_init_iterator
 typedef|;
+comment|/// \brief Retrieve the initialization expressions for this lambda's captures.
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|capture_init_iterator
+operator|>
+name|capture_inits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|capture_init_iterator
+operator|>
+operator|(
+name|capture_init_begin
+argument_list|()
+expr|,
+name|capture_init_end
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// \brief Retrieve the first initialization argument for this
 comment|/// lambda expression (which initializes the first capture field).
 name|capture_init_iterator
@@ -6529,7 +6393,7 @@ argument_list|)
 block|,
 name|SubExprs
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|void
@@ -6669,7 +6533,7 @@ literal|0
 index|]
 operator|)
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|const
@@ -6693,7 +6557,7 @@ literal|0
 index|]
 operator|)
 else|:
-literal|0
+name|nullptr
 return|;
 block|}
 name|unsigned
@@ -6876,7 +6740,7 @@ name|Array
 index|]
 operator|)
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|const
@@ -6901,7 +6765,7 @@ name|Array
 index|]
 operator|)
 else|:
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Returns the CXXConstructExpr from this new-expression, or null.
@@ -7303,14 +7167,14 @@ argument_list|)
 block|,
 name|OperatorDelete
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Argument
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
-block|{ }
+block|{}
 name|bool
 name|isGlobalDelete
 argument_list|()
@@ -7674,7 +7538,7 @@ argument_list|)
 block|,
 name|Base
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|IsArrow
@@ -7687,7 +7551,7 @@ argument_list|()
 block|,
 name|ScopeType
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|Expr
@@ -7952,563 +7816,12 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Represents a GCC or MS unary type trait, as used in the
-comment|/// implementation of TR1/C++11 type trait templates.
-comment|///
-comment|/// Example:
-comment|/// \code
-comment|///   __is_pod(int) == true
-comment|///   __is_enum(std::string) == false
-comment|/// \endcode
-name|class
-name|UnaryTypeTraitExpr
-operator|:
-name|public
-name|Expr
-block|{
-comment|/// \brief The trait. A UnaryTypeTrait enum in MSVC compatible unsigned.
-name|unsigned
-name|UTT
-operator|:
-literal|31
-block|;
-comment|/// The value of the type trait. Unspecified if dependent.
-name|bool
-name|Value
-operator|:
-literal|1
-block|;
-comment|/// \brief The location of the type trait keyword.
-name|SourceLocation
-name|Loc
-block|;
-comment|/// \brief The location of the closing paren.
-name|SourceLocation
-name|RParen
-block|;
-comment|/// \brief The type being queried.
-name|TypeSourceInfo
-operator|*
-name|QueriedType
-block|;
-name|public
-operator|:
-name|UnaryTypeTraitExpr
-argument_list|(
-argument|SourceLocation loc
-argument_list|,
-argument|UnaryTypeTrait utt
-argument_list|,
-argument|TypeSourceInfo *queried
-argument_list|,
-argument|bool value
-argument_list|,
-argument|SourceLocation rparen
-argument_list|,
-argument|QualType ty
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|UnaryTypeTraitExprClass
-argument_list|,
-name|ty
-argument_list|,
-name|VK_RValue
-argument_list|,
-name|OK_Ordinary
-argument_list|,
-name|false
-argument_list|,
-name|queried
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isDependentType
-argument_list|()
-argument_list|,
-name|queried
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isInstantiationDependentType
-argument_list|()
-argument_list|,
-name|queried
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|containsUnexpandedParameterPack
-argument_list|()
-argument_list|)
-block|,
-name|UTT
-argument_list|(
-name|utt
-argument_list|)
-block|,
-name|Value
-argument_list|(
-name|value
-argument_list|)
-block|,
-name|Loc
-argument_list|(
-name|loc
-argument_list|)
-block|,
-name|RParen
-argument_list|(
-name|rparen
-argument_list|)
-block|,
-name|QueriedType
-argument_list|(
-argument|queried
-argument_list|)
-block|{ }
-name|explicit
-name|UnaryTypeTraitExpr
-argument_list|(
-argument|EmptyShell Empty
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|UnaryTypeTraitExprClass
-argument_list|,
-name|Empty
-argument_list|)
-block|,
-name|UTT
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Value
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|QueriedType
-argument_list|()
-block|{ }
-name|SourceLocation
-name|getLocStart
-argument_list|()
-specifier|const
-name|LLVM_READONLY
-block|{
-return|return
-name|Loc
-return|;
-block|}
-name|SourceLocation
-name|getLocEnd
-argument_list|()
-specifier|const
-name|LLVM_READONLY
-block|{
-return|return
-name|RParen
-return|;
-block|}
-name|UnaryTypeTrait
-name|getTrait
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|UnaryTypeTrait
-operator|>
-operator|(
-name|UTT
-operator|)
-return|;
-block|}
-name|QualType
-name|getQueriedType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QueriedType
-operator|->
-name|getType
-argument_list|()
-return|;
-block|}
-name|TypeSourceInfo
-operator|*
-name|getQueriedTypeSourceInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QueriedType
-return|;
-block|}
-name|bool
-name|getValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Value
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getStmtClass
-argument_list|()
-operator|==
-name|UnaryTypeTraitExprClass
-return|;
-block|}
-comment|// Iterators
-name|child_range
-name|children
-argument_list|()
-block|{
-return|return
-name|child_range
-argument_list|()
-return|;
-block|}
-name|friend
-name|class
-name|ASTStmtReader
-block|; }
-block|;
-comment|/// \brief Represents a GCC or MS binary type trait, as used in the
-comment|/// implementation of TR1/C++11 type trait templates.
-comment|///
-comment|/// Example:
-comment|/// \code
-comment|///   __is_base_of(Base, Derived) == true
-comment|/// \endcode
-name|class
-name|BinaryTypeTraitExpr
-operator|:
-name|public
-name|Expr
-block|{
-comment|/// \brief The trait. A BinaryTypeTrait enum in MSVC compatible unsigned.
-name|unsigned
-name|BTT
-operator|:
-literal|8
-block|;
-comment|/// The value of the type trait. Unspecified if dependent.
-name|bool
-name|Value
-operator|:
-literal|1
-block|;
-comment|/// \brief The location of the type trait keyword.
-name|SourceLocation
-name|Loc
-block|;
-comment|/// \brief The location of the closing paren.
-name|SourceLocation
-name|RParen
-block|;
-comment|/// \brief The lhs type being queried.
-name|TypeSourceInfo
-operator|*
-name|LhsType
-block|;
-comment|/// \brief The rhs type being queried.
-name|TypeSourceInfo
-operator|*
-name|RhsType
-block|;
-name|public
-operator|:
-name|BinaryTypeTraitExpr
-argument_list|(
-argument|SourceLocation loc
-argument_list|,
-argument|BinaryTypeTrait btt
-argument_list|,
-argument|TypeSourceInfo *lhsType
-argument_list|,
-argument|TypeSourceInfo *rhsType
-argument_list|,
-argument|bool value
-argument_list|,
-argument|SourceLocation rparen
-argument_list|,
-argument|QualType ty
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|BinaryTypeTraitExprClass
-argument_list|,
-name|ty
-argument_list|,
-name|VK_RValue
-argument_list|,
-name|OK_Ordinary
-argument_list|,
-name|false
-argument_list|,
-name|lhsType
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isDependentType
-argument_list|()
-operator|||
-name|rhsType
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isDependentType
-argument_list|()
-argument_list|,
-operator|(
-name|lhsType
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isInstantiationDependentType
-argument_list|()
-operator|||
-name|rhsType
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isInstantiationDependentType
-argument_list|()
-operator|)
-argument_list|,
-operator|(
-name|lhsType
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|containsUnexpandedParameterPack
-argument_list|()
-operator|||
-name|rhsType
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|containsUnexpandedParameterPack
-argument_list|()
-operator|)
-argument_list|)
-block|,
-name|BTT
-argument_list|(
-name|btt
-argument_list|)
-block|,
-name|Value
-argument_list|(
-name|value
-argument_list|)
-block|,
-name|Loc
-argument_list|(
-name|loc
-argument_list|)
-block|,
-name|RParen
-argument_list|(
-name|rparen
-argument_list|)
-block|,
-name|LhsType
-argument_list|(
-name|lhsType
-argument_list|)
-block|,
-name|RhsType
-argument_list|(
-argument|rhsType
-argument_list|)
-block|{ }
-name|explicit
-name|BinaryTypeTraitExpr
-argument_list|(
-argument|EmptyShell Empty
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|BinaryTypeTraitExprClass
-argument_list|,
-name|Empty
-argument_list|)
-block|,
-name|BTT
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Value
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|LhsType
-argument_list|()
-block|,
-name|RhsType
-argument_list|()
-block|{ }
-name|SourceLocation
-name|getLocStart
-argument_list|()
-specifier|const
-name|LLVM_READONLY
-block|{
-return|return
-name|Loc
-return|;
-block|}
-name|SourceLocation
-name|getLocEnd
-argument_list|()
-specifier|const
-name|LLVM_READONLY
-block|{
-return|return
-name|RParen
-return|;
-block|}
-name|BinaryTypeTrait
-name|getTrait
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|BinaryTypeTrait
-operator|>
-operator|(
-name|BTT
-operator|)
-return|;
-block|}
-name|QualType
-name|getLhsType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LhsType
-operator|->
-name|getType
-argument_list|()
-return|;
-block|}
-name|QualType
-name|getRhsType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|RhsType
-operator|->
-name|getType
-argument_list|()
-return|;
-block|}
-name|TypeSourceInfo
-operator|*
-name|getLhsTypeSourceInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LhsType
-return|;
-block|}
-name|TypeSourceInfo
-operator|*
-name|getRhsTypeSourceInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|RhsType
-return|;
-block|}
-name|bool
-name|getValue
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|!
-name|isTypeDependent
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|Value
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getStmtClass
-argument_list|()
-operator|==
-name|BinaryTypeTraitExprClass
-return|;
-block|}
-comment|// Iterators
-name|child_range
-name|children
-argument_list|()
-block|{
-return|return
-name|child_range
-argument_list|()
-return|;
-block|}
-name|friend
-name|class
-name|ASTStmtReader
-block|; }
-block|;
 comment|/// \brief A type trait used in the implementation of various C++11 and
 comment|/// Library TR1 trait templates.
 comment|///
 comment|/// \code
+comment|///   __is_pod(int) == true
+comment|///   __is_enum(std::string) == false
 comment|///   __is_trivially_constructible(vector<int>, int*, int*)
 comment|/// \endcode
 name|class
@@ -9462,7 +8775,7 @@ argument_list|()
 block|,
 name|Results
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|NumResults
@@ -9691,6 +9004,32 @@ name|NumResults
 argument_list|)
 return|;
 block|}
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|decls_iterator
+operator|>
+name|decls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|decls_iterator
+operator|>
+operator|(
+name|decls_begin
+argument_list|()
+expr|,
+name|decls_end
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// \brief Gets the number of declarations in the unresolved set.
 name|unsigned
 name|getNumDecls
@@ -9834,7 +9173,13 @@ operator|->
 name|RAngleLoc
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determines whether the name was preceded by the template keyword.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasTemplateKeyword
 argument_list|()
@@ -9848,7 +9193,13 @@ name|isValid
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determines whether this expression had explicit template arguments.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasExplicitTemplateArgs
 argument_list|()
@@ -9862,26 +9213,41 @@ name|isValid
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Note that, inconsistently with the explicit-template-argument AST
+end_comment
+
+begin_comment
 comment|// nodes, users are *forbidden* from calling these methods on objects
+end_comment
+
+begin_comment
 comment|// without explicit template arguments.
+end_comment
+
+begin_function
 name|ASTTemplateArgumentListInfo
-operator|&
+modifier|&
 name|getExplicitTemplateArgs
-argument_list|()
+parameter_list|()
 block|{
 name|assert
 argument_list|(
 name|hasExplicitTemplateArgs
 argument_list|()
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 operator|*
 name|getTemplateKWAndArgsInfo
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|ASTTemplateArgumentListInfo
 operator|&
@@ -9903,6 +9269,9 @@ name|getExplicitTemplateArgs
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|TemplateArgumentLoc
 specifier|const
 operator|*
@@ -9918,6 +9287,9 @@ name|getTemplateArgs
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|getNumTemplateArgs
 argument_list|()
@@ -9930,13 +9302,21 @@ operator|.
 name|NumTemplateArgs
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Copies the template arguments into the given structure.
+end_comment
+
+begin_decl_stmt
 name|void
 name|copyTemplateArgumentsInto
 argument_list|(
-argument|TemplateArgumentListInfo&List
+name|TemplateArgumentListInfo
+operator|&
+name|List
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|getExplicitTemplateArgs
 argument_list|()
@@ -9945,11 +9325,27 @@ name|copyInto
 argument_list|(
 name|List
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Retrieves the optional explicit template arguments.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This points to the same data as getExplicitTemplateArgs(), but
+end_comment
+
+begin_comment
 comment|/// returns null if there are no explicit template arguments.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|ASTTemplateArgumentListInfo
 operator|*
@@ -9964,20 +9360,28 @@ name|hasExplicitTemplateArgs
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
 return|;
-block|}
-specifier|static
+end_return
+
+begin_function
+unit|}    static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -9995,26 +9399,68 @@ operator|==
 name|UnresolvedMemberExprClass
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 name|friend
 name|class
 name|ASTStmtReader
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|friend
 name|class
 name|ASTStmtWriter
-block|; }
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|};
 comment|/// \brief A reference to a name which we were able to look up during
+end_comment
+
+begin_comment
 comment|/// parsing but could not resolve to a specific declaration.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This arises in several ways:
+end_comment
+
+begin_comment
 comment|///   * we might be waiting for argument-dependent lookup;
+end_comment
+
+begin_comment
 comment|///   * the name might resolve to an overloaded function;
+end_comment
+
+begin_comment
 comment|/// and eventually:
+end_comment
+
+begin_comment
 comment|///   * the lookup might have included a function template.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// These never include UnresolvedUsingValueDecls, which are always class
+end_comment
+
+begin_comment
 comment|/// members and therefore appear only in UnresolvedMemberLookupExprs.
+end_comment
+
+begin_decl_stmt
 name|class
 name|UnresolvedLookupExpr
 range|:
@@ -10128,7 +9574,7 @@ argument_list|)
 block|,
 name|NamingClass
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|friend
@@ -10181,7 +9627,7 @@ name|ADL
 argument_list|,
 name|Overloaded
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
 name|Begin
 argument_list|,
@@ -10287,6 +9733,9 @@ name|getLocStart
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocEnd
 argument_list|()
@@ -10302,6 +9751,9 @@ return|return
 name|getRAngleLoc
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|getNameInfo
 argument_list|()
@@ -10309,20 +9761,22 @@ operator|.
 name|getLocEnd
 argument_list|()
 return|;
-block|}
-end_decl_stmt
+end_return
 
-begin_function
-name|child_range
+begin_macro
+unit|}    child_range
 name|children
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 return|return
 name|child_range
 argument_list|()
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -10436,7 +9890,7 @@ operator|!
 name|HasTemplateKWAndArgsInfo
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|reinterpret_cast
@@ -10924,7 +10378,7 @@ name|hasExplicitTemplateArgs
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 end_expr_stmt
 
@@ -12144,7 +11598,7 @@ operator|!
 name|HasTemplateKWAndArgsInfo
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|reinterpret_cast
@@ -12842,7 +12296,7 @@ name|hasExplicitTemplateArgs
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 end_expr_stmt
 
@@ -13232,7 +12686,7 @@ argument_list|)
 block|,
 name|Base
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|friend
@@ -14051,7 +13505,7 @@ operator|!
 name|HasTemplateKWAndArgsInfo
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 if|if
 condition|(
@@ -15017,8 +14471,11 @@ operator|:
 name|public
 name|Expr
 block|{
-name|public
+name|private
 operator|:
+expr|struct
+name|ExtraState
+block|{
 comment|/// \brief The temporary-generating expression whose value will be
 comment|/// materialized.
 name|Stmt
@@ -15032,6 +14489,22 @@ name|ValueDecl
 operator|*
 name|ExtendingDecl
 block|;
+name|unsigned
+name|ManglingNumber
+block|;   }
+block|;
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|Stmt
+operator|*
+block|,
+name|ExtraState
+operator|*
+operator|>
+name|State
+block|;
 name|friend
 name|class
 name|ASTStmtReader
@@ -15039,6 +14512,14 @@ block|;
 name|friend
 name|class
 name|ASTStmtWriter
+block|;
+name|void
+name|initializeExtraState
+argument_list|(
+argument|const ValueDecl *ExtendedBy
+argument_list|,
+argument|unsigned ManglingNumber
+argument_list|)
 block|;
 name|public
 operator|:
@@ -15049,8 +14530,6 @@ argument_list|,
 argument|Expr *Temporary
 argument_list|,
 argument|bool BoundToLvalueReference
-argument_list|,
-argument|const ValueDecl *ExtendedBy
 argument_list|)
 operator|:
 name|Expr
@@ -15088,16 +14567,11 @@ name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
 block|,
-name|Temporary
+name|State
 argument_list|(
-name|Temporary
+argument|Temporary
 argument_list|)
-block|,
-name|ExtendingDecl
-argument_list|(
-argument|ExtendedBy
-argument_list|)
-block|{   }
+block|{}
 name|MaterializeTemporaryExpr
 argument_list|(
 argument|EmptyShell Empty
@@ -15110,6 +14584,46 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
+name|Stmt
+operator|*
+name|getTemporary
+argument_list|()
+specifier|const
+block|{
+return|return
+name|State
+operator|.
+name|is
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|(
+operator|)
+condition|?
+name|State
+operator|.
+name|get
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|(
+operator|)
+else|:
+name|State
+operator|.
+name|get
+operator|<
+name|ExtraState
+operator|*
+operator|>
+operator|(
+operator|)
+operator|->
+name|Temporary
+return|;
+block|}
 comment|/// \brief Retrieve the temporary-generating subexpression whose value will
 comment|/// be materialized into a glvalue.
 name|Expr
@@ -15125,7 +14639,8 @@ name|Expr
 operator|*
 operator|>
 operator|(
-name|Temporary
+name|getTemporary
+argument_list|()
 operator|)
 return|;
 block|}
@@ -15135,6 +14650,14 @@ name|getStorageDuration
 argument_list|()
 specifier|const
 block|{
+specifier|const
+name|ValueDecl
+operator|*
+name|ExtendingDecl
+operator|=
+name|getExtendingDecl
+argument_list|()
+block|;
 if|if
 condition|(
 operator|!
@@ -15181,6 +14704,28 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|State
+operator|.
+name|is
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|(
+operator|)
+operator|?
+name|nullptr
+operator|:
+name|State
+operator|.
+name|get
+operator|<
+name|ExtraState
+operator|*
+operator|>
+operator|(
+operator|)
+operator|->
 name|ExtendingDecl
 return|;
 block|}
@@ -15188,12 +14733,41 @@ name|void
 name|setExtendingDecl
 argument_list|(
 argument|const ValueDecl *ExtendedBy
+argument_list|,
+argument|unsigned ManglingNumber
 argument_list|)
+block|;
+name|unsigned
+name|getManglingNumber
+argument_list|()
+specifier|const
 block|{
-name|ExtendingDecl
-operator|=
-name|ExtendedBy
-block|;   }
+return|return
+name|State
+operator|.
+name|is
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|(
+operator|)
+condition|?
+literal|0
+else|:
+name|State
+operator|.
+name|get
+operator|<
+name|ExtraState
+operator|*
+operator|>
+operator|(
+operator|)
+operator|->
+name|ManglingNumber
+return|;
+block|}
 comment|/// \brief Determine whether this materialized temporary is bound to an
 comment|/// lvalue reference; otherwise, it's bound to an rvalue reference.
 name|bool
@@ -15215,7 +14789,8 @@ specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|Temporary
+name|getTemporary
+argument_list|()
 operator|->
 name|getLocStart
 argument_list|()
@@ -15228,7 +14803,8 @@ specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|Temporary
+name|getTemporary
+argument_list|()
 operator|->
 name|getLocEnd
 argument_list|()
@@ -15255,13 +14831,58 @@ name|child_range
 name|children
 argument_list|()
 block|{
+if|if
+condition|(
+name|State
+operator|.
+name|is
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|child_range
+argument_list|(
+name|State
+operator|.
+name|getAddrOfPtr1
+argument_list|()
+argument_list|,
+name|State
+operator|.
+name|getAddrOfPtr1
+argument_list|()
+operator|+
+literal|1
+argument_list|)
+return|;
+name|auto
+name|ES
+operator|=
+name|State
+operator|.
+name|get
+operator|<
+name|ExtraState
+operator|*
+operator|>
+operator|(
+operator|)
+block|;
 return|return
 name|child_range
 argument_list|(
 operator|&
+name|ES
+operator|->
 name|Temporary
 argument_list|,
 operator|&
+name|ES
+operator|->
 name|Temporary
 operator|+
 literal|1

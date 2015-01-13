@@ -160,7 +160,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CallSite.h"
+file|"llvm/IR/CallSite.h"
 end_include
 
 begin_decl_stmt
@@ -205,7 +205,7 @@ label|:
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 decl_stmt|;
 specifier|const
 name|TargetLibraryInfo
@@ -256,19 +256,19 @@ comment|// Class identification, replacement for typeinfo
 name|AliasAnalysis
 argument_list|()
 operator|:
-name|TD
+name|DL
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|TLI
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|AA
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|virtual
@@ -302,7 +302,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TD
+name|DL
 return|;
 block|}
 comment|/// getTargetLibraryInfo - Return a pointer to the current TargetLibraryInfo
@@ -361,13 +361,11 @@ decl_stmt|;
 name|explicit
 name|Location
 argument_list|(
-argument|const Value *P =
-literal|0
+argument|const Value *P = nullptr
 argument_list|,
 argument|uint64_t S = UnknownSize
 argument_list|,
-argument|const MDNode *N =
-literal|0
+argument|const MDNode *N = nullptr
 argument_list|)
 block|:
 name|Ptr
@@ -450,7 +448,7 @@ name|Copy
 operator|.
 name|TBAATag
 operator|=
-literal|0
+name|nullptr
 block|;
 return|return
 name|Copy
@@ -945,6 +943,26 @@ operator||
 name|ModRef
 block|}
 enum|;
+comment|/// Get the location associated with a pointer argument of a callsite.
+comment|/// The mask bits are set to indicate the allowed aliasing ModRef kinds.
+comment|/// Note that these mask bits do not necessarily account for the overall
+comment|/// behavior of the function, but rather only provide additional
+comment|/// per-argument information.
+name|virtual
+name|Location
+name|getArgLocation
+parameter_list|(
+name|ImmutableCallSite
+name|CS
+parameter_list|,
+name|unsigned
+name|ArgIdx
+parameter_list|,
+name|ModRefResult
+modifier|&
+name|Mask
+parameter_list|)
+function_decl|;
 comment|/// getModRefBehavior - Return the behavior when calling the given call site.
 name|virtual
 name|ModRefBehavior
@@ -2110,7 +2128,7 @@ argument_list|()
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -2139,7 +2157,7 @@ argument_list|()
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -2260,6 +2278,20 @@ comment|///    NoAlias returns (e.g. calls to malloc)
 comment|///
 name|bool
 name|isIdentifiedObject
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+block|;
+comment|/// isIdentifiedFunctionLocal - Return true if V is umabigously identified
+comment|/// at the function-level. Different IdentifiedFunctionLocals can't alias.
+comment|/// Further, an IdentifiedFunctionLocal can not alias with any function
+comment|/// arguments other than itself, which is not necessarily true for
+comment|/// IdentifiedObjects.
+name|bool
+name|isIdentifiedFunctionLocal
 argument_list|(
 specifier|const
 name|Value

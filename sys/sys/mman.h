@@ -183,23 +183,23 @@ end_if
 begin_define
 define|#
 directive|define
-name|MAP_RENAME
+name|MAP_RESERVED0020
 value|0x0020
 end_define
 
 begin_comment
-comment|/* Sun: rename private pages to file */
+comment|/* previously unimplemented MAP_RENAME */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAP_NORESERVE
+name|MAP_RESERVED0040
 value|0x0040
 end_define
 
 begin_comment
-comment|/* Sun: don't reserve needed swap area */
+comment|/* previously unimplemented MAP_NORESERVE */
 end_comment
 
 begin_define

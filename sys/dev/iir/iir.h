@@ -3601,6 +3601,10 @@ block|{
 name|device_t
 name|sc_devnode
 decl_stmt|;
+name|struct
+name|mtx
+name|sc_lock
+decl_stmt|;
 name|int
 name|sc_hanum
 decl_stmt|;
@@ -3670,14 +3674,10 @@ name|cdev
 modifier|*
 name|sc_dev
 decl_stmt|;
-name|bus_space_tag_t
-name|sc_dpmemt
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_dpmemh
-decl_stmt|;
-name|bus_addr_t
-name|sc_dpmembase
+name|struct
+name|resource
+modifier|*
+name|sc_dpmem
 decl_stmt|;
 name|bus_dma_tag_t
 name|sc_parent_dmat
@@ -3958,14 +3958,11 @@ name|bus_dmamap_t
 name|gc_dmamap
 decl_stmt|;
 name|struct
-name|callout_handle
-name|gc_timeout_ch
+name|callout
+name|gc_timeout
 decl_stmt|;
 name|int
 name|gc_map_flag
-decl_stmt|;
-name|int
-name|gc_timeout
 decl_stmt|;
 name|u_int8_t
 name|gc_service
@@ -4234,18 +4231,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_extern
-extern|extern TAILQ_HEAD(gdt_softc_list
-operator|,
-extern|gdt_softc
-end_extern
-
-begin_expr_stmt
-unit|)
-name|gdt_softcs
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|extern
 name|u_int8_t
@@ -4259,8 +4244,10 @@ name|cdev
 modifier|*
 name|gdt_make_dev
 parameter_list|(
-name|int
-name|unit
+name|struct
+name|gdt_softc
+modifier|*
+name|gdt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4307,8 +4294,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|gdt_evt_str
-modifier|*
+name|void
 name|gdt_store_event
 parameter_list|(
 name|u_int16_t

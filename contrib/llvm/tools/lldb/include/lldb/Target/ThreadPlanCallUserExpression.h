@@ -157,22 +157,7 @@ name|virtual
 name|void
 name|WillPop
 argument_list|()
-block|{
-name|ThreadPlanCallFunction
-operator|::
-name|WillPop
-argument_list|()
 block|;
-if|if
-condition|(
-name|m_user_expression_sp
-condition|)
-name|m_user_expression_sp
-operator|.
-name|reset
-argument_list|()
-expr_stmt|;
-block|}
 name|virtual
 name|lldb
 operator|::
@@ -180,6 +165,30 @@ name|StopInfoSP
 name|GetRealStopInfo
 argument_list|()
 block|;
+name|virtual
+name|bool
+name|MischiefManaged
+argument_list|()
+block|;
+name|void
+name|TransferExpressionOwnership
+argument_list|()
+block|{
+name|m_manage_materialization
+operator|=
+name|true
+block|;     }
+name|virtual
+name|lldb
+operator|::
+name|ClangExpressionVariableSP
+name|GetExpressionVariable
+argument_list|()
+block|{
+return|return
+name|m_result_var_sp
+return|;
+block|}
 name|protected
 operator|:
 name|private
@@ -192,6 +201,18 @@ block|;
 comment|// This is currently just used to ensure the
 comment|// User expression the initiated this ThreadPlan
 comment|// lives as long as the thread plan does.
+name|bool
+name|m_manage_materialization
+operator|=
+name|false
+block|;
+name|lldb
+operator|::
+name|ClangExpressionVariableSP
+name|m_result_var_sp
+block|;
+comment|// If we are left to manage the materialization,
+comment|// then stuff the result expression variable here.
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ThreadPlanCallUserExpression

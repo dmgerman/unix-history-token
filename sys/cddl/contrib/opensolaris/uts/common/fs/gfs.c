@@ -109,7 +109,7 @@ file|<sys/gfs.h>
 end_include
 
 begin_comment
-comment|/*  * Generic pseudo-filesystem routines.  *  * There are significant similarities between the implementation of certain file  * system entry points across different filesystems.  While one could attempt to  * "choke up on the bat" and incorporate common functionality into a VOP  * preamble or postamble, such an approach is limited in the benefit it can  * provide.  In this file we instead define a toolkit of routines which can be  * called from a filesystem (with in-kernel pseudo-filesystems being the focus  * of the exercise) in a more component-like fashion.  *  * There are three basic classes of routines:  *  * 1) Lowlevel support routines  *  *    These routines are designed to play a support role for existing  *    pseudo-filesystems (such as procfs).  They simplify common tasks,  *    without forcing the filesystem to hand over management to GFS.  The  *    routines covered are:  *  *	gfs_readdir_init()  *	gfs_readdir_emit()  *	gfs_readdir_emitn()  *	gfs_readdir_pred()  *	gfs_readdir_fini()  *	gfs_lookup_dot()  *  * 2) Complete GFS management  *  *    These routines take a more active role in management of the  *    pseudo-filesystem.  They handle the relationship between vnode private  *    data and VFS data, as well as the relationship between vnodes in the  *    directory hierarchy.  *  *    In order to use these interfaces, the first member of every private  *    v_data must be a gfs_file_t or a gfs_dir_t.  This hands over all control  *    to GFS.  *  * 	gfs_file_create()  * 	gfs_dir_create()  * 	gfs_root_create()  *  *	gfs_file_inactive()  *	gfs_dir_inactive()  *	gfs_dir_lookup()  *	gfs_dir_readdir()  *  * 	gfs_vop_inactive()  * 	gfs_vop_lookup()  * 	gfs_vop_readdir()  * 	gfs_vop_map()  *  * 3) Single File pseudo-filesystems  *  *    This routine creates a rooted file to be overlayed ontop of another  *    file in the physical filespace.  *  *    Note that the parent is NULL (actually the vfs), but there is nothing  *    technically keeping such a file from utilizing the "Complete GFS  *    management" set of routines.  *  * 	gfs_root_create_file()  */
+comment|/*  * Generic pseudo-filesystem routines.  *  * There are significant similarities between the implementation of certain file  * system entry points across different filesystems.  While one could attempt to  * "choke up on the bat" and incorporate common functionality into a VOP  * preamble or postamble, such an approach is limited in the benefit it can  * provide.  In this file we instead define a toolkit of routines which can be  * called from a filesystem (with in-kernel pseudo-filesystems being the focus  * of the exercise) in a more component-like fashion.  *  * There are three basic classes of routines:  *  * 1) Lowlevel support routines  *  *    These routines are designed to play a support role for existing  *    pseudo-filesystems (such as procfs).  They simplify common tasks,  *    without forcing the filesystem to hand over management to GFS.  The  *    routines covered are:  *  *	gfs_readdir_init()  *	gfs_readdir_emit()  *	gfs_readdir_emitn()  *	gfs_readdir_pred()  *	gfs_readdir_fini()  *	gfs_lookup_dot()  *  * 2) Complete GFS management  *  *    These routines take a more active role in management of the  *    pseudo-filesystem.  They handle the relationship between vnode private  *    data and VFS data, as well as the relationship between vnodes in the  *    directory hierarchy.  *  *    In order to use these interfaces, the first member of every private  *    v_data must be a gfs_file_t or a gfs_dir_t.  This hands over all control  *    to GFS.  *  * 	gfs_file_create()  * 	gfs_dir_create()  * 	gfs_root_create()  *  *	gfs_file_inactive()  *	gfs_dir_inactive()  *	gfs_dir_lookup()  *	gfs_dir_readdir()  *  * 	gfs_vop_reclaim()  * 	gfs_vop_lookup()  * 	gfs_vop_readdir()  * 	gfs_vop_map()  *  * 3) Single File pseudo-filesystems  *  *    This routine creates a rooted file to be overlayed ontop of another  *    file in the physical filespace.  *  *    Note that the parent is NULL (actually the vfs), but there is nothing  *    technically keeping such a file from utilizing the "Complete GFS  *    management" set of routines.  *  * 	gfs_root_create_file()  */
 end_comment
 
 begin_ifdef
@@ -1361,6 +1361,9 @@ modifier|*
 name|nm
 parameter_list|)
 block|{
+name|int
+name|ltype
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -1433,9 +1436,30 @@ name|vpp
 operator|=
 name|dvp
 expr_stmt|;
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|dvp
+argument_list|,
+literal|"gfs_lookup_dot: non-locked dvp"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
+name|ltype
+operator|=
+name|VOP_ISLOCKED
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|dvp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|VN_HOLD
 argument_list|(
 name|pvp
@@ -1446,7 +1470,6 @@ name|vpp
 operator|=
 name|pvp
 expr_stmt|;
-block|}
 name|vn_lock
 argument_list|(
 operator|*
@@ -1457,6 +1480,16 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
+name|vn_lock
+argument_list|(
+name|dvp
+argument_list|,
+name|ltype
+operator||
+name|LK_RETRY
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -2037,7 +2070,7 @@ comment|/* sun */
 end_comment
 
 begin_comment
-comment|/*  * gfs_file_inactive()  *  * Called from the VOP_INACTIVE() routine.  If necessary, this routine will  * remove the given vnode from the parent directory and clean up any references  * in the VFS layer.  *  * If the vnode was not removed (due to a race with vget), then NULL is  * returned.  Otherwise, a pointer to the private data is returned.  */
+comment|/*  * gfs_file_inactive()  *  * Called from the VOP_RECLAIM() routine.  If necessary, this routine will  * remove the given vnode from the parent directory and clean up any references  * in the VFS layer.  *  * If the vnode was not removed (due to a race with vget), then NULL is  * returned.  Otherwise, a pointer to the private data is returned.  */
 end_comment
 
 begin_function
@@ -4189,7 +4222,7 @@ comment|/* sun */
 end_comment
 
 begin_comment
-comment|/*  * gfs_vop_inactive: VOP_INACTIVE() entry point  *  * Given a vnode that is a GFS file or directory, call gfs_file_inactive() or  * gfs_dir_inactive() as necessary, and kmem_free()s associated private data.  */
+comment|/*  * gfs_vop_reclaim: VOP_RECLAIM() entry point (solaris' VOP_INACTIVE())  *  * Given a vnode that is a GFS file or directory, call gfs_file_inactive() or  * gfs_dir_inactive() as necessary, and kmem_free()s associated private data.  */
 end_comment
 
 begin_comment
@@ -4198,12 +4231,12 @@ end_comment
 
 begin_function
 name|int
-name|gfs_vop_inactive
+name|gfs_vop_reclaim
 parameter_list|(
 name|ap
 parameter_list|)
 name|struct
-name|vop_inactive_args
+name|vop_reclaim_args
 comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
@@ -4240,6 +4273,11 @@ argument_list|)
 expr_stmt|;
 else|else
 name|gfs_file_inactive
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|vnode_destroy_vobject
 argument_list|(
 name|vp
 argument_list|)

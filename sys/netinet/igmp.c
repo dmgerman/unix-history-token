@@ -1094,7 +1094,7 @@ comment|/*  * Virtualized sysctls.  */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_STRUCT
+name|SYSCTL_STRUCT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1102,6 +1102,8 @@ name|IGMPCTL_STATS
 argument_list|,
 name|stats
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1118,7 +1120,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1126,6 +1128,8 @@ name|OID_AUTO
 argument_list|,
 name|recvifkludge
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1142,7 +1146,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1150,6 +1154,8 @@ name|OID_AUTO
 argument_list|,
 name|sendra
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1166,7 +1172,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1174,6 +1180,8 @@ name|OID_AUTO
 argument_list|,
 name|sendlocal
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1190,7 +1198,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1198,6 +1206,8 @@ name|OID_AUTO
 argument_list|,
 name|v1enable
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1214,7 +1224,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1222,6 +1232,8 @@ name|OID_AUTO
 argument_list|,
 name|v2enable
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1238,7 +1250,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1246,6 +1258,8 @@ name|OID_AUTO
 argument_list|,
 name|legacysupp
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1262,7 +1276,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1270,6 +1284,8 @@ name|OID_AUTO
 argument_list|,
 name|default_version
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -1294,7 +1310,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1302,6 +1318,8 @@ name|OID_AUTO
 argument_list|,
 name|gsrdelay
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -8000,7 +8018,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -10234,7 +10252,7 @@ if|if
 condition|(
 name|m
 condition|)
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -10818,7 +10836,7 @@ if|if
 condition|(
 name|m
 condition|)
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -11575,7 +11593,7 @@ if|if
 condition|(
 name|m
 condition|)
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,

@@ -354,12 +354,9 @@ name|ERANGE
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|atf_tc_expect_fail
 argument_list|(
 literal|"FreeBSD returns ENOTTY instead of EBADF; see bin/191936"

@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/Attr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Decl.h"
 end_include
 
@@ -88,13 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/ExprCXX.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/TypeLoc.h"
+file|"clang/AST/LambdaCapture.h"
 end_include
 
 begin_include
@@ -107,12 +107,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/PointerIntPair.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
@@ -465,6 +459,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|{
 return|return
@@ -498,6 +493,8 @@ return|return
 name|new
 argument_list|(
 argument|C
+argument_list|,
+argument|DC
 argument_list|)
 name|AccessSpecDecl
 argument_list|(
@@ -862,27 +859,147 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// The inheritance model to use for member pointers of a given CXXRecordDecl.
-block|enum
-name|MSInheritanceModel
+comment|/// \brief A lazy pointer to the definition data for a declaration.
+comment|/// FIXME: This is a little CXXRecordDecl-specific that the moment.
+name|template
+operator|<
+name|typename
+name|Decl
+block|,
+name|typename
+name|T
+operator|>
+name|class
+name|LazyDefinitionDataPtr
 block|{
-name|MSIM_Single
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|T
+operator|*
 block|,
-name|MSIM_SinglePolymorphic
-block|,
-name|MSIM_Multiple
-block|,
-name|MSIM_MultiplePolymorphic
-block|,
-name|MSIM_Virtual
-block|,
-name|MSIM_Unspecified
+name|Decl
+operator|*
+operator|>
+name|DataOrCanonicalDecl
+block|;
+name|LazyDefinitionDataPtr
+name|update
+argument_list|()
+block|{
+if|if
+condition|(
+name|Decl
+modifier|*
+name|Canon
+init|=
+name|DataOrCanonicalDecl
+operator|.
+name|template
+name|dyn_cast
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|Canon
+operator|->
+name|isCanonicalDecl
+argument_list|()
+condition|)
+name|Canon
+operator|->
+name|getMostRecentDecl
+argument_list|()
+expr_stmt|;
+else|else
+comment|// Declaration isn't canonical any more;
+comment|// update it and perform path compression.
+operator|*
+name|this
+operator|=
+name|Canon
+operator|->
+name|getPreviousDecl
+argument_list|()
+operator|->
+name|DefinitionData
+operator|.
+name|update
+argument_list|()
+expr_stmt|;
 block|}
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|public
+operator|:
+name|LazyDefinitionDataPtr
+argument_list|(
+name|Decl
+operator|*
+name|Canon
+argument_list|)
+operator|:
+name|DataOrCanonicalDecl
+argument_list|(
+argument|Canon
+argument_list|)
+block|{}
+name|LazyDefinitionDataPtr
+argument_list|(
+name|T
+operator|*
+name|Data
+argument_list|)
+operator|:
+name|DataOrCanonicalDecl
+argument_list|(
+argument|Data
+argument_list|)
+block|{}
+name|T
+operator|*
+name|getNotUpdated
+argument_list|()
+block|{
+return|return
+name|DataOrCanonicalDecl
+operator|.
+name|template
+name|dyn_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+name|T
+operator|*
+name|get
+argument_list|()
+block|{
+return|return
+name|update
+argument_list|()
+operator|.
+name|getNotUpdated
+argument_list|()
+return|;
+block|}
+expr|}
 block|;
 comment|/// \brief Represents a C++ struct/union/class.
-comment|///
-comment|/// FIXME: This class will disappear once we've properly taught RecordDecl
-comment|/// to deal with C++-specific things.
 name|class
 name|CXXRecordDecl
 operator|:
@@ -1037,13 +1154,21 @@ name|HasMutableFields
 operator|:
 literal|1
 block|;
+comment|/// \brief True if this class (or any nested anonymous struct or union)
+comment|/// has variant members.
+name|bool
+name|HasVariantMembers
+operator|:
+literal|1
+block|;
 comment|/// \brief True if there no non-field members declared by the user.
 name|bool
 name|HasOnlyCMembers
 operator|:
 literal|1
 block|;
-comment|/// \brief True if any field has an in-class initializer.
+comment|/// \brief True if any field has an in-class initializer, including those
+comment|/// within anonymous unions or structs.
 name|bool
 name|HasInClassInitializer
 operator|:
@@ -1142,7 +1267,7 @@ block|;
 comment|/// \brief True if this class has a constexpr default constructor.
 comment|///
 comment|/// This is true for either a user-declared constexpr default constructor
-comment|/// or an implicitly declared constexpr default constructor..
+comment|/// or an implicitly declared constexpr default constructor.
 name|bool
 name|HasConstexprDefaultConstructor
 operator|:
@@ -1207,6 +1332,12 @@ block|;
 comment|/// \brief Whether this class describes a C++ lambda.
 name|bool
 name|IsLambda
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether we are currently parsing base specifiers.
+name|bool
+name|IsParsingBaseSpecifiers
 operator|:
 literal|1
 block|;
@@ -1275,7 +1406,7 @@ name|Bases
 operator|.
 name|get
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 return|;
 return|return
@@ -1303,7 +1434,7 @@ name|VBases
 operator|.
 name|get
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 return|;
 return|return
@@ -1325,7 +1456,28 @@ name|getVBasesSlowCase
 argument_list|()
 specifier|const
 block|;   }
-operator|*
+block|;
+typedef|typedef
+name|LazyDefinitionDataPtr
+operator|<
+name|CXXRecordDecl
+operator|,
+expr_stmt|struct
+name|DefinitionData
+operator|>
+name|DefinitionDataPtr
+expr_stmt|;
+name|friend
+name|class
+name|LazyDefinitionDataPtr
+operator|<
+name|CXXRecordDecl
+block|, struct
+name|DefinitionData
+operator|>
+block|;
+name|mutable
+name|DefinitionDataPtr
 name|DefinitionData
 block|;
 comment|/// \brief Describes a C++ closure type (generated by a lambda expression).
@@ -1336,11 +1488,9 @@ name|public
 name|DefinitionData
 block|{
 typedef|typedef
-name|LambdaExpr
-operator|::
+name|LambdaCapture
 name|Capture
-name|Capture
-expr_stmt|;
+typedef|;
 name|LambdaDefinitionData
 argument_list|(
 argument|CXXRecordDecl *D
@@ -1391,12 +1541,12 @@ argument_list|)
 block|,
 name|ContextDecl
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Captures
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|MethodTyInfo
@@ -1470,42 +1620,32 @@ operator|*
 name|MethodTyInfo
 block|;           }
 decl_stmt|;
-name|struct
-name|DefinitionData
-modifier|&
-name|data
-function|()
-block|{
-name|assert
-argument_list|(
-name|DefinitionData
-operator|&&
-literal|"queried property of class with no definition"
-argument_list|)
-expr_stmt|;
-return|return
-operator|*
-name|DefinitionData
-return|;
-block|}
-specifier|const
-expr|struct
+block|struct
 name|DefinitionData
 operator|&
 name|data
 argument_list|()
 specifier|const
 block|{
+name|auto
+operator|*
+name|DD
+operator|=
+name|DefinitionData
+operator|.
+name|get
+argument_list|()
+block|;
 name|assert
 argument_list|(
-name|DefinitionData
+name|DD
 operator|&&
 literal|"queried property of class with no definition"
 argument_list|)
 block|;
 return|return
 operator|*
-name|DefinitionData
+name|DD
 return|;
 block|}
 block|struct
@@ -1515,16 +1655,22 @@ name|getLambdaData
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
+comment|// No update required: a merged definition cannot change any lambda
+comment|// properties.
+name|auto
+operator|*
+name|DD
+operator|=
 name|DefinitionData
-operator|&&
-literal|"queried property of lambda with no definition"
-argument_list|)
+operator|.
+name|getNotUpdated
+argument_list|()
 block|;
 name|assert
 argument_list|(
-name|DefinitionData
+name|DD
+operator|&&
+name|DD
 operator|->
 name|IsLambda
 operator|&&
@@ -1539,7 +1685,7 @@ operator|&
 operator|>
 operator|(
 operator|*
-name|DefinitionData
+name|DD
 operator|)
 return|;
 block|}
@@ -1628,6 +1774,8 @@ argument|Kind K
 argument_list|,
 argument|TagKind TK
 argument_list|,
+argument|const ASTContext&C
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation StartLoc
@@ -1654,33 +1802,11 @@ name|CXXBaseSpecifier
 modifier|*
 name|base_class_const_iterator
 typedef|;
-comment|/// \brief Iterator that traverses the base classes of a class in reverse
-comment|/// order.
-typedef|typedef
-name|std
-operator|::
-name|reverse_iterator
-operator|<
-name|base_class_iterator
-operator|>
-name|reverse_base_class_iterator
-expr_stmt|;
-comment|/// \brief Iterator that traverses the base classes of a class in reverse
-comment|/// order.
-typedef|typedef
-name|std
-operator|::
-name|reverse_iterator
-operator|<
-name|base_class_const_iterator
-operator|>
-name|reverse_base_class_const_iterator
-expr_stmt|;
-name|virtual
 name|CXXRecordDecl
 modifier|*
 name|getCanonicalDecl
 parameter_list|()
+function|override
 block|{
 return|return
 name|cast
@@ -1814,24 +1940,25 @@ name|getDefinition
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-operator|!
+name|auto
+operator|*
+name|DD
+operator|=
 name|DefinitionData
-condition|)
-return|return
-literal|0
-return|;
-return|return
-name|data
-argument_list|()
 operator|.
+name|get
+argument_list|()
+block|;
+return|return
+name|DD
+condition|?
+name|DD
+operator|->
 name|Definition
+else|:
+name|nullptr
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|bool
 name|hasDefinition
 argument_list|()
@@ -1839,13 +1966,11 @@ specifier|const
 block|{
 return|return
 name|DefinitionData
-operator|!=
-literal|0
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function_decl
 specifier|static
 name|CXXRecordDecl
 modifier|*
@@ -1877,7 +2002,7 @@ name|CXXRecordDecl
 modifier|*
 name|PrevDecl
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|bool
 name|DelayTypeCreation
@@ -1885,9 +2010,6 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|CXXRecordDecl
 modifier|*
@@ -1919,9 +2041,6 @@ name|LambdaCaptureDefault
 name|CaptureDefault
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|CXXRecordDecl
 modifier|*
@@ -1936,9 +2055,6 @@ name|unsigned
 name|ID
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|bool
 name|isDynamicClass
 argument_list|()
@@ -1958,13 +2074,31 @@ operator|!=
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
+name|void
+name|setIsParsingBaseSpecifiers
+parameter_list|()
+block|{
+name|data
+argument_list|()
+operator|.
+name|IsParsingBaseSpecifiers
+operator|=
+name|true
+expr_stmt|;
+block|}
+name|bool
+name|isParsingBaseSpecifiers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|IsParsingBaseSpecifiers
+return|;
+block|}
 comment|/// \brief Sets the base classes of this struct or class.
-end_comment
-
-begin_function_decl
 name|void
 name|setBases
 parameter_list|(
@@ -1979,13 +2113,7 @@ name|unsigned
 name|NumBases
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Retrieves the number of base classes of this class.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getNumBases
 argument_list|()
@@ -1998,9 +2126,55 @@ operator|.
 name|NumBases
 return|;
 block|}
-end_expr_stmt
-
-begin_function
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|base_class_iterator
+operator|>
+name|base_class_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|base_class_const_iterator
+operator|>
+name|base_class_const_range
+expr_stmt|;
+name|base_class_range
+name|bases
+parameter_list|()
+block|{
+return|return
+name|base_class_range
+argument_list|(
+name|bases_begin
+argument_list|()
+argument_list|,
+name|bases_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|base_class_const_range
+name|bases
+argument_list|()
+specifier|const
+block|{
+return|return
+name|base_class_const_range
+argument_list|(
+name|bases_begin
+argument_list|()
+argument_list|,
+name|bases_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|base_class_iterator
 name|bases_begin
 parameter_list|()
@@ -2013,9 +2187,6 @@ name|getBases
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|base_class_const_iterator
 name|bases_begin
 argument_list|()
@@ -2029,9 +2200,6 @@ name|getBases
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|base_class_iterator
 name|bases_end
 parameter_list|()
@@ -2046,9 +2214,6 @@ operator|.
 name|NumBases
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|base_class_const_iterator
 name|bases_end
 argument_list|()
@@ -2064,75 +2229,7 @@ operator|.
 name|NumBases
 return|;
 block|}
-end_expr_stmt
-
-begin_function
-name|reverse_base_class_iterator
-name|bases_rbegin
-parameter_list|()
-block|{
-return|return
-name|reverse_base_class_iterator
-argument_list|(
-name|bases_end
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|reverse_base_class_const_iterator
-name|bases_rbegin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|reverse_base_class_const_iterator
-argument_list|(
-name|bases_end
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|reverse_base_class_iterator
-name|bases_rend
-parameter_list|()
-block|{
-return|return
-name|reverse_base_class_iterator
-argument_list|(
-name|bases_begin
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|reverse_base_class_const_iterator
-name|bases_rend
-argument_list|()
-specifier|const
-block|{
-return|return
-name|reverse_base_class_const_iterator
-argument_list|(
-name|bases_begin
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieves the number of virtual base classes of this class.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getNumVBases
 argument_list|()
@@ -2145,9 +2242,37 @@ operator|.
 name|NumVBases
 return|;
 block|}
-end_expr_stmt
-
-begin_function
+name|base_class_range
+name|vbases
+parameter_list|()
+block|{
+return|return
+name|base_class_range
+argument_list|(
+name|vbases_begin
+argument_list|()
+argument_list|,
+name|vbases_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|base_class_const_range
+name|vbases
+argument_list|()
+specifier|const
+block|{
+return|return
+name|base_class_const_range
+argument_list|(
+name|vbases_begin
+argument_list|()
+argument_list|,
+name|vbases_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|base_class_iterator
 name|vbases_begin
 parameter_list|()
@@ -2160,9 +2285,6 @@ name|getVBases
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|base_class_const_iterator
 name|vbases_begin
 argument_list|()
@@ -2176,9 +2298,6 @@ name|getVBases
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|base_class_iterator
 name|vbases_end
 parameter_list|()
@@ -2193,9 +2312,6 @@ operator|.
 name|NumVBases
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|base_class_const_iterator
 name|vbases_end
 argument_list|()
@@ -2211,99 +2327,16 @@ operator|.
 name|NumVBases
 return|;
 block|}
-end_expr_stmt
-
-begin_function
-name|reverse_base_class_iterator
-name|vbases_rbegin
-parameter_list|()
-block|{
-return|return
-name|reverse_base_class_iterator
-argument_list|(
-name|vbases_end
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|reverse_base_class_const_iterator
-name|vbases_rbegin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|reverse_base_class_const_iterator
-argument_list|(
-name|vbases_end
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|reverse_base_class_iterator
-name|vbases_rend
-parameter_list|()
-block|{
-return|return
-name|reverse_base_class_iterator
-argument_list|(
-name|vbases_begin
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|reverse_base_class_const_iterator
-name|vbases_rend
-argument_list|()
-specifier|const
-block|{
-return|return
-name|reverse_base_class_const_iterator
-argument_list|(
-name|vbases_begin
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has any dependent base classes which
-end_comment
-
-begin_comment
 comment|/// are not the current instantiation.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasAnyDependentBases
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Iterator access to method members.  The method iterator visits
-end_comment
-
-begin_comment
 comment|/// all method members of the class, including non-instance methods,
-end_comment
-
-begin_comment
 comment|/// special methods, etc.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|specific_decl_iterator
 operator|<
@@ -2311,17 +2344,35 @@ name|CXXMethodDecl
 operator|>
 name|method_iterator
 expr_stmt|;
-end_typedef
-
-begin_comment
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|specific_decl_iterator
+operator|<
+name|CXXMethodDecl
+operator|>>
+name|method_range
+expr_stmt|;
+name|method_range
+name|methods
+argument_list|()
+specifier|const
+block|{
+return|return
+name|method_range
+argument_list|(
+name|method_begin
+argument_list|()
+argument_list|,
+name|method_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// \brief Method begin iterator.  Iterates in the order the methods
-end_comment
-
-begin_comment
 comment|/// were declared.
-end_comment
-
-begin_expr_stmt
 name|method_iterator
 name|method_begin
 argument_list|()
@@ -2335,13 +2386,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Method past-the-end iterator.
-end_comment
-
-begin_expr_stmt
 name|method_iterator
 name|method_end
 argument_list|()
@@ -2355,13 +2400,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Iterator access to constructor members.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|specific_decl_iterator
 operator|<
@@ -2369,9 +2408,33 @@ name|CXXConstructorDecl
 operator|>
 name|ctor_iterator
 expr_stmt|;
-end_typedef
-
-begin_expr_stmt
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|specific_decl_iterator
+operator|<
+name|CXXConstructorDecl
+operator|>>
+name|ctor_range
+expr_stmt|;
+name|ctor_range
+name|ctors
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ctor_range
+argument_list|(
+name|ctor_begin
+argument_list|()
+argument_list|,
+name|ctor_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|ctor_iterator
 name|ctor_begin
 argument_list|()
@@ -2385,9 +2448,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|ctor_iterator
 name|ctor_end
 argument_list|()
@@ -2401,39 +2461,35 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// An iterator over friend declarations.  All of these are defined
-end_comment
-
-begin_comment
 comment|/// in DeclFriend.h.
-end_comment
-
-begin_decl_stmt
 name|class
 name|friend_iterator
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|friend_iterator
+operator|>
+name|friend_range
+expr_stmt|;
+name|friend_range
+name|friends
+argument_list|()
+specifier|const
+expr_stmt|;
 name|friend_iterator
 name|friend_begin
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|friend_iterator
 name|friend_end
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
 name|void
 name|pushFriendDecl
 parameter_list|(
@@ -2442,13 +2498,7 @@ modifier|*
 name|FD
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Determines whether this record has any friends.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasFriends
 argument_list|()
@@ -2464,17 +2514,8 @@ name|isValid
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief \c true if we know for sure that this class has a single,
-end_comment
-
-begin_comment
 comment|/// accessible, unambiguous move constructor that is not deleted.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasSimpleMoveConstructor
 argument_list|()
@@ -2495,17 +2536,8 @@ operator|.
 name|DefaultedMoveConstructorIsDeleted
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief \c true if we know for sure that this class has a single,
-end_comment
-
-begin_comment
 comment|/// accessible, unambiguous move assignment operator that is not deleted.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasSimpleMoveAssignment
 argument_list|()
@@ -2526,17 +2558,8 @@ operator|.
 name|DefaultedMoveAssignmentIsDeleted
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief \c true if we know for sure that this class has an accessible
-end_comment
-
-begin_comment
 comment|/// destructor that is not deleted.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasSimpleDestructor
 argument_list|()
@@ -2554,13 +2577,7 @@ operator|.
 name|DefaultedDestructorIsDeleted
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has any default constructors.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasDefaultConstructor
 argument_list|()
@@ -2580,25 +2597,10 @@ name|needsImplicitDefaultConstructor
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine if we need to declare a default constructor for
-end_comment
-
-begin_comment
 comment|/// this class.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This value is used for lazy creation of default constructors.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|needsImplicitDefaultConstructor
 argument_list|()
@@ -2622,21 +2624,9 @@ name|SMF_DefaultConstructor
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has any user-declared constructors.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// When true, a default constructor will not be implicitly declared.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasUserDeclaredConstructor
 argument_list|()
@@ -2649,17 +2639,8 @@ operator|.
 name|UserDeclaredConstructor
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Whether this class has a user-provided default constructor
-end_comment
-
-begin_comment
 comment|/// per C++11.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasUserProvidedDefaultConstructor
 argument_list|()
@@ -2672,21 +2653,9 @@ operator|.
 name|UserProvidedDefaultConstructor
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a user-declared copy constructor.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// When false, a copy constructor will be implicitly declared.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasUserDeclaredCopyConstructor
 argument_list|()
@@ -2701,17 +2670,8 @@ operator|&
 name|SMF_CopyConstructor
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class needs an implicit copy
-end_comment
-
-begin_comment
 comment|/// constructor to be lazily declared.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|needsImplicitCopyConstructor
 argument_list|()
@@ -2729,17 +2689,8 @@ name|SMF_CopyConstructor
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether we need to eagerly declare a defaulted copy
-end_comment
-
-begin_comment
 comment|/// constructor for this class.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|needsOverloadResolutionForCopyConstructor
 argument_list|()
@@ -2752,17 +2703,8 @@ operator|.
 name|HasMutableFields
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether an implicit copy constructor for this type
-end_comment
-
-begin_comment
 comment|/// would have a parameter with a const-qualified reference type.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|implicitCopyConstructorHasConstParam
 argument_list|()
@@ -2775,17 +2717,8 @@ operator|.
 name|ImplicitCopyConstructorHasConstParam
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a copy constructor with
-end_comment
-
-begin_comment
 comment|/// a parameter type which is a reference to a const-qualified type.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasCopyConstructorWithConstParam
 argument_list|()
@@ -2806,29 +2739,11 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Whether this class has a user-declared move constructor or
-end_comment
-
-begin_comment
 comment|/// assignment operator.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// When false, a move constructor and assignment operator may be
-end_comment
-
-begin_comment
 comment|/// implicitly declared.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasUserDeclaredMoveOperation
 argument_list|()
@@ -2847,17 +2762,8 @@ name|SMF_MoveAssignment
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has had a move constructor
-end_comment
-
-begin_comment
 comment|/// declared by the user.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasUserDeclaredMoveConstructor
 argument_list|()
@@ -2872,13 +2778,7 @@ operator|&
 name|SMF_MoveConstructor
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a move constructor.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasMoveConstructor
 argument_list|()
@@ -2898,17 +2798,8 @@ name|needsImplicitMoveConstructor
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Set that we attempted to declare an implicitly move
-end_comment
-
-begin_comment
 comment|/// constructor, but overload resolution failed so we deleted it.
-end_comment
-
-begin_function
 name|void
 name|setImplicitMoveConstructorIsDeleted
 parameter_list|()
@@ -2936,17 +2827,8 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Determine whether this class should get an implicit move
-end_comment
-
-begin_comment
 comment|/// constructor or if any existing special member function inhibits this.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|needsImplicitMoveConstructor
 argument_list|()
@@ -2980,17 +2862,8 @@ name|hasUserDeclaredDestructor
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether we need to eagerly declare a defaulted move
-end_comment
-
-begin_comment
 comment|/// constructor for this class.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|needsOverloadResolutionForMoveConstructor
 argument_list|()
@@ -3003,25 +2876,10 @@ operator|.
 name|NeedOverloadResolutionForMoveConstructor
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a user-declared copy assignment
-end_comment
-
-begin_comment
 comment|/// operator.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// When false, a copy assigment operator will be implicitly declared.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasUserDeclaredCopyAssignment
 argument_list|()
@@ -3036,17 +2894,8 @@ operator|&
 name|SMF_CopyAssignment
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class needs an implicit copy
-end_comment
-
-begin_comment
 comment|/// assignment operator to be lazily declared.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|needsImplicitCopyAssignment
 argument_list|()
@@ -3064,17 +2913,8 @@ name|SMF_CopyAssignment
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether we need to eagerly declare a defaulted copy
-end_comment
-
-begin_comment
 comment|/// assignment operator for this class.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|needsOverloadResolutionForCopyAssignment
 argument_list|()
@@ -3087,17 +2927,8 @@ operator|.
 name|HasMutableFields
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether an implicit copy assignment operator for this
-end_comment
-
-begin_comment
 comment|/// type would have a parameter with a const-qualified reference type.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|implicitCopyAssignmentHasConstParam
 argument_list|()
@@ -3110,21 +2941,9 @@ operator|.
 name|ImplicitCopyAssignmentHasConstParam
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a copy assignment operator with
-end_comment
-
-begin_comment
 comment|/// a parameter type which is a reference to a const-qualified type or is not
-end_comment
-
-begin_comment
 comment|/// a reference.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasCopyAssignmentWithConstParam
 argument_list|()
@@ -3145,17 +2964,8 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has had a move assignment
-end_comment
-
-begin_comment
 comment|/// declared by the user.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasUserDeclaredMoveAssignment
 argument_list|()
@@ -3170,13 +2980,7 @@ operator|&
 name|SMF_MoveAssignment
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a move assignment operator.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasMoveAssignment
 argument_list|()
@@ -3196,17 +3000,8 @@ name|needsImplicitMoveAssignment
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Set that we attempted to declare an implicit move assignment
-end_comment
-
-begin_comment
 comment|/// operator, but overload resolution failed so we deleted it.
-end_comment
-
-begin_function
 name|void
 name|setImplicitMoveAssignmentIsDeleted
 parameter_list|()
@@ -3234,21 +3029,9 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Determine whether this class should get an implicit move
-end_comment
-
-begin_comment
 comment|/// assignment operator or if any existing special member function inhibits
-end_comment
-
-begin_comment
 comment|/// this.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|needsImplicitMoveAssignment
 argument_list|()
@@ -3282,17 +3065,8 @@ name|hasUserDeclaredDestructor
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether we need to eagerly declare a move assignment
-end_comment
-
-begin_comment
 comment|/// operator for this class.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|needsOverloadResolutionForMoveAssignment
 argument_list|()
@@ -3305,21 +3079,9 @@ operator|.
 name|NeedOverloadResolutionForMoveAssignment
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a user-declared destructor.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// When false, a destructor will be implicitly declared.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasUserDeclaredDestructor
 argument_list|()
@@ -3334,17 +3096,8 @@ operator|&
 name|SMF_Destructor
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class needs an implicit destructor to
-end_comment
-
-begin_comment
 comment|/// be lazily declared.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|needsImplicitDestructor
 argument_list|()
@@ -3362,17 +3115,8 @@ name|SMF_Destructor
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether we need to eagerly declare a destructor for this
-end_comment
-
-begin_comment
 comment|/// class.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|needsOverloadResolutionForDestructor
 argument_list|()
@@ -3385,110 +3129,64 @@ operator|.
 name|NeedOverloadResolutionForDestructor
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class describes a lambda function object.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isLambda
 argument_list|()
 specifier|const
 block|{
-return|return
-name|hasDefinition
-argument_list|()
-operator|&&
-name|data
-argument_list|()
+comment|// An update record can't turn a non-lambda into a lambda.
+name|auto
+operator|*
+name|DD
+operator|=
+name|DefinitionData
 operator|.
+name|getNotUpdated
+argument_list|()
+block|;
+return|return
+name|DD
+operator|&&
+name|DD
+operator|->
 name|IsLambda
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class describes a generic
-end_comment
-
-begin_comment
 comment|/// lambda function object (i.e. function call operator is
-end_comment
-
-begin_comment
 comment|/// a template).
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isGenericLambda
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the lambda call operator of the closure type
-end_comment
-
-begin_comment
 comment|/// if this is a closure type.
-end_comment
-
-begin_expr_stmt
 name|CXXMethodDecl
 operator|*
 name|getLambdaCallOperator
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the lambda static invoker, the address of which
-end_comment
-
-begin_comment
 comment|/// is returned by the conversion operator, and the body of which
-end_comment
-
-begin_comment
 comment|/// is forwarded to the lambda call operator.
-end_comment
-
-begin_expr_stmt
 name|CXXMethodDecl
 operator|*
 name|getLambdaStaticInvoker
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the generic lambda's template parameter list.
-end_comment
-
-begin_comment
 comment|/// Returns null if the class does not represent a lambda or a generic
-end_comment
-
-begin_comment
 comment|/// lambda.
-end_comment
-
-begin_expr_stmt
 name|TemplateParameterList
 operator|*
 name|getGenericLambdaTemplateParameterList
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|LambdaCaptureDefault
 name|getLambdaCaptureDefault
 argument_list|()
@@ -3513,57 +3211,18 @@ name|CaptureDefault
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief For a closure type, retrieve the mapping from captured
-end_comment
-
-begin_comment
 comment|/// variables and \c this to the non-static data members that store the
-end_comment
-
-begin_comment
 comment|/// values or references of the captures.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Captures Will be populated with the mapping from captured
-end_comment
-
-begin_comment
 comment|/// variables to the corresponding fields.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param ThisCapture Will be set to the field declaration for the
-end_comment
-
-begin_comment
 comment|/// \c this capture.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \note No entries will be added for init-captures, as they do not capture
-end_comment
-
-begin_comment
 comment|/// variables.
-end_comment
-
-begin_decl_stmt
 name|void
 name|getCaptureFields
 argument_list|(
@@ -3588,20 +3247,37 @@ name|ThisCapture
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 specifier|const
-name|LambdaExpr
-operator|::
-name|Capture
-operator|*
+name|LambdaCapture
+modifier|*
 name|capture_const_iterator
+typedef|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|capture_const_iterator
+operator|>
+name|capture_const_range
 expr_stmt|;
-end_typedef
-
-begin_expr_stmt
+name|capture_const_range
+name|captures
+argument_list|()
+specifier|const
+block|{
+return|return
+name|capture_const_range
+argument_list|(
+name|captures_begin
+argument_list|()
+argument_list|,
+name|captures_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|capture_const_iterator
 name|captures_begin
 argument_list|()
@@ -3616,12 +3292,9 @@ argument_list|()
 operator|.
 name|Captures
 operator|:
-name|NULL
+name|nullptr
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|capture_const_iterator
 name|captures_end
 argument_list|()
@@ -3639,19 +3312,13 @@ argument_list|()
 operator|.
 name|NumCaptures
 operator|:
-name|NULL
+name|nullptr
 return|;
 block|}
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|UnresolvedSetIterator
 name|conversion_iterator
 typedef|;
-end_typedef
-
-begin_expr_stmt
 name|conversion_iterator
 name|conversion_begin
 argument_list|()
@@ -3673,9 +3340,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|conversion_iterator
 name|conversion_end
 argument_list|()
@@ -3697,21 +3361,9 @@ name|end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Removes a conversion function from this class.  The conversion
-end_comment
-
-begin_comment
 comment|/// function must currently be a member of this class.  Furthermore,
-end_comment
-
-begin_comment
 comment|/// this class must currently be in the process of being defined.
-end_comment
-
-begin_function_decl
 name|void
 name|removeConversion
 parameter_list|(
@@ -3721,17 +3373,8 @@ modifier|*
 name|Old
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Get all conversion functions visible in current class,
-end_comment
-
-begin_comment
 comment|/// including conversion function templates.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -3743,25 +3386,10 @@ operator|>
 name|getVisibleConversionFunctions
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Determine whether this class is an aggregate (C++ [dcl.init.aggr]),
-end_comment
-
-begin_comment
 comment|/// which is a class with no user-declared constructors, no private
-end_comment
-
-begin_comment
 comment|/// or protected non-static data members, no base classes, and no virtual
-end_comment
-
-begin_comment
 comment|/// functions (C++ [dcl.init.aggr]p1).
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isAggregate
 argument_list|()
@@ -3774,17 +3402,9 @@ operator|.
 name|Aggregate
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Whether this class has any in-class initializers
-end_comment
-
-begin_comment
-comment|/// for non-static data members.
-end_comment
-
-begin_expr_stmt
+comment|/// for non-static data members (including those in anonymous unions or
+comment|/// structs).
 name|bool
 name|hasInClassInitializer
 argument_list|()
@@ -3797,41 +3417,14 @@ operator|.
 name|HasInClassInitializer
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Whether this class or any of its subobjects has any members of
-end_comment
-
-begin_comment
 comment|/// reference type which would make value-initialization ill-formed.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Per C++03 [dcl.init]p5:
-end_comment
-
-begin_comment
 comment|///  - if T is a non-union class type without a user-declared constructor,
-end_comment
-
-begin_comment
 comment|///    then every non-static data member and base-class component of T is
-end_comment
-
-begin_comment
 comment|///    value-initialized [...] A program that calls for [...]
-end_comment
-
-begin_comment
 comment|///    value-initialization of an entity of reference type is ill-formed.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasUninitializedReferenceMember
 argument_list|()
@@ -3852,41 +3445,14 @@ operator|.
 name|HasUninitializedReferenceMember
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Whether this class is a POD-type (C++ [class]p4)
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// For purposes of this function a class is POD if it is an aggregate
-end_comment
-
-begin_comment
 comment|/// that has no non-static non-POD data members, no reference data
-end_comment
-
-begin_comment
 comment|/// members, no user-defined copy assignment operator and no
-end_comment
-
-begin_comment
 comment|/// user-defined destructor.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Note that this is the C++ TR1 definition of POD.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isPOD
 argument_list|()
@@ -3899,57 +3465,21 @@ operator|.
 name|PlainOldData
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief True if this class is C-like, without C++-specific features, e.g.
-end_comment
-
-begin_comment
 comment|/// it contains only public fields, no bases, tag kind is not 'class', etc.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isCLike
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this is an empty class in the sense of
-end_comment
-
-begin_comment
 comment|/// (C++11 [meta.unary.prop]).
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// A non-union class is empty iff it has a virtual function, virtual base,
-end_comment
-
-begin_comment
 comment|/// data member (other than 0-width bit-field) or inherits from a non-empty
-end_comment
-
-begin_comment
 comment|/// class.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \note This does NOT include a check for union-ness.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isEmpty
 argument_list|()
@@ -3962,17 +3492,8 @@ operator|.
 name|Empty
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Whether this class is polymorphic (C++ [class.virtual]),
-end_comment
-
-begin_comment
 comment|/// which means that the class contains or inherits a virtual function.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isPolymorphic
 argument_list|()
@@ -3985,29 +3506,11 @@ operator|.
 name|Polymorphic
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a pure virtual function.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The class is is abstract per (C++ [class.abstract]p2) if it declares
-end_comment
-
-begin_comment
 comment|/// a pure virtual function or inherits a pure virtual function that is
-end_comment
-
-begin_comment
 comment|/// not overridden.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isAbstract
 argument_list|()
@@ -4020,17 +3523,8 @@ operator|.
 name|Abstract
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has standard layout per
-end_comment
-
-begin_comment
 comment|/// (C++ [class]p7)
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isStandardLayout
 argument_list|()
@@ -4043,17 +3537,8 @@ operator|.
 name|IsStandardLayout
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class, or any of its class subobjects,
-end_comment
-
-begin_comment
 comment|/// contains a mutable field.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasMutableFields
 argument_list|()
@@ -4066,17 +3551,21 @@ operator|.
 name|HasMutableFields
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
+comment|/// \brief Determine whether this class has any variant members.
+name|bool
+name|hasVariantMembers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|HasVariantMembers
+return|;
+block|}
 comment|/// \brief Determine whether this class has a trivial default constructor
-end_comment
-
-begin_comment
 comment|/// (C++11 [class.ctor]p5).
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasTrivialDefaultConstructor
 argument_list|()
@@ -4096,17 +3585,8 @@ name|SMF_DefaultConstructor
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a non-trivial default constructor
-end_comment
-
-begin_comment
 comment|/// (C++11 [class.ctor]p5).
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasNonTrivialDefaultConstructor
 argument_list|()
@@ -4138,17 +3618,8 @@ operator|)
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has at least one constexpr constructor
-end_comment
-
-begin_comment
 comment|/// other than the copy or move constructors.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasConstexprNonCopyMoveConstructor
 argument_list|()
@@ -4169,17 +3640,8 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether a defaulted default constructor for this class
-end_comment
-
-begin_comment
 comment|/// would be constexpr.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|defaultedDefaultConstructorIsConstexpr
 argument_list|()
@@ -4198,16 +3660,14 @@ argument_list|()
 operator|||
 name|hasInClassInitializer
 argument_list|()
+operator|||
+operator|!
+name|hasVariantMembers
+argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a constexpr default constructor.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasConstexprDefaultConstructor
 argument_list|()
@@ -4228,17 +3688,8 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a trivial copy constructor
-end_comment
-
-begin_comment
 comment|/// (C++ [class.copy]p6, C++11 [class.copy]p12)
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasTrivialCopyConstructor
 argument_list|()
@@ -4253,17 +3704,8 @@ operator|&
 name|SMF_CopyConstructor
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a non-trivial copy constructor
-end_comment
-
-begin_comment
 comment|/// (C++ [class.copy]p6, C++11 [class.copy]p12)
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasNonTrivialCopyConstructor
 argument_list|()
@@ -4282,17 +3724,8 @@ name|hasTrivialCopyConstructor
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a trivial move constructor
-end_comment
-
-begin_comment
 comment|/// (C++11 [class.copy]p12)
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasTrivialMoveConstructor
 argument_list|()
@@ -4312,17 +3745,8 @@ name|SMF_MoveConstructor
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a non-trivial move constructor
-end_comment
-
-begin_comment
 comment|/// (C++11 [class.copy]p12)
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasNonTrivialMoveConstructor
 argument_list|()
@@ -4354,17 +3778,8 @@ operator|)
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a trivial copy assignment operator
-end_comment
-
-begin_comment
 comment|/// (C++ [class.copy]p11, C++11 [class.copy]p25)
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasTrivialCopyAssignment
 argument_list|()
@@ -4379,17 +3794,8 @@ operator|&
 name|SMF_CopyAssignment
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a non-trivial copy assignment
-end_comment
-
-begin_comment
 comment|/// operator (C++ [class.copy]p11, C++11 [class.copy]p25)
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasNonTrivialCopyAssignment
 argument_list|()
@@ -4408,17 +3814,8 @@ name|hasTrivialCopyAssignment
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a trivial move assignment operator
-end_comment
-
-begin_comment
 comment|/// (C++11 [class.copy]p25)
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasTrivialMoveAssignment
 argument_list|()
@@ -4438,17 +3835,8 @@ name|SMF_MoveAssignment
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a non-trivial move assignment
-end_comment
-
-begin_comment
 comment|/// operator (C++11 [class.copy]p25)
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasNonTrivialMoveAssignment
 argument_list|()
@@ -4480,17 +3868,8 @@ operator|)
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a trivial destructor
-end_comment
-
-begin_comment
 comment|/// (C++ [class.dtor]p3)
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasTrivialDestructor
 argument_list|()
@@ -4505,17 +3884,8 @@ operator|&
 name|SMF_Destructor
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a non-trivial destructor
-end_comment
-
-begin_comment
 comment|/// (C++ [class.dtor]p3)
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasNonTrivialDestructor
 argument_list|()
@@ -4533,29 +3903,11 @@ name|SMF_Destructor
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a destructor which has no
-end_comment
-
-begin_comment
 comment|/// semantic effect.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Any such destructor will be trivial, public, defaulted and not deleted,
-end_comment
-
-begin_comment
 comment|/// and will call only irrelevant destructors.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasIrrelevantDestructor
 argument_list|()
@@ -4568,17 +3920,8 @@ operator|.
 name|HasIrrelevantDestructor
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class has a non-literal or/ volatile type
-end_comment
-
-begin_comment
 comment|/// non-static data member or base class.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasNonLiteralTypeFieldsOrBases
 argument_list|()
@@ -4591,45 +3934,18 @@ operator|.
 name|HasNonLiteralTypeFieldsOrBases
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class is considered trivially copyable per
-end_comment
-
-begin_comment
 comment|/// (C++11 [class]p6).
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isTriviallyCopyable
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class is considered trivial.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// C++11 [class]p6:
-end_comment
-
-begin_comment
 comment|///    "A trivial class is a class that has a trivial default constructor and
-end_comment
-
-begin_comment
 comment|///    is trivially copiable."
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isTrivial
 argument_list|()
@@ -4643,69 +3959,21 @@ name|hasTrivialDefaultConstructor
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this class is a literal type.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// C++11 [basic.types]p10:
-end_comment
-
-begin_comment
 comment|///   A class type that has all the following properties:
-end_comment
-
-begin_comment
 comment|///     - it has a trivial destructor
-end_comment
-
-begin_comment
 comment|///     - every constructor call and full-expression in the
-end_comment
-
-begin_comment
 comment|///       brace-or-equal-intializers for non-static data members (if any) is
-end_comment
-
-begin_comment
 comment|///       a constant expression.
-end_comment
-
-begin_comment
 comment|///     - it is an aggregate type or has at least one constexpr constructor
-end_comment
-
-begin_comment
 comment|///       or constructor template that is not a copy or move constructor, and
-end_comment
-
-begin_comment
 comment|///     - all of its non-static data members and base classes are of literal
-end_comment
-
-begin_comment
 comment|///       types
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// We resolve DR1361 by ignoring the second bullet. We resolve DR1452 by
-end_comment
-
-begin_comment
 comment|/// treating types with trivial default constructors as literal types.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isLiteral
 argument_list|()
@@ -4731,106 +3999,34 @@ name|hasNonLiteralTypeFieldsOrBases
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief If this record is an instantiation of a member class,
-end_comment
-
-begin_comment
 comment|/// retrieves the member class from which it was instantiated.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This routine will return non-null for (non-templated) member
-end_comment
-
-begin_comment
 comment|/// classes of class templates. For example, given:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \code
-end_comment
-
-begin_comment
 comment|/// template<typename T>
-end_comment
-
-begin_comment
 comment|/// struct X {
-end_comment
-
-begin_comment
 comment|///   struct A { };
-end_comment
-
-begin_comment
 comment|/// };
-end_comment
-
-begin_comment
 comment|/// \endcode
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The declaration for X<int>::A is a (non-templated) CXXRecordDecl
-end_comment
-
-begin_comment
 comment|/// whose parent is the class template specialization X<int>. For
-end_comment
-
-begin_comment
 comment|/// this declaration, getInstantiatedFromMemberClass() will return
-end_comment
-
-begin_comment
 comment|/// the CXXRecordDecl X<T>::A. When a complete definition of
-end_comment
-
-begin_comment
 comment|/// X<int>::A is required, it will be instantiated from the
-end_comment
-
-begin_comment
 comment|/// declaration returned by getInstantiatedFromMemberClass().
-end_comment
-
-begin_expr_stmt
 name|CXXRecordDecl
 operator|*
 name|getInstantiatedFromMemberClass
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief If this class is an instantiation of a member class of a
-end_comment
-
-begin_comment
 comment|/// class template specialization, retrieves the member specialization
-end_comment
-
-begin_comment
 comment|/// information.
-end_comment
-
-begin_expr_stmt
 name|MemberSpecializationInfo
 operator|*
 name|getMemberSpecializationInfo
@@ -4849,17 +4045,8 @@ operator|(
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Specify that this record is an instantiation of the
-end_comment
-
-begin_comment
 comment|/// member class \p RD.
-end_comment
-
-begin_function_decl
 name|void
 name|setInstantiationOfMemberClass
 parameter_list|(
@@ -4871,53 +4058,17 @@ name|TemplateSpecializationKind
 name|TSK
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Retrieves the class template that is described by this
-end_comment
-
-begin_comment
 comment|/// class declaration.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Every class template is represented as a ClassTemplateDecl and a
-end_comment
-
-begin_comment
 comment|/// CXXRecordDecl. The former contains template properties (such as
-end_comment
-
-begin_comment
 comment|/// the template parameter lists) while the latter contains the
-end_comment
-
-begin_comment
 comment|/// actual description of the template's
-end_comment
-
-begin_comment
 comment|/// contents. ClassTemplateDecl::getTemplatedDecl() retrieves the
-end_comment
-
-begin_comment
 comment|/// CXXRecordDecl that from a ClassTemplateDecl, while
-end_comment
-
-begin_comment
 comment|/// getDescribedClassTemplate() retrieves the ClassTemplateDecl from
-end_comment
-
-begin_comment
 comment|/// a CXXRecordDecl.
-end_comment
-
-begin_expr_stmt
 name|ClassTemplateDecl
 operator|*
 name|getDescribedClassTemplate
@@ -4936,9 +4087,6 @@ operator|(
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setDescribedClassTemplate
 parameter_list|(
@@ -4952,33 +4100,15 @@ operator|=
 name|Template
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Determine whether this particular class is a specialization or
-end_comment
-
-begin_comment
 comment|/// instantiation of a class template or member class of a class template,
-end_comment
-
-begin_comment
 comment|/// and how it was instantiated or specialized.
-end_comment
-
-begin_expr_stmt
 name|TemplateSpecializationKind
 name|getTemplateSpecializationKind
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Set the kind of specialization or template instantiation this is.
-end_comment
-
-begin_function_decl
 name|void
 name|setTemplateSpecializationKind
 parameter_list|(
@@ -4986,30 +4116,15 @@ name|TemplateSpecializationKind
 name|TSK
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Returns the destructor decl for this class.
-end_comment
-
-begin_expr_stmt
 name|CXXDestructorDecl
 operator|*
 name|getDestructor
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief If the class is a local class [class.local], returns
-end_comment
-
-begin_comment
 comment|/// the enclosing function declaration.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|FunctionDecl
 operator|*
@@ -5039,9 +4154,6 @@ operator|->
 name|isLocalClass
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|dyn_cast
 operator|<
@@ -5052,13 +4164,14 @@ name|getDeclContext
 argument_list|()
 operator|)
 return|;
-end_return
+block|}
+end_decl_stmt
 
-begin_expr_stmt
-unit|}    FunctionDecl
-operator|*
+begin_function
+name|FunctionDecl
+modifier|*
 name|isLocalClass
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|const_cast
@@ -5082,7 +4195,7 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_comment
 comment|/// \brief Determine whether this dependent class is a current instantiation,
@@ -5998,13 +5111,13 @@ begin_comment
 comment|/// \brief Indicates that the definition of this class is now complete.
 end_comment
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|void
 name|completeDefinition
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Indicates that the definition of this class is now complete,
@@ -6230,8 +5343,96 @@ comment|/// \brief Returns the inheritance model used for this record.
 end_comment
 
 begin_expr_stmt
-name|MSInheritanceModel
+name|MSInheritanceAttr
+operator|::
+name|Spelling
 name|getMSInheritanceModel
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Calculate what the inheritance model would be for this class.
+end_comment
+
+begin_expr_stmt
+name|MSInheritanceAttr
+operator|::
+name|Spelling
+name|calculateInheritanceModel
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// In the Microsoft C++ ABI, use zero for the field offset of a null data
+end_comment
+
+begin_comment
+comment|/// member pointer if we can guarantee that zero is not a valid field offset,
+end_comment
+
+begin_comment
+comment|/// or if the member pointer has multiple fields.  Polymorphic classes have a
+end_comment
+
+begin_comment
+comment|/// vfptr at offset zero, so we can use zero for null.  If there are multiple
+end_comment
+
+begin_comment
+comment|/// fields, we can use zero even if it is a valid field offset because
+end_comment
+
+begin_comment
+comment|/// null-ness testing will check the other fields.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|nullFieldOffsetIsZero
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|MSInheritanceAttr
+operator|::
+name|hasOnlyOneField
+argument_list|(
+comment|/*IsMemberFunction=*/
+name|false
+argument_list|,
+name|getMSInheritanceModel
+argument_list|()
+argument_list|)
+operator|||
+operator|(
+name|hasDefinition
+argument_list|()
+operator|&&
+name|isPolymorphic
+argument_list|()
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Controls when vtordisps will be emitted if this record is used as a
+end_comment
+
+begin_comment
+comment|/// virtual base.
+end_comment
+
+begin_expr_stmt
+name|MSVtorDispAttr
+operator|::
+name|Mode
+name|getMSVtorDispMode
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -6411,16 +5612,18 @@ range|:
 name|public
 name|FunctionDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
 name|CXXMethodDecl
 argument_list|(
 argument|Kind DK
+argument_list|,
+argument|ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *RD
 argument_list|,
@@ -6444,6 +5647,8 @@ operator|:
 name|FunctionDecl
 argument_list|(
 argument|DK
+argument_list|,
+argument|C
 argument_list|,
 argument|RD
 argument_list|,
@@ -6628,7 +5833,8 @@ name|getCanonicalDecl
 argument_list|()
 operator|)
 block|;
-comment|// Methods declared in interfaces are automatically (pure) virtual.
+comment|// Member function is virtual if it is marked explicitly so, or if it is
+comment|// declared in __interface -- then it is automatically pure virtual.
 if|if
 condition|(
 name|CD
@@ -6636,20 +5842,10 @@ operator|->
 name|isVirtualAsWritten
 argument_list|()
 operator|||
-operator|(
 name|CD
 operator|->
-name|getParent
+name|isPure
 argument_list|()
-operator|->
-name|isInterface
-argument_list|()
-operator|&&
-name|CD
-operator|->
-name|isUserProvided
-argument_list|()
-operator|)
 condition|)
 return|return
 name|true
@@ -6723,6 +5919,7 @@ name|CXXMethodDecl
 modifier|*
 name|getCanonicalDecl
 parameter_list|()
+function|override
 block|{
 return|return
 name|cast
@@ -6746,6 +5943,7 @@ operator|*
 name|getCanonicalDecl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|const_cast
@@ -7625,13 +6823,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|isa
-operator|<
-name|CXXDefaultInitExpr
-operator|>
-operator|(
 name|Init
-operator|)
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|Stmt
+operator|::
+name|CXXDefaultInitExprClass
 return|;
 block|}
 comment|/// \brief Determine whether this initializer is creating a delegating
@@ -7769,7 +6968,7 @@ operator|(
 operator|)
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_decl_stmt
@@ -7823,7 +7022,7 @@ end_if
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 
@@ -7854,7 +7053,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 
@@ -8323,10 +7522,10 @@ range|:
 name|public
 name|CXXMethodDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// \brief Whether this constructor declaration has the \c explicit keyword
 comment|/// specified.
@@ -8349,6 +7548,8 @@ block|;
 comment|/// \}
 name|CXXConstructorDecl
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|CXXRecordDecl *RD
 argument_list|,
 argument|SourceLocation StartLoc
@@ -8371,6 +7572,8 @@ operator|:
 name|CXXMethodDecl
 argument_list|(
 name|CXXConstructor
+argument_list|,
+name|C
 argument_list|,
 name|RD
 argument_list|,
@@ -8399,7 +7602,7 @@ argument_list|)
 block|,
 name|CtorInitializers
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|NumCtorInitializers
@@ -8503,6 +7706,67 @@ modifier|*
 name|init_const_iterator
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|init_iterator
+operator|>
+name|init_range
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|init_const_iterator
+operator|>
+name|init_const_range
+expr_stmt|;
+end_typedef
+
+begin_function
+name|init_range
+name|inits
+parameter_list|()
+block|{
+return|return
+name|init_range
+argument_list|(
+name|init_begin
+argument_list|()
+argument_list|,
+name|init_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|init_const_range
+name|inits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|init_const_range
+argument_list|(
+name|init_begin
+argument_list|()
+argument_list|,
+name|init_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Retrieve an iterator to the first initializer.
@@ -9056,6 +8320,7 @@ operator|*
 name|getCanonicalDecl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -9077,6 +8342,7 @@ name|CXXConstructorDecl
 modifier|*
 name|getCanonicalDecl
 parameter_list|()
+function|override
 block|{
 return|return
 name|cast
@@ -9199,10 +8465,10 @@ range|:
 name|public
 name|CXXMethodDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|FunctionDecl
 operator|*
@@ -9210,6 +8476,8 @@ name|OperatorDelete
 block|;
 name|CXXDestructorDecl
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|CXXRecordDecl *RD
 argument_list|,
 argument|SourceLocation StartLoc
@@ -9228,6 +8496,8 @@ operator|:
 name|CXXMethodDecl
 argument_list|(
 name|CXXDestructor
+argument_list|,
+name|C
 argument_list|,
 name|RD
 argument_list|,
@@ -9252,7 +8522,7 @@ argument_list|)
 block|,
 name|OperatorDelete
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|setImplicit
@@ -9300,10 +8570,19 @@ argument_list|(
 argument|FunctionDecl *OD
 argument_list|)
 block|{
+name|cast
+operator|<
+name|CXXDestructorDecl
+operator|>
+operator|(
+name|getFirstDecl
+argument_list|()
+operator|)
+operator|->
 name|OperatorDelete
 operator|=
 name|OD
-block|; }
+block|;   }
 specifier|const
 name|FunctionDecl
 operator|*
@@ -9312,6 +8591,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|cast
+operator|<
+name|CXXDestructorDecl
+operator|>
+operator|(
+name|getFirstDecl
+argument_list|()
+operator|)
+operator|->
 name|OperatorDelete
 return|;
 block|}
@@ -9404,10 +8692,10 @@ range|:
 name|public
 name|CXXMethodDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// Whether this conversion function declaration is marked
 comment|/// "explicit", meaning that it can only be applied when the user
@@ -9419,6 +8707,8 @@ literal|1
 block|;
 name|CXXConversionDecl
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|CXXRecordDecl *RD
 argument_list|,
 argument|SourceLocation StartLoc
@@ -9441,6 +8731,8 @@ operator|:
 name|CXXMethodDecl
 argument_list|(
 name|CXXConversion
+argument_list|,
+name|C
 argument_list|,
 name|RD
 argument_list|,
@@ -9556,7 +8848,7 @@ operator|>
 operator|(
 operator|)
 operator|->
-name|getResultType
+name|getReturnType
 argument_list|()
 return|;
 block|}
@@ -9911,6 +9203,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|{
 return|return
@@ -10077,10 +9370,10 @@ range|:
 name|public
 name|NamedDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// \brief The location of the \c using keyword.
 name|SourceLocation
@@ -10340,6 +9633,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|{
 return|return
@@ -10429,10 +9723,10 @@ range|:
 name|public
 name|NamedDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// \brief The location of the \c namespace keyword.
 name|SourceLocation
@@ -10724,11 +10018,11 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|{
 return|return
@@ -10848,11 +10142,11 @@ decl|<
 name|UsingShadowDecl
 decl|>
 block|{
-name|virtual
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 comment|/// The referenced declaration.
 name|NamedDecl
 modifier|*
@@ -10870,6 +10164,8 @@ name|UsingDecl
 decl_stmt|;
 name|UsingShadowDecl
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation Loc
@@ -10889,6 +10185,11 @@ name|Loc
 argument_list|,
 name|DeclarationName
 argument_list|()
+argument_list|)
+operator|,
+name|redeclarable_base
+argument_list|(
+name|C
 argument_list|)
 operator|,
 name|Underlying
@@ -10933,35 +10234,33 @@ name|UsingShadowDecl
 operator|>
 name|redeclarable_base
 expr_stmt|;
-name|virtual
 name|UsingShadowDecl
 modifier|*
-name|getNextRedeclaration
+name|getNextRedeclarationImpl
 parameter_list|()
+function|override
 block|{
 return|return
-name|RedeclLink
-operator|.
-name|getNext
+name|getNextRedeclaration
 argument_list|()
 return|;
 block|}
-name|virtual
 name|UsingShadowDecl
 modifier|*
 name|getPreviousDeclImpl
 parameter_list|()
+function|override
 block|{
 return|return
 name|getPreviousDecl
 argument_list|()
 return|;
 block|}
-name|virtual
 name|UsingShadowDecl
 modifier|*
 name|getMostRecentDeclImpl
 parameter_list|()
+function|override
 block|{
 return|return
 name|getMostRecentDecl
@@ -10999,9 +10298,13 @@ return|return
 name|new
 argument_list|(
 argument|C
+argument_list|,
+argument|DC
 argument_list|)
 name|UsingShadowDecl
 argument_list|(
+name|C
+argument_list|,
 name|DC
 argument_list|,
 name|Loc
@@ -11028,6 +10331,12 @@ function_decl|;
 typedef|typedef
 name|redeclarable_base
 operator|::
+name|redecl_range
+name|redecl_range
+expr_stmt|;
+typedef|typedef
+name|redeclarable_base
+operator|::
 name|redecl_iterator
 name|redecl_iterator
 expr_stmt|;
@@ -11044,6 +10353,11 @@ expr_stmt|;
 name|using
 name|redeclarable_base
 operator|::
+name|redecls
+expr_stmt|;
+name|using
+name|redeclarable_base
+operator|::
 name|getPreviousDecl
 expr_stmt|;
 name|using
@@ -11051,18 +10365,17 @@ name|redeclarable_base
 operator|::
 name|getMostRecentDecl
 expr_stmt|;
-name|virtual
 name|UsingShadowDecl
 modifier|*
 name|getCanonicalDecl
 parameter_list|()
+function|override
 block|{
 return|return
 name|getFirstDecl
 argument_list|()
 return|;
 block|}
-name|virtual
 specifier|const
 name|UsingShadowDecl
 operator|*
@@ -11223,10 +10536,10 @@ range|:
 name|public
 name|NamedDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// \brief The source location of the 'using' keyword itself.
 name|SourceLocation
@@ -11309,7 +10622,7 @@ argument_list|)
 block|,
 name|FirstUsingShadow
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|,
 argument|HasTypenameKeyword
 argument_list|)
@@ -11476,7 +10789,7 @@ argument_list|()
 operator|:
 name|Current
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|explicit
@@ -11621,8 +10934,39 @@ return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
+begin_typedef
 unit|};
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|shadow_iterator
+operator|>
+name|shadow_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|shadow_range
+name|shadows
+argument_list|()
+specifier|const
+block|{
+return|return
+name|shadow_range
+argument_list|(
+name|shadow_begin
+argument_list|()
+argument_list|,
+name|shadow_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|shadow_iterator
 name|shadow_begin
 argument_list|()
@@ -11756,6 +11100,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 expr_stmt|;
 end_expr_stmt
@@ -11866,10 +11211,10 @@ range|:
 name|public
 name|ValueDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// \brief The source location of the 'using' keyword
 name|SourceLocation
@@ -12040,6 +11385,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|;
 specifier|static
@@ -12134,10 +11480,10 @@ range|:
 name|public
 name|TypeDecl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|/// \brief The source location of the 'typename' keyword
 name|SourceLocation
@@ -12475,6 +11821,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 name|LLVM_READONLY
 block|{
 return|return
@@ -12563,8 +11910,6 @@ block|,
 operator|*
 name|SetterId
 block|;
-name|public
-operator|:
 name|MSPropertyDecl
 argument_list|(
 argument|DeclContext *DC
@@ -12611,6 +11956,32 @@ argument_list|(
 argument|Setter
 argument_list|)
 block|{}
+name|public
+operator|:
+specifier|static
+name|MSPropertyDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|DeclarationName N
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *TInfo
+argument_list|,
+argument|SourceLocation StartL
+argument_list|,
+argument|IdentifierInfo *Getter
+argument_list|,
+argument|IdentifierInfo *Setter
+argument_list|)
+block|;
 specifier|static
 name|MSPropertyDecl
 operator|*
@@ -12645,7 +12016,7 @@ block|{
 return|return
 name|GetterId
 operator|!=
-name|NULL
+name|nullptr
 return|;
 block|}
 name|IdentifierInfo
@@ -12666,7 +12037,7 @@ block|{
 return|return
 name|SetterId
 operator|!=
-name|NULL
+name|nullptr
 return|;
 block|}
 name|IdentifierInfo

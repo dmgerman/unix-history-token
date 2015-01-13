@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf.h,v 1.23 2007-10-08 07:53:21 hannes Exp $ (LBL) */
-end_comment
-
-begin_comment
 comment|/*  * Copyright (c) 1991, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * OSPF support contributed by Jeffrey Honig (jch@mitchell.cit.cornell.edu)  */
 end_comment
 
@@ -870,6 +866,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OSPF_LLS_HDRLEN
+value|4U
+end_define
+
+begin_comment
+comment|/* RFC5613 Section 2.2 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OSPF_LLS_EO
 value|1
 end_define
@@ -919,13 +926,13 @@ begin_struct
 struct|struct
 name|tos_metric
 block|{
-name|u_int8_t
+name|uint8_t
 name|tos_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|reserved
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|tos_metric
 index|[
 literal|2
@@ -939,13 +946,13 @@ begin_struct
 struct|struct
 name|tos_link
 block|{
-name|u_int8_t
+name|uint8_t
 name|link_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|link_tos_count
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|tos_metric
 index|[
 literal|2
@@ -979,13 +986,13 @@ begin_struct
 struct|struct
 name|lsa_hdr
 block|{
-name|u_int16_t
+name|uint16_t
 name|ls_age
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ls_options
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ls_type
 decl_stmt|;
 union|union
@@ -997,10 +1004,10 @@ decl_stmt|;
 struct|struct
 block|{
 comment|/* opaque LSAs change the LSA-ID field */
-name|u_int8_t
+name|uint8_t
 name|opaque_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|opaque_id
 index|[
 literal|3
@@ -1016,13 +1023,13 @@ name|struct
 name|in_addr
 name|ls_router
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ls_seq
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ls_chksum
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ls_length
 decl_stmt|;
 block|}
@@ -1047,16 +1054,16 @@ block|{
 comment|/* Router links advertisements */
 struct|struct
 block|{
-name|u_int8_t
+name|uint8_t
 name|rla_flags
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|rla_zero
 index|[
 literal|1
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|rla_count
 decl_stmt|;
 struct|struct
@@ -1109,7 +1116,7 @@ name|struct
 name|in_addr
 name|sla_mask
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|sla_tosmetric
 index|[
 literal|1
@@ -1129,7 +1136,7 @@ decl_stmt|;
 struct|struct
 name|aslametric
 block|{
-name|u_int32_t
+name|uint32_t
 name|asla_tosmetric
 decl_stmt|;
 name|struct
@@ -1154,7 +1161,7 @@ comment|/* Multicast group membership */
 struct|struct
 name|mcla
 block|{
-name|u_int32_t
+name|uint32_t
 name|mcla_vtype
 decl_stmt|;
 name|struct
@@ -1170,13 +1177,13 @@ struct|;
 comment|/* Opaque TE LSA */
 struct|struct
 block|{
-name|u_int16_t
+name|uint16_t
 name|type
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|length
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|data
 index|[
 literal|1
@@ -1189,13 +1196,13 @@ struct|;
 comment|/* Opaque Grace LSA */
 struct|struct
 block|{
-name|u_int16_t
+name|uint16_t
 name|type
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|length
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|data
 index|[
 literal|1
@@ -1208,13 +1215,13 @@ struct|;
 comment|/* Opaque Router information LSA */
 struct|struct
 block|{
-name|u_int16_t
+name|uint16_t
 name|type
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|length
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|data
 index|[
 literal|1
@@ -1228,7 +1235,7 @@ comment|/* Unknown LSA */
 struct|struct
 name|unknown
 block|{
-name|u_int8_t
+name|uint8_t
 name|data
 index|[
 literal|1
@@ -1263,13 +1270,13 @@ begin_struct
 struct|struct
 name|ospfhdr
 block|{
-name|u_int8_t
+name|uint8_t
 name|ospf_version
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ospf_type
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ospf_len
 decl_stmt|;
 name|struct
@@ -1280,13 +1287,13 @@ name|struct
 name|in_addr
 name|ospf_areaid
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ospf_chksum
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|ospf_authtype
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ospf_authdata
 index|[
 name|OSPF_AUTH_SIZE
@@ -1301,16 +1308,16 @@ name|struct
 name|in_addr
 name|hello_mask
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|hello_helloint
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|hello_options
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|hello_priority
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hello_deadint
 decl_stmt|;
 name|struct
@@ -1335,16 +1342,16 @@ struct|;
 comment|/* Database Description packet */
 struct|struct
 block|{
-name|u_int16_t
+name|uint16_t
 name|db_ifmtu
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|db_options
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|db_flags
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|db_seq
 decl_stmt|;
 name|struct
@@ -1362,7 +1369,7 @@ comment|/* Link State Request */
 struct|struct
 name|lsr
 block|{
-name|u_int8_t
+name|uint8_t
 name|ls_type
 index|[
 literal|4
@@ -1377,10 +1384,10 @@ decl_stmt|;
 struct|struct
 block|{
 comment|/* opaque LSAs change the LSA-ID field */
-name|u_int8_t
+name|uint8_t
 name|opaque_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|opaque_id
 index|[
 literal|3
@@ -1406,7 +1413,7 @@ comment|/* may repeat	*/
 comment|/* Link State Update */
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|lsu_count
 decl_stmt|;
 name|struct
@@ -1475,38 +1482,6 @@ directive|define
 name|ospf_lsa
 value|ospf_un.un_lsa
 end_define
-
-begin_comment
-comment|/* Functions shared by ospf and ospf6 */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|ospf_print_te_lsa
-parameter_list|(
-specifier|const
-name|u_int8_t
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|ospf_print_grace_lsa
-parameter_list|(
-specifier|const
-name|u_int8_t
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 end_unit
 

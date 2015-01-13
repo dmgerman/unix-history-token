@@ -350,7 +350,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_FREQUENCY
-value|10000000
+value|1000000000
 end_define
 
 begin_comment

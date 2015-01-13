@@ -1548,12 +1548,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNTK_UNUSED25
+name|MNTK_SUSPENDABLE
 value|0x20000000
 end_define
 
 begin_comment
-comment|/*  --available-- */
+comment|/* writes can be suspended */
 end_comment
 
 begin_define
@@ -4361,6 +4361,24 @@ name|vfs_sysctl_t
 name|vfs_stdsysctl
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|syncer_suspend
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|syncer_resume
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#

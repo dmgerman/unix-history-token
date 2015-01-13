@@ -418,11 +418,16 @@ operator|-
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"\nlseek failed\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-
@@ -450,11 +455,16 @@ operator|!=
 name|len
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"\nreadin failed\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-
@@ -510,6 +520,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"\nmalloc(%d) failed\n"
@@ -520,6 +533,8 @@ operator|)
 name|len
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|NULL
@@ -541,11 +556,16 @@ operator|-
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"\nlseek failed\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|buf
@@ -575,11 +595,16 @@ operator|!=
 name|len
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"\nread failed\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|buf

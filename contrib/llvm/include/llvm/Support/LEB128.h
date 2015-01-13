@@ -382,7 +382,7 @@ name|unsigned
 modifier|*
 name|n
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 specifier|const
@@ -449,6 +449,24 @@ return|return
 name|Value
 return|;
 block|}
+comment|/// Utility function to get the size of the ULEB128-encoded value.
+specifier|extern
+name|unsigned
+name|getULEB128Size
+parameter_list|(
+name|uint64_t
+name|Value
+parameter_list|)
+function_decl|;
+comment|/// Utility function to get the size of the SLEB128-encoded value.
+specifier|extern
+name|unsigned
+name|getSLEB128Size
+parameter_list|(
+name|int64_t
+name|Value
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

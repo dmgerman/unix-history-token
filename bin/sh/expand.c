@@ -850,7 +850,6 @@ name|exparg
 operator|.
 name|list
 expr_stmt|;
-comment|/* 	 * TODO - EXP_REDIR 	 */
 if|if
 condition|(
 name|flag
@@ -894,18 +893,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|flag
-operator|&
-name|EXP_REDIR
-condition|)
-comment|/*XXX - for now, just remove escapes */
-name|rmescapes
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|sp
 operator|=
 operator|(
@@ -1021,7 +1008,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform parameter expansion, command substitution and arithmetic  * expansion, and tilde expansion if requested via EXP_TILDE/EXP_VARTILDE.  * Processing ends at a CTLENDVAR or CTLENDARI character as well as '\0'.  * This is used to expand word in ${var+word} etc.  * If EXP_FULL, EXP_CASE or EXP_REDIR are set, keep and/or generate CTLESC  * characters to allow for further processing.  * If EXP_FULL is set, also preserve CTLQUOTEMARK characters.  */
+comment|/*  * Perform parameter expansion, command substitution and arithmetic  * expansion, and tilde expansion if requested via EXP_TILDE/EXP_VARTILDE.  * Processing ends at a CTLENDVAR or CTLENDARI character as well as '\0'.  * This is used to expand word in ${var+word} etc.  * If EXP_FULL or EXP_CASE are set, keep and/or generate CTLESC  * characters to allow for further processing.  * If EXP_FULL is set, also preserve CTLQUOTEMARK characters.  */
 end_comment
 
 begin_function
@@ -1050,8 +1037,6 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
-operator||
-name|EXP_REDIR
 operator|)
 decl_stmt|;
 comment|/* do CTLESC */
@@ -1484,8 +1469,6 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
-operator||
-name|EXP_REDIR
 operator|)
 decl_stmt|;
 while|while
@@ -1641,7 +1624,7 @@ name|STPUTS_QUOTES
 argument_list|(
 name|home
 argument_list|,
-name|SQSYNTAX
+name|DQSYNTAX
 argument_list|,
 name|expdest
 argument_list|)
@@ -2110,8 +2093,6 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
-operator||
-name|EXP_REDIR
 operator|)
 decl_stmt|;
 name|size_t
@@ -3139,8 +3120,6 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
-operator||
-name|EXP_REDIR
 operator|)
 decl_stmt|;
 name|varflags
@@ -4281,6 +4260,9 @@ name|i
 decl_stmt|;
 name|char
 name|sep
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -4300,9 +4282,7 @@ name|num
 operator|=
 name|rootpid
 expr_stmt|;
-goto|goto
-name|numvar
-goto|;
+break|break;
 case|case
 literal|'?'
 case|:
@@ -4310,9 +4290,7 @@ name|num
 operator|=
 name|oexitstatus
 expr_stmt|;
-goto|goto
-name|numvar
-goto|;
+break|break;
 case|case
 literal|'#'
 case|:
@@ -4322,9 +4300,7 @@ name|shellparam
 operator|.
 name|nparam
 expr_stmt|;
-goto|goto
-name|numvar
-goto|;
+break|break;
 case|case
 literal|'!'
 case|:
@@ -4332,17 +4308,6 @@ name|num
 operator|=
 name|backgndpidval
 argument_list|()
-expr_stmt|;
-name|numvar
-label|:
-name|expdest
-operator|=
-name|cvtnum
-argument_list|(
-name|num
-argument_list|,
-name|expdest
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4384,7 +4349,7 @@ name|expdest
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
+return|return;
 case|case
 literal|'@'
 case|:
@@ -4441,7 +4406,7 @@ name|expdest
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
+return|return;
 block|}
 comment|/* FALLTHROUGH */
 case|case
@@ -4453,6 +4418,9 @@ name|ifsset
 argument_list|()
 condition|)
 name|sep
+index|[
+literal|0
+index|]
 operator|=
 name|ifsval
 argument_list|()
@@ -4462,8 +4430,18 @@ index|]
 expr_stmt|;
 else|else
 name|sep
+index|[
+literal|0
+index|]
 operator|=
 literal|' '
+expr_stmt|;
+name|sep
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 for|for
 control|(
@@ -4506,8 +4484,24 @@ break|break;
 if|if
 condition|(
 name|sep
-operator|||
-operator|(
+index|[
+literal|0
+index|]
+condition|)
+name|strtodest
+argument_list|(
+name|sep
+argument_list|,
+name|flag
+argument_list|,
+name|subtype
+argument_list|,
+name|quoted
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|flag
 operator|&
 name|EXP_FULL
@@ -4520,17 +4514,16 @@ operator|*
 name|ap
 operator|!=
 literal|'\0'
-operator|)
 condition|)
 name|STPUTC
 argument_list|(
-name|sep
+literal|'\0'
 argument_list|,
 name|expdest
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
+return|return;
 default|default:
 if|if
 condition|(
@@ -4583,7 +4576,7 @@ literal|1
 index|]
 expr_stmt|;
 else|else
-break|break;
+return|return;
 name|strtodest
 argument_list|(
 name|p
@@ -4596,8 +4589,17 @@ name|quoted
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
+return|return;
 block|}
+name|expdest
+operator|=
+name|cvtnum
+argument_list|(
+name|num
+argument_list|,
+name|expdest
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5212,19 +5214,23 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-comment|/* TODO - EXP_REDIR */
 while|while
 condition|(
 name|str
 condition|)
 block|{
+name|savelastp
+operator|=
+name|exparg
+operator|.
+name|lastp
+expr_stmt|;
 if|if
 condition|(
+operator|!
 name|fflag
 condition|)
-goto|goto
-name|nometa
-goto|;
+block|{
 name|p
 operator|=
 name|str
@@ -5234,25 +5240,20 @@ expr_stmt|;
 for|for
 control|(
 init|;
-condition|;
-control|)
-block|{
-comment|/* fast check for meta chars */
-if|if
-condition|(
 operator|(
 name|c
 operator|=
 operator|*
 name|p
-operator|++
 operator|)
-operator|==
+operator|!=
 literal|'\0'
-condition|)
-goto|goto
-name|nometa
-goto|;
+condition|;
+name|p
+operator|++
+control|)
+block|{
+comment|/* fast check for meta chars */
 if|if
 condition|(
 name|c
@@ -5267,14 +5268,7 @@ name|c
 operator|==
 literal|'['
 condition|)
-break|break;
-block|}
-name|savelastp
-operator|=
-name|exparg
-operator|.
-name|lastp
-expr_stmt|;
+block|{
 name|INTOFF
 expr_stmt|;
 name|expmeta
@@ -5288,6 +5282,10 @@ argument_list|)
 expr_stmt|;
 name|INTON
 expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
 if|if
 condition|(
 name|exparg
@@ -5298,8 +5296,6 @@ name|savelastp
 condition|)
 block|{
 comment|/* 			 * no matches 			 */
-name|nometa
-label|:
 operator|*
 name|exparg
 operator|.

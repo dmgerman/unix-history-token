@@ -451,15 +451,8 @@ name|res
 argument_list|,
 name|flags
 argument_list|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700031
 name|NULL
 argument_list|,
-endif|#
-directive|endif
 name|hand
 argument_list|,
 name|param

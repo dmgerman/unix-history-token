@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<iterator>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
 end_include
 
 begin_decl_stmt
@@ -129,6 +129,27 @@ operator|+
 name|X
 operator|-
 literal|10
+return|;
+block|}
+comment|/// Construct a string ref from a boolean.
+specifier|static
+specifier|inline
+name|StringRef
+name|toStringRef
+parameter_list|(
+name|bool
+name|B
+parameter_list|)
+block|{
+return|return
+name|StringRef
+argument_list|(
+name|B
+condition|?
+literal|"true"
+else|:
+literal|"false"
+argument_list|)
 return|;
 block|}
 comment|/// Interpret the given character \p C as a hexadecimal digit and return its
@@ -220,6 +241,8 @@ argument_list|(
 argument|IntTy X
 argument_list|,
 argument|char *BufferEnd
+argument_list|,
+argument|bool LowerCase = false
 argument_list|)
 block|{
 name|char
@@ -280,6 +303,8 @@ operator|=
 name|hexdigit
 argument_list|(
 name|Mod
+argument_list|,
+name|LowerCase
 argument_list|)
 expr_stmt|;
 name|X
@@ -299,6 +324,8 @@ name|string
 name|utohexstr
 argument_list|(
 argument|uint64_t X
+argument_list|,
+argument|bool LowerCase = false
 argument_list|)
 block|{
 name|char
@@ -315,6 +342,8 @@ argument_list|,
 name|Buffer
 operator|+
 literal|17
+argument_list|,
+name|LowerCase
 argument_list|)
 return|;
 block|}
@@ -700,13 +729,15 @@ parameter_list|)
 block|{
 for|for
 control|(
-name|unsigned
+name|StringRef
+operator|::
+name|size_type
 name|i
-init|=
+operator|=
 literal|0
-init|,
+operator|,
 name|e
-init|=
+operator|=
 name|Str
 operator|.
 name|size

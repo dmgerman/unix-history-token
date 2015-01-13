@@ -62,6 +62,12 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+name|class
+name|Platform
+decl_stmt|;
+name|class
+name|ExecutionContext
+decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Every register is described in detail including its name, alternate
 comment|// name (optional), encoding, size in bytes and the default display
@@ -174,8 +180,50 @@ decl_stmt|;
 block|}
 name|OptionEnumValueElement
 typedef|;
-typedef|typedef
 struct|struct
+name|OptionValidator
+block|{
+name|virtual
+operator|~
+name|OptionValidator
+argument_list|()
+block|{ }
+name|virtual
+name|bool
+name|IsValid
+argument_list|(
+argument|Platform&platform
+argument_list|,
+argument|const ExecutionContext&target
+argument_list|)
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+specifier|const
+name|char
+operator|*
+name|ShortConditionString
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+specifier|const
+name|char
+operator|*
+name|LongConditionString
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+block|}
+struct|;
+struct|struct
+name|OptionDefinition
 block|{
 name|uint32_t
 name|usage_mask
@@ -200,6 +248,11 @@ name|int
 name|option_has_arg
 decl_stmt|;
 comment|// no_argument, required_argument or optional_argument
+name|OptionValidator
+modifier|*
+name|validator
+decl_stmt|;
+comment|// If non-NULL, option is valid iff |validator->IsValid()|, otherwise always valid.
 name|OptionEnumValueElement
 modifier|*
 name|enum_values
@@ -223,8 +276,7 @@ decl_stmt|;
 comment|// Full text explaining what this options does and what (if any) argument to
 comment|// pass it.
 block|}
-name|OptionDefinition
-typedef|;
+struct|;
 block|}
 end_decl_stmt
 

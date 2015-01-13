@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: dwarf_lineno.c 2074 2011-10-27 03:34:33Z jkoshy $"
+literal|"$Id: dwarf_lineno.c 2983 2014-02-09 00:24:31Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -269,8 +269,7 @@ name|linecount
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|_Dwarf_Line
+name|Dwarf_Line
 argument_list|)
 argument_list|)
 operator|)

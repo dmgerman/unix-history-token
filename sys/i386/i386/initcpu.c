@@ -521,6 +521,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|u_int
+name|cpu_max_ext_state_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
 name|cpu_mon_mwait_flags
 decl_stmt|;
 end_decl_stmt
@@ -557,6 +563,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* Device ID of Cyrix CPU */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cpu_maxphyaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Max phys addr width in bits */
 end_comment
 
 begin_expr_stmt

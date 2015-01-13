@@ -66,18 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/DominatorInternals.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/Dominators.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -91,6 +79,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/GenericDomTree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/GenericDomTreeConstruction.h"
 end_include
 
 begin_decl_stmt
@@ -182,13 +182,13 @@ operator|*
 name|DT
 return|;
 block|}
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getRoots -  Return the root blocks of the current CFG.  This may include
 comment|/// multiple blocks if we are computing post dominators.  For forward
@@ -243,14 +243,12 @@ name|getRootNode
 argument_list|()
 return|;
 block|}
-name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
-name|F
+argument|MachineFunction&F
 argument_list|)
+name|override
 block|;
 specifier|inline
 name|bool
@@ -734,16 +732,15 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|void
 name|releaseMemory
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-name|virtual
 name|void
 name|print
 argument_list|(
@@ -756,6 +753,7 @@ name|Module
 operator|*
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 end_decl_stmt
 

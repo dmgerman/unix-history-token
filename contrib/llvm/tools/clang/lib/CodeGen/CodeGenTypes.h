@@ -350,7 +350,7 @@ expr_stmt|;
 name|private
 label|:
 comment|/// TypeCache - This map keeps cache of llvm::Types
-comment|/// and maps llvm::Types to corresponding clang::Type.
+comment|/// and maps clang::Type to corresponding llvm::Type.
 name|llvm
 operator|::
 name|DenseMap
@@ -506,7 +506,7 @@ name|FT
 parameter_list|)
 function_decl|;
 name|bool
-name|isFuncTypeArgumentConvertible
+name|isFuncParamTypeConvertible
 parameter_list|(
 name|QualType
 name|Ty
@@ -595,7 +595,7 @@ function_decl|;
 specifier|const
 name|CGFunctionInfo
 modifier|&
-name|arrangeFunctionDeclaration
+name|arrangeFreeFunctionDeclaration
 argument_list|(
 name|QualType
 name|ResTy
@@ -664,6 +664,28 @@ name|D
 parameter_list|,
 name|CXXCtorType
 name|Type
+parameter_list|)
+function_decl|;
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|arrangeCXXConstructorCall
+parameter_list|(
+specifier|const
+name|CallArgList
+modifier|&
+name|Args
+parameter_list|,
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|D
+parameter_list|,
+name|CXXCtorType
+name|CtorKind
+parameter_list|,
+name|unsigned
+name|ExtraArgs
 parameter_list|)
 function_decl|;
 specifier|const
@@ -806,6 +828,9 @@ name|arrangeLLVMFunctionInfo
 argument_list|(
 name|CanQualType
 name|returnType
+argument_list|,
+name|bool
+name|IsInstanceMethod
 argument_list|,
 name|ArrayRef
 operator|<

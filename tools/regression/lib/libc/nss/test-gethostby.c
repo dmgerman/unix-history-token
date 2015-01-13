@@ -586,7 +586,6 @@ name|he
 operator|==
 name|NULL
 condition|)
-empty_stmt|;
 name|errno
 operator|=
 name|error

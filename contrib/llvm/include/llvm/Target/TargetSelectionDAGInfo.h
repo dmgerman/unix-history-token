@@ -109,7 +109,7 @@ decl_stmt|;
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 decl_stmt|;
 name|protected
 label|:
@@ -121,7 +121,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TD
+name|DL
 return|;
 block|}
 name|public
@@ -130,9 +130,9 @@ name|explicit
 name|TargetSelectionDAGInfo
 parameter_list|(
 specifier|const
-name|TargetMachine
-modifier|&
-name|TM
+name|DataLayout
+modifier|*
+name|DL
 parameter_list|)
 function_decl|;
 name|virtual

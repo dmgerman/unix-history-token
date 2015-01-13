@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_decl_stmt
@@ -261,11 +261,11 @@ name|PostIncLoops
 decl_stmt|;
 comment|/// Deleted - Implementation of CallbackVH virtual function to
 comment|/// receive notification when the User is deleted.
-name|virtual
 name|void
 name|deleted
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 block|}
 empty_stmt|;
 name|template
@@ -389,9 +389,10 @@ name|ScalarEvolution
 operator|*
 name|SE
 block|;
+specifier|const
 name|DataLayout
 operator|*
-name|TD
+name|DL
 block|;
 name|SmallPtrSet
 operator|<
@@ -410,31 +411,27 @@ name|IVStrideUse
 operator|>
 name|IVUses
 block|;
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|runOnLoop
 argument_list|(
-name|Loop
-operator|*
-name|L
+argument|Loop *L
 argument_list|,
-name|LPPassManager
-operator|&
-name|LPM
+argument|LPPassManager&LPM
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|releaseMemory
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -617,9 +614,10 @@ specifier|const
 name|Module
 operator|*
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// dump - This method is used for debugging.
 name|void

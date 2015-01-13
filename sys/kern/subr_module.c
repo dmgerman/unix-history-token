@@ -937,7 +937,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Called from locore on i386.  Convert physical pointers to kvm. Sigh. */
+comment|/* Called from locore.  Convert physical pointers to kvm. Sigh. */
 end_comment
 
 begin_function

@@ -1600,7 +1600,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Setup per-CPU ACPI IDs.  */
+comment|/*  * Setup per-CPU domain IDs.  */
 end_comment
 
 begin_function
@@ -1708,6 +1708,19 @@ operator|=
 name|cpu
 operator|->
 name|domain
+expr_stmt|;
+name|CPU_SET
+argument_list|(
+name|i
+argument_list|,
+operator|&
+name|cpuset_domain
+index|[
+name|cpu
+operator|->
+name|domain
+index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

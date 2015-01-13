@@ -122,7 +122,7 @@ name|uint64_t
 name|getBase
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 name|Base
@@ -132,7 +132,7 @@ name|uint64_t
 name|getExtent
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 name|Bytes
@@ -149,7 +149,7 @@ argument_list|,
 argument|uint8_t *Byte
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 name|int
 name|readBytes
@@ -161,7 +161,7 @@ argument_list|,
 argument|uint8_t *Buf
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|; }
 decl_stmt|;
 block|}

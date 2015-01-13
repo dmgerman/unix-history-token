@@ -71,6 +71,10 @@ name|struct
 name|mtx
 name|lock
 decl_stmt|;
+name|u_int
+name|bus_freq
+decl_stmt|;
+comment|/* Configured bus Hz. */
 block|}
 struct|;
 end_struct
@@ -82,6 +86,9 @@ block|{
 name|uint32_t
 name|addr
 decl_stmt|;
+name|bool
+name|nostop
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -90,7 +97,11 @@ begin_enum
 enum|enum
 block|{
 name|IICBUS_IVAR_ADDR
+block|,
 comment|/* Address or base address */
+name|IICBUS_IVAR_NOSTOP
+block|,
+comment|/* nostop defaults */
 block|}
 enum|;
 end_enum
@@ -118,6 +129,17 @@ argument_list|,
 argument|ADDR
 argument_list|,
 argument|uint32_t
+argument_list|)
+end_macro
+
+begin_macro
+name|IICBUS_ACCESSOR
+argument_list|(
+argument|nostop
+argument_list|,
+argument|NOSTOP
+argument_list|,
+argument|bool
 argument_list|)
 end_macro
 
@@ -152,7 +174,6 @@ value|mtx_assert(&(sc)->lock, MA_OWNED)
 end_define
 
 begin_function_decl
-specifier|extern
 name|int
 name|iicbus_generic_intr
 parameter_list|(
@@ -165,6 +186,19 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|iicbus_init_frequency
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|bus_freq
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -210,7 +210,7 @@ comment|/// section list if it has been parsed, and the symbol table
 comment|/// if it has been parsed.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|//------------------------------------------------------------------
 name|virtual
 name|void
@@ -339,7 +339,7 @@ comment|/// recognize that magic bytes in a header, false should be returned
 comment|/// and the next plug-in can attempt to parse an object file.
 comment|///
 comment|/// @return
-comment|///     Returns \b true if the header was parsed succesfully, \b
+comment|///     Returns \b true if the header was parsed successfully, \b
 comment|///     false otherwise.
 comment|//------------------------------------------------------------------
 name|virtual

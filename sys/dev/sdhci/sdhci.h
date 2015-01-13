@@ -188,6 +188,17 @@ value|(1<<13)
 end_define
 
 begin_comment
+comment|/* Wait to see reset bit asserted before waiting for de-asserted  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_WAITFOR_RESET_ASSERTED
+value|(1<<14)
+end_define
+
+begin_comment
 comment|/*  * Controller registers  */
 end_comment
 
@@ -899,8 +910,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDHCI_INT_CMD_ERROR_MASK
+value|(SDHCI_INT_TIMEOUT | \ 		SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDHCI_INT_CMD_MASK
-value|(SDHCI_INT_RESPONSE | SDHCI_INT_TIMEOUT | \ 		SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX)
+value|(SDHCI_INT_RESPONSE | SDHCI_INT_CMD_ERROR_MASK)
 end_define
 
 begin_define

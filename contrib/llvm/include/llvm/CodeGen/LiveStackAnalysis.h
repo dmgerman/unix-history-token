@@ -440,7 +440,6 @@ return|return
 name|VNInfoAllocator
 return|;
 block|}
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
@@ -449,23 +448,23 @@ operator|&
 name|AU
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|releaseMemory
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 comment|/// runOnMachineFunction - pass entry point
-name|virtual
 name|bool
 name|runOnMachineFunction
-parameter_list|(
+argument_list|(
 name|MachineFunction
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// print - Implement the dump method.
-name|virtual
 name|void
 name|print
 argument_list|(
@@ -477,9 +476,10 @@ specifier|const
 name|Module
 operator|*
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 block|}
 end_decl_stmt

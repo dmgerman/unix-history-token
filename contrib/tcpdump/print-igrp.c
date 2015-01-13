@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Initial contribution from Francis Dupont (francis.dupont@inria.fr)  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-igrp.c,v 1.21 2005-04-20 21:01:56 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -52,31 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"addrtoname.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"igrp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ip.h"
 end_include
 
 begin_include
@@ -89,11 +48,150 @@ begin_comment
 comment|/* must come after interface.h */
 end_comment
 
+begin_comment
+comment|/* Cisco IGRP definitions */
+end_comment
+
+begin_comment
+comment|/* IGRP Header */
+end_comment
+
+begin_struct
+struct|struct
+name|igrphdr
+block|{
+name|uint8_t
+name|ig_vop
+decl_stmt|;
+comment|/* protocol version number / opcode */
+define|#
+directive|define
+name|IGRP_V
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0xf0)>> 4)
+define|#
+directive|define
+name|IGRP_OP
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x0f)
+name|uint8_t
+name|ig_ed
+decl_stmt|;
+comment|/* edition number */
+name|uint16_t
+name|ig_as
+decl_stmt|;
+comment|/* autonomous system number */
+name|uint16_t
+name|ig_ni
+decl_stmt|;
+comment|/* number of subnet in local net */
+name|uint16_t
+name|ig_ns
+decl_stmt|;
+comment|/* number of networks in AS */
+name|uint16_t
+name|ig_nx
+decl_stmt|;
+comment|/* number of networks ouside AS */
+name|uint16_t
+name|ig_sum
+decl_stmt|;
+comment|/* checksum of IGRP header& data */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IGRP_UPDATE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGRP_REQUEST
+value|2
+end_define
+
+begin_comment
+comment|/* IGRP routing entry */
+end_comment
+
+begin_struct
+struct|struct
+name|igrprte
+block|{
+name|uint8_t
+name|igr_net
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* 3 significant octets of IP address */
+name|uint8_t
+name|igr_dly
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* delay in tens of microseconds */
+name|uint8_t
+name|igr_bw
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* bandwidth in units of 1 kb/s */
+name|uint8_t
+name|igr_mtu
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* MTU in octets */
+name|uint8_t
+name|igr_rel
+decl_stmt|;
+comment|/* percent packets successfully tx/rx */
+name|uint8_t
+name|igr_ld
+decl_stmt|;
+comment|/* percent of channel occupied */
+name|uint8_t
+name|igr_hct
+decl_stmt|;
+comment|/* hop count */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IGRP_RTE_SIZE
+value|14
+end_define
+
+begin_comment
+comment|/* don't believe sizeof ! */
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|igrp_entry_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 name|struct
 name|igrprte
@@ -124,30 +222,34 @@ if|if
 condition|(
 name|is_interior
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" *.%d.%d.%d"
-argument_list|,
+operator|,
 name|igr
 operator|->
 name|igr_net
 index|[
 literal|0
 index|]
-argument_list|,
+operator|,
 name|igr
 operator|->
 name|igr_net
 index|[
 literal|1
 index|]
-argument_list|,
+operator|,
 name|igr
 operator|->
 name|igr_net
 index|[
 literal|2
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -155,57 +257,65 @@ if|if
 condition|(
 name|is_exterior
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" X%d.%d.%d.0"
-argument_list|,
+operator|,
 name|igr
 operator|->
 name|igr_net
 index|[
 literal|0
 index|]
-argument_list|,
+operator|,
 name|igr
 operator|->
 name|igr_net
 index|[
 literal|1
 index|]
-argument_list|,
+operator|,
 name|igr
 operator|->
 name|igr_net
 index|[
 literal|2
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %d.%d.%d.0"
-argument_list|,
+operator|,
 name|igr
 operator|->
 name|igr_net
 index|[
 literal|0
 index|]
-argument_list|,
+operator|,
 name|igr
 operator|->
 name|igr_net
 index|[
 literal|1
 index|]
-argument_list|,
+operator|,
 name|igr
 operator|->
 name|igr_net
 index|[
 literal|2
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 name|delay
@@ -251,14 +361,17 @@ operator|->
 name|igr_mtu
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" d=%d b=%d r=%d l=%d M=%d mtu=%d in %d hops"
-argument_list|,
+operator|,
 literal|10
 operator|*
 name|delay
-argument_list|,
+operator|,
 name|bandwidth
 operator|==
 literal|0
@@ -268,22 +381,23 @@ else|:
 literal|10000000
 operator|/
 name|bandwidth
-argument_list|,
+operator|,
 name|igr
 operator|->
 name|igr_rel
-argument_list|,
+operator|,
 name|igr
 operator|->
 name|igr_ld
-argument_list|,
+operator|,
 name|metric
-argument_list|,
+operator|,
 name|mtu
-argument_list|,
+operator|,
 name|igr
 operator|->
 name|igr_hct
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -291,6 +405,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|op2str
@@ -322,6 +437,10 @@ begin_function
 name|void
 name|igrp_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -330,12 +449,6 @@ name|bp
 parameter_list|,
 name|u_int
 name|length
-parameter_list|,
-specifier|const
-name|u_char
-modifier|*
-name|bp2
-name|_U_
 parameter_list|)
 block|{
 specifier|register
@@ -377,16 +490,17 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"igrp:"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Header */
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|hdr
@@ -422,13 +536,13 @@ operator|->
 name|ig_nx
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s V%d edit=%d AS=%d (%d/%d/%d)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|op2str
@@ -442,18 +556,18 @@ operator|->
 name|ig_vop
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|IGRP_V
 argument_list|(
 name|hdr
 operator|->
 name|ig_vop
 argument_list|)
-argument_list|,
+operator|,
 name|hdr
 operator|->
 name|ig_ed
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -461,12 +575,13 @@ name|hdr
 operator|->
 name|ig_as
 argument_list|)
-argument_list|,
+operator|,
 name|nint
-argument_list|,
+operator|,
 name|nsys
-argument_list|,
+operator|,
 name|next
+operator|)
 argument_list|)
 expr_stmt|;
 name|length
@@ -491,7 +606,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|cp
@@ -501,6 +616,8 @@ argument_list|)
 expr_stmt|;
 name|igrp_entry_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 expr|struct
 name|igrprte
@@ -525,7 +642,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|cp
@@ -535,6 +652,8 @@ argument_list|)
 expr_stmt|;
 name|igrp_entry_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 expr|struct
 name|igrprte
@@ -559,7 +678,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|cp
@@ -569,6 +688,8 @@ argument_list|)
 expr_stmt|;
 name|igrp_entry_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 expr|struct
 name|igrprte
@@ -587,14 +708,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [extra bytes %d]"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -625,11 +747,13 @@ condition|)
 return|return;
 name|trunc
 label|:
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|igrp]"
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

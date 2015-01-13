@@ -82,6 +82,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm-c/Disassembler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
@@ -89,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/CodeGen.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm-c/Disassembler.h"
 end_include
 
 begin_include
@@ -171,10 +171,10 @@ name|class
 name|MCTargetAsmParser
 decl_stmt|;
 name|class
-name|TargetMachine
+name|MCTargetOptions
 decl_stmt|;
 name|class
-name|MCTargetStreamer
+name|TargetMachine
 decl_stmt|;
 name|class
 name|TargetOptions
@@ -187,15 +187,20 @@ name|formatted_raw_ostream
 decl_stmt|;
 name|MCStreamer
 modifier|*
+name|createNullStreamer
+parameter_list|(
+name|MCContext
+modifier|&
+name|Ctx
+parameter_list|)
+function_decl|;
+name|MCStreamer
+modifier|*
 name|createAsmStreamer
 parameter_list|(
 name|MCContext
 modifier|&
 name|Ctx
-parameter_list|,
-name|MCTargetStreamer
-modifier|*
-name|TargetStreamer
 parameter_list|,
 name|formatted_raw_ostream
 modifier|&
@@ -203,12 +208,6 @@ name|OS
 parameter_list|,
 name|bool
 name|isVerboseAsm
-parameter_list|,
-name|bool
-name|useLoc
-parameter_list|,
-name|bool
-name|useCFI
 parameter_list|,
 name|bool
 name|useDwarfDirectory
@@ -285,19 +284,16 @@ struct_decl|struct
 name|TargetRegistry
 struct_decl|;
 typedef|typedef
-name|unsigned
+name|bool
 argument_list|(
-operator|*
-name|TripleMatchQualityFnTy
+argument|*ArchMatchFnTy
 argument_list|)
-argument_list|(
-specifier|const
-name|std
+operator|(
+name|Triple
 operator|::
-name|string
-operator|&
-name|TT
-argument_list|)
+name|ArchType
+name|Arch
+operator|)
 expr_stmt|;
 typedef|typedef
 name|MCAsmInfo
@@ -503,6 +499,11 @@ specifier|const
 name|MCInstrInfo
 modifier|&
 name|MII
+parameter_list|,
+specifier|const
+name|MCTargetOptions
+modifier|&
+name|Options
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -522,6 +523,10 @@ specifier|const
 name|MCSubtargetInfo
 modifier|&
 name|STI
+parameter_list|,
+name|MCContext
+modifier|&
+name|Ctx
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -621,6 +626,11 @@ name|MCCodeEmitter
 modifier|*
 name|_Emitter
 parameter_list|,
+specifier|const
+name|MCSubtargetInfo
+modifier|&
+name|STI
+parameter_list|,
 name|bool
 name|RelaxAll
 parameter_list|,
@@ -648,12 +658,6 @@ name|bool
 name|isVerboseAsm
 parameter_list|,
 name|bool
-name|useLoc
-parameter_list|,
-name|bool
-name|useCFI
-parameter_list|,
-name|bool
 name|useDwarfDirectory
 parameter_list|,
 name|MCInstPrinter
@@ -670,6 +674,19 @@ name|TAB
 parameter_list|,
 name|bool
 name|ShowInst
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|MCStreamer
+modifier|*
+function_decl|(
+modifier|*
+name|NullStreamerCtorTy
+function_decl|)
+parameter_list|(
+name|MCContext
+modifier|&
+name|Ctx
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -726,10 +743,9 @@ name|Target
 modifier|*
 name|Next
 decl_stmt|;
-comment|/// TripleMatchQualityFn - The target function for rating the match quality
-comment|/// of a triple.
-name|TripleMatchQualityFnTy
-name|TripleMatchQualityFn
+comment|/// The target function for checking if an architecture is supported.
+name|ArchMatchFnTy
+name|ArchMatchFn
 decl_stmt|;
 comment|/// Name - The target name.
 specifier|const
@@ -822,6 +838,11 @@ comment|/// AsmStreamer, if registered (default = llvm::createAsmStreamer).
 name|AsmStreamerCtorTy
 name|AsmStreamerCtorFn
 decl_stmt|;
+comment|/// Construction function for this target's NullStreamer, if registered
+comment|/// (default = llvm::createNullStreamer).
+name|NullStreamerCtorTy
+name|NullStreamerCtorFn
+decl_stmt|;
 comment|/// MCRelocationInfoCtorFn - Construction function for this target's
 comment|/// MCRelocationInfo, if registered (default = llvm::createMCRelocationInfo)
 name|MCRelocationInfoCtorTy
@@ -839,17 +860,22 @@ argument_list|()
 operator|:
 name|AsmStreamerCtorFn
 argument_list|(
-literal|0
+name|nullptr
+argument_list|)
+operator|,
+name|NullStreamerCtorFn
+argument_list|(
+name|nullptr
 argument_list|)
 operator|,
 name|MCRelocationInfoCtorFn
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|MCSymbolizerCtorFn
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// @name Target Information
@@ -912,7 +938,7 @@ block|{
 return|return
 name|TargetMachineCtorFn
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// hasMCAsmBackend - Check if this target supports .o generation.
@@ -924,7 +950,7 @@ block|{
 return|return
 name|MCAsmBackendCtorFn
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// @}
@@ -957,7 +983,7 @@ operator|!
 name|MCAsmInfoCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|MCAsmInfoCtorFn
@@ -1000,7 +1026,7 @@ operator|!
 name|MCCodeGenInfoCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|MCCodeGenInfoCtorFn
@@ -1029,7 +1055,7 @@ operator|!
 name|MCInstrInfoCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|MCInstrInfoCtorFn
@@ -1055,7 +1081,7 @@ operator|!
 name|MCInstrAnalysisCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|MCInstrAnalysisCtorFn
@@ -1081,7 +1107,7 @@ operator|!
 name|MCRegInfoCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|MCRegInfoCtorFn
@@ -1120,7 +1146,7 @@ operator|!
 name|MCSubtargetInfoCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|MCSubtargetInfoCtorFn
@@ -1193,7 +1219,7 @@ operator|!
 name|TargetMachineCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|TargetMachineCtorFn
@@ -1243,7 +1269,7 @@ operator|!
 name|MCAsmBackendCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|MCAsmBackendCtorFn
@@ -1279,6 +1305,11 @@ specifier|const
 name|MCInstrInfo
 operator|&
 name|MII
+argument_list|,
+specifier|const
+name|MCTargetOptions
+operator|&
+name|Options
 argument_list|)
 decl|const
 block|{
@@ -1288,7 +1319,7 @@ operator|!
 name|MCAsmParserCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|MCAsmParserCtorFn
@@ -1298,6 +1329,8 @@ argument_list|,
 name|Parser
 argument_list|,
 name|MII
+argument_list|,
+name|Options
 argument_list|)
 return|;
 block|}
@@ -1323,7 +1356,7 @@ operator|!
 name|AsmPrinterCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|AsmPrinterCtorFn
@@ -1342,6 +1375,10 @@ specifier|const
 name|MCSubtargetInfo
 operator|&
 name|STI
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
 argument_list|)
 decl|const
 block|{
@@ -1351,7 +1388,7 @@ operator|!
 name|MCDisassemblerCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|MCDisassemblerCtorFn
@@ -1360,6 +1397,8 @@ operator|*
 name|this
 argument_list|,
 name|STI
+argument_list|,
+name|Ctx
 argument_list|)
 return|;
 block|}
@@ -1398,7 +1437,7 @@ operator|!
 name|MCInstPrinterCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|MCInstPrinterCtorFn
@@ -1450,7 +1489,7 @@ operator|!
 name|MCCodeEmitterCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|MCCodeEmitterCtorFn
@@ -1497,6 +1536,11 @@ name|MCCodeEmitter
 operator|*
 name|_Emitter
 argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|,
 name|bool
 name|RelaxAll
 argument_list|,
@@ -1511,7 +1555,7 @@ operator|!
 name|MCObjectStreamerCtorFn
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|MCObjectStreamerCtorFn
@@ -1528,6 +1572,8 @@ argument_list|,
 name|_OS
 argument_list|,
 name|_Emitter
+argument_list|,
+name|STI
 argument_list|,
 name|RelaxAll
 argument_list|,
@@ -1550,12 +1596,6 @@ name|OS
 argument_list|,
 name|bool
 name|isVerboseAsm
-argument_list|,
-name|bool
-name|useLoc
-argument_list|,
-name|bool
-name|useCFI
 argument_list|,
 name|bool
 name|useDwarfDirectory
@@ -1590,10 +1630,6 @@ name|OS
 argument_list|,
 name|isVerboseAsm
 argument_list|,
-name|useLoc
-argument_list|,
-name|useCFI
-argument_list|,
 name|useDwarfDirectory
 argument_list|,
 name|InstPrint
@@ -1612,15 +1648,9 @@ name|createAsmStreamer
 argument_list|(
 name|Ctx
 argument_list|,
-literal|0
-argument_list|,
 name|OS
 argument_list|,
 name|isVerboseAsm
-argument_list|,
-name|useLoc
-argument_list|,
-name|useCFI
 argument_list|,
 name|useDwarfDirectory
 argument_list|,
@@ -1631,6 +1661,35 @@ argument_list|,
 name|TAB
 argument_list|,
 name|ShowInst
+argument_list|)
+return|;
+block|}
+name|MCStreamer
+modifier|*
+name|createNullStreamer
+argument_list|(
+name|MCContext
+operator|&
+name|Ctx
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|NullStreamerCtorFn
+condition|)
+return|return
+name|NullStreamerCtorFn
+argument_list|(
+name|Ctx
+argument_list|)
+return|;
+return|return
+name|llvm
+operator|::
+name|createNullStreamer
+argument_list|(
+name|Ctx
 argument_list|)
 return|;
 block|}
@@ -1779,24 +1838,11 @@ expr_stmt|;
 name|public
 label|:
 name|iterator
-argument_list|(
-specifier|const
-name|iterator
-operator|&
-name|I
-argument_list|)
-operator|:
-name|Current
-argument_list|(
-argument|I.Current
-argument_list|)
-block|{}
-name|iterator
 argument_list|()
 operator|:
 name|Current
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|bool
@@ -2090,42 +2136,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getClosestTargetForJIT - Pick the best target that is compatible with
-end_comment
-
-begin_comment
-comment|/// the current host.  If no close target can be found, this returns null
-end_comment
-
-begin_comment
-comment|/// and sets the Error string to a reason.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Maintained for compatibility through 2.6.
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|Target
-modifier|*
-name|getClosestTargetForJIT
-argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|Error
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// @}
 end_comment
 
@@ -2182,11 +2192,7 @@ comment|/// string.
 end_comment
 
 begin_comment
-comment|/// @param TQualityFn - The triple match quality computation function for
-end_comment
-
-begin_comment
-comment|/// this target.
+comment|/// @param ArchMatchFn - The arch match checking function for this target.
 end_comment
 
 begin_comment
@@ -2218,8 +2224,8 @@ name|ShortDesc
 argument_list|,
 name|Target
 operator|::
-name|TripleMatchQualityFnTy
-name|TQualityFn
+name|ArchMatchFnTy
+name|ArchMatchFn
 argument_list|,
 name|bool
 name|HasJIT
@@ -3101,6 +3107,30 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterNullStreamer
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|NullStreamerCtorTy
+name|Fn
+argument_list|)
+block|{
+name|T
+operator|.
+name|NullStreamerCtorFn
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
 begin_comment
 comment|/// RegisterMCRelocationInfo - Register an MCRelocationInfo
 end_comment
@@ -3306,35 +3336,22 @@ argument_list|,
 name|Desc
 argument_list|,
 operator|&
-name|getTripleMatchQuality
+name|getArchMatch
 argument_list|,
 name|HasJIT
 argument_list|)
 block|;     }
 specifier|static
-name|unsigned
-name|getTripleMatchQuality
+name|bool
+name|getArchMatch
 argument_list|(
-argument|const std::string&TT
+argument|Triple::ArchType Arch
 argument_list|)
 block|{
-if|if
-condition|(
-name|Triple
-argument_list|(
-name|TT
-argument_list|)
-operator|.
-name|getArch
-argument_list|()
+return|return
+name|Arch
 operator|==
 name|TargetArchType
-condition|)
-return|return
-literal|20
-return|;
-return|return
-literal|0
 return|;
 block|}
 end_expr_stmt
@@ -4413,6 +4430,8 @@ argument_list|,
 argument|MCAsmParser&P
 argument_list|,
 argument|const MCInstrInfo&MII
+argument_list|,
+argument|const MCTargetOptions&Options
 argument_list|)
 block|{
 return|return
@@ -4424,6 +4443,8 @@ argument_list|,
 name|P
 argument_list|,
 name|MII
+argument_list|,
+name|Options
 argument_list|)
 return|;
 block|}

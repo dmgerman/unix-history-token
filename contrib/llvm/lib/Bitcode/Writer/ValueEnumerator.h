@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/UniqueVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Attributes.h"
 end_include
 
@@ -98,6 +104,9 @@ name|Instruction
 decl_stmt|;
 name|class
 name|BasicBlock
+decl_stmt|;
+name|class
+name|Comdat
 decl_stmt|;
 name|class
 name|Function
@@ -191,6 +200,18 @@ name|ValueMap
 decl_stmt|;
 name|ValueList
 name|Values
+decl_stmt|;
+typedef|typedef
+name|UniqueVector
+operator|<
+specifier|const
+name|Comdat
+operator|*
+operator|>
+name|ComdatSetType
+expr_stmt|;
+name|ComdatSetType
+name|Comdats
 decl_stmt|;
 name|ValueList
 name|MDValues
@@ -647,6 +668,27 @@ return|return
 name|AttributeGroups
 return|;
 block|}
+specifier|const
+name|ComdatSetType
+operator|&
+name|getComdats
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Comdats
+return|;
+block|}
+name|unsigned
+name|getComdatID
+argument_list|(
+specifier|const
+name|Comdat
+operator|*
+name|C
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getGlobalBasicBlockID - This returns the function-specific ID for the
 comment|/// specified basic block.  This is relatively expensive information, so it
 comment|/// should only be used by rare constructs such as address-of-label.

@@ -2906,19 +2906,31 @@ condition|(
 name|vap
 operator|->
 name|iv_des_mode
-operator|!=
+operator|==
 name|IEEE80211_MODE_11G
-operator|||
+condition|)
+block|{
+if|if
+condition|(
 name|mode
-operator|!=
+operator|==
+name|IEEE80211_MODE_11G
+condition|)
+comment|/* Skip the G check */
+continue|continue;
+elseif|else
+if|if
+condition|(
+name|mode
+operator|==
 name|IEEE80211_MODE_11B
 condition|)
-continue|continue;
 name|mode
 operator|=
 name|IEEE80211_MODE_11G
 expr_stmt|;
 comment|/* upgrade */
+block|}
 block|}
 block|}
 else|else

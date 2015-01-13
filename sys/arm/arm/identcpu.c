@@ -853,6 +853,16 @@ name|generic_steppings
 block|}
 block|,
 block|{
+name|CPU_ID_CORTEXA17
+block|,
+name|CPU_CLASS_CORTEXA
+block|,
+literal|"Cortex A17"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
 name|CPU_ID_KRAIT
 block|,
 name|CPU_CLASS_KRAIT
@@ -1938,6 +1948,8 @@ operator|+
 literal|1
 argument_list|,
 name|arm_cache_loc
+operator|+
+literal|1
 argument_list|,
 name|CPU_CLIDR_LOUIS
 argument_list|(

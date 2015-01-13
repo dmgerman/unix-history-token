@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libdwarf_lineno.c 2972 2013-12-23 06:46:04Z kaiwang27 $"
+literal|"$Id: libdwarf_lineno.c 3100 2014-10-25 20:34:29Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -374,8 +374,6 @@ name|line
 decl_stmt|,
 name|column
 decl_stmt|,
-name|isa
-decl_stmt|,
 name|opsize
 decl_stmt|;
 name|int
@@ -386,18 +384,13 @@ decl_stmt|,
 name|end_sequence
 decl_stmt|;
 name|int
-name|prologue_end
-decl_stmt|,
-name|epilogue_begin
-decl_stmt|;
-name|int
 name|ret
 decl_stmt|;
 define|#
 directive|define
 name|RESET_REGISTERS
 define|\
-value|do {							\ 		address	       = 0;				\ 		file	       = 1;				\ 		line	       = 1;				\ 		column	       = 0;				\ 		is_stmt	       = li->li_defstmt;		\ 		basic_block    = 0;				\ 		end_sequence   = 0;				\ 		prologue_end   = 0;				\ 		epilogue_begin = 0;				\ 	} while(0)
+value|do {							\ 		address	       = 0;				\ 		file	       = 1;				\ 		line	       = 1;				\ 		column	       = 0;				\ 		is_stmt	       = li->li_defstmt;		\ 		basic_block    = 0;				\ 		end_sequence   = 0;				\ 	} while(0)
 define|#
 directive|define
 name|APPEND_ROW
@@ -569,14 +562,6 @@ name|basic_block
 operator|=
 literal|0
 expr_stmt|;
-name|prologue_end
-operator|=
-literal|0
-expr_stmt|;
-name|epilogue_begin
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 name|DW_LNS_advance_pc
@@ -677,24 +662,17 @@ break|break;
 case|case
 name|DW_LNS_set_prologue_end
 case|:
-name|prologue_end
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 name|DW_LNS_set_epilogue_begin
 case|:
-name|epilogue_begin
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 name|DW_LNS_set_isa
 case|:
-name|isa
-operator|=
+operator|(
+name|void
+operator|)
 name|_dwarf_decode_uleb128
 argument_list|(
 operator|&
@@ -729,14 +707,6 @@ expr_stmt|;
 name|APPEND_ROW
 expr_stmt|;
 name|basic_block
-operator|=
-literal|0
-expr_stmt|;
-name|prologue_end
-operator|=
-literal|0
-expr_stmt|;
-name|epilogue_begin
 operator|=
 literal|0
 expr_stmt|;
@@ -1955,8 +1925,6 @@ name|int
 name|is_stmt
 decl_stmt|,
 name|basic_block
-decl_stmt|,
-name|end_sequence
 decl_stmt|;
 name|int
 name|need_copy
@@ -1968,7 +1936,7 @@ define|#
 directive|define
 name|RESET_REGISTERS
 define|\
-value|do {							\ 		address	       = 0;				\ 		file	       = 1;				\ 		line	       = 1;				\ 		column	       = 0;				\ 		is_stmt	       = li->li_defstmt;		\ 		basic_block    = 0;				\ 		end_sequence   = 0;				\ 	} while(0)
+value|do {							\ 		address	       = 0;				\ 		file	       = 1;				\ 		line	       = 1;				\ 		column	       = 0;				\ 		is_stmt	       = li->li_defstmt;		\ 		basic_block    = 0;				\ 	} while(0)
 name|li
 operator|=
 name|dbg

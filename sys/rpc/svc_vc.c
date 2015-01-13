@@ -2491,13 +2491,15 @@ expr_stmt|;
 operator|*
 name|ack
 operator|-=
+name|sbused
+argument_list|(
+operator|&
 name|xprt
 operator|->
 name|xp_socket
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

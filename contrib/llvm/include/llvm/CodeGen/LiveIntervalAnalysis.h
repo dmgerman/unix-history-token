@@ -184,6 +184,9 @@ name|class
 name|VirtRegMap
 decl_stmt|;
 name|class
+name|MachineBlockFrequencyInfo
+decl_stmt|;
+name|class
 name|LiveIntervals
 range|:
 name|public
@@ -333,7 +336,9 @@ argument|bool isDef
 argument_list|,
 argument|bool isUse
 argument_list|,
-argument|BlockFrequency freq
+argument|const MachineBlockFrequencyInfo *MBFI
+argument_list|,
+argument|const MachineInstr *Instr
 argument_list|)
 block|;
 name|LiveInterval
@@ -498,7 +503,7 @@ index|[
 name|Reg
 index|]
 operator|=
-literal|0
+name|nullptr
 block|;     }
 comment|/// Given a register and an instruction, adds a live segment from that
 comment|/// instruction to the end of its MBB.
@@ -534,7 +539,37 @@ operator|>
 operator|*
 name|dead
 operator|=
-literal|0
+name|nullptr
+argument_list|)
+block|;
+comment|/// \brief Walk the values in the given interval and compute which ones
+comment|/// are dead.  Dead values are not deleted, however:
+comment|/// - Dead PHIDef values are marked as unused.
+comment|/// - New dead machine instructions are added to the dead vector.
+comment|/// - CanSeparate is set to true if the interval may have been separated
+comment|///   into multiple connected components.
+name|void
+name|computeDeadValues
+argument_list|(
+name|LiveInterval
+operator|*
+name|li
+argument_list|,
+name|LiveRange
+operator|&
+name|LR
+argument_list|,
+name|bool
+operator|*
+name|CanSeparate
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MachineInstr
+operator|*
+operator|>
+operator|*
+name|dead
 argument_list|)
 block|;
 comment|/// extendToIndices - Extend the live range of LI to reach all points in
@@ -906,39 +941,37 @@ return|return
 name|VNInfoAllocator
 return|;
 block|}
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|releaseMemory
 argument_list|()
+name|override
 block|;
 comment|/// runOnMachineFunction - pass entry point
-name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
+argument|MachineFunction&
 argument_list|)
+name|override
 block|;
 comment|/// print - Implement the dump method.
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&O
 argument_list|,
-argument|const Module* =
-literal|0
+argument|const Module* = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// intervalIsInOneMBB - If LI is confined to a single basic block, return
 comment|/// a pointer to that block.  If LI is live in to or out of any block,

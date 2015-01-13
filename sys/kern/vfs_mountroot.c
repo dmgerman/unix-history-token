@@ -860,11 +860,13 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|kern_symlink
+name|kern_symlinkat
 argument_list|(
 name|td
 argument_list|,
 literal|"/"
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 literal|"dev"
 argument_list|,
@@ -1469,13 +1471,17 @@ expr_stmt|;
 comment|/* Unlink the no longer needed /dev/dev -> / symlink */
 name|error
 operator|=
-name|kern_unlink
+name|kern_unlinkat
 argument_list|(
 name|td
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 literal|"/dev/dev"
 argument_list|,
 name|UIO_SYSSPACE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1865,7 +1871,7 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 name|var
 argument_list|)
@@ -2251,9 +2257,13 @@ expr_stmt|;
 comment|/* Get file status. */
 name|error
 operator|=
-name|kern_stat
+name|kern_statat
 argument_list|(
 name|td
+argument_list|,
+literal|0
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 name|path
 argument_list|,
@@ -2261,6 +2271,8 @@ name|UIO_SYSSPACE
 argument_list|,
 operator|&
 name|sb
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2273,9 +2285,11 @@ goto|;
 comment|/* Open /dev/mdctl so that we can attach/detach. */
 name|error
 operator|=
-name|kern_open
+name|kern_openat
 argument_list|(
 name|td
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 literal|"/dev/"
 name|MDCTL_NAME
@@ -3860,7 +3874,7 @@ expr_stmt|;
 block|}
 name|s
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"vfs.root.mountfrom"
 argument_list|)
@@ -3874,7 +3888,7 @@ condition|)
 block|{
 name|opt
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"vfs.root.mountfrom.options"
 argument_list|)

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Target/QueueList.h"
 end_include
 
@@ -371,7 +377,7 @@ comment|/// Given the address of the dispatch_queue_t structure for a thread,
 comment|/// get the queue name and return it.
 comment|///
 comment|/// @param [in] dispatch_qaddr
-comment|///     The address of the dispatch_queue_t structure for this thread.
+comment|///     The address of the dispatch_qaddr pointer for this thread.
 comment|///
 comment|/// @return
 comment|///     The string of this queue's name.  An empty string is returned if the
@@ -400,7 +406,7 @@ comment|/// Given the address of the dispatch_queue_t structure for a thread,
 comment|/// get the queue ID and return it.
 comment|///
 comment|/// @param [in] dispatch_qaddr
-comment|///     The address of the dispatch_queue_t structure for this thread.
+comment|///     The address of the dispatch_qaddr pointer for this thread.
 comment|///
 comment|/// @return
 comment|///     The queue ID, or if it could not be retrieved, LLDB_INVALID_QUEUE_ID.
@@ -416,6 +422,33 @@ argument_list|)
 block|{
 return|return
 name|LLDB_INVALID_QUEUE_ID
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Get the libdispatch_queue_t address for the queue given the thread's dispatch_qaddr.
+comment|///
+comment|/// On systems using libdispatch queues, a thread may be associated with a queue.
+comment|/// There will be a call to get the thread's dispatch_qaddr.
+comment|/// Given the thread's dispatch_qaddr, find the libdispatch_queue_t address and
+comment|/// return it.
+comment|///
+comment|/// @param [in] dispatch_qaddr
+comment|///     The address of the dispatch_qaddr pointer for this thread.
+comment|///
+comment|/// @return
+comment|///     The libdispatch_queue_t address, or LLDB_INVALID_ADDRESS if unavailable/not found.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|addr_t
+name|GetLibdispatchQueueAddressFromThreadQAddress
+argument_list|(
+argument|lldb::addr_t dispatch_qaddr
+argument_list|)
+block|{
+return|return
+name|LLDB_INVALID_ADDRESS
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -435,6 +468,71 @@ argument_list|(
 argument|lldb_private::Queue *queue
 argument_list|)
 block|{     }
+comment|//------------------------------------------------------------------
+comment|/// Complete the fields in a QueueItem
+comment|///
+comment|/// PopulatePendingItemsForQueue() may not fill in all of the QueueItem
+comment|/// details; when the remaining fields are needed, they will be
+comment|/// fetched by call this method.
+comment|///
+comment|/// @param [in] queue_item
+comment|///   The QueueItem that we will be completing.
+comment|///
+comment|/// @param [in] item_ref
+comment|///     The item_ref token that is needed to retrieve the rest of the
+comment|///     information about the QueueItem.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|CompleteQueueItem
+argument_list|(
+argument|lldb_private::QueueItem *queue_item
+argument_list|,
+argument|lldb::addr_t item_ref
+argument_list|)
+block|{     }
+comment|//------------------------------------------------------------------
+comment|/// Add key-value pairs to the StructuredData dictionary object with
+comment|/// information debugserver  may need when constructing the jThreadExtendedInfo
+comment|/// packet.
+comment|///
+comment|/// @param [out] dict
+comment|///     Dictionary to which key-value pairs should be added; they will
+comment|///     be sent to the remote gdb server stub as arguments in the
+comment|///     jThreadExtendedInfo request.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|AddThreadExtendedInfoPacketHints
+argument_list|(
+argument|lldb_private::StructuredData::ObjectSP dict
+argument_list|)
+block|{     }
+comment|/// Determine whether it is safe to run an expression on a given thread
+comment|///
+comment|/// If a system must not run functions on a thread in some particular state,
+comment|/// this method gives a way for it to flag that the expression should not be
+comment|/// run.
+comment|///
+comment|/// @param [in] thread_sp
+comment|///     The thread we want to run the expression on.
+comment|///
+comment|/// @return
+comment|///     True will be returned if there are no known problems with running an
+comment|///     expression on this thread.  False means that the inferior function
+comment|///     call should not be made on this thread.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|SafeToCallFunctionsOnThisThread
+argument_list|(
+argument|lldb::ThreadSP thread_sp
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 name|protected
 operator|:
 comment|//------------------------------------------------------------------

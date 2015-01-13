@@ -43,6 +43,27 @@ directive|ifndef
 name|_MSC_VER
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_BSD_SOURCE
+end_define
+
+begin_comment
+comment|// Required so that getopt.h defines optreset
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -63,7 +84,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<lldb/Host/windows/GetOptInc.h>
+file|<lldb/Host/windows/getopt/GetOptInc.h>
 end_include
 
 begin_endif

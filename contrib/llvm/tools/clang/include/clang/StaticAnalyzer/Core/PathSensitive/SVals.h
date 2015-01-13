@@ -215,7 +215,7 @@ name|SVal
 argument_list|(
 argument|BaseKind k
 argument_list|,
-argument|const void *D = NULL
+argument|const void *D = nullptr
 argument_list|)
 operator|:
 name|Data
@@ -236,7 +236,7 @@ argument_list|()
 operator|:
 name|Data
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Kind
@@ -770,7 +770,7 @@ name|DefinedOrUnknownSVal
 argument_list|(
 argument|BaseKind k
 argument_list|,
-argument|void *D = NULL
+argument|void *D = nullptr
 argument_list|)
 operator|:
 name|SVal

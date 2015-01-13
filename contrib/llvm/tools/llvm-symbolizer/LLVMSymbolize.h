@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -104,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -111,6 +111,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+typedef|typedef
+name|DILineInfoSpecifier
+operator|::
+name|FunctionNameKind
+name|FunctionNameKind
+expr_stmt|;
 name|using
 name|namespace
 name|object
@@ -134,10 +140,8 @@ name|UseSymbolTable
 range|:
 literal|1
 decl_stmt|;
-name|bool
+name|FunctionNameKind
 name|PrintFunctions
-range|:
-literal|1
 decl_stmt|;
 name|bool
 name|PrintInlining
@@ -158,7 +162,7 @@ name|Options
 argument_list|(
 argument|bool UseSymbolTable = true
 argument_list|,
-argument|bool PrintFunctions = true
+argument|FunctionNameKind PrintFunctions = FunctionNameKind::LinkageName
 argument_list|,
 argument|bool PrintInlining = true
 argument_list|,
@@ -192,7 +196,7 @@ name|DefaultArch
 argument_list|(
 argument|DefaultArch
 argument_list|)
-block|{     }
+block|{}
 block|}
 struct|;
 name|LLVMSymbolizer
@@ -324,25 +328,15 @@ argument|DILineInfo LineInfo
 argument_list|)
 specifier|const
 expr_stmt|;
-specifier|static
-name|std
-operator|::
-name|string
-name|DemangleGlobalName
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
-argument_list|)
-expr_stmt|;
 comment|// Owns all the parsed binaries and object files.
 name|SmallVector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Binary
-operator|*
+operator|>
 operator|,
 literal|4
 operator|>
@@ -515,11 +509,22 @@ name|Size
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|addSymbol
+parameter_list|(
+specifier|const
+name|SymbolRef
+modifier|&
+name|Symbol
+parameter_list|)
+function_decl|;
 name|ObjectFile
 modifier|*
 name|Module
 decl_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|DIContext
 operator|>

@@ -3672,6 +3672,35 @@ name|vlapic
 operator|->
 name|apic_page
 decl_stmt|;
+if|if
+condition|(
+name|lapic
+operator|->
+name|tpr
+operator|!=
+name|val
+condition|)
+block|{
+name|VCPU_CTR2
+argument_list|(
+name|vlapic
+operator|->
+name|vm
+argument_list|,
+name|vlapic
+operator|->
+name|vcpuid
+argument_list|,
+literal|"vlapic TPR changed "
+literal|"from %#x to %#x"
+argument_list|,
+name|lapic
+operator|->
+name|tpr
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
 name|lapic
 operator|->
 name|tpr
@@ -3683,6 +3712,7 @@ argument_list|(
 name|vlapic
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

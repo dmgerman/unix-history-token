@@ -126,14 +126,11 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|const
@@ -403,12 +400,9 @@ index|]
 operator|=
 name|auto2
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 name|srandom
 argument_list|(
 literal|0L

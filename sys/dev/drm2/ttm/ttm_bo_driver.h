@@ -1751,24 +1751,7 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-operator|(
-name|defined
-argument_list|(
-name|CONFIG_AGP
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|CONFIG_AGP_MODULE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|MODULE
-argument_list|)
-operator|)
-operator|)
+name|__OS_HAS_AGP
 end_if
 
 begin_define
@@ -1776,12 +1759,6 @@ define|#
 directive|define
 name|TTM_HAS_AGP
 end_define
-
-begin_include
-include|#
-directive|include
-file|<linux/agp_backend.h>
-end_include
 
 begin_comment
 comment|/**  * ttm_agp_tt_create  *  * @bdev: Pointer to a struct ttm_bo_device.  * @bridge: The agp bridge this device is sitting on.  * @size: Size of the data needed backing.  * @page_flags: Page flags as identified by TTM_PAGE_FLAG_XX flags.  * @dummy_read_page: See struct ttm_bo_device.  *  *  * Create a TTM backend that uses the indicated AGP bridge as an aperture  * for TT memory. This function uses the linux agpgart interface to  * bind and unbind memory backing a ttm_tt.  */
@@ -1799,9 +1776,7 @@ name|ttm_bo_device
 modifier|*
 name|bdev
 parameter_list|,
-name|struct
-name|agp_bridge_data
-modifier|*
+name|device_t
 name|bridge
 parameter_list|,
 name|unsigned

@@ -300,6 +300,27 @@ comment|/// with \c __attribute__((objc_requires_super)).
 name|bool
 name|ObjCShouldCallSuper
 decl_stmt|;
+comment|/// True when this is a method marked as a designated initializer.
+name|bool
+name|ObjCIsDesignatedInit
+decl_stmt|;
+comment|/// This starts true for a method marked as designated initializer and will
+comment|/// be set to false if there is an invocation to a designated initializer of
+comment|/// the super class.
+name|bool
+name|ObjCWarnForNoDesignatedInitChain
+decl_stmt|;
+comment|/// True when this is an initializer method not marked as a designated
+comment|/// initializer within a class that has at least one initializer marked as a
+comment|/// designated initializer.
+name|bool
+name|ObjCIsSecondaryInit
+decl_stmt|;
+comment|/// This starts true for a secondary initializer method and will be set to
+comment|/// false if there is an invocation of an initializer on 'self'.
+name|bool
+name|ObjCWarnForNoInitDelegation
+decl_stmt|;
 comment|/// \brief Used to determine if errors occurred in this function or block.
 name|DiagnosticErrorTrap
 name|ErrorTrap
@@ -937,6 +958,26 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|ObjCIsDesignatedInit
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ObjCWarnForNoDesignatedInitChain
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ObjCIsSecondaryInit
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ObjCWarnForNoInitDelegation
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|ErrorTrap
 argument_list|(
 argument|Diag
@@ -1132,7 +1173,7 @@ argument_list|)
 operator|:
 name|VarAndNested
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 name|IsNested
 argument_list|)
@@ -1962,12 +2003,12 @@ argument_list|)
 block|,
 name|Lambda
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|CallOperator
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|NumExplicitCaptures
@@ -1997,7 +2038,7 @@ argument_list|)
 block|,
 name|GLTemplateParameterList
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|Kind
@@ -2185,6 +2226,7 @@ name|isVariableExprMarkedAsNonODRUsed
 argument_list|(
 argument|Expr *CapturingVarExpr
 argument_list|)
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -2299,7 +2341,8 @@ argument|VarDecl *&VD
 argument_list|,
 argument|Expr *&E
 argument_list|)
-block|;   }
+specifier|const
+block|; }
 block|;
 name|FunctionScopeInfo
 operator|::
@@ -2310,14 +2353,14 @@ argument_list|()
 operator|:
 name|Base
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 name|false
 argument_list|)
 block|,
 name|Property
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|FunctionScopeInfo

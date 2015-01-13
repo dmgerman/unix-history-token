@@ -371,7 +371,7 @@ name|provideInitialHead
 argument_list|()
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// ensureHead - make sure that Head is either already
@@ -422,7 +422,7 @@ name|setNext
 argument_list|(
 name|Head
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 return|return
@@ -815,7 +815,7 @@ argument_list|()
 operator|:
 name|NodePtr
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|// This is templated so that we can allow constructing a const iterator from
@@ -2009,9 +2009,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
 name|Head
-operator|==
-literal|0
 operator|||
 name|Head
 operator|==
@@ -2389,7 +2388,7 @@ name|setNext
 argument_list|(
 name|Node
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|this
@@ -2398,7 +2397,7 @@ name|setPrev
 argument_list|(
 name|Node
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 return|return
@@ -2581,7 +2580,7 @@ argument_list|()
 decl_stmt|;
 name|setTail
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|NodeTy
@@ -2597,7 +2596,7 @@ name|L2
 operator|.
 name|setTail
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|// Remove [first, last) from its old position.
@@ -2789,9 +2788,8 @@ specifier|const
 block|{
 if|if
 condition|(
+operator|!
 name|Head
-operator|==
-literal|0
 condition|)
 return|return
 literal|0

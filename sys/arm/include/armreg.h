@@ -19,6 +19,12 @@ directive|define
 name|MACHINE_ARMREG_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/acle-compat.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -716,6 +722,13 @@ define|#
 directive|define
 name|CPU_ID_CORTEXA15R3
 value|0x413fc0f0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA17
+value|0x410fc0d0
 end_define
 
 begin_define
@@ -2140,15 +2153,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FAULT_TYPE_MASK
-value|0x0f
+name|FAULT_USER
+value|0x10
 end_define
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
 
 begin_define
 define|#
 directive|define
-name|FAULT_USER
-value|0x10
+name|FAULT_TYPE_MASK
+value|0x0f
 end_define
 
 begin_define
@@ -2371,18 +2392,243 @@ begin_comment
 comment|/* Write-not-Read access (armv6+) */
 end_comment
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
-comment|/* Fault status register definitions - v6+ */
+comment|/* __ARM_ARCH< 6 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FSR_STATUS_TO_IDX
+name|FAULT_ALIGN
+value|0x001
+end_define
+
+begin_comment
+comment|/* Alignment Fault */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_DEBUG
+value|0x002
+end_define
+
+begin_comment
+comment|/* Debug Event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_ACCESS_L1
+value|0x003
+end_define
+
+begin_comment
+comment|/* Access Bit (L1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_ICACHE
+value|0x004
+end_define
+
+begin_comment
+comment|/* Instruction cache maintenance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_TRAN_L1
+value|0x005
+end_define
+
+begin_comment
+comment|/* Translation Fault (L1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_ACCESS_L2
+value|0x006
+end_define
+
+begin_comment
+comment|/* Access Bit (L2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_TRAN_L2
+value|0x007
+end_define
+
+begin_comment
+comment|/* Translation Fault (L2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_EA_PREC
+value|0x008
+end_define
+
+begin_comment
+comment|/* External Abort */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_DOMAIN_L1
+value|0x009
+end_define
+
+begin_comment
+comment|/* Domain Fault (L1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_DOMAIN_L2
+value|0x00B
+end_define
+
+begin_comment
+comment|/* Domain Fault (L2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_EA_TRAN_L1
+value|0x00C
+end_define
+
+begin_comment
+comment|/* External Translation Abort (L1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_PERM_L1
+value|0x00D
+end_define
+
+begin_comment
+comment|/* Permission Fault (L1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_EA_TRAN_L2
+value|0x00E
+end_define
+
+begin_comment
+comment|/* External Translation Abort (L2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_PERM_L2
+value|0x00F
+end_define
+
+begin_comment
+comment|/* Permission Fault (L2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_TLB_CONFLICT
+value|0x010
+end_define
+
+begin_comment
+comment|/* Permission Fault (L2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_EA_IMPREC
+value|0x016
+end_define
+
+begin_comment
+comment|/* Asynchronous External Abort */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_PE_IMPREC
+value|0x018
+end_define
+
+begin_comment
+comment|/* Asynchronous Parity Error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_PARITY
+value|0x019
+end_define
+
+begin_comment
+comment|/* Parity Error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_PE_TRAN_L1
+value|0x01C
+end_define
+
+begin_comment
+comment|/* Parity Error on Translation (L1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_PE_TRAN_L2
+value|0x01E
+end_define
+
+begin_comment
+comment|/* Parity Error on Translation (L2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSR_TO_FAULT
 parameter_list|(
 name|fsr
 parameter_list|)
-value|(((fsr)& 0xF) | 			\ 				 (((fsr)& (1<< 10)>> (10 - 4))))
+value|(((fsr)& 0xF) | 			\ 				 ((((fsr)& (1<< 10))>> (10 - 4))))
 end_define
 
 begin_define
@@ -2427,6 +2673,15 @@ end_define
 
 begin_comment
 comment|/* Cache maintenance fault */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__ARM_ARCH< 6 */
 end_comment
 
 begin_comment

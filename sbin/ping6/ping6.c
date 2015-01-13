@@ -371,6 +371,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAXWAIT
+value|10000
+end_define
+
+begin_comment
+comment|/* max ms to wait for response */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXALARM
+value|(60 * 60)
+end_define
+
+begin_comment
+comment|/* max seconds for alarm timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|A
 parameter_list|(
 name|bit
@@ -629,6 +651,13 @@ name|F_NOUSERDATA
 value|(F_NODEADDR | F_FQDN | F_FQDNOLD | F_SUPTYPES)
 end_define
 
+begin_define
+define|#
+directive|define
+name|F_WAITTIME
+value|0x2000000
+end_define
+
 begin_decl_stmt
 name|u_int
 name|options
@@ -678,6 +707,7 @@ value|(8 * 8192)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mx_dup_ck
 init|=
@@ -686,6 +716,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|rcvd_tbl
 index|[
@@ -697,6 +728,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in6
 name|dst
@@ -708,6 +740,7 @@ comment|/* who to ping6 */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in6
 name|src
@@ -719,13 +752,15 @@ comment|/* src addr of this packet */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|socklen_t
 name|srclen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+specifier|static
+name|size_t
 name|datalen
 init|=
 name|DEFDATALEN
@@ -733,6 +768,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|s
 decl_stmt|;
@@ -743,6 +779,7 @@ comment|/* socket file descriptor */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|outpack
 index|[
@@ -752,6 +789,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|BSPACE
 init|=
@@ -764,6 +802,7 @@ comment|/* characters written for flood */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|BBELL
 init|=
@@ -776,6 +815,7 @@ comment|/* characters written for AUDIBLE */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|DOT
 init|=
@@ -784,6 +824,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|hostname
@@ -791,6 +832,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ident
 decl_stmt|;
@@ -801,6 +843,7 @@ comment|/* process id to identify our packets */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_int8_t
 name|nonce
 index|[
@@ -814,6 +857,7 @@ comment|/* nonce field for node information */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hoplimit
 init|=
@@ -827,18 +871,7 @@ comment|/* hoplimit */
 end_comment
 
 begin_decl_stmt
-name|int
-name|pathmtu
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* path MTU for the destination.  0 = unspec. */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|u_char
 modifier|*
 name|packet
@@ -852,6 +885,7 @@ comment|/* counters */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|nmissedmax
 decl_stmt|;
@@ -862,6 +896,7 @@ comment|/* max value of ntransmitted - nreceived - 1 */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|npackets
 decl_stmt|;
@@ -872,6 +907,7 @@ comment|/* max packets to transmit */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|nreceived
 decl_stmt|;
@@ -882,6 +918,7 @@ comment|/* # of packets we got back */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|nrepeats
 decl_stmt|;
@@ -892,6 +929,7 @@ comment|/* number of duplicates */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|ntransmitted
 decl_stmt|;
@@ -902,6 +940,7 @@ comment|/* sequence # for outbound packets = #sent */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|interval
 init|=
@@ -913,11 +952,38 @@ begin_comment
 comment|/* interval between packets in ms */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|waittime
+init|=
+name|MAXWAIT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* timeout for each packet */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|nrcvtimeout
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of packets we got back after waittime */
+end_comment
+
 begin_comment
 comment|/* timing */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|timing
 decl_stmt|;
@@ -928,6 +994,7 @@ comment|/* flag to do timing */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|tmin
 init|=
@@ -940,6 +1007,7 @@ comment|/* minimum round trip time */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|tmax
 init|=
@@ -952,6 +1020,7 @@ comment|/* maximum round trip time */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|tsum
 init|=
@@ -964,6 +1033,7 @@ comment|/* sum of all times, for doing average */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|tsumsq
 init|=
@@ -980,6 +1050,7 @@ comment|/* for node addresses */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_short
 name|naflags
 decl_stmt|;
@@ -990,6 +1061,7 @@ comment|/* for ancillary data(advanced API) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|msghdr
 name|smsghdr
@@ -997,6 +1069,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|iovec
 name|smsgiov
@@ -1004,6 +1077,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|scmsg
@@ -1013,6 +1087,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|seenint
@@ -1026,6 +1101,7 @@ name|SIGINFO
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|seeninfo
@@ -1051,6 +1127,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|fill
 parameter_list|(
@@ -1064,6 +1141,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|get_hoplim
 parameter_list|(
@@ -1075,6 +1153,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|get_pathmtu
 parameter_list|(
@@ -1086,6 +1165,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|in6_pktinfo
 modifier|*
@@ -1099,6 +1179,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|onsignal
 parameter_list|(
@@ -1108,6 +1189,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|onint
 parameter_list|(
@@ -1117,6 +1199,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|size_t
 name|pingerlen
 parameter_list|(
@@ -1126,6 +1209,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|pinger
 parameter_list|(
@@ -1135,6 +1219,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1150,6 +1235,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_icmph
 parameter_list|(
@@ -1164,6 +1250,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_iph
 parameter_list|(
@@ -1175,6 +1262,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_suptypes
 parameter_list|(
@@ -1188,6 +1276,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_nodeaddr
 parameter_list|(
@@ -1201,6 +1290,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|myechoreply
 parameter_list|(
@@ -1213,6 +1303,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|mynireply
 parameter_list|(
@@ -1225,6 +1316,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|dnsdecode
@@ -1251,6 +1343,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_pack
 parameter_list|(
@@ -1267,6 +1360,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_exthdrs
 parameter_list|(
@@ -1278,6 +1372,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_ip6opt
 parameter_list|(
@@ -1290,6 +1385,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_rthdr
 parameter_list|(
@@ -1302,6 +1398,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|pr_bitrange
 parameter_list|(
@@ -1315,6 +1412,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_retip
 parameter_list|(
@@ -1329,6 +1427,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|summary
 parameter_list|(
@@ -1338,6 +1437,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|tvsub
 parameter_list|(
@@ -1353,6 +1453,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|setpolicy
 parameter_list|(
@@ -1365,6 +1466,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|nigroup
@@ -1378,6 +1480,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -1564,6 +1667,9 @@ directive|endif
 name|double
 name|t
 decl_stmt|;
+name|u_long
+name|alarmtimeout
+decl_stmt|;
 name|size_t
 name|rthlen
 decl_stmt|;
@@ -1604,6 +1710,8 @@ name|smsgiov
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|alarmtimeout
+operator|=
 name|preload
 operator|=
 literal|0
@@ -1655,7 +1763,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:c:DdfHg:h:I:i:l:mnNop:qrRS:s:tvwW"
+literal|"a:b:c:DdfHg:h:I:i:l:mnNop:qrRS:s:tvwWx:X:"
 name|ADDOPTS
 argument_list|)
 operator|)
@@ -1831,6 +1939,9 @@ argument_list|)
 expr_stmt|;
 name|sockbufsize
 operator|=
+operator|(
+name|int
+operator|)
 name|lsockbufsize
 expr_stmt|;
 if|if
@@ -1844,9 +1955,9 @@ operator|||
 operator|*
 name|e
 operator|||
-name|sockbufsize
-operator|!=
 name|lsockbufsize
+operator|>
+name|INT_MAX
 condition|)
 name|errx
 argument_list|(
@@ -2562,6 +2673,120 @@ operator||=
 name|F_FQDNOLD
 expr_stmt|;
 break|break;
+case|case
+literal|'x'
+case|:
+name|t
+operator|=
+name|strtod
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|e
+operator|||
+name|e
+operator|==
+name|optarg
+operator|||
+name|t
+operator|>
+operator|(
+name|double
+operator|)
+name|INT_MAX
+condition|)
+name|err
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"invalid timing interval: `%s'"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|options
+operator||=
+name|F_WAITTIME
+expr_stmt|;
+name|waittime
+operator|=
+operator|(
+name|int
+operator|)
+name|t
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+name|alarmtimeout
+operator|=
+name|strtoul
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|e
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|alarmtimeout
+operator|<
+literal|1
+operator|)
+operator|||
+operator|(
+name|alarmtimeout
+operator|==
+name|ULONG_MAX
+operator|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"invalid timeout: `%s'"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|alarmtimeout
+operator|>
+name|MAXALARM
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"invalid timeout: `%s'> %d"
+argument_list|,
+name|optarg
+argument_list|,
+name|MAXALARM
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+operator|(
+name|int
+operator|)
+name|alarmtimeout
+argument_list|)
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -2966,7 +3191,83 @@ name|options
 operator|&
 name|F_SRCADDR
 operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* properly fill sin6_scope_id */
+if|if
+condition|(
+name|IN6_IS_ADDR_LINKLOCAL
+argument_list|(
+operator|&
+name|src
+operator|.
+name|sin6_addr
+argument_list|)
 operator|&&
+operator|(
+name|IN6_IS_ADDR_LINKLOCAL
+argument_list|(
+operator|&
+name|dst
+operator|.
+name|sin6_addr
+argument_list|)
+operator|||
+name|IN6_IS_ADDR_MC_LINKLOCAL
+argument_list|(
+operator|&
+name|dst
+operator|.
+name|sin6_addr
+argument_list|)
+operator|||
+name|IN6_IS_ADDR_MC_NODELOCAL
+argument_list|(
+operator|&
+name|dst
+operator|.
+name|sin6_addr
+argument_list|)
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|src
+operator|.
+name|sin6_scope_id
+operator|==
+literal|0
+condition|)
+name|src
+operator|.
+name|sin6_scope_id
+operator|=
+name|dst
+operator|.
+name|sin6_scope_id
+expr_stmt|;
+if|if
+condition|(
+name|dst
+operator|.
+name|sin6_scope_id
+operator|==
+literal|0
+condition|)
+name|dst
+operator|.
+name|sin6_scope_id
+operator|=
+name|src
+operator|.
+name|sin6_scope_id
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|bind
 argument_list|(
 name|s
@@ -2984,7 +3285,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -3589,6 +3889,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|nonce
@@ -5131,6 +5434,9 @@ if|if
 condition|(
 name|datalen
 operator|>
+operator|(
+name|size_t
+operator|)
 name|sockbufsize
 condition|)
 name|warnx
@@ -5564,6 +5870,36 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|alarmtimeout
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|sigaction
+argument_list|(
+name|SIGALRM
+argument_list|,
+operator|&
+name|si_sa
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"sigaction SIGALRM"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|options
@@ -6084,11 +6420,7 @@ name|almost_done
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 			 * If we're not transmitting any more packets, 			 * change the timer to wait two round-trip times 			 * if we've received any packets or ten seconds 			 * if we haven't. 			 */
-define|#
-directive|define
-name|MAXWAIT
-value|10
+comment|/* 			 * If we're not transmitting any more packets, 			 * change the timer to wait two round-trip times 			 * if we've received any packets or (waittime) 			 * milliseconds if we haven't. 			 */
 name|intvl
 operator|.
 name|tv_usec
@@ -6126,12 +6458,26 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+block|{
 name|intvl
 operator|.
 name|tv_sec
 operator|=
-name|MAXWAIT
+name|waittime
+operator|/
+literal|1000
 expr_stmt|;
+name|intvl
+operator|.
+name|tv_usec
+operator|=
+name|waittime
+operator|%
+literal|1000
+operator|*
+literal|1000
+expr_stmt|;
+block|}
 block|}
 name|gettimeofday
 argument_list|(
@@ -6212,6 +6558,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGALRM
+argument_list|,
+operator|&
+name|si_sa
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|summary
 argument_list|()
 expr_stmt|;
@@ -6252,6 +6608,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|onsignal
 parameter_list|(
@@ -6266,6 +6623,9 @@ condition|)
 block|{
 case|case
 name|SIGINT
+case|:
+case|case
+name|SIGALRM
 case|:
 name|seenint
 operator|++
@@ -6292,6 +6652,7 @@ comment|/*  * pinger --  *	Compose and transmit an ICMP ECHO REQUEST packet.  Th
 end_comment
 
 begin_function
+specifier|static
 name|size_t
 name|pingerlen
 parameter_list|(
@@ -6372,6 +6733,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pinger
 parameter_list|(
@@ -7096,6 +7458,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|myechoreply
 parameter_list|(
@@ -7128,6 +7491,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mynireply
 parameter_list|(
@@ -7182,6 +7546,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|dnsdecode
@@ -7458,6 +7823,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|l
 operator|>=
 sizeof|sizeof
@@ -7529,6 +7897,7 @@ comment|/*  * pr_pack --  *	Print out the packet, if it came from us.  This logi
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pr_pack
 parameter_list|(
@@ -7716,6 +8085,9 @@ if|if
 condition|(
 name|cc
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -8009,6 +8381,22 @@ operator|&
 name|F_QUIET
 condition|)
 return|return;
+if|if
+condition|(
+name|options
+operator|&
+name|F_WAITTIME
+operator|&&
+name|triptime
+operator|>
+name|waittime
+condition|)
+block|{
+operator|++
+name|nrcvtimeout
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|options
@@ -9052,6 +9440,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pr_exthdrs
 parameter_list|(
@@ -9242,6 +9631,7 @@ name|USE_RFC2292BIS
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|pr_ip6opt
 parameter_list|(
@@ -9529,6 +9919,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pr_ip6opt
 parameter_list|(
@@ -9566,6 +9957,7 @@ name|USE_RFC2292BIS
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|pr_rthdr
 parameter_list|(
@@ -9868,6 +10260,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pr_rthdr
 parameter_list|(
@@ -9899,6 +10292,7 @@ comment|/* USE_RFC2292BIS */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pr_bitrange
 parameter_list|(
@@ -10087,6 +10481,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pr_suptypes
 parameter_list|(
@@ -10485,6 +10880,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pr_nodeaddr
 parameter_list|(
@@ -10764,6 +11160,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_hoplim
 parameter_list|(
@@ -10873,6 +11270,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|in6_pktinfo
 modifier|*
@@ -10983,6 +11381,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_pathmtu
 parameter_list|(
@@ -11219,6 +11618,7 @@ comment|/*  * tvsub --  *	Subtract 2 timeval structs:  out = out - in.  Out is a
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|tvsub
 parameter_list|(
@@ -11280,6 +11680,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|onint
 parameter_list|(
@@ -11318,6 +11719,7 @@ comment|/*  * summary --  *	Print out statistics.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|summary
 parameter_list|(
@@ -11414,6 +11816,17 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|nrcvtimeout
+condition|)
+name|printf
+argument_list|(
+literal|", %ld packets out of wait time"
+argument_list|,
+name|nrcvtimeout
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -11544,6 +11957,7 @@ comment|/*  * pr_icmph --  *	Print a descriptive string about an ICMP header.  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pr_icmph
 parameter_list|(
@@ -12672,6 +13086,7 @@ comment|/*  * pr_iph --  *	Print an IP6 header.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pr_iph
 parameter_list|(
@@ -12863,6 +13278,7 @@ comment|/*  * pr_addr --  *	Return an ascii host address as a dotted quad and op
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -12944,6 +13360,7 @@ comment|/*  * pr_retip --  *	Dump some info on a returned (via ICMPv6) IPv6 pack
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pr_retip
 parameter_list|(
@@ -12974,6 +13391,10 @@ name|hlen
 decl_stmt|;
 if|if
 condition|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|end
 operator|-
 operator|(
@@ -12981,6 +13402,7 @@ name|u_char
 operator|*
 operator|)
 name|ip6
+argument_list|)
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -13397,6 +13819,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fill
 parameter_list|(
@@ -13572,11 +13995,13 @@ name|kk
 operator|=
 literal|0
 init|;
+operator|(
+name|size_t
+operator|)
 name|kk
 operator|<=
 name|MAXDATALEN
 operator|-
-operator|(
 literal|8
 operator|+
 sizeof|sizeof
@@ -13586,7 +14011,6 @@ name|tv32
 argument_list|)
 operator|+
 name|ii
-operator|)
 condition|;
 name|kk
 operator|+=
@@ -13688,6 +14112,7 @@ name|IPSEC_POLICY_IPSEC
 end_ifdef
 
 begin_function
+specifier|static
 name|int
 name|setpolicy
 parameter_list|(
@@ -13789,6 +14214,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|nigroup
@@ -14126,6 +14552,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -14197,7 +14624,8 @@ endif|#
 directive|endif
 literal|"\n"
 literal|"             [-p pattern] [-S sourceaddr] [-s packetsize] "
-literal|"[hops ...] host\n"
+literal|"[-x waittime]\n"
+literal|"             [-X timeout] [hops ...] host\n"
 argument_list|)
 expr_stmt|;
 name|exit

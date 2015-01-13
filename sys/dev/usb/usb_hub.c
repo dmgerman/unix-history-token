@@ -358,7 +358,7 @@ name|OID_AUTO
 argument_list|,
 name|power_timeout
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_power_timeout
@@ -5822,7 +5822,7 @@ block|{
 comment|/* turn the power off */
 name|DPRINTFN
 argument_list|(
-literal|0
+literal|2
 argument_list|,
 literal|"Turning port %d power off\n"
 argument_list|,
@@ -5850,7 +5850,7 @@ directive|endif
 comment|/* turn the power on */
 name|DPRINTFN
 argument_list|(
-literal|0
+literal|2
 argument_list|,
 literal|"Turning port %d power on\n"
 argument_list|,

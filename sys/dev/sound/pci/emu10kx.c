@@ -19473,15 +19473,8 @@ name|INTR_MPSAFE
 operator||
 name|INTR_TYPE_AV
 argument_list|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700031
 name|NULL
 argument_list|,
-endif|#
-directive|endif
 name|emu_intr
 argument_list|,
 name|sc

@@ -109,95 +109,83 @@ name|subreg_l64
 return|;
 block|}
 block|}
-name|class
-name|SystemZSubtarget
-decl_stmt|;
-name|class
-name|SystemZInstrInfo
-decl_stmt|;
+comment|// end namespace SystemZ
 name|struct
 name|SystemZRegisterInfo
 range|:
 name|public
 name|SystemZGenRegisterInfo
 block|{
-name|private
-operator|:
-name|SystemZTargetMachine
-operator|&
-name|TM
-block|;
 name|public
 operator|:
 name|SystemZRegisterInfo
-argument_list|(
-name|SystemZTargetMachine
-operator|&
-name|tm
-argument_list|)
+argument_list|()
 block|;
 comment|// Override TargetRegisterInfo.h.
-name|virtual
 name|bool
 name|requiresRegisterScavenging
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|requiresFrameIndexScavenging
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|trackLivenessAfterRegAlloc
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF =
-literal|0
+argument|const MachineFunction *MF = nullptr
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
+specifier|const
+name|uint32_t
+operator|*
+name|getCallPreservedMask
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|)
+specifier|const
+name|override
+block|;
 name|BitVector
 name|getReservedRegs
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|eliminateFrameIndex
 argument_list|(
@@ -210,16 +198,15 @@ argument_list|,
 argument|RegScavenger *RS
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getFrameRegister
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|; }
 decl_stmt|;
 block|}

@@ -1197,7 +1197,7 @@ name|v
 operator|==
 name|NULL
 condition|)
-name|setenv
+name|kern_setenv
 argument_list|(
 name|n
 argument_list|,
@@ -1205,7 +1205,7 @@ literal|"1"
 argument_list|)
 expr_stmt|;
 else|else
-name|setenv
+name|kern_setenv
 argument_list|(
 name|n
 argument_list|,
@@ -1498,7 +1498,7 @@ name|v
 operator|==
 name|NULL
 condition|)
-name|setenv
+name|kern_setenv
 argument_list|(
 name|n
 argument_list|,
@@ -1506,7 +1506,7 @@ literal|"1"
 argument_list|)
 expr_stmt|;
 else|else
-name|setenv
+name|kern_setenv
 argument_list|(
 name|n
 argument_list|,
@@ -1543,7 +1543,7 @@ expr_stmt|;
 comment|/* command line argument */
 name|v
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"bootargs"
 argument_list|)

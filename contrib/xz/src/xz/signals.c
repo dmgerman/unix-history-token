@@ -287,13 +287,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|// Using "my_sa" because "sa" may conflict with a sockaddr variable
+comment|// from system headers on Solaris.
 name|struct
 name|sigaction
-name|sa
+name|my_sa
 decl_stmt|;
 comment|// All the signals that we handle we also blocked while the signal
 comment|// handler runs.
-name|sa
+name|my_sa
 operator|.
 name|sa_mask
 operator|=
@@ -302,13 +304,13 @@ expr_stmt|;
 comment|// Don't set SA_RESTART, because we want EINTR so that we can check
 comment|// for user_abort and cleanup before exiting. We block the signals
 comment|// for which we have established a handler when we don't want EINTR.
-name|sa
+name|my_sa
 operator|.
 name|sa_flags
 operator|=
 literal|0
 expr_stmt|;
-name|sa
+name|my_sa
 operator|.
 name|sa_handler
 operator|=
@@ -374,7 +376,7 @@ name|i
 index|]
 argument_list|,
 operator|&
-name|sa
+name|my_sa
 argument_list|,
 name|NULL
 argument_list|)

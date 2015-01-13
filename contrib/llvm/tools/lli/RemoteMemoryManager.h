@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"RemoteTarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -97,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|<utility>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"RemoteTarget.h"
 end_include
 
 begin_decl_stmt
@@ -222,7 +222,7 @@ argument_list|()
 operator|:
 name|Target
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{}
 name|virtual
@@ -242,6 +242,7 @@ argument|unsigned SectionID
 argument_list|,
 argument|StringRef SectionName
 argument_list|)
+name|override
 block|;
 name|uint8_t
 operator|*
@@ -257,6 +258,7 @@ argument|StringRef SectionName
 argument_list|,
 argument|bool IsReadOnly
 argument_list|)
+name|override
 block|;
 comment|// For now, remote symbol resolution is not support in lli.  The MCJIT
 comment|// interface does support this, but clients must provide their own
@@ -267,6 +269,7 @@ name|getSymbolAddress
 argument_list|(
 argument|const std::string&Name
 argument_list|)
+name|override
 block|{
 return|return
 literal|0
@@ -275,25 +278,18 @@ block|}
 name|void
 name|notifyObjectLoaded
 argument_list|(
-name|ExecutionEngine
-operator|*
-name|EE
+argument|ExecutionEngine *EE
 argument_list|,
-specifier|const
-name|ObjectImage
-operator|*
-name|Obj
+argument|const ObjectImage *Obj
 argument_list|)
+name|override
 block|;
 name|bool
 name|finalizeMemory
 argument_list|(
-name|std
-operator|::
-name|string
-operator|*
-name|ErrMsg
+argument|std::string *ErrMsg
 argument_list|)
+name|override
 block|;
 comment|// For now, remote EH frame registration isn't supported.  Remote symbol
 comment|// resolution is a prerequisite to supporting remote EH frame registration.
@@ -306,6 +302,7 @@ argument|uint64_t LoadAddr
 argument_list|,
 argument|size_t Size
 argument_list|)
+name|override
 block|{}
 name|void
 name|deregisterEHFrames
@@ -316,6 +313,7 @@ argument|uint64_t LoadAddr
 argument_list|,
 argument|size_t Size
 argument_list|)
+name|override
 block|{}
 comment|// This is a non-interface function used by lli
 name|void
@@ -333,40 +331,41 @@ comment|// this model.
 name|void
 name|setMemoryWritable
 argument_list|()
+name|override
 block|;
 name|void
 name|setMemoryExecutable
 argument_list|()
+name|override
 block|;
 name|void
 name|setPoisonMemory
 argument_list|(
 argument|bool poison
 argument_list|)
+name|override
 block|;
 name|void
 name|AllocateGOT
 argument_list|()
+name|override
 block|;
 name|uint8_t
 operator|*
 name|getGOTBase
 argument_list|()
 specifier|const
+name|override
 block|;
 name|uint8_t
 operator|*
 name|startFunctionBody
 argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
+argument|const Function *F
 argument_list|,
-name|uintptr_t
-operator|&
-name|ActualSize
+argument|uintptr_t&ActualSize
 argument_list|)
+name|override
 block|;
 name|uint8_t
 operator|*
@@ -378,23 +377,18 @@ argument|unsigned StubSize
 argument_list|,
 argument|unsigned Alignment
 argument_list|)
+name|override
 block|;
 name|void
 name|endFunctionBody
 argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
+argument|const Function *F
 argument_list|,
-name|uint8_t
-operator|*
-name|FunctionStart
+argument|uint8_t *FunctionStart
 argument_list|,
-name|uint8_t
-operator|*
-name|FunctionEnd
+argument|uint8_t *FunctionEnd
 argument_list|)
+name|override
 block|;
 name|uint8_t
 operator|*
@@ -404,6 +398,7 @@ argument|intptr_t Size
 argument_list|,
 argument|unsigned Alignment
 argument_list|)
+name|override
 block|;
 name|uint8_t
 operator|*
@@ -413,14 +408,14 @@ argument|uintptr_t Size
 argument_list|,
 argument|unsigned Alignment
 argument_list|)
+name|override
 block|;
 name|void
 name|deallocateFunctionBody
 argument_list|(
-name|void
-operator|*
-name|Body
+argument|void *Body
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

@@ -2379,6 +2379,8 @@ literal|0
 return|;
 comment|/* otherwise, rec->length>= bs */
 block|}
+if|if
+condition|(
 name|EVP_Cipher
 argument_list|(
 name|ds
@@ -2393,7 +2395,13 @@ name|input
 argument_list|,
 name|l
 argument_list|)
-expr_stmt|;
+operator|<
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|EVP_MD_CTX_md
@@ -4568,6 +4576,14 @@ case|:
 return|return
 operator|(
 name|TLS1_AD_UNKNOWN_PSK_IDENTITY
+operator|)
+return|;
+case|case
+name|SSL_AD_INAPPROPRIATE_FALLBACK
+case|:
+return|return
+operator|(
+name|TLS1_AD_INAPPROPRIATE_FALLBACK
 operator|)
 return|;
 default|default:

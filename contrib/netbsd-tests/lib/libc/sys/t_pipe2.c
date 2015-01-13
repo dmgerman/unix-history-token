@@ -97,6 +97,16 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|closefrom
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ATF_REQUIRE
 argument_list|(
 name|fcntl
@@ -110,6 +120,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_REQUIRE
 argument_list|(
 name|pipe2
@@ -316,6 +328,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 if|if
 condition|(
 name|flags
@@ -387,6 +402,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|ATF_REQUIRE
 argument_list|(
 name|close
@@ -523,6 +540,19 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|int
+name|old
+decl_stmt|;
+name|closefrom
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|err
 operator|=
 name|fcntl
@@ -539,6 +569,8 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|err
 operator|=
 name|getrlimit
@@ -557,6 +589,17 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The heart of this test is to run against the number of open 	 * file descriptor limit in the middle of a pipe2() call - i.e. 	 * before the call only a single descriptor may be openend. 	 */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|old
+operator|=
+name|rl
+operator|.
+name|rlim_cur
+expr_stmt|;
+endif|#
+directive|endif
 name|rl
 operator|.
 name|rlim_cur
@@ -597,6 +640,27 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|rl
+operator|.
+name|rlim_cur
+operator|=
+name|old
+expr_stmt|;
+name|err
+operator|=
+name|setrlimit
+argument_list|(
+name|RLIMIT_NOFILE
+argument_list|,
+operator|&
+name|rl
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -700,6 +764,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -749,6 +819,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|ATF_TC
@@ -853,6 +928,9 @@ argument_list|,
 name|pipe2_cloexec
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -860,6 +938,8 @@ argument_list|,
 name|pipe2_nosigpipe
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp

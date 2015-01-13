@@ -252,6 +252,7 @@ comment|/* indicates SIGINT/SIGQUIT received */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|in_dotrap
 decl_stmt|;
@@ -1535,6 +1536,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* 		 * The !in_dotrap here is safe.  The only way we can arrive 		 * here with in_dotrap set is that a trap handler set SIGINT to 		 * SIG_DFL and killed itself. 		 */
+if|if
+condition|(
+name|suppressint
+operator|&&
+operator|!
+name|in_dotrap
+condition|)
+name|SET_PENDING_INT
+expr_stmt|;
+else|else
 name|onint
 argument_list|()
 expr_stmt|;

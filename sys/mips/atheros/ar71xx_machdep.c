@@ -326,7 +326,7 @@ name|v
 operator|==
 name|NULL
 condition|)
-name|setenv
+name|kern_setenv
 argument_list|(
 name|n
 argument_list|,
@@ -334,7 +334,7 @@ literal|"1"
 argument_list|)
 expr_stmt|;
 else|else
-name|setenv
+name|kern_setenv
 argument_list|(
 name|n
 argument_list|,
@@ -403,7 +403,7 @@ condition|(
 operator|(
 name|var
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"ethaddr"
 argument_list|)
@@ -414,7 +414,7 @@ operator|||
 operator|(
 name|var
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"kmac"
 argument_list|)
@@ -1135,7 +1135,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|setenv
+name|kern_setenv
 argument_list|(
 name|envp
 index|[

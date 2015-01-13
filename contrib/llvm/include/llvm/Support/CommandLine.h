@@ -92,25 +92,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Twine.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/ADT/Twine.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/type_traits.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -174,7 +168,7 @@ name|char
 modifier|*
 name|Overview
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -199,7 +193,7 @@ name|char
 modifier|*
 name|Overview
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|///===---------------------------------------------------------------------===//
@@ -427,7 +421,7 @@ operator|*
 specifier|const
 name|Description
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|Name
@@ -448,6 +442,7 @@ name|char
 operator|*
 name|getName
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Name
@@ -455,9 +450,10 @@ return|;
 block|}
 specifier|const
 name|char
-modifier|*
+operator|*
 name|getDescription
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Description
@@ -894,7 +890,7 @@ argument_list|)
 operator|,
 name|NextRegistered
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|ArgStr
@@ -936,6 +932,14 @@ name|void
 name|addArgument
 argument_list|()
 expr_stmt|;
+comment|/// Unregisters this option from the CommandLine system.
+comment|///
+comment|/// This option must have been the last option registered.
+comment|/// For testing purposes only.
+name|void
+name|removeArgument
+parameter_list|()
+function_decl|;
 name|Option
 operator|*
 name|getNextRegisteredOption
@@ -998,6 +1002,7 @@ argument_list|)
 block|{}
 comment|// addOccurrence - Wrapper around handleOccurrence that enforces Flags.
 comment|//
+name|virtual
 name|bool
 name|addOccurrence
 parameter_list|(
@@ -1432,7 +1437,6 @@ return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|compare
 argument_list|(
@@ -1442,6 +1446,7 @@ operator|&
 comment|/*V*/
 argument_list|)
 decl|const
+name|override
 block|{
 return|return
 name|false
@@ -1535,13 +1540,13 @@ name|V
 operator|)
 return|;
 block|}
-name|virtual
 name|bool
 name|compare
 argument_list|(
 argument|const GenericOptionValue&V
 argument_list|)
 specifier|const
+name|override
 block|{
 specifier|const
 name|OptionValueCopy
@@ -1643,6 +1648,8 @@ name|OptionValueBase
 operator|<
 name|DataType
 operator|,
+name|std
+operator|::
 name|is_class
 operator|<
 name|DataType
@@ -1793,13 +1800,13 @@ name|private
 label|:
 end_label
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 unit|};
@@ -1875,13 +1882,13 @@ name|private
 label|:
 end_label
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|};
@@ -2669,6 +2676,7 @@ name|unsigned
 name|getNumOptions
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|unsigned
@@ -2688,6 +2696,7 @@ argument_list|(
 argument|unsigned N
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Values
@@ -2706,6 +2715,7 @@ argument_list|(
 argument|unsigned N
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Values
@@ -2717,7 +2727,6 @@ name|HelpStr
 return|;
 block|}
 comment|// getOptionValue - Return the value of option name N.
-name|virtual
 specifier|const
 name|GenericOptionValue
 operator|&
@@ -2726,6 +2735,7 @@ argument_list|(
 argument|unsigned N
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Values
@@ -3199,16 +3209,16 @@ name|ValueOptional
 return|;
 block|}
 comment|// getValueName - Do not print =<value> at all.
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getValueName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -3239,13 +3249,13 @@ begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
 end_comment
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 unit|};
@@ -3308,16 +3318,16 @@ name|ValueOptional
 return|;
 block|}
 comment|// getValueName - Do not print =<value> at all.
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getValueName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -3348,13 +3358,13 @@ begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
 end_comment
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 unit|};
@@ -3412,13 +3422,13 @@ argument|int&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getValueName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"int"
@@ -3443,13 +3453,13 @@ begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
 end_comment
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 unit|};
@@ -3507,13 +3517,13 @@ argument|unsigned&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getValueName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"uint"
@@ -3538,13 +3548,13 @@ begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
 end_comment
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 unit|};
@@ -3606,13 +3616,13 @@ argument|unsigned long long&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getValueName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"uint"
@@ -3637,13 +3647,13 @@ begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
 end_comment
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 unit|};
@@ -3701,13 +3711,13 @@ argument|double&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getValueName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"number"
@@ -3732,13 +3742,13 @@ begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
 end_comment
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 unit|};
@@ -3796,13 +3806,13 @@ argument|float&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getValueName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"number"
@@ -3827,13 +3837,13 @@ begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
 end_comment
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 unit|};
@@ -3906,13 +3916,13 @@ name|false
 return|;
 block|}
 comment|// getValueName - Overload in subclass to provide a better default value.
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getValueName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"string"
@@ -3946,13 +3956,13 @@ begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
 end_comment
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 unit|};
@@ -4021,13 +4031,13 @@ name|false
 return|;
 block|}
 comment|// getValueName - Overload in subclass to provide a better default value.
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getValueName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"char"
@@ -4061,13 +4071,13 @@ begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
 end_comment
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 unit|};
@@ -4484,7 +4494,7 @@ specifier|static
 name|void
 name|opt
 argument_list|(
-argument|NumOccurrencesFlag NO
+argument|NumOccurrencesFlag N
 argument_list|,
 argument|Option&O
 argument_list|)
@@ -4493,7 +4503,7 @@ name|O
 operator|.
 name|setNumOccurrencesFlag
 argument_list|(
-name|NO
+name|N
 argument_list|)
 block|;   }
 block|}
@@ -4686,15 +4696,13 @@ operator|>
 name|Default
 block|;
 name|void
-name|check
+name|check_location
 argument_list|()
 specifier|const
 block|{
 name|assert
 argument_list|(
 name|Location
-operator|!=
-literal|0
 operator|&&
 literal|"cl::location(...) not specified for a command "
 literal|"line option with external storage, "
@@ -4708,7 +4716,7 @@ argument_list|()
 operator|:
 name|Location
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|bool
@@ -4760,7 +4768,7 @@ argument_list|,
 argument|bool initial = false
 argument_list|)
 block|{
-name|check
+name|check_location
 argument_list|()
 block|;
 operator|*
@@ -4785,7 +4793,7 @@ modifier|&
 name|getValue
 parameter_list|()
 block|{
-name|check
+name|check_location
 argument_list|()
 expr_stmt|;
 return|return
@@ -4803,7 +4811,7 @@ name|getValue
 argument_list|()
 specifier|const
 block|{
-name|check
+name|check_location
 argument_list|()
 block|;
 return|return
@@ -5168,6 +5176,8 @@ name|DataType
 operator|,
 name|ExternalStorage
 operator|,
+name|std
+operator|::
 name|is_class
 operator|<
 name|DataType
@@ -5179,7 +5189,6 @@ block|{
 name|ParserClass
 name|Parser
 block|;
-name|virtual
 name|bool
 name|handleOccurrence
 argument_list|(
@@ -5189,6 +5198,7 @@ argument|StringRef ArgName
 argument_list|,
 argument|StringRef Arg
 argument_list|)
+name|override
 block|{
 name|typename
 name|ParserClass
@@ -5243,12 +5253,12 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|virtual
-expr|enum
+unit|enum
 name|ValueExpected
 name|getValueExpectedFlagDefault
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Parser
@@ -5260,7 +5270,6 @@ block|}
 end_expr_stmt
 
 begin_decl_stmt
-name|virtual
 name|void
 name|getExtraOptionNames
 argument_list|(
@@ -5273,6 +5282,7 @@ operator|>
 operator|&
 name|OptionNames
 argument_list|)
+name|override
 block|{
 return|return
 name|Parser
@@ -5290,11 +5300,11 @@ comment|// Forward printing stuff to the parser...
 end_comment
 
 begin_expr_stmt
-name|virtual
 name|size_t
 name|getOptionWidth
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Parser
@@ -5309,7 +5319,6 @@ block|}
 end_expr_stmt
 
 begin_decl_stmt
-name|virtual
 name|void
 name|printOptionInfo
 argument_list|(
@@ -5317,6 +5326,7 @@ name|size_t
 name|GlobalWidth
 argument_list|)
 decl|const
+name|override
 block|{
 name|Parser
 operator|.
@@ -5332,7 +5342,6 @@ block|}
 end_decl_stmt
 
 begin_decl_stmt
-name|virtual
 name|void
 name|printOptionValue
 argument_list|(
@@ -5343,6 +5352,7 @@ name|bool
 name|Force
 argument_list|)
 decl|const
+name|override
 block|{
 if|if
 condition|(
@@ -6453,13 +6463,12 @@ name|Positions
 block|;
 name|ParserClass
 name|Parser
-block|;
-name|virtual
-expr|enum
+block|;    enum
 name|ValueExpected
 name|getValueExpectedFlagDefault
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Parser
@@ -6468,12 +6477,12 @@ name|getValueExpectedFlagDefault
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|getExtraOptionNames
 argument_list|(
 argument|SmallVectorImpl<const char*>&OptionNames
 argument_list|)
+name|override
 block|{
 return|return
 name|Parser
@@ -6487,7 +6496,6 @@ block|}
 end_expr_stmt
 
 begin_function
-name|virtual
 name|bool
 name|handleOccurrence
 parameter_list|(
@@ -6500,6 +6508,7 @@ parameter_list|,
 name|StringRef
 name|Arg
 parameter_list|)
+function|override
 block|{
 name|typename
 name|ParserClass
@@ -6568,11 +6577,11 @@ comment|// Forward printing stuff to the parser...
 end_comment
 
 begin_expr_stmt
-name|virtual
 name|size_t
 name|getOptionWidth
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Parser
@@ -6587,7 +6596,6 @@ block|}
 end_expr_stmt
 
 begin_decl_stmt
-name|virtual
 name|void
 name|printOptionInfo
 argument_list|(
@@ -6595,6 +6603,7 @@ name|size_t
 name|GlobalWidth
 argument_list|)
 decl|const
+name|override
 block|{
 name|Parser
 operator|.
@@ -6614,7 +6623,6 @@ comment|// Unimplemented: list options don't currently store their default value
 end_comment
 
 begin_decl_stmt
-name|virtual
 name|void
 name|printOptionValue
 argument_list|(
@@ -6625,6 +6633,7 @@ name|bool
 comment|/*Force*/
 argument_list|)
 decl|const
+name|override
 block|{}
 end_decl_stmt
 
@@ -7534,7 +7543,7 @@ argument_list|()
 operator|:
 name|Location
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|bool
@@ -7823,13 +7832,12 @@ name|Positions
 block|;
 name|ParserClass
 name|Parser
-block|;
-name|virtual
-expr|enum
+block|;    enum
 name|ValueExpected
 name|getValueExpectedFlagDefault
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Parser
@@ -7838,12 +7846,12 @@ name|getValueExpectedFlagDefault
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|getExtraOptionNames
 argument_list|(
 argument|SmallVectorImpl<const char*>&OptionNames
 argument_list|)
+name|override
 block|{
 return|return
 name|Parser
@@ -7857,7 +7865,6 @@ block|}
 end_expr_stmt
 
 begin_function
-name|virtual
 name|bool
 name|handleOccurrence
 parameter_list|(
@@ -7870,6 +7877,7 @@ parameter_list|,
 name|StringRef
 name|Arg
 parameter_list|)
+function|override
 block|{
 name|typename
 name|ParserClass
@@ -7933,11 +7941,11 @@ comment|// Forward printing stuff to the parser...
 end_comment
 
 begin_expr_stmt
-name|virtual
 name|size_t
 name|getOptionWidth
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Parser
@@ -7952,7 +7960,6 @@ block|}
 end_expr_stmt
 
 begin_decl_stmt
-name|virtual
 name|void
 name|printOptionInfo
 argument_list|(
@@ -7960,6 +7967,7 @@ name|size_t
 name|GlobalWidth
 argument_list|)
 decl|const
+name|override
 block|{
 name|Parser
 operator|.
@@ -7979,7 +7987,6 @@ comment|// Unimplemented: bits options don't currently store their default value
 end_comment
 
 begin_decl_stmt
-name|virtual
 name|void
 name|printOptionValue
 argument_list|(
@@ -7990,6 +7997,7 @@ name|bool
 comment|/*Force*/
 argument_list|)
 decl|const
+name|override
 block|{}
 end_decl_stmt
 
@@ -8758,7 +8766,6 @@ name|Option
 operator|*
 name|AliasFor
 block|;
-name|virtual
 name|bool
 name|handleOccurrence
 argument_list|(
@@ -8769,7 +8776,7 @@ comment|/*ArgName*/
 argument_list|,
 argument|StringRef Arg
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 name|AliasFor
@@ -8786,25 +8793,53 @@ name|Arg
 argument_list|)
 return|;
 block|}
+name|bool
+name|addOccurrence
+argument_list|(
+argument|unsigned pos
+argument_list|,
+argument|StringRef
+comment|/*ArgName*/
+argument_list|,
+argument|StringRef Value
+argument_list|,
+argument|bool MultiArg = false
+argument_list|)
+name|override
+block|{
+return|return
+name|AliasFor
+operator|->
+name|addOccurrence
+argument_list|(
+name|pos
+argument_list|,
+name|AliasFor
+operator|->
+name|ArgStr
+argument_list|,
+name|Value
+argument_list|,
+name|MultiArg
+argument_list|)
+return|;
+block|}
 comment|// Handle printing stuff...
-name|virtual
 name|size_t
 name|getOptionWidth
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|printOptionInfo
 argument_list|(
 argument|size_t GlobalWidth
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|// Aliases do not need to print their values.
-name|virtual
 name|void
 name|printOptionValue
 argument_list|(
@@ -8815,8 +8850,21 @@ argument|bool
 comment|/*Force*/
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{}
+name|ValueExpected
+name|getValueExpectedFlagDefault
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|AliasFor
+operator|->
+name|getValueExpectedFlag
+argument_list|()
+return|;
+block|}
 name|void
 name|done
 argument_list|()
@@ -8834,9 +8882,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|AliasFor
-operator|==
-literal|0
 condition|)
 name|error
 argument_list|(
@@ -8903,7 +8950,7 @@ argument_list|)
 operator|,
 name|AliasFor
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|apply
@@ -8947,7 +8994,7 @@ argument_list|)
 operator|,
 name|AliasFor
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|apply
@@ -9006,7 +9053,7 @@ argument_list|)
 operator|,
 name|AliasFor
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|apply
@@ -9080,7 +9127,7 @@ argument_list|)
 operator|,
 name|AliasFor
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|apply

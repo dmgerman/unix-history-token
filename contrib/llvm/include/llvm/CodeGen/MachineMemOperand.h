@@ -70,6 +70,28 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/PseudoSourceValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_comment
+comment|// PointerLikeTypeTraits<Value*>
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -77,9 +99,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Value
-decl_stmt|;
 name|class
 name|FoldingSetNodeID
 decl_stmt|;
@@ -99,11 +118,18 @@ block|{
 comment|/// V - This is the IR pointer value for the access, or it is null if unknown.
 comment|/// If this is null, then the access is to a pointer in the default address
 comment|/// space.
+name|PointerUnion
+operator|<
 specifier|const
 name|Value
-modifier|*
+operator|*
+operator|,
+specifier|const
+name|PseudoSourceValue
+operator|*
+operator|>
 name|V
-decl_stmt|;
+expr_stmt|;
 comment|/// Offset - This is an offset from the base Value*.
 name|int64_t
 name|Offset
@@ -111,13 +137,31 @@ decl_stmt|;
 name|explicit
 name|MachinePointerInfo
 argument_list|(
-argument|const Value *v =
-literal|0
+argument|const Value *v = nullptr
 argument_list|,
 argument|int64_t offset =
 literal|0
 argument_list|)
 block|:
+name|V
+argument_list|(
+name|v
+argument_list|)
+operator|,
+name|Offset
+argument_list|(
+argument|offset
+argument_list|)
+block|{}
+name|explicit
+name|MachinePointerInfo
+argument_list|(
+argument|const PseudoSourceValue *v
+argument_list|,
+argument|int64_t offset =
+literal|0
+argument_list|)
+operator|:
 name|V
 argument_list|(
 name|v
@@ -138,21 +182,59 @@ block|{
 if|if
 condition|(
 name|V
-operator|==
-literal|0
+operator|.
+name|isNull
+argument_list|()
+condition|)
+return|return
+name|MachinePointerInfo
+argument_list|()
+return|;
+if|if
+condition|(
+name|V
+operator|.
+name|is
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+operator|(
+operator|)
 condition|)
 return|return
 name|MachinePointerInfo
 argument_list|(
-literal|0
+name|V
+operator|.
+name|get
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+operator|(
+operator|)
 argument_list|,
-literal|0
+name|Offset
+operator|+
+name|O
 argument_list|)
 return|;
 return|return
 name|MachinePointerInfo
 argument_list|(
 name|V
+operator|.
+name|get
+operator|<
+specifier|const
+name|PseudoSourceValue
+operator|*
+operator|>
+operator|(
+operator|)
 argument_list|,
 name|Offset
 operator|+
@@ -332,11 +414,9 @@ argument|uint64_t s
 argument_list|,
 argument|unsigned base_alignment
 argument_list|,
-argument|const MDNode *TBAAInfo =
-literal|0
+argument|const MDNode *TBAAInfo = nullptr
 argument_list|,
-argument|const MDNode *Ranges =
-literal|0
+argument|const MDNode *Ranges = nullptr
 argument_list|)
 empty_stmt|;
 specifier|const
@@ -368,6 +448,53 @@ return|return
 name|PtrInfo
 operator|.
 name|V
+operator|.
+name|dyn_cast
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+specifier|const
+name|PseudoSourceValue
+operator|*
+name|getPseudoValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PtrInfo
+operator|.
+name|V
+operator|.
+name|dyn_cast
+operator|<
+specifier|const
+name|PseudoSourceValue
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+specifier|const
+name|void
+operator|*
+name|getOpaqueValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PtrInfo
+operator|.
+name|V
+operator|.
+name|getOpaqueValue
+argument_list|()
 return|;
 block|}
 comment|/// getFlags - Return the raw flags of the source value, \see MemOperandFlags.
@@ -428,6 +555,18 @@ return|return
 name|PtrInfo
 operator|.
 name|Offset
+return|;
+block|}
+name|unsigned
+name|getAddrSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PtrInfo
+operator|.
+name|getAddrSpace
+argument_list|()
 return|;
 block|}
 comment|/// getSize - Return the size in bytes of the memory reference.
@@ -585,6 +724,22 @@ name|setValue
 parameter_list|(
 specifier|const
 name|Value
+modifier|*
+name|NewSV
+parameter_list|)
+block|{
+name|PtrInfo
+operator|.
+name|V
+operator|=
+name|NewSV
+expr_stmt|;
+block|}
+name|void
+name|setValue
+parameter_list|(
+specifier|const
+name|PseudoSourceValue
 modifier|*
 name|NewSV
 parameter_list|)

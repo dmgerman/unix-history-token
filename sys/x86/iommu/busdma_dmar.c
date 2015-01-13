@@ -268,7 +268,7 @@ argument_list|)
 expr_stmt|;
 name|env
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 name|str
 argument_list|)
@@ -318,9 +318,15 @@ name|devclass_t
 name|pci_class
 decl_stmt|;
 name|device_t
+name|l
+decl_stmt|,
 name|pci
 decl_stmt|,
 name|pcib
+decl_stmt|,
+name|pcip
+decl_stmt|,
+name|pcibp
 decl_stmt|,
 name|requester
 decl_stmt|;
@@ -334,6 +340,8 @@ argument_list|(
 literal|"pci"
 argument_list|)
 expr_stmt|;
+name|l
+operator|=
 name|requester
 operator|=
 name|dev
@@ -357,7 +365,7 @@ name|pci
 operator|=
 name|device_get_parent
 argument_list|(
-name|dev
+name|l
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -367,26 +375,17 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"NULL parent for pci%d:%d:%d:%d"
+literal|"dmar_get_requester(%s): NULL parent "
+literal|"for %s"
 operator|,
-name|pci_get_domain
+name|device_get_name
 argument_list|(
 name|dev
 argument_list|)
 operator|,
-name|pci_get_bus
+name|device_get_name
 argument_list|(
-name|dev
-argument_list|)
-operator|,
-name|pci_get_slot
-argument_list|(
-name|dev
-argument_list|)
-operator|,
-name|pci_get_function
-argument_list|(
-name|dev
+name|l
 argument_list|)
 operator|)
 argument_list|)
@@ -401,26 +400,21 @@ operator|==
 name|pci_class
 argument_list|,
 operator|(
-literal|"Non-pci parent for pci%d:%d:%d:%d"
+literal|"dmar_get_requester(%s): non-pci parent %s for %s"
 operator|,
-name|pci_get_domain
+name|device_get_name
 argument_list|(
 name|dev
 argument_list|)
 operator|,
-name|pci_get_bus
+name|device_get_name
 argument_list|(
-name|dev
+name|pci
 argument_list|)
 operator|,
-name|pci_get_slot
+name|device_get_name
 argument_list|(
-name|dev
-argument_list|)
-operator|,
-name|pci_get_function
-argument_list|(
-name|dev
+name|l
 argument_list|)
 operator|)
 argument_list|)
@@ -439,70 +433,80 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"NULL bridge for pci%d:%d:%d:%d"
+literal|"dmar_get_requester(%s): NULL bridge "
+literal|"for %s"
 operator|,
-name|pci_get_domain
+name|device_get_name
 argument_list|(
 name|dev
 argument_list|)
 operator|,
-name|pci_get_bus
+name|device_get_name
 argument_list|(
-name|dev
-argument_list|)
-operator|,
-name|pci_get_slot
-argument_list|(
-name|dev
-argument_list|)
-operator|,
-name|pci_get_function
-argument_list|(
-name|dev
+name|pci
 argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * The parent of our "bridge" isn't another PCI bus, 		 * so pcib isn't a PCI->PCI bridge but rather a host 		 * port, and the requester ID won't be translated 		 * further. 		 */
-if|if
-condition|(
-name|device_get_devclass
-argument_list|(
+name|pcip
+operator|=
 name|device_get_parent
 argument_list|(
 name|pcib
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|device_get_devclass
+argument_list|(
+name|pcip
 argument_list|)
 operator|!=
 name|pci_class
 condition|)
 break|break;
+name|pcibp
+operator|=
+name|device_get_parent
+argument_list|(
+name|pcip
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pci_find_cap
 argument_list|(
-name|dev
+name|l
 argument_list|,
 name|PCIY_EXPRESS
 argument_list|,
 operator|&
 name|cap_offset
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
+block|{
+comment|/* 			 * Do not stop the loop even if the target 			 * device is PCIe, because it is possible (but 			 * unlikely) to have a PCI->PCIe bridge 			 * somewhere in the hierarchy. 			 */
+name|l
+operator|=
+name|pcib
+expr_stmt|;
+block|}
+else|else
 block|{
 comment|/* 			 * Device is not PCIe, it cannot be seen as a 			 * requester by DMAR unit. 			 */
 name|requester
 operator|=
-name|pcib
+name|pcibp
 expr_stmt|;
-comment|/* Check whether the bus above is PCIe. */
+comment|/* Check whether the bus above the bridge is PCIe. */
 if|if
 condition|(
 name|pci_find_cap
 argument_list|(
-name|pcib
+name|pcibp
 argument_list|,
 name|PCIY_EXPRESS
 argument_list|,
@@ -521,7 +525,7 @@ name|PCI_RID
 argument_list|(
 name|pci_get_bus
 argument_list|(
-name|dev
+name|l
 argument_list|)
 argument_list|,
 literal|0
@@ -542,12 +546,11 @@ name|pcib
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* 		 * Do not stop the loop even if the target device is 		 * PCIe, because it is possible (but unlikely) to have 		 * a PCI->PCIe bridge somewhere in the hierarchy. 		 */
-name|dev
+name|l
 operator|=
-name|pcib
+name|pcibp
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(

@@ -84,7 +84,7 @@ begin_function_decl
 name|struct
 name|icl_pdu
 modifier|*
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 parameter_list|(
 name|struct
 name|icl_conn

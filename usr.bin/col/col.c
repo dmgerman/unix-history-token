@@ -1597,7 +1597,7 @@ argument_list|)
 expr_stmt|;
 name|PUTC
 argument_list|(
-literal|'9'
+literal|'\011'
 argument_list|)
 expr_stmt|;
 if|if

@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -115,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/YAMLParser.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -193,7 +193,6 @@ comment|/// compiled.
 comment|///
 comment|/// FIXME: Currently FilePath must be an absolute path inside the
 comment|/// source directory which does not have symlinks resolved.
-name|virtual
 name|std
 operator|::
 name|vector
@@ -205,11 +204,11 @@ argument_list|(
 argument|StringRef FilePath
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// \brief Returns the list of all files available in the compilation database.
 comment|///
 comment|/// These are the 'file' entries of the JSON objects.
-name|virtual
 name|std
 operator|::
 name|vector
@@ -221,10 +220,10 @@ operator|>
 name|getAllFiles
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \brief Returns all compile commands for all the files in the compilation
 comment|/// database.
-name|virtual
 name|std
 operator|::
 name|vector
@@ -234,6 +233,7 @@ operator|>
 name|getAllCompileCommands
 argument_list|()
 specifier|const
+name|override
 block|;
 name|private
 operator|:
@@ -323,7 +323,9 @@ expr_stmt|;
 name|FileMatchTrie
 name|MatchTrie
 decl_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|llvm
 operator|::

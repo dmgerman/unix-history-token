@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/GetElementPtrTypeIterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/IRBuilder.h"
 end_include
 
@@ -79,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Operator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/GetElementPtrTypeIterator.h"
 end_include
 
 begin_decl_stmt
@@ -180,7 +180,7 @@ name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -201,7 +201,7 @@ name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// RecursivelyDeleteTriviallyDeadInstructions - If the specified value is a
@@ -220,7 +220,7 @@ name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// RecursivelyDeleteDeadPHINode - If the specified value is an effectively
@@ -240,7 +240,7 @@ name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// SimplifyInstructionsInBlock - Scan the specified basic block and try to
@@ -260,14 +260,14 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 specifier|const
 name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -299,7 +299,7 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// MergeBasicBlockIntoOnlyPred - BB is a block with one predecessor and its
@@ -318,7 +318,7 @@ name|Pass
 modifier|*
 name|P
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// TryToSimplifyUncondBranchFromEmptyBlock - BB is known to contain an
@@ -370,7 +370,7 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// FlatternCFG - This function is used to flatten a CFG.  For
@@ -388,7 +388,7 @@ name|AliasAnalysis
 modifier|*
 name|AA
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// FoldBranchToCommonDest - If this basic block is ONLY a setcc and a branch,
@@ -401,6 +401,13 @@ parameter_list|(
 name|BranchInst
 modifier|*
 name|BI
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|*
+name|DL
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// DemoteRegToStack - This function takes a virtual register computed by an
@@ -426,7 +433,7 @@ name|Instruction
 modifier|*
 name|AllocaPoint
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// DemotePHIToStack - This function takes a virtual register computed by a phi
@@ -444,7 +451,7 @@ name|Instruction
 modifier|*
 name|AllocaPoint
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// getOrEnforceKnownAlignment - If the specified pointer has an alignment that
@@ -466,7 +473,7 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// getKnownAlignment - Try to infer an alignment for the specified pointer.
@@ -484,7 +491,7 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return

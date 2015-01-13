@@ -926,6 +926,16 @@ operator|==
 name|ENOENT
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_expect_fail
+argument_list|(
+literal|"Depends on non-standard behavior not mentioned in POSIX.1-2008"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ATF_REQUIRE
 argument_list|(
 name|faccessat

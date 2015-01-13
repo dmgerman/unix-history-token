@@ -7082,6 +7082,8 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
+if|if
+condition|(
 name|m_cljget
 argument_list|(
 name|m
@@ -7090,17 +7092,8 @@ name|M_NOWAIT
 argument_list|,
 name|MJUM9BYTES
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
-operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|m_freem
@@ -9916,7 +9909,7 @@ argument_list|,
 name|mode_ctl
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Disable memory write invalidate.  Apparently it is not supported 	 * properly by these devices.  Also ensure that INTx isn't disabled, 	 * as these chips need it even when using MSI. 	 */
+comment|/* 	 * Disable memory write invalidate.  Apparently it is not supported 	 * properly by these devices. 	 */
 name|PCI_CLRBIT
 argument_list|(
 name|sc
@@ -9925,8 +9918,6 @@ name|bge_dev
 argument_list|,
 name|BGE_PCI_CMD
 argument_list|,
-name|PCIM_CMD_INTxDIS
-operator||
 name|PCIM_CMD_MWIEN
 argument_list|,
 literal|4

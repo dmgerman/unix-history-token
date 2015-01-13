@@ -91,32 +91,104 @@ specifier|const
 name|SIRegisterInfo
 name|RI
 block|;
-name|MachineInstrBuilder
-name|buildIndirectIndexLoop
+name|unsigned
+name|buildExtractSubReg
 argument_list|(
-argument|MachineBasicBlock&MBB
+argument|MachineBasicBlock::iterator MI
 argument_list|,
-argument|MachineBasicBlock::iterator I
+argument|MachineRegisterInfo&MRI
 argument_list|,
-argument|unsigned OffsetVGPR
+argument|MachineOperand&SuperReg
 argument_list|,
-argument|unsigned MovRelOp
+argument|const TargetRegisterClass *SuperRC
 argument_list|,
-argument|unsigned Dst
+argument|unsigned SubIdx
 argument_list|,
-argument|unsigned Src0
+argument|const TargetRegisterClass *SubRC
 argument_list|)
 specifier|const
 block|;
-comment|// If you add or remove instructions from this function, you will
+name|MachineOperand
+name|buildExtractSubRegOrImm
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|MachineRegisterInfo&MRI
+argument_list|,
+argument|MachineOperand&SuperReg
+argument_list|,
+argument|const TargetRegisterClass *SuperRC
+argument_list|,
+argument|unsigned SubIdx
+argument_list|,
+argument|const TargetRegisterClass *SubRC
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|split64BitImm
+argument_list|(
+argument|SmallVectorImpl<MachineInstr *>&Worklist
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|MachineRegisterInfo&MRI
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const MachineOperand&Op
+argument_list|)
+specifier|const
+block|;
+name|void
+name|splitScalar64BitUnaryOp
+argument_list|(
+argument|SmallVectorImpl<MachineInstr *>&Worklist
+argument_list|,
+argument|MachineInstr *Inst
+argument_list|,
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|void
+name|splitScalar64BitBinaryOp
+argument_list|(
+argument|SmallVectorImpl<MachineInstr *>&Worklist
+argument_list|,
+argument|MachineInstr *Inst
+argument_list|,
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|void
+name|splitScalar64BitBCNT
+argument_list|(
+argument|SmallVectorImpl<MachineInstr *>&Worklist
+argument_list|,
+argument|MachineInstr *Inst
+argument_list|)
+specifier|const
+block|;
+name|void
+name|addDescImplicitUseDef
+argument_list|(
+argument|const MCInstrDesc&Desc
+argument_list|,
+argument|MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|explicit
 name|SIInstrInfo
 argument_list|(
-name|AMDGPUTargetMachine
+specifier|const
+name|AMDGPUSubtarget
 operator|&
-name|tm
+name|st
 argument_list|)
 block|;
 specifier|const
@@ -125,8 +197,12 @@ operator|&
 name|getRegisterInfo
 argument_list|()
 specifier|const
-block|;
-name|virtual
+name|override
+block|{
+return|return
+name|RI
+return|;
+block|}
 name|void
 name|copyPhysReg
 argument_list|(
@@ -143,6 +219,53 @@ argument_list|,
 argument|bool KillSrc
 argument_list|)
 specifier|const
+name|override
+block|;
+name|void
+name|storeRegToStackSlot
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|bool isKill
+argument_list|,
+argument|int FrameIndex
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|loadRegFromStackSlot
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|int FrameIndex
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|virtual
+name|bool
+name|expandPostRAPseudo
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|)
+specifier|const
 block|;
 name|unsigned
 name|commuteOpcode
@@ -151,7 +274,6 @@ argument|unsigned Opcode
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|MachineInstr
 operator|*
 name|commuteInstruction
@@ -161,23 +283,17 @@ argument_list|,
 argument|bool NewMI=false
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
-name|unsigned
-name|getIEQOpcode
-argument_list|()
-specifier|const
-block|{
-name|assert
+name|bool
+name|isTriviallyReMaterializable
 argument_list|(
-operator|!
-literal|"Implement"
+argument|const MachineInstr *MI
+argument_list|,
+argument|AliasAnalysis *AA = nullptr
 argument_list|)
+specifier|const
 block|;
-return|return
-literal|0
-return|;
-block|}
 name|MachineInstr
 operator|*
 name|buildMovInstr
@@ -191,20 +307,28 @@ argument_list|,
 argument|unsigned SrcReg
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isMov
 argument_list|(
 argument|unsigned Opcode
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isSafeToMoveRegClassDefs
 argument_list|(
 argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isDS
+argument_list|(
+argument|uint16_t Opcode
 argument_list|)
 specifier|const
 block|;
@@ -253,6 +377,13 @@ block|;
 name|bool
 name|isInlineConstant
 argument_list|(
+argument|const APInt&Imm
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isInlineConstant
+argument_list|(
 argument|const MachineOperand&MO
 argument_list|)
 specifier|const
@@ -264,7 +395,26 @@ argument|const MachineOperand&MO
 argument_list|)
 specifier|const
 block|;
-name|virtual
+name|bool
+name|isImmOperandLegal
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MachineOperand&MO
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return true if this 64-bit VALU instruction has a 32-bit encoding.
+comment|/// This function will return false if you pass it a 32-bit instruction.
+name|bool
+name|hasVALU32BitEncoding
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|verifyInstruction
 argument_list|(
@@ -273,6 +423,7 @@ argument_list|,
 argument|StringRef&ErrInfo
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isSALUInstr
@@ -352,6 +503,15 @@ argument|MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
+name|void
+name|moveSMRDToVALU
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineRegisterInfo&MRI
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief Replace this instruction's opcode with the equivalent VALU
 comment|/// opcode.  This function will also move the users of \p MI to the
 comment|/// VALU if necessary.
@@ -362,7 +522,6 @@ argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|unsigned
 name|calculateIndirectAddress
 argument_list|(
@@ -371,16 +530,16 @@ argument_list|,
 argument|unsigned Channel
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|TargetRegisterClass
 operator|*
 name|getIndirectAddrRegClass
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineInstrBuilder
 name|buildIndirectWrite
 argument_list|(
@@ -395,8 +554,8 @@ argument_list|,
 argument|unsigned OffsetReg
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineInstrBuilder
 name|buildIndirectRead
 argument_list|(
@@ -411,6 +570,7 @@ argument_list|,
 argument|unsigned OffsetReg
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|reserveIndirectRegisters
@@ -433,6 +593,28 @@ argument_list|,
 argument|unsigned IndexReg
 argument_list|)
 specifier|const
+block|;
+name|void
+name|insertNOPs
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|int Count
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Returns the operand named \p Op.  If \p MI does not have an
+comment|/// operand named \c Op, this function returns nullptr.
+specifier|const
+name|MachineOperand
+operator|*
+name|getNamedOperand
+argument_list|(
+argument|const MachineInstr& MI
+argument_list|,
+argument|unsigned OperandName
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 name|namespace
@@ -440,6 +622,13 @@ name|AMDGPU
 block|{
 name|int
 name|getVOPe64
+parameter_list|(
+name|uint16_t
+name|Opcode
+parameter_list|)
+function_decl|;
+name|int
+name|getVOPe32
 parameter_list|(
 name|uint16_t
 name|Opcode
@@ -459,6 +648,30 @@ name|uint16_t
 name|Opcode
 parameter_list|)
 function_decl|;
+name|int
+name|getMCOpcode
+parameter_list|(
+name|uint16_t
+name|Opcode
+parameter_list|,
+name|unsigned
+name|Gen
+parameter_list|)
+function_decl|;
+specifier|const
+name|uint64_t
+name|RSRC_DATA_FORMAT
+init|=
+literal|0xf00000000000LL
+decl_stmt|;
+specifier|const
+name|uint64_t
+name|RSRC_TID_ENABLE
+init|=
+literal|1LL
+operator|<<
+literal|55
+decl_stmt|;
 block|}
 comment|// End namespace AMDGPU
 block|}

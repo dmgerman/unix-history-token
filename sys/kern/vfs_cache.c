@@ -1281,7 +1281,7 @@ name|namecache
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5326,32 +5326,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SYS_SYSPROTO_H_
-end_ifndef
-
-begin_struct
-struct|struct
-name|__getcwd_args
-block|{
-name|u_char
-modifier|*
-name|buf
-decl_stmt|;
-name|u_int
-name|buflen
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * XXX All of these sysctls would probably be more productive dead.  */
 end_comment
@@ -5437,7 +5411,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|u_char
+name|char
 modifier|*
 name|buf
 parameter_list|,

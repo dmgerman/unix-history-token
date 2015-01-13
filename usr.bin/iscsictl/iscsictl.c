@@ -600,7 +600,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 			 * XXX: We should verify UTF-8 normalisation, as defined 			 * 	by 3.2.6.2: iSCSI Name Encoding. 			 */
+comment|/* 			 * XXX: We should verify UTF-8 normalisation, as defined 			 *      by 3.2.6.2: iSCSI Name Encoding. 			 */
 if|if
 condition|(
 name|isalnum
@@ -3829,48 +3829,15 @@ block|}
 elseif|else
 if|if
 condition|(
+name|target
+operator|==
+name|NULL
+operator|&&
 name|portal
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|target
-operator|!=
-name|NULL
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-p and -t and mutually exclusive"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|target
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|portal
-operator|!=
-name|NULL
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-t and -p and mutually exclusive"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 name|errx
 argument_list|(
 literal|1
@@ -3878,6 +3845,7 @@ argument_list|,
 literal|"must specify either -a, -n, -t, or -p"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|session_id

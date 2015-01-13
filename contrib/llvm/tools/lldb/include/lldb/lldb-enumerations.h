@@ -178,15 +178,25 @@ literal|7
 operator|)
 block|,
 comment|///< Launch the process in a separate process group
-name|eLaunchFlagsDontMonitorProcess
+name|eLaunchFlagDontSetExitStatus
 init|=
 operator|(
 literal|1u
 operator|<<
 literal|8
 operator|)
+block|,
 comment|///< If you are going to hand the process off (e.g. to debugserver)
-comment|///< set this flag so lldb& the handee don't race to reap it.
+comment|///< set this flag so lldb& the handee don't race to set its exit status.
+name|eLaunchFlagDetachOnError
+init|=
+operator|(
+literal|1u
+operator|<<
+literal|9
+operator|)
+comment|///< If set, then the client stub should detach rather than killing the debugee
+comment|///< if it loses connection with lldb.
 block|}
 name|LaunchFlags
 typedef|;
@@ -402,6 +412,9 @@ name|ScriptLanguage
 typedef|;
 comment|//----------------------------------------------------------------------
 comment|// Register numbering types
+comment|// See RegisterContext::ConvertRegisterKindToRegisterNumber to convert
+comment|// any of these to the lldb internal register numbering scheme
+comment|// (eRegisterKindLLDB).
 comment|//----------------------------------------------------------------------
 typedef|typedef
 enum|enum
@@ -420,7 +433,7 @@ block|,
 comment|// insn ptr reg, stack ptr reg, etc not specific to any particular target
 name|eRegisterKindGDB
 block|,
-comment|// the register numbers gdb uses (matches stabs numbers?)
+comment|// the register numbers gdb uses (matches stabs numbers)
 name|eRegisterKindLLDB
 block|,
 comment|// lldb's internal register numbers
@@ -486,6 +499,35 @@ block|}
 name|ReturnStatus
 typedef|;
 comment|//----------------------------------------------------------------------
+comment|// The results of expression evaluation:
+comment|//----------------------------------------------------------------------
+typedef|typedef
+enum|enum
+name|ExpressionResults
+block|{
+name|eExpressionCompleted
+init|=
+literal|0
+block|,
+name|eExpressionSetupError
+block|,
+name|eExpressionParseError
+block|,
+name|eExpressionDiscarded
+block|,
+name|eExpressionInterrupted
+block|,
+name|eExpressionHitBreakpoint
+block|,
+name|eExpressionTimedOut
+block|,
+name|eExpressionResultUnavailable
+block|,
+name|eExpressionStoppedForDebug
+block|}
+name|ExpressionResults
+typedef|;
+comment|//----------------------------------------------------------------------
 comment|// Connection Status Types
 comment|//----------------------------------------------------------------------
 typedef|typedef
@@ -508,7 +550,10 @@ name|eConnectionStatusNoConnection
 block|,
 comment|// No connection
 name|eConnectionStatusLostConnection
+block|,
 comment|// Lost connection while connected to a valid connection
+name|eConnectionStatusInterrupted
+comment|// Interrupted read
 block|}
 name|ConnectionStatus
 typedef|;
@@ -525,7 +570,13 @@ name|eErrorTypeMachKernel
 block|,
 comment|///< Mach kernel error codes.
 name|eErrorTypePOSIX
+block|,
 comment|///< POSIX error codes.
+name|eErrorTypeExpression
+block|,
+comment|///< These are from the ExpressionResults enum.
+name|eErrorTypeWin32
+comment|///< Standard Win32 error codes.
 block|}
 name|ErrorType
 typedef|;
@@ -1053,6 +1104,66 @@ init|=
 literal|0x0014
 block|,
 comment|///< Python.
+name|eLanguageTypeOpenCL
+init|=
+literal|0x0015
+block|,
+comment|///< OpenCL.
+name|eLanguageTypeGo
+init|=
+literal|0x0016
+block|,
+comment|///< Go.
+name|eLanguageTypeModula3
+init|=
+literal|0x0017
+block|,
+comment|///< Modula 3.
+name|eLanguageTypeHaskell
+init|=
+literal|0x0018
+block|,
+comment|///< Haskell.
+name|eLanguageTypeC_plus_plus_03
+init|=
+literal|0x0019
+block|,
+comment|///< ISO C++:2003.
+name|eLanguageTypeC_plus_plus_11
+init|=
+literal|0x001a
+block|,
+comment|///< ISO C++:2011.
+name|eLanguageTypeOCaml
+init|=
+literal|0x001b
+block|,
+comment|///< OCaml.
+name|eLanguageTypeRust
+init|=
+literal|0x001c
+block|,
+comment|///< Rust.
+name|eLanguageTypeC11
+init|=
+literal|0x001d
+block|,
+comment|///< ISO C:2011.
+name|eLanguageTypeSwift
+init|=
+literal|0x001e
+block|,
+comment|///< Swift.
+name|eLanguageTypeJulia
+init|=
+literal|0x001f
+block|,
+comment|///< Julia.
+name|eLanguageTypeDylan
+init|=
+literal|0x0020
+block|,
+comment|///< Dylan.
 name|eNumLanguageTypes
 block|}
 name|LanguageType
@@ -1866,8 +1977,15 @@ block|}
 name|TypeOptions
 typedef|;
 comment|//----------------------------------------------------------------------
-comment|// This is the return value for frame comparisons.  When frame A pushes
-comment|// frame B onto the stack, frame A is OLDER than frame B.
+comment|// This is the return value for frame comparisons.  If you are comparing frame A to frame B
+comment|// the following cases arise:
+comment|// 1) When frame A pushes frame B (or a frame that ends up pushing B) A is Older than B.
+comment|// 2) When frame A pushed frame B (or if frame A is on the stack but B is not) A is Younger than B
+comment|// 3) When frame A and frame B have the same StackID, they are Equal.
+comment|// 4) When frame A and frame B have the same immediate parent frame, but are not equal, the comparision yields
+comment|//    SameParent.
+comment|// 5) If the two frames are on different threads or processes the comparision is Invalid
+comment|// 6) If for some reason we can't figure out what went on, we return Unknown.
 comment|//----------------------------------------------------------------------
 typedef|typedef
 enum|enum
@@ -1878,6 +1996,8 @@ block|,
 name|eFrameCompareUnknown
 block|,
 name|eFrameCompareEqual
+block|,
+name|eFrameCompareSameParent
 block|,
 name|eFrameCompareYounger
 block|,
@@ -2177,6 +2297,136 @@ block|,
 name|eQueueItemKindBlock
 block|}
 name|QueueItemKind
+typedef|;
+comment|//----------------------------------------------------------------------
+comment|// Queue type
+comment|// libdispatch aka Grand Central Dispatch (GCD) queues can be either serial
+comment|// (executing on one thread) or concurrent (executing on multiple threads).
+comment|//----------------------------------------------------------------------
+typedef|typedef
+enum|enum
+name|QueueKind
+block|{
+name|eQueueKindUnknown
+init|=
+literal|0
+block|,
+name|eQueueKindSerial
+block|,
+name|eQueueKindConcurrent
+block|}
+name|QueueKind
+typedef|;
+comment|//----------------------------------------------------------------------
+comment|// Expression Evaluation Stages
+comment|// These are the cancellable stages of expression evaluation, passed to the
+comment|// expression evaluation callback, so that you can interrupt expression
+comment|// evaluation at the various points in its lifecycle.
+comment|//----------------------------------------------------------------------
+typedef|typedef
+enum|enum
+name|ExpressionEvaluationPhase
+block|{
+name|eExpressionEvaluationParse
+init|=
+literal|0
+block|,
+name|eExpressionEvaluationIRGen
+block|,
+name|eExpressionEvaluationExecution
+block|,
+name|eExpressionEvaluationComplete
+block|}
+name|ExpressionEvaluationPhase
+typedef|;
+comment|//----------------------------------------------------------------------
+comment|// Watchpoint Kind
+comment|// Indicates what types of events cause the watchpoint to fire.
+comment|// Used by Native*Protocol-related classes.
+comment|//----------------------------------------------------------------------
+typedef|typedef
+enum|enum
+name|WatchpointKind
+block|{
+name|eWatchpointKindRead
+init|=
+operator|(
+literal|1u
+operator|<<
+literal|0
+operator|)
+block|,
+name|eWatchpointKindWrite
+init|=
+operator|(
+literal|1u
+operator|<<
+literal|1
+operator|)
+block|}
+name|WatchpointKind
+typedef|;
+typedef|typedef
+enum|enum
+name|GdbSignal
+block|{
+name|eGdbSignalBadAccess
+init|=
+literal|0x91
+block|,
+name|eGdbSignalBadInstruction
+init|=
+literal|0x92
+block|,
+name|eGdbSignalArithmetic
+init|=
+literal|0x93
+block|,
+name|eGdbSignalEmulation
+init|=
+literal|0x94
+block|,
+name|eGdbSignalSoftware
+init|=
+literal|0x95
+block|,
+name|eGdbSignalBreakpoint
+init|=
+literal|0x96
+block|}
+name|GdbRemoteSignal
+typedef|;
+comment|//----------------------------------------------------------------------
+comment|// Used with SBHost::GetPath (lldb::PathType) to find files that are
+comment|// related to LLDB on the current host machine. Most files are relative
+comment|// to LLDB or are in known locations.
+comment|//----------------------------------------------------------------------
+typedef|typedef
+enum|enum
+name|PathType
+block|{
+name|ePathTypeLLDBShlibDir
+block|,
+comment|// The directory where the lldb.so (unix) or LLDB mach-o file in LLDB.framework (MacOSX) exists
+name|ePathTypeSupportExecutableDir
+block|,
+comment|// Find LLDB support executable directory (debugserver, etc)
+name|ePathTypeHeaderDir
+block|,
+comment|// Find LLDB header file directory
+name|ePathTypePythonDir
+block|,
+comment|// Find Python modules (PYTHONPATH) directory
+name|ePathTypeLLDBSystemPlugins
+block|,
+comment|// System plug-ins directory
+name|ePathTypeLLDBUserPlugins
+block|,
+comment|// User plug-ins directory
+name|ePathTypeLLDBTempSystemDir
+comment|// The LLDB temp directory for this system that will be cleaned up on exit
+block|}
+name|PathType
 typedef|;
 block|}
 end_decl_stmt

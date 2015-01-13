@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011-2014 Universita` di Pisa. All rights reserved. 
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  *  * Functions and macros to manipulate netmap structures and packets  * in userspace. See netmap(4) for more information.  *  * The address of the struct netmap_if, say nifp, is computed from the  * value returned from ioctl(.., NIOCREG, ...) and the mmap region:  *	ioctl(fd, NIOCREG,&req);  *	mem = mmap(0, ... );  *	nifp = NETMAP_IF(mem, req.nr_nifp);  *		(so simple, we could just do it manually)  *  * From there:  *	struct netmap_ring *NETMAP_TXRING(nifp, index)  *	struct netmap_ring *NETMAP_RXRING(nifp, index)  *		we can access ring->nr_cur, ring->nr_avail, ring->nr_flags  *  *	ring->slot[i] gives us the i-th slot (we can access  *		directly len, flags, buf_idx)  *  *	char *buf = NETMAP_BUF(ring, x) returns a pointer to  *		the buffer numbered x  *  * All ring indexes (head, cur, tail) should always move forward.  * To compute the next index in a circular ring you can use  *	i = nm_ring_next(ring, i);  *  * To ease porting apps from pcap to netmap we supply a few fuctions  * that can be called to open, close, read and write on netmap in a way  * similar to libpcap. Note that the read/write function depend on  * an ioctl()/select()/poll() being issued to refill rings or push  * packets out.  *  * In order to use these, include #define NETMAP_WITH_LIBS  * in the source file that invokes these functions.  */
+comment|/*  * $FreeBSD$  *  * Functions and macros to manipulate netmap structures and packets  * in userspace. See netmap(4) for more information.  *  * The address of the struct netmap_if, say nifp, is computed from the  * value returned from ioctl(.., NIOCREG, ...) and the mmap region:  *	ioctl(fd, NIOCREG,&req);  *	mem = mmap(0, ... );  *	nifp = NETMAP_IF(mem, req.nr_nifp);  *		(so simple, we could just do it manually)  *  * From there:  *	struct netmap_ring *NETMAP_TXRING(nifp, index)  *	struct netmap_ring *NETMAP_RXRING(nifp, index)  *		we can access ring->cur, ring->head, ring->tail, etc.  *  *	ring->slot[i] gives us the i-th slot (we can access  *		directly len, flags, buf_idx)  *  *	char *buf = NETMAP_BUF(ring, x) returns a pointer to  *		the buffer numbered x  *  * All ring indexes (head, cur, tail) should always move forward.  * To compute the next index in a circular ring you can use  *	i = nm_ring_next(ring, i);  *  * To ease porting apps from pcap to netmap we supply a few fuctions  * that can be called to open, close, read and write on netmap in a way  * similar to libpcap. Note that the read/write function depend on  * an ioctl()/select()/poll() being issued to refill rings or push  * packets out.  *  * In order to use these, include #define NETMAP_WITH_LIBS  * in the source file that invokes these functions.  */
 end_comment
 
 begin_ifndef
@@ -2301,6 +2301,12 @@ argument_list|,
 name|ifname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+literal|0
+condition|)
 name|errno
 operator|=
 name|EINVAL

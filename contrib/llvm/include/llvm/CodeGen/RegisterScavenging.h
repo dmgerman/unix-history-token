@@ -161,7 +161,7 @@ argument_list|)
 operator|,
 name|Restore
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// A spill slot used for scavenging a register post register allocation.
@@ -215,7 +215,7 @@ argument_list|()
 operator|:
 name|MBB
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|NumPhysRegs
@@ -329,7 +329,7 @@ name|MachineBasicBlock
 operator|::
 name|iterator
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 condition|)
 name|Tracking

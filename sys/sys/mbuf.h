@@ -731,12 +731,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_FLOWID
+name|M_UNUSED_8
 value|0x00000100
 end_define
 
 begin_comment
-comment|/* deprecated: flowid is valid */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -903,7 +903,7 @@ define|#
 directive|define
 name|M_COPYFLAGS
 define|\
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_PROMISC|M_VLANTAG|M_FLOWID| \      M_PROTOFLAGS)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_PROMISC|M_VLANTAG| \      M_PROTOFLAGS)
 end_define
 
 begin_comment
@@ -915,7 +915,7 @@ define|#
 directive|define
 name|M_FLAG_BITS
 define|\
-value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_BCAST\6M_MCAST" \     "\7M_PROMISC\10M_VLANTAG\11M_FLOWID"
+value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_BCAST\6M_MCAST" \     "\7M_PROMISC\10M_VLANTAG"
 end_define
 
 begin_define
@@ -1656,7 +1656,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Flags indicating checksum, segmentation and other offload work to be  * done, or already done, by hardware or lower layers.  It is split into  * separate inbound and outbound flags.  *  * Outbound flags that are set by upper protocol layers requesting lower  * layers, or ideally the hardware, to perform these offloading tasks.  * For outbound packets this field and its flags can be directly tested  * against if_data.ifi_hwassist.  */
+comment|/*  * Flags indicating checksum, segmentation and other offload work to be  * done, or already done, by hardware or lower layers.  It is split into  * separate inbound and outbound flags.  *  * Outbound flags that are set by upper protocol layers requesting lower  * layers, or ideally the hardware, to perform these offloading tasks.  * For outbound packets this field and its flags can be directly tested  * against ifnet if_hwassist.  */
 end_comment
 
 begin_define
@@ -2978,7 +2978,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|__inline
-name|void
+name|int
 name|m_clget
 parameter_list|(
 name|struct
@@ -3063,6 +3063,15 @@ name|how
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_EXT
+operator|)
+return|;
 block|}
 end_function
 
@@ -3358,6 +3367,11 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+while|while
+condition|(
+name|m
+condition|)
+block|{
 name|m
 operator|->
 name|m_flags
@@ -3365,6 +3379,13 @@ operator|&=
 operator|~
 name|M_PROTOFLAGS
 expr_stmt|;
+name|m
+operator|=
+name|m
+operator|->
+name|m_next
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3546,54 +3567,6 @@ value|KASSERT((((struct mbuf *)m)->m_flags& 0) == 0,			\ 	    ("%s: attempted us
 end_define
 
 begin_comment
-comment|/*  * Set the m_data pointer of a newly-allocated mbuf (m_get/MGET) to place an  * object of the specified size at the end of the mbuf, longword aligned.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_ALIGN
-parameter_list|(
-name|m
-parameter_list|,
-name|len
-parameter_list|)
-value|do {						\ 	KASSERT(!((m)->m_flags& (M_PKTHDR|M_EXT)),			\ 		("%s: M_ALIGN not normal mbuf", __func__));		\ 	KASSERT((m)->m_data == (m)->m_dat,				\ 		("%s: M_ALIGN not a virgin mbuf", __func__));		\ 	(m)->m_data += (MLEN - (len))& ~(sizeof(long) - 1);		\ } while (0)
-end_define
-
-begin_comment
-comment|/*  * As above, for mbufs allocated with m_gethdr/MGETHDR or initialized by  * M_DUP/MOVE_PKTHDR.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MH_ALIGN
-parameter_list|(
-name|m
-parameter_list|,
-name|len
-parameter_list|)
-value|do {						\ 	KASSERT((m)->m_flags& M_PKTHDR&& !((m)->m_flags& M_EXT),	\ 		("%s: MH_ALIGN not PKTHDR mbuf", __func__));		\ 	KASSERT((m)->m_data == (m)->m_pktdat,				\ 		("%s: MH_ALIGN not a virgin mbuf", __func__));		\ 	(m)->m_data += (MHLEN - (len))& ~(sizeof(long) - 1);		\ } while (0)
-end_define
-
-begin_comment
-comment|/*  * As above, for mbuf with external storage.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MEXT_ALIGN
-parameter_list|(
-name|m
-parameter_list|,
-name|len
-parameter_list|)
-value|do {						\ 	KASSERT((m)->m_flags& M_EXT,					\ 		("%s: MEXT_ALIGN not an M_EXT mbuf", __func__));	\ 	KASSERT((m)->m_data == (m)->m_ext.ext_buf,			\ 		("%s: MEXT_ALIGN not a virgin mbuf", __func__));	\ 	(m)->m_data += ((m)->m_ext.ext_size - (len))&			\ 	    ~(sizeof(long) - 1); 					\ } while (0)
-end_define
-
-begin_comment
 comment|/*  * Return the address of the start of the buffer associated with an mbuf,  * handling external storage, packet-header mbufs, and regular data mbufs.  */
 end_comment
 
@@ -3621,6 +3594,122 @@ name|m
 parameter_list|)
 define|\
 value|(((m)->m_flags& M_EXT) ? (m)->m_ext.ext_size :			\ 	 ((m)->m_flags& M_PKTHDR) ? MHLEN :				\ 	 MLEN)
+end_define
+
+begin_comment
+comment|/*  * Set the m_data pointer of a newly allocated mbuf to place an object of the  * specified size at the end of the mbuf, longword aligned.  *  * NB: Historically, we had M_ALIGN(), MH_ALIGN(), and MEXT_ALIGN() as  * separate macros, each asserting that it was called at the proper moment.  * This required callers to themselves test the storage type and call the  * right one.  Rather than require callers to be aware of those layout  * decisions, we centralize here.  */
+end_comment
+
+begin_function
+unit|static
+name|__inline
+name|void
+name|m_align
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+specifier|const
+name|char
+modifier|*
+name|msg
+init|=
+literal|"%s: not a virgin mbuf"
+decl_stmt|;
+endif|#
+directive|endif
+name|int
+name|adjust
+decl_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|m_data
+operator|==
+name|M_START
+argument_list|(
+name|m
+argument_list|)
+argument_list|,
+operator|(
+name|msg
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|adjust
+operator|=
+name|M_SIZE
+argument_list|(
+name|m
+argument_list|)
+operator|-
+name|len
+expr_stmt|;
+name|m
+operator|->
+name|m_data
+operator|+=
+name|adjust
+operator|&
+operator|~
+operator|(
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|M_ALIGN
+parameter_list|(
+name|m
+parameter_list|,
+name|len
+parameter_list|)
+value|m_align(m, len)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MH_ALIGN
+parameter_list|(
+name|m
+parameter_list|,
+name|len
+parameter_list|)
+value|m_align(m, len)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEXT_ALIGN
+parameter_list|(
+name|m
+parameter_list|,
+name|len
+parameter_list|)
+value|m_align(m, len)
 end_define
 
 begin_comment
@@ -3717,7 +3806,7 @@ value|m_copym((m), (o), (l), M_NOWAIT)
 end_define
 
 begin_decl_stmt
-unit|extern
+specifier|extern
 name|int
 name|max_datalen
 decl_stmt|;
@@ -3780,19 +3869,6 @@ end_struct_decl
 begin_function_decl
 name|void
 name|m_adj
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|m_align
 parameter_list|(
 name|struct
 name|mbuf
@@ -3998,31 +4074,6 @@ begin_function_decl
 name|struct
 name|mbuf
 modifier|*
-name|m_copymdata
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
 name|m_copypacket
 parameter_list|(
 name|struct
@@ -4088,6 +4139,8 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)

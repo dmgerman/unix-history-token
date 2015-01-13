@@ -179,6 +179,16 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__NetBSD__
+name|atf_tc_expect_fail
+argument_list|(
+literal|"fails on FreeBSD and some variants of Linux"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* set of "white space" symbols from isspace(3) */
 name|c
 operator|=

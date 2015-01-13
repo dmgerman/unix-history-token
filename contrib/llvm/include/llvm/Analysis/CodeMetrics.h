@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CallSite.h"
+file|"llvm/IR/CallSite.h"
 end_include
 
 begin_decl_stmt

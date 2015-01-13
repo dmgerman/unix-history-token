@@ -598,7 +598,7 @@ name|sb_cc
 operator|=
 name|sb
 operator|->
-name|sb_cc
+name|sb_ccc
 expr_stmt|;
 name|xsb
 operator|->

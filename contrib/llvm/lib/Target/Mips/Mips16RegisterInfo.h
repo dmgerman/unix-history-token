@@ -94,6 +94,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|requiresFrameIndexScavenging
@@ -101,6 +102,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|useFPForScavengingIndex
@@ -108,6 +110,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|saveScavengerRegister
@@ -123,8 +126,8 @@ argument_list|,
 argument|unsigned Reg
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -133,10 +136,10 @@ argument_list|(
 argument|unsigned Size
 argument_list|)
 specifier|const
+name|override
 block|;
 name|private
 operator|:
-name|virtual
 name|void
 name|eliminateFI
 argument_list|(
@@ -151,6 +154,7 @@ argument_list|,
 argument|int64_t SPOffset
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

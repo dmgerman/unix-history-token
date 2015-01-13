@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -120,16 +126,6 @@ include|#
 directive|include
 file|<string>
 end_include
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|BumpPtrAllocator
-decl_stmt|;
-block|}
-end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -192,7 +188,7 @@ argument_list|()
 operator|:
 name|R
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|RegionOffset
@@ -638,6 +634,7 @@ operator|*
 name|getMemRegionManager
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Mgr
@@ -649,6 +646,7 @@ name|bool
 name|isBoundable
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -660,6 +658,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -796,6 +795,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|dumpToStream
@@ -803,6 +803,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|CodeTextRegion
@@ -928,6 +929,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -984,6 +986,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -1038,6 +1041,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -1094,6 +1098,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -1150,6 +1155,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -1232,6 +1238,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -1304,6 +1311,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -1369,6 +1377,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -1459,14 +1468,15 @@ operator|*
 name|getMemRegionManager
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isSubRegionOf
 argument_list|(
 argument|const MemRegion* R
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -1556,6 +1566,7 @@ name|bool
 name|isBoundable
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -1567,6 +1578,7 @@ argument_list|(
 argument|SValBuilder&svalBuilder
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|Profile
@@ -1574,6 +1586,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|void
@@ -1594,6 +1607,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -1622,10 +1636,10 @@ name|SubRegion
 block|{
 name|public
 operator|:
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -1674,6 +1688,7 @@ name|bool
 name|isBoundable
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -1715,10 +1730,10 @@ name|TypedRegion
 block|{
 name|public
 operator|:
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -1746,11 +1761,11 @@ specifier|const
 operator|=
 literal|0
 block|;
-name|virtual
 name|QualType
 name|getLocationType
 argument_list|()
 specifier|const
+name|override
 block|{
 comment|// FIXME: We can possibly optimize this later to cache this value.
 name|QualType
@@ -1830,6 +1845,7 @@ argument_list|(
 argument|SValBuilder&svalBuilder
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -1866,10 +1882,10 @@ name|TypedRegion
 block|{
 name|public
 operator|:
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -1893,6 +1909,7 @@ name|bool
 name|isBoundable
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -1987,6 +2004,7 @@ name|QualType
 name|getLocationType
 argument_list|()
 specifier|const
+name|override
 block|{
 specifier|const
 name|ASTContext
@@ -2060,13 +2078,13 @@ return|return
 name|FD
 return|;
 block|}
-name|virtual
 name|void
 name|dumpToStream
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|Profile
@@ -2074,6 +2092,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|void
@@ -2180,6 +2199,7 @@ name|QualType
 name|getLocationType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|locTy
@@ -2213,6 +2233,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|Profile
@@ -2220,6 +2241,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|void
@@ -2338,12 +2360,12 @@ argument_list|)
 block|,
 name|ReferencedVars
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|OriginalVars
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|public
@@ -2377,6 +2399,7 @@ name|QualType
 name|getLocationType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|BC
@@ -2484,7 +2507,7 @@ argument_list|(
 operator|(
 name|R
 operator|==
-literal|0
+name|nullptr
 operator|)
 operator|==
 operator|(
@@ -2492,7 +2515,7 @@ name|I
 operator|.
 name|R
 operator|==
-literal|0
+name|nullptr
 operator|)
 argument_list|)
 block|;
@@ -2520,7 +2543,7 @@ argument_list|(
 operator|(
 name|R
 operator|==
-literal|0
+name|nullptr
 operator|)
 operator|==
 operator|(
@@ -2528,7 +2551,7 @@ name|I
 operator|.
 name|R
 operator|==
-literal|0
+name|nullptr
 operator|)
 argument_list|)
 block|;
@@ -2581,13 +2604,13 @@ name|referenced_vars_end
 argument_list|()
 specifier|const
 block|;
-name|virtual
 name|void
 name|dumpToStream
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|Profile
@@ -2595,6 +2618,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|void
@@ -2714,6 +2738,7 @@ name|bool
 name|isBoundable
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -2725,6 +2750,7 @@ argument_list|(
 argument|SValBuilder&svalBuilder
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|Profile
@@ -2732,6 +2758,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|void
@@ -2750,6 +2777,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -2850,6 +2878,7 @@ name|QualType
 name|getValueType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Str
@@ -2864,11 +2893,13 @@ argument_list|(
 argument|SValBuilder&svalBuilder
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isBoundable
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -2880,6 +2911,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
+name|override
 block|{
 name|ProfileRegion
 argument_list|(
@@ -2896,6 +2928,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -2996,6 +3029,7 @@ name|QualType
 name|getValueType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Str
@@ -3008,6 +3042,7 @@ name|bool
 name|isBoundable
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -3019,6 +3054,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
+name|override
 block|{
 name|ProfileRegion
 argument_list|(
@@ -3035,6 +3071,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -3126,6 +3163,7 @@ name|QualType
 name|getValueType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|CL
@@ -3138,6 +3176,7 @@ name|bool
 name|isBoundable
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|!
@@ -3153,6 +3192,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|dumpToStream
@@ -3160,6 +3200,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|CompoundLiteralExpr
@@ -3256,6 +3297,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -3347,6 +3389,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -3378,6 +3421,7 @@ name|QualType
 name|getValueType
 argument_list|()
 specifier|const
+name|override
 block|{
 comment|// FIXME: We can cache this if needed.
 return|return
@@ -3394,6 +3438,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -3415,6 +3460,7 @@ name|bool
 name|canPrintPrettyAsExpr
 argument_list|()
 specifier|const
+name|override
 block|;
 name|void
 name|printPrettyAsExpr
@@ -3422,6 +3468,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// CXXThisRegion - Represents the region for the implicit 'this' parameter
@@ -3489,6 +3536,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -3496,6 +3544,7 @@ name|QualType
 name|getValueType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|QualType
@@ -3512,6 +3561,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -3592,6 +3642,7 @@ name|QualType
 name|getValueType
 argument_list|()
 specifier|const
+name|override
 block|{
 comment|// FIXME: We can cache this if needed.
 return|return
@@ -3608,6 +3659,7 @@ argument_list|(
 argument|SValBuilder&svalBuilder
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|void
@@ -3655,11 +3707,13 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|canPrintPretty
 argument_list|()
 specifier|const
+name|override
 block|;
 name|void
 name|printPretty
@@ -3667,11 +3721,13 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|canPrintPrettyAsExpr
 argument_list|()
 specifier|const
+name|override
 block|;
 name|void
 name|printPrettyAsExpr
@@ -3679,6 +3735,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|; }
 block|;
 name|class
@@ -3738,11 +3795,13 @@ name|QualType
 name|getValueType
 argument_list|()
 specifier|const
+name|override
 block|;
 name|bool
 name|canPrintPrettyAsExpr
 argument_list|()
 specifier|const
+name|override
 block|;
 name|void
 name|printPrettyAsExpr
@@ -3750,6 +3809,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|dumpToStream
@@ -3757,6 +3817,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -3959,6 +4020,7 @@ name|QualType
 name|getValueType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|ElementType
@@ -3985,6 +4047,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|Profile
@@ -3992,6 +4055,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -4090,6 +4154,7 @@ name|QualType
 name|getValueType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Ex
@@ -4104,6 +4169,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|Profile
@@ -4111,6 +4177,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -4224,6 +4291,7 @@ name|QualType
 name|getValueType
 argument_list|()
 specifier|const
+name|override
 block|;
 name|void
 name|dumpToStream
@@ -4231,6 +4299,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|Profile
@@ -4238,6 +4307,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -4259,6 +4329,7 @@ name|bool
 name|canPrintPrettyAsExpr
 argument_list|()
 specifier|const
+name|override
 block|;
 name|void
 name|printPrettyAsExpr
@@ -4266,6 +4337,7 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|; }
 block|;
 name|template
@@ -4301,7 +4373,7 @@ return|return
 name|RT
 return|;
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|//===----------------------------------------------------------------------===//
@@ -4418,32 +4490,32 @@ argument_list|)
 block|,
 name|InternalGlobals
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|SystemGlobals
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|ImmutableGlobals
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|heap
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|unknown
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|code
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 operator|~
@@ -4505,8 +4577,7 @@ name|getGlobalsRegion
 argument_list|(
 argument|MemRegion::Kind K = MemRegion::GlobalInternalSpaceRegionKind
 argument_list|,
-argument|const CodeTextRegion *R =
-literal|0
+argument|const CodeTextRegion *R = nullptr
 argument_list|)
 block|;
 comment|/// getHeapRegion - Retrieve the memory region associated with the

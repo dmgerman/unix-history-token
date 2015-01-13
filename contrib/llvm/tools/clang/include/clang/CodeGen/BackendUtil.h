@@ -119,6 +119,9 @@ name|LangOptions
 operator|&
 name|LOpts
 argument_list|,
+name|StringRef
+name|TDesc
+argument_list|,
 name|llvm
 operator|::
 name|Module

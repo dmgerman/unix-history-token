@@ -524,9 +524,12 @@ comment|/// isDeclInScope - If 'Ctx' is a function/method, isDeclInScope returns
 comment|/// if 'D' is in Scope 'S', otherwise 'S' is ignored and isDeclInScope returns
 comment|/// true if 'D' belongs to the given declaration context.
 comment|///
-comment|/// \param ExplicitInstantiationOrSpecialization When true, we are checking
-comment|/// whether the declaration is in scope for the purposes of explicit template
-comment|/// instantiation or specialization. The default is false.
+comment|/// \param AllowInlineNamespace If \c true, we are checking whether a prior
+comment|///        declaration is in scope in a declaration that requires a prior
+comment|///        declaration (because it is either explicitly qualified or is a
+comment|///        template instantiation or specialization). In this case, a
+comment|///        declaration is in scope if it's in the inline namespace set of the
+comment|///        context.
 name|bool
 name|isDeclInScope
 argument_list|(
@@ -542,10 +545,10 @@ name|Scope
 operator|*
 name|S
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|bool
-name|ExplicitInstantiationOrSpecialization
+name|AllowInlineNamespace
 operator|=
 name|false
 argument_list|)

@@ -4098,13 +4098,15 @@ expr_stmt|;
 comment|/* Send more if we have any */
 if|if
 condition|(
+name|sbavail
+argument_list|(
+operator|&
 name|pcb
 operator|->
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 operator|>
 literal|0
 condition|)
@@ -7337,13 +7339,15 @@ name|rt
 operator|->
 name|num_pkts
 operator|&&
+name|sbavail
+argument_list|(
+operator|&
 name|pcb
 operator|->
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 operator|>
 literal|0
 condition|)

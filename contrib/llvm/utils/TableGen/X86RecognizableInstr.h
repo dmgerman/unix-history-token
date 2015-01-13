@@ -127,9 +127,13 @@ name|Record
 modifier|*
 name|Rec
 decl_stmt|;
-comment|/// The prefix field from the record
+comment|/// The OpPrefix field from the record
 name|uint8_t
-name|Prefix
+name|OpPrefix
+decl_stmt|;
+comment|/// The OpMap field from the record
+name|uint8_t
+name|OpMap
 decl_stmt|;
 comment|/// The opcode field from the record; this is the opcode used in the Intel
 comment|/// encoding and therefore distinct from the UID
@@ -140,13 +144,13 @@ comment|/// The form field from the record
 name|uint8_t
 name|Form
 decl_stmt|;
-comment|/// The segment override field from the record
+comment|// The encoding field from the record
 name|uint8_t
-name|SegOvr
+name|Encoding
 decl_stmt|;
-comment|/// The hasOpSizePrefix field from the record
-name|bool
-name|HasOpSizePrefix
+comment|/// The OpSize field from the record
+name|uint8_t
+name|OpSize
 decl_stmt|;
 comment|/// The hasAdSizePrefix field from the record
 name|bool
@@ -156,17 +160,13 @@ comment|/// The hasREX_WPrefix field from the record
 name|bool
 name|HasREX_WPrefix
 decl_stmt|;
-comment|/// The hasVEXPrefix field from the record
+comment|/// The hasVEX_4V field from the record
 name|bool
-name|HasVEXPrefix
+name|HasVEX_4V
 decl_stmt|;
-comment|/// The hasVEX_4VPrefix field from the record
+comment|/// The hasVEX_4VOp3 field from the record
 name|bool
-name|HasVEX_4VPrefix
-decl_stmt|;
-comment|/// The hasVEX_4VOp3Prefix field from the record
-name|bool
-name|HasVEX_4VOp3Prefix
+name|HasVEX_4VOp3
 decl_stmt|;
 comment|/// The hasVEX_WPrefix field from the record
 name|bool
@@ -184,10 +184,6 @@ comment|/// The ignoreVEX_L field from the record
 name|bool
 name|IgnoresVEX_L
 decl_stmt|;
-comment|/// The hasEVEXPrefix field from the record
-name|bool
-name|HasEVEXPrefix
-decl_stmt|;
 comment|/// The hasEVEX_L2Prefix field from the record
 name|bool
 name|HasEVEX_L2Prefix
@@ -204,13 +200,17 @@ comment|/// The hasEVEX_B field from the record
 name|bool
 name|HasEVEX_B
 decl_stmt|;
-comment|/// The hasLockPrefix field from the record
-name|bool
-name|HasLockPrefix
-decl_stmt|;
-comment|/// The isCodeGenOnly filed from the record
+comment|/// The isCodeGenOnly field from the record
 name|bool
 name|IsCodeGenOnly
+decl_stmt|;
+comment|/// The ForceDisassemble field from the record
+name|bool
+name|ForceDisassemble
+decl_stmt|;
+comment|// The CD8_Scale field from the record
+name|uint8_t
+name|CD8_Scale
 decl_stmt|;
 comment|// Whether the instruction has the predicate "In64BitMode"
 name|bool
@@ -232,15 +232,6 @@ operator|::
 name|string
 name|AsmString
 expr_stmt|;
-comment|/// Indicates whether the instruction is SSE
-name|bool
-name|IsSSE
-decl_stmt|;
-comment|/// Indicates whether the instruction has FR operands - MOVs with FR operands
-comment|/// are typically ignored
-name|bool
-name|HasFROperands
-decl_stmt|;
 comment|/// Indicates whether the instruction should be emitted into the decode
 comment|/// tables; regardless, it will be emitted into the instruction info table
 name|bool
@@ -276,56 +267,17 @@ name|insnContext
 argument_list|()
 specifier|const
 expr_stmt|;
-enum|enum
-name|filter_ret
-block|{
-name|FILTER_STRONG
-block|,
-comment|// instruction has no place in the instruction tables
-name|FILTER_WEAK
-block|,
-comment|// instruction may conflict, and should be eliminated if
-comment|// it does
-name|FILTER_NORMAL
-comment|// instruction should have high priority and generate an
-comment|// error if it conflcits with any other FILTER_NORMAL
-comment|// instruction
-block|}
-enum|;
-comment|/// filter - Determines whether the instruction should be decodable.  Some
-comment|///   instructions are pure intrinsics and use unencodable operands; many
-comment|///   synthetic instructions are duplicates of other instructions; other
-comment|///   instructions only differ in the logical way in which they are used, and
-comment|///   have the same decoding.  Because these would cause decode conflicts,
-comment|///   they must be filtered out.
-comment|///
-comment|/// @return - The degree of filtering to be applied (see filter_ret).
-name|filter_ret
-name|filter
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// hasFROperands - Returns true if any operand is a FR operand.
-name|bool
-name|hasFROperands
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// typeFromString - Translates an operand type from the string provided in
 comment|///   the LLVM tables to an OperandType for use in the operand specifier.
 comment|///
 comment|/// @param s              - The string, as extracted by calling Rec->getName()
 comment|///                         on a CodeGenInstruction::OperandInfo.
-comment|/// @param isSSE          - Indicates whether the instruction is an SSE
-comment|///                         instruction.  For SSE instructions, immediates are
-comment|///                         fixed-size rather than being affected by the
-comment|///                         mandatory OpSize prefix.
 comment|/// @param hasREX_WPrefix - Indicates whether the instruction has a REX.W
 comment|///                         prefix.  If it does, 32-bit register operands stay
 comment|///                         32-bit regardless of the operand size.
-comment|/// @param hasOpSizePrefix  Indicates whether the instruction has an OpSize
-comment|///                         prefix.  If it does not, then 16-bit register
-comment|///                         operands stay 16-bit.
+comment|/// @param OpSize           Indicates the operand size of the instruction.
+comment|///                         If register size does not match OpSize, then
+comment|///                         register sizes keep their size.
 comment|/// @return               - The operand's type.
 specifier|static
 name|OperandType
@@ -339,24 +291,20 @@ operator|&
 name|s
 argument_list|,
 name|bool
-name|isSSE
-argument_list|,
-name|bool
 name|hasREX_WPrefix
 argument_list|,
-name|bool
-name|hasOpSizePrefix
+name|uint8_t
+name|OpSize
 argument_list|)
 decl_stmt|;
 comment|/// immediateEncodingFromString - Translates an immediate encoding from the
 comment|///   string provided in the LLVM tables to an OperandEncoding for use in
 comment|///   the operand specifier.
 comment|///
-comment|/// @param s                - See typeFromString().
-comment|/// @param hasOpSizePrefix  - Indicates whether the instruction has an OpSize
-comment|///                           prefix.  If it does not, then 16-bit immediate
-comment|///                           operands stay 16-bit.
-comment|/// @return                 - The operand's encoding.
+comment|/// @param s       - See typeFromString().
+comment|/// @param OpSize  - Indicates whether this is an OpSize16 instruction.
+comment|///                  If it is not, then 16-bit immediate operands stay 16-bit.
+comment|/// @return        - The operand's encoding.
 specifier|static
 name|OperandEncoding
 name|immediateEncodingFromString
@@ -368,8 +316,8 @@ name|string
 operator|&
 name|s
 argument_list|,
-name|bool
-name|hasOpSizePrefix
+name|uint8_t
+name|OpSize
 argument_list|)
 decl_stmt|;
 comment|/// rmRegisterEncodingFromString - Like immediateEncodingFromString, but
@@ -385,8 +333,8 @@ name|string
 operator|&
 name|s
 argument_list|,
-name|bool
-name|hasOpSizePrefix
+name|uint8_t
+name|OpSize
 argument_list|)
 decl_stmt|;
 comment|/// rmRegisterEncodingFromString - Like immediateEncodingFromString, but
@@ -402,8 +350,8 @@ name|string
 operator|&
 name|s
 argument_list|,
-name|bool
-name|hasOpSizePrefix
+name|uint8_t
+name|OpSize
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -417,8 +365,8 @@ name|string
 operator|&
 name|s
 argument_list|,
-name|bool
-name|hasOpSizePrefix
+name|uint8_t
+name|OpSize
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -432,8 +380,8 @@ name|string
 operator|&
 name|s
 argument_list|,
-name|bool
-name|hasOpSizePrefix
+name|uint8_t
+name|OpSize
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -447,8 +395,8 @@ name|string
 operator|&
 name|s
 argument_list|,
-name|bool
-name|hasOpSizePrefix
+name|uint8_t
+name|OpSize
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -462,8 +410,8 @@ name|string
 operator|&
 name|s
 argument_list|,
-name|bool
-name|HasOpSizePrefix
+name|uint8_t
+name|OpSize
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -477,10 +425,19 @@ name|string
 operator|&
 name|s
 argument_list|,
-name|bool
-name|HasOpSizePrefix
+name|uint8_t
+name|OpSize
 argument_list|)
 decl_stmt|;
+comment|/// \brief Adjust the encoding type for an operand based on the instruction.
+name|void
+name|adjustOperandEncoding
+parameter_list|(
+name|OperandEncoding
+modifier|&
+name|encoding
+parameter_list|)
+function_decl|;
 comment|/// handleOperand - Converts a single operand from the LLVM table format to
 comment|///   the emitted table format, handling any duplicate operands it encounters
 comment|///   and then one non-duplicate.
@@ -533,8 +490,8 @@ operator|::
 name|string
 operator|&
 operator|,
-name|bool
-name|hasOpSizePrefix
+name|uint8_t
+name|OpSize
 operator|)
 argument_list|)
 decl_stmt|;
@@ -559,15 +516,9 @@ block|}
 comment|/// emitInstructionSpecifier - Loads the instruction specifier for the current
 comment|///   instruction into a DisassemblerTables.
 comment|///
-comment|/// \param tables The DisassemblerTables to populate with the specifier for
-comment|///               the current instruction.
 name|void
 name|emitInstructionSpecifier
-parameter_list|(
-name|DisassemblerTables
-modifier|&
-name|tables
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// emitDecodePath - Populates the proper fields in the decode tables
 comment|///   corresponding to the decode paths for this instruction.

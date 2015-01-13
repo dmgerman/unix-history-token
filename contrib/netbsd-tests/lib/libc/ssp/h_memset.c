@@ -89,9 +89,23 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+return|return
+name|b
+index|[
+literal|0
+index|]
+return|;
+comment|/* keeps optimizer from zapping the call to memset() */
+else|#
+directive|else
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 

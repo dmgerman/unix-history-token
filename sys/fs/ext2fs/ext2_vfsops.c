@@ -5143,7 +5143,16 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	ext2_print_inode(ip); */
+ifdef|#
+directive|ifdef
+name|EXT2FS_DEBUG
+name|ext2_print_inode
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|bqrelse
 argument_list|(
 name|bp

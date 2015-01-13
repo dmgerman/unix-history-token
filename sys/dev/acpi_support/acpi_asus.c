@@ -1713,7 +1713,7 @@ name|int
 name|method
 decl_stmt|;
 name|int
-name|flags
+name|flag_anybody
 decl_stmt|;
 block|}
 name|acpi_asus_sysctls
@@ -1737,13 +1737,9 @@ operator|=
 literal|"state of the lcd backlight"
 block|,
 operator|.
-name|flags
+name|flag_anybody
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_ANYBODY
+literal|1
 block|}
 block|,
 block|{
@@ -1763,13 +1759,9 @@ operator|=
 literal|"brightness of the lcd panel"
 block|,
 operator|.
-name|flags
+name|flag_anybody
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_ANYBODY
+literal|1
 block|}
 block|,
 block|{
@@ -1787,14 +1779,7 @@ operator|.
 name|description
 operator|=
 literal|"display output state"
-block|,
-operator|.
-name|flags
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -1811,14 +1796,7 @@ operator|.
 name|description
 operator|=
 literal|"internal camera state"
-block|,
-operator|.
-name|flags
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|,   	}
 block|,
 block|{
 operator|.
@@ -1835,14 +1813,7 @@ operator|.
 name|description
 operator|=
 literal|"internal card reader state"
-block|,
-operator|.
-name|flags
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -1859,14 +1830,7 @@ operator|.
 name|description
 operator|=
 literal|"wireless lan state"
-block|,
-operator|.
-name|flags
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -3364,6 +3328,18 @@ name|method
 argument_list|)
 condition|)
 continue|continue;
+if|if
+condition|(
+name|acpi_asus_sysctls
+index|[
+name|i
+index|]
+operator|.
+name|flag_anybody
+operator|!=
+literal|0
+condition|)
+block|{
 name|SYSCTL_ADD_PROC
 argument_list|(
 operator|&
@@ -3387,12 +3363,11 @@ index|]
 operator|.
 name|name
 argument_list|,
-name|acpi_asus_sysctls
-index|[
-name|i
-index|]
-operator|.
-name|flags
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_ANYBODY
 argument_list|,
 name|sc
 argument_list|,
@@ -3410,6 +3385,53 @@ operator|.
 name|description
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|SYSCTL_ADD_PROC
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sysctl_ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|sc
+operator|->
+name|sysctl_tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|acpi_asus_sysctls
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+name|sc
+argument_list|,
+name|i
+argument_list|,
+name|acpi_asus_sysctl
+argument_list|,
+literal|"I"
+argument_list|,
+name|acpi_asus_sysctls
+index|[
+name|i
+index|]
+operator|.
+name|description
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* Attach leds */
 if|if

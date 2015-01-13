@@ -761,6 +761,10 @@ name|int
 name|vpd_cap_addr
 decl_stmt|;
 name|unsigned
+name|int
+name|mps
+decl_stmt|;
+name|unsigned
 name|short
 name|speed
 decl_stmt|;

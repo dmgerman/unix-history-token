@@ -71,7 +71,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Inetd - Internet super-server  *  * This program invokes all internet services as needed.  Connection-oriented  * services are invoked each time a connection is made, by creating a process.  * This process is passed the connection as file descriptor 0 and is expected  * to do a getpeername to find out the source host and port.  *  * Datagram oriented services are invoked when a datagram  * arrives; a process is created and passed a pending message  * on file descriptor 0.  Datagram servers may either connect  * to their peer, freeing up the original socket for inetd  * to receive further messages on, or ``take over the socket'',  * processing all arriving datagrams and, eventually, timing  * out.	 The first type of server is said to be ``multi-threaded'';  * the second type of server ``single-threaded''.  *  * Inetd uses a configuration file which is read at startup  * and, possibly, at some later time in response to a hangup signal.  * The configuration file is ``free format'' with fields given in the  * order shown below.  Continuation lines for an entry must begin with  * a space or tab.  All fields must be present in each entry.  *  *	service name			must be in /etc/services  *					or name a tcpmux service   *					or specify a unix domain socket  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			tcp[4][6][/faith], udp[4][6], unix  *	wait/nowait			single-threaded/multi-threaded  *	user[:group][/login-class]	user/group/login-class to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS (20)  *  * TCP services without official port numbers are handled with the  * RFC1078-based tcpmux internal service. Tcpmux listens on port 1 for  * requests. When a connection is made from a foreign host, the service  * requested is passed to tcpmux, which looks it up in the servtab list  * and returns the proper entry for the service. Tcpmux returns a  * negative reply if the service doesn't exist, otherwise the invoked  * server is expected to return the positive reply if the service type in  * inetd.conf file has the prefix "tcpmux/". If the service type has the  * prefix "tcpmux/+", tcpmux will return the positive reply for the  * process; this is for compatibility with older server code, and also  * allows you to invoke programs that use stdin/stdout without putting any  * special server code in them. Services that use tcpmux are "nowait"  * because they do not have a well-known port and hence cannot listen  * for new requests.  *  * For RPC services  *	service name/version		must be in /etc/rpc  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			rpc/tcp[4][6], rpc/udp[4][6]  *	wait/nowait			single-threaded/multi-threaded  *	user[:group][/login-class]	user/group/login-class to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS  *  * Comment lines are indicated by a `#' in column 1.  *  * #ifdef IPSEC  * Comment lines that start with "#@" denote IPsec policy string, as described  * in ipsec_set_policy(3).  This will affect all the following items in  * inetd.conf(8).  To reset the policy, just use "#@" line.  By default,  * there's no IPsec policy.  * #endif  */
+comment|/*  * Inetd - Internet super-server  *  * This program invokes all internet services as needed.  Connection-oriented  * services are invoked each time a connection is made, by creating a process.  * This process is passed the connection as file descriptor 0 and is expected  * to do a getpeername to find out the source host and port.  *  * Datagram oriented services are invoked when a datagram  * arrives; a process is created and passed a pending message  * on file descriptor 0.  Datagram servers may either connect  * to their peer, freeing up the original socket for inetd  * to receive further messages on, or ``take over the socket'',  * processing all arriving datagrams and, eventually, timing  * out.	 The first type of server is said to be ``multi-threaded'';  * the second type of server ``single-threaded''.  *  * Inetd uses a configuration file which is read at startup  * and, possibly, at some later time in response to a hangup signal.  * The configuration file is ``free format'' with fields given in the  * order shown below.  Continuation lines for an entry must begin with  * a space or tab.  All fields must be present in each entry.  *  *	service name			must be in /etc/services  *					or name a tcpmux service   *					or specify a unix domain socket  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			tcp[4][6], udp[4][6], unix  *	wait/nowait			single-threaded/multi-threaded  *	user[:group][/login-class]	user/group/login-class to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS (20)  *  * TCP services without official port numbers are handled with the  * RFC1078-based tcpmux internal service. Tcpmux listens on port 1 for  * requests. When a connection is made from a foreign host, the service  * requested is passed to tcpmux, which looks it up in the servtab list  * and returns the proper entry for the service. Tcpmux returns a  * negative reply if the service doesn't exist, otherwise the invoked  * server is expected to return the positive reply if the service type in  * inetd.conf file has the prefix "tcpmux/". If the service type has the  * prefix "tcpmux/+", tcpmux will return the positive reply for the  * process; this is for compatibility with older server code, and also  * allows you to invoke programs that use stdin/stdout without putting any  * special server code in them. Services that use tcpmux are "nowait"  * because they do not have a well-known port and hence cannot listen  * for new requests.  *  * For RPC services  *	service name/version		must be in /etc/rpc  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			rpc/tcp[4][6], rpc/udp[4][6]  *	wait/nowait			single-threaded/multi-threaded  *	user[:group][/login-class]	user/group/login-class to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS  *  * Comment lines are indicated by a `#' in column 1.  *  * #ifdef IPSEC  * Comment lines that start with "#@" denote IPsec policy string, as described  * in ipsec_set_policy(3).  This will affect all the following items in  * inetd.conf(8).  To reset the policy, just use "#@" line.  By default,  * there's no IPsec policy.  * #endif  */
 end_comment
 
 begin_include
@@ -6738,53 +6738,6 @@ directive|undef
 name|turnon
 ifdef|#
 directive|ifdef
-name|IPV6_FAITH
-if|if
-condition|(
-name|sep
-operator|->
-name|se_type
-operator|==
-name|FAITH_TYPE
-condition|)
-block|{
-if|if
-condition|(
-name|setsockopt
-argument_list|(
-name|sep
-operator|->
-name|se_fd
-argument_list|,
-name|IPPROTO_IPV6
-argument_list|,
-name|IPV6_FAITH
-argument_list|,
-operator|&
-name|on
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|on
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"setsockopt (IPV6_FAITH): %m"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|IPSEC
 name|ipsecsetup
 argument_list|(
@@ -9215,10 +9168,8 @@ condition|(
 name|arg
 operator|!=
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
+operator|(
 name|strcmp
 argument_list|(
 name|arg
@@ -9227,13 +9178,19 @@ literal|"faith"
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
-name|sep
-operator|->
-name|se_type
-operator|=
-name|FAITH_TYPE
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"faith has been deprecated"
+argument_list|)
 expr_stmt|;
+goto|goto
+name|more
+goto|;
 block|}
 block|}
 else|else
@@ -9258,16 +9215,16 @@ operator|==
 literal|0
 condition|)
 block|{
-name|arg
-operator|+=
-literal|6
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"faith has been deprecated"
+argument_list|)
 expr_stmt|;
-name|sep
-operator|->
-name|se_type
-operator|=
-name|FAITH_TYPE
-expr_stmt|;
+goto|goto
+name|more
+goto|;
 block|}
 name|sep
 operator|->

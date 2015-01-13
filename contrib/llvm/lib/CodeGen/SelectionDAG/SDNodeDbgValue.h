@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/IR/DebugLoc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DebugLoc.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -155,6 +155,9 @@ name|MDNode
 modifier|*
 name|mdPtr
 decl_stmt|;
+name|bool
+name|IsIndirect
+decl_stmt|;
 name|uint64_t
 name|Offset
 decl_stmt|;
@@ -178,6 +181,8 @@ argument|SDNode *N
 argument_list|,
 argument|unsigned R
 argument_list|,
+argument|bool indir
+argument_list|,
 argument|uint64_t off
 argument_list|,
 argument|DebugLoc dl
@@ -188,6 +193,11 @@ block|:
 name|mdPtr
 argument_list|(
 name|mdP
+argument_list|)
+operator|,
+name|IsIndirect
+argument_list|(
+name|indir
 argument_list|)
 operator|,
 name|Offset
@@ -249,6 +259,11 @@ argument_list|(
 name|mdP
 argument_list|)
 operator|,
+name|IsIndirect
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Offset
 argument_list|(
 name|off
@@ -296,6 +311,11 @@ operator|:
 name|mdPtr
 argument_list|(
 name|mdP
+argument_list|)
+operator|,
+name|IsIndirect
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|Offset
@@ -424,6 +444,15 @@ return|return
 name|u
 operator|.
 name|FrameIx
+return|;
+block|}
+comment|// Returns whether this is an indirect value.
+name|bool
+name|isIndirect
+parameter_list|()
+block|{
+return|return
+name|IsIndirect
 return|;
 block|}
 comment|// Returns the offset.

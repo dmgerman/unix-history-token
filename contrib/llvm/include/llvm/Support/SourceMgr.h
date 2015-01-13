@@ -119,7 +119,7 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// SourceMgr - This owns the files read by a parser, handles include stacks,
+comment|/// This owns the files read by a parser, handles include stacks,
 comment|/// and handles diagnostic wrangling.
 name|class
 name|SourceMgr
@@ -136,9 +136,9 @@ block|,
 name|DK_Note
 block|}
 enum|;
-comment|/// DiagHandlerTy - Clients that want to handle their own diagnostics in a
-comment|/// custom way can register a function pointer+context as a diagnostic
-comment|/// handler.  It gets called each time PrintMessage is invoked.
+comment|/// Clients that want to handle their own diagnostics in a custom way can
+comment|/// register a function pointer+context as a diagnostic handler.
+comment|/// It gets called each time PrintMessage is invoked.
 typedef|typedef
 name|void
 function_decl|(
@@ -160,19 +160,18 @@ label|:
 struct|struct
 name|SrcBuffer
 block|{
-comment|/// Buffer - The memory buffer for the file.
+comment|/// The memory buffer for the file.
 name|MemoryBuffer
 modifier|*
 name|Buffer
 decl_stmt|;
-comment|/// IncludeLoc - This is the location of the parent include, or null if at
-comment|/// the top level.
+comment|/// This is the location of the parent include, or null if at the top level.
 name|SMLoc
 name|IncludeLoc
 decl_stmt|;
 block|}
 struct|;
-comment|/// Buffers - This is all of the buffers that we are reading from.
+comment|/// This is all of the buffers that we are reading from.
 name|std
 operator|::
 name|vector
@@ -181,8 +180,7 @@ name|SrcBuffer
 operator|>
 name|Buffers
 expr_stmt|;
-comment|// IncludeDirectories - This is the list of directories we should search for
-comment|// include files in.
+comment|// This is the list of directories we should search for include files in.
 name|std
 operator|::
 name|vector
@@ -193,8 +191,8 @@ name|string
 operator|>
 name|IncludeDirectories
 expr_stmt|;
-comment|/// LineNoCache - This is a cache for line number queries, its implementation
-comment|/// is really private to SourceMgr.cpp.
+comment|/// This is a cache for line number queries, its implementation is really
+comment|/// private to SourceMgr.cpp.
 name|mutable
 name|void
 modifier|*
@@ -207,6 +205,25 @@ name|void
 modifier|*
 name|DiagContext
 decl_stmt|;
+name|bool
+name|isValidBufferID
+argument_list|(
+name|unsigned
+name|i
+argument_list|)
+decl|const
+block|{
+return|return
+name|i
+operator|&&
+name|i
+operator|<=
+name|Buffers
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
 name|SourceMgr
 argument_list|(
 argument|const SourceMgr&
@@ -230,17 +247,17 @@ argument_list|()
 operator|:
 name|LineNoCache
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|DiagHandler
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|DiagContext
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 operator|~
@@ -268,8 +285,8 @@ operator|=
 name|Dirs
 expr_stmt|;
 block|}
-comment|/// setDiagHandler - Specify a diagnostic handler to be invoked every time
-comment|/// PrintMessage is called. Ctx is passed into the handler when it is invoked.
+comment|/// Specify a diagnostic handler to be invoked every time PrintMessage is
+comment|/// called. \p Ctx is passed into the handler when it is invoked.
 name|void
 name|setDiagHandler
 parameter_list|(
@@ -280,7 +297,7 @@ name|void
 modifier|*
 name|Ctx
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 name|DiagHandler
@@ -323,20 +340,18 @@ decl|const
 block|{
 name|assert
 argument_list|(
+name|isValidBufferID
+argument_list|(
 name|i
-operator|<
-name|Buffers
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Invalid Buffer ID!"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
 name|Buffers
 index|[
 name|i
+operator|-
+literal|1
 index|]
 return|;
 block|}
@@ -352,26 +367,24 @@ decl|const
 block|{
 name|assert
 argument_list|(
+name|isValidBufferID
+argument_list|(
 name|i
-operator|<
-name|Buffers
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Invalid Buffer ID!"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
 name|Buffers
 index|[
 name|i
+operator|-
+literal|1
 index|]
 operator|.
 name|Buffer
 return|;
 block|}
-name|size_t
+name|unsigned
 name|getNumBuffers
 argument_list|()
 specifier|const
@@ -381,6 +394,21 @@ name|Buffers
 operator|.
 name|size
 argument_list|()
+return|;
+block|}
+name|unsigned
+name|getMainFileID
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getNumBuffers
+argument_list|()
+argument_list|)
+block|;
+return|return
+literal|1
 return|;
 block|}
 name|SMLoc
@@ -393,28 +421,26 @@ decl|const
 block|{
 name|assert
 argument_list|(
+name|isValidBufferID
+argument_list|(
 name|i
-operator|<
-name|Buffers
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Invalid Buffer ID!"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
 name|Buffers
 index|[
 name|i
+operator|-
+literal|1
 index|]
 operator|.
 name|IncludeLoc
 return|;
 block|}
-comment|/// AddNewSourceBuffer - Add a new source buffer to this source manager.  This
-comment|/// takes ownership of the memory buffer.
-name|size_t
+comment|/// Add a new source buffer to this source manager. This takes ownership of
+comment|/// the memory buffer.
+name|unsigned
 name|AddNewSourceBuffer
 parameter_list|(
 name|MemoryBuffer
@@ -452,15 +478,15 @@ name|Buffers
 operator|.
 name|size
 argument_list|()
-operator|-
-literal|1
 return|;
 block|}
-comment|/// AddIncludeFile - Search for a file with the specified name in the current
-comment|/// directory or in one of the IncludeDirs.  If no file is found, this returns
-comment|/// ~0, otherwise it returns the buffer ID of the stacked file.
-comment|/// The full path to the included file can be found in IncludedFile.
-name|size_t
+comment|/// Search for a file with the specified name in the current directory or in
+comment|/// one of the IncludeDirs.
+comment|///
+comment|/// If no file is found, this returns 0, otherwise it returns the buffer ID
+comment|/// of the stacked file. The full path to the included file can be found in
+comment|/// \p IncludedFile.
+name|unsigned
 name|AddIncludeFile
 argument_list|(
 specifier|const
@@ -480,9 +506,10 @@ operator|&
 name|IncludedFile
 argument_list|)
 decl_stmt|;
-comment|/// FindBufferContainingLoc - Return the ID of the buffer containing the
-comment|/// specified location, returning -1 if not found.
-name|int
+comment|/// Return the ID of the buffer containing the specified location.
+comment|///
+comment|/// 0 is returned if the buffer is not found.
+name|unsigned
 name|FindBufferContainingLoc
 argument_list|(
 name|SMLoc
@@ -490,19 +517,18 @@ name|Loc
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// FindLineNumber - Find the line number for the specified location in the
-comment|/// specified file.  This is not a fast method.
+comment|/// Find the line number for the specified location in the specified file.
+comment|/// This is not a fast method.
 name|unsigned
 name|FindLineNumber
 argument_list|(
 name|SMLoc
 name|Loc
 argument_list|,
-name|int
+name|unsigned
 name|BufferID
 operator|=
-operator|-
-literal|1
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -517,8 +543,8 @@ operator|.
 name|first
 return|;
 block|}
-comment|/// getLineAndColumn - Find the line and column number for the specified
-comment|/// location in the specified file.  This is not a fast method.
+comment|/// Find the line and column number for the specified location in the
+comment|/// specified file. This is not a fast method.
 name|std
 operator|::
 name|pair
@@ -531,15 +557,14 @@ name|getLineAndColumn
 argument_list|(
 argument|SMLoc Loc
 argument_list|,
-argument|int BufferID = -
-literal|1
+argument|unsigned BufferID =
+literal|0
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// PrintMessage - Emit a message about the specified location with the
-comment|/// specified string.
+comment|/// Emit a message about the specified location with the specified string.
 comment|///
-comment|/// @param ShowColors - Display colored messages if output is a terminal and
+comment|/// \param ShowColors Display colored messages if output is a terminal and
 comment|/// the default error handler is used.
 name|void
 name|PrintMessage
@@ -620,10 +645,33 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// GetMessage - Return an SMDiagnostic at the specified location with the
-comment|/// specified string.
+comment|/// Emits a manually-constructed diagnostic to the given output stream.
 comment|///
-comment|/// @param Msg If non-null, the kind of message (e.g., "error") which is
+comment|/// \param ShowColors Display colored messages if output is a terminal and
+comment|/// the default error handler is used.
+name|void
+name|PrintMessage
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|SMDiagnostic
+operator|&
+name|Diagnostic
+argument_list|,
+name|bool
+name|ShowColors
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return an SMDiagnostic at the specified location with the specified
+comment|/// string.
+comment|///
+comment|/// \param Msg If non-null, the kind of message (e.g., "error") which is
 comment|/// prefixed to the message.
 name|SMDiagnostic
 name|GetMessage
@@ -657,12 +705,12 @@ name|None
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// PrintIncludeStack - Prints the names of included files and the line of the
-comment|/// file they were included from.  A diagnostic handler can use this before
-comment|/// printing its custom formatted message.
+comment|/// Prints the names of included files and the line of the file they were
+comment|/// included from. A diagnostic handler can use this before printing its
+comment|/// custom formatted message.
 comment|///
-comment|/// @param IncludeLoc - The line of the include.
-comment|/// @param OS the raw_ostream to print on.
+comment|/// \param IncludeLoc The location of the include.
+comment|/// \param OS the raw_ostream to print on.
 name|void
 name|PrintIncludeStack
 argument_list|(
@@ -860,11 +908,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// SMDiagnostic - Instances of this class encapsulate one diagnostic report,
+comment|/// Instances of this class encapsulate one diagnostic report, allowing
 end_comment
 
 begin_comment
-comment|/// allowing printing to a raw_ostream as a caret diagnostic.
+comment|/// printing to a raw_ostream as a caret diagnostic.
 end_comment
 
 begin_decl_stmt
@@ -932,7 +980,7 @@ argument_list|()
 operator|:
 name|SM
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|LineNo
@@ -962,7 +1010,7 @@ argument_list|)
 operator|:
 name|SM
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Filename

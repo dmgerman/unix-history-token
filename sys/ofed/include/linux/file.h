@@ -235,6 +235,7 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/* 	 * NOTE: We should only get here when the "fd" has not been 	 * installed, so no need to free the associated Linux file 	 * structure. 	 */
 name|fdclose
 argument_list|(
 name|curthread
@@ -246,6 +247,14 @@ argument_list|,
 name|file
 argument_list|,
 name|fd
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
+comment|/* drop extra reference */
+name|fdrop
+argument_list|(
+name|file
 argument_list|,
 name|curthread
 argument_list|)
@@ -326,6 +335,12 @@ operator|&
 name|linuxfileops
 argument_list|)
 expr_stmt|;
+comment|/* drop the extra reference */
+name|fput
+argument_list|(
+name|filp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -372,6 +387,14 @@ return|return
 operator|-
 name|error
 return|;
+comment|/* drop the extra reference */
+name|fdrop
+argument_list|(
+name|file
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 return|return
 name|fd
 return|;

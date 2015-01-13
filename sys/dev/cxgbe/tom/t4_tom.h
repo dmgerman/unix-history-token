@@ -15,12 +15,11 @@ directive|define
 name|__T4_TOM_H__
 end_define
 
-begin_define
-define|#
-directive|define
-name|KTR_CXGBE
-value|KTR_SPARE3
-end_define
+begin_include
+include|#
+directive|include
+file|<sys/vmem.h>
+end_include
 
 begin_define
 define|#
@@ -273,34 +272,15 @@ end_struct
 
 begin_struct
 struct|struct
-name|ppod_region
-block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|ppod_region
-argument_list|)
-name|link
-expr_stmt|;
-name|int
-name|used
-decl_stmt|;
-comment|/* # of pods used by this region */
-name|int
-name|free
-decl_stmt|;
-comment|/* # of contiguous pods free right after this region */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|ddp_buffer
 block|{
 name|uint32_t
 name|tag
 decl_stmt|;
 comment|/* includes color, page pod addr, and DDP page size */
+name|u_int
+name|ppod_addr
+decl_stmt|;
 name|int
 name|nppods
 decl_stmt|;
@@ -309,10 +289,6 @@ name|offset
 decl_stmt|;
 name|int
 name|len
-decl_stmt|;
-name|struct
-name|ppod_region
-name|ppod_region
 decl_stmt|;
 name|int
 name|npages
@@ -633,16 +609,6 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
-name|ppod_head
-argument_list|,
-name|ppod_region
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|clip_entry
@@ -713,24 +679,12 @@ name|int
 name|lctx_count
 decl_stmt|;
 comment|/* # of lctx in the hash table */
-name|struct
-name|mtx
-name|ppod_lock
+name|u_int
+name|ppod_start
 decl_stmt|;
-name|int
-name|nppods
-decl_stmt|;
-name|int
-name|nppods_free
-decl_stmt|;
-comment|/* # of available ppods */
-name|int
-name|nppods_free_head
-decl_stmt|;
-comment|/* # of available ppods at the begining */
-name|struct
-name|ppod_head
-name|ppods
+name|vmem_t
+modifier|*
+name|ppod_arena
 decl_stmt|;
 name|struct
 name|mtx

@@ -1390,6 +1390,9 @@ name|dev
 operator|->
 name|devclass
 decl_stmt|;
+name|int
+name|domain
+decl_stmt|;
 if|if
 condition|(
 name|dev
@@ -1613,6 +1616,45 @@ argument_list|,
 literal|"A"
 argument_list|,
 literal|"parent device"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bus_get_domain
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|domain
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|SYSCTL_ADD_INT
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|sysctl_ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|dev
+operator|->
+name|sysctl_tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"%domain"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+name|domain
+argument_list|,
+literal|"NUMA domain"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4852,7 +4894,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Register that a device driver has been deleted from a devclass  *  * Register that a device driver has been removed from a devclass.  * This is called by devclass_delete_driver to accomplish the  * recursive notification of all the children classes of busclass, as  * well as busclass.  Each layer will attempt to detach the driver  * from any devices that are children of the bus's devclass.  The function  * will return an error if a device fails to detach.  *   * We do a full search here of the devclass list at each iteration  * level to save storing children-lists in the devclass structure.  If  * we ever move beyond a few dozen devices doing this, we may need to  * reevaluate...  *  * @param busclass	the devclass of the parent bus  * @param dc		the devclass of the driver being deleted  * @param driver	the driver being deleted  */
+comment|/**  * @brief Register that a device driver has been deleted from a devclass  *  * Register that a device driver has been removed from a devclass.  * This is called by devclass_delete_driver to accomplish the  * recursive notification of all the children classes of busclass, as  * well as busclass.  Each layer will attempt to detach the driver  * from any devices that are children of the bus's devclass.  The function  * will return an error if a device fails to detach.  *  * We do a full search here of the devclass list at each iteration  * level to save storing children-lists in the devclass structure.  If  * we ever move beyond a few dozen devices doing this, we may need to  * reevaluate...  *  * @param busclass	the devclass of the parent bus  * @param dc		the devclass of the driver being deleted  * @param driver	the driver being deleted  */
 end_comment
 
 begin_function
@@ -5530,7 +5572,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Find a device given a unit number  *  * @param dc		the devclass to search  * @param unit		the unit number to search for  *   * @returns		the device with the given unit number or @c  *			NULL if there is no such device  */
+comment|/**  * @brief Find a device given a unit number  *  * @param dc		the devclass to search  * @param unit		the unit number to search for  *  * @returns		the device with the given unit number or @c  *			NULL if there is no such device  */
 end_comment
 
 begin_function
@@ -5579,7 +5621,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Find the softc field of a device given a unit number  *  * @param dc		the devclass to search  * @param unit		the unit number to search for  *   * @returns		the softc field of the device with the given  *			unit number or @c NULL if there is no such  *			device  */
+comment|/**  * @brief Find the softc field of a device given a unit number  *  * @param dc		the devclass to search  * @param unit		the unit number to search for  *  * @returns		the softc field of the device with the given  *			unit number or @c NULL if there is no such  *			device  */
 end_comment
 
 begin_function
@@ -7106,7 +7148,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Create a new device  *  * This creates a new device and adds it as a child of an existing  * parent device. The new device will be added after the last existing  * child with order zero.  *   * @param dev		the device which will be the parent of the  *			new child device  * @param name		devclass name for new device or @c NULL if not  *			specified  * @param unit		unit number for new device or @c -1 if not  *			specified  *   * @returns		the new device  */
+comment|/**  * @brief Create a new device  *  * This creates a new device and adds it as a child of an existing  * parent device. The new device will be added after the last existing  * child with order zero.  *  * @param dev		the device which will be the parent of the  *			new child device  * @param name		devclass name for new device or @c NULL if not  *			specified  * @param unit		unit number for new device or @c -1 if not  *			specified  *  * @returns		the new device  */
 end_comment
 
 begin_function
@@ -7143,7 +7185,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Create a new device  *  * This creates a new device and adds it as a child of an existing  * parent device. The new device will be added after the last existing  * child with the same order.  *   * @param dev		the device which will be the parent of the  *			new child device  * @param order		a value which is used to partially sort the  *			children of @p dev - devices created using  *			lower values of @p order appear first in @p  *			dev's list of children  * @param name		devclass name for new device or @c NULL if not  *			specified  * @param unit		unit number for new device or @c -1 if not  *			specified  *   * @returns		the new device  */
+comment|/**  * @brief Create a new device  *  * This creates a new device and adds it as a child of an existing  * parent device. The new device will be added after the last existing  * child with the same order.  *  * @param dev		the device which will be the parent of the  *			new child device  * @param order		a value which is used to partially sort the  *			children of @p dev - devices created using  *			lower values of @p order appear first in @p  *			dev's list of children  * @param name		devclass name for new device or @c NULL if not  *			specified  * @param unit		unit number for new device or @c -1 if not  *			specified  *  * @returns		the new device  */
 end_comment
 
 begin_function
@@ -7296,7 +7338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Delete a device  *  * This function deletes a device along with all of its children. If  * the device currently has a driver attached to it, the device is  * detached first using device_detach().  *   * @param dev		the parent device  * @param child		the device to delete  *  * @retval 0		success  * @retval non-zero	a unit error code describing the error  */
+comment|/**  * @brief Delete a device  *  * This function deletes a device along with all of its children. If  * the device currently has a driver attached to it, the device is  * detached first using device_detach().  *  * @param dev		the parent device  * @param child		the device to delete  *  * @retval 0		success  * @retval non-zero	a unit error code describing the error  */
 end_comment
 
 begin_function
@@ -7460,7 +7502,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Delete all children devices of the given device, if any.  *  * This function deletes all children devices of the given device, if  * any, using the device_delete_child() function for each device it  * finds. If a child device cannot be deleted, this function will  * return an error code.  *   * @param dev		the parent device  *  * @retval 0		success  * @retval non-zero	a device would not detach  */
+comment|/**  * @brief Delete all children devices of the given device, if any.  *  * This function deletes all children devices of the given device, if  * any, using the device_delete_child() function for each device it  * finds. If a child device cannot be deleted, this function will  * return an error code.  *  * @param dev		the parent device  *  * @retval 0		success  * @retval non-zero	a device would not detach  */
 end_comment
 
 begin_function
@@ -10411,7 +10453,7 @@ directive|ifdef
 name|RANDOM_DEBUG
 name|printf
 argument_list|(
-literal|"%s(): feeding %d bit(s) of entropy from %s%d\n"
+literal|"random: %s(): feeding %d bit(s) of entropy from %s%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10875,7 +10917,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Reclaim memory used by a resource list.  *  * This function frees the memory for all resource entries on the list  * (if any).  *  * @param rl		the resource list to free		  */
+comment|/**  * @brief Reclaim memory used by a resource list.  *  * This function frees the memory for all resource entries on the list  * (if any).  *  * @param rl		the resource list to free  */
 end_comment
 
 begin_function
@@ -11460,7 +11502,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Allocate a reserved resource  *  * This can be used by busses to force the allocation of resources  * that are always active in the system even if they are not allocated  * by a driver (e.g. PCI BARs).  This function is usually called when  * adding a new child to the bus.  The resource is allocated from the  * parent bus when it is reserved.  The resource list entry is marked  * with RLE_RESERVED to note that it is a reserved resource.  *  * Subsequent attempts to allocate the resource with  * resource_list_alloc() will succeed the first time and will set  * RLE_ALLOCATED to note that it has been allocated.  When a reserved  * resource that has been allocated is released with  * resource_list_release() the resource RLE_ALLOCATED is cleared, but  * the actual resource remains allocated.  The resource can be released to  * the parent bus by calling resource_list_unreserve().  *  * @param rl		the resource list to allocate from  * @param bus		the parent device of @p child  * @param child		the device for which the resource is being reserved  * @param type		the type of resource to allocate  * @param rid		a pointer to the resource identifier  * @param start		hint at the start of the resource range - pass  *			@c 0UL for any start address  * @param end		hint at the end of the resource range - pass  *			@c ~0UL for any end address  * @param count		hint at the size of range required - pass @c 1  *			for any size  * @param flags		any extra flags to control the resource  *			allocation - see @c RF_XXX flags in  *<sys/rman.h> for details  *   * @returns		the resource which was allocated or @c NULL if no  *			resource could be allocated  */
+comment|/**  * @brief Allocate a reserved resource  *  * This can be used by busses to force the allocation of resources  * that are always active in the system even if they are not allocated  * by a driver (e.g. PCI BARs).  This function is usually called when  * adding a new child to the bus.  The resource is allocated from the  * parent bus when it is reserved.  The resource list entry is marked  * with RLE_RESERVED to note that it is a reserved resource.  *  * Subsequent attempts to allocate the resource with  * resource_list_alloc() will succeed the first time and will set  * RLE_ALLOCATED to note that it has been allocated.  When a reserved  * resource that has been allocated is released with  * resource_list_release() the resource RLE_ALLOCATED is cleared, but  * the actual resource remains allocated.  The resource can be released to  * the parent bus by calling resource_list_unreserve().  *  * @param rl		the resource list to allocate from  * @param bus		the parent device of @p child  * @param child		the device for which the resource is being reserved  * @param type		the type of resource to allocate  * @param rid		a pointer to the resource identifier  * @param start		hint at the start of the resource range - pass  *			@c 0UL for any start address  * @param end		hint at the end of the resource range - pass  *			@c ~0UL for any end address  * @param count		hint at the size of range required - pass @c 1  *			for any size  * @param flags		any extra flags to control the resource  *			allocation - see @c RF_XXX flags in  *<sys/rman.h> for details  *  * @returns		the resource which was allocated or @c NULL if no  *			resource could be allocated  */
 end_comment
 
 begin_function
@@ -11602,7 +11644,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Helper function for implementing BUS_ALLOC_RESOURCE()  *  * Implement BUS_ALLOC_RESOURCE() by looking up a resource from the list  * and passing the allocation up to the parent of @p bus. This assumes  * that the first entry of @c device_get_ivars(child) is a struct  * resource_list. This also handles 'passthrough' allocations where a  * child is a remote descendant of bus by passing the allocation up to  * the parent of bus.  *  * Typically, a bus driver would store a list of child resources  * somewhere in the child device's ivars (see device_get_ivars()) and  * its implementation of BUS_ALLOC_RESOURCE() would find that list and  * then call resource_list_alloc() to perform the allocation.  *  * @param rl		the resource list to allocate from  * @param bus		the parent device of @p child  * @param child		the device which is requesting an allocation  * @param type		the type of resource to allocate  * @param rid		a pointer to the resource identifier  * @param start		hint at the start of the resource range - pass  *			@c 0UL for any start address  * @param end		hint at the end of the resource range - pass  *			@c ~0UL for any end address  * @param count		hint at the size of range required - pass @c 1  *			for any size  * @param flags		any extra flags to control the resource  *			allocation - see @c RF_XXX flags in  *<sys/rman.h> for details  *   * @returns		the resource which was allocated or @c NULL if no  *			resource could be allocated  */
+comment|/**  * @brief Helper function for implementing BUS_ALLOC_RESOURCE()  *  * Implement BUS_ALLOC_RESOURCE() by looking up a resource from the list  * and passing the allocation up to the parent of @p bus. This assumes  * that the first entry of @c device_get_ivars(child) is a struct  * resource_list. This also handles 'passthrough' allocations where a  * child is a remote descendant of bus by passing the allocation up to  * the parent of bus.  *  * Typically, a bus driver would store a list of child resources  * somewhere in the child device's ivars (see device_get_ivars()) and  * its implementation of BUS_ALLOC_RESOURCE() would find that list and  * then call resource_list_alloc() to perform the allocation.  *  * @param rl		the resource list to allocate from  * @param bus		the parent device of @p child  * @param child		the device which is requesting an allocation  * @param type		the type of resource to allocate  * @param rid		a pointer to the resource identifier  * @param start		hint at the start of the resource range - pass  *			@c 0UL for any start address  * @param end		hint at the end of the resource range - pass  *			@c ~0UL for any end address  * @param count		hint at the size of range required - pass @c 1  *			for any size  * @param flags		any extra flags to control the resource  *			allocation - see @c RF_XXX flags in  *<sys/rman.h> for details  *  * @returns		the resource which was allocated or @c NULL if no  *			resource could be allocated  */
 end_comment
 
 begin_function
@@ -11936,7 +11978,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Helper function for implementing BUS_RELEASE_RESOURCE()  *   * Implement BUS_RELEASE_RESOURCE() using a resource list. Normally  * used with resource_list_alloc().  *   * @param rl		the resource list which was allocated from  * @param bus		the parent device of @p child  * @param child		the device which is requesting a release  * @param type		the type of resource to release  * @param rid		the resource identifier  * @param res		the resource to release  *   * @retval 0		success  * @retval non-zero	a standard unix error code indicating what  *			error condition prevented the operation  */
+comment|/**  * @brief Helper function for implementing BUS_RELEASE_RESOURCE()  *  * Implement BUS_RELEASE_RESOURCE() using a resource list. Normally  * used with resource_list_alloc().  *  * @param rl		the resource list which was allocated from  * @param bus		the parent device of @p child  * @param child		the device which is requesting a release  * @param type		the type of resource to release  * @param rid		the resource identifier  * @param res		the resource to release  *  * @retval 0		success  * @retval non-zero	a standard unix error code indicating what  *			error condition prevented the operation  */
 end_comment
 
 begin_function
@@ -12158,7 +12200,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Release all active resources of a given type  *  * Release all active resources of a specified type.  This is intended  * to be used to cleanup resources leaked by a driver after detach or  * a failed attach.  *  * @param rl		the resource list which was allocated from  * @param bus		the parent device of @p child  * @param child		the device whose active resources are being released  * @param type		the type of resources to release  *   * @retval 0		success  * @retval EBUSY	at least one resource was active  */
+comment|/**  * @brief Release all active resources of a given type  *  * Release all active resources of a specified type.  This is intended  * to be used to cleanup resources leaked by a driver after detach or  * a failed attach.  *  * @param rl		the resource list which was allocated from  * @param bus		the parent device of @p child  * @param child		the device whose active resources are being released  * @param type		the type of resources to release  *  * @retval 0		success  * @retval EBUSY	at least one resource was active  */
 end_comment
 
 begin_function
@@ -12291,7 +12333,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Fully release a reserved resource  *  * Fully releases a resource reserved via resource_list_reserve().  *  * @param rl		the resource list which was allocated from  * @param bus		the parent device of @p child  * @param child		the device whose reserved resource is being released  * @param type		the type of resource to release  * @param rid		the resource identifier  * @param res		the resource to release  *   * @retval 0		success  * @retval non-zero	a standard unix error code indicating what  *			error condition prevented the operation  */
+comment|/**  * @brief Fully release a reserved resource  *  * Fully releases a resource reserved via resource_list_reserve().  *  * @param rl		the resource list which was allocated from  * @param bus		the parent device of @p child  * @param child		the device whose reserved resource is being released  * @param type		the type of resource to release  * @param rid		the resource identifier  * @param res		the resource to release  *  * @retval 0		success  * @retval non-zero	a standard unix error code indicating what  *			error condition prevented the operation  */
 end_comment
 
 begin_function
@@ -12425,7 +12467,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Print a description of resources in a resource list  *  * Print all resources of a specified type, for use in BUS_PRINT_CHILD().  * The name is printed if at least one resource of the given type is available.  * The format is used to print resource start and end.  *  * @param rl		the resource list to print  * @param name		the name of @p type, e.g. @c "memory"  * @param type		type type of resource entry to print  * @param format	printf(9) format string to print resource  *			start and end values  *   * @returns		the number of characters printed  */
+comment|/**  * @brief Print a description of resources in a resource list  *  * Print all resources of a specified type, for use in BUS_PRINT_CHILD().  * The name is printed if at least one resource of the given type is available.  * The format is used to print resource start and end.  *  * @param rl		the resource list to print  * @param name		the name of @p type, e.g. @c "memory"  * @param type		type type of resource entry to print  * @param format	printf(9) format string to print resource  *			start and end values  *  * @returns		the number of characters printed  */
 end_comment
 
 begin_function
@@ -12570,7 +12612,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Releases all the resources in a list.  *  * @param rl		The resource list to purge.  *   * @returns		nothing  */
+comment|/**  * @brief Releases all the resources in a list.  *  * @param rl		The resource list to purge.  *  * @returns		nothing  */
 end_comment
 
 begin_function
@@ -13303,7 +13345,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Stub function for implementing BUS_READ_IVAR().  *   * @returns ENOENT  */
+comment|/**  * @brief Stub function for implementing BUS_READ_IVAR().  *  * @returns ENOENT  */
 end_comment
 
 begin_function
@@ -13333,7 +13375,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Stub function for implementing BUS_WRITE_IVAR().  *   * @returns ENOENT  */
+comment|/**  * @brief Stub function for implementing BUS_WRITE_IVAR().  *  * @returns ENOENT  */
 end_comment
 
 begin_function
@@ -13362,7 +13404,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Stub function for implementing BUS_GET_RESOURCE_LIST().  *   * @returns NULL  */
+comment|/**  * @brief Stub function for implementing BUS_GET_RESOURCE_LIST().  *  * @returns NULL  */
 end_comment
 
 begin_function
@@ -16072,6 +16114,40 @@ argument_list|(
 name|parent
 argument_list|,
 name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_GET_DOMAIN().  *  * This function simply calls the BUS_GET_DOMAIN() method of the  * parent of @p dev.  */
+end_comment
+
+begin_function
+name|int
+name|bus_get_domain
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+modifier|*
+name|domain
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BUS_GET_DOMAIN
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|domain
 argument_list|)
 operator|)
 return|;

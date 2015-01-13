@@ -2694,11 +2694,8 @@ condition|(
 name|pip
 operator|->
 name|pi_rname
-index|[
-literal|0
-index|]
 operator|==
-literal|'\0'
+name|NULL
 condition|)
 name|dofr
 operator|.

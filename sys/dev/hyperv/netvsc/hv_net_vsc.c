@@ -1886,9 +1886,7 @@ name|ifp
 init|=
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_ifp
+name|hn_ifp
 decl_stmt|;
 name|net_dev
 operator|=

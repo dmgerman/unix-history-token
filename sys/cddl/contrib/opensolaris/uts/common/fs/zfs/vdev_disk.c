@@ -2986,7 +2986,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vdev_disk_io_start
 parameter_list|(
 name|zio_t
@@ -3060,11 +3060,7 @@ argument_list|(
 name|zio
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -3099,11 +3095,7 @@ argument_list|(
 name|zio
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
+return|return;
 block|}
 switch|switch
 condition|(
@@ -3212,11 +3204,7 @@ literal|0
 condition|)
 block|{
 comment|/* 				 * The ioctl will be done asychronously, 				 * and will call vdev_disk_ioctl_done() 				 * upon completion. 				 */
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -3255,17 +3243,28 @@ name|ENOTSUP
 argument_list|)
 expr_stmt|;
 block|}
-name|zio_interrupt
+name|zio_execute
 argument_list|(
 name|zio
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
+return|return;
 block|}
+name|ASSERT
+argument_list|(
+name|zio
+operator|->
+name|io_type
+operator|==
+name|ZIO_TYPE_READ
+operator|||
+name|zio
+operator|->
+name|io_type
+operator|==
+name|ZIO_TYPE_WRITE
+argument_list|)
+expr_stmt|;
 name|vb
 operator|=
 name|kmem_alloc
@@ -3402,11 +3401,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
 block|}
 end_function
 

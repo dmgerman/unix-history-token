@@ -280,7 +280,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif

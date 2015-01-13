@@ -182,7 +182,7 @@ argument_list|)
 operator|,
 name|NewRC
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// Create a CoalescerPair representing a virtreg-to-physreg copy.
@@ -238,7 +238,7 @@ argument_list|)
 operator|,
 name|NewRC
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// setRegisters - set registers to match the copy instruction MI. Return

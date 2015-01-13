@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: netcat.c,v 1.117 2013/10/26 21:33:29 sthen Exp $ */
+comment|/* $OpenBSD: netcat.c,v 1.122 2014/07/20 01:38:40 guenther Exp $ */
 end_comment
 
 begin_comment
@@ -903,12 +903,6 @@ name|sv
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|rtableid = getrtable();
-endif|#
-directive|endif
 while|while
 condition|(
 operator|(
@@ -3337,16 +3331,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"bind failed: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"bind failed"
 argument_list|)
 expr_stmt|;
 name|freeaddrinfo
@@ -3811,7 +3800,7 @@ name|setsockopt
 argument_list|(
 name|s
 argument_list|,
-name|IPPROTO_IP
+name|SOL_SOCKET
 argument_list|,
 name|SO_SETFIB
 argument_list|,
@@ -4059,7 +4048,9 @@ name|unsigned
 name|char
 name|buf
 index|[
-literal|16384
+literal|16
+operator|*
+literal|1024
 index|]
 decl_stmt|;
 name|int
@@ -4085,7 +4076,10 @@ name|plen
 decl_stmt|;
 name|plen
 operator|=
-literal|2048
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 expr_stmt|;
 comment|/* Setup Network FD */
 name|pfd
@@ -4167,14 +4161,21 @@ operator|<
 literal|0
 condition|)
 block|{
+name|int
+name|saved_errno
+init|=
+name|errno
+decl_stmt|;
 name|close
 argument_list|(
 name|nfd
 argument_list|)
 expr_stmt|;
-name|err
+name|errc
 argument_list|(
 literal|1
+argument_list|,
+name|saved_errno
 argument_list|,
 literal|"Polling Error"
 argument_list|)

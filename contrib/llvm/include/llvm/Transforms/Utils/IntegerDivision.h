@@ -36,19 +36,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file contains an implementation of 32bit integer division for targets
+comment|// This file contains an implementation of 32bit and 64bit scalar integer
 end_comment
 
 begin_comment
-comment|// that don't have native support. It's largely derived from compiler-rt's
+comment|// division for targets that don't have native support. It's largely derived
 end_comment
 
 begin_comment
-comment|// implementation of __udivsi3, but hand-tuned for targets that prefer less
+comment|// from compiler-rt's implementations of __udivsi3 and __udivmoddi4,
 end_comment
 
 begin_comment
-comment|// control flow.
+comment|// but hand-tuned for targets that prefer less control flow.
 end_comment
 
 begin_comment
@@ -88,9 +88,8 @@ block|{
 comment|/// Generate code to calculate the remainder of two integers, replacing Rem
 comment|/// with the generated code. This currently generates code using the udiv
 comment|/// expansion, but future work includes generating more specialized code,
-comment|/// e.g. when more information about the operands are known. Currently only
-comment|/// implements 32bit scalar division (due to udiv's limitation), but future
-comment|/// work is removing this limitation.
+comment|/// e.g. when more information about the operands are known. Implements both
+comment|/// 32bit and 64bit scalar division.
 comment|///
 comment|/// @brief Replace Rem with generated code.
 name|bool
@@ -104,9 +103,8 @@ function_decl|;
 comment|/// Generate code to divide two integers, replacing Div with the generated
 comment|/// code. This currently generates code similarly to compiler-rt's
 comment|/// implementations, but future work includes generating more specialized code
-comment|/// when more information about the operands are known. Currently only
-comment|/// implements 32bit scalar division, but future work is removing this
-comment|/// limitation.
+comment|/// when more information about the operands are known. Implements both
+comment|/// 32bit and 64bit scalar division.
 comment|///
 comment|/// @brief Replace Div with generated code.
 name|bool
@@ -118,8 +116,9 @@ name|Div
 parameter_list|)
 function_decl|;
 comment|/// Generate code to calculate the remainder of two integers, replacing Rem
-comment|/// with the generated code. Uses the above 32bit routine, therefore adequate
-comment|/// for targets with little or no support for less than 32 bit arithmetic.
+comment|/// with the generated code. Uses ExpandReminder with a 32bit Rem which
+comment|/// makes it useful for targets with little or no support for less than
+comment|/// 32 bit arithmetic.
 comment|///
 comment|/// @brief Replace Rem with generated code.
 name|bool
@@ -130,13 +129,37 @@ modifier|*
 name|Rem
 parameter_list|)
 function_decl|;
+comment|/// Generate code to calculate the remainder of two integers, replacing Rem
+comment|/// with the generated code. Uses ExpandReminder with a 64bit Rem.
+comment|///
+comment|/// @brief Replace Rem with generated code.
+name|bool
+name|expandRemainderUpTo64Bits
+parameter_list|(
+name|BinaryOperator
+modifier|*
+name|Rem
+parameter_list|)
+function_decl|;
 comment|/// Generate code to divide two integers, replacing Div with the generated
-comment|/// code. Uses the above 32bit routine, therefore adequate for targets with
-comment|/// little or no support for less than 32 bit arithmetic.
+comment|/// code. Uses ExpandDivision with a 32bit Div which makes it useful for
+comment|/// targets with little or no support for less than 32 bit arithmetic.
 comment|///
 comment|/// @brief Replace Rem with generated code.
 name|bool
 name|expandDivisionUpTo32Bits
+parameter_list|(
+name|BinaryOperator
+modifier|*
+name|Div
+parameter_list|)
+function_decl|;
+comment|/// Generate code to divide two integers, replacing Div with the generated
+comment|/// code. Uses ExpandDivision with a 64bit Div.
+comment|///
+comment|/// @brief Replace Rem with generated code.
+name|bool
+name|expandDivisionUpTo64Bits
 parameter_list|(
 name|BinaryOperator
 modifier|*

@@ -845,7 +845,7 @@ comment|/*  * Virtualized sysctls.  */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet6_mld
 argument_list|,
@@ -853,6 +853,8 @@ name|OID_AUTO
 argument_list|,
 name|gsrdelay
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -6415,7 +6417,7 @@ operator|=
 name|md
 expr_stmt|;
 comment|/* 	 * FUTURE: Consider increasing alignment by ETHER_HDR_LEN, so 	 * that ether_output() does not need to allocate another mbuf 	 * for the header in the most common case. 	 */
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|mh
 argument_list|,
@@ -11963,7 +11965,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|mh
 argument_list|,

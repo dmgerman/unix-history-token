@@ -81,10 +81,10 @@ range|:
 name|public
 name|MCAsmInfoELF
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:

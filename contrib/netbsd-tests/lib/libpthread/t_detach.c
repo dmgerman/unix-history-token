@@ -193,6 +193,16 @@ operator|==
 name|EINVAL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_expect_fail
+argument_list|(
+literal|"PR # 191906: fails with EINVAL, not ESRCH"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * As usual, ESRCH should follow if 	 * we try to detach an invalid thread. 	 */
 name|rv
 operator|=

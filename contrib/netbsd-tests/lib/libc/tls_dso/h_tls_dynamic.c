@@ -27,14 +27,11 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#

@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<map>
+file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunction.h"
+file|<map>
 end_include
 
 begin_decl_stmt

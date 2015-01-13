@@ -103,13 +103,13 @@ comment|/// A Function object owns a BlockList object which owns one or more
 comment|/// Block objects. The BlockList object contains a section offset
 comment|/// address range, and Block objects contain one or more ranges
 comment|/// which are offsets into that range. Blocks are can have discontiguous
-comment|/// ranges within the BlockList adress range, and each block can
+comment|/// ranges within the BlockList address range, and each block can
 comment|/// contain child blocks each with their own sets of ranges.
 comment|///
 comment|/// Each block has a variable list that represents local, argument, and
 comment|/// static variables that are scoped to the block.
 comment|///
-comment|/// Inlined functions are representated by attaching a
+comment|/// Inlined functions are represented by attaching a
 comment|/// InlineFunctionInfo shared pointer object to a block. Inlined
 comment|/// functions are represented as named blocks.
 comment|//----------------------------------------------------------------------
@@ -324,7 +324,7 @@ comment|//------------------------------------------------------------------
 comment|/// Dump the block contents.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|///
 comment|/// @param[in] base_addr
 comment|///     The resolved start address of the Function's address
@@ -604,7 +604,7 @@ comment|//------------------------------------------------------------------
 comment|/// Get const accessor for any inlined function information.
 comment|///
 comment|/// @return
-comment|///     A comst pointer to any inlined function information, or NULL
+comment|///     A const pointer to any inlined function information, or NULL
 comment|///     if this is a regular block.
 comment|//------------------------------------------------------------------
 specifier|const
@@ -820,7 +820,7 @@ name|addr
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|// Since blocks might have multiple discontiguous addresss ranges,
+comment|// Since blocks might have multiple discontiguous address ranges,
 comment|// we need to be able to get at any of the address ranges in a block.
 comment|//------------------------------------------------------------------
 name|bool
@@ -889,7 +889,7 @@ operator|::
 name|VariableListSP
 name|m_variable_list_sp
 expr_stmt|;
-comment|///< The variable list for all local, static and paramter variables scoped to this block.
+comment|///< The variable list for all local, static and parameter variables scoped to this block.
 name|bool
 name|m_parsed_block_info
 range|:

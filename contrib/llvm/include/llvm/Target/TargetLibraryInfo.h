@@ -141,8 +141,8 @@ block|,
 comment|/// double __sincospi_stret(double x);
 name|sincospi_stret
 block|,
-comment|/// float __sincospi_stretf(float x);
-name|sincospi_stretf
+comment|/// float __sincospif_stret(float x);
+name|sincospif_stret
 block|,
 comment|/// double __sinpi(double x);
 name|sinpi
@@ -417,6 +417,24 @@ block|,
 comment|/// long double floorl(long double x);
 name|floorl
 block|,
+comment|/// double fmax(double x, double y);
+name|fmax
+block|,
+comment|/// float fmaxf(float x, float y);
+name|fmaxf
+block|,
+comment|/// long double fmaxl(long double x, long double y);
+name|fmaxl
+block|,
+comment|/// double fmin(double x, double y);
+name|fmin
+block|,
+comment|/// float fminf(float x, float y);
+name|fminf
+block|,
+comment|/// long double fminl(long double x, long double y);
+name|fminl
+block|,
 comment|/// double fmod(double x, double y);
 name|fmod
 block|,
@@ -549,6 +567,15 @@ name|labs
 block|,
 comment|/// int lchown(const char *path, uid_t owner, gid_t group);
 name|lchown
+block|,
+comment|/// double ldexp(double x, int n);
+name|ldexp
+block|,
+comment|/// float ldexpf(float x, int n);
+name|ldexpf
+block|,
+comment|/// long double ldexpl(long double x, int n);
+name|ldexpl
 block|,
 comment|/// long long int llabs(long long int j);
 name|llabs
@@ -1331,6 +1358,36 @@ case|case
 name|LibFunc
 operator|::
 name|sqrtl_finite
+case|:
+case|case
+name|LibFunc
+operator|::
+name|fmax
+case|:
+case|case
+name|LibFunc
+operator|::
+name|fmaxf
+case|:
+case|case
+name|LibFunc
+operator|::
+name|fmaxl
+case|:
+case|case
+name|LibFunc
+operator|::
+name|fmin
+case|:
+case|case
+name|LibFunc
+operator|::
+name|fminf
+case|:
+case|case
+name|LibFunc
+operator|::
+name|fminl
 case|:
 case|case
 name|LibFunc

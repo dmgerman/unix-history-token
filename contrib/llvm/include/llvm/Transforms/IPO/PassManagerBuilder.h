@@ -177,7 +177,12 @@ comment|/// EP_EnabledOnOptLevel0 - This extension point allows adding passes th
 comment|/// should not be disabled by O0 optimization level. The passes will be
 comment|/// inserted after the inlining pass.
 name|EP_EnabledOnOptLevel0
-block|}
+block|,
+comment|/// EP_Peephole - This extension point allows adding passes that perform
+comment|/// peephole optimizations similar to the instruction combiner. These passes
+comment|/// will be inserted after each instance of the instruction combiner pass.
+name|EP_Peephole
+block|,   }
 enum|;
 comment|/// The Optimization Level - Specify the basic optimization level.
 comment|///    0 = -O0, 1 = -O1, 2 = -O2, 3 = -O3
@@ -203,6 +208,9 @@ modifier|*
 name|Inliner
 decl_stmt|;
 name|bool
+name|DisableTailCalls
+decl_stmt|;
+name|bool
 name|DisableUnitAtATime
 decl_stmt|;
 name|bool
@@ -218,10 +226,10 @@ name|bool
 name|LoopVectorize
 decl_stmt|;
 name|bool
-name|LateVectorize
+name|RerollLoops
 decl_stmt|;
 name|bool
-name|RerollLoops
+name|LoadCombine
 decl_stmt|;
 name|private
 label|:

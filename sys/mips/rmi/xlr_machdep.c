@@ -577,7 +577,7 @@ condition|(
 operator|(
 name|hw_env
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"xlr.shtlb"
 argument_list|)
@@ -916,7 +916,7 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"bootflags"
 argument_list|)
@@ -929,7 +929,7 @@ name|NULL
 condition|)
 name|p
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"boot_flags"
 argument_list|)
@@ -2006,7 +2006,7 @@ name|arg
 operator|==
 name|NULL
 condition|)
-name|setenv
+name|kern_setenv
 argument_list|(
 name|n
 argument_list|,
@@ -2014,7 +2014,7 @@ literal|"1"
 argument_list|)
 expr_stmt|;
 else|else
-name|setenv
+name|kern_setenv
 argument_list|(
 name|n
 argument_list|,

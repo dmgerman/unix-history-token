@@ -134,7 +134,7 @@ name|AttrEntryKind
 block|{
 name|EnumAttrEntry
 block|,
-name|AlignAttrEntry
+name|IntAttrEntry
 block|,
 name|StringAttrEntry
 block|}
@@ -168,14 +168,14 @@ name|EnumAttrEntry
 return|;
 block|}
 name|bool
-name|isAlignAttribute
+name|isIntAttribute
 argument_list|()
 specifier|const
 block|{
 return|return
 name|KindID
 operator|==
-name|AlignAttrEntry
+name|IntAttrEntry
 return|;
 block|}
 name|bool
@@ -262,7 +262,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|isAlignAttribute
+name|isIntAttribute
 argument_list|()
 condition|)
 name|Profile
@@ -434,38 +434,38 @@ block|}
 expr|}
 block|;
 name|class
-name|AlignAttributeImpl
+name|IntAttributeImpl
 operator|:
 name|public
 name|EnumAttributeImpl
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
-name|unsigned
-name|Align
+name|uint64_t
+name|Val
 block|;
 name|public
 operator|:
-name|AlignAttributeImpl
+name|IntAttributeImpl
 argument_list|(
 argument|Attribute::AttrKind Kind
 argument_list|,
-argument|unsigned Align
+argument|uint64_t Val
 argument_list|)
 operator|:
 name|EnumAttributeImpl
 argument_list|(
-name|AlignAttrEntry
+name|IntAttrEntry
 argument_list|,
 name|Kind
 argument_list|)
 block|,
-name|Align
+name|Val
 argument_list|(
-argument|Align
+argument|Val
 argument_list|)
 block|{
 name|assert
@@ -482,18 +482,24 @@ operator|==
 name|Attribute
 operator|::
 name|StackAlignment
+operator|||
+name|Kind
+operator|==
+name|Attribute
+operator|::
+name|Dereferenceable
 operator|)
 operator|&&
-literal|"Wrong kind for alignment attribute!"
+literal|"Wrong kind for int attribute!"
 argument_list|)
 block|;   }
-name|unsigned
-name|getAlignment
+name|uint64_t
+name|getValue
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Align
+name|Val
 return|;
 block|}
 expr|}
@@ -699,6 +705,11 @@ specifier|const
 block|;
 name|unsigned
 name|getStackAlignment
+argument_list|()
+specifier|const
+block|;
+name|uint64_t
+name|getDereferenceableBytes
 argument_list|()
 specifier|const
 block|;

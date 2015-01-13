@@ -577,12 +577,6 @@ name|PFSE_ICMP6
 block|, 	}
 name|pfse_type
 enum|;
-union|union
-block|{
-name|struct
-name|route
-name|ro
-decl_stmt|;
 struct|struct
 block|{
 name|int
@@ -597,25 +591,6 @@ decl_stmt|;
 block|}
 name|icmpopts
 struct|;
-block|}
-name|u
-union|;
-define|#
-directive|define
-name|pfse_ro
-value|u.ro
-define|#
-directive|define
-name|pfse_icmp_type
-value|u.icmpopts.type
-define|#
-directive|define
-name|pfse_icmp_code
-value|u.icmpopts.code
-define|#
-directive|define
-name|pfse_icmp_mtu
-value|u.icmpopts.mtu
 block|}
 struct|;
 end_struct
@@ -656,6 +631,21 @@ name|mtx
 name|pf_sendqueue_mtx
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|pf_sendqueue_mtx
+argument_list|,
+operator|&
+name|pf_sendqueue_mtx
+argument_list|,
+literal|"pf send queue"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -762,6 +752,21 @@ name|pf_overloadqueue_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|pf_overloadqueue_mtx
+argument_list|,
+operator|&
+name|pf_overloadqueue_mtx
+argument_list|,
+literal|"pf overload/flush queue"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -795,6 +800,21 @@ name|mtx
 name|pf_unlnkdrules_mtx
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|pf_unlnkdrules_mtx
+argument_list|,
+operator|&
+name|pf_unlnkdrules_mtx
+argument_list|,
+literal|"pf unlinked rules"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 specifier|static
@@ -1913,16 +1933,6 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|pf_end_threads
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
 expr|struct
@@ -2094,7 +2104,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_ULONG
 argument_list|(
 name|_net_pf
 argument_list|,
@@ -2115,7 +2125,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_ULONG
 argument_list|(
 name|_net_pf
 argument_list|,
@@ -2180,7 +2190,7 @@ name|h
 decl_stmt|;
 name|h
 operator|=
-name|murmur3_aligned_32
+name|murmur3_32_hash32
 argument_list|(
 operator|(
 name|uint32_t
@@ -2192,6 +2202,11 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|pf_state_key_cmp
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|uint32_t
 argument_list|)
 argument_list|,
 name|V_pf_hashseed
@@ -2235,7 +2250,7 @@ name|AF_INET
 case|:
 name|h
 operator|=
-name|murmur3_aligned_32
+name|murmur3_32_hash32
 argument_list|(
 operator|(
 name|uint32_t
@@ -2251,6 +2266,11 @@ argument_list|(
 name|addr
 operator|->
 name|v4
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|uint32_t
 argument_list|)
 argument_list|,
 name|V_pf_hashseed
@@ -2262,7 +2282,7 @@ name|AF_INET6
 case|:
 name|h
 operator|=
-name|murmur3_aligned_32
+name|murmur3_32_hash32
 argument_list|(
 operator|(
 name|uint32_t
@@ -2278,6 +2298,11 @@ argument_list|(
 name|addr
 operator|->
 name|v6
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|uint32_t
 argument_list|)
 argument_list|,
 name|V_pf_hashseed
@@ -4214,7 +4239,7 @@ end_comment
 
 begin_function
 name|void
-name|pf_initialize
+name|pf_vnet_initialize
 parameter_list|()
 block|{
 name|struct
@@ -4625,47 +4650,11 @@ argument_list|,
 name|curvnet
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|pf_sendqueue_mtx
-argument_list|,
-literal|"pf send queue"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|pf_overloadqueue_mtx
-argument_list|,
-literal|"pf overload/flush queue"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 comment|/* Unlinked, but may be referenced rules. */
 name|TAILQ_INIT
 argument_list|(
 operator|&
 name|V_pf_unlinked_rules
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|pf_unlnkdrules_mtx
-argument_list|,
-literal|"pf unlinked rules"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -4888,24 +4877,6 @@ name|M_PFTEMP
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_destroy
-argument_list|(
-operator|&
-name|pf_sendqueue_mtx
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|pf_overloadqueue_mtx
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|pf_unlnkdrules_mtx
-argument_list|)
-expr_stmt|;
 name|uma_zdestroy
 argument_list|(
 name|V_pf_sources_z
@@ -7544,17 +7515,23 @@ name|pfse_m
 argument_list|,
 name|pfse
 operator|->
-name|pfse_icmp_type
+name|icmpopts
+operator|.
+name|type
 argument_list|,
 name|pfse
 operator|->
-name|pfse_icmp_code
+name|icmpopts
+operator|.
+name|code
 argument_list|,
 literal|0
 argument_list|,
 name|pfse
 operator|->
-name|pfse_icmp_mtu
+name|icmpopts
+operator|.
+name|mtu
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7598,15 +7575,21 @@ name|pfse_m
 argument_list|,
 name|pfse
 operator|->
-name|pfse_icmp_type
+name|icmpopts
+operator|.
+name|type
 argument_list|,
 name|pfse
 operator|->
-name|pfse_icmp_code
+name|icmpopts
+operator|.
+name|code
 argument_list|,
 name|pfse
 operator|->
-name|pfse_icmp_mtu
+name|icmpopts
+operator|.
+name|mtu
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7643,6 +7626,7 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+name|__unused
 parameter_list|)
 block|{
 name|u_int
@@ -7650,14 +7634,9 @@ name|idx
 init|=
 literal|0
 decl_stmt|;
-name|CURVNET_SET
+name|VNET_ITERATOR_DECL
 argument_list|(
-operator|(
-expr|struct
-name|vnet
-operator|*
-operator|)
-name|v
+name|vnet_iter
 argument_list|)
 expr_stmt|;
 for|for
@@ -7666,17 +7645,11 @@ init|;
 condition|;
 control|)
 block|{
-name|PF_RULES_RLOCK
-argument_list|()
-expr_stmt|;
-name|rw_sleep
+name|tsleep
 argument_list|(
 name|pf_purge_thread
 argument_list|,
-operator|&
-name|pf_rules_lock
-argument_list|,
-literal|0
+name|PWAIT
 argument_list|,
 literal|"pftm"
 argument_list|,
@@ -7685,65 +7658,18 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|V_pf_end_threads
-condition|)
+name|VNET_LIST_RLOCK
+argument_list|()
+expr_stmt|;
+name|VNET_FOREACH
+argument_list|(
+argument|vnet_iter
+argument_list|)
 block|{
-comment|/* 			 * To cleanse up all kifs and rules we need 			 * two runs: first one clears reference flags, 			 * then pf_purge_expired_states() doesn't 			 * raise them, and then second run frees. 			 */
-name|PF_RULES_RUNLOCK
-argument_list|()
-expr_stmt|;
-name|pf_purge_unlinked_rules
-argument_list|()
-expr_stmt|;
-name|pfi_kif_purge
-argument_list|()
-expr_stmt|;
-comment|/* 			 * Now purge everything. 			 */
-name|pf_purge_expired_states
+name|CURVNET_SET
 argument_list|(
-literal|0
-argument_list|,
-name|pf_hashmask
+name|vnet_iter
 argument_list|)
-expr_stmt|;
-name|pf_purge_expired_fragments
-argument_list|()
-expr_stmt|;
-name|pf_purge_expired_src_nodes
-argument_list|()
-expr_stmt|;
-comment|/* 			 * Now all kifs& rules should be unreferenced, 			 * thus should be successfully freed. 			 */
-name|pf_purge_unlinked_rules
-argument_list|()
-expr_stmt|;
-name|pfi_kif_purge
-argument_list|()
-expr_stmt|;
-comment|/* 			 * Announce success and exit. 			 */
-name|PF_RULES_RLOCK
-argument_list|()
-expr_stmt|;
-name|V_pf_end_threads
-operator|++
-expr_stmt|;
-name|PF_RULES_RUNLOCK
-argument_list|()
-expr_stmt|;
-name|wakeup
-argument_list|(
-name|pf_purge_thread
-argument_list|)
-expr_stmt|;
-name|kproc_exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-name|PF_RULES_RUNLOCK
-argument_list|()
 expr_stmt|;
 comment|/* Process 1/interval fraction of the state table every run. */
 name|idx
@@ -7774,7 +7700,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Order is important: 			 * - states and src nodes reference rules 			 * - states and rules reference kifs 			 */
+comment|/* 				 * Order is important: 				 * - states and src nodes reference rules 				 * - states and rules reference kifs 				 */
 name|pf_purge_expired_fragments
 argument_list|()
 expr_stmt|;
@@ -7788,11 +7714,15 @@ name|pfi_kif_purge
 argument_list|()
 expr_stmt|;
 block|}
-block|}
-comment|/* not reached */
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
+block|}
+name|VNET_LIST_RUNLOCK
+argument_list|()
+expr_stmt|;
+block|}
+comment|/* not reached */
 block|}
 end_function
 
@@ -13419,13 +13349,17 @@ name|m0
 expr_stmt|;
 name|pfse
 operator|->
-name|pfse_icmp_type
+name|icmpopts
+operator|.
+name|type
 operator|=
 name|type
 expr_stmt|;
 name|pfse
 operator|->
-name|pfse_icmp_code
+name|icmpopts
+operator|.
+name|code
 operator|=
 name|code
 expr_stmt|;

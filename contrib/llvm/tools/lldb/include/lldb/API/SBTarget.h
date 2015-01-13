@@ -149,6 +149,43 @@ name|uint32_t
 name|gid
 parameter_list|)
 function_decl|;
+name|SBFileSpec
+name|GetExecutableFile
+parameter_list|()
+function_decl|;
+comment|//----------------------------------------------------------------------
+comment|/// Set the executable file that will be used to launch the process and
+comment|/// optionally set it as the first argument in the argument vector.
+comment|///
+comment|/// This only needs to be specified if clients wish to carefully control
+comment|/// the exact path will be used to launch a binary. If you create a
+comment|/// target with a symlink, that symlink will get resolved in the target
+comment|/// and the resolved path will get used to launch the process. Calling
+comment|/// this function can help you still launch your process using the
+comment|/// path of your choice.
+comment|///
+comment|/// If this function is not called prior to launching with
+comment|/// SBTarget::Launch(...), the target will use the resolved executable
+comment|/// path that was used to create the target.
+comment|///
+comment|/// @param[in] exe_file
+comment|///     The override path to use when launching the executable.
+comment|///
+comment|/// @param[in] add_as_first_arg
+comment|///     If true, then the path will be inserted into the argument vector
+comment|///     prior to launching. Otherwise the argument vector will be left
+comment|///     alone.
+comment|//----------------------------------------------------------------------
+name|void
+name|SetExecutableFile
+parameter_list|(
+name|SBFileSpec
+name|exe_file
+parameter_list|,
+name|bool
+name|add_as_first_arg
+parameter_list|)
+function_decl|;
 name|uint32_t
 name|GetNumArguments
 parameter_list|()
@@ -319,6 +356,34 @@ name|read
 parameter_list|,
 name|bool
 name|write
+parameter_list|)
+function_decl|;
+name|void
+name|SetLaunchEventData
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+operator|*
+name|GetLaunchEventData
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|GetDetachOnError
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|SetDetachOnError
+parameter_list|(
+name|bool
+name|enable
 parameter_list|)
 function_decl|;
 name|protected
@@ -743,7 +808,7 @@ comment|/// @param[in] launch_flags
 comment|///     Some launch options specified by logical OR'ing
 comment|///     lldb::LaunchFlags enumeration values together.
 comment|///
-comment|/// @param[in] stop_at_endtry
+comment|/// @param[in] stop_at_entry
 comment|///     If false do not stop the inferior at the entry point.
 comment|///
 comment|/// @param[out]
@@ -1199,7 +1264,7 @@ argument|int64_t sections_offset
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// The the section base load addresses for all sections in a module.
+comment|/// Clear the section base load addresses for all sections in a module.
 comment|///
 comment|/// @param[in] module
 comment|///     The module to unload.

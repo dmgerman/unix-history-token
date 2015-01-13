@@ -69,6 +69,9 @@ name|class
 name|MCSectionData
 decl_stmt|;
 name|class
+name|MCSymbol
+decl_stmt|;
+name|class
 name|MCSymbolData
 decl_stmt|;
 comment|/// Encapsulates the layout of an assembly file at a particular point in time.
@@ -300,6 +303,22 @@ decl|const
 decl_stmt|;
 comment|/// \brief Get the offset of the given symbol, as computed in the current
 comment|/// layout.
+comment|/// \result True on success.
+name|bool
+name|getSymbolOffset
+argument_list|(
+specifier|const
+name|MCSymbolData
+operator|*
+name|SD
+argument_list|,
+name|uint64_t
+operator|&
+name|Val
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Variant that reports a fatal error if the offset is not computable.
 name|uint64_t
 name|getSymbolOffset
 argument_list|(
@@ -307,6 +326,19 @@ specifier|const
 name|MCSymbolData
 operator|*
 name|SD
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief If this symbol is equivalent to A + Constant, return A.
+specifier|const
+name|MCSymbol
+modifier|*
+name|getBaseSymbol
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|&
+name|Symbol
 argument_list|)
 decl|const
 decl_stmt|;

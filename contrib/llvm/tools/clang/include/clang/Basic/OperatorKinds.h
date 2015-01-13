@@ -71,6 +71,8 @@ comment|/// \brief Enumeration specifying the different kinds of C++ overloaded
 comment|/// operators.
 enum|enum
 name|OverloadedOperatorKind
+enum|:
+name|int
 block|{
 name|OO_None
 block|,

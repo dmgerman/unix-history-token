@@ -262,7 +262,7 @@ end_macro
 
 begin_block
 block|{
-name|gic_init_secondary
+name|arm_init_secondary_ic
 argument_list|()
 expr_stmt|;
 block|}
