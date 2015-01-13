@@ -279,7 +279,7 @@ operator|>>
 literal|24
 operator|)
 operator|&
-literal|0x0f
+literal|0xff
 expr_stmt|;
 name|buf
 index|[
