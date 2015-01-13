@@ -217,6 +217,11 @@ decl_stmt|,
 modifier|*
 name|iln
 decl_stmt|;
+name|idr_remove_all
+argument_list|(
+name|idr
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
