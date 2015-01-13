@@ -2475,6 +2475,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|0xa01c177d
+block|,
+literal|0x00
+block|,
+literal|"ThunderX SATA"
+block|,
+name|AHCI_Q_ABAR0
+block|}
+block|,
+block|{
 literal|0x00000000
 block|,
 literal|0x00
@@ -3035,7 +3045,6 @@ name|quirks
 operator||=
 name|AHCI_Q_SATA1_UNIT0
 expr_stmt|;
-comment|/* if we have a memory BAR(5) we are likely on an AHCI part */
 name|ctlr
 operator|->
 name|vendorid
@@ -3072,6 +3081,25 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* Default AHCI Base Address is BAR(5), Cavium uses BAR(0) */
+if|if
+condition|(
+name|ctlr
+operator|->
+name|quirks
+operator|&
+name|AHCI_Q_ABAR0
+condition|)
+name|ctlr
+operator|->
+name|r_rid
+operator|=
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 name|ctlr
 operator|->
 name|r_rid
