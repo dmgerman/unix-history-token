@@ -499,6 +499,7 @@ index|]
 operator|.
 name|s64
 expr_stmt|;
+break|break;
 case|case
 name|DW_FORM_data8
 case|:
