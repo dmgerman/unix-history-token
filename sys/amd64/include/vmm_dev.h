@@ -135,6 +135,9 @@ decl_stmt|;
 name|int
 name|error_code_valid
 decl_stmt|;
+name|int
+name|restart_instruction
+decl_stmt|;
 block|}
 struct|;
 end_struct

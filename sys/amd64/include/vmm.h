@@ -1805,7 +1805,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Inject exception 'vme' into the guest vcpu. This function returns 0 on  * success and non-zero on failure.  *  * Wrapper functions like 'vm_inject_gp()' should be preferred to calling  * this function directly because they enforce the trap-like or fault-like  * behavior of an exception.  *  * This function should only be called in the context of the thread that is  * executing this vcpu.  */
+comment|/*  * Inject exception 'vector' into the guest vcpu. This function returns 0 on  * success and non-zero on failure.  *  * Wrapper functions like 'vm_inject_gp()' should be preferred to calling  * this function directly because they enforce the trap-like or fault-like  * behavior of an exception.  *  * This function should only be called in the context of the thread that is  * executing this vcpu.  */
 end_comment
 
 begin_function_decl
@@ -1820,10 +1820,17 @@ parameter_list|,
 name|int
 name|vcpuid
 parameter_list|,
-name|struct
-name|vm_exception
-modifier|*
-name|vme
+name|int
+name|vector
+parameter_list|,
+name|int
+name|err_valid
+parameter_list|,
+name|uint32_t
+name|errcode
+parameter_list|,
+name|int
+name|restart_instruction
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2910,6 +2917,20 @@ name|error_code
 parameter_list|,
 name|uint64_t
 name|cr2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vm_restart_instruction
+parameter_list|(
+name|void
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|vcpuid
 parameter_list|)
 function_decl|;
 end_function_decl
