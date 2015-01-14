@@ -1585,6 +1585,13 @@ block|,
 operator|&
 name|pmc_sysent
 block|,
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|1100000
+operator|)
 block|{
 literal|0
 block|,
@@ -1592,7 +1599,17 @@ name|NULL
 block|}
 block|,
 name|SY_THR_STATIC_KLD
-block|, }
+block|,
+else|#
+directive|else
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
