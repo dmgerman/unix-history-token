@@ -1967,10 +1967,14 @@ argument_list|,
 name|CBB_SOCKET_STATE
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|DEVPRINTF
 argument_list|(
 operator|(
-literal|"Status is 0x%x\n"
+name|sc
+operator|->
+name|dev
+operator|,
+literal|"Status is %#x\n"
 operator|,
 name|status
 operator|)
@@ -3101,7 +3105,7 @@ name|sc
 operator|->
 name|powerintr
 expr_stmt|;
-comment|/* 		 * We have a shortish timeout of 500ms here.  Some bridges do 		 * not generate a POWER_CYCLE event for 16-bit cards.  In 		 * those cases, we have to cope the best we can, and having 		 * only a short delay is better than the alternatives.  Others 		 * raise the power cycle a smidge before it is really ready. 		 * We deal with those below. 		 */
+comment|/* 		 * We have a shortish timeout of 500ms here.  Some bridges do 		 * not generate a POWER_CYCLE event for 16-bit cards.  In those 		 * cases, we have to cope the best we can, and having only a 		 * short delay is better than the alternatives.  Others raise 		 * the power cycle a smidge before it is really ready.  We deal 		 * with those below. 		 */
 name|sane
 operator|=
 literal|10
@@ -3160,7 +3164,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Relax for 100ms.  Some bridges appear to assert this signal 		 * right away, but before the card has stabilized.  Other 		 * cards need need more time to cope up reliabily. 		 * Experiments with troublesome setups show this to be a 		 * "cheap" way to enhance reliabilty.  We need not do this for 		 * "off" since we don't touch the card after we turn it off. 		 */
+comment|/* 		 * Relax for 100ms.  Some bridges appear to assert this signal 		 * right away, but before the card has stabilized.  Other cards 		 * need need more time to cope up reliabily.  Experiments with 		 * troublesome setups show this to be a "cheap" way to enhance 		 * reliabilty. 		 */
 name|pause
 argument_list|(
 literal|"cbbPwr"
@@ -3175,7 +3179,7 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The TOPIC95B requires a little bit extra time to get its 		 * act together, so delay for an additional 100ms.  Also as 		 * documented below, it doesn't seem to set the POWER_CYCLE 		 * bit, so don't whine if it never came on. 		 */
+comment|/* 		 * The TOPIC95B requires a little bit extra time to get its act 		 * together, so delay for an additional 100ms.  Also as 		 * documented below, it doesn't seem to set the POWER_CYCLE bit, 		 * so don't whine if it never came on. 		 */
 if|if
 condition|(
 name|sc
@@ -3210,7 +3214,7 @@ literal|"power timeout, doom?\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * After the power is good, we can turn off the power interrupt. 	 * However, the PC Card standard says that we must delay turning the 	 * CD bit back on for a bit to allow for bouncyness on power down 	 * (recall that we don't wait above for a power down, since we don't 	 * get an interrupt for that).  We're called either from the suspend 	 * code in which case we don't want to turn card change on again, or 	 * we're called from the card insertion code, in which case the cbb 	 * thread will turn it on for us before it waits to be woken by a 	 * change event. 	 * 	 * NB: Topic95B doesn't set the power cycle bit.  we assume that 	 * both it and the TOPIC95 behave the same. 	 */
+comment|/* 	 * After the power is good, we can turn off the power interrupt. 	 * However, the PC Card standard says that we must delay turning the CD 	 * bit back on for a bit to allow for bouncyness on power down. We just 	 * pause a little below to cover that. Most bridges don't seem to need 	 * this delay. 	 * 	 * NB: Topic95B doesn't set the power cycle bit.  We assume that 	 * both it and the TOPIC95 behave the same, though despite efforts 	 * to find one, the author never could locate a laptop with a TOPIC95 	 * in it. 	 */
 name|cbb_clrb
 argument_list|(
 name|sc
@@ -3260,6 +3264,18 @@ literal|"Power not on?\n"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|pause
+argument_list|(
+literal|"cbbDwn"
+argument_list|,
+name|hz
+operator|/
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|status
@@ -3273,7 +3289,11 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Bad Vcc requested\n"
+literal|"Bad Vcc requested status %#x %dV\n"
+argument_list|,
+name|status
+argument_list|,
+name|volts
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Turn off the power, and try again.  Retrigger other 		 * active interrupts via force register.  From NetBSD 		 * PR 36652, coded by me to description there. 		 */
@@ -6948,196 +6968,6 @@ block|}
 return|return
 operator|(
 name|ENOENT
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|cbb_suspend
-parameter_list|(
-name|device_t
-name|self
-parameter_list|)
-block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
-name|struct
-name|cbb_softc
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|self
-argument_list|)
-decl_stmt|;
-name|error
-operator|=
-name|bus_generic_suspend
-argument_list|(
-name|self
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-name|cbb_set
-argument_list|(
-name|sc
-argument_list|,
-name|CBB_SOCKET_MASK
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Quiet hardware */
-name|sc
-operator|->
-name|cardok
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Card is bogus now */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|cbb_resume
-parameter_list|(
-name|device_t
-name|self
-parameter_list|)
-block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
-name|struct
-name|cbb_softc
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|cbb_softc
-operator|*
-operator|)
-name|device_get_softc
-argument_list|(
-name|self
-argument_list|)
-decl_stmt|;
-name|uint32_t
-name|tmp
-decl_stmt|;
-comment|/* 	 * In the APM and early ACPI era, BIOSes saved the PCI config 	 * registers. As chips became more complicated, that functionality moved 	 * into the ACPI code / tables. We must therefore, restore the settings 	 * we made here to make sure the device come back. Transitions to Dx 	 * from D0 and back to D0 cause the bridge to lose its config space, so 	 * all the bus mappings and such are preserved. 	 * 	 * For most drivers, the PCI layer handles this saving. However, since 	 * there's much black magic and arcane art hidden in these few lines of 	 * code that would be difficult to transition into the PCI 	 * layer. chipinit was several years of trial and error to write. 	 */
-name|pci_write_config
-argument_list|(
-name|self
-argument_list|,
-name|CBBR_SOCKBASE
-argument_list|,
-name|rman_get_start
-argument_list|(
-name|sc
-operator|->
-name|base_res
-argument_list|)
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-name|DEVPRINTF
-argument_list|(
-operator|(
-name|self
-operator|,
-literal|"PCI Memory allocated: %08lx\n"
-operator|,
-name|rman_get_start
-argument_list|(
-name|sc
-operator|->
-name|base_res
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|chipinit
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* reset interrupt -- Do we really need to do this? */
-name|tmp
-operator|=
-name|cbb_get
-argument_list|(
-name|sc
-argument_list|,
-name|CBB_SOCKET_EVENT
-argument_list|)
-expr_stmt|;
-name|cbb_set
-argument_list|(
-name|sc
-argument_list|,
-name|CBB_SOCKET_EVENT
-argument_list|,
-name|tmp
-argument_list|)
-expr_stmt|;
-comment|/* CSC Interrupt: Card detect interrupt on */
-name|cbb_setb
-argument_list|(
-name|sc
-argument_list|,
-name|CBB_SOCKET_MASK
-argument_list|,
-name|CBB_SOCKET_MASK_CD
-argument_list|)
-expr_stmt|;
-comment|/* Signal the thread to wakeup. */
-name|wakeup
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|intrhand
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|bus_generic_resume
-argument_list|(
-name|self
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
