@@ -7584,6 +7584,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* make sure we can re-use the device name */
+name|delist_dev
+argument_list|(
+name|pd
+operator|->
+name|cdev
+argument_list|)
+expr_stmt|;
 name|USB_BUS_LOCK
 argument_list|(
 name|bus
