@@ -1626,11 +1626,11 @@ define|#
 directive|define
 name|SSL_OP_SINGLE_DH_USE
 value|0x00100000L
-comment|/* Set to always use the tmp_rsa key when doing RSA operations,  * even when this violates protocol specs */
+comment|/* Does nothing: retained for compatibiity */
 define|#
 directive|define
 name|SSL_OP_EPHEMERAL_RSA
-value|0x00200000L
+value|0x0
 comment|/* Set on servers to choose the cipher according to the server's  * preferences */
 define|#
 directive|define

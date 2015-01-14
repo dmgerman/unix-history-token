@@ -2010,10 +2010,12 @@ function_decl|;
 name|int
 name|ASN1_TYPE_cmp
 parameter_list|(
+specifier|const
 name|ASN1_TYPE
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|ASN1_TYPE
 modifier|*
 name|b
@@ -5377,6 +5379,10 @@ define|#
 directive|define
 name|ASN1_R_INTEGER_TOO_LARGE_FOR_LONG
 value|128
+define|#
+directive|define
+name|ASN1_R_INVALID_BIT_STRING_BITS_LEFT
+value|220
 define|#
 directive|define
 name|ASN1_R_INVALID_BMPSTRING_LENGTH
