@@ -813,6 +813,16 @@ name|generic_steppings
 block|}
 block|,
 block|{
+name|CPU_ID_CORTEXA12R0
+block|,
+name|CPU_CLASS_CORTEXA
+block|,
+literal|"Cortex A12-r0"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
 name|CPU_ID_CORTEXA15R0
 block|,
 name|CPU_CLASS_CORTEXA
@@ -848,16 +858,6 @@ block|,
 name|CPU_CLASS_CORTEXA
 block|,
 literal|"Cortex A15-r3"
-block|,
-name|generic_steppings
-block|}
-block|,
-block|{
-name|CPU_ID_CORTEXA17
-block|,
-name|CPU_CLASS_CORTEXA
-block|,
-literal|"Cortex A17"
 block|,
 name|generic_steppings
 block|}
