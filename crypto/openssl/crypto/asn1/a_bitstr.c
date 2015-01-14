@@ -465,6 +465,21 @@ name|p
 operator|++
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|7
+condition|)
+block|{
+name|i
+operator|=
+name|ASN1_R_INVALID_BIT_STRING_BITS_LEFT
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 comment|/* We do this to preserve the settings.  If we modify 	 * the settings, via the _set_bit function, we will recalculate 	 * on output */
 name|ret
 operator|->
@@ -485,11 +500,7 @@ operator||=
 operator|(
 name|ASN1_STRING_FLAG_BITS_LEFT
 operator||
-operator|(
 name|i
-operator|&
-literal|0x07
-operator|)
 operator|)
 expr_stmt|;
 comment|/* set */

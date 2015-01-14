@@ -1624,6 +1624,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|ASN1_R_INVALID_BIT_STRING_BITS_LEFT
+argument_list|)
+block|,
+literal|"invalid bit string bits left"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|ASN1_R_INVALID_BMPSTRING_LENGTH
 argument_list|)
 block|,

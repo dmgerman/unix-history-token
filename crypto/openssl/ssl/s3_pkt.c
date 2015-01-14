@@ -352,6 +352,17 @@ block|{
 if|if
 condition|(
 name|left
+operator|==
+literal|0
+operator|&&
+name|extend
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|left
 operator|>
 literal|0
 operator|&&

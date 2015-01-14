@@ -935,6 +935,25 @@ argument_list|,
 name|ERR_R_INTERNAL_ERROR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rdata
+operator|->
+name|rbuf
+operator|.
+name|buf
+operator|!=
+name|NULL
+condition|)
+name|OPENSSL_free
+argument_list|(
+name|rdata
+operator|->
+name|rbuf
+operator|.
+name|buf
+argument_list|)
+expr_stmt|;
 name|OPENSSL_free
 argument_list|(
 name|rdata
@@ -947,7 +966,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -973,6 +993,25 @@ argument_list|,
 name|ERR_R_INTERNAL_ERROR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rdata
+operator|->
+name|rbuf
+operator|.
+name|buf
+operator|!=
+name|NULL
+condition|)
+name|OPENSSL_free
+argument_list|(
+name|rdata
+operator|->
+name|rbuf
+operator|.
+name|buf
+argument_list|)
+expr_stmt|;
 name|OPENSSL_free
 argument_list|(
 name|rdata
@@ -985,7 +1024,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -1180,6 +1220,8 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
 name|dtls1_buffer_record
 argument_list|(
 name|s
@@ -1201,7 +1243,13 @@ name|rrec
 operator|.
 name|seq_num
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 block|}
 block|}
 comment|/* sync epoch numbers once all the unprocessed records       * have been processed */
@@ -1844,21 +1892,6 @@ name|packet_length
 operator|=
 literal|0
 expr_stmt|;
-name|dtls1_record_bitmap_update
-argument_list|(
-name|s
-argument_list|,
-operator|&
-operator|(
-name|s
-operator|->
-name|d1
-operator|->
-name|bitmap
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Mark receipt of record. */
 return|return
 operator|(
 literal|1
@@ -1947,11 +1980,19 @@ name|rrec
 operator|)
 expr_stmt|;
 comment|/* The epoch may have changed.  If so, process all the 	 * pending records.  This is a non-blocking operation. */
+if|if
+condition|(
 name|dtls1_process_buffered_records
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 comment|/* if we're renegotiating, then there may be buffered records */
 if|if
 condition|(
@@ -2261,18 +2302,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|n
-operator|<=
-literal|0
-condition|)
-return|return
-operator|(
-name|n
-operator|)
-return|;
-comment|/* error or non-blocking io */
 comment|/* this packet contained a partial record, dump it */
 if|if
 condition|(
@@ -2379,8 +2408,18 @@ name|type
 operator|==
 name|SSL3_RT_HANDSHAKE
 operator|&&
-operator|*
-name|p
+name|s
+operator|->
+name|packet_length
+operator|>
+name|DTLS1_RT_HEADER_LENGTH
+operator|&&
+name|s
+operator|->
+name|packet
+index|[
+name|DTLS1_RT_HEADER_LENGTH
+index|]
 operator|==
 name|SSL3_MT_CLIENT_HELLO
 operator|)
@@ -2457,6 +2496,8 @@ operator|->
 name|listen
 condition|)
 block|{
+if|if
+condition|(
 name|dtls1_buffer_record
 argument_list|(
 name|s
@@ -2474,7 +2515,21 @@ name|rr
 operator|->
 name|seq_num
 argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|dtls1_record_bitmap_update
+argument_list|(
+name|s
+argument_list|,
+name|bitmap
+argument_list|)
 expr_stmt|;
+comment|/* Mark receipt of record. */
 block|}
 name|rr
 operator|->
@@ -2519,6 +2574,14 @@ name|again
 goto|;
 comment|/* get another record */
 block|}
+name|dtls1_record_bitmap_update
+argument_list|(
+name|s
+argument_list|,
+name|bitmap
+argument_list|)
+expr_stmt|;
+comment|/* Mark receipt of record. */
 return|return
 operator|(
 literal|1
@@ -3046,6 +3109,8 @@ operator|)
 condition|)
 block|{
 comment|/* We now have application data between CCS and Finished. 		 * Most likely the packets were reordered on their way, so 		 * buffer the application data for later processing rather 		 * than dropping the connection. 		 */
+if|if
+condition|(
 name|dtls1_buffer_record
 argument_list|(
 name|s
@@ -3063,7 +3128,22 @@ name|rr
 operator|->
 name|seq_num
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_DTLS1_READ_BYTES
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|rr
 operator|->
 name|length

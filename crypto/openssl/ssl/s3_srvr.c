@@ -1218,42 +1218,7 @@ name|new_cipher
 operator|->
 name|algorithm_mkey
 expr_stmt|;
-comment|/* clear this, it may get reset by 			 * send_server_key_exchange */
-if|if
-condition|(
-operator|(
-name|s
-operator|->
-name|options
-operator|&
-name|SSL_OP_EPHEMERAL_RSA
-operator|)
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_KRB5
-operator|&&
-operator|!
-operator|(
-name|alg_k
-operator|&
-name|SSL_kKRB5
-operator|)
-endif|#
-directive|endif
-comment|/* OPENSSL_NO_KRB5 */
-condition|)
-comment|/* option SSL_OP_EPHEMERAL_RSA sends temporary RSA key 				 * even when forbidden by protocol specs 				 * (handshake may fail as clients are not required to 				 * be able to handle this) */
-name|s
-operator|->
-name|s3
-operator|->
-name|tmp
-operator|.
-name|use_rsa_tmp
-operator|=
-literal|1
-expr_stmt|;
-else|else
+comment|/* 			 * clear this, it may get reset by 			 * send_server_key_exchange 			 */
 name|s
 operator|->
 name|s3
@@ -1267,13 +1232,7 @@ expr_stmt|;
 comment|/* only send if a DH key exchange, fortezza or 			 * RSA but we have a sign only certificate 			 * 			 * PSK: may send PSK identity hints 			 * 			 * For ECC ciphersuites, we send a serverKeyExchange 			 * message only if the cipher suite is either 			 * ECDH-anon or ECDHE. In other cases, the 			 * server certificate contains the server's 			 * public key for key exchange. 			 */
 if|if
 condition|(
-name|s
-operator|->
-name|s3
-operator|->
-name|tmp
-operator|.
-name|use_rsa_tmp
+literal|0
 comment|/* PSK: send ServerKeyExchange if PSK identity 			 * hint if provided */
 ifndef|#
 directive|ifndef
@@ -12082,17 +12041,9 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|peer
 operator|!=
 name|NULL
-operator|)
-operator|&&
-operator|(
-name|type
-operator|&
-name|EVP_PKT_SIGN
-operator|)
 condition|)
 block|{
 name|al
