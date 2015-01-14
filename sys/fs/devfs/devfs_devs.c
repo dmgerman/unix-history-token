@@ -592,6 +592,13 @@ name|si_cred
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * Avoid race with dev_rel() by setting the initial 	 * reference count to 1. This last reference is taken 	 * by the destroy_dev() function. 	 */
+name|cdev
+operator|->
+name|si_refcount
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|cdev
