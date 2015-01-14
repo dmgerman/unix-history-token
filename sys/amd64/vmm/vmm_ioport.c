@@ -262,6 +262,7 @@ block|,
 literal|"outsw"
 block|,
 literal|"outsd"
+block|,
 literal|"insb"
 block|,
 literal|"insw"
