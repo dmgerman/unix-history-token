@@ -3899,6 +3899,20 @@ continue|continue;
 comment|/* Align section offset. */
 if|if
 condition|(
+name|s
+operator|->
+name|align
+operator|==
+literal|0
+condition|)
+name|s
+operator|->
+name|align
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|off
 operator|<=
 name|s
