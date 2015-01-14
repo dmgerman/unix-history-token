@@ -475,6 +475,15 @@ name|ENXIO
 operator|)
 return|;
 block|}
+else|#
+directive|else
+name|device_printf
+argument_list|(
+name|cbdev
+argument_list|,
+literal|"Your bus numbers may be AFU\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 return|return
