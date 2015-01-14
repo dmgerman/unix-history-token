@@ -782,28 +782,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PR_IP4_DISABLE
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* Disable IPv4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PR_IP6_DISABLE
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* Disable IPv6 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PR_IP4_SADDRSEL
 value|0x00000080
 end_define
