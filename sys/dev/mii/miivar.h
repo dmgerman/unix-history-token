@@ -891,17 +891,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|mii_down
-parameter_list|(
-name|struct
-name|mii_data
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|mii_mediachg
 parameter_list|(
@@ -962,17 +951,6 @@ name|mii_phy_detach
 parameter_list|(
 name|device_t
 name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mii_phy_down
-parameter_list|(
-name|struct
-name|mii_softc
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

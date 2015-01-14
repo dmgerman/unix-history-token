@@ -1171,18 +1171,6 @@ end_function
 
 begin_function
 name|void
-name|mii_phy_down
-parameter_list|(
-name|struct
-name|mii_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-name|void
 name|mii_phy_update
 parameter_list|(
 name|struct
@@ -2232,11 +2220,6 @@ operator|=
 name|device_get_softc
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|mii_phy_down
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|sc
