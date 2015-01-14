@@ -524,6 +524,9 @@ decl_stmt|;
 name|int
 name|page_size
 decl_stmt|;
+name|int
+name|driver_abi_ver
+decl_stmt|;
 block|}
 struct|;
 end_struct
