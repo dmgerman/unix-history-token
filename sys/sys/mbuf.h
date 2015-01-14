@@ -66,21 +66,41 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Mbufs are of a single size, MSIZE (sys/param.h), which includes overhead.  * An mbuf may add a single "mbuf cluster" of size MCLBYTES (also in  * sys/param.h), which has no additional overhead and is used instead of the  * internal data area; this is done when at least MINCLSIZE of data must be  * stored.  Additionally, it is possible to allocate a separate buffer  * externally and attach it to the mbuf in a way similar to that of mbuf  * clusters.  *  * NB: These calculation do not take actual compiler-induced alignment and  * padding inside the complete struct mbuf into account.  Appropriate  * attention is required when changing members of struct mbuf.  *  * MLEN is data length in a normal mbuf.  * MHLEN is data length in an mbuf with pktheader.  * MINCLSIZE is a smallest amount of data that should be put into cluster.  */
+comment|/*  * Mbufs are of a single size, MSIZE (sys/param.h), which includes overhead.  * An mbuf may add a single "mbuf cluster" of size MCLBYTES (also in  * sys/param.h), which has no additional overhead and is used instead of the  * internal data area; this is done when at least MINCLSIZE of data must be  * stored.  Additionally, it is possible to allocate a separate buffer  * externally and attach it to the mbuf in a way similar to that of mbuf  * clusters.  *  * NB: These calculation do not take actual compiler-induced alignment and  * padding inside the complete struct mbuf into account.  Appropriate  * attention is required when changing members of struct mbuf.  *  * MLEN is data length in a normal mbuf.  * MHLEN is data length in an mbuf with pktheader.  * MINCLSIZE is a smallest amount of data that should be put into cluster.  *  * Compile-time assertions in uipc_mbuf.c test these values to ensure that  * they are sensible.  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
+begin_define
+define|#
+directive|define
+name|MHSIZE
+value|offsetof(struct mbuf, M_dat.M_databuf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPKTHSIZE
+value|offsetof(struct mbuf, M_dat.MH.MH_dat.MH_databuf)
+end_define
 
 begin_define
 define|#
 directive|define
 name|MLEN
-value|((int)(MSIZE - sizeof(struct m_hdr)))
+value|((int)(MSIZE - MHSIZE))
 end_define
 
 begin_define
 define|#
 directive|define
 name|MHLEN
-value|((int)(MLEN - sizeof(struct pkthdr)))
+value|((int)(MSIZE - MPKTHSIZE))
 end_define
 
 begin_define
@@ -154,62 +174,6 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Header present at the beginning of every mbuf.  * Size ILP32: 24  *	 LP64: 32  */
-end_comment
-
-begin_struct
-struct|struct
-name|m_hdr
-block|{
-name|struct
-name|mbuf
-modifier|*
-name|mh_next
-decl_stmt|;
-comment|/* next buffer in chain */
-name|struct
-name|mbuf
-modifier|*
-name|mh_nextpkt
-decl_stmt|;
-comment|/* next chain in queue/record */
-name|caddr_t
-name|mh_data
-decl_stmt|;
-comment|/* location of data */
-name|int32_t
-name|mh_len
-decl_stmt|;
-comment|/* amount of data in this mbuf */
-name|uint32_t
-name|mh_type
-range|:
-literal|8
-decl_stmt|,
-comment|/* type of data in this mbuf */
-name|mh_flags
-range|:
-literal|24
-decl_stmt|;
-comment|/* flags; see below */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__LP64__
-argument_list|)
-name|uint32_t
-name|mh_pad
-decl_stmt|;
-comment|/* pad for 64bit alignment */
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Packet tag structure (see below for details).  */
 end_comment
 
@@ -252,7 +216,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Record/packet header in first mbuf of chain; valid only if M_PKTHDR is set.  * Size ILP32: 48  *	 LP64: 56  */
+comment|/*  * Record/packet header in first mbuf of chain; valid only if M_PKTHDR is set.  * Size ILP32: 48  *	 LP64: 56  * Compile-time assertions in uipc_mbuf.c test these values to ensure that  * they are correct.  */
 end_comment
 
 begin_struct
@@ -448,12 +412,12 @@ value|PH_loc.ptr
 end_define
 
 begin_comment
-comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  * Size ILP32: 28  *	 LP64: 48  */
+comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  * Size ILP32: 28  *	 LP64: 48  * Compile-time assertions in uipc_mbuf.c test these values to ensure that  * they are correct.  */
 end_comment
 
 begin_struct
 struct|struct
-name|m_ext
+name|struct_m_ext
 block|{
 specifier|volatile
 name|u_int
@@ -520,10 +484,52 @@ begin_struct
 struct|struct
 name|mbuf
 block|{
+comment|/* 	 * Header present at the beginning of every mbuf. 	 * Size ILP32: 24 	 *      LP64: 32 	 * Compile-time assertions in uipc_mbuf.c test these values to ensure 	 * that they are correct. 	 */
 name|struct
-name|m_hdr
-name|m_hdr
+name|mbuf
+modifier|*
+name|m_next
 decl_stmt|;
+comment|/* next buffer in chain */
+name|struct
+name|mbuf
+modifier|*
+name|m_nextpkt
+decl_stmt|;
+comment|/* next chain in queue/record */
+name|caddr_t
+name|m_data
+decl_stmt|;
+comment|/* location of data */
+name|int32_t
+name|m_len
+decl_stmt|;
+comment|/* amount of data in this mbuf */
+name|uint32_t
+name|m_type
+range|:
+literal|8
+decl_stmt|,
+comment|/* type of data in this mbuf */
+name|m_flags
+range|:
+literal|24
+decl_stmt|;
+comment|/* flags; see below */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+name|uint32_t
+name|m_pad
+decl_stmt|;
+comment|/* pad for 64bit alignment */
+endif|#
+directive|endif
+comment|/* 	 * A set of optional headers (packet header, external storage header) 	 * and internal data storage.  Historically, these arrays were sized 	 * to MHLEN (space left after a packet header) and MLEN (space left 	 * after only a regular mbuf header); they are now variable size in 	 * order to support future work on variable-size mbufs. 	 */
 union|union
 block|{
 struct|struct
@@ -536,14 +542,14 @@ comment|/* M_PKTHDR set */
 union|union
 block|{
 name|struct
-name|m_ext
+name|struct_m_ext
 name|MH_ext
 decl_stmt|;
 comment|/* M_EXT set */
 name|char
 name|MH_databuf
 index|[
-name|MHLEN
+literal|0
 index|]
 decl_stmt|;
 block|}
@@ -555,7 +561,7 @@ struct|;
 name|char
 name|M_databuf
 index|[
-name|MLEN
+literal|0
 index|]
 decl_stmt|;
 comment|/* !M_PKTHDR, !M_EXT */
@@ -565,48 +571,6 @@ union|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|m_next
-value|m_hdr.mh_next
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_len
-value|m_hdr.mh_len
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_data
-value|m_hdr.mh_data
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_type
-value|m_hdr.mh_type
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_flags
-value|m_hdr.mh_flags
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_nextpkt
-value|m_hdr.mh_nextpkt
-end_define
 
 begin_define
 define|#
