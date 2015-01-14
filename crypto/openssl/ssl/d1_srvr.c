@@ -1078,41 +1078,6 @@ operator|->
 name|algorithms
 expr_stmt|;
 comment|/* clear this, it may get reset by 			 * send_server_key_exchange */
-if|if
-condition|(
-operator|(
-name|s
-operator|->
-name|options
-operator|&
-name|SSL_OP_EPHEMERAL_RSA
-operator|)
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_KRB5
-operator|&&
-operator|!
-operator|(
-name|l
-operator|&
-name|SSL_KRB5
-operator|)
-endif|#
-directive|endif
-comment|/* OPENSSL_NO_KRB5 */
-condition|)
-comment|/* option SSL_OP_EPHEMERAL_RSA sends temporary RSA key 				 * even when forbidden by protocol specs 				 * (handshake may fail as clients are not required to 				 * be able to handle this) */
-name|s
-operator|->
-name|s3
-operator|->
-name|tmp
-operator|.
-name|use_rsa_tmp
-operator|=
-literal|1
-expr_stmt|;
-else|else
 name|s
 operator|->
 name|s3
@@ -1126,14 +1091,6 @@ expr_stmt|;
 comment|/* only send if a DH key exchange, fortezza or 			 * RSA but we have a sign only certificate */
 if|if
 condition|(
-name|s
-operator|->
-name|s3
-operator|->
-name|tmp
-operator|.
-name|use_rsa_tmp
-operator|||
 operator|(
 name|l
 operator|&
