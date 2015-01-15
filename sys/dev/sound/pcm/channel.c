@@ -343,7 +343,7 @@ name|sysctl_hw_snd_latency_profile
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"buffering latency profile (0=aggresive 1=safe)"
+literal|"buffering latency profile (0=aggressive 1=safe)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

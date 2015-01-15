@@ -14148,7 +14148,7 @@ name|sbuf_printf
 argument_list|(
 name|s
 argument_list|,
-literal|"\tIR reciever MIDI events %s\n"
+literal|"\tIR receiver MIDI events %s\n"
 argument_list|,
 name|sc
 operator|->
