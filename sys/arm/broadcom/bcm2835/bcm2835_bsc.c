@@ -1139,6 +1139,19 @@ argument_list|,
 literal|"only bsc0 and bsc1 are supported\n"
 argument_list|)
 expr_stmt|;
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+literal|0
+argument_list|,
+name|sc
+operator|->
+name|sc_mem_res
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -1169,6 +1182,19 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"cannot find gpio0\n"
+argument_list|)
+expr_stmt|;
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+literal|0
+argument_list|,
+name|sc
+operator|->
+name|sc_mem_res
 argument_list|)
 expr_stmt|;
 return|return
