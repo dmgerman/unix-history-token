@@ -574,6 +574,8 @@ literal|1
 index|]
 argument_list|,
 name|typestr
+argument_list|,
+literal|1
 argument_list|)
 condition|?
 name|CMD_OK
@@ -883,6 +885,8 @@ literal|2
 index|]
 argument_list|,
 name|typestr
+argument_list|,
+literal|1
 argument_list|)
 condition|?
 name|CMD_OK
@@ -1732,6 +1736,9 @@ parameter_list|,
 name|char
 modifier|*
 name|type
+parameter_list|,
+name|int
+name|insert
 parameter_list|)
 block|{
 name|struct
@@ -2033,6 +2040,12 @@ operator|=
 name|laddr
 expr_stmt|;
 comment|/* Add to the list of loaded files */
+if|if
+condition|(
+name|insert
+operator|!=
+literal|0
+condition|)
 name|file_insert_tail
 argument_list|(
 name|fp
@@ -2495,10 +2508,12 @@ name|preloaded_file
 modifier|*
 name|file_findfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|type

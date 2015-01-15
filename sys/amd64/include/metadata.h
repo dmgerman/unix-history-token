@@ -50,6 +50,13 @@ name|MODINFOMD_EFI_FB
 value|0x1005
 end_define
 
+begin_define
+define|#
+directive|define
+name|MODINFOMD_MODULEP
+value|0x1006
+end_define
+
 begin_struct
 struct|struct
 name|efi_map_header
