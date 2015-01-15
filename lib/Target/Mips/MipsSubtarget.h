@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MipsABIInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -151,27 +157,7 @@ name|virtual
 name|void
 name|anchor
 argument_list|()
-block|;
-name|public
-operator|:
-comment|// NOTE: O64 will not be supported.
-expr|enum
-name|MipsABIEnum
-block|{
-name|UnknownABI
-block|,
-name|O32
-block|,
-name|N32
-block|,
-name|N64
-block|,
-name|EABI
-block|}
-block|;
-name|protected
-operator|:
-expr|enum
+block|;    enum
 name|MipsArchEnum
 block|{
 name|Mips1
@@ -201,9 +187,9 @@ comment|// Mips architecture version
 name|MipsArchEnum
 name|MipsArchVersion
 block|;
-comment|// Mips supported ABIs
-name|MipsABIEnum
-name|MipsABI
+comment|// Selected ABI
+name|MipsABIInfo
+name|ABI
 block|;
 comment|// IsLittle - The target is Little Endian
 name|bool
@@ -218,6 +204,10 @@ block|;
 comment|// IsFPXX - MIPS O32 modeless ABI.
 name|bool
 name|IsFPXX
+block|;
+comment|// NoABICalls - Disable SVR4-style position-independent code.
+name|bool
+name|NoABICalls
 block|;
 comment|// IsFP64bit - The target processor has 64-bit floating point registers.
 name|bool
@@ -402,9 +392,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MipsABI
-operator|==
-name|EABI
+name|ABI
+operator|.
+name|IsEABI
+argument_list|()
 return|;
 block|}
 name|bool
@@ -413,9 +404,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MipsABI
-operator|==
-name|N64
+name|ABI
+operator|.
+name|IsN64
+argument_list|()
 return|;
 block|}
 name|bool
@@ -424,9 +416,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MipsABI
-operator|==
-name|N32
+name|ABI
+operator|.
+name|IsN32
+argument_list|()
 return|;
 block|}
 name|bool
@@ -435,9 +428,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MipsABI
-operator|==
-name|O32
+name|ABI
+operator|.
+name|IsO32
+argument_list|()
 return|;
 block|}
 name|bool
@@ -452,13 +446,15 @@ operator|&&
 name|IsFPXX
 return|;
 block|}
-name|unsigned
-name|getTargetABI
+specifier|const
+name|MipsABIInfo
+operator|&
+name|getABI
 argument_list|()
 specifier|const
 block|{
 return|return
-name|MipsABI
+name|ABI
 return|;
 block|}
 comment|/// This constructor initializes the data members to match that
@@ -676,6 +672,16 @@ name|IsLittle
 return|;
 block|}
 name|bool
+name|isABICalls
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|NoABICalls
+return|;
+block|}
+name|bool
 name|isFPXX
 argument_list|()
 specifier|const
@@ -722,16 +728,6 @@ name|IsNaN2008bit
 return|;
 block|}
 name|bool
-name|isNotFP64bit
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|IsFP64bit
-return|;
-block|}
-name|bool
 name|isGP64bit
 argument_list|()
 specifier|const
@@ -750,22 +746,26 @@ operator|!
 name|IsGP64bit
 return|;
 block|}
+name|unsigned
+name|getGPRSizeInBytes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isGP64bit
+argument_list|()
+operator|?
+literal|8
+operator|:
+literal|4
+return|;
+block|}
 name|bool
 name|isSingleFloat
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsSingleFloat
-return|;
-block|}
-name|bool
-name|isNotSingleFloat
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
 name|IsSingleFloat
 return|;
 block|}
@@ -965,19 +965,6 @@ name|isOSNaCl
 argument_list|()
 return|;
 block|}
-name|bool
-name|isNotTargetNaCl
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|TargetTriple
-operator|.
-name|isOSNaCl
-argument_list|()
-return|;
-block|}
 comment|// for now constant islands are on for the whole compilation unit but we only
 comment|// really use them if in addition we are in mips16 mode
 specifier|static
@@ -993,9 +980,9 @@ block|{
 return|return
 name|hasMips64
 argument_list|()
-operator|?
+condition|?
 literal|16
-operator|:
+else|:
 literal|8
 return|;
 block|}

@@ -398,6 +398,9 @@ name|class
 name|MipsSubtarget
 decl_stmt|;
 name|class
+name|MipsCCState
+decl_stmt|;
+name|class
 name|MipsTargetLowering
 range|:
 name|public
@@ -576,6 +579,18 @@ literal|0
 return|;
 block|}
 expr|}
+block|;
+name|void
+name|HandleByVal
+argument_list|(
+argument|CCState *
+argument_list|,
+argument|unsigned&
+argument_list|,
+argument|unsigned
+argument_list|)
+specifier|const
+name|override
 block|;
 name|protected
 operator|:
@@ -1114,338 +1129,6 @@ argument|SDValue Chain
 argument_list|)
 specifier|const
 block|;
-comment|/// ByValArgInfo - Byval argument information.
-block|struct
-name|ByValArgInfo
-block|{
-name|unsigned
-name|FirstIdx
-block|;
-comment|// Index of the first register used.
-name|unsigned
-name|NumRegs
-block|;
-comment|// Number of registers used for this argument.
-name|unsigned
-name|Address
-block|;
-comment|// Offset of the stack area used to pass this argument.
-name|ByValArgInfo
-argument_list|()
-operator|:
-name|FirstIdx
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|NumRegs
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Address
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-block|}
-block|;
-comment|/// MipsCC - This class provides methods used to analyze formal and call
-comment|/// arguments and inquire about calling convention information.
-name|class
-name|MipsCC
-block|{
-name|public
-operator|:
-expr|enum
-name|SpecialCallingConvType
-block|{
-name|Mips16RetHelperConv
-block|,
-name|NoSpecialCallingConv
-block|}
-block|;
-name|MipsCC
-argument_list|(
-argument|CallingConv::ID CallConv
-argument_list|,
-argument|bool IsO32
-argument_list|,
-argument|bool IsFP64
-argument_list|,
-argument|CCState&Info
-argument_list|,
-argument|SpecialCallingConvType SpecialCallingConv = NoSpecialCallingConv
-argument_list|)
-block|;
-name|void
-name|analyzeCallOperands
-argument_list|(
-argument|const SmallVectorImpl<ISD::OutputArg>&Outs
-argument_list|,
-argument|bool IsVarArg
-argument_list|,
-argument|bool IsSoftFloat
-argument_list|,
-argument|const SDNode *CallNode
-argument_list|,
-argument|std::vector<ArgListEntry>&FuncArgs
-argument_list|)
-block|;
-name|void
-name|analyzeFormalArguments
-argument_list|(
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|bool IsSoftFloat
-argument_list|,
-argument|Function::const_arg_iterator FuncArg
-argument_list|)
-block|;
-name|void
-name|analyzeCallResult
-argument_list|(
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|bool IsSoftFloat
-argument_list|,
-argument|const SDNode *CallNode
-argument_list|,
-argument|const Type *RetTy
-argument_list|)
-specifier|const
-block|;
-name|void
-name|analyzeReturn
-argument_list|(
-argument|const SmallVectorImpl<ISD::OutputArg>&Outs
-argument_list|,
-argument|bool IsSoftFloat
-argument_list|,
-argument|const Type *RetTy
-argument_list|)
-specifier|const
-block|;
-specifier|const
-name|CCState
-operator|&
-name|getCCInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CCInfo
-return|;
-block|}
-comment|/// hasByValArg - Returns true if function has byval arguments.
-name|bool
-name|hasByValArg
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|ByValArgs
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-comment|/// regSize - Size (in number of bits) of integer registers.
-name|unsigned
-name|regSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsO32
-condition|?
-literal|4
-else|:
-literal|8
-return|;
-block|}
-comment|/// numIntArgRegs - Number of integer registers available for calls.
-name|unsigned
-name|numIntArgRegs
-argument_list|()
-specifier|const
-block|;
-comment|/// reservedArgArea - The size of the area the caller reserves for
-comment|/// register arguments. This is 16-byte if ABI is O32.
-name|unsigned
-name|reservedArgArea
-argument_list|()
-specifier|const
-block|;
-comment|/// Return pointer to array of integer argument registers.
-specifier|const
-name|MCPhysReg
-operator|*
-name|intArgRegs
-argument_list|()
-specifier|const
-block|;
-typedef|typedef
-name|SmallVectorImpl
-operator|<
-name|ByValArgInfo
-operator|>
-operator|::
-name|const_iterator
-name|byval_iterator
-expr_stmt|;
-name|byval_iterator
-name|byval_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ByValArgs
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|byval_iterator
-name|byval_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ByValArgs
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|private
-operator|:
-name|void
-name|handleByValArg
-argument_list|(
-argument|unsigned ValNo
-argument_list|,
-argument|MVT ValVT
-argument_list|,
-argument|MVT LocVT
-argument_list|,
-argument|CCValAssign::LocInfo LocInfo
-argument_list|,
-argument|ISD::ArgFlagsTy ArgFlags
-argument_list|)
-block|;
-comment|/// useRegsForByval - Returns true if the calling convention allows the
-comment|/// use of registers to pass byval arguments.
-name|bool
-name|useRegsForByval
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CallConv
-operator|!=
-name|CallingConv
-operator|::
-name|Fast
-return|;
-block|}
-comment|/// Return the function that analyzes fixed argument list functions.
-name|llvm
-operator|::
-name|CCAssignFn
-operator|*
-name|fixedArgFn
-argument_list|()
-specifier|const
-block|;
-comment|/// Return the function that analyzes variable argument list functions.
-name|llvm
-operator|::
-name|CCAssignFn
-operator|*
-name|varArgFn
-argument_list|()
-specifier|const
-block|;
-specifier|const
-name|MCPhysReg
-operator|*
-name|shadowRegs
-argument_list|()
-specifier|const
-block|;
-name|void
-name|allocateRegs
-argument_list|(
-argument|ByValArgInfo&ByVal
-argument_list|,
-argument|unsigned ByValSize
-argument_list|,
-argument|unsigned Align
-argument_list|)
-block|;
-comment|/// Return the type of the register which is used to pass an argument or
-comment|/// return a value. This function returns f64 if the argument is an i64
-comment|/// value which has been generated as a result of softening an f128 value.
-comment|/// Otherwise, it just returns VT.
-name|MVT
-name|getRegVT
-argument_list|(
-argument|MVT VT
-argument_list|,
-argument|const Type *OrigTy
-argument_list|,
-argument|const SDNode *CallNode
-argument_list|,
-argument|bool IsSoftFloat
-argument_list|)
-specifier|const
-block|;
-name|template
-operator|<
-name|typename
-name|Ty
-operator|>
-name|void
-name|analyzeReturn
-argument_list|(
-argument|const SmallVectorImpl<Ty>&RetVals
-argument_list|,
-argument|bool IsSoftFloat
-argument_list|,
-argument|const SDNode *CallNode
-argument_list|,
-argument|const Type *RetTy
-argument_list|)
-specifier|const
-block|;
-name|CCState
-operator|&
-name|CCInfo
-block|;
-name|CallingConv
-operator|::
-name|ID
-name|CallConv
-block|;
-name|bool
-name|IsO32
-block|,
-name|IsFP64
-block|;
-name|SpecialCallingConvType
-name|SpecialCallingConv
-block|;
-name|SmallVector
-operator|<
-name|ByValArgInfo
-block|,
-literal|2
-operator|>
-name|ByValArgs
-block|;     }
-block|;
 name|protected
 operator|:
 name|SDValue
@@ -1544,15 +1227,6 @@ argument|unsigned Flag
 argument_list|)
 specifier|const
 block|;
-name|MipsCC
-operator|::
-name|SpecialCallingConvType
-name|getSpecialCallingConv
-argument_list|(
-argument|SDValue Callee
-argument_list|)
-specifier|const
-block|;
 comment|// Lower Operand helpers
 name|SDValue
 name|LowerCallResult
@@ -1573,9 +1247,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|,
-argument|const SDNode *CallNode
-argument_list|,
-argument|const Type *RetTy
+argument|TargetLowering::CallLoweringInfo&CLI
 argument_list|)
 specifier|const
 block|;
@@ -1672,6 +1344,15 @@ specifier|const
 block|;
 name|SDValue
 name|lowerVASTART
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerVAARG
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1777,11 +1458,11 @@ name|virtual
 name|bool
 name|isEligibleForTailCallOptimization
 argument_list|(
-argument|const MipsCC&MipsCCInfo
+argument|const CCState&CCInfo
 argument_list|,
 argument|unsigned NextStackOffset
 argument_list|,
-argument|const MipsFunctionInfo& FI
+argument|const MipsFunctionInfo&FI
 argument_list|)
 specifier|const
 operator|=
@@ -1807,9 +1488,13 @@ argument|SmallVectorImpl<SDValue>&InVals
 argument_list|,
 argument|const Argument *FuncArg
 argument_list|,
-argument|const MipsCC&CC
+argument|unsigned FirstReg
 argument_list|,
-argument|const ByValArgInfo&ByVal
+argument|unsigned LastReg
+argument_list|,
+argument|const CCValAssign&VA
+argument_list|,
+argument|MipsCCState&State
 argument_list|)
 specifier|const
 block|;
@@ -1821,7 +1506,7 @@ argument|SDValue Chain
 argument_list|,
 argument|SDLoc DL
 argument_list|,
-argument|std::deque< std::pair<unsigned
+argument|std::deque<std::pair<unsigned
 argument_list|,
 argument|SDValue>>&RegsToPass
 argument_list|,
@@ -1835,13 +1520,15 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SDValue Arg
 argument_list|,
-argument|const MipsCC&CC
+argument|unsigned FirstReg
 argument_list|,
-argument|const ByValArgInfo&ByVal
+argument|unsigned LastReg
 argument_list|,
 argument|const ISD::ArgFlagsTy&Flags
 argument_list|,
 argument|bool isLittle
+argument_list|,
+argument|const CCValAssign&VA
 argument_list|)
 specifier|const
 block|;
@@ -1853,13 +1540,13 @@ name|writeVarArgRegs
 argument_list|(
 argument|std::vector<SDValue>&OutChains
 argument_list|,
-argument|const MipsCC&CC
-argument_list|,
 argument|SDValue Chain
 argument_list|,
 argument|SDLoc DL
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|,
+argument|CCState&State
 argument_list|)
 specifier|const
 block|;
@@ -2166,56 +1853,55 @@ argument|MachineBasicBlock *BB
 argument_list|)
 specifier|const
 block|;   }
-decl_stmt|;
+block|;
 comment|/// Create MipsTargetLowering objects.
 specifier|const
 name|MipsTargetLowering
-modifier|*
+operator|*
 name|createMips16TargetLowering
-parameter_list|(
+argument_list|(
 name|MipsTargetMachine
-modifier|&
+operator|&
 name|TM
-parameter_list|,
+argument_list|,
 specifier|const
 name|MipsSubtarget
-modifier|&
+operator|&
 name|STI
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 specifier|const
 name|MipsTargetLowering
-modifier|*
+operator|*
 name|createMipsSETargetLowering
-parameter_list|(
+argument_list|(
 name|MipsTargetMachine
-modifier|&
+operator|&
 name|TM
-parameter_list|,
+argument_list|,
 specifier|const
 name|MipsSubtarget
-modifier|&
+operator|&
 name|STI
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|namespace
 name|Mips
 block|{
 name|FastISel
-modifier|*
+operator|*
 name|createFastISel
-parameter_list|(
+argument_list|(
 name|FunctionLoweringInfo
-modifier|&
+operator|&
 name|funcInfo
-parameter_list|,
+argument_list|,
 specifier|const
 name|TargetLibraryInfo
-modifier|*
+operator|*
 name|libInfo
-parameter_list|)
-function_decl|;
-block|}
+argument_list|)
+block|;   }
 block|}
 end_decl_stmt
 

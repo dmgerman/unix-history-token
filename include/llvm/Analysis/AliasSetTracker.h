@@ -1410,11 +1410,23 @@ begin_function
 name|void
 name|removeUnknownInst
 parameter_list|(
+name|AliasSetTracker
+modifier|&
+name|AST
+parameter_list|,
 name|Instruction
 modifier|*
 name|I
 parameter_list|)
 block|{
+name|bool
+name|WasEmpty
+init|=
+name|UnknownInsts
+operator|.
+name|empty
+argument_list|()
+decl_stmt|;
 for|for
 control|(
 name|size_t
@@ -1469,6 +1481,21 @@ name|e
 expr_stmt|;
 comment|// Revisit the moved entry.
 block|}
+if|if
+condition|(
+operator|!
+name|WasEmpty
+operator|&&
+name|UnknownInsts
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|dropRef
+argument_list|(
+name|AST
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
