@@ -699,6 +699,22 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|MDT_PNP_INFO
+case|:
+if|if
+condition|(
+name|dflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"  pnp info for bus %s\n"
+argument_list|,
+name|cval
+argument_list|)
+expr_stmt|;
+block|}
 default|default:
 name|warnx
 argument_list|(

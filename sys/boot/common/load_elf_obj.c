@@ -2227,6 +2227,9 @@ break|break;
 case|case
 name|MDT_MODULE
 case|:
+case|case
+name|MDT_PNP_INFO
+case|:
 break|break;
 default|default:
 name|printf
