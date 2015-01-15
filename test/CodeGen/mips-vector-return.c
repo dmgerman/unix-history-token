@@ -54,7 +54,7 @@ comment|// O32-LABEL: define void @test_v4sf(<4 x float>* noalias nocapture sret
 end_comment
 
 begin_comment
-comment|// N64: define { i64, i64 } @test_v4sf
+comment|// N64: define inreg { i64, i64 } @test_v4sf
 end_comment
 
 begin_function
@@ -128,11 +128,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32: define { i32, i32, i32, i32 } @test_v4i32
+comment|// O32: define inreg { i32, i32, i32, i32 } @test_v4i32
 end_comment
 
 begin_comment
-comment|// N64: define { i64, i64 } @test_v4i32
+comment|// N64: define inreg { i64, i64 } @test_v4i32
 end_comment
 
 begin_function

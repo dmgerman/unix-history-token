@@ -285,6 +285,17 @@ begin_comment
 comment|// expected-note{{previous declaration is here}}
 end_comment
 
+begin_function
+name|int
+name|useGlobalRedecl3
+parameter_list|()
+block|{
+return|return
+name|GlobalRedecl3
+return|;
+block|}
+end_function
+
 begin_macro
 name|__declspec
 argument_list|(
@@ -301,6 +312,35 @@ end_decl_stmt
 
 begin_comment
 comment|// expected-error{{redeclaration of 'GlobalRedecl3' cannot add 'dllexport' attribute}}
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|GlobalRedecl4
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-note{{previous declaration is here}}
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|dllexport
+argument_list|)
+end_macro
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|GlobalRedecl4
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning{{redeclaration of 'GlobalRedecl4' should not add 'dllexport' attribute}}
 end_comment
 
 begin_comment
@@ -596,6 +636,17 @@ begin_comment
 comment|// expected-note{{previous declaration is here}}
 end_comment
 
+begin_function
+name|void
+name|useRedecl4
+parameter_list|()
+block|{
+name|redecl4
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_macro
 name|__declspec
 argument_list|(
@@ -625,6 +676,17 @@ begin_comment
 comment|// expected-note{{previous declaration is here}}
 end_comment
 
+begin_function
+name|void
+name|useRedecl5
+parameter_list|()
+block|{
+name|redecl5
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_macro
 name|__declspec
 argument_list|(
@@ -642,6 +704,39 @@ end_function
 
 begin_comment
 comment|// expected-error{{redeclaration of 'redecl5' cannot add 'dllexport' attribute}}
+end_comment
+
+begin_comment
+comment|// Allow with a warning if the decl hasn't been used yet.
+end_comment
+
+begin_function_decl
+name|void
+name|redecl6
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note{{previous declaration is here}}
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|dllexport
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|redecl6
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-warning{{redeclaration of 'redecl6' should not add 'dllexport' attribute}}
 end_comment
 
 begin_comment

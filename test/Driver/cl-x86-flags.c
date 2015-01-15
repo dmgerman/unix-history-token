@@ -36,7 +36,7 @@ comment|// -arch:IA32 is no-op.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m32 -arch:IA32 -### -- 2>&1 %s | FileCheck -check-prefix=IA32 %s
+comment|// RUN: %clang_cl -m32 -arch:IA32 --target=i386 -### -- 2>&1 %s | FileCheck -check-prefix=IA32 %s
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// IA32-NOT: -target-feature
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m32 -arch:ia32 -### -- 2>&1 %s | FileCheck -check-prefix=ia32 %s
+comment|// RUN: %clang_cl -m32 -arch:ia32 --target=i386 -### -- 2>&1 %s | FileCheck -check-prefix=ia32 %s
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// ia32-NOT: -target-feature
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m64 -arch:IA32 -### -- 2>&1 %s | FileCheck -check-prefix=IA3264 %s
+comment|// RUN: %clang_cl -m64 -arch:IA32 --target=x86_64 -### -- 2>&1 %s | FileCheck -check-prefix=IA3264 %s
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ comment|// IA3264-NOT: -target-feature
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m32 -arch:SSE -### -- 2>&1 %s | FileCheck -check-prefix=SSE %s
+comment|// RUN: %clang_cl -m32 -arch:SSE --target=i386 -### -- 2>&1 %s | FileCheck -check-prefix=SSE %s
 end_comment
 
 begin_comment
@@ -88,7 +88,7 @@ comment|// SSE-NOT: argument unused during compilation
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m32 -arch:sse -### -- 2>&1 %s | FileCheck -check-prefix=sse %s
+comment|// RUN: %clang_cl -m32 -arch:sse --target=i386 -### -- 2>&1 %s | FileCheck -check-prefix=sse %s
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ comment|// sse-NOT: -target-feature
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m32 -arch:SSE2 -### -- 2>&1 %s | FileCheck -check-prefix=SSE2 %s
+comment|// RUN: %clang_cl -m32 -arch:SSE2 --target=i386 -### -- 2>&1 %s | FileCheck -check-prefix=SSE2 %s
 end_comment
 
 begin_comment
@@ -116,7 +116,7 @@ comment|// SSE2-NOT: argument unused during compilation
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m32 -arch:sse2 -### -- 2>&1 %s | FileCheck -check-prefix=sse %s
+comment|// RUN: %clang_cl -m32 -arch:sse2 --target=i386 -### -- 2>&1 %s | FileCheck -check-prefix=sse %s
 end_comment
 
 begin_comment
@@ -128,7 +128,7 @@ comment|// sse2-NOT: -target-feature
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m64 -arch:SSE -### -- 2>&1 %s | FileCheck -check-prefix=SSE64 %s
+comment|// RUN: %clang_cl -m64 -arch:SSE --target=x86_64 -### -- 2>&1 %s | FileCheck -check-prefix=SSE64 %s
 end_comment
 
 begin_comment
@@ -140,7 +140,7 @@ comment|// SSE64-NOT: -target-feature
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m64 -arch:SSE2 -### -- 2>&1 %s | FileCheck -check-prefix=SSE264 %s
+comment|// RUN: %clang_cl -m64 -arch:SSE2 --target=x86_64 -### -- 2>&1 %s | FileCheck -check-prefix=SSE264 %s
 end_comment
 
 begin_comment
@@ -152,7 +152,7 @@ comment|// SSE264-NOT: -target-feature
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m32 -arch:AVX -### -- 2>&1 %s | FileCheck -check-prefix=AVX %s
+comment|// RUN: %clang_cl -m32 -arch:AVX --target=i386 -### -- 2>&1 %s | FileCheck -check-prefix=AVX %s
 end_comment
 
 begin_comment
@@ -164,7 +164,7 @@ comment|// AVX: +avx
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m32 -arch:avx -### -- 2>&1 %s | FileCheck -check-prefix=avx %s
+comment|// RUN: %clang_cl -m32 -arch:avx --target=i386 -### -- 2>&1 %s | FileCheck -check-prefix=avx %s
 end_comment
 
 begin_comment
@@ -176,7 +176,7 @@ comment|// avx-NOT: -target-feature
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m32 -arch:AVX2 -### -- 2>&1 %s | FileCheck -check-prefix=AVX2 %s
+comment|// RUN: %clang_cl -m32 -arch:AVX2 --target=i386 -### -- 2>&1 %s | FileCheck -check-prefix=AVX2 %s
 end_comment
 
 begin_comment
@@ -188,7 +188,7 @@ comment|// AVX2: +avx2
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m32 -arch:avx2 -### -- 2>&1 %s | FileCheck -check-prefix=avx2 %s
+comment|// RUN: %clang_cl -m32 -arch:avx2 --target=i386 -### -- 2>&1 %s | FileCheck -check-prefix=avx2 %s
 end_comment
 
 begin_comment
@@ -200,7 +200,7 @@ comment|// avx2-NOT: -target-feature
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m64 -arch:AVX -### -- 2>&1 %s | FileCheck -check-prefix=AVX64 %s
+comment|// RUN: %clang_cl -m64 -arch:AVX --target=x86_64 -### -- 2>&1 %s | FileCheck -check-prefix=AVX64 %s
 end_comment
 
 begin_comment
@@ -212,7 +212,7 @@ comment|// AVX64: +avx
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m64 -arch:avx -### -- 2>&1 %s | FileCheck -check-prefix=avx64 %s
+comment|// RUN: %clang_cl -m64 -arch:avx --target=x86_64 -### -- 2>&1 %s | FileCheck -check-prefix=avx64 %s
 end_comment
 
 begin_comment
@@ -224,7 +224,7 @@ comment|// avx64-NOT: -target-feature
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m64 -arch:AVX2 -### -- 2>&1 %s | FileCheck -check-prefix=AVX264 %s
+comment|// RUN: %clang_cl -m64 -arch:AVX2 --target=x86_64 -### -- 2>&1 %s | FileCheck -check-prefix=AVX264 %s
 end_comment
 
 begin_comment
@@ -236,7 +236,7 @@ comment|// AVX264: +avx2
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -m64 -arch:avx2 -### -- 2>&1 %s | FileCheck -check-prefix=avx264 %s
+comment|// RUN: %clang_cl -m64 -arch:avx2 --target=x86_64 -### -- 2>&1 %s | FileCheck -check-prefix=avx264 %s
 end_comment
 
 begin_comment

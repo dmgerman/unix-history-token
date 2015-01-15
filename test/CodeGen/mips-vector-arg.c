@@ -40,19 +40,19 @@ typedef|(16)));
 end_typedef
 
 begin_comment
-comment|// O32: define void @test_v4sf(i32 %a1.coerce0, i32 %a1.coerce1, i32 %a1.coerce2, i32 %a1.coerce3, i32 %a2, i32, i32 %a3.coerce0, i32 %a3.coerce1, i32 %a3.coerce2, i32 %a3.coerce3) [[NUW:#[0-9]+]]
+comment|// O32: define void @test_v4sf(i32 inreg %a1.coerce0, i32 inreg %a1.coerce1, i32 inreg %a1.coerce2, i32 inreg %a1.coerce3, i32 signext %a2, i32, i32 inreg %a3.coerce0, i32 inreg %a3.coerce1, i32 inreg %a3.coerce2, i32 inreg %a3.coerce3) [[NUW:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// O32: declare i32 @test_v4sf_2(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32)
+comment|// O32: declare i32 @test_v4sf_2(i32 inreg, i32 inreg, i32 inreg, i32 inreg, i32 signext, i32, i32 inreg, i32 inreg, i32 inreg, i32 inreg)
 end_comment
 
 begin_comment
-comment|// N64: define void @test_v4sf(i64 %a1.coerce0, i64 %a1.coerce1, i32 %a2, i64, i64 %a3.coerce0, i64 %a3.coerce1) [[NUW:#[0-9]+]]
+comment|// N64: define void @test_v4sf(i64 inreg %a1.coerce0, i64 inreg %a1.coerce1, i32 signext %a2, i64, i64 inreg %a3.coerce0, i64 inreg %a3.coerce1) [[NUW:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// N64: declare i32 @test_v4sf_2(i64, i64, i32, i64, i64, i64)
+comment|// N64: declare i32 @test_v4sf_2(i64 inreg, i64 inreg, i32 signext, i64, i64 inreg, i64 inreg)
 end_comment
 
 begin_extern
@@ -95,19 +95,19 @@ block|}
 end_function
 
 begin_comment
-comment|// O32: define void @test_v4i32(i32 %a1.coerce0, i32 %a1.coerce1, i32 %a1.coerce2, i32 %a1.coerce3, i32 %a2, i32, i32 %a3.coerce0, i32 %a3.coerce1, i32 %a3.coerce2, i32 %a3.coerce3) [[NUW]]
+comment|// O32: define void @test_v4i32(i32 inreg %a1.coerce0, i32 inreg %a1.coerce1, i32 inreg %a1.coerce2, i32 inreg %a1.coerce3, i32 signext %a2, i32, i32 inreg %a3.coerce0, i32 inreg %a3.coerce1, i32 inreg %a3.coerce2, i32 inreg %a3.coerce3) [[NUW]]
 end_comment
 
 begin_comment
-comment|// O32: declare i32 @test_v4i32_2(i32, i32, i32, i32, i32, i32, i32, i32, i32, i32)
+comment|// O32: declare i32 @test_v4i32_2(i32 inreg, i32 inreg, i32 inreg, i32 inreg, i32 signext, i32, i32 inreg, i32 inreg, i32 inreg, i32 inreg)
 end_comment
 
 begin_comment
-comment|// N64: define void @test_v4i32(i64 %a1.coerce0, i64 %a1.coerce1, i32 %a2, i64, i64 %a3.coerce0, i64 %a3.coerce1) [[NUW]]
+comment|// N64: define void @test_v4i32(i64 inreg %a1.coerce0, i64 inreg %a1.coerce1, i32 signext %a2, i64, i64 inreg %a3.coerce0, i64 inreg %a3.coerce1) [[NUW]]
 end_comment
 
 begin_comment
-comment|// N64: declare i32 @test_v4i32_2(i64, i64, i32, i64, i64, i64)
+comment|// N64: declare i32 @test_v4i32_2(i64 inreg, i64 inreg, i32 signext, i64, i64 inreg, i64 inreg)
 end_comment
 
 begin_extern

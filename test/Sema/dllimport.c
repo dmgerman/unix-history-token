@@ -536,6 +536,10 @@ begin_comment
 comment|// expected-warning{{'GlobalRedecl3' redeclared without 'dllimport' attribute: previous 'dllimport' ignored}}
 end_comment
 
+begin_comment
+comment|// Adding an attribute on redeclaration.
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -546,6 +550,17 @@ end_decl_stmt
 begin_comment
 comment|// expected-note{{previous declaration is here}}
 end_comment
+
+begin_function
+name|int
+name|useGlobalRedecl4
+parameter_list|()
+block|{
+return|return
+name|GlobalRedecl4
+return|;
+block|}
+end_function
 
 begin_macro
 name|__declspec
@@ -563,6 +578,39 @@ end_decl_stmt
 
 begin_comment
 comment|// expected-error{{redeclaration of 'GlobalRedecl4' cannot add 'dllimport' attribute}}
+end_comment
+
+begin_comment
+comment|// Allow with a warning if the decl hasn't been used yet.
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|GlobalRedecl5
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-note{{previous declaration is here}}
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|dllimport
+argument_list|)
+end_macro
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|GlobalRedecl5
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning{{redeclaration of 'GlobalRedecl5' should not add 'dllimport' attribute}}
 end_comment
 
 begin_comment
@@ -985,6 +1033,17 @@ begin_comment
 comment|// expected-note{{previous declaration is here}}
 end_comment
 
+begin_function
+name|void
+name|useRedecl4
+parameter_list|()
+block|{
+name|redecl4
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_macro
 name|__declspec
 argument_list|(
@@ -1004,7 +1063,18 @@ comment|// expected-error{{redeclaration of 'redecl4' cannot add 'dllimport' att
 end_comment
 
 begin_comment
-comment|// Inline redeclarations are fine.
+comment|// Allow with a warning if the decl hasn't been used yet.
+end_comment
+
+begin_function_decl
+name|void
+name|redecl5
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note{{previous declaration is here}}
 end_comment
 
 begin_macro
@@ -1021,17 +1091,39 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// expected-warning{{redeclaration of 'redecl5' should not add 'dllimport' attribute}}
+end_comment
+
+begin_comment
+comment|// Inline redeclarations are fine.
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|dllimport
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|redecl6
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|inline
 name|void
-name|redecl5
+name|redecl6
 parameter_list|()
 block|{}
 end_function
 
 begin_function_decl
 name|void
-name|redecl6
+name|redecl7
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1050,13 +1142,13 @@ end_macro
 begin_function
 specifier|inline
 name|void
-name|redecl6
+name|redecl7
 parameter_list|()
 block|{}
 end_function
 
 begin_comment
-comment|// expected-error{{redeclaration of 'redecl6' cannot add 'dllimport' attribute}}
+comment|// expected-warning{{redeclaration of 'redecl7' should not add 'dllimport' attribute}}
 end_comment
 
 begin_comment

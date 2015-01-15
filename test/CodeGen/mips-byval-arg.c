@@ -33,11 +33,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// O32-LABEL: define void @foo1(i32 %a0.coerce0, i32 %a0.coerce1, i32 %a0.coerce2)
+comment|// O32-LABEL: define void @foo1(i32 inreg %a0.coerce0, i32 inreg %a0.coerce1, i32 inreg %a0.coerce2)
 end_comment
 
 begin_comment
-comment|// N64-LABEL: define void @foo1(i64 %a0.coerce0, i32 %a0.coerce1)
+comment|// N64-LABEL: define void @foo1(i64 inreg %a0.coerce0, i32 inreg %a0.coerce1)
 end_comment
 
 begin_function

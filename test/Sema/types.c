@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 %s -pedantic -verify -triple=x86_64-apple-darwin9
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 %s -pedantic -verify -triple=mips64-linux-gnu
+end_comment
+
+begin_comment
 comment|// rdar://6097662
 end_comment
 

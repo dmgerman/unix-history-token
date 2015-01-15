@@ -32,15 +32,15 @@ comment|// Insert padding to ensure arguments of type S0 are aligned to 16-byte 
 end_comment
 
 begin_comment
-comment|// N64-LABEL: define void @foo1(i32 %a0, i64, double %a1.coerce0, i64 %a1.coerce1, i64 %a1.coerce2, i64 %a1.coerce3, double %a2.coerce0, i64 %a2.coerce1, i64 %a2.coerce2, i64 %a2.coerce3, i32 %b, i64, double %a3.coerce0, i64 %a3.coerce1, i64 %a3.coerce2, i64 %a3.coerce3)
+comment|// N64-LABEL: define void @foo1(i32 signext %a0, i64, double inreg %a1.coerce0, i64 inreg %a1.coerce1, i64 inreg %a1.coerce2, i64 inreg %a1.coerce3, double inreg %a2.coerce0, i64 inreg %a2.coerce1, i64 inreg %a2.coerce2, i64 inreg %a2.coerce3, i32 signext %b, i64, double inreg %a3.coerce0, i64 inreg %a3.coerce1, i64 inreg %a3.coerce2, i64 inreg %a3.coerce3)
 end_comment
 
 begin_comment
-comment|// N64: tail call void @foo2(i32 1, i32 2, i32 %a0, i64 undef, double %a1.coerce0, i64 %a1.coerce1, i64 %a1.coerce2, i64 %a1.coerce3, double %a2.coerce0, i64 %a2.coerce1, i64 %a2.coerce2, i64 %a2.coerce3, i32 3, i64 undef, double %a3.coerce0, i64 %a3.coerce1, i64 %a3.coerce2, i64 %a3.coerce3)
+comment|// N64: tail call void @foo2(i32 signext 1, i32 signext 2, i32 signext %a0, i64 undef, double inreg %a1.coerce0, i64 inreg %a1.coerce1, i64 inreg %a1.coerce2, i64 inreg %a1.coerce3, double inreg %a2.coerce0, i64 inreg %a2.coerce1, i64 inreg %a2.coerce2, i64 inreg %a2.coerce3, i32 signext 3, i64 undef, double inreg %a3.coerce0, i64 inreg %a3.coerce1, i64 inreg %a3.coerce2, i64 inreg %a3.coerce3)
 end_comment
 
 begin_comment
-comment|// N64: declare void @foo2(i32, i32, i32, i64, double, i64, i64, i64, double, i64, i64, i64, i32, i64, double, i64, i64, i64)
+comment|// N64: declare void @foo2(i32 signext, i32 signext, i32 signext, i64, double inreg, i64 inreg, i64 inreg, i64 inreg, double inreg, i64 inreg, i64 inreg, i64 inreg, i32 signext, i64, double inreg, i64 inreg, i64 inreg, i64 inreg)
 end_comment
 
 begin_function_decl
@@ -114,15 +114,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// N64-LABEL: define void @foo3(i32 %a0, i64, fp128 %a1)
+comment|// N64-LABEL: define void @foo3(i32 signext %a0, i64, fp128 %a1)
 end_comment
 
 begin_comment
-comment|// N64: tail call void @foo4(i32 1, i32 2, i32 %a0, i64 undef, fp128 %a1)
+comment|// N64: tail call void @foo4(i32 signext 1, i32 signext 2, i32 signext %a0, i64 undef, fp128 %a1)
 end_comment
 
 begin_comment
-comment|// N64: declare void @foo4(i32, i32, i32, i64, fp128)
+comment|// N64: declare void @foo4(i32 signext, i32 signext, i32 signext, i64, fp128)
 end_comment
 
 begin_function_decl
@@ -181,11 +181,11 @@ comment|// N64-LABEL: define void @foo5(%struct.S0* noalias sret %agg.result, i6
 end_comment
 
 begin_comment
-comment|// N64: call void @foo6(%struct.S0* sret %agg.result, i32 1, i32 2, i64 undef, fp128 %a0)
+comment|// N64: call void @foo6(%struct.S0* sret %agg.result, i32 signext 1, i32 signext 2, i64 undef, fp128 %a0)
 end_comment
 
 begin_comment
-comment|// N64: declare void @foo6(%struct.S0* sret, i32, i32, i64, fp128)
+comment|// N64: declare void @foo6(%struct.S0* sret, i32 signext, i32 signext, i64, fp128)
 end_comment
 
 begin_function_decl
@@ -283,7 +283,7 @@ comment|// O32-LABEL: define void @foo9()
 end_comment
 
 begin_comment
-comment|// O32: declare void @foo10(i32, i32
+comment|// O32: declare void @foo10(i32 signext, i32
 end_comment
 
 begin_typedef
