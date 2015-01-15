@@ -17132,6 +17132,15 @@ case|:
 case|case
 name|F_SETFL
 case|:
+case|case
+name|F_OGETLK
+case|:
+case|case
+name|F_OSETLK
+case|:
+case|case
+name|F_OSETLKW
+case|:
 name|tmp
 operator|=
 call|(
