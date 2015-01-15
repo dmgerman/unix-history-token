@@ -366,6 +366,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|sleepq_release
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 name|sleepq_set_timeout
 argument_list|(
 name|c
@@ -373,6 +378,11 @@ argument_list|,
 name|end
 operator|-
 name|ticks
+argument_list|)
+expr_stmt|;
+name|sleepq_lock
+argument_list|(
+name|c
 argument_list|)
 expr_stmt|;
 if|if

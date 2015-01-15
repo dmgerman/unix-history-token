@@ -921,6 +921,11 @@ name|td_slpcallout
 decl_stmt|;
 comment|/* (h) Callout for sleep. */
 name|struct
+name|mtx
+name|td_slpmutex
+decl_stmt|;
+comment|/* (h) Mutex for sleep callout */
+name|struct
 name|trapframe
 modifier|*
 name|td_frame
@@ -1254,12 +1259,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_TIMOFAIL
+name|TDF_UNUSED12
 value|0x00001000
 end_define
 
 begin_comment
-comment|/* Timeout from sleep after we were awake. */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -3554,12 +3559,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SWT_SLEEPQTIMO
+name|SWT_UNUSED5
 value|5
 end_define
 
 begin_comment
-comment|/* Sleepq timeout wait. */
+comment|/* --available-- */
 end_comment
 
 begin_define

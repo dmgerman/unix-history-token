@@ -992,6 +992,15 @@ operator|)
 operator|&&
 name|timo
 condition|)
+block|{
+name|sleepq_release
+argument_list|(
+operator|&
+name|lk
+operator|->
+name|lock_object
+argument_list|)
+expr_stmt|;
 name|sleepq_set_timeout
 argument_list|(
 operator|&
@@ -1002,6 +1011,15 @@ argument_list|,
 name|timo
 argument_list|)
 expr_stmt|;
+name|sleepq_lock
+argument_list|(
+operator|&
+name|lk
+operator|->
+name|lock_object
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Decisional switch for real sleeping. 	 */
 if|if
 condition|(
