@@ -213,26 +213,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAW2K
-parameter_list|(
-name|temp
-parameter_list|)
-value|(((temp) + 273150) / 1000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|K2RAW
-parameter_list|(
-name|temp
-parameter_list|)
-value|(((temp) * 1000) - 273150)
-end_define
-
-begin_define
-define|#
-directive|define
 name|DEFAULT_ARM_FREQUENCY
 value|700
 end_define
@@ -298,6 +278,13 @@ define|#
 directive|define
 name|HZSTEP
 value|(MHZ2HZ(MHZSTEP))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TZ_ZEROC
+value|2732
 end_define
 
 begin_define
@@ -5137,12 +5124,11 @@ return|;
 comment|/* 1/1000 celsius (raw) to 1/10 kelvin */
 name|val
 operator|=
-name|RAW2K
-argument_list|(
 name|val
-argument_list|)
-operator|*
-literal|10
+operator|/
+literal|100
+operator|+
+name|TZ_ZEROC
 expr_stmt|;
 name|err
 operator|=
