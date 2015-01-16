@@ -1059,6 +1059,37 @@ name|ah_btCoexEnable
 operator|=
 name|ar9300_bt_coex_enable
 expr_stmt|;
+comment|/* MCI bluetooth functions */
+name|ah
+operator|->
+name|ah_btMciSetup
+operator|=
+name|ar9300_mci_setup
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btMciSendMessage
+operator|=
+name|ar9300_mci_send_message
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btMciGetInterrupt
+operator|=
+name|ar9300_mci_get_interrupt
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btMciGetState
+operator|=
+name|ar9300_mci_state
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btMciDetach
+operator|=
+name|ar9300_mci_detach
+expr_stmt|;
 comment|/* LNA diversity functions */
 name|ah
 operator|->
