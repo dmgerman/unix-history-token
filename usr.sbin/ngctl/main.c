@@ -1376,7 +1376,15 @@ argument_list|)
 operator|==
 name|CMDRTN_QUIT
 condition|)
+block|{
+name|pthread_mutex_unlock
+argument_list|(
+operator|&
+name|mutex
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|pthread_cond_signal
 argument_list|(
 operator|&
