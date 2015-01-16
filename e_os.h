@@ -1231,7 +1231,7 @@ name|DEFAULT_HOME
 value|"C:"
 endif|#
 directive|endif
-comment|/* Avoid Windows 8 SDK GetVersion deprecated problems */
+comment|/* Avoid Visual Studio 13 GetVersion deprecated problems */
 if|#
 directive|if
 name|defined
@@ -1247,6 +1247,13 @@ directive|define
 name|check_winnt
 parameter_list|()
 value|(1)
+define|#
+directive|define
+name|check_win_minplat
+parameter_list|(
+name|x
+parameter_list|)
+value|(1)
 else|#
 directive|else
 define|#
@@ -1254,6 +1261,13 @@ directive|define
 name|check_winnt
 parameter_list|()
 value|(GetVersion()< 0x80000000)
+define|#
+directive|define
+name|check_win_minplat
+parameter_list|(
+name|x
+parameter_list|)
+value|(LOBYTE(LOWORD(GetVersion()))>= (x))
 endif|#
 directive|endif
 else|#
