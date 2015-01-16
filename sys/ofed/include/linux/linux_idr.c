@@ -1900,9 +1900,11 @@ operator|(
 literal|1
 operator|<<
 operator|(
+operator|(
 name|layer
 operator|+
 literal|1
+operator|)
 operator|*
 name|IDR_BITS
 operator|)
