@@ -948,6 +948,16 @@ comment|/** Set then report an endpoint's synchronization frame */
 name|LIBUSB20_REQUEST_SYNCH_FRAME
 init|=
 literal|0x0C
+block|,
+comment|/** Set U1 and U2 system exit latency */
+name|LIBUSB20_REQUEST_SET_SEL
+init|=
+literal|0x30
+block|,
+comment|/** Set isochronous delay */
+name|LIBUSB20_REQUEST_SET_ISOCH_DELAY
+init|=
+literal|0x31
 block|, }
 enum|;
 comment|/** \ingroup misc  * Request type bits of the  * \ref libusb20_control_setup::bmRequestType "bmRequestType" field in  * control transfers. */
