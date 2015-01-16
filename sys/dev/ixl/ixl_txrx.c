@@ -35,6 +35,23 @@ directive|include
 file|"ixl.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RSS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/rss_config.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Local Prototypes */
 end_comment
@@ -6245,7 +6262,7 @@ name|RSS
 end_ifdef
 
 begin_comment
-comment|/* ** i40e_ptype_to_hash: parse the packet type ** to determine the appropriate hash. */
+comment|/* ** ixl_ptype_to_hash: parse the packet type ** to determine the appropriate hash. */
 end_comment
 
 begin_function
@@ -6266,7 +6283,7 @@ name|u8
 name|ex
 init|=
 literal|0
-name|decode
+name|decoded
 operator|=
 name|decode_rx_desc_ptype
 argument_list|(

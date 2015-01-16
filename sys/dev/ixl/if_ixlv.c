@@ -37,6 +37,23 @@ directive|include
 file|"ixlv.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RSS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/rss_config.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*********************************************************************  *  Driver version  *********************************************************************/
 end_comment
@@ -46,7 +63,7 @@ name|char
 name|ixlv_driver_version
 index|[]
 init|=
-literal|"1.2.0"
+literal|"1.2.1"
 decl_stmt|;
 end_decl_stmt
 
@@ -11637,6 +11654,23 @@ if|if
 condition|(
 name|rss_hash_config
 operator|&
+name|RSS_HASHTYPE_RSS_IPV6_EX
+condition|)
+name|set_hena
+operator||=
+operator|(
+operator|(
+name|u64
+operator|)
+literal|1
+operator|<<
+name|I40E_FILTER_PCTYPE_FRAG_IPV6
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rss_hash_config
+operator|&
 name|RSS_HASHTYPE_RSS_TCP_IPV6
 condition|)
 name|set_hena
@@ -11666,16 +11700,6 @@ literal|1
 operator|<<
 name|I40E_FILTER_PCTYPE_NONF_IPV6_UDP
 operator|)
-expr_stmt|;
-if|if
-condition|(
-name|rss_hash_config
-operator|&
-name|RSS_HASHTYPE_RSS_UDP_IPV6_EX
-condition|)
-name|set_hena
-operator||=
-name|IXGBE_MRQC_RSS_FIELD_IPV6_EX_UDP
 expr_stmt|;
 else|#
 directive|else
@@ -11901,7 +11925,7 @@ name|que_id
 operator|=
 name|que_id
 operator|%
-name|adapter
+name|vsi
 operator|->
 name|num_queues
 expr_stmt|;
