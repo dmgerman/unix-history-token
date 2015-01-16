@@ -376,7 +376,7 @@ operator|=
 operator|&
 name|V_layer3_chain
 expr_stmt|;
-name|IPFW_WLOCK
+name|IPFW_UH_WLOCK
 argument_list|(
 name|chain
 argument_list|)
@@ -444,6 +444,11 @@ operator|!=
 name|AF_INET
 condition|)
 continue|continue;
+name|IPFW_WLOCK
+argument_list|(
+name|chain
+argument_list|)
+expr_stmt|;
 name|ptr
 operator|->
 name|ip
@@ -474,6 +479,11 @@ operator|->
 name|ip
 argument_list|)
 expr_stmt|;
+name|IPFW_WUNLOCK
+argument_list|(
+name|chain
+argument_list|)
+expr_stmt|;
 block|}
 name|if_addr_runlock
 argument_list|(
@@ -481,7 +491,7 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-name|IPFW_WUNLOCK
+name|IPFW_UH_WUNLOCK
 argument_list|(
 name|chain
 argument_list|)
