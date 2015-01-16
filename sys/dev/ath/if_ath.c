@@ -27882,7 +27882,6 @@ block|{
 comment|/* 		 * Don't bother grabbing the lock unless the queue is empty. 		 */
 if|if
 condition|(
-operator|&
 name|an
 operator|->
 name|an_swq_depth
