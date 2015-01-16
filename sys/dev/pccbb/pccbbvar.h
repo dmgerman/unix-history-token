@@ -633,6 +633,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|cbb_resume
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|cbb_setup_intr
 parameter_list|(
 name|device_t
@@ -665,6 +675,16 @@ name|void
 modifier|*
 modifier|*
 name|cookiep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cbb_suspend
+parameter_list|(
+name|device_t
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
