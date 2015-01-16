@@ -2382,7 +2382,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Enable memory access */
+comment|/* Enable DMA, memory access for this card and I/O acces for children */
 name|pci_enable_busmaster
 argument_list|(
 name|sc
@@ -2390,19 +2390,22 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* XXX: This should not be necessary, but some chipsets require it */
-name|PCI_MASK_CONFIG
+name|pci_enable_io
 argument_list|(
 name|sc
 operator|->
 name|dev
 argument_list|,
-name|PCIR_COMMAND
+name|SYS_RES_IOPORT
+argument_list|)
+expr_stmt|;
+name|pci_enable_io
+argument_list|(
+name|sc
+operator|->
+name|dev
 argument_list|,
-operator||
-name|PCIM_CMD_PORTEN
-argument_list|,
-literal|2
+name|SYS_RES_MEMORY
 argument_list|)
 expr_stmt|;
 comment|/* disable Legacy IO */
