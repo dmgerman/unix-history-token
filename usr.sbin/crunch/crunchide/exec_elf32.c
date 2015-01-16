@@ -91,6 +91,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -2303,15 +2309,12 @@ name|sh_offset
 expr_stmt|;
 name|off
 operator|=
-operator|(
-name|ELFSIZE
-operator|==
-literal|32
-operator|)
-condition|?
-literal|32
-else|:
-literal|44
+name|offsetof
+argument_list|(
+name|Elf_Ehdr
+argument_list|,
+name|e_shoff
+argument_list|)
 expr_stmt|;
 name|size
 operator|=
