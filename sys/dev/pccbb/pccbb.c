@@ -6958,7 +6958,7 @@ name|int
 name|cbb_suspend
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|)
 block|{
 name|int
@@ -6973,14 +6973,14 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 name|error
 operator|=
 name|bus_generic_suspend
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 expr_stmt|;
 if|if
@@ -7024,7 +7024,7 @@ name|int
 name|cbb_resume
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|)
 block|{
 name|int
@@ -7044,7 +7044,7 @@ operator|*
 operator|)
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 name|uint32_t
@@ -7053,7 +7053,7 @@ decl_stmt|;
 comment|/* 	 * In the APM and early ACPI era, BIOSes saved the PCI config 	 * registers. As chips became more complicated, that functionality moved 	 * into the ACPI code / tables. We must therefore, restore the settings 	 * we made here to make sure the device come back. Transitions to Dx 	 * from D0 and back to D0 cause the bridge to lose its config space, so 	 * all the bus mappings and such are preserved. 	 * 	 * For most drivers, the PCI layer handles this saving. However, since 	 * there's much black magic and arcane art hidden in these few lines of 	 * code that would be difficult to transition into the PCI 	 * layer. chipinit was several years of trial and error to write. 	 */
 name|pci_write_config
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|CBBR_SOCKBASE
 argument_list|,
@@ -7070,7 +7070,7 @@ expr_stmt|;
 name|DEVPRINTF
 argument_list|(
 operator|(
-name|self
+name|brdev
 operator|,
 literal|"PCI Memory allocated: %08lx\n"
 operator|,
@@ -7132,7 +7132,7 @@ name|error
 operator|=
 name|bus_generic_resume
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 expr_stmt|;
 return|return
