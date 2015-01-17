@@ -4377,7 +4377,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Insert into the list of ports. Keep ports sorted by if_index. */
+comment|/* 	 * Insert into the list of ports. 	 * Keep ports sorted by if_index. It is handy, when configuration 	 * is predictable and `ifconfig laggN create ...` command 	 * will lead to the same result each time. 	 */
 name|SLIST_FOREACH
 argument_list|(
 argument|tlp
@@ -4419,7 +4419,7 @@ operator|->
 name|lp_ifp
 operator|->
 name|if_index
-operator|<
+operator|>
 name|ifp
 operator|->
 name|if_index
