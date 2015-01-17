@@ -2371,6 +2371,21 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|AR_SREV_JUPITER
+argument_list|(
+name|ah
+argument_list|)
+operator|||
+name|AR_SREV_APHRODITE
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+goto|goto
+name|skip_ws_det
+goto|;
 comment|/*              * make register setting for default (weak sig detect ON)              * come from INI file              */
 name|m1_thresh_low
 operator|=
@@ -2602,6 +2617,8 @@ argument_list|,
 name|m2_thresh_ext
 argument_list|)
 expr_stmt|;
+name|skip_ws_det
+label|:
 if|if
 condition|(
 name|is_on
