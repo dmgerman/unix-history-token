@@ -125,7 +125,9 @@ function_decl|(
 modifier|*
 name|sink
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 comment|/* datagram sink function or 0 */
 name|void
@@ -133,7 +135,11 @@ function_decl|(
 modifier|*
 name|hostname
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|struct
+name|host_info
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/* address to printable hostname */
 name|void
@@ -141,7 +147,11 @@ function_decl|(
 modifier|*
 name|hostaddr
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|struct
+name|host_info
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/* address to printable address */
 name|void
@@ -149,7 +159,11 @@ function_decl|(
 modifier|*
 name|cleanup
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|struct
+name|request_info
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/* cleanup function or 0 */
 name|struct
@@ -360,6 +374,18 @@ end_function_decl
 
 begin_comment
 comment|/* access control */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|hosts_ctl
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* wrapper around request_init() */
 end_comment
 
 begin_function_decl
