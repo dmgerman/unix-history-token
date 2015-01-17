@@ -313,10 +313,10 @@ parameter_list|,
 name|elf_file_t
 name|ef
 parameter_list|,
-name|u_int64_t
+name|Elf_Addr
 name|p_start
 parameter_list|,
-name|u_int64_t
+name|Elf_Addr
 name|p_end
 parameter_list|)
 function_decl|;
@@ -1403,7 +1403,7 @@ decl_stmt|;
 name|Elf_Sym
 name|sym
 decl_stmt|;
-name|u_int64_t
+name|Elf_Addr
 name|p_start
 decl_stmt|,
 name|p_end
@@ -3869,7 +3869,7 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-name|u_int64_t
+name|Elf_Addr
 name|p_start
 decl_stmt|,
 name|p_end
@@ -4532,10 +4532,10 @@ parameter_list|,
 name|elf_file_t
 name|ef
 parameter_list|,
-name|u_int64_t
+name|Elf_Addr
 name|p_start
 parameter_list|,
-name|u_int64_t
+name|Elf_Addr
 name|p_end
 parameter_list|)
 block|{
