@@ -220,9 +220,13 @@ name|ds_ctl22
 decl_stmt|;
 comment|/* DMA control 22 */
 name|u_int32_t
+name|ds_ctl23
+decl_stmt|;
+comment|/* DMA control 23 */
+name|u_int32_t
 name|ds_pad
 index|[
-literal|9
+literal|8
 index|]
 decl_stmt|;
 comment|/* pad to cache line (128 bytes/32 dwords) */
@@ -2298,8 +2302,10 @@ directive|define
 name|TXC_INFO
 parameter_list|(
 name|_qcu
+parameter_list|,
+name|_desclen
 parameter_list|)
-value|(ATHEROS_VENDOR_ID<< AR_desc_id_S) \                         | (1<< AR_tx_rx_desc_S) \                         | (1<< AR_ctrl_stat_S) \                         | (_qcu<< AR_tx_qcu_num_S) \                         | (0x17)
+value|(ATHEROS_VENDOR_ID<< AR_desc_id_S) \                         | (1<< AR_tx_rx_desc_S) \                         | (1<< AR_ctrl_stat_S) \                         | (_qcu<< AR_tx_qcu_num_S) \                         | (_desclen)
 end_define
 
 begin_define

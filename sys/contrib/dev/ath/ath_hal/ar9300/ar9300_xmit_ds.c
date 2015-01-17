@@ -247,7 +247,28 @@ argument_list|(
 name|ds
 argument_list|)
 decl_stmt|;
+name|short
+name|desclen
+decl_stmt|;
 comment|/* Fill TXC info field */
+name|desclen
+operator|=
+operator|(
+name|AR_SREV_JUPITER
+argument_list|(
+name|ah
+argument_list|)
+operator|||
+name|AR_SREV_APHRODITE
+argument_list|(
+name|ah
+argument_list|)
+operator|)
+condition|?
+literal|0x18
+else|:
+literal|0x17
+expr_stmt|;
 name|ads
 operator|->
 name|ds_info
@@ -255,6 +276,8 @@ operator|=
 name|TXC_INFO
 argument_list|(
 name|qcu
+argument_list|,
+name|desclen
 argument_list|)
 expr_stmt|;
 comment|/* Set the buffer addresses */
@@ -533,6 +556,13 @@ name|AR_encr_type
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Only relevant for Jupiter/Aphrodite */
+name|ads
+operator|->
+name|ds_ctl23
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|AH_TRUE
 return|;
