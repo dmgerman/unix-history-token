@@ -401,20 +401,6 @@ begin_comment
 comment|/* Maximum MTU */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MTAG_GIF
-value|1080679712
-end_define
-
-begin_define
-define|#
-directive|define
-name|MTAG_GIF_CALLED
-value|0
-end_define
-
 begin_struct
 struct|struct
 name|etherip_header
