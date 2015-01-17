@@ -17073,14 +17073,11 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_comment
 comment|/*  * Get the root pool information from the root disk, then import the root pool  * during the system boot up time.  */
@@ -17937,6 +17934,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* !illumos */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -18997,13 +18998,17 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Import a non-root pool into the system.  */
@@ -24010,7 +24015,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|sun
+name|illumos
 comment|/* mark that we are creating new spa by splitting */
 name|newspa
 operator|->
@@ -24036,7 +24041,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|sun
+name|illumos
 name|newspa
 operator|->
 name|spa_splitting_newspa
@@ -29784,7 +29789,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* FreeBSD */
+comment|/* !illumos */
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -29812,6 +29817,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* illumos */
 comment|/* 	 * If we are upgrading to SPA_VERSION_RAIDZ_DEFLATE this txg, 	 * set spa_deflate if we have no raid-z vdevs. 	 */
 if|if
 condition|(
@@ -30429,7 +30435,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* FreeBSD */
+comment|/* !illumos */
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -30445,6 +30451,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* illumos */
 comment|/* 	 * Clear the dirty config list. 	 */
 while|while
 condition|(

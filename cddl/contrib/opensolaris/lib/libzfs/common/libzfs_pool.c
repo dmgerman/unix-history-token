@@ -1807,7 +1807,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|nvlist_t
 modifier|*
 modifier|*
@@ -1879,7 +1879,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 return|return
 operator|(
 name|B_FALSE
@@ -2646,7 +2646,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 			 * bootfs property cannot be set on a disk which has 			 * been EFI labeled. 			 */
 if|if
 condition|(
@@ -2694,7 +2694,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 name|zpool_close
 argument_list|(
 name|zhp
@@ -11098,7 +11098,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|char
 name|path
 index|[
@@ -11275,7 +11275,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 return|return
 operator|(
 literal|0
@@ -16380,7 +16380,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|strncmp
@@ -16520,7 +16520,7 @@ return|;
 block|}
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 if|if
 condition|(
 name|strncmp
@@ -16550,7 +16550,7 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 block|}
 else|else
 block|{
@@ -18462,7 +18462,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/*  * Read the EFI label from the config, if a label does not exist then  * pass back the error to the caller. If the caller has passed a non-NULL  * diskaddr argument then we set it to the starting address of the EFI  * partition.  */
 specifier|static
 name|int
@@ -18756,7 +18756,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 comment|/*  * Label an individual disk.  The name provided is the short name,  * stripped of any leading /dev path.  */
 name|int
 name|zpool_label_disk
@@ -18777,7 +18777,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|char
 name|path
 index|[
@@ -19237,7 +19237,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 return|return
 operator|(
 literal|0

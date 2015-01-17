@@ -5344,7 +5344,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* illumos */
 block|}
 end_function
 
@@ -5742,7 +5741,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* illumos */
 block|}
 end_function
 
@@ -8018,7 +8016,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* illumos */
 if|if
 condition|(
 operator|!
@@ -11967,7 +11964,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * take 'desfree' extra pages, so we reclaim sooner, rather than later 	 */
 name|extra
 operator|=
@@ -12019,7 +12016,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 if|#
 directive|if
 name|defined
@@ -12095,7 +12092,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * If zio data pages are being allocated out of a separate heap segment, 	 * then enforce that the size of available vmem for this arena remains 	 * above about 1/16th free. 	 * 	 * Note: The 1/16th arena free requirement was put in place 	 * to aggressively evict memory from the arc in order to avoid 	 * memory fragmentation issues. 	 */
 if|if
 condition|(
@@ -12128,7 +12125,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 else|#
 directive|else
 comment|/* _KERNEL */
@@ -12352,7 +12349,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * Ask the vmem arena to reclaim unused memory from its 	 * quantum caches. 	 */
 if|if
 condition|(
@@ -14351,7 +14348,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* illumos */
 if|if
 condition|(
 name|hash_lock
@@ -17145,7 +17141,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* illumos */
 name|mutex_exit
 argument_list|(
 name|hash_lock
@@ -18991,7 +18986,7 @@ literal|8
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -19018,7 +19013,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 comment|/* set min cache to 1/32 of all memory, or 16MB, whichever is more */
 name|arc_c_min
 operator|=

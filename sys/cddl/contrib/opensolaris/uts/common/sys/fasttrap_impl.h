@@ -75,13 +75,9 @@ block|{
 endif|#
 directive|endif
 comment|/*  * Fasttrap Providers, Probes and Tracepoints  *  * Each Solaris process can have multiple providers -- the pid provider as  * well as any number of user-level statically defined tracing (USDT)  * providers. Those providers are each represented by a fasttrap_provider_t.  * All providers for a given process have a pointer to a shared  * fasttrap_proc_t. The fasttrap_proc_t has two states: active or defunct.  * When the count of active providers goes to zero it becomes defunct; a  * provider drops its active count when it is removed individually or as part  * of a mass removal when a process exits or performs an exec.  *  * Each probe is represented by a fasttrap_probe_t which has a pointer to  * its associated provider as well as a list of fasttrap_id_tp_t structures  * which are tuples combining a fasttrap_id_t and a fasttrap_tracepoint_t.  * A fasttrap_tracepoint_t represents the actual point of instrumentation  * and it contains two lists of fasttrap_id_t structures (to be fired pre-  * and post-instruction emulation) that identify the probes attached to the  * tracepoint. Tracepoints also have a pointer to the fasttrap_proc_t for the  * process they trace which is used when looking up a tracepoint both when a  * probe fires and when enabling and disabling probes.  *  * It's important to note that probes are preallocated with the necessary  * number of tracepoints, but that tracepoints can be shared by probes and  * swapped between probes. If a probe's preallocated tracepoint is enabled  * (and, therefore, the associated probe is enabled), and that probe is  * then disabled, ownership of that tracepoint may be exchanged for an  * unused tracepoint belonging to another probe that was attached to the  * enabled tracepoint.  *  * On FreeBSD, fasttrap providers also maintain per-thread scratch space for use  * by the ISA-specific fasttrap code. The fasttrap_scrblock_t type stores the  * virtual address of a page-sized memory block that is mapped into a process'  * address space. Each block is carved up into chunks (fasttrap_scrspace_t) for  * use by individual threads, which keep the address of their scratch space  * chunk in their struct kdtrace_thread. A thread's scratch space isn't released  * until it exits.  */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 typedef|typedef
 struct|struct
 name|fasttrap_scrblock
@@ -154,13 +150,9 @@ modifier|*
 name|ftpc_next
 decl_stmt|;
 comment|/* next proc in hash chain */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -514,13 +506,9 @@ parameter_list|,
 name|uintptr_t
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 specifier|extern
 name|fasttrap_scrspace_t
 modifier|*

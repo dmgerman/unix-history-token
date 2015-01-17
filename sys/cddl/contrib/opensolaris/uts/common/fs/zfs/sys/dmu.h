@@ -2032,7 +2032,7 @@ directive|ifdef
 name|_KERNEL
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|int
 name|dmu_write_pages
 parameter_list|(

@@ -259,7 +259,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -377,7 +377,7 @@ parameter_list|)
 value|(minor_t)((x)& L_MAXMIN)
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 comment|/*  * These are versions of the kernel routines for compressing and  * expanding long device numbers that don't return errors.  */
 if|#
 directive|if

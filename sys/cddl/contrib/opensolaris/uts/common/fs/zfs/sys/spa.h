@@ -1057,12 +1057,9 @@ modifier|*
 name|zplprops
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 specifier|extern
 name|int
 name|spa_import_rootpool

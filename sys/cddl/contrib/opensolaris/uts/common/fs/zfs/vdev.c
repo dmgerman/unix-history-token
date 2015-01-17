@@ -14620,7 +14620,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 operator|!
@@ -14748,7 +14748,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 return|return
 operator|(
 name|B_TRUE

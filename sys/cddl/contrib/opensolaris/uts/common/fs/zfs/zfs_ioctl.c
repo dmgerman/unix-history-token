@@ -20457,7 +20457,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -20549,7 +20549,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_decl_stmt
@@ -20561,7 +20561,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -20680,7 +20680,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function
@@ -20695,7 +20695,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|int
 name|error
 decl_stmt|;
@@ -21165,7 +21165,7 @@ operator|)
 return|;
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 return|return
 operator|(
 name|ENOSYS
@@ -21173,7 +21173,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 block|}
 end_function
 
@@ -21566,7 +21566,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -21686,7 +21686,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function
@@ -21701,7 +21701,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|vnode_t
 modifier|*
 name|vp
@@ -22344,7 +22344,7 @@ operator|)
 return|;
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 return|return
 operator|(
 name|EOPNOTSUPP
@@ -22352,7 +22352,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 block|}
 end_function
 
@@ -25361,7 +25361,7 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|getminor
@@ -27005,7 +27005,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -27213,7 +27213,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_comment
@@ -27223,7 +27223,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_decl_stmt
@@ -27395,7 +27395,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_decl_stmt
@@ -27523,7 +27523,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -27800,7 +27800,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function_decl

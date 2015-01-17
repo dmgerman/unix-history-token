@@ -7744,6 +7744,7 @@ literal|0
 condition|)
 else|#
 directive|else
+comment|/* !illumos */
 if|if
 condition|(
 operator|!
@@ -7795,7 +7796,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* ! illumos */
+comment|/* illumos */
 comment|/* 	 * If full-owner-access is enabled and delegated administration is 	 * turned on, we must set nosuid. 	 */
 if|if
 condition|(
@@ -8133,7 +8134,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * Add an extra VFS_HOLD on our parent vfs so that it can't 	 * disappear due to a forced unmount. 	 */
 if|if
 condition|(
@@ -8162,7 +8163,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
 name|out
 label|:
 return|return
@@ -9133,7 +9133,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 operator|!
@@ -10662,7 +10662,7 @@ name|vfs_data
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * If this is a snapshot, we have an extra VFS_HOLD on our parent 	 * from zfs_mount().  Release it here.  If we came through 	 * zfs_mountroot() instead, we didn't grab an extra hold, so 	 * skip the VFS_RELE for rootvfs. 	 */
 if|if
 condition|(
@@ -10687,7 +10687,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
 name|zfsvfs_free
 argument_list|(
 name|zfsvfs

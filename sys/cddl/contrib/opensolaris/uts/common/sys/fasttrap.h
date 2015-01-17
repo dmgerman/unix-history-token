@@ -56,12 +56,9 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 define|#
 directive|define
 name|FASTTRAPIOC
