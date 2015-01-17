@@ -199,6 +199,17 @@ value|(1<<14)
 end_define
 
 begin_comment
+comment|/* Leave controller in standard mode when putting card in HS mode. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_DONT_SET_HISPD_BIT
+value|(1<<15)
+end_define
+
+begin_comment
 comment|/*  * Controller registers  */
 end_comment
 

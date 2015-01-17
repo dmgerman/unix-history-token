@@ -313,7 +313,7 @@ specifier|static
 name|int
 name|bcm2835_sdhci_hs
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1063,6 +1063,8 @@ operator|=
 name|SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK
 operator||
 name|SDHCI_QUIRK_BROKEN_TIMEOUT_VAL
+operator||
+name|SDHCI_QUIRK_DONT_SET_HISPD_BIT
 operator||
 name|SDHCI_QUIRK_MISSING_CAPS
 expr_stmt|;
