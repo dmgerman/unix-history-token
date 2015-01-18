@@ -3355,6 +3355,28 @@ begin_comment
 comment|/* New children get P_PROTECTED. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|P2_NOTRACE
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* No ptrace(2) attach or coredumps. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P2_NOTRACE_EXEC
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Keep P2_NOPTRACE on exec(2). */
+end_comment
+
 begin_comment
 comment|/* Flags protected by proctree_lock, kept in p_treeflags. */
 end_comment

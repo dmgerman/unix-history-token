@@ -15614,6 +15614,16 @@ operator|)
 operator|!=
 literal|0
 operator|)
+operator|||
+operator|(
+name|p
+operator|->
+name|p_flag2
+operator|&
+name|P2_NOTRACE
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|PROC_UNLOCK

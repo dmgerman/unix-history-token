@@ -468,6 +468,17 @@ begin_comment
 comment|/* Exempt unprivileged debug limit. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_DEBUG_DENIED
+value|83
+end_define
+
+begin_comment
+comment|/* Exempt P2_NOTRACE. */
+end_comment
+
 begin_comment
 comment|/*  * Dtrace privileges.  */
 end_comment

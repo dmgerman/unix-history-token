@@ -104,6 +104,28 @@ begin_comment
 comment|/* kill descendants */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PROC_TRACE_CTL
+value|7
+end_define
+
+begin_comment
+comment|/* en/dis ptrace and coredumps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROC_TRACE_STATUS
+value|8
+end_define
+
+begin_comment
+comment|/* query tracing status */
+end_comment
+
 begin_comment
 comment|/* Operations for PROC_SPROTECT (passed in integer arg). */
 end_comment
@@ -316,6 +338,27 @@ define|#
 directive|define
 name|REAPER_KILL_SUBTREE
 value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_TRACE_CTL_ENABLE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_TRACE_CTL_DISABLE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_TRACE_CTL_DISABLE_EXEC
+value|3
 end_define
 
 begin_ifndef
