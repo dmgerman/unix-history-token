@@ -24,43 +24,43 @@ comment|// CHECK-DAG: @both2 = alias void ()* @__both2
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @weakvar_alias = alias weak i32* @__weakvar_alias
+comment|// CHECK-DAG: @weakvar_alias = weak alias i32* @__weakvar_alias
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @foo = alias weak void ()* @__foo
+comment|// CHECK-DAG: @foo = weak alias void ()* @__foo
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @foo2 = alias weak void ()* @__foo2
+comment|// CHECK-DAG: @foo2 = weak alias void ()* @__foo2
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @stutter = alias weak void ()* @__stutter
+comment|// CHECK-DAG: @stutter = weak alias void ()* @__stutter
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @stutter2 = alias weak void ()* @__stutter2
+comment|// CHECK-DAG: @stutter2 = weak alias void ()* @__stutter2
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @declfirst = alias weak void ()* @__declfirst
+comment|// CHECK-DAG: @declfirst = weak alias void ()* @__declfirst
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @declfirstattr = alias weak void ()* @__declfirstattr
+comment|// CHECK-DAG: @declfirstattr = weak alias void ()* @__declfirstattr
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @mix2 = alias weak void ()* @__mix2
+comment|// CHECK-DAG: @mix2 = weak alias void ()* @__mix2
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @a1 = alias weak void ()* @__a1
+comment|// CHECK-DAG: @a1 = weak alias void ()* @__a1
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @xxx = alias weak void ()* @__xxx
+comment|// CHECK-DAG: @xxx = weak alias void ()* @__xxx
 end_comment
 
 begin_comment

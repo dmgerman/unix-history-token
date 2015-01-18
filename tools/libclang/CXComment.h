@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_CXCOMMENT_H
+name|LLVM_CLANG_TOOLS_LIBCLANG_CXCOMMENT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_CXCOMMENT_H
+name|LLVM_CLANG_TOOLS_LIBCLANG_CXCOMMENT_H
 end_define
 
 begin_include
@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang-c/Index.h"
+file|"clang-c/Documentation.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang-c/Documentation.h"
+file|"clang-c/Index.h"
 end_include
 
 begin_include

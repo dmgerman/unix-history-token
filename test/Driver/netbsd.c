@@ -60,30 +60,6 @@ comment|// RUN: | FileCheck -check-prefix=AARCH64-7 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -no-canonical-prefixes -target arm64--netbsd \
-end_comment
-
-begin_comment
-comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN: | FileCheck -check-prefix=ARM64 %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -no-canonical-prefixes -target arm64--netbsd7.0.0 \
-end_comment
-
-begin_comment
-comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN: | FileCheck -check-prefix=ARM64-7 %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang -no-canonical-prefixes -target arm--netbsd-eabi \
 end_comment
 
@@ -93,6 +69,18 @@ end_comment
 
 begin_comment
 comment|// RUN: | FileCheck -check-prefix=ARM %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target armeb--netbsd-eabi \
+end_comment
+
+begin_comment
+comment|// RUN: -no-integrated-as --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=ARMEB %s
 end_comment
 
 begin_comment
@@ -108,6 +96,18 @@ comment|// RUN: | FileCheck -check-prefix=ARM-APCS %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target arm--netbsd-eabihf \
+end_comment
+
+begin_comment
+comment|// RUN: -no-integrated-as --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=ARM-HF %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -no-canonical-prefixes -target thumb--netbsd-eabi \
 end_comment
 
@@ -117,6 +117,18 @@ end_comment
 
 begin_comment
 comment|// RUN: | FileCheck -check-prefix=THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target thumbeb--netbsd-eabi \
+end_comment
+
+begin_comment
+comment|// RUN: -no-integrated-as --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=THUMBEB %s
 end_comment
 
 begin_comment
@@ -144,18 +156,6 @@ comment|// RUN: | FileCheck -check-prefix=ARM-6 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -no-canonical-prefixes -target arm--netbsd-eabihf \
-end_comment
-
-begin_comment
-comment|// RUN: -no-integrated-as --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN: | FileCheck -check-prefix=ARM-HF %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang -no-canonical-prefixes -target sparc--netbsd \
 end_comment
 
@@ -177,6 +177,30 @@ end_comment
 
 begin_comment
 comment|// RUN: | FileCheck -check-prefix=SPARC64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target powerpc--netbsd \
+end_comment
+
+begin_comment
+comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=POWERPC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target powerpc64--netbsd \
+end_comment
+
+begin_comment
+comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=POWERPC64 %s
 end_comment
 
 begin_comment
@@ -240,30 +264,6 @@ comment|// RUN: | FileCheck -check-prefix=S-AARCH64-7 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -no-canonical-prefixes -target arm64--netbsd -static \
-end_comment
-
-begin_comment
-comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN: | FileCheck -check-prefix=S-ARM64 %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -no-canonical-prefixes -target arm64--netbsd7.0.0 -static \
-end_comment
-
-begin_comment
-comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN: | FileCheck -check-prefix=S-ARM64-7 %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang -no-canonical-prefixes -target arm--netbsd-eabi -static \
 end_comment
 
@@ -273,6 +273,18 @@ end_comment
 
 begin_comment
 comment|// RUN: | FileCheck -check-prefix=S-ARM %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target armeb--netbsd-eabi -static \
+end_comment
+
+begin_comment
+comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=S-ARMEB %s
 end_comment
 
 begin_comment
@@ -321,6 +333,30 @@ end_comment
 
 begin_comment
 comment|// RUN: | FileCheck -check-prefix=S-SPARC64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target powerpc--netbsd -static \
+end_comment
+
+begin_comment
+comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=S-POWERPC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target powerpc64--netbsd -static \
+end_comment
+
+begin_comment
+comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=S-POWERPC64 %s
 end_comment
 
 begin_comment
@@ -400,10 +436,6 @@ comment|// AARCH64: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
 end_comment
 
 begin_comment
-comment|// AARCH64: "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed"
-end_comment
-
-begin_comment
 comment|// AARCH64: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
 end_comment
 
@@ -424,59 +456,7 @@ comment|// AARCH64-7:  "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
 end_comment
 
 begin_comment
-comment|// AARCH64-7: "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed"
-end_comment
-
-begin_comment
 comment|// AARCH64-7: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
-end_comment
-
-begin_comment
-comment|// ARM64: clang{{.*}}" "-cc1" "-triple" "arm64--netbsd"
-end_comment
-
-begin_comment
-comment|// ARM64: ld{{.*}}" "--eh-frame-hdr" "-dynamic-linker" "/libexec/ld.elf_so"
-end_comment
-
-begin_comment
-comment|// ARM64: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o" "{{.*}}/usr/lib{{/|\\\\}}crti.o"
-end_comment
-
-begin_comment
-comment|// ARM64: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
-end_comment
-
-begin_comment
-comment|// ARM64: "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed"
-end_comment
-
-begin_comment
-comment|// ARM64: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
-end_comment
-
-begin_comment
-comment|// ARM64-7: clang{{.*}}" "-cc1" "-triple" "arm64--netbsd7.0.0"
-end_comment
-
-begin_comment
-comment|// ARM64-7: ld{{.*}}" "--eh-frame-hdr" "-dynamic-linker" "/libexec/ld.elf_so"
-end_comment
-
-begin_comment
-comment|// ARM64-7: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o" "{{.*}}/usr/lib{{/|\\\\}}crti.o"
-end_comment
-
-begin_comment
-comment|// ARM64-7:  "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
-end_comment
-
-begin_comment
-comment|// ARM64-7: "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed"
-end_comment
-
-begin_comment
-comment|// ARM64-7: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -512,6 +492,38 @@ comment|// ARM: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn
 end_comment
 
 begin_comment
+comment|// ARMEB: clang{{.*}}" "-cc1" "-triple" "armebv5e--netbsd-eabi"
+end_comment
+
+begin_comment
+comment|// ARMEB: as{{.*}}" "-mcpu=arm926ej-s" "-o"
+end_comment
+
+begin_comment
+comment|// ARMEB: ld{{.*}}" "--eh-frame-hdr" "-dynamic-linker" "/libexec/ld.elf_so"
+end_comment
+
+begin_comment
+comment|// ARMEB: "-m" "armelfb_nbsd_eabi"
+end_comment
+
+begin_comment
+comment|// ARMEB: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o"
+end_comment
+
+begin_comment
+comment|// ARMEB: "{{.*}}/usr/lib{{/|\\\\}}eabi{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// ARMEB: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// ARMEB: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
 comment|// ARM-APCS: clang{{.*}}" "-cc1" "-triple" "armv4--netbsd"
 end_comment
 
@@ -544,6 +556,38 @@ comment|// ARM-APCS: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}
 end_comment
 
 begin_comment
+comment|// ARM-HF: clang{{.*}}" "-cc1" "-triple" "armv5e--netbsd-eabihf"
+end_comment
+
+begin_comment
+comment|// ARM-HF: as{{.*}}" "-mcpu=arm926ej-s" "-o"
+end_comment
+
+begin_comment
+comment|// ARM-HF: ld{{.*}}" "--eh-frame-hdr" "-dynamic-linker" "/libexec/ld.elf_so"
+end_comment
+
+begin_comment
+comment|// ARM-HF: "-m" "armelf_nbsd_eabihf"
+end_comment
+
+begin_comment
+comment|// ARM-HF: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o"
+end_comment
+
+begin_comment
+comment|// ARM-HF: "{{.*}}/usr/lib{{/|\\\\}}eabihf{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// ARM-HF: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// ARM-HF: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
 comment|// THUMB: clang{{.*}}" "-cc1" "-triple" "armv5e--netbsd-eabi"
 end_comment
 
@@ -573,6 +617,38 @@ end_comment
 
 begin_comment
 comment|// THUMB: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// THUMBEB: clang{{.*}}" "-cc1" "-triple" "armebv5e--netbsd-eabi"
+end_comment
+
+begin_comment
+comment|// THUMBEB: as{{.*}}" "-mcpu=arm926ej-s" "-o"
+end_comment
+
+begin_comment
+comment|// THUMBEB: ld{{.*}}" "--eh-frame-hdr" "-dynamic-linker" "/libexec/ld.elf_so"
+end_comment
+
+begin_comment
+comment|// THUMBEB: "-m" "armelfb_nbsd_eabi"
+end_comment
+
+begin_comment
+comment|// THUMBEB: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o"
+end_comment
+
+begin_comment
+comment|// THUMBEB: "{{.*}}/usr/lib{{/|\\\\}}eabi{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// THUMBEB: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// THUMBEB: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -629,14 +705,6 @@ end_comment
 
 begin_comment
 comment|// ARM-6: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
-end_comment
-
-begin_comment
-comment|// ARM-HF: clang{{.*}}" "-cc1" "-triple" "armv5e--netbsd-eabihf"
-end_comment
-
-begin_comment
-comment|// ARM-HF: ld{{.*}}" "-m" "armelf_nbsd_eabihf"
 end_comment
 
 begin_comment
@@ -697,6 +765,62 @@ end_comment
 
 begin_comment
 comment|// SPARC64: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// POWERPC: clang{{.*}}" "-cc1" "-triple" "powerpc--netbsd"
+end_comment
+
+begin_comment
+comment|// POWERPC: ld{{.*}}" "--eh-frame-hdr" "-dynamic-linker" "/libexec/ld.elf_so"
+end_comment
+
+begin_comment
+comment|// POWERPC: "-m" "elf32ppc_nbsd"
+end_comment
+
+begin_comment
+comment|// POWERPC: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o"
+end_comment
+
+begin_comment
+comment|// POWERPC: "{{.*}}/usr/lib{{/|\\\\}}powerpc{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// POWERPC: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// POWERPC: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// POWERPC64: clang{{.*}}" "-cc1" "-triple" "powerpc64--netbsd"
+end_comment
+
+begin_comment
+comment|// POWERPC64: ld{{.*}}" "--eh-frame-hdr" "-dynamic-linker" "/libexec/ld.elf_so"
+end_comment
+
+begin_comment
+comment|// POWERPC64: "-m" "elf64ppc"
+end_comment
+
+begin_comment
+comment|// POWERPC64: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o"
+end_comment
+
+begin_comment
+comment|// POWERPC64: "{{.*}}/usr/lib{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// POWERPC64: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// POWERPC64: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -780,10 +904,6 @@ comment|// S-AARCH64: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
 end_comment
 
 begin_comment
-comment|// S-AARCH64: "-lgcc_eh" "-lc" "-lgcc"
-end_comment
-
-begin_comment
 comment|// S-AARCH64: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
 end_comment
 
@@ -804,59 +924,7 @@ comment|// S-AARCH64-7: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
 end_comment
 
 begin_comment
-comment|// S-AARCH64-7: "-lgcc_eh" "-lc" "-lgcc"
-end_comment
-
-begin_comment
 comment|// S-AARCH64-7: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
-end_comment
-
-begin_comment
-comment|// S-ARM64: clang{{.*}}" "-cc1" "-triple" "arm64--netbsd"
-end_comment
-
-begin_comment
-comment|// S-ARM64: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
-end_comment
-
-begin_comment
-comment|// S-ARM64: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o" "{{.*}}/usr/lib{{/|\\\\}}crti.o"
-end_comment
-
-begin_comment
-comment|// S-ARM64: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
-end_comment
-
-begin_comment
-comment|// S-ARM64: "-lgcc_eh" "-lc" "-lgcc"
-end_comment
-
-begin_comment
-comment|// S-ARM64: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
-end_comment
-
-begin_comment
-comment|// S-ARM64-7: clang{{.*}}" "-cc1" "-triple" "arm64--netbsd7.0.0"
-end_comment
-
-begin_comment
-comment|// S-ARM64-7: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
-end_comment
-
-begin_comment
-comment|// S-ARM64-7: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o" "{{.*}}/usr/lib{{/|\\\\}}crti.o"
-end_comment
-
-begin_comment
-comment|// S-ARM64-7: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
-end_comment
-
-begin_comment
-comment|// S-ARM64-7: "-lgcc_eh" "-lc" "-lgcc"
-end_comment
-
-begin_comment
-comment|// S-ARM64-7: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -885,6 +953,34 @@ end_comment
 
 begin_comment
 comment|// S-ARM: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// S-ARMEB: clang{{.*}}" "-cc1" "-triple" "armebv5e--netbsd-eabi"
+end_comment
+
+begin_comment
+comment|// S-ARMEB: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
+end_comment
+
+begin_comment
+comment|// S-ARMEB: "-m" "armelfb_nbsd_eabi"
+end_comment
+
+begin_comment
+comment|// S-ARMEB: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o"
+end_comment
+
+begin_comment
+comment|// S-ARMEB: "{{.*}}/usr/lib{{/|\\\\}}eabi{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// S-ARMEB: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// S-ARMEB: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -1005,6 +1101,62 @@ end_comment
 
 begin_comment
 comment|// S-SPARC64: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// S-POWERPC: clang{{.*}}" "-cc1" "-triple" "powerpc--netbsd"
+end_comment
+
+begin_comment
+comment|// S-POWERPC: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
+end_comment
+
+begin_comment
+comment|// S-POWERPC: "-m" "elf32ppc_nbsd"
+end_comment
+
+begin_comment
+comment|// S-POWERPC: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o"
+end_comment
+
+begin_comment
+comment|// S-POWERPC: "{{.*}}/usr/lib{{/|\\\\}}powerpc{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// S-POWERPC: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// S-POWERPC: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// S-POWERPC64: clang{{.*}}" "-cc1" "-triple" "powerpc64--netbsd"
+end_comment
+
+begin_comment
+comment|// S-POWERPC64: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
+end_comment
+
+begin_comment
+comment|// S-POWERPC64: "-m" "elf64ppc"
+end_comment
+
+begin_comment
+comment|// S-POWERPC64: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o"
+end_comment
+
+begin_comment
+comment|// S-POWERPC64: "{{.*}}/usr/lib{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// S-POWERPC64: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// S-POWERPC64: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
 end_comment
 
 end_unit

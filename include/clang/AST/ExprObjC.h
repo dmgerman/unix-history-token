@@ -657,6 +657,52 @@ literal|1
 argument_list|)
 return|;
 block|}
+typedef|typedef
+name|ConstExprIterator
+name|const_arg_iterator
+typedef|;
+name|const_arg_iterator
+name|arg_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Stmt
+specifier|const
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+operator|&
+name|SubExpr
+operator|)
+return|;
+block|}
+name|const_arg_iterator
+name|arg_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Stmt
+specifier|const
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+operator|&
+name|SubExpr
+operator|+
+literal|1
+operator|)
+return|;
+block|}
 name|friend
 name|class
 name|ASTStmtReader
@@ -1470,13 +1516,13 @@ name|friend
 name|class
 name|ASTStmtWriter
 block|; }
-block|;
+decl_stmt|;
 comment|/// ObjCEncodeExpr, used for \@encode in Objective-C.  \@encode has the same
 comment|/// type and behavior as StringLiteral except that the string initializer is
 comment|/// obtained from ASTContext with the encoding type as an argument.
 name|class
 name|ObjCEncodeExpr
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -3766,13 +3812,13 @@ name|f
 argument_list|)
 block|;   }
 block|}
-block|;
+decl_stmt|;
 comment|/// ObjCSubscriptRefExpr - used for array and dictionary subscripting.
 comment|/// array[4] = array[3]; dictionary[key] = dictionary[alt_key];
 comment|///
 name|class
 name|ObjCSubscriptRefExpr
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -4127,7 +4173,7 @@ name|friend
 name|class
 name|ASTStmtReader
 block|; }
-block|;
+decl_stmt|;
 comment|/// \brief An expression that sends a message to the given Objective-C
 comment|/// object or class.
 comment|///
@@ -4153,7 +4199,7 @@ comment|/// class, and can be distinguished via \c getReceiverKind(). Example:
 comment|///
 name|class
 name|ObjCMessageExpr
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -4534,43 +4580,64 @@ return|;
 block|}
 specifier|static
 name|ObjCMessageExpr
-operator|*
+modifier|*
 name|alloc
 argument_list|(
-argument|const ASTContext&C
+specifier|const
+name|ASTContext
+operator|&
+name|C
 argument_list|,
-argument|ArrayRef<Expr *> Args
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|Args
 argument_list|,
-argument|SourceLocation RBraceLoc
+name|SourceLocation
+name|RBraceLoc
 argument_list|,
-argument|ArrayRef<SourceLocation> SelLocs
+name|ArrayRef
+operator|<
+name|SourceLocation
+operator|>
+name|SelLocs
 argument_list|,
-argument|Selector Sel
+name|Selector
+name|Sel
 argument_list|,
-argument|SelectorLocationsKind&SelLocsK
+name|SelectorLocationsKind
+operator|&
+name|SelLocsK
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|ObjCMessageExpr
-operator|*
+modifier|*
 name|alloc
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|unsigned NumStoredSelLocs
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|NumArgs
+parameter_list|,
+name|unsigned
+name|NumStoredSelLocs
+parameter_list|)
+function_decl|;
 name|public
-operator|:
+label|:
 comment|/// \brief The kind of receiver this message is sending to.
-expr|enum
+enum|enum
 name|ReceiverKind
 block|{
 comment|/// \brief The receiver is a class.
 name|Class
-operator|=
+init|=
 literal|0
 block|,
 comment|/// \brief The receiver is an object instance.
@@ -4582,7 +4649,7 @@ block|,
 comment|/// \brief The receiver is the instance of the superclass object.
 name|SuperInstance
 block|}
-block|;
+enum|;
 comment|/// \brief Create a message send to super.
 comment|///
 comment|/// \param Context The ASTContext in which this expression will be created.
@@ -4610,36 +4677,59 @@ comment|///
 comment|/// \param RBracLoc The location of the closing square bracket ']'.
 specifier|static
 name|ObjCMessageExpr
-operator|*
+modifier|*
 name|Create
 argument_list|(
-argument|const ASTContext&Context
+specifier|const
+name|ASTContext
+operator|&
+name|Context
 argument_list|,
-argument|QualType T
+name|QualType
+name|T
 argument_list|,
-argument|ExprValueKind VK
+name|ExprValueKind
+name|VK
 argument_list|,
-argument|SourceLocation LBracLoc
+name|SourceLocation
+name|LBracLoc
 argument_list|,
-argument|SourceLocation SuperLoc
+name|SourceLocation
+name|SuperLoc
 argument_list|,
-argument|bool IsInstanceSuper
+name|bool
+name|IsInstanceSuper
 argument_list|,
-argument|QualType SuperType
+name|QualType
+name|SuperType
 argument_list|,
-argument|Selector Sel
+name|Selector
+name|Sel
 argument_list|,
-argument|ArrayRef<SourceLocation> SelLocs
+name|ArrayRef
+operator|<
+name|SourceLocation
+operator|>
+name|SelLocs
 argument_list|,
-argument|ObjCMethodDecl *Method
+name|ObjCMethodDecl
+operator|*
+name|Method
 argument_list|,
-argument|ArrayRef<Expr *> Args
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|Args
 argument_list|,
-argument|SourceLocation RBracLoc
+name|SourceLocation
+name|RBracLoc
 argument_list|,
-argument|bool isImplicit
+name|bool
+name|isImplicit
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Create a class message send.
 comment|///
 comment|/// \param Context The ASTContext in which this expression will be created.
@@ -4665,32 +4755,54 @@ comment|///
 comment|/// \param RBracLoc The location of the closing square bracket ']'.
 specifier|static
 name|ObjCMessageExpr
-operator|*
+modifier|*
 name|Create
 argument_list|(
-argument|const ASTContext&Context
+specifier|const
+name|ASTContext
+operator|&
+name|Context
 argument_list|,
-argument|QualType T
+name|QualType
+name|T
 argument_list|,
-argument|ExprValueKind VK
+name|ExprValueKind
+name|VK
 argument_list|,
-argument|SourceLocation LBracLoc
+name|SourceLocation
+name|LBracLoc
 argument_list|,
-argument|TypeSourceInfo *Receiver
+name|TypeSourceInfo
+operator|*
+name|Receiver
 argument_list|,
-argument|Selector Sel
+name|Selector
+name|Sel
 argument_list|,
-argument|ArrayRef<SourceLocation> SelLocs
+name|ArrayRef
+operator|<
+name|SourceLocation
+operator|>
+name|SelLocs
 argument_list|,
-argument|ObjCMethodDecl *Method
+name|ObjCMethodDecl
+operator|*
+name|Method
 argument_list|,
-argument|ArrayRef<Expr *> Args
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|Args
 argument_list|,
-argument|SourceLocation RBracLoc
+name|SourceLocation
+name|RBracLoc
 argument_list|,
-argument|bool isImplicit
+name|bool
+name|isImplicit
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Create an instance message send.
 comment|///
 comment|/// \param Context The ASTContext in which this expression will be created.
@@ -4716,32 +4828,54 @@ comment|///
 comment|/// \param RBracLoc The location of the closing square bracket ']'.
 specifier|static
 name|ObjCMessageExpr
-operator|*
+modifier|*
 name|Create
 argument_list|(
-argument|const ASTContext&Context
+specifier|const
+name|ASTContext
+operator|&
+name|Context
 argument_list|,
-argument|QualType T
+name|QualType
+name|T
 argument_list|,
-argument|ExprValueKind VK
+name|ExprValueKind
+name|VK
 argument_list|,
-argument|SourceLocation LBracLoc
+name|SourceLocation
+name|LBracLoc
 argument_list|,
-argument|Expr *Receiver
+name|Expr
+operator|*
+name|Receiver
 argument_list|,
-argument|Selector Sel
+name|Selector
+name|Sel
 argument_list|,
-argument|ArrayRef<SourceLocation> SeLocs
+name|ArrayRef
+operator|<
+name|SourceLocation
+operator|>
+name|SeLocs
 argument_list|,
-argument|ObjCMethodDecl *Method
+name|ObjCMethodDecl
+operator|*
+name|Method
 argument_list|,
-argument|ArrayRef<Expr *> Args
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|Args
 argument_list|,
-argument|SourceLocation RBracLoc
+name|SourceLocation
+name|RBracLoc
 argument_list|,
-argument|bool isImplicit
+name|bool
+name|isImplicit
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Create an empty Objective-C message expression, to be
 comment|/// filled in by subsequent calls.
 comment|///
@@ -4751,16 +4885,21 @@ comment|/// \param NumArgs The number of message arguments, not including
 comment|/// the receiver.
 specifier|static
 name|ObjCMessageExpr
-operator|*
+modifier|*
 name|CreateEmpty
-argument_list|(
-argument|const ASTContext&Context
-argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|unsigned NumStoredSelLocs
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|unsigned
+name|NumArgs
+parameter_list|,
+name|unsigned
+name|NumStoredSelLocs
+parameter_list|)
+function_decl|;
 comment|/// \brief Indicates whether the message send was implicitly
 comment|/// generated by the implementation. If false, it was written explicitly
 comment|/// in the source code.
@@ -4792,7 +4931,7 @@ name|SourceRange
 name|getReceiverRange
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// \brief Determine whether this is an instance message to either a
 comment|/// computed object or to super.
 name|bool
@@ -4834,9 +4973,9 @@ block|}
 comment|/// \brief Returns the object expression (receiver) for an instance message,
 comment|/// or null for a message that is not an instance message.
 name|Expr
-operator|*
+modifier|*
 name|getInstanceReceiver
-argument_list|()
+parameter_list|()
 block|{
 if|if
 condition|(

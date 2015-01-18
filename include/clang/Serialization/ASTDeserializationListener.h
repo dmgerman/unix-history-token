@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FRONTEND_AST_DESERIALIZATION_LISTENER_H
+name|LLVM_CLANG_SERIALIZATION_ASTDESERIALIZATIONLISTENER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FRONTEND_AST_DESERIALIZATION_LISTENER_H
+name|LLVM_CLANG_SERIALIZATION_ASTDESERIALIZATIONLISTENER_H
 end_define
 
 begin_include

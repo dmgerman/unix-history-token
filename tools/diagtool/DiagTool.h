@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DIAGTOOL_DIAGTOOL_H
+name|LLVM_CLANG_TOOLS_DIAGTOOL_DIAGTOOL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|DIAGTOOL_DIAGTOOL_H
+name|LLVM_CLANG_TOOLS_DIAGTOOL_DIAGTOOL_H
 end_define
 
 begin_include

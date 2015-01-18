@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN:  %clang_cc1 -triple arm64_be-linux-gnu -ffreestanding -emit-llvm -O0 -o - %s | FileCheck %s
+comment|// RUN:  %clang_cc1 -triple aarch64_be-linux-gnu -ffreestanding -emit-llvm -O0 -o - %s | FileCheck %s
 end_comment
 
 begin_include

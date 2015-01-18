@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -std=c99 %s -emit-llvm -o - | \
 end_comment
 
 begin_comment
-comment|// RUN:    opt -std-compile-opts -disable-output
+comment|// RUN:    opt -O3 -disable-output
 end_comment
 
 begin_comment

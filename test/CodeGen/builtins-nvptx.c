@@ -466,6 +466,17 @@ argument_list|(
 name|f2
 argument_list|)
 decl_stmt|;
+comment|// CHECK: call float @llvm.nvvm.add.rn.f
+name|float
+name|t5
+init|=
+name|__nvvm_add_rn_f
+argument_list|(
+name|f1
+argument_list|,
+name|f2
+argument_list|)
+decl_stmt|;
 comment|// CHECK: call double @llvm.nvvm.fmax.d
 name|double
 name|td1

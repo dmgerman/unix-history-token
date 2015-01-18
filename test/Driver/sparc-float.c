@@ -28,6 +28,10 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-DEF %s
 end_comment
 
 begin_comment
+comment|// CHECK-DEF: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
 comment|// CHECK-DEF: "-msoft-float"
 end_comment
 
@@ -76,6 +80,10 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-SOFT %s
 end_comment
 
 begin_comment
+comment|// CHECK-SOFT: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
 comment|// CHECK-SOFT: "-msoft-float"
 end_comment
 
@@ -97,6 +105,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-DEF-SPARC64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEF-SPARC64: "-target-feature" "+soft-float"
 end_comment
 
 begin_comment
@@ -145,6 +157,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-SOFT-SPARC64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-SOFT-SPARC64: "-target-feature" "+soft-float"
 end_comment
 
 begin_comment

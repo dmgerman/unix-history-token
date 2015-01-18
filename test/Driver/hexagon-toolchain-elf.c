@@ -20,6 +20,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   %s 2>&1 \
 end_comment
 
@@ -40,7 +44,7 @@ comment|// CHECK001:   "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/q
 end_comment
 
 begin_comment
-comment|// CHECK001-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"
+comment|// CHECK001-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -49,6 +53,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -76,7 +84,7 @@ comment|// CHECK002:   "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree/q
 end_comment
 
 begin_comment
-comment|// CHECK002-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"
+comment|// CHECK002-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -97,6 +105,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -128,7 +140,7 @@ comment|// CHECK003-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree
 end_comment
 
 begin_comment
-comment|// CHECK003-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"
+comment|// CHECK003-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -137,6 +149,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -168,7 +184,7 @@ comment|// CHECK004-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree
 end_comment
 
 begin_comment
-comment|// CHECK004-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"
+comment|// CHECK004-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -177,6 +193,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -212,7 +232,7 @@ comment|// CHECK005-NOT: "-internal-externc-isystem" "{{.*}}/Inputs/hexagon_tree
 end_comment
 
 begin_comment
-comment|// CHECK005-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"
+comment|// CHECK005-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -221,6 +241,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -244,7 +268,7 @@ comment|// CHECK006-NOT: "-internal-isystem" "{{.*}}/Inputs/hexagon_tree/qc/bin/
 end_comment
 
 begin_comment
-comment|// CHECK006-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"
+comment|// CHECK006-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -268,6 +292,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -march=hexagonv3 \
 end_comment
 
@@ -284,11 +312,11 @@ comment|// CHECK007: "-cc1" {{.*}} "-target-cpu" "hexagonv3"
 end_comment
 
 begin_comment
-comment|// CHECK007-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"{{.*}} "-march=v3"
+comment|// CHECK007-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"{{.*}} "-march=v3"
 end_comment
 
 begin_comment
-comment|// CHECK007-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-ld"{{.*}} "-mv3"
+comment|// CHECK007-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-ld"{{.*}} "-mv3"
 end_comment
 
 begin_comment
@@ -297,6 +325,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -316,11 +348,11 @@ comment|// CHECK008: "-cc1" {{.*}} "-target-cpu" "hexagonv5"
 end_comment
 
 begin_comment
-comment|// CHECK008-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"{{.*}} "-march=v5"
+comment|// CHECK008-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"{{.*}} "-march=v5"
 end_comment
 
 begin_comment
-comment|// CHECK008-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-ld"{{.*}} "-mv5"
+comment|// CHECK008-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-ld"{{.*}} "-mv5"
 end_comment
 
 begin_comment
@@ -329,6 +361,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -348,11 +384,11 @@ comment|// CHECK009: "-cc1" {{.*}} "-target-cpu" "hexagonv2"
 end_comment
 
 begin_comment
-comment|// CHECK009-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"{{.*}} "-march=v2"
+comment|// CHECK009-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"{{.*}} "-march=v2"
 end_comment
 
 begin_comment
-comment|// CHECK009-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-ld"{{.*}} "-mv2"
+comment|// CHECK009-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-ld"{{.*}} "-mv2"
 end_comment
 
 begin_comment
@@ -361,6 +397,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -376,11 +416,11 @@ comment|// CHECK010: "-cc1" {{.*}} "-target-cpu" "hexagonv4"
 end_comment
 
 begin_comment
-comment|// CHECK010-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-as"{{.*}} "-march=v4"
+comment|// CHECK010-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-as"{{.*}} "-march=v4"
 end_comment
 
 begin_comment
-comment|// CHECK010-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\}}hexagon-ld"{{.*}} "-mv4"
+comment|// CHECK010-NEXT: "{{.*}}/Inputs/hexagon_tree/qc/bin/../../gnu/bin{{/|\\\\}}hexagon-ld"{{.*}} "-mv4"
 end_comment
 
 begin_comment
@@ -472,6 +512,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   %s 2>&1 \
 end_comment
 
@@ -484,11 +528,11 @@ comment|// CHECK011: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK011-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
+comment|// CHECK011-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK011-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK011-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -564,6 +608,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   %s 2>&1 \
 end_comment
 
@@ -576,11 +624,11 @@ comment|// CHECK012: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK012-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
+comment|// CHECK012-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK012-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK012-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -660,6 +708,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -Lone -L two -L three \
 end_comment
 
@@ -676,11 +728,11 @@ comment|// CHECK013: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK013-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
+comment|// CHECK013-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK013-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK013-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -752,6 +804,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -static \
 end_comment
 
@@ -768,11 +824,11 @@ comment|// CHECK014: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK014-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
+comment|// CHECK014-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK014-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK014-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -832,6 +888,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -shared \
 end_comment
 
@@ -848,11 +908,11 @@ comment|// CHECK015: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK015-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
+comment|// CHECK015-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK015-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK015-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -944,6 +1004,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -shared \
 end_comment
 
@@ -964,11 +1028,11 @@ comment|// CHECK016: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK016-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
+comment|// CHECK016-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK016-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK016-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1072,6 +1136,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -nostdlib \
 end_comment
 
@@ -1088,11 +1156,11 @@ comment|// CHECK017: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK017-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
+comment|// CHECK017-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK017-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK017-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1172,6 +1240,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -nostartfiles \
 end_comment
 
@@ -1188,11 +1260,11 @@ comment|// CHECK018: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK018-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
+comment|// CHECK018-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK018-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK018-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1272,6 +1344,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -nodefaultlibs \
 end_comment
 
@@ -1288,11 +1364,11 @@ comment|// CHECK019: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK019-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
+comment|// CHECK019-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK019-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK019-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1384,6 +1460,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -moslib=first -moslib=second \
 end_comment
 
@@ -1400,11 +1480,11 @@ comment|// CHECK020: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK020-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
+comment|// CHECK020-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK020-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK020-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1480,6 +1560,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -moslib=first -moslib=second -moslib=standalone\
 end_comment
 
@@ -1496,11 +1580,11 @@ comment|// CHECK021: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK021-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
+comment|// CHECK021-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK021-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK021-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1588,6 +1672,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -s \
 end_comment
 
@@ -1620,11 +1708,11 @@ comment|// CHECK022: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK022-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"{{.*}}
+comment|// CHECK022-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK022-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK022-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1712,6 +1800,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   %s 2>&1 \
 end_comment
 
@@ -1728,7 +1820,7 @@ comment|// CHECK023:        "-mrelocation-model" "static"
 end_comment
 
 begin_comment
-comment|// CHECK023-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
+comment|// CHECK023-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -1736,7 +1828,7 @@ comment|// CHECK023-NOT:    "-G{{[0-9]+}}"
 end_comment
 
 begin_comment
-comment|// CHECK023-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK023-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1749,6 +1841,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -1772,6 +1868,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -fPIC \
 end_comment
 
@@ -1789,6 +1889,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -1824,7 +1928,7 @@ comment|// CHECK024:        "-mllvm" "-hexagon-small-data-threshold=0"
 end_comment
 
 begin_comment
-comment|// CHECK024-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
+comment|// CHECK024-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -1832,7 +1936,7 @@ comment|// CHECK024:        "-G0"
 end_comment
 
 begin_comment
-comment|// CHECK024-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK024-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1845,6 +1949,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -1868,6 +1976,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -G 8 \
 end_comment
 
@@ -1885,6 +1997,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -1912,7 +2028,7 @@ comment|// CHECK025:        "-mllvm" "-hexagon-small-data-threshold=8"
 end_comment
 
 begin_comment
-comment|// CHECK025-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
+comment|// CHECK025-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -1920,7 +2036,7 @@ comment|// CHECK025:        "-G8"
 end_comment
 
 begin_comment
-comment|// CHECK025-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK025-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1948,6 +2064,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   -pie \
 end_comment
 
@@ -1964,11 +2084,11 @@ comment|// CHECK026:      "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK026-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
+comment|// CHECK026-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
 end_comment
 
 begin_comment
-comment|// CHECK026-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK026-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -1981,6 +2101,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -2000,11 +2124,11 @@ comment|// CHECK027:      "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK027-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
+comment|// CHECK027-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
 end_comment
 
 begin_comment
-comment|// CHECK027-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK027-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -2032,6 +2156,10 @@ comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
 end_comment
 
 begin_comment
+comment|// RUN:   --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   %s 2>&1 \
 end_comment
 
@@ -2052,11 +2180,11 @@ comment|// CHECK028:        "-Wreturn-type"
 end_comment
 
 begin_comment
-comment|// CHECK028-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
+comment|// CHECK028-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
 end_comment
 
 begin_comment
-comment|// CHECK028-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK028-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 begin_comment
@@ -2077,6 +2205,10 @@ end_comment
 
 begin_comment
 comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -2104,7 +2236,7 @@ comment|// CHECK029:      "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK029-NEXT: "{{.*}}/bin{{/|\\}}hexagon-as"
+comment|// CHECK029-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-as"
 end_comment
 
 begin_comment
@@ -2112,7 +2244,7 @@ comment|// CHECK029:      "--noexecstack" "--trap" "--keep-locals"
 end_comment
 
 begin_comment
-comment|// CHECK029-NEXT: "{{.*}}/bin{{/|\\}}hexagon-ld"
+comment|// CHECK029-NEXT: "{{.*}}/bin{{/|\\\\}}hexagon-ld"
 end_comment
 
 end_unit

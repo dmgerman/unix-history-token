@@ -30,11 +30,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: @yv7 = global
-end_comment
-
-begin_comment
-comment|// CHECK: i8 52,
+comment|// CHECK: @yv7 = global %struct.et7 { [0 x float] zeroinitializer, i8 52 }
 end_comment
 
 end_unit

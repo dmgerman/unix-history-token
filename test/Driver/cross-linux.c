@@ -20,11 +20,11 @@ comment|// CHECK-I386: "-cc1" "-triple" "i386-unknown-linux-gnu"
 end_comment
 
 begin_comment
-comment|// CHECK-I386: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/i386-unknown-linux-gnu/4.6.0/../../../../i386-unknown-linux-gnu/bin{{/|\\}}as" "--32"
+comment|// CHECK-I386: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/i386-unknown-linux-gnu/4.6.0/../../../../i386-unknown-linux-gnu/bin{{/|\\\\}}as" "--32"
 end_comment
 
 begin_comment
-comment|// CHECK-I386: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/i386-unknown-linux-gnu/4.6.0/../../../../i386-unknown-linux-gnu/bin{{/|\\}}ld" {{.*}} "-m" "elf_i386"
+comment|// CHECK-I386: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/i386-unknown-linux-gnu/4.6.0/../../../../i386-unknown-linux-gnu/bin{{/|\\\\}}ld" {{.*}} "-m" "elf_i386"
 end_comment
 
 begin_comment
@@ -52,11 +52,11 @@ comment|// CHECK-X86-64: "-cc1" "-triple" "x86_64-unknown-linux-gnu"
 end_comment
 
 begin_comment
-comment|// CHECK-X86-64: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/x86_64-unknown-linux-gnu/4.6.0/../../../../x86_64-unknown-linux-gnu/bin{{/|\\}}as" "--64"
+comment|// CHECK-X86-64: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/x86_64-unknown-linux-gnu/4.6.0/../../../../x86_64-unknown-linux-gnu/bin{{/|\\\\}}as" "--64"
 end_comment
 
 begin_comment
-comment|// CHECK-X86-64: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/x86_64-unknown-linux-gnu/4.6.0/../../../../x86_64-unknown-linux-gnu/bin{{/|\\}}ld" {{.*}} "-m" "elf_x86_64"
+comment|// CHECK-X86-64: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/x86_64-unknown-linux-gnu/4.6.0/../../../../x86_64-unknown-linux-gnu/bin{{/|\\\\}}ld" {{.*}} "-m" "elf_x86_64"
 end_comment
 
 begin_comment
@@ -84,11 +84,11 @@ comment|// CHECK-X32: "-cc1" "-triple" "x86_64-unknown-linux-gnux32"
 end_comment
 
 begin_comment
-comment|// CHECK-X32: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/x86_64-unknown-linux-gnu/4.6.0/../../../../x86_64-unknown-linux-gnu/bin{{/|\\}}as" "--x32"
+comment|// CHECK-X32: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/x86_64-unknown-linux-gnu/4.6.0/../../../../x86_64-unknown-linux-gnu/bin{{/|\\\\}}as" "--x32"
 end_comment
 
 begin_comment
-comment|// CHECK-X32: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/x86_64-unknown-linux-gnu/4.6.0/../../../../x86_64-unknown-linux-gnu/bin{{/|\\}}ld" {{.*}} "-m" "elf32_x86_64"
+comment|// CHECK-X32: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/x86_64-unknown-linux-gnu/4.6.0/../../../../x86_64-unknown-linux-gnu/bin{{/|\\\\}}ld" {{.*}} "-m" "elf32_x86_64"
 end_comment
 
 begin_comment
@@ -160,11 +160,11 @@ comment|// CHECK-MULTI32-I386: "-cc1" "-triple" "i386-unknown-linux"
 end_comment
 
 begin_comment
-comment|// CHECK-MULTI32-I386: "{{.*}}/Inputs/multilib_32bit_linux_tree/usr/lib/gcc/i386-unknown-linux/4.6.0/../../../../i386-unknown-linux/bin{{/|\\}}as" "--32"
+comment|// CHECK-MULTI32-I386: "{{.*}}/Inputs/multilib_32bit_linux_tree/usr/lib/gcc/i386-unknown-linux/4.6.0/../../../../i386-unknown-linux/bin{{/|\\\\}}as" "--32"
 end_comment
 
 begin_comment
-comment|// CHECK-MULTI32-I386: "{{.*}}/Inputs/multilib_32bit_linux_tree/usr/lib/gcc/i386-unknown-linux/4.6.0/../../../../i386-unknown-linux/bin{{/|\\}}ld"
+comment|// CHECK-MULTI32-I386: "{{.*}}/Inputs/multilib_32bit_linux_tree/usr/lib/gcc/i386-unknown-linux/4.6.0/../../../../i386-unknown-linux/bin{{/|\\\\}}ld"
 end_comment
 
 begin_comment
@@ -228,11 +228,11 @@ comment|// CHECK-MULTI32-X86-64: "-cc1" "-triple" "x86_64-unknown-linux"
 end_comment
 
 begin_comment
-comment|// CHECK-MULTI32-X86-64: "{{.*}}/Inputs/multilib_32bit_linux_tree/usr/lib/gcc/i386-unknown-linux/4.6.0/../../../../i386-unknown-linux/bin{{/|\\}}as" "--64"
+comment|// CHECK-MULTI32-X86-64: "{{.*}}/Inputs/multilib_32bit_linux_tree/usr/lib/gcc/i386-unknown-linux/4.6.0/../../../../i386-unknown-linux/bin{{/|\\\\}}as" "--64"
 end_comment
 
 begin_comment
-comment|// CHECK-MULTI32-X86-64: "{{.*}}/Inputs/multilib_32bit_linux_tree/usr/lib/gcc/i386-unknown-linux/4.6.0/../../../../i386-unknown-linux/bin{{/|\\}}ld"
+comment|// CHECK-MULTI32-X86-64: "{{.*}}/Inputs/multilib_32bit_linux_tree/usr/lib/gcc/i386-unknown-linux/4.6.0/../../../../i386-unknown-linux/bin{{/|\\\\}}ld"
 end_comment
 
 begin_comment
@@ -300,11 +300,11 @@ comment|// CHECK-MULTI64-I386: "-cc1" "-triple" "i386-unknown-linux"
 end_comment
 
 begin_comment
-comment|// CHECK-MULTI64-I386: "{{.*}}/Inputs/multilib_64bit_linux_tree/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../x86_64-unknown-linux/bin{{/|\\}}as" "--32"
+comment|// CHECK-MULTI64-I386: "{{.*}}/Inputs/multilib_64bit_linux_tree/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../x86_64-unknown-linux/bin{{/|\\\\}}as" "--32"
 end_comment
 
 begin_comment
-comment|// CHECK-MULTI64-I386: "{{.*}}/Inputs/multilib_64bit_linux_tree/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../x86_64-unknown-linux/bin{{/|\\}}ld"
+comment|// CHECK-MULTI64-I386: "{{.*}}/Inputs/multilib_64bit_linux_tree/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../x86_64-unknown-linux/bin{{/|\\\\}}ld"
 end_comment
 
 begin_comment
@@ -372,11 +372,11 @@ comment|// CHECK-MULTI64-X86-64: "-cc1" "-triple" "x86_64-unknown-linux"
 end_comment
 
 begin_comment
-comment|// CHECK-MULTI64-X86-64: "{{.*}}/Inputs/multilib_64bit_linux_tree/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../x86_64-unknown-linux/bin{{/|\\}}as" "--64"
+comment|// CHECK-MULTI64-X86-64: "{{.*}}/Inputs/multilib_64bit_linux_tree/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../x86_64-unknown-linux/bin{{/|\\\\}}as" "--64"
 end_comment
 
 begin_comment
-comment|// CHECK-MULTI64-X86-64: "{{.*}}/Inputs/multilib_64bit_linux_tree/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../x86_64-unknown-linux/bin{{/|\\}}ld"
+comment|// CHECK-MULTI64-X86-64: "{{.*}}/Inputs/multilib_64bit_linux_tree/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../x86_64-unknown-linux/bin{{/|\\\\}}ld"
 end_comment
 
 begin_comment

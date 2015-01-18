@@ -27,7 +27,7 @@ name|BITCODE
 end_ifdef
 
 begin_comment
-comment|// CHECK-BC: 'f': symbol multiply defined
+comment|// CHECK-BC: fatal error: cannot link module {{.*}}'f': symbol multiply defined
 end_comment
 
 begin_function

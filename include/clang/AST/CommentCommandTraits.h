@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_COMMENT_COMMAND_TRAITS_H
+name|LLVM_CLANG_AST_COMMENTCOMMANDTRAITS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_COMMENT_COMMAND_TRAITS_H
+name|LLVM_CLANG_AST_COMMENTCOMMANDTRAITS_H
 end_define
 
 begin_include
@@ -133,10 +133,19 @@ name|char
 modifier|*
 name|EndCommandName
 decl_stmt|;
+comment|/// DRY definition of the number of bits used for a command ID.
+enum|enum
+block|{
+name|NumCommandIDBits
+init|=
+literal|20
+block|}
+enum|;
+comment|/// The ID of the command.
 name|unsigned
 name|ID
 range|:
-literal|8
+name|NumCommandIDBits
 decl_stmt|;
 comment|/// Number of word-like arguments for a given block command, except for
 comment|/// \\param and \\tparam commands -- these have special argument parsers.

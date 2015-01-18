@@ -20,6 +20,26 @@ comment|// RUN: %clang_cc1 %s -emit-llvm -include-pch %t -o - | FileCheck %s
 end_comment
 
 begin_comment
+comment|// The first run line creates a pch, and since at that point HEADER is not
+end_comment
+
+begin_comment
+comment|// defined, the only thing contained in the pch is the pragma. The second line
+end_comment
+
+begin_comment
+comment|// then includes that pch, so HEADER is defined and the actual code is compiled.
+end_comment
+
+begin_comment
+comment|// The check then makes sure that the pragma is in effect in the file that
+end_comment
+
+begin_comment
+comment|// includes the pch.
+end_comment
+
+begin_comment
 comment|// expected-no-diagnostics
 end_comment
 

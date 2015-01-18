@@ -111,32 +111,98 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function_decl
+name|void
+name|ccc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|ddd
+parameter_list|()
+block|{
+name|ccc
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ccc
+parameter_list|()
+block|{}
+end_function
+
+begin_function_decl
+name|void
+name|eee
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|eee
+parameter_list|()
+block|{}
+end_function
+
+begin_function
+name|void
+name|fff
+parameter_list|()
+block|{
+name|eee
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|// CHECK:--- Call graph Dump ---
 end_comment
 
 begin_comment
-comment|// CHECK: Function:< root> calls: mmm foo aaa<> bbb
+comment|// CHECK-NEXT: {{Function:< root> calls: mmm foo aaa<> bbb ccc ddd eee fff $}}
 end_comment
 
 begin_comment
-comment|// CHECK: Function: bbb calls:<>
+comment|// CHECK-NEXT: {{Function: fff calls: eee $}}
 end_comment
 
 begin_comment
-comment|// CHECK: Function:<> calls: foo
+comment|// CHECK-NEXT: {{Function: eee calls: $}}
 end_comment
 
 begin_comment
-comment|// CHECK: Function: aaa calls: foo
+comment|// CHECK-NEXT: {{Function: ddd calls: ccc $}}
 end_comment
 
 begin_comment
-comment|// CHECK: Function: foo calls: mmm
+comment|// CHECK-NEXT: {{Function: ccc calls: $}}
 end_comment
 
 begin_comment
-comment|// CHECK: Function: mmm calls:
+comment|// CHECK-NEXT: {{Function: bbb calls:<> $}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{Function:<> calls: foo $}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{Function: aaa calls: foo $}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{Function: foo calls: mmm $}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{Function: mmm calls: $}}
 end_comment
 
 end_unit

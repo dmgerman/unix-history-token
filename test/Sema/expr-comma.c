@@ -4,10 +4,6 @@ comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -std=c89 -Wno-sizeof-array-d
 end_comment
 
 begin_comment
-comment|// expected-no-diagnostics
-end_comment
-
-begin_comment
 comment|// rdar://6095180
 end_comment
 
@@ -204,6 +200,10 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{expression with side effects has no effect in an unevaluated context}}
+end_comment
 
 end_unit
 

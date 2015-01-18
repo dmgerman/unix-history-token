@@ -758,10 +758,6 @@ name|deprecated
 typedef|));
 end_typedef
 
-begin_comment
-comment|// expected-note {{previous definition is here}}
-end_comment
-
 begin_typedef
 typedef|typedef
 name|int
@@ -770,7 +766,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-note {{'test23_ty' has been explicitly marked deprecated here}} expected-warning {{redefinition of typedef 'test23_ty' is a C11 feature}}
+comment|// expected-note {{'test23_ty' has been explicitly marked deprecated here}}
 end_comment
 
 begin_decl_stmt

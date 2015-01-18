@@ -201,6 +201,77 @@ operator|::
 name|h
 argument_list|()
 block|{}
+name|namespace
+name|EmitDefaultedSpecialMembers
+block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|SmallVectorImpl
+block|{
+name|SmallVectorImpl
+argument_list|()
+block|{}
+operator|~
+name|SmallVectorImpl
+argument_list|()
+block|{}
+comment|// non-trivial dtor
+block|}
+block|;
+name|template
+operator|<
+name|typename
+name|T
+block|,
+name|unsigned
+name|N
+operator|>
+expr|struct
+name|SmallVector
+operator|:
+name|SmallVectorImpl
+operator|<
+name|T
+operator|>
+block|{
+comment|// trivial dtor
+block|}
+block|;
+name|template
+operator|<
+name|unsigned
+name|N
+operator|>
+expr|struct
+name|SmallString
+operator|:
+name|SmallVector
+operator|<
+name|char
+block|,
+name|N
+operator|>
+block|{
+comment|// trivial dtor
+block|}
+block|; }
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|WithUndefinedStaticDataMember
+block|{
+specifier|static
+name|T
+name|undefined
+block|; }
+expr_stmt|;
 end_expr_stmt
 
 end_unit

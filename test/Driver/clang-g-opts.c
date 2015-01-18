@@ -76,6 +76,14 @@ comment|// RUN:             | FileCheck --check-prefix=CHECK-WITH-G-DWARF2 %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -S %s -g0 -g -target i386-pc-solaris 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck --check-prefix=CHECK-WITH-G-DWARF2 %s
+end_comment
+
+begin_comment
 comment|// CHECK-WITHOUT-G-NOT: "-g"
 end_comment
 

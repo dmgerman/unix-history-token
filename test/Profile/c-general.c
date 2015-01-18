@@ -16,6 +16,14 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-gen
 end_comment
 
 begin_comment
+comment|// Also check compatibility with older profiles.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-general.c %s -o - -emit-llvm -fprofile-instr-use=%S/Inputs/c-general.profdata.v1 | FileCheck -check-prefix=PGOUSE %s
+end_comment
+
+begin_comment
 comment|// PGOGEN: @[[SLC:__llvm_profile_counters_simple_loops]] = hidden global [4 x i64] zeroinitializer
 end_comment
 
@@ -56,7 +64,7 @@ comment|// PGOGEN: @[[MAC:__llvm_profile_counters_main]] = hidden global [1 x i6
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[STC:__llvm_profile_counters_static_func]] = internal global [2 x i64] zeroinitializer
+comment|// PGOGEN: @[[STC:"__llvm_profile_counters_c-general.c:static_func"]] = internal global [2 x i64] zeroinitializer
 end_comment
 
 begin_comment
@@ -1256,263 +1264,263 @@ block|}
 end_function
 
 begin_comment
-comment|// PGOUSE-DAG: ![[SL1]] = metadata !{metadata !"branch_weights", i32 101, i32 2}
+comment|// PGOUSE-DAG: ![[SL1]] = !{!"branch_weights", i32 101, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[SL2]] = metadata !{metadata !"branch_weights", i32 101, i32 2}
+comment|// PGOUSE-DAG: ![[SL2]] = !{!"branch_weights", i32 101, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[SL3]] = metadata !{metadata !"branch_weights", i32 76, i32 2}
+comment|// PGOUSE-DAG: ![[SL3]] = !{!"branch_weights", i32 76, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[EE1]] = metadata !{metadata !"branch_weights", i32 1, i32 2}
+comment|// PGOUSE-DAG: ![[EE1]] = !{!"branch_weights", i32 1, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[EE2]] = metadata !{metadata !"branch_weights", i32 52, i32 1}
+comment|// PGOUSE-DAG: ![[EE2]] = !{!"branch_weights", i32 52, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[EE3]] = metadata !{metadata !"branch_weights", i32 2, i32 51}
+comment|// PGOUSE-DAG: ![[EE3]] = !{!"branch_weights", i32 2, i32 51}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[EE4]] = metadata !{metadata !"branch_weights", i32 26, i32 26}
+comment|// PGOUSE-DAG: ![[EE4]] = !{!"branch_weights", i32 26, i32 26}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[EE5]] = metadata !{metadata !"branch_weights", i32 2, i32 1}
+comment|// PGOUSE-DAG: ![[EE5]] = !{!"branch_weights", i32 2, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[EE6]] = metadata !{metadata !"branch_weights", i32 2, i32 26}
+comment|// PGOUSE-DAG: ![[EE6]] = !{!"branch_weights", i32 2, i32 26}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[EE7]] = metadata !{metadata !"branch_weights", i32 26, i32 1}
+comment|// PGOUSE-DAG: ![[EE7]] = !{!"branch_weights", i32 26, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[IF1]] = metadata !{metadata !"branch_weights", i32 101, i32 2}
+comment|// PGOUSE-DAG: ![[IF1]] = !{!"branch_weights", i32 101, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[IF2]] = metadata !{metadata !"branch_weights", i32 51, i32 51}
+comment|// PGOUSE-DAG: ![[IF2]] = !{!"branch_weights", i32 51, i32 51}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[IF3]] = metadata !{metadata !"branch_weights", i32 51, i32 1}
+comment|// PGOUSE-DAG: ![[IF3]] = !{!"branch_weights", i32 51, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[IF4]] = metadata !{metadata !"branch_weights", i32 34, i32 18}
+comment|// PGOUSE-DAG: ![[IF4]] = !{!"branch_weights", i32 34, i32 18}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[IF5]] = metadata !{metadata !"branch_weights", i32 34, i32 1}
+comment|// PGOUSE-DAG: ![[IF5]] = !{!"branch_weights", i32 34, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[IF6]] = metadata !{metadata !"branch_weights", i32 17, i32 2}
+comment|// PGOUSE-DAG: ![[IF6]] = !{!"branch_weights", i32 17, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[IF7]] = metadata !{metadata !"branch_weights", i32 100, i32 2}
+comment|// PGOUSE-DAG: ![[IF7]] = !{!"branch_weights", i32 100, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[IF8]] = metadata !{metadata !"branch_weights", i32 100, i32 2}
+comment|// PGOUSE-DAG: ![[IF8]] = !{!"branch_weights", i32 100, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[JM1]] = metadata !{metadata !"branch_weights", i32 2, i32 1}
+comment|// PGOUSE-DAG: ![[JM1]] = !{!"branch_weights", i32 2, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[JM2]] = metadata !{metadata !"branch_weights", i32 1, i32 2}
+comment|// PGOUSE-DAG: ![[JM2]] = !{!"branch_weights", i32 1, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[JM3]] = metadata !{metadata !"branch_weights", i32 1, i32 2}
+comment|// PGOUSE-DAG: ![[JM3]] = !{!"branch_weights", i32 1, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[JM4]] = metadata !{metadata !"branch_weights", i32 1, i32 2}
+comment|// PGOUSE-DAG: ![[JM4]] = !{!"branch_weights", i32 1, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[JM5]] = metadata !{metadata !"branch_weights", i32 3, i32 2}
+comment|// PGOUSE-DAG: ![[JM5]] = !{!"branch_weights", i32 3, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[JM6]] = metadata !{metadata !"branch_weights", i32 1, i32 2}
+comment|// PGOUSE-DAG: ![[JM6]] = !{!"branch_weights", i32 1, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[JM7]] = metadata !{metadata !"branch_weights", i32 1, i32 2, i32 2, i32 2}
+comment|// PGOUSE-DAG: ![[JM7]] = !{!"branch_weights", i32 1, i32 2, i32 2, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[JM8]] = metadata !{metadata !"branch_weights", i32 11, i32 2}
+comment|// PGOUSE-DAG: ![[JM8]] = !{!"branch_weights", i32 11, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[JM9]] = metadata !{metadata !"branch_weights", i32 10, i32 2}
+comment|// PGOUSE-DAG: ![[JM9]] = !{!"branch_weights", i32 10, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[SW1]] = metadata !{metadata !"branch_weights", i32 16, i32 1}
+comment|// PGOUSE-DAG: ![[SW1]] = !{!"branch_weights", i32 16, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[SW2]] = metadata !{metadata !"branch_weights", i32 6, i32 2, i32 3, i32 4, i32 5}
+comment|// PGOUSE-DAG: ![[SW2]] = !{!"branch_weights", i32 6, i32 2, i32 3, i32 4, i32 5}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[SW3]] = metadata !{metadata !"branch_weights", i32 1, i32 2}
+comment|// PGOUSE-DAG: ![[SW3]] = !{!"branch_weights", i32 1, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[SW4]] = metadata !{metadata !"branch_weights", i32 3, i32 2}
+comment|// PGOUSE-DAG: ![[SW4]] = !{!"branch_weights", i32 3, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[SW5]] = metadata !{metadata !"branch_weights", i32 4, i32 1}
+comment|// PGOUSE-DAG: ![[SW5]] = !{!"branch_weights", i32 4, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[SW6]] = metadata !{metadata !"branch_weights", i32 5, i32 1}
+comment|// PGOUSE-DAG: ![[SW6]] = !{!"branch_weights", i32 5, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[SW7]] = metadata !{metadata !"branch_weights", i32 1, i32 2, i32 2, i32 2, i32 2}
+comment|// PGOUSE-DAG: ![[SW7]] = !{!"branch_weights", i32 1, i32 2, i32 2, i32 2, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[SW8]] = metadata !{metadata !"branch_weights", i32 5, i32 1}
+comment|// PGOUSE-DAG: ![[SW8]] = !{!"branch_weights", i32 5, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[SW9]] = metadata !{metadata !"branch_weights", i32 2, i32 5}
+comment|// PGOUSE-DAG: ![[SW9]] = !{!"branch_weights", i32 2, i32 5}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BS1]] = metadata !{metadata !"branch_weights", i32 33, i32 2}
+comment|// PGOUSE-DAG: ![[BS1]] = !{!"branch_weights", i32 33, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BS2]] = metadata !{metadata !"branch_weights", i32 29, i32 2, i32 2, i32 2, i32 2, i32 1}
+comment|// PGOUSE-DAG: ![[BS2]] = !{!"branch_weights", i32 29, i32 2, i32 2, i32 2, i32 2, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BS3]] = metadata !{metadata !"branch_weights", i32 1, i32 2}
+comment|// PGOUSE-DAG: ![[BS3]] = !{!"branch_weights", i32 1, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BS4]] = metadata !{metadata !"branch_weights", i32 2, i32 2}
+comment|// PGOUSE-DAG: ![[BS4]] = !{!"branch_weights", i32 2, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BS5]] = metadata !{metadata !"branch_weights", i32 12, i32 1}
+comment|// PGOUSE-DAG: ![[BS5]] = !{!"branch_weights", i32 12, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BS6]] = metadata !{metadata !"branch_weights", i32 12, i32 3}
+comment|// PGOUSE-DAG: ![[BS6]] = !{!"branch_weights", i32 12, i32 3}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BS7]] = metadata !{metadata !"branch_weights", i32 2, i32 1}
+comment|// PGOUSE-DAG: ![[BS7]] = !{!"branch_weights", i32 2, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BS8]] = metadata !{metadata !"branch_weights", i32 16, i32 1}
+comment|// PGOUSE-DAG: ![[BS8]] = !{!"branch_weights", i32 16, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BS9]] = metadata !{metadata !"branch_weights", i32 16, i32 14}
+comment|// PGOUSE-DAG: ![[BS9]] = !{!"branch_weights", i32 16, i32 14}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BS10]] = metadata !{metadata !"branch_weights", i32 2, i32 1}
+comment|// PGOUSE-DAG: ![[BS10]] = !{!"branch_weights", i32 2, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BS11]] = metadata !{metadata !"branch_weights", i32 3, i32 1}
+comment|// PGOUSE-DAG: ![[BS11]] = !{!"branch_weights", i32 3, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BO1]] = metadata !{metadata !"branch_weights", i32 101, i32 2}
+comment|// PGOUSE-DAG: ![[BO1]] = !{!"branch_weights", i32 101, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BO2]] = metadata !{metadata !"branch_weights", i32 67, i32 35}
+comment|// PGOUSE-DAG: ![[BO2]] = !{!"branch_weights", i32 67, i32 35}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BO3]] = metadata !{metadata !"branch_weights", i32 67, i32 35}
+comment|// PGOUSE-DAG: ![[BO3]] = !{!"branch_weights", i32 67, i32 35}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BO4]] = metadata !{metadata !"branch_weights", i32 67, i32 35}
+comment|// PGOUSE-DAG: ![[BO4]] = !{!"branch_weights", i32 67, i32 35}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BO5]] = metadata !{metadata !"branch_weights", i32 18, i32 18}
+comment|// PGOUSE-DAG: ![[BO5]] = !{!"branch_weights", i32 18, i32 18}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BO6]] = metadata !{metadata !"branch_weights", i32 51, i32 51}
+comment|// PGOUSE-DAG: ![[BO6]] = !{!"branch_weights", i32 51, i32 51}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BO7]] = metadata !{metadata !"branch_weights", i32 34, i32 18}
+comment|// PGOUSE-DAG: ![[BO7]] = !{!"branch_weights", i32 34, i32 18}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BL1]] = metadata !{metadata !"branch_weights", i32 52, i32 1}
+comment|// PGOUSE-DAG: ![[BL1]] = !{!"branch_weights", i32 52, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BL2]] = metadata !{metadata !"branch_weights", i32 51, i32 2}
+comment|// PGOUSE-DAG: ![[BL2]] = !{!"branch_weights", i32 51, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BL3]] = metadata !{metadata !"branch_weights", i32 26, i32 27}
+comment|// PGOUSE-DAG: ![[BL3]] = !{!"branch_weights", i32 26, i32 27}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BL4]] = metadata !{metadata !"branch_weights", i32 51, i32 2}
+comment|// PGOUSE-DAG: ![[BL4]] = !{!"branch_weights", i32 51, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BL5]] = metadata !{metadata !"branch_weights", i32 52, i32 1}
+comment|// PGOUSE-DAG: ![[BL5]] = !{!"branch_weights", i32 52, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BL6]] = metadata !{metadata !"branch_weights", i32 51, i32 2}
+comment|// PGOUSE-DAG: ![[BL6]] = !{!"branch_weights", i32 51, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BL7]] = metadata !{metadata !"branch_weights", i32 26, i32 27}
+comment|// PGOUSE-DAG: ![[BL7]] = !{!"branch_weights", i32 26, i32 27}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[BL8]] = metadata !{metadata !"branch_weights", i32 51, i32 2}
+comment|// PGOUSE-DAG: ![[BL8]] = !{!"branch_weights", i32 51, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[CO1]] = metadata !{metadata !"branch_weights", i32 1, i32 2}
+comment|// PGOUSE-DAG: ![[CO1]] = !{!"branch_weights", i32 1, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[CO2]] = metadata !{metadata !"branch_weights", i32 2, i32 1}
+comment|// PGOUSE-DAG: ![[CO2]] = !{!"branch_weights", i32 2, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[ST1]] = metadata !{metadata !"branch_weights", i32 11, i32 2}
+comment|// PGOUSE-DAG: ![[ST1]] = !{!"branch_weights", i32 11, i32 2}
 end_comment
 
 begin_function

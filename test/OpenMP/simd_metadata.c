@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fopenmp=libiomp5 -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -fopenmp=libiomp5 -triple x86_64-unknown-unknown -emit-llvm %s -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fopenmp=libiomp5 -triple powerpc64-unknown-unknown -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_function
@@ -15,9 +19,9 @@ name|float
 modifier|*
 name|a
 parameter_list|,
-name|float
-modifier|*
+name|double
 name|b
+index|[]
 parameter_list|,
 name|int
 name|size
@@ -41,6 +45,30 @@ name|linear
 name|(
 name|t
 name|)
+name|aligned
+name|(
+name|c
+name|:
+name|32
+name|)
+name|aligned
+name|(
+name|a
+name|,
+name|b
+name|)
+comment|// CHECK:         [[C_PTRINT:%.+]] = ptrtoint
+comment|// CHECK-NEXT:    [[C_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[C_PTRINT]], 31
+comment|// CHECK-NEXT:    [[C_MASKCOND:%.+]] = icmp eq i{{[0-9]+}} [[C_MASKEDPTR]], 0
+comment|// CHECK-NEXT:    call void @llvm.assume(i1 [[C_MASKCOND]])
+comment|// CHECK:         [[A_PTRINT:%.+]] = ptrtoint
+comment|// CHECK-NEXT:    [[A_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[A_PTRINT]], 15
+comment|// CHECK-NEXT:    [[A_MASKCOND:%.+]] = icmp eq i{{[0-9]+}} [[A_MASKEDPTR]], 0
+comment|// CHECK-NEXT:    call void @llvm.assume(i1 [[A_MASKCOND]])
+comment|// CHECK:         [[B_PTRINT:%.+]] = ptrtoint
+comment|// CHECK-NEXT:    [[B_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[B_PTRINT]], 15
+comment|// CHECK-NEXT:    [[B_MASKCOND:%.+]] = icmp eq i{{[0-9]+}} [[B_MASKEDPTR]], 0
+comment|// CHECK-NEXT:    call void @llvm.assume(i1 [[B_MASKCOND]])
 for|for
 control|(
 name|int
@@ -256,15 +284,15 @@ comment|// Metadata for h1:
 end_comment
 
 begin_comment
-comment|// CHECK: [[LOOP_H1_HEADER:![0-9]+]] = metadata !{metadata [[LOOP_H1_HEADER]], metadata [[LOOP_WIDTH_16:![0-9]+]], metadata [[LOOP_VEC_ENABLE:![0-9]+]]}
+comment|// CHECK: [[LOOP_H1_HEADER:![0-9]+]] = distinct !{[[LOOP_H1_HEADER]], [[LOOP_WIDTH_16:![0-9]+]], [[LOOP_VEC_ENABLE:![0-9]+]]}
 end_comment
 
 begin_comment
-comment|// CHECK: [[LOOP_WIDTH_16]] = metadata !{metadata !"llvm.loop.vectorize.width", i32 16}
+comment|// CHECK: [[LOOP_WIDTH_16]] = !{!"llvm.loop.vectorize.width", i32 16}
 end_comment
 
 begin_comment
-comment|// CHECK: [[LOOP_VEC_ENABLE]] = metadata !{metadata !"llvm.loop.vectorize.enable", i1 true}
+comment|// CHECK: [[LOOP_VEC_ENABLE]] = !{!"llvm.loop.vectorize.enable", i1 true}
 end_comment
 
 begin_comment
@@ -276,7 +304,7 @@ comment|// Metadata for h2:
 end_comment
 
 begin_comment
-comment|// CHECK: [[LOOP_H2_HEADER]] = metadata !{metadata [[LOOP_H2_HEADER]], metadata [[LOOP_VEC_ENABLE]]}
+comment|// CHECK: [[LOOP_H2_HEADER]] = distinct !{[[LOOP_H2_HEADER]], [[LOOP_VEC_ENABLE]]}
 end_comment
 
 begin_comment
@@ -288,7 +316,7 @@ comment|// Metadata for h3:
 end_comment
 
 begin_comment
-comment|// CHECK: [[LOOP_H3_HEADER:![0-9]+]] = metadata !{metadata [[LOOP_H3_HEADER]], metadata [[LOOP_VEC_ENABLE]]}
+comment|// CHECK: [[LOOP_H3_HEADER:![0-9]+]] = distinct !{[[LOOP_H3_HEADER]], [[LOOP_VEC_ENABLE]]}
 end_comment
 
 begin_comment

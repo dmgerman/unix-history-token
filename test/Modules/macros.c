@@ -548,11 +548,40 @@ end_endif
 begin_decl_stmt
 unit|@
 name|import
+name|macros_bottom
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|TOP_DEF_RIGHT_UNDEF
+modifier|*
+name|TDRUf
+parameter_list|()
+block|{
+return|return
+name|TDRUp
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+unit|@
+name|import
 name|macros_right
 operator|.
 name|undef
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|TOP_DEF_RIGHT_UNDEF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// ok, no longer defined
+end_comment
 
 begin_comment
 comment|// FIXME: When macros_right.undef is built, macros_top is visible because

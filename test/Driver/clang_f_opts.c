@@ -200,6 +200,30 @@ comment|// CHECK-AUTO-PROFILE: "-fprofile-sample-use={{.*}}/file.prof"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -S -fprofile-arcs %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-ARCS %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fno-profile-arcs -fprofile-arcs %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-ARCS %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fno-profile-arcs %s 2>&1 | FileCheck -check-prefix=CHECK-NO-PROFILE-ARCS %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-arcs -fno-profile-arcs %s 2>&1 | FileCheck -check-prefix=CHECK-NO-PROFILE-ARCS %s
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-ARCS: "-femit-coverage-data"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-PROFILE-ARCS-NOT: "-femit-coverage-data"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -S -fvectorize %s 2>&1 | FileCheck -check-prefix=CHECK-VECTORIZE %s
 end_comment
 
@@ -456,6 +480,14 @@ comment|// CHECK-INVALID-CHARSET: error: invalid value 'iso-8859-1' in '-finput-
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -S -fexec-charset=iso-8859-1 -o /dev/null %s 2>&1 | FileCheck -check-prefix=CHECK-INVALID-INPUT-CHARSET %s
+end_comment
+
+begin_comment
+comment|// CHECK-INVALID-INPUT-CHARSET: error: invalid value 'iso-8859-1' in '-fexec-charset=iso-8859-1'
+end_comment
+
+begin_comment
 comment|// Test that we don't error on these.
 end_comment
 
@@ -501,6 +533,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     -finput-charset=UTF-8                                             \
+end_comment
+
+begin_comment
+comment|// RUN:     -fexec-charset=UTF-8                                             \
 end_comment
 
 begin_comment
@@ -592,6 +628,206 @@ comment|// RUN:     -finline-limit                                              
 end_comment
 
 begin_comment
+comment|// RUN:     -flto=1                                                           \
+end_comment
+
+begin_comment
+comment|// RUN:     -falign-labels                                                    \
+end_comment
+
+begin_comment
+comment|// RUN:     -falign-labels=100                                                \
+end_comment
+
+begin_comment
+comment|// RUN:     -falign-loops                                                     \
+end_comment
+
+begin_comment
+comment|// RUN:     -falign-loops=100                                                 \
+end_comment
+
+begin_comment
+comment|// RUN:     -falign-jumps                                                     \
+end_comment
+
+begin_comment
+comment|// RUN:     -falign-jumps=100                                                 \
+end_comment
+
+begin_comment
+comment|// RUN:     -fexcess-precision=100                                            \
+end_comment
+
+begin_comment
+comment|// RUN:     -fbranch-count-reg                                                \
+end_comment
+
+begin_comment
+comment|// RUN:     -fcaller-saves                                                    \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-default-inline -fdefault-inline                              \
+end_comment
+
+begin_comment
+comment|// RUN:     -fgcse-after-reload                                               \
+end_comment
+
+begin_comment
+comment|// RUN:     -fgcse-las                                                        \
+end_comment
+
+begin_comment
+comment|// RUN:     -fgcse-sm                                                         \
+end_comment
+
+begin_comment
+comment|// RUN:     -fipa-cp                                                          \
+end_comment
+
+begin_comment
+comment|// RUN:     -finline-functions-called-once                                    \
+end_comment
+
+begin_comment
+comment|// RUN:     -fmodulo-sched                                                    \
+end_comment
+
+begin_comment
+comment|// RUN:     -fmodulo-sched-allow-regmoves                                     \
+end_comment
+
+begin_comment
+comment|// RUN:     -fpeel-loops                                                      \
+end_comment
+
+begin_comment
+comment|// RUN:     -frename-registers                                                \
+end_comment
+
+begin_comment
+comment|// RUN:     -fschedule-insns2                                                 \
+end_comment
+
+begin_comment
+comment|// RUN:     -fsingle-precision-constant                                       \
+end_comment
+
+begin_comment
+comment|// RUN:     -ftree_loop_im                                                    \
+end_comment
+
+begin_comment
+comment|// RUN:     -ftree_loop_ivcanon                                               \
+end_comment
+
+begin_comment
+comment|// RUN:     -ftree_loop_linear                                                \
+end_comment
+
+begin_comment
+comment|// RUN:     -funsafe-loop-optimizations                                       \
+end_comment
+
+begin_comment
+comment|// RUN:     -fuse-linker-plugin                                               \
+end_comment
+
+begin_comment
+comment|// RUN:     -fvect-cost-model                                                 \
+end_comment
+
+begin_comment
+comment|// RUN:     -fvariable-expansion-in-unroller                                  \
+end_comment
+
+begin_comment
+comment|// RUN:     -fweb                                                             \
+end_comment
+
+begin_comment
+comment|// RUN:     -fwhole-program                                                   \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-tree-dce -ftree-dce                                          \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-tree-ter -ftree-ter                                          \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-tree-vrp -ftree-vrp                                          \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-delete-null-pointer-checks -fdelete-null-pointer-checks      \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-inline-small-functions -finline-small-functions              \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-fat-lto-objects -ffat-lto-objects                            \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-merge-constants -fmerge-constants                            \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-caller-saves -fcaller-saves                                  \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-reorder-blocks -freorder-blocks                              \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-schedule-insns2 -fschedule-insns2                            \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-stack-check                                                  \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-check-new -fcheck-new                                        \
+end_comment
+
+begin_comment
+comment|// RUN:     -ffriend-injection                                                \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-implement-inlines -fimplement-inlines                        \
+end_comment
+
+begin_comment
+comment|// RUN:     -fstack-check                                                     \
+end_comment
+
+begin_comment
+comment|// RUN:     -fforce-addr                                                      \
+end_comment
+
+begin_comment
+comment|// RUN:     -malign-functions=100                                             \
+end_comment
+
+begin_comment
+comment|// RUN:     -malign-loops=100                                                 \
+end_comment
+
+begin_comment
+comment|// RUN:     -malign-jumps=100                                                 \
+end_comment
+
+begin_comment
 comment|// RUN:     %s 2>&1 | FileCheck --check-prefix=IGNORE %s
 end_comment
 
@@ -629,6 +865,10 @@ end_comment
 
 begin_comment
 comment|// RUN: -finline-functions                                                    \
+end_comment
+
+begin_comment
+comment|// RUN: -fkeep-inline-functions                                               \
 end_comment
 
 begin_comment
@@ -712,6 +952,174 @@ comment|// RUN: -funswitch-loops                                                
 end_comment
 
 begin_comment
+comment|// RUN: -flto=1                                                               \
+end_comment
+
+begin_comment
+comment|// RUN: -falign-labels                                                        \
+end_comment
+
+begin_comment
+comment|// RUN: -falign-labels=100                                                    \
+end_comment
+
+begin_comment
+comment|// RUN: -falign-loops                                                         \
+end_comment
+
+begin_comment
+comment|// RUN: -falign-loops=100                                                     \
+end_comment
+
+begin_comment
+comment|// RUN: -falign-jumps                                                         \
+end_comment
+
+begin_comment
+comment|// RUN: -falign-jumps=100                                                     \
+end_comment
+
+begin_comment
+comment|// RUN: -fexcess-precision=100                                                \
+end_comment
+
+begin_comment
+comment|// RUN: -fbranch-count-reg                                                    \
+end_comment
+
+begin_comment
+comment|// RUN: -fcaller-saves                                                        \
+end_comment
+
+begin_comment
+comment|// RUN: -fno-default-inline                                                   \
+end_comment
+
+begin_comment
+comment|// RUN: -fgcse-after-reload                                                   \
+end_comment
+
+begin_comment
+comment|// RUN: -fgcse-las                                                            \
+end_comment
+
+begin_comment
+comment|// RUN: -fgcse-sm                                                             \
+end_comment
+
+begin_comment
+comment|// RUN: -fipa-cp                                                              \
+end_comment
+
+begin_comment
+comment|// RUN: -finline-functions-called-once                                        \
+end_comment
+
+begin_comment
+comment|// RUN: -fmodulo-sched                                                        \
+end_comment
+
+begin_comment
+comment|// RUN: -fmodulo-sched-allow-regmoves                                         \
+end_comment
+
+begin_comment
+comment|// RUN: -fpeel-loops                                                          \
+end_comment
+
+begin_comment
+comment|// RUN: -frename-registers                                                    \
+end_comment
+
+begin_comment
+comment|// RUN: -fschedule-insns2                                                     \
+end_comment
+
+begin_comment
+comment|// RUN: -fsingle-precision-constant                                           \
+end_comment
+
+begin_comment
+comment|// RUN: -ftree_loop_im                                                        \
+end_comment
+
+begin_comment
+comment|// RUN: -ftree_loop_ivcanon                                                   \
+end_comment
+
+begin_comment
+comment|// RUN: -ftree_loop_linear                                                    \
+end_comment
+
+begin_comment
+comment|// RUN: -funsafe-loop-optimizations                                           \
+end_comment
+
+begin_comment
+comment|// RUN: -fuse-linker-plugin                                                   \
+end_comment
+
+begin_comment
+comment|// RUN: -fvect-cost-model                                                     \
+end_comment
+
+begin_comment
+comment|// RUN: -fvariable-expansion-in-unroller                                      \
+end_comment
+
+begin_comment
+comment|// RUN: -fweb                                                                 \
+end_comment
+
+begin_comment
+comment|// RUN: -fwhole-program                                                       \
+end_comment
+
+begin_comment
+comment|// RUN: -fcaller-saves                                                        \
+end_comment
+
+begin_comment
+comment|// RUN: -freorder-blocks                                                      \
+end_comment
+
+begin_comment
+comment|// RUN: -fdelete-null-pointer-checks                                          \
+end_comment
+
+begin_comment
+comment|// RUN: -ffat-lto-objects                                                     \
+end_comment
+
+begin_comment
+comment|// RUN: -fmerge-constants                                                     \
+end_comment
+
+begin_comment
+comment|// RUN: -finline-small-functions                                              \
+end_comment
+
+begin_comment
+comment|// RUN: -ftree-dce                                                            \
+end_comment
+
+begin_comment
+comment|// RUN: -ftree-ter                                                            \
+end_comment
+
+begin_comment
+comment|// RUN: -ftree-vrp                                                            \
+end_comment
+
+begin_comment
+comment|// RUN: -fno-devirtualize                                                     \
+end_comment
+
+begin_comment
+comment|// RUN: -fno-devirtualize-speculatively                                       \
+end_comment
+
+begin_comment
 comment|// RUN: %s 2>&1 | FileCheck --check-prefix=CHECK-WARNING %s
 end_comment
 
@@ -737,6 +1145,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-WARNING-DAG: optimization flag '-finline-functions' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fkeep-inline-functions' is not supported
 end_comment
 
 begin_comment
@@ -820,6 +1232,174 @@ comment|// CHECK-WARNING-DAG: optimization flag '-funswitch-loops' is not suppor
 end_comment
 
 begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-flto=1' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-falign-labels' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-falign-labels=100' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-falign-loops' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-falign-loops=100' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-falign-jumps' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-falign-jumps=100' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fexcess-precision=100' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fbranch-count-reg' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fcaller-saves' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fno-default-inline' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fgcse-after-reload' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fgcse-las' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fgcse-sm' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fipa-cp' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-finline-functions-called-once' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fmodulo-sched' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fmodulo-sched-allow-regmoves' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fpeel-loops' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-frename-registers' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fschedule-insns2' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fsingle-precision-constant' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-ftree_loop_im' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-ftree_loop_ivcanon' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-ftree_loop_linear' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-funsafe-loop-optimizations' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fuse-linker-plugin' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fvect-cost-model' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fvariable-expansion-in-unroller' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fweb' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fwhole-program' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fcaller-saves' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-freorder-blocks' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fdelete-null-pointer-checks' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-ffat-lto-objects' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fmerge-constants' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-finline-small-functions' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-ftree-dce' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-ftree-ter' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-ftree-vrp' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fno-devirtualize' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fno-devirtualize-speculatively' is not supported
+end_comment
+
+begin_comment
 comment|// Test that we mute the warning on these
 end_comment
 
@@ -833,6 +1413,18 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -### -finline-limit -Wno-invalid-command-line-argument                   \
+end_comment
+
+begin_comment
+comment|// RUN:     %s 2>&1 | FileCheck --check-prefix=CHECK-NO-WARNING2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -finline-limit \
+end_comment
+
+begin_comment
+comment|// RUN:     -Winvalid-command-line-argument -Wno-ignored-optimization-argument          \
 end_comment
 
 begin_comment

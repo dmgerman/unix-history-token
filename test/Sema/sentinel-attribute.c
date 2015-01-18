@@ -3,6 +3,22 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// RUN: not %clang_cc1 -fsyntax-only %s -fdiagnostics-parseable-fixits 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:         FileCheck %s --check-prefix=C
+end_comment
+
+begin_comment
+comment|// RUN: not %clang_cc1 -fsyntax-only %s -fdiagnostics-parseable-fixits -x c++ -std=c++11 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:         FileCheck %s --check-prefix=CXX11
+end_comment
+
 begin_decl_stmt
 name|int
 name|x
@@ -37,6 +53,10 @@ begin_empty_stmt
 unit|))
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// expected-note {{function has been explicitly marked sentinel here}}
+end_comment
 
 begin_function_decl
 name|void
@@ -203,6 +223,25 @@ end_empty_stmt
 begin_comment
 comment|// expected-warning {{'sentinel' attribute requires named arguments}}
 end_comment
+
+begin_function
+name|void
+name|g
+parameter_list|()
+block|{
+comment|// The integer literal zero is not a sentinel.
+name|f1
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{missing sentinel in function call}}
+comment|// C: fix-it:{{.*}}:{23:10-23:10}:", (void*) 0"
+comment|// CXX11: fix-it:{{.*}}:{23:10-23:10}:", nullptr"
+block|}
+end_function
 
 end_unit
 

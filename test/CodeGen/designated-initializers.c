@@ -790,6 +790,33 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// CHECK: @lab = global { [4 x i8], i32 } { [4 x i8] undef, i32 123 }
+end_comment
+
+begin_struct
+struct|struct
+name|leading_anon_bitfield
+block|{
+name|int
+label|:
+literal|32
+expr_stmt|;
+name|int
+name|n
+decl_stmt|;
+block|}
+name|lab
+init|=
+block|{
+operator|.
+name|n
+operator|=
+literal|123
+block|}
+struct|;
+end_struct
+
 begin_function
 name|void
 name|test1

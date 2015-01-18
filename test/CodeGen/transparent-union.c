@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Werror -triple i386-unknown-unknown -emit-llvm -o %t %s
+comment|// RUN: %clang_cc1 -Werror -triple x86_64-linux -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck< %t %s
+comment|// RUN: %clang_cc1 -Werror -triple i386-linux -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|//
+comment|// RUN: %clang_cc1 -Werror -triple armv7-linux -emit-llvm -o - %s | FileCheck %s --check-prefix=ARM
 end_comment
 
 begin_comment
-comment|// FIXME: Note that we don't currently get the ABI right here. f0() should be
+comment|// RUN: %clang_cc1 -Werror -triple powerpc64le-linux -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// f0(i8*).
+comment|// RUN: %clang_cc1 -Werror -triple aarch64-linux -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_typedef
@@ -50,7 +50,7 @@ comment|// CHECK-LABEL: define void @f1_0(i32* %a0)
 end_comment
 
 begin_comment
-comment|// CHECK:  call void @f0(%union.transp_t0* byval align 4 %{{.*}})
+comment|// CHECK:  call void @f0(i8* %{{.*}})
 end_comment
 
 begin_comment
@@ -59,6 +59,22 @@ end_comment
 
 begin_comment
 comment|// CHECK: }
+end_comment
+
+begin_comment
+comment|// ARM-LABEL: define arm_aapcscc void @f1_0(i32* %a0)
+end_comment
+
+begin_comment
+comment|// ARM:  call arm_aapcscc void @f0(i8* %{{.*}})
+end_comment
+
+begin_comment
+comment|// ARM:  call arm_aapcscc void %{{.*}}(i8* %{{[a-z0-9]*}})
+end_comment
+
+begin_comment
+comment|// ARM: }
 end_comment
 
 begin_function

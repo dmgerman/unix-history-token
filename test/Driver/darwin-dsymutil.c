@@ -32,31 +32,35 @@ comment|// CHECK-MULTIARCH-ACTIONS: 1: preprocessor, {0}, cpp-output
 end_comment
 
 begin_comment
-comment|// CHECK-MULTIARCH-ACTIONS: 2: compiler, {1}, assembler
+comment|// CHECK-MULTIARCH-ACTIONS: 2: compiler, {1}, ir
 end_comment
 
 begin_comment
-comment|// CHECK-MULTIARCH-ACTIONS: 3: assembler, {2}, object
+comment|// CHECK-MULTIARCH-ACTIONS: 3: backend, {2}, assembler
 end_comment
 
 begin_comment
-comment|// CHECK-MULTIARCH-ACTIONS: 4: linker, {3}, image
+comment|// CHECK-MULTIARCH-ACTIONS: 4: assembler, {3}, object
 end_comment
 
 begin_comment
-comment|// CHECK-MULTIARCH-ACTIONS: 5: bind-arch, "i386", {4}, image
+comment|// CHECK-MULTIARCH-ACTIONS: 5: linker, {4}, image
 end_comment
 
 begin_comment
-comment|// CHECK-MULTIARCH-ACTIONS: 6: bind-arch, "x86_64", {4}, image
+comment|// CHECK-MULTIARCH-ACTIONS: 6: bind-arch, "i386", {5}, image
 end_comment
 
 begin_comment
-comment|// CHECK-MULTIARCH-ACTIONS: 7: lipo, {5, 6}, image
+comment|// CHECK-MULTIARCH-ACTIONS: 7: bind-arch, "x86_64", {5}, image
 end_comment
 
 begin_comment
-comment|// CHECK-MULTIARCH-ACTIONS: 8: dsymutil, {7}, dSYM
+comment|// CHECK-MULTIARCH-ACTIONS: 8: lipo, {6, 7}, image
+end_comment
+
+begin_comment
+comment|// CHECK-MULTIARCH-ACTIONS: 9: dsymutil, {8}, dSYM
 end_comment
 
 begin_comment

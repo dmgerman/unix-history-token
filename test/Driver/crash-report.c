@@ -51,18 +51,6 @@ begin_comment
 comment|// REQUIRES: shell
 end_comment
 
-begin_comment
-comment|// RUN: not env FORCE_CLANG_DIAGNOSTICS_CRASH=1 %clang -fsyntax-only -x c /dev/null -lstdc++ 2>&1 | FileCheck %s
-end_comment
-
-begin_comment
-comment|// FIXME: Investigating. "fatal error: file 'nul' modified since it was first processed"
-end_comment
-
-begin_comment
-comment|// XFAIL: mingw32
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -76,7 +64,7 @@ comment|// CHECK: Preprocessed source(s) and associated run script(s) are locate
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: note: diagnostic msg: {{.*}}.c
+comment|// CHECK-NEXT: note: diagnostic msg: {{.*}}crash-report-{{.*}}.c
 end_comment
 
 begin_macro
@@ -88,59 +76,63 @@ comment|// CHECKSRC: FOO
 end_comment
 
 begin_comment
-comment|// CHECKSH: -cc1
+comment|// CHECKSH: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECKSH: -D "FOO=BAR"
+comment|// CHECKSH: "-main-file-name" "crash-report.c"
 end_comment
 
 begin_comment
-comment|// CHECKSH-NOT: -F/tmp/
+comment|// CHECKSH: "-D" "FOO=BAR"
 end_comment
 
 begin_comment
-comment|// CHECKSH-NOT: -I /tmp/
+comment|// CHECKSH-NOT: "-F/tmp/"
 end_comment
 
 begin_comment
-comment|// CHECKSH-NOT: -idirafter /tmp/
+comment|// CHECKSH-NOT: "-I" "/tmp/"
 end_comment
 
 begin_comment
-comment|// CHECKSH-NOT: -iquote /tmp/
+comment|// CHECKSH-NOT: "-idirafter" "/tmp/"
 end_comment
 
 begin_comment
-comment|// CHECKSH-NOT: -isystem /tmp/
+comment|// CHECKSH-NOT: "-iquote" "/tmp/"
 end_comment
 
 begin_comment
-comment|// CHECKSH-NOT: -iprefix /the/prefix
+comment|// CHECKSH-NOT: "-isystem" "/tmp/"
 end_comment
 
 begin_comment
-comment|// CHECKSH-NOT: -iwithprefix /tmp/
+comment|// CHECKSH-NOT: "-iprefix" "/the/prefix"
 end_comment
 
 begin_comment
-comment|// CHECKSH-NOT: -iwithprefixbefore /tmp/
+comment|// CHECKSH-NOT: "-iwithprefix" "/tmp/"
 end_comment
 
 begin_comment
-comment|// CHECKSH-NOT: -internal-isystem /tmp/
+comment|// CHECKSH-NOT: "-iwithprefixbefore" "/tmp/"
 end_comment
 
 begin_comment
-comment|// CHECKSH-NOT: -internal-externc-isystem /tmp/
+comment|// CHECKSH-NOT: "-internal-isystem" "/tmp/"
 end_comment
 
 begin_comment
-comment|// CHECKSH-NOT: -dwarf-debug-flags
+comment|// CHECKSH-NOT: "-internal-externc-isystem" "/tmp/"
 end_comment
 
 begin_comment
-comment|// CHECKSH: crash-report-{{[^ ]*}}.c
+comment|// CHECKSH-NOT: "-dwarf-debug-flags"
+end_comment
+
+begin_comment
+comment|// CHECKSH: "crash-report-{{[^ ]*}}.c"
 end_comment
 
 end_unit

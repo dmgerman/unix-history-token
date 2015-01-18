@@ -3,10 +3,6 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple arm64-apple-ios7.1 -fsyntax-only -verify %s
 end_comment
 
-begin_comment
-comment|// expected-no-diagnostics
-end_comment
-
 begin_function
 name|void
 name|foo
@@ -21,6 +17,10 @@ asm|("USE(%x0)" :: "z"(0LL));
 asm|asm
 specifier|volatile
 asm|("USE(%w0)" :: "z"(0));
+asm|asm
+specifier|volatile
+asm|("USE(%0)" :: "z"(0));
+comment|// expected-warning {{value size does not match register size specified by the constraint and modifier}} expected-note {{use constraint modifier "w"}}
 block|}
 end_function
 

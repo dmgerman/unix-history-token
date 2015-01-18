@@ -16,11 +16,11 @@ comment|// PGOGEN: @[[DCC:__llvm_profile_counters_debug_captured]] = hidden glob
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[CSC:__llvm_profile_counters___captured_stmt]] = internal global [2 x i64] zeroinitializer
+comment|// PGOGEN: @[[CSC:"__llvm_profile_counters_c-captured.c:__captured_stmt"]] = internal global [2 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[C1C:__llvm_profile_counters___captured_stmt1]] = internal global [3 x i64] zeroinitializer
+comment|// PGOGEN: @[[C1C:"__llvm_profile_counters_c-captured.c:__captured_stmt1"]] = internal global [3 x i64] zeroinitializer
 end_comment
 
 begin_comment
@@ -114,23 +114,23 @@ block|}
 end_function
 
 begin_comment
-comment|// PGOUSE-DAG: ![[DC1]] = metadata !{metadata !"branch_weights", i32 2, i32 1}
+comment|// PGOUSE-DAG: ![[DC1]] = !{!"branch_weights", i32 2, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[DC2]] = metadata !{metadata !"branch_weights", i32 2, i32 1}
+comment|// PGOUSE-DAG: ![[DC2]] = !{!"branch_weights", i32 2, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[CS1]] = metadata !{metadata !"branch_weights", i32 2, i32 1}
+comment|// PGOUSE-DAG: ![[CS1]] = !{!"branch_weights", i32 2, i32 1}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[C11]] = metadata !{metadata !"branch_weights", i32 11, i32 2}
+comment|// PGOUSE-DAG: ![[C11]] = !{!"branch_weights", i32 11, i32 2}
 end_comment
 
 begin_comment
-comment|// PGOUSE-DAG: ![[C12]] = metadata !{metadata !"branch_weights", i32 2, i32 1}
+comment|// PGOUSE-DAG: ![[C12]] = !{!"branch_weights", i32 2, i32 1}
 end_comment
 
 begin_function

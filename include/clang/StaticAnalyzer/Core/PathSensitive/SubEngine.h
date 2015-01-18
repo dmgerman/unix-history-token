@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_SUBENGINE_H
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_SUBENGINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_SUBENGINE_H
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_SUBENGINE_H
 end_define
 
 begin_include
@@ -244,6 +244,43 @@ parameter_list|,
 name|NodeBuilderContext
 modifier|&
 name|BuilderCtx
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+parameter_list|,
+name|ExplodedNodeSet
+modifier|&
+name|Dst
+parameter_list|,
+specifier|const
+name|CFGBlock
+modifier|*
+name|DstT
+parameter_list|,
+specifier|const
+name|CFGBlock
+modifier|*
+name|DstF
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// Called by CoreEngine.
+comment|/// Used to generate successor nodes for temporary destructors depending
+comment|/// on whether the corresponding constructor was visited.
+name|virtual
+name|void
+name|processCleanupTemporaryBranch
+parameter_list|(
+specifier|const
+name|CXXBindTemporaryExpr
+modifier|*
+name|BTE
+parameter_list|,
+name|NodeBuilderContext
+modifier|&
+name|BldCtx
 parameter_list|,
 name|ExplodedNode
 modifier|*

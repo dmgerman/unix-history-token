@@ -79,5 +79,12 @@ name|TOP_REDEF_IN_SUBMODULES
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|TOP_DEF_RIGHT_UNDEF
+value|void
+end_define
+
 end_unit
 

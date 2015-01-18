@@ -302,6 +302,15 @@ literal|"rr_asm"
 argument_list|)
 decl_stmt|;
 comment|// expected-error{{unknown register name 'rr_asm' in asm}}
+specifier|register
+name|int
+name|rrr
+name|asm
+argument_list|(
+literal|"%"
+argument_list|)
+decl_stmt|;
+comment|// expected-error{{unknown register name '%' in asm}}
 block|}
 end_function
 
@@ -505,6 +514,83 @@ comment|// expected-error {{invalid output constraint '=f' in asm}}
 return|return
 name|result
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|fn1
+parameter_list|()
+block|{
+name|int
+name|l
+decl_stmt|;
+asm|__asm__(""           : [l] "=r"(l)           : "[l],m"(l));
+comment|// expected-error {{asm constraint has an unexpected number of alternatives: 1 vs 2}}
+block|}
+end_function
+
+begin_function
+name|void
+name|fn2
+parameter_list|()
+block|{
+name|int
+name|l
+decl_stmt|;
+asm|__asm__(""           : "+&m"(l));
+comment|// expected-error {{invalid output constraint '+&m' in asm}}
+block|}
+end_function
+
+begin_function
+name|void
+name|fn3
+parameter_list|()
+block|{
+name|int
+name|l
+decl_stmt|;
+asm|__asm__(""           : "+#r"(l));
+comment|// expected-error {{invalid output constraint '+#r' in asm}}
+block|}
+end_function
+
+begin_function
+name|void
+name|fn4
+parameter_list|()
+block|{
+name|int
+name|l
+decl_stmt|;
+asm|__asm__(""           : "=r"(l)           : "m#"(l));
+block|}
+end_function
+
+begin_function
+name|void
+name|fn5
+parameter_list|()
+block|{
+name|int
+name|l
+decl_stmt|;
+asm|__asm__(""           : [g] "+r"(l)           : "[g]"(l));
+comment|// expected-error {{invalid input constraint '[g]' in asm}}
+block|}
+end_function
+
+begin_function
+name|void
+name|fn6
+parameter_list|()
+block|{
+name|int
+name|a
+decl_stmt|;
+asm|__asm__(""             : "=rm"(a), "=rm"(a)             : "11m"(a))
+comment|// expected-error {{invalid input constraint '11m' in asm}}
 block|}
 end_function
 

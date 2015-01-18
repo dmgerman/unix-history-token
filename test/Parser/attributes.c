@@ -538,7 +538,11 @@ comment|// \
 comment|// expected-warning {{GCC does not allow 'pure' attribute in this position on a function definition}}
 argument|return *a; }
 comment|// GCC allows these
-argument|void testFundef5() __attribute__(()) { }  __attribute__((pure)) int testFundef6(int a) { return a; }  void deprecatedTestFun(void) __attribute__((deprecated()));
+argument|void testFundef5() __attribute__(()) { }  __attribute__((pure)) int testFundef6(int a) { return a; }  void deprecatedTestFun(void) __attribute__((deprecated()));  struct s {   int a; };
+comment|// This test ensure compatibility with parsing GNU-style attributes
+comment|// where the attribute is on a separate line from the elaborated type
+comment|// specifier.
+argument|struct s __attribute__((used)) bar;
 end_decl_stmt
 
 end_unit

@@ -8,10 +8,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// REQUIRES: asserts
-end_comment
-
-begin_comment
 comment|// RUN: %clang -target x86_64-unknown-linux-gnu -gsplit-dwarf -c -### %s 2> %t
 end_comment
 

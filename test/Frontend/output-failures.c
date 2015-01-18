@@ -8,7 +8,7 @@ comment|// RUN: FileCheck -check-prefix=OUTPUTFAIL -input-file=%t %s
 end_comment
 
 begin_comment
-comment|// OUTPUTFAIL: Error opening output file '{{.*}}doesnotexist{{.*}}'
+comment|// OUTPUTFAIL: error: unable to open output file '{{.*}}{{[/\\]}}test{{[/\\]}}Frontend{{[/\\]}}doesnotexist{{[/\\]}}somename': '{{[nN]}}o such file or directory'
 end_comment
 
 end_unit

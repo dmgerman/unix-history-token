@@ -4,6 +4,10 @@ comment|// REQUIRES: arm-registered-target
 end_comment
 
 begin_comment
+comment|// REQUIRES: aarch64-registered-target
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple thumbv7-apple-darwin9 \
 end_comment
 
@@ -112,7 +116,7 @@ comment|// CHECK: define arm_aapcs_vfpcc %struct.homogeneous_struct @test_struct
 end_comment
 
 begin_comment
-comment|// CHECK64: define %struct.homogeneous_struct @test_struct(float %{{.*}}, float %{{.*}}, float %{{.*}}, float %{{.*}})
+comment|// CHECK64: define %struct.homogeneous_struct @test_struct([4 x float] %{{.*}})
 end_comment
 
 begin_function_decl
@@ -190,7 +194,7 @@ comment|// CHECK: define arm_aapcs_vfpcc void @test_array(%struct.nested_array %
 end_comment
 
 begin_comment
-comment|// CHECK64: define void @test_array(double %{{.*}}, double %{{.*}}, double %{{.*}}, double %{{.*}})
+comment|// CHECK64: define void @test_array([4 x double] %{{.*}})
 end_comment
 
 begin_function_decl
@@ -237,7 +241,7 @@ comment|// CHECK: define arm_aapcs_vfpcc void @test_complex({ double, double } %
 end_comment
 
 begin_comment
-comment|// CHECK64: define void @test_complex(double %{{.*}}, double %{{.*}})
+comment|// CHECK64: define void @test_complex([2 x double] %cd.coerce)
 end_comment
 
 begin_function
@@ -327,7 +331,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: define arm_aapcs_vfpcc void @test_big({ [5 x i32] } %{{.*}})
+comment|// CHECK: define arm_aapcs_vfpcc void @test_big([5 x i32] %{{.*}})
 end_comment
 
 begin_comment
@@ -393,7 +397,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: define arm_aapcs_vfpcc void @test_hetero({ [2 x i32] } %{{.*}})
+comment|// CHECK: define arm_aapcs_vfpcc void @test_hetero([2 x i32] %{{.*}})
 end_comment
 
 begin_comment
@@ -437,7 +441,7 @@ comment|// CHECK: define arm_aapcs_vfpcc<16 x i8> @f0(%struct.int8x16x4_t %{{.*}
 end_comment
 
 begin_comment
-comment|// CHECK64: define<16 x i8> @f0(<16 x i8> %{{.*}},<16 x i8> %{{.*}},<16 x i8> %{{.*}},<16 x i8> %{{.*}})
+comment|// CHECK64: define<16 x i8> @f0([4 x<16 x i8>] %{{.*}})
 end_comment
 
 begin_function
@@ -499,7 +503,7 @@ comment|// CHECK: define arm_aapcs_vfpcc void @test_neon(%struct.neon_struct %{{
 end_comment
 
 begin_comment
-comment|// CHECK64: define void @test_neon(<8 x i8> %{{.*}},<8 x i8> %{{.*}},<2 x i32> %{{.*}},<4 x i16> %{{.*}})
+comment|// CHECK64: define void @test_neon([4 x<8 x i8>] %{{.*}})
 end_comment
 
 begin_function_decl
@@ -626,7 +630,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_2(double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, i32 %j, [3 x i32], { [2 x i64] } %k.coerce)
+comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_2(double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, i32 %j, [3 x i32], [2 x i64] %k.coerce)
 end_comment
 
 begin_function
@@ -670,7 +674,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_3(%struct.struct_long_long_int* noalias sret %agg.result, double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, [3 x i32], { [2 x i64] } %k.coerce)
+comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_3(%struct.struct_long_long_int* noalias sret %agg.result, double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, [3 x i32], [2 x i64] %k.coerce)
 end_comment
 
 begin_function
@@ -731,7 +735,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: define arm_aapcs_vfpcc void @test_test_vfp_stack_gpr_split_bitfield(double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, i32 %j, i32 %k, [2 x i32], { [3 x i32] } %l.coerce)
+comment|// CHECK: define arm_aapcs_vfpcc void @test_test_vfp_stack_gpr_split_bitfield(double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, i32 %j, i32 %k, [2 x i32], [3 x i32] %l.coerce)
 end_comment
 
 begin_function
@@ -798,7 +802,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_4(double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, i32 %j, [3 x i32], { [2 x i64] } %k.coerce)
+comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_4(double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, i32 %j, [3 x i32], [2 x i64] %k.coerce)
 end_comment
 
 begin_function
@@ -876,7 +880,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_5(%struct.struct_seventeen_ints* byval align 4 %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, double %j, { [4 x i32] } %k.coerce)
+comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_5(%struct.struct_seventeen_ints* byval align 4 %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, double %j, [4 x i32] %k.coerce)
 end_comment
 
 begin_function

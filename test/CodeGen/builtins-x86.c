@@ -2914,7 +2914,7 @@ name|tmp_V4f
 argument_list|,
 name|tmp_V4f
 argument_list|,
-name|tmp_i
+name|imm_i_0_256
 argument_list|)
 expr_stmt|;
 endif|#

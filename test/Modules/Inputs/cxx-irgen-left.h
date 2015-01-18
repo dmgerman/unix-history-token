@@ -58,5 +58,74 @@ return|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|namespace
+name|ImplicitSpecialMembers
+block|{
+specifier|inline
+name|void
+name|create_left
+parameter_list|()
+block|{
+comment|// Trigger declaration, but not definition, of special members.
+name|B
+name|b
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+name|C
+name|c
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+name|D
+name|d
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+comment|// Trigger definition of copy constructor.
+name|C
+name|c2
+argument_list|(
+name|c
+argument_list|)
+decl_stmt|;
+name|D
+name|d2
+argument_list|(
+name|d
+argument_list|)
+decl_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|OperatorDeleteLookup
+block|{
+comment|// Trigger definition of A::~A() and lookup of operator delete.
+comment|// Likewise for B<int>::~B().
+specifier|inline
+name|void
+name|f
+parameter_list|()
+block|{
+name|A
+name|a
+decl_stmt|;
+name|B
+operator|<
+name|int
+operator|>
+name|b
+expr_stmt|;
+block|}
+block|}
+end_decl_stmt
+
 end_unit
 

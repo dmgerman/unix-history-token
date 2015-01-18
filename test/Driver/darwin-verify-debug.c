@@ -8,10 +8,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// REQUIRES: asserts
-end_comment
-
-begin_comment
 comment|// RUN: %clang -target x86_64-apple-darwin10 -ccc-print-phases \
 end_comment
 
@@ -32,11 +28,11 @@ comment|// CHECK-MULTIARCH-ACTIONS: 0: input, "{{.*}}darwin-verify-debug.c", c
 end_comment
 
 begin_comment
-comment|// CHECK-MULTIARCH-ACTIONS: 8: dsymutil, {7}, dSYM
+comment|// CHECK-MULTIARCH-ACTIONS: 9: dsymutil, {8}, dSYM
 end_comment
 
 begin_comment
-comment|// CHECK-MULTIARCH-ACTIONS: 9: verify-debug-info, {8}, none
+comment|// CHECK-MULTIARCH-ACTIONS: 10: verify-debug-info, {9}, none
 end_comment
 
 begin_comment

@@ -67,6 +67,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_CLANG_UNITTESTS_AST_MATCHVERIFIER_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_CLANG_UNITTESTS_AST_MATCHVERIFIER_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -116,6 +128,8 @@ block|,
 name|Lang_CXX11
 block|,
 name|Lang_OpenCL
+block|,
+name|Lang_OBJCXX
 block|}
 enum|;
 comment|/// \brief Base class for verifying some property of nodes found by a matcher.
@@ -432,6 +446,15 @@ name|FileName
 operator|=
 literal|"input.cl"
 expr_stmt|;
+break|break;
+case|case
+name|Lang_OBJCXX
+case|:
+name|FileName
+operator|=
+literal|"input.mm"
+expr_stmt|;
+break|break;
 block|}
 comment|// Default to failure in case callback is never called
 name|setFailure
@@ -1295,6 +1318,11 @@ begin_comment
 unit|}
 comment|// end namespace clang
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

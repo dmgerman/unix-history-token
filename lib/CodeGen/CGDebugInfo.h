@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_CODEGEN_CGDEBUGINFO_H
+name|LLVM_CLANG_LIB_CODEGEN_CGDEBUGINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_CODEGEN_CGDEBUGINFO_H
+name|LLVM_CLANG_LIB_CODEGEN_CGDEBUGINFO_H
 end_define
 
 begin_include
@@ -202,8 +202,6 @@ name|TheCU
 expr_stmt|;
 name|SourceLocation
 name|CurLoc
-decl_stmt|,
-name|PrevLoc
 decl_stmt|;
 name|llvm
 operator|::
@@ -267,7 +265,7 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|WeakVH
+name|TrackingMDRef
 operator|>
 name|TypeCache
 expr_stmt|;
@@ -353,9 +351,29 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|WeakVH
+name|TrackingMDRef
 operator|>>
 name|ReplaceMap
+expr_stmt|;
+comment|/// \brief Cache of replaceable forward declarartions (functions and
+comment|/// variables) to RAUW at the end of compilation.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|DeclaratorDecl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|TrackingMDRef
+operator|>>
+name|FwdDeclReplaceMap
 expr_stmt|;
 comment|// LexicalBlockStack - Keep track of our current nested lexical block.
 name|std
@@ -364,13 +382,8 @@ name|vector
 operator|<
 name|llvm
 operator|::
-name|TrackingVH
-operator|<
-name|llvm
-operator|::
-name|MDNode
+name|TrackingMDNodeRef
 operator|>
-expr|>
 name|LexicalBlockStack
 expr_stmt|;
 name|llvm
@@ -383,7 +396,7 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|WeakVH
+name|TrackingMDRef
 operator|>
 name|RegionMap
 expr_stmt|;
@@ -418,7 +431,7 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|WeakVH
+name|TrackingMDRef
 operator|>
 name|DIFileCache
 expr_stmt|;
@@ -432,7 +445,7 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|WeakVH
+name|TrackingMDRef
 operator|>
 name|SPCache
 expr_stmt|;
@@ -448,7 +461,7 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|WeakVH
+name|TrackingMDRef
 operator|>
 name|DeclCache
 expr_stmt|;
@@ -462,7 +475,7 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|WeakVH
+name|TrackingMDRef
 operator|>
 name|NameSpaceCache
 expr_stmt|;
@@ -476,7 +489,7 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|WeakVH
+name|TrackingMDRef
 operator|>
 name|NamespaceAliasCache
 expr_stmt|;
@@ -490,7 +503,7 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|WeakVH
+name|TrackingMDRef
 operator|>
 name|StaticDataMemberCache
 expr_stmt|;
@@ -899,7 +912,7 @@ name|SmallVectorImpl
 operator|<
 name|llvm
 operator|::
-name|Value
+name|Metadata
 operator|*
 operator|>
 operator|&
@@ -928,7 +941,7 @@ name|SmallVectorImpl
 operator|<
 name|llvm
 operator|::
-name|Value
+name|Metadata
 operator|*
 operator|>
 operator|&
@@ -992,6 +1005,8 @@ argument_list|,
 argument|llvm::DIFile tunit
 argument_list|,
 argument|llvm::DIScope scope
+argument_list|,
+argument|const RecordDecl* RD = nullptr
 argument_list|)
 expr_stmt|;
 comment|// Helpers for collecting fields of a record.
@@ -1007,7 +1022,7 @@ name|SmallVectorImpl
 operator|<
 name|llvm
 operator|::
-name|Value
+name|Metadata
 operator|*
 operator|>
 operator|&
@@ -1027,6 +1042,8 @@ argument_list|(
 argument|const VarDecl *Var
 argument_list|,
 argument|llvm::DIType RecordTy
+argument_list|,
+argument|const RecordDecl* RD
 argument_list|)
 expr_stmt|;
 name|void
@@ -1049,7 +1066,7 @@ name|SmallVectorImpl
 operator|<
 name|llvm
 operator|::
-name|Value
+name|Metadata
 operator|*
 operator|>
 operator|&
@@ -1059,6 +1076,11 @@ name|llvm
 operator|::
 name|DIType
 name|RecordTy
+argument_list|,
+specifier|const
+name|RecordDecl
+operator|*
+name|RD
 argument_list|)
 decl_stmt|;
 name|void
@@ -1078,7 +1100,7 @@ name|SmallVectorImpl
 operator|<
 name|llvm
 operator|::
-name|Value
+name|Metadata
 operator|*
 operator|>
 operator|&
@@ -1107,7 +1129,7 @@ name|SmallVectorImpl
 operator|<
 name|llvm
 operator|::
-name|Value
+name|Metadata
 operator|*
 operator|>
 operator|&
@@ -1288,6 +1310,14 @@ specifier|const
 name|CGBlockInfo
 operator|&
 name|blockInfo
+argument_list|,
+name|llvm
+operator|::
+name|Instruction
+operator|*
+name|InsertPoint
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 comment|/// EmitDeclareOfArgVariable - Emit call to llvm.dbg.declare for an argument
@@ -1330,6 +1360,9 @@ operator|::
 name|Value
 operator|*
 name|Arg
+argument_list|,
+name|unsigned
+name|ArgNo
 argument_list|,
 name|llvm
 operator|::
@@ -1382,6 +1415,14 @@ specifier|const
 name|UsingDirectiveDecl
 modifier|&
 name|UD
+parameter_list|)
+function_decl|;
+comment|/// EmitExplicitCastType - Emit the type explicitly casted to.
+name|void
+name|EmitExplicitCastType
+parameter_list|(
+name|QualType
+name|Ty
 parameter_list|)
 function_decl|;
 comment|/// \brief - Emit C++ using declaration.
@@ -1662,11 +1703,11 @@ argument_list|,
 argument|uint64_t *Offset
 argument_list|)
 expr_stmt|;
-comment|/// \brief Retrieve the DIScope, if any, for the canonical form of this
+comment|/// \brief Retrieve the DIDescriptor, if any, for the canonical form of this
 comment|/// declaration.
 name|llvm
 operator|::
-name|DIScope
+name|DIDescriptor
 name|getDeclarationOrDefinition
 argument_list|(
 specifier|const
@@ -1699,6 +1740,32 @@ specifier|const
 name|VarDecl
 operator|*
 name|D
+argument_list|)
+expr_stmt|;
+comment|/// \brief Create a DISubprogram describing the forward
+comment|/// decalration represented in the given FunctionDecl.
+name|llvm
+operator|::
+name|DISubprogram
+name|getFunctionForwardDeclaration
+argument_list|(
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|)
+expr_stmt|;
+comment|/// \brief Create a DIGlobalVariable describing the forward
+comment|/// decalration represented in the given VarDecl.
+name|llvm
+operator|::
+name|DIGlobalVariable
+name|getGlobalVariableForwardDeclaration
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|VD
 argument_list|)
 expr_stmt|;
 comment|/// Return a global variable that represents one of the collection of
@@ -1797,6 +1864,82 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// \brief Collect various properties of a FunctionDecl.
+comment|/// \param GD  A GlobalDecl whose getDecl() must return a FunctionDecl.
+name|void
+name|collectFunctionDeclProps
+argument_list|(
+name|GlobalDecl
+name|GD
+argument_list|,
+name|llvm
+operator|::
+name|DIFile
+name|Unit
+argument_list|,
+name|StringRef
+operator|&
+name|Name
+argument_list|,
+name|StringRef
+operator|&
+name|LinkageName
+argument_list|,
+name|llvm
+operator|::
+name|DIDescriptor
+operator|&
+name|FDContext
+argument_list|,
+name|llvm
+operator|::
+name|DIArray
+operator|&
+name|TParamsArray
+argument_list|,
+name|unsigned
+operator|&
+name|Flags
+argument_list|)
+decl_stmt|;
+comment|/// \brief Collect various properties of a VarDecl.
+name|void
+name|collectVarDeclProps
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|VD
+argument_list|,
+name|llvm
+operator|::
+name|DIFile
+operator|&
+name|Unit
+argument_list|,
+name|unsigned
+operator|&
+name|LineNo
+argument_list|,
+name|QualType
+operator|&
+name|T
+argument_list|,
+name|StringRef
+operator|&
+name|Name
+argument_list|,
+name|StringRef
+operator|&
+name|LinkageName
+argument_list|,
+name|llvm
+operator|::
+name|DIDescriptor
+operator|&
+name|VDContext
+argument_list|)
+decl_stmt|;
 comment|/// internString - Allocate a copy of \p A using the DebugInfoNames allocator
 comment|/// and return a reference to it. If multiple arguments are given the strings
 comment|/// are concatenated.
@@ -1893,72 +2036,44 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// SaveAndRestoreLocation - An RAII object saves the current location
-comment|/// and automatically restores it to the original value.
 name|class
-name|SaveAndRestoreLocation
+name|ApplyDebugLocation
 block|{
 name|protected
 label|:
-name|SourceLocation
-name|SavedLoc
-decl_stmt|;
-name|CGDebugInfo
-modifier|*
-name|DI
-decl_stmt|;
-name|CGBuilderTy
+name|llvm
+operator|::
+name|DebugLoc
+name|OriginalLocation
+expr_stmt|;
+name|CodeGenFunction
 modifier|&
-name|Builder
+name|CGF
 decl_stmt|;
 name|public
 label|:
-name|SaveAndRestoreLocation
+name|ApplyDebugLocation
 argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
+argument|CodeGenFunction&CGF
 argument_list|,
-name|CGBuilderTy
-operator|&
-name|B
+argument|SourceLocation TemporaryLocation = SourceLocation()
+argument_list|,
+argument|bool ForceColumnInfo = false
 argument_list|)
-expr_stmt|;
-comment|/// Autorestore everything back to normal.
+empty_stmt|;
+name|ApplyDebugLocation
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|llvm::DebugLoc Loc
+argument_list|)
+empty_stmt|;
 operator|~
-name|SaveAndRestoreLocation
+name|ApplyDebugLocation
 argument_list|()
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/// NoLocation - An RAII object that temporarily disables debug
-comment|/// locations. This is useful for emitting instructions that should be
-comment|/// counted towards the function prologue.
-name|class
-name|NoLocation
-range|:
-name|public
-name|SaveAndRestoreLocation
-block|{
-name|public
-operator|:
-name|NoLocation
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|,
-name|CGBuilderTy
-operator|&
-name|B
-argument_list|)
-block|;
-comment|/// Autorestore everything back to normal.
-operator|~
-name|NoLocation
-argument_list|()
-block|; }
-decl_stmt|;
 comment|/// ArtificialLocation - An RAII object that temporarily switches to
 comment|/// an artificial debug location that has a valid scope, but no line
 comment|/// information. This is useful when emitting compiler-generated
@@ -1974,7 +2089,7 @@ name|class
 name|ArtificialLocation
 range|:
 name|public
-name|SaveAndRestoreLocation
+name|ApplyDebugLocation
 block|{
 name|public
 operator|:
@@ -1983,22 +2098,7 @@ argument_list|(
 name|CodeGenFunction
 operator|&
 name|CGF
-argument_list|,
-name|CGBuilderTy
-operator|&
-name|B
 argument_list|)
-block|;
-comment|/// Set the current location to line 0, but within the current scope
-comment|/// (= the top of the LexicalBlockStack).
-name|void
-name|Emit
-argument_list|()
-block|;
-comment|/// Autorestore everything back to normal.
-operator|~
-name|ArtificialLocation
-argument_list|()
 block|; }
 decl_stmt|;
 block|}

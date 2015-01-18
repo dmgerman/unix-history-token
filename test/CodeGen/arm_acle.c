@@ -231,6 +231,201 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARM_32BIT_STATE
+end_if
+
+begin_comment
+comment|// AArch32-LABEL: test_dbg
+end_comment
+
+begin_comment
+comment|// AArch32: call void @llvm.arm.dbg(i32 0)
+end_comment
+
+begin_function
+name|void
+name|test_dbg
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|__dbg
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 8.5 Swap */
+end_comment
+
+begin_comment
+comment|// ARM-LABEL: test_swp
+end_comment
+
+begin_comment
+comment|// AArch32: call i32 @llvm.arm.ldrex
+end_comment
+
+begin_comment
+comment|// AArch32: call i32 @llvm.arm.strex
+end_comment
+
+begin_comment
+comment|// AArch64: call i64 @llvm.aarch64.ldxr
+end_comment
+
+begin_comment
+comment|// AArch64: call i32 @llvm.aarch64.stxr
+end_comment
+
+begin_function
+name|uint32_t
+name|test_swp
+parameter_list|(
+name|uint32_t
+name|x
+parameter_list|,
+specifier|volatile
+name|void
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|__swp
+argument_list|(
+name|x
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* 8.6 Memory prefetch intrinsics */
+end_comment
+
+begin_comment
+comment|/* 8.6.1 Data prefetch */
+end_comment
+
+begin_comment
+comment|// ARM-LABEL: test_pld
+end_comment
+
+begin_comment
+comment|// ARM: call void @llvm.prefetch(i8* null, i32 0, i32 3, i32 1)
+end_comment
+
+begin_function
+name|void
+name|test_pld
+parameter_list|()
+block|{
+name|__pld
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_pldx
+end_comment
+
+begin_comment
+comment|// AArch32: call void @llvm.prefetch(i8* null, i32 1, i32 3, i32 1)
+end_comment
+
+begin_comment
+comment|// AArch64: call void @llvm.prefetch(i8* null, i32 1, i32 1, i32 1)
+end_comment
+
+begin_function
+name|void
+name|test_pldx
+parameter_list|()
+block|{
+name|__pldx
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* 8.6.2 Instruction prefetch */
+end_comment
+
+begin_comment
+comment|// ARM-LABEL: test_pli
+end_comment
+
+begin_comment
+comment|// ARM: call void @llvm.prefetch(i8* null, i32 0, i32 3, i32 0)
+end_comment
+
+begin_function
+name|void
+name|test_pli
+parameter_list|()
+block|{
+name|__pli
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_plix
+end_comment
+
+begin_comment
+comment|// AArch32: call void @llvm.prefetch(i8* null, i32 0, i32 3, i32 0)
+end_comment
+
+begin_comment
+comment|// AArch64: call void @llvm.prefetch(i8* null, i32 0, i32 1, i32 0)
+end_comment
+
+begin_function
+name|void
+name|test_plix
+parameter_list|()
+block|{
+name|__plix
+argument_list|(
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* 8.7 NOP */
 end_comment
@@ -267,6 +462,213 @@ end_comment
 begin_comment
 comment|/* 9.2 Miscellaneous data-processing intrinsics */
 end_comment
+
+begin_comment
+comment|// ARM-LABEL: test_ror
+end_comment
+
+begin_comment
+comment|// ARM: lshr
+end_comment
+
+begin_comment
+comment|// ARM: sub
+end_comment
+
+begin_comment
+comment|// ARM: shl
+end_comment
+
+begin_comment
+comment|// ARM: or
+end_comment
+
+begin_function
+name|uint32_t
+name|test_ror
+parameter_list|(
+name|uint32_t
+name|x
+parameter_list|,
+name|uint32_t
+name|y
+parameter_list|)
+block|{
+return|return
+name|__ror
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_rorl
+end_comment
+
+begin_comment
+comment|// ARM: lshr
+end_comment
+
+begin_comment
+comment|// ARM: sub
+end_comment
+
+begin_comment
+comment|// ARM: shl
+end_comment
+
+begin_comment
+comment|// ARM: or
+end_comment
+
+begin_function
+name|unsigned
+name|long
+name|test_rorl
+parameter_list|(
+name|unsigned
+name|long
+name|x
+parameter_list|,
+name|uint32_t
+name|y
+parameter_list|)
+block|{
+return|return
+name|__rorl
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_rorll
+end_comment
+
+begin_comment
+comment|// ARM: lshr
+end_comment
+
+begin_comment
+comment|// ARM: sub
+end_comment
+
+begin_comment
+comment|// ARM: shl
+end_comment
+
+begin_comment
+comment|// ARM: or
+end_comment
+
+begin_function
+name|uint64_t
+name|test_rorll
+parameter_list|(
+name|uint64_t
+name|x
+parameter_list|,
+name|uint32_t
+name|y
+parameter_list|)
+block|{
+return|return
+name|__rorll
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_clz
+end_comment
+
+begin_comment
+comment|// ARM: call i32 @llvm.ctlz.i32(i32 %t, i1 false)
+end_comment
+
+begin_function
+name|uint32_t
+name|test_clz
+parameter_list|(
+name|uint32_t
+name|t
+parameter_list|)
+block|{
+return|return
+name|__clz
+argument_list|(
+name|t
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_clzl
+end_comment
+
+begin_comment
+comment|// AArch32: call i32 @llvm.ctlz.i32(i32 %t, i1 false)
+end_comment
+
+begin_comment
+comment|// AArch64: call i64 @llvm.ctlz.i64(i64 %t, i1 false)
+end_comment
+
+begin_function
+name|long
+name|test_clzl
+parameter_list|(
+name|long
+name|t
+parameter_list|)
+block|{
+return|return
+name|__clzl
+argument_list|(
+name|t
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_clzll
+end_comment
+
+begin_comment
+comment|// ARM: call i64 @llvm.ctlz.i64(i64 %t, i1 false)
+end_comment
+
+begin_function
+name|uint64_t
+name|test_clzll
+parameter_list|(
+name|uint64_t
+name|t
+parameter_list|)
+block|{
+return|return
+name|__clzll
+argument_list|(
+name|t
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|// ARM-LABEL: test_rev
@@ -348,23 +750,35 @@ block|}
 end_function
 
 begin_comment
-comment|// ARM-LABEL: test_clz
+comment|// ARM-LABEL: test_rev16
 end_comment
 
 begin_comment
-comment|// ARM: call i32 @llvm.ctlz.i32(i32 %t, i1 false)
+comment|// ARM: llvm.bswap
+end_comment
+
+begin_comment
+comment|// ARM: lshr
+end_comment
+
+begin_comment
+comment|// ARM: shl
+end_comment
+
+begin_comment
+comment|// ARM: or
 end_comment
 
 begin_function
 name|uint32_t
-name|test_clz
+name|test_rev16
 parameter_list|(
 name|uint32_t
 name|t
 parameter_list|)
 block|{
 return|return
-name|__clz
+name|__rev16
 argument_list|(
 name|t
 argument_list|)
@@ -373,27 +787,35 @@ block|}
 end_function
 
 begin_comment
-comment|// ARM-LABEL: test_clzl
+comment|// ARM-LABEL: test_rev16l
 end_comment
 
 begin_comment
-comment|// AArch32: call i32 @llvm.ctlz.i32(i32 %t, i1 false)
+comment|// ARM: llvm.bswap
 end_comment
 
 begin_comment
-comment|// AArch64: call i64 @llvm.ctlz.i64(i64 %t, i1 false)
+comment|// ARM: lshr
+end_comment
+
+begin_comment
+comment|// ARM: shl
+end_comment
+
+begin_comment
+comment|// ARM: or
 end_comment
 
 begin_function
 name|long
-name|test_clzl
+name|test_rev16l
 parameter_list|(
 name|long
 name|t
 parameter_list|)
 block|{
 return|return
-name|__clzl
+name|__rev16l
 argument_list|(
 name|t
 argument_list|)
@@ -402,23 +824,151 @@ block|}
 end_function
 
 begin_comment
-comment|// ARM-LABEL: test_clzll
+comment|// ARM-LABEL: test_rev16ll
 end_comment
 
 begin_comment
-comment|// ARM: call i64 @llvm.ctlz.i64(i64 %t, i1 false)
+comment|// ARM: llvm.bswap
+end_comment
+
+begin_comment
+comment|// ARM: lshr
+end_comment
+
+begin_comment
+comment|// ARM: shl
+end_comment
+
+begin_comment
+comment|// ARM: or
 end_comment
 
 begin_function
 name|uint64_t
-name|test_clzll
+name|test_rev16ll
 parameter_list|(
 name|uint64_t
 name|t
 parameter_list|)
 block|{
 return|return
-name|__clzll
+name|__rev16ll
+argument_list|(
+name|t
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_revsh
+end_comment
+
+begin_comment
+comment|// ARM: call i16 @llvm.bswap.i16(i16 %t)
+end_comment
+
+begin_function
+name|int16_t
+name|test_revsh
+parameter_list|(
+name|int16_t
+name|t
+parameter_list|)
+block|{
+return|return
+name|__revsh
+argument_list|(
+name|t
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_rbit
+end_comment
+
+begin_comment
+comment|// AArch32: call i32 @llvm.arm.rbit
+end_comment
+
+begin_comment
+comment|// AArch64: call i32 @llvm.aarch64.rbit.i32
+end_comment
+
+begin_function
+name|uint32_t
+name|test_rbit
+parameter_list|(
+name|uint32_t
+name|t
+parameter_list|)
+block|{
+return|return
+name|__rbit
+argument_list|(
+name|t
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_rbitl
+end_comment
+
+begin_comment
+comment|// AArch32: call i32 @llvm.arm.rbit
+end_comment
+
+begin_comment
+comment|// AArch64: call i64 @llvm.aarch64.rbit.i64
+end_comment
+
+begin_function
+name|long
+name|test_rbitl
+parameter_list|(
+name|long
+name|t
+parameter_list|)
+block|{
+return|return
+name|__rbitl
+argument_list|(
+name|t
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_rbitll
+end_comment
+
+begin_comment
+comment|// AArch32: call i32 @llvm.arm.rbit
+end_comment
+
+begin_comment
+comment|// AArch32: call i32 @llvm.arm.rbit
+end_comment
+
+begin_comment
+comment|// AArch64: call i64 @llvm.aarch64.rbit.i64
+end_comment
+
+begin_function
+name|uint64_t
+name|test_rbitll
+parameter_list|(
+name|uint64_t
+name|t
+parameter_list|)
+block|{
+return|return
+name|__rbitll
 argument_list|(
 name|t
 argument_list|)

@@ -212,7 +212,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS64R2-EL-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS64R2-EL-AS: as{{(.exe)?}}" "-march" "mips64r2" "-mabi" "64"  "-mno-shared" "-KPIC" "-EL"
+comment|// MIPS64R2-EL-AS: as{{(.exe)?}}" "-march" "mips64r2" "-mabi" "64" "-mno-shared" "-KPIC" "-EL"
 end_comment
 
 begin_comment
@@ -252,7 +252,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS-OCTEON %s
 end_comment
 
 begin_comment
-comment|// MIPS-OCTEON: as{{(.exe)?}}" "-march" "octeon" "-mabi" "64"  "-mno-shared" "-KPIC" "-EB"
+comment|// MIPS-OCTEON: as{{(.exe)?}}" "-march" "octeon" "-mabi" "64" "-mno-shared" "-KPIC" "-EB"
 end_comment
 
 begin_comment
@@ -432,7 +432,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS-ALIAS-64 %s
 end_comment
 
 begin_comment
-comment|// MIPS-ALIAS-64: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64"  "-mno-shared" "-KPIC" "-EB"
+comment|// MIPS-ALIAS-64: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-mno-shared" "-KPIC" "-EB"
 end_comment
 
 begin_comment
@@ -452,7 +452,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS-ALIAS-64R2 %s
 end_comment
 
 begin_comment
-comment|// MIPS-ALIAS-64R2: as{{(.exe)?}}" "-march" "mips64r2" "-mabi" "64"  "-mno-shared" "-KPIC" "-EB"
+comment|// MIPS-ALIAS-64R2: as{{(.exe)?}}" "-march" "mips64r2" "-mabi" "64" "-mno-shared" "-KPIC" "-EB"
 end_comment
 
 begin_comment
@@ -472,7 +472,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS-ALIAS-64R6 %s
 end_comment
 
 begin_comment
-comment|// MIPS-ALIAS-64R6: as{{(.exe)?}}" "-march" "mips64r6" "-mabi" "64"  "-mno-shared" "-KPIC" "-EB"
+comment|// MIPS-ALIAS-64R6: as{{(.exe)?}}" "-march" "mips64r6" "-mabi" "64" "-mno-shared" "-KPIC" "-EB"
 end_comment
 
 begin_comment
@@ -864,7 +864,7 @@ comment|// RUN:   2>&1 | FileCheck -check-prefix=MIPS3-EB-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS3-EB-AS: as{{(.exe)?}}" "-march" "mips3" "-mabi" "64"  "-mno-shared" "-KPIC" "-EB"
+comment|// MIPS3-EB-AS: as{{(.exe)?}}" "-march" "mips3" "-mabi" "64" "-mno-shared" "-KPIC" "-EB"
 end_comment
 
 begin_comment
@@ -880,7 +880,7 @@ comment|// RUN:   2>&1 | FileCheck -check-prefix=MIPS4-EB-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS4-EB-AS: as{{(.exe)?}}" "-march" "mips4" "-mabi" "64"  "-mno-shared" "-KPIC" "-EB"
+comment|// MIPS4-EB-AS: as{{(.exe)?}}" "-march" "mips4" "-mabi" "64" "-mno-shared" "-KPIC" "-EB"
 end_comment
 
 begin_comment
@@ -896,7 +896,7 @@ comment|// RUN:   2>&1 | FileCheck -check-prefix=MIPS5-EB-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS5-EB-AS: as{{(.exe)?}}" "-march" "mips5" "-mabi" "64"  "-mno-shared" "-KPIC" "-EB"
+comment|// MIPS5-EB-AS: as{{(.exe)?}}" "-march" "mips5" "-mabi" "64" "-mno-shared" "-KPIC" "-EB"
 end_comment
 
 begin_comment
@@ -952,7 +952,7 @@ comment|// RUN:   2>&1 | FileCheck -check-prefix=MIPS64-EB-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS64-EB-AS: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64"  "-mno-shared" "-KPIC" "-EB"
+comment|// MIPS64-EB-AS: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-mno-shared" "-KPIC" "-EB"
 end_comment
 
 begin_comment
@@ -968,7 +968,7 @@ comment|// RUN:   2>&1 | FileCheck -check-prefix=MIPS64R6-EB-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS64R6-EB-AS: as{{(.exe)?}}" "-march" "mips64r6" "-mabi" "64"  "-mno-shared" "-KPIC" "-EB"
+comment|// MIPS64R6-EB-AS: as{{(.exe)?}}" "-march" "mips64r6" "-mabi" "64" "-mno-shared" "-KPIC" "-EB"
 end_comment
 
 begin_comment

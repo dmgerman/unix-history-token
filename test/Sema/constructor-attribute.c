@@ -91,6 +91,26 @@ begin_comment
 comment|// expected-error {{'constructor' attribute requires an integer constant}}
 end_comment
 
+begin_function_decl
+name|int
+name|f
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(constructor
+parameter_list|(
+function_decl|0x100000000
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-error {{integer constant expression evaluates to value 4294967296 that cannot be represented in a 32-bit unsigned integer type}}
+end_comment
+
 begin_decl_stmt
 name|int
 name|x

@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-win32     -fsyntax-only -verify -std=c99 %s
+comment|// RUN: %clang_cc1 -triple i686-win32     -fsyntax-only -verify -std=c99 -DMS %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-win32   -fsyntax-only -verify -std=c11 %s
+comment|// RUN: %clang_cc1 -triple x86_64-win32   -fsyntax-only -verify -std=c11 -DMS %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-mingw32   -fsyntax-only -verify -std=c11 %s
+comment|// RUN: %clang_cc1 -triple i686-mingw32   -fsyntax-only -verify -std=c11 -DGNU %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-mingw32 -fsyntax-only -verify -std=c99 %s
+comment|// RUN: %clang_cc1 -triple x86_64-mingw32 -fsyntax-only -verify -std=c99 -DGNU %s
 end_comment
 
 begin_comment
@@ -636,6 +636,28 @@ comment|// expected-error{{'StaticGlobal' must have external linkage when declar
 end_comment
 
 begin_comment
+comment|// Thread local variables are invalid.
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|dllimport
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|__thread
+name|int
+name|ThreadLocalGlobal
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error{{'ThreadLocalGlobal' cannot be thread local when declared 'dllimport'}}
+end_comment
+
+begin_comment
 comment|// Import in local scope.
 end_comment
 
@@ -689,6 +711,19 @@ end_decl_stmt
 begin_comment
 comment|// expected-note{{previous definition is here}}
 end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|dllimport
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|float
+name|LocalRedecl4
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -769,6 +804,11 @@ name|int
 name|StaticLocalVar
 decl_stmt|;
 comment|// expected-error{{'StaticLocalVar' must have external linkage when declared 'dllimport'}}
+comment|// Local extern redeclaration does not drop the attribute.
+specifier|extern
+name|float
+name|LocalRedecl4
+decl_stmt|;
 block|}
 end_function
 
@@ -894,6 +934,25 @@ end_comment
 begin_comment
 comment|// Import inline function.
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GNU
+end_ifdef
+
+begin_comment
+comment|// expected-warning@+3{{'dllimport' attribute ignored on inline function}}
+end_comment
+
+begin_comment
+comment|// expected-warning@+3{{'dllimport' attribute ignored on inline function}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|__declspec
@@ -1096,8 +1155,23 @@ comment|// expected-warning{{redeclaration of 'redecl5' should not add 'dllimpor
 end_comment
 
 begin_comment
-comment|// Inline redeclarations are fine.
+comment|// Inline redeclarations.
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GNU
+end_ifdef
+
+begin_comment
+comment|// expected-warning@+3{{'redecl6' redeclared inline; 'dllimport' attribute ignored}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|__declspec
@@ -1121,16 +1195,40 @@ parameter_list|()
 block|{}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MS
+end_ifdef
+
+begin_comment
+comment|// expected-note@+5{{previous declaration is here}}
+end_comment
+
+begin_comment
+comment|// expected-warning@+5{{redeclaration of 'redecl7' should not add 'dllimport' attribute}}
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// expected-warning@+3{{'dllimport' attribute ignored on inline function}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|redecl7
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|// expected-note{{previous declaration is here}}
-end_comment
 
 begin_macro
 name|__declspec
@@ -1146,10 +1244,6 @@ name|redecl7
 parameter_list|()
 block|{}
 end_function
-
-begin_comment
-comment|// expected-warning{{redeclaration of 'redecl7' should not add 'dllimport' attribute}}
-end_comment
 
 begin_comment
 comment|// External linkage is required.

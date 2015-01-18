@@ -97,7 +97,10 @@ name|LCK_ByCopy
 block|,
 comment|///< Capturing by copy (a.k.a., by value)
 name|LCK_ByRef
+block|,
 comment|///< Capturing by reference
+name|LCK_VLAType
+comment|///< Capturing variable-length array type
 block|}
 enum|;
 block|}

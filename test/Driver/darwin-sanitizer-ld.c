@@ -28,6 +28,14 @@ comment|// CHECK-ASAN: libclang_rt.asan_osx_dynamic.dylib"
 end_comment
 
 begin_comment
+comment|// CHECK-ASAN: "-rpath" "@executable_path"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN: "-rpath" "{{.*}}lib{{.*}}darwin"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -no-canonical-prefixes -### -target x86_64-darwin \
 end_comment
 
@@ -52,6 +60,14 @@ comment|// CHECK-ASAN-IOSSIM: libclang_rt.asan_iossim_dynamic.dylib"
 end_comment
 
 begin_comment
+comment|// CHECK-ASAN-IOSSIM: "-rpath" "@executable_path"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-IOSSIM: "-rpath" "{{.*}}lib{{.*}}darwin"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -no-canonical-prefixes -### -target x86_64-darwin \
 end_comment
 
@@ -72,7 +88,15 @@ comment|// CHECK-DYN-ASAN: "-dylib"
 end_comment
 
 begin_comment
-comment|// CHECK-DYN-ASAN: libclang_rt.asan_osx_dynamic.dylib
+comment|// CHECK-DYN-ASAN: libclang_rt.asan_osx_dynamic.dylib"
+end_comment
+
+begin_comment
+comment|// CHECK-DYN-ASAN: "-rpath" "@executable_path"
+end_comment
+
+begin_comment
+comment|// CHECK-DYN-ASAN: "-rpath" "{{.*}}lib{{.*}}darwin"
 end_comment
 
 begin_comment

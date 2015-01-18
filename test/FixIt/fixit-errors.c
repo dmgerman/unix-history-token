@@ -12,7 +12,7 @@ comment|// RUN: not %clang_cc1 -pedantic -fixit -x c %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -pedantic -Werror -x c %t
+comment|// RUN: %clang_cc1 -pedantic -Werror -Wno-invalid-noreturn -x c %t
 end_comment
 
 begin_comment
@@ -80,6 +80,40 @@ expr_stmt|;
 comment|// expected-error {{base of member reference is a function; perhaps you meant to call it with no arguments?}}
 block|}
 end_function
+
+begin_expr_stmt
+name|void
+name|noreturn_1
+argument_list|()
+specifier|_Noreturn
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// expected-error {{must precede function declarator}}
+end_comment
+
+begin_function
+name|void
+name|noreturn_1
+parameter_list|()
+block|{
+return|return;
+comment|// expected-warning {{should not return}}
+block|}
+end_function
+
+begin_expr_stmt
+name|void
+name|noreturn_2
+argument_list|()
+specifier|_Noreturn
+block|{
+comment|// expected-error {{must precede function declarator}}
+return|return;
+comment|// expected-warning {{should not return}}
+block|}
+end_expr_stmt
 
 end_unit
 

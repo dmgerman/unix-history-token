@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -E %s -o - | FileCheck --check-prefix=CHECK-PED-NONE %s
+comment|// RUN: %clang_cc1 -std=c99 -E %s -o - | FileCheck --check-prefix=CHECK-PED-NONE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -pedantic-errors -E %s -o - | FileCheck --check-prefix=CHECK-PED-ERR %s
+comment|// RUN: %clang_cc1 -std=c99 -pedantic-errors -E %s -o - | FileCheck --check-prefix=CHECK-PED-ERR %s
 end_comment
 
 begin_comment
@@ -176,6 +176,47 @@ end_else
 begin_function_decl
 name|int
 name|no_c_alignas
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// CHECK-PED-NONE: has_c_alignof
+end_comment
+
+begin_comment
+comment|// CHECK-PED-ERR: no_c_alignof
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_extension
+argument_list|(
+name|c_alignof
+argument_list|)
+end_if
+
+begin_function_decl
+name|int
+name|has_c_alignof
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|int
+name|no_c_alignof
 parameter_list|()
 function_decl|;
 end_function_decl

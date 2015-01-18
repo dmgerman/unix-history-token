@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsanitize=alignment,null,object-size,shift,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s
+comment|// RUN: %clang_cc1 -fsanitize=alignment,null,object-size,shift,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-COMMON --check-prefix=CHECK-UBSAN
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsanitize-undefined-trap-on-error -fsanitize=alignment,null,object-size,shift,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-TRAP
+comment|// RUN: %clang_cc1 -fsanitize-undefined-trap-on-error -fsanitize=alignment,null,object-size,shift,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-COMMON --check-prefix=CHECK-TRAP
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsanitize=null -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-NULL
+comment|// RUN: %clang_cc1 -fsanitize=null -fsanitize-recover=null -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-NULL
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN: %clang_cc1 -fsanitize=signed-integer-overflow -emit-llvm %s -o -
 end_comment
 
 begin_comment
-comment|// CHECK: @[[INT:.*]] = private unnamed_addr constant { i16, i16, [6 x i8] } { i16 0, i16 11, [6 x i8] c"'int'\00" }
+comment|// CHECK-UBSAN: @[[INT:.*]] = private unnamed_addr constant { i16, i16, [6 x i8] } { i16 0, i16 11, [6 x i8] c"'int'\00" }
 end_comment
 
 begin_comment
@@ -24,43 +24,43 @@ comment|// FIXME: When we only emit each type once, use [[INT]] more below.
 end_comment
 
 begin_comment
-comment|// CHECK: @[[LINE_100:.*]] = private unnamed_addr global {{.*}}, i32 100, i32 5 {{.*}} @[[INT]], i64 4, i8 1
+comment|// CHECK-UBSAN: @[[LINE_100:.*]] = private unnamed_addr global {{.*}}, i32 100, i32 5 {{.*}} @[[INT]], i64 4, i8 1
 end_comment
 
 begin_comment
-comment|// CHECK: @[[LINE_200:.*]] = {{.*}}, i32 200, i32 10 {{.*}}, i64 4, i8 0
+comment|// CHECK-UBSAN: @[[LINE_200:.*]] = {{.*}}, i32 200, i32 10 {{.*}}, i64 4, i8 0
 end_comment
 
 begin_comment
-comment|// CHECK: @[[LINE_300:.*]] = {{.*}}, i32 300, i32 12 {{.*}} @{{.*}}, {{.*}} @{{.*}}
+comment|// CHECK-UBSAN: @[[LINE_300:.*]] = {{.*}}, i32 300, i32 12 {{.*}} @{{.*}}, {{.*}} @{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK: @[[LINE_400:.*]] = {{.*}}, i32 400, i32 12 {{.*}} @{{.*}}, {{.*}} @{{.*}}
+comment|// CHECK-UBSAN: @[[LINE_400:.*]] = {{.*}}, i32 400, i32 12 {{.*}} @{{.*}}, {{.*}} @{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK: @[[LINE_500:.*]] = {{.*}}, i32 500, i32 10 {{.*}} @{{.*}}, i64 4, i8 0 }
+comment|// CHECK-UBSAN: @[[LINE_500:.*]] = {{.*}}, i32 500, i32 10 {{.*}} @{{.*}}, i64 4, i8 0 }
 end_comment
 
 begin_comment
-comment|// CHECK: @[[LINE_600:.*]] = {{.*}}, i32 600, i32 3 {{.*}} @{{.*}}, i64 4, i8 1 }
+comment|// CHECK-UBSAN: @[[LINE_600:.*]] = {{.*}}, i32 600, i32 3 {{.*}} @{{.*}}, i64 4, i8 1 }
 end_comment
 
 begin_comment
-comment|// CHECK: @[[STRUCT_S:.*]] = private unnamed_addr constant { i16, i16, [11 x i8] } { i16 -1, i16 0, [11 x i8] c"'struct S'\00" }
+comment|// CHECK-UBSAN: @[[STRUCT_S:.*]] = private unnamed_addr constant { i16, i16, [11 x i8] } { i16 -1, i16 0, [11 x i8] c"'struct S'\00" }
 end_comment
 
 begin_comment
-comment|// CHECK: @[[LINE_700:.*]] = {{.*}}, i32 700, i32 14 {{.*}} @[[STRUCT_S]], i64 4, i8 3 }
+comment|// CHECK-UBSAN: @[[LINE_700:.*]] = {{.*}}, i32 700, i32 14 {{.*}} @[[STRUCT_S]], i64 4, i8 3 }
 end_comment
 
 begin_comment
-comment|// CHECK: @[[LINE_800:.*]] = {{.*}}, i32 800, i32 12 {{.*}} @{{.*}} }
+comment|// CHECK-UBSAN: @[[LINE_800:.*]] = {{.*}}, i32 800, i32 12 {{.*}} @{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK: @[[LINE_900:.*]] = {{.*}}, i32 900, i32 11 {{.*}} @{{.*}} }
+comment|// CHECK-UBSAN: @[[LINE_900:.*]] = {{.*}}, i32 900, i32 11 {{.*}} @{{.*}} }
 end_comment
 
 begin_comment
@@ -72,15 +72,11 @@ comment|// PR6805
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: @foo
+comment|// CHECK-COMMON-LABEL: @foo
 end_comment
 
 begin_comment
 comment|// CHECK-NULL-LABEL: @foo
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @foo
 end_comment
 
 begin_function
@@ -96,28 +92,19 @@ decl_stmt|;
 block|}
 name|u
 union|;
-comment|// CHECK:      %[[CHECK0:.*]] = icmp ne {{.*}}* %[[PTR:.*]], null
-comment|// CHECK-TRAP: %[[CHECK0:.*]] = icmp ne {{.*}}* %[[PTR:.*]], null
-comment|// CHECK:      %[[I8PTR:.*]] = bitcast i32* %[[PTR]] to i8*
-comment|// CHECK-NEXT: %[[SIZE:.*]] = call i64 @llvm.objectsize.i64.p0i8(i8* %[[I8PTR]], i1 false)
-comment|// CHECK-NEXT: %[[CHECK1:.*]] = icmp uge i64 %[[SIZE]], 4
-comment|// CHECK-NEXT: %[[CHECK01:.*]] = and i1 %[[CHECK0]], %[[CHECK1]]
-comment|// CHECK-TRAP:      %[[I8PTR:.*]] = bitcast i32* %[[PTR]] to i8*
-comment|// CHECK-TRAP-NEXT: %[[SIZE:.*]] = call i64 @llvm.objectsize.i64.p0i8(i8* %[[I8PTR]], i1 false)
-comment|// CHECK-TRAP-NEXT: %[[CHECK1:.*]] = icmp uge i64 %[[SIZE]], 4
-comment|// CHECK-TRAP-NEXT: %[[CHECK01:.*]] = and i1 %[[CHECK0]], %[[CHECK1]]
-comment|// CHECK:      %[[PTRTOINT:.*]] = ptrtoint {{.*}}* %[[PTR]] to i64
-comment|// CHECK-NEXT: %[[MISALIGN:.*]] = and i64 %[[PTRTOINT]], 3
-comment|// CHECK-NEXT: %[[CHECK2:.*]] = icmp eq i64 %[[MISALIGN]], 0
-comment|// CHECK-TRAP:      %[[PTRTOINT:.*]] = ptrtoint {{.*}}* %[[PTR]] to i64
-comment|// CHECK-TRAP-NEXT: %[[MISALIGN:.*]] = and i64 %[[PTRTOINT]], 3
-comment|// CHECK-TRAP-NEXT: %[[CHECK2:.*]] = icmp eq i64 %[[MISALIGN]], 0
-comment|// CHECK:      %[[OK:.*]] = and i1 %[[CHECK01]], %[[CHECK2]]
-comment|// CHECK-NEXT: br i1 %[[OK]], {{.*}} !prof ![[WEIGHT_MD:.*]], !nosanitize
-comment|// CHECK-TRAP:      %[[OK:.*]] = and i1 %[[CHECK01]], %[[CHECK2]]
-comment|// CHECK-TRAP-NEXT: br i1 %[[OK]], {{.*}}
-comment|// CHECK:      %[[ARG:.*]] = ptrtoint {{.*}} %[[PTR]] to i64
-comment|// CHECK-NEXT: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_100]] to i8*), i64 %[[ARG]])
+comment|// CHECK-COMMON:      %[[CHECK0:.*]] = icmp ne {{.*}}* %[[PTR:.*]], null
+comment|// CHECK-COMMON:      %[[I8PTR:.*]] = bitcast i32* %[[PTR]] to i8*
+comment|// CHECK-COMMON-NEXT: %[[SIZE:.*]] = call i64 @llvm.objectsize.i64.p0i8(i8* %[[I8PTR]], i1 false)
+comment|// CHECK-COMMON-NEXT: %[[CHECK1:.*]] = icmp uge i64 %[[SIZE]], 4
+comment|// CHECK-COMMON:      %[[PTRTOINT:.*]] = ptrtoint {{.*}}* %[[PTR]] to i64
+comment|// CHECK-COMMON-NEXT: %[[MISALIGN:.*]] = and i64 %[[PTRTOINT]], 3
+comment|// CHECK-COMMON-NEXT: %[[CHECK2:.*]] = icmp eq i64 %[[MISALIGN]], 0
+comment|// CHECK-COMMON:       %[[CHECK01:.*]] = and i1 %[[CHECK0]], %[[CHECK1]]
+comment|// CHECK-COMMON-NEXT:  %[[OK:.*]] = and i1 %[[CHECK01]], %[[CHECK2]]
+comment|// CHECK-UBSAN: br i1 %[[OK]], {{.*}} !prof ![[WEIGHT_MD:.*]], !nosanitize
+comment|// CHECK-TRAP:  br i1 %[[OK]], {{.*}}
+comment|// CHECK-UBSAN:      %[[ARG:.*]] = ptrtoint {{.*}} %[[PTR]] to i64
+comment|// CHECK-UBSAN-NEXT: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_100]] to i8*), i64 %[[ARG]])
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW:#[0-9]+]]
 comment|// CHECK-TRAP-NEXT: unreachable
 comment|// With -fsanitize=null, only perform the null check.
@@ -137,11 +124,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @bar
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @bar
+comment|// CHECK-COMMON-LABEL: @bar
 end_comment
 
 begin_function
@@ -153,18 +136,13 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-comment|// CHECK:      %[[SIZE:.*]] = call i64 @llvm.objectsize.i64
-comment|// CHECK-NEXT: icmp uge i64 %[[SIZE]], 4
-comment|// CHECK-TRAP:      %[[SIZE:.*]] = call i64 @llvm.objectsize.i64
-comment|// CHECK-TRAP-NEXT: icmp uge i64 %[[SIZE]], 4
-comment|// CHECK:      %[[PTRINT:.*]] = ptrtoint
-comment|// CHECK-NEXT: %[[MISALIGN:.*]] = and i64 %[[PTRINT]], 3
-comment|// CHECK-NEXT: icmp eq i64 %[[MISALIGN]], 0
-comment|// CHECK-TRAP:      %[[PTRINT:.*]] = ptrtoint
-comment|// CHECK-TRAP-NEXT: %[[MISALIGN:.*]] = and i64 %[[PTRINT]], 3
-comment|// CHECK-TRAP-NEXT: icmp eq i64 %[[MISALIGN]], 0
-comment|// CHECK:      %[[ARG:.*]] = ptrtoint
-comment|// CHECK-NEXT: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_200]] to i8*), i64 %[[ARG]])
+comment|// CHECK-COMMON:      %[[SIZE:.*]] = call i64 @llvm.objectsize.i64
+comment|// CHECK-COMMON-NEXT: icmp uge i64 %[[SIZE]], 4
+comment|// CHECK-COMMON:      %[[PTRINT:.*]] = ptrtoint
+comment|// CHECK-COMMON-NEXT: %[[MISALIGN:.*]] = and i64 %[[PTRINT]], 3
+comment|// CHECK-COMMON-NEXT: icmp eq i64 %[[MISALIGN]], 0
+comment|// CHECK-UBSAN:      %[[ARG:.*]] = ptrtoint
+comment|// CHECK-UBSAN-NEXT: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_200]] to i8*), i64 %[[ARG]])
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 line|#
@@ -178,7 +156,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @addr_space
+comment|// CHECK-UBSAN-LABEL: @addr_space
 end_comment
 
 begin_decl_stmt
@@ -199,7 +177,7 @@ operator|*
 name|a
 argument_list|)
 block|{
-comment|// CHECK-NOT: __ubsan
+comment|// CHECK-UBSAN-NOT: __ubsan
 return|return
 operator|*
 name|a
@@ -208,11 +186,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// CHECK-LABEL: @lsh_overflow
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @lsh_overflow
+comment|// CHECK-COMMON-LABEL: @lsh_overflow
 end_comment
 
 begin_function
@@ -226,33 +200,24 @@ name|int
 name|b
 parameter_list|)
 block|{
-comment|// CHECK:      %[[INBOUNDS:.*]] = icmp ule i32 %[[RHS:.*]], 31
-comment|// CHECK-NEXT: br i1 %[[INBOUNDS]], label %[[CHECKBB:.*]], label %[[CONTBB:.*]]
-comment|// CHECK-TRAP:      %[[INBOUNDS:.*]] = icmp ule i32 %[[RHS:.*]], 31
-comment|// CHECK-TRAP-NEXT: br i1 %[[INBOUNDS]], label %[[CHECKBB:.*]], label %[[CONTBB:.*]]
-comment|// CHECK:      %[[SHIFTED_OUT_WIDTH:.*]] = sub nuw nsw i32 31, %[[RHS]]
-comment|// CHECK-NEXT: %[[SHIFTED_OUT:.*]] = lshr i32 %[[LHS:.*]], %[[SHIFTED_OUT_WIDTH]]
-comment|// CHECK-NEXT: %[[NO_OVERFLOW:.*]] = icmp eq i32 %[[SHIFTED_OUT]], 0
-comment|// CHECK-NEXT: br label %[[CONTBB]]
-comment|// CHECK-TRAP:      %[[SHIFTED_OUT_WIDTH:.*]] = sub nuw nsw i32 31, %[[RHS]]
-comment|// CHECK-TRAP-NEXT: %[[SHIFTED_OUT:.*]] = lshr i32 %[[LHS:.*]], %[[SHIFTED_OUT_WIDTH]]
-comment|// CHECK-TRAP-NEXT: %[[NO_OVERFLOW:.*]] = icmp eq i32 %[[SHIFTED_OUT]], 0
-comment|// CHECK-TRAP-NEXT: br label %[[CONTBB]]
-comment|// CHECK:      %[[VALID:.*]] = phi i1 [ %[[INBOUNDS]], {{.*}} ], [ %[[NO_OVERFLOW]], %[[CHECKBB]] ]
-comment|// CHECK-NEXT: br i1 %[[VALID]], {{.*}} !prof ![[WEIGHT_MD]]
-comment|// CHECK-TRAP:      %[[VALID:.*]] = phi i1 [ %[[INBOUNDS]], {{.*}} ], [ %[[NO_OVERFLOW]], %[[CHECKBB]] ]
-comment|// CHECK-TRAP-NEXT: br i1 %[[VALID]]
-comment|// CHECK:      %[[ARG1:.*]] = zext
-comment|// CHECK-NEXT: %[[ARG2:.*]] = zext
-comment|// CHECK-NEXT: call void @__ubsan_handle_shift_out_of_bounds(i8* bitcast ({{.*}} @[[LINE_300]] to i8*), i64 %[[ARG1]], i64 %[[ARG2]])
-comment|// CHECK-NOT:  call void @__ubsan_handle_shift_out_of_bounds
+comment|// CHECK-COMMON:      %[[INBOUNDS:.*]] = icmp ule i32 %[[RHS:.*]], 31
+comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]], label %[[CHECKBB:.*]], label %[[CONTBB:.*]]
+comment|// CHECK-COMMON:      %[[SHIFTED_OUT_WIDTH:.*]] = sub nuw nsw i32 31, %[[RHS]]
+comment|// CHECK-COMMON-NEXT: %[[SHIFTED_OUT:.*]] = lshr i32 %[[LHS:.*]], %[[SHIFTED_OUT_WIDTH]]
+comment|// CHECK-COMMON-NEXT: %[[NO_OVERFLOW:.*]] = icmp eq i32 %[[SHIFTED_OUT]], 0
+comment|// CHECK-COMMON-NEXT: br label %[[CONTBB]]
+comment|// CHECK-COMMON:      %[[VALID:.*]] = phi i1 [ %[[INBOUNDS]], {{.*}} ], [ %[[NO_OVERFLOW]], %[[CHECKBB]] ]
+comment|// CHECK-UBSAN: br i1 %[[VALID]], {{.*}} !prof ![[WEIGHT_MD]]
+comment|// CHECK-TRAP:  br i1 %[[VALID]]
+comment|// CHECK-UBSAN:      %[[ARG1:.*]] = zext
+comment|// CHECK-UBSAN-NEXT: %[[ARG2:.*]] = zext
+comment|// CHECK-UBSAN-NEXT: call void @__ubsan_handle_shift_out_of_bounds(i8* bitcast ({{.*}} @[[LINE_300]] to i8*), i64 %[[ARG1]], i64 %[[ARG2]])
+comment|// CHECK-UBSAN-NOT:  call void @__ubsan_handle_shift_out_of_bounds
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP:      unreachable
 comment|// CHECK-TRAP-NOT:  call void @llvm.trap()
-comment|// CHECK:      %[[RET:.*]] = shl i32 %[[LHS]], %[[RHS]]
-comment|// CHECK-NEXT: ret i32 %[[RET]]
-comment|// CHECK-TRAP:      %[[RET:.*]] = shl i32 %[[LHS]], %[[RHS]]
-comment|// CHECK-TRAP-NEXT: ret i32 %[[RET]]
+comment|// CHECK-COMMON:      %[[RET:.*]] = shl i32 %[[LHS]], %[[RHS]]
+comment|// CHECK-COMMON-NEXT: ret i32 %[[RET]]
 line|#
 directive|line
 number|300
@@ -265,11 +230,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @rsh_inbounds
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @rsh_inbounds
+comment|// CHECK-COMMON-LABEL: @rsh_inbounds
 end_comment
 
 begin_function
@@ -283,19 +244,15 @@ name|int
 name|b
 parameter_list|)
 block|{
-comment|// CHECK:      %[[INBOUNDS:.*]] = icmp ule i32 %[[RHS:.*]], 31
-comment|// CHECK:      br i1 %[[INBOUNDS]]
-comment|// CHECK-TRAP: %[[INBOUNDS:.*]] = icmp ule i32 %[[RHS:.*]], 31
-comment|// CHECK-TRAP: br i1 %[[INBOUNDS]]
-comment|// CHECK:      %[[ARG1:.*]] = zext
-comment|// CHECK-NEXT: %[[ARG2:.*]] = zext
-comment|// CHECK-NEXT: call void @__ubsan_handle_shift_out_of_bounds(i8* bitcast ({{.*}} @[[LINE_400]] to i8*), i64 %[[ARG1]], i64 %[[ARG2]])
+comment|// CHECK-COMMON:      %[[INBOUNDS:.*]] = icmp ule i32 %[[RHS:.*]], 31
+comment|// CHECK-COMMON:      br i1 %[[INBOUNDS]]
+comment|// CHECK-UBSAN:      %[[ARG1:.*]] = zext
+comment|// CHECK-UBSAN-NEXT: %[[ARG2:.*]] = zext
+comment|// CHECK-UBSAN-NEXT: call void @__ubsan_handle_shift_out_of_bounds(i8* bitcast ({{.*}} @[[LINE_400]] to i8*), i64 %[[ARG1]], i64 %[[ARG2]])
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
-comment|// CHECK:      %[[RET:.*]] = ashr i32 %[[LHS]], %[[RHS]]
-comment|// CHECK-NEXT: ret i32 %[[RET]]
-comment|// CHECK-TRAP:      %[[RET:.*]] = ashr i32 %[[LHS]], %[[RHS]]
-comment|// CHECK-TRAP-NEXT: ret i32 %[[RET]]
+comment|// CHECK-COMMON:      %[[RET:.*]] = ashr i32 %[[LHS]], %[[RHS]]
+comment|// CHECK-COMMON-NEXT: ret i32 %[[RET]]
 line|#
 directive|line
 number|400
@@ -308,11 +265,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @load
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @load
+comment|// CHECK-COMMON-LABEL: @load
 end_comment
 
 begin_function
@@ -324,7 +277,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_500]] to i8*), i64 %{{.*}})
+comment|// CHECK-UBSAN: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_500]] to i8*), i64 %{{.*}})
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 line|#
@@ -338,11 +291,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @store
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @store
+comment|// CHECK-COMMON-LABEL: @store
 end_comment
 
 begin_function
@@ -357,7 +306,7 @@ name|int
 name|q
 parameter_list|)
 block|{
-comment|// CHECK: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_600]] to i8*), i64 %{{.*}})
+comment|// CHECK-UBSAN: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_600]] to i8*), i64 %{{.*}})
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 line|#
@@ -383,11 +332,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK-LABEL: @member_access
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @member_access
+comment|// CHECK-COMMON-LABEL: @member_access
 end_comment
 
 begin_function
@@ -401,7 +346,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_700]] to i8*), i64 %{{.*}})
+comment|// CHECK-UBSAN: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_700]] to i8*), i64 %{{.*}})
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 line|#
@@ -417,11 +362,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @signed_overflow
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @signed_overflow
+comment|// CHECK-COMMON-LABEL: @signed_overflow
 end_comment
 
 begin_function
@@ -435,9 +376,9 @@ name|int
 name|b
 parameter_list|)
 block|{
-comment|// CHECK:      %[[ARG1:.*]] = zext
-comment|// CHECK-NEXT: %[[ARG2:.*]] = zext
-comment|// CHECK-NEXT: call void @__ubsan_handle_add_overflow(i8* bitcast ({{.*}} @[[LINE_800]] to i8*), i64 %[[ARG1]], i64 %[[ARG2]])
+comment|// CHECK-UBSAN:      %[[ARG1:.*]] = zext
+comment|// CHECK-UBSAN-NEXT: %[[ARG2:.*]] = zext
+comment|// CHECK-UBSAN-NEXT: call void @__ubsan_handle_add_overflow(i8* bitcast ({{.*}} @[[LINE_800]] to i8*), i64 %[[ARG1]], i64 %[[ARG2]])
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 line|#
@@ -452,11 +393,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @no_return
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @no_return
+comment|// CHECK-COMMON-LABEL: @no_return
 end_comment
 
 begin_function
@@ -467,17 +404,14 @@ block|{
 comment|// Reaching the end of a noreturn function is fine in C.
 comment|// FIXME: If the user explicitly requests -fsanitize=return, we should catch
 comment|//        that here even though it's not undefined behavior.
-comment|// CHECK-NOT: call
-comment|// CHECK-NOT: unreachable
-comment|// CHECK: ret i32
-comment|// CHECK-TRAP-NOT: call
-comment|// CHECK-TRAP-NOT: unreachable
-comment|// CHECK-TRAP: ret i32
+comment|// CHECK-COMMON-NOT: call
+comment|// CHECK-COMMON-NOT: unreachable
+comment|// CHECK-COMMON: ret i32
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @vla_bound
+comment|// CHECK-UBSAN-LABEL: @vla_bound
 end_comment
 
 begin_function
@@ -488,10 +422,10 @@ name|int
 name|n
 parameter_list|)
 block|{
-comment|// CHECK:      icmp sgt i32 %[[PARAM:.*]], 0
+comment|// CHECK-UBSAN:      icmp sgt i32 %[[PARAM:.*]], 0
 comment|//
-comment|// CHECK:      %[[ARG:.*]] = zext i32 %[[PARAM]] to i64
-comment|// CHECK-NEXT: call void @__ubsan_handle_vla_bound_not_positive(i8* bitcast ({{.*}} @[[LINE_900]] to i8*), i64 %[[ARG]])
+comment|// CHECK-UBSAN:      %[[ARG:.*]] = zext i32 %[[PARAM]] to i64
+comment|// CHECK-UBSAN-NEXT: call void @__ubsan_handle_vla_bound_not_positive(i8* bitcast ({{.*}} @[[LINE_900]] to i8*), i64 %[[ARG]])
 line|#
 directive|line
 number|900
@@ -507,7 +441,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @int_float_no_overflow
+comment|// CHECK-UBSAN-LABEL: @int_float_no_overflow
 end_comment
 
 begin_function
@@ -518,7 +452,7 @@ name|__int128
 name|n
 parameter_list|)
 block|{
-comment|// CHECK-NOT: call void @__ubsan_handle
+comment|// CHECK-UBSAN-NOT: call void @__ubsan_handle
 return|return
 name|n
 return|;
@@ -526,11 +460,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @int_float_overflow
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @int_float_overflow
+comment|// CHECK-COMMON-LABEL: @int_float_overflow
 end_comment
 
 begin_function
@@ -543,10 +473,9 @@ name|n
 parameter_list|)
 block|{
 comment|// This is 2**104. FLT_MAX is 2**128 - 2**104.
-comment|// CHECK: icmp ule i128 %{{.*}}, -20282409603651670423947251286016
-comment|// CHECK: call void @__ubsan_handle_float_cast_overflow(
-comment|// CHECK-TRAP: %[[INBOUNDS:.*]] = icmp ule i128 %{{.*}}, -20282409603651670423947251286016
-comment|// CHECK-TRAP-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = icmp ule i128 %{{.*}}, -20282409603651670423947251286016
+comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 return|return
@@ -556,11 +485,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @int_fp16_overflow
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @int_fp16_overflow
+comment|// CHECK-COMMON-LABEL: @int_fp16_overflow
 end_comment
 
 begin_function
@@ -575,14 +500,11 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK: %[[GE:.*]] = icmp sge i32 %{{.*}}, -65504
-comment|// CHECK: %[[LE:.*]] = icmp sle i32 %{{.*}}, 65504
-comment|// CHECK: and i1 %[[GE]], %[[LE]]
-comment|// CHECK: call void @__ubsan_handle_float_cast_overflow(
-comment|// CHECK-TRAP: %[[GE:.*]] = icmp sge i32 %{{.*}}, -65504
-comment|// CHECK-TRAP: %[[LE:.*]] = icmp sle i32 %{{.*}}, 65504
-comment|// CHECK-TRAP: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
-comment|// CHECK-TRAP-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-COMMON: %[[GE:.*]] = icmp sge i32 %{{.*}}, -65504
+comment|// CHECK-COMMON: %[[LE:.*]] = icmp sle i32 %{{.*}}, 65504
+comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
+comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 operator|*
@@ -594,11 +516,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @float_int_overflow
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @float_int_overflow
+comment|// CHECK-COMMON-LABEL: @float_int_overflow
 end_comment
 
 begin_function
@@ -609,16 +527,13 @@ name|float
 name|f
 parameter_list|)
 block|{
-comment|// CHECK: %[[GE:.*]] = fcmp ogt float %[[F:.*]], 0xC1E0000020000000
-comment|// CHECK: %[[LE:.*]] = fcmp olt float %[[F]], 0x41E0000000000000
-comment|// CHECK: and i1 %[[GE]], %[[LE]]
-comment|// CHECK: %[[CAST:.*]] = bitcast float %[[F]] to i32
-comment|// CHECK: %[[ARG:.*]] = zext i32 %[[CAST]] to i64
-comment|// CHECK: call void @__ubsan_handle_float_cast_overflow({{.*}}, i64 %[[ARG]]
-comment|// CHECK-TRAP: %[[GE:.*]] = fcmp ogt float %[[F:.*]], 0xC1E0000020000000
-comment|// CHECK-TRAP: %[[LE:.*]] = fcmp olt float %[[F]], 0x41E0000000000000
-comment|// CHECK-TRAP: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
-comment|// CHECK-TRAP-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-COMMON: %[[GE:.*]] = fcmp ogt float %[[F:.*]], 0xC1E0000020000000
+comment|// CHECK-COMMON: %[[LE:.*]] = fcmp olt float %[[F]], 0x41E0000000000000
+comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
+comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-UBSAN: %[[CAST:.*]] = bitcast float %[[F]] to i32
+comment|// CHECK-UBSAN: %[[ARG:.*]] = zext i32 %[[CAST]] to i64
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow({{.*}}, i64 %[[ARG]]
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 return|return
@@ -628,11 +543,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @long_double_int_overflow
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @long_double_int_overflow
+comment|// CHECK-COMMON-LABEL: @long_double_int_overflow
 end_comment
 
 begin_function
@@ -644,17 +555,14 @@ name|double
 name|ld
 parameter_list|)
 block|{
-comment|// CHECK: alloca x86_fp80
-comment|// CHECK: %[[GE:.*]] = fcmp ogt x86_fp80 %[[F:.*]], 0xKC01E8000000100000000
-comment|// CHECK: %[[LE:.*]] = fcmp olt x86_fp80 %[[F]], 0xK401E8000000000000000
-comment|// CHECK: and i1 %[[GE]], %[[LE]]
-comment|// CHECK: store x86_fp80 %[[F]], x86_fp80* %[[ALLOCA:.*]], !nosanitize
-comment|// CHECK: %[[ARG:.*]] = ptrtoint x86_fp80* %[[ALLOCA]] to i64
-comment|// CHECK: call void @__ubsan_handle_float_cast_overflow({{.*}}, i64 %[[ARG]]
-comment|// CHECK-TRAP: %[[GE:.*]] = fcmp ogt x86_fp80 %[[F:.*]], 0xKC01E800000010000000
-comment|// CHECK-TRAP: %[[LE:.*]] = fcmp olt x86_fp80 %[[F]], 0xK401E800000000000000
-comment|// CHECK-TRAP: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
-comment|// CHECK-TRAP-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-UBSAN: alloca x86_fp80
+comment|// CHECK-COMMON: %[[GE:.*]] = fcmp ogt x86_fp80 %[[F:.*]], 0xKC01E800000010000000
+comment|// CHECK-COMMON: %[[LE:.*]] = fcmp olt x86_fp80 %[[F]], 0xK401E800000000000000
+comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
+comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-UBSAN: store x86_fp80 %[[F]], x86_fp80* %[[ALLOCA:.*]], !nosanitize
+comment|// CHECK-UBSAN: %[[ARG:.*]] = ptrtoint x86_fp80* %[[ALLOCA]] to i64
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow({{.*}}, i64 %[[ARG]]
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 return|return
@@ -664,11 +572,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @float_uint_overflow
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @float_uint_overflow
+comment|// CHECK-COMMON-LABEL: @float_uint_overflow
 end_comment
 
 begin_function
@@ -679,14 +583,11 @@ name|float
 name|f
 parameter_list|)
 block|{
-comment|// CHECK: %[[GE:.*]] = fcmp ogt float %[[F:.*]], -1.{{0*}}e+00
-comment|// CHECK: %[[LE:.*]] = fcmp olt float %[[F]], 0x41F0000000000000
-comment|// CHECK: and i1 %[[GE]], %[[LE]]
-comment|// CHECK: call void @__ubsan_handle_float_cast_overflow(
-comment|// CHECK-TRAP: %[[GE:.*]] = fcmp ogt float %[[F:.*]], -1.{{0*}}e+00
-comment|// CHECK-TRAP: %[[LE:.*]] = fcmp olt float %[[F]], 0x41F0000000000000
-comment|// CHECK-TRAP: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
-comment|// CHECK-TRAP-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-COMMON: %[[GE:.*]] = fcmp ogt float %[[F:.*]], -1.{{0*}}e+00
+comment|// CHECK-COMMON: %[[LE:.*]] = fcmp olt float %[[F]], 0x41F0000000000000
+comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
+comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 return|return
@@ -696,11 +597,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @fp16_char_overflow
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @fp16_char_overflow
+comment|// CHECK-COMMON-LABEL: @fp16_char_overflow
 end_comment
 
 begin_function
@@ -713,14 +610,11 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK: %[[GE:.*]] = fcmp ogt float %[[F:.*]], -1.29{{0*}}e+02
-comment|// CHECK: %[[LE:.*]] = fcmp olt float %[[F]], 1.28{{0*}}e+02
-comment|// CHECK: and i1 %[[GE]], %[[LE]]
-comment|// CHECK: call void @__ubsan_handle_float_cast_overflow(
-comment|// CHECK-TRAP: %[[GE:.*]] = fcmp ogt float %[[F:.*]], -1.29{{0*}}e+02
-comment|// CHECK-TRAP: %[[LE:.*]] = fcmp olt float %[[F]], 1.28{{0*}}e+02
-comment|// CHECK-TRAP: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
-comment|// CHECK-TRAP-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-COMMON: %[[GE:.*]] = fcmp ogt float %[[F:.*]], -1.29{{0*}}e+02
+comment|// CHECK-COMMON: %[[LE:.*]] = fcmp olt float %[[F]], 1.28{{0*}}e+02
+comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
+comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 return|return
@@ -731,11 +625,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @float_float_overflow
-end_comment
-
-begin_comment
-comment|// CHECK-TRAP-LABEL: @float_float_overflow
+comment|// CHECK-COMMON-LABEL: @float_float_overflow
 end_comment
 
 begin_function
@@ -746,17 +636,13 @@ name|double
 name|f
 parameter_list|)
 block|{
-comment|// CHECK: %[[F:.*]] = call double @llvm.fabs.f64(
-comment|// CHECK: %[[GE:.*]] = fcmp ogt double %[[F]], 0x47EFFFFFE0000000
-comment|// CHECK: %[[LE:.*]] = fcmp olt double %[[F]], 0x7FF0000000000000
-comment|// CHECK: and i1 %[[GE]], %[[LE]]
-comment|// CHECK: call void @__ubsan_handle_float_cast_overflow(
-comment|// CHECK-TRAP: %[[F:.*]] = call double @llvm.fabs.f64(
-comment|// CHECK-TRAP: %[[GE:.*]] = fcmp ogt double %[[F]], 0x47EFFFFFE0000000
-comment|// CHECK-TRAP: %[[LE:.*]] = fcmp olt double %[[F]], 0x7FF0000000000000
-comment|// CHECK-TRAP: %[[OUTOFBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
-comment|// CHECK-TRAP: %[[INBOUNDS:.*]] = xor i1 %[[OUTOFBOUNDS]], true
-comment|// CHECK-TRAP-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-COMMON: %[[F:.*]] = call double @llvm.fabs.f64(
+comment|// CHECK-COMMON: %[[GE:.*]] = fcmp ogt double %[[F]], 0x47EFFFFFE0000000
+comment|// CHECK-COMMON: %[[LE:.*]] = fcmp olt double %[[F]], 0x7FF0000000000000
+comment|// CHECK-COMMON: %[[OUTOFBOUNDS:.*]] = and i1 %[[GE]], %[[LE]]
+comment|// CHECK-COMMON: %[[INBOUNDS:.*]] = xor i1 %[[OUTOFBOUNDS]], true
+comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]]
+comment|// CHECK-UBSAN: call void @__ubsan_handle_float_cast_overflow(
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 return|return
@@ -766,7 +652,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL:          @int_divide_overflow
+comment|// CHECK-COMMON-LABEL:   @int_divide_overflow
 end_comment
 
 begin_comment
@@ -784,23 +670,17 @@ name|int
 name|b
 parameter_list|)
 block|{
-comment|// CHECK:               %[[ZERO:.*]] = icmp ne i32 %[[B:.*]], 0
+comment|// CHECK-COMMON:         %[[ZERO:.*]] = icmp ne i32 %[[B:.*]], 0
 comment|// CHECK-OVERFLOW-NOT:  icmp ne i32 %{{.*}}, 0
-comment|// CHECK-TRAP:          %[[ZERO:.*]] = icmp ne i32 %[[B:.*]], 0
-comment|// CHECK:               %[[AOK:.*]] = icmp ne i32 %[[A:.*]], -2147483648
-comment|// CHECK-NEXT:          %[[BOK:.*]] = icmp ne i32 %[[B]], -1
-comment|// CHECK-NEXT:          %[[OVER:.*]] = or i1 %[[AOK]], %[[BOK]]
+comment|// CHECK-COMMON:               %[[AOK:.*]] = icmp ne i32 %[[A:.*]], -2147483648
+comment|// CHECK-COMMON-NEXT:          %[[BOK:.*]] = icmp ne i32 %[[B]], -1
+comment|// CHECK-COMMON-NEXT:          %[[OVER:.*]] = or i1 %[[AOK]], %[[BOK]]
+comment|// CHECK-COMMON:         %[[OK:.*]] = and i1 %[[ZERO]], %[[OVER]]
+comment|// CHECK-COMMON:         br i1 %[[OK]]
 comment|// CHECK-OVERFLOW:      %[[AOK:.*]] = icmp ne i32 %[[A:.*]], -2147483648
 comment|// CHECK-OVERFLOW-NEXT: %[[BOK:.*]] = icmp ne i32 %[[B:.*]], -1
 comment|// CHECK-OVERFLOW-NEXT: %[[OK:.*]] = or i1 %[[AOK]], %[[BOK]]
-comment|// CHECK-TRAP:          %[[AOK:.*]] = icmp ne i32 %[[A:.*]], -2147483648
-comment|// CHECK-TRAP-NEXT:     %[[BOK:.*]] = icmp ne i32 %[[B]], -1
-comment|// CHECK-TRAP-NEXT:     %[[OVER:.*]] = or i1 %[[AOK]], %[[BOK]]
-comment|// CHECK:               %[[OK:.*]] = and i1 %[[ZERO]], %[[OVER]]
-comment|// CHECK:               br i1 %[[OK]]
 comment|// CHECK-OVERFLOW:      br i1 %[[OK]]
-comment|// CHECK-TRAP:          %[[OK:.*]] = and i1 %[[ZERO]], %[[OVER]]
-comment|// CHECK-TRAP:          br i1 %[[OK]]
 comment|// CHECK-TRAP: call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP: unreachable
 return|return
@@ -808,14 +688,13 @@ name|a
 operator|/
 name|b
 return|;
-comment|// CHECK:          }
+comment|// CHECK-COMMON:          }
 comment|// CHECK-OVERFLOW: }
-comment|// CHECK-TRAP:     }
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: @sour_bool
+comment|// CHECK-COMMON-LABEL: @sour_bool
 end_comment
 
 begin_function
@@ -827,11 +706,9 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK: %[[OK:.*]] = icmp ule i8 {{.*}}, 1
-comment|// CHECK: br i1 %[[OK]]
-comment|// CHECK: call void @__ubsan_handle_load_invalid_value(i8* bitcast ({{.*}}), i64 {{.*}})
-comment|// CHECK-TRAP: %[[OK:.*]] = icmp ule i8 {{.*}}, 1
-comment|// CHECK-TRAP: br i1 %[[OK]]
+comment|// CHECK-COMMON: %[[OK:.*]] = icmp ule i8 {{.*}}, 1
+comment|// CHECK-COMMON: br i1 %[[OK]]
+comment|// CHECK-UBSAN: call void @__ubsan_handle_load_invalid_value(i8* bitcast ({{.*}}), i64 {{.*}})
 comment|// CHECK-TRAP: call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP: unreachable
 return|return
@@ -842,7 +719,133 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: ![[WEIGHT_MD]] = metadata !{metadata !"branch_weights", i32 1048575, i32 1}
+comment|// CHECK-COMMON-LABEL: @ret_nonnull
+end_comment
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(returns_nonnull)
+argument_list|)
+end_macro
+
+begin_function
+name|int
+modifier|*
+name|ret_nonnull
+parameter_list|(
+name|int
+modifier|*
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-COMMON: [[OK:%.*]] = icmp ne i32* {{.*}}, null
+comment|// CHECK-COMMON: br i1 [[OK]]
+comment|// CHECK-UBSAN: call void @__ubsan_handle_nonnull_return
+comment|// CHECK-TRAP: call void @llvm.trap() [[NR_NUW]]
+comment|// CHECK-TRAP: unreachable
+return|return
+name|a
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-COMMON-LABEL: @call_decl_nonnull
+end_comment
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(nonnull)
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|decl_nonnull
+parameter_list|(
+name|int
+modifier|*
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|call_decl_nonnull
+parameter_list|(
+name|int
+modifier|*
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-COMMON: [[OK:%.*]] = icmp ne i32* {{.*}}, null
+comment|// CHECK-COMMON: br i1 [[OK]]
+comment|// CHECK-UBSAN: call void @__ubsan_handle_nonnull_arg
+comment|// CHECK-TRAP: call void @llvm.trap() [[NR_NUW]]
+comment|// CHECK-TRAP: unreachable
+name|decl_nonnull
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-COMMON-LABEL: @call_nonnull_variadic
+end_comment
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(nonnull)
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|nonnull_variadic
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|call_nonnull_variadic
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+name|int
+modifier|*
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-COMMON: [[OK:%.*]] = icmp ne i32* {{.*}}, null
+comment|// CHECK-COMMON: br i1 [[OK]]
+comment|// CHECK-UBSAN: call void @__ubsan_handle_nonnull_arg
+comment|// CHECK-UBSAN-NOT: __ubsan_handle_nonnull_arg
+comment|// CHECK-COMMON: call void (i32, ...)* @nonnull_variadic
+name|nonnull_variadic
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-UBSAN: ![[WEIGHT_MD]] = !{!"branch_weights", i32 1048575, i32 1}
 end_comment
 
 begin_comment

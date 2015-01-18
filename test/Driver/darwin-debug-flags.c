@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: env RC_DEBUG_OPTIONS=1 %clang -target i386-apple-darwin9 -g -Os %s  -emit-llvm -S -o - | FileCheck %s
+comment|// RUN: env RC_DEBUG_OPTIONS=1 %clang -target i386-apple-darwin9 -I "path with \spaces" -g -Os %s  -emit-llvm -S -o - | FileCheck %s
 end_comment
 
 begin_comment
@@ -24,7 +24,11 @@ comment|// RUN: %clang -### -target i386-apple-darwin9 -c -g %t.s 2>&1 | FileChe
 end_comment
 
 begin_comment
-comment|// CHECK: !0 = metadata !{
+comment|// CHECK: !0 = !{
+end_comment
+
+begin_comment
+comment|// CHECK: -I path\5C with\5C \5C\5Cspaces
 end_comment
 
 begin_comment
@@ -51,6 +55,14 @@ end_comment
 
 begin_comment
 comment|// P: "-dwarf-debug-producer"
+end_comment
+
+begin_comment
+comment|// This depends on shell quoting.
+end_comment
+
+begin_comment
+comment|// REQUIRES: shell
 end_comment
 
 end_unit

@@ -21,11 +21,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: metadata !{i32 2, metadata !"Debug Info Version", i32 1}
+comment|// CHECK:  i32 2, !"Debug Info Version", i32 2}
 end_comment
 
 begin_comment
-comment|// NO_DEBUG-NOT: metadata !"Debug Info Version"
+comment|// NO_DEBUG-NOT: !"Debug Info Version"
 end_comment
 
 end_unit

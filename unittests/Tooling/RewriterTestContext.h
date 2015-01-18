@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_REWRITER_TEST_CONTEXT_H
+name|LLVM_CLANG_UNITTESTS_TOOLING_REWRITERTESTCONTEXT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_REWRITER_TEST_CONTEXT_H
+name|LLVM_CLANG_UNITTESTS_TOOLING_REWRITERTESTCONTEXT_H
 end_define
 
 begin_include
@@ -213,10 +213,14 @@ argument_list|,
 argument|StringRef Content
 argument_list|)
 block|{
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|llvm
 operator|::
 name|MemoryBuffer
-operator|*
+operator|>
 name|Source
 operator|=
 name|llvm
@@ -253,7 +257,12 @@ name|overrideFileContents
 argument_list|(
 name|Entry
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|Source
+argument_list|)
 argument_list|)
 block|;
 name|assert
@@ -376,7 +385,11 @@ name|Found
 init|=
 name|TemporaryFiles
 operator|.
-name|GetOrCreateValue
+name|insert
+argument_list|(
+name|std
+operator|::
+name|make_pair
 argument_list|(
 name|Name
 argument_list|,
@@ -385,7 +398,10 @@ operator|.
 name|str
 argument_list|()
 argument_list|)
+argument_list|)
 operator|.
+name|first
+operator|->
 name|second
 decl_stmt|;
 name|assert
@@ -536,29 +552,21 @@ comment|// a FileEntry, as otherwise we'd read through an already opened file
 comment|// descriptor, which might not see the changes made.
 comment|// FIXME: Figure out whether there is a way to get the SourceManger to
 comment|// reopen the file.
-name|std
-operator|::
-name|unique_ptr
-operator|<
-specifier|const
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|>
+name|auto
 name|FileBuffer
-argument_list|(
+operator|=
 name|Files
 operator|.
 name|getBufferForFile
 argument_list|(
 name|Path
-argument_list|,
-name|nullptr
-argument_list|)
 argument_list|)
 block|;
 return|return
+operator|(
+operator|*
 name|FileBuffer
+operator|)
 operator|->
 name|getBuffer
 argument_list|()

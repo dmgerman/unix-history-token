@@ -787,6 +787,7 @@ operator|&
 name|mu1
 argument_list|)
 expr_stmt|;
+comment|// expected-warning {{releasing mutex 'mu1' that was not held}}
 name|mutex_shared_lock
 argument_list|(
 operator|&
@@ -806,6 +807,7 @@ operator|&
 name|mu1
 argument_list|)
 expr_stmt|;
+comment|// expected-warning {{releasing mutex 'mu1' that was not held}}
 return|return
 literal|0
 return|;

@@ -3,10 +3,6 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple arm64-apple-macosx10.8.0 -fsyntax-only -verify %s
 end_comment
 
-begin_comment
-comment|// expected-no-diagnostics
-end_comment
-
 begin_decl_stmt
 name|unsigned
 name|t
@@ -28,6 +24,7 @@ block|{
 asm|__asm__
 specifier|__volatile__
 asm|( "stxr   %w[_t], %[_r], [%[_p]]" : [_t] "=&r" (t) : [_p] "p" (p), [_r] "r" (r) : "memory");
+comment|// expected-warning{{value size does not match register size specified by the constraint and modifier}} expected-note {{use constraint modifier "w"}}
 return|return
 literal|1
 return|;

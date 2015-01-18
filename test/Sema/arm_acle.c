@@ -125,5 +125,54 @@ comment|// expected-error-re {{argument to {{.*}} must be a constant integer}}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Prefetch intrinsics  */
+end_comment
+
+begin_function
+name|void
+name|test_pldx_const_diag
+parameter_list|(
+name|int32_t
+name|i
+parameter_list|)
+block|{
+name|__pldx
+argument_list|(
+name|i
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-error-re {{argument to {{.*}} must be a constant integer}}
+block|}
+end_function
+
+begin_comment
+comment|/*  * DBG intrinsic  * First argument for DBG intrinsic must be compile-time constant,  * otherwise an error should be raised.  */
+end_comment
+
+begin_function
+name|void
+name|test_dbg_const_diag
+parameter_list|(
+name|unsigned
+name|int
+name|t
+parameter_list|)
+block|{
+name|__dbg
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+comment|// expected-error-re {{argument to {{.*}} must be a constant integer}}
+block|}
+end_function
+
 end_unit
 

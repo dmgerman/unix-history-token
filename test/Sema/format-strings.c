@@ -1561,16 +1561,14 @@ expr_stmt|;
 comment|// expected-warning{{data argument not used by format string}}
 name|printf
 argument_list|(
-literal|"%W%d%Z\n"
-argument_list|,
-name|x
+literal|"%W%d\n"
 argument_list|,
 name|x
 argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{invalid conversion specifier 'W'}} expected-warning{{invalid conversion specifier 'Z'}}
+comment|// expected-warning{{invalid conversion specifier 'W'}}
 name|printf
 argument_list|(
 literal|"%"

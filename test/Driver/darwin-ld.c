@@ -60,6 +60,14 @@ comment|// LINK_IPHONE_3_0: {{ld(.exe)?"}}
 end_comment
 
 begin_comment
+comment|// LINK_IPHONE_3_0: -iphoneos_version_min
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_0: 3.0.0
+end_comment
+
+begin_comment
 comment|// LINK_IPHONE_3_0-NOT: -lcrt1.3.1.o
 end_comment
 
@@ -120,6 +128,14 @@ comment|// LINK_IPHONE_3_1: {{ld(.exe)?"}}
 end_comment
 
 begin_comment
+comment|// LINK_IPHONE_3_1: -iphoneos_version_min
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_1: 3.1.0
+end_comment
+
+begin_comment
 comment|// LINK_IPHONE_3_1-NOT: -lcrt1.o
 end_comment
 
@@ -177,6 +193,14 @@ end_comment
 
 begin_comment
 comment|// LINK_IOSSIM_3_0: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_3_0: -ios_simulator_version_min
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_3_0: 3.0.0
 end_comment
 
 begin_comment
@@ -640,15 +664,27 @@ comment|// LINK_X86_64H_MULTIARCH: "x86_64h"
 end_comment
 
 begin_comment
-comment|// Check that clang passes -iphoneos_version_min to the linker when building
+comment|// Check for the linker options to specify the iOS version when the
 end_comment
 
 begin_comment
-comment|// for the iOS simulator but when -mios-simulator-version-min is not
+comment|// IPHONEOS_DEPLOYMENT_TARGET variable is used instead of the command-line
 end_comment
 
 begin_comment
-comment|// explicitly specified (<rdar://problem/15959009>).
+comment|// deployment target options.
+end_comment
+
+begin_comment
+comment|// RUN: env IPHONEOS_DEPLOYMENT_TARGET=7.0 \
+end_comment
+
+begin_comment
+comment|// RUN:   %clang -target arm64-apple-darwin -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_IPHONEOS_VERSION_MIN %s< %t.log
 end_comment
 
 begin_comment
@@ -660,11 +696,15 @@ comment|// RUN:   %clang -target i386-apple-darwin -### %t.o 2> %t.log
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck -check-prefix=LINK_IPHONEOS_VERSION_MIN %s< %t.log
+comment|// RUN: FileCheck -check-prefix=LINK_IOS_SIMULATOR_VERSION_MIN %s< %t.log
 end_comment
 
 begin_comment
 comment|// LINK_IPHONEOS_VERSION_MIN: -iphoneos_version_min
+end_comment
+
+begin_comment
+comment|// LINK_IOS_SIMULATOR_VERSION_MIN: -ios_simulator_version_min
 end_comment
 
 end_unit

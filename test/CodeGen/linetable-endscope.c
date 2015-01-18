@@ -38,12 +38,12 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|// CHECK: ![[CONV]] = metadata !{i32 [[@LINE+1]], i32 0, metadata !{{.*}}, null}
+comment|// CHECK: ![[CONV]] = !MDLocation(line: [[@LINE+1]], scope: !{{.*}})
 name|i
 operator|=
 name|c
 expr_stmt|;
-comment|// CHECK: ![[RET]] = metadata !{i32 [[@LINE+1]], i32 0, metadata !{{.*}}, null}
+comment|// CHECK: ![[RET]] = !MDLocation(line: [[@LINE+1]], scope: !{{.*}})
 block|}
 end_function
 

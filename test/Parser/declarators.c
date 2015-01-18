@@ -74,6 +74,22 @@ begin_comment
 comment|/* expected-error {{cannot return}} expected-warning {{type specifier missing, defaults to 'int'}} */
 end_comment
 
+begin_function_decl
+name|int
+name|f5
+parameter_list|(
+name|int
+index|[
+specifier|static
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* expected-error {{'static' may not be used without an array size}} */
+end_comment
+
 begin_expr_stmt
 name|char
 argument_list|(
@@ -666,6 +682,7 @@ name|n
 block|; }
 operator|:
 comment|// expected-error {{expected ';'}}
+comment|// expected-warning@-1 {{declaration does not declare anything}}
 block|}
 enum|;
 end_enum
@@ -818,6 +835,24 @@ name|A6a
 block|}
 enum|;
 end_enum
+
+begin_decl_stmt
+name|int
+name|PR20634
+init|=
+expr|sizeof
+operator|(
+expr|struct
+block|{
+name|int
+name|n
+block|; }
+index|[
+literal|5
+index|]
+operator|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

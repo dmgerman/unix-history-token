@@ -169,5 +169,39 @@ return|;
 block|}
 end_function
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|f
+decl_stmt|;
+block|}
+name|T
+name|__attribute__
+typedef|((
+name|__aligned__
+typedef|));
+end_typedef
+
+begin_comment
+comment|// CHECK: struct __attribute__((visibility("default"))) S;
+end_comment
+
+begin_decl_stmt
+name|struct
+name|__attribute__
+argument_list|(
+operator|(
+name|visibility
+argument_list|(
+literal|"default"
+argument_list|)
+operator|)
+argument_list|)
+name|S
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

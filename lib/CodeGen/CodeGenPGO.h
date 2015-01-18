@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_CODEGEN_CODEGENPGO_H
+name|LLVM_CLANG_LIB_CODEGEN_CODEGENPGO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_CODEGEN_CODEGENPGO_H
+name|LLVM_CLANG_LIB_CODEGEN_CODEGENPGO_H
 end_define
 
 begin_include
@@ -124,23 +124,14 @@ name|CGM
 decl_stmt|;
 name|std
 operator|::
-name|unique_ptr
-operator|<
-name|std
-operator|::
 name|string
-operator|>
-name|PrefixedFuncName
+name|FuncName
 expr_stmt|;
-name|StringRef
-name|RawFuncName
-decl_stmt|;
 name|llvm
 operator|::
-name|GlobalValue
-operator|::
-name|LinkageTypes
-name|VarLinkage
+name|GlobalVariable
+operator|*
+name|FuncNameVar
 expr_stmt|;
 name|unsigned
 name|NumRegionCounters
@@ -148,12 +139,6 @@ decl_stmt|;
 name|uint64_t
 name|FunctionHash
 decl_stmt|;
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|RegionCounters
-expr_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -188,18 +173,19 @@ name|StmtCountMap
 expr_stmt|;
 name|std
 operator|::
-name|unique_ptr
-operator|<
-name|std
-operator|::
 name|vector
 operator|<
 name|uint64_t
-operator|>>
+operator|>
 name|RegionCounts
 expr_stmt|;
 name|uint64_t
 name|CurrentRegionCount
+decl_stmt|;
+comment|/// \brief A flag that is set to true when this function doesn't need
+comment|/// to have coverage mapping data.
+name|bool
+name|SkipCoverageMapping
 decl_stmt|;
 name|public
 label|:
@@ -225,14 +211,14 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|RegionCounters
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|CurrentRegionCount
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|SkipCoverageMapping
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// Whether or not we have PGO region data for the current function. This is
@@ -244,47 +230,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
 name|RegionCounts
-operator|!=
-name|nullptr
-return|;
-block|}
-comment|/// Get the string used to identify this function in the profile data.
-comment|/// For functions with local linkage, this includes the main file name.
-name|StringRef
-name|getFuncName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StringRef
-argument_list|(
-operator|*
-name|PrefixedFuncName
-argument_list|)
-return|;
-block|}
-name|std
-operator|::
-name|string
-name|getFuncVarName
-argument_list|(
-argument|StringRef VarName
-argument_list|)
-specifier|const
-block|{
-return|return
-operator|(
-literal|"__llvm_profile_"
-operator|+
-name|VarName
-operator|+
-literal|"_"
-operator|+
-name|RawFuncName
-operator|)
 operator|.
-name|str
+name|empty
 argument_list|()
 return|;
 block|}
@@ -462,6 +411,14 @@ operator|&
 name|Cnt
 argument_list|)
 expr_stmt|;
+comment|/// Check if we need to emit coverage mapping for a given declaration
+name|void
+name|checkGlobalDecl
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
 comment|/// Assign counters to regions and configure them for PGO of a given
 comment|/// function. Does nothing if instrumentation is not enabled and either
 comment|/// generates global variables or associates PGO data with each of the
@@ -481,30 +438,27 @@ operator|*
 name|Fn
 argument_list|)
 decl_stmt|;
-comment|/// Emit static data structures for instrumentation data.
+comment|/// Emit a coverage mapping range with a counter zero
+comment|/// for an unused declaration.
 name|void
-name|emitInstrumentationData
-parameter_list|()
-function_decl|;
-comment|/// Clean up region counter state. Must be called if assignRegionCounters is
-comment|/// used.
-name|void
-name|destroyRegionCounters
-parameter_list|()
-function_decl|;
-comment|/// Emit static initialization code, if any.
-specifier|static
+name|emitEmptyCounterMapping
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|,
+name|StringRef
+name|FuncName
+argument_list|,
 name|llvm
 operator|::
-name|Function
-operator|*
-name|emitInitialization
-argument_list|(
-name|CodeGenModule
-operator|&
-name|CGM
+name|GlobalValue
+operator|::
+name|LinkageTypes
+name|Linkage
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|private
 label|:
 name|void
@@ -515,6 +469,31 @@ operator|::
 name|Function
 operator|*
 name|Fn
+argument_list|)
+decl_stmt|;
+name|void
+name|setFuncName
+argument_list|(
+name|StringRef
+name|Name
+argument_list|,
+name|llvm
+operator|::
+name|GlobalValue
+operator|::
+name|LinkageTypes
+name|Linkage
+argument_list|)
+decl_stmt|;
+name|void
+name|createFuncNameVar
+argument_list|(
+name|llvm
+operator|::
+name|GlobalValue
+operator|::
+name|LinkageTypes
+name|Linkage
 argument_list|)
 decl_stmt|;
 name|void
@@ -568,13 +547,15 @@ name|void
 name|emitCounterVariables
 parameter_list|()
 function_decl|;
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|buildDataVar
-argument_list|()
-expr_stmt|;
+name|void
+name|emitCounterRegionMapping
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 comment|/// Emit code to increment the counter at the given index
 name|void
 name|emitCounterIncrement
@@ -634,10 +615,7 @@ return|return
 literal|0
 return|;
 return|return
-operator|(
-operator|*
 name|RegionCounts
-operator|)
 index|[
 name|Counter
 index|]

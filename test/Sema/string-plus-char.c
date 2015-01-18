@@ -3,6 +3,48 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
+begin_struct
+struct|struct
+name|AB
+block|{
+specifier|const
+name|char
+modifier|*
+name|a
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|b
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|foo
+parameter_list|(
+specifier|const
+name|struct
+name|AB
+modifier|*
+name|ab
+parameter_list|)
+block|{
+return|return
+name|ab
+operator|->
+name|a
+operator|+
+literal|'b'
+return|;
+comment|// expected-warning {{adding 'char' to a string pointer does not append to the string}} expected-note {{use array indexing to silence this warning}}
+block|}
+end_function
+
 begin_function
 name|void
 name|f
@@ -43,6 +85,55 @@ operator|=
 literal|'c'
 operator|+
 name|str
+expr_stmt|;
+comment|// expected-warning {{adding 'char' to a string pointer does not append to the string}} expected-note {{use array indexing to silence this warning}}
+name|char
+name|strArr
+index|[]
+init|=
+literal|"foo"
+decl_stmt|;
+name|str
+operator|=
+name|strArr
+operator|+
+literal|'c'
+expr_stmt|;
+comment|// expected-warning {{adding 'char' to a string pointer does not append to the string}} expected-note {{use array indexing to silence this warning}}
+name|char
+modifier|*
+name|strArr2
+index|[]
+init|=
+block|{
+literal|"ac"
+block|,
+literal|"dc"
+block|}
+decl_stmt|;
+name|str
+operator|=
+name|strArr2
+index|[
+literal|0
+index|]
+operator|+
+literal|'c'
+expr_stmt|;
+comment|// expected-warning {{adding 'char' to a string pointer does not append to the string}} expected-note {{use array indexing to silence this warning}}
+name|struct
+name|AB
+name|ab
+decl_stmt|;
+name|constStr
+operator|=
+name|foo
+argument_list|(
+operator|&
+name|ab
+argument_list|)
+operator|+
+literal|'c'
 expr_stmt|;
 comment|// expected-warning {{adding 'char' to a string pointer does not append to the string}} expected-note {{use array indexing to silence this warning}}
 comment|// no-warning

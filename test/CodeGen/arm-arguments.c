@@ -1103,35 +1103,15 @@ block|}
 end_function
 
 begin_comment
-comment|// APCS-GNU: @g34(%struct.s34* %s)
-end_comment
-
-begin_comment
-comment|// APCS-GNU: %[[a:.*]] = alloca { [1 x i32] }
-end_comment
-
-begin_comment
-comment|// APCS-GNU: %[[gep:.*]] = getelementptr { [1 x i32] }* %[[a]], i32 0, i32 0
-end_comment
-
-begin_comment
-comment|// APCS-GNU: load [1 x i32]* %[[gep]]
-end_comment
-
-begin_comment
 comment|// AAPCS: @g34(%struct.s34* %s)
 end_comment
 
 begin_comment
-comment|// AAPCS: %[[a:.*]] = alloca { [1 x i32] }
+comment|// AAPCS: %[[a:.*]] = alloca [1 x i32]
 end_comment
 
 begin_comment
-comment|// AAPCS: %[[gep:.*]] = getelementptr { [1 x i32] }* %[[a]], i32 0, i32 0
-end_comment
-
-begin_comment
-comment|// AAPCS: load [1 x i32]* %[[gep]]
+comment|// AAPCS: load [1 x i32]* %[[a]]
 end_comment
 
 begin_comment

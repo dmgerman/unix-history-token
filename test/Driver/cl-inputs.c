@@ -116,6 +116,38 @@ comment|// WARN-NOT: note
 end_comment
 
 begin_comment
+comment|// RUN: env LIB=%S/Inputs/cl-libs %clang_cl /c /TP cl-test.lib -### 2>&1 | FileCheck -check-prefix=TPlib %s
+end_comment
+
+begin_comment
+comment|// TPlib: warning: cl-test.lib: 'linker' input unused
+end_comment
+
+begin_comment
+comment|// TPlib: warning: argument unused during compilation: '/TP'
+end_comment
+
+begin_comment
+comment|// TPlib-NOT: cl-test.lib
+end_comment
+
+begin_comment
+comment|// RUN: env LIB=%S/Inputs/cl-libs %clang_cl /c /TC cl-test.lib -### 2>&1 | FileCheck -check-prefix=TClib %s
+end_comment
+
+begin_comment
+comment|// TClib: warning: cl-test.lib: 'linker' input unused
+end_comment
+
+begin_comment
+comment|// TClib: warning: argument unused during compilation: '/TC'
+end_comment
+
+begin_comment
+comment|// TClib-NOT: cl-test.lib
+end_comment
+
+begin_comment
 comment|// RUN: not %clang_cl - 2>&1 | FileCheck -check-prefix=STDIN %s
 end_comment
 

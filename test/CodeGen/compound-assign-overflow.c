@@ -4,7 +4,7 @@ comment|// Verify proper type emitted for compound assignments
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -ffreestanding -triple x86_64-apple-darwin10 -emit-llvm -o - %s  -fsanitize=signed-integer-overflow,unsigned-integer-overflow | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding -triple x86_64-apple-darwin10 -emit-llvm -o - %s  -fsanitize=signed-integer-overflow,unsigned-integer-overflow -fsanitize-recover=signed-integer-overflow,unsigned-integer-overflow | FileCheck %s
 end_comment
 
 begin_include

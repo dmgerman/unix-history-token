@@ -18,5 +18,11 @@ directive|undef
 name|TOP_OTHER_DEF_RIGHT_UNDEF
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|TOP_DEF_RIGHT_UNDEF
+end_undef
+
 end_unit
 

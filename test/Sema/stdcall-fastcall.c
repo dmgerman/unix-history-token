@@ -78,7 +78,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note{{previous declaration is here}}
+comment|// expected-note{{previous declaration is here}} expected-warning{{function with no prototype cannot use the stdcall calling convention}}
 end_comment
 
 begin_decl_stmt

@@ -4,6 +4,10 @@ comment|// RUN: %clang -v --target=i386-unknown-linux \
 end_comment
 
 begin_comment
+comment|// RUN:           --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:           --sysroot=%S/Inputs/debian_multiarch_tree 2>&1 | FileCheck %s
 end_comment
 

@@ -30,7 +30,7 @@ name|__m256i
 name|y
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.mpsadbw({{.*}}, {{.*}}, i32 3)
+comment|// CHECK: @llvm.x86.avx2.mpsadbw({{.*}}, {{.*}}, i8 3)
 return|return
 name|_mm256_mpsadbw_epu8
 argument_list|(

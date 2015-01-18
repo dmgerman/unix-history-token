@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_PATH_DIAGNOSTIC_H
+name|LLVM_CLANG_STATICANALYZER_CORE_BUGREPORTER_PATHDIAGNOSTIC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_PATH_DIAGNOSTIC_H
+name|LLVM_CLANG_STATICANALYZER_CORE_BUGREPORTER_PATHDIAGNOSTIC_H
 end_define
 
 begin_include
@@ -365,12 +365,16 @@ literal|0
 expr_stmt|;
 name|void
 name|HandlePathDiagnostic
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|PathDiagnostic
-modifier|*
+operator|>
 name|D
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 enum|enum
 name|PathGenerationScheme
 block|{
@@ -3222,14 +3226,18 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function
+begin_decl_stmt
 name|void
 name|setEndOfPath
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|PathDiagnosticPiece
-modifier|*
+operator|>
 name|EndPiece
-parameter_list|)
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -3265,10 +3273,13 @@ operator|.
 name|push_back
 argument_list|(
 name|EndPiece
+operator|.
+name|release
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 name|void

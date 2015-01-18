@@ -18,6 +18,17 @@ comment|// CHECKBASIC: @g0 = common global i32 0
 end_comment
 
 begin_decl_stmt
+name|__thread
+name|int
+name|TL_WITH_ALIAS
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECKBASIC-DAG: @TL_WITH_ALIAS = thread_local global i32 0, align 4
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|bar1
@@ -55,6 +66,27 @@ end_decl_stmt
 
 begin_comment
 comment|// CHECKBASIC-DAG: @g1 = alias i32* @g0
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|__thread
+name|int
+name|__libc_errno
+name|__attribute__
+argument_list|(
+operator|(
+name|alias
+argument_list|(
+literal|"TL_WITH_ALIAS"
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECKBASIC-DAG: @__libc_errno = thread_local alias i32* @TL_WITH_ALIAS
 end_comment
 
 begin_function
@@ -100,7 +132,7 @@ comment|// CHECKBASIC-DAG: @f1 = alias void ()* @f0
 end_comment
 
 begin_comment
-comment|// CHECKBASIC-DAG: @test8_foo = alias weak bitcast (void ()* @test8_bar to void (...)*)
+comment|// CHECKBASIC-DAG: @test8_foo = weak alias bitcast (void ()* @test8_bar to void (...)*)
 end_comment
 
 begin_comment

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_BUGREPORTER
+name|LLVM_CLANG_STATICANALYZER_CORE_BUGREPORTER_BUGREPORTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_BUGREPORTER
+name|LLVM_CLANG_STATICANALYZER_CORE_BUGREPORTER_BUGREPORTER_H
 end_define
 
 begin_include
@@ -235,8 +235,12 @@ typedef|;
 typedef|typedef
 name|SmallVector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|BugReporterVisitor
-operator|*
+operator|>
 operator|,
 literal|8
 operator|>
@@ -686,7 +690,6 @@ return|return
 name|ErrorNode
 return|;
 block|}
-specifier|const
 name|StringRef
 name|getDescription
 argument_list|()
@@ -696,7 +699,6 @@ return|return
 name|Description
 return|;
 block|}
-specifier|const
 name|StringRef
 name|getShortDescription
 argument_list|(
@@ -1065,12 +1067,16 @@ comment|/// registerFindLastStore(), registerNilReceiverVisitor(), and
 comment|/// registerVarDeclsLastStore().
 name|void
 name|addVisitor
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|BugReporterVisitor
-modifier|*
+operator|>
 name|visitor
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Iterators through the custom diagnostic visitors.
 name|visitor_iterator
 name|visitor_begin
@@ -1275,7 +1281,7 @@ block|;
 name|void
 name|AddReport
 argument_list|(
-argument|BugReport* R
+argument|std::unique_ptr<BugReport> R
 argument_list|)
 block|{
 name|Reports
@@ -1283,20 +1289,26 @@ operator|.
 name|push_back
 argument_list|(
 name|R
+operator|.
+name|release
+argument_list|()
 argument_list|)
-block|; }
+block|;   }
 name|public
 operator|:
 name|BugReportEquivClass
 argument_list|(
-argument|BugReport* R
+argument|std::unique_ptr<BugReport> R
 argument_list|)
 block|{
-name|Reports
-operator|.
-name|push_back
+name|AddReport
+argument_list|(
+name|std
+operator|::
+name|move
 argument_list|(
 name|R
+argument_list|)
 argument_list|)
 block|; }
 operator|~

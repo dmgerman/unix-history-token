@@ -70,13 +70,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FORMAT_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_FORMATSTRING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FORMAT_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_FORMATSTRING_H
 end_define
 
 begin_include
@@ -298,6 +298,9 @@ comment|// for '%as', GNU extension to C90 scanf
 name|AsMAllocate
 block|,
 comment|// for '%ms', GNU extension to scanf
+name|AsWide
+block|,
+comment|// 'w' (MSVCRT, like l but only for c, C, s, S, or Z
 name|AsWideChar
 init|=
 name|AsLong
@@ -514,6 +517,9 @@ block|,
 name|SArg
 block|,
 comment|// ** Printf-specific **
+name|ZArg
+block|,
+comment|// MS extension
 comment|// Objective-C specific specifiers.
 name|ObjCObjArg
 block|,
@@ -2420,6 +2426,30 @@ name|FormatStringHandler
 operator|&
 name|H
 argument_list|,
+specifier|const
+name|char
+operator|*
+name|beg
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|end
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LO
+argument_list|,
+specifier|const
+name|TargetInfo
+operator|&
+name|Target
+argument_list|)
+block|;
+name|bool
+name|ParseFormatStringHasSArg
+argument_list|(
 specifier|const
 name|char
 operator|*

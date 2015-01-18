@@ -8,7 +8,11 @@ comment|// RUN: %clang -ccc-print-phases -c %s -flto 2> %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '2: compiler, {1}, lto-bc' %t.log
+comment|// RUN: grep '2: compiler, {1}, ir' %t.log
+end_comment
+
+begin_comment
+comment|// RUN: grep '3: backend, {2}, lto-bc' %t.log
 end_comment
 
 begin_comment
@@ -24,11 +28,15 @@ comment|// RUN: grep '1: preprocessor, {0}, cpp-output' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '2: compiler, {1}, lto-bc' %t.log
+comment|// RUN: grep '2: compiler, {1}, ir' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '3: linker, {2}, image' %t.log
+comment|// RUN: grep '3: backend, {2}, lto-bc' %t.log
+end_comment
+
+begin_comment
+comment|// RUN: grep '4: linker, {3}, image' %t.log
 end_comment
 
 begin_comment
@@ -48,11 +56,15 @@ comment|// RUN: grep '"-o" ".*lto\.i" "-x" "c" ".*lto\.c"' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '"-o" ".*lto\.o" .*".*lto\.i"' %t.log
+comment|// RUN: grep '"-o" ".*lto\.bc" .*".*lto\.i"' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '".*a.out" .*".*lto\.o"' %t.log
+comment|// RUN: grep '"-o" ".*lto\.o" .*".*lto\.bc"' %t.log
+end_comment
+
+begin_comment
+comment|// RUN: grep '".*a\.\(out\|exe\)" .*".*lto\.o"' %t.log
 end_comment
 
 begin_comment

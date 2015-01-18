@@ -831,11 +831,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// Expand Homogeneous Aggregate.
-end_comment
-
-begin_comment
-comment|// CHECK: @f32(double %{{.*}})
+comment|// CHECK: @f32([1 x double] %{{.*}})
 end_comment
 
 begin_comment
@@ -1247,7 +1243,7 @@ name|s35_with_align
 name|s2
 parameter_list|)
 block|{
-comment|// CHECK: define<4 x float> @f35(i32 %i, float %s1.0, float %s1.1, float %s1.2, float %s1.3, float %s2.0, float %s2.1, float %s2.2, float %s2.3)
+comment|// CHECK: define<4 x float> @f35(i32 %i, [4 x float] %s1.coerce, [4 x float] %s2.coerce)
 comment|// CHECK: %s1 = alloca %struct.s35, align 16
 comment|// CHECK: %s2 = alloca %struct.s35, align 16
 comment|// CHECK: %[[a:.*]] = bitcast %struct.s35* %s1 to<4 x float>*
@@ -3113,7 +3109,7 @@ name|s40_no_align
 name|s2
 parameter_list|)
 block|{
-comment|// CHECK: define i32 @f40_split(i32 %i, i32 %i2, i32 %i3, i32 %i4, i32 %i5, i32 %i6, i32 %i7, [1 x i32], [2 x i64] %s1.coerce, [2 x i64] %s2.coerce)
+comment|// CHECK: define i32 @f40_split(i32 %i, i32 %i2, i32 %i3, i32 %i4, i32 %i5, i32 %i6, i32 %i7, [2 x i64] %s1.coerce, [2 x i64] %s2.coerce)
 return|return
 name|s1
 operator|.
@@ -3154,7 +3150,7 @@ name|caller40_split
 parameter_list|()
 block|{
 comment|// CHECK: define i32 @caller40_split()
-comment|// CHECK: call i32 @f40_split(i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, [1 x i32] undef, [2 x i64] %{{.*}} [2 x i64] %{{.*}})
+comment|// CHECK: call i32 @f40_split(i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, [2 x i64] %{{.*}} [2 x i64] %{{.*}})
 return|return
 name|f40_split
 argument_list|(
@@ -3219,7 +3215,7 @@ name|s41_with_align
 name|s2
 parameter_list|)
 block|{
-comment|// CHECK: define i32 @f41_split(i32 %i, i32 %i2, i32 %i3, i32 %i4, i32 %i5, i32 %i6, i32 %i7, [1 x i32], i128 %s1.coerce, i128 %s2.coerce)
+comment|// CHECK: define i32 @f41_split(i32 %i, i32 %i2, i32 %i3, i32 %i4, i32 %i5, i32 %i6, i32 %i7, i128 %s1.coerce, i128 %s2.coerce)
 return|return
 name|s1
 operator|.
@@ -3260,7 +3256,7 @@ name|caller41_split
 parameter_list|()
 block|{
 comment|// CHECK: define i32 @caller41_split()
-comment|// CHECK: call i32 @f41_split(i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, [1 x i32] undef, i128 %{{.*}}, i128 %{{.*}})
+comment|// CHECK: call i32 @f41_split(i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i128 %{{.*}}, i128 %{{.*}})
 return|return
 name|f41_split
 argument_list|(
@@ -3365,7 +3361,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: define float @test_hfa_call(%struct.HFA* %a)
-comment|// CHECK: call float (i32, ...)* @test_hfa(i32 1, [2 x double] {{.*}})
+comment|// CHECK: call float (i32, ...)* @test_hfa(i32 1, [4 x float] {{.*}})
 name|test_hfa
 argument_list|(
 literal|1

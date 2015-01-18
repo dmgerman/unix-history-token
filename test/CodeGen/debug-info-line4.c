@@ -36,7 +36,7 @@ comment|// Without column information we wouldn't change locations for b.
 end_comment
 
 begin_comment
-comment|// CHECK: metadata !{i32 4, i32 20,
+comment|// CHECK:  !MDLocation(line: 4, column: 20,
 end_comment
 
 end_unit

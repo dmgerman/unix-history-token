@@ -4,7 +4,7 @@ comment|// Check for warnings in non-C11 mode:
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wc11-extensions %s
+comment|// RUN: %clang_cc1 -fsyntax-only -std=c99 -verify -Wc11-extensions %s
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// Expect no warnings in C11 mode:
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -pedantic -Werror -std=c11 %s
+comment|// RUN: %clang_cc1 -fsyntax-only -std=c11 -pedantic -Werror %s
 end_comment
 
 begin_struct

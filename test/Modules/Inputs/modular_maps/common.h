@@ -14,7 +14,7 @@ end_define
 begin_decl_stmt
 specifier|const
 name|int
-name|c
+name|x
 init|=
 literal|2
 decl_stmt|;

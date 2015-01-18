@@ -54,14 +54,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_CODEGEN_TARGETINFO_H
+name|LLVM_CLANG_LIB_CODEGEN_TARGETINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_CODEGEN_TARGETINFO_H
+name|LLVM_CLANG_LIB_CODEGEN_TARGETINFO_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"CGValue.h"
+end_include
 
 begin_include
 include|#
@@ -373,6 +379,74 @@ return|return
 name|Ty
 return|;
 block|}
+comment|/// Adds constraints and types for result registers.
+name|virtual
+name|void
+name|addReturnRegisterOutputs
+argument_list|(
+name|CodeGen
+operator|::
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|CodeGen
+operator|::
+name|LValue
+name|ReturnValue
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Constraints
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|Type
+operator|*
+operator|>
+operator|&
+name|ResultRegTypes
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|Type
+operator|*
+operator|>
+operator|&
+name|ResultTruncRegTypes
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|CodeGen
+operator|::
+name|LValue
+operator|>
+operator|&
+name|ResultRegDests
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|AsmString
+argument_list|,
+name|unsigned
+name|NumOutputs
+argument_list|)
+decl|const
+block|{}
 comment|/// doesReturnSlotInterfereWithArgs - Return true if the target uses an
 comment|/// argument slot for an 'sret' type.
 name|virtual
@@ -531,6 +605,22 @@ name|Opt
 argument_list|)
 decl|const
 block|{}
+comment|/// Gets the target-specific default alignment used when an 'aligned' clause
+comment|/// is used with a 'simd' OpenMP directive without specifying a specific
+comment|/// alignment.
+name|virtual
+name|unsigned
+name|getOpenMPSimdDefaultAlignment
+argument_list|(
+name|QualType
+name|Type
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}
@@ -540,10 +630,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// CLANG_CODEGEN_TARGETINFO_H
-end_comment
 
 end_unit
 

@@ -36,11 +36,11 @@ comment|// Now match the line number records:
 end_comment
 
 begin_comment
-comment|// CHECK: {{^}}[[variable_l]]{{ = metadata ![{]i32 5,}}
+comment|// CHECK: {{^}}[[variable_l]] = !MDLocation(line: 5,
 end_comment
 
 begin_comment
-comment|// CHECK: {{^}}[[variable_p]]{{ = metadata ![{]i32 6,}}
+comment|// CHECK: {{^}}[[variable_p]] = !MDLocation(line: 6,
 end_comment
 
 end_unit

@@ -33,19 +33,19 @@ operator|*=
 literal|2
 expr_stmt|;
 comment|// CHECK: mul nsw i32
-comment|// CHECK: cmpxchg i32*
+comment|// CHECK: {{(cmpxchg i32*|i1 @__atomic_compare_exchange\(i32 4,)}}
 name|i
 operator|/=
 literal|2
 expr_stmt|;
 comment|// CHECK: sdiv i32
-comment|// CHECK: cmpxchg i32*
+comment|// CHECK: {{(cmpxchg i32*|i1 @__atomic_compare_exchange\(i32 4, )}}
 name|j
 operator|/=
 name|x
 expr_stmt|;
 comment|// CHECK: sdiv i32
-comment|// CHECK: cmpxchg i16*
+comment|// CHECK: {{(cmpxchg i16*|i1 @__atomic_compare_exchange\(i32 2, )}}
 block|}
 end_function
 

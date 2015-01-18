@@ -20,7 +20,7 @@ comment|// This work was done in pursuit of<rdar://13338582>.
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: define arm_aapcscc void @testFloat(float*
+comment|// CHECK-LABEL: define void @testFloat(float*
 end_comment
 
 begin_function
@@ -83,7 +83,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define arm_aapcscc void @testComplexFloat([[CF:{ float, float }]]*
+comment|// CHECK: define void @testComplexFloat([[CF:{ float, float }]]*
 end_comment
 
 begin_function
@@ -191,7 +191,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: define arm_aapcscc void @testStruct([[S:.*]]*
+comment|// CHECK: define void @testStruct([[S:.*]]*
 end_comment
 
 begin_function
@@ -310,7 +310,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: define arm_aapcscc void @testPromotedStruct([[APS:.*]]*
+comment|// CHECK: define void @testPromotedStruct([[APS:.*]]*
 end_comment
 
 begin_function

@@ -36,6 +36,10 @@ comment|// RUN:     --sysroot=%S/Inputs/fake_install_tree \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-INIT-ARRAY %s
 end_comment
 
@@ -57,6 +61,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/fake_install_tree \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -84,6 +92,10 @@ comment|// RUN:     --sysroot=%S/Inputs/fake_install_tree \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-INIT-ARRAY %s
 end_comment
 
@@ -101,6 +113,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -128,6 +144,10 @@ comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-INIT-ARRAY %s
 end_comment
 
@@ -145,6 +165,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -168,6 +192,10 @@ comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-INIT-ARRAY %s
 end_comment
 
@@ -188,6 +216,10 @@ comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-INIT-ARRAY %s
 end_comment
 
@@ -205,6 +237,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -237,6 +273,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment

@@ -11,7 +11,7 @@ name|int
 name|s
 parameter_list|)
 block|{
-comment|// CHECK: metadata !{i32 {{.*}}, metadata {{.*}}, metadata !"vla", metadata {{.*}}, i32 [[@LINE+1]], metadata {{.*}}, i32 8192, i32 0} ; [ DW_TAG_auto_variable ] [vla] [line [[@LINE+1]]]
+comment|// CHECK:  !"0x100\00vla\00[[@LINE+1]]\008192", {{.*}}, {{.*}}, {{.*}}} ; [ DW_TAG_auto_variable ] [vla] [line [[@LINE+1]]]
 name|int
 name|vla
 index|[

@@ -95,7 +95,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{null passed to a callee which requires a non-null argument}}
+comment|// expected-warning {{null passed to a callee that requires a non-null argument}}
 name|cat
 argument_list|(
 name|a
@@ -124,7 +124,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{null passed to a callee which requires a non-null argument}}
+comment|// expected-warning {{null passed to a callee that requires a non-null argument}}
 name|vat
 argument_list|(
 literal|3

@@ -52,11 +52,23 @@ comment|// CHECK-NOT: __ARM_FEATURE_CRYPTO 1
 end_comment
 
 begin_comment
+comment|// CHECK: __ARM_FEATURE_DIRECTED_ROUNDING 1
+end_comment
+
+begin_comment
 comment|// CHECK: __ARM_FEATURE_DIV 1
 end_comment
 
 begin_comment
 comment|// CHECK: __ARM_FEATURE_FMA 1
+end_comment
+
+begin_comment
+comment|// CHECK: __ARM_FEATURE_IDIV 1
+end_comment
+
+begin_comment
+comment|// CHECK: __ARM_FEATURE_NUMERIC_MAXMIN 1
 end_comment
 
 begin_comment
@@ -237,6 +249,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-MCPU-A57: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-feature" "+neon" "-target-feature" "+crc" "-target-feature" "+crypto"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-macosx -arch arm64 -### -c %s 2>&1 | FileCheck --check-prefix=CHECK-ARCH-ARM64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARCH-ARM64: "-target-cpu" "cyclone" "-target-feature" "+neon" "-target-feature" "+crc" "-target-feature" "+crypto" "-target-feature" "+zcm" "-target-feature" "+zcz"
 end_comment
 
 begin_comment

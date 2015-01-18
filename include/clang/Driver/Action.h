@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_DRIVER_ACTION_H_
+name|LLVM_CLANG_DRIVER_ACTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_DRIVER_ACTION_H_
+name|LLVM_CLANG_DRIVER_ACTION_H
 end_define
 
 begin_include
@@ -133,6 +133,8 @@ name|MigrateJobClass
 block|,
 name|CompileJobClass
 block|,
+name|BackendJobClass
+block|,
 name|AssembleJobClass
 block|,
 name|LinkJobClass
@@ -211,7 +213,7 @@ name|Action
 argument_list|(
 argument|ActionClass _Kind
 argument_list|,
-argument|Action *Input
+argument|std::unique_ptr<Action> Input
 argument_list|,
 argument|types::ID _Type
 argument_list|)
@@ -228,13 +230,47 @@ argument_list|)
 operator|,
 name|Inputs
 argument_list|(
-operator|&
-name|Input
-argument_list|,
-operator|&
-name|Input
-operator|+
 literal|1
+argument_list|,
+name|Input
+operator|.
+name|release
+argument_list|()
+argument_list|)
+operator|,
+name|OwnsInputs
+argument_list|(
+argument|true
+argument_list|)
+block|{   }
+name|Action
+argument_list|(
+argument|ActionClass _Kind
+argument_list|,
+argument|std::unique_ptr<Action> Input
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|_Kind
+argument_list|)
+operator|,
+name|Type
+argument_list|(
+name|Input
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+operator|,
+name|Inputs
+argument_list|(
+literal|1
+argument_list|,
+name|Input
+operator|.
+name|release
+argument_list|()
 argument_list|)
 operator|,
 name|OwnsInputs
@@ -499,8 +535,12 @@ name|public
 operator|:
 name|BindArchAction
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Action
-operator|*
+operator|>
 name|Input
 argument_list|,
 specifier|const
@@ -555,7 +595,7 @@ name|JobAction
 argument_list|(
 argument|ActionClass Kind
 argument_list|,
-argument|Action *Input
+argument|std::unique_ptr<Action> Input
 argument_list|,
 argument|types::ID Type
 argument_list|)
@@ -613,7 +653,7 @@ name|public
 operator|:
 name|PreprocessJobAction
 argument_list|(
-argument|Action *Input
+argument|std::unique_ptr<Action> Input
 argument_list|,
 argument|types::ID OutputType
 argument_list|)
@@ -651,7 +691,7 @@ name|public
 operator|:
 name|PrecompileJobAction
 argument_list|(
-argument|Action *Input
+argument|std::unique_ptr<Action> Input
 argument_list|,
 argument|types::ID OutputType
 argument_list|)
@@ -689,7 +729,7 @@ name|public
 operator|:
 name|AnalyzeJobAction
 argument_list|(
-argument|Action *Input
+argument|std::unique_ptr<Action> Input
 argument_list|,
 argument|types::ID OutputType
 argument_list|)
@@ -727,7 +767,7 @@ name|public
 operator|:
 name|MigrateJobAction
 argument_list|(
-argument|Action *Input
+argument|std::unique_ptr<Action> Input
 argument_list|,
 argument|types::ID OutputType
 argument_list|)
@@ -765,7 +805,7 @@ name|public
 operator|:
 name|CompileJobAction
 argument_list|(
-argument|Action *Input
+argument|std::unique_ptr<Action> Input
 argument_list|,
 argument|types::ID OutputType
 argument_list|)
@@ -789,6 +829,44 @@ block|}
 expr|}
 block|;
 name|class
+name|BackendJobAction
+operator|:
+name|public
+name|JobAction
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
+block|;
+name|public
+operator|:
+name|BackendJobAction
+argument_list|(
+argument|std::unique_ptr<Action> Input
+argument_list|,
+argument|types::ID OutputType
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Action *A
+argument_list|)
+block|{
+return|return
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|BackendJobClass
+return|;
+block|}
+expr|}
+block|;
+name|class
 name|AssembleJobAction
 operator|:
 name|public
@@ -803,7 +881,7 @@ name|public
 operator|:
 name|AssembleJobAction
 argument_list|(
-argument|Action *Input
+argument|std::unique_ptr<Action> Input
 argument_list|,
 argument|types::ID OutputType
 argument_list|)
@@ -957,7 +1035,7 @@ name|VerifyJobAction
 argument_list|(
 argument|ActionClass Kind
 argument_list|,
-argument|Action *Input
+argument|std::unique_ptr<Action> Input
 argument_list|,
 argument|types::ID Type
 argument_list|)
@@ -1011,7 +1089,7 @@ name|public
 operator|:
 name|VerifyDebugInfoJobAction
 argument_list|(
-argument|Action *Input
+argument|std::unique_ptr<Action> Input
 argument_list|,
 argument|types::ID Type
 argument_list|)
@@ -1049,7 +1127,7 @@ name|public
 operator|:
 name|VerifyPCHJobAction
 argument_list|(
-argument|Action *Input
+argument|std::unique_ptr<Action> Input
 argument_list|,
 argument|types::ID Type
 argument_list|)

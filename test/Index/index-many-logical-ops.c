@@ -16,6 +16,14 @@ comment|// logical operators.
 end_comment
 
 begin_comment
+comment|// UBSan increses stack usage.
+end_comment
+
+begin_comment
+comment|// REQUIRES: not_ubsan
+end_comment
+
+begin_comment
 comment|// CHECK: [indexDeclaration]: kind: function | name: foo
 end_comment
 

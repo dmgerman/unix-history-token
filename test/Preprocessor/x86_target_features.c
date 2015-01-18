@@ -392,6 +392,162 @@ comment|// AVX512PF: #define __SSSE3__ 1
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=atom -mavx512dq -x c -E -dM -o - %s | FileCheck --check-prefix=AVX512DQ %s
+end_comment
+
+begin_comment
+comment|// AVX512DQ: #define __AVX2__ 1
+end_comment
+
+begin_comment
+comment|// AVX512DQ: #define __AVX512DQ__ 1
+end_comment
+
+begin_comment
+comment|// AVX512DQ: #define __AVX512F__ 1
+end_comment
+
+begin_comment
+comment|// AVX512DQ: #define __AVX__ 1
+end_comment
+
+begin_comment
+comment|// AVX512DQ: #define __SSE2_MATH__ 1
+end_comment
+
+begin_comment
+comment|// AVX512DQ: #define __SSE2__ 1
+end_comment
+
+begin_comment
+comment|// AVX512DQ: #define __SSE3__ 1
+end_comment
+
+begin_comment
+comment|// AVX512DQ: #define __SSE4_1__ 1
+end_comment
+
+begin_comment
+comment|// AVX512DQ: #define __SSE4_2__ 1
+end_comment
+
+begin_comment
+comment|// AVX512DQ: #define __SSE_MATH__ 1
+end_comment
+
+begin_comment
+comment|// AVX512DQ: #define __SSE__ 1
+end_comment
+
+begin_comment
+comment|// AVX512DQ: #define __SSSE3__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=atom -mavx512bw -x c -E -dM -o - %s | FileCheck --check-prefix=AVX512BW %s
+end_comment
+
+begin_comment
+comment|// AVX512BW: #define __AVX2__ 1
+end_comment
+
+begin_comment
+comment|// AVX512BW: #define __AVX512BW__ 1
+end_comment
+
+begin_comment
+comment|// AVX512BW: #define __AVX512F__ 1
+end_comment
+
+begin_comment
+comment|// AVX512BW: #define __AVX__ 1
+end_comment
+
+begin_comment
+comment|// AVX512BW: #define __SSE2_MATH__ 1
+end_comment
+
+begin_comment
+comment|// AVX512BW: #define __SSE2__ 1
+end_comment
+
+begin_comment
+comment|// AVX512BW: #define __SSE3__ 1
+end_comment
+
+begin_comment
+comment|// AVX512BW: #define __SSE4_1__ 1
+end_comment
+
+begin_comment
+comment|// AVX512BW: #define __SSE4_2__ 1
+end_comment
+
+begin_comment
+comment|// AVX512BW: #define __SSE_MATH__ 1
+end_comment
+
+begin_comment
+comment|// AVX512BW: #define __SSE__ 1
+end_comment
+
+begin_comment
+comment|// AVX512BW: #define __SSSE3__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=atom -mavx512vl -x c -E -dM -o - %s | FileCheck --check-prefix=AVX512VL %s
+end_comment
+
+begin_comment
+comment|// AVX512VL: #define __AVX2__ 1
+end_comment
+
+begin_comment
+comment|// AVX512VL: #define __AVX512F__ 1
+end_comment
+
+begin_comment
+comment|// AVX512VL: #define __AVX512VL__ 1
+end_comment
+
+begin_comment
+comment|// AVX512VL: #define __AVX__ 1
+end_comment
+
+begin_comment
+comment|// AVX512VL: #define __SSE2_MATH__ 1
+end_comment
+
+begin_comment
+comment|// AVX512VL: #define __SSE2__ 1
+end_comment
+
+begin_comment
+comment|// AVX512VL: #define __SSE3__ 1
+end_comment
+
+begin_comment
+comment|// AVX512VL: #define __SSE4_1__ 1
+end_comment
+
+begin_comment
+comment|// AVX512VL: #define __SSE4_2__ 1
+end_comment
+
+begin_comment
+comment|// AVX512VL: #define __SSE_MATH__ 1
+end_comment
+
+begin_comment
+comment|// AVX512VL: #define __SSE__ 1
+end_comment
+
+begin_comment
+comment|// AVX512VL: #define __SSSE3__ 1
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target i386-unknown-unknown -march=atom -mavx512pf -mno-avx512f -x c -E -dM -o - %s | FileCheck --check-prefix=AVX512F2 %s
 end_comment
 
@@ -685,6 +841,22 @@ end_comment
 
 begin_comment
 comment|// NO3DNOWPRFCHW: #define __PRFCHW__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=atom -madx -x c -E -dM -o - %s | FileCheck --check-prefix=ADX %s
+end_comment
+
+begin_comment
+comment|// ADX: #define __ADX__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=atom -mrdseed -x c -E -dM -o - %s | FileCheck --check-prefix=RDSEED %s
+end_comment
+
+begin_comment
+comment|// RDSEED: #define __RDSEED__ 1
 end_comment
 
 end_unit

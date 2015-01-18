@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_CODEGEN_CGCLEANUP_H
+name|LLVM_CLANG_LIB_CODEGEN_CGCLEANUP_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_CODEGEN_CGCLEANUP_H
+name|LLVM_CLANG_LIB_CODEGEN_CGCLEANUP_H
 end_define
 
 begin_include
@@ -998,13 +998,19 @@ operator|&&
 literal|"cleanup size overflow"
 argument_list|)
 block|;   }
-operator|~
-name|EHCleanupScope
+name|void
+name|Destroy
 argument_list|()
 block|{
 name|delete
 name|ExtInfo
 block|;   }
+comment|// Objects of EHCleanupScope are not destructed. Use Destroy().
+operator|~
+name|EHCleanupScope
+argument_list|()
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
 name|bool
 name|isNormalCleanup
 argument_list|()
@@ -1307,6 +1313,8 @@ name|insert
 argument_list|(
 name|Block
 argument_list|)
+operator|.
+name|second
 condition|)
 name|ExtInfo
 operator|.
@@ -1437,6 +1445,8 @@ name|insert
 argument_list|(
 name|Block
 argument_list|)
+operator|.
+name|second
 return|;
 block|}
 comment|/// Determines if this cleanup scope has any branch throughs.

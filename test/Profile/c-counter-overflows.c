@@ -116,15 +116,15 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-DAG: ![[FOR]] = metadata !{metadata !"branch_weights", i32 -252645135, i32 1}
+comment|// CHECK-DAG: ![[FOR]] = !{!"branch_weights", i32 -252645135, i32 1}
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: ![[IF]]  = metadata !{metadata !"branch_weights", i32 -268435456, i32 268435456}
+comment|// CHECK-DAG: ![[IF]]  = !{!"branch_weights", i32 -268435456, i32 268435456}
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: ![[SWITCH]] = metadata !{metadata !"branch_weights", i32 715827883, i32 -715827883, i32 -715827883, i32 -715827883}
+comment|// CHECK-DAG: ![[SWITCH]] = !{!"branch_weights", i32 715827883, i32 -715827883, i32 -715827883, i32 -715827883}
 end_comment
 
 end_unit

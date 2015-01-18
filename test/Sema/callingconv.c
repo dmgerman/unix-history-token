@@ -73,9 +73,7 @@ operator|)
 argument_list|)
 name|test0
 argument_list|()
-block|{
-comment|// expected-error {{function with no prototype cannot use fastcall calling convention}}
-block|}
+block|{ }
 end_decl_stmt
 
 begin_decl_stmt

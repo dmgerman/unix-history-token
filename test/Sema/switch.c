@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wswitch-enum -Wcovered-switch-default %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wswitch-enum -Wcovered-switch-default -triple x86_64-linux-gnu %s
 end_comment
 
 begin_function
@@ -1192,6 +1192,91 @@ case|:
 break|break;
 comment|// expected-warning {{case value not in enumerated type 'enum ExtendedEnum1'}}
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|PR11778
+parameter_list|(
+name|char
+name|c
+parameter_list|,
+name|int
+name|n
+parameter_list|,
+name|long
+name|long
+name|ll
+parameter_list|)
+block|{
+comment|// Do not reject this; we don't have duplicate case values because we
+comment|// check for duplicates in the promoted type.
+switch|switch
+condition|(
+name|c
+condition|)
+case|case
+literal|1
+case|:
+case|case
+literal|257
+case|:
+empty_stmt|;
+comment|// expected-warning {{overflow}}
+switch|switch
+condition|(
+name|n
+condition|)
+case|case
+literal|0x100000001LL
+case|:
+case|case
+literal|1
+case|:
+empty_stmt|;
+comment|// expected-warning {{overflow}} expected-error {{duplicate}} expected-note {{previous}}
+switch|switch
+condition|(
+operator|(
+name|int
+operator|)
+name|ll
+condition|)
+case|case
+literal|0x100000001LL
+case|:
+case|case
+literal|1
+case|:
+empty_stmt|;
+comment|// expected-warning {{overflow}} expected-error {{duplicate}} expected-note {{previous}}
+switch|switch
+condition|(
+operator|(
+name|long
+name|long
+operator|)
+name|n
+condition|)
+case|case
+literal|0x100000001LL
+case|:
+case|case
+literal|1
+case|:
+empty_stmt|;
+switch|switch
+condition|(
+name|ll
+condition|)
+case|case
+literal|0x100000001LL
+case|:
+case|case
+literal|1
+case|:
+empty_stmt|;
 block|}
 end_function
 

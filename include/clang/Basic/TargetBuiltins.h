@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_BASIC_TARGET_BUILTINS_H
+name|LLVM_CLANG_BASIC_TARGETBUILTINS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_BASIC_TARGET_BUILTINS_H
+name|LLVM_CLANG_BASIC_TARGETBUILTINS_H
 end_define
 
 begin_include
@@ -596,6 +596,40 @@ value|BI##ID,
 include|#
 directive|include
 file|"clang/Basic/BuiltinsXCore.def"
+name|LastTSBuiltin
+block|}
+enum|;
+block|}
+comment|/// \brief Le64 builtins
+name|namespace
+name|Le64
+block|{
+enum|enum
+block|{
+name|LastTIBuiltin
+init|=
+name|clang
+operator|::
+name|Builtin
+operator|::
+name|FirstTSBuiltin
+operator|-
+literal|1
+block|,
+define|#
+directive|define
+name|BUILTIN
+parameter_list|(
+name|ID
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|ATTRS
+parameter_list|)
+value|BI##ID,
+include|#
+directive|include
+file|"clang/Basic/BuiltinsLe64.def"
 name|LastTSBuiltin
 block|}
 enum|;

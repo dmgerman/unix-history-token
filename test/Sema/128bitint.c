@@ -156,7 +156,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{constant is larger than the largest unsigned integer type}}
+comment|// expected-error {{integer literal is too large to be represented in any integer type}}
 end_comment
 
 begin_decl_stmt
@@ -193,7 +193,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{constant is larger than the largest unsigned integer type}}
+comment|// expected-error {{integer literal is too large to be represented in any integer type}}
 end_comment
 
 begin_decl_stmt

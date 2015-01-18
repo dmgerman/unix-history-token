@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -pedantic -trigraphs %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -pedantic -ftrigraphs %s
 end_comment
 
 begin_decl_stmt
@@ -88,7 +88,7 @@ literal|9223372036854775808
 end_if
 
 begin_comment
-comment|// expected-warning {{integer constant is larger than the largest signed integer type}}
+comment|// expected-warning {{integer literal is too large to be represented in a signed integer type, interpreting as unsigned}}
 end_comment
 
 begin_endif
@@ -103,7 +103,7 @@ literal|0x10000000000000000
 end_if
 
 begin_comment
-comment|// expected-error {{integer constant is larger than the largest unsigned integer type}}
+comment|// expected-error {{integer literal is too large to be represented in any integer type}}
 end_comment
 
 begin_endif

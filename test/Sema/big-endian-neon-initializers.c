@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple arm64_be -target-feature +neon -verify -fsyntax-only -ffreestanding
+comment|// RUN: %clang_cc1 %s -triple aarch64_be -target-feature +neon -verify -fsyntax-only -ffreestanding
 end_comment
 
 begin_comment

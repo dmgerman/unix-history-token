@@ -12,11 +12,11 @@ comment|// RUN: %clang_cc1 -O2 -triple x86_64-apple-macosx10.9 -main-file-name c
 end_comment
 
 begin_comment
-comment|// CHECK: @__llvm_profile_counters_foo = linkonce_odr hidden global [1 x i64] zeroinitializer, section "__DATA,__llvm_prf_cnts", align 8
+comment|// CHECK: @__llvm_profile_name_foo = linkonce_odr hidden constant [3 x i8] c"foo", section "__DATA,__llvm_prf_names", align 1
 end_comment
 
 begin_comment
-comment|// CHECK: @__llvm_profile_name_foo = linkonce_odr hidden constant [3 x i8] c"foo", section "__DATA,__llvm_prf_names", align 1
+comment|// CHECK: @__llvm_profile_counters_foo = linkonce_odr hidden global [1 x i64] zeroinitializer, section "__DATA,__llvm_prf_cnts", align 8
 end_comment
 
 begin_comment

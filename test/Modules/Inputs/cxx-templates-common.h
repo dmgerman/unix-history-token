@@ -166,6 +166,26 @@ expr|struct
 name|WithPartialSpecialization
 block|{}
 expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|WithPartialSpecialization
+operator|<
+name|void
+argument_list|(
+name|T
+argument_list|)
+operator|>
+block|{
+typedef|typedef
+name|int
+name|type
+typedef|;
+block|}
+empty_stmt|;
 typedef|typedef
 name|WithPartialSpecialization
 operator|<
@@ -173,6 +193,16 @@ name|int
 operator|*
 operator|>
 name|WithPartialSpecializationUse
+expr_stmt|;
+typedef|typedef
+name|WithPartialSpecialization
+operator|<
+name|void
+argument_list|(
+name|int
+argument_list|)
+operator|>
+name|WithPartialSpecializationUse2
 expr_stmt|;
 name|template
 operator|<
@@ -189,7 +219,84 @@ name|int
 operator|>
 name|WithExplicitSpecializationUse
 expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|WithImplicitSpecialMembers
+block|{
+name|int
+name|n
+block|; }
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|WithAliasTemplate
+block|{
+name|template
+operator|<
+name|typename
+operator|>
+name|using
+name|X
+operator|=
+name|T
+block|; }
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|WithAnonymousDecls
+block|{   struct
+block|{
+name|bool
+name|k
+block|; }
+block|;
+expr|union
+block|{
+name|int
+name|a
+block|,
+name|b
+block|; }
+block|;   struct
+block|{
+name|int
+name|c
+block|,
+name|d
+block|; }
+name|s
+block|;   enum
+block|{
+name|e
+operator|=
+literal|123
+block|}
+block|;
+typedef|typedef
+name|int
+name|X
+typedef|;
+block|}
+empty_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|"cxx-templates-textual.h"
+end_include
 
 end_unit
 

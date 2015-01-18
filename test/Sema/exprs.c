@@ -1277,6 +1277,18 @@ if|if
 condition|(
 name|test22
 condition|)
+comment|// expected-warning {{address of function 'test22' will always evaluate to 'true'}} \
+comment|// expected-note {{prefix with the address-of operator to silence this warning}}
+operator|(
+name|void
+operator|)
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|&
+name|test22
+condition|)
 operator|(
 name|void
 operator|)

@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify -std=c11 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -std=c11 -fmodules -fmodules-cache-path=%t %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -std=c11 -fmodules -fmodules-cache-path=%t %s -D__STDC_WANT_LIB_EXT1__=1
 end_comment
 
 begin_comment

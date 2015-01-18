@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -O3 -triple arm64-apple-ios7 -target-feature +neon -f
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -O3 -triple arm64_be-linux-gnu -target-feature +neon -ffreestanding -emit-llvm -o - %s | FileCheck %s --check-prefix CHECK-BE
+comment|// RUN: %clang_cc1 -O3 -triple aarch64_be-linux-gnu -target-feature +neon -ffreestanding -emit-llvm -o - %s | FileCheck %s --check-prefix CHECK-BE
 end_comment
 
 begin_include

@@ -189,6 +189,17 @@ block|}
 end_function
 
 begin_function
+name|void
+name|t12
+parameter_list|()
+block|{
+asm|__asm jmp label
+comment|//
+asm|expected-error {{use of undeclared label 'label'}}
+block|}
+end_function
+
+begin_function
 name|int
 name|t_fail
 parameter_list|()
@@ -206,7 +217,7 @@ end_asm
 begin_asm
 asm|__asm {
 comment|//
-asm|expected-error 3 {{expected}} expected-note {{to match this}}
+asm|expected-error 2 {{expected}} expected-note {{to match this}}
 end_asm
 
 end_unit

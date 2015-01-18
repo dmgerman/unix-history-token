@@ -32,6 +32,34 @@ comment|// CHECK-PG: ld{{.*}}" "-e" "__start" "--eh-frame-hdr" "-Bdynamic" "-dyn
 end_comment
 
 begin_comment
+comment|// Check CPU type for MIPS64
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64-unknown-openbsd -### -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-MIPS64-CPU %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64el-unknown-openbsd -### -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-MIPS64EL-CPU %s
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64-CPU: "-target-cpu" "mips3"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-CPU: "-target-cpu" "mips3"
+end_comment
+
+begin_comment
 comment|// Check that the new linker flags are passed to OpenBSD
 end_comment
 
@@ -229,38 +257,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-MIPS64EL-PIC: as{{.*}}" "-mabi" "64" "-EL" "-KPIC"
-end_comment
-
-begin_comment
-comment|// Check that the integrated assembler is enabled for PowerPC and SPARC
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target powerpc-unknown-openbsd -### -c %s 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK-IAS %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target sparc-unknown-openbsd -### -c %s 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK-IAS %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target sparc64-unknown-openbsd -### -c %s 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK-IAS %s
-end_comment
-
-begin_comment
-comment|// CHECK-IAS-NOT: "-no-integrated-as"
 end_comment
 
 end_unit

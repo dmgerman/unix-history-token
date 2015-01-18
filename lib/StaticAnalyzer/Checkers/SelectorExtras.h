@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SA_CHECKERS_SELECTOREXTRAS
+name|LLVM_CLANG_LIB_STATICANALYZER_CHECKERS_SELECTOREXTRAS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SA_CHECKERS_SELECTOREXTRAS
+name|LLVM_CLANG_LIB_STATICANALYZER_CHECKERS_SELECTOREXTRAS_H
 end_define
 
 begin_include
@@ -200,7 +200,7 @@ name|argp
 argument_list|)
 return|;
 block|}
-name|END_WITH_NULL
+name|LLVM_END_WITH_NULL
 specifier|static
 specifier|inline
 name|Selector
@@ -249,7 +249,7 @@ return|return
 name|result
 return|;
 block|}
-name|END_WITH_NULL
+name|LLVM_END_WITH_NULL
 specifier|static
 specifier|inline
 name|void

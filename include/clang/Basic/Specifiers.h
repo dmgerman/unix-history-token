@@ -414,6 +414,9 @@ comment|// __attribute__((fastcall))
 name|CC_X86ThisCall
 block|,
 comment|// __attribute__((thiscall))
+name|CC_X86VectorCall
+block|,
+comment|// __attribute__((vectorcall))
 name|CC_X86Pascal
 block|,
 comment|// __attribute__((pascal))
@@ -436,10 +439,11 @@ name|CC_IntelOclBicc
 comment|// __attribute__((intel_ocl_bicc))
 block|}
 enum|;
-comment|/// \brief Checks whether the given calling convention is callee-cleanup.
+comment|/// \brief Checks whether the given calling convention supports variadic
+comment|/// calls. Unprototyped calls also use the variadic call rules.
 specifier|inline
 name|bool
-name|isCalleeCleanup
+name|supportsVariadicCall
 parameter_list|(
 name|CallingConv
 name|CC
@@ -462,12 +466,15 @@ case|:
 case|case
 name|CC_X86Pascal
 case|:
+case|case
+name|CC_X86VectorCall
+case|:
 return|return
-name|true
+name|false
 return|;
 default|default:
 return|return
-name|false
+name|true
 return|;
 block|}
 block|}

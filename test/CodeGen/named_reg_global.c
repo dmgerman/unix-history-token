@@ -188,7 +188,7 @@ comment|// CHECK: !llvm.named.register.sp = !{!0}
 end_comment
 
 begin_comment
-comment|// CHECK: !0 = metadata !{metadata !"sp"}
+comment|// CHECK: !0 = !{!"sp"}
 end_comment
 
 end_unit

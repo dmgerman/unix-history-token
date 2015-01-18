@@ -66,13 +66,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_DEPENDENT_DIAGNOSTIC_H
+name|LLVM_CLANG_AST_DEPENDENTDIAGNOSTIC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_DEPENDENT_DIAGNOSTIC_H
+name|LLVM_CLANG_AST_DEPENDENTDIAGNOSTIC_H
 end_define
 
 begin_include
@@ -746,9 +746,16 @@ condition|(
 operator|!
 name|Map
 condition|)
+comment|// Return an empty range using the always-end default constructor.
 return|return
 name|ddiag_range
+argument_list|(
+name|ddiag_iterator
 argument_list|()
+argument_list|,
+name|ddiag_iterator
+argument_list|()
+argument_list|)
 return|;
 end_expr_stmt
 

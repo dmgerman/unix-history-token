@@ -20,7 +20,7 @@ comment|// variable length arrays) and will thus emit no meta data.
 end_comment
 
 begin_comment
-comment|// The 33 tests that do emit typestrings are gathered into '!xcore.typestrings'
+comment|// The 38 tests that do emit typestrings are gathered into '!xcore.typestrings'
 end_comment
 
 begin_comment
@@ -32,15 +32,47 @@ comment|//<https://www.xmos.com/download/public/Tools-Development-Guide%28X9114A
 end_comment
 
 begin_comment
-comment|// CHECK: !xcore.typestrings = !{!1, !2, !3, !4, !5, !6, !7, !8, !9, !10, !11,
+comment|// CHECK: !xcore.typestrings = !{
 end_comment
 
 begin_comment
-comment|// CHECK: !12, !13, !14, !15, !16, !17, !18, !19, !20, !21, !22, !23, !24, !25,
+comment|// CHECK: !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}},
 end_comment
 
 begin_comment
-comment|// CHECK: !26, !27, !28, !29, !30, !31, !32, !33, !34, !35, !36, !37, !38}
+comment|// CHECK: !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}},
+end_comment
+
+begin_comment
+comment|// CHECK: !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}},
+end_comment
+
+begin_comment
+comment|// CHECK: !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}},
+end_comment
+
+begin_comment
+comment|// CHECK: !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}},
+end_comment
+
+begin_comment
+comment|// CHECK: !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}},
+end_comment
+
+begin_comment
+comment|// CHECK: !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}},
+end_comment
+
+begin_comment
+comment|// CHECK: !{{[0-9]+}}, !{{[0-9]+}}, !{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: , !{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK: }
 end_comment
 
 begin_comment
@@ -48,7 +80,7 @@ comment|// test BuiltinType
 end_comment
 
 begin_comment
-comment|// CHECK: !1 = metadata !{void (i1, i8, i8, i8, i16, i16, i16, i32, i32, i32,
+comment|// CHECK: !{{[0-9]+}} = !{void (i1, i8, i8, i8, i16, i16, i16, i32, i32, i32,
 end_comment
 
 begin_comment
@@ -56,7 +88,7 @@ comment|// CHECK:      i32, i32, i32, i64, i64, i64, float, double, double)*
 end_comment
 
 begin_comment
-comment|// CHECK:      @builtinType, metadata !"f{0}(b,uc,uc,sc,ss,us,ss,si,ui,si,sl,
+comment|// CHECK:      @builtinType, !"f{0}(b,uc,uc,sc,ss,us,ss,si,ui,si,sl,
 end_comment
 
 begin_comment
@@ -157,35 +189,35 @@ comment|// test FunctionType& Qualifiers
 end_comment
 
 begin_comment
-comment|// CHECK: !2 = metadata !{void ()* @gI, metadata !"f{0}()"}
+comment|// CHECK: !{{[0-9]+}} = !{void ()* @gI, !"f{0}()"}
 end_comment
 
 begin_comment
-comment|// CHECK: !3 = metadata !{void (...)* @eI, metadata !"f{0}()"}
+comment|// CHECK: !{{[0-9]+}} = !{void (...)* @eI, !"f{0}()"}
 end_comment
 
 begin_comment
-comment|// CHECK: !4 = metadata !{void ()* @gV, metadata !"f{0}(0)"}
+comment|// CHECK: !{{[0-9]+}} = !{void ()* @gV, !"f{0}(0)"}
 end_comment
 
 begin_comment
-comment|// CHECK: !5 = metadata !{void ()* @eV, metadata !"f{0}(0)"}
+comment|// CHECK: !{{[0-9]+}} = !{void ()* @eV, !"f{0}(0)"}
 end_comment
 
 begin_comment
-comment|// CHECK: !6 = metadata !{void (i32, ...)* @gVA, metadata !"f{0}(si,va)"}
+comment|// CHECK: !{{[0-9]+}} = !{void (i32, ...)* @gVA, !"f{0}(si,va)"}
 end_comment
 
 begin_comment
-comment|// CHECK: !7 = metadata !{void (i32, ...)* @eVA, metadata !"f{0}(si,va)"}
+comment|// CHECK: !{{[0-9]+}} = !{void (i32, ...)* @eVA, !"f{0}(si,va)"}
 end_comment
 
 begin_comment
-comment|// CHECK: !8 = metadata !{i32* (i32*)* @gQ, metadata !"f{crv:p(cv:si)}(p(cv:si))"}
+comment|// CHECK: !{{[0-9]+}} = !{i32* (i32*)* @gQ, !"f{crv:p(cv:si)}(p(cv:si))"}
 end_comment
 
 begin_comment
-comment|// CHECK: !9 = metadata !{i32* (i32*)* @eQ, metadata !"f{crv:p(cv:si)}(p(cv:si))"}
+comment|// CHECK: !{{[0-9]+}} = !{i32* (i32*)* @eQ, !"f{crv:p(cv:si)}(p(cv:si))"}
 end_comment
 
 begin_function_decl
@@ -320,19 +352,19 @@ comment|// test PointerType
 end_comment
 
 begin_comment
-comment|// CHECK: !10 = metadata !{i32* (i32*, i32* (i32*)*)*
+comment|// CHECK: !{{[0-9]+}} = !{i32* (i32*, i32* (i32*)*)*
 end_comment
 
 begin_comment
-comment|// CHECK:       @pointerType, metadata !"f{p(si)}(p(si),p(f{p(si)}(p(si))))"}
+comment|// CHECK:       @pointerType, !"f{p(si)}(p(si),p(f{p(si)}(p(si))))"}
 end_comment
 
 begin_comment
-comment|// CHECK: !11 = metadata !{i32** @EP, metadata !"p(si)"}
+comment|// CHECK: !{{[0-9]+}} = !{i32** @EP, !"p(si)"}
 end_comment
 
 begin_comment
-comment|// CHECK: !12 = metadata !{i32** @GP, metadata !"p(si)"}
+comment|// CHECK: !{{[0-9]+}} = !{i32** @GP, !"p(si)"}
 end_comment
 
 begin_decl_stmt
@@ -386,11 +418,11 @@ comment|// test ArrayType
 end_comment
 
 begin_comment
-comment|// CHECK: !13 = metadata !{[2 x i32]* (i32*, i32*, [2 x i32]*, [2 x i32]*, i32*)*
+comment|// CHECK: !{{[0-9]+}} = !{[2 x i32]* (i32*, i32*, [2 x i32]*, [2 x i32]*, i32*)*
 end_comment
 
 begin_comment
-comment|// CHECK:       @arrayType, metadata !"f{p(a(2:si))}(p(si),p(cv:si),p(a(2:si)),
+comment|// CHECK:       @arrayType, !"f{p(a(2:si))}(p(si),p(cv:si),p(a(2:si)),
 end_comment
 
 begin_comment
@@ -398,43 +430,43 @@ comment|// CHECK:       p(a(2:si)),p(si))"}
 end_comment
 
 begin_comment
-comment|// CHECK: !14 = metadata !{[0 x i32]* @EA1, metadata !"a(*:cv:si)"}
+comment|// CHECK: !{{[0-9]+}} = !{[0 x i32]* @EA1, !"a(*:cv:si)"}
 end_comment
 
 begin_comment
-comment|// CHECK: !15 = metadata !{[2 x i32]* @EA2, metadata !"a(2:si)"}
+comment|// CHECK: !{{[0-9]+}} = !{[2 x i32]* @EA2, !"a(2:si)"}
 end_comment
 
 begin_comment
-comment|// CHECK: !16 = metadata !{[0 x [2 x i32]]* @EA3, metadata !"a(*:a(2:si))"}
+comment|// CHECK: !{{[0-9]+}} = !{[0 x [2 x i32]]* @EA3, !"a(*:a(2:si))"}
 end_comment
 
 begin_comment
-comment|// CHECK: !17 = metadata !{[3 x [2 x i32]]* @EA4, metadata !"a(3:a(2:si))"}
+comment|// CHECK: !{{[0-9]+}} = !{[3 x [2 x i32]]* @EA4, !"a(3:a(2:si))"}
 end_comment
 
 begin_comment
-comment|// CHECK: !18 = metadata !{[2 x i32]* @GA1, metadata !"a(2:cv:si)"}
+comment|// CHECK: !{{[0-9]+}} = !{[2 x i32]* @GA1, !"a(2:cv:si)"}
 end_comment
 
 begin_comment
-comment|// CHECK: !19 = metadata !{void ([2 x i32]*)* @arrayTypeVariable1,
+comment|// CHECK: !{{[0-9]+}} = !{void ([2 x i32]*)* @arrayTypeVariable1,
 end_comment
 
 begin_comment
-comment|// CHECK:       metadata !"f{0}(p(a(2:si)))"}
+comment|// CHECK:       !"f{0}(p(a(2:si)))"}
 end_comment
 
 begin_comment
-comment|// CHECK: !20 = metadata !{void (void ([2 x i32]*)*)* @arrayTypeVariable2,
+comment|// CHECK: !{{[0-9]+}} = !{void (void ([2 x i32]*)*)* @arrayTypeVariable2,
 end_comment
 
 begin_comment
-comment|// CHECK:       metadata !"f{0}(p(f{0}(p(a(2:si)))))"}
+comment|// CHECK:       !"f{0}(p(f{0}(p(a(2:si)))))"}
 end_comment
 
 begin_comment
-comment|// CHECK: !21 = metadata !{[3 x [2 x i32]]* @GA2, metadata !"a(3:a(2:si))"}
+comment|// CHECK: !{{[0-9]+}} = !{[3 x [2 x i32]]* @GA2, !"a(3:a(2:si))"}
 end_comment
 
 begin_decl_stmt
@@ -726,7 +758,7 @@ comment|// test StructureType
 end_comment
 
 begin_comment
-comment|// CHECK: !22 = metadata !{void (%struct.S1*)* @structureType1, metadata
+comment|// CHECK: !{{[0-9]+}} = !{void (%struct.S1*)* @structureType1,
 end_comment
 
 begin_comment
@@ -734,7 +766,7 @@ comment|// CHECK:       !"f{0}(s(S1){m(ps2){p(s(S2){m(ps3){p(s(S3){m(s1){s(S1){}
 end_comment
 
 begin_comment
-comment|// CHECK: !23 = metadata !{void (%struct.S2*)* @structureType2, metadata
+comment|// CHECK: !{{[0-9]+}} = !{void (%struct.S2*)* @structureType2,
 end_comment
 
 begin_comment
@@ -742,7 +774,7 @@ comment|// CHECK:       !"f{0}(s(S2){m(ps3){p(s(S3){m(s1){s(S1){m(ps2){p(s(S2){}
 end_comment
 
 begin_comment
-comment|// CHECK: !24 = metadata !{void (%struct.S3*)* @structureType3, metadata
+comment|// CHECK: !{{[0-9]+}} = !{void (%struct.S3*)* @structureType3,
 end_comment
 
 begin_comment
@@ -750,7 +782,7 @@ comment|// CHECK:       !"f{0}(s(S3){m(s1){s(S1){m(ps2){p(s(S2){m(ps3){p(s(S3){}
 end_comment
 
 begin_comment
-comment|// CHECK: !25 = metadata !{void (%struct.S4*)* @structureType4, metadata
+comment|// CHECK: !{{[0-9]+}} = !{void (%struct.S4*)* @structureType4,
 end_comment
 
 begin_comment
@@ -758,11 +790,11 @@ comment|// CHECK:       !"f{0}(s(S4){m(s1){s(S1){m(ps2){p(s(S2){m(ps3){p(s(S3){m
 end_comment
 
 begin_comment
-comment|// CHECK: !26 = metadata !{%struct.anon* @StructAnon, metadata !"s(){m(A){si}}"}
+comment|// CHECK: !{{[0-9]+}} = !{%struct.anon* @StructAnon, !"s(){m(A){si}}"}
 end_comment
 
 begin_comment
-comment|// CHECK: !27 = metadata !{i32 (%struct.SB*)* @structureTypeB, metadata
+comment|// CHECK: !{{[0-9]+}} = !{i32 (%struct.SB*)* @structureTypeB,
 end_comment
 
 begin_comment
@@ -972,7 +1004,7 @@ comment|// test UnionType
 end_comment
 
 begin_comment
-comment|// CHECK: !28 = metadata !{void (%union.U1*)* @unionType1, metadata
+comment|// CHECK: !{{[0-9]+}} = !{void (%union.U1*)* @unionType1,
 end_comment
 
 begin_comment
@@ -980,7 +1012,7 @@ comment|// CHECK:       !"f{0}(u(U1){m(pu2){p(u(U2){m(pu3){p(u(U3){m(u1){u(U1){}
 end_comment
 
 begin_comment
-comment|// CHECK: !29 = metadata !{void (%union.U2*)* @unionType2, metadata
+comment|// CHECK: !{{[0-9]+}} = !{void (%union.U2*)* @unionType2,
 end_comment
 
 begin_comment
@@ -988,7 +1020,7 @@ comment|// CHECK:       !"f{0}(u(U2){m(pu3){p(u(U3){m(u1){u(U1){m(pu2){p(u(U2){}
 end_comment
 
 begin_comment
-comment|// CHECK: !30 = metadata !{void (%union.U3*)* @unionType3, metadata
+comment|// CHECK: !{{[0-9]+}} = !{void (%union.U3*)* @unionType3,
 end_comment
 
 begin_comment
@@ -996,7 +1028,7 @@ comment|// CHECK:       !"f{0}(u(U3){m(u1){u(U1){m(pu2){p(u(U2){m(pu3){p(u(U3){}
 end_comment
 
 begin_comment
-comment|// CHECK: !31 = metadata !{void (%union.U4*)* @unionType4, metadata
+comment|// CHECK: !{{[0-9]+}} = !{void (%union.U4*)* @unionType4,
 end_comment
 
 begin_comment
@@ -1004,11 +1036,11 @@ comment|// CHECK:       !"f{0}(u(U4){m(u1){u(U1){m(pu2){p(u(U2){m(pu3){p(u(U3){m
 end_comment
 
 begin_comment
-comment|// CHECK: !32 = metadata !{%union.anon* @UnionAnon, metadata !"u(){m(A){si}}"}
+comment|// CHECK: !{{[0-9]+}} = !{%union.anon* @UnionAnon, !"u(){m(A){si}}"}
 end_comment
 
 begin_comment
-comment|// CHECK: !33 = metadata !{i32 (%union.UB*)* @unionTypeB, metadata
+comment|// CHECK: !{{[0-9]+}} = !{i32 (%union.UB*)* @unionTypeB,
 end_comment
 
 begin_comment
@@ -1218,11 +1250,11 @@ comment|// test EnumType
 end_comment
 
 begin_comment
-comment|// CHECK: !34 = metadata !{i32* @EnumAnon, metadata !"e(){m(EA){3}}"}
+comment|// CHECK: !{{[0-9]+}} = !{i32* @EnumAnon, !"e(){m(EA){3}}"}
 end_comment
 
 begin_comment
-comment|// CHECK: !35 = metadata !{i32 (i32)* @enumType, metadata
+comment|// CHECK: !{{[0-9]+}} = !{i32 (i32)* @enumType,
 end_comment
 
 begin_comment
@@ -1275,15 +1307,15 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: !36 = metadata !{i32 ()* @testReDecl, metadata !"f{si}()"}
+comment|// CHECK: !{{[0-9]+}} = !{i32 ()* @testReDecl, !"f{si}()"}
 end_comment
 
 begin_comment
-comment|// CHECK: !37 = metadata !{[10 x i32]* @After, metadata !"a(10:si)"}
+comment|// CHECK: !{{[0-9]+}} = !{[10 x i32]* @After, !"a(10:si)"}
 end_comment
 
 begin_comment
-comment|// CHECK: !38 = metadata !{[10 x i32]* @Before, metadata !"a(10:si)"}
+comment|// CHECK: !{{[0-9]+}} = !{[10 x i32]* @Before, !"a(10:si)"}
 end_comment
 
 begin_decl_stmt

@@ -8,6 +8,46 @@ comment|//
 end_comment
 
 begin_comment
+comment|// -mabicalls
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s -mno-abicalls -mabicalls 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MABICALLS %s
+end_comment
+
+begin_comment
+comment|// CHECK-MABICALLS: "-target-feature" "-noabicalls"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mno-abicalls
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s -mabicalls -mno-abicalls 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MNOABICALLS %s
+end_comment
+
+begin_comment
+comment|// CHECK-MNOABICALLS: "-target-feature" "+noabicalls"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// -mips16
 end_comment
 

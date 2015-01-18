@@ -25,9 +25,7 @@ name|t2
 parameter_list|()
 block|{
 comment|// CHECK: @t2
-comment|// CHECK: call void asm sideeffect inteldialect "nop", "~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "nop", "~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "nop", "~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: call void asm sideeffect inteldialect "nop\0A\09nop\0A\09nop", "~{dirflag},~{fpsr},~{flags}"()
 comment|// CHECK: ret void
 asm|__asm nop
 asm|__asm nop
@@ -57,8 +55,7 @@ name|void
 parameter_list|)
 block|{
 comment|// CHECK: @t4
-comment|// CHECK: call void asm sideeffect inteldialect "mov ebx, eax", "~{ebx},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov ecx, ebx", "~{ecx},~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: call void asm sideeffect inteldialect "mov ebx, eax\0A\09mov ecx, ebx", "~{ebx},~{ecx},~{dirflag},~{fpsr},~{flags}"()
 comment|// CHECK: ret void
 asm|__asm mov ebx, eax
 asm|__asm mov ecx, ebx
@@ -170,15 +167,7 @@ comment|// CHECK: t8
 end_comment
 
 begin_comment
-comment|// CHECK: call void asm sideeffect inteldialect "int $$4", "~{dirflag},~{fpsr},~{flags}"()
-end_comment
-
-begin_comment
-comment|// CHECK: call void asm sideeffect inteldialect "", "~{dirflag},~{fpsr},~{flags}"()
-end_comment
-
-begin_comment
-comment|// CHECK: call void asm sideeffect inteldialect "int $$4", "~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: call i32 asm sideeffect inteldialect "int $$4\0A\09int $$4", "={eax},~{dirflag},~{fpsr},~{flags}"()
 end_comment
 
 begin_comment
@@ -229,10 +218,11 @@ return|return
 name|j
 return|;
 comment|// CHECK: t10
+comment|// CHECK: [[r:%[a-zA-Z0-9]+]] = alloca i32, align 4
 comment|// CHECK: [[I:%[a-zA-Z0-9]+]] = alloca i32, align 4
 comment|// CHECK: [[J:%[a-zA-Z0-9]+]] = alloca i32, align 4
 comment|// CHECK: store i32 1, i32* [[I]], align 4
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $1\0A\09mov dword ptr $0, eax", "=*m,*m,~{eax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}}, i32* %{{.*}})
+comment|// CHECK: call i32 asm sideeffect inteldialect "mov eax, dword ptr $2\0A\09mov dword ptr $0, eax", "=*m,={eax},*m,~{eax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}}, i32* %{{.*}})
 comment|// CHECK: [[RET:%[a-zA-Z0-9]+]] = load i32* [[J]], align 4
 comment|// CHECK: ret i32 [[RET]]
 block|}
@@ -283,7 +273,7 @@ operator|+
 name|m
 return|;
 comment|// CHECK: t12
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $2\0A\09mov dword ptr $0, eax\0A\09mov eax, dword ptr $3\0A\09mov dword ptr $1, eax", "=*m,=*m,*m,*m,~{eax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}}, i32* %{{.*}}, i32* %{{.*}}, i32* %{{.*}})
+comment|// CHECK: call i32 asm sideeffect inteldialect "mov eax, dword ptr $3\0A\09mov dword ptr $0, eax\0A\09mov eax, dword ptr $4\0A\09mov dword ptr $1, eax", "=*m,=*m,={eax},*m,*m,~{eax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}}, i32* %{{.*}}, i32* %{{.*}}, i32* %{{.*}})
 block|}
 end_function
 
@@ -305,8 +295,7 @@ decl_stmt|;
 asm|__asm movzx eax, i
 asm|__asm movzx eax, j
 comment|// CHECK: t13
-comment|// CHECK: call void asm sideeffect inteldialect "movzx eax, byte ptr $0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"(i8* %{{.*}})
-comment|// CHECK: call void asm sideeffect inteldialect "movzx eax, word ptr $0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"(i16* %{{.*}})
+comment|// CHECK: call void asm sideeffect inteldialect "movzx eax, byte ptr $0\0A\09movzx eax, word ptr $1", "*m,*m,~{eax},~{dirflag},~{fpsr},~{flags}"(i8* %{{.*}}i, i16* %{{.*}}j)
 block|}
 end_function
 
@@ -351,6 +340,7 @@ name|void
 name|t15
 parameter_list|()
 block|{
+comment|// CHECK: t15
 name|int
 name|lvar
 init|=
@@ -360,22 +350,22 @@ asm|__asm mov eax, lvar        ;
 name|eax
 operator|=
 literal|10
+comment|// CHECK: mov eax, dword ptr $0
 asm|__asm mov eax, offset lvar ;
 name|eax
 operator|=
 name|address
 name|of
 name|lvar
+comment|// CHECK: mov eax, $1
 asm|__asm mov eax, offset gvar ;
 name|eax
 operator|=
 name|address
 name|of
 name|gvar
-comment|// CHECK: t15
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $0", "r,~{eax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $0", "r,~{eax},~{dirflag},~{fpsr},~{flags}"(i32* @{{.*}})
+comment|// CHECK: mov eax, $2
+comment|// CHECK: "*m,r,r,~{eax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}}, i32* %{{.*}}, i32* @{{.*}})
 block|}
 end_function
 
@@ -400,15 +390,16 @@ name|void
 name|t17
 parameter_list|()
 block|{
-asm|__asm _emit 0x4A
-asm|__asm _emit 0x43
-asm|__asm _emit 0x4B
-asm|__asm _EMIT 0x4B
 comment|// CHECK: t17
-comment|// CHECK:  call void asm sideeffect inteldialect ".byte 0x4A", "~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK:  call void asm sideeffect inteldialect ".byte 0x43", "~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK:  call void asm sideeffect inteldialect ".byte 0x4B", "~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK:  call void asm sideeffect inteldialect ".byte 0x4B", "~{dirflag},~{fpsr},~{flags}"()
+asm|__asm _emit 0x4A
+comment|// CHECK: .byte 0x4A
+asm|__asm _emit 0x43
+comment|// CHECK: .byte 0x43
+asm|__asm _emit 0x4B
+comment|// CHECK: .byte 0x4B
+asm|__asm _EMIT 0x4B
+comment|// CHECK: .byte 0x4B
+comment|// CHECK:  "~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -417,6 +408,7 @@ name|void
 name|t20
 parameter_list|()
 block|{
+comment|// CHECK: t20
 name|char
 name|bar
 decl_stmt|;
@@ -436,30 +428,30 @@ literal|4
 index|]
 decl_stmt|;
 asm|__asm mov eax, LENGTH foo
+comment|// CHECK: mov eax, $$1
 asm|__asm mov eax, LENGTH bar
+comment|// CHECK: mov eax, $$1
 asm|__asm mov eax, LENGTH _foo
+comment|// CHECK: mov eax, $$4
 asm|__asm mov eax, LENGTH _bar
-comment|// CHECK: t20
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$1", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$1", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$4", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$2", "~{eax},~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: mov eax, $$2
 asm|__asm mov eax, TYPE foo
+comment|// CHECK: mov eax, $$4
 asm|__asm mov eax, TYPE bar
+comment|// CHECK: mov eax, $$1
 asm|__asm mov eax, TYPE _foo
+comment|// CHECK: mov eax, $$4
 asm|__asm mov eax, TYPE _bar
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$4", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$1", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$4", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$1", "~{eax},~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: mov eax, $$1
 asm|__asm mov eax, SIZE foo
+comment|// CHECK: mov eax, $$4
 asm|__asm mov eax, SIZE bar
+comment|// CHECK: mov eax, $$1
 asm|__asm mov eax, SIZE _foo
+comment|// CHECK: mov eax, $$16
 asm|__asm mov eax, SIZE _bar
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$4", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$1", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$16", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$2", "~{eax},~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: mov eax, $$2
+comment|// CHECK: "~{eax},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -528,7 +520,7 @@ asm|__asm {
 asm|the_label:
 asm|}
 comment|// CHECK: t23
-comment|// CHECK: call void asm sideeffect inteldialect "the_label:", "~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: call void asm sideeffect inteldialect "{{.*}}__MSASMLABEL_.0__the_label:", "~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -548,7 +540,7 @@ parameter_list|()
 block|{
 asm|__asm call t24_helper
 comment|// CHECK: t24
-comment|// CHECK: call void asm sideeffect inteldialect "call $0", "r,~{dirflag},~{fpsr},~{flags}"(void ()* @t24_helper)
+comment|// CHECK: call void asm sideeffect inteldialect "call dword ptr $0", "*m,~{dirflag},~{fpsr},~{flags}"(void ()* @t24_helper)
 block|}
 end_function
 
@@ -557,17 +549,18 @@ name|void
 name|t25
 parameter_list|()
 block|{
-asm|__asm mov eax, 0ffffffffh
-asm|__asm mov eax, 0fh
-asm|__asm mov eax, 0a2h
-asm|__asm mov eax, 0xa2h
-asm|__asm mov eax, 0xa2
 comment|// CHECK: t25
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$4294967295", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$15", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$162", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$0xa2h", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$0xa2", "~{eax},~{dirflag},~{fpsr},~{flags}"()
+asm|__asm mov eax, 0ffffffffh
+comment|// CHECK: mov eax, $$4294967295
+asm|__asm mov eax, 0fh
+comment|// CHECK: mov eax, $$15
+asm|__asm mov eax, 0a2h
+comment|// CHECK: mov eax, $$162
+asm|__asm mov eax, 0xa2h
+comment|// CHECK: mov eax, $$0xa2h
+asm|__asm mov eax, 0xa2
+comment|// CHECK: mov eax, $$0xa2
+comment|// CHECK: "~{eax},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -576,20 +569,20 @@ name|void
 name|t26
 parameter_list|()
 block|{
-asm|__asm pushad
-asm|__asm mov eax, 0
-asm|__asm __emit 0fh
-asm|__asm __emit 0a2h
-asm|__asm __EMIT 0a2h
-asm|__asm popad
-comment|// FIXME: These all need to be merged into the same asm blob.
 comment|// CHECK: t26
-comment|// CHECK: call void asm sideeffect inteldialect "pushad", "~{esp},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$0", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect ".byte 0fh", "~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect ".byte 0a2h", "~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect ".byte 0a2h", "~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "popad", "~{eax},~{ebp},~{ebx},~{ecx},~{edi},~{edx},~{esi},~{esp},~{dirflag},~{fpsr},~{flags}"()
+asm|__asm pushad
+comment|// CHECK: pushad
+asm|__asm mov eax, 0
+comment|// CHECK: mov eax, $$0
+asm|__asm __emit 0fh
+comment|// CHECK: .byte 0fh
+asm|__asm __emit 0a2h
+comment|// CHECK: .byte 0a2h
+asm|__asm __EMIT 0a2h
+comment|// CHECK: .byte 0a2h
+asm|__asm popad
+comment|// CHECK: popad
+comment|// CHECK: "~{eax},~{ebp},~{ebx},~{ecx},~{edi},~{edx},~{esi},~{esp},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -609,15 +602,16 @@ name|void
 name|t28
 parameter_list|()
 block|{
-asm|__asm align 8
-asm|__asm align 16;
-asm|__asm align 128;
-asm|__asm ALIGN 256;
 comment|// CHECK: t28
-comment|// CHECK: call void asm sideeffect inteldialect ".align 3", "~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect ".align 4", "~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect ".align 7", "~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect ".align 8", "~{dirflag},~{fpsr},~{flags}"()
+asm|__asm align 8
+comment|// CHECK: .align 3
+asm|__asm align 16;
+comment|// CHECK: .align 4
+asm|__asm align 128;
+comment|// CHECK: .align 7
+asm|__asm ALIGN 256;
+comment|// CHECK: .align 8
+comment|// CHECK: "~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -626,6 +620,7 @@ name|void
 name|t29
 parameter_list|()
 block|{
+comment|// CHECK: t29
 name|int
 name|arr
 index|[
@@ -652,12 +647,12 @@ init|=
 literal|0
 decl_stmt|;
 asm|__asm mov olen, LENGTH arr
+comment|// CHECK: mov dword ptr $0, $$2
 asm|__asm mov osize, SIZE arr
+comment|// CHECK: mov dword ptr $1, $$8
 asm|__asm mov otype, TYPE arr
-comment|// CHECK: t29
-comment|// CHECK: call void asm sideeffect inteldialect "mov dword ptr $0, $$2", "=*m,~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
-comment|// CHECK: call void asm sideeffect inteldialect "mov dword ptr $0, $$8", "=*m,~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
-comment|// CHECK: call void asm sideeffect inteldialect "mov dword ptr $0, $$4", "=*m,~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
+comment|// CHECK: mov dword ptr $2, $$4
+comment|// CHECK: "=*m,=*m,=*m,~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}}, i32* %{{.*}}, i32* %{{.*}})
 block|}
 end_function
 
@@ -681,19 +676,20 @@ name|int
 modifier|*
 name|t30
 parameter_list|()
+comment|// CHECK: t30
 block|{
 name|int
 modifier|*
 name|res
 decl_stmt|;
 asm|__asm lea edi, results
+comment|// CHECK: lea edi, dword ptr $2
 asm|__asm mov res, edi
+comment|// CHECK: mov dword ptr $0, edi
 return|return
 name|res
 return|;
-comment|// CHECK: t30
-comment|// CHECK: call void asm sideeffect inteldialect "lea edi, dword ptr $0", "*m,~{edi},~{dirflag},~{fpsr},~{flags}"([2 x i32]* @{{.*}})
-comment|// CHECK: call void asm sideeffect inteldialect "mov dword ptr $0, edi", "=*m,~{dirflag},~{fpsr},~{flags}"(i32** %{{.*}})
+comment|// CHECK: "=*m,={eax},*m,~{edi},~{dirflag},~{fpsr},~{flags}"(i32** %{{.*}}, [2 x i32]* @{{.*}})
 block|}
 end_function
 
@@ -702,11 +698,12 @@ name|void
 name|t31
 parameter_list|()
 block|{
-asm|__asm pushad
-asm|__asm popad
 comment|// CHECK: t31
-comment|// CHECK: call void asm sideeffect inteldialect "pushad", "~{esp},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "popad", "~{eax},~{ebp},~{ebx},~{ecx},~{edi},~{edx},~{esi},~{esp},~{dirflag},~{fpsr},~{flags}"()
+asm|__asm pushad
+comment|// CHECK: pushad
+asm|__asm popad
+comment|// CHECK: popad
+comment|// CHECK: "~{eax},~{ebp},~{ebx},~{ecx},~{edi},~{edx},~{esi},~{esp},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -715,18 +712,19 @@ name|void
 name|t32
 parameter_list|()
 block|{
+comment|// CHECK: t32
 name|int
 name|i
 decl_stmt|;
 asm|__asm mov eax, i
+comment|// CHECK: mov eax, dword ptr $0
 asm|__asm mov eax, dword ptr i
+comment|// CHECK: mov eax, dword ptr $1
 asm|__asm mov ax, word ptr i
+comment|// CHECK: mov ax, word ptr $2
 asm|__asm mov al, byte ptr i
-comment|// CHECK: t32
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
-comment|// CHECK: call void asm sideeffect inteldialect "mov ax, word ptr $0", "*m,~{ax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
-comment|// CHECK: call void asm sideeffect inteldialect "mov al, byte ptr $0", "*m,~{al},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
+comment|// CHECK: mov al, byte ptr $3
+comment|// CHECK: "*m,*m,*m,*m,~{al},~{ax},~{eax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}}, i32* %{{.*}}, i32* %{{.*}}, i32* %{{.*}})
 block|}
 end_function
 
@@ -735,18 +733,19 @@ name|void
 name|t33
 parameter_list|()
 block|{
+comment|// CHECK: t33
 name|int
 name|i
 decl_stmt|;
 asm|__asm mov eax, [i]
+comment|// CHECK: mov eax, dword ptr $0
 asm|__asm mov eax, dword ptr [i]
+comment|// CHECK: mov eax, dword ptr $1
 asm|__asm mov ax, word ptr [i]
+comment|// CHECK: mov ax, word ptr $2
 asm|__asm mov al, byte ptr [i]
-comment|// CHECK: t33
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
-comment|// CHECK: call void asm sideeffect inteldialect "mov ax, word ptr $0", "*m,~{ax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
-comment|// CHECK: call void asm sideeffect inteldialect "mov al, byte ptr $0", "*m,~{al},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
+comment|// CHECK: mov al, byte ptr $3
+comment|// CHECK: "*m,*m,*m,*m,~{al},~{ax},~{eax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}}, i32* %{{.*}}, i32* %{{.*}}, i32* %{{.*}})
 block|}
 end_function
 
@@ -755,11 +754,12 @@ name|void
 name|t34
 parameter_list|()
 block|{
-asm|__asm prefetchnta 64[eax]
-asm|__asm mov eax, dword ptr 4[eax]
 comment|// CHECK: t34
-comment|// CHECK: call void asm sideeffect inteldialect "prefetchnta $$64[eax]", "~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$4[eax]", "~{eax},~{dirflag},~{fpsr},~{flags}"()
+asm|__asm prefetchnta 64[eax]
+comment|// CHECK: prefetchnta $$64[eax]
+asm|__asm mov eax, dword ptr 4[eax]
+comment|// CHECK: mov eax, dword ptr $$4[eax]
+comment|// CHECK: "~{eax},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -768,11 +768,12 @@ name|void
 name|t35
 parameter_list|()
 block|{
-asm|__asm prefetchnta [eax + (200*64)]
-asm|__asm mov eax, dword ptr [eax + (200*64)]
 comment|// CHECK: t35
-comment|// CHECK: call void asm sideeffect inteldialect "prefetchnta [eax + ($$200*$$64)]", "~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr [eax + ($$200*$$64)]", "~{eax},~{dirflag},~{fpsr},~{flags}"()
+asm|__asm prefetchnta [eax + (200*64)]
+comment|// CHECK: prefetchnta [eax + ($$200*$$64)]
+asm|__asm mov eax, dword ptr [eax + (200*64)]
+comment|// CHECK: mov eax, dword ptr [eax + ($$200*$$64)]
+comment|// CHECK: "~{eax},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -781,38 +782,65 @@ name|void
 name|t36
 parameter_list|()
 block|{
+comment|// CHECK: t36
 name|int
 name|arr
 index|[
 literal|4
 index|]
 decl_stmt|;
-asm|__asm mov eax, 4[arr]
-asm|__asm mov eax, 4[arr + 4]
-asm|__asm mov eax, 8[arr + 4 + 32*2 - 4]
-asm|__asm mov eax, 12[4 + arr]
-asm|__asm mov eax, 4[4 + arr + 4]
-asm|__asm mov eax, 4[64 + arr + (2*32)]
-asm|__asm mov eax, 4[64 + arr - 2*32]
-asm|__asm mov eax, [arr + 4]
-asm|__asm mov eax, [arr + 4 + 32*2 - 4]
-asm|__asm mov eax, [4 + arr]
-asm|__asm mov eax, [4 + arr + 4]
-asm|__asm mov eax, [64 + arr + (2*32)]
-asm|__asm mov eax, [64 + arr - 2*32]
-comment|// CHECK: t36
+comment|// Work around PR20368: These should be single line blocks
+asm|__asm {
+asm|mov eax, 4[arr]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$4$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, 4[arr + 4]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$8$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, 8[arr + 4 + 32*2 - 4]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$72$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, 12[4 + arr]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$16$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, 4[4 + arr + 4]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$12$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, 4[64 + arr + (2*32)]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$132$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, 4[64 + arr - 2*32]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$4$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, [arr + 4]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$4$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, [arr + 4 + 32*2 - 4]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$64$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, [4 + arr]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$4$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, [4 + arr + 4]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$8$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, [64 + arr + (2*32)]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$128$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, [64 + arr - 2*32]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
 block|}
 end_function
@@ -822,23 +850,24 @@ name|void
 name|t37
 parameter_list|()
 block|{
-asm|__asm mov eax, 4 + 8
-asm|__asm mov eax, 4 + 8 * 16
-asm|__asm mov eax, -4 + 8 * 16
-asm|__asm mov eax, (4 + 4) * 16
-asm|__asm mov eax, 4 + 8 * -16
-asm|__asm mov eax, 4 + 16 / -8
-asm|__asm mov eax, (16 + 16) / -8
-asm|__asm mov eax, ~15
 comment|// CHECK: t37
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$12", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$132", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$124", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$128", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$4294967172", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$2", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$4294967292", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, $$4294967280", "~{eax},~{dirflag},~{fpsr},~{flags}"()
+asm|__asm mov eax, 4 + 8
+comment|// CHECK: mov eax, $$12
+asm|__asm mov eax, 4 + 8 * 16
+comment|// CHECK: mov eax, $$132
+asm|__asm mov eax, -4 + 8 * 16
+comment|// CHECK: mov eax, $$124
+asm|__asm mov eax, (4 + 4) * 16
+comment|// CHECK: mov eax, $$128
+asm|__asm mov eax, 4 + 8 * -16
+comment|// CHECK: mov eax, $$4294967172
+asm|__asm mov eax, 4 + 16 / -8
+comment|// CHECK: mov eax, $$2
+asm|__asm mov eax, (16 + 16) / -8
+comment|// CHECK: mov eax, $$4294967292
+asm|__asm mov eax, ~15
+comment|// CHECK: mov eax, $$4294967280
+comment|// CHECK: "~{eax},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -847,28 +876,45 @@ name|void
 name|t38
 parameter_list|()
 block|{
+comment|// CHECK: t38
 name|int
 name|arr
 index|[
 literal|4
 index|]
 decl_stmt|;
-asm|__asm mov eax, 4+4[arr]
-asm|__asm mov eax, (4+4)[arr + 4]
-asm|__asm mov eax, 8*2[arr + 4 + 32*2 - 4]
-asm|__asm mov eax, 12+20[4 + arr]
-asm|__asm mov eax, 4*16+4[4 + arr + 4]
-asm|__asm mov eax, 4*4[64 + arr + (2*32)]
-asm|__asm mov eax, 4*(4-2)[64 + arr - 2*32]
-asm|__asm mov eax, 32*(4-2)[arr - 2*32]
-comment|// CHECK: t38
+comment|// Work around PR20368: These should be single line blocks
+asm|__asm {
+asm|mov eax, 4+4[arr]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$8$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, (4+4)[arr + 4]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$12$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, 8*2[arr + 4 + 32*2 - 4]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$80$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, 12+20[4 + arr]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$36$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, 4*16+4[4 + arr + 4]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$76$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, 4*4[64 + arr + (2*32)]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$144$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, 4*(4-2)[64 + arr - 2*32]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$8$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
+asm|__asm {
+asm|mov eax, 32*(4-2)[arr - 2*32]
+asm|}
 comment|// CHECK: call void asm sideeffect inteldialect "mov eax, dword ptr $$0$0", "*m,~{eax},~{dirflag},~{fpsr},~{flags}"([4 x i32]* %{{.*}})
 block|}
 end_function
@@ -904,13 +950,14 @@ name|void
 name|t39
 parameter_list|()
 block|{
-asm|__asm mov eax, [eax].A.b
-asm|__asm mov eax, [eax] A.b
-asm|__asm mov eax, fs:[0] A.b
 comment|// CHECK-LABEL: define void @t39
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, [eax].4", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, [eax] .4", "~{eax},~{dirflag},~{fpsr},~{flags}"()
-comment|// CHECK: call void asm sideeffect inteldialect "mov eax, fs:[$$0] .4", "~{eax},~{dirflag},~{fpsr},~{flags}"()
+asm|__asm mov eax, [eax].A.b
+comment|// CHECK: mov eax, [eax].4
+asm|__asm mov eax, [eax] A.b
+comment|// CHECK: mov eax, [eax] .4
+asm|__asm mov eax, fs:[0] A.b
+comment|// CHECK: mov eax, fs:[$$0] .4
+comment|// CHECK: "~{eax},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -922,14 +969,15 @@ name|float
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: define void @t40
 name|int
 name|i
 decl_stmt|;
 asm|__asm fld a
+comment|// CHECK: fld dword ptr $1
 asm|__asm fistp i
-comment|// CHECK-LABEL: define void @t40
-comment|// CHECK: call void asm sideeffect inteldialect "fld dword ptr $0", "*m,~{dirflag},~{fpsr},~{flags}"(float* {{.*}})
-comment|// CHECK: call void asm sideeffect inteldialect "fistp dword ptr $0", "=*m,~{dirflag},~{fpsr},~{flags}"(i32* {{.*}})
+comment|// CHECK: fistp dword ptr $0
+comment|// CHECK: "=*m,*m,~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}}, float* %{{.*}})
 block|}
 end_function
 
@@ -942,21 +990,104 @@ name|short
 name|a
 parameter_list|)
 block|{
-asm|__asm mov cs, a;
-asm|__asm mov ds, a;
-asm|__asm mov es, a;
-asm|__asm mov fs, a;
-asm|__asm mov gs, a;
-asm|__asm mov ss, a;
 comment|// CHECK-LABEL: define void @t41(i16 zeroext %a)
-comment|// CHECK: [[T41_A_ADDR:%.+]] = alloca i16
-comment|// CHECK: store i16 %a, i16* [[T41_A_ADDR]]
-comment|// CHECK: call void asm sideeffect inteldialect "mov cs, word ptr $0", "*m,~{dirflag},~{fpsr},~{flags}"(i16* [[T41_A_ADDR]])
-comment|// CHECK: call void asm sideeffect inteldialect "mov ds, word ptr $0", "*m,~{dirflag},~{fpsr},~{flags}"(i16* [[T41_A_ADDR]])
-comment|// CHECK: call void asm sideeffect inteldialect "mov es, word ptr $0", "*m,~{dirflag},~{fpsr},~{flags}"(i16* [[T41_A_ADDR]])
-comment|// CHECK: call void asm sideeffect inteldialect "mov fs, word ptr $0", "*m,~{dirflag},~{fpsr},~{flags}"(i16* [[T41_A_ADDR]])
-comment|// CHECK: call void asm sideeffect inteldialect "mov gs, word ptr $0", "*m,~{dirflag},~{fpsr},~{flags}"(i16* [[T41_A_ADDR]])
-comment|// CHECK: call void asm sideeffect inteldialect "mov ss, word ptr $0", "*m,~{dirflag},~{fpsr},~{flags}"(i16* [[T41_A_ADDR]])
+asm|__asm mov cs, a;
+comment|// CHECK: mov cs, word ptr $0
+asm|__asm mov ds, a;
+comment|// CHECK: mov ds, word ptr $1
+asm|__asm mov es, a;
+comment|// CHECK: mov es, word ptr $2
+asm|__asm mov fs, a;
+comment|// CHECK: mov fs, word ptr $3
+asm|__asm mov gs, a;
+comment|// CHECK: mov gs, word ptr $4
+asm|__asm mov ss, a;
+comment|// CHECK: mov ss, word ptr $5
+comment|// CHECK: "*m,*m,*m,*m,*m,*m,~{dirflag},~{fpsr},~{flags}"(i16* {{.*}}, i16* {{.*}}, i16* {{.*}}, i16* {{.*}}, i16* {{.*}}, i16* {{.*}})
+block|}
+end_function
+
+begin_function
+name|void
+name|call_clobber
+parameter_list|()
+block|{
+asm|__asm call t41
+comment|// CHECK-LABEL: define void @call_clobber
+comment|// CHECK: call void asm sideeffect inteldialect "call dword ptr $0", "*m,~{dirflag},~{fpsr},~{flags}"(void (i16)* @t41)
+block|}
+end_function
+
+begin_function
+name|void
+name|xgetbv
+parameter_list|()
+block|{
+asm|__asm xgetbv
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define void @xgetbv()
+end_comment
+
+begin_comment
+comment|// CHECK: call void asm sideeffect inteldialect "xgetbv", "~{eax},~{edx},~{dirflag},~{fpsr},~{flags}"()
+end_comment
+
+begin_function
+name|void
+name|label1
+parameter_list|()
+block|{
+asm|__asm {
+asm|label:
+asm|jmp label
+asm|}
+comment|// CHECK-LABEL: define void @label1
+comment|// CHECK: call void asm sideeffect inteldialect "{{.*}}__MSASMLABEL_.1__label:\0A\09jmp {{.*}}__MSASMLABEL_.1__label", "~{dirflag},~{fpsr},~{flags}"()
+block|}
+end_function
+
+begin_function
+name|void
+name|label2
+parameter_list|()
+block|{
+asm|__asm {
+asm|jmp label
+asm|label:
+asm|}
+comment|// CHECK-LABEL: define void @label2
+comment|// CHECK: call void asm sideeffect inteldialect "jmp {{.*}}__MSASMLABEL_.2__label\0A\09{{.*}}__MSASMLABEL_.2__label:", "~{dirflag},~{fpsr},~{flags}"()
+block|}
+end_function
+
+begin_function
+name|void
+name|label3
+parameter_list|()
+block|{
+asm|__asm {
+asm|label:
+asm|mov eax, label
+asm|}
+comment|// CHECK-LABEL: define void @label3
+comment|// CHECK: call void asm sideeffect inteldialect "{{.*}}__MSASMLABEL_.3__label:\0A\09mov eax, {{.*}}__MSASMLABEL_.3__label", "~{eax},~{dirflag},~{fpsr},~{flags}"()
+block|}
+end_function
+
+begin_function
+name|void
+name|label4
+parameter_list|()
+block|{
+asm|__asm {
+asm|label:
+asm|mov eax, [label]
+asm|}
+comment|// CHECK-LABEL: define void @label4
+comment|// CHECK: call void asm sideeffect inteldialect "{{.*}}__MSASMLABEL_.4__label:\0A\09mov eax, {{.*}}__MSASMLABEL_.4__label", "~{eax},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 

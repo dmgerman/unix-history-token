@@ -39,7 +39,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: call arm_aapcscc  void (i32, ...)* @foo(i32 1, [1 x i32] {{.*}})
+comment|// CHECK: call void (i32, ...)* @foo(i32 1, [1 x i32] {{.*}})
 end_comment
 
 begin_function

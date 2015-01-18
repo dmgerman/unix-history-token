@@ -131,5 +131,73 @@ comment|//CHECK: call {{.*}} @llvm.aarch64.isb(i32 3)
 block|}
 end_function
 
+begin_function
+name|void
+name|prefetch
+parameter_list|()
+block|{
+name|__builtin_arm_prefetch
+argument_list|(
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// pstl3keep
+comment|// CHECK: call {{.*}} @llvm.prefetch(i8* null, i32 1, i32 1, i32 1)
+name|__builtin_arm_prefetch
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// pldl1keep
+comment|// CHECK: call {{.*}} @llvm.prefetch(i8* null, i32 0, i32 0, i32 1)
+name|__builtin_arm_prefetch
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// pldl1strm
+comment|// CHECK: call {{.*}} @llvm.prefetch(i8* null, i32 0, i32 0, i32 1)
+name|__builtin_arm_prefetch
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// plil1keep
+comment|// CHECK: call {{.*}} @llvm.prefetch(i8* null, i32 0, i32 3, i32 0)
+block|}
+end_function
+
 end_unit
 

@@ -79,11 +79,6 @@ name|defined
 argument_list|(
 name|__sun
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__AuroraUX__
-argument_list|)
 end_elif
 
 begin_define
@@ -99,7 +94,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Solaris or AuroraUX. */
+comment|/* Solaris. */
 end_comment
 
 begin_define

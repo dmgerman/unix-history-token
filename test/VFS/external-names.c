@@ -86,11 +86,11 @@ comment|// RUN: %clang_cc1 -I %t -ivfsoverlay %t.external.yaml -triple %itanium_
 end_comment
 
 begin_comment
-comment|// CHECK-DEBUG-EXTERNAL: ![[Num:[0-9]*]] = metadata !{metadata !"{{.*}}Inputs{{.}}external-names.h
+comment|// CHECK-DEBUG-EXTERNAL: ![[Num:[0-9]*]] = !{!"{{.*}}Inputs{{.}}external-names.h
 end_comment
 
 begin_comment
-comment|// CHECK-DEBUG-EXTERNAL: metadata !{i32 {{[0-9]*}}, metadata ![[Num]]{{.*}}DW_TAG_file_type
+comment|// CHECK-DEBUG-EXTERNAL: !{!"0x29", ![[Num]]{{.*}}DW_TAG_file_type
 end_comment
 
 begin_comment

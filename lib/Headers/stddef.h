@@ -76,11 +76,30 @@ name|__need_wint_t
 argument_list|)
 end_if
 
+begin_comment
+comment|/* Always define miscellaneous pieces when modules are available. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|__has_feature
+argument_list|(
+name|modules
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|__STDDEF_H
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -104,6 +123,12 @@ begin_define
 define|#
 directive|define
 name|__need_NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|__need_STDDEF_H_misc
 end_define
 
 begin_comment
@@ -272,7 +297,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__STDDEF_H
+name|__need_STDDEF_H_misc
 argument_list|)
 end_if
 
@@ -350,7 +375,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(__STDDEF_H) */
+comment|/* defined(__need_STDDEF_H_misc) */
 end_comment
 
 begin_if
@@ -611,7 +636,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__STDDEF_H
+name|__need_STDDEF_H_misc
 argument_list|)
 end_if
 
@@ -627,98 +652,11 @@ operator|>=
 literal|201103L
 end_if
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__CLANG_MAX_ALIGN_T_DEFINED
-argument_list|)
-operator|||
-name|__has_feature
-argument_list|(
-name|modules
-argument_list|)
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_MSC_VER
-end_ifndef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|long
-name|long
-name|__clang_max_align_nonce1
-name|__attribute__
-decl|((
-name|__aligned__
-decl|(
-name|__alignof__
-decl|(
-name|long
-name|long
-decl_stmt|)
-block|)
-typedef|));
-end_typedef
-
-begin_decl_stmt
-name|long
-name|double
-name|__clang_max_align_nonce2
-name|__attribute__
-argument_list|(
-operator|(
-name|__aligned__
-argument_list|(
-name|__alignof__
-argument_list|(
-argument|long double
-argument_list|)
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_empty_stmt
-unit|} max_align_t
-empty_stmt|;
-end_empty_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|double
-name|max_align_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|__CLANG_MAX_ALIGN_T_DEFINED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"__stddef_max_align_t.h"
+end_include
 
 begin_endif
 endif|#
@@ -737,13 +675,19 @@ parameter_list|)
 value|__builtin_offsetof(t, d)
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|__need_STDDEF_H_misc
+end_undef
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* __STDDEF_H */
+comment|/* defined(__need_STDDEF_H_misc) */
 end_comment
 
 begin_comment

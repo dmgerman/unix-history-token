@@ -202,7 +202,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: cmpxchg i8* @b
+comment|// CHECK: call arm_aapcscc zeroext i1 @__atomic_compare_exchange(i32 1, i8* @b
 name|b
 operator|--
 expr_stmt|;
@@ -218,7 +218,7 @@ comment|// CHECK: atomicrmw sub i16* @s, i16 1 seq_cst
 name|s
 operator|--
 expr_stmt|;
-comment|// CHECK: cmpxchg i8* @b
+comment|// CHECK: call arm_aapcscc zeroext i1 @__atomic_compare_exchange(i32 1, i8* @b
 operator|--
 name|b
 expr_stmt|;
@@ -251,7 +251,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: cmpxchg i8* @b
+comment|// CHECK: call arm_aapcscc zeroext i1 @__atomic_compare_exchange(i32 1, i8* @b
 comment|// CHECK: atomicrmw add i32* @i, i32 42 seq_cst
 comment|// CHECK: atomicrmw add i64* @l, i64 42 seq_cst
 comment|// CHECK: atomicrmw add i16* @s, i16 42 seq_cst
@@ -285,7 +285,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: cmpxchg i8* @b
+comment|// CHECK: call arm_aapcscc zeroext i1 @__atomic_compare_exchange(i32 1, i8* @b
 comment|// CHECK: atomicrmw sub i32* @i, i32 42 seq_cst
 comment|// CHECK: atomicrmw sub i64* @l, i64 42 seq_cst
 comment|// CHECK: atomicrmw sub i16* @s, i16 42 seq_cst
@@ -319,7 +319,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: cmpxchg i8* @b
+comment|// CHECK: call arm_aapcscc zeroext i1 @__atomic_compare_exchange(i32 1, i8* @b
 comment|// CHECK: atomicrmw xor i32* @i, i32 42 seq_cst
 comment|// CHECK: atomicrmw xor i64* @l, i64 42 seq_cst
 comment|// CHECK: atomicrmw xor i16* @s, i16 42 seq_cst
@@ -353,7 +353,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: cmpxchg i8* @b
+comment|// CHECK: call arm_aapcscc zeroext i1 @__atomic_compare_exchange(i32 1, i8* @b
 comment|// CHECK: atomicrmw or i32* @i, i32 42 seq_cst
 comment|// CHECK: atomicrmw or i64* @l, i64 42 seq_cst
 comment|// CHECK: atomicrmw or i16* @s, i16 42 seq_cst
@@ -387,7 +387,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: cmpxchg i8* @b
+comment|// CHECK: call arm_aapcscc zeroext i1 @__atomic_compare_exchange(i32 1, i8* @b
 comment|// CHECK: atomicrmw and i32* @i, i32 42 seq_cst
 comment|// CHECK: atomicrmw and i64* @l, i64 42 seq_cst
 comment|// CHECK: atomicrmw and i16* @s, i16 42 seq_cst

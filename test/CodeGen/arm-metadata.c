@@ -12,27 +12,27 @@ comment|// RUN: %clang_cc1 -triple armv7a-linux-gnueabi -emit-llvm -o - %s -fsho
 end_comment
 
 begin_comment
-comment|// DEFAULT:  !{{[0-9]+}} = metadata !{i32 1, metadata !"wchar_size", i32 4}
+comment|// DEFAULT:  !{{[0-9]+}} = !{i32 1, !"wchar_size", i32 4}
 end_comment
 
 begin_comment
-comment|// DEFAULT:   !{{[0-9]+}} = metadata !{i32 1, metadata !"min_enum_size", i32 4}
+comment|// DEFAULT:   !{{[0-9]+}} = !{i32 1, !"min_enum_size", i32 4}
 end_comment
 
 begin_comment
-comment|// SHORT-WCHAR: !{{[0-9]+}} = metadata !{i32 1, metadata !"wchar_size", i32 2}
+comment|// SHORT-WCHAR: !{{[0-9]+}} = !{i32 1, !"wchar_size", i32 2}
 end_comment
 
 begin_comment
-comment|// SHORT-WCHAR:   !{{[0-9]+}} = metadata !{i32 1, metadata !"min_enum_size", i32 4}
+comment|// SHORT-WCHAR:   !{{[0-9]+}} = !{i32 1, !"min_enum_size", i32 4}
 end_comment
 
 begin_comment
-comment|// SHORT_ENUM:  !{{[0-9]+}} = metadata !{i32 1, metadata !"wchar_size", i32 4}
+comment|// SHORT_ENUM:  !{{[0-9]+}} = !{i32 1, !"wchar_size", i32 4}
 end_comment
 
 begin_comment
-comment|// SHORT-ENUM:  !{{[0-9]+}} = metadata !{i32 1, metadata !"min_enum_size", i32 1}
+comment|// SHORT-ENUM:  !{{[0-9]+}} = !{i32 1, !"min_enum_size", i32 1}
 end_comment
 
 end_unit

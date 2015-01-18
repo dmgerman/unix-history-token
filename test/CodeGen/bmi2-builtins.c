@@ -121,9 +121,9 @@ name|__P
 parameter_list|)
 block|{
 comment|// CHECK: @test_mulx_u32
-comment|// CHECK-NOT: mul i64
+comment|// CHECK-NOT: mul nuw i64
 comment|// B32: @test_mulx_u32
-comment|// B32: mul i64
+comment|// B32: mul nuw i64
 return|return
 name|_mulx_u32
 argument_list|(
@@ -248,7 +248,7 @@ name|__P
 parameter_list|)
 block|{
 comment|// CHECK: @test_mulx_u64
-comment|// CHECK: mul i128
+comment|// CHECK: mul nuw i128
 return|return
 name|_mulx_u64
 argument_list|(

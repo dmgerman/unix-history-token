@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_UNITTESTS_AST_MATCHERS_AST_MATCHERS_TEST_H
+name|LLVM_CLANG_UNITTESTS_ASTMATCHERS_ASTMATCHERSTEST_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_UNITTESTS_AST_MATCHERS_AST_MATCHERS_TEST_H
+name|LLVM_CLANG_UNITTESTS_ASTMATCHERS_ASTMATCHERSTEST_H
 end_define
 
 begin_include
@@ -101,6 +101,13 @@ operator|::
 name|tooling
 operator|::
 name|FrontendActionFactory
+expr_stmt|;
+name|using
+name|clang
+operator|::
+name|tooling
+operator|::
+name|FileContentMappings
 expr_stmt|;
 name|class
 name|BoundNodesCallback
@@ -187,6 +194,7 @@ name|run
 argument_list|(
 argument|const MatchFinder::MatchResult&Result
 argument_list|)
+name|override
 block|{
 if|if
 condition|(
@@ -267,6 +275,8 @@ argument_list|,
 argument|bool ExpectMatch
 argument_list|,
 argument|llvm::StringRef CompileArg
+argument_list|,
+argument|const FileContentMappings&VirtualMappedFiles = FileContentMappings()
 argument_list|)
 block|{
 name|bool
@@ -374,6 +384,10 @@ argument_list|,
 name|Code
 argument_list|,
 name|Args
+argument_list|,
+literal|"input.cc"
+argument_list|,
+name|VirtualMappedFiles
 argument_list|)
 condition|)
 block|{
@@ -520,6 +534,327 @@ literal|"-std=c++11"
 argument_list|)
 return|;
 block|}
+comment|// Function based on matchesConditionally with "-x cuda" argument added and
+comment|// small CUDA header prepended to the code string.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|testing
+operator|::
+name|AssertionResult
+name|matchesConditionallyWithCuda
+argument_list|(
+argument|const std::string&Code
+argument_list|,
+argument|const T&AMatcher
+argument_list|,
+argument|bool ExpectMatch
+argument_list|,
+argument|llvm::StringRef CompileArg
+argument_list|)
+block|{
+specifier|const
+name|std
+operator|::
+name|string
+name|CudaHeader
+operator|=
+literal|"typedef unsigned int size_t;\n"
+literal|"#define __constant__ __attribute__((constant))\n"
+literal|"#define __device__ __attribute__((device))\n"
+literal|"#define __global__ __attribute__((global))\n"
+literal|"#define __host__ __attribute__((host))\n"
+literal|"#define __shared__ __attribute__((shared))\n"
+literal|"struct dim3 {"
+literal|"  unsigned x, y, z;"
+literal|"  __host__ __device__ dim3(unsigned x, unsigned y = 1, unsigned z = 1)"
+literal|"      : x(x), y(y), z(z) {}"
+literal|"};"
+literal|"typedef struct cudaStream *cudaStream_t;"
+literal|"int cudaConfigureCall(dim3 gridSize, dim3 blockSize,"
+literal|"                      size_t sharedSize = 0,"
+literal|"                      cudaStream_t stream = 0);"
+block|;
+name|bool
+name|Found
+operator|=
+name|false
+block|,
+name|DynamicFound
+operator|=
+name|false
+block|;
+name|MatchFinder
+name|Finder
+block|;
+name|VerifyMatch
+name|VerifyFound
+argument_list|(
+name|nullptr
+argument_list|,
+operator|&
+name|Found
+argument_list|)
+block|;
+name|Finder
+operator|.
+name|addMatcher
+argument_list|(
+name|AMatcher
+argument_list|,
+operator|&
+name|VerifyFound
+argument_list|)
+block|;
+name|VerifyMatch
+name|VerifyDynamicFound
+argument_list|(
+name|nullptr
+argument_list|,
+operator|&
+name|DynamicFound
+argument_list|)
+block|;
+if|if
+condition|(
+operator|!
+name|Finder
+operator|.
+name|addDynamicMatcher
+argument_list|(
+name|AMatcher
+argument_list|,
+operator|&
+name|VerifyDynamicFound
+argument_list|)
+condition|)
+return|return
+name|testing
+operator|::
+name|AssertionFailure
+argument_list|()
+operator|<<
+literal|"Could not add dynamic matcher"
+return|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|FrontendActionFactory
+operator|>
+name|Factory
+argument_list|(
+name|newFrontendActionFactory
+argument_list|(
+operator|&
+name|Finder
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// Some tests use typeof, which is a gnu extension.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Args
+expr_stmt|;
+name|Args
+operator|.
+name|push_back
+argument_list|(
+literal|"-xcuda"
+argument_list|)
+expr_stmt|;
+name|Args
+operator|.
+name|push_back
+argument_list|(
+literal|"-fno-ms-extensions"
+argument_list|)
+expr_stmt|;
+name|Args
+operator|.
+name|push_back
+argument_list|(
+name|CompileArg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|runToolOnCodeWithArgs
+argument_list|(
+name|Factory
+operator|->
+name|create
+argument_list|()
+argument_list|,
+name|CudaHeader
+operator|+
+name|Code
+argument_list|,
+name|Args
+argument_list|)
+condition|)
+block|{
+return|return
+name|testing
+operator|::
+name|AssertionFailure
+argument_list|()
+operator|<<
+literal|"Parsing error in \""
+operator|<<
+name|Code
+operator|<<
+literal|"\""
+return|;
+block|}
+if|if
+condition|(
+name|Found
+operator|!=
+name|DynamicFound
+condition|)
+block|{
+return|return
+name|testing
+operator|::
+name|AssertionFailure
+argument_list|()
+operator|<<
+literal|"Dynamic match result ("
+operator|<<
+name|DynamicFound
+operator|<<
+literal|") does not match static result ("
+operator|<<
+name|Found
+operator|<<
+literal|")"
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|Found
+operator|&&
+name|ExpectMatch
+condition|)
+block|{
+return|return
+name|testing
+operator|::
+name|AssertionFailure
+argument_list|()
+operator|<<
+literal|"Could not find match in \""
+operator|<<
+name|Code
+operator|<<
+literal|"\""
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|Found
+operator|&&
+operator|!
+name|ExpectMatch
+condition|)
+block|{
+return|return
+name|testing
+operator|::
+name|AssertionFailure
+argument_list|()
+operator|<<
+literal|"Found unexpected match in \""
+operator|<<
+name|Code
+operator|<<
+literal|"\""
+return|;
+block|}
+return|return
+name|testing
+operator|::
+name|AssertionSuccess
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|testing
+operator|::
+name|AssertionResult
+name|matchesWithCuda
+argument_list|(
+argument|const std::string&Code
+argument_list|,
+argument|const T&AMatcher
+argument_list|)
+block|{
+return|return
+name|matchesConditionallyWithCuda
+argument_list|(
+name|Code
+argument_list|,
+name|AMatcher
+argument_list|,
+name|true
+argument_list|,
+literal|"-std=c++11"
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|testing
+operator|::
+name|AssertionResult
+name|notMatchesWithCuda
+argument_list|(
+argument|const std::string&Code
+argument_list|,
+argument|const T&AMatcher
+argument_list|)
+block|{
+return|return
+name|matchesConditionallyWithCuda
+argument_list|(
+name|Code
+argument_list|,
+name|AMatcher
+argument_list|,
+name|false
+argument_list|,
+literal|"-std=c++11"
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -637,6 +972,9 @@ operator|<<
 literal|"\""
 return|;
 block|}
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -680,10 +1018,16 @@ operator|<<
 literal|"\""
 return|;
 block|}
+end_if
+
+begin_expr_stmt
 name|VerifiedResult
 operator|=
 name|false
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|unique_ptr
@@ -700,6 +1044,9 @@ name|Args
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -720,6 +1067,9 @@ name|Code
 operator|<<
 literal|"\" while building AST"
 return|;
+end_if
+
+begin_expr_stmt
 name|Finder
 operator|.
 name|matchAST
@@ -730,6 +1080,9 @@ name|getASTContext
 argument_list|()
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -773,16 +1126,19 @@ operator|<<
 literal|"\" with AST"
 return|;
 block|}
+end_if
+
+begin_return
 return|return
 name|testing
 operator|::
 name|AssertionSuccess
 argument_list|()
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|// FIXME: Find better names for these functions (or document what they
 end_comment
 
@@ -791,7 +1147,7 @@ comment|// do more precisely).
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|T

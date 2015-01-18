@@ -20,6 +20,14 @@ comment|// CHECK: __ARM_FEATURE_CRC32 1
 end_comment
 
 begin_comment
+comment|// CHECK: __ARM_FEATURE_DIRECTED_ROUNDING 1
+end_comment
+
+begin_comment
+comment|// CHECK: __ARM_FEATURE_NUMERIC_MAXMIN 1
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv7a-none-linux-gnu -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-V7 %s
 end_comment
 
@@ -40,6 +48,14 @@ comment|// CHECK-V7-NOT: __ARM_FEATURE_CRC32
 end_comment
 
 begin_comment
+comment|// CHECK-V7-NOT: __ARM_FEATURE_NUMERIC_MAXMIN
+end_comment
+
+begin_comment
+comment|// CHECK-V7-NOT: __ARM_FEATURE_DIRECTED_ROUNDING
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv8a -mfloat-abi=hard -x c -E -dM %s | FileCheck --check-prefix=CHECK-V8-BAREHF %s
 end_comment
 
@@ -57,6 +73,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-V8-BAREHF: __ARM_FEATURE_CRC32 1
+end_comment
+
+begin_comment
+comment|// CHECK-V8-BAREHF: __ARM_FEATURE_DIRECTED_ROUNDING 1
+end_comment
+
+begin_comment
+comment|// CHECK-V8-BAREHF: __ARM_FEATURE_NUMERIC_MAXMIN 1
 end_comment
 
 begin_comment
@@ -408,6 +432,30 @@ comment|// FIXME: add check for further predefines
 end_comment
 
 begin_comment
+comment|// Test whether predefines are as expected when targeting ep9312.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv4t -mcpu=ep9312 -x c -E -dM %s -o - | FileCheck --check-prefix=A4T %s
+end_comment
+
+begin_comment
+comment|// A4T-NOT:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
+comment|// Test whether predefines are as expected when targeting arm10tdmi.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv5 -mcpu=arm10tdmi -x c -E -dM %s -o - | FileCheck --check-prefix=A5T %s
+end_comment
+
+begin_comment
+comment|// A5T-NOT:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// Test whether predefines are as expected when targeting cortex-a5.
 end_comment
 
@@ -420,11 +468,19 @@ comment|// A5-ARM-NOT:#define __ARM_ARCH_EXT_IDIV__
 end_comment
 
 begin_comment
+comment|// A5-ARM:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-a5 -x c -E -dM %s -o - | FileCheck --check-prefix=A5-THUMB %s
 end_comment
 
 begin_comment
 comment|// A5-THUMB-NOT:#define __ARM_ARCH_EXT_IDIV__
+end_comment
+
+begin_comment
+comment|// A5-THUMB:#define __ARM_FEATURE_DSP
 end_comment
 
 begin_comment
@@ -445,6 +501,18 @@ end_comment
 
 begin_comment
 comment|// A5:#define __ARM_ARCH_PROFILE 'A'
+end_comment
+
+begin_comment
+comment|// A5-NOT: #define __ARM_FEATURE_NUMERIC_MAXMIN
+end_comment
+
+begin_comment
+comment|// A5-NOT: #define __ARM_FEATURE_DIRECTED_ROUNDING
+end_comment
+
+begin_comment
+comment|// A5:#define __ARM_FEATURE_DSP
 end_comment
 
 begin_comment
@@ -476,6 +544,10 @@ comment|// A7:#define __ARM_ARCH_PROFILE 'A'
 end_comment
 
 begin_comment
+comment|// A7:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// Test whether predefines are as expected when targeting cortex-a8.
 end_comment
 
@@ -488,11 +560,19 @@ comment|// A8-ARM-NOT:#define __ARM_ARCH_EXT_IDIV__
 end_comment
 
 begin_comment
+comment|// A8-ARM:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-a8 -x c -E -dM %s -o - | FileCheck --check-prefix=A8-THUMB %s
 end_comment
 
 begin_comment
 comment|// A8-THUMB-NOT:#define __ARM_ARCH_EXT_IDIV__
+end_comment
+
+begin_comment
+comment|// A8-THUMB:#define __ARM_FEATURE_DSP
 end_comment
 
 begin_comment
@@ -508,11 +588,19 @@ comment|// A9-ARM-NOT:#define __ARM_ARCH_EXT_IDIV__
 end_comment
 
 begin_comment
+comment|// A9-ARM:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-a9 -x c -E -dM %s -o - | FileCheck --check-prefix=A9-THUMB %s
 end_comment
 
 begin_comment
 comment|// A9-THUMB-NOT:#define __ARM_ARCH_EXT_IDIV__
+end_comment
+
+begin_comment
+comment|// A9-THUMB:#define __ARM_FEATURE_DSP
 end_comment
 
 begin_comment
@@ -580,6 +668,10 @@ comment|// A12:#define __ARM_ARCH_PROFILE 'A'
 end_comment
 
 begin_comment
+comment|// A12:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// Test whether predefines are as expected when targeting cortex-a15.
 end_comment
 
@@ -592,11 +684,87 @@ comment|// A15-ARM:#define __ARM_ARCH_EXT_IDIV__ 1
 end_comment
 
 begin_comment
+comment|// A15-ARM:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-a15 -x c -E -dM %s -o - | FileCheck --check-prefix=A15-THUMB %s
 end_comment
 
 begin_comment
 comment|// A15-THUMB:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// A15-THUMB:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
+comment|// Check that -mfpu works properly for Cortex-A17 (enabled by default).
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mcpu=cortex-a17 -x c -E -dM %s -o - | FileCheck --check-prefix=DEFAULTFPU-A17 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mthumb -mcpu=cortex-a17 -x c -E -dM %s -o - | FileCheck --check-prefix=DEFAULTFPU-A17 %s
+end_comment
+
+begin_comment
+comment|// DEFAULTFPU-A17:#define __ARM_NEON__ 1
+end_comment
+
+begin_comment
+comment|// DEFAULTFPU-A17:#define __ARM_VFPV4__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mcpu=cortex-a17 -mfpu=none -x c -E -dM %s -o - | FileCheck --check-prefix=FPUNONE-A17 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mthumb -mcpu=cortex-a17 -mfpu=none -x c -E -dM %s -o - | FileCheck --check-prefix=FPUNONE-A17 %s
+end_comment
+
+begin_comment
+comment|// FPUNONE-A17-NOT:#define __ARM_NEON__ 1
+end_comment
+
+begin_comment
+comment|// FPUNONE-A17-NOT:#define __ARM_VFPV4__ 1
+end_comment
+
+begin_comment
+comment|// Test whether predefines are as expected when targeting cortex-a17.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mcpu=cortex-a17 -x c -E -dM %s -o - | FileCheck --check-prefix=A17 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-a17 -x c -E -dM %s -o - | FileCheck --check-prefix=A17 %s
+end_comment
+
+begin_comment
+comment|// A17:#define __ARM_ARCH 7
+end_comment
+
+begin_comment
+comment|// A17:#define __ARM_ARCH_7A__ 1
+end_comment
+
+begin_comment
+comment|// A17:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// A17:#define __ARM_ARCH_PROFILE 'A'
+end_comment
+
+begin_comment
+comment|// A17:#define __ARM_FEATURE_DSP
 end_comment
 
 begin_comment
@@ -612,11 +780,19 @@ comment|// SWIFT-ARM:#define __ARM_ARCH_EXT_IDIV__ 1
 end_comment
 
 begin_comment
+comment|// SWIFT:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv7s -mthumb -mcpu=swift -x c -E -dM %s -o - | FileCheck --check-prefix=SWIFT-THUMB %s
 end_comment
 
 begin_comment
 comment|// SWIFT-THUMB:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// SWIFT-THUMB:#define __ARM_FEATURE_DSP
 end_comment
 
 begin_comment
@@ -632,11 +808,19 @@ comment|// A53-ARM:#define __ARM_ARCH_EXT_IDIV__ 1
 end_comment
 
 begin_comment
+comment|// A53-ARM:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv8 -mthumb -mcpu=cortex-a53 -x c -E -dM %s -o - | FileCheck --check-prefix=A53-THUMB %s
 end_comment
 
 begin_comment
 comment|// A53-THUMB:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// A53-THUMB:#define __ARM_FEATURE_DSP
 end_comment
 
 begin_comment
@@ -652,11 +836,19 @@ comment|// R5-ARM:#define __ARM_ARCH_EXT_IDIV__ 1
 end_comment
 
 begin_comment
+comment|// R5-ARM:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-r5 -x c -E -dM %s -o - | FileCheck --check-prefix=R5-THUMB %s
 end_comment
 
 begin_comment
 comment|// R5-THUMB:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// R5-THUMB:#define __ARM_FEATURE_DSP
 end_comment
 
 begin_comment
@@ -672,6 +864,10 @@ comment|// M0-THUMB-NOT:#define __ARM_ARCH_EXT_IDIV__
 end_comment
 
 begin_comment
+comment|// M0-THUMB-NOT:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// Test whether predefines are as expected when targeting cortex-m3.
 end_comment
 
@@ -681,6 +877,10 @@ end_comment
 
 begin_comment
 comment|// M3-THUMB:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// M3-THUMB-NOT:#define __ARM_FEATURE_DSP
 end_comment
 
 begin_comment
@@ -696,6 +896,26 @@ comment|// M4-THUMB:#define __ARM_ARCH_EXT_IDIV__ 1
 end_comment
 
 begin_comment
+comment|// M4-THUMB:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
+comment|// Test whether predefines are as expected when targeting cortex-m7.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-m7 -x c -E -dM %s -o - | FileCheck --check-prefix=M7-THUMB %s
+end_comment
+
+begin_comment
+comment|// M7-THUMB:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// M7-THUMB:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// Test whether predefines are as expected when targeting krait.
 end_comment
 
@@ -708,6 +928,10 @@ comment|// KRAIT-ARM:#define __ARM_ARCH_EXT_IDIV__ 1
 end_comment
 
 begin_comment
+comment|// KRAIT-ARM:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// KRAIT-ARM:#define  __ARM_VFPV4__ 1
 end_comment
 
@@ -717,6 +941,10 @@ end_comment
 
 begin_comment
 comment|// KRAIT-THUMB:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// KRAIT-THUMB:#define __ARM_FEATURE_DSP
 end_comment
 
 begin_comment

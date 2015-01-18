@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_FRONTEND_MULTIPLEXCONSUMER_H
+name|LLVM_CLANG_FRONTEND_MULTIPLEXCONSUMER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_FRONTEND_MULTIPLEXCONSUMER_H
+name|LLVM_CLANG_FRONTEND_MULTIPLEXCONSUMER_H
 end_define
 
 begin_include
@@ -109,11 +109,16 @@ operator|:
 comment|// Takes ownership of the pointers in C.
 name|MultiplexConsumer
 argument_list|(
-name|ArrayRef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|ASTConsumer
-operator|*
-operator|>
+operator|>>
 name|C
 argument_list|)
 block|;
@@ -274,9 +279,12 @@ name|std
 operator|::
 name|vector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
-operator|>
+operator|>>
 name|Consumers
 block|;
 comment|// Owns these.

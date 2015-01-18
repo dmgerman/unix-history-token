@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wunused-value -Wunused-label %s
+comment|// RUN: %clang_cc1 -std=c11 -fsyntax-only -verify -Wunused-value -Wunused-label %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wunused %s
+comment|// RUN: %clang_cc1 -std=c11 -fsyntax-only -verify -Wunused %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wall %s
+comment|// RUN: %clang_cc1 -std=c11 -fsyntax-only -verify -Wall %s
 end_comment
 
 begin_decl_stmt
@@ -427,6 +427,109 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{expression result unused}}
+block|}
+end_function
+
+begin_function_decl
+name|void
+name|blah
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|GenTest
+parameter_list|(
+name|x
+parameter_list|)
+value|_Generic(x, default : blah)(x)
+end_define
+
+begin_function
+name|void
+name|unevaluated_operands
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|val
+init|=
+literal|0
+decl_stmt|;
+operator|(
+name|void
+operator|)
+sizeof|sizeof
+argument_list|(
+operator|++
+name|val
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{expression with side effects has no effect in an unevaluated context}}
+operator|(
+name|void
+operator|)
+generic_selection|_Generic(
+name|val
+operator|++
+generic_selection|,
+type|default
+association|:
+literal|0
+generic_selection|)
+expr_stmt|;
+comment|// expected-warning {{expression with side effects has no effect in an unevaluated context}}
+operator|(
+name|void
+operator|)
+alignof|_Alignof
+argument_list|(
+name|val
+operator|++
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{expression with side effects has no effect in an unevaluated context}} expected-warning {{'_Alignof' applied to an expression is a GNU extension}}
+comment|// VLAs can have side effects so long as it's part of the type and not
+comment|// an expression.
+operator|(
+name|void
+operator|)
+sizeof|sizeof
+argument_list|(
+name|int
+index|[
+operator|++
+name|val
+index|]
+argument_list|)
+expr_stmt|;
+comment|// Ok
+operator|(
+name|void
+operator|)
+alignof|_Alignof
+argument_list|(
+name|int
+index|[
+operator|++
+name|val
+index|]
+argument_list|)
+expr_stmt|;
+comment|// Ok
+comment|// Side effects as part of macro expansion are ok.
+name|GenTest
+argument_list|(
+name|val
+operator|++
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

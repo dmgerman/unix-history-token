@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1< %s -emit-llvm | grep internal | count 1
+comment|// RUN: %clang_cc1< %s -emit-llvm | FileCheck %s
 end_comment
 
 begin_comment
@@ -48,6 +48,18 @@ literal|10
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// CHECK-NOT: internal global
+end_comment
+
+begin_comment
+comment|// CHECK: @a = internal global %struct.s { i32 10 }
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: internal-global
+end_comment
 
 end_unit
 

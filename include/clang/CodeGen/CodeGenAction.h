@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_CODEGEN_CODE_GEN_ACTION_H
+name|LLVM_CLANG_CODEGEN_CODEGENACTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_CODEGEN_CODE_GEN_ACTION_H
+name|LLVM_CLANG_CODEGEN_CODEGENACTION_H
 end_define
 
 begin_include
@@ -129,8 +129,12 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
@@ -168,12 +172,16 @@ name|LinkModule
 operator|=
 name|Mod
 block|; }
-comment|/// takeModule - Take the generated LLVM module, for use after the action has
-comment|/// been run. The result may be null on failure.
+comment|/// Take the generated LLVM module, for use after the action has been run.
+comment|/// The result may be null on failure.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|llvm
 operator|::
 name|Module
-operator|*
+operator|>
 name|takeModule
 argument_list|()
 block|;

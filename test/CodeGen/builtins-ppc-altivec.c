@@ -3050,7 +3050,7 @@ name|vec_ctf
 argument_list|(
 name|vi
 argument_list|,
-name|param_i
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcfsx
@@ -3137,7 +3137,7 @@ comment|// CHECK-LE: @llvm.ppc.altivec.vctuxs
 comment|/* vec_dss */
 name|vec_dss
 argument_list|(
-name|param_i
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.dss

@@ -87,22 +87,46 @@ modifier|*
 name|PragmaNameLoc
 decl_stmt|;
 comment|// Name of the loop hint.  Examples: "unroll", "vectorize".  In the
-comment|// "#pragma unroll" case, this is identical to PragmaNameLoc.
+comment|// "#pragma unroll" and "#pragma nounroll" cases, this is identical to
+comment|// PragmaNameLoc.
 name|IdentifierLoc
 modifier|*
 name|OptionLoc
 decl_stmt|;
-comment|// Identifier for the hint argument.  If null, then the hint has no argument
-comment|// such as for "#pragma unroll".
+comment|// Identifier for the hint state argument.  If null, then the state is
+comment|// default value such as for "#pragma unroll".
 name|IdentifierLoc
 modifier|*
-name|ValueLoc
+name|StateLoc
 decl_stmt|;
 comment|// Expression for the hint argument if it exists, null otherwise.
 name|Expr
 modifier|*
 name|ValueExpr
 decl_stmt|;
+name|LoopHint
+argument_list|()
+operator|:
+name|PragmaNameLoc
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|OptionLoc
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|StateLoc
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|ValueExpr
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
 block|}
 struct|;
 block|}

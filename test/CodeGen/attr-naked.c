@@ -63,6 +63,32 @@ block|{ }
 end_function
 
 begin_comment
+comment|// Make sure not to generate prolog or epilog for naked functions.
+end_comment
+
+begin_macro
+name|__attribute
+argument_list|(
+argument|(naked)
+argument_list|)
+end_macro
+
+begin_function
+name|void
+name|t3
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+comment|// CHECK: define void @t3(i32)
+comment|// CHECK-NOT: alloca
+comment|// CHECK-NOT: store
+comment|// CHECK: unreachable
+block|}
+end_function
+
+begin_comment
 comment|// CHECK: attributes [[NAKED]] = { naked noinline nounwind{{.*}} }
 end_comment
 

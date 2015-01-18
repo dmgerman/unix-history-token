@@ -286,7 +286,7 @@ end_return
 
 begin_comment
 unit|};
-comment|// CHECK:<Declaration>int (^Block1)(int, int) = ^(int i, int j) {}</Declaration>
+comment|// CHECK:<Declaration>int (^Block1)(int, int) = ^(int i, int j) {\n}</Declaration>
 end_comment
 
 end_unit

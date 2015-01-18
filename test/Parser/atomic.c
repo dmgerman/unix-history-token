@@ -290,5 +290,13 @@ name|atomic_vector_int
 typedef|;
 end_typedef
 
+begin_decl_stmt
+name|struct
+name|S
+specifier|_Atomic
+name|atomic_s_no_missing_semicolon
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

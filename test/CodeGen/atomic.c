@@ -195,6 +195,17 @@ expr_stmt|;
 comment|// CHECK: atomicrmw xor i32* %val, i32 11 seq_cst
 name|old
 operator|=
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|val
+argument_list|,
+literal|0xc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand i32* %val, i32 12 seq_cst
+name|old
+operator|=
 name|__sync_add_and_fetch
 argument_list|(
 operator|&
@@ -248,6 +259,17 @@ literal|5
 argument_list|)
 expr_stmt|;
 comment|// CHECK: atomicrmw xor i8* %valc, i8 5 seq_cst
+name|old
+operator|=
+name|__sync_nand_and_fetch
+argument_list|(
+operator|&
+name|valc
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand i8* %valc, i8 6 seq_cst
 name|__sync_val_compare_and_swap
 argument_list|(
 operator|(

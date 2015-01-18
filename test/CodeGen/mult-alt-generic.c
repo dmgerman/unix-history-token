@@ -73,7 +73,7 @@ name|void
 name|single_m
 parameter_list|()
 block|{
-comment|// CHECK: call void asm "foo $1,$0", "=*m,*m[[CLOBBERS:[a-zA-Z0-9@%{},~_ ]*\"]](i32* {{[a-zA-Z0-9@%]+}}, i32* {{[a-zA-Z0-9@%]+}})
+comment|// CHECK: call void asm "foo $1,$0", "=*m,*m[[CLOBBERS:[a-zA-Z0-9@%{},~_$ ]*\"]](i32* {{[a-zA-Z0-9@%]+}}, i32* {{[a-zA-Z0-9@%]+}})
 asm|asm("foo %1,%0" : "=m" (mout0) : "m" (min1));
 block|}
 end_function

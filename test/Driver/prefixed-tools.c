@@ -24,19 +24,19 @@ comment|// RUN: FileCheck --check-prefix=CHECK-M32 %s
 end_comment
 
 begin_comment
-comment|// CHECK-M64: "{{.*}}{{[/\\]}}prefixed_tools_tree{{[/\\]}}x86_64--linux-as"
+comment|// CHECK-M64: "{{.*}}{{/|\\\\}}prefixed_tools_tree{{/|\\\\}}x86_64--linux-as"
 end_comment
 
 begin_comment
-comment|// CHECK-M64: "{{.*}}{{[/\\]}}prefixed_tools_tree{{[/\\]}}x86_64--linux-ld"
+comment|// CHECK-M64: "{{.*}}{{/|\\\\}}prefixed_tools_tree{{/|\\\\}}x86_64--linux-ld"
 end_comment
 
 begin_comment
-comment|// CHECK-M32: "{{.*}}{{[/\\]}}prefixed_tools_tree{{[/\\]}}x86_64--linux-as"
+comment|// CHECK-M32: "{{.*}}{{/|\\\\}}prefixed_tools_tree{{/|\\\\}}x86_64--linux-as"
 end_comment
 
 begin_comment
-comment|// CHECK-M32: "{{.*}}{{[/\\]}}prefixed_tools_tree{{[/\\]}}x86_64--linux-ld"
+comment|// CHECK-M32: "{{.*}}{{/|\\\\}}prefixed_tools_tree{{/|\\\\}}x86_64--linux-ld"
 end_comment
 
 end_unit

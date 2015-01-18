@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -triple arm64-linux-gnu -emit-llvm -o - %s | FileChec
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple arm64_be-linux-gnu -emit-llvm -o - %s | FileCheck --check-prefix=CHECK --check-prefix=CHECK-BE %s
+comment|// RUN: %clang_cc1 -triple aarch64_be-linux-gnu -emit-llvm -o - %s | FileCheck --check-prefix=CHECK --check-prefix=CHECK-BE %s
 end_comment
 
 begin_include

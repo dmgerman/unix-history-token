@@ -34,19 +34,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SA_FRONTEND_CHECKERREGISTRATION_H
+name|LLVM_CLANG_STATICANALYZER_FRONTEND_CHECKERREGISTRATION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SA_FRONTEND_CHECKERREGISTRATION_H
+name|LLVM_CLANG_STATICANALYZER_FRONTEND_CHECKERREGISTRATION_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -74,8 +80,12 @@ block|{
 name|class
 name|CheckerManager
 decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CheckerManager
-modifier|*
+operator|>
 name|createCheckerManager
 argument_list|(
 name|AnalyzerOptions
@@ -99,7 +109,7 @@ name|DiagnosticsEngine
 operator|&
 name|diags
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
 comment|// end ento namespace
 block|}

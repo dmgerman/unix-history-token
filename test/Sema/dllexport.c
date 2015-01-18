@@ -366,6 +366,28 @@ comment|// expected-error{{'StaticGlobal' must have external linkage when declar
 end_comment
 
 begin_comment
+comment|// Thread local variables are invalid.
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|dllexport
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|__thread
+name|int
+name|ThreadLocalGlobal
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error{{'ThreadLocalGlobal' cannot be thread local when declared 'dllexport'}}
+end_comment
+
+begin_comment
 comment|// Export in local scope.
 end_comment
 

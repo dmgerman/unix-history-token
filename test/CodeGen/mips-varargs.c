@@ -118,7 +118,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ALL:   [[AP_CUR:%.+]] = load i8** %va, align [[PTRALIGN]]
+comment|// O32:   [[TMP0:%.+]] = bitcast i8** %va to i32**
+end_comment
+
+begin_comment
+comment|// O32:   [[AP_CUR:%.+]] = load i32** [[TMP0]], align [[PTRALIGN]]
+end_comment
+
+begin_comment
+comment|// NEW:   [[TMP0:%.+]] = bitcast i8** %va to i64**
+end_comment
+
+begin_comment
+comment|// NEW:   [[AP_CUR:%.+]] = load i64** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -126,23 +138,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[TMP0:%.+]] = bitcast i8* [[AP_CUR]] to i32*
+comment|// O32:   [[AP_NEXT:%.+]] = getelementptr i32* [[AP_CUR]], i32 1
 end_comment
 
 begin_comment
-comment|// NEW:   [[TMP0:%.+]] = bitcast i8* [[AP_CUR]] to i64*
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// O32:   [[AP_NEXT:%.+]] = getelementptr i8* [[AP_CUR]], i32 4
-end_comment
-
-begin_comment
-comment|// NEW:   [[AP_NEXT:%.+]] = getelementptr i8* [[AP_CUR]], {{i32|i64}} 8
+comment|// NEW:   [[AP_NEXT:%.+]] = getelementptr i64* [[AP_CUR]], {{i32|i64}} 1
 end_comment
 
 begin_comment
@@ -150,7 +150,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ALL:   store i8* [[AP_NEXT]], i8** %va, align [[PTRALIGN]]
+comment|// O32:   store i32* [[AP_NEXT]], i32** [[TMP0]], align [[PTRALIGN]]
+end_comment
+
+begin_comment
+comment|// NEW:   store i64* [[AP_NEXT]], i64** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -158,11 +162,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[ARG1:%.+]] = load i32* [[TMP0]], align 4
+comment|// O32:   [[ARG1:%.+]] = load i32* [[AP_CUR]], align 4
 end_comment
 
 begin_comment
-comment|// NEW:   [[TMP2:%.+]] = load i64* [[TMP0]], align 8
+comment|// NEW:   [[TMP2:%.+]] = load i64* [[AP_CUR]], align 8
 end_comment
 
 begin_comment
@@ -264,7 +268,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ALL:   [[AP_CUR:%.+]] = load i8** %va, align [[PTRALIGN]]
+comment|// O32:   [[TMP0:%.+]] = bitcast i8** %va to i32**
+end_comment
+
+begin_comment
+comment|// O32:   [[AP_CUR:%.+]] = load i32** [[TMP0]], align [[PTRALIGN]]
+end_comment
+
+begin_comment
+comment|// NEW:   [[TMP0:%.+]] = bitcast i8** %va to i64**
+end_comment
+
+begin_comment
+comment|// NEW:   [[AP_CUR:%.+]] = load i64** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -272,23 +288,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[TMP0:%.+]] = bitcast i8* [[AP_CUR]] to i32*
+comment|// O32:   [[AP_NEXT1:%.+]] = getelementptr i32* [[AP_CUR]], i32 1
 end_comment
 
 begin_comment
-comment|// NEW:   [[TMP0:%.+]] = bitcast i8* [[AP_CUR]] to i64*
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// O32:   [[AP_NEXT:%.+]] = getelementptr i8* [[AP_CUR]], i32 4
-end_comment
-
-begin_comment
-comment|// NEW:   [[AP_NEXT:%.+]] = getelementptr i8* [[AP_CUR]], [[INTPTR_T:i32|i64]] 8
+comment|// NEW:   [[AP_NEXT1:%.+]] = getelementptr i64* [[AP_CUR]], [[INTPTR_T:i32|i64]] 1
 end_comment
 
 begin_comment
@@ -296,7 +300,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   store i8* [[AP_NEXT]], i8** %va, align [[PTRALIGN]]
+comment|// O32:   store i32* [[AP_NEXT1]], i32** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -304,7 +308,7 @@ comment|// FIXME: N32 optimised this store out. Why only for this ABI?
 end_comment
 
 begin_comment
-comment|// N64:   store i8* [[AP_NEXT]], i8** %va, align [[PTRALIGN]]
+comment|// N64:   store i64* [[AP_NEXT1]], i64** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -312,11 +316,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[ARG1:%.+]] = load i32* [[TMP0]], align 4
+comment|// O32:   [[ARG1:%.+]] = load i32* [[AP_CUR]], align 4
 end_comment
 
 begin_comment
-comment|// NEW:   [[TMP3:%.+]] = load i64* [[TMP0]], align 8
+comment|// NEW:   [[TMP3:%.+]] = load i64* [[AP_CUR]], align 8
 end_comment
 
 begin_comment
@@ -328,23 +332,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[TMP1:%.+]] = bitcast i8* [[AP_NEXT]] to i32*
+comment|// O32:   [[AP_NEXT2:%.+]] = getelementptr i32* [[AP_CUR]], i32 2
 end_comment
 
 begin_comment
-comment|// NEW:   [[TMP1:%.+]] = bitcast i8* [[AP_NEXT]] to i64*
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// O32:   [[AP_NEXT3:%.+]] = getelementptr i8* [[AP_CUR]], i32 8
-end_comment
-
-begin_comment
-comment|// NEW:   [[AP_NEXT3:%.+]] = getelementptr i8* [[AP_CUR]], [[INTPTR_T]] 16
+comment|// NEW:   [[AP_NEXT2:%.+]] = getelementptr i64* [[AP_CUR]], [[INTPTR_T]] 2
 end_comment
 
 begin_comment
@@ -352,7 +344,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ALL:   store i8* [[AP_NEXT3]], i8** %va, align [[PTRALIGN]]
+comment|// O32:   store i32* [[AP_NEXT2]], i32** [[TMP0]], align [[PTRALIGN]]
+end_comment
+
+begin_comment
+comment|// NEW:   store i64* [[AP_NEXT2]], i64** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -360,11 +356,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[ARG2:%.+]] = load i32* [[TMP1]], align 4
+comment|// O32:   [[ARG2:%.+]] = load i32* [[AP_NEXT1]], align 4
 end_comment
 
 begin_comment
-comment|// NEW:   [[TMP4:%.+]] = load i64* [[TMP1]], align 8
+comment|// NEW:   [[TMP4:%.+]] = load i64* [[AP_NEXT1]], align 8
 end_comment
 
 begin_comment
@@ -460,15 +456,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ALL:   [[AP_CUR:%.+]] = load i8** %va, align [[PTRALIGN]]
+comment|// O32:   [[AP_CUR:%.+]] = load i8** %va, align [[PTRALIGN]]
 end_comment
 
 begin_comment
-comment|//
+comment|// NEW:   [[TMP0:%.+]] = bitcast i8** %va to i64**
 end_comment
 
 begin_comment
-comment|// NEW:   [[TMP0:%.+]] = bitcast i8* [[AP_CUR]] to i64*
+comment|// NEW:   [[AP_CUR:%.+]] = load i64** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -512,7 +508,7 @@ comment|// O32:   [[AP_NEXT:%.+]] = getelementptr i8* [[PTR4]], [[INTPTR_T]] 8
 end_comment
 
 begin_comment
-comment|// NEW:   [[AP_NEXT:%.+]] = getelementptr i8* [[AP_CUR]], [[INTPTR_T]] 8
+comment|// NEW:   [[AP_NEXT:%.+]] = getelementptr i64* [[AP_CUR]], [[INTPTR_T:i32|i64]] 1
 end_comment
 
 begin_comment
@@ -520,7 +516,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ALL:   store i8* [[AP_NEXT]], i8** %va, align [[PTRALIGN]]
+comment|// O32:   store i8* [[AP_NEXT]], i8** %va, align [[PTRALIGN]]
+end_comment
+
+begin_comment
+comment|// NEW:   store i64* [[AP_NEXT]], i64** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -532,7 +532,7 @@ comment|// O32:   [[ARG1:%.+]] = load i64* [[PTR3]], align 8
 end_comment
 
 begin_comment
-comment|// NEW:   [[ARG1:%.+]] = load i64* [[TMP0]], align 8
+comment|// NEW:   [[ARG1:%.+]] = load i64* [[AP_CUR]], align 8
 end_comment
 
 begin_comment
@@ -545,6 +545,203 @@ end_comment
 
 begin_comment
 comment|// ALL:   ret i64 [[ARG1]]
+end_comment
+
+begin_comment
+comment|// ALL: }
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|test_ptr
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|va
+decl_stmt|;
+name|va_start
+argument_list|(
+name|va
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|char
+modifier|*
+name|v
+init|=
+name|va_arg
+argument_list|(
+name|va
+argument_list|,
+name|char
+operator|*
+argument_list|)
+decl_stmt|;
+name|va_end
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+return|return
+name|v
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// ALL-LABEL: define i8* @test_ptr(i8*{{.*}} %fmt, ...)
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// O32:   %va = alloca i8*, align [[PTRALIGN:4]]
+end_comment
+
+begin_comment
+comment|// N32:   %va = alloca i8*, align [[PTRALIGN:4]]
+end_comment
+
+begin_comment
+comment|// N64:   %va = alloca i8*, align [[PTRALIGN:8]]
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// ALL:   [[VA1:%.+]] = bitcast i8** %va to i8*
+end_comment
+
+begin_comment
+comment|// ALL:   call void @llvm.va_start(i8* [[VA1]])
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// O32:   [[TMP0:%.+]] = bitcast i8** %va to i8***
+end_comment
+
+begin_comment
+comment|// O32:   [[AP_CUR:%.+]] = load i8*** [[TMP0]], align [[PTRALIGN]]
+end_comment
+
+begin_comment
+comment|// N32 differs because the vararg is not a N32 pointer. It's been promoted to 64-bit.
+end_comment
+
+begin_comment
+comment|// N32:   [[TMP0:%.+]] = bitcast i8** %va to i64**
+end_comment
+
+begin_comment
+comment|// N32:   [[AP_CUR:%.+]] = load i64** [[TMP0]], align [[PTRALIGN]]
+end_comment
+
+begin_comment
+comment|// N64:   [[TMP0:%.+]] = bitcast i8** %va to i8***
+end_comment
+
+begin_comment
+comment|// N64:   [[AP_CUR:%.+]] = load i8*** [[TMP0]], align [[PTRALIGN]]
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// O32:   [[AP_NEXT:%.+]] = getelementptr i8** [[AP_CUR]], i32 1
+end_comment
+
+begin_comment
+comment|// N32 differs because the vararg is not a N32 pointer. It's been promoted to 64-bit.
+end_comment
+
+begin_comment
+comment|// N32:   [[AP_NEXT:%.+]] = getelementptr i64* [[AP_CUR]], {{i32|i64}} 1
+end_comment
+
+begin_comment
+comment|// N64:   [[AP_NEXT:%.+]] = getelementptr i8** [[AP_CUR]], {{i32|i64}} 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// O32:   store i8** [[AP_NEXT]], i8*** [[TMP0]], align [[PTRALIGN]]
+end_comment
+
+begin_comment
+comment|// N32 differs because the vararg is not a N32 pointer. It's been promoted to 64-bit.
+end_comment
+
+begin_comment
+comment|// N32:   store i64* [[AP_NEXT]], i64** [[TMP0]], align [[PTRALIGN]]
+end_comment
+
+begin_comment
+comment|// N64:   store i8** [[AP_NEXT]], i8*** [[TMP0]], align [[PTRALIGN]]
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// O32:   [[ARG1:%.+]] = load i8** [[AP_CUR]], align 4
+end_comment
+
+begin_comment
+comment|// N32 differs because the vararg is not a N32 pointer. It's been promoted to
+end_comment
+
+begin_comment
+comment|// 64-bit so we must truncate the excess and bitcast to a N32 pointer.
+end_comment
+
+begin_comment
+comment|// N32:   [[TMP2:%.+]] = load i64* [[AP_CUR]], align 8
+end_comment
+
+begin_comment
+comment|// N32:   [[TMP3:%.+]] = trunc i64 [[TMP2]] to i32
+end_comment
+
+begin_comment
+comment|// N32:   [[ARG1:%.+]] = inttoptr i32 [[TMP3]] to i8*
+end_comment
+
+begin_comment
+comment|// N64:   [[ARG1:%.+]] = load i8** [[AP_CUR]], align 8
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// ALL:   call void @llvm.va_end(i8* [[VA1]])
+end_comment
+
+begin_comment
+comment|// ALL:   ret i8* [[ARG1]]
 end_comment
 
 begin_comment

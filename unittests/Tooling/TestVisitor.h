@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_TEST_VISITOR_H
+name|LLVM_CLANG_UNITTESTS_TOOLING_TESTVISITOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_TEST_VISITOR_H
+name|LLVM_CLANG_UNITTESTS_TOOLING_TESTVISITOR_H
 end_define
 
 begin_include
@@ -377,10 +377,14 @@ argument|Visitor
 argument_list|)
 block|{}
 name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|clang
 operator|::
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&
@@ -390,11 +394,15 @@ argument_list|)
 block|{
 comment|/// TestConsumer will be deleted by the framework calling us.
 return|return
-name|new
+name|llvm
+operator|::
+name|make_unique
+operator|<
 name|FindConsumer
-argument_list|(
+operator|>
+operator|(
 name|Visitor
-argument_list|)
+operator|)
 return|;
 block|}
 name|protected
@@ -1004,10 +1012,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* LLVM_CLANG_TEST_VISITOR_H */
-end_comment
 
 end_unit
 

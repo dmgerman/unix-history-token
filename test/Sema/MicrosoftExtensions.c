@@ -123,6 +123,62 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+name|struct
+name|nested2
+name|PR20573
+init|=
+block|{
+operator|.
+name|a
+operator|=
+literal|3
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+struct|struct
+name|nested3
+block|{
+name|long
+name|d
+decl_stmt|;
+struct|struct
+name|nested4
+block|{
+comment|// expected-warning {{anonymous structs are a Microsoft extension}}
+name|long
+name|e
+decl_stmt|;
+block|}
+struct|;
+union|union
+name|nested5
+block|{
+comment|// expected-warning {{anonymous unions are a Microsoft extension}}
+name|long
+name|f
+decl_stmt|;
+block|}
+union|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+union|union
+name|nested6
+block|{
+name|long
+name|f
+decl_stmt|;
+block|}
+name|NESTED6
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|test
@@ -134,6 +190,9 @@ struct_decl|struct
 name|nested2
 struct_decl|;
 comment|// expected-warning {{anonymous structs are a Microsoft extension}}
+name|NESTED6
+expr_stmt|;
+comment|// expected-warning {{anonymous unions are a Microsoft extension}}
 block|}
 struct|;
 end_struct
@@ -303,6 +362,33 @@ block|}
 name|BB
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|anon_fault
+block|{
+struct_decl|struct
+name|undefined
+struct_decl|;
+comment|// expected-warning {{anonymous structs are a Microsoft extension}}
+comment|// expected-error@-1 {{field has incomplete type 'struct undefined'}}
+comment|// expected-note@-2 {{forward declaration of 'struct undefined'}}
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|const
+name|int
+name|anon_falt_size
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|anon_fault
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|__declspec

@@ -69,7 +69,7 @@ comment|// CHECK: ret void
 end_comment
 
 begin_comment
-comment|// CHECK: metadata !{i32 0, i32 2}
+comment|// CHECK:  i32 0, i32 2}
 end_comment
 
 end_unit

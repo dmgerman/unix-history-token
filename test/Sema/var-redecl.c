@@ -46,10 +46,6 @@ name|outer5
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|// expected-note{{previous definition is here}}
-end_comment
-
 begin_function_decl
 name|int
 name|outer6
@@ -99,6 +95,7 @@ specifier|extern
 name|int
 name|outer5
 decl_stmt|;
+comment|// expected-note{{previous definition is here}}
 specifier|extern
 name|int
 name|outer6
@@ -314,6 +311,69 @@ end_decl_stmt
 
 begin_comment
 comment|// expected-error {{non-static declaration of 'a' follows static declaration}}
+end_comment
+
+begin_function
+name|void
+name|f
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+comment|// expected-note {{previous definition is here}}
+specifier|extern
+name|int
+name|x
+decl_stmt|;
+comment|// expected-error {{extern declaration of 'x' follows non-extern declaration}}
+block|}
+end_function
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|b
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|g20
+parameter_list|()
+block|{
+specifier|extern
+name|int
+name|b
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// expected-note{{previous definition is here}}
+end_comment
+
+begin_function
+name|void
+name|g21
+parameter_list|()
+block|{
+specifier|extern
+name|int
+name|b
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// expected-error{{redefinition of 'b' with a different type: 'int [4]' vs 'int [3]'}}
 end_comment
 
 end_unit

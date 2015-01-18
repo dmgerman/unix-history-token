@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_DRIVER_TYPES_H_
+name|LLVM_CLANG_DRIVER_TYPES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_DRIVER_TYPES_H_
+name|LLVM_CLANG_DRIVER_TYPES_H
 end_define
 
 begin_include

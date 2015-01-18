@@ -8,19 +8,11 @@ comment|// RUN: %clang_cc1 -analyze -analyzer-output=html -analyzer-checker=core
 end_comment
 
 begin_comment
-comment|// RUN: cat %t/*.html | FileCheck %s
+comment|// RUN: find %t -name "*.html" -exec cat "{}" ";" | FileCheck %s
 end_comment
 
 begin_comment
 comment|// REQUIRES: staticanalyzer
-end_comment
-
-begin_comment
-comment|// Because of the glob (*.html)
-end_comment
-
-begin_comment
-comment|// REQUIRES: shell
 end_comment
 
 begin_comment

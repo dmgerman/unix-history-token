@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple i386-mingw32 -fms-extensions -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -fsyntax-only -verify %s
+end_comment
+
 begin_function
 name|int
 name|foo
@@ -15,6 +19,9 @@ name|int
 name|i
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|_MSC_VER
 name|__assume
 argument_list|(
 name|i
@@ -30,7 +37,7 @@ operator|>
 literal|2
 argument_list|)
 expr_stmt|;
-comment|//expected-warning {{the argument to __assume has side effects that will be discarded}}
+comment|//expected-warning {{the argument to '__assume' has side effects that will be discarded}}
 name|int
 name|test
 init|=
@@ -55,6 +62,50 @@ index|]
 block|;}
 operator|)
 decl_stmt|;
+else|#
+directive|else
+name|__builtin_assume
+argument_list|(
+name|i
+operator|!=
+literal|4
+argument_list|)
+expr_stmt|;
+name|__builtin_assume
+argument_list|(
+operator|++
+name|i
+operator|>
+literal|2
+argument_list|)
+expr_stmt|;
+comment|//expected-warning {{the argument to '__builtin_assume' has side effects that will be discarded}}
+name|int
+name|test
+init|=
+expr|sizeof
+operator|(
+expr|struct
+block|{
+name|char
+name|qq
+index|[
+operator|(
+name|__builtin_assume
+argument_list|(
+name|i
+operator|!=
+literal|5
+argument_list|)
+expr|,
+literal|7
+operator|)
+index|]
+block|;}
+operator|)
+decl_stmt|;
+endif|#
+directive|endif
 return|return
 name|a
 index|[

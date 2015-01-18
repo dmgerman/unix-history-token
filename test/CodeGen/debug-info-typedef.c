@@ -42,11 +42,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: metadata ![[HEADER:[0-9]+]], null, metadata !"MyType"{{.*}} ; [ DW_TAG_typedef ] [MyType] [line 2, size 0, align 0, offset 0] [from int]
+comment|// CHECK:  !"0x16\00MyType\002\00{{.*}}", ![[HEADER:[0-9]+]], null{{.*}}} ; [ DW_TAG_typedef ] [MyType] [line 2, size 0, align 0, offset 0] [from int]
 end_comment
 
 begin_comment
-comment|// CHECK: ![[HEADER]] = metadata !{metadata !"b.h",
+comment|// CHECK: ![[HEADER]] = !{!"b.h",
 end_comment
 
 end_unit

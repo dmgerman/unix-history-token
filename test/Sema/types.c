@@ -1,10 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -pedantic -verify -triple=x86_64-apple-darwin9
+comment|// RUN: %clang_cc1 %s -fblocks -pedantic -verify -triple=x86_64-apple-darwin9
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -pedantic -verify -triple=mips64-linux-gnu
+comment|// RUN: %clang_cc1 %s -fblocks -pedantic -verify -triple=mips64-linux-gnu
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -fblocks -pedantic -verify -triple=x86_64-unknown-linux
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -fblocks -pedantic -verify -triple=x86_64-unknown-linux-gnux32
 end_comment
 
 begin_comment
@@ -129,10 +137,6 @@ name|check_int_128
 typedef|;
 end_typedef
 
-begin_comment
-comment|// expected-note {{here}}
-end_comment
-
 begin_typedef
 typedef|typedef
 name|__int128_t
@@ -141,7 +145,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-note {{here}} expected-warning {{redefinition}}
+comment|// expected-note {{here}}
 end_comment
 
 begin_typedef
@@ -163,10 +167,6 @@ name|check_uint_128
 typedef|;
 end_typedef
 
-begin_comment
-comment|// expected-note {{here}}
-end_comment
-
 begin_typedef
 typedef|typedef
 name|__uint128_t
@@ -175,7 +175,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-note {{here}} expected-warning {{redefinition}}
+comment|// expected-note {{here}}
 end_comment
 
 begin_typedef
@@ -509,6 +509,44 @@ expr_stmt|;
 comment|// expected-error {{illegal vector component name 's'}}
 block|}
 end_function
+
+begin_decl_stmt
+name|int
+modifier|&
+modifier|*
+specifier|_Atomic
+name|null_type_0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{expected identifier or '('}}
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|&
+modifier|*
+name|__restrict__
+name|null_type_1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{expected identifier or '('}}
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|^
+specifier|_Atomic
+name|null_type_2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{block pointer to non-function type is invalid}}
+end_comment
 
 end_unit
 

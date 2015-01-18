@@ -42,6 +42,28 @@ argument_list|)
 assert|;
 end_assert
 
+begin_define
+define|#
+directive|define
+name|M
+parameter_list|(
+name|A
+parameter_list|)
+end_define
+
+begin_macro
+name|M
+argument_list|(
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+comment|// expected-error {{embedding a #pragma directive within macro arguments is not supported}}
+argument_list|)
+end_macro
+
 begin_comment
 comment|// header1.h
 end_comment

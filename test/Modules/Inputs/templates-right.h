@@ -284,5 +284,24 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+specifier|inline
+name|int
+modifier|*
+name|getStaticDataMemberRight
+parameter_list|()
+block|{
+return|return
+name|WithUndefinedStaticDataMember
+operator|<
+name|int
+index|[]
+operator|>
+operator|::
+name|undefined
+return|;
+block|}
+end_function
+
 end_unit
 

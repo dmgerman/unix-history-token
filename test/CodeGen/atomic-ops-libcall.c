@@ -37,7 +37,7 @@ name|p
 parameter_list|)
 block|{
 comment|// CHECK: test_c11_atomic_fetch_add_int_ptr
-comment|// CHECK: {{%[^ ]*}} = tail call i32* @__atomic_fetch_add_4(i8* {{%[0-9]+}}, i32 12, i32 5)
+comment|// CHECK: {{%[^ ]*}} = tail call i32 @__atomic_fetch_add_4(i8* {{%[0-9]+}}, i32 12, i32 5)
 return|return
 name|__c11_atomic_fetch_add
 argument_list|(
@@ -66,7 +66,7 @@ name|p
 parameter_list|)
 block|{
 comment|// CHECK: test_c11_atomic_fetch_sub_int_ptr
-comment|// CHECK: {{%[^ ]*}} = tail call i32* @__atomic_fetch_sub_4(i8* {{%[0-9]+}}, i32 20, i32 5)
+comment|// CHECK: {{%[^ ]*}} = tail call i32 @__atomic_fetch_sub_4(i8* {{%[0-9]+}}, i32 20, i32 5)
 return|return
 name|__c11_atomic_fetch_sub
 argument_list|(
@@ -93,7 +93,7 @@ name|p
 parameter_list|)
 block|{
 comment|// CHECK: test_c11_atomic_fetch_add_int
-comment|// CHECK: {{%[^ ]*}} = tail call i32 bitcast (i32* (i8*, i32, i32)* @__atomic_fetch_add_4 to i32 (i8*, i32, i32)*)(i8* {{%[0-9]+}}, i32 3, i32 5)
+comment|// CHECK: {{%[^ ]*}} = tail call i32 @__atomic_fetch_add_4(i8* {{%[0-9]+}}, i32 3, i32 5)
 return|return
 name|__c11_atomic_fetch_add
 argument_list|(
@@ -120,7 +120,7 @@ name|p
 parameter_list|)
 block|{
 comment|// CHECK: test_c11_atomic_fetch_sub_int
-comment|// CHECK: {{%[^ ]*}} = tail call i32 bitcast (i32* (i8*, i32, i32)* @__atomic_fetch_sub_4 to i32 (i8*, i32, i32)*)(i8* {{%[0-9]+}}, i32 5, i32 5)
+comment|// CHECK: {{%[^ ]*}} = tail call i32 @__atomic_fetch_sub_4(i8* {{%[0-9]+}}, i32 5, i32 5)
 return|return
 name|__c11_atomic_fetch_sub
 argument_list|(
@@ -146,7 +146,7 @@ name|p
 parameter_list|)
 block|{
 comment|// CHECK: @fp2a
-comment|// CHECK: {{%[^ ]*}} = tail call i32* @__atomic_fetch_sub_4(i8* {{%[0-9]+}}, i32 4, i32 0)
+comment|// CHECK: {{%[^ ]*}} = tail call i32 @__atomic_fetch_sub_4(i8* {{%[0-9]+}}, i32 4, i32 0)
 comment|// Note, the GNU builtins do not multiply by sizeof(T)!
 return|return
 name|__atomic_fetch_sub

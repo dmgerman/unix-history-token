@@ -281,6 +281,17 @@ name|OpenMPDirectiveKind
 name|DKind
 parameter_list|)
 function_decl|;
+comment|/// \brief Checks if the specified directive is a teams-kind directive.
+comment|/// \param DKind Specified directive.
+comment|/// \return true - the directive is a teams-like directive like 'omp teams',
+comment|/// otherwise - false.
+name|bool
+name|isOpenMPTeamsDirective
+parameter_list|(
+name|OpenMPDirectiveKind
+name|DKind
+parameter_list|)
+function_decl|;
 comment|/// \brief Checks if the specified directive is a simd directive.
 comment|/// \param DKind Specified directive.
 comment|/// \return true - the directive is a simd directive like 'omp simd',

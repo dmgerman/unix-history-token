@@ -27,6 +27,10 @@ begin_comment
 comment|// RUN: %clang -target powerpc-unknown-freebsd -g -S -emit-llvm -o - %s | FileCheck %s --check-prefix=VER2
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target i386-pc-solaris -g -S -emit-llvm -o - %s | FileCheck %s --check-prefix=VER2
+end_comment
+
 begin_function
 name|int
 name|main
@@ -41,15 +45,15 @@ block|}
 end_function
 
 begin_comment
-comment|// VER2: metadata !{i32 2, metadata !"Dwarf Version", i32 2}
+comment|// VER2: !{i32 2, !"Dwarf Version", i32 2}
 end_comment
 
 begin_comment
-comment|// VER3: metadata !{i32 2, metadata !"Dwarf Version", i32 3}
+comment|// VER3: !{i32 2, !"Dwarf Version", i32 3}
 end_comment
 
 begin_comment
-comment|// VER4: metadata !{i32 2, metadata !"Dwarf Version", i32 4}
+comment|// VER4: !{i32 2, !"Dwarf Version", i32 4}
 end_comment
 
 end_unit

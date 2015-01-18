@@ -1469,6 +1469,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|SourceRange
+name|getReturnTypeSourceRange
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// \brief Determine the type of an expression that sends a message to this
 end_comment
@@ -1789,12 +1797,9 @@ name|SourceLocation
 operator|>
 name|SelLocs
 operator|=
-name|ArrayRef
-operator|<
-name|SourceLocation
-operator|>
-operator|(
-operator|)
+name|llvm
+operator|::
+name|None
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -3007,6 +3012,7 @@ name|ObjCPropertyDecl
 modifier|*
 name|FindPropertyDeclaration
 argument_list|(
+specifier|const
 name|IdentifierInfo
 operator|*
 name|PropertyId
@@ -11098,6 +11104,7 @@ name|DeclContext
 modifier|*
 name|DC
 parameter_list|,
+specifier|const
 name|IdentifierInfo
 modifier|*
 name|propertyID

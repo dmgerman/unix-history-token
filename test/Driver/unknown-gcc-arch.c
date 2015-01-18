@@ -48,11 +48,11 @@ comment|// I386-M64: {{.*as.*--64}}
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target powerpc64-unknown-unknown -c -x assembler %s -### 2>&1 \
+comment|// RUN: %clang -target powerpc64-unknown-unknown -c -x assembler %s -### \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=PPC64 %s
+comment|// RUN: -no-integrated-as 2>&1 | FileCheck -check-prefix=PPC64 %s
 end_comment
 
 begin_comment
@@ -60,11 +60,23 @@ comment|// PPC64: {{.*as.*-a64}}
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target powerpc64-unknown-unknown -c -x assembler %s -### -m32 2>&1 \
+comment|// RUN: %clang -target powerpc-unknown-unknown -c -x assembler %s -### -m64 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=PPC64-M32 %s
+comment|// RUN: -no-integrated-as 2>&1  | FileCheck -check-prefix=PPC-M64 %s
+end_comment
+
+begin_comment
+comment|// PPC-M64: {{.*as.*-a64}}
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-unknown -c -x assembler %s -### -m32 \
+end_comment
+
+begin_comment
+comment|// RUN: -no-integrated-as 2>&1 | FileCheck -check-prefix=PPC64-M32 %s
 end_comment
 
 begin_comment
@@ -76,23 +88,11 @@ comment|// RUN: %clang -target powerpc-unknown-unknown -c -x assembler %s -### 2
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -check-prefix=PPC %s
+comment|// RUN: -no-integrated-as | FileCheck -check-prefix=PPC %s
 end_comment
 
 begin_comment
 comment|// PPC: {{.*as.*-a32}}
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target powerpc-unknown-unknown -c -x assembler %s -### -m64 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck -check-prefix=PPC-M64 %s
-end_comment
-
-begin_comment
-comment|// PPC-M64: {{.*as.*-a64}}
 end_comment
 
 begin_comment

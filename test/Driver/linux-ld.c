@@ -20,6 +20,10 @@ comment|// RUN:     --target=i386-unknown-linux \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
 end_comment
 
@@ -69,6 +73,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -148,6 +156,10 @@ comment|// RUN:     --target=x86_64-unknown-linux-gnux32 \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
 end_comment
 
@@ -197,6 +209,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -277,6 +293,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -364,6 +384,10 @@ comment|// RUN:     -static-libgcc \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
 end_comment
 
@@ -441,6 +465,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     -static \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -524,6 +552,10 @@ comment|// RUN:     -static-libgcc -static \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
 end_comment
 
@@ -541,6 +573,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=i386-unknown-linux -m32 \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -605,6 +641,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=i386-unknown-linux -m64 \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -676,6 +716,10 @@ comment|// RUN:     --target=x86_64-unknown-linux -m64 \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/multilib_64bit_linux_tree \
 end_comment
 
@@ -737,6 +781,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=x86_64-unknown-linux -m32 \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -808,6 +856,10 @@ comment|// RUN:     --target=x86_64-unknown-linux-gnux32 \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/multilib_64bit_linux_tree \
 end_comment
 
@@ -873,6 +925,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=x86_64-unknown-linux -mx32 \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -944,6 +1000,10 @@ comment|// RUN:     --target=i386-unknown-linux -mx32 \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/multilib_64bit_linux_tree \
 end_comment
 
@@ -997,6 +1057,146 @@ end_comment
 
 begin_comment
 comment|// CHECK-32-TO-X32: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=x86_64-unknown-linux-gnux32 -m64 \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/multilib_64bit_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-X32-TO-64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-64: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-64: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0{{/|\\\\}}crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-64: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-unknown-linux/4.6.0"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-64: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../x86_64-unknown-linux/lib/../lib64"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-64: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../lib64"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-64: "-L[[SYSROOT]]/lib/../lib64"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-64: "-L[[SYSROOT]]/usr/lib/../lib64"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-64: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../x86_64-unknown-linux/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-64: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-64: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-64: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=x86_64-unknown-linux-gnux32 -m32 \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/multilib_64bit_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-X32-TO-32 %s
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-32: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-32: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0/32{{/|\\\\}}crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-32: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-unknown-linux/4.6.0/32"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-32: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../x86_64-unknown-linux/lib/../lib32"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-32: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../lib32"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-32: "-L[[SYSROOT]]/lib/../lib32"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-32: "-L[[SYSROOT]]/usr/lib/../lib32"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-32: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-unknown-linux/4.6.0"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-32: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../../../x86_64-unknown-linux/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-32: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-unknown-linux/4.6.0/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-32: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-X32-TO-32: "-L[[SYSROOT]]/usr/lib"
 end_comment
 
 begin_comment
@@ -1072,6 +1272,10 @@ comment|// RUN:     -ccc-install-dir %S/Inputs/fake_install_tree/bin \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
 end_comment
 
@@ -1113,6 +1317,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     -ccc-install-dir %S/Inputs/fake_install_tree/bin \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -1160,6 +1368,10 @@ comment|// RUN:     -ccc-install-dir %S/Inputs/gcc_version_parsing1/bin \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
 end_comment
 
@@ -1189,6 +1401,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     -ccc-install-dir %S/Inputs/gcc_version_parsing2/bin \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -1224,6 +1440,10 @@ comment|// RUN:     -ccc-install-dir %S/Inputs/gcc_version_parsing3/bin \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
 end_comment
 
@@ -1253,6 +1473,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     -ccc-install-dir %S/Inputs/gcc_version_parsing4/bin \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -1304,6 +1528,10 @@ comment|// RUN:     -ccc-install-dir %S/Inputs/basic_linux_tree/usr/bin \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_linux_libcxx_tree \
 end_comment
 
@@ -1345,6 +1573,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     -ccc-install-dir %S/Inputs/basic_linux_libcxx_tree/usr/bin \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -1393,6 +1625,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -1449,6 +1685,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=arm-unknown-linux-gnueabihf \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -1517,6 +1757,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=arm-linux-gnueabihf \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -1592,6 +1836,10 @@ comment|// RUN:     --target=arm-linux-gnueabi \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/x86-64_ubuntu_13.10 \
 end_comment
 
@@ -1664,6 +1912,10 @@ comment|// RUN:     --target=powerpc64le-unknown-linux-gnu \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/ubuntu_14.04_multiarch_tree \
 end_comment
 
@@ -1733,6 +1985,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=x86_64-unknown-linux-gnux32 \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -1812,6 +2068,10 @@ comment|// RUN:     --target=armv7-unknown-linux-gnueabihf \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/fedora_18_tree \
 end_comment
 
@@ -1868,6 +2128,10 @@ comment|// RUN:     --target=arm64-unknown-linux-gnu \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/fedora_21_tree \
 end_comment
 
@@ -1881,6 +2145,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=aarch64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -1933,6 +2201,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=arm-unknown-linux-gnueabi \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -2001,6 +2273,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=powerpc64-suse-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -2104,6 +2380,90 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
+comment|// RUN:     --target=powerpc64-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-PPC64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64: "-m" "elf64ppc"
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64: "-dynamic-linker" "{{.*}}/lib64/ld64.so.1"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=powerpc64-linux-gnu -mabi=elfv1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-PPC64-ELFv1 %s
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64-ELFv1: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64-ELFv1: "-m" "elf64ppc"
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64-ELFv1: "-dynamic-linker" "{{.*}}/lib64/ld64.so.1"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=powerpc64-linux-gnu -mabi=elfv2 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-PPC64-ELFv2 %s
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64-ELFv2: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64-ELFv2: "-m" "elf64ppc"
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64-ELFv2: "-dynamic-linker" "{{.*}}/lib64/ld64.so.2"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
 comment|// RUN:     --target=powerpc64le-linux-gnu \
 end_comment
 
@@ -2121,6 +2481,62 @@ end_comment
 
 begin_comment
 comment|// CHECK-PPC64LE: "-dynamic-linker" "{{.*}}/lib64/ld64.so.2"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=powerpc64le-linux-gnu -mabi=elfv1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-PPC64LE-ELFv1 %s
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64LE-ELFv1: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64LE-ELFv1: "-m" "elf64lppc"
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64LE-ELFv1: "-dynamic-linker" "{{.*}}/lib64/ld64.so.1"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=powerpc64le-linux-gnu -mabi=elfv2 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-PPC64LE-ELFv2 %s
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64LE-ELFv2: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64LE-ELFv2: "-m" "elf64lppc"
+end_comment
+
+begin_comment
+comment|// CHECK-PPC64LE-ELFv2: "-dynamic-linker" "{{.*}}/lib64/ld64.so.2"
 end_comment
 
 begin_comment
@@ -2540,6 +2956,10 @@ comment|// RUN:     --target=i686-linux-gnu \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/debian_multiarch_tree \
 end_comment
 
@@ -2585,6 +3005,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=x86_64-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -2636,6 +3060,10 @@ comment|// RUN:     --target=powerpc-linux-gnu \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/debian_multiarch_tree \
 end_comment
 
@@ -2681,6 +3109,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=powerpc64-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -2732,6 +3164,10 @@ comment|// RUN:     --target=mips-linux-gnu \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/debian_multiarch_tree \
 end_comment
 
@@ -2777,6 +3213,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=mipsel-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -2828,6 +3268,10 @@ comment|// RUN:     --target=mips64-linux-gnu \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/debian_multiarch_tree \
 end_comment
 
@@ -2869,6 +3313,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=mips64el-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -2916,6 +3364,10 @@ comment|// RUN:     --target=mips64-linux-gnu -mabi=n32 \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/debian_multiarch_tree \
 end_comment
 
@@ -2957,6 +3409,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=mips64el-linux-gnu -mabi=n32 \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3012,6 +3468,10 @@ comment|// RUN:     --target=arm-linux-androideabi \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3025,6 +3485,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=arm-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3044,6 +3508,10 @@ comment|// RUN:     --target=aarch64-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3057,6 +3525,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=arm64-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3076,6 +3548,10 @@ comment|// RUN:     --target=mipsel-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3089,6 +3565,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=mips64el-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3108,6 +3588,10 @@ comment|// RUN:     --target=i686-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3121,6 +3605,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=x86_64-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3172,6 +3660,10 @@ comment|// RUN:     --target=arm-linux-androideabi \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3192,6 +3684,10 @@ comment|// RUN:     --target=arm-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3209,6 +3705,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=aarch64-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3252,6 +3752,10 @@ comment|// RUN:     --target=mipsel-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3269,6 +3773,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=mips64el-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3292,6 +3800,10 @@ comment|// RUN:     --target=i686-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3309,6 +3821,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=x86_64-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3368,6 +3884,10 @@ comment|// RUN:     --target=arm-linux-androideabi \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3405,6 +3925,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=aarch64-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3448,6 +3972,10 @@ comment|// RUN:     --target=mipsel-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3465,6 +3993,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=mips64el-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3488,6 +4020,10 @@ comment|// RUN:     --target=i686-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3504,7 +4040,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=x86-linux-android \
+comment|// RUN:     --target=x86_64-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3560,6 +4100,10 @@ comment|// RUN:     --target=arm-linux-androideabi \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot  \
 end_comment
 
@@ -3577,6 +4121,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=arm-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3600,6 +4148,10 @@ comment|// RUN:     --target=aarch64-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot  \
 end_comment
 
@@ -3617,6 +4169,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=arm64-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3640,6 +4196,10 @@ comment|// RUN:     --target=mipsel-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3657,6 +4217,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=mips64el-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3680,6 +4244,10 @@ comment|// RUN:     --target=i686-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3697,6 +4265,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=x86_64-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3748,6 +4320,10 @@ comment|// RUN:     --target=arm-linux-androideabi \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3761,6 +4337,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=arm-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3780,6 +4360,10 @@ comment|// RUN:     --target=mipsel-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3793,6 +4377,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=aarch64-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3812,6 +4400,10 @@ comment|// RUN:     --target=arm64-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3825,6 +4417,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=mips64el-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3844,6 +4440,10 @@ comment|// RUN:     --target=i686-linux-android \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3857,6 +4457,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=x86_64-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3892,6 +4496,10 @@ comment|// RUN:     --target=arm-linux-androideabi -pthread \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3905,6 +4513,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=arm-linux-android -pthread \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3924,6 +4536,10 @@ comment|// RUN:     --target=aarch64-linux-android -pthread \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3937,6 +4553,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=arm64-linux-android -pthread \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -3972,6 +4592,10 @@ comment|// RUN:     --target=mips64el-linux-android -pthread \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -3988,6 +4612,10 @@ comment|// RUN:     --target=i686-linux-android -pthread \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -4001,6 +4629,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=x86_64-linux-android -pthread \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4020,6 +4652,10 @@ comment|// RUN:     --target=arm-linux-androideabi -pthread \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -4037,6 +4673,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=arm-linux-android -pthread \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4060,6 +4700,10 @@ comment|// RUN:     --target=aarch64-linux-android -pthread \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -4077,6 +4721,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=arm64-linux-android -pthread \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4100,6 +4748,10 @@ comment|// RUN:     --target=mipsel-linux-android -pthread \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -4117,6 +4769,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=mips64el-linux-android -pthread \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4140,6 +4796,10 @@ comment|// RUN:     --target=i686-linux-android -pthread \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -4157,6 +4817,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=x86_64-linux-android -pthread \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4188,6 +4852,10 @@ comment|// RUN:     --target=arm-linux-androideabi -pthread \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
 end_comment
 
@@ -4213,6 +4881,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=mipsel-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4280,6 +4952,10 @@ comment|// RUN:     --target=mips64el-linux-gnu \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/debian_6_mips_tree \
 end_comment
 
@@ -4344,6 +5020,10 @@ comment|// RUN:     --target=mips64el-linux-gnu -mabi=n32 \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/debian_6_mips_tree \
 end_comment
 
@@ -4405,6 +5085,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=mips64-linux-gnuabi64 -mabi=n64 \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4481,6 +5165,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=mips64el-linux-gnuabi64 -mabi=n64 \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4564,6 +5252,10 @@ comment|// RUN:     --target=powerpc-fsl-linux \
 end_comment
 
 begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:     --sysroot=%S/Inputs/freescale_ppc_tree \
 end_comment
 
@@ -4597,6 +5289,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=powerpc64-fsl-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4640,6 +5336,10 @@ comment|// RUN: %clang --target=x86_64-unknown-linux -### %s \
 end_comment
 
 begin_comment
+comment|// RUN:        --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
 end_comment
 
@@ -4649,6 +5349,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -ffast-math \
+end_comment
+
+begin_comment
+comment|// RUN:        --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4664,6 +5368,10 @@ comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -funsafe-math-optim
 end_comment
 
 begin_comment
+comment|// RUN:        --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
 end_comment
 
@@ -4673,6 +5381,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -Ofast\
+end_comment
+
+begin_comment
+comment|// RUN:        --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4688,6 +5400,10 @@ comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -Ofast -O3\
 end_comment
 
 begin_comment
+comment|// RUN:        --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
 end_comment
 
@@ -4697,6 +5413,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -O3 -Ofast\
+end_comment
+
+begin_comment
+comment|// RUN:        --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4712,6 +5432,10 @@ comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -ffast-math -fno-fa
 end_comment
 
 begin_comment
+comment|// RUN:        --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
 end_comment
 
@@ -4721,6 +5445,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -Ofast -fno-fast-math \
+end_comment
+
+begin_comment
+comment|// RUN:        --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4736,6 +5464,10 @@ comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -Ofast -fno-unsafe-
 end_comment
 
 begin_comment
+comment|// RUN:        --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
 end_comment
 
@@ -4748,6 +5480,10 @@ comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -fno-fast-math -Ofa
 end_comment
 
 begin_comment
+comment|// RUN:        --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>&1 \
 end_comment
 
@@ -4757,6 +5493,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang --target=x86_64-unknown-linux -### %s -fno-unsafe-math-optimizations -Ofast \
+end_comment
+
+begin_comment
+comment|// RUN:        --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4777,6 +5517,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang --target=i386-unknown-linux -### %s -ffast-math \
+end_comment
+
+begin_comment
+comment|// RUN:        --gcc-toolchain="" \
 end_comment
 
 begin_comment
@@ -4804,6 +5548,10 @@ comment|// RUN: %clang -pg --target=x86_64-unknown-linux -### %s \
 end_comment
 
 begin_comment
+comment|// RUN:        --gcc-toolchain="" \
+end_comment
+
+begin_comment
 comment|// RUN:        --sysroot=%S/Inputs/basic_linux_tree 2>& 1 \
 end_comment
 
@@ -4821,6 +5569,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -u asdf --target=x86_64-unknown-linux -### %s \
+end_comment
+
+begin_comment
+comment|// RUN:        --gcc-toolchain="" \
 end_comment
 
 begin_comment

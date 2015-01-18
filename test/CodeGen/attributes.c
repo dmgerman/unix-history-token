@@ -170,7 +170,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @t9 = alias weak bitcast (void ()* @__t8 to void (...)*)
+comment|// CHECK: @t9 = weak alias bitcast (void ()* @__t8 to void (...)*)
 end_comment
 
 begin_function

@@ -2544,6 +2544,434 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=powerpc64-none-netbsd %s | FileCheck -check-prefix PPC64-NETBSD %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef long long int int64_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef long long unsigned int uint64_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef int64_t int_least64_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef uint64_t uint_least64_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef int64_t int_fast64_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef uint64_t uint_fast64_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef int int32_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef unsigned int uint32_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef int32_t int_least32_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef uint32_t uint_least32_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef int32_t int_fast32_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef uint32_t uint_fast32_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef short int16_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef unsigned short uint16_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef int16_t int_least16_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef uint16_t uint_least16_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef int16_t int_fast16_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef uint16_t uint_fast16_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef signed char int8_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef unsigned char uint8_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef int8_t int_least8_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef uint8_t uint_least8_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef uint8_t uint_fast8_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef int64_t intptr_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef uint64_t uintptr_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef long long int intmax_t;
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:typedef long long unsigned int uintmax_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT8_MAX_ 127
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT8_MIN_ (-127 -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT8_MAX_ 255
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_LEAST8_MIN_ (-127 -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_LEAST8_MAX_ 127
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT_LEAST8_MAX_ 255
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_FAST8_MIN_ (-127 -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_FAST8_MAX_ 127
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT_FAST8_MAX_ 255
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT16_MAX_ 32767
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT16_MIN_ (-32767 -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT16_MAX_ 65535
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_LEAST16_MIN_ (-32767 -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_LEAST16_MAX_ 32767
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT_LEAST16_MAX_ 65535
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_FAST16_MIN_ (-32767 -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_FAST16_MAX_ 32767
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT_FAST16_MAX_ 65535
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT32_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT32_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT32_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_LEAST32_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_LEAST32_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT_LEAST32_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_FAST32_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_FAST32_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT_FAST32_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT64_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT64_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT64_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_LEAST64_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_LEAST64_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT_LEAST64_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_FAST64_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT_FAST64_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT_FAST64_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INTPTR_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INTPTR_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINTPTR_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:PTRDIFF_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:PTRDIFF_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:SIZE_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INTMAX_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INTMAX_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINTMAX_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:SIG_ATOMIC_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:SIG_ATOMIC_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:WINT_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:WINT_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:WCHAR_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:WCHAR_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT8_C_(0) 0
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT8_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT16_C_(0) 0
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT16_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT32_C_(0) 0
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT32_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INT64_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINT64_C_(0) 0ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:INTMAX_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// PPC64-NETBSD:UINTMAX_C_(0) 0ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -E -ffreestanding -triple=powerpc-none-none %s | FileCheck -check-prefix PPC %s
 end_comment
 

@@ -126,6 +126,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTConsumer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -425,6 +431,27 @@ operator|=
 literal|"input.cc"
 argument_list|)
 decl_stmt|;
+comment|/// The first part of the pair is the filename, the second part the
+comment|/// file-content.
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|std
+operator|::
+name|string
+operator|>>
+name|FileContentMappings
+expr_stmt|;
 comment|/// \brief Runs (and deletes) the tool on 'Code' with the -fsyntax-only flag and
 comment|///        with additional other flags.
 comment|///
@@ -466,6 +493,14 @@ operator|&
 name|FileName
 operator|=
 literal|"input.cc"
+argument_list|,
+specifier|const
+name|FileContentMappings
+operator|&
+name|VirtualMappedFiles
+operator|=
+name|FileContentMappings
+argument_list|()
 argument_list|)
 decl_stmt|;
 comment|/// \brief Builds an AST for 'Code'.
@@ -609,7 +644,14 @@ name|DiagnosticConsumer
 modifier|*
 name|DiagConsumer
 parameter_list|)
-function_decl|;
+block|{
+name|this
+operator|->
+name|DiagConsumer
+operator|=
+name|DiagConsumer
+expr_stmt|;
+block|}
 comment|/// \brief Map a virtual file to be used while running the tool.
 comment|///
 comment|/// \param FilePath The path at which the content will be mapped.
@@ -734,23 +776,26 @@ operator|>
 name|SourcePaths
 argument_list|)
 expr_stmt|;
-name|virtual
 operator|~
 name|ClangTool
 argument_list|()
-block|{
-name|clearArgumentsAdjusters
-argument_list|()
-block|; }
+expr_stmt|;
 comment|/// \brief Set a \c DiagnosticConsumer to use during parsing.
 name|void
 name|setDiagnosticConsumer
-argument_list|(
+parameter_list|(
 name|DiagnosticConsumer
-operator|*
+modifier|*
 name|DiagConsumer
-argument_list|)
+parameter_list|)
+block|{
+name|this
+operator|->
+name|DiagConsumer
+operator|=
+name|DiagConsumer
 expr_stmt|;
+block|}
 comment|/// \brief Map a virtual file to be used while running the tool.
 comment|///
 comment|/// \param FilePath The path at which the content will be mapped.
@@ -765,20 +810,6 @@ name|StringRef
 name|Content
 parameter_list|)
 function_decl|;
-comment|/// \brief Install command line arguments adjuster.
-comment|///
-comment|/// \param Adjuster Command line arguments adjuster.
-comment|//
-comment|/// FIXME: Function is deprecated. Use (clear/append)ArgumentsAdjuster instead.
-comment|/// Remove it once all callers are gone.
-name|void
-name|setArgumentsAdjuster
-parameter_list|(
-name|ArgumentsAdjuster
-modifier|*
-name|Adjuster
-parameter_list|)
-function_decl|;
 comment|/// \brief Append a command line arguments adjuster to the adjuster chain.
 comment|///
 comment|/// \param Adjuster An argument adjuster, which will be run on the output of
@@ -787,7 +818,6 @@ name|void
 name|appendArgumentsAdjuster
 parameter_list|(
 name|ArgumentsAdjuster
-modifier|*
 name|Adjuster
 parameter_list|)
 function_decl|;
@@ -841,23 +871,20 @@ return|;
 block|}
 name|private
 label|:
-comment|// We store compile commands as pair (file name, compile command).
+specifier|const
+name|CompilationDatabase
+modifier|&
+name|Compilations
+decl_stmt|;
 name|std
 operator|::
 name|vector
 operator|<
 name|std
 operator|::
-name|pair
-operator|<
-name|std
-operator|::
 name|string
-operator|,
-name|CompileCommand
 operator|>
-expr|>
-name|CompileCommands
+name|SourcePaths
 expr_stmt|;
 name|llvm
 operator|::
@@ -883,15 +910,9 @@ operator|>
 expr|>
 name|MappedFileContents
 expr_stmt|;
-name|SmallVector
-operator|<
 name|ArgumentsAdjuster
-operator|*
-operator|,
-literal|2
-operator|>
-name|ArgsAdjusters
-expr_stmt|;
+name|ArgsAdjuster
+decl_stmt|;
 name|DiagnosticConsumer
 modifier|*
 name|DiagConsumer
@@ -1048,10 +1069,14 @@ argument_list|(
 argument|Callbacks
 argument_list|)
 block|{}
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|clang
 operator|::
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|clang::CompilerInstance&

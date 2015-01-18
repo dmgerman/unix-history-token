@@ -103,5 +103,52 @@ comment|// expected-warning {{expression result unused}}
 block|}
 end_function
 
+begin_comment
+comment|// rdar://18405357
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|long
+name|long
+name|l
+init|=
+literal|65536
+operator|*
+literal|65536
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{overflow in expression; result is 0 with type 'int'}}
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|long
+name|long
+name|l2
+init|=
+literal|65536
+operator|*
+operator|(
+name|unsigned
+operator|)
+literal|65536
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|long
+name|long
+name|l3
+init|=
+literal|65536
+operator|*
+literal|65536ULL
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

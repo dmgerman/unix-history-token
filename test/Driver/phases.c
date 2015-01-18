@@ -16,59 +16,59 @@ comment|// BASIC: 1: preprocessor, {0}, cpp-output
 end_comment
 
 begin_comment
-comment|// BASIC: 2: compiler, {1}, assembler
+comment|// BASIC: 2: compiler, {1}, ir
 end_comment
 
 begin_comment
-comment|// BASIC: 3: assembler, {2}, object
+comment|// BASIC: 3: backend, {2}, assembler
 end_comment
 
 begin_comment
-comment|// BASIC: 4: input, "{{.*}}phases.c", objective-c
+comment|// BASIC: 4: assembler, {3}, object
 end_comment
 
 begin_comment
-comment|// BASIC: 5: preprocessor, {4}, objective-c-cpp-output
+comment|// BASIC: 5: input, "{{.*}}phases.c", objective-c
 end_comment
 
 begin_comment
-comment|// BASIC: 6: compiler, {5}, assembler
+comment|// BASIC: 6: preprocessor, {5}, objective-c-cpp-output
 end_comment
 
 begin_comment
-comment|// BASIC: 7: assembler, {6}, object
+comment|// BASIC: 7: compiler, {6}, ir
 end_comment
 
 begin_comment
-comment|// BASIC: 8: input, "{{.*}}phases.c", c++
+comment|// BASIC: 8: backend, {7}, assembler
 end_comment
 
 begin_comment
-comment|// BASIC: 9: preprocessor, {8}, c++-cpp-output
+comment|// BASIC: 9: assembler, {8}, object
 end_comment
 
 begin_comment
-comment|// BASIC: 10: compiler, {9}, assembler
+comment|// BASIC: 10: input, "{{.*}}phases.c", c++
 end_comment
 
 begin_comment
-comment|// BASIC: 11: assembler, {10}, object
+comment|// BASIC: 11: preprocessor, {10}, c++-cpp-output
 end_comment
 
 begin_comment
-comment|// BASIC: 12: input, "{{.*}}phases.c", assembler
+comment|// BASIC: 12: compiler, {11}, ir
 end_comment
 
 begin_comment
-comment|// BASIC: 13: assembler, {12}, object
+comment|// BASIC: 13: backend, {12}, assembler
 end_comment
 
 begin_comment
-comment|// BASIC: 14: input, "{{.*}}phases.c", assembler-with-cpp
+comment|// BASIC: 14: assembler, {13}, object
 end_comment
 
 begin_comment
-comment|// BASIC: 15: preprocessor, {14}, assembler
+comment|// BASIC: 15: input, "{{.*}}phases.c", assembler
 end_comment
 
 begin_comment
@@ -76,23 +76,39 @@ comment|// BASIC: 16: assembler, {15}, object
 end_comment
 
 begin_comment
-comment|// BASIC: 17: input, "{{.*}}phases.c", c
+comment|// BASIC: 17: input, "{{.*}}phases.c", assembler-with-cpp
 end_comment
 
 begin_comment
-comment|// BASIC: 18: preprocessor, {17}, cpp-output
+comment|// BASIC: 18: preprocessor, {17}, assembler
 end_comment
 
 begin_comment
-comment|// BASIC: 19: compiler, {18}, assembler
+comment|// BASIC: 19: assembler, {18}, object
 end_comment
 
 begin_comment
-comment|// BASIC: 20: assembler, {19}, object
+comment|// BASIC: 20: input, "{{.*}}phases.c", c
 end_comment
 
 begin_comment
-comment|// BASIC: 21: linker, {3, 7, 11, 13, 16, 20}, image
+comment|// BASIC: 21: preprocessor, {20}, cpp-output
+end_comment
+
+begin_comment
+comment|// BASIC: 22: compiler, {21}, ir
+end_comment
+
+begin_comment
+comment|// BASIC: 23: backend, {22}, assembler
+end_comment
+
+begin_comment
+comment|// BASIC: 24: assembler, {23}, object
+end_comment
+
+begin_comment
+comment|// BASIC: 25: linker, {4, 9, 14, 16, 19, 24}, image
 end_comment
 
 begin_comment
@@ -112,27 +128,31 @@ comment|// ULI: 1: preprocessor, {0}, cpp-output
 end_comment
 
 begin_comment
-comment|// ULI: 2: compiler, {1}, assembler
+comment|// ULI: 2: compiler, {1}, ir
 end_comment
 
 begin_comment
-comment|// ULI: 3: assembler, {2}, object
+comment|// ULI: 3: backend, {2}, assembler
 end_comment
 
 begin_comment
-comment|// ULI: 4: linker, {3}, image
+comment|// ULI: 4: assembler, {3}, object
 end_comment
 
 begin_comment
-comment|// ULI: 5: bind-arch, "ppc", {4}, image
+comment|// ULI: 5: linker, {4}, image
 end_comment
 
 begin_comment
-comment|// ULI: 6: bind-arch, "i386", {4}, image
+comment|// ULI: 6: bind-arch, "ppc", {5}, image
 end_comment
 
 begin_comment
-comment|// ULI: 7: lipo, {5, 6}, image
+comment|// ULI: 7: bind-arch, "i386", {5}, image
+end_comment
+
+begin_comment
+comment|// ULI: 8: lipo, {6, 7}, image
 end_comment
 
 begin_comment
@@ -152,23 +172,27 @@ comment|// UOF: 1: preprocessor, {0}, cpp-output
 end_comment
 
 begin_comment
-comment|// UOF: 2: compiler, {1}, assembler
+comment|// UOF: 2: compiler, {1}, ir
 end_comment
 
 begin_comment
-comment|// UOF: 3: assembler, {2}, object
+comment|// UOF: 3: backend, {2}, assembler
 end_comment
 
 begin_comment
-comment|// UOF: 4: bind-arch, "ppc", {3}, object
+comment|// UOF: 4: assembler, {3}, object
 end_comment
 
 begin_comment
-comment|// UOF: 5: bind-arch, "i386", {3}, object
+comment|// UOF: 5: bind-arch, "ppc", {4}, object
 end_comment
 
 begin_comment
-comment|// UOF: 6: lipo, {4, 5}, object
+comment|// UOF: 6: bind-arch, "i386", {4}, object
+end_comment
+
+begin_comment
+comment|// UOF: 7: lipo, {5, 6}, object
 end_comment
 
 begin_comment

@@ -40,7 +40,7 @@ comment|// CHECK: {{.*}}.tmps/first
 end_comment
 
 begin_comment
-comment|// CHECK: {{/|\\}}lib{{/|\\}}clang{{/|\\}}{{[.0-9]+}}{{/|\\}}include
+comment|// CHECK: {{/|\\}}lib{{(32|64)?}}{{/|\\}}clang{{/|\\}}{{[.0-9]+}}{{/|\\}}include
 end_comment
 
 begin_comment

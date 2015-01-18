@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_VECTOR
+name|LLVM_CLANG_AST_ASTVECTOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_VECTOR
+name|LLVM_CLANG_AST_ASTVECTOR_H
 end_define
 
 begin_include
@@ -1230,6 +1230,17 @@ end_macro
 
 begin_block
 block|{
+comment|// Convert iterator to elt# to avoid invalidating iterator when we reserve()
+name|size_t
+name|InsertElt
+init|=
+name|I
+operator|-
+name|this
+operator|->
+name|begin
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|I
@@ -1253,23 +1264,12 @@ expr_stmt|;
 return|return
 name|this
 operator|->
-name|end
-argument_list|()
-operator|-
-literal|1
-return|;
-block|}
-comment|// Convert iterator to elt# to avoid invalidating iterator when we reserve()
-name|size_t
-name|InsertElt
-init|=
-name|I
-operator|-
-name|this
-operator|->
 name|begin
 argument_list|()
-decl_stmt|;
+operator|+
+name|InsertElt
+return|;
+block|}
 comment|// Ensure there is enough space.
 name|reserve
 argument_list|(
@@ -1470,6 +1470,17 @@ argument_list|,
 argument|ItTy To
 argument_list|)
 block|{
+comment|// Convert iterator to elt# to avoid invalidating iterator when we reserve()
+name|size_t
+name|InsertElt
+operator|=
+name|I
+operator|-
+name|this
+operator|->
+name|begin
+argument_list|()
+block|;
 if|if
 condition|(
 name|I
@@ -1493,10 +1504,10 @@ expr_stmt|;
 return|return
 name|this
 operator|->
-name|end
+name|begin
 argument_list|()
-operator|-
-literal|1
+operator|+
+name|InsertElt
 return|;
 block|}
 name|size_t
@@ -1512,23 +1523,6 @@ name|To
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|// Convert iterator to elt# to avoid invalidating iterator when we reserve()
-end_comment
-
-begin_decl_stmt
-name|size_t
-name|InsertElt
-init|=
-name|I
-operator|-
-name|this
-operator|->
-name|begin
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|// Ensure there is enough space.

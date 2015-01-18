@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only -verify
+comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -std=c11 -Wno-unused-value
 end_comment
 
 begin_enum_decl
@@ -348,6 +348,177 @@ expr_stmt|;
 comment|// not a bitfield designator in C
 block|}
 end_function
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|Unsigned
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|signed
+name|Signed
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|Test5
+block|{
+name|unsigned
+name|n
+range|:
+literal|2
+decl_stmt|;
+block|}
+name|t5
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+argument|t5.n
+argument_list|)
+name|Unsigned
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|// Bitfield is unsigned
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+argument|+t5.n
+argument_list|)
+name|Signed
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|// ... but promotes to signed.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+argument|t5.n +
+literal|0
+argument_list|)
+name|Signed
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|// Arithmetic promotes.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+argument|+(t5.n =
+literal|0
+argument|)
+argument_list|)
+name|Signed
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|// FIXME: Assignment should not; the result
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+argument|+(t5.n +=
+literal|0
+argument|)
+argument_list|)
+name|Signed
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|// is a non-bit-field lvalue of type unsigned.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+argument|+(t5.n *=
+literal|0
+argument|)
+argument_list|)
+name|Signed
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+argument|+(++t5.n)
+argument_list|)
+name|Signed
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|// FIXME: Increment is equivalent to compound-assignment.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+argument|+(--t5.n)
+argument_list|)
+name|Signed
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|// This should not promote to signed.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+argument|+(t5.n++)
+argument_list|)
+name|Unsigned
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|// Post-increment is underspecified, but seems to
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+argument|+(t5.n--)
+argument_list|)
+name|Unsigned
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|// also act like compound-assignment.
+end_comment
 
 end_unit
 

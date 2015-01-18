@@ -464,6 +464,102 @@ comment|// CHECK: atomicrmw xor i64
 operator|(
 name|void
 operator|)
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|sc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand i8
+operator|(
+name|void
+operator|)
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|uc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand i8
+operator|(
+name|void
+operator|)
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|ss
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand i16
+operator|(
+name|void
+operator|)
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|us
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand i16
+operator|(
+name|void
+operator|)
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|si
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand i32
+operator|(
+name|void
+operator|)
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|ui
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand i32
+operator|(
+name|void
+operator|)
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|sll
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand i64
+operator|(
+name|void
+operator|)
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|ull
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand i64
+operator|(
+name|void
+operator|)
 name|__sync_fetch_and_and
 argument_list|(
 operator|&
@@ -922,6 +1018,94 @@ expr_stmt|;
 comment|// CHECK: atomicrmw xor
 name|sc
 operator|=
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|sc
+argument_list|,
+literal|11
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+name|uc
+operator|=
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|uc
+argument_list|,
+literal|11
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+name|ss
+operator|=
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|ss
+argument_list|,
+literal|11
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+name|us
+operator|=
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|us
+argument_list|,
+literal|11
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+name|si
+operator|=
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|si
+argument_list|,
+literal|11
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+name|ui
+operator|=
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|ui
+argument_list|,
+literal|11
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+name|sll
+operator|=
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|sll
+argument_list|,
+literal|11
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+name|ull
+operator|=
+name|__sync_fetch_and_nand
+argument_list|(
+operator|&
+name|ull
+argument_list|,
+literal|11
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+name|sc
+operator|=
 name|__sync_fetch_and_and
 argument_list|(
 operator|&
@@ -1370,6 +1554,110 @@ name|uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: atomicrmw xor
+name|sc
+operator|=
+name|__sync_nand_and_fetch
+argument_list|(
+operator|&
+name|sc
+argument_list|,
+name|uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+comment|// CHECK: and
+comment|// CHECK: xor
+name|uc
+operator|=
+name|__sync_nand_and_fetch
+argument_list|(
+operator|&
+name|uc
+argument_list|,
+name|uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+comment|// CHECK: and
+comment|// CHECK: xor
+name|ss
+operator|=
+name|__sync_nand_and_fetch
+argument_list|(
+operator|&
+name|ss
+argument_list|,
+name|uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+comment|// CHECK: and
+comment|// CHECK: xor
+name|us
+operator|=
+name|__sync_nand_and_fetch
+argument_list|(
+operator|&
+name|us
+argument_list|,
+name|uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+comment|// CHECK: and
+comment|// CHECK: xor
+name|si
+operator|=
+name|__sync_nand_and_fetch
+argument_list|(
+operator|&
+name|si
+argument_list|,
+name|uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+comment|// CHECK: and
+comment|// CHECK: xor
+name|ui
+operator|=
+name|__sync_nand_and_fetch
+argument_list|(
+operator|&
+name|ui
+argument_list|,
+name|uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+comment|// CHECK: and
+comment|// CHECK: xor
+name|sll
+operator|=
+name|__sync_nand_and_fetch
+argument_list|(
+operator|&
+name|sll
+argument_list|,
+name|uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+comment|// CHECK: and
+comment|// CHECK: xor
+name|ull
+operator|=
+name|__sync_nand_and_fetch
+argument_list|(
+operator|&
+name|ull
+argument_list|,
+name|uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw nand
+comment|// CHECK: and
+comment|// CHECK: xor
 name|sc
 operator|=
 name|__sync_and_and_fetch

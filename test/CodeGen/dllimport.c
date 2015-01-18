@@ -1,26 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-windows-msvc   -emit-llvm -std=c11 -O0 -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i686-windows-msvc   -emit-llvm -std=c11 -O0 -o - %s | FileCheck --check-prefix=CHECK --check-prefix=MS %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-windows-msvc -emit-llvm -std=c11 -O0 -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-windows-msvc -emit-llvm -std=c11 -O0 -o - %s | FileCheck --check-prefix=CHECK --check-prefix=MS %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-windows-gnu    -emit-llvm -std=c11 -O0 -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i686-windows-gnu    -emit-llvm -std=c11 -O0 -o - %s | FileCheck --check-prefix=CHECK --check-prefix=GNU %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-windows-gnu  -emit-llvm -std=c11 -O0 -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-windows-gnu  -emit-llvm -std=c11 -O0 -o - %s | FileCheck --check-prefix=CHECK --check-prefix=GNU %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-windows-msvc   -emit-llvm -std=c11 -O1 -o - %s | FileCheck --check-prefix=O1 %s
+comment|// RUN: %clang_cc1 -triple i686-windows-msvc   -emit-llvm -std=c11 -O1 -o - %s | FileCheck --check-prefix=O1 --check-prefix=MO1 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-windows-gnu    -emit-llvm -std=c11 -O1 -o - %s | FileCheck --check-prefix=O1 %s
+comment|// RUN: %clang_cc1 -triple i686-windows-gnu    -emit-llvm -std=c11 -O1 -o - %s | FileCheck --check-prefix=O1 --check-prefix=GO1 %s
 end_comment
 
 begin_define
@@ -261,6 +261,122 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|// Make sure this works even if the decl has been used before it's defined (PR20792).
+end_comment
+
+begin_comment
+comment|// CHECK: @GlobalRedecl4 = common global i32
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|dllimport
+argument_list|)
+end_macro
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|GlobalRedecl4
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|USEVAR
+argument_list|(
+argument|GlobalRedecl4
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|GlobalRedecl4
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// dllimport ignored
+end_comment
+
+begin_comment
+comment|// FIXME: dllimport is dropped in the AST; this should be reflected in codegen (PR02803).
+end_comment
+
+begin_comment
+comment|// CHECK: @GlobalRedecl5 = external dllimport global i32
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|dllimport
+argument_list|)
+end_macro
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|GlobalRedecl5
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|USEVAR
+argument_list|(
+argument|GlobalRedecl5
+argument_list|)
+end_macro
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|GlobalRedecl5
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// dllimport ignored
+end_comment
+
+begin_comment
+comment|// Redeclaration in local context.
+end_comment
+
+begin_comment
+comment|// CHECK: @GlobalRedecl6 = external dllimport global i32
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|dllimport
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|GlobalRedecl6
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|functionScope
+parameter_list|()
+block|{
+specifier|extern
+name|int
+name|GlobalRedecl6
+decl_stmt|;
+comment|// still dllimport
+return|return
+name|GlobalRedecl6
+return|;
+block|}
+end_function
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -324,11 +440,19 @@ comment|// Import inline function.
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: declare dllimport void @inlineFunc()
+comment|// MS-DAG: declare dllimport void @inlineFunc()
 end_comment
 
 begin_comment
-comment|// O1-DAG: define available_externally dllimport void @inlineFunc()
+comment|// MO1-DAG: define available_externally dllimport void @inlineFunc()
+end_comment
+
+begin_comment
+comment|// GNU-DAG: declare void @inlineFunc()
+end_comment
+
+begin_comment
+comment|// GO1-DAG: define available_externally void @inlineFunc()
 end_comment
 
 begin_macro
@@ -360,11 +484,19 @@ comment|// inline attributes
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: declare dllimport void @noinline()
+comment|// MS-DAG: declare dllimport void @noinline()
 end_comment
 
 begin_comment
-comment|// O1-DAG: define available_externally dllimport void @noinline()
+comment|// MO1-DAG: define available_externally dllimport void @noinline()
+end_comment
+
+begin_comment
+comment|// GNU-DAG: declare void @noinline()
+end_comment
+
+begin_comment
+comment|// GO1-DAG: define available_externally void @noinline()
 end_comment
 
 begin_comment
@@ -567,6 +699,94 @@ argument_list|(
 argument|redecl3
 argument_list|)
 end_macro
+
+begin_comment
+comment|// Make sure this works even if the decl is used before it's defined (PR20792).
+end_comment
+
+begin_comment
+comment|// CHECK-DAG: define void @redecl4()
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|dllimport
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|redecl4
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_macro
+name|USE
+argument_list|(
+argument|redecl4
+argument_list|)
+end_macro
+
+begin_function
+name|void
+name|redecl4
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
+end_function
+
+begin_comment
+comment|// dllimport ignored
+end_comment
+
+begin_comment
+comment|// FIXME: dllimport is dropped in the AST; this should be reflected in codegen (PR20803).
+end_comment
+
+begin_comment
+comment|// CHECK-DAG: declare dllimport
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|dllimport
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|redecl5
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_macro
+name|USE
+argument_list|(
+argument|redecl5
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|redecl5
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// dllimport ignored
+end_comment
 
 end_unit
 

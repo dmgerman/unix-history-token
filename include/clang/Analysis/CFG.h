@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_CFG_H
+name|LLVM_CLANG_ANALYSIS_CFG_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_CFG_H
+name|LLVM_CLANG_ANALYSIS_CFG_H
 end_define
 
 begin_include
@@ -4123,39 +4123,39 @@ end_decl_stmt
 
 begin_comment
 unit|};
-comment|/// buildCFG - Builds a CFG from an AST.  The responsibility to free the
+comment|/// buildCFG - Builds a CFG from an AST.
 end_comment
 
-begin_comment
-comment|///   constructed CFG belongs to the caller.
-end_comment
-
-begin_function_decl
+begin_expr_stmt
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CFG
-modifier|*
+operator|>
 name|buildCFG
-parameter_list|(
+argument_list|(
 specifier|const
 name|Decl
-modifier|*
+operator|*
 name|D
-parameter_list|,
+argument_list|,
 name|Stmt
-modifier|*
+operator|*
 name|AST
-parameter_list|,
+argument_list|,
 name|ASTContext
-modifier|*
+operator|*
 name|C
-parameter_list|,
+argument_list|,
 specifier|const
 name|BuildOptions
-modifier|&
+operator|&
 name|BO
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// createBlock - Create a new block in the CFG.  The CFG owns the block;

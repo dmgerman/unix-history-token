@@ -415,6 +415,44 @@ end_function
 
 begin_function
 name|poly64x1_t
+name|test_vmov_n_p64
+parameter_list|(
+name|poly64_t
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_vmov_n_p64
+return|return
+name|vmov_n_p64
+argument_list|(
+name|a
+argument_list|)
+return|;
+comment|// CHECK: fmov {{d[0-9]+}}, {{x[0-9]+}}
+block|}
+end_function
+
+begin_function
+name|poly64x2_t
+name|test_vmovq_n_p64
+parameter_list|(
+name|poly64_t
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_vmovq_n_p64
+return|return
+name|vmovq_n_p64
+argument_list|(
+name|a
+argument_list|)
+return|;
+comment|// CHECK: dup {{v[0-9]+}}.2d, {{x[0-9]+}}
+block|}
+end_function
+
+begin_function
+name|poly64x1_t
 name|test_vdup_lane_p64
 parameter_list|(
 name|poly64x1_t

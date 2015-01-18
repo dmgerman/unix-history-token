@@ -125,51 +125,51 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: metadata !{metadata !"any pointer", metadata [[TYPE_CHAR:!.*]],
+comment|// CHECK:  !"any pointer", [[TYPE_CHAR:!.*]],
 end_comment
 
 begin_comment
-comment|// CHECK: [[TYPE_CHAR]] = metadata !{metadata !"omnipotent char", metadata [[TAG_CXX_TBAA:!.*]],
+comment|// CHECK: [[TYPE_CHAR]] = !{!"omnipotent char", [[TAG_CXX_TBAA:!.*]],
 end_comment
 
 begin_comment
-comment|// CHECK: [[TAG_CXX_TBAA]] = metadata !{metadata !"Simple C/C++ TBAA"}
+comment|// CHECK: [[TAG_CXX_TBAA]] = !{!"Simple C/C++ TBAA"}
 end_comment
 
 begin_comment
-comment|// CHECK: [[TAG_CHAR]] = metadata !{metadata [[TYPE_CHAR]], metadata [[TYPE_CHAR]], i64 0}
+comment|// CHECK: [[TAG_CHAR]] = !{[[TYPE_CHAR]], [[TYPE_CHAR]], i64 0}
 end_comment
 
 begin_comment
-comment|// CHECK: [[TAG_INT]] = metadata !{metadata [[TYPE_INT:!.*]], metadata [[TYPE_INT]], i64 0}
+comment|// CHECK: [[TAG_INT]] = !{[[TYPE_INT:!.*]], [[TYPE_INT]], i64 0}
 end_comment
 
 begin_comment
-comment|// CHECK: [[TYPE_INT]] = metadata !{metadata !"int", metadata [[TYPE_CHAR]]
+comment|// CHECK: [[TYPE_INT]] = !{!"int", [[TYPE_CHAR]]
 end_comment
 
 begin_comment
-comment|// PATH: [[TYPE_CHAR:!.*]] = metadata !{metadata !"omnipotent char", metadata !{{.*}}
+comment|// PATH: [[TYPE_CHAR:!.*]] = !{!"omnipotent char", !{{.*}}
 end_comment
 
 begin_comment
-comment|// PATH: [[TAG_CHAR]] = metadata !{metadata [[TYPE_CHAR]], metadata [[TYPE_CHAR]], i64 0}
+comment|// PATH: [[TAG_CHAR]] = !{[[TYPE_CHAR]], [[TYPE_CHAR]], i64 0}
 end_comment
 
 begin_comment
-comment|// PATH: [[TAG_INT]] = metadata !{metadata [[TYPE_INT:!.*]], metadata [[TYPE_INT]], i64 0}
+comment|// PATH: [[TAG_INT]] = !{[[TYPE_INT:!.*]], [[TYPE_INT]], i64 0}
 end_comment
 
 begin_comment
-comment|// PATH: [[TYPE_INT]] = metadata !{metadata !"int", metadata [[TYPE_CHAR]]
+comment|// PATH: [[TYPE_INT]] = !{!"int", [[TYPE_CHAR]]
 end_comment
 
 begin_comment
-comment|// PATH: [[TAG_test1_x]] = metadata !{metadata [[TYPE_test1:!.*]], metadata [[TYPE_INT]], i64 0}
+comment|// PATH: [[TAG_test1_x]] = !{[[TYPE_test1:!.*]], [[TYPE_INT]], i64 0}
 end_comment
 
 begin_comment
-comment|// PATH: [[TYPE_test1]] = metadata !{metadata !"Test1", metadata [[TYPE_INT]], i64 0}
+comment|// PATH: [[TYPE_test1]] = !{!"Test1", [[TYPE_INT]], i64 0}
 end_comment
 
 end_unit

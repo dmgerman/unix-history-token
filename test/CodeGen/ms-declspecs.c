@@ -32,11 +32,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// CHECK: @x1 = weak_odr global i32 1, align 4
+comment|// CHECK: @x1 = weak_odr global i32 1, comdat, align 4
 end_comment
 
 begin_comment
-comment|// CHECK: @x2 = weak_odr constant i32 2, align 4
+comment|// CHECK: @x2 = weak_odr constant i32 2, comdat, align 4
 end_comment
 
 begin_struct

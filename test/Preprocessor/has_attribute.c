@@ -265,5 +265,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// CHECK: does_not_have_uuid
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|__has_attribute
+argument_list|(
+name|uuid
+argument_list|)
+end_if
+
+begin_expr_stmt
+name|int
+name|does_not_have_uuid
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

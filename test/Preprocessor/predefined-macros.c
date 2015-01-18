@@ -120,87 +120,87 @@ comment|// RUN:     -o - | FileCheck %s --check-prefix=CHECK-MS-STDINT
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT16_MAX__ 32767
+comment|// CHECK-MS-STDINT:#define __INT16_MAX__ 32767
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT32_MAX__ 2147483647
+comment|// CHECK-MS-STDINT:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT64_MAX__ 9223372036854775807LL
+comment|// CHECK-MS-STDINT:#define __INT64_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT8_MAX__ 127
+comment|// CHECK-MS-STDINT:#define __INT8_MAX__ 127
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INTPTR_MAX__ 2147483647
+comment|// CHECK-MS-STDINT:#define __INTPTR_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST16_MAX__ 32767
+comment|// CHECK-MS-STDINT:#define __INT_FAST16_MAX__ 32767
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST16_TYPE__ short
+comment|// CHECK-MS-STDINT:#define __INT_FAST16_TYPE__ short
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST32_MAX__ 2147483647
+comment|// CHECK-MS-STDINT:#define __INT_FAST32_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST32_TYPE__ int
+comment|// CHECK-MS-STDINT:#define __INT_FAST32_TYPE__ int
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST64_MAX__ 9223372036854775807LL
+comment|// CHECK-MS-STDINT:#define __INT_FAST64_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST64_TYPE__ long long int
+comment|// CHECK-MS-STDINT:#define __INT_FAST64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST8_MAX__ 127
+comment|// CHECK-MS-STDINT:#define __INT_FAST8_MAX__ 127
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST8_TYPE__ char
+comment|// CHECK-MS-STDINT:#define __INT_FAST8_TYPE__ signed char
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST16_MAX__ 32767
+comment|// CHECK-MS-STDINT:#define __INT_LEAST16_MAX__ 32767
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST16_TYPE__ short
+comment|// CHECK-MS-STDINT:#define __INT_LEAST16_TYPE__ short
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST32_MAX__ 2147483647
+comment|// CHECK-MS-STDINT:#define __INT_LEAST32_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST32_TYPE__ int
+comment|// CHECK-MS-STDINT:#define __INT_LEAST32_TYPE__ int
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+comment|// CHECK-MS-STDINT:#define __INT_LEAST64_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST64_TYPE__ long long int
+comment|// CHECK-MS-STDINT:#define __INT_LEAST64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST8_MAX__ 127
+comment|// CHECK-MS-STDINT:#define __INT_LEAST8_MAX__ 127
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST8_TYPE__ char
+comment|// CHECK-MS-STDINT:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -208,35 +208,35 @@ comment|// CHECK-MS-STDINT-NOT:#define __UINT16_C_SUFFIX__ U
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT16_MAX__ 65535U
+comment|// CHECK-MS-STDINT:#define __UINT16_MAX__ 65535
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT16_TYPE__ unsigned short
+comment|// CHECK-MS-STDINT:#define __UINT16_TYPE__ unsigned short
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT32_C_SUFFIX__ U
+comment|// CHECK-MS-STDINT:#define __UINT32_C_SUFFIX__ U
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT32_MAX__ 4294967295U
+comment|// CHECK-MS-STDINT:#define __UINT32_MAX__ 4294967295U
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT32_TYPE__ unsigned int
+comment|// CHECK-MS-STDINT:#define __UINT32_TYPE__ unsigned int
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT64_C_SUFFIX__ ULL
+comment|// CHECK-MS-STDINT:#define __UINT64_C_SUFFIX__ ULL
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT64_MAX__ 18446744073709551615ULL
+comment|// CHECK-MS-STDINT:#define __UINT64_MAX__ 18446744073709551615ULL
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT64_TYPE__ long long unsigned int
+comment|// CHECK-MS-STDINT:#define __UINT64_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -244,91 +244,91 @@ comment|// CHECK-MS-STDINT-NOT:#define __UINT8_C_SUFFIX__ U
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT8_MAX__ 255U
+comment|// CHECK-MS-STDINT:#define __UINT8_MAX__ 255
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT8_TYPE__ unsigned char
+comment|// CHECK-MS-STDINT:#define __UINT8_TYPE__ unsigned char
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINTMAX_MAX__ 18446744073709551615ULL
+comment|// CHECK-MS-STDINT:#define __UINTMAX_MAX__ 18446744073709551615ULL
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINTPTR_MAX__ 4294967295U
+comment|// CHECK-MS-STDINT:#define __UINTPTR_MAX__ 4294967295U
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINTPTR_TYPE__ unsigned int
+comment|// CHECK-MS-STDINT:#define __UINTPTR_TYPE__ unsigned int
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINTPTR_WIDTH__ 32
+comment|// CHECK-MS-STDINT:#define __UINTPTR_WIDTH__ 32
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST16_MAX__ 65535U
+comment|// CHECK-MS-STDINT:#define __UINT_FAST16_MAX__ 65535
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST16_TYPE__ unsigned short
+comment|// CHECK-MS-STDINT:#define __UINT_FAST16_TYPE__ unsigned short
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST32_MAX__ 4294967295U
+comment|// CHECK-MS-STDINT:#define __UINT_FAST32_MAX__ 4294967295U
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST32_TYPE__ unsigned int
+comment|// CHECK-MS-STDINT:#define __UINT_FAST32_TYPE__ unsigned int
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+comment|// CHECK-MS-STDINT:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST64_TYPE__ long long unsigned int
+comment|// CHECK-MS-STDINT:#define __UINT_FAST64_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST8_MAX__ 255U
+comment|// CHECK-MS-STDINT:#define __UINT_FAST8_MAX__ 255
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST8_TYPE__ unsigned char
+comment|// CHECK-MS-STDINT:#define __UINT_FAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST16_MAX__ 65535U
+comment|// CHECK-MS-STDINT:#define __UINT_LEAST16_MAX__ 65535
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST16_TYPE__ unsigned short
+comment|// CHECK-MS-STDINT:#define __UINT_LEAST16_TYPE__ unsigned short
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST32_MAX__ 4294967295U
+comment|// CHECK-MS-STDINT:#define __UINT_LEAST32_MAX__ 4294967295U
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST32_TYPE__ unsigned int
+comment|// CHECK-MS-STDINT:#define __UINT_LEAST32_TYPE__ unsigned int
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+comment|// CHECK-MS-STDINT:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST64_TYPE__ long long unsigned int
+comment|// CHECK-MS-STDINT:#define __UINT_LEAST64_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST8_MAX__ 255U
+comment|// CHECK-MS-STDINT:#define __UINT_LEAST8_MAX__ 255
 end_comment
 
 begin_comment
-comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST8_TYPE__ unsigned char
+comment|// CHECK-MS-STDINT:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment

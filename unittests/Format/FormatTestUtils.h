@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FORMAT_TEST_UTILS_H
+name|LLVM_CLANG_UNITTESTS_FORMAT_FORMATTESTUTILS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FORMAT_TEST_UTILS_H
+name|LLVM_CLANG_UNITTESTS_FORMAT_FORMATTESTUTILS_H
 end_define
 
 begin_include
@@ -408,10 +408,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_FORMAT_TEST_UTILS_H
-end_comment
 
 end_unit
 

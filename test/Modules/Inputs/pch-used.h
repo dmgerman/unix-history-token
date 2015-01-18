@@ -8,6 +8,15 @@ name|stdio
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+unit|@
+name|import
+name|other_constants
+operator|.
+name|dbl_max
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 specifier|inline

@@ -28,11 +28,11 @@ comment|// CHECK: [[F2:![0-9]*]] = {{.*}} ; [ DW_TAG_subprogram ] {{.*}} [def] [
 end_comment
 
 begin_comment
-comment|// CHECK: [[F1_LINE]] = {{.*}}, metadata [[F1]], null}
+comment|// CHECK: [[F1_LINE]] = !MDLocation({{.*}}, scope: [[F1]])
 end_comment
 
 begin_comment
-comment|// CHECK: [[F2_LINE]] = {{.*}}, metadata [[F2]], null}
+comment|// CHECK: [[F2_LINE]] = !MDLocation({{.*}}, scope: [[F2]])
 end_comment
 
 begin_function

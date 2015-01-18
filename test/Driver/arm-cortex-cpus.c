@@ -52,7 +52,7 @@ comment|// RUN: %clang -target armv5 -mthumb -### -c %s 2>&1 | FileCheck -check-
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target armv -march=armv5 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V5-THUMB %s
+comment|// RUN: %clang -target arm -march=armv5 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V5-THUMB %s
 end_comment
 
 begin_comment
@@ -552,6 +552,10 @@ comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a15 -### -c %s 2>&
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a17 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV7A %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a5 -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV7A %s
 end_comment
 
@@ -573,6 +577,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a15 -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV7A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a17 -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV7A %s
 end_comment
 
 begin_comment
@@ -604,6 +612,10 @@ comment|// RUN: %clang -target armeb-linux-gnueabi -mcpu=cortex-a15 -### -c %s 2
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armeb-linux-gnueabi -mcpu=cortex-a17 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV7A %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a5 -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV7A %s
 end_comment
 
@@ -625,6 +637,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a15 -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV7A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a17 -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV7A %s
 end_comment
 
 begin_comment
@@ -656,6 +672,10 @@ comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a15 -mthumb -### -
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a17 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV7A-THUMB %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a5 -mlittle-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV7A-THUMB %s
 end_comment
 
@@ -677,6 +697,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a15 -mlittle-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV7A-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a17 -mlittle-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV7A-THUMB %s
 end_comment
 
 begin_comment
@@ -708,6 +732,10 @@ comment|// RUN: %clang -target armeb-linux-gnueabi -mcpu=cortex-a15 -mthumb -###
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armeb-linux-gnueabi -mcpu=cortex-a17 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV7A-THUMB %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a5 -mbig-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV7A-THUMB %s
 end_comment
 
@@ -729,6 +757,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a15 -mbig-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV7A-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-a17 -mbig-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV7A-THUMB %s
 end_comment
 
 begin_comment
@@ -772,7 +804,15 @@ comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-m4 -### -c %s 2>&1
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-m7 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV7EM %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-m4 -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV7EM %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-m7 -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV7EM %s
 end_comment
 
 begin_comment
@@ -784,7 +824,15 @@ comment|// RUN: %clang -target armeb-linux-gnueabi -mcpu=cortex-m4 -### -c %s 2>
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armeb-linux-gnueabi -mcpu=cortex-m7 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV7EM %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-m4 -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV7EM %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-m7 -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV7EM %s
 end_comment
 
 begin_comment

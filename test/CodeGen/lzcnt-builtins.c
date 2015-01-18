@@ -81,5 +81,47 @@ return|;
 block|}
 end_function
 
+begin_function
+name|unsigned
+name|int
+name|test_lzcnt_u32
+parameter_list|(
+name|unsigned
+name|int
+name|__X
+parameter_list|)
+block|{
+comment|// CHECK: @llvm.ctlz.i32
+return|return
+name|_lzcnt_u32
+argument_list|(
+name|__X
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|long
+name|long
+name|test__lzcnt_u64
+parameter_list|(
+name|unsigned
+name|long
+name|long
+name|__X
+parameter_list|)
+block|{
+comment|// CHECK: @llvm.ctlz.i64
+return|return
+name|_lzcnt_u64
+argument_list|(
+name|__X
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 

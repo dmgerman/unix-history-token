@@ -68,5 +68,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_macro
+name|_Pragma
+argument_list|(
+end_macro
+
+begin_comment
+comment|// expected-error{{_Pragma takes a parenthesized string literal}}
+end_comment
+
 end_unit
 

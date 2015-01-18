@@ -11,6 +11,30 @@ begin_comment
 comment|// RUN: FileCheck %s --check-prefix=ABSENT< %t
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -emit-llvm -Os< %s> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s --check-prefix=PRESENT< %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s --check-prefix=OPTSIZE< %t
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -emit-llvm -Oz< %s> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s --check-prefix=PRESENT< %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s --check-prefix=MINSIZE< %t
+end_comment
+
 begin_macro
 name|__attribute__
 argument_list|(
@@ -30,20 +54,17 @@ block|}
 end_function
 
 begin_comment
-comment|// PRESENT-DAG: @test2{{.*}}[[ATTR2:#[0-9]+]]
+comment|// OPTSIZE: @test2{{.*}}[[ATTR2:#[0-9]+]]
+end_comment
+
+begin_comment
+comment|// MINSIZE: @test2{{.*}}[[ATTR2:#[0-9]+]]
 end_comment
 
 begin_macro
 name|__attribute__
 argument_list|(
 argument|(optnone)
-argument_list|)
-end_macro
-
-begin_macro
-name|__attribute__
-argument_list|(
-argument|(minsize)
 argument_list|)
 end_macro
 
@@ -122,6 +143,38 @@ end_comment
 
 begin_comment
 comment|// ABSENT-NOT: minsize
+end_comment
+
+begin_comment
+comment|// With -Os, check that 'optsize' appears only on test2.
+end_comment
+
+begin_comment
+comment|// OPTSIZE-NOT: optsize
+end_comment
+
+begin_comment
+comment|// OPTSIZE: attributes [[ATTR2]] = { {{.*}}optsize{{.*}} }
+end_comment
+
+begin_comment
+comment|// OPTSIZE-NOT: optsize
+end_comment
+
+begin_comment
+comment|// With -Oz, check that 'minsize' appears only on test2.
+end_comment
+
+begin_comment
+comment|// MINSIZE-NOT: minsize
+end_comment
+
+begin_comment
+comment|// MINSIZE: attributes [[ATTR2]] = { {{.*}}minsize{{.*}} }
+end_comment
+
+begin_comment
+comment|// MINSIZE-NOT: minsize
 end_comment
 
 end_unit

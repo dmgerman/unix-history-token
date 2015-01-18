@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple=i686-apple-darwin9
+comment|// RUN: %clang_cc1 %s -triple=i686-apple-darwin9 -verify -DVERIFY
 end_comment
 
 begin_comment
@@ -275,6 +275,39 @@ error|#
 directive|error
 error|Expansion should have occurred
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VERIFY
+end_ifdef
+
+begin_comment
+comment|// expected-error@+2 {{builtin feature check macro requires a parenthesized identifier}}
+end_comment
+
+begin_comment
+comment|// expected-error@+1 {{expected value in expression}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+literal|'x'
+argument_list|)
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -170,6 +170,14 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -c -g1 %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=GLTO_ONLY %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -c -gmlt %s 2>&1 \
 end_comment
 
@@ -235,6 +243,14 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -### -c -gline-tables-only -g %s -target x86_64-pc-freebsd10.0 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_ONLY_DWARF2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -gline-tables-only -g %s -target i386-pc-solaris 2>&1 \
 end_comment
 
 begin_comment

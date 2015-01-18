@@ -143,6 +143,7 @@ struct|struct
 name|y
 block|{ }
 struct|;
+comment|// expected-warning{{declaration does not declare anything}}
 union|union
 block|{
 name|int
@@ -400,6 +401,53 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|// PR20930
+end_comment
+
+begin_struct
+struct|struct
+name|s3
+block|{
+struct|struct
+block|{
+name|int
+name|A
+name|__attribute__
+argument_list|(
+operator|(
+name|deprecated
+operator|)
+argument_list|)
+decl_stmt|;
+block|}
+struct|;
+comment|// expected-note {{'A' has been explicitly marked deprecated here}}
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|deprecated_anonymous_struct_member
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|s3
+name|s
+decl_stmt|;
+name|s
+operator|.
+name|A
+operator|=
+literal|1
+expr_stmt|;
+comment|// expected-warning {{'A' is deprecated}}
+block|}
+end_function
 
 end_unit
 

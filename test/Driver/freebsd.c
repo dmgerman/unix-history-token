@@ -4,6 +4,38 @@ comment|// RUN: %clang -no-canonical-prefixes \
 end_comment
 
 begin_comment
+comment|// RUN:   -target aarch64-pc-freebsd11 %s                              \
+end_comment
+
+begin_comment
+comment|// RUN:   --sysroot=%S/Inputs/basic_freebsd64_tree -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ARM64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARM64: "-cc1" "-triple" "aarch64-pc-freebsd11"
+end_comment
+
+begin_comment
+comment|// CHECK-ARM64: ld{{.*}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-ARM64: "--eh-frame-hdr" "-dynamic-linker" "{{.*}}ld-elf{{.*}}" "-o" "a.out" "{{.*}}crt1.o" "{{.*}}crti.o" "{{.*}}crtbegin.o" "-L[[SYSROOT]]/usr/lib" "{{.*}}.o" "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed" "-lc" "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed" "{{.*}}crtend.o" "{{.*}}crtn.o"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes \
+end_comment
+
+begin_comment
 comment|// RUN:   -target powerpc-pc-freebsd8 %s    \
 end_comment
 
@@ -452,7 +484,7 @@ comment|// CHECK-LTO: ld{{.*}}" "-plugin{{.*}}LLVMgold.so
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target sparc-unknown-freebsd8 %s -### -fpic 2>&1 \
+comment|// RUN: %clang -target sparc-unknown-freebsd8 %s -### -fpic -no-integrated-as 2>&1 \
 end_comment
 
 begin_comment
@@ -464,7 +496,7 @@ comment|// CHECK-SPARC-PIE: as{{.*}}" "-KPIC
 end_comment
 
 begin_comment
-comment|// RUN: %clang -mcpu=ultrasparc -target sparc64-unknown-freebsd8 %s -### 2>&1 \
+comment|// RUN: %clang -mcpu=ultrasparc -target sparc64-unknown-freebsd8 %s -### -no-integrated-as 2>&1 \
 end_comment
 
 begin_comment

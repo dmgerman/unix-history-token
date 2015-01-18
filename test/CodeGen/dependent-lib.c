@@ -16,15 +16,15 @@ comment|// CHECK: !llvm.module.flags = !{{{.*}}}
 end_comment
 
 begin_comment
-comment|// CHECK: !{{[0-9]+}} = metadata !{i32 6, metadata !"Linker Options", metadata ![[link_opts:[0-9]+]]}
+comment|// CHECK: !{{[0-9]+}} = !{i32 6, !"Linker Options", ![[link_opts:[0-9]+]]}
 end_comment
 
 begin_comment
-comment|// CHECK: ![[link_opts]] = metadata !{metadata ![[msvcrt:[0-9]+]]}
+comment|// CHECK: ![[link_opts]] = !{![[msvcrt:[0-9]+]]}
 end_comment
 
 begin_comment
-comment|// CHECK: ![[msvcrt]] = metadata !{metadata !"/DEFAULTLIB:msvcrt.lib"}
+comment|// CHECK: ![[msvcrt]] = !{!"/DEFAULTLIB:msvcrt.lib"}
 end_comment
 
 begin_comment
@@ -32,15 +32,15 @@ comment|// LINUX: !llvm.module.flags = !{{{.*}}}
 end_comment
 
 begin_comment
-comment|// LINUX: !{{[0-9]+}} = metadata !{i32 6, metadata !"Linker Options", metadata ![[link_opts:[0-9]+]]}
+comment|// LINUX: !{{[0-9]+}} = !{i32 6, !"Linker Options", ![[link_opts:[0-9]+]]}
 end_comment
 
 begin_comment
-comment|// LINUX: ![[link_opts]] = metadata !{metadata ![[msvcrt:[0-9]+]]}
+comment|// LINUX: ![[link_opts]] = !{![[msvcrt:[0-9]+]]}
 end_comment
 
 begin_comment
-comment|// LINUX: ![[msvcrt]] = metadata !{metadata !"-lmsvcrt"}
+comment|// LINUX: ![[msvcrt]] = !{!"-lmsvcrt"}
 end_comment
 
 begin_function_decl

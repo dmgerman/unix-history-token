@@ -12,7 +12,7 @@ comment|// CHECK: !llvm.ident = !{{{.*}}}
 end_comment
 
 begin_comment
-comment|// CHECK: !{{[0-9]+}} = metadata !{metadata !{{.*}}
+comment|// CHECK: !{{[0-9]+}} = !{!{{.*}}
 end_comment
 
 end_unit

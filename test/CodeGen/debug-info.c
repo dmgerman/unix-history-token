@@ -168,7 +168,7 @@ comment|// Radar 7325611
 end_comment
 
 begin_comment
-comment|// CHECK: "barfoo"
+comment|// CHECK: !"0x16\00barfoo\00{{.*}}"
 end_comment
 
 begin_typedef

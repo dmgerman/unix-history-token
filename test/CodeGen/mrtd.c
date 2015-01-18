@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -mrtd -triple i386-unknown-unknown -std=c89 -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -mrtd -triple i386-unknown-unknown -std=c89 -emit-llvm -o - %s 2>&1 | FileCheck %s
+end_comment
+
+begin_comment
+comment|// CHECK: mrtd.c:10:3: warning: function with no prototype cannot use the stdcall calling convention
 end_comment
 
 begin_function_decl

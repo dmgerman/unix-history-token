@@ -1196,7 +1196,7 @@ argument_list|(
 name|F
 argument_list|)
 expr_stmt|;
-comment|// CHECK:  call float @fabsf(float
+comment|// CHECK:  call float @llvm.fabs.f32(float
 comment|// CHECK:  fcmp oeq float {{.*}}, 0x7FF0000000000000
 name|res
 operator|=
@@ -1205,7 +1205,7 @@ argument_list|(
 name|D
 argument_list|)
 expr_stmt|;
-comment|// CHECK:  call double @fabs(double
+comment|// CHECK:  call double @llvm.fabs.f64(double
 comment|// CHECK:  fcmp oeq double {{.*}}, 0x7FF0000000000000
 name|res
 operator|=
@@ -1214,7 +1214,7 @@ argument_list|(
 name|LD
 argument_list|)
 expr_stmt|;
-comment|// CHECK:  call x86_fp80 @fabsl(x86_fp80
+comment|// CHECK:  call x86_fp80 @llvm.fabs.f80(x86_fp80
 comment|// CHECK:  fcmp oeq x86_fp80 {{.*}}, 0xK7FFF8000000000000000
 name|res
 operator|=
@@ -1224,7 +1224,7 @@ name|F
 argument_list|)
 expr_stmt|;
 comment|// CHECK: fcmp oeq float
-comment|// CHECK: call float @fabsf
+comment|// CHECK: call float @llvm.fabs.f32(float
 comment|// CHECK: fcmp une float {{.*}}, 0x7FF0000000000000
 comment|// CHECK: and i1
 name|res
@@ -1235,11 +1235,100 @@ name|F
 argument_list|)
 expr_stmt|;
 comment|// CHECK: fcmp oeq float
-comment|// CHECK: call float @fabsf
+comment|// CHECK: call float @llvm.fabs.f32(float
 comment|// CHECK: fcmp ult float {{.*}}, 0x7FF0000000000000
 comment|// CHECK: fcmp uge float {{.*}}, 0x3810000000000000
 comment|// CHECK: and i1
 comment|// CHECK: and i1
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define void @test_float_builtin_ops
+end_comment
+
+begin_function
+name|void
+name|test_float_builtin_ops
+parameter_list|(
+name|float
+name|F
+parameter_list|,
+name|double
+name|D
+parameter_list|,
+name|long
+name|double
+name|LD
+parameter_list|)
+block|{
+specifier|volatile
+name|float
+name|resf
+decl_stmt|;
+specifier|volatile
+name|double
+name|resd
+decl_stmt|;
+specifier|volatile
+name|long
+name|double
+name|resld
+decl_stmt|;
+name|resf
+operator|=
+name|__builtin_fmodf
+argument_list|(
+name|F
+argument_list|,
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK: frem float
+name|resd
+operator|=
+name|__builtin_fmod
+argument_list|(
+name|D
+argument_list|,
+name|D
+argument_list|)
+expr_stmt|;
+comment|// CHECK: frem double
+name|resld
+operator|=
+name|__builtin_fmodl
+argument_list|(
+name|LD
+argument_list|,
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK: frem x86_fp80
+name|resf
+operator|=
+name|__builtin_fabsf
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+name|resd
+operator|=
+name|__builtin_fabs
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+name|resld
+operator|=
+name|__builtin_fabsl
+argument_list|(
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.fabs.f32(float
+comment|// CHECK: call double @llvm.fabs.f64(double
+comment|// CHECK: call x86_fp80 @llvm.fabs.f80(x86_fp80
 block|}
 end_function
 

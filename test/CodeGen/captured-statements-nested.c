@@ -57,9 +57,9 @@ index|[
 name|size
 index|]
 decl_stmt|;
-comment|// CHECK1: %struct.anon{{.*}} = type { i32*, i32*, i{{.+}}*, i32**, i32* }
-comment|// CHECK1: %struct.anon{{.*}} = type { i32*, i32*, i32**, i32*, i{{.+}}*, i32**, i32* }
-comment|// CHECK1: [[T:%struct.anon.*]] = type { i32*, i32*, %struct.A*, i32**, i32*, i{{.+}}*, i32**, i32* }
+comment|// CHECK1: %struct.anon{{.*}} = type { [[INT:i.+]]*, [[INT]]*, [[SIZE_TYPE:i.+]], [[INT]]**, [[INT]]*, [[SIZE_TYPE]], [[SIZE_TYPE]], [[INT]]* }
+comment|// CHECK1: %struct.anon{{.*}} = type { [[INT]]*, [[INT]]*, [[INT]]**, [[INT]]*, [[SIZE_TYPE]], [[INT]]**, [[INT]]*, [[SIZE_TYPE]], [[SIZE_TYPE]], [[INT]]* }
+comment|// CHECK1: [[T:%struct.anon.*]] = type { [[INT]]*, [[INT]]*, %struct.A*, [[INT]]**, [[INT]]*, [[SIZE_TYPE]], [[INT]]**, [[INT]]*, [[SIZE_TYPE]], [[SIZE_TYPE]], [[INT]]* }
 pragma|#
 directive|pragma
 name|clang
@@ -141,39 +141,45 @@ operator|=
 literal|12
 expr_stmt|;
 comment|// CHECK1: define internal void @__captured_stmt{{.*}}([[T]]
+comment|// CHECK1: [[PARAM_ARR_SIZE_REF:%.+]] = getelementptr inbounds [[T]]* {{.+}}, i{{[0-9]+}} 0, i{{[0-9]+}} 5
+comment|// CHECK1: [[PARAM_ARR_SIZE:%.+]] = load [[SIZE_TYPE]]* [[PARAM_ARR_SIZE_REF]]
+comment|// CHECK1: [[ARR_SIZE1_REF:%.+]] = getelementptr inbounds [[T]]* {{.+}}, i{{[0-9]+}} 0, i{{[0-9]+}} 8
+comment|// CHECK1: [[ARR_SIZE1:%.+]] = load [[SIZE_TYPE]]* [[ARR_SIZE1_REF]]
+comment|// CHECK1: [[ARR_SIZE2_REF:%.+]] = getelementptr inbounds [[T]]* {{.+}}, i{{[0-9]+}} 0, i{{[0-9]+}} 9
+comment|// CHECK1: [[ARR_SIZE2:%.+]] = load [[SIZE_TYPE]]* [[ARR_SIZE2_REF]]
 comment|//
-comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i32 0, i32 2
+comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 2
 comment|// CHECK1-NEXT: load %struct.A**
 comment|// CHECK1-NEXT: getelementptr inbounds %struct.A*
 comment|// CHECK1-NEXT: store i{{.+}} 1
 comment|//
-comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i32 0, i32 1
-comment|// CHECK1-NEXT: load i32**
-comment|// CHECK1-NEXT: store i32 1
+comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 1
+comment|// CHECK1-NEXT: load i{{[0-9]+}}**
+comment|// CHECK1-NEXT: store i{{[0-9]+}} 1
 comment|//
-comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i32 0, i32 0
-comment|// CHECK1-NEXT: load i32**
-comment|// CHECK1-NEXT: store i32 1
+comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 0
+comment|// CHECK1-NEXT: load i{{[0-9]+}}**
+comment|// CHECK1-NEXT: store i{{[0-9]+}} 1
 comment|//
-comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i32 0, i32 4
-comment|// CHECK1-NEXT: load i32**
-comment|// CHECK1-NEXT: load i32*
-comment|// CHECK1-NEXT: getelementptr inbounds [[T]]* {{.*}}, i32 0, i32 3
-comment|// CHECK1-NEXT: load i32***
-comment|// CHECK1-NEXT: load i32**
-comment|// CHECK1-NEXT: store i32
+comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 4
+comment|// CHECK1-NEXT: load i{{[0-9]+}}**
+comment|// CHECK1-NEXT: load i{{[0-9]+}}*
+comment|// CHECK1-NEXT: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 3
+comment|// CHECK1-NEXT: load i{{[0-9]+}}***
+comment|// CHECK1-NEXT: load i{{[0-9]+}}**
+comment|// CHECK1-NEXT: store i{{[0-9]+}}
 comment|//
-comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i32 0, i32 2
+comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 2
 comment|// CHECK1-NEXT: load %struct.A**
 comment|// CHECK1-NEXT: getelementptr inbounds %struct.A*
 comment|// CHECK1-NEXT: store float
 comment|//
-comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i32 0, i32 2
+comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 2
 comment|// CHECK1-NEXT: load %struct.A**
 comment|// CHECK1-NEXT: getelementptr inbounds %struct.A*
 comment|// CHECK1-NEXT: store i8 99
 comment|//
-comment|// CHECK1: [[SIZE_ADDR_REF:%.*]] = getelementptr inbounds [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 5
+comment|// CHECK1: [[SIZE_ADDR_REF:%.*]] = getelementptr inbounds [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 7
 comment|// CHECK1-DAG: [[SIZE_ADDR:%.*]] = load i{{.+}}** [[SIZE_ADDR_REF]]
 comment|// CHECK1-DAG: [[SIZE:%.*]] = load i{{.+}}* [[SIZE_ADDR]]
 comment|// CHECK1-DAG: [[PARAM_ARR_IDX:%.*]] = sub nsw i{{.+}} [[SIZE]], 1
@@ -187,7 +193,7 @@ comment|// CHECK1: [[Z_ADDR_REF:%.*]] = getelementptr inbounds [[T]]* {{.*}}, i{
 comment|// CHECK1-DAG: [[Z_ADDR:%.*]] = load %struct.A** [[Z_ADDR_REF]]
 comment|// CHECK1-DAG: [[Z_A_ADDR:%.*]] = getelementptr inbounds %struct.A* [[Z_ADDR]], i{{.+}} 0, i{{.+}} 0
 comment|// CHECK1-DAG: [[ARR_IDX_2:%.*]] = load i{{.+}}* [[Z_A_ADDR]]
-comment|// CHECK1-DAG: [[ARR_ADDR_REF:%.*]] = getelementptr inbounds [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 7
+comment|// CHECK1-DAG: [[ARR_ADDR_REF:%.*]] = getelementptr inbounds [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 10
 comment|// CHECK1-DAG: [[ARR_ADDR:%.*]] = load i{{.+}}** [[ARR_ADDR_REF]]
 comment|// CHECK1-DAG: [[ARR_IDX_1:%.*]] = mul {{.*}} 10
 comment|// CHECK1-DAG: [[ARR_10_ADDR:%.*]] = getelementptr inbounds i{{.+}}* [[ARR_ADDR]], i{{.*}} [[ARR_IDX_1]]
@@ -237,15 +243,15 @@ argument_list|()
 expr_stmt|;
 comment|// CHECK2: define internal void @{{.*}}test_nest_block_block_invoke
 comment|//
-comment|// CHECK2: [[Z:%[0-9a-z_]*]] = alloca i32
+comment|// CHECK2: [[Z:%[0-9a-z_]*]] = alloca i{{[0-9]+}},
 comment|// CHECK2: alloca %struct.anon{{.*}}
 comment|//
-comment|// CHECK2: store i32
-comment|// CHECK2: store i32* [[Z]]
+comment|// CHECK2: store i{{[0-9]+}}
+comment|// CHECK2: store i{{[0-9]+}}* [[Z]]
 comment|//
 comment|// CHECK2: getelementptr inbounds %struct.anon
 comment|// CHECK2-NEXT: getelementptr inbounds
-comment|// CHECK2-NEXT: store i32*
+comment|// CHECK2-NEXT: store i{{[0-9]+}}*
 comment|//
 comment|// CHECK2: call void @__captured_stmt
 name|int
@@ -287,22 +293,22 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|// CHECK2: alloca %struct.__block_byref_b
-comment|// CHECK2-NEXT: [[C:%[0-9a-z_]*]] = alloca i32
+comment|// CHECK2-NEXT: [[C:%[0-9a-z_]*]] = alloca i{{[0-9]+}}
 comment|// CHECK2-NEXT: alloca %struct.__block_byref_d
 comment|//
 comment|// CHECK2: bitcast %struct.__block_byref_b*
 comment|// CHECK2-NEXT: store i8*
 comment|//
-comment|// CHECK2: [[CapA:%[0-9a-z_.]*]] = getelementptr inbounds {{.*}}, i32 0, i32 7
+comment|// CHECK2: [[CapA:%[0-9a-z_.]*]] = getelementptr inbounds {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 7
 comment|//
-comment|// CHECK2: getelementptr inbounds %struct.anon{{.*}}, i32 0, i32 0
-comment|// CHECK2: load i32**
-comment|// CHECK2: load i32*
-comment|// CHECK2: store i32 {{.*}}, i32* [[CapA]]
+comment|// CHECK2: getelementptr inbounds %struct.anon{{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 0
+comment|// CHECK2: load i{{[0-9]+}}**
+comment|// CHECK2: load i{{[0-9]+}}*
+comment|// CHECK2: store i{{[0-9]+}} {{.*}}, i{{[0-9]+}}* [[CapA]]
 comment|//
-comment|// CHECK2: [[CapC:%[0-9a-z_.]*]] = getelementptr inbounds {{.*}}, i32 0, i32 8
-comment|// CHECK2-NEXT: [[Val:%[0-9a-z_]*]] = load i32* [[C]]
-comment|// CHECK2-NEXT: store i32 [[Val]], i32* [[CapC]]
+comment|// CHECK2: [[CapC:%[0-9a-z_.]*]] = getelementptr inbounds {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 8
+comment|// CHECK2-NEXT: [[Val:%[0-9a-z_]*]] = load i{{[0-9]+}}* [[C]]
+comment|// CHECK2-NEXT: store i{{[0-9]+}} [[Val]], i{{[0-9]+}}* [[CapC]]
 comment|//
 comment|// CHECK2: bitcast %struct.__block_byref_d*
 comment|// CHECK2-NEXT: store i8*

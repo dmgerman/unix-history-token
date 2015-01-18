@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/AlignOf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -265,38 +271,6 @@ name|ICK_Num_Conversion_Kinds
 comment|///< The number of conversion kinds
 block|}
 enum|;
-comment|/// ImplicitConversionCategory - The category of an implicit
-comment|/// conversion kind. The enumerator values match with Table 9 of
-comment|/// (C++ 13.3.3.1.1) and are listed such that better conversion
-comment|/// categories have smaller values.
-enum|enum
-name|ImplicitConversionCategory
-block|{
-name|ICC_Identity
-init|=
-literal|0
-block|,
-comment|///< Identity
-name|ICC_Lvalue_Transformation
-block|,
-comment|///< Lvalue transformation
-name|ICC_Qualification_Adjustment
-block|,
-comment|///< Qualification adjustment
-name|ICC_Promotion
-block|,
-comment|///< Promotion
-name|ICC_Conversion
-comment|///< Conversion
-block|}
-enum|;
-name|ImplicitConversionCategory
-name|GetConversionCategory
-parameter_list|(
-name|ImplicitConversionKind
-name|Kind
-parameter_list|)
-function_decl|;
 comment|/// ImplicitConversionRank - The rank of an implicit conversion
 comment|/// kind. The enumerator values match with Table 9 of (C++
 comment|/// 13.3.3.1.1) and are listed such that better conversion ranks
@@ -1741,6 +1715,17 @@ comment|/// duplicates the work of a trivial or derived-to-base
 comment|/// conversion.
 name|ovl_fail_trivial_conversion
 block|,
+comment|/// This conversion candidate was not considered because it is
+comment|/// an illegal instantiation of a constructor temploid: it is
+comment|/// callable with one argument, we only have one argument, and
+comment|/// its first parameter type is exactly the type of the class.
+comment|///
+comment|/// Defining such a constructor directly is illegal, and
+comment|/// template-argument deduction is supposed to ignore such
+comment|/// instantiations, but we can still get one with the right
+comment|/// kind of implicit instantiation.
+name|ovl_fail_illegal_constructor
+block|,
 comment|/// This conversion candidate is not viable because its result
 comment|/// type is not implicitly convertible to the desired type.
 name|ovl_fail_bad_final_conversion
@@ -2119,17 +2104,28 @@ decl_stmt|;
 name|unsigned
 name|NumInlineSequences
 decl_stmt|;
-name|char
-name|InlineSpace
-index|[
+name|llvm
+operator|::
+name|AlignedCharArray
+operator|<
+name|llvm
+operator|::
+name|AlignOf
+operator|<
+name|ImplicitConversionSequence
+operator|>
+operator|::
+name|Alignment
+operator|,
 literal|16
 operator|*
 sizeof|sizeof
 argument_list|(
 name|ImplicitConversionSequence
 argument_list|)
-index|]
-decl_stmt|;
+operator|>
+name|InlineSpace
+expr_stmt|;
 name|OverloadCandidateSet
 argument_list|(
 argument|const OverloadCandidateSet&
@@ -2219,6 +2215,8 @@ operator|->
 name|getCanonicalDecl
 argument_list|()
 argument_list|)
+operator|.
+name|second
 return|;
 block|}
 comment|/// \brief Clear out all of the candidates.
@@ -2330,6 +2328,8 @@ name|ImplicitConversionSequence
 operator|*
 operator|)
 name|InlineSpace
+operator|.
+name|buffer
 decl_stmt|;
 name|C
 operator|.

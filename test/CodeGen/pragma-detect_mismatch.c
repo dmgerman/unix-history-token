@@ -37,19 +37,19 @@ comment|// CHECK: !llvm.module.flags = !{{{.*}}}
 end_comment
 
 begin_comment
-comment|// CHECK: !{{[0-9]+}} = metadata !{i32 6, metadata !"Linker Options", metadata ![[link_opts:[0-9]+]]}
+comment|// CHECK: !{{[0-9]+}} = !{i32 6, !"Linker Options", ![[link_opts:[0-9]+]]}
 end_comment
 
 begin_comment
-comment|// CHECK: ![[link_opts]] = metadata !{metadata ![[test:[0-9]+]], metadata ![[test2:[0-9]+]]}
+comment|// CHECK: ![[link_opts]] = !{![[test:[0-9]+]], ![[test2:[0-9]+]]}
 end_comment
 
 begin_comment
-comment|// CHECK: ![[test]] = metadata !{metadata !"/FAILIFMISMATCH:\22test=1\22"}
+comment|// CHECK: ![[test]] = !{!"/FAILIFMISMATCH:\22test=1\22"}
 end_comment
 
 begin_comment
-comment|// CHECK: ![[test2]] = metadata !{metadata !"/FAILIFMISMATCH:\22test2=2\22"}
+comment|// CHECK: ![[test2]] = !{!"/FAILIFMISMATCH:\22test2=2\22"}
 end_comment
 
 end_unit

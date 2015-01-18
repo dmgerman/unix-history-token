@@ -2,13 +2,13 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FORMAT_PARSING_H
+name|LLVM_CLANG_LIB_ANALYSIS_FORMATSTRINGPARSING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FORMAT_PARSING_H
+name|LLVM_CLANG_LIB_ANALYSIS_FORMATSTRINGPARSING_H
 end_define
 
 begin_include

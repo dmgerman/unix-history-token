@@ -8,7 +8,7 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-undefined-trap-on-err
 end_comment
 
 begin_comment
-comment|// CHECK-UNDEFINED-TRAP: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift|unreachable|return|vla-bound|alignment|null|object-size|float-cast-overflow|array-bounds|enum|bool),?){14}"}}
+comment|// CHECK-UNDEFINED-TRAP: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift|unreachable|return|vla-bound|alignment|null|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){16}"}}
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=undefined %s -### 2>&
 end_comment
 
 begin_comment
-comment|// CHECK-UNDEFINED: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|function|shift|unreachable|return|vla-bound|alignment|null|vptr|object-size|float-cast-overflow|array-bounds|enum|bool),?){16}"}}
+comment|// CHECK-UNDEFINED: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|function|shift|unreachable|return|vla-bound|alignment|null|vptr|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){18}"}}
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=undefined %s -##
 end_comment
 
 begin_comment
-comment|// CHECK-UNDEFINED-DARWIN: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift|unreachable|return|vla-bound|alignment|null|vptr|object-size|float-cast-overflow|array-bounds|enum|bool),?){15}"}}
+comment|// CHECK-UNDEFINED-DARWIN: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift|unreachable|return|vla-bound|alignment|null|vptr|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){17}"}}
 end_comment
 
 begin_comment
@@ -48,11 +48,27 @@ comment|// CHECK-BOUNDS: "-fsanitize={{((array-bounds|local-bounds),?){2}"}}
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=all %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-FSANITIZE-ALL
+end_comment
+
+begin_comment
+comment|// CHECK-FSANITIZE-ALL: error: unsupported argument 'all' to option 'fsanitize='
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address,undefined -fno-sanitize=all -fsanitize=thread %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-FNO-SANITIZE-ALL
+end_comment
+
+begin_comment
+comment|// CHECK-FNO-SANITIZE-ALL: "-fsanitize=thread"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=thread,undefined -fno-sanitize=thread -fno-sanitize=float-cast-overflow,vptr,bool,enum %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-PARTIAL-UNDEFINED
 end_comment
 
 begin_comment
-comment|// CHECK-PARTIAL-UNDEFINED: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|function|shift|unreachable|return|vla-bound|alignment|null|object-size|array-bounds),?){12}"}}
+comment|// CHECK-PARTIAL-UNDEFINED: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|function|shift|unreachable|return|vla-bound|alignment|null|object-size|array-bounds|returns-nonnull-attribute|nonnull-attribute),?){14}"}}
 end_comment
 
 begin_comment
@@ -232,6 +248,114 @@ comment|// CHECK-TRACK-ORIGINS-3: error: invalid value '3' in '-fsanitize-memory
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=0 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-0
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address                       %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-0
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-0-NOT: fsanitize-coverage
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=memory -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=leak -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=undefined -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=bool -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-1
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-1: fsanitize-coverage=1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=4 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-4
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-4: fsanitize-coverage=4
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=5 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-5
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-5: error: invalid value '5' in '-fsanitize-coverage=5'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=thread   -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-UNUSED
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=dataflow -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-UNUSED
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu                     -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-UNUSED
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-UNUSED: argument unused during compilation: '-fsanitize-coverage=1'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-address-field-padding=0 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ASAN-FIELD-PADDING-0
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-FIELD-PADDING-0-NOT: -fsanitize-address-field-padding
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-address-field-padding=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ASAN-FIELD-PADDING-1
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-FIELD-PADDING-1: -fsanitize-address-field-padding=1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-address-field-padding=2 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ASAN-FIELD-PADDING-2
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-FIELD-PADDING-2: -fsanitize-address-field-padding=2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-address-field-padding=3 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ASAN-FIELD-PADDING-3
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-FIELD-PADDING-3: error: invalid value '3' in '-fsanitize-address-field-padding=3'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-address-field-padding=2 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ASAN-FIELD-PADDING-NO-ASAN
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-FIELD-PADDING-NO-ASAN: warning: argument unused during compilation: '-fsanitize-address-field-padding=2'
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=vptr -fno-sanitize=vptr -fsanitize=undefined,address %s -### 2>&1
 end_comment
 
@@ -244,11 +368,7 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=thread %s -### 2>&1 |
 end_comment
 
 begin_comment
-comment|// CHECK-TSAN-NO-PIE: "-mrelocation-model" "pic" "-pic-level" "2" "-pie-level" "2"
-end_comment
-
-begin_comment
-comment|// CHECK-TSAN-NO-PIE: "-pie"
+comment|// CHECK-TSAN-NO-PIE: "-mrelocation-model" "static"
 end_comment
 
 begin_comment
@@ -284,31 +404,59 @@ comment|// CHECK-ANDROID-NO-ASAN: "-mrelocation-model" "pic"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize-recover -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fsanitize-recover -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu %s -fno-sanitize-recover -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-RECOVER
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fsanitize-recover=all -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu %s -fno-sanitize-recover -fsanitize-recover -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fno-sanitize-recover -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-RECOVER
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize-recover -fno-sanitize-recover -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-RECOVER
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fno-sanitize-recover=all -fsanitize-recover=thread -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-RECOVER
 end_comment
 
 begin_comment
-comment|// CHECK-RECOVER-NOT: sanitize-recover
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fno-sanitize-recover -fsanitize-recover=undefined -### 2>&1 | FileCheck %s --check-prefix=CHECK-RECOVER
 end_comment
 
 begin_comment
-comment|// CHECK-NO-RECOVER: "-fno-sanitize-recover"
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fsanitize-recover -fno-sanitize-recover -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-RECOVER
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fno-sanitize-recover=all -fsanitize-recover=object-size -### 2>&1 | FileCheck %s --check-prefix=CHECK-PARTIAL-RECOVER
+end_comment
+
+begin_comment
+comment|// CHECK-RECOVER: "-fsanitize-recover={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|function|shift|vla-bound|alignment|null|vptr|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){16}"}}
+end_comment
+
+begin_comment
+comment|// CHECK-NO-RECOVER-NOT: sanitize-recover
+end_comment
+
+begin_comment
+comment|// CHECK-PARTIAL-RECOVER: "-fsanitize-recover=object-size"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fsanitize-recover=address,foobar,object-size,unreachable -### 2>&1 | FileCheck %s --check-prefix=CHECK-DIAG-RECOVER
+end_comment
+
+begin_comment
+comment|// CHECK-DIAG-RECOVER: unsupported argument 'foobar' to option 'fsanitize-recover='
+end_comment
+
+begin_comment
+comment|// CHECK-DIAG-RECOVER: unsupported argument 'address,unreachable' to option 'fsanitize-recover='
 end_comment
 
 begin_comment
@@ -413,6 +561,70 @@ end_comment
 
 begin_comment
 comment|// CHECK-FSAN-UBSAN-DARWIN: unsupported option '-fsanitize=function' for target 'x86_64-apple-darwin10'
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fsanitize=address -c -MDd -### -- %s 2>&1 | FileCheck %s -check-prefix=CHECK-ASAN-DEBUGRTL
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fsanitize=address -c -MTd -### -- %s 2>&1 | FileCheck %s -check-prefix=CHECK-ASAN-DEBUGRTL
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fsanitize=address -c -LDd -### -- %s 2>&1 | FileCheck %s -check-prefix=CHECK-ASAN-DEBUGRTL
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fsanitize=address -c -MD -MDd -### -- %s 2>&1 | FileCheck %s -check-prefix=CHECK-ASAN-DEBUGRTL
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fsanitize=address -c -MT -MTd -### -- %s 2>&1 | FileCheck %s -check-prefix=CHECK-ASAN-DEBUGRTL
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fsanitize=address -c -LD -LDd -### -- %s 2>&1 | FileCheck %s -check-prefix=CHECK-ASAN-DEBUGRTL
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-DEBUGRTL: error: invalid argument
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-DEBUGRTL: not allowed with '-fsanitize=address'
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-DEBUGRTL: note: AddressSanitizer doesn't support linking with debug runtime libraries yet
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fsanitize=address -c -MT -### -- %s 2>&1 | FileCheck %s -check-prefix=CHECK-ASAN-RELEASERTL
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fsanitize=address -c -MD -### -- %s 2>&1 | FileCheck %s -check-prefix=CHECK-ASAN-RELEASERTL
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fsanitize=address -c -LD -### -- %s 2>&1 | FileCheck %s -check-prefix=CHECK-ASAN-RELEASERTL
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fsanitize=address -c -MTd -MT -### -- %s 2>&1 | FileCheck %s -check-prefix=CHECK-ASAN-RELEASERTL
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fsanitize=address -c -MDd -MD -### -- %s 2>&1 | FileCheck %s -check-prefix=CHECK-ASAN-RELEASERTL
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fsanitize=address -c -LDd -LD -### -- %s 2>&1 | FileCheck %s -check-prefix=CHECK-ASAN-RELEASERTL
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-RELEASERTL-NOT: error: invalid argument
 end_comment
 
 end_unit

@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -g -emit-llvm< %s | FileCheck %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -gline-tables-only -emit-llvm< %s | FileCheck --check-prefix=GMLT %s
+end_comment
+
+begin_comment
 comment|// Two variables with same name in separate scope.
 end_comment
 
@@ -28,6 +32,15 @@ literal|0
 decl_stmt|;
 comment|// CHECK: DW_TAG_auto_variable ] [i]
 comment|// CHECK-NEXT: DW_TAG_lexical_block
+comment|// FIXME: Looks like we don't actually need both these lexical blocks (disc 2
+comment|// just refers to disc 1, nothing actually uses disc 2).
+comment|// GMLT-NOT: DW_TAG_lexical_block
+comment|// GMLT: "0xb\002", {{.*}}} ; [ DW_TAG_lexical_block ]
+comment|// GMLT-NOT: DW_TAG_lexical_block
+comment|// GMLT: "0xb\001", {{.*}}} ; [ DW_TAG_lexical_block ]
+comment|// Make sure we don't have any more lexical blocks because we don't need them in
+comment|// -gmlt.
+comment|// GMLT-NOT: DW_TAG_lexical_block
 for|for
 control|(
 name|int
@@ -47,6 +60,7 @@ operator|++
 expr_stmt|;
 comment|// CHECK: DW_TAG_auto_variable ] [i]
 comment|// CHECK-NEXT: DW_TAG_lexical_block
+comment|// GMLT-NOT: DW_TAG_lexical_block
 for|for
 control|(
 name|int

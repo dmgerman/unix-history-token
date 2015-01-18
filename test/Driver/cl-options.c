@@ -376,6 +376,22 @@ comment|// w: -w
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl /Zp -### -- %s 2>&1 | FileCheck -check-prefix=ZP %s
+end_comment
+
+begin_comment
+comment|// ZP: -fpack-struct=1
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Zp2 -### -- %s 2>&1 | FileCheck -check-prefix=ZP2 %s
+end_comment
+
+begin_comment
+comment|// ZP2: -fpack-struct=2
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl /Zs -### -- %s 2>&1 | FileCheck -check-prefix=Zs %s
 end_comment
 
@@ -476,11 +492,27 @@ comment|// RUN:    /analyze- \
 end_comment
 
 begin_comment
+comment|// RUN:    /cgthreads4 \
+end_comment
+
+begin_comment
+comment|// RUN:    /cgthreads8 \
+end_comment
+
+begin_comment
+comment|// RUN:    /d2Zi+ \
+end_comment
+
+begin_comment
 comment|// RUN:    /errorReport:foo \
 end_comment
 
 begin_comment
 comment|// RUN:    /FS \
+end_comment
+
+begin_comment
+comment|// RUN:    /Gd \
 end_comment
 
 begin_comment
@@ -524,6 +556,10 @@ comment|// RUN:    /vmg \
 end_comment
 
 begin_comment
+comment|// RUN:    /volatile:iso \
+end_comment
+
+begin_comment
 comment|// RUN:    /w12345 \
 end_comment
 
@@ -532,19 +568,11 @@ comment|// RUN:    /wd1234 \
 end_comment
 
 begin_comment
-comment|// RUN:    /Zc:forScope \
+comment|// RUN:    /Zo \
 end_comment
 
 begin_comment
-comment|// RUN:    /Zc:wchar_t \
-end_comment
-
-begin_comment
-comment|// RUN:    /Zc:inline \
-end_comment
-
-begin_comment
-comment|// RUN:    /Zc:rvalueCast \
+comment|// RUN:    /Zo- \
 end_comment
 
 begin_comment
@@ -553,6 +581,10 @@ end_comment
 
 begin_comment
 comment|// IGNORED-NOT: argument unused during compilation
+end_comment
+
+begin_comment
+comment|// IGNORED-NOT: no such file or directory
 end_comment
 
 begin_comment
@@ -613,10 +645,6 @@ end_comment
 
 begin_comment
 comment|// RUN:     /docname \
-end_comment
-
-begin_comment
-comment|// RUN:     /d2Zi+ \
 end_comment
 
 begin_comment
@@ -756,6 +784,10 @@ comment|// RUN:     /GX \
 end_comment
 
 begin_comment
+comment|// RUN:     /Gv \
+end_comment
+
+begin_comment
 comment|// RUN:     /Gz \
 end_comment
 
@@ -828,7 +860,7 @@ comment|// RUN:     /V \
 end_comment
 
 begin_comment
-comment|// RUN:     /volatile \
+comment|// RUN:     /volatile:ms \
 end_comment
 
 begin_comment
@@ -884,14 +916,6 @@ comment|// RUN:     /Za \
 end_comment
 
 begin_comment
-comment|// RUN:     /Zc:auto \
-end_comment
-
-begin_comment
-comment|// RUN:     /Zc:wchar_t- \
-end_comment
-
-begin_comment
 comment|// RUN:     /Ze \
 end_comment
 
@@ -909,14 +933,6 @@ end_comment
 
 begin_comment
 comment|// RUN:     /Zl \
-end_comment
-
-begin_comment
-comment|// RUN:     /Zp \
-end_comment
-
-begin_comment
-comment|// RUN:     /Zp1 \
 end_comment
 
 begin_comment

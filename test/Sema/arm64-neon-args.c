@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -triple arm64-apple-darwin -target-feature +neon -fsy
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple arm64_be-none-linux-gnu -target-feature +neon -fsyntax-only -ffreestanding -verify %s
+comment|// RUN: %clang_cc1 -triple aarch64_be-none-linux-gnu -target-feature +neon -fsyntax-only -ffreestanding -verify %s
 end_comment
 
 begin_include

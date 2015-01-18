@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SERIALIZATION_MODULE_MANAGER_H
+name|LLVM_CLANG_SERIALIZATION_MODULEMANAGER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SERIALIZATION_MODULE_MANAGER_H
+name|LLVM_CLANG_SERIALIZATION_MODULEMANAGER_H
 end_define
 
 begin_include
@@ -144,11 +144,14 @@ specifier|const
 name|FileEntry
 operator|*
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|llvm
 operator|::
 name|MemoryBuffer
-operator|*
-operator|>
+operator|>>
 name|InMemoryBuffers
 expr_stmt|;
 comment|/// \brief The visitation order.
@@ -481,10 +484,14 @@ name|File
 parameter_list|)
 function_decl|;
 comment|/// \brief Returns the in-memory (virtual file) buffer with the given name
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|llvm
 operator|::
 name|MemoryBuffer
-operator|*
+operator|>
 name|lookupBuffer
 argument_list|(
 argument|StringRef Name
@@ -540,6 +547,12 @@ comment|///
 comment|/// \param ExpectedModTime The expected modification time of the module
 comment|/// file, used for validation. This will be zero if unknown.
 comment|///
+comment|/// \param ExpectedSignature The expected signature of the module file, used
+comment|/// for validation. This will be zero if unknown.
+comment|///
+comment|/// \param ReadSignature Reads the signature from an AST file without actually
+comment|/// loading it.
+comment|///
 comment|/// \param Module A pointer to the module file if the module was successfully
 comment|/// loaded.
 comment|///
@@ -572,6 +585,23 @@ name|ExpectedSize
 argument_list|,
 name|time_t
 name|ExpectedModTime
+argument_list|,
+name|ASTFileSignature
+name|ExpectedSignature
+argument_list|,
+name|std
+operator|::
+name|function
+operator|<
+name|ASTFileSignature
+argument_list|(
+name|llvm
+operator|::
+name|BitstreamReader
+operator|&
+argument_list|)
+operator|>
+name|ReadSignature
 argument_list|,
 name|ModuleFile
 operator|*
@@ -617,10 +647,14 @@ argument_list|(
 name|StringRef
 name|FileName
 argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|llvm
 operator|::
 name|MemoryBuffer
-operator|*
+operator|>
 name|Buffer
 argument_list|)
 decl_stmt|;
@@ -690,12 +724,10 @@ name|UserData
 argument_list|,
 name|llvm
 operator|::
-name|SmallPtrSet
+name|SmallPtrSetImpl
 operator|<
 name|ModuleFile
 operator|*
-argument_list|,
-literal|4
 operator|>
 operator|*
 name|ModuleFilesHit

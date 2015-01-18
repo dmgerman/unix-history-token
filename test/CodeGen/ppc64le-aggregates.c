@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: powerpc-registered-target
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -faltivec -triple powerpc64le-unknown-linux-gnu -emit-llvm -o - %s | FileCheck %s
 end_comment
 
@@ -163,6 +159,26 @@ name|b
 decl_stmt|;
 name|float
 name|c
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|f2a2b
+block|{
+name|float
+name|a
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|float
+name|b
+index|[
+literal|2
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -379,6 +395,26 @@ name|func_fabc
 parameter_list|(
 name|struct
 name|fabc
+name|x
+parameter_list|)
+block|{
+return|return
+name|x
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: define [4 x float] @func_f2a2b([4 x float] %x.coerce)
+end_comment
+
+begin_function
+name|struct
+name|f2a2b
+name|func_f2a2b
+parameter_list|(
+name|struct
+name|f2a2b
 name|x
 parameter_list|)
 block|{

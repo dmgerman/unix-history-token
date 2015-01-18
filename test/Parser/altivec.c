@@ -139,6 +139,30 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__vector
+name|__bool
+name|char
+name|vv___bc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__vector
+name|__bool
+name|short
+name|vv___bs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__vector
+name|__bool
+name|int
+name|vv_bi
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__vector
 name|__pixel
 name|vv_p
 decl_stmt|;
@@ -307,6 +331,30 @@ name|vector
 name|bool
 name|int
 name|v_bi
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|__bool
+name|char
+name|v___bc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|__bool
+name|short
+name|v___bs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|__bool
+name|int
+name|v___bi
 decl_stmt|;
 end_decl_stmt
 
@@ -532,7 +580,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}} expected-error {{cannot use 'double' with '__vector'}}
+comment|// expected-error {{cannot use 'long double' with '__vector'}}
 end_comment
 
 begin_decl_stmt
@@ -544,13 +592,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}} expected-error {{cannot use 'double' with '__vector'}}
+comment|// expected-error {{cannot use 'long double' with '__vector'}}
 end_comment
 
 begin_decl_stmt
 name|vector
 name|bool
 name|v_b
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{type specifier missing, defaults to 'int'}}
+end_comment
+
+begin_decl_stmt
+name|vector
+name|__bool
+name|v___b
 decl_stmt|;
 end_decl_stmt
 
@@ -570,7 +629,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{cannot use 'double' with '__vector'}}
+comment|// expected-error {{use of 'double' with '__vector' requires VSX support to be enabled (available on the POWER7 or later)}}
 end_comment
 
 begin_decl_stmt
@@ -581,7 +640,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{cannot use 'double' with '__vector'}}
+comment|// expected-error {{use of 'double' with '__vector' requires VSX support to be enabled (available on the POWER7 or later)}}
 end_comment
 
 begin_decl_stmt
@@ -593,7 +652,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}} expected-error {{cannot use 'double' with '__vector'}}
+comment|// expected-error {{cannot use 'long double' with '__vector'}}
 end_comment
 
 begin_decl_stmt
@@ -605,7 +664,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}} expected-error {{cannot use 'double' with '__vector'}}
+comment|// expected-error {{cannot use 'long double' with '__vector'}}
 end_comment
 
 begin_decl_stmt
@@ -694,6 +753,123 @@ end_decl_stmt
 begin_comment
 comment|// expected-error {{cannot use 'long long' with '__vector bool'}}
 end_comment
+
+begin_decl_stmt
+name|vector
+name|__bool
+name|float
+name|v___bf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{cannot use 'float' with '__vector bool'}}
+end_comment
+
+begin_decl_stmt
+name|vector
+name|__bool
+name|double
+name|v___bd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{cannot use 'double' with '__vector bool'}}
+end_comment
+
+begin_decl_stmt
+name|vector
+name|__bool
+name|pixel
+name|v___bp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{cannot use '__pixel' with '__vector bool'}}
+end_comment
+
+begin_decl_stmt
+name|vector
+name|__bool
+name|signed
+name|char
+name|v___bsc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{cannot use 'signed' with '__vector bool'}}
+end_comment
+
+begin_decl_stmt
+name|vector
+name|__bool
+name|unsigned
+name|int
+name|v___bsc2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{cannot use 'unsigned' with '__vector bool'}}
+end_comment
+
+begin_decl_stmt
+name|vector
+name|__bool
+name|long
+name|v___bl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{cannot use 'long' with '__vector bool'}}
+end_comment
+
+begin_decl_stmt
+name|vector
+name|__bool
+name|long
+name|long
+name|v___bll
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{cannot use 'long long' with '__vector bool'}}
+end_comment
+
+begin_comment
+comment|// vector long is deprecated, but vector long long is not.
+end_comment
+
+begin_decl_stmt
+name|vector
+name|long
+name|long
+name|v_ll
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|signed
+name|long
+name|long
+name|v_sll
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|unsigned
+name|long
+name|long
+name|v_ull
+decl_stmt|;
+end_decl_stmt
 
 begin_typedef
 typedef|typedef

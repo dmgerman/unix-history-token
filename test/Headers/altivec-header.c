@@ -46,6 +46,10 @@ comment|// CHECK-NEXT: .ident{{.*$}}
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: .section ".note.GNU-stack","",@progbits
+end_comment
+
+begin_comment
 comment|// CHECK-NOT: .
 end_comment
 

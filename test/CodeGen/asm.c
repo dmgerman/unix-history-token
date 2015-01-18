@@ -721,5 +721,37 @@ comment|// CHECK: call void asm sideeffect "movl %eax, $0", "*m,~{dirflag},~{fps
 block|}
 end_function
 
+begin_function
+name|void
+name|t30
+parameter_list|(
+name|int
+name|len
+parameter_list|)
+block|{
+asm|__asm__
+specifier|volatile
+asm|(""                    : "+&&rm"(len));
+comment|// CHECK: @t30
+comment|// CHECK: call void asm sideeffect "", "=*&rm,0,~{dirflag},~{fpsr},~{flags}"
+block|}
+end_function
+
+begin_function
+name|void
+name|t31
+parameter_list|(
+name|int
+name|len
+parameter_list|)
+block|{
+asm|__asm__
+specifier|volatile
+asm|(""                    : "+%%rm"(len), "+rm"(len));
+comment|// CHECK: @t31
+comment|// CHECK: call void asm sideeffect "", "=*%rm,=*rm,0,1,~{dirflag},~{fpsr},~{flags}"
+block|}
+end_function
+
 end_unit
 

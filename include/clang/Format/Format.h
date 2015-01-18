@@ -66,13 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/FrontendAction.h"
+file|"clang/Basic/LangOptions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Tooling/Refactoring.h"
+file|"clang/Tooling/Core/Replacement.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
@@ -173,6 +179,9 @@ name|LK_None
 block|,
 comment|/// Should be used for C, C++, ObjectiveC, ObjectiveC++.
 name|LK_Cpp
+block|,
+comment|/// Should be used for Java.
+name|LK_Java
 block|,
 comment|/// Should be used for JavaScript.
 name|LK_JavaScript
@@ -307,10 +316,15 @@ comment|/// commonly have different usage patterns and a number of special cases
 name|unsigned
 name|SpacesBeforeTrailingComments
 decl_stmt|;
-comment|/// \brief If \c false, a function call's or function definition's parameters
-comment|/// will either all be on the same line or will have one line each.
+comment|/// \brief If \c false, a function declaration's or function definition's
+comment|/// parameters will either all be on the same line or will have one line each.
 name|bool
 name|BinPackParameters
+decl_stmt|;
+comment|/// \brief If \c false, a function call's arguments will either be all on the
+comment|/// same line or will have one line each.
+name|bool
+name|BinPackArguments
 decl_stmt|;
 comment|/// \brief If \c true, clang-format detects whether function calls and
 comment|/// definitions are formatted with one parameter per line.
@@ -361,6 +375,10 @@ comment|/// single line.
 name|bool
 name|AllowShortLoopsOnASingleLine
 decl_stmt|;
+comment|/// \brief If \c true, short case labels will be contracted to a single line.
+name|bool
+name|AllowShortCaseLabelsOnASingleLine
+decl_stmt|;
 comment|/// \brief Different styles for merging short functions containing at most one
 comment|/// statement.
 enum|enum
@@ -371,6 +389,9 @@ name|SFS_None
 block|,
 comment|/// \brief Only merge functions defined inside a class.
 name|SFS_Inline
+block|,
+comment|/// \brief Only merge empty functions.
+name|SFS_Empty
 block|,
 comment|/// \brief Merge all functions fitting on a single line.
 name|SFS_All
@@ -390,6 +411,22 @@ comment|/// \brief Add a space in front of an Objective-C protocol list, i.e. us
 comment|///<tt>Foo<Protocol></tt> instead of \c Foo<Protocol>.
 name|bool
 name|ObjCSpaceBeforeProtocolList
+decl_stmt|;
+comment|/// \brief If \c true, horizontally aligns arguments after an open bracket.
+comment|///
+comment|/// This applies to round brackets (parentheses), angle brackets and square
+comment|/// brackets. This will result in formattings like
+comment|/// \code
+comment|/// someLongFunction(argument1,
+comment|///                  argument2);
+comment|/// \endcode
+name|bool
+name|AlignAfterOpenBracket
+decl_stmt|;
+comment|/// \brief If \c true, horizontally align operands of binary and ternary
+comment|/// expressions.
+name|bool
+name|AlignOperands
 decl_stmt|;
 comment|/// \brief If \c true, aligns trailing comments.
 name|bool
@@ -412,6 +449,18 @@ comment|/// \brief The number of characters to use for indentation of constructo
 comment|/// initializer lists.
 name|unsigned
 name|ConstructorInitializerIndentWidth
+decl_stmt|;
+comment|/// \brief The number of characters to use for indentation of ObjC blocks.
+name|unsigned
+name|ObjCBlockIndentWidth
+decl_stmt|;
+comment|/// \brief If \c true, always break after function definition return types.
+comment|///
+comment|/// More truthfully called 'break before the identifier following the type
+comment|/// in a function definition'. PenaltyReturnTypeOnItsOwnLine becomes
+comment|/// irrelevant.
+name|bool
+name|AlwaysBreakAfterDefinitionReturnType
 decl_stmt|;
 comment|/// \brief If \c true, always break after the<tt>template<...></tt> of a
 comment|/// template declaration.
@@ -441,8 +490,22 @@ comment|/// \brief The way to use tab characters in the resulting file.
 name|UseTabStyle
 name|UseTab
 decl_stmt|;
-comment|/// \brief If \c true, binary operators will be placed after line breaks.
-name|bool
+comment|/// \brief The style of breaking before or after binary operators.
+enum|enum
+name|BinaryOperatorStyle
+block|{
+comment|/// Break after operators.
+name|BOS_None
+block|,
+comment|/// Break before operators that aren't assignments.
+name|BOS_NonAssignment
+block|,
+comment|/// Break before operators.
+name|BOS_All
+block|,   }
+enum|;
+comment|/// \brief The way to wrap binary operators.
+name|BinaryOperatorStyle
 name|BreakBeforeBinaryOperators
 decl_stmt|;
 comment|/// \brief If \c true, ternary operators will be placed after line breaks.
@@ -460,7 +523,7 @@ comment|/// Like \c Attach, but break before braces on function, namespace and
 comment|/// class definitions.
 name|BS_Linux
 block|,
-comment|/// Like \c Attach, but break before function definitions.
+comment|/// Like \c Attach, but break before function definitions, and 'else'.
 name|BS_Stroustrup
 block|,
 comment|/// Always break before braces.
@@ -501,6 +564,10 @@ comment|/// template argument lists
 name|bool
 name|SpacesInAngles
 decl_stmt|;
+comment|/// \brief If \c true, spaces will be inserted after '[' and before ']'.
+name|bool
+name|SpacesInSquareBrackets
+decl_stmt|;
 comment|/// \brief If \c true, spaces may be inserted into '()'.
 name|bool
 name|SpaceInEmptyParentheses
@@ -513,6 +580,10 @@ decl_stmt|;
 comment|/// \brief If \c true, spaces may be inserted into C style casts.
 name|bool
 name|SpacesInCStyleCastParentheses
+decl_stmt|;
+comment|/// \brief If \c true, a space may be inserted after C style casts.
+name|bool
+name|SpaceAfterCStyleCast
 decl_stmt|;
 comment|/// \brief Different ways to put a space before opening parentheses.
 enum|enum
@@ -593,11 +664,17 @@ name|R
 operator|.
 name|AccessModifierOffset
 operator|&&
-name|ConstructorInitializerIndentWidth
+name|AlignAfterOpenBracket
 operator|==
 name|R
 operator|.
-name|ConstructorInitializerIndentWidth
+name|AlignAfterOpenBracket
+operator|&&
+name|AlignOperands
+operator|==
+name|R
+operator|.
+name|AlignOperands
 operator|&&
 name|AlignEscapedNewlinesLeft
 operator|==
@@ -641,6 +718,12 @@ name|R
 operator|.
 name|AllowShortLoopsOnASingleLine
 operator|&&
+name|AlwaysBreakAfterDefinitionReturnType
+operator|==
+name|R
+operator|.
+name|AlwaysBreakAfterDefinitionReturnType
+operator|&&
 name|AlwaysBreakTemplateDeclarations
 operator|==
 name|R
@@ -658,6 +741,12 @@ operator|==
 name|R
 operator|.
 name|BinPackParameters
+operator|&&
+name|BinPackArguments
+operator|==
+name|R
+operator|.
+name|BinPackArguments
 operator|&&
 name|BreakBeforeBinaryOperators
 operator|==
@@ -694,6 +783,12 @@ operator|==
 name|R
 operator|.
 name|ConstructorInitializerAllOnOneLineOrOnePerLine
+operator|&&
+name|ConstructorInitializerIndentWidth
+operator|==
+name|R
+operator|.
+name|ConstructorInitializerIndentWidth
 operator|&&
 name|DerivePointerAlignment
 operator|==
@@ -748,6 +843,12 @@ operator|==
 name|R
 operator|.
 name|NamespaceIndentation
+operator|&&
+name|ObjCBlockIndentWidth
+operator|==
+name|R
+operator|.
+name|ObjCBlockIndentWidth
 operator|&&
 name|ObjCSpaceAfterProperty
 operator|==
@@ -833,6 +934,12 @@ name|R
 operator|.
 name|SpacesInParentheses
 operator|&&
+name|SpacesInSquareBrackets
+operator|==
+name|R
+operator|.
+name|SpacesInSquareBrackets
+operator|&&
 name|SpacesInAngles
 operator|==
 name|R
@@ -856,6 +963,12 @@ operator|==
 name|R
 operator|.
 name|SpacesInCStyleCastParentheses
+operator|&&
+name|SpaceAfterCStyleCast
+operator|==
+name|R
+operator|.
+name|SpaceAfterCStyleCast
 operator|&&
 name|SpaceBeforeParens
 operator|==
@@ -997,12 +1110,7 @@ expr_stmt|;
 comment|/// \brief Reformats the given \p Ranges in the token stream coming out of
 comment|/// \c Lex.
 comment|///
-comment|/// Each range is extended on either end to its next bigger logic unit, i.e.
-comment|/// everything that might influence its formatting or might be influenced by its
-comment|/// formatting.
-comment|///
-comment|/// Returns the \c Replacements necessary to make all \p Ranges comply with
-comment|/// \p Style.
+comment|/// DEPRECATED: Do not use.
 name|tooling
 operator|::
 name|Replacements
@@ -1021,13 +1129,33 @@ name|SourceManager
 operator|&
 name|SourceMgr
 argument_list|,
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|CharSourceRange
 operator|>
 name|Ranges
+argument_list|)
+expr_stmt|;
+comment|/// \brief Reformats the given \p Ranges in the file \p ID.
+comment|///
+comment|/// Each range is extended on either end to its next bigger logic unit, i.e.
+comment|/// everything that might influence its formatting or might be influenced by its
+comment|/// formatting.
+comment|///
+comment|/// Returns the \c Replacements necessary to make all \p Ranges comply with
+comment|/// \p Style.
+name|tooling
+operator|::
+name|Replacements
+name|reformat
+argument_list|(
+argument|const FormatStyle&Style
+argument_list|,
+argument|SourceManager&SourceMgr
+argument_list|,
+argument|FileID ID
+argument_list|,
+argument|ArrayRef<CharSourceRange> Ranges
 argument_list|)
 expr_stmt|;
 comment|/// \brief Reformats the given \p Ranges in \p Code.
@@ -1042,7 +1170,7 @@ argument|const FormatStyle&Style
 argument_list|,
 argument|StringRef Code
 argument_list|,
-argument|std::vector<tooling::Range> Ranges
+argument|ArrayRef<tooling::Range> Ranges
 argument_list|,
 argument|StringRef FileName =
 literal|"<stdin>"
@@ -1050,21 +1178,19 @@ argument_list|)
 expr_stmt|;
 comment|/// \brief Returns the \c LangOpts that the formatter expects you to set.
 comment|///
-comment|/// \param Standard determines lexing mode: LC_Cpp11 and LS_Auto turn on C++11
-comment|/// lexing mode, LS_Cpp03 - C++03 mode.
+comment|/// \param Style determines specific settings for lexing mode.
 name|LangOptions
 name|getFormattingLangOpts
-argument_list|(
+parameter_list|(
+specifier|const
 name|FormatStyle
-operator|::
-name|LanguageStandard
-name|Standard
-operator|=
-name|FormatStyle
-operator|::
-name|LS_Cpp11
-argument_list|)
-decl_stmt|;
+modifier|&
+name|Style
+init|=
+name|getLLVMStyle
+argument_list|()
+parameter_list|)
+function_decl|;
 comment|/// \brief Description to be used for help text for a llvm::cl option for
 comment|/// specifying format style. The description is closely related to the operation
 comment|/// of getStyle().

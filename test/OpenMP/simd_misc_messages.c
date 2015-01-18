@@ -1303,6 +1303,86 @@ operator|++
 name|i
 control|)
 empty_stmt|;
+comment|// expected-note@+2 {{defined as reduction}}
+pragma|#
+directive|pragma
+name|omp
+name|parallel
+pragma|#
+directive|pragma
+name|omp
+name|simd
+name|collapse
+name|(
+name|2
+name|)
+name|reduction
+name|(
+name|+
+name|:
+name|i
+name|)
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|16
+condition|;
+operator|++
+name|i
+control|)
+comment|// expected-note@+1 {{variable with automatic storage duration is predetermined as private; perhaps you forget to enclose 'omp for' directive into a parallel or another task region?}}
+for|for
+control|(
+name|int
+name|j
+init|=
+literal|0
+init|;
+name|j
+operator|<
+literal|16
+condition|;
+operator|++
+name|j
+control|)
+comment|// expected-error@+3 {{reduction variable must be shared}}
+comment|// expected-error@+2 {{private variable cannot be reduction}}
+comment|// expected-error@+1 {{OpenMP constructs may not be nested inside a simd region}}
+pragma|#
+directive|pragma
+name|omp
+name|for
+name|reduction
+name|(
+name|+
+name|:
+name|i
+name|,
+name|j
+name|)
+for|for
+control|(
+name|int
+name|k
+init|=
+literal|0
+init|;
+name|k
+operator|<
+literal|16
+condition|;
+operator|++
+name|k
+control|)
+name|i
+operator|+=
+name|j
+expr_stmt|;
 block|}
 end_function
 
@@ -3168,8 +3248,7 @@ operator|++
 name|i
 control|)
 empty_stmt|;
-comment|// expected-error@+2 {{expected identifier}}
-comment|// expected-warning@+1 {{missing ':' after reduction identifier - ignoring}}
+comment|// expected-error@+1 {{expected identifier}}
 pragma|#
 directive|pragma
 name|omp

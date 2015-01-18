@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -std=c11 -fsyntax-only -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -pedantic -fsyntax-only %s 2>&1 | FileCheck -check-prefix=CHECK-EXT %s
+comment|// RUN: not %clang_cc1 -std=c99 -pedantic -fsyntax-only %s 2>&1 | FileCheck -check-prefix=CHECK-EXT %s
 end_comment
 
 begin_function_decl
@@ -46,7 +46,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// expected-error {{expected ';'}} expected-warning {{does not declare anything}} expected-error {{'_Noreturn' can only appear on functions}}
+comment|// expected-error {{'_Noreturn' keyword must precede function declarator}}
 end_comment
 
 begin_decl_stmt

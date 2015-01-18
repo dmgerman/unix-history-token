@@ -12,6 +12,14 @@ comment|// CHECK: "-o" "save-temps.i"
 end_comment
 
 begin_comment
+comment|// CHECK: "-disable-llvm-optzns"
+end_comment
+
+begin_comment
+comment|// CHECK: "-o" "save-temps.bc"
+end_comment
+
+begin_comment
 comment|// CHECK: "-o" "save-temps.s"
 end_comment
 
@@ -24,6 +32,30 @@ comment|// CHECK: "-o" "a.out"
 end_comment
 
 begin_comment
+comment|// Check for a single clang cc1 invocation when NOT using -save-temps.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin -arch x86_64 -S %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=NO-TEMPS
+end_comment
+
+begin_comment
+comment|// NO-TEMPS: "-cc1"
+end_comment
+
+begin_comment
+comment|// NO-TEMPS: "-S"
+end_comment
+
+begin_comment
+comment|// NO-TEMPS: "-x" "c"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-apple-darwin -save-temps -arch i386 -arch x86_64 %s -### 2>&1 \
 end_comment
 
@@ -33,6 +65,10 @@ end_comment
 
 begin_comment
 comment|// MULT-ARCH: "-o" "save-temps-i386.i"
+end_comment
+
+begin_comment
+comment|// MULT-ARCH: "-o" "save-temps-i386.bc"
 end_comment
 
 begin_comment
@@ -49,6 +85,10 @@ end_comment
 
 begin_comment
 comment|// MULT-ARCH: "-o" "save-temps-x86_64.i"
+end_comment
+
+begin_comment
+comment|// MULT-ARCH: "-o" "save-temps-x86_64.bc"
 end_comment
 
 begin_comment

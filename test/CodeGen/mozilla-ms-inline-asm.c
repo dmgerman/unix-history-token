@@ -13,6 +13,13 @@ end_comment
 
 begin_function
 name|void
+name|invoke_copy_to_stack
+parameter_list|()
+block|{}
+end_function
+
+begin_function
+name|void
 name|invoke
 parameter_list|(
 name|void
@@ -42,24 +49,25 @@ comment|// CHECK: store i8* %3, i8** %8, align 4
 comment|// CHECK: call void asm sideeffect inteldialect
 comment|// CHECK: mov edx,dword ptr $1
 comment|// CHECK: test edx,edx
-comment|// CHECK: jz noparams
+comment|// CHECK: jz {{[^_]*}}__MSASMLABEL_.0__noparams
+comment|//             ^ Can't use {{.*}} here because the matching is greedy.
 comment|// CHECK: mov eax,edx
 comment|// CHECK: shl eax,$$3
 comment|// CHECK: sub esp,eax
 comment|// CHECK: mov ecx,esp
 comment|// CHECK: push dword ptr $0
-comment|// CHECK: call invoke_copy_to_stack
-comment|// CHECK: noparams:
-comment|// CHECK: mov ecx,dword ptr $2
+comment|// CHECK: call dword ptr $2
+comment|// CHECK: {{.*}}__MSASMLABEL_.0__noparams:
+comment|// CHECK: mov ecx,dword ptr $3
 comment|// CHECK: push ecx
 comment|// CHECK: mov edx,[ecx]
-comment|// CHECK: mov eax,dword ptr $3
+comment|// CHECK: mov eax,dword ptr $4
 comment|// CHECK: call dword ptr[edx+eax*$$4]
 comment|// CHECK: mov esp,ebp
 comment|// CHECK: pop ebp
 comment|// CHECK: ret
-comment|// CHECK: "=*m,*m,*m,*m,~{eax},~{ebp},~{ecx},~{edx},~{flags},~{esp},~{dirflag},~{fpsr},~{flags}"
-comment|// CHECK: (i8** %8, i32* %7, i8** %5, i32* %6)
+comment|// CHECK: "=*m,*m,*m,*m,*m,~{eax},~{ebp},~{ecx},~{edx},~{flags},~{esp},~{dirflag},~{fpsr},~{flags}"
+comment|// CHECK: (i8** %8, i32* %7, void (...)* bitcast (void ()* @invoke_copy_to_stack to void (...)*), i8** %5, i32* %6)
 comment|// CHECK: ret void
 asm|__asm {
 asm|mov     edx,paramCount

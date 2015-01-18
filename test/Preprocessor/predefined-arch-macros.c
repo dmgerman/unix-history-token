@@ -2256,6 +2256,262 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -march=broadwell -m32 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BROADWELL_M32
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __ADX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __AES__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __AVX2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __AVX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __BMI2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __BMI__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __F16C__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __FMA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __LZCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __MMX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __PCLMUL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __POPCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __RDRND__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __RDSEED__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __RTM__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __SSE2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __SSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __SSE4_1__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __SSE4_2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __SSE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __SSSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __corei7 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __corei7__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __i386 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __i386__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define __tune_corei7__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M32: #define i386 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -march=broadwell -m64 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BROADWELL_M64
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __ADX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __AES__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __AVX2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __AVX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __BMI2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __BMI__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __F16C__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __FMA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __LZCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __MMX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __PCLMUL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __POPCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __RDRND__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __RDSEED__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __RTM__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __SSE2_MATH__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __SSE2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __SSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __SSE4_1__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __SSE4_2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __SSE_MATH__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __SSE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __SSSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __amd64 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __amd64__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __corei7 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __corei7__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __tune_corei7__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __x86_64 1
+end_comment
+
+begin_comment
+comment|// CHECK_BROADWELL_M64: #define __x86_64__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -march=knl -m32 -E -dM %s -o - 2>&1 \
 end_comment
 
@@ -2521,6 +2777,286 @@ end_comment
 
 begin_comment
 comment|// CHECK_KNL_M64: #define __x86_64__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -march=skx -m32 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SKX_M32
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __AES__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __AVX2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __AVX512BW__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __AVX512CD__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __AVX512DQ__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __AVX512F__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __AVX512VL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __AVX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __BMI2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __BMI__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __F16C__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __FMA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __LZCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __MMX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __PCLMUL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __POPCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __RDRND__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __RTM__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __SSE2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __SSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __SSE4_1__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __SSE4_2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __SSE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __SSSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __i386 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __i386__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __skx 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __skx__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define __tune_skx__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M32: #define i386 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -march=skx -m64 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SKX_M64
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __AES__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __AVX2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __AVX512BW__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __AVX512CD__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __AVX512DQ__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __AVX512F__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __AVX512VL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __AVX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __BMI2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __BMI__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __F16C__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __FMA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __LZCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __MMX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __PCLMUL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __POPCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __RDRND__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __RTM__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __SSE2_MATH__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __SSE2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __SSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __SSE4_1__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __SSE4_2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __SSE_MATH__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __SSE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __SSSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __amd64 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __amd64__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __skx 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __skx__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __tune_skx__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __x86_64 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKX_M64: #define __x86_64__ 1
 end_comment
 
 begin_comment
@@ -4832,11 +5368,23 @@ comment|// CHECK_BTVER2_M32: #define __AVX__ 1
 end_comment
 
 begin_comment
+comment|// CHECK_BTVER2_M32: #define __BMI__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BTVER2_M32: #define __F16C__ 1
+end_comment
+
+begin_comment
 comment|// CHECK_BTVER2_M32: #define __LZCNT__ 1
 end_comment
 
 begin_comment
 comment|// CHECK_BTVER2_M32: #define __MMX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BTVER2_M32: #define __PCLMUL__ 1
 end_comment
 
 begin_comment
@@ -4924,11 +5472,23 @@ comment|// CHECK_BTVER2_M64: #define __AVX__ 1
 end_comment
 
 begin_comment
+comment|// CHECK_BTVER2_M64: #define __BMI__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BTVER2_M64: #define __F16C__ 1
+end_comment
+
+begin_comment
 comment|// CHECK_BTVER2_M64: #define __LZCNT__ 1
 end_comment
 
 begin_comment
 comment|// CHECK_BTVER2_M64: #define __MMX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BTVER2_M64: #define __PCLMUL__ 1
 end_comment
 
 begin_comment
@@ -5536,6 +6096,10 @@ comment|// CHECK_BDVER3_M32: #define __FMA__ 1
 end_comment
 
 begin_comment
+comment|// CHECK_BDVER3_M32: #define __FSGSBASE__ 1
+end_comment
+
+begin_comment
 comment|// CHECK_BDVER3_M32: #define __LZCNT__ 1
 end_comment
 
@@ -5661,6 +6225,10 @@ end_comment
 
 begin_comment
 comment|// CHECK_BDVER3_M64: #define __FMA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_BDVER3_M64: #define __FSGSBASE__ 1
 end_comment
 
 begin_comment
@@ -5808,6 +6376,10 @@ comment|// CHECK_BDVER4_M32: #define __FMA__ 1
 end_comment
 
 begin_comment
+comment|// CHECK_BDVER4_M32: #define __FSGSBASE__ 1
+end_comment
+
+begin_comment
 comment|// CHECK_BDVER4_M32: #define __LZCNT__ 1
 end_comment
 
@@ -5944,6 +6516,10 @@ comment|// CHECK_BDVER4_M64: #define __FMA__ 1
 end_comment
 
 begin_comment
+comment|// CHECK_BDVER4_M64: #define __FSGSBASE__ 1
+end_comment
+
+begin_comment
 comment|// CHECK_BDVER4_M64: #define __LZCNT__ 1
 end_comment
 
@@ -6065,6 +6641,34 @@ end_comment
 
 begin_comment
 comment|// CHECK_PPC_VSX_M64: #define __VSX__
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mpower8-vector -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target powerpc64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PPC_POWER8_VECTOR_M64
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK_PPC_POWER8_VECTOR_M64: #define __POWER8_VECTOR__
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 end_unit

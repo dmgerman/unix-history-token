@@ -19,6 +19,13 @@ begin_comment
 comment|// RUN: FileCheck %s -input-file=%t -check-prefix=CHECK-3
 end_comment
 
+begin_typedef
+typedef|typedef
+name|__INTPTR_TYPE__
+name|intptr_t
+typedef|;
+end_typedef
+
 begin_function_decl
 name|int
 name|foo
@@ -213,10 +220,10 @@ begin_function
 name|void
 name|test4
 parameter_list|(
-name|int
+name|intptr_t
 name|size
 parameter_list|,
-name|int
+name|intptr_t
 name|vla_arr
 index|[
 name|size
@@ -237,10 +244,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|// CHECK-3: test4([[INT:i.+]] {{.*}}[[SIZE:%.+]], [[INT]]*
-comment|// CHECK-3: store [[INT]] {{.*}}[[SIZE]], [[INT]]* [[SIZE_ADDR:%.+]],
+comment|// CHECK-3: test4([[INTPTR_T:i.+]] {{.*}}[[SIZE_ARG:%.+]], [[INTPTR_T]]*
+comment|// CHECK-3: store [[INTPTR_T]] {{.*}}[[SIZE_ARG]], [[INTPTR_T]]* [[SIZE_ADDR:%.+]],
+comment|// CHECK-3: [[SIZE:%.+]] = load [[INTPTR_T]]* [[SIZE_ADDR]],
 comment|// CHECK-3: [[REF:%.+]] = getelementptr inbounds
-comment|// CHECK-3: store [[INT]]* [[SIZE_ADDR]], [[INT]]** [[REF]]
+comment|// CHECK-3: store [[INTPTR_T]] [[SIZE]], [[INTPTR_T]]* [[REF]]
 comment|// CHECK-3: call void @__captured_stmt
 block|}
 end_function

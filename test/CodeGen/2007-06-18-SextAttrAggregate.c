@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 %s -o - -emit-llvm | FileCheck %s
 end_comment
 
 begin_comment
-comment|// XFAIL: aarch64, arm64
+comment|// XFAIL: aarch64, arm64, x86_64-pc-win32, x86_64-w64-mingw32
 end_comment
 
 begin_comment
@@ -17,6 +17,10 @@ end_comment
 
 begin_comment
 comment|// does any extensions and remaining bits are unspecified.
+end_comment
+
+begin_comment
+comment|// Win64 ABI does expect extensions for type smaller than 64bits.
 end_comment
 
 begin_comment

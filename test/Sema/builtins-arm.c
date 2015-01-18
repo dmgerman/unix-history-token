@@ -175,6 +175,11 @@ comment|// expected-error {{incomplete type 'void' is not assignable}}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|test3
@@ -201,10 +206,47 @@ comment|// expected-error {{argument should be a value from 0 to 15}}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function
+name|void
+name|test4
+parameter_list|()
+block|{
+name|__builtin_arm_prefetch
+argument_list|(
+literal|0
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{argument should be a value from 0 to 1}}
+name|__builtin_arm_prefetch
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{argument should be a value from 0 to 1}}
+block|}
+end_function
+
+begin_function
+name|void
+name|test5
+parameter_list|()
+block|{
+name|__builtin_arm_dbg
+argument_list|(
+literal|16
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{argument should be a value from 0 to 15}}
+block|}
+end_function
 
 end_unit
 

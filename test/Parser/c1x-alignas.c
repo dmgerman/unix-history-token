@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -std=c11 -fsyntax-only -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -pedantic -fsyntax-only %s 2>&1 | FileCheck -check-prefix=CHECK-EXT %s
+comment|// RUN: not %clang_cc1 -std=c99 -pedantic -fsyntax-only %s 2>&1 | FileCheck -check-prefix=CHECK-EXT %s
 end_comment
 
 begin_decl_stmt

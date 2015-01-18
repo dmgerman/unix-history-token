@@ -167,6 +167,23 @@ end_comment
 
 begin_function
 name|void
+name|dbg
+parameter_list|()
+block|{
+name|__builtin_arm_dbg
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: call {{.*}} @llvm.arm.dbg(i32 0)
+end_comment
+
+begin_function
+name|void
 name|test_barrier
 parameter_list|()
 block|{
@@ -209,6 +226,50 @@ argument_list|(
 name|a
 argument_list|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|prefetch
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+name|__builtin_arm_prefetch
+argument_list|(
+operator|&
+name|i
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call {{.*}} @llvm.prefetch(i8* %{{.*}}, i32 0, i32 3, i32 1)
+name|__builtin_arm_prefetch
+argument_list|(
+operator|&
+name|i
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call {{.*}} @llvm.prefetch(i8* %{{.*}}, i32 1, i32 3, i32 1)
+name|__builtin_arm_prefetch
+argument_list|(
+operator|&
+name|i
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call {{.*}} @llvm.prefetch(i8* %{{.*}}, i32 1, i32 3, i32 0)
 block|}
 end_function
 

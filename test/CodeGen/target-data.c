@@ -212,7 +212,7 @@ comment|// RUN: FileCheck %s -check-prefix=ARM-NACL
 end_comment
 
 begin_comment
-comment|// ARM-NACL: target datalayout = "e-m:e-p:32:32-i64:64-v128:64:128-n32-S128"
+comment|// ARM-NACL: target datalayout = "e-m:e-p:32:32-i64:64-v128:64:128-a:0:32-n32-S128"
 end_comment
 
 begin_comment
@@ -360,7 +360,7 @@ comment|// R600D: target datalayout = "e-p:32:32-i64:64-v16:16-v24:32-v32:32-v48
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple r600-unknown -target-cpu hawaii -o - -emit-llvm %s \
+comment|// RUN: %clang_cc1 -triple amdgcn-unknown -target-cpu hawaii -o - -emit-llvm %s \
 end_comment
 
 begin_comment
@@ -392,7 +392,7 @@ comment|// RUN: FileCheck %s -check-prefix=THUMB
 end_comment
 
 begin_comment
-comment|// THUMB: target datalayout = "e-m:e-p:32:32-i1:8:32-i8:8:32-i16:16:32-i64:64-v128:64:128-a:0:32-n32-S64"
+comment|// THUMB: target datalayout = "e-m:e-p:32:32-i64:64-v128:64:128-a:0:32-n32-S64"
 end_comment
 
 begin_comment
@@ -404,7 +404,7 @@ comment|// RUN: FileCheck %s -check-prefix=ARM
 end_comment
 
 begin_comment
-comment|// ARM: target datalayout = "e-m:e-p:32:32-i64:64-v128:64:128-n32-S64"
+comment|// ARM: target datalayout = "e-m:e-p:32:32-i64:64-v128:64:128-a:0:32-n32-S64"
 end_comment
 
 begin_comment
@@ -416,7 +416,7 @@ comment|// RUN: %s | FileCheck %s -check-prefix=THUMB-GNU
 end_comment
 
 begin_comment
-comment|// THUMB-GNU: target datalayout = "e-m:e-p:32:32-i1:8:32-i8:8:32-i16:16:32-f64:32:64-v64:32:64-v128:32:128-a:0:32-n32-S32"
+comment|// THUMB-GNU: target datalayout = "e-m:e-p:32:32-f64:32:64-v64:32:64-v128:32:128-a:0:32-n32-S32"
 end_comment
 
 begin_comment
@@ -464,7 +464,7 @@ comment|// RUN: FileCheck %s -check-prefix=MSP430
 end_comment
 
 begin_comment
-comment|// MSP430: target datalayout = "e-m:e-p:16:16-i32:16:32-n8:16"
+comment|// MSP430: target datalayout = "e-m:e-p:16:16-i32:16:32-a:16-n8:16"
 end_comment
 
 begin_comment

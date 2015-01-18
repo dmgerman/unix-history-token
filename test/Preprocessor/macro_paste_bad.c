@@ -130,5 +130,69 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|PR21379A
+parameter_list|(
+name|x
+parameter_list|)
+value|printf ##x
+end_define
+
+begin_comment
+comment|// expected-note {{macro 'PR21379A' defined here}}
+end_comment
+
+begin_macro
+name|PR21379A
+argument_list|(
+literal|0
+argument|{
+argument_list|,
+argument|}
+argument_list|)
+end_macro
+
+begin_comment
+comment|// expected-error {{too many arguments provided to function-like macro invocation}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1 {{parentheses are required around macro argument containing braced initializer list}}
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR21379B
+parameter_list|(
+name|x
+parameter_list|)
+value|printf #x
+end_define
+
+begin_comment
+comment|// expected-note {{macro 'PR21379B' defined here}}
+end_comment
+
+begin_macro
+name|PR21379B
+argument_list|(
+literal|0
+argument|{
+argument_list|,
+argument|}
+argument_list|)
+end_macro
+
+begin_comment
+comment|// expected-error {{too many arguments provided to function-like macro invocation}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1 {{parentheses are required around macro argument containing braced initializer list}}
+end_comment
+
 end_unit
 

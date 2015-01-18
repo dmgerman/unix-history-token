@@ -89,6 +89,22 @@ comment|// CHECK: call x86_thiscallcc void @f3()
 block|}
 end_function
 
+begin_function
+name|void
+name|__vectorcall
+name|f61
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define x86_vectorcallcc void @f61()
+name|f3
+argument_list|()
+expr_stmt|;
+comment|// CHECK: call x86_thiscallcc void @f3()
+block|}
+end_function
+
 begin_comment
 comment|// PR5280
 end_comment
@@ -183,6 +199,21 @@ name|f6
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+function_decl|(
+name|__vectorcall
+modifier|*
+name|pf7
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+init|=
+name|f61
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|main
@@ -199,9 +230,13 @@ expr_stmt|;
 name|f6
 argument_list|()
 expr_stmt|;
+name|f61
+argument_list|()
+expr_stmt|;
 comment|// CHECK: call x86_fastcallcc void @f4()
 comment|// CHECK: call x86_stdcallcc void @f5()
 comment|// CHECK: call x86_thiscallcc void @f6()
+comment|// CHECK: call x86_vectorcallcc void @f61()
 name|pf1
 argument_list|()
 expr_stmt|;
@@ -220,12 +255,16 @@ expr_stmt|;
 name|pf6
 argument_list|()
 expr_stmt|;
+name|pf7
+argument_list|()
+expr_stmt|;
 comment|// CHECK: call x86_fastcallcc void %{{.*}}()
 comment|// CHECK: call x86_stdcallcc void %{{.*}}()
 comment|// CHECK: call x86_thiscallcc void %{{.*}}()
 comment|// CHECK: call x86_fastcallcc void %{{.*}}()
 comment|// CHECK: call x86_stdcallcc void %{{.*}}()
 comment|// CHECK: call x86_thiscallcc void %{{.*}}()
+comment|// CHECK: call x86_vectorcallcc void %{{.*}}()
 return|return
 literal|0
 return|;

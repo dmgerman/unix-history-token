@@ -68,43 +68,43 @@ comment|// CHECK: !llvm.module.flags = !{{{.*}}}
 end_comment
 
 begin_comment
-comment|// CHECK: !{{[0-9]+}} = metadata !{i32 6, metadata !"Linker Options", metadata ![[link_opts:[0-9]+]]}
+comment|// CHECK: !{{[0-9]+}} = !{i32 6, !"Linker Options", ![[link_opts:[0-9]+]]}
 end_comment
 
 begin_comment
-comment|// CHECK: ![[link_opts]] = metadata !{metadata ![[msvcrt:[0-9]+]], metadata ![[kernel32:[0-9]+]], metadata ![[USER32:[0-9]+]], metadata ![[bar:[0-9]+]]}
+comment|// CHECK: ![[link_opts]] = !{![[msvcrt:[0-9]+]], ![[kernel32:[0-9]+]], ![[USER32:[0-9]+]], ![[bar:[0-9]+]]}
 end_comment
 
 begin_comment
-comment|// CHECK: ![[msvcrt]] = metadata !{metadata !"/DEFAULTLIB:msvcrt.lib"}
+comment|// CHECK: ![[msvcrt]] = !{!"/DEFAULTLIB:msvcrt.lib"}
 end_comment
 
 begin_comment
-comment|// CHECK: ![[kernel32]] = metadata !{metadata !"/DEFAULTLIB:kernel32.lib"}
+comment|// CHECK: ![[kernel32]] = !{!"/DEFAULTLIB:kernel32.lib"}
 end_comment
 
 begin_comment
-comment|// CHECK: ![[USER32]] = metadata !{metadata !"/DEFAULTLIB:USER32.LIB"}
+comment|// CHECK: ![[USER32]] = !{!"/DEFAULTLIB:USER32.LIB"}
 end_comment
 
 begin_comment
-comment|// CHECK: ![[bar]] = metadata !{metadata !" /bar=2"}
+comment|// CHECK: ![[bar]] = !{!" /bar=2"}
 end_comment
 
 begin_comment
-comment|// LINUX: metadata !{metadata !"-lmsvcrt.lib"}
+comment|// LINUX: !{!"-lmsvcrt.lib"}
 end_comment
 
 begin_comment
-comment|// LINUX: metadata !{metadata !"-lkernel32"}
+comment|// LINUX: !{!"-lkernel32"}
 end_comment
 
 begin_comment
-comment|// LINUX: metadata !{metadata !"-lUSER32.LIB"}
+comment|// LINUX: !{!"-lUSER32.LIB"}
 end_comment
 
 begin_comment
-comment|// LINUX: metadata !{metadata !" /bar=2"}
+comment|// LINUX: !{!" /bar=2"}
 end_comment
 
 end_unit

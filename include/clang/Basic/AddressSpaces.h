@@ -93,6 +93,8 @@ name|opencl_local
 block|,
 name|opencl_constant
 block|,
+name|opencl_generic
+block|,
 name|cuda_device
 block|,
 name|cuda_constant

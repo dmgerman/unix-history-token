@@ -28,10 +28,6 @@ comment|// RUN: %clang -target arm64 -mlittle-endian -### -c %s 2>&1 | FileCheck
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm64_be -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-GENERIC %s
-end_comment
-
-begin_comment
 comment|// ARM64-GENERIC: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "generic"
 end_comment
 
@@ -76,19 +72,11 @@ comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu=cortex-a53 -### -c %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm64_be -mlittle-endian -mcpu=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA53 %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang -target arm64 -mtune=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA53 %s
 end_comment
 
 begin_comment
 comment|// RUN: %clang -target arm64 -mlittle-endian -mtune=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA53 %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64_be -mlittle-endian -mtune=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA53 %s
 end_comment
 
 begin_comment
@@ -132,19 +120,11 @@ comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu=cortex-a57 -### -c %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm64_be -mlittle-endian -mcpu=cortex-a57 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA57 %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang -target arm64 -mtune=cortex-a57 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA57 %s
 end_comment
 
 begin_comment
 comment|// RUN: %clang -target arm64 -mlittle-endian -mtune=cortex-a57 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA57 %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64_be -mlittle-endian -mtune=cortex-a57 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA57 %s
 end_comment
 
 begin_comment
@@ -165,22 +145,6 @@ end_comment
 
 begin_comment
 comment|// GENERIC-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "generic"
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64_be -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-GENERIC-BE %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64 -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-GENERIC-BE %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64_be -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-GENERIC-BE %s
-end_comment
-
-begin_comment
-comment|// ARM64-GENERIC-BE: "-cc1"{{.*}} "-triple" "arm64_be{{.*}}" "-target-cpu" "generic"
 end_comment
 
 begin_comment
@@ -212,34 +176,6 @@ comment|// CA53-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "cor
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm64_be -mcpu=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA53-BE %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64 -mbig-endian -mcpu=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA53-BE %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64_be -mbig-endian -mcpu=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA53-BE %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64_be -mtune=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA53-BE %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64 -mbig-endian -mtune=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA53-BE %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64_be -mbig-endian -mtune=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA53-BE %s
-end_comment
-
-begin_comment
-comment|// ARM64-CA53-BE: "-cc1"{{.*}} "-triple" "arm64_be{{.*}}" "-target-cpu" "cortex-a53"
-end_comment
-
-begin_comment
 comment|// RUN: %clang -target aarch64_be -mcpu=cortex-a57 -### -c %s 2>&1 | FileCheck -check-prefix=CA57-BE %s
 end_comment
 
@@ -265,34 +201,6 @@ end_comment
 
 begin_comment
 comment|// CA57-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "cortex-a57"
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64_be -mcpu=cortex-a57 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA57-BE %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64 -mbig-endian -mcpu=cortex-a57 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA57-BE %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64_be -mbig-endian -mcpu=cortex-a57 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA57-BE %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64_be -mtune=cortex-a57 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA57-BE %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64 -mbig-endian -mtune=cortex-a57 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA57-BE %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target arm64_be -mbig-endian -mtune=cortex-a57 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CA57-BE %s
-end_comment
-
-begin_comment
-comment|// ARM64-CA57-BE: "-cc1"{{.*}} "-triple" "arm64_be{{.*}}" "-target-cpu" "cortex-a57"
 end_comment
 
 begin_comment

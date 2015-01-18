@@ -215,6 +215,54 @@ operator|++
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{multiple unsequenced modifications}}
+operator|++
+name|a
+operator|+
+name|f
+argument_list|(
+operator|++
+name|a
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{multiple unsequenced modifications}}
+name|f
+argument_list|(
+operator|++
+name|a
+argument_list|,
+literal|0
+argument_list|)
+operator|+
+operator|++
+name|a
+expr_stmt|;
+comment|// expected-warning {{multiple unsequenced modifications}}
+name|a
+operator|++
+operator|+
+name|f
+argument_list|(
+name|a
+operator|++
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{multiple unsequenced modifications}}
+name|f
+argument_list|(
+name|a
+operator|++
+argument_list|,
+literal|0
+argument_list|)
+operator|+
+name|a
+operator|++
+expr_stmt|;
+comment|// expected-warning {{multiple unsequenced modifications}}
 name|a
 operator|=
 operator|++
@@ -409,7 +457,7 @@ operator|)
 operator|+
 name|a
 expr_stmt|;
-comment|// FIXME: warn here
+comment|// expected-warning {{unsequenced modification and access}}
 comment|// Here, the read of the fourth 'a' might happen before or after the write to
 comment|// the second 'a'.
 name|a
@@ -650,7 +698,40 @@ operator|+
 operator|++
 name|a
 expr_stmt|;
-comment|// FIXME: warn here
+comment|// expected-warning {{multiple unsequenced modifications}}
+generic_selection|_Generic(
+operator|++
+name|a
+generic_selection|,
+type|default
+association|:
+literal|0
+generic_selection|)
+operator|+
+operator|++
+name|a
+expr_stmt|;
+comment|// ok
+sizeof|sizeof
+argument_list|(
+operator|++
+name|a
+argument_list|)
+operator|+
+operator|++
+name|a
+expr_stmt|;
+comment|// ok
+alignof|_Alignof
+argument_list|(
+operator|++
+name|a
+argument_list|)
+operator|+
+operator|++
+name|a
+expr_stmt|;
+comment|// expected-warning {{extension}}
 block|}
 end_function
 

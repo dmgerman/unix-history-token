@@ -7277,6 +7277,14 @@ begin_comment
 comment|// CHECK-LABEL: test_vcombine_s8
 end_comment
 
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
 begin_function
 name|int8x16_t
 name|test_vcombine_s8
@@ -7301,6 +7309,14 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: test_vcombine_s16
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
 end_comment
 
 begin_function
@@ -7329,6 +7345,14 @@ begin_comment
 comment|// CHECK-LABEL: test_vcombine_s32
 end_comment
 
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
 begin_function
 name|int32x4_t
 name|test_vcombine_s32
@@ -7353,6 +7377,14 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: test_vcombine_s64
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
 end_comment
 
 begin_function
@@ -7381,6 +7413,14 @@ begin_comment
 comment|// CHECK-LABEL: test_vcombine_f16
 end_comment
 
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
 begin_function
 name|float16x8_t
 name|test_vcombine_f16
@@ -7405,6 +7445,14 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: test_vcombine_f32
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
 end_comment
 
 begin_function
@@ -7433,6 +7481,14 @@ begin_comment
 comment|// CHECK-LABEL: test_vcombine_u8
 end_comment
 
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
 begin_function
 name|uint8x16_t
 name|test_vcombine_u8
@@ -7457,6 +7513,14 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: test_vcombine_u16
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
 end_comment
 
 begin_function
@@ -7485,6 +7549,14 @@ begin_comment
 comment|// CHECK-LABEL: test_vcombine_u32
 end_comment
 
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
 begin_function
 name|uint32x4_t
 name|test_vcombine_u32
@@ -7509,6 +7581,14 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: test_vcombine_u64
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
 end_comment
 
 begin_function
@@ -7537,6 +7617,14 @@ begin_comment
 comment|// CHECK-LABEL: test_vcombine_p8
 end_comment
 
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
 begin_function
 name|poly8x16_t
 name|test_vcombine_p8
@@ -7561,6 +7649,14 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: test_vcombine_p16
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
+end_comment
+
+begin_comment
+comment|// CHECK: vmov d{{[0-9]+}}, r{{[0-9]+}}, r{{[0-9]+}}
 end_comment
 
 begin_function
@@ -7589,6 +7685,14 @@ begin_comment
 comment|// CHECK-LABEL: test_vcreate_s8
 end_comment
 
+begin_comment
+comment|// CHECK: vmov [[REG:d[0-9]+]], r0, r1
+end_comment
+
+begin_comment
+comment|// CHECK: vclz.i8 d{{[0-9]+}}, [[REG]]
+end_comment
+
 begin_function
 name|int8x8_t
 name|test_vcreate_s8
@@ -7598,9 +7702,12 @@ name|a
 parameter_list|)
 block|{
 return|return
+name|vclz_s8
+argument_list|(
 name|vcreate_s8
 argument_list|(
 name|a
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -7608,6 +7715,14 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: test_vcreate_s16
+end_comment
+
+begin_comment
+comment|// CHECK: vmov [[REG:d[0-9]+]], r0, r1
+end_comment
+
+begin_comment
+comment|// CHECK: vclz.i16 d{{[0-9]+}}, [[REG]]
 end_comment
 
 begin_function
@@ -7619,9 +7734,12 @@ name|a
 parameter_list|)
 block|{
 return|return
+name|vclz_s16
+argument_list|(
 name|vcreate_s16
 argument_list|(
 name|a
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -7629,6 +7747,14 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: test_vcreate_s32
+end_comment
+
+begin_comment
+comment|// CHECK: vmov [[REG:d[0-9]+]], r0, r1
+end_comment
+
+begin_comment
+comment|// CHECK: vclz.i32 d{{[0-9]+}}, [[REG]]
 end_comment
 
 begin_function
@@ -7640,9 +7766,12 @@ name|a
 parameter_list|)
 block|{
 return|return
+name|vclz_s32
+argument_list|(
 name|vcreate_s32
 argument_list|(
 name|a
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -7694,6 +7823,14 @@ begin_comment
 comment|// CHECK-LABEL: test_vcreate_u8
 end_comment
 
+begin_comment
+comment|// CHECK: vmov [[REG:d[0-9]+]], r0, r1
+end_comment
+
+begin_comment
+comment|// CHECK: vclz.i8 d{{[0-9]+}}, [[REG]]
+end_comment
+
 begin_function
 name|uint8x8_t
 name|test_vcreate_u8
@@ -7703,9 +7840,12 @@ name|a
 parameter_list|)
 block|{
 return|return
+name|vclz_s8
+argument_list|(
 name|vcreate_u8
 argument_list|(
 name|a
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -7713,6 +7853,14 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: test_vcreate_u16
+end_comment
+
+begin_comment
+comment|// CHECK: vmov [[REG:d[0-9]+]], r0, r1
+end_comment
+
+begin_comment
+comment|// CHECK: vclz.i16 d{{[0-9]+}}, [[REG]]
 end_comment
 
 begin_function
@@ -7724,9 +7872,12 @@ name|a
 parameter_list|)
 block|{
 return|return
+name|vclz_s16
+argument_list|(
 name|vcreate_u16
 argument_list|(
 name|a
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -7734,6 +7885,14 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: test_vcreate_u32
+end_comment
+
+begin_comment
+comment|// CHECK: vmov [[REG:d[0-9]+]], r0, r1
+end_comment
+
+begin_comment
+comment|// CHECK: vclz.i32 d{{[0-9]+}}, [[REG]]
 end_comment
 
 begin_function
@@ -7745,16 +7904,39 @@ name|a
 parameter_list|)
 block|{
 return|return
+name|vclz_s32
+argument_list|(
 name|vcreate_u32
 argument_list|(
 name|a
+argument_list|)
 argument_list|)
 return|;
 block|}
 end_function
 
 begin_comment
+comment|// We have two ways of lowering that.  Either with one 'vmov d, r, r' or
+end_comment
+
+begin_comment
+comment|// with two 'vmov d[],r'.  LLVM does the latter. We may want to be less
+end_comment
+
+begin_comment
+comment|// strict about the matching pattern if it starts causing problem.
+end_comment
+
+begin_comment
 comment|// CHECK-LABEL: test_vcreate_u64
+end_comment
+
+begin_comment
+comment|// CHECK: vmov.32 [[REG:d[0-9]+]][0], r0
+end_comment
+
+begin_comment
+comment|// CHECK: vmov.32 [[REG]][1], r1
 end_comment
 
 begin_function
@@ -7765,10 +7947,20 @@ name|uint64_t
 name|a
 parameter_list|)
 block|{
-return|return
+name|uint64x1_t
+name|tmp
+init|=
 name|vcreate_u64
 argument_list|(
 name|a
+argument_list|)
+decl_stmt|;
+return|return
+name|vadd_u64
+argument_list|(
+name|tmp
+argument_list|,
+name|tmp
 argument_list|)
 return|;
 block|}
@@ -7776,6 +7968,14 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: test_vcreate_p8
+end_comment
+
+begin_comment
+comment|// CHECK: vmov [[REG:d[0-9]+]], r0, r1
+end_comment
+
+begin_comment
+comment|// CHECK: vcnt.8 d{{[0-9]+}}, [[REG]]
 end_comment
 
 begin_function
@@ -7787,9 +7987,12 @@ name|a
 parameter_list|)
 block|{
 return|return
+name|vcnt_p8
+argument_list|(
 name|vcreate_p8
 argument_list|(
 name|a
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -7797,6 +8000,10 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: test_vcreate_p16
+end_comment
+
+begin_comment
+comment|// CHECK: vmov [[REG:d[0-9]+]], r0, r1
 end_comment
 
 begin_function
@@ -7807,10 +8014,22 @@ name|uint64_t
 name|a
 parameter_list|)
 block|{
-return|return
+name|poly16x4_t
+name|tmp
+init|=
 name|vcreate_p16
 argument_list|(
 name|a
+argument_list|)
+decl_stmt|;
+return|return
+name|vbsl_p16
+argument_list|(
+name|tmp
+argument_list|,
+name|tmp
+argument_list|,
+name|tmp
 argument_list|)
 return|;
 block|}
@@ -7818,6 +8037,14 @@ end_function
 
 begin_comment
 comment|// CHECK-LABEL: test_vcreate_s64
+end_comment
+
+begin_comment
+comment|// CHECK: vmov.32 [[REG:d[0-9]+]][0], r0
+end_comment
+
+begin_comment
+comment|// CHECK: vmov.32 [[REG]][1], r1
 end_comment
 
 begin_function
@@ -7828,10 +8055,20 @@ name|uint64_t
 name|a
 parameter_list|)
 block|{
-return|return
+name|int64x1_t
+name|tmp
+init|=
 name|vcreate_s64
 argument_list|(
 name|a
+argument_list|)
+decl_stmt|;
+return|return
+name|vadd_s64
+argument_list|(
+name|tmp
+argument_list|,
+name|tmp
 argument_list|)
 return|;
 block|}
@@ -8944,7 +9181,7 @@ comment|// CHECK-LABEL: test_vdup_n_u32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: mov
 end_comment
 
 begin_function
@@ -9019,7 +9256,7 @@ comment|// CHECK-LABEL: test_vdup_n_s32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: mov
 end_comment
 
 begin_function
@@ -9121,7 +9358,7 @@ comment|// CHECK-LABEL: test_vdup_n_f32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: mov
 end_comment
 
 begin_function
@@ -9409,10 +9646,20 @@ name|int64_t
 name|a
 parameter_list|)
 block|{
-return|return
+name|int64x1_t
+name|tmp
+init|=
 name|vdup_n_s64
 argument_list|(
 name|a
+argument_list|)
+decl_stmt|;
+return|return
+name|vadd_s64
+argument_list|(
+name|tmp
+argument_list|,
+name|tmp
 argument_list|)
 return|;
 block|}
@@ -9434,10 +9681,20 @@ name|uint64_t
 name|a
 parameter_list|)
 block|{
-return|return
+name|int64x1_t
+name|tmp
+init|=
 name|vdup_n_u64
 argument_list|(
 name|a
+argument_list|)
+decl_stmt|;
+return|return
+name|vadd_s64
+argument_list|(
+name|tmp
+argument_list|,
+name|tmp
 argument_list|)
 return|;
 block|}
@@ -9459,10 +9716,20 @@ name|int64_t
 name|a
 parameter_list|)
 block|{
-return|return
+name|int64x2_t
+name|tmp
+init|=
 name|vdupq_n_s64
 argument_list|(
 name|a
+argument_list|)
+decl_stmt|;
+return|return
+name|vaddq_s64
+argument_list|(
+name|tmp
+argument_list|,
+name|tmp
 argument_list|)
 return|;
 block|}
@@ -9484,10 +9751,20 @@ name|uint64_t
 name|a
 parameter_list|)
 block|{
-return|return
+name|int64x2_t
+name|tmp
+init|=
 name|vdupq_n_u64
 argument_list|(
 name|a
+argument_list|)
+decl_stmt|;
+return|return
+name|vaddq_u64
+argument_list|(
+name|tmp
+argument_list|,
+name|tmp
 argument_list|)
 return|;
 block|}
@@ -11050,7 +11327,7 @@ comment|// CHECK-LABEL: test_vget_lane_u32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: mov
 end_comment
 
 begin_function
@@ -11131,7 +11408,7 @@ comment|// CHECK-LABEL: test_vget_lane_s32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: mov
 end_comment
 
 begin_function
@@ -11482,7 +11759,7 @@ comment|// CHECK-LABEL: test_vget_lane_s64
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// The optimizer is able to remove all moves now.
 end_comment
 
 begin_function
@@ -11509,7 +11786,7 @@ comment|// CHECK-LABEL: test_vget_lane_u64
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// The optimizer is able to remove all moves now.
 end_comment
 
 begin_function
@@ -23818,7 +24095,7 @@ comment|// CHECK-LABEL: test_vmov_n_u8
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -23843,7 +24120,7 @@ comment|// CHECK-LABEL: test_vmov_n_u16
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -23868,7 +24145,7 @@ comment|// CHECK-LABEL: test_vmov_n_u32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: mov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -23893,7 +24170,7 @@ comment|// CHECK-LABEL: test_vmov_n_s8
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -23918,7 +24195,7 @@ comment|// CHECK-LABEL: test_vmov_n_s16
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -23943,7 +24220,7 @@ comment|// CHECK-LABEL: test_vmov_n_s32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: mov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -23968,7 +24245,7 @@ comment|// CHECK-LABEL: test_vmov_n_p8
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -23993,7 +24270,7 @@ comment|// CHECK-LABEL: test_vmov_n_p16
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -24045,7 +24322,7 @@ comment|// CHECK-LABEL: test_vmov_n_f32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: mov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -24070,7 +24347,7 @@ comment|// CHECK-LABEL: test_vmovq_n_u8
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -24095,7 +24372,7 @@ comment|// CHECK-LABEL: test_vmovq_n_u16
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -24120,7 +24397,7 @@ comment|// CHECK-LABEL: test_vmovq_n_u32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -24145,7 +24422,7 @@ comment|// CHECK-LABEL: test_vmovq_n_s8
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -24170,7 +24447,7 @@ comment|// CHECK-LABEL: test_vmovq_n_s16
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -24195,7 +24472,7 @@ comment|// CHECK-LABEL: test_vmovq_n_s32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -24220,7 +24497,7 @@ comment|// CHECK-LABEL: test_vmovq_n_p8
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -24245,7 +24522,7 @@ comment|// CHECK-LABEL: test_vmovq_n_p16
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -24297,7 +24574,7 @@ comment|// CHECK-LABEL: test_vmovq_n_f32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -24322,7 +24599,11 @@ comment|// CHECK-LABEL: test_vmov_n_s64
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov.32 [[REG:d[0-9]+]][0], r0
+end_comment
+
+begin_comment
+comment|// CHECK: vmov.32 [[REG]][1], r1
 end_comment
 
 begin_function
@@ -24333,10 +24614,20 @@ name|int64_t
 name|a
 parameter_list|)
 block|{
-return|return
+name|int64x1_t
+name|tmp
+init|=
 name|vmov_n_s64
 argument_list|(
 name|a
+argument_list|)
+decl_stmt|;
+return|return
+name|vadd_s64
+argument_list|(
+name|tmp
+argument_list|,
+name|tmp
 argument_list|)
 return|;
 block|}
@@ -24347,7 +24638,11 @@ comment|// CHECK-LABEL: test_vmov_n_u64
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov.32 [[REG:d[0-9]+]][0], r0
+end_comment
+
+begin_comment
+comment|// CHECK: vmov.32 [[REG]][1], r1
 end_comment
 
 begin_function
@@ -24358,10 +24653,20 @@ name|uint64_t
 name|a
 parameter_list|)
 block|{
-return|return
+name|uint64x1_t
+name|tmp
+init|=
 name|vmov_n_u64
 argument_list|(
 name|a
+argument_list|)
+decl_stmt|;
+return|return
+name|vadd_u64
+argument_list|(
+name|tmp
+argument_list|,
+name|tmp
 argument_list|)
 return|;
 block|}
@@ -24372,7 +24677,7 @@ comment|// CHECK-LABEL: test_vmovq_n_s64
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -24397,7 +24702,7 @@ comment|// CHECK-LABEL: test_vmovq_n_u64
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: vmov {{r[0-9]+}}
 end_comment
 
 begin_function
@@ -42841,7 +43146,7 @@ comment|// CHECK-LABEL: test_vset_lane_u32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: mov
 end_comment
 
 begin_function
@@ -42937,7 +43242,7 @@ comment|// CHECK-LABEL: test_vset_lane_s32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: mov
 end_comment
 
 begin_function
@@ -43033,7 +43338,7 @@ comment|// CHECK-LABEL: test_vset_lane_f32
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// CHECK: mov
 end_comment
 
 begin_function
@@ -43353,7 +43658,7 @@ comment|// CHECK-LABEL: test_vset_lane_s64
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// The optimizer is able to get rid of all moves now.
 end_comment
 
 begin_function
@@ -43385,7 +43690,7 @@ comment|// CHECK-LABEL: test_vset_lane_u64
 end_comment
 
 begin_comment
-comment|// CHECK: vmov
+comment|// The optimizer is able to get rid of all moves now.
 end_comment
 
 begin_function

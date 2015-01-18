@@ -68,6 +68,38 @@ comment|// ASAN: "{{.*}}cl-link{{.*}}.obj"
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl /MD /Tc%s -### -fsanitize=address 2>&1 | FileCheck --check-prefix=ASAN-MD %s
+end_comment
+
+begin_comment
+comment|// ASAN-MD: link.exe
+end_comment
+
+begin_comment
+comment|// ASAN-MD: "-debug"
+end_comment
+
+begin_comment
+comment|// ASAN-MD: "-incremental:no"
+end_comment
+
+begin_comment
+comment|// ASAN-MD: "{{.*}}clang_rt.asan_dynamic-i386.lib"
+end_comment
+
+begin_comment
+comment|// ASAN-MD: "{{.*}}clang_rt.asan_dynamic_runtime_thunk-i386.lib"
+end_comment
+
+begin_comment
+comment|// ASAN-MD: "-include:___asan_seh_interceptor"
+end_comment
+
+begin_comment
+comment|// ASAN-MD: "{{.*}}cl-link{{.*}}.obj"
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl /LD -### /Tc%s 2>&1 | FileCheck --check-prefix=DLL %s
 end_comment
 

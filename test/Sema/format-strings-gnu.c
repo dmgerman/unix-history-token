@@ -8,11 +8,11 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple thumbv6-apple-ios4.0 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple x86_64-mingw32 %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple x86_64-mingw32 -DMS %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple i686-pc-win32 %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple i686-pc-win32 -DMS %s
 end_comment
 
 begin_comment
@@ -89,6 +89,19 @@ comment|// expected-warning@-4 {{length modifier 'L' results in undefined behavi
 comment|// expected-note@-5 {{did you mean to use 'll'?}}
 comment|// expected-warning@-6 {{length modifier 'L' results in undefined behavior or no effect with 'd' conversion specifier}}
 comment|// expected-note@-7 {{did you mean to use 'll'?}}
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|MS
+name|printf
+argument_list|(
+literal|"%Z\n"
+argument_list|,
+name|quiteLong
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{invalid conversion specifier 'Z'}}
 endif|#
 directive|endif
 block|}

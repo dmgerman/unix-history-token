@@ -52,22 +52,6 @@ comment|// CHECK: "-Wall" "-Wdocumentation"
 end_comment
 
 begin_comment
-comment|// CHECK: "-o" "{{[^"]+}}.s"
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// gnu-as
-end_comment
-
-begin_comment
-comment|// CHECK: as{{[^"]*}}"
-end_comment
-
-begin_comment
 comment|// CHECK: "-o" "{{[^"]+}}.o"
 end_comment
 

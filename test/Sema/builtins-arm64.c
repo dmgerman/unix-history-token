@@ -117,5 +117,69 @@ comment|// expected-error {{argument should be a value from 0 to 15}}
 block|}
 end_function
 
+begin_function
+name|void
+name|test_prefetch
+parameter_list|()
+block|{
+name|__builtin_arm_prefetch
+argument_list|(
+literal|0
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{argument should be a value from 0 to 1}}
+name|__builtin_arm_prefetch
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|3
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{argument should be a value from 0 to 2}}
+name|__builtin_arm_prefetch
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{argument should be a value from 0 to 1}}
+name|__builtin_arm_prefetch
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{argument should be a value from 0 to 1}}
+block|}
+end_function
+
 end_unit
 

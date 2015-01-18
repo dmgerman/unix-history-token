@@ -60,15 +60,19 @@ comment|// COMPILE-AST-PHASES: , ast
 end_comment
 
 begin_comment
-comment|// COMPILE-AST-PHASES: 1: compiler, {0}, assembler
+comment|// COMPILE-AST-PHASES: 1: compiler, {0}, ir
 end_comment
 
 begin_comment
-comment|// COMPILE-AST-PHASES: 2: assembler, {1}, object
+comment|// COMPILE-AST-PHASES: 2: backend, {1}, assembler
 end_comment
 
 begin_comment
-comment|// COMPILE-AST-PHASES-NOT: 3:
+comment|// COMPILE-AST-PHASES: 3: assembler, {2}, object
+end_comment
+
+begin_comment
+comment|// COMPILE-AST-PHASES-NOT: 4:
 end_comment
 
 begin_comment

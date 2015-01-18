@@ -20,7 +20,7 @@ comment|// RUN: %clang_cc1 -triple arm64-linux-gnu -ffreestanding -emit-llvm -w 
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck --check-prefix=CHECK64-AAPCS %s
+comment|// RUN:   | FileCheck --check-prefix=CHECK64 %s
 end_comment
 
 begin_typedef
@@ -107,7 +107,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: declare arm_aapcs_vfpcc void @takes_union_with_first_floats({ [4 x i32] })
+comment|// CHECK: declare arm_aapcs_vfpcc void @takes_union_with_first_floats([4 x i32])
 end_comment
 
 begin_function
@@ -197,7 +197,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: declare arm_aapcs_vfpcc void @takes_union_with_non_first_floats({ [4 x i32] })
+comment|// CHECK: declare arm_aapcs_vfpcc void @takes_union_with_non_first_floats([4 x i32])
 end_comment
 
 begin_function
@@ -281,7 +281,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: declare arm_aapcs_vfpcc void @takes_struct_with_union_with_first_floats({ [5 x i32] })
+comment|// CHECK: declare arm_aapcs_vfpcc void @takes_struct_with_union_with_first_floats([5 x i32])
 end_comment
 
 begin_function
@@ -365,7 +365,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: declare arm_aapcs_vfpcc void @takes_struct_with_union_with_non_first_floats({ [5 x i32] })
+comment|// CHECK: declare arm_aapcs_vfpcc void @takes_struct_with_union_with_non_first_floats([5 x i32])
 end_comment
 
 begin_function
@@ -769,9 +769,7 @@ block|{
 comment|// CHECK: test_struct_of_four_doubles
 comment|// CHECK: call arm_aapcs_vfpcc void @takes_struct_of_four_doubles(double {{.*}}, %struct.struct_of_four_doubles {{.*}}, %struct.struct_of_four_doubles {{.*}}, double {{.*}})
 comment|// CHECK64: test_struct_of_four_doubles
-comment|// CHECK64: call void @takes_struct_of_four_doubles(double {{.*}}, double {{.*}}, double {{.*}}, double {{.*}}, double {{.*}}, [3 x float] undef, double {{.*}}, double {{.*}}, double {{.*}}, double {{.*}}, double {{.*}})
-comment|// CHECK64-AAPCS: test_struct_of_four_doubles
-comment|// CHECK64-AAPCS: call void @takes_struct_of_four_doubles(double {{.*}}, double {{.*}}, double {{.*}}, double {{.*}}, double {{.*}}, [3 x float] undef, double {{.*}}, double {{.*}}, double {{.*}}, double {{.*}})
+comment|// CHECK64: call void @takes_struct_of_four_doubles(double {{.*}}, [4 x double] {{.*}}, [4 x double] {{.*}}, double {{.*}})
 name|takes_struct_of_four_doubles
 argument_list|(
 literal|3.0
@@ -816,7 +814,7 @@ name|void
 parameter_list|)
 block|{
 comment|// CHECK: test_struct_of_four_doubles_variadic
-comment|// CHECK: call arm_aapcs_vfpcc void (double, { [4 x i64] }, { [4 x i64] }, double, ...)* @takes_struct_of_four_doubles_variadic(double {{.*}}, { [4 x i64] } {{.*}}, { [4 x i64] } {{.*}}, double {{.*}})
+comment|// CHECK: call arm_aapcs_vfpcc void (double, [4 x i64], [4 x i64], double, ...)* @takes_struct_of_four_doubles_variadic(double {{.*}}, [4 x i64] {{.*}}, [4 x i64] {{.*}}, double {{.*}})
 name|takes_struct_of_four_doubles_variadic
 argument_list|(
 literal|3.0
@@ -967,9 +965,7 @@ block|{
 comment|// CHECK: test_struct_of_vecs
 comment|// CHECK: call arm_aapcs_vfpcc void @takes_struct_of_vecs(double {{.*}}, %struct.struct_of_vecs {{.*}}, %struct.struct_of_vecs {{.*}}, double {{.*}})
 comment|// CHECK64: test_struct_of_vecs
-comment|// CHECK64: call void @takes_struct_of_vecs(double {{.*}},<8 x i8> {{.*}},<4 x i16> {{.*}},<8 x i8> {{.*}},<4 x i16> {{.*}}, [3 x float] undef,<8 x i8> {{.*}},<4 x i16> {{.*}},<8 x i8> {{.*}},<4 x i16> {{.*}}, double {{.*}})
-comment|// CHECK64-AAPCS: test_struct_of_vecs
-comment|// CHECK64-AAPCS: call void @takes_struct_of_vecs(double {{.*}},<8 x i8> {{.*}},<4 x i16> {{.*}},<8 x i8> {{.*}},<4 x i16> {{.*}}, [3 x float] undef,<8 x i8> {{.*}},<4 x i16> {{.*}},<8 x i8> {{.*}},<4 x i16> {{.*}}, double {{.*}})
+comment|// CHECK64: call void @takes_struct_of_vecs(double {{.*}}, [4 x<8 x i8>] {{.*}}, [4 x<8 x i8>] {{.*}}, double {{.*}})
 name|takes_struct_of_vecs
 argument_list|(
 literal|3.0

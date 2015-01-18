@@ -131,5 +131,33 @@ begin_comment
 comment|// REQUIRES: shell-preserves-root
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This test will fail with MSYS env.exe, since it does not preserve root,
+end_comment
+
+begin_comment
+comment|// expanding / into C:/MINGW/MSYS/1.0. To see the problem, from cmd.exe run:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   env SDKROOT=/ cmd //c echo %SDKROOT%
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This test passes using env.exe from GnuWin32.
+end_comment
+
 end_unit
 

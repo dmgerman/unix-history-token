@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_DIAGNOSTIC_H
+name|LLVM_CLANG_BASIC_DIAGNOSTIC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_DIAGNOSTIC_H
+name|LLVM_CLANG_BASIC_DIAGNOSTIC_H
 end_define
 
 begin_include
@@ -629,9 +629,14 @@ name|DiagnosticConsumer
 modifier|*
 name|Client
 decl_stmt|;
-name|bool
-name|OwnsDiagClient
-decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DiagnosticConsumer
+operator|>
+name|Owner
+expr_stmt|;
 name|SourceManager
 modifier|*
 name|SourceMgr
@@ -1134,16 +1139,6 @@ begin_comment
 comment|///< Number of errors reported
 end_comment
 
-begin_decl_stmt
-name|unsigned
-name|NumErrorsSuppressed
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|///< Number of errors suppressed
-end_comment
-
 begin_comment
 comment|/// \brief A function pointer that converts an opaque diagnostic
 end_comment
@@ -1476,7 +1471,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|OwnsDiagClient
+name|Owner
+operator|!=
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -1489,21 +1486,26 @@ begin_comment
 comment|/// client.
 end_comment
 
-begin_function
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DiagnosticConsumer
-modifier|*
+operator|>
 name|takeClient
-parameter_list|()
+argument_list|()
 block|{
-name|OwnsDiagClient
-operator|=
-name|false
-expr_stmt|;
 return|return
-name|Client
+name|std
+operator|::
+name|move
+argument_list|(
+name|Owner
+argument_list|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_expr_stmt
 name|bool

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple arm64-linux-gnu -target-feature +neon -target-abi aapcs -ffreestanding -emit-llvm -w -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple aarch64-linux-gnu -target-feature +neon -target-abi aapcs -ffreestanding -fallow-half-arguments-and-returns -emit-llvm -w -o - %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -91,7 +91,7 @@ comment|// first:
 end_comment
 
 begin_comment
-comment|// CHECK: void @test3(float %s0_s3.0, float %s0_s3.1, float %s0_s3.2, float %s0_s3.3, float %s4, [3 x float], [2 x double] %sp.coerce, [2 x double] %sp16.coerce)
+comment|// CHECK: void @test3([4 x float] %s0_s3.coerce, float %s4, [4 x float] %sp.coerce, [4 x float] %sp16.coerce)
 end_comment
 
 begin_typedef
@@ -145,7 +145,7 @@ comment|// users to debug.
 end_comment
 
 begin_comment
-comment|//  CHECK: void @test4(<16 x i8> %v0_v2.0,<16 x i8> %v0_v2.1,<16 x i8> %v0_v2.2,<16 x i8> %v3_v5.0,<16 x i8> %v3_v5.1,<16 x i8> %v3_v5.2, [2 x float],<16 x i8> %sp.0,<16 x i8> %sp.1,<16 x i8> %sp.2, double %sp48,<16 x i8> %sp64.0,<16 x i8> %sp64.1,<16 x i8> %sp64.2)
+comment|//  CHECK: void @test4([3 x<16 x i8>] %v0_v2.coerce, [3 x<16 x i8>] %v3_v5.coerce, [3 x<16 x i8>] %sp.coerce, double %sp48, [3 x<16 x i8>] %sp64.coerce)
 end_comment
 
 begin_typedef
@@ -223,6 +223,58 @@ parameter_list|,
 name|signed
 name|short
 name|b
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// __fp16 can be used as a function argument or return type (ACLE 2.0)
+end_comment
+
+begin_comment
+comment|// CHECK: define half @test_half(half %{{.*}})
+end_comment
+
+begin_function
+name|__fp16
+name|test_half
+parameter_list|(
+name|__fp16
+name|A
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// __fp16 is a base type for homogeneous floating-point aggregates for AArch64 (but not 32-bit ARM).
+end_comment
+
+begin_comment
+comment|// CHECK: define %struct.HFA_half @test_half_hfa([4 x half] %{{.*}})
+end_comment
+
+begin_struct
+struct|struct
+name|HFA_half
+block|{
+name|__fp16
+name|a
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|struct
+name|HFA_half
+name|test_half_hfa
+parameter_list|(
+name|struct
+name|HFA_half
+name|A
 parameter_list|)
 block|{ }
 end_function

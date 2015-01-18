@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_COREENGINE
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_COREENGINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_COREENGINE
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_COREENGINE_H
 end_define
 
 begin_include
@@ -205,14 +205,10 @@ modifier|&
 name|SubEng
 decl_stmt|;
 comment|/// G - The simulation graph.  Each node is a (location,state) pair.
-name|std
-operator|::
-name|unique_ptr
-operator|<
+name|mutable
 name|ExplodedGraph
-operator|>
 name|G
-expr_stmt|;
+decl_stmt|;
 comment|/// WList - A set of queued nodes that need to be processed by the
 comment|///  worklist algorithm.  It is up to the implementation of WList to decide
 comment|///  the order that nodes are processed.
@@ -342,6 +338,24 @@ modifier|*
 name|Pred
 parameter_list|)
 function_decl|;
+name|void
+name|HandleCleanupTemporaryBranch
+parameter_list|(
+specifier|const
+name|CXXBindTemporaryExpr
+modifier|*
+name|BTE
+parameter_list|,
+specifier|const
+name|CFGBlock
+modifier|*
+name|B
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+parameter_list|)
+function_decl|;
 comment|/// Handle conditional logic for running static initializers.
 name|void
 name|HandleStaticInit
@@ -407,11 +421,6 @@ argument_list|(
 name|subengine
 argument_list|)
 operator|,
-name|G
-argument_list|(
-argument|new ExplodedGraph()
-argument_list|)
-operator|,
 name|WList
 argument_list|(
 name|WorkList
@@ -423,7 +432,7 @@ operator|,
 name|BCounterFactory
 argument_list|(
 name|G
-operator|->
+operator|.
 name|getAllocator
 argument_list|()
 argument_list|)
@@ -440,25 +449,7 @@ name|getGraph
 argument_list|()
 block|{
 return|return
-operator|*
 name|G
-operator|.
-name|get
-argument_list|()
-return|;
-block|}
-comment|/// takeGraph - Returns the exploded graph.  Ownership of the graph is
-comment|///  transferred to the caller.
-name|ExplodedGraph
-modifier|*
-name|takeGraph
-parameter_list|()
-block|{
-return|return
-name|G
-operator|.
-name|release
-argument_list|()
 return|;
 block|}
 comment|/// ExecuteWorkList - Run the worklist algorithm for a maximum number of

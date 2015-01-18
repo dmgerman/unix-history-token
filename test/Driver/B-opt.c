@@ -20,7 +20,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-B-OPT-TRIPLE %s
 end_comment
 
 begin_comment
-comment|// CHECK-B-OPT-TRIPLE: "{{.*}}/Inputs/B_opt_tree/dir1{{/|\\}}i386-unknown-linux-ld"
+comment|// CHECK-B-OPT-TRIPLE: "{{.*}}/Inputs/B_opt_tree/dir1{{/|\\\\}}i386-unknown-linux-ld"
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-B-OPT-DIR %s
 end_comment
 
 begin_comment
-comment|// CHECK-B-OPT-DIR: "{{.*}}/Inputs/B_opt_tree/dir2{{/|\\}}ld"
+comment|// CHECK-B-OPT-DIR: "{{.*}}/Inputs/B_opt_tree/dir2{{/|\\\\}}ld"
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-B-OPT-PREFIX %s
 end_comment
 
 begin_comment
-comment|// CHECK-B-OPT-PREFIX: "{{.*}}/Inputs/B_opt_tree/dir3{{/|\\}}prefix-ld"
+comment|// CHECK-B-OPT-PREFIX: "{{.*}}/Inputs/B_opt_tree/dir3{{/|\\\\}}prefix-ld"
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-B-OPT-MULT %s
 end_comment
 
 begin_comment
-comment|// CHECK-B-OPT-MULT: "{{.*}}/Inputs/B_opt_tree/dir3{{/|\\}}prefix-ld"
+comment|// CHECK-B-OPT-MULT: "{{.*}}/Inputs/B_opt_tree/dir3{{/|\\\\}}prefix-ld"
 end_comment
 
 end_unit

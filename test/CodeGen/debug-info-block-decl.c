@@ -32,8 +32,8 @@ name|int
 name|main
 parameter_list|()
 block|{
-comment|// CHECK: [[ASSIGNMENT]] = metadata !{i32 [[@LINE+2]],
-comment|// CHECK: [[BLOCK_ENTRY]] = metadata !{i32 [[@LINE+1]],
+comment|// CHECK: [[ASSIGNMENT]] = !MDLocation(line: [[@LINE+2]],
+comment|// CHECK: [[BLOCK_ENTRY]] = !MDLocation(line: [[@LINE+1]],
 name|int
 function_decl|(
 modifier|^

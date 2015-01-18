@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_CINDEX_LOADED_DIAGNOSTIC_H
+name|LLVM_CLANG_TOOLS_LIBCLANG_CXLOADEDDIAGNOSTIC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_CINDEX_LOADED_DIAGNOSTIC_H
+name|LLVM_CLANG_TOOLS_LIBCLANG_CXLOADEDDIAGNOSTIC_H
 end_define
 
 begin_include

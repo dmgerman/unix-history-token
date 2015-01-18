@@ -31,7 +31,7 @@ comment|// CHECK: ret void, !dbg [[LINE:.*]]
 end_comment
 
 begin_comment
-comment|// CHECK: [[LINE]] = metadata !{i32 6,
+comment|// CHECK: [[LINE]] = !MDLocation(line: 6,
 end_comment
 
 end_unit
