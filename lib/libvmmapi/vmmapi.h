@@ -27,6 +27,21 @@ directive|include
 file|<sys/cpuset.h>
 end_include
 
+begin_comment
+comment|/*  * API version for out-of-tree consumers like grub-bhyve for making compile  * time decisions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMMAPI_VERSION
+value|0101
+end_define
+
+begin_comment
+comment|/* 2 digit major followed by 2 digit minor */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|iovec
@@ -415,9 +430,6 @@ parameter_list|,
 name|int
 name|vcpu
 parameter_list|,
-name|uint64_t
-name|rip
-parameter_list|,
 name|struct
 name|vm_exit
 modifier|*
@@ -482,28 +494,16 @@ name|int
 name|vcpu
 parameter_list|,
 name|int
-name|vec
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vm_inject_exception2
-parameter_list|(
-name|struct
-name|vmctx
-modifier|*
-name|ctx
+name|vector
 parameter_list|,
 name|int
-name|vcpu
+name|errcode_valid
 parameter_list|,
-name|int
-name|vec
-parameter_list|,
-name|int
+name|uint32_t
 name|errcode
+parameter_list|,
+name|int
+name|restart_instruction
 parameter_list|)
 function_decl|;
 end_function_decl

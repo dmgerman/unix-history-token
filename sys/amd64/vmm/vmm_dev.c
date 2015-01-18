@@ -806,6 +806,9 @@ case|:
 case|case
 name|VM_GET_INTINFO
 case|:
+case|case
+name|VM_RESTART_INSTRUCTION
+case|:
 comment|/* 		 * XXX fragile, handle with care 		 * Assumes that the first field of the ioctl data is the vcpu. 		 */
 name|vcpu
 operator|=
@@ -2611,6 +2614,21 @@ argument_list|(
 name|sc
 operator|->
 name|vm
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|VM_RESTART_INSTRUCTION
+case|:
+name|error
+operator|=
+name|vm_restart_instruction
+argument_list|(
+name|sc
+operator|->
+name|vm
+argument_list|,
+name|vcpu
 argument_list|)
 expr_stmt|;
 break|break;

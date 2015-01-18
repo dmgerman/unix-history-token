@@ -107,10 +107,6 @@ block|{
 name|int
 name|cpuid
 decl_stmt|;
-name|uint64_t
-name|rip
-decl_stmt|;
-comment|/* start running here */
 name|struct
 name|vm_exit
 name|vm_exit
@@ -682,6 +678,10 @@ name|IOCNUM_IOAPIC_PINCOUNT
 init|=
 literal|38
 block|,
+name|IOCNUM_RESTART_INSTRUCTION
+init|=
+literal|39
+block|,
 comment|/* PCI pass-thru */
 name|IOCNUM_BIND_PPTDEV
 init|=
@@ -1121,6 +1121,14 @@ directive|define
 name|VM_RTC_GETTIME
 define|\
 value|_IOR('v', IOCNUM_RTC_GETTIME, struct vm_rtc_time)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RESTART_INSTRUCTION
+define|\
+value|_IOW('v', IOCNUM_RESTART_INSTRUCTION, int)
 end_define
 
 begin_endif

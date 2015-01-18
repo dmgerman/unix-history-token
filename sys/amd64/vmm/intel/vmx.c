@@ -10044,6 +10044,12 @@ name|VM_EXITCODE_PAGING
 expr_stmt|;
 name|vmexit
 operator|->
+name|inst_length
+operator|=
+literal|0
+expr_stmt|;
+name|vmexit
+operator|->
 name|u
 operator|.
 name|paging
