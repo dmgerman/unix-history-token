@@ -133,6 +133,12 @@ name|IsTemporary
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief True if this symbol can be redefined.
+name|unsigned
+name|IsRedefinable
+range|:
+literal|1
+decl_stmt|;
 comment|/// IsUsed - True if this symbol has been used.
 name|mutable
 name|unsigned
@@ -176,6 +182,11 @@ operator|,
 name|IsTemporary
 argument_list|(
 name|isTemporary
+argument_list|)
+operator|,
+name|IsRedefinable
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|IsUsed
@@ -245,6 +256,53 @@ name|IsUsed
 operator|=
 name|Value
 expr_stmt|;
+block|}
+comment|/// \brief Check if this symbol is redefinable.
+name|bool
+name|isRedefinable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsRedefinable
+return|;
+block|}
+comment|/// \brief Mark this symbol as redefinable.
+name|void
+name|setRedefinable
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|IsRedefinable
+operator|=
+name|Value
+expr_stmt|;
+block|}
+comment|/// \brief Prepare this symbol to be redefined.
+name|void
+name|redefineIfPossible
+parameter_list|()
+block|{
+if|if
+condition|(
+name|IsRedefinable
+condition|)
+block|{
+name|Value
+operator|=
+name|nullptr
+expr_stmt|;
+name|Section
+operator|=
+name|nullptr
+expr_stmt|;
+name|IsRedefinable
+operator|=
+name|false
+expr_stmt|;
+block|}
 block|}
 comment|/// @}
 comment|/// @name Associated Sections

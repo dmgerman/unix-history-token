@@ -610,6 +610,23 @@ operator|==
 name|Barrier
 return|;
 block|}
+comment|/// isNormalMemoryOrBarrier - Test if this is could be any kind of memory
+comment|/// dependence.
+name|bool
+name|isNormalMemoryOrBarrier
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|isNormalMemory
+argument_list|()
+operator|||
+name|isBarrier
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// isMustAlias - Test if this is an Order dependence that is marked
 comment|/// as "must alias", meaning that the SUnits at either end of the edge
 comment|/// have a memory dependence on a known memory location.

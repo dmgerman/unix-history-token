@@ -50,20 +50,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CODEGEN_ASMPRINTER_DWARFACCELTABLE_H__
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DWARFACCELTABLE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CODEGEN_ASMPRINTER_DWARFACCELTABLE_H__
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DWARFACCELTABLE_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"DIE.h"
-end_include
 
 begin_include
 include|#
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/DIE.h"
 end_include
 
 begin_include
@@ -263,7 +263,7 @@ name|class
 name|AsmPrinter
 decl_stmt|;
 name|class
-name|DwarfFile
+name|DwarfDebug
 decl_stmt|;
 name|class
 name|DwarfAccelTable
@@ -568,7 +568,7 @@ name|SmallVector
 operator|<
 name|Atom
 operator|,
-literal|1
+literal|3
 operator|>
 name|Atoms
 expr_stmt|;
@@ -997,9 +997,13 @@ parameter_list|(
 name|AsmPrinter
 modifier|*
 parameter_list|,
-name|DwarfFile
+name|DwarfDebug
 modifier|*
 name|D
+parameter_list|,
+name|MCSymbol
+modifier|*
+name|StrSym
 parameter_list|)
 function_decl|;
 comment|// Allocator for HashData and HashDataContents.
@@ -1113,8 +1117,12 @@ parameter_list|,
 name|MCSymbol
 modifier|*
 parameter_list|,
-name|DwarfFile
+name|DwarfDebug
 modifier|*
+parameter_list|,
+name|MCSymbol
+modifier|*
+name|StrSym
 parameter_list|)
 function_decl|;
 ifndef|#

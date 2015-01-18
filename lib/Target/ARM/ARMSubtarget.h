@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARMSUBTARGET_H
+name|LLVM_LIB_TARGET_ARM_ARMSUBTARGET_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARMSUBTARGET_H
+name|LLVM_LIB_TARGET_ARM_ARMSUBTARGET_H
 end_define
 
 begin_include
@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ARMJITInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ARMSelectionDAGInfo.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"ARMSubtarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MCTargetDesc/ARMMCTargetDesc.h"
 end_include
 
 begin_include
@@ -111,18 +111,6 @@ begin_include
 include|#
 directive|include
 file|"Thumb2InstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMJITInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MCTargetDesc/ARMMCTargetDesc.h"
 end_include
 
 begin_include
@@ -181,6 +169,9 @@ name|class
 name|TargetOptions
 decl_stmt|;
 name|class
+name|ARMBaseTargetMachine
+decl_stmt|;
+name|class
 name|ARMSubtarget
 range|:
 name|public
@@ -205,6 +196,8 @@ name|CortexA12
 block|,
 name|CortexA15
 block|,
+name|CortexA17
+block|,
 name|CortexR5
 block|,
 name|Swift
@@ -214,7 +207,7 @@ block|,
 name|CortexA57
 block|,
 name|Krait
-block|}
+block|,    }
 block|;   enum
 name|ARMProcClassEnum
 block|{
@@ -420,7 +413,7 @@ name|HasZeroCycleZeroing
 block|;
 comment|/// AllowsUnalignedMem - If true, the subtarget allows unaligned memory
 comment|/// accesses for some types.  For details, see
-comment|/// ARMTargetLowering::allowsUnalignedMemoryAccesses().
+comment|/// ARMTargetLowering::allowsMisalignedMemoryAccesses().
 name|bool
 name|AllowsUnalignedMem
 block|;
@@ -462,9 +455,7 @@ name|Triple
 name|TargetTriple
 block|;
 comment|/// SchedModel - Processor specific instruction costs.
-specifier|const
 name|MCSchedModel
-operator|*
 name|SchedModel
 block|;
 comment|/// Selected instruction itineraries (one entry per itinerary class.)
@@ -477,19 +468,13 @@ name|TargetOptions
 operator|&
 name|Options
 block|;
+specifier|const
+name|ARMBaseTargetMachine
+operator|&
+name|TM
+block|;
 name|public
 operator|:
-expr|enum
-block|{
-name|ARM_ABI_UNKNOWN
-block|,
-name|ARM_ABI_APCS
-block|,
-name|ARM_ABI_AAPCS
-comment|// ARM EABI
-block|}
-name|TargetABI
-block|;
 comment|/// This constructor initializes the data members to match that
 comment|/// of the specified triple.
 comment|///
@@ -501,11 +486,9 @@ argument|const std::string&CPU
 argument_list|,
 argument|const std::string&FS
 argument_list|,
-argument|TargetMachine&TM
+argument|const ARMBaseTargetMachine&TM
 argument_list|,
 argument|bool IsLittle
-argument_list|,
-argument|const TargetOptions&Options
 argument_list|)
 block|;
 comment|/// getMaxInlineSizeThreshold - Returns the maximum memset / memcpy size
@@ -529,14 +512,6 @@ argument_list|,
 argument|StringRef FS
 argument_list|)
 block|;
-comment|/// \brief Reset the features for the ARM target.
-name|void
-name|resetSubtargetFeatures
-argument_list|(
-argument|const MachineFunction *MF
-argument_list|)
-name|override
-block|;
 comment|/// initializeSubtargetDependencies - Initializes using a CPU and feature string
 comment|/// so that we can use initializer lists for subtarget initialization.
 name|ARMSubtarget
@@ -554,6 +529,7 @@ operator|*
 name|getDataLayout
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -566,20 +542,11 @@ operator|*
 name|getSelectionDAGInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
 name|TSInfo
-return|;
-block|}
-name|ARMJITInfo
-operator|*
-name|getJITInfo
-argument_list|()
-block|{
-return|return
-operator|&
-name|JITInfo
 return|;
 block|}
 specifier|const
@@ -588,6 +555,7 @@ operator|*
 name|getInstrInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|InstrInfo
@@ -602,6 +570,7 @@ operator|*
 name|getTargetLowering
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -614,6 +583,7 @@ operator|*
 name|getFrameLowering
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|FrameLowering
@@ -628,6 +598,7 @@ operator|*
 name|getRegisterInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -645,9 +616,6 @@ name|DL
 block|;
 name|ARMSelectionDAGInfo
 name|TSInfo
-block|;
-name|ARMJITInfo
-name|JITInfo
 block|;
 comment|// Either Thumb1InstrInfo or Thumb2InstrInfo.
 name|std
@@ -675,7 +643,7 @@ name|initializeEnvironment
 argument_list|()
 block|;
 name|void
-name|resetSubtargetFeatures
+name|initSubtargetFeatures
 argument_list|(
 argument|StringRef CPU
 argument_list|,
@@ -1244,12 +1212,8 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isOSNetBSD
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|NetBSD
 return|;
 block|}
 name|bool
@@ -1455,38 +1419,12 @@ name|bool
 name|isAPCS_ABI
 argument_list|()
 specifier|const
-block|{
-name|assert
-argument_list|(
-name|TargetABI
-operator|!=
-name|ARM_ABI_UNKNOWN
-argument_list|)
 block|;
-return|return
-name|TargetABI
-operator|==
-name|ARM_ABI_APCS
-return|;
-block|}
 name|bool
 name|isAAPCS_ABI
 argument_list|()
 specifier|const
-block|{
-name|assert
-argument_list|(
-name|TargetABI
-operator|!=
-name|ARM_ABI_UNKNOWN
-argument_list|)
 block|;
-return|return
-name|TargetABI
-operator|==
-name|ARM_ABI_AAPCS
-return|;
-block|}
 name|bool
 name|isThumb
 argument_list|()
@@ -1559,6 +1497,19 @@ return|return
 name|ARMProcClass
 operator|==
 name|AClass
+return|;
+block|}
+name|bool
+name|isV6M
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isThumb1Only
+argument_list|()
+operator|&&
+name|isMClass
+argument_list|()
 return|;
 block|}
 name|bool
@@ -1645,23 +1596,25 @@ argument_list|()
 specifier|const
 name|override
 block|;
-comment|// enableAtomicExpandLoadLinked - True if we need to expand our atomics.
+comment|// enableAtomicExpand- True if we need to expand our atomics.
 name|bool
-name|enableAtomicExpandLoadLinked
+name|enableAtomicExpand
 argument_list|()
 specifier|const
 name|override
 block|;
-comment|/// getInstrItins - Return the instruction itineraies based on subtarget
+comment|/// getInstrItins - Return the instruction itineraries based on subtarget
 comment|/// selection.
 specifier|const
 name|InstrItineraryData
-operator|&
+operator|*
 name|getInstrItineraryData
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
+operator|&
 name|InstrItins
 return|;
 block|}

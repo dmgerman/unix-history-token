@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_POWERPC_PPC32ISELLOWERING_H
+name|LLVM_LIB_TARGET_POWERPC_PPCISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_POWERPC_PPC32ISELLOWERING_H
+name|LLVM_LIB_TARGET_POWERPC_PPCISELLOWERING_H
 end_define
 
 begin_include
@@ -161,6 +161,9 @@ comment|/// VPERM - The PPC VPERM Instruction.
 comment|///
 name|VPERM
 block|,
+comment|/// The CMPB instruction (takes two operands of i32 or i64).
+name|CMPB
+block|,
 comment|/// Hi/Lo - These represent the high and low 16-bit parts of a global
 comment|/// address respectively.  These nodes have two operands, the first of
 comment|/// which must be a TargetGlobalAddress, and the second of which must be a
@@ -199,6 +202,12 @@ name|SRA
 block|,
 name|SHL
 block|,
+comment|/// The combination of sra[wd]i and addze used to implemented signed
+comment|/// integer division by a power of 2. The first operand is the dividend,
+comment|/// and the second is the constant shift amount (representing the
+comment|/// divisor).
+name|SRA_ADDZE
+block|,
 comment|/// CALL - A direct function call.
 comment|/// CALL_NOP is a call with the special NOP which follows 64-bit
 comment|/// SVR4 calls.
@@ -220,6 +229,10 @@ comment|/// CHAIN,FLAG = BCTRL(CHAIN, INFLAG) - Directly corresponds to a
 comment|/// BCTRL instruction.
 name|BCTRL
 block|,
+comment|/// CHAIN,FLAG = BCTRL(CHAIN, ADDR, INFLAG) - The combination of a bctrl
+comment|/// instruction and the TOC reload required on SVR4 PPC64.
+name|BCTRL_LOAD_TOC
+block|,
 comment|/// Return with a flag operand, matched by 'blr'
 name|RET_FLAG
 block|,
@@ -235,6 +248,10 @@ comment|/// implement truncation of i32 or i64 to i1.
 name|ANDIo_1_EQ_BIT
 block|,
 name|ANDIo_1_GT_BIT
+block|,
+comment|// READ_TIME_BASE - A read of the 64-bit time-base register on a 32-bit
+comment|// target (returns (Lo, Hi)). It takes a chain operand.
+name|READ_TIME_BASE
 block|,
 comment|// EH_SJLJ_SETJMP - SjLj exception handling setjmp.
 name|EH_SJLJ_SETJMP
@@ -364,6 +381,13 @@ comment|/// CHAIN = SC CHAIN, Imm128 - System call.  The 7-bit unsigned
 comment|/// operand identifies the operating system entry point.
 name|SC
 block|,
+comment|/// VSRC, CHAIN = XXSWAPD CHAIN, VSRC - Occurs only for little
+comment|/// endian.  Maps to an xxswapd instruction that corrects an lxvd2x
+comment|/// or stxvd2x instruction.  The chain is necessary because the
+comment|/// sequence replaces a load and needs to provide the same number
+comment|/// of outputs.
+name|XXSWAPD
+block|,
 comment|/// CHAIN = STBRX CHAIN, GPRC, Ptr, Type - This is a
 comment|/// byte-swapping store instruction.  It byte-swaps the low "Type" bits of
 comment|/// the GPRC input, then stores it through Ptr.  Type can be either i16 or
@@ -408,6 +432,16 @@ comment|/// G8RC = ADDI_TOC_L G8RReg, Symbol - For medium code model, produces
 comment|/// an ADDI8 instruction that adds G8RReg to sym\@toc\@l.
 comment|/// Preceded by an ADDIS_TOC_HA to form a full 32-bit offset.
 name|ADDI_TOC_L
+block|,
+comment|/// VSRC, CHAIN = LXVD2X_LE CHAIN, Ptr - Occurs only for little endian.
+comment|/// Maps directly to an lxvd2x instruction that will be followed by
+comment|/// an xxswapd.
+name|LXVD2X
+block|,
+comment|/// CHAIN = STXVD2X CHAIN, VSRC, Ptr - Occurs only for little endian.
+comment|/// Maps directly to an stxvd2x instruction that will be preceded by
+comment|/// an xxswapd.
+name|STXVD2X
 block|}
 enum|;
 block|}
@@ -586,6 +620,7 @@ operator|:
 name|explicit
 name|PPCTargetLowering
 argument_list|(
+specifier|const
 name|PPCTargetMachine
 operator|&
 name|TM
@@ -617,12 +652,43 @@ operator|::
 name|i32
 return|;
 block|}
+name|bool
+name|isCheapToSpeculateCttz
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|isCheapToSpeculateCtlz
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// getSetCCResultType - Return the ISD::SETCC ValueType
 name|EVT
 name|getSetCCResultType
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
+argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Return true if target always beneficiates from combining into FMA for a
+comment|/// given value type. This must typically return false on targets where FMA
+comment|/// takes more cycles to execute than FADD.
+name|bool
+name|enableAggressiveFMAFusion
+argument_list|(
 argument|EVT VT
 argument_list|)
 specifier|const
@@ -735,11 +801,43 @@ specifier|const
 name|override
 block|;
 name|SDValue
+name|expandVSXLoadForLE
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|expandVSXStoreForLE
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|PerformDAGCombine
 argument_list|(
 argument|SDNode *N
 argument_list|,
 argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|SDValue
+name|BuildSDIVPow2
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|const APInt&Divisor
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|std::vector<SDNode *> *Created
 argument_list|)
 specifier|const
 name|override
@@ -767,6 +865,44 @@ argument|const SelectionDAG&DAG
 argument_list|,
 argument|unsigned Depth =
 literal|0
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|getPrefLoopAlignment
+argument_list|(
+argument|MachineLoop *ML
+argument_list|)
+specifier|const
+name|override
+block|;
+name|Instruction
+operator|*
+name|emitLeadingFence
+argument_list|(
+argument|IRBuilder<>&Builder
+argument_list|,
+argument|AtomicOrdering Ord
+argument_list|,
+argument|bool IsStore
+argument_list|,
+argument|bool IsLoad
+argument_list|)
+specifier|const
+name|override
+block|;
+name|Instruction
+operator|*
+name|emitTrailingFence
+argument_list|(
+argument|IRBuilder<>&Builder
+argument_list|,
+argument|AtomicOrdering Ord
+argument_list|,
+argument|bool IsStore
+argument_list|,
+argument|bool IsLoad
 argument_list|)
 specifier|const
 name|override
@@ -955,6 +1091,24 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|isZExtFree
+argument_list|(
+argument|SDValue Val
+argument_list|,
+argument|EVT VT2
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isFPExtFree
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// \brief Returns true if it is beneficial to convert a load of a constant
 comment|/// to just the constant itself.
 name|bool
@@ -971,6 +1125,18 @@ name|bool
 name|isOffsetFoldingLegal
 argument_list|(
 argument|const GlobalAddressSDNode *GA
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|getTgtMemIntrinsic
+argument_list|(
+argument|IntrinsicInfo&Info
+argument_list|,
+argument|const CallInst&I
+argument_list|,
+argument|unsigned Intrinsic
 argument_list|)
 specifier|const
 name|override
@@ -1009,11 +1175,14 @@ block|;
 comment|/// Is unaligned memory access allowed for the given type, and is it fast
 comment|/// relative to software emulation.
 name|bool
-name|allowsUnalignedMemoryAccesses
+name|allowsMisalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
 argument_list|,
 argument|unsigned AddrSpace
+argument_list|,
+argument|unsigned Align =
+literal|1
 argument_list|,
 argument|bool *Fast = nullptr
 argument_list|)
@@ -1028,6 +1197,16 @@ name|bool
 name|isFMAFasterThanFMulAndFAdd
 argument_list|(
 argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|MCPhysReg
+operator|*
+name|getScratchRegisters
+argument_list|(
+argument|CallingConv::ID CC
 argument_list|)
 specifier|const
 name|override
@@ -1086,6 +1265,94 @@ return|;
 block|}
 name|private
 operator|:
+expr|struct
+name|ReuseLoadInfo
+block|{
+name|SDValue
+name|Ptr
+block|;
+name|SDValue
+name|Chain
+block|;
+name|SDValue
+name|ResChain
+block|;
+name|MachinePointerInfo
+name|MPI
+block|;
+name|bool
+name|IsInvariant
+block|;
+name|unsigned
+name|Alignment
+block|;
+name|AAMDNodes
+name|AAInfo
+block|;
+specifier|const
+name|MDNode
+operator|*
+name|Ranges
+block|;
+name|ReuseLoadInfo
+argument_list|()
+operator|:
+name|IsInvariant
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|Alignment
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Ranges
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+block|}
+block|;
+name|bool
+name|canReuseLoadAddress
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|ReuseLoadInfo&RLI
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|ISD::LoadExtType ET = ISD::NON_EXTLOAD
+argument_list|)
+specifier|const
+block|;
+name|void
+name|spliceIntoChain
+argument_list|(
+argument|SDValue ResChain
+argument_list|,
+argument|SDValue NewResChain
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|void
+name|LowerFP_TO_INTForReuse
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|ReuseLoadInfo&RLI
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc dl
+argument_list|)
+specifier|const
+block|;
 name|SDValue
 name|getFramePointerFrameIndex
 argument_list|(
@@ -1475,6 +1742,8 @@ argument|bool isTailCall
 argument_list|,
 argument|bool isVarArg
 argument_list|,
+argument|bool IsPatchPoint
+argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVector<std::pair<unsigned
@@ -1668,6 +1937,8 @@ argument|bool isVarArg
 argument_list|,
 argument|bool isTailCall
 argument_list|,
+argument|bool IsPatchPoint
+argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
@@ -1695,6 +1966,8 @@ argument|bool isVarArg
 argument_list|,
 argument|bool isTailCall
 argument_list|,
+argument|bool IsPatchPoint
+argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
@@ -1721,6 +1994,8 @@ argument_list|,
 argument|bool isVarArg
 argument_list|,
 argument|bool isTailCall
+argument_list|,
+argument|bool IsPatchPoint
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
@@ -1773,22 +2048,47 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|DAGCombineFastRecip
+name|combineFPToIntToFP
 argument_list|(
-argument|SDValue Op
+argument|SDNode *N
 argument_list|,
 argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|DAGCombineFastRecipFSQRT
+name|getRsqrtEstimate
 argument_list|(
-argument|SDValue Op
+argument|SDValue Operand
 argument_list|,
 argument|DAGCombinerInfo&DCI
+argument_list|,
+argument|unsigned&RefinementSteps
+argument_list|,
+argument|bool&UseOneConstNR
 argument_list|)
 specifier|const
+name|override
+block|;
+name|SDValue
+name|getRecipEstimate
+argument_list|(
+argument|SDValue Operand
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|,
+argument|unsigned&RefinementSteps
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|combineRepeatedFPDivisors
+argument_list|(
+argument|unsigned NumUsers
+argument_list|)
+specifier|const
+name|override
 block|;
 name|CCAssignFn
 operator|*

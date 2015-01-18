@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*===-- linker_ocaml.c - LLVM Ocaml Glue ------------------------*- C++ -*-===*\ |*                                                                            *| |*                     The LLVM Compiler Infrastructure                       *| |*                                                                            *| |* This file is distributed under the University of Illinois Open Source      *| |* License. See LICENSE.TXT for details.                                      *| |*                                                                            *| |*===----------------------------------------------------------------------===*| |*                                                                            *| |* This file glues LLVM's OCaml interface to its C interface. These functions *| |* are by and large transparent wrappers to the corresponding C functions.    *| |*                                                                            *| |* Note that these functions intentionally take liberties with the CAMLparamX *| |* macros, since most of the parameters are not GC heap objects.              *| |*                                                                            *| \*===----------------------------------------------------------------------===*/
+comment|/*===-- linker_ocaml.c - LLVM OCaml Glue ------------------------*- C++ -*-===*\ |*                                                                            *| |*                     The LLVM Compiler Infrastructure                       *| |*                                                                            *| |* This file is distributed under the University of Illinois Open Source      *| |* License. See LICENSE.TXT for details.                                      *| |*                                                                            *| |*===----------------------------------------------------------------------===*| |*                                                                            *| |* This file glues LLVM's OCaml interface to its C interface. These functions *| |* are by and large transparent wrappers to the corresponding C functions.    *| |*                                                                            *| |* Note that these functions intentionally take liberties with the CAMLparamX *| |* macros, since most of the parameters are not GC heap objects.              *| |*                                                                            *| \*===----------------------------------------------------------------------===*/
 end_comment
 
 begin_include
@@ -27,45 +27,13 @@ directive|include
 file|"caml/fail.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|value
-name|llvm_linker_error_exn
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"caml/callback.h"
+end_include
 
-begin_function
-name|CAMLprim
-name|value
-name|llvm_register_linker_exns
-parameter_list|(
-name|value
-name|Error
-parameter_list|)
-block|{
-name|llvm_linker_error_exn
-operator|=
-name|Field
-argument_list|(
-name|Error
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|register_global_root
-argument_list|(
-operator|&
-name|llvm_linker_error_exn
-argument_list|)
-expr_stmt|;
-return|return
-name|Val_unit
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
+begin_function_decl
 name|void
 name|llvm_raise
 parameter_list|(
@@ -76,53 +44,11 @@ name|char
 modifier|*
 name|Message
 parameter_list|)
-block|{
-name|CAMLparam1
-argument_list|(
-name|Prototype
-argument_list|)
-expr_stmt|;
-name|CAMLlocal1
-argument_list|(
-name|CamlMessage
-argument_list|)
-expr_stmt|;
-name|CamlMessage
-operator|=
-name|copy_string
-argument_list|(
-name|Message
-argument_list|)
-expr_stmt|;
-name|LLVMDisposeMessage
-argument_list|(
-name|Message
-argument_list|)
-expr_stmt|;
-name|raise_with_arg
-argument_list|(
-name|Prototype
-argument_list|,
-name|CamlMessage
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* NOTREACHED */
-ifdef|#
-directive|ifdef
-name|CAMLnoreturn
-name|CAMLnoreturn
-expr_stmt|;
-comment|/* Silences warnings, but is missing in some versions. */
-endif|#
-directive|endif
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* llmodule -> llmodule -> Mode.t -> unit    raises Error msg on error */
+comment|/* llmodule -> llmodule -> unit */
 end_comment
 
 begin_function
@@ -135,9 +61,6 @@ name|Dst
 parameter_list|,
 name|LLVMModuleRef
 name|Src
-parameter_list|,
-name|value
-name|Mode
 parameter_list|)
 block|{
 name|char
@@ -152,10 +75,7 @@ name|Dst
 argument_list|,
 name|Src
 argument_list|,
-name|Int_val
-argument_list|(
-name|Mode
-argument_list|)
+literal|0
 argument_list|,
 operator|&
 name|Message
@@ -163,7 +83,11 @@ argument_list|)
 condition|)
 name|llvm_raise
 argument_list|(
-name|llvm_linker_error_exn
+operator|*
+name|caml_named_value
+argument_list|(
+literal|"Llvm_linker.Error"
+argument_list|)
 argument_list|,
 name|Message
 argument_list|)

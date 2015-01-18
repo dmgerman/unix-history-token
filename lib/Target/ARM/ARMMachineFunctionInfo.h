@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARMMACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_ARM_ARMMACHINEFUNCTIONINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARMMACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_ARM_ARMMACHINEFUNCTIONINFO_H
 end_define
 
 begin_include
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/BitVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -87,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_decl_stmt
@@ -135,6 +135,10 @@ comment|/// VarArgsRegSaveSize - Size of the register save area for vararg funct
 comment|///
 name|unsigned
 name|ArgRegsSaveSize
+block|;
+comment|/// ReturnRegsCount - Number of registers used up in the return.
+name|unsigned
+name|ReturnRegsCount
 block|;
 comment|/// HasStackFrame - True if this function has a stack frame. Set by
 comment|/// processFunctionBeforeCalleeSavedScan().
@@ -183,6 +187,9 @@ name|GPRCS1Size
 block|;
 name|unsigned
 name|GPRCS2Size
+block|;
+name|unsigned
+name|DPRCSAlignGapSize
 block|;
 name|unsigned
 name|DPRCSSize
@@ -266,6 +273,11 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
+name|ReturnRegsCount
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|HasStackFrame
 argument_list|(
 name|false
@@ -307,6 +319,11 @@ literal|0
 argument_list|)
 block|,
 name|GPRCS2Size
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|DPRCSAlignGapSize
 argument_list|(
 literal|0
 argument_list|)
@@ -446,6 +463,27 @@ name|s
 parameter_list|)
 block|{
 name|ArgRegsSaveSize
+operator|=
+name|s
+expr_stmt|;
+block|}
+name|unsigned
+name|getReturnRegsCount
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ReturnRegsCount
+return|;
+block|}
+name|void
+name|setReturnRegsCount
+parameter_list|(
+name|unsigned
+name|s
+parameter_list|)
+block|{
+name|ReturnRegsCount
 operator|=
 name|s
 expr_stmt|;
@@ -637,6 +675,15 @@ name|GPRCS2Size
 return|;
 block|}
 name|unsigned
+name|getDPRCalleeSavedGapSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DPRCSAlignGapSize
+return|;
+block|}
+name|unsigned
 name|getDPRCalleeSavedAreaSize
 argument_list|()
 specifier|const
@@ -665,6 +712,18 @@ name|s
 parameter_list|)
 block|{
 name|GPRCS2Size
+operator|=
+name|s
+expr_stmt|;
+block|}
+name|void
+name|setDPRCalleeSavedGapSize
+parameter_list|(
+name|unsigned
+name|s
+parameter_list|)
+block|{
+name|DPRCSAlignGapSize
 operator|=
 name|s
 expr_stmt|;
@@ -967,10 +1026,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// ARMMACHINEFUNCTIONINFO_H
-end_comment
 
 end_unit
 

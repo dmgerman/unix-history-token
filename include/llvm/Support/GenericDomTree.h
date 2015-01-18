@@ -66,13 +66,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_GENERIC_DOM_TREE_H
+name|LLVM_SUPPORT_GENERICDOMTREE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_GENERIC_DOM_TREE_H
+name|LLVM_SUPPORT_GENERICDOMTREE_H
 end_define
 
 begin_include
@@ -127,10 +127,8 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|//===----------------------------------------------------------------------===//
-comment|/// DominatorBase - Base class that other, more interesting dominator analyses
+comment|/// \brief Base class that other, more interesting dominator analyses
 comment|/// inherit from.
-comment|///
 name|template
 operator|<
 name|class
@@ -150,11 +148,9 @@ operator|*
 operator|>
 name|Roots
 block|;
-specifier|const
 name|bool
 name|IsPostDominators
 block|;
-specifier|inline
 name|explicit
 name|DominatorBase
 argument_list|(
@@ -169,13 +165,87 @@ argument_list|(
 argument|isPostDom
 argument_list|)
 block|{}
+name|DominatorBase
+argument_list|(
+name|DominatorBase
+operator|&&
+name|Arg
+argument_list|)
+operator|:
+name|Roots
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Arg
+operator|.
+name|Roots
+argument_list|)
+argument_list|)
+block|,
+name|IsPostDominators
+argument_list|(
+argument|std::move(Arg.IsPostDominators)
+argument_list|)
+block|{
+name|Arg
+operator|.
+name|Roots
+operator|.
+name|clear
+argument_list|()
+block|;   }
+name|DominatorBase
+operator|&
+name|operator
+operator|=
+operator|(
+name|DominatorBase
+operator|&&
+name|RHS
+operator|)
+block|{
+name|Roots
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|Roots
+argument_list|)
+block|;
+name|IsPostDominators
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|IsPostDominators
+argument_list|)
+block|;
+name|RHS
+operator|.
+name|Roots
+operator|.
+name|clear
+argument_list|()
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 name|public
 operator|:
 comment|/// getRoots - Return the root blocks of the current CFG.  This may include
 comment|/// multiple blocks if we are computing post dominators.  For forward
 comment|/// dominators, this will always be a single block (the entry node).
 comment|///
-specifier|inline
 specifier|const
 name|std
 operator|::
@@ -206,8 +276,6 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===----------------------------------------------------------------------===//
-comment|// DomTreeNodeBase - Dominator Tree Node
 name|template
 operator|<
 name|class
@@ -218,6 +286,7 @@ name|DominatorTreeBase
 block|; struct
 name|PostDominatorTree
 block|;
+comment|/// \brief Base class for the actual dominator tree node.
 name|template
 operator|<
 name|class
@@ -426,7 +495,7 @@ argument_list|(
 argument|-
 literal|1
 argument_list|)
-block|{ }
+block|{}
 name|DomTreeNodeBase
 operator|<
 name|NodeT
@@ -774,7 +843,6 @@ operator|<
 name|class
 name|NodeT
 operator|>
-specifier|inline
 name|raw_ostream
 operator|&
 name|operator
@@ -851,7 +919,6 @@ operator|<
 name|class
 name|NodeT
 operator|>
-specifier|inline
 name|void
 name|PrintDomTree
 argument_list|(
@@ -928,15 +995,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
-comment|/// DominatorTree - Calculate the immediate dominator tree for a function.
-end_comment
-
-begin_comment
-comment|///
+comment|// The calculate routine is provided in a separate header but referenced here.
 end_comment
 
 begin_expr_stmt
@@ -951,12 +1010,28 @@ operator|>
 name|void
 name|Calculate
 argument_list|(
-argument|DominatorTreeBase<typename GraphTraits<N>::NodeType>& DT
+argument|DominatorTreeBase<typename GraphTraits<N>::NodeType>&DT
 argument_list|,
-argument|FuncT& F
+argument|FuncT&F
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Core dominator tree base class.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This class is a generic template over graph nodes. It is instantiated for
+end_comment
+
+begin_comment
+comment|/// various graphs in the LLVM IR or in the code generator.
+end_comment
 
 begin_expr_stmt
 name|template
@@ -973,6 +1048,23 @@ operator|<
 name|NodeT
 operator|>
 block|{
+name|DominatorTreeBase
+argument_list|(
+argument|const DominatorTreeBase&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+block|;
+name|DominatorTreeBase
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|DominatorTreeBase
+operator|&
+operator|)
+name|LLVM_DELETED_FUNCTION
+block|;
 name|bool
 name|dominatedBySlowTreeWalk
 argument_list|(
@@ -1046,6 +1138,54 @@ name|nullptr
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Wipe this tree's state without releasing any resources.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is essentially a post-move helper only. It leaves the object in an
+end_comment
+
+begin_comment
+comment|/// assignable and destroyable state, but otherwise invalid.
+end_comment
+
+begin_function
+name|void
+name|wipe
+parameter_list|()
+block|{
+name|DomTreeNodes
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|IDoms
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|Vertex
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|Info
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|RootNode
+operator|=
+name|nullptr
+expr_stmt|;
+block|}
+end_function
 
 begin_label
 name|protected
@@ -1281,9 +1421,9 @@ operator|>
 name|void
 name|Split
 argument_list|(
-argument|DominatorTreeBase<typename GraphT::NodeType>& DT
+argument|DominatorTreeBase<typename GraphT::NodeType>&DT
 argument_list|,
-argument|typename GraphT::NodeType* NewBB
+argument|typename GraphT::NodeType *NewBB
 argument_list|)
 block|{
 name|assert
@@ -1345,8 +1485,7 @@ operator|<
 name|Inverse
 operator|<
 name|N
-operator|>
-expr|>
+operator|>>
 name|InvTraits
 expr_stmt|;
 end_expr_stmt
@@ -1722,7 +1861,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|DominatorTreeBase
 argument_list|()
@@ -1730,24 +1868,271 @@ block|{
 name|reset
 argument_list|()
 block|; }
+name|DominatorTreeBase
+argument_list|(
+name|DominatorTreeBase
+operator|&&
+name|Arg
+argument_list|)
+operator|:
+name|DominatorBase
+operator|<
+name|NodeT
+operator|>
+operator|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|static_cast
+operator|<
+name|DominatorBase
+operator|<
+name|NodeT
+operator|>
+operator|&
+operator|>
+operator|(
+name|Arg
+operator|)
+argument_list|)
+operator|)
+operator|,
+name|DomTreeNodes
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Arg
+operator|.
+name|DomTreeNodes
+argument_list|)
+argument_list|)
+operator|,
+name|RootNode
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Arg
+operator|.
+name|RootNode
+argument_list|)
+argument_list|)
+operator|,
+name|DFSInfoValid
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Arg
+operator|.
+name|DFSInfoValid
+argument_list|)
+argument_list|)
+operator|,
+name|SlowQueries
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Arg
+operator|.
+name|SlowQueries
+argument_list|)
+argument_list|)
+operator|,
+name|IDoms
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Arg
+operator|.
+name|IDoms
+argument_list|)
+argument_list|)
+operator|,
+name|Vertex
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Arg
+operator|.
+name|Vertex
+argument_list|)
+argument_list|)
+operator|,
+name|Info
+argument_list|(
+argument|std::move(Arg.Info)
+argument_list|)
+block|{
+name|Arg
+operator|.
+name|wipe
+argument_list|()
+block|;   }
+name|DominatorTreeBase
+operator|&
+name|operator
+operator|=
+operator|(
+name|DominatorTreeBase
+operator|&&
+name|RHS
+operator|)
+block|{
+name|DominatorBase
+operator|<
+name|NodeT
+operator|>
+operator|::
+name|operator
+operator|=
+operator|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|static_cast
+operator|<
+name|DominatorBase
+operator|<
+name|NodeT
+operator|>
+operator|&
+operator|>
+operator|(
+name|RHS
+operator|)
+argument_list|)
+operator|)
+block|;
+name|DomTreeNodes
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|DomTreeNodes
+argument_list|)
+block|;
+name|RootNode
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|RootNode
+argument_list|)
+block|;
+name|DFSInfoValid
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|DFSInfoValid
+argument_list|)
+block|;
+name|SlowQueries
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|SlowQueries
+argument_list|)
+block|;
+name|IDoms
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|IDoms
+argument_list|)
+block|;
+name|Vertex
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|Vertex
+argument_list|)
+block|;
+name|Info
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|Info
+argument_list|)
+block|;
+name|RHS
+operator|.
+name|wipe
+argument_list|()
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// compare - Return false if the other dominator tree base matches this
+end_comment
+
+begin_comment
 comment|/// dominator tree base. Otherwise return true.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|compare
 argument_list|(
-argument|const DominatorTreeBase&Other
-argument_list|)
 specifier|const
+name|DominatorTreeBase
+operator|&
+name|Other
+argument_list|)
+decl|const
 block|{
 specifier|const
 name|DomTreeNodeMapType
-operator|&
+modifier|&
 name|OtherDomTreeNodes
-operator|=
+init|=
 name|Other
 operator|.
 name|DomTreeNodes
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|DomTreeNodes
@@ -1763,9 +2148,6 @@ condition|)
 return|return
 name|true
 return|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|typename
@@ -1866,16 +2248,13 @@ return|return
 name|true
 return|;
 block|}
-end_for
-
-begin_return
 return|return
 name|false
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_function
-unit|}    virtual
 name|void
 name|releaseMemory
 parameter_list|()
@@ -1899,7 +2278,6 @@ comment|///
 end_comment
 
 begin_expr_stmt
-specifier|inline
 name|DomTreeNodeBase
 operator|<
 name|NodeT
@@ -1923,7 +2301,6 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-specifier|inline
 name|DomTreeNodeBase
 operator|<
 name|NodeT
@@ -2258,7 +2635,6 @@ block|}
 end_decl_stmt
 
 begin_decl_stmt
-specifier|inline
 name|bool
 name|isReachableFromEntry
 argument_list|(
@@ -2291,7 +2667,6 @@ comment|///
 end_comment
 
 begin_decl_stmt
-specifier|inline
 name|bool
 name|dominates
 argument_list|(
@@ -3199,9 +3574,7 @@ name|Inverse
 operator|<
 name|NodeT
 operator|*
-operator|>
-expr|>
-operator|>
+operator|>>>
 operator|(
 operator|*
 name|this
@@ -3221,8 +3594,7 @@ name|GraphTraits
 operator|<
 name|NodeT
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|(
 operator|*
 name|this
@@ -3331,9 +3703,9 @@ name|NodeType
 operator|*
 name|Eval
 argument_list|(
-argument|DominatorTreeBase<typename GraphT::NodeType>& DT
+argument|DominatorTreeBase<typename GraphT::NodeType>&DT
 argument_list|,
-argument|typename GraphT::NodeType* V
+argument|typename GraphT::NodeType *V
 argument_list|,
 argument|unsigned LastLinked
 argument_list|)
@@ -3350,9 +3722,9 @@ name|friend
 name|unsigned
 name|DFSPass
 argument_list|(
-argument|DominatorTreeBase<typename GraphT::NodeType>& DT
+argument|DominatorTreeBase<typename GraphT::NodeType>&DT
 argument_list|,
-argument|typename GraphT::NodeType* V
+argument|typename GraphT::NodeType *V
 argument_list|,
 argument|unsigned N
 argument_list|)
@@ -3372,9 +3744,9 @@ name|friend
 name|void
 name|Calculate
 argument_list|(
-argument|DominatorTreeBase<typename GraphTraits<N>::NodeType>& DT
+argument|DominatorTreeBase<typename GraphTraits<N>::NodeType>&DT
 argument_list|,
-argument|FuncT& F
+argument|FuncT&F
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3722,17 +4094,14 @@ argument_list|)
 return|;
 end_return
 
-begin_decl_stmt
-unit|}    inline
-name|NodeT
-modifier|*
+begin_expr_stmt
+unit|}    NodeT
+operator|*
 name|getIDom
 argument_list|(
-name|NodeT
-operator|*
-name|BB
+argument|NodeT *BB
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|IDoms
@@ -3743,10 +4112,9 @@ name|BB
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_function
-specifier|inline
 name|void
 name|addRoot
 parameter_list|(
@@ -3785,7 +4153,7 @@ operator|>
 name|void
 name|recalculate
 argument_list|(
-argument|FT& F
+argument|FT&F
 argument_list|)
 block|{
 typedef|typedef
@@ -3935,7 +4303,8 @@ argument_list|(
 name|I
 argument_list|)
 expr_stmt|;
-comment|// Prepopulate maps so that we don't get iterator invalidation issues later.
+comment|// Prepopulate maps so that we don't get iterator invalidation issues
+comment|// later.
 name|this
 operator|->
 name|IDoms
@@ -3963,8 +4332,7 @@ name|Inverse
 operator|<
 name|NodeT
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|(
 operator|*
 name|this

@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_OBJECT_ELF_TYPES_H
+name|LLVM_OBJECT_ELFTYPES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_OBJECT_ELF_TYPES_H
+name|LLVM_OBJECT_ELFTYPES_H
 end_define
 
 begin_include
@@ -873,6 +873,14 @@ operator|>
 operator|::
 name|st_info
 block|;
+name|using
+name|Elf_Sym_Base
+operator|<
+name|ELFT
+operator|>
+operator|::
+name|st_other
+block|;
 comment|// These accessors and mutators correspond to the ELF32_ST_BIND,
 comment|// ELF32_ST_TYPE, and ELF32_ST_INFO macros defined in the ELF specification:
 name|unsigned
@@ -970,6 +978,25 @@ operator|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// Access to the STV_xxx flag stored in the first two bits of st_other.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|char
+name|getVisibility
+argument_list|()
+specifier|const
+block|{
+return|return
+name|st_other
+operator|&
+literal|0x3
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 unit|};

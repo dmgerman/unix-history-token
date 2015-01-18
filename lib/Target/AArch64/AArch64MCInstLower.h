@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AArch64_MCINSTLOWER_H
+name|LLVM_LIB_TARGET_AARCH64_AARCH64MCINSTLOWER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AArch64_MCINSTLOWER_H
+name|LLVM_LIB_TARGET_AARCH64_AARCH64MCINSTLOWER_H
 end_define
 
 begin_include
@@ -113,10 +113,6 @@ argument_list|(
 name|MCContext
 operator|&
 name|ctx
-argument_list|,
-name|Mangler
-operator|&
-name|mang
 argument_list|,
 name|AsmPrinter
 operator|&

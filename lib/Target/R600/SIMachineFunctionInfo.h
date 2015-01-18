@@ -50,19 +50,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SIMACHINEFUNCTIONINFO_H_
+name|LLVM_LIB_TARGET_R600_SIMACHINEFUNCTIONINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SIMACHINEFUNCTIONINFO_H_
+name|LLVM_LIB_TARGET_R600_SIMACHINEFUNCTIONINFO_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"AMDGPUMachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"SIRegisterInfo.h"
 end_include
 
 begin_include
@@ -90,6 +96,12 @@ name|void
 name|anchor
 argument_list|()
 name|override
+block|;
+name|unsigned
+name|TIDReg
+block|;
+name|bool
+name|HasSpilledVGPRs
 block|;
 name|public
 operator|:
@@ -145,92 +157,6 @@ literal|1
 return|;
 block|}
 expr|}
-block|;    struct
-name|RegSpillTracker
-block|{
-name|private
-operator|:
-name|unsigned
-name|CurrentLane
-block|;
-name|std
-operator|::
-name|map
-operator|<
-name|unsigned
-block|,
-name|SpilledReg
-operator|>
-name|SpilledRegisters
-block|;
-name|public
-operator|:
-name|unsigned
-name|LaneVGPR
-block|;
-name|RegSpillTracker
-argument_list|()
-operator|:
-name|CurrentLane
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|SpilledRegisters
-argument_list|()
-block|,
-name|LaneVGPR
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
-comment|/// \p NumRegs The number of consecutive registers what need to be spilled.
-comment|///            This function will ensure that all registers are stored in
-comment|///            the same VGPR.
-comment|/// \returns The lane to be used for storing the first register.
-name|unsigned
-name|reserveLanes
-argument_list|(
-argument|MachineRegisterInfo&MRI
-argument_list|,
-argument|MachineFunction *MF
-argument_list|,
-argument|unsigned NumRegs =
-literal|1
-argument_list|)
-block|;
-name|void
-name|addSpilledReg
-argument_list|(
-argument|unsigned FrameIndex
-argument_list|,
-argument|unsigned Reg
-argument_list|,
-argument|int Lane = -
-literal|1
-argument_list|)
-block|;
-specifier|const
-name|SpilledReg
-operator|&
-name|getSpilledReg
-argument_list|(
-argument|unsigned FrameIndex
-argument_list|)
-block|;
-name|bool
-name|programSpillsRegisters
-argument_list|()
-block|{
-return|return
-operator|!
-name|SpilledRegisters
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-expr|}
 block|;
 comment|// SIMachineFunctionInfo definition
 name|SIMachineFunctionInfo
@@ -241,14 +167,94 @@ operator|&
 name|MF
 argument_list|)
 block|;
+name|SpilledReg
+name|getSpilledReg
+argument_list|(
+argument|MachineFunction *MF
+argument_list|,
+argument|unsigned FrameIndex
+argument_list|,
+argument|unsigned SubIdx
+argument_list|)
+block|;
 name|unsigned
 name|PSInputAddr
-block|;   struct
-name|RegSpillTracker
-name|SpillTracker
 block|;
 name|unsigned
 name|NumUserSGPRs
+block|;
+name|std
+operator|::
+name|map
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|LaneVGPRs
+block|;
+name|unsigned
+name|LDSWaveSpillSize
+block|;
+name|bool
+name|hasCalculatedTID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TIDReg
+operator|!=
+name|AMDGPU
+operator|::
+name|NoRegister
+return|;
+block|}
+block|;
+name|unsigned
+name|getTIDReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TIDReg
+return|;
+block|}
+block|;
+name|void
+name|setTIDReg
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+name|TIDReg
+operator|=
+name|Reg
+block|; }
+name|bool
+name|hasSpilledVGPRs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSpilledVGPRs
+return|;
+block|}
+name|void
+name|setHasSpilledVGPRs
+argument_list|(
+argument|bool Spill = true
+argument_list|)
+block|{
+name|HasSpilledVGPRs
+operator|=
+name|Spill
+block|; }
+name|unsigned
+name|getMaximumWorkGroupSize
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
 block|; }
 block|;  }
 end_decl_stmt
@@ -261,10 +267,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|//_SIMACHINEFUNCTIONINFO_H_
-end_comment
 
 end_unit
 

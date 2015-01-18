@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPUMCTARGETDESC_H
+name|LLVM_LIB_TARGET_R600_MCTARGETDESC_AMDGPUMCTARGETDESC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPUMCTARGETDESC_H
+name|LLVM_LIB_TARGET_R600_MCTARGETDESC_AMDGPUMCTARGETDESC_H
 end_define
 
 begin_include
@@ -107,6 +107,10 @@ decl_stmt|;
 specifier|extern
 name|Target
 name|TheAMDGPUTarget
+decl_stmt|;
+specifier|extern
+name|Target
+name|TheGCNTarget
 decl_stmt|;
 name|MCCodeEmitter
 modifier|*
@@ -229,10 +233,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDGPUMCTARGETDESC_H
-end_comment
 
 end_unit
 

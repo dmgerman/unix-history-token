@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ARMTARGETASMINFO_H
+name|LLVM_LIB_TARGET_ARM_MCTARGETDESC_ARMMCASMINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ARMTARGETASMINFO_H
+name|LLVM_LIB_TARGET_ARM_MCTARGETDESC_ARMMCASMINFO_H
 end_define
 
 begin_include
@@ -87,10 +87,10 @@ range|:
 name|public
 name|MCAsmInfoDarwin
 block|{
+name|virtual
 name|void
 name|anchor
 argument_list|()
-name|override
 block|;
 name|public
 operator|:

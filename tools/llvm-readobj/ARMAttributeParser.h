@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_READOBJ_ARMATTRIBUTE_PARSER_H
+name|LLVM_TOOLS_LLVM_READOBJ_ARMATTRIBUTEPARSER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_READOBJ_ARMATTRIBUTE_PARSER_H
+name|LLVM_TOOLS_LLVM_READOBJ_ARMATTRIBUTEPARSER_H
 end_define
 
 begin_include

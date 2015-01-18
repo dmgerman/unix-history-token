@@ -697,7 +697,7 @@ return|return
 name|debugLoc
 return|;
 block|}
-comment|/// getDebugVariable() - Return the debug variable referenced by
+comment|/// \brief Return the debug variable referenced by
 comment|/// this DBG_VALUE instruction.
 name|DIVariable
 name|getDebugVariable
@@ -712,27 +712,71 @@ operator|&&
 literal|"not a DBG_VALUE"
 argument_list|)
 block|;
-specifier|const
-name|MDNode
-operator|*
+name|DIVariable
 name|Var
-operator|=
+argument_list|(
 name|getOperand
 argument_list|(
-name|getNumOperands
-argument_list|()
-operator|-
-literal|1
+literal|2
 argument_list|)
 operator|.
 name|getMetadata
 argument_list|()
+argument_list|)
 block|;
-return|return
-name|DIVariable
+name|assert
 argument_list|(
 name|Var
+operator|.
+name|Verify
+argument_list|()
+operator|&&
+literal|"not a DIVariable"
 argument_list|)
+block|;
+return|return
+name|Var
+return|;
+block|}
+comment|/// \brief Return the complex address expression referenced by
+comment|/// this DBG_VALUE instruction.
+name|DIExpression
+name|getDebugExpression
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isDebugValue
+argument_list|()
+operator|&&
+literal|"not a DBG_VALUE"
+argument_list|)
+block|;
+name|DIExpression
+name|Expr
+argument_list|(
+name|getOperand
+argument_list|(
+literal|3
+argument_list|)
+operator|.
+name|getMetadata
+argument_list|()
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|Expr
+operator|.
+name|Verify
+argument_list|()
+operator|&&
+literal|"not a DIExpression"
+argument_list|)
+block|;
+return|return
+name|Expr
 return|;
 block|}
 comment|/// emitError - Emit an error referring to the source location of this
@@ -1780,6 +1824,100 @@ name|Type
 argument_list|)
 return|;
 block|}
+comment|/// \brief Return true if this instruction behaves
+comment|/// the same way as the generic REG_SEQUENCE instructions.
+comment|/// E.g., on ARM,
+comment|/// dX VMOVDRR rY, rZ
+comment|/// is equivalent to
+comment|/// dX = REG_SEQUENCE rY, ssub_0, rZ, ssub_1.
+comment|///
+comment|/// Note that for the optimizers to be able to take advantage of
+comment|/// this property, TargetInstrInfo::getRegSequenceLikeInputs has to be
+comment|/// override accordingly.
+name|bool
+name|isRegSequenceLike
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|RegSequence
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// \brief Return true if this instruction behaves
+comment|/// the same way as the generic EXTRACT_SUBREG instructions.
+comment|/// E.g., on ARM,
+comment|/// rX, rY VMOVRRD dZ
+comment|/// is equivalent to two EXTRACT_SUBREG:
+comment|/// rX = EXTRACT_SUBREG dZ, ssub_0
+comment|/// rY = EXTRACT_SUBREG dZ, ssub_1
+comment|///
+comment|/// Note that for the optimizers to be able to take advantage of
+comment|/// this property, TargetInstrInfo::getExtractSubregLikeInputs has to be
+comment|/// override accordingly.
+name|bool
+name|isExtractSubregLike
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|ExtractSubreg
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// \brief Return true if this instruction behaves
+comment|/// the same way as the generic INSERT_SUBREG instructions.
+comment|/// E.g., on ARM,
+comment|/// dX = VSETLNi32 dY, rZ, Imm
+comment|/// is equivalent to a INSERT_SUBREG:
+comment|/// dX = INSERT_SUBREG dY, rZ, translateImmToSubIdx(Imm)
+comment|///
+comment|/// Note that for the optimizers to be able to take advantage of
+comment|/// this property, TargetInstrInfo::getInsertSubregLikeInputs has to be
+comment|/// override accordingly.
+name|bool
+name|isInsertSubregLike
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|InsertSubreg
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Side Effect Analysis
 comment|//===--------------------------------------------------------------------===//
@@ -2061,7 +2199,6 @@ argument_list|)
 decl|const
 block|{
 comment|// Only returns true for a bundle if all bundled instructions are cheap.
-comment|// FIXME: This probably requires a target hook.
 return|return
 name|hasProperty
 argument_list|(
@@ -2187,6 +2324,14 @@ comment|/// This function can not be used for instructions inside a bundle, use
 comment|/// eraseFromBundle() to erase individual bundled instructions.
 name|void
 name|eraseFromParent
+parameter_list|()
+function_decl|;
+comment|/// Unlink 'this' from the containing basic block and delete it.
+comment|///
+comment|/// For all definitions mark their uses in DBG_VALUE nodes
+comment|/// as undefined. Otherwise like eraseFromParent().
+name|void
+name|eraseFromParentAndMarkDBGValuesForRemoval
 parameter_list|()
 function_decl|;
 comment|/// Unlink 'this' form its basic block and delete it.
@@ -3620,6 +3765,16 @@ block|{
 name|debugLoc
 operator|=
 name|dl
+expr_stmt|;
+name|assert
+argument_list|(
+name|debugLoc
+operator|.
+name|hasTrivialDestructor
+argument_list|()
+operator|&&
+literal|"Expected trivial destructor"
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// RemoveOperand - Erase an operand  from an instruction, leaving it with one

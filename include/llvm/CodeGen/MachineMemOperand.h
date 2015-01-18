@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Metadata.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Value.h"
 end_include
 
@@ -346,10 +352,8 @@ decl_stmt|;
 name|unsigned
 name|Flags
 decl_stmt|;
-specifier|const
-name|MDNode
-modifier|*
-name|TBAAInfo
+name|AAMDNodes
+name|AAInfo
 decl_stmt|;
 specifier|const
 name|MDNode
@@ -414,7 +418,7 @@ argument|uint64_t s
 argument_list|,
 argument|unsigned base_alignment
 argument_list|,
-argument|const MDNode *TBAAInfo = nullptr
+argument|const AAMDNodes&AAInfo = AAMDNodes()
 argument_list|,
 argument|const MDNode *Ranges = nullptr
 argument_list|)
@@ -607,16 +611,14 @@ operator|>>
 literal|1
 return|;
 block|}
-comment|/// getTBAAInfo - Return the TBAA tag for the memory reference.
-specifier|const
-name|MDNode
-operator|*
-name|getTBAAInfo
+comment|/// getAAInfo - Return the AA tags for the memory reference.
+name|AAMDNodes
+name|getAAInfo
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TBAAInfo
+name|AAInfo
 return|;
 block|}
 comment|/// getRanges - Return the range tag for the memory reference.

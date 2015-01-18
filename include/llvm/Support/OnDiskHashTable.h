@@ -54,25 +54,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_ON_DISK_HASH_TABLE_H
+name|LLVM_SUPPORT_ONDISKHASHTABLE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_ON_DISK_HASH_TABLE_H
+name|LLVM_SUPPORT_ONDISKHASHTABLE_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
+file|"llvm/Support/AlignOf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/AlignOf.h"
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
@@ -3047,10 +3047,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_SUPPORT_ON_DISK_HASH_TABLE_H
-end_comment
 
 end_unit
 

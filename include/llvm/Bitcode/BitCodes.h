@@ -78,6 +78,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -688,56 +694,35 @@ comment|/// abbreviation allows a complex record that has redundancy to be store
 comment|/// specialized format instead of the fully-general, fully-vbr, format.
 name|class
 name|BitCodeAbbrev
+range|:
+name|public
+name|RefCountedBase
+operator|<
+name|BitCodeAbbrev
+operator|>
 block|{
 name|SmallVector
 operator|<
 name|BitCodeAbbrevOp
-operator|,
+block|,
 literal|32
 operator|>
 name|OperandList
-expr_stmt|;
-name|unsigned
-name|char
-name|RefCount
-decl_stmt|;
-comment|// Number of things using this.
+block|;
 operator|~
 name|BitCodeAbbrev
 argument_list|()
 block|{}
+comment|// Only RefCountedBase is allowed to delete.
+name|friend
+name|class
+name|RefCountedBase
+operator|<
+name|BitCodeAbbrev
+operator|>
+block|;
 name|public
 operator|:
-name|BitCodeAbbrev
-argument_list|()
-operator|:
-name|RefCount
-argument_list|(
-literal|1
-argument_list|)
-block|{}
-name|void
-name|addRef
-argument_list|()
-block|{
-operator|++
-name|RefCount
-block|; }
-name|void
-name|dropRef
-argument_list|()
-block|{
-if|if
-condition|(
-operator|--
-name|RefCount
-operator|==
-literal|0
-condition|)
-name|delete
-name|this
-decl_stmt|;
-block|}
 name|unsigned
 name|getNumOperandInfos
 argument_list|()
@@ -758,13 +743,12 @@ return|;
 block|}
 specifier|const
 name|BitCodeAbbrevOp
-modifier|&
+operator|&
 name|getOperandInfo
 argument_list|(
-name|unsigned
-name|N
+argument|unsigned N
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|OperandList
@@ -775,12 +759,9 @@ return|;
 block|}
 name|void
 name|Add
-parameter_list|(
-specifier|const
-name|BitCodeAbbrevOp
-modifier|&
-name|OpInfo
-parameter_list|)
+argument_list|(
+argument|const BitCodeAbbrevOp&OpInfo
+argument_list|)
 block|{
 name|OperandList
 operator|.
@@ -788,11 +769,9 @@ name|push_back
 argument_list|(
 name|OpInfo
 argument_list|)
-expr_stmt|;
-block|}
-block|}
-empty_stmt|;
-block|}
+block|;   }
+expr|}
+block|; }
 end_decl_stmt
 
 begin_comment

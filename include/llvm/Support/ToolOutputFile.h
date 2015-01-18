@@ -84,7 +84,7 @@ comment|/// cleanups in its constructor and uninstalls them in its destructor.
 name|class
 name|CleanupInstaller
 block|{
-comment|/// Filename - The name of the file.
+comment|/// The name of the file.
 name|std
 operator|::
 name|string
@@ -92,17 +92,15 @@ name|Filename
 expr_stmt|;
 name|public
 label|:
-comment|/// Keep - The flag which indicates whether we should not delete the file.
+comment|/// The flag which indicates whether we should not delete the file.
 name|bool
 name|Keep
 decl_stmt|;
 name|explicit
 name|CleanupInstaller
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|filename
+name|StringRef
+name|ilename
 parameter_list|)
 function_decl|;
 operator|~
@@ -119,20 +117,20 @@ name|OS
 decl_stmt|;
 name|public
 label|:
-comment|/// tool_output_file - This constructor's arguments are passed to
-comment|/// to raw_fd_ostream's constructor.
+comment|/// This constructor's arguments are passed to to raw_fd_ostream's
+comment|/// constructor.
 name|tool_output_file
 argument_list|(
-argument|const char *filename
+argument|StringRef Filename
 argument_list|,
-argument|std::string&ErrorInfo
+argument|std::error_code&EC
 argument_list|,
 argument|sys::fs::OpenFlags Flags
 argument_list|)
 empty_stmt|;
 name|tool_output_file
 argument_list|(
-argument|const char *Filename
+argument|StringRef Filename
 argument_list|,
 argument|int FD
 argument_list|)

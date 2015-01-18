@@ -517,11 +517,51 @@ end_return
 
 begin_comment
 unit|}
-comment|// implicit conversion operator to ArrayRef.
+comment|/// Constructor from a single element.
 end_comment
 
-begin_expr_stmt
-unit|operator
+begin_macro
+unit|explicit
+name|TinyPtrVector
+argument_list|(
+argument|EltTy Elt
+argument_list|)
+end_macro
+
+begin_macro
+unit|:
+name|Val
+argument_list|(
+argument|Elt
+argument_list|)
+end_macro
+
+begin_block
+block|{}
+end_block
+
+begin_comment
+comment|/// Constructor from an ArrayRef.
+end_comment
+
+begin_decl_stmt
+name|explicit
+name|TinyPtrVector
+argument_list|(
+name|ArrayRef
+operator|<
+name|EltTy
+operator|>
+name|Elts
+argument_list|)
+range|:
+name|Val
+argument_list|(
+argument|new VecTy(Elts.begin(), Elts.end())
+argument_list|)
+block|{}
+comment|// implicit conversion operator to ArrayRef.
+name|operator
 name|ArrayRef
 operator|<
 name|EltTy
@@ -538,14 +578,9 @@ name|isNull
 argument_list|()
 condition|)
 return|return
-name|ArrayRef
-operator|<
-name|EltTy
-operator|>
-operator|(
-operator|)
+name|None
 return|;
-end_expr_stmt
+end_decl_stmt
 
 begin_if
 if|if

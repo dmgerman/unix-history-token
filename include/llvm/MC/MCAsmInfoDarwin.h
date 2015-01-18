@@ -79,16 +79,19 @@ range|:
 name|public
 name|MCAsmInfo
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 name|public
 operator|:
 name|explicit
 name|MCAsmInfoDarwin
 argument_list|()
+block|;
+name|bool
+name|isSectionAtomizableBySymbols
+argument_list|(
+argument|const MCSection&Section
+argument_list|)
+specifier|const
+name|override
 block|;   }
 decl_stmt|;
 block|}

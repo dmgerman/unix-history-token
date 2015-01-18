@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPS_MC_CODE_EMITTER_H
+name|LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSMCCODEEMITTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPS_MC_CODE_EMITTER_H
+name|LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSMCCODEEMITTER_H
 end_define
 
 begin_include
@@ -230,7 +230,7 @@ argument|const MCSubtargetInfo&STI
 argument_list|)
 specifier|const
 block|;
-comment|// getBranchJumpOpValue - Return binary encoding of the jump
+comment|// getJumpTargetOpValue - Return binary encoding of the jump
 comment|// target operand. If the machine operand requires relocation,
 comment|// record the relocation and return zero.
 name|unsigned
@@ -262,11 +262,83 @@ argument|const MCSubtargetInfo&STI
 argument_list|)
 specifier|const
 block|;
+comment|// getUImm5Lsl2Encoding - Return binary encoding of the microMIPS jump
+comment|// target operand.
+name|unsigned
+name|getUImm5Lsl2Encoding
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getSImm3Lsa2Value
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getUImm6Lsl2Encoding
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+comment|// getSImm9AddiuspValue - Return binary encoding of the microMIPS addiusp
+comment|// instruction immediate operand.
+name|unsigned
+name|getSImm9AddiuspValue
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
 comment|// getBranchTargetOpValue - Return binary encoding of the branch
 comment|// target operand. If the machine operand requires relocation,
 comment|// record the relocation and return zero.
 name|unsigned
 name|getBranchTargetOpValue
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+comment|// getBranchTarget7OpValue - Return binary encoding of the microMIPS branch
+comment|// target operand. If the machine operand requires relocation,
+comment|// record the relocation and return zero.
+name|unsigned
+name|getBranchTarget7OpValueMM
 argument_list|(
 argument|const MCInst&MI
 argument_list|,
@@ -384,7 +456,72 @@ argument_list|)
 specifier|const
 block|;
 name|unsigned
+name|getMemEncodingMMImm4
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getMemEncodingMMImm4Lsl1
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getMemEncodingMMImm4Lsl2
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getMemEncodingMMSPImm5Lsl2
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
 name|getMemEncodingMMImm12
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getMemEncodingMMImm4sp
 argument_list|(
 argument|const MCInst&MI
 argument_list|,
@@ -463,6 +600,45 @@ argument_list|)
 specifier|const
 block|;
 name|unsigned
+name|getUImm3Mod8Encoding
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getUImm4AndValue
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getRegisterPairOpValue
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
 name|getExprOpValue
 argument_list|(
 argument|const MCExpr *Expr
@@ -472,7 +648,33 @@ argument_list|,
 argument|const MCSubtargetInfo&STI
 argument_list|)
 specifier|const
-block|;  }
+block|;
+name|unsigned
+name|getRegisterListOpValue
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getRegisterListOpValue16
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|; }
 decl_stmt|;
 comment|// class MipsMCCodeEmitter
 block|}

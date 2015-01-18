@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|R600MACHINESCHEDULER_H_
+name|LLVM_LIB_TARGET_R600_R600MACHINESCHEDULER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|R600MACHINESCHEDULER_H_
+name|LLVM_LIB_TARGET_R600_R600MACHINESCHEDULER_H
 end_define
 
 begin_include

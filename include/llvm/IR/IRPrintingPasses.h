@@ -70,13 +70,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_IR_IR_PRINTING_PASSES_H
+name|LLVM_IR_IRPRINTINGPASSES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_IR_IR_PRINTING_PASSES_H
+name|LLVM_IR_IRPRINTINGPASSES_H
 end_define
 
 begin_include
@@ -217,7 +217,7 @@ name|PreservedAnalyses
 name|run
 parameter_list|(
 name|Module
-modifier|*
+modifier|&
 name|M
 parameter_list|)
 function_decl|;
@@ -273,7 +273,7 @@ name|PreservedAnalyses
 name|run
 parameter_list|(
 name|Function
-modifier|*
+modifier|&
 name|F
 parameter_list|)
 function_decl|;

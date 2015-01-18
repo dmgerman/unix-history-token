@@ -82,12 +82,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/BitVector.h"
 end_include
 
@@ -125,6 +119,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/ilist_node.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -409,6 +409,13 @@ comment|///
 name|class
 name|SDValue
 block|{
+name|friend
+block|struct
+name|DenseMapInfo
+operator|<
+name|SDValue
+operator|>
+expr_stmt|;
 name|SDNode
 modifier|*
 name|Node
@@ -439,17 +446,7 @@ argument|SDNode *node
 argument_list|,
 argument|unsigned resno
 argument_list|)
-operator|:
-name|Node
-argument_list|(
-name|node
-argument_list|)
-operator|,
-name|ResNo
-argument_list|(
-argument|resno
-argument_list|)
-block|{}
+expr_stmt|;
 comment|/// get the index which selects a specific result in the SDNode
 name|unsigned
 name|getResNo
@@ -805,19 +802,18 @@ name|SDValue
 name|getEmptyKey
 argument_list|()
 block|{
-return|return
 name|SDValue
-argument_list|(
-operator|(
-name|SDNode
-operator|*
-operator|)
-operator|-
-literal|1
-argument_list|,
+name|V
+block|;
+name|V
+operator|.
+name|ResNo
+operator|=
 operator|-
 literal|1U
-argument_list|)
+block|;
+return|return
+name|V
 return|;
 block|}
 specifier|static
@@ -826,18 +822,18 @@ name|SDValue
 name|getTombstoneKey
 argument_list|()
 block|{
-return|return
 name|SDValue
-argument_list|(
-operator|(
-name|SDNode
-operator|*
-operator|)
+name|V
+block|;
+name|V
+operator|.
+name|ResNo
+operator|=
 operator|-
-literal|1
-argument_list|,
-literal|0
-argument_list|)
+literal|2U
+block|;
+return|return
+name|V
 return|;
 block|}
 end_expr_stmt
@@ -1577,6 +1573,42 @@ operator|>=
 name|ISD
 operator|::
 name|FIRST_TARGET_MEMORY_OPCODE
+return|;
+block|}
+comment|/// Test if this node is a memory intrinsic (with valid pointer information).
+comment|/// INTRINSIC_W_CHAIN and INTRINSIC_VOID nodes are sometimes created for
+comment|/// non-memory intrinsics (with chains) that are not really instances of
+comment|/// MemSDNode. For such nodes, we need some extra state to determine the
+comment|/// proper classof relationship.
+name|bool
+name|isMemIntrinsic
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|NodeType
+operator|==
+name|ISD
+operator|::
+name|INTRINSIC_W_CHAIN
+operator|||
+name|NodeType
+operator|==
+name|ISD
+operator|::
+name|INTRINSIC_VOID
+operator|)
+operator|&&
+operator|(
+operator|(
+name|SubclassData
+operator|>>
+literal|13
+operator|)
+operator|&
+literal|1
+operator|)
 return|;
 block|}
 comment|/// isMachineOpcode - Test if this node has a post-isel opcode, directly
@@ -2335,13 +2367,11 @@ name|SDNode
 operator|*
 name|N
 argument_list|,
-name|SmallPtrSet
+name|SmallPtrSetImpl
 operator|<
 specifier|const
 name|SDNode
 operator|*
-argument_list|,
-literal|32
 operator|>
 operator|&
 name|Visited
@@ -3358,6 +3388,39 @@ argument_list|(
 argument|Order
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|debugLoc
+operator|.
+name|hasTrivialDestructor
+argument_list|()
+operator|&&
+literal|"Expected trivial destructor"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|NumOperands
+operator|==
+name|Ops
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"NumOperands wasn't wide enough for its operands!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|NumValues
+operator|==
+name|VTs
+operator|.
+name|NumVTs
+operator|&&
+literal|"NumValues wasn't wide enough for its operands!"
+argument_list|)
+block|;
 for|for
 control|(
 name|unsigned
@@ -3376,6 +3439,13 @@ operator|++
 name|i
 control|)
 block|{
+name|assert
+argument_list|(
+name|OperandList
+operator|&&
+literal|"no operands available"
+argument_list|)
+expr_stmt|;
 name|OperandList
 index|[
 name|i
@@ -3497,7 +3567,28 @@ name|IROrder
 argument_list|(
 argument|Order
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|debugLoc
+operator|.
+name|hasTrivialDestructor
+argument_list|()
+operator|&&
+literal|"Expected trivial destructor"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|NumValues
+operator|==
+name|VTs
+operator|.
+name|NumVTs
+operator|&&
+literal|"NumValues wasn't wide enough for its operands!"
+argument_list|)
+block|;   }
 comment|/// InitOperands - Initialize the operands list of this with 1 operand.
 name|void
 name|InitOperands
@@ -3855,6 +3946,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|assert
+argument_list|(
+name|NumOperands
+operator|==
+name|N
+operator|&&
+literal|"NumOperands wasn't wide enough for its operands!"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|OperandList
 operator|=
 name|Ops
@@ -4149,6 +4252,53 @@ comment|// Define inline functions from the SDValue class.
 end_comment
 
 begin_expr_stmt
+specifier|inline
+name|SDValue
+operator|::
+name|SDValue
+argument_list|(
+argument|SDNode *node
+argument_list|,
+argument|unsigned resno
+argument_list|)
+operator|:
+name|Node
+argument_list|(
+name|node
+argument_list|)
+operator|,
+name|ResNo
+argument_list|(
+argument|resno
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|Node
+operator|||
+name|ResNo
+operator|<
+name|Node
+operator|->
+name|getNumValues
+argument_list|()
+operator|)
+operator|&&
+literal|"Invalid result number for the given node!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|ResNo
+operator|<
+operator|-
+literal|2U
+operator|&&
+literal|"Cannot use result numbers reserved for DenseMaps."
+argument_list|)
+block|; }
 specifier|inline
 name|unsigned
 name|SDValue
@@ -5265,18 +5415,16 @@ name|getOffset
 argument_list|()
 return|;
 block|}
-comment|/// Returns the TBAAInfo that describes the dereference.
-specifier|const
-name|MDNode
-operator|*
-name|getTBAAInfo
+comment|/// Returns the AA info that describes the dereference.
+name|AAMDNodes
+name|getAAInfo
 argument_list|()
 specifier|const
 block|{
 return|return
 name|MMO
 operator|->
-name|getTBAAInfo
+name|getAAInfo
 argument_list|()
 return|;
 block|}
@@ -5571,6 +5719,29 @@ operator|==
 name|ISD
 operator|::
 name|ATOMIC_STORE
+operator|||
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|MLOAD
+operator|||
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|MSTORE
+operator|||
+name|N
+operator|->
+name|isMemIntrinsic
+argument_list|()
 operator|||
 name|N
 operator|->
@@ -6233,7 +6404,13 @@ argument|MemoryVT
 argument_list|,
 argument|MMO
 argument_list|)
-block|{   }
+block|{
+name|SubclassData
+operator||=
+literal|1u
+operator|<<
+literal|13
+block|;   }
 comment|// Methods to support isa and dyn_cast
 specifier|static
 name|bool
@@ -6247,21 +6424,8 @@ comment|// early a node with a target opcode can be of this class
 return|return
 name|N
 operator|->
-name|getOpcode
+name|isMemIntrinsic
 argument_list|()
-operator|==
-name|ISD
-operator|::
-name|INTRINSIC_W_CHAIN
-operator|||
-name|N
-operator|->
-name|getOpcode
-argument_list|()
-operator|==
-name|ISD
-operator|::
-name|INTRINSIC_VOID
 operator|||
 name|N
 operator|->
@@ -6818,6 +6982,32 @@ return|return
 name|Value
 operator|->
 name|isNaN
+argument_list|()
+return|;
+block|}
+comment|/// isInfinity - Return true if the value is an infinity
+name|bool
+name|isInfinity
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+operator|->
+name|isInfinity
+argument_list|()
+return|;
+block|}
+comment|/// isNegative - Return true if the value is negative.
+name|bool
+name|isNegative
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+operator|->
+name|isNegative
 argument_list|()
 return|;
 block|}
@@ -9296,6 +9486,300 @@ operator|==
 name|ISD
 operator|::
 name|STORE
+return|;
+block|}
+expr|}
+block|;
+comment|/// MaskedLoadStoreSDNode - This is a base class is used to represent MLOAD and
+comment|/// MSTORE nodes
+comment|///
+name|class
+name|MaskedLoadStoreSDNode
+operator|:
+name|public
+name|MemSDNode
+block|{
+comment|// Operands
+name|SDUse
+name|Ops
+index|[
+literal|4
+index|]
+block|;
+name|public
+operator|:
+name|friend
+name|class
+name|SelectionDAG
+block|;
+name|MaskedLoadStoreSDNode
+argument_list|(
+argument|ISD::NodeType NodeTy
+argument_list|,
+argument|unsigned Order
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SDValue *Operands
+argument_list|,
+argument|unsigned numOperands
+argument_list|,
+argument|SDVTList VTs
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|MachineMemOperand *MMO
+argument_list|)
+operator|:
+name|MemSDNode
+argument_list|(
+argument|NodeTy
+argument_list|,
+argument|Order
+argument_list|,
+argument|dl
+argument_list|,
+argument|VTs
+argument_list|,
+argument|MemVT
+argument_list|,
+argument|MMO
+argument_list|)
+block|{
+name|InitOperands
+argument_list|(
+name|Ops
+argument_list|,
+name|Operands
+argument_list|,
+name|numOperands
+argument_list|)
+block|;   }
+comment|// In the both nodes address is Op1, mask is Op2:
+comment|// MaskedLoadSDNode (Chain, ptr, mask, src0), src0 is a passthru value
+comment|// MaskedStoreSDNode (Chain, ptr, mask, data)
+comment|// Mask is a vector of i1 elements
+specifier|const
+name|SDValue
+operator|&
+name|getBasePtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+return|;
+block|}
+specifier|const
+name|SDValue
+operator|&
+name|getMask
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|2
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|MLOAD
+operator|||
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|MSTORE
+return|;
+block|}
+expr|}
+block|;
+comment|/// MaskedLoadSDNode - This class is used to represent an MLOAD node
+comment|///
+name|class
+name|MaskedLoadSDNode
+operator|:
+name|public
+name|MaskedLoadStoreSDNode
+block|{
+name|public
+operator|:
+name|friend
+name|class
+name|SelectionDAG
+block|;
+name|MaskedLoadSDNode
+argument_list|(
+argument|unsigned Order
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SDValue *Operands
+argument_list|,
+argument|unsigned numOperands
+argument_list|,
+argument|SDVTList VTs
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|MachineMemOperand *MMO
+argument_list|)
+operator|:
+name|MaskedLoadStoreSDNode
+argument_list|(
+argument|ISD::MLOAD
+argument_list|,
+argument|Order
+argument_list|,
+argument|dl
+argument_list|,
+argument|Operands
+argument_list|,
+argument|numOperands
+argument_list|,
+argument|VTs
+argument_list|,
+argument|MemVT
+argument_list|,
+argument|MMO
+argument_list|)
+block|{}
+specifier|const
+name|SDValue
+operator|&
+name|getSrc0
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|3
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|MLOAD
+return|;
+block|}
+expr|}
+block|;
+comment|/// MaskedStoreSDNode - This class is used to represent an MSTORE node
+comment|///
+name|class
+name|MaskedStoreSDNode
+operator|:
+name|public
+name|MaskedLoadStoreSDNode
+block|{
+name|public
+operator|:
+name|friend
+name|class
+name|SelectionDAG
+block|;
+name|MaskedStoreSDNode
+argument_list|(
+argument|unsigned Order
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SDValue *Operands
+argument_list|,
+argument|unsigned numOperands
+argument_list|,
+argument|SDVTList VTs
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|MachineMemOperand *MMO
+argument_list|)
+operator|:
+name|MaskedLoadStoreSDNode
+argument_list|(
+argument|ISD::MSTORE
+argument_list|,
+argument|Order
+argument_list|,
+argument|dl
+argument_list|,
+argument|Operands
+argument_list|,
+argument|numOperands
+argument_list|,
+argument|VTs
+argument_list|,
+argument|MemVT
+argument_list|,
+argument|MMO
+argument_list|)
+block|{}
+specifier|const
+name|SDValue
+operator|&
+name|getData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|3
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|MSTORE
 return|;
 block|}
 expr|}

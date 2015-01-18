@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NVPTX_ALLOCA_HOISTING_H_
+name|LLVM_LIB_TARGET_NVPTX_NVPTXALLOCAHOISTING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NVPTX_ALLOCA_HOISTING_H_
+name|LLVM_LIB_TARGET_NVPTX_NVPTXALLOCAHOISTING_H
 end_define
 
 begin_include
@@ -180,10 +180,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// NVPTX_ALLOCA_HOISTING_H_
-end_comment
 
 end_unit
 

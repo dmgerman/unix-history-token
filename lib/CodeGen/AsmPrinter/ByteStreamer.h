@@ -54,14 +54,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_BYTESTREAMER_H
+name|LLVM_LIB_CODEGEN_ASMPRINTER_BYTESTREAMER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_BYTESTREAMER_H
+name|LLVM_LIB_CODEGEN_ASMPRINTER_BYTESTREAMER_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"DIEHash.h"
+end_include
 
 begin_include
 include|#
@@ -79,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/MCStreamer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"DIEHash.h"
 end_include
 
 begin_decl_stmt

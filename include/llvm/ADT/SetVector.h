@@ -367,6 +367,8 @@ name|insert
 argument_list|(
 name|X
 argument_list|)
+operator|.
+name|second
 decl_stmt|;
 if|if
 condition|(
@@ -416,6 +418,8 @@ argument_list|(
 operator|*
 name|Start
 argument_list|)
+operator|.
+name|second
 condition|)
 name|vector_
 operator|.

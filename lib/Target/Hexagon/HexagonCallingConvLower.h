@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_Hexagon_CODEGEN_CALLINGCONVLOWER_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONCALLINGCONVLOWER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_Hexagon_CODEGEN_CALLINGCONVLOWER_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONCALLINGCONVLOWER_H
 end_define
 
 begin_include

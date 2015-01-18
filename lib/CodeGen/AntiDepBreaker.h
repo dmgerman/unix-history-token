@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_ANTIDEPBREAKER_H
+name|LLVM_LIB_CODEGEN_ANTIDEPBREAKER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_ANTIDEPBREAKER_H
+name|LLVM_LIB_CODEGEN_ANTIDEPBREAKER_H
 end_define
 
 begin_include
@@ -109,9 +109,8 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// AntiDepBreaker - This class works into conjunction with the
-comment|/// post-RA scheduler to rename registers to break register
-comment|/// anti-dependencies.
+comment|/// This class works in conjunction with the post-RA scheduler to rename
+comment|/// registers to break register anti-dependencies (WAR hazards).
 name|class
 name|AntiDepBreaker
 block|{
@@ -140,7 +139,7 @@ operator|~
 name|AntiDepBreaker
 argument_list|()
 expr_stmt|;
-comment|/// Start - Initialize anti-dep breaking for a new basic block.
+comment|/// Initialize anti-dep breaking for a new basic block.
 name|virtual
 name|void
 name|StartBlock
@@ -152,10 +151,8 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// BreakAntiDependencies - Identifiy anti-dependencies within a
-comment|/// basic-block region and break them by renaming registers. Return
-comment|/// the number of anti-dependencies broken.
-comment|///
+comment|/// Identifiy anti-dependencies within a basic-block region and break them by
+comment|/// renaming registers. Return the number of anti-dependencies broken.
 name|virtual
 name|unsigned
 name|BreakAntiDependencies
@@ -190,9 +187,8 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// Observe - Update liveness information to account for the current
+comment|/// Update liveness information to account for the current
 comment|/// instruction, which will not be scheduled.
-comment|///
 name|virtual
 name|void
 name|Observe
@@ -210,7 +206,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Finish - Finish anti-dep breaking for a basic block.
+comment|/// Finish anti-dep breaking for a basic block.
 name|virtual
 name|void
 name|FinishBlock
@@ -218,7 +214,7 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// UpdateDbgValue - Update DBG_VALUE if dependency breaker is updating
+comment|/// Update DBG_VALUE if dependency breaker is updating
 comment|/// other machine instruction to use NewReg.
 name|void
 name|UpdateDbgValue

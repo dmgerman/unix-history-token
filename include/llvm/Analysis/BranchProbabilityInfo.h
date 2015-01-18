@@ -293,6 +293,27 @@ argument_list|,
 argument|uint32_t Weight
 argument_list|)
 block|;
+specifier|static
+name|uint32_t
+name|getBranchWeightStackProtector
+argument_list|(
+argument|bool IsLikely
+argument_list|)
+block|{
+return|return
+name|IsLikely
+operator|?
+operator|(
+literal|1u
+operator|<<
+literal|20
+operator|)
+operator|-
+literal|1
+operator|:
+literal|1
+return|;
+block|}
 name|private
 operator|:
 comment|// Since we allow duplicate edges from one basic block to another, we use

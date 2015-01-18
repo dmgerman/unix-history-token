@@ -54,19 +54,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_IR_LEAKSCONTEXT_H
+name|LLVM_LIB_IR_LEAKSCONTEXT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_IR_LEAKSCONTEXT_H
+name|LLVM_LIB_IR_LEAKSCONTEXT_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Metadata.h"
 end_include
 
 begin_include
@@ -128,6 +134,32 @@ argument_list|()
 operator|<<
 operator|*
 name|P
+block|; }
+block|}
+expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|PrinterTrait
+operator|<
+name|Metadata
+operator|>
+block|{
+specifier|static
+name|void
+name|print
+argument_list|(
+argument|const Metadata *P
+argument_list|)
+block|{
+name|P
+operator|->
+name|print
+argument_list|(
+name|errs
+argument_list|()
+argument_list|)
 block|; }
 block|}
 expr_stmt|;
@@ -404,10 +436,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_IR_LEAKSCONTEXT_H
-end_comment
 
 end_unit
 

@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CodeGen.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -142,28 +148,6 @@ decl_stmt|;
 name|class
 name|StructType
 decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-expr|struct
-name|DenseMapInfo
-expr_stmt|;
-name|template
-operator|<
-name|typename
-name|KeyT
-operator|,
-name|typename
-name|ValueT
-operator|,
-name|typename
-name|KeyInfoT
-operator|>
-name|class
-name|DenseMap
-expr_stmt|;
 name|template
 operator|<
 operator|>
@@ -606,6 +590,20 @@ operator|::
 name|const_iterator
 name|const_iterator
 expr_stmt|;
+comment|/// The Function reverse iterator.
+typedef|typedef
+name|FunctionListType
+operator|::
+name|reverse_iterator
+name|reverse_iterator
+expr_stmt|;
+comment|/// The Function constant reverse iterator.
+typedef|typedef
+name|FunctionListType
+operator|::
+name|const_reverse_iterator
+name|const_reverse_iterator
+expr_stmt|;
 comment|/// The Global Alias iterators.
 typedef|typedef
 name|AliasListType
@@ -627,7 +625,7 @@ operator|::
 name|iterator
 name|named_metadata_iterator
 expr_stmt|;
-comment|/// The named metadata constant interators.
+comment|/// The named metadata constant iterators.
 typedef|typedef
 name|NamedMDListType
 operator|::
@@ -679,8 +677,32 @@ comment|/// during the append operation.
 name|AppendUnique
 init|=
 literal|6
+block|,
+comment|// Markers:
+name|ModFlagBehaviorFirstVal
+init|=
+name|Error
+block|,
+name|ModFlagBehaviorLastVal
+init|=
+name|AppendUnique
 block|}
 enum|;
+comment|/// Checks if Metadata represents a valid ModFlagBehavior, and stores the
+comment|/// converted result in MFB.
+specifier|static
+name|bool
+name|isValidModFlagBehavior
+parameter_list|(
+name|Metadata
+modifier|*
+name|MD
+parameter_list|,
+name|ModFlagBehavior
+modifier|&
+name|MFB
+parameter_list|)
+function_decl|;
 struct|struct
 name|ModuleFlagEntry
 block|{
@@ -691,7 +713,7 @@ name|MDString
 modifier|*
 name|Key
 decl_stmt|;
-name|Value
+name|Metadata
 modifier|*
 name|Val
 decl_stmt|;
@@ -701,7 +723,7 @@ argument|ModFlagBehavior B
 argument_list|,
 argument|MDString *K
 argument_list|,
-argument|Value *V
+argument|Metadata *V
 argument_list|)
 block|:
 name|Behavior
@@ -784,18 +806,12 @@ name|string
 name|TargetTriple
 expr_stmt|;
 comment|///< Platform target triple Module compiled on
+comment|///< Format: (arch)(sub)-(vendor)-(sys0-(abi)
 name|void
 modifier|*
 name|NamedMDSymTab
 decl_stmt|;
 comment|///< NamedMDNode names.
-comment|// Allow lazy initialization in const method.
-name|mutable
-name|RandomNumberGenerator
-modifier|*
-name|RNG
-decl_stmt|;
-comment|///< The random number generator for this module.
 comment|// We need to keep the string because the C API expects us to own the string
 comment|// representation.
 comment|// Since we have it, we also use an empty string to represent a module without
@@ -847,6 +863,19 @@ operator|::
 name|string
 operator|&
 name|getModuleIdentifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModuleID
+return|;
+block|}
+comment|/// \brief Get a short "name" for the module.
+comment|///
+comment|/// This is useful for debugging or logging. It is essentially a convenience
+comment|/// wrapper around getModuleIdentifier().
+name|StringRef
+name|getName
 argument_list|()
 specifier|const
 block|{
@@ -919,15 +948,26 @@ return|return
 name|GlobalScopeAsm
 return|;
 block|}
-comment|/// Get the RandomNumberGenerator for this module. The RNG can be
-comment|/// seeded via -rng-seed=<uint64> and is salted with the ModuleID.
-comment|/// The returned RNG should not be shared across threads.
+comment|/// Get a RandomNumberGenerator salted for use with this module. The
+comment|/// RNG can be seeded via -rng-seed=<uint64> and is salted with the
+comment|/// ModuleID and the provided pass salt. The returned RNG should not
+comment|/// be shared across threads or passes.
+comment|///
+comment|/// A unique RNG per pass ensures a reproducible random stream even
+comment|/// when other randomness consuming passes are added or removed. In
+comment|/// addition, the random stream will be reproducible across LLVM
+comment|/// versions when the pass does not change.
 name|RandomNumberGenerator
-operator|&
-name|getRNG
-argument_list|()
+modifier|*
+name|createRNG
+argument_list|(
 specifier|const
-expr_stmt|;
+name|Pass
+operator|*
+name|P
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 comment|/// @name Module Level Mutators
 comment|/// @{
@@ -1099,6 +1139,17 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|StructType
+operator|*
+operator|>
+name|getIdentifiedStructTypes
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// @}
 comment|/// @name Function Accessors
 comment|/// @{
@@ -1160,7 +1211,7 @@ name|RetTy
 argument_list|,
 operator|...
 argument_list|)
-name|END_WITH_NULL
+name|LLVM_END_WITH_NULL
 decl_stmt|;
 comment|/// Same as above, but without the attributes.
 name|Constant
@@ -1176,7 +1227,7 @@ name|RetTy
 argument_list|,
 operator|...
 argument_list|)
-name|END_WITH_NULL
+name|LLVM_END_WITH_NULL
 decl_stmt|;
 comment|/// Look up the specified function in the module symbol table. If it does not
 comment|/// exist, return null.
@@ -1196,7 +1247,24 @@ comment|/// Look up the specified global variable in the module symbol table. If
 comment|/// does not exist, return null. If AllowInternal is set to true, this
 comment|/// function will return types that have InternalLinkage. By default, these
 comment|/// types are not returned.
-specifier|const
+name|GlobalVariable
+modifier|*
+name|getGlobalVariable
+argument_list|(
+name|StringRef
+name|Name
+argument_list|)
+decl|const
+block|{
+return|return
+name|getGlobalVariable
+argument_list|(
+name|Name
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
 name|GlobalVariable
 modifier|*
 name|getGlobalVariable
@@ -1206,8 +1274,6 @@ name|Name
 argument_list|,
 name|bool
 name|AllowInternal
-operator|=
-name|false
 argument_list|)
 decl|const
 block|{
@@ -1388,7 +1454,7 @@ decl|const
 decl_stmt|;
 comment|/// Return the corresponding value if Key appears in module flags, otherwise
 comment|/// return null.
-name|Value
+name|Metadata
 modifier|*
 name|getModuleFlag
 argument_list|(
@@ -1424,7 +1490,21 @@ parameter_list|,
 name|StringRef
 name|Key
 parameter_list|,
-name|Value
+name|Metadata
+modifier|*
+name|Val
+parameter_list|)
+function_decl|;
+name|void
+name|addModuleFlag
+parameter_list|(
+name|ModFlagBehavior
+name|Behavior
+parameter_list|,
+name|StringRef
+name|Key
+parameter_list|,
+name|Constant
 modifier|*
 name|Val
 parameter_list|)
@@ -1482,18 +1562,6 @@ name|get
 argument_list|()
 return|;
 block|}
-comment|/// True if the definition of GV has yet to be materializedfrom the
-comment|/// GVMaterializer.
-name|bool
-name|isMaterializable
-argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// Returns true if this GV was loaded from this Module's GVMaterializer and
 comment|/// the GVMaterializer knows how to dematerialize the GV.
 name|bool
@@ -1509,25 +1577,19 @@ decl_stmt|;
 comment|/// Make sure the GlobalValue is fully read. If the module is corrupt, this
 comment|/// returns true and fills in the optional string with information about the
 comment|/// problem. If successful, this returns false.
-name|bool
-name|Materialize
+name|std
+operator|::
+name|error_code
+name|materialize
 argument_list|(
 name|GlobalValue
 operator|*
 name|GV
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrInfo
-operator|=
-name|nullptr
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// If the GlobalValue is read in, and if the GVMaterializer supports it,
 comment|/// release the memory for the function, and set it up to be materialized
-comment|/// lazily. If !isDematerializable(), this method is a noop.
+comment|/// lazily. If !isDematerializable(), this method is a no-op.
 name|void
 name|Dematerialize
 parameter_list|(
@@ -1550,9 +1612,7 @@ name|std
 operator|::
 name|error_code
 name|materializeAllPermanently
-argument_list|(
-argument|bool ReleaseBuffer = false
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/// @}
 comment|/// @name Direct access to the globals list, functions list, and symbol table
@@ -1924,6 +1984,52 @@ name|end
 argument_list|()
 return|;
 block|}
+name|reverse_iterator
+name|rbegin
+parameter_list|()
+block|{
+return|return
+name|FunctionList
+operator|.
+name|rbegin
+argument_list|()
+return|;
+block|}
+name|const_reverse_iterator
+name|rbegin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FunctionList
+operator|.
+name|rbegin
+argument_list|()
+return|;
+block|}
+name|reverse_iterator
+name|rend
+parameter_list|()
+block|{
+return|return
+name|FunctionList
+operator|.
+name|rend
+argument_list|()
+return|;
+block|}
+name|const_reverse_iterator
+name|rend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FunctionList
+operator|.
+name|rend
+argument_list|()
+return|;
+block|}
 name|size_t
 name|size
 argument_list|()
@@ -1946,6 +2052,49 @@ name|FunctionList
 operator|.
 name|empty
 argument_list|()
+return|;
+block|}
+name|iterator_range
+operator|<
+name|iterator
+operator|>
+name|functions
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|iterator
+operator|>
+operator|(
+name|begin
+argument_list|()
+operator|,
+name|end
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|const_iterator
+operator|>
+name|functions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|const_iterator
+operator|>
+operator|(
+name|begin
+argument_list|()
+operator|,
+name|end
+argument_list|()
+operator|)
 return|;
 block|}
 comment|/// @}
@@ -2223,6 +2372,27 @@ name|getDwarfVersion
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// @}
+comment|/// @name Utility functions for querying and setting PIC level
+comment|/// @{
+comment|/// \brief Returns the PIC level (small or large model)
+name|PICLevel
+operator|::
+name|Level
+name|getPICLevel
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Set the PIC level (small or large model)
+name|void
+name|setPICLevel
+argument_list|(
+name|PICLevel
+operator|::
+name|Level
+name|PL
+argument_list|)
+decl_stmt|;
 comment|/// @}
 block|}
 empty_stmt|;

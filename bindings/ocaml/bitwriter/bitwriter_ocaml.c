@@ -34,10 +34,6 @@ file|"caml/memory.h"
 end_include
 
 begin_comment
-comment|/*===-- Modules -----------------------------------------------------------===*/
-end_comment
-
-begin_comment
 comment|/* Llvm.llmodule -> string -> bool */
 end_comment
 
@@ -46,7 +42,7 @@ name|CAMLprim
 name|value
 name|llvm_write_bitcode_file
 parameter_list|(
-name|value
+name|LLVMModuleRef
 name|M
 parameter_list|,
 name|value
@@ -54,13 +50,10 @@ name|Path
 parameter_list|)
 block|{
 name|int
-name|res
+name|Result
 init|=
 name|LLVMWriteBitcodeToFile
 argument_list|(
-operator|(
-name|LLVMModuleRef
-operator|)
 name|M
 argument_list|,
 name|String_val
@@ -72,7 +65,7 @@ decl_stmt|;
 return|return
 name|Val_bool
 argument_list|(
-name|res
+name|Result
 operator|==
 literal|0
 argument_list|)
@@ -92,7 +85,7 @@ parameter_list|(
 name|value
 name|U
 parameter_list|,
-name|value
+name|LLVMModuleRef
 name|M
 parameter_list|,
 name|value
@@ -103,7 +96,7 @@ name|int
 name|Unbuffered
 decl_stmt|;
 name|int
-name|res
+name|Result
 decl_stmt|;
 if|if
 condition|(
@@ -135,13 +128,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|res
+name|Result
 operator|=
 name|LLVMWriteBitcodeToFD
 argument_list|(
-operator|(
-name|LLVMModuleRef
-operator|)
 name|M
 argument_list|,
 name|Int_val
@@ -157,9 +147,31 @@ expr_stmt|;
 return|return
 name|Val_bool
 argument_list|(
-name|res
+name|Result
 operator|==
 literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Llvm.llmodule -> Llvm.llmemorybuffer */
+end_comment
+
+begin_function
+name|CAMLprim
+name|LLVMMemoryBufferRef
+name|llvm_write_bitcode_to_memory_buffer
+parameter_list|(
+name|LLVMModuleRef
+name|M
+parameter_list|)
+block|{
+return|return
+name|LLVMWriteBitcodeToMemoryBuffer
+argument_list|(
+name|M
 argument_list|)
 return|;
 block|}

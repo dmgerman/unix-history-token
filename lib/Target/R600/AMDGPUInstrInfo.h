@@ -58,20 +58,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPUINSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_R600_AMDGPUINSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPUINSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_R600_AMDGPUINSTRINFO_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"AMDGPUInstrInfo.h"
-end_include
 
 begin_include
 include|#
@@ -170,15 +164,6 @@ operator|:
 specifier|const
 name|AMDGPURegisterInfo
 name|RI
-block|;
-name|bool
-name|getNextBranchInstr
-argument_list|(
-argument|MachineBasicBlock::iterator&iter
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|)
-specifier|const
 block|;
 name|virtual
 name|void
@@ -301,26 +286,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|virtual
-name|void
-name|copyPhysReg
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|DebugLoc DL
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool KillSrc
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
 name|bool
 name|expandPostRAPseudo
 argument_list|(
@@ -399,6 +364,8 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|public
+operator|:
 comment|/// \returns the smallest register index that will be accessed by an indirect
 comment|/// read or write or -1 if indirect addressing is not used by this program.
 name|int
@@ -417,8 +384,6 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|public
-operator|:
 name|bool
 name|canFoldMemoryOperand
 argument_list|(
@@ -470,6 +435,12 @@ argument|bool UnfoldStore
 argument_list|,
 argument|unsigned *LoadRegIndex = nullptr
 argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|enableClusterLoads
+argument_list|()
 specifier|const
 name|override
 block|;
@@ -722,10 +693,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDGPUINSTRINFO_H
-end_comment
 
 end_unit
 

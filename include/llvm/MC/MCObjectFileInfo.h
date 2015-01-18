@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MC_MCBJECTFILEINFO_H
+name|LLVM_MC_MCOBJECTFILEINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MC_MCBJECTFILEINFO_H
+name|LLVM_MC_MCOBJECTFILEINFO_H
 end_define
 
 begin_include
@@ -284,6 +284,11 @@ specifier|const
 name|MCSection
 modifier|*
 name|DwarfInfoDWOSection
+decl_stmt|;
+specifier|const
+name|MCSection
+modifier|*
+name|DwarfTypesDWOSection
 decl_stmt|;
 specifier|const
 name|MCSection
@@ -878,14 +883,15 @@ decl|const
 decl_stmt|;
 specifier|const
 name|MCSection
-modifier|*
+operator|*
 name|getDwarfTypesDWOSection
-argument_list|(
-name|uint64_t
-name|Hash
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfTypesDWOSection
+return|;
+block|}
 specifier|const
 name|MCSection
 operator|*

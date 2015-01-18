@@ -384,16 +384,9 @@ comment|/// instruction type. Itinerary tables are an independent mechanism that
 comment|/// provides a detailed reservation table describing each cycle of instruction
 comment|/// execution. Subtargets may define any or all of the above categories of data
 comment|/// depending on the type of CPU and selected scheduler.
-name|class
+struct|struct
 name|MCSchedModel
 block|{
-name|public
-label|:
-specifier|static
-name|MCSchedModel
-name|DefaultSchedModel
-decl_stmt|;
-comment|// For unknown processors.
 comment|// IssueWidth is the maximum number of instructions that may be scheduled in
 comment|// the same per-cycle group.
 name|unsigned
@@ -493,8 +486,6 @@ comment|// default value is false
 name|bool
 name|CompleteModel
 decl_stmt|;
-name|private
-label|:
 name|unsigned
 name|ProcID
 decl_stmt|;
@@ -524,197 +515,6 @@ name|InstrItinerary
 modifier|*
 name|InstrItineraries
 decl_stmt|;
-name|public
-label|:
-comment|// Default's must be specified as static const literals so that tablegenerated
-comment|// target code can use it in static initializers. The defaults need to be
-comment|// initialized in this default ctor because some clients directly instantiate
-comment|// MCSchedModel instead of using a generated itinerary.
-name|MCSchedModel
-argument_list|()
-operator|:
-name|IssueWidth
-argument_list|(
-name|DefaultIssueWidth
-argument_list|)
-operator|,
-name|MicroOpBufferSize
-argument_list|(
-name|DefaultMicroOpBufferSize
-argument_list|)
-operator|,
-name|LoopMicroOpBufferSize
-argument_list|(
-name|DefaultLoopMicroOpBufferSize
-argument_list|)
-operator|,
-name|LoadLatency
-argument_list|(
-name|DefaultLoadLatency
-argument_list|)
-operator|,
-name|HighLatency
-argument_list|(
-name|DefaultHighLatency
-argument_list|)
-operator|,
-name|MispredictPenalty
-argument_list|(
-name|DefaultMispredictPenalty
-argument_list|)
-operator|,
-name|PostRAScheduler
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|CompleteModel
-argument_list|(
-name|true
-argument_list|)
-operator|,
-name|ProcID
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ProcResourceTable
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|SchedClassTable
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|NumProcResourceKinds
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumSchedClasses
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|InstrItineraries
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{
-operator|(
-name|void
-operator|)
-name|NumProcResourceKinds
-block|;
-operator|(
-name|void
-operator|)
-name|NumSchedClasses
-block|;   }
-comment|// Table-gen driven ctor.
-name|MCSchedModel
-argument_list|(
-argument|unsigned iw
-argument_list|,
-argument|int mbs
-argument_list|,
-argument|int lmbs
-argument_list|,
-argument|unsigned ll
-argument_list|,
-argument|unsigned hl
-argument_list|,
-argument|unsigned mp
-argument_list|,
-argument|bool postRASched
-argument_list|,
-argument|bool cm
-argument_list|,
-argument|unsigned pi
-argument_list|,
-argument|const MCProcResourceDesc *pr
-argument_list|,
-argument|const MCSchedClassDesc *sc
-argument_list|,
-argument|unsigned npr
-argument_list|,
-argument|unsigned nsc
-argument_list|,
-argument|const InstrItinerary *ii
-argument_list|)
-operator|:
-name|IssueWidth
-argument_list|(
-name|iw
-argument_list|)
-operator|,
-name|MicroOpBufferSize
-argument_list|(
-name|mbs
-argument_list|)
-operator|,
-name|LoopMicroOpBufferSize
-argument_list|(
-name|lmbs
-argument_list|)
-operator|,
-name|LoadLatency
-argument_list|(
-name|ll
-argument_list|)
-operator|,
-name|HighLatency
-argument_list|(
-name|hl
-argument_list|)
-operator|,
-name|MispredictPenalty
-argument_list|(
-name|mp
-argument_list|)
-operator|,
-name|PostRAScheduler
-argument_list|(
-name|postRASched
-argument_list|)
-operator|,
-name|CompleteModel
-argument_list|(
-name|cm
-argument_list|)
-operator|,
-name|ProcID
-argument_list|(
-name|pi
-argument_list|)
-operator|,
-name|ProcResourceTable
-argument_list|(
-name|pr
-argument_list|)
-operator|,
-name|SchedClassTable
-argument_list|(
-name|sc
-argument_list|)
-operator|,
-name|NumProcResourceKinds
-argument_list|(
-name|npr
-argument_list|)
-operator|,
-name|NumSchedClasses
-argument_list|(
-name|nsc
-argument_list|)
-operator|,
-name|InstrItineraries
-argument_list|(
-argument|ii
-argument_list|)
-block|{}
 name|unsigned
 name|getProcessorID
 argument_list|()
@@ -824,8 +624,51 @@ name|SchedClassIdx
 index|]
 return|;
 block|}
+comment|// /\brief Returns a default initialized model. Used for unknown processors.
+specifier|static
+name|MCSchedModel
+name|GetDefaultSchedModel
+parameter_list|()
+block|{
+name|MCSchedModel
+name|Ret
+init|=
+block|{
+name|DefaultIssueWidth
+block|,
+name|DefaultMicroOpBufferSize
+block|,
+name|DefaultLoopMicroOpBufferSize
+block|,
+name|DefaultLoadLatency
+block|,
+name|DefaultHighLatency
+block|,
+name|DefaultMispredictPenalty
+block|,
+name|false
+block|,
+name|true
+block|,
+literal|0
+block|,
+name|nullptr
+block|,
+name|nullptr
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|nullptr
 block|}
-empty_stmt|;
+decl_stmt|;
+return|return
+name|Ret
+return|;
+block|}
+block|}
+struct|;
 block|}
 end_decl_stmt
 

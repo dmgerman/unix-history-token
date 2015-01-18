@@ -70,13 +70,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_ARM_BUILD_ATTRIBUTES_H
+name|LLVM_SUPPORT_ARMBUILDATTRIBUTES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_ARM_BUILD_ATTRIBUTES_H
+name|LLVM_SUPPORT_ARMBUILDATTRIBUTES_H
 end_define
 
 begin_decl_stmt
@@ -530,6 +530,27 @@ init|=
 literal|3
 block|,
 comment|// ARM v8-A SIMD was permitted
+comment|// Tag_ABI_PCS_R9_use, (=14), uleb128
+name|R9IsGPR
+init|=
+literal|0
+block|,
+comment|// R9 used as v6 (just another callee-saved register)
+name|R9IsSB
+init|=
+literal|1
+block|,
+comment|// R9 used as a global static base rgister
+name|R9IsTLSPointer
+init|=
+literal|2
+block|,
+comment|// R9 used as a thread local storage pointer
+name|R9Reserved
+init|=
+literal|3
+block|,
+comment|// R9 not used by code associated with attributed entity
 comment|// Tag_ABI_PCS_RW_data, (=15), uleb128
 name|AddressRWPCRel
 init|=
@@ -585,6 +606,14 @@ literal|4
 block|,
 comment|// sizeof(wchar_t) == 4
 comment|// Tag_ABI_FP_denormal, (=20), uleb128
+name|PositiveZero
+init|=
+literal|0
+block|,
+name|IEEEDenormals
+init|=
+literal|1
+block|,
 name|PreserveFPSign
 init|=
 literal|2
@@ -652,6 +681,11 @@ init|=
 literal|1
 block|,
 comment|// Allow use of Half Precision FP
+comment|// Tag_FP_16bit_format, (=38), uleb128
+name|FP16FormatIEEE
+init|=
+literal|1
+block|,
 comment|// Tag_MPextension_use, (=42), uleb128
 name|AllowMP
 init|=
@@ -706,10 +740,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_SUPPORT_ARM_BUILD_ATTRIBUTES_H
-end_comment
 
 end_unit
 

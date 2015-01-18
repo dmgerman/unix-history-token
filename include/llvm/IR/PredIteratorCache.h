@@ -47,6 +47,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_IR_PREDITERATORCACHE_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_IR_PREDITERATORCACHE_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -70,18 +82,6 @@ include|#
 directive|include
 file|"llvm/Support/Allocator.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LLVM_IR_PREDITERATORCACHE_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LLVM_IR_PREDITERATORCACHE_H
-end_define
 
 begin_decl_stmt
 name|namespace

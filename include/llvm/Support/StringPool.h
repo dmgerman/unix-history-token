@@ -122,13 +122,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include

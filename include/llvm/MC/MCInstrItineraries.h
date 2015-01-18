@@ -84,7 +84,7 @@ name|namespace
 name|llvm
 block|{
 comment|//===----------------------------------------------------------------------===//
-comment|/// Instruction stage - These values represent a non-pipelined step in
+comment|/// These values represent a non-pipelined step in
 comment|/// the execution of an instruction.  Cycles represents the number of
 comment|/// discrete time slots needed to complete the stage.  Units represent
 comment|/// the choice of functional units that can be used to complete the
@@ -148,7 +148,7 @@ name|ReservationKinds
 name|Kind_
 decl_stmt|;
 comment|///< Kind of the FU reservation
-comment|/// getCycles - returns the number of cycles the stage is occupied
+comment|/// Returns the number of cycles the stage is occupied.
 name|unsigned
 name|getCycles
 argument_list|()
@@ -158,7 +158,7 @@ return|return
 name|Cycles_
 return|;
 block|}
-comment|/// getUnits - returns the choice of FUs
+comment|/// Returns the choice of FUs.
 name|unsigned
 name|getUnits
 argument_list|()
@@ -177,7 +177,7 @@ return|return
 name|Kind_
 return|;
 block|}
-comment|/// getNextCycles - returns the number of cycles from the start of
+comment|/// Returns the number of cycles from the start of
 comment|/// this stage to the start of the next stage in the itinerary
 name|unsigned
 name|getNextCycles
@@ -202,10 +202,9 @@ block|}
 block|}
 struct|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// Instruction itinerary - An itinerary represents the scheduling
-comment|/// information for an instruction. This includes a set of stages
-comment|/// occupies by the instruction, and the pipeline cycle in which
-comment|/// operands are read and written.
+comment|/// An itinerary represents the scheduling information for an instruction.
+comment|/// This includes a set of stages occupied by the instruction and the pipeline
+comment|/// cycle in which operands are read and written.
 comment|///
 struct|struct
 name|InstrItinerary
@@ -233,17 +232,14 @@ comment|///< Index of last + 1 operand rd/wr
 block|}
 struct|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// Instruction itinerary Data - Itinerary data supplied by a subtarget to be
-comment|/// used by a target.
+comment|/// Itinerary data supplied by a subtarget to be used by a target.
 comment|///
 name|class
 name|InstrItineraryData
 block|{
 name|public
 label|:
-specifier|const
 name|MCSchedModel
-modifier|*
 name|SchedModel
 decl_stmt|;
 comment|///< Basic machine properties.
@@ -278,10 +274,10 @@ argument_list|()
 operator|:
 name|SchedModel
 argument_list|(
-operator|&
 name|MCSchedModel
 operator|::
-name|DefaultSchedModel
+name|GetDefaultSchedModel
+argument_list|()
 argument_list|)
 operator|,
 name|Stages
@@ -308,7 +304,7 @@ name|InstrItineraryData
 argument_list|(
 specifier|const
 name|MCSchedModel
-operator|*
+operator|&
 name|SM
 argument_list|,
 specifier|const
@@ -349,11 +345,10 @@ argument_list|)
 operator|,
 name|Itineraries
 argument_list|(
-argument|SchedModel->InstrItineraries
+argument|SchedModel.InstrItineraries
 argument_list|)
 block|{}
-comment|/// isEmpty - Returns true if there are no itineraries.
-comment|///
+comment|/// Returns true if there are no itineraries.
 name|bool
 name|isEmpty
 argument_list|()
@@ -365,9 +360,7 @@ operator|==
 name|nullptr
 return|;
 block|}
-comment|/// isEndMarker - Returns true if the index is for the end marker
-comment|/// itinerary.
-comment|///
+comment|/// Returns true if the index is for the end marker itinerary.
 name|bool
 name|isEndMarker
 argument_list|(
@@ -404,8 +397,7 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/// beginStage - Return the first stage of the itinerary.
-comment|///
+comment|/// Return the first stage of the itinerary.
 specifier|const
 name|InstrStage
 modifier|*
@@ -432,8 +424,7 @@ operator|+
 name|StageIdx
 return|;
 block|}
-comment|/// endStage - Return the last+1 stage of the itinerary.
-comment|///
+comment|/// Return the last+1 stage of the itinerary.
 specifier|const
 name|InstrStage
 modifier|*
@@ -460,10 +451,8 @@ operator|+
 name|StageIdx
 return|;
 block|}
-comment|/// getStageLatency - Return the total stage latency of the given
-comment|/// class.  The latency is the maximum completion time for any stage
-comment|/// in the itinerary.
-comment|///
+comment|/// Return the total stage latency of the given class.
+comment|/// The latency is the maximum completion time for any stage in the itinerary.
 comment|/// If no stages exist, it defaults to one cycle.
 name|unsigned
 name|getStageLatency
@@ -549,9 +538,8 @@ return|return
 name|Latency
 return|;
 block|}
-comment|/// getOperandCycle - Return the cycle for the given class and
-comment|/// operand. Return -1 if no cycle is specified for the operand.
-comment|///
+comment|/// Return the cycle for the given class and operand.
+comment|/// Return -1 if no cycle is specified for the operand.
 name|int
 name|getOperandCycle
 argument_list|(
@@ -618,7 +606,7 @@ name|OperandIdx
 index|]
 return|;
 block|}
-comment|/// hasPipelineForwarding - Return true if there is a pipeline forwarding
+comment|/// Return true if there is a pipeline forwarding
 comment|/// between instructions of itinerary classes DefClass and UseClasses so that
 comment|/// value produced by an instruction of itinerary class DefClass, operand
 comment|/// index DefIdx can be bypassed when it's read by an instruction of
@@ -736,7 +724,7 @@ name|UseIdx
 index|]
 return|;
 block|}
-comment|/// getOperandLatency - Compute and return the use operand latency of a given
+comment|/// Compute and return the use operand latency of a given
 comment|/// itinerary class and operand index if the value is produced by an
 comment|/// instruction of the specified itinerary class and def operand index.
 name|int
@@ -840,9 +828,8 @@ return|return
 name|UseCycle
 return|;
 block|}
-comment|/// getNumMicroOps - Return the number of micro-ops that the given class
-comment|/// decodes to. Return -1 for classes that require dynamic lookup via
-comment|/// TargetInstrInfo.
+comment|/// Return the number of micro-ops that the given class decodes to.
+comment|/// Return -1 for classes that require dynamic lookup via TargetInstrInfo.
 name|int
 name|getNumMicroOps
 argument_list|(

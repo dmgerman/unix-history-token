@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MCJIT_TEST_API_COMMON_H
+name|LLVM_UNITTESTS_EXECUTIONENGINE_MCJIT_MCJITTESTAPICOMMON_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MCJIT_TEST_API_COMMON_H
+name|LLVM_UNITTESTS_EXECUTIONENGINE_MCJIT_MCJITTESTAPICOMMON_H
 end_define
 
 begin_include
@@ -421,10 +421,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// MCJIT_TEST_API_COMMON_H
-end_comment
 
 end_unit
 

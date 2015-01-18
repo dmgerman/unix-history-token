@@ -43,10 +43,19 @@ directive|define
 name|LLVM_MC_MCTARGETOPTIONS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 name|class
 name|MCTargetOptions
 block|{
@@ -73,6 +82,11 @@ literal|1
 decl_stmt|;
 name|bool
 name|MCNoExecStack
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|MCFatalWarnings
 range|:
 literal|1
 decl_stmt|;
@@ -104,6 +118,19 @@ decl_stmt|;
 name|int
 name|DwarfVersion
 decl_stmt|;
+comment|/// getABIName - If this returns a non-empty string this represents the
+comment|/// textual name of the ABI that we want the backend to use, e.g. o32, or
+comment|/// aapcs-linux.
+name|StringRef
+name|getABIName
+argument_list|()
+specifier|const
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|ABIName
+expr_stmt|;
 name|MCTargetOptions
 argument_list|()
 expr_stmt|;
@@ -151,6 +178,11 @@ argument_list|)
 operator|&&
 name|ARE_EQUAL
 argument_list|(
+name|MCFatalWarnings
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
 name|MCSaveTempLabels
 argument_list|)
 operator|&&
@@ -177,6 +209,11 @@ operator|&&
 name|ARE_EQUAL
 argument_list|(
 name|DwarfVersion
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|ABIName
 argument_list|)
 operator|)
 return|;

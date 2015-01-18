@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPS_ANALYZE_IMMEDIATE_H
+name|LLVM_LIB_TARGET_MIPS_MIPSANALYZEIMMEDIATE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPS_ANALYZE_IMMEDIATE_H
+name|LLVM_LIB_TARGET_MIPS_MIPSANALYZEIMMEDIATE_H
 end_define
 
 begin_include

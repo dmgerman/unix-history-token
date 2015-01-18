@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARMINSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_ARM_ARMINSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARMINSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_ARM_ARMINSTRINFO_H
 end_define
 
 begin_include
@@ -133,8 +133,20 @@ return|return
 name|RI
 return|;
 block|}
-expr|}
-block|;  }
+name|private
+operator|:
+name|void
+name|expandLoadStackGuard
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|Reloc::Model RM
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif

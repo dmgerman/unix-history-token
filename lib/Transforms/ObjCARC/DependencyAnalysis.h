@@ -86,13 +86,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TRANSFORMS_OBJCARC_DEPEDENCYANALYSIS_H
+name|LLVM_LIB_TRANSFORMS_OBJCARC_DEPENDENCYANALYSIS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TRANSFORMS_OBJCARC_DEPEDENCYANALYSIS_H
+name|LLVM_LIB_TRANSFORMS_OBJCARC_DEPENDENCYANALYSIS_H
 end_define
 
 begin_include
@@ -170,23 +170,19 @@ name|Instruction
 operator|*
 name|StartInst
 argument_list|,
-name|SmallPtrSet
+name|SmallPtrSetImpl
 operator|<
 name|Instruction
 operator|*
-argument_list|,
-literal|4
 operator|>
 operator|&
 name|DependingInstructions
 argument_list|,
-name|SmallPtrSet
+name|SmallPtrSetImpl
 operator|<
 specifier|const
 name|BasicBlock
 operator|*
-argument_list|,
-literal|4
 operator|>
 operator|&
 name|Visited
@@ -275,10 +271,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_TRANSFORMS_OBJCARC_DEPEDENCYANALYSIS_H
-end_comment
 
 end_unit
 

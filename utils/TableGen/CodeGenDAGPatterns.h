@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CODEGEN_DAGPATTERNS_H
+name|LLVM_UTILS_TABLEGEN_CODEGENDAGPATTERNS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CODEGEN_DAGPATTERNS_H
+name|LLVM_UTILS_TABLEGEN_CODEGENDAGPATTERNS_H
 end_define
 
 begin_include
@@ -2650,19 +2650,17 @@ begin_comment
 comment|/// print it and set the error flag.  Otherwise, continue silently.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|error
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|Twine
+modifier|&
 name|Msg
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|bool
@@ -3075,7 +3073,7 @@ argument|TreePatternNode *dst
 argument_list|,
 argument|const std::vector<Record*>&dstregs
 argument_list|,
-argument|unsigned complexity
+argument|int complexity
 argument_list|,
 argument|unsigned uid
 argument_list|)
@@ -3145,7 +3143,7 @@ operator|>
 name|Dstregs
 expr_stmt|;
 comment|// Physical register defs being matched.
-name|unsigned
+name|int
 name|AddedComplexity
 decl_stmt|;
 comment|// Add to matching pattern complexity.
@@ -3210,7 +3208,7 @@ return|return
 name|Dstregs
 return|;
 block|}
-name|unsigned
+name|int
 name|getAddedComplexity
 argument_list|()
 specifier|const
@@ -3228,7 +3226,7 @@ specifier|const
 expr_stmt|;
 comment|/// Compute the complexity metric for the input pattern.  This roughly
 comment|/// corresponds to the number of nodes that are covered.
-name|unsigned
+name|int
 name|getPatternComplexity
 argument_list|(
 specifier|const
@@ -3328,8 +3326,12 @@ operator|<
 name|Record
 operator|*
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|TreePattern
-operator|*
+operator|>
 operator|,
 name|LessRecordByID
 operator|>
@@ -3392,10 +3394,6 @@ name|RecordKeeper
 operator|&
 name|R
 argument_list|)
-expr_stmt|;
-operator|~
-name|CodeGenDAGPatterns
-argument_list|()
 expr_stmt|;
 name|CodeGenTarget
 modifier|&
@@ -3900,6 +3898,9 @@ name|R
 argument_list|)
 operator|->
 name|second
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|TreePattern
@@ -3934,6 +3935,9 @@ name|R
 argument_list|)
 operator|->
 name|second
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 typedef|typedef
@@ -3944,8 +3948,12 @@ operator|<
 name|Record
 operator|*
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|TreePattern
-operator|*
+operator|>
 operator|,
 name|LessRecordByID
 operator|>

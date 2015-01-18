@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_EXECUTIONENGINE_RT_DYLD_MEMORY_MANAGER_H
+name|LLVM_EXECUTIONENGINE_RTDYLDMEMORYMANAGER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_EXECUTIONENGINE_RT_DYLD_MEMORY_MANAGER_H
+name|LLVM_EXECUTIONENGINE_RTDYLDMEMORYMANAGER_H
 end_define
 
 begin_include
@@ -90,9 +90,13 @@ block|{
 name|class
 name|ExecutionEngine
 decl_stmt|;
+name|namespace
+name|object
+block|{
 name|class
-name|ObjectImage
+name|ObjectFile
 decl_stmt|;
+block|}
 comment|// RuntimeDyld clients often want to handle the memory management of
 comment|// what gets placed where. For JIT clients, this is the subset of
 comment|// JITMemoryManager required for dynamic loading of binaries.
@@ -246,6 +250,20 @@ name|size_t
 name|Size
 parameter_list|)
 function_decl|;
+comment|/// This method returns the address of the specified function or variable in
+comment|/// the current process.
+specifier|static
+name|uint64_t
+name|getSymbolAddressInProcess
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+decl_stmt|;
 comment|/// This method returns the address of the specified function or variable.
 comment|/// It is used to resolve symbols during module linking.
 name|virtual
@@ -259,7 +277,14 @@ name|string
 operator|&
 name|Name
 argument_list|)
-decl_stmt|;
+block|{
+return|return
+name|getSymbolAddressInProcess
+argument_list|(
+name|Name
+argument_list|)
+return|;
+block|}
 comment|/// This method returns the address of the specified function. As such it is
 comment|/// only useful for resolving library symbols, not code generated symbols.
 comment|///
@@ -300,15 +325,17 @@ comment|/// newly loaded object.
 name|virtual
 name|void
 name|notifyObjectLoaded
-parameter_list|(
+argument_list|(
 name|ExecutionEngine
-modifier|*
+operator|*
 name|EE
-parameter_list|,
+argument_list|,
 specifier|const
-name|ObjectImage
-modifier|*
-parameter_list|)
+name|object
+operator|::
+name|ObjectFile
+operator|&
+argument_list|)
 block|{}
 comment|/// This method is called when object loading is complete and section page
 comment|/// permissions can be applied.  It is up to the memory manager implementation
@@ -354,10 +381,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_EXECUTIONENGINE_RT_DYLD_MEMORY_MANAGER_H
-end_comment
 
 end_unit
 

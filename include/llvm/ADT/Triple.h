@@ -116,12 +116,6 @@ comment|// ARM (little endian): arm, armv.*, xscale
 name|armeb
 block|,
 comment|// ARM (big endian): armeb
-name|arm64
-block|,
-comment|// ARM64 (little endian): arm64
-name|arm64_be
-block|,
-comment|// ARM64 (big endian): arm64_be
 name|aarch64
 block|,
 comment|// AArch64 (little endian): aarch64
@@ -158,6 +152,9 @@ comment|// PPC64LE: powerpc64le
 name|r600
 block|,
 comment|// R600: AMD GPUs HD2XXX - HD6XXX
+name|amdgcn
+block|,
+comment|// AMDGCN: AMD GCN GPUs
 name|sparc
 block|,
 comment|// Sparc: sparc
@@ -194,9 +191,21 @@ comment|// NVPTX: 64-bit
 name|le32
 block|,
 comment|// le32: generic little-endian 32-bit CPU (PNaCl / Emscripten)
+name|le64
+block|,
+comment|// le64: generic little-endian 64-bit CPU (PNaCl / Emscripten)
 name|amdil
 block|,
-comment|// amdil: amd IL
+comment|// AMDIL
+name|amdil64
+block|,
+comment|// AMDIL with 64-bit pointers
+name|hsail
+block|,
+comment|// AMD HSAIL
+name|hsail64
+block|,
+comment|// AMD HSAIL with 64-bit pointers
 name|spir
 block|,
 comment|// SPIR: standard portable IR for OpenCL 32-bit version
@@ -233,6 +242,12 @@ block|,
 name|ARMSubArch_v5te
 block|,
 name|ARMSubArch_v4t
+block|,
+name|KalimbaSubArch_v3
+block|,
+name|KalimbaSubArch_v4
+block|,
+name|KalimbaSubArch_v5
 block|}
 enum|;
 enum|enum
@@ -268,10 +283,6 @@ name|OSType
 block|{
 name|UnknownOS
 block|,
-name|AuroraUX
-block|,
-name|Cygwin
-block|,
 name|Darwin
 block|,
 name|DragonFly
@@ -289,9 +300,6 @@ block|,
 comment|// PS3
 name|MacOSX
 block|,
-name|MinGW32
-block|,
-comment|// i*86-pc-mingw32, *-w64-mingw32
 name|NetBSD
 block|,
 name|OpenBSD
@@ -320,7 +328,10 @@ name|CUDA
 block|,
 comment|// NVIDIA CUDA
 name|NVCL
+block|,
 comment|// NVIDIA OpenCL
+name|AMDHSA
+comment|// AMD HSA Runtime
 block|}
 enum|;
 enum|enum
@@ -973,6 +984,34 @@ argument_list|()
 return|;
 block|}
 name|bool
+name|isOSNetBSD
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|NetBSD
+return|;
+block|}
+name|bool
+name|isOSOpenBSD
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|OpenBSD
+return|;
+block|}
+name|bool
 name|isOSFreeBSD
 argument_list|()
 specifier|const
@@ -984,6 +1023,48 @@ operator|==
 name|Triple
 operator|::
 name|FreeBSD
+return|;
+block|}
+name|bool
+name|isOSDragonFly
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|DragonFly
+return|;
+block|}
+name|bool
+name|isOSSolaris
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Solaris
+return|;
+block|}
+name|bool
+name|isOSBitrig
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Bitrig
 return|;
 block|}
 name|bool
@@ -1069,14 +1150,6 @@ argument_list|()
 operator|==
 name|Triple
 operator|::
-name|Cygwin
-operator|||
-operator|(
-name|getOS
-argument_list|()
-operator|==
-name|Triple
-operator|::
 name|Win32
 operator|&&
 name|getEnvironment
@@ -1085,7 +1158,6 @@ operator|==
 name|Triple
 operator|::
 name|Cygnus
-operator|)
 return|;
 block|}
 name|bool
@@ -1099,14 +1171,6 @@ argument_list|()
 operator|==
 name|Triple
 operator|::
-name|MinGW32
-operator|||
-operator|(
-name|getOS
-argument_list|()
-operator|==
-name|Triple
-operator|::
 name|Win32
 operator|&&
 name|getEnvironment
@@ -1115,7 +1179,6 @@ operator|==
 name|Triple
 operator|::
 name|GNU
-operator|)
 return|;
 block|}
 comment|/// \brief Tests for either Cygwin or MinGW OS
@@ -1143,6 +1206,9 @@ name|isWindowsMSVCEnvironment
 argument_list|()
 operator|||
 name|isWindowsGNUEnvironment
+argument_list|()
+operator|||
+name|isWindowsItaniumEnvironment
 argument_list|()
 return|;
 block|}
@@ -1340,14 +1406,6 @@ parameter_list|(
 name|StringRef
 name|Str
 parameter_list|)
-function_decl|;
-comment|/// getArchNameForAssembler - Get an architecture name that is understood by
-comment|/// the target assembler.
-specifier|const
-name|char
-modifier|*
-name|getArchNameForAssembler
-parameter_list|()
 function_decl|;
 comment|/// @}
 comment|/// @name Helpers to build variants of a particular triple.

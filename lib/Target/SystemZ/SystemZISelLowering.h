@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_SystemZ_ISELLOWERING_H
+name|LLVM_LIB_TARGET_SYSTEMZ_SYSTEMZISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_SystemZ_ISELLOWERING_H
+name|LLVM_LIB_TARGET_SYSTEMZ_SYSTEMZISELLOWERING_H
 end_define
 
 begin_include
@@ -393,11 +393,13 @@ specifier|const
 name|override
 block|;
 name|bool
-name|allowsUnalignedMemoryAccesses
+name|allowsMisalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
 argument_list|,
 argument|unsigned AS
+argument_list|,
+argument|unsigned Align
 argument_list|,
 argument|bool *Fast
 argument_list|)
@@ -980,10 +982,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_TARGET_SystemZ_ISELLOWERING_H
-end_comment
 
 end_unit
 

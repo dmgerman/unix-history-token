@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/ValueHandle.h"
 end_include
 
@@ -97,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/MCCodeGenInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/Binary.h"
 end_include
 
 begin_include
@@ -170,13 +182,7 @@ name|class
 name|JITEventListener
 decl_stmt|;
 name|class
-name|JITMemoryManager
-decl_stmt|;
-name|class
 name|MachineCodeInfo
-decl_stmt|;
-name|class
-name|Module
 decl_stmt|;
 name|class
 name|MutexGuard
@@ -431,8 +437,12 @@ comment|/// The list of Modules that we are JIT'ing from.  We use a SmallVector 
 comment|/// optimize for the case where there is only one module.
 name|SmallVector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-operator|*
+operator|>
 operator|,
 literal|1
 operator|>
@@ -464,68 +474,44 @@ modifier|*
 name|GV
 parameter_list|)
 function_decl|;
-comment|// To avoid having libexecutionengine depend on the JIT and interpreter
-comment|// libraries, the execution engine implementations set these functions to ctor
-comment|// pointers at startup time if they are linked in.
 specifier|static
 name|ExecutionEngine
 operator|*
-operator|(
-operator|*
-name|JITCtor
-operator|)
-operator|(
-name|Module
-operator|*
-name|M
-operator|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrorStr
-operator|,
-name|JITMemoryManager
-operator|*
-name|JMM
-operator|,
-name|bool
-name|GVsWithCode
-operator|,
-name|TargetMachine
-operator|*
-name|TM
-operator|)
-expr_stmt|;
-specifier|static
-name|ExecutionEngine
-operator|*
-operator|(
-operator|*
+call|(
+modifier|*
 name|MCJITCtor
-operator|)
-operator|(
+call|)
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-operator|*
+operator|>
 name|M
-operator|,
+argument_list|,
 name|std
 operator|::
 name|string
 operator|*
 name|ErrorStr
-operator|,
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|RTDyldMemoryManager
-operator|*
+operator|>
 name|MCJMM
-operator|,
-name|bool
-name|GVsWithCode
-operator|,
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|TargetMachine
-operator|*
+operator|>
 name|TM
-operator|)
+argument_list|)
 expr_stmt|;
 specifier|static
 name|ExecutionEngine
@@ -535,8 +521,12 @@ modifier|*
 name|InterpCtor
 call|)
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-operator|*
+operator|>
 name|M
 argument_list|,
 name|std
@@ -565,9 +555,8 @@ argument_list|)
 argument_list|;
 name|public
 operator|:
-comment|/// lock - This lock protects the ExecutionEngine, MCJIT, JIT, JITResolver and
-comment|/// JITEmitter classes.  It must be held while changing the internal state of
-comment|/// any of those classes.
+comment|/// lock - This lock protects the ExecutionEngine and MCJIT classes. It must
+comment|/// be held while changing the internal state of any of those classes.
 name|sys
 operator|::
 name|Mutex
@@ -581,73 +570,24 @@ operator|~
 name|ExecutionEngine
 argument_list|()
 argument_list|;
-comment|/// create - This is the factory method for creating an execution engine which
-comment|/// is appropriate for the current machine.  This takes ownership of the
-comment|/// module.
-comment|///
-comment|/// \param GVsWithCode - Allocating globals with code breaks
-comment|/// freeMachineCodeForFunction and is probably unsafe and bad for performance.
-comment|/// However, we have clients who depend on this behavior, so we must support
-comment|/// it.  Eventually, when we're willing to break some backwards compatibility,
-comment|/// this flag should be flipped to false, so that by default
-comment|/// freeMachineCodeForFunction works.
-specifier|static
-name|ExecutionEngine
-operator|*
-name|create
-argument_list|(
-argument|Module *M
-argument_list|,
-argument|bool ForceInterpreter = false
-argument_list|,
-argument|std::string *ErrorStr = nullptr
-argument_list|,
-argument|CodeGenOpt::Level OptLevel =                                  CodeGenOpt::Default
-argument_list|,
-argument|bool GVsWithCode = true
-argument_list|)
-argument_list|;
-comment|/// createJIT - This is the factory method for creating a JIT for the current
-comment|/// machine, it does not fall back to the interpreter.  This takes ownership
-comment|/// of the Module and JITMemoryManager if successful.
-comment|///
-comment|/// Clients should make sure to initialize targets prior to calling this
-comment|/// function.
-specifier|static
-name|ExecutionEngine
-operator|*
-name|createJIT
-argument_list|(
-argument|Module *M
-argument_list|,
-argument|std::string *ErrorStr = nullptr
-argument_list|,
-argument|JITMemoryManager *JMM = nullptr
-argument_list|,
-argument|CodeGenOpt::Level OptLevel =                                     CodeGenOpt::Default
-argument_list|,
-argument|bool GVsWithCode = true
-argument_list|,
-argument|Reloc::Model RM = Reloc::Default
-argument_list|,
-argument|CodeModel::Model CMM =                                     CodeModel::JITDefault
-argument_list|)
-argument_list|;
-comment|/// addModule - Add a Module to the list of modules that we can JIT from.
-comment|/// Note that this takes ownership of the Module: when the ExecutionEngine is
-comment|/// destroyed, it destroys the Module as well.
+comment|/// Add a Module to the list of modules that we can JIT from.
 name|virtual
 name|void
 name|addModule
 argument_list|(
-argument|Module *M
+argument|std::unique_ptr<Module> M
 argument_list|)
 block|{
 name|Modules
 operator|.
 name|push_back
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|M
+argument_list|)
 argument_list|)
 block|;   }
 comment|/// addObjectFile - Add an ObjectFile to the execution engine.
@@ -675,26 +615,42 @@ operator|>
 name|O
 argument_list|)
 argument_list|;
+name|virtual
+name|void
+name|addObjectFile
+argument_list|(
+name|object
+operator|::
+name|OwningBinary
+operator|<
+name|object
+operator|::
+name|ObjectFile
+operator|>
+name|O
+argument_list|)
+argument_list|;
 comment|/// addArchive - Add an Archive to the execution engine.
 comment|///
 comment|/// This method is only supported by MCJIT.  MCJIT will use the archive to
 comment|/// resolve external symbols in objects it is loading.  If a symbol is found
 comment|/// in the Archive the contained object file will be extracted (in memory)
 comment|/// and loaded for possible execution.
-comment|///
-comment|/// MCJIT will take ownership of the Archive.
 name|virtual
 name|void
 name|addArchive
 argument_list|(
-argument|object::Archive *A
+name|object
+operator|::
+name|OwningBinary
+operator|<
+name|object
+operator|::
+name|Archive
+operator|>
+name|A
 argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"ExecutionEngine subclass doesn't implement addArchive."
-argument_list|)
-block|;   }
+argument_list|;
 comment|//===--------------------------------------------------------------------===//
 specifier|const
 name|DataLayout
@@ -764,30 +720,22 @@ comment|/// found, this function silently returns a null pointer. Otherwise,
 comment|/// it prints a message to stderr and aborts.
 comment|///
 comment|/// This function is deprecated for the MCJIT execution engine.
-comment|///
-comment|/// FIXME: the JIT and MCJIT interfaces should be disentangled or united
-comment|/// again, if possible.
-comment|///
 name|virtual
 name|void
 modifier|*
 name|getPointerToNamedFunction
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|(
+name|StringRef
 name|Name
-argument_list|,
+parameter_list|,
 name|bool
 name|AbortOnFailure
-operator|=
+init|=
 name|true
-argument_list|)
+parameter_list|)
 init|=
 literal|0
-decl_stmt|;
+function_decl|;
 comment|/// mapSectionAddress - map a section to its target address space value.
 comment|/// Map the address of a JIT section as returned from the memory manager
 comment|/// to the address in the target process as the running code will see it.
@@ -812,7 +760,7 @@ literal|"EE!"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// generateCodeForModule - Run code generationen for the specified module and
+comment|/// generateCodeForModule - Run code generation for the specified module and
 comment|/// load it into memory.
 comment|///
 comment|/// When this function has completed, all code and data for the specified
@@ -826,7 +774,7 @@ comment|/// before relocations are applied.  Clients that intend to execute code
 comment|/// locally can use the getFunctionAddress call, which will generate code
 comment|/// and apply final preparations all in one step.
 comment|///
-comment|/// This method has no effect for the legacy JIT engine or the interpeter.
+comment|/// This method has no effect for the interpeter.
 name|virtual
 name|void
 name|generateCodeForModule
@@ -842,8 +790,7 @@ comment|/// It is the user-level function for completing the process of making t
 comment|/// object usable for execution.  It should be called after sections within an
 comment|/// object have been relocated using mapSectionAddress.  When this method is
 comment|/// called the MCJIT execution engine will reapply relocations for a loaded
-comment|/// object.  This method has no effect for the legacy JIT engine or the
-comment|/// interpeter.
+comment|/// object.  This method has no effect for the interpeter.
 name|virtual
 name|void
 name|finalizeObject
@@ -861,15 +808,15 @@ name|bool
 name|isDtors
 parameter_list|)
 function_decl|;
-comment|/// runStaticConstructorsDestructors - This method is used to execute all of
-comment|/// the static constructors or destructors for a particular module.
+comment|/// This method is used to execute all of the static constructors or
+comment|/// destructors for a particular module.
 comment|///
 comment|/// \param isDtors - Run the destructors instead of constructors.
 name|void
 name|runStaticConstructorsDestructors
 parameter_list|(
 name|Module
-modifier|*
+modifier|&
 name|module
 parameter_list|,
 name|bool
@@ -1010,23 +957,6 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// getPointerToBasicBlock - The different EE's represent basic blocks in
-comment|/// different ways.  Return the representation for a blockaddress of the
-comment|/// specified block.
-comment|///
-comment|/// This function will not be implemented for the MCJIT execution engine.
-name|virtual
-name|void
-modifier|*
-name|getPointerToBasicBlock
-parameter_list|(
-name|BasicBlock
-modifier|*
-name|BB
-parameter_list|)
-init|=
-literal|0
-function_decl|;
 comment|/// getPointerToFunctionOrStub - If the specified function has been
 comment|/// code-gen'd, return a pointer to the function.  If not, compile it, or use
 comment|/// a stub to implement lazy compilation if available.  See
@@ -1055,7 +985,7 @@ block|}
 comment|/// getGlobalValueAddress - Return the address of the specified global
 comment|/// value. This may involve code generation.
 comment|///
-comment|/// This function should not be called with the JIT or interpreter engines.
+comment|/// This function should not be called with the interpreter engine.
 name|virtual
 name|uint64_t
 name|getGlobalValueAddress
@@ -1068,7 +998,7 @@ operator|&
 name|Name
 argument_list|)
 block|{
-comment|// Default implementation for JIT and interpreter.  MCJIT will override this.
+comment|// Default implementation for the interpreter.  MCJIT will override this.
 comment|// JIT and interpreter clients should use getPointerToGlobal instead.
 return|return
 literal|0
@@ -1088,26 +1018,12 @@ operator|&
 name|Name
 argument_list|)
 block|{
-comment|// Default implementation for JIT and interpreter.  MCJIT will override this.
-comment|// JIT and interpreter clients should use getPointerToFunction instead.
+comment|// Default implementation for the interpreter.  MCJIT will override this.
+comment|// Interpreter clients should use getPointerToFunction instead.
 return|return
 literal|0
 return|;
 block|}
-comment|// The JIT overrides a version that actually does this.
-name|virtual
-name|void
-name|runJITOnFunction
-parameter_list|(
-name|Function
-modifier|*
-parameter_list|,
-name|MachineCodeInfo
-modifier|*
-init|=
-name|nullptr
-parameter_list|)
-block|{ }
 comment|/// getGlobalValueAtAddress - Return the LLVM global value object that starts
 comment|/// at the specified address.
 comment|///
@@ -1154,37 +1070,6 @@ name|void
 modifier|*
 name|Addr
 parameter_list|)
-function_decl|;
-comment|/// recompileAndRelinkFunction - This method is used to force a function which
-comment|/// has already been compiled to be compiled again, possibly after it has been
-comment|/// modified.  Then the entry to the old copy is overwritten with a branch to
-comment|/// the new copy.  If there was no old copy, this acts just like
-comment|/// VM::getPointerToFunction().
-name|virtual
-name|void
-modifier|*
-name|recompileAndRelinkFunction
-parameter_list|(
-name|Function
-modifier|*
-name|F
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// freeMachineCodeForFunction - Release memory in the ExecutionEngine
-comment|/// corresponding to the machine code emitted to execute this function, useful
-comment|/// for garbage-collecting generated code.
-name|virtual
-name|void
-name|freeMachineCodeForFunction
-parameter_list|(
-name|Function
-modifier|*
-name|F
-parameter_list|)
-init|=
-literal|0
 function_decl|;
 comment|/// getOrEmitGlobalVariable - Return the address of the specified global
 comment|/// variable, possibly emitting it to memory if needed.  This is used by the
@@ -1236,7 +1121,7 @@ modifier|*
 parameter_list|)
 block|{}
 comment|/// Sets the pre-compiled object cache.  The ownership of the ObjectCache is
-comment|/// not changed.  Supported by MCJIT but not JIT.
+comment|/// not changed.  Supported by MCJIT but not the interpreter.
 name|virtual
 name|void
 name|setObjectCache
@@ -1321,18 +1206,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CompilingLazily
-return|;
-block|}
-comment|// Deprecated in favor of isCompilingLazily (to reduce double-negatives).
-comment|// Remove this in LLVM 2.8.
-name|bool
-name|isLazyCompilationDisabled
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
 name|CompilingLazily
 return|;
 block|}
@@ -1443,12 +1316,16 @@ name|protected
 label|:
 name|explicit
 name|ExecutionEngine
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
+operator|>
 name|M
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|emitGlobals
 parameter_list|()
@@ -1529,15 +1406,15 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// EngineBuilder - Builder class for ExecutionEngines.  Use this by
+comment|/// Builder class for ExecutionEngines. Use this by stack-allocating a builder,
 end_comment
 
 begin_comment
-comment|/// stack-allocating a builder, chaining the various set* methods, and
+comment|/// chaining the various set* methods, and terminating it with a .create()
 end_comment
 
 begin_comment
-comment|/// terminating it with a .create() call.
+comment|/// call.
 end_comment
 
 begin_decl_stmt
@@ -1546,10 +1423,14 @@ name|EngineBuilder
 block|{
 name|private
 label|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
+operator|>
 name|M
-decl_stmt|;
+expr_stmt|;
 name|EngineKind
 operator|::
 name|Kind
@@ -1566,17 +1447,14 @@ operator|::
 name|Level
 name|OptLevel
 expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|RTDyldMemoryManager
-modifier|*
+operator|>
 name|MCJMM
-decl_stmt|;
-name|JITMemoryManager
-modifier|*
-name|JMM
-decl_stmt|;
-name|bool
-name|AllocateGVsWithCode
-decl_stmt|;
+expr_stmt|;
 name|TargetOptions
 name|Options
 decl_stmt|;
@@ -1611,9 +1489,6 @@ operator|>
 name|MAttrs
 expr_stmt|;
 name|bool
-name|UseMCJIT
-decl_stmt|;
-name|bool
 name|VerifyModules
 decl_stmt|;
 comment|/// InitEngine - Does the common initialization of default options.
@@ -1623,36 +1498,39 @@ parameter_list|()
 function_decl|;
 name|public
 label|:
-comment|/// EngineBuilder - Constructor for EngineBuilder.  If create() is called and
-comment|/// is successful, the created engine takes ownership of the module.
+comment|/// Constructor for EngineBuilder.
 name|EngineBuilder
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-operator|*
-name|m
-argument_list|)
-operator|:
+operator|>
 name|M
-argument_list|(
-argument|m
 argument_list|)
-block|{
-name|InitEngine
+expr_stmt|;
+comment|// Out-of-line since we don't have the def'n of RTDyldMemoryManager here.
+operator|~
+name|EngineBuilder
 argument_list|()
-block|;   }
+expr_stmt|;
 comment|/// setEngineKind - Controls whether the user wants the interpreter, the JIT,
 comment|/// or whichever engine works.  This option defaults to EngineKind::Either.
 name|EngineBuilder
-operator|&
+modifier|&
 name|setEngineKind
 argument_list|(
-argument|EngineKind::Kind w
+name|EngineKind
+operator|::
+name|Kind
+name|w
 argument_list|)
 block|{
 name|WhichEngine
 operator|=
 name|w
-block|;
+expr_stmt|;
 return|return
 operator|*
 name|this
@@ -1663,59 +1541,20 @@ comment|/// clients to customize their memory allocation policies for the MCJIT.
 comment|/// is only appropriate for the MCJIT; setting this and configuring the builder
 comment|/// to create anything other than MCJIT will cause a runtime error. If create()
 comment|/// is called and is successful, the created engine takes ownership of the
-comment|/// memory manager. This option defaults to NULL. Using this option nullifies
-comment|/// the setJITMemoryManager() option.
+comment|/// memory manager. This option defaults to NULL.
 name|EngineBuilder
 modifier|&
 name|setMCJITMemoryManager
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|RTDyldMemoryManager
-modifier|*
+operator|>
 name|mcjmm
-parameter_list|)
-block|{
-name|MCJMM
-operator|=
-name|mcjmm
-expr_stmt|;
-name|JMM
-operator|=
-name|nullptr
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-comment|/// setJITMemoryManager - Sets the JIT memory manager to use.  This allows
-comment|/// clients to customize their memory allocation policies.  This is only
-comment|/// appropriate for either JIT or MCJIT; setting this and configuring the
-comment|/// builder to create an interpreter will cause a runtime error. If create()
-comment|/// is called and is successful, the created engine takes ownership of the
-comment|/// memory manager.  This option defaults to NULL. This option overrides
-comment|/// setMCJITMemoryManager() as well.
-name|EngineBuilder
-modifier|&
-name|setJITMemoryManager
-parameter_list|(
-name|JITMemoryManager
-modifier|*
-name|jmm
-parameter_list|)
-block|{
-name|MCJMM
-operator|=
-name|nullptr
-expr_stmt|;
-name|JMM
-operator|=
-name|jmm
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
+argument_list|)
+decl_stmt|;
 comment|/// setErrorStr - Set the error string to write to on error.  This option
 comment|/// defaults to NULL.
 name|EngineBuilder
@@ -1823,30 +1662,6 @@ operator|*
 name|this
 return|;
 block|}
-comment|/// setAllocateGVsWithCode - Sets whether global values should be allocated
-comment|/// into the same buffer as code.  For most applications this should be set
-comment|/// to false.  Allocating globals with code breaks freeMachineCodeForFunction
-comment|/// and is probably unsafe and bad for performance.  However, we have clients
-comment|/// who depend on this behavior, so we must support it.  This option defaults
-comment|/// to false so that users of the new API can safely use the new memory
-comment|/// manager and free machine code.
-name|EngineBuilder
-modifier|&
-name|setAllocateGVsWithCode
-parameter_list|(
-name|bool
-name|a
-parameter_list|)
-block|{
-name|AllocateGVsWithCode
-operator|=
-name|a
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 comment|/// setMArch - Override the architecture set by the Module's triple.
 name|EngineBuilder
 modifier|&
@@ -1899,25 +1714,6 @@ operator|.
 name|end
 argument_list|()
 argument_list|)
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-comment|/// setUseMCJIT - Set whether the MC-JIT implementation should be used
-comment|/// (experimental).
-name|EngineBuilder
-modifier|&
-name|setUseMCJIT
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|UseMCJIT
-operator|=
-name|Value
 expr_stmt|;
 return|return
 operator|*

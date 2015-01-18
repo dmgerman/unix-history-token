@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDILFRAME_LOWERING_H
+name|LLVM_LIB_TARGET_R600_AMDGPUFRAMELOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDILFRAME_LOWERING_H
+name|LLVM_LIB_TARGET_R600_AMDGPUFRAMELOWERING_H
 end_define
 
 begin_include
@@ -180,10 +180,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDILFRAME_LOWERING_H
-end_comment
 
 end_unit
 

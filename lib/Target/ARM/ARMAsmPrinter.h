@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARMASMPRINTER_H
+name|LLVM_LIB_TARGET_ARM_ARMASMPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARMASMPRINTER_H
+name|LLVM_LIB_TARGET_ARM_ARMASMPRINTER_H
 end_define
 
 begin_include
@@ -76,6 +76,9 @@ name|MachineConstantPool
 decl_stmt|;
 name|class
 name|MachineOperand
+decl_stmt|;
+name|class
+name|MCSymbol
 decl_stmt|;
 name|namespace
 name|ARM
@@ -124,6 +127,24 @@ comment|/// InConstantPool - Maintain state when emitting a sequence of constant
 comment|/// pool entries so we can properly mark them as data regions.
 name|bool
 name|InConstantPool
+block|;
+comment|/// ThumbIndirectPads - These maintain a per-function list of jump pad
+comment|/// labels used for ARMv4t thumb code to make register indirect calls.
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|MCSymbol
+operator|*
+operator|>
+block|,
+literal|4
+operator|>
+name|ThumbIndirectPads
 block|;
 name|public
 operator|:

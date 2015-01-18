@@ -52,6 +52,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -2184,6 +2196,10 @@ comment|/// \brief Keeping track of bundle-locked state.
 name|BundleLockStateType
 name|BundleLockState
 block|;
+comment|/// \brief Current nesting depth of bundle_lock directives.
+name|unsigned
+name|BundleLockNestingDepth
+block|;
 comment|/// \brief We've seen a bundle_lock directive but not its first instruction
 comment|/// yet.
 name|bool
@@ -2496,11 +2512,7 @@ name|setBundleLockState
 argument_list|(
 argument|BundleLockStateType NewState
 argument_list|)
-block|{
-name|BundleLockState
-operator|=
-name|NewState
-block|;   }
+block|;
 name|bool
 name|isBundleGroupBeforeFirstInst
 argument_list|()
@@ -2537,42 +2549,34 @@ operator|<
 name|MCSymbolData
 operator|>
 block|{
-name|public
-operator|:
 specifier|const
 name|MCSymbol
 operator|*
 name|Symbol
 block|;
-comment|/// Fragment - The fragment this symbol's value is relative to, if any.
+comment|/// Fragment - The fragment this symbol's value is relative to, if any. Also
+comment|/// stores if this symbol is visible outside this translation unit (bit 0) or
+comment|/// if it is private extern (bit 1).
+name|PointerIntPair
+operator|<
 name|MCFragment
 operator|*
+block|,
+literal|2
+operator|>
 name|Fragment
 block|;
-comment|/// Offset - The offset to apply to the fragment address to form this symbol's
-comment|/// value.
+expr|union
+block|{
+comment|/// Offset - The offset to apply to the fragment address to form this
+comment|/// symbol's value.
 name|uint64_t
 name|Offset
 block|;
-comment|/// IsExternal - True if this symbol is visible outside this translation
-comment|/// unit.
-name|unsigned
-name|IsExternal
-operator|:
-literal|1
-block|;
-comment|/// IsPrivateExtern - True if this symbol is private extern.
-name|unsigned
-name|IsPrivateExtern
-operator|:
-literal|1
-block|;
-comment|/// CommonSize - The size of the symbol, if it is 'common', or 0.
-comment|//
-comment|// FIXME: Pack this in with other fields? We could put it in offset, since a
-comment|// common symbol can never get a definition.
+comment|/// CommonSize - The size of the symbol, if it is 'common'.
 name|uint64_t
 name|CommonSize
+block|;   }
 block|;
 comment|/// SymbolSize - An expression describing how to calculate the size of
 comment|/// a symbol. If a symbol has no size this field will be NULL.
@@ -2581,7 +2585,7 @@ name|MCExpr
 operator|*
 name|SymbolSize
 block|;
-comment|/// CommonAlign - The alignment of the symbol, if it is 'common'.
+comment|/// CommonAlign - The alignment of the symbol, if it is 'common', or -1.
 comment|//
 comment|// FIXME: Pack this in with other fields?
 name|unsigned
@@ -2635,6 +2639,9 @@ specifier|const
 block|{
 return|return
 name|Fragment
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 name|void
@@ -2644,14 +2651,24 @@ argument|MCFragment *Value
 argument_list|)
 block|{
 name|Fragment
-operator|=
+operator|.
+name|setPointer
+argument_list|(
 name|Value
+argument_list|)
 block|; }
 name|uint64_t
 name|getOffset
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|!
+name|isCommon
+argument_list|()
+argument_list|)
+block|;
 return|return
 name|Offset
 return|;
@@ -2662,10 +2679,17 @@ argument_list|(
 argument|uint64_t Value
 argument_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+name|isCommon
+argument_list|()
+argument_list|)
+block|;
 name|Offset
 operator|=
 name|Value
-block|; }
+block|;   }
 comment|/// @}
 comment|/// @name Symbol Attributes
 comment|/// @{
@@ -2675,7 +2699,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IsExternal
+name|Fragment
+operator|.
+name|getInt
+argument_list|()
+operator|&
+literal|1
 return|;
 block|}
 name|void
@@ -2684,17 +2713,38 @@ argument_list|(
 argument|bool Value
 argument_list|)
 block|{
-name|IsExternal
-operator|=
+name|Fragment
+operator|.
+name|setInt
+argument_list|(
+operator|(
+name|Fragment
+operator|.
+name|getInt
+argument_list|()
+operator|&
+operator|~
+literal|1
+operator|)
+operator||
+name|unsigned
+argument_list|(
 name|Value
-block|; }
+argument_list|)
+argument_list|)
+block|;   }
 name|bool
 name|isPrivateExtern
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsPrivateExtern
+name|Fragment
+operator|.
+name|getInt
+argument_list|()
+operator|&
+literal|2
 return|;
 block|}
 name|void
@@ -2703,10 +2753,30 @@ argument_list|(
 argument|bool Value
 argument_list|)
 block|{
-name|IsPrivateExtern
-operator|=
+name|Fragment
+operator|.
+name|setInt
+argument_list|(
+operator|(
+name|Fragment
+operator|.
+name|getInt
+argument_list|()
+operator|&
+operator|~
+literal|2
+operator|)
+operator||
+operator|(
+name|unsigned
+argument_list|(
 name|Value
-block|; }
+argument_list|)
+operator|<<
+literal|1
+operator|)
+argument_list|)
+block|;   }
 comment|/// isCommon - Is this a 'common' symbol.
 name|bool
 name|isCommon
@@ -2714,9 +2784,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CommonSize
+name|CommonAlign
 operator|!=
-literal|0
+operator|-
+literal|1U
 return|;
 block|}
 comment|/// setCommon - Mark this symbol as being 'common'.
@@ -2731,6 +2802,14 @@ argument_list|,
 argument|unsigned Align
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|getOffset
+argument_list|()
+operator|==
+literal|0
+argument_list|)
+block|;
 name|CommonSize
 operator|=
 name|Size
@@ -3176,6 +3255,17 @@ name|Symbols
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|DenseSet
+operator|<
+specifier|const
+name|MCSymbol
+operator|*
+operator|>
+name|LocalsUsedInReloc
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// The map of sections to their associated assembler backend data.
 end_comment
@@ -3345,14 +3435,6 @@ end_decl_stmt
 begin_decl_stmt
 name|unsigned
 name|RelaxAll
-range|:
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|NoExecStack
 range|:
 literal|1
 decl_stmt|;
@@ -3702,6 +3784,31 @@ begin_label
 name|public
 label|:
 end_label
+
+begin_function_decl
+name|void
+name|addLocalUsedInReloc
+parameter_list|(
+specifier|const
+name|MCSymbol
+modifier|&
+name|Sym
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|bool
+name|isLocalUsedInReloc
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|&
+name|Sym
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Compute the effective fragment size assuming it is laid out at the given
@@ -4145,33 +4252,6 @@ name|Value
 parameter_list|)
 block|{
 name|RelaxAll
-operator|=
-name|Value
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|bool
-name|getNoExecStack
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NoExecStack
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|void
-name|setNoExecStack
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|NoExecStack
 operator|=
 name|Value
 expr_stmt|;

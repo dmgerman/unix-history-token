@@ -22,19 +22,7 @@ file|"caml/memory.h"
 end_include
 
 begin_comment
-comment|// TODO: Figure out how to call these only for targets which support them.
-end_comment
-
-begin_comment
-comment|// LLVMInitialize ## target ## AsmPrinter();
-end_comment
-
-begin_comment
-comment|// LLVMInitialize ## target ## AsmParser();
-end_comment
-
-begin_comment
-comment|// LLVMInitialize ## target ## Disassembler();
+comment|/* TODO: Figure out how to call these only for targets which support them.  * LLVMInitialize ## target ## AsmPrinter();  * LLVMInitialize ## target ## AsmParser();  * LLVMInitialize ## target ## Disassembler();  */
 end_comment
 
 begin_define

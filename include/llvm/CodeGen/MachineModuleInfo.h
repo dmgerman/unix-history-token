@@ -264,6 +264,16 @@ operator|>
 name|EndLabels
 expr_stmt|;
 comment|// Labels after invoke.
+name|SmallVector
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+literal|1
+operator|>
+name|ClauseLabels
+expr_stmt|;
+comment|// Labels for each clause.
 name|MCSymbol
 modifier|*
 name|LandingPadLabel
@@ -411,11 +421,6 @@ name|MCCFIInstruction
 operator|>
 name|FrameInstructions
 block|;
-comment|/// CompactUnwindEncoding - If the target supports it, this is the compact
-comment|/// unwind encoding. It replaces a function's CIE and FDE.
-name|uint32_t
-name|CompactUnwindEncoding
-block|;
 comment|/// LandingPads - List of LandingPadInfo describing the landing pad
 comment|/// information in the current function.
 name|std
@@ -464,7 +469,7 @@ operator|::
 name|vector
 operator|<
 specifier|const
-name|GlobalVariable
+name|GlobalValue
 operator|*
 operator|>
 name|TypeInfos
@@ -536,6 +541,14 @@ comment|/// to _fltused on Windows targets.
 name|bool
 name|UsesVAFloatArgument
 block|;
+comment|/// UsesMorestackAddr - True if the module calls the __morestack function
+comment|/// indirectly, as is required under the large code model on x86. This is used
+comment|/// to emit a definition of a symbol, __morestack_addr, containing the
+comment|/// address. See comments in lib/Target/X86/X86FrameLowering.cpp for more
+comment|/// details.
+name|bool
+name|UsesMorestackAddr
+block|;
 name|public
 operator|:
 specifier|static
@@ -546,18 +559,50 @@ comment|// Pass identification, replacement for typeid
 block|struct
 name|VariableDbgInfo
 block|{
-name|TrackingVH
-operator|<
-name|MDNode
-operator|>
+name|TrackingMDNodeRef
 name|Var
+block|;
+name|TrackingMDNodeRef
+name|Expr
 block|;
 name|unsigned
 name|Slot
 block|;
 name|DebugLoc
 name|Loc
-block|;   }
+block|;
+name|VariableDbgInfo
+argument_list|(
+argument|MDNode *Var
+argument_list|,
+argument|MDNode *Expr
+argument_list|,
+argument|unsigned Slot
+argument_list|,
+argument|DebugLoc Loc
+argument_list|)
+operator|:
+name|Var
+argument_list|(
+name|Var
+argument_list|)
+block|,
+name|Expr
+argument_list|(
+name|Expr
+argument_list|)
+block|,
+name|Slot
+argument_list|(
+name|Slot
+argument_list|)
+block|,
+name|Loc
+argument_list|(
+argument|Loc
+argument_list|)
+block|{}
+block|}
 block|;
 typedef|typedef
 name|SmallVector
@@ -877,6 +922,33 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|bool
+name|usesMorestackAddr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsesMorestackAddr
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setUsesMorestackAddr
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|UsesMorestackAddr
+operator|=
+name|b
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/// \brief Returns a reference to a list of cfi instructions in the current
 end_comment
@@ -934,53 +1006,6 @@ argument_list|()
 operator|-
 literal|1
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/// getCompactUnwindEncoding - Returns the compact unwind encoding for a
-end_comment
-
-begin_comment
-comment|/// function if the target supports the encoding. This encoding replaces a
-end_comment
-
-begin_comment
-comment|/// function's CIE and FDE.
-end_comment
-
-begin_expr_stmt
-name|uint32_t
-name|getCompactUnwindEncoding
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CompactUnwindEncoding
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// setCompactUnwindEncoding - Set the compact unwind encoding for a function
-end_comment
-
-begin_comment
-comment|/// if the target supports the encoding.
-end_comment
-
-begin_function
-name|void
-name|setCompactUnwindEncoding
-parameter_list|(
-name|uint32_t
-name|Enc
-parameter_list|)
-block|{
-name|CompactUnwindEncoding
-operator|=
-name|Enc
-expr_stmt|;
 block|}
 end_function
 
@@ -1266,7 +1291,7 @@ argument_list|,
 name|ArrayRef
 operator|<
 specifier|const
-name|GlobalVariable
+name|GlobalValue
 operator|*
 operator|>
 name|TyInfo
@@ -1293,7 +1318,7 @@ argument_list|,
 name|ArrayRef
 operator|<
 specifier|const
-name|GlobalVariable
+name|GlobalValue
 operator|*
 operator|>
 name|TyInfo
@@ -1321,6 +1346,30 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Add a clause for a landing pad. Returns a new label for the clause. This
+end_comment
+
+begin_comment
+comment|/// is used by EH schemes that have more than one landing pad. In this case,
+end_comment
+
+begin_comment
+comment|/// each clause gets its own basic block.
+end_comment
+
+begin_function_decl
+name|MCSymbol
+modifier|*
+name|addClauseForLandingPad
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|LandingPad
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// getTypeIDFor - Return the type id for the specified typeinfo.  This is
 end_comment
 
@@ -1333,7 +1382,7 @@ name|unsigned
 name|getTypeIDFor
 parameter_list|(
 specifier|const
-name|GlobalVariable
+name|GlobalValue
 modifier|*
 name|TI
 parameter_list|)
@@ -1650,7 +1699,7 @@ operator|::
 name|vector
 operator|<
 specifier|const
-name|GlobalVariable
+name|GlobalValue
 operator|*
 operator|>
 operator|&
@@ -1723,7 +1772,11 @@ name|setVariableDbgInfo
 parameter_list|(
 name|MDNode
 modifier|*
-name|N
+name|Var
+parameter_list|,
+name|MDNode
+modifier|*
+name|Expr
 parameter_list|,
 name|unsigned
 name|Slot
@@ -1732,27 +1785,17 @@ name|DebugLoc
 name|Loc
 parameter_list|)
 block|{
-name|VariableDbgInfo
-name|Info
-init|=
-block|{
-name|N
-block|,
-name|Slot
-block|,
-name|Loc
-block|}
-decl_stmt|;
 name|VariableDbgInfos
 operator|.
-name|push_back
+name|emplace_back
 argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Info
-argument_list|)
+name|Var
+argument_list|,
+name|Expr
+argument_list|,
+name|Slot
+argument_list|,
+name|Loc
 argument_list|)
 expr_stmt|;
 block|}

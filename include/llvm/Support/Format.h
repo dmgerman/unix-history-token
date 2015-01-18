@@ -98,6 +98,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -161,11 +173,16 @@ name|char
 modifier|*
 name|Fmt
 decl_stmt|;
+operator|~
+name|format_object_base
+argument_list|()
+block|{}
+comment|// Disallow polymorphic deletion.
 name|virtual
 name|void
 name|home
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|// Out of line virtual method.
 comment|/// Call snprintf() for this object, on the given buffer and size.
 name|virtual
@@ -197,11 +214,6 @@ name|Fmt
 argument_list|(
 argument|fmt
 argument_list|)
-block|{}
-name|virtual
-operator|~
-name|format_object_base
-argument_list|()
 block|{}
 comment|/// Format the object into the specified buffer.  On success, this returns
 comment|/// the length of the formatted string.  If the buffer is too small, this
@@ -297,6 +309,7 @@ name|T
 operator|>
 name|class
 name|format_object1
+name|final
 operator|:
 name|public
 name|format_object_base
@@ -366,6 +379,7 @@ name|T2
 operator|>
 name|class
 name|format_object2
+name|final
 operator|:
 name|public
 name|format_object_base
@@ -453,6 +467,7 @@ name|T3
 operator|>
 name|class
 name|format_object3
+name|final
 operator|:
 name|public
 name|format_object_base
@@ -558,6 +573,7 @@ name|T4
 operator|>
 name|class
 name|format_object4
+name|final
 operator|:
 name|public
 name|format_object_base
@@ -681,6 +697,7 @@ name|T5
 operator|>
 name|class
 name|format_object5
+name|final
 operator|:
 name|public
 name|format_object_base
@@ -822,6 +839,7 @@ name|T6
 operator|>
 name|class
 name|format_object6
+name|final
 operator|:
 name|public
 name|format_object_base
@@ -1343,6 +1361,328 @@ operator|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// This is a helper class used for left_justify() and right_justify().
+end_comment
+
+begin_decl_stmt
+name|class
+name|FormattedString
+block|{
+name|StringRef
+name|Str
+decl_stmt|;
+name|unsigned
+name|Width
+decl_stmt|;
+name|bool
+name|RightJustify
+decl_stmt|;
+name|friend
+name|class
+name|raw_ostream
+decl_stmt|;
+name|public
+label|:
+name|FormattedString
+argument_list|(
+argument|StringRef S
+argument_list|,
+argument|unsigned W
+argument_list|,
+argument|bool R
+argument_list|)
+block|:
+name|Str
+argument_list|(
+name|S
+argument_list|)
+operator|,
+name|Width
+argument_list|(
+name|W
+argument_list|)
+operator|,
+name|RightJustify
+argument_list|(
+argument|R
+argument_list|)
+block|{ }
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// left_justify - append spaces after string so total output is
+end_comment
+
+begin_comment
+comment|/// \p Width characters.  If \p Str is larger that \p Width, full string
+end_comment
+
+begin_comment
+comment|/// is written with no padding.
+end_comment
+
+begin_function
+specifier|inline
+name|FormattedString
+name|left_justify
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|,
+name|unsigned
+name|Width
+parameter_list|)
+block|{
+return|return
+name|FormattedString
+argument_list|(
+name|Str
+argument_list|,
+name|Width
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// right_justify - add spaces before string so total output is
+end_comment
+
+begin_comment
+comment|/// \p Width characters.  If \p Str is larger that \p Width, full string
+end_comment
+
+begin_comment
+comment|/// is written with no padding.
+end_comment
+
+begin_function
+specifier|inline
+name|FormattedString
+name|right_justify
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|,
+name|unsigned
+name|Width
+parameter_list|)
+block|{
+return|return
+name|FormattedString
+argument_list|(
+name|Str
+argument_list|,
+name|Width
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// This is a helper class used for format_hex() and format_decimal().
+end_comment
+
+begin_decl_stmt
+name|class
+name|FormattedNumber
+block|{
+name|uint64_t
+name|HexValue
+decl_stmt|;
+name|int64_t
+name|DecValue
+decl_stmt|;
+name|unsigned
+name|Width
+decl_stmt|;
+name|bool
+name|Hex
+decl_stmt|;
+name|bool
+name|Upper
+decl_stmt|;
+name|friend
+name|class
+name|raw_ostream
+decl_stmt|;
+name|public
+label|:
+name|FormattedNumber
+argument_list|(
+argument|uint64_t HV
+argument_list|,
+argument|int64_t DV
+argument_list|,
+argument|unsigned W
+argument_list|,
+argument|bool H
+argument_list|,
+argument|bool U
+argument_list|)
+block|:
+name|HexValue
+argument_list|(
+name|HV
+argument_list|)
+operator|,
+name|DecValue
+argument_list|(
+name|DV
+argument_list|)
+operator|,
+name|Width
+argument_list|(
+name|W
+argument_list|)
+operator|,
+name|Hex
+argument_list|(
+name|H
+argument_list|)
+operator|,
+name|Upper
+argument_list|(
+argument|U
+argument_list|)
+block|{ }
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// format_hex - Output \p N as a fixed width hexadecimal. If number will not
+end_comment
+
+begin_comment
+comment|/// fit in width, full number is still printed.  Examples:
+end_comment
+
+begin_comment
+comment|///   OS<< format_hex(255, 4)        => 0xff
+end_comment
+
+begin_comment
+comment|///   OS<< format_hex(255, 4, true)  => 0xFF
+end_comment
+
+begin_comment
+comment|///   OS<< format_hex(255, 6)        => 0x00ff
+end_comment
+
+begin_comment
+comment|///   OS<< format_hex(255, 2)        => 0xff
+end_comment
+
+begin_function
+specifier|inline
+name|FormattedNumber
+name|format_hex
+parameter_list|(
+name|uint64_t
+name|N
+parameter_list|,
+name|unsigned
+name|Width
+parameter_list|,
+name|bool
+name|Upper
+init|=
+name|false
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Width
+operator|<=
+literal|18
+operator|&&
+literal|"hex width must be<= 18"
+argument_list|)
+expr_stmt|;
+return|return
+name|FormattedNumber
+argument_list|(
+name|N
+argument_list|,
+literal|0
+argument_list|,
+name|Width
+argument_list|,
+name|true
+argument_list|,
+name|Upper
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// format_decimal - Output \p N as a right justified, fixed-width decimal. If
+end_comment
+
+begin_comment
+comment|/// number will not fit in width, full number is still printed.  Examples:
+end_comment
+
+begin_comment
+comment|///   OS<< format_decimal(0, 5)     => "    0"
+end_comment
+
+begin_comment
+comment|///   OS<< format_decimal(255, 5)   => "  255"
+end_comment
+
+begin_comment
+comment|///   OS<< format_decimal(-1, 3)    => " -1"
+end_comment
+
+begin_comment
+comment|///   OS<< format_decimal(12345, 3) => "12345"
+end_comment
+
+begin_function
+specifier|inline
+name|FormattedNumber
+name|format_decimal
+parameter_list|(
+name|int64_t
+name|N
+parameter_list|,
+name|unsigned
+name|Width
+parameter_list|)
+block|{
+return|return
+name|FormattedNumber
+argument_list|(
+literal|0
+argument_list|,
+name|N
+argument_list|,
+name|Width
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 unit|}

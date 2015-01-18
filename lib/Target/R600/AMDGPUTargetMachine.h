@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPU_TARGET_MACHINE_H
+name|LLVM_LIB_TARGET_R600_AMDGPUTARGETMACHINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPU_TARGET_MACHINE_H
+name|LLVM_LIB_TARGET_R600_AMDGPUTARGETMACHINE_H
 end_define
 
 begin_include
@@ -103,37 +103,26 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|//===----------------------------------------------------------------------===//
+comment|// AMDGPU Target Machine (R600+)
+comment|//===----------------------------------------------------------------------===//
 name|class
 name|AMDGPUTargetMachine
 range|:
 name|public
 name|LLVMTargetMachine
 block|{
+name|protected
+operator|:
+name|TargetLoweringObjectFile
+operator|*
+name|TLOF
+block|;
 name|AMDGPUSubtarget
 name|Subtarget
 block|;
-specifier|const
-name|DataLayout
-name|Layout
-block|;
-name|AMDGPUFrameLowering
-name|FrameLowering
-block|;
 name|AMDGPUIntrinsicInfo
 name|IntrinsicInfo
-block|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|AMDGPUTargetLowering
-operator|>
-name|TLInfo
-block|;
-specifier|const
-name|InstrItineraryData
-operator|*
-name|InstrItins
 block|;
 name|public
 operator|:
@@ -161,48 +150,6 @@ name|AMDGPUTargetMachine
 argument_list|()
 block|;
 specifier|const
-name|AMDGPUFrameLowering
-operator|*
-name|getFrameLowering
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|FrameLowering
-return|;
-block|}
-specifier|const
-name|AMDGPUIntrinsicInfo
-operator|*
-name|getIntrinsicInfo
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|IntrinsicInfo
-return|;
-block|}
-specifier|const
-name|AMDGPUInstrInfo
-operator|*
-name|getInstrInfo
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getInstrInfo
-argument_list|()
-return|;
-block|}
-specifier|const
 name|AMDGPUSubtarget
 operator|*
 name|getSubtargetImpl
@@ -216,59 +163,16 @@ name|Subtarget
 return|;
 block|}
 specifier|const
-name|AMDGPURegisterInfo
+name|AMDGPUIntrinsicInfo
 operator|*
-name|getRegisterInfo
+name|getIntrinsicInfo
 argument_list|()
 specifier|const
 name|override
 block|{
 return|return
 operator|&
-name|getInstrInfo
-argument_list|()
-operator|->
-name|getRegisterInfo
-argument_list|()
-return|;
-block|}
-name|AMDGPUTargetLowering
-operator|*
-name|getTargetLowering
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|TLInfo
-operator|.
-name|get
-argument_list|()
-return|;
-block|}
-specifier|const
-name|InstrItineraryData
-operator|*
-name|getInstrItineraryData
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|InstrItins
-return|;
-block|}
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|Layout
+name|IntrinsicInfo
 return|;
 block|}
 name|TargetPassConfig
@@ -286,9 +190,51 @@ argument_list|(
 argument|PassManagerBase&PM
 argument_list|)
 name|override
-block|; }
-decl_stmt|;
+block|;
+name|TargetLoweringObjectFile
+operator|*
+name|getObjFileLowering
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|TLOF
+return|;
 block|}
+expr|}
+block|;
+comment|//===----------------------------------------------------------------------===//
+comment|// GCN Target Machine (SI+)
+comment|//===----------------------------------------------------------------------===//
+name|class
+name|GCNTargetMachine
+operator|:
+name|public
+name|AMDGPUTargetMachine
+block|{
+name|public
+operator|:
+name|GCNTargetMachine
+argument_list|(
+argument|const Target&T
+argument_list|,
+argument|StringRef TT
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|TargetOptions Options
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
+argument_list|)
+block|; }
+block|;  }
 end_decl_stmt
 
 begin_comment
@@ -299,10 +245,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDGPU_TARGET_MACHINE_H
-end_comment
 
 end_unit
 

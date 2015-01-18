@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_BITCODE_BITCODE_WRITER_PASS_H
+name|LLVM_BITCODE_BITCODEWRITERPASS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_BITCODE_BITCODE_WRITER_PASS_H
+name|LLVM_BITCODE_BITCODEWRITERPASS_H
 end_define
 
 begin_include
@@ -130,7 +130,7 @@ name|PreservedAnalyses
 name|run
 argument_list|(
 name|Module
-operator|*
+operator|&
 name|M
 argument_list|)
 expr_stmt|;

@@ -77,12 +77,24 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<system_error>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|format_object_base
+decl_stmt|;
+name|class
+name|FormattedString
+decl_stmt|;
+name|class
+name|FormattedNumber
 decl_stmt|;
 name|template
 operator|<
@@ -813,6 +825,40 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|// Formatted output, see the leftJustify() function in Support/Format.h.
+end_comment
+
+begin_expr_stmt
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|FormattedString
+operator|&
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Formatted output, see the formatHex() function in Support/Format.h.
+end_comment
+
+begin_expr_stmt
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|FormattedNumber
+operator|&
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// indent - Insert 'NumSpaces' spaces.
 end_comment
 
@@ -1351,10 +1397,10 @@ name|true
 block|; }
 name|public
 operator|:
-comment|/// raw_fd_ostream - Open the specified file for writing. If an error occurs,
-comment|/// information about the error is put into ErrorInfo, and the stream should
-comment|/// be immediately destroyed; the string will be empty if no error occurred.
-comment|/// This allows optional flags to control how the file will be opened.
+comment|/// Open the specified file for writing. If an error occurs, information
+comment|/// about the error is put into EC, and the stream should be immediately
+comment|/// destroyed;
+comment|/// \p Flags allows optional flags to control how the file will be opened.
 comment|///
 comment|/// As a special case, if Filename is "-", then the stream will use
 comment|/// STDOUT_FILENO instead of opening a file. Note that it will still consider
@@ -1363,9 +1409,9 @@ comment|/// file descriptor when it is done (this is necessary to detect
 comment|/// output errors).
 name|raw_fd_ostream
 argument_list|(
-argument|const char *Filename
+argument|StringRef Filename
 argument_list|,
-argument|std::string&ErrorInfo
+argument|std::error_code&EC
 argument_list|,
 argument|sys::fs::OpenFlags Flags
 argument_list|)

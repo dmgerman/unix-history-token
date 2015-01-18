@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MCJIT_TEST_BASE_H
+name|LLVM_UNITTESTS_EXECUTIONENGINE_MCJIT_MCJITTESTBASE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MCJIT_TEST_BASE_H
+name|LLVM_UNITTESTS_EXECUTIONENGINE_MCJIT_MCJITTESTBASE_H
 end_define
 
 begin_include
@@ -527,6 +527,54 @@ argument_list|,
 name|AddResult
 argument_list|)
 expr_stmt|;
+return|return
+name|Result
+return|;
+block|}
+comment|// Inserts a declaration to a function defined elsewhere
+name|template
+operator|<
+name|typename
+name|FuncType
+operator|>
+name|Function
+operator|*
+name|insertExternalReferenceToFunction
+argument_list|(
+argument|Module *M
+argument_list|,
+argument|StringRef Name
+argument_list|)
+block|{
+name|Function
+operator|*
+name|Result
+operator|=
+name|Function
+operator|::
+name|Create
+argument_list|(
+name|TypeBuilder
+operator|<
+name|FuncType
+argument_list|,
+name|false
+operator|>
+operator|::
+name|get
+argument_list|(
+name|Context
+argument_list|)
+argument_list|,
+name|GlobalValue
+operator|::
+name|ExternalLinkage
+argument_list|,
+name|Name
+argument_list|,
+name|M
+argument_list|)
+block|;
 return|return
 name|Result
 return|;
@@ -1698,15 +1746,6 @@ name|push_back
 argument_list|(
 name|Triple
 operator|::
-name|Cygwin
-argument_list|)
-block|;
-name|UnsupportedOSs
-operator|.
-name|push_back
-argument_list|(
-name|Triple
-operator|::
 name|Darwin
 argument_list|)
 block|;
@@ -1722,7 +1761,7 @@ block|;   }
 name|void
 name|createJIT
 argument_list|(
-argument|Module *M
+argument|std::unique_ptr<Module> M
 argument_list|)
 block|{
 comment|// Due to the EngineBuilder constructor, it is required to have a Module
@@ -1739,7 +1778,12 @@ block|;
 name|EngineBuilder
 name|EB
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|M
+argument_list|)
 argument_list|)
 block|;
 name|std
@@ -1760,15 +1804,14 @@ operator|::
 name|JIT
 argument_list|)
 operator|.
-name|setUseMCJIT
-argument_list|(
-name|true
-argument_list|)
-comment|/* can this be folded into the EngineKind enum? */
-operator|.
 name|setMCJITMemoryManager
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|MM
+argument_list|)
 argument_list|)
 operator|.
 name|setErrorStr
@@ -1783,12 +1826,6 @@ name|CodeGenOpt
 operator|::
 name|None
 argument_list|)
-operator|.
-name|setAllocateGVsWithCode
-argument_list|(
-name|false
-argument_list|)
-comment|/*does this do anything?*/
 operator|.
 name|setCodeModel
 argument_list|(
@@ -1871,10 +1908,14 @@ name|ExecutionEngine
 operator|>
 name|TheJIT
 expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|RTDyldMemoryManager
-modifier|*
+operator|>
 name|MM
-decl_stmt|;
+expr_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -1899,10 +1940,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// MCJIT_TEST_H
-end_comment
 
 end_unit
 

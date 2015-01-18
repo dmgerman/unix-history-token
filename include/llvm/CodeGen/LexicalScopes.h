@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -93,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
@@ -122,13 +122,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<unordered_map>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unordered_map>
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -222,6 +222,36 @@ argument_list|(
 literal|0
 argument_list|)
 block|{
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|D
+operator|||
+name|D
+operator|->
+name|isResolved
+argument_list|()
+operator|)
+operator|&&
+literal|"Expected resolved node"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|I
+operator|||
+name|I
+operator|->
+name|isResolved
+argument_list|()
+operator|)
+operator|&&
+literal|"Expected resolved node"
+argument_list|)
+block|;
 if|if
 condition|(
 name|Parent
@@ -565,21 +595,17 @@ modifier|*
 name|Parent
 decl_stmt|;
 comment|// Parent to this scope.
-name|AssertingVH
-operator|<
 specifier|const
 name|MDNode
-operator|>
+modifier|*
 name|Desc
-expr_stmt|;
+decl_stmt|;
 comment|// Debug info descriptor.
-name|AssertingVH
-operator|<
 specifier|const
 name|MDNode
-operator|>
+modifier|*
 name|InlinedAtLocation
-expr_stmt|;
+decl_stmt|;
 comment|// Location at which this
 comment|// scope is inlined.
 name|bool
@@ -674,23 +700,6 @@ operator|==
 name|nullptr
 return|;
 block|}
-comment|/// isCurrentFunctionScope - Return true if given lexical scope represents
-comment|/// current function.
-name|bool
-name|isCurrentFunctionScope
-parameter_list|(
-specifier|const
-name|LexicalScope
-modifier|*
-name|LS
-parameter_list|)
-block|{
-return|return
-name|LS
-operator|==
-name|CurrentFnLexicalScope
-return|;
-block|}
 comment|/// getCurrentFunctionScope - Return lexical scope for the current function.
 name|LexicalScope
 operator|*
@@ -711,13 +720,11 @@ argument_list|(
 name|DebugLoc
 name|DL
 argument_list|,
-name|SmallPtrSet
+name|SmallPtrSetImpl
 operator|<
 specifier|const
 name|MachineBasicBlock
 operator|*
-argument_list|,
-literal|4
 operator|>
 operator|&
 name|MBBs

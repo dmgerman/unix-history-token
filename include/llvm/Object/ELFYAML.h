@@ -141,7 +141,7 @@ argument|ELF_SHT
 argument_list|)
 name|LLVM_YAML_STRONG_TYPEDEF
 argument_list|(
-argument|uint8_t
+argument|uint32_t
 argument_list|,
 argument|ELF_REL
 argument_list|)
@@ -163,6 +163,12 @@ argument_list|(
 argument|uint8_t
 argument_list|,
 argument|ELF_STV
+argument_list|)
+name|LLVM_YAML_STRONG_TYPEDEF
+argument_list|(
+argument|uint8_t
+argument_list|,
+argument|ELF_STO
 argument_list|)
 comment|// For now, hardcode 64 bits everywhere that 32 or 64 would be needed
 comment|// since 64-bit can hold 32-bit values too.
@@ -222,8 +228,8 @@ operator|::
 name|Hex64
 name|Size
 expr_stmt|;
-name|ELF_STV
-name|Visibility
+name|uint8_t
+name|Other
 decl_stmt|;
 block|}
 struct|;
@@ -730,6 +736,33 @@ argument_list|,
 name|ELFYAML
 operator|::
 name|ELF_STV
+operator|&
+name|Value
+argument_list|)
+block|; }
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|ScalarBitSetTraits
+operator|<
+name|ELFYAML
+operator|::
+name|ELF_STO
+operator|>
+block|{
+specifier|static
+name|void
+name|bitset
+argument_list|(
+name|IO
+operator|&
+name|IO
+argument_list|,
+name|ELFYAML
+operator|::
+name|ELF_STO
 operator|&
 name|Value
 argument_list|)

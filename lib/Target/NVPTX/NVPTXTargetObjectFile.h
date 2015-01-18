@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_NVPTX_TARGETOBJECTFILE_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXTARGETOBJECTFILE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_NVPTX_TARGETOBJECTFILE_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXTARGETOBJECTFILE_H
 end_define
 
 begin_include
@@ -502,8 +502,24 @@ return|return
 name|DataSection
 return|;
 block|}
-expr|}
-block|;  }
+specifier|const
+name|MCSection
+operator|*
+name|SelectSectionForGlobal
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|SectionKind Kind
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

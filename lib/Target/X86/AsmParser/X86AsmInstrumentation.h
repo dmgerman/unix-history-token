@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86_ASM_INSTRUMENTATION_H
+name|LLVM_LIB_TARGET_X86_ASMPARSER_X86ASMINSTRUMENTATION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86_ASM_INSTRUMENTATION_H
+name|LLVM_LIB_TARGET_X86_ASMPARSER_X86ASMINSTRUMENTATION_H
 end_define
 
 begin_include
@@ -113,11 +113,23 @@ operator|~
 name|X86AsmInstrumentation
 argument_list|()
 expr_stmt|;
-comment|// Instruments Inst. Should be called just before the original
-comment|// instruction is sent to Out.
+comment|// Sets frame register corresponding to a current frame.
+name|void
+name|SetInitialFrameRegister
+parameter_list|(
+name|unsigned
+name|RegNo
+parameter_list|)
+block|{
+name|InitialFrameReg
+operator|=
+name|RegNo
+expr_stmt|;
+block|}
+comment|// Tries to instrument and emit instruction.
 name|virtual
 name|void
-name|InstrumentInstruction
+name|InstrumentAndEmitInstruction
 argument_list|(
 specifier|const
 name|MCInst
@@ -131,7 +143,8 @@ operator|::
 name|unique_ptr
 operator|<
 name|MCParsedAsmOperand
-operator|>>
+operator|>
+expr|>
 operator|&
 name|Operands
 argument_list|,
@@ -173,8 +186,47 @@ name|STI
 parameter_list|)
 function_decl|;
 name|X86AsmInstrumentation
-argument_list|()
+argument_list|(
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|)
 expr_stmt|;
+name|unsigned
+name|GetFrameRegGeneric
+parameter_list|(
+specifier|const
+name|MCContext
+modifier|&
+name|Ctx
+parameter_list|,
+name|MCStreamer
+modifier|&
+name|Out
+parameter_list|)
+function_decl|;
+name|void
+name|EmitInstruction
+parameter_list|(
+name|MCStreamer
+modifier|&
+name|Out
+parameter_list|,
+specifier|const
+name|MCInst
+modifier|&
+name|Inst
+parameter_list|)
+function_decl|;
+specifier|const
+name|MCSubtargetInfo
+modifier|&
+name|STI
+decl_stmt|;
+name|unsigned
+name|InitialFrameReg
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}
@@ -188,10 +240,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// X86_ASM_INSTRUMENTATION_H
-end_comment
 
 end_unit
 

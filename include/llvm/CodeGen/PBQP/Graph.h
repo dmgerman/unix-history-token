@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/Support/Debug.h"
 end_include
 
 begin_include
@@ -97,6 +97,9 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
 name|PBQP
 block|{
 name|class
@@ -112,7 +115,7 @@ typedef|typedef
 name|unsigned
 name|EdgeId
 typedef|;
-comment|/// \brief Returns a value representing an invalid (non-existent) node.
+comment|/// @brief Returns a value representing an invalid (non-existent) node.
 specifier|static
 name|NodeId
 name|invalidNodeId
@@ -130,7 +133,7 @@ name|max
 argument_list|()
 return|;
 block|}
-comment|/// \brief Returns a value representing an invalid (non-existent) edge.
+comment|/// @brief Returns a value representing an invalid (non-existent) edge.
 specifier|static
 name|EdgeId
 name|invalidEdgeId
@@ -230,6 +233,13 @@ name|SolverT
 operator|::
 name|EdgeMetadata
 name|EdgeMetadata
+expr_stmt|;
+typedef|typedef
+name|typename
+name|SolverT
+operator|::
+name|GraphMetadata
+name|GraphMetadata
 expr_stmt|;
 name|private
 label|:
@@ -845,6 +855,9 @@ expr_stmt|;
 block|}
 empty_stmt|;
 comment|// ----- MEMBERS -----
+name|GraphMetadata
+name|Metadata
+decl_stmt|;
 name|CostAllocator
 name|CostAlloc
 decl_stmt|;
@@ -909,6 +922,18 @@ name|NodeId
 name|NId
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|NId
+operator|<
+name|Nodes
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Out of bound NodeId"
+argument_list|)
+expr_stmt|;
 return|return
 name|Nodes
 index|[
@@ -926,6 +951,18 @@ name|NId
 argument_list|)
 decl|const
 block|{
+name|assert
+argument_list|(
+name|NId
+operator|<
+name|Nodes
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Out of bound NodeId"
+argument_list|)
+expr_stmt|;
 return|return
 name|Nodes
 index|[
@@ -968,9 +1005,7 @@ block|}
 name|NodeId
 name|addConstructedNode
 parameter_list|(
-specifier|const
 name|NodeEntry
-modifier|&
 name|N
 parameter_list|)
 block|{
@@ -1042,9 +1077,7 @@ block|}
 name|EdgeId
 name|addConstructedEdge
 parameter_list|(
-specifier|const
 name|EdgeEntry
-modifier|&
 name|E
 parameter_list|)
 block|{
@@ -1183,6 +1216,30 @@ name|NodeItr
 block|{
 name|public
 label|:
+typedef|typedef
+name|std
+operator|::
+name|forward_iterator_tag
+name|iterator_category
+expr_stmt|;
+typedef|typedef
+name|NodeId
+name|value_type
+typedef|;
+typedef|typedef
+name|int
+name|difference_type
+typedef|;
+typedef|typedef
+name|NodeId
+modifier|*
+name|pointer
+typedef|;
+typedef|typedef
+name|NodeId
+modifier|&
+name|reference
+typedef|;
 name|NodeItr
 argument_list|(
 argument|NodeId CurNId
@@ -1818,7 +1875,7 @@ name|NE
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// \brief Construct an empty PBQP graph.
+comment|/// @brief Construct an empty PBQP graph.
 name|Graph
 argument_list|()
 operator|:
@@ -1826,16 +1883,56 @@ name|Solver
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{ }
-comment|/// \brief Lock this graph to the given solver instance in preparation
+block|{}
+comment|/// @brief Construct an empty PBQP graph with the given graph metadata.
+name|Graph
+argument_list|(
+argument|GraphMetadata Metadata
+argument_list|)
+operator|:
+name|Metadata
+argument_list|(
+name|Metadata
+argument_list|)
+operator|,
+name|Solver
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+comment|/// @brief Get a reference to the graph metadata.
+name|GraphMetadata
+operator|&
+name|getMetadata
+argument_list|()
+block|{
+return|return
+name|Metadata
+return|;
+block|}
+comment|/// @brief Get a const-reference to the graph metadata.
+specifier|const
+name|GraphMetadata
+operator|&
+name|getMetadata
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Metadata
+return|;
+block|}
+comment|/// @brief Lock this graph to the given solver instance in preparation
 comment|/// for running the solver. This method will call solver.handleAddNode for
 comment|/// each node in the graph, and handleAddEdge for each edge, to give the
 comment|/// solver an opportunity to set up any requried metadata.
 name|void
 name|setSolver
-argument_list|(
-argument|SolverT&S
-argument_list|)
+parameter_list|(
+name|SolverT
+modifier|&
+name|S
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -1844,12 +1941,12 @@ name|Solver
 operator|&&
 literal|"Solver already set. Call unsetSolver()."
 argument_list|)
-block|;
+expr_stmt|;
 name|Solver
 operator|=
 operator|&
 name|S
-block|;
+expr_stmt|;
 for|for
 control|(
 name|auto
@@ -1881,13 +1978,7 @@ name|EId
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Release from solver instance.
-end_comment
-
-begin_function
+comment|/// @brief Release from solver instance.
 name|void
 name|unsetSolver
 parameter_list|()
@@ -1904,21 +1995,9 @@ operator|=
 name|nullptr
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/// \brief Add a node with the given costs.
-end_comment
-
-begin_comment
+comment|/// @brief Add a node with the given costs.
 comment|/// @param Costs Cost vector for the new node.
-end_comment
-
-begin_comment
 comment|/// @return Node iterator for the added node.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1968,17 +2047,62 @@ argument_list|(
 name|NId
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|NId
 return|;
-end_return
+block|}
+comment|/// @brief Add a node bypassing the cost allocator.
+comment|/// @param Costs Cost vector ptr for the new node (must be convertible to
+comment|///        VectorPtr).
+comment|/// @return Node iterator for the added node.
+comment|///
+comment|///   This method allows for fast addition of a node whose costs don't need
+comment|/// to be passed through the cost allocator. The most common use case for
+comment|/// this is when duplicating costs from an existing node (when using a
+comment|/// pooling allocator). These have already been uniqued, so we can avoid
+comment|/// re-constructing and re-uniquing them by attaching them directly to the
+comment|/// new node.
+name|template
+operator|<
+name|typename
+name|OtherVectorPtrT
+operator|>
+name|NodeId
+name|addNodeBypassingCostAllocator
+argument_list|(
+argument|OtherVectorPtrT Costs
+argument_list|)
+block|{
+name|NodeId
+name|NId
+operator|=
+name|addConstructedNode
+argument_list|(
+name|NodeEntry
+argument_list|(
+name|Costs
+argument_list|)
+argument_list|)
+block|;
+if|if
+condition|(
+name|Solver
+condition|)
+name|Solver
+operator|->
+name|handleAddNode
+argument_list|(
+name|NId
+argument_list|)
+expr_stmt|;
+return|return
+name|NId
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
-comment|/// \brief Add an edge between the given nodes with the given costs.
+comment|/// @brief Add an edge between the given nodes with the given costs.
 end_comment
 
 begin_comment
@@ -1990,11 +2114,15 @@ comment|/// @param N2Id Second node.
 end_comment
 
 begin_comment
+comment|/// @param Costs Cost matrix for new edge.
+end_comment
+
+begin_comment
 comment|/// @return Edge iterator for the added edge.
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|OtherVectorT
@@ -2092,7 +2220,138 @@ end_return
 
 begin_comment
 unit|}
-comment|/// \brief Returns true if the graph is empty.
+comment|/// @brief Add an edge bypassing the cost allocator.
+end_comment
+
+begin_comment
+comment|/// @param N1Id First node.
+end_comment
+
+begin_comment
+comment|/// @param N2Id Second node.
+end_comment
+
+begin_comment
+comment|/// @param Costs Cost matrix for new edge.
+end_comment
+
+begin_comment
+comment|/// @return Edge iterator for the added edge.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   This method allows for fast addition of an edge whose costs don't need
+end_comment
+
+begin_comment
+comment|/// to be passed through the cost allocator. The most common use case for
+end_comment
+
+begin_comment
+comment|/// this is when duplicating costs from an existing edge (when using a
+end_comment
+
+begin_comment
+comment|/// pooling allocator). These have already been uniqued, so we can avoid
+end_comment
+
+begin_comment
+comment|/// re-constructing and re-uniquing them by attaching them directly to the
+end_comment
+
+begin_comment
+comment|/// new edge.
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|OtherMatrixPtrT
+operator|>
+name|NodeId
+name|addEdgeBypassingCostAllocator
+argument_list|(
+argument|NodeId N1Id
+argument_list|,
+argument|NodeId N2Id
+argument_list|,
+argument|OtherMatrixPtrT Costs
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|getNodeCosts
+argument_list|(
+name|N1Id
+argument_list|)
+operator|.
+name|getLength
+argument_list|()
+operator|==
+name|Costs
+operator|->
+name|getRows
+argument_list|()
+operator|&&
+name|getNodeCosts
+argument_list|(
+name|N2Id
+argument_list|)
+operator|.
+name|getLength
+argument_list|()
+operator|==
+name|Costs
+operator|->
+name|getCols
+argument_list|()
+operator|&&
+literal|"Matrix dimensions mismatch."
+argument_list|)
+block|;
+comment|// Get cost matrix from the problem domain.
+name|EdgeId
+name|EId
+operator|=
+name|addConstructedEdge
+argument_list|(
+name|EdgeEntry
+argument_list|(
+name|N1Id
+argument_list|,
+name|N2Id
+argument_list|,
+name|Costs
+argument_list|)
+argument_list|)
+block|;
+if|if
+condition|(
+name|Solver
+condition|)
+name|Solver
+operator|->
+name|handleAddEdge
+argument_list|(
+name|EId
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|EId
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// @brief Returns true if the graph is empty.
 end_comment
 
 begin_macro
@@ -2170,7 +2429,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Get the number of nodes in the graph.
+comment|/// @brief Get the number of nodes in the graph.
 end_comment
 
 begin_comment
@@ -2197,7 +2456,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Get the number of edges in the graph.
+comment|/// @brief Get the number of edges in the graph.
 end_comment
 
 begin_comment
@@ -2224,7 +2483,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Set a node's cost vector.
+comment|/// @brief Set a node's cost vector.
 end_comment
 
 begin_comment
@@ -2291,7 +2550,61 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/// \brief Get a node's cost vector (const version).
+comment|/// @brief Get a VectorPtr to a node's cost vector. Rarely useful - use
+end_comment
+
+begin_comment
+comment|///        getNodeCosts where possible.
+end_comment
+
+begin_comment
+comment|/// @param NId Node id.
+end_comment
+
+begin_comment
+comment|/// @return VectorPtr to node cost vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   This method is primarily useful for duplicating costs quickly by
+end_comment
+
+begin_comment
+comment|/// bypassing the cost allocator. See addNodeBypassingCostAllocator. Prefer
+end_comment
+
+begin_comment
+comment|/// getNodeCosts when dealing with node cost values.
+end_comment
+
+begin_decl_stmt
+unit|const
+name|VectorPtr
+modifier|&
+name|getNodeCostsPtr
+argument_list|(
+name|NodeId
+name|NId
+argument_list|)
+decl|const
+block|{
+return|return
+name|getNode
+argument_list|(
+name|NId
+argument_list|)
+operator|.
+name|Costs
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// @brief Get a node's cost vector.
 end_comment
 
 begin_comment
@@ -2303,7 +2616,7 @@ comment|/// @return Node cost vector.
 end_comment
 
 begin_decl_stmt
-unit|const
+specifier|const
 name|Vector
 modifier|&
 name|getNodeCosts
@@ -2315,12 +2628,10 @@ decl|const
 block|{
 return|return
 operator|*
-name|getNode
+name|getNodeCostsPtr
 argument_list|(
 name|NId
 argument_list|)
-operator|.
-name|Costs
 return|;
 block|}
 end_decl_stmt
@@ -2396,7 +2707,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Set an edge's cost matrix.
+comment|/// @brief Set an edge's cost matrix.
 end_comment
 
 begin_comment
@@ -2463,7 +2774,61 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/// \brief Get an edge's cost matrix (const version).
+comment|/// @brief Get a MatrixPtr to a node's cost matrix. Rarely useful - use
+end_comment
+
+begin_comment
+comment|///        getEdgeCosts where possible.
+end_comment
+
+begin_comment
+comment|/// @param EId Edge id.
+end_comment
+
+begin_comment
+comment|/// @return MatrixPtr to edge cost matrix.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   This method is primarily useful for duplicating costs quickly by
+end_comment
+
+begin_comment
+comment|/// bypassing the cost allocator. See addNodeBypassingCostAllocator. Prefer
+end_comment
+
+begin_comment
+comment|/// getEdgeCosts when dealing with edge cost values.
+end_comment
+
+begin_decl_stmt
+unit|const
+name|MatrixPtr
+modifier|&
+name|getEdgeCostsPtr
+argument_list|(
+name|EdgeId
+name|EId
+argument_list|)
+decl|const
+block|{
+return|return
+name|getEdge
+argument_list|(
+name|EId
+argument_list|)
+operator|.
+name|Costs
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// @brief Get an edge's cost matrix.
 end_comment
 
 begin_comment
@@ -2475,7 +2840,7 @@ comment|/// @return Edge cost matrix.
 end_comment
 
 begin_decl_stmt
-unit|const
+specifier|const
 name|Matrix
 modifier|&
 name|getEdgeCosts
@@ -2503,13 +2868,13 @@ modifier|&
 name|getEdgeMetadata
 parameter_list|(
 name|EdgeId
-name|NId
+name|EId
 parameter_list|)
 block|{
 return|return
 name|getEdge
 argument_list|(
-name|NId
+name|EId
 argument_list|)
 operator|.
 name|Metadata
@@ -2524,14 +2889,14 @@ modifier|&
 name|getEdgeMetadata
 argument_list|(
 name|EdgeId
-name|NId
+name|EId
 argument_list|)
 decl|const
 block|{
 return|return
 name|getEdge
 argument_list|(
-name|NId
+name|EId
 argument_list|)
 operator|.
 name|Metadata
@@ -2540,7 +2905,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Get the first node connected to this edge.
+comment|/// @brief Get the first node connected to this edge.
 end_comment
 
 begin_comment
@@ -2572,7 +2937,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Get the second node connected to this edge.
+comment|/// @brief Get the second node connected to this edge.
 end_comment
 
 begin_comment
@@ -2604,7 +2969,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Get the "other" node connected to this edge.
+comment|/// @brief Get the "other" node connected to this edge.
 end_comment
 
 begin_comment
@@ -2667,7 +3032,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Get the edge connecting two nodes.
+comment|/// @brief Get the edge connecting two nodes.
 end_comment
 
 begin_comment
@@ -2742,7 +3107,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Remove a node from the graph.
+comment|/// @brief Remove a node from the graph.
 end_comment
 
 begin_comment
@@ -2827,7 +3192,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Disconnect an edge from the given node.
+comment|/// @brief Disconnect an edge from the given node.
 end_comment
 
 begin_comment
@@ -2973,7 +3338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Convenience method to disconnect all neighbours from the given
+comment|/// @brief Convenience method to disconnect all neighbours from the given
 end_comment
 
 begin_comment
@@ -3014,7 +3379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Re-attach an edge to its nodes.
+comment|/// @brief Re-attach an edge to its nodes.
 end_comment
 
 begin_comment
@@ -3078,7 +3443,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Remove an edge from the graph.
+comment|/// @brief Remove an edge from the graph.
 end_comment
 
 begin_comment
@@ -3137,7 +3502,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Remove all nodes and edges from the graph.
+comment|/// @brief Remove all nodes and edges from the graph.
 end_comment
 
 begin_function
@@ -3169,7 +3534,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Dump a graph to an output stream.
+comment|/// @brief Dump a graph to an output stream.
 end_comment
 
 begin_expr_stmt
@@ -3179,7 +3544,7 @@ name|typename
 name|OStream
 operator|>
 name|void
-name|dump
+name|dumpToStream
 argument_list|(
 argument|OStream&OS
 argument_list|)
@@ -3447,7 +3812,28 @@ end_expr_stmt
 
 begin_comment
 unit|}       }     }
-comment|/// \brief Print a representation of this graph in DOT format.
+comment|/// @brief Dump this graph to dbgs().
+end_comment
+
+begin_macro
+unit|void
+name|dump
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|dumpToStream
+argument_list|(
+name|dbgs
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/// @brief Print a representation of this graph in DOT format.
 end_comment
 
 begin_comment
@@ -3455,7 +3841,7 @@ comment|/// @param OS Output stream to print on.
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|OStream
@@ -3600,8 +3986,17 @@ unit|}   }
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// namespace PBQP
+end_comment
+
+begin_comment
+unit|}
+comment|// namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

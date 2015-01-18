@@ -47,12 +47,6 @@ endif|#
 directive|endif
 comment|/**  * @defgroup LLVMCExecutionEngine Execution Engine  * @ingroup LLVMC  *  * @{  */
 name|void
-name|LLVMLinkInJIT
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|void
 name|LLVMLinkInMCJIT
 parameter_list|(
 name|void
@@ -522,6 +516,30 @@ name|EE
 parameter_list|,
 name|LLVMValueRef
 name|Global
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|LLVMGetGlobalValueAddress
+parameter_list|(
+name|LLVMExecutionEngineRef
+name|EE
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Name
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|LLVMGetFunctionAddress
+parameter_list|(
+name|LLVMExecutionEngineRef
+name|EE
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Name
 parameter_list|)
 function_decl|;
 comment|/*===-- Operations on memory managers -------------------------------------===*/

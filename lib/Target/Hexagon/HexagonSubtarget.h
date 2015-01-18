@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|Hexagon_SUBTARGET_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONSUBTARGET_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|Hexagon_SUBTARGET_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONSUBTARGET_H
 end_define
 
 begin_include
@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"HexagonInstrInfo.h"
+file|"HexagonISelLowering.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"HexagonISelLowering.h"
+file|"HexagonInstrInfo.h"
 end_include
 
 begin_include
@@ -213,16 +213,18 @@ argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 block|;
-comment|/// getInstrItins - Return the instruction itineraies based on subtarget
+comment|/// getInstrItins - Return the instruction itineraries based on subtarget
 comment|/// selection.
 specifier|const
 name|InstrItineraryData
-operator|&
+operator|*
 name|getInstrItineraryData
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
+operator|&
 name|InstrItins
 return|;
 block|}
@@ -232,6 +234,7 @@ operator|*
 name|getInstrInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -244,6 +247,7 @@ operator|*
 name|getRegisterInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -259,6 +263,7 @@ operator|*
 name|getTargetLowering
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -271,6 +276,7 @@ operator|*
 name|getFrameLowering
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -283,6 +289,7 @@ operator|*
 name|getSelectionDAGInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -295,6 +302,7 @@ operator|*
 name|getDataLayout
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&

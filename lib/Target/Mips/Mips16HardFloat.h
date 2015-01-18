@@ -51,6 +51,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_LIB_TARGET_MIPS_MIPS16HARDFLOAT_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_LIB_TARGET_MIPS_MIPS16HARDFLOAT_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -74,18 +86,6 @@ include|#
 directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MIPS16HARDFLOAT_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MIPS16HARDFLOAT_H
-end_define
 
 begin_decl_stmt
 name|using
@@ -124,14 +124,9 @@ argument_list|)
 block|,
 name|TM
 argument_list|(
-name|TM_
+argument|TM_
 argument_list|)
-block|,
-name|Subtarget
-argument_list|(
-argument|TM.getSubtarget<MipsSubtarget>()
-argument_list|)
-block|{   }
+block|{}
 specifier|const
 name|char
 operator|*
@@ -153,18 +148,11 @@ name|override
 block|;
 name|protected
 operator|:
-comment|/// Keep a pointer to the MipsSubtarget around so that we can make the right
-comment|/// decision when generating code for different targets.
 specifier|const
-name|TargetMachine
+name|MipsTargetMachine
 operator|&
 name|TM
-block|;
-specifier|const
-name|MipsSubtarget
-operator|&
-name|Subtarget
-block|;  }
+block|; }
 decl_stmt|;
 name|ModulePass
 modifier|*

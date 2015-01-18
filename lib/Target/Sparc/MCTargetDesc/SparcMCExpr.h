@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SPARCMCEXPR_H
+name|LLVM_LIB_TARGET_SPARC_MCTARGETDESC_SPARCMCEXPR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SPARCMCEXPR_H
+name|LLVM_LIB_TARGET_SPARC_MCTARGETDESC_SPARCMCEXPR_H
 end_define
 
 begin_include
@@ -259,6 +259,8 @@ argument_list|(
 argument|MCValue&Res
 argument_list|,
 argument|const MCAsmLayout *Layout
+argument_list|,
+argument|const MCFixup *Fixup
 argument_list|)
 specifier|const
 name|override

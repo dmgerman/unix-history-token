@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_REGISTER_COALESCER_H
+name|LLVM_LIB_CODEGEN_REGISTERCOALESCER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_REGISTER_COALESCER_H
+name|LLVM_LIB_CODEGEN_REGISTERCOALESCER_H
 end_define
 
 begin_decl_stmt
@@ -79,7 +79,7 @@ decl_stmt|;
 name|class
 name|TargetInstrInfo
 decl_stmt|;
-comment|/// CoalescerPair - A helper class for register coalescers. When deciding if
+comment|/// A helper class for register coalescers. When deciding if
 comment|/// two registers can be coalesced, CoalescerPair can determine if a copy
 comment|/// instruction would become an identity copy after coalescing.
 name|class
@@ -90,39 +90,37 @@ name|TargetRegisterInfo
 modifier|&
 name|TRI
 decl_stmt|;
-comment|/// DstReg - The register that will be left after coalescing. It can be a
+comment|/// The register that will be left after coalescing. It can be a
 comment|/// virtual or physical register.
 name|unsigned
 name|DstReg
 decl_stmt|;
-comment|/// SrcReg - the virtual register that will be coalesced into dstReg.
+comment|/// The virtual register that will be coalesced into dstReg.
 name|unsigned
 name|SrcReg
 decl_stmt|;
-comment|/// DstIdx - The sub-register index of the old DstReg in the new coalesced
-comment|/// register.
+comment|/// The sub-register index of the old DstReg in the new coalesced register.
 name|unsigned
 name|DstIdx
 decl_stmt|;
-comment|/// SrcIdx - The sub-register index of the old SrcReg in the new coalesced
-comment|/// register.
+comment|/// The sub-register index of the old SrcReg in the new coalesced register.
 name|unsigned
 name|SrcIdx
 decl_stmt|;
-comment|/// Partial - True when the original copy was a partial subregister copy.
+comment|/// True when the original copy was a partial subregister copy.
 name|bool
 name|Partial
 decl_stmt|;
-comment|/// CrossClass - True when both regs are virtual, and newRC is constrained.
+comment|/// True when both regs are virtual and newRC is constrained.
 name|bool
 name|CrossClass
 decl_stmt|;
-comment|/// Flipped - True when DstReg and SrcReg are reversed from the original
+comment|/// True when DstReg and SrcReg are reversed from the original
 comment|/// copy instruction.
 name|bool
 name|Flipped
 decl_stmt|;
-comment|/// NewRC - The register class of the coalesced register, or NULL if DstReg
+comment|/// The register class of the coalesced register, or NULL if DstReg
 comment|/// is a physreg. This register class may be a super-register of both
 comment|/// SrcReg and DstReg.
 specifier|const
@@ -241,7 +239,7 @@ argument_list|(
 argument|nullptr
 argument_list|)
 block|{}
-comment|/// setRegisters - set registers to match the copy instruction MI. Return
+comment|/// Set registers to match the copy instruction MI. Return
 comment|/// false if MI is not a coalescable copy instruction.
 name|bool
 name|setRegisters
@@ -251,13 +249,13 @@ name|MachineInstr
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/// flip - Swap SrcReg and DstReg. Return false if swapping is impossible
+comment|/// Swap SrcReg and DstReg. Return false if swapping is impossible
 comment|/// because DstReg is a physical register, or SubIdx is set.
 name|bool
 name|flip
 parameter_list|()
 function_decl|;
-comment|/// isCoalescable - Return true if MI is a copy instruction that will become
+comment|/// Return true if MI is a copy instruction that will become
 comment|/// an identity copy after coalescing.
 name|bool
 name|isCoalescable
@@ -268,7 +266,7 @@ operator|*
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isPhys - Return true if DstReg is a physical register.
+comment|/// Return true if DstReg is a physical register.
 name|bool
 name|isPhys
 argument_list|()
@@ -279,7 +277,7 @@ operator|!
 name|NewRC
 return|;
 block|}
-comment|/// isPartial - Return true if the original copy instruction did not copy
+comment|/// Return true if the original copy instruction did not copy
 comment|/// the full register, but was a subreg operation.
 name|bool
 name|isPartial
@@ -290,7 +288,7 @@ return|return
 name|Partial
 return|;
 block|}
-comment|/// isCrossClass - Return true if DstReg is virtual and NewRC is a smaller
+comment|/// Return true if DstReg is virtual and NewRC is a smaller
 comment|/// register class than DstReg's.
 name|bool
 name|isCrossClass
@@ -301,7 +299,7 @@ return|return
 name|CrossClass
 return|;
 block|}
-comment|/// isFlipped - Return true when getSrcReg is the register being defined by
+comment|/// Return true when getSrcReg is the register being defined by
 comment|/// the original copy instruction.
 name|bool
 name|isFlipped
@@ -312,7 +310,7 @@ return|return
 name|Flipped
 return|;
 block|}
-comment|/// getDstReg - Return the register (virtual or physical) that will remain
+comment|/// Return the register (virtual or physical) that will remain
 comment|/// after coalescing.
 name|unsigned
 name|getDstReg
@@ -323,7 +321,7 @@ return|return
 name|DstReg
 return|;
 block|}
-comment|/// getSrcReg - Return the virtual register that will be coalesced away.
+comment|/// Return the virtual register that will be coalesced away.
 name|unsigned
 name|getSrcReg
 argument_list|()
@@ -333,8 +331,7 @@ return|return
 name|SrcReg
 return|;
 block|}
-comment|/// getDstIdx - Return the subregister index that DstReg will be coalesced
-comment|/// into, or 0.
+comment|/// Return the subregister index that DstReg will be coalesced into, or 0.
 name|unsigned
 name|getDstIdx
 argument_list|()
@@ -344,8 +341,7 @@ return|return
 name|DstIdx
 return|;
 block|}
-comment|/// getSrcIdx - Return the subregister index that SrcReg will be coalesced
-comment|/// into, or 0.
+comment|/// Return the subregister index that SrcReg will be coalesced into, or 0.
 name|unsigned
 name|getSrcIdx
 argument_list|()
@@ -355,7 +351,7 @@ return|return
 name|SrcIdx
 return|;
 block|}
-comment|/// getNewRC - Return the register class of the coalesced register.
+comment|/// Return the register class of the coalesced register.
 specifier|const
 name|TargetRegisterClass
 operator|*

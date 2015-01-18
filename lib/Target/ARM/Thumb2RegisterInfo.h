@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|THUMB2REGISTERINFO_H
+name|LLVM_LIB_TARGET_ARM_THUMB2REGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|THUMB2REGISTERINFO_H
+name|LLVM_LIB_TARGET_ARM_THUMB2REGISTERINFO_H
 end_define
 
 begin_include
@@ -127,10 +127,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// THUMB2REGISTERINFO_H
-end_comment
 
 end_unit
 

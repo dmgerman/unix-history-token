@@ -100,14 +100,12 @@ name|class
 name|FilenameCache
 block|{
 comment|// Holds the filename of each Scope, so that we can pass a null-terminated
-comment|// string into oprofile.  Use an AssertingVH rather than a ValueMap because we
-comment|// shouldn't be modifying any MDNodes while this map is alive.
+comment|// string into oprofile.
 name|DenseMap
 operator|<
-name|AssertingVH
-operator|<
+specifier|const
 name|MDNode
-operator|>
+operator|*
 operator|,
 name|std
 operator|::
@@ -117,10 +115,9 @@ name|Filenames
 expr_stmt|;
 name|DenseMap
 operator|<
-name|AssertingVH
-operator|<
+specifier|const
 name|MDNode
-operator|>
+operator|*
 operator|,
 name|std
 operator|::
@@ -140,6 +137,16 @@ modifier|*
 name|Scope
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|Scope
+operator|->
+name|isResolved
+argument_list|()
+operator|&&
+literal|"Expected Scope to be resolved"
+argument_list|)
+expr_stmt|;
 name|std
 operator|::
 name|string
@@ -190,6 +197,16 @@ modifier|*
 name|Scope
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|Scope
+operator|->
+name|isResolved
+argument_list|()
+operator|&&
+literal|"Expected Scope to be resolved"
+argument_list|)
+expr_stmt|;
 name|std
 operator|::
 name|string

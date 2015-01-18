@@ -258,6 +258,13 @@ comment|// block and doesn't need additional handling for allocation beyond that
 name|bool
 name|PreAllocated
 decl_stmt|;
+comment|// If true, an LLVM IR value might point to this object.
+comment|// Normally, spill slots and fixed-offset objects don't alias IR-accessible
+comment|// objects, but there are exceptions (on PowerPC, for example, some byval
+comment|// arguments have ABI-prescribed offsets).
+name|bool
+name|isAliased
+decl_stmt|;
 name|StackObject
 argument_list|(
 argument|uint64_t Sz
@@ -271,6 +278,8 @@ argument_list|,
 argument|bool isSS
 argument_list|,
 argument|const AllocaInst *Val
+argument_list|,
+argument|bool A
 argument_list|)
 block|:
 name|SPOffset
@@ -305,15 +314,23 @@ argument_list|)
 operator|,
 name|PreAllocated
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|isAliased
+argument_list|(
+argument|A
 argument_list|)
 block|{}
 block|}
 struct|;
-specifier|const
-name|TargetMachine
-modifier|&
-name|TM
+comment|/// StackAlignment - The alignment of the stack.
+name|unsigned
+name|StackAlignment
+decl_stmt|;
+comment|/// StackRealignable - Can the stack be realigned.
+name|bool
+name|StackRealignable
 decl_stmt|;
 comment|/// Objects - The list of stack objects allocated...
 comment|///
@@ -473,26 +490,34 @@ comment|/// pointer.
 name|bool
 name|HasInlineAsmWithSPAdjust
 decl_stmt|;
-specifier|const
-name|TargetFrameLowering
-operator|*
-name|getFrameLowering
-argument_list|()
-specifier|const
-expr_stmt|;
+comment|/// True if the function contains a call to the llvm.vastart intrinsic.
+name|bool
+name|HasVAStart
+decl_stmt|;
+comment|/// True if this is a varargs function that contains a musttail call.
+name|bool
+name|HasMustTailInVarArgFunc
+decl_stmt|;
 name|public
 label|:
 name|explicit
 name|MachineFrameInfo
 argument_list|(
-argument|const TargetMachine&TM
+argument|unsigned StackAlign
+argument_list|,
+argument|bool isStackRealign
 argument_list|,
 argument|bool RealignOpt
 argument_list|)
 block|:
-name|TM
+name|StackAlignment
 argument_list|(
-name|TM
+name|StackAlign
+argument_list|)
+operator|,
+name|StackRealignable
+argument_list|(
+name|isStackRealign
 argument_list|)
 operator|,
 name|RealignOption
@@ -569,6 +594,14 @@ operator|=
 name|false
 block|;
 name|HasInlineAsmWithSPAdjust
+operator|=
+name|false
+block|;
+name|HasVAStart
+operator|=
+name|false
+block|;
+name|HasMustTailInVarArgFunc
 operator|=
 name|false
 block|;   }
@@ -1466,6 +1499,50 @@ operator|=
 name|B
 expr_stmt|;
 block|}
+comment|/// Returns true if the function calls the llvm.va_start intrinsic.
+name|bool
+name|hasVAStart
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVAStart
+return|;
+block|}
+name|void
+name|setHasVAStart
+parameter_list|(
+name|bool
+name|B
+parameter_list|)
+block|{
+name|HasVAStart
+operator|=
+name|B
+expr_stmt|;
+block|}
+comment|/// Returns true if the function is variadic and contains a musttail call.
+name|bool
+name|hasMustTailInVarArgFunc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMustTailInVarArgFunc
+return|;
+block|}
+name|void
+name|setHasMustTailInVarArgFunc
+parameter_list|(
+name|bool
+name|B
+parameter_list|)
+block|{
+name|HasMustTailInVarArgFunc
+operator|=
+name|B
+expr_stmt|;
+block|}
 comment|/// getMaxCallFrameSize - Return the maximum size of a call frame that must be
 comment|/// allocated for an outgoing function call.  This is only available if
 comment|/// CallFrameSetup/Destroy pseudo instructions are used by the target, and
@@ -1494,8 +1571,8 @@ expr_stmt|;
 block|}
 comment|/// CreateFixedObject - Create a new object at a fixed location on the stack.
 comment|/// All fixed objects should be created before other objects are created for
-comment|/// efficiency. By default, fixed objects are immutable. This returns an
-comment|/// index with a negative value.
+comment|/// efficiency. By default, fixed objects are not pointed to by LLVM IR
+comment|/// values. This returns an index with a negative value.
 comment|///
 name|int
 name|CreateFixedObject
@@ -1508,6 +1585,11 @@ name|SPOffset
 parameter_list|,
 name|bool
 name|Immutable
+parameter_list|,
+name|bool
+name|isAliased
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// CreateFixedSpillStackObject - Create a spill slot at a fixed location
@@ -1520,6 +1602,15 @@ name|Size
 parameter_list|,
 name|int64_t
 name|SPOffset
+parameter_list|)
+function_decl|;
+comment|/// Allocates memory at a fixed, target-specific offset from the frame
+comment|/// pointer. Marks the function as having its frame address taken.
+name|int
+name|CreateFrameAllocation
+parameter_list|(
+name|uint64_t
+name|Size
 parameter_list|)
 function_decl|;
 comment|/// isFixedObjectIndex - Returns true if the specified index corresponds to a
@@ -1546,6 +1637,44 @@ name|int
 operator|)
 name|NumFixedObjects
 operator|)
+return|;
+block|}
+comment|/// isAliasedObjectIndex - Returns true if the specified index corresponds
+comment|/// to an object that might be pointed to by an LLVM IR value.
+name|bool
+name|isAliasedObjectIndex
+argument_list|(
+name|int
+name|ObjectIdx
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+return|return
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|isAliased
 return|;
 block|}
 comment|/// isImmutableObjectIndex - Returns true if the specified index corresponds

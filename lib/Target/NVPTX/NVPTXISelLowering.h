@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NVPTXISELLOWERING_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NVPTXISELLOWERING_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXISELLOWERING_H
 end_define
 
 begin_include
@@ -895,6 +895,7 @@ operator|:
 name|explicit
 name|NVPTXTargetLowering
 argument_list|(
+specifier|const
 name|NVPTXTargetMachine
 operator|&
 name|TM
@@ -1199,6 +1200,7 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+specifier|const
 name|NVPTXTargetMachine
 modifier|*
 name|nvTM
@@ -1243,13 +1245,26 @@ name|OptLevel
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|bool
 name|isFMAFasterThanFMulAndFAdd
 argument_list|(
 name|EVT
 argument_list|)
 decl|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|enableAggressiveFMAFusion
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+name|override
 block|{
 return|return
 name|true
@@ -1478,10 +1493,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// NVPTXISELLOWERING_H
-end_comment
 
 end_unit
 

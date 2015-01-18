@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86_FRAMELOWERING_H
+name|LLVM_LIB_TARGET_X86_X86FRAMELOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86_FRAMELOWERING_H
+name|LLVM_LIB_TARGET_X86_X86FRAMELOWERING_H
 end_define
 
 begin_include
@@ -74,6 +74,9 @@ name|MCSymbol
 decl_stmt|;
 name|class
 name|X86TargetMachine
+decl_stmt|;
+name|class
+name|X86Subtarget
 decl_stmt|;
 name|class
 name|X86FrameLowering
@@ -102,6 +105,26 @@ argument_list|,
 argument|LAO
 argument_list|)
 block|{}
+specifier|static
+name|void
+name|getStackProbeFunction
+argument_list|(
+specifier|const
+name|X86Subtarget
+operator|&
+name|STI
+argument_list|,
+name|unsigned
+operator|&
+name|CallOp
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|&
+name|Symbol
+argument_list|)
+block|;
 name|void
 name|emitCalleeSavedFrameMoves
 argument_list|(
@@ -237,6 +260,27 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|int
+name|getFrameIndexOffsetFromSP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getFrameIndexReferenceFromSP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|,
+argument|unsigned&FrameReg
+argument_list|)
+specifier|const
+name|override
+block|;
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(
@@ -248,6 +292,25 @@ argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
 name|override
+block|;
+name|private
+operator|:
+comment|/// convertArgMovsToPushes - This method tries to convert a call sequence
+comment|/// that uses sub and mov instructions to put the argument onto the stack
+comment|/// into a series of pushes.
+comment|/// Returns true if the transformation succeeded, false if not.
+name|bool
+name|convertArgMovsToPushes
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|uint64_t Amount
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

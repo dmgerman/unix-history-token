@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86INSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_X86_X86INSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86INSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_X86_X86INSTRINFO_H
 end_define
 
 begin_include
@@ -677,6 +677,9 @@ name|RegOp2MemOpTable2
 decl_stmt|;
 name|RegOp2MemOpTableType
 name|RegOp2MemOpTable3
+decl_stmt|;
+name|RegOp2MemOpTableType
+name|RegOp2MemOpTable4
 decl_stmt|;
 comment|/// MemOp2RegOpTable - Load / store unfolding opcode map.
 comment|///
@@ -1791,6 +1794,9 @@ name|Size
 argument_list|,
 name|unsigned
 name|Alignment
+argument_list|,
+name|bool
+name|AllowCommute
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1819,6 +1825,12 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+name|unsigned
+name|getJumpInstrTableEntryBound
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
 name|bool
 name|isHighLatencyDef
 argument_list|(

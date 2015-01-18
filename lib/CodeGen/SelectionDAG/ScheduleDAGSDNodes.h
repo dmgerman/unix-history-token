@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SCHEDULEDAGSDNODES_H
+name|LLVM_LIB_CODEGEN_SELECTIONDAG_SCHEDULEDAGSDNODES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SCHEDULEDAGSDNODES_H
+name|LLVM_LIB_CODEGEN_SELECTIONDAG_SCHEDULEDAGSDNODES_H
 end_define
 
 begin_include

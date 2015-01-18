@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|XCOREINSTPRINTER_H
+name|LLVM_LIB_TARGET_XCORE_INSTPRINTER_XCOREINSTPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|XCOREINSTPRINTER_H
+name|LLVM_LIB_TARGET_XCORE_INSTPRINTER_XCOREINSTPRINTER_H
 end_define
 
 begin_include

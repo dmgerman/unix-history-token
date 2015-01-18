@@ -222,6 +222,38 @@ name|getDefault
 argument_list|()
 parameter_list|)
 function_decl|;
+comment|/// Options for the frontend instrumentation based profiling pass.
+struct|struct
+name|InstrProfOptions
+block|{
+name|InstrProfOptions
+argument_list|()
+operator|:
+name|NoRedZone
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+comment|// Add the 'noredzone' attribute to added runtime library calls.
+name|bool
+name|NoRedZone
+expr_stmt|;
+block|}
+struct|;
+comment|/// Insert frontend instrumentation based profiling.
+name|ModulePass
+modifier|*
+name|createInstrProfilingPass
+parameter_list|(
+specifier|const
+name|InstrProfOptions
+modifier|&
+name|Options
+init|=
+name|InstrProfOptions
+argument_list|()
+parameter_list|)
+function_decl|;
 comment|// Insert AddressSanitizer (address sanity checking) instrumentation
 name|FunctionPass
 modifier|*
@@ -282,6 +314,15 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+comment|// Insert SanitizerCoverage instrumentation.
+name|ModulePass
+modifier|*
+name|createSanitizerCoverageModulePass
+parameter_list|(
+name|int
+name|CoverageLevel
+parameter_list|)
+function_decl|;
 if|#
 directive|if
 name|defined
@@ -329,58 +370,6 @@ comment|// checking on loads, stores, and other memory intrinsics.
 name|FunctionPass
 modifier|*
 name|createBoundsCheckingPass
-parameter_list|()
-function_decl|;
-comment|/// createDebugIRPass - Enable interactive stepping through LLVM IR in LLDB (or
-comment|///                     GDB) and generate a file with the LLVM IR to be
-comment|///                     displayed in the debugger.
-comment|///
-comment|/// Existing debug metadata is preserved (but may be modified) in order to allow
-comment|/// accessing variables in the original source. The line table and file
-comment|/// information is modified to correspond to the lines in the LLVM IR. If
-comment|/// Filename and Directory are empty, a file name is generated based on existing
-comment|/// debug information. If no debug information is available, a temporary file
-comment|/// name is generated.
-comment|///
-comment|/// @param HideDebugIntrinsics  Omit debug intrinsics in emitted IR source file.
-comment|/// @param HideDebugMetadata    Omit debug metadata in emitted IR source file.
-comment|/// @param Directory            Embed this directory in the debug information.
-comment|/// @param Filename             Embed this file name in the debug information.
-name|ModulePass
-modifier|*
-name|createDebugIRPass
-parameter_list|(
-name|bool
-name|HideDebugIntrinsics
-parameter_list|,
-name|bool
-name|HideDebugMetadata
-parameter_list|,
-name|StringRef
-name|Directory
-init|=
-name|StringRef
-argument_list|()
-parameter_list|,
-name|StringRef
-name|Filename
-init|=
-name|StringRef
-argument_list|()
-parameter_list|)
-function_decl|;
-comment|/// createDebugIRPass - Enable interactive stepping through LLVM IR in LLDB
-comment|///                     (or GDB) with an existing IR file on disk. When creating
-comment|///                     a DebugIR pass with this function, no source file is
-comment|///                     output to disk and the existing one is unmodified. Debug
-comment|///                     metadata in the Module is created/updated to point to
-comment|///                     the existing textual IR file on disk.
-comment|/// NOTE: If the IR file to be debugged is not on disk, use the version of this
-comment|///       function with parameters in order to generate the file that will be
-comment|///       seen by the debugger.
-name|ModulePass
-modifier|*
-name|createDebugIRPass
 parameter_list|()
 function_decl|;
 block|}

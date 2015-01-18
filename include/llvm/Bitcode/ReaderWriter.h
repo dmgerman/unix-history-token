@@ -62,7 +62,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/IR/DiagnosticInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -77,9 +95,6 @@ name|llvm
 block|{
 name|class
 name|BitstreamWriter
-decl_stmt|;
-name|class
-name|MemoryBuffer
 decl_stmt|;
 name|class
 name|DataStreamer
@@ -97,8 +112,8 @@ name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// Read the header of the specified bitcode buffer and prepare for lazy
-comment|/// deserialization of function bodies.  If successful, this takes ownership
-comment|/// of 'buffer. On error, this *does not* take ownership of Buffer.
+comment|/// deserialization of function bodies.  If successful, this moves Buffer. On
+comment|/// error, this *does not* move Buffer.
 name|ErrorOr
 operator|<
 name|Module
@@ -106,66 +121,50 @@ operator|*
 operator|>
 name|getLazyBitcodeModule
 argument_list|(
-name|MemoryBuffer
-operator|*
-name|Buffer
+argument|std::unique_ptr<MemoryBuffer>&&Buffer
 argument_list|,
-name|LLVMContext
-operator|&
-name|Context
+argument|LLVMContext&Context
+argument_list|,
+argument|DiagnosticHandlerFunction DiagnosticHandler = nullptr
 argument_list|)
 expr_stmt|;
-comment|/// getStreamedBitcodeModule - Read the header of the specified stream
-comment|/// and prepare for lazy deserialization and streaming of function bodies.
-comment|/// On error, this returns null, and fills in *ErrMsg with an error
-comment|/// description if ErrMsg is non-null.
+comment|/// Read the header of the specified stream and prepare for lazy
+comment|/// deserialization and streaming of function bodies.
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
+operator|>>
 name|getStreamedBitcodeModule
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|name
+argument|StringRef Name
 argument_list|,
-name|DataStreamer
-operator|*
-name|streamer
+argument|DataStreamer *Streamer
 argument_list|,
-name|LLVMContext
-operator|&
-name|Context
+argument|LLVMContext&Context
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrMsg
-operator|=
-name|nullptr
+argument|DiagnosticHandlerFunction DiagnosticHandler = nullptr
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// Read the header of the specified bitcode buffer and extract just the
-comment|/// triple information. If successful, this returns a string and *does not*
-comment|/// take ownership of 'buffer'. On error, this returns "".
+comment|/// triple information. If successful, this returns a string. On error, this
+comment|/// returns "".
 name|std
 operator|::
 name|string
 name|getBitcodeTargetTriple
 argument_list|(
-name|MemoryBuffer
-operator|*
-name|Buffer
+argument|MemoryBufferRef Buffer
 argument_list|,
-name|LLVMContext
-operator|&
-name|Context
+argument|LLVMContext&Context
+argument_list|,
+argument|DiagnosticHandlerFunction DiagnosticHandler = nullptr
 argument_list|)
 expr_stmt|;
 comment|/// Read the specified bitcode file, returning the module.
-comment|/// This method *never* takes ownership of Buffer.
 name|ErrorOr
 operator|<
 name|Module
@@ -173,13 +172,11 @@ operator|*
 operator|>
 name|parseBitcodeFile
 argument_list|(
-name|MemoryBuffer
-operator|*
-name|Buffer
+argument|MemoryBufferRef Buffer
 argument_list|,
-name|LLVMContext
-operator|&
-name|Context
+argument|LLVMContext&Context
+argument_list|,
+argument|DiagnosticHandlerFunction DiagnosticHandler = nullptr
 argument_list|)
 expr_stmt|;
 comment|/// WriteBitcodeToFile - Write the specified module to the specified
@@ -539,12 +536,136 @@ return|return
 name|false
 return|;
 block|}
+specifier|const
+name|std
+operator|::
+name|error_category
+operator|&
+name|BitcodeErrorCategory
+argument_list|()
+expr_stmt|;
+name|enum
+name|class
+name|BitcodeError
+block|{
+name|InvalidBitcodeSignature
+operator|,
+name|CorruptedBitcode
 block|}
-end_decl_stmt
-
-begin_comment
+empty_stmt|;
+specifier|inline
+name|std
+operator|::
+name|error_code
+name|make_error_code
+argument_list|(
+argument|BitcodeError E
+argument_list|)
+block|{
+return|return
+name|std
+operator|::
+name|error_code
+argument_list|(
+name|static_cast
+operator|<
+name|int
+operator|>
+operator|(
+name|E
+operator|)
+argument_list|,
+name|BitcodeErrorCategory
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|class
+name|BitcodeDiagnosticInfo
+range|:
+name|public
+name|DiagnosticInfo
+block|{
+specifier|const
+name|Twine
+operator|&
+name|Msg
+block|;
+name|std
+operator|::
+name|error_code
+name|EC
+block|;
+name|public
+operator|:
+name|BitcodeDiagnosticInfo
+argument_list|(
+argument|std::error_code EC
+argument_list|,
+argument|DiagnosticSeverity Severity
+argument_list|,
+argument|const Twine&Msg
+argument_list|)
+block|;
+name|void
+name|print
+argument_list|(
+argument|DiagnosticPrinter&DP
+argument_list|)
+specifier|const
+name|override
+block|;
+name|std
+operator|::
+name|error_code
+name|getError
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EC
+return|;
+block|}
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DiagnosticInfo *DI
+argument_list|)
+block|{
+return|return
+name|DI
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|DK_Bitcode
+return|;
+block|}
+expr|}
+block|;  }
 comment|// End llvm namespace
-end_comment
+name|namespace
+name|std
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|is_error_code_enum
+operator|<
+name|llvm
+operator|::
+name|BitcodeError
+operator|>
+operator|:
+name|std
+operator|::
+name|true_type
+block|{}
+block|; }
+end_decl_stmt
 
 begin_endif
 endif|#

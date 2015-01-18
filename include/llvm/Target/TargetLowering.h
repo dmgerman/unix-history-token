@@ -140,13 +140,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/IRBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/InlineAsm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/IRBuilder.h"
+file|"llvm/IR/Instructions.h"
 end_include
 
 begin_include
@@ -218,6 +224,9 @@ name|MachineInstr
 decl_stmt|;
 name|class
 name|MachineJumpTableInfo
+decl_stmt|;
+name|class
+name|MachineLoop
 decl_stmt|;
 name|class
 name|Mangler
@@ -442,7 +451,7 @@ literal|"Invalid content kind"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// NOTE: The constructor takes ownership of TLOF.
+comment|/// NOTE: The TargetMachine owns TLOF.
 name|explicit
 name|TargetLoweringBase
 argument_list|(
@@ -450,25 +459,20 @@ specifier|const
 name|TargetMachine
 operator|&
 name|TM
-argument_list|,
-specifier|const
-name|TargetLoweringObjectFile
-operator|*
-name|TLOF
 argument_list|)
 expr_stmt|;
 name|virtual
 operator|~
 name|TargetLoweringBase
 argument_list|()
-expr_stmt|;
+block|{}
 name|protected
-label|:
+operator|:
 comment|/// \brief Initialize all of the actions to default values.
 name|void
 name|initActions
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|public
 label|:
 specifier|const
@@ -501,7 +505,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TLOF
+operator|*
+name|TM
+operator|.
+name|getObjFileLowering
+argument_list|()
 return|;
 block|}
 name|bool
@@ -697,6 +705,16 @@ return|return
 name|IntDivIsCheap
 return|;
 block|}
+comment|/// Return true if sqrt(x) is as cheap or cheaper than 1 / rsqrt(x)
+name|bool
+name|isFsqrtCheap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FsqrtIsCheap
+return|;
+block|}
 comment|/// Returns true if target has indicated at least one type should be bypassed.
 name|bool
 name|isSlowDivBypassed
@@ -731,14 +749,14 @@ return|return
 name|BypassSlowDivWidths
 return|;
 block|}
-comment|/// Return true if pow2 div is cheaper than a chain of srl/add/sra.
+comment|/// Return true if pow2 sdiv is cheaper than a chain of sra/srl/add/sra.
 name|bool
-name|isPow2DivCheap
+name|isPow2SDivCheap
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Pow2DivIsCheap
+name|Pow2SDivIsCheap
 return|;
 block|}
 comment|/// Return true if Flow Control is an expensive operation that should be
@@ -786,6 +804,28 @@ return|return
 name|true
 return|;
 block|}
+comment|/// \brief Return true if it is cheap to speculate a call to intrinsic cttz.
+name|virtual
+name|bool
+name|isCheapToSpeculateCttz
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Return true if it is cheap to speculate a call to intrinsic ctlz.
+name|virtual
+name|bool
+name|isCheapToSpeculateCtlz
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Return if the target supports combining a
 comment|/// chain like:
 comment|/// \code
@@ -806,10 +846,70 @@ return|return
 name|MaskAndBranchFoldingIsLegal
 return|;
 block|}
-comment|/// Return the ValueType of the result of SETCC operations.  Also used to
-comment|/// obtain the target's preferred type for the condition operand of SELECT and
-comment|/// BRCOND nodes.  In the case of BRCOND the argument passed is MVT::Other
-comment|/// since there are no other operands to get a type hint from.
+comment|/// \brief Return true if the target wants to use the optimization that
+comment|/// turns ext(promotableInst1(...(promotableInstN(load)))) into
+comment|/// promotedInst1(...(promotedInstN(ext(load)))).
+name|bool
+name|enableExtLdPromotion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EnableExtLdPromotion
+return|;
+block|}
+comment|/// Return true if the target can combine store(extractelement VectorTy,
+comment|/// Idx).
+comment|/// \p Cost[out] gives the cost of that transformation when this is true.
+name|virtual
+name|bool
+name|canCombineStoreAndExtract
+argument_list|(
+name|Type
+operator|*
+name|VectorTy
+argument_list|,
+name|Value
+operator|*
+name|Idx
+argument_list|,
+name|unsigned
+operator|&
+name|Cost
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Return true if target supports floating point exceptions.
+name|bool
+name|hasFloatingPointExceptions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFloatingPointExceptions
+return|;
+block|}
+comment|/// Return true if target always beneficiates from combining into FMA for a
+comment|/// given value type. This must typically return false on targets where FMA
+comment|/// takes more cycles to execute than FADD.
+name|virtual
+name|bool
+name|enableAggressiveFMAFusion
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Return the ValueType of the result of SETCC operations.
 name|virtual
 name|EVT
 name|getSetCCResultType
@@ -1364,6 +1464,11 @@ name|offset
 decl_stmt|;
 comment|// offset off of ptrVal
 name|unsigned
+name|size
+decl_stmt|;
+comment|// the size of the memory location
+comment|// (taken from memVT if zero)
+name|unsigned
 name|align
 decl_stmt|;
 comment|// alignment
@@ -1379,6 +1484,49 @@ name|bool
 name|writeMem
 decl_stmt|;
 comment|// writes memory?
+name|IntrinsicInfo
+argument_list|()
+operator|:
+name|opc
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|ptrVal
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|offset
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|size
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|align
+argument_list|(
+literal|1
+argument_list|)
+operator|,
+name|vol
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|readMem
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|writeMem
+argument_list|(
+argument|false
+argument_list|)
+block|{}
 block|}
 struct|;
 comment|/// Given an intrinsic, checks if on the target the intrinsic will need to map
@@ -1734,11 +1882,55 @@ argument_list|(
 name|unsigned
 name|ExtType
 argument_list|,
-name|MVT
-name|VT
+name|EVT
+name|ValVT
+argument_list|,
+name|EVT
+name|MemVT
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+name|ValVT
+operator|.
+name|isExtended
+argument_list|()
+operator|||
+name|MemVT
+operator|.
+name|isExtended
+argument_list|()
+condition|)
+return|return
+name|Expand
+return|;
+name|unsigned
+name|ValI
+init|=
+operator|(
+name|unsigned
+operator|)
+name|ValVT
+operator|.
+name|getSimpleVT
+argument_list|()
+operator|.
+name|SimpleTy
+decl_stmt|;
+name|unsigned
+name|MemI
+init|=
+operator|(
+name|unsigned
+operator|)
+name|MemVT
+operator|.
+name|getSimpleVT
+argument_list|()
+operator|.
+name|SimpleTy
+decl_stmt|;
 name|assert
 argument_list|(
 name|ExtType
@@ -1747,7 +1939,13 @@ name|ISD
 operator|::
 name|LAST_LOADEXT_TYPE
 operator|&&
-name|VT
+name|ValI
+operator|<
+name|MVT
+operator|::
+name|LAST_VALUETYPE
+operator|&&
+name|MemI
 operator|<
 name|MVT
 operator|::
@@ -1762,9 +1960,10 @@ name|LegalizeAction
 operator|)
 name|LoadExtActions
 index|[
-name|VT
-operator|.
-name|SimpleTy
+name|ValI
+index|]
+index|[
+name|MemI
 index|]
 index|[
 name|ExtType
@@ -1779,12 +1978,20 @@ name|unsigned
 name|ExtType
 argument_list|,
 name|EVT
-name|VT
+name|ValVT
+argument_list|,
+name|EVT
+name|MemVT
 argument_list|)
 decl|const
 block|{
 return|return
-name|VT
+name|ValVT
+operator|.
+name|isSimple
+argument_list|()
+operator|&&
+name|MemVT
 operator|.
 name|isSimple
 argument_list|()
@@ -1793,10 +2000,9 @@ name|getLoadExtAction
 argument_list|(
 name|ExtType
 argument_list|,
-name|VT
-operator|.
-name|getSimpleVT
-argument_list|()
+name|ValVT
+argument_list|,
+name|MemVT
 argument_list|)
 operator|==
 name|Legal
@@ -1808,23 +2014,64 @@ comment|/// other code sequence, or the target has a custom expander for it.
 name|LegalizeAction
 name|getTruncStoreAction
 argument_list|(
-name|MVT
+name|EVT
 name|ValVT
 argument_list|,
-name|MVT
+name|EVT
 name|MemVT
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+name|ValVT
+operator|.
+name|isExtended
+argument_list|()
+operator|||
+name|MemVT
+operator|.
+name|isExtended
+argument_list|()
+condition|)
+return|return
+name|Expand
+return|;
+name|unsigned
+name|ValI
+init|=
+operator|(
+name|unsigned
+operator|)
+name|ValVT
+operator|.
+name|getSimpleVT
+argument_list|()
+operator|.
+name|SimpleTy
+decl_stmt|;
+name|unsigned
+name|MemI
+init|=
+operator|(
+name|unsigned
+operator|)
+name|MemVT
+operator|.
+name|getSimpleVT
+argument_list|()
+operator|.
+name|SimpleTy
+decl_stmt|;
 name|assert
 argument_list|(
-name|ValVT
+name|ValI
 operator|<
 name|MVT
 operator|::
 name|LAST_VALUETYPE
 operator|&&
-name|MemVT
+name|MemI
 operator|<
 name|MVT
 operator|::
@@ -1839,14 +2086,10 @@ name|LegalizeAction
 operator|)
 name|TruncStoreActions
 index|[
-name|ValVT
-operator|.
-name|SimpleTy
+name|ValI
 index|]
 index|[
-name|MemVT
-operator|.
-name|SimpleTy
+name|MemI
 index|]
 return|;
 block|}
@@ -1913,10 +2156,9 @@ operator|::
 name|LAST_INDEXED_MODE
 operator|&&
 name|VT
-operator|<
-name|MVT
-operator|::
-name|LAST_VALUETYPE
+operator|.
+name|isValid
+argument_list|()
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
@@ -2020,10 +2262,9 @@ operator|::
 name|LAST_INDEXED_MODE
 operator|&&
 name|VT
-operator|<
-name|MVT
-operator|::
-name|LAST_VALUETYPE
+operator|.
+name|isValid
+argument_list|()
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
@@ -2896,6 +3137,32 @@ return|return
 name|true
 return|;
 block|}
+comment|// Return true if it is profitable to reduce the given load node to a smaller
+comment|// type.
+comment|//
+comment|// e.g. (i16 (trunc (i32 (load x))) -> i16 load x should be performed
+name|virtual
+name|bool
+name|shouldReduceLoadWidth
+argument_list|(
+name|SDNode
+operator|*
+name|Load
+argument_list|,
+name|ISD
+operator|::
+name|LoadExtType
+name|ExtTy
+argument_list|,
+name|EVT
+name|NewVT
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// When splitting a value of the specified type into parts, does the Lo
 comment|/// or Hi part come first?  This usually follows the endianness, except
 comment|/// for ppcf128, where the Hi part always comes first.
@@ -3034,14 +3301,14 @@ comment|/// \brief Determine if the target supports unaligned memory accesses.
 comment|///
 comment|/// This function returns true if the target allows unaligned memory accesses
 comment|/// of the specified type in the given address space. If true, it also returns
-comment|/// whether the unaligned memory access is "fast" in the third argument by
+comment|/// whether the unaligned memory access is "fast" in the last argument by
 comment|/// reference. This is used, for example, in situations where an array
 comment|/// copy/move/set is converted to a sequence of store operations. Its use
 comment|/// helps to ensure that such replacements don't generate code that causes an
 comment|/// alignment error (trap) on the target machine.
 name|virtual
 name|bool
-name|allowsUnalignedMemoryAccesses
+name|allowsMisalignedMemoryAccesses
 argument_list|(
 name|EVT
 argument_list|,
@@ -3049,6 +3316,11 @@ name|unsigned
 name|AddrSpace
 operator|=
 literal|0
+argument_list|,
+name|unsigned
+name|Align
+operator|=
+literal|1
 argument_list|,
 name|bool
 operator|*
@@ -3145,16 +3417,6 @@ specifier|const
 block|{
 return|return
 name|UseUnderscoreLongJmp
-return|;
-block|}
-comment|/// Return whether the target can generate code for jump tables.
-name|bool
-name|supportJumpTables
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SupportJumpTables
 return|;
 block|}
 comment|/// Return integer threshold on number of blocks to use jump tables rather
@@ -3254,10 +3516,17 @@ name|PrefFunctionAlignment
 return|;
 block|}
 comment|/// Return the preferred loop alignment.
+name|virtual
 name|unsigned
 name|getPrefLoopAlignment
-argument_list|()
-specifier|const
+argument_list|(
+name|MachineLoop
+operator|*
+name|ML
+operator|=
+name|nullptr
+argument_list|)
+decl|const
 block|{
 return|return
 name|PrefLoopAlignment
@@ -3353,8 +3622,20 @@ specifier|const
 expr_stmt|;
 comment|/// @}
 comment|//===--------------------------------------------------------------------===//
-comment|/// \name Helpers for load-linked/store-conditional atomic expansion.
+comment|/// \name Helpers for atomic expansion.
 comment|/// @{
+comment|/// True if AtomicExpandPass should use emitLoadLinked/emitStoreConditional
+comment|/// and expand AtomicCmpXchgInst.
+name|virtual
+name|bool
+name|hasLoadLinkedStoreConditional
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Perform a load-linked operation on Addr, returning a "Value *" with the
 comment|/// corresponding pointee type. This may entail some non-trivial operations to
 comment|/// truncate or reconstruct types that will be illegal in the backend. See
@@ -3417,22 +3698,214 @@ literal|"Store conditional unimplemented on this target"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Return true if the given (atomic) instruction should be expanded by the
-comment|/// IR-level AtomicExpandLoadLinked pass into a loop involving
-comment|/// load-linked/store-conditional pairs. Atomic stores will be expanded in the
-comment|/// same way as "atomic xchg" operations which ignore their output if needed.
+comment|/// Inserts in the IR a target-specific intrinsic specifying a fence.
+comment|/// It is called by AtomicExpandPass before expanding an
+comment|///   AtomicRMW/AtomicCmpXchg/AtomicStore/AtomicLoad.
+comment|/// RMW and CmpXchg set both IsStore and IsLoad to true.
+comment|/// This function should either return a nullptr, or a pointer to an IR-level
+comment|///   Instruction*. Even complex fence sequences can be represented by a
+comment|///   single Instruction* through an intrinsic to be lowered later.
+comment|/// Backends with !getInsertFencesForAtomic() should keep a no-op here.
+comment|/// Backends should override this method to produce target-specific intrinsic
+comment|///   for their fences.
+comment|/// FIXME: Please note that the default implementation here in terms of
+comment|///   IR-level fences exists for historical/compatibility reasons and is
+comment|///   *unsound* ! Fences cannot, in general, be used to restore sequential
+comment|///   consistency. For example, consider the following example:
+comment|/// atomic<int> x = y = 0;
+comment|/// int r1, r2, r3, r4;
+comment|/// Thread 0:
+comment|///   x.store(1);
+comment|/// Thread 1:
+comment|///   y.store(1);
+comment|/// Thread 2:
+comment|///   r1 = x.load();
+comment|///   r2 = y.load();
+comment|/// Thread 3:
+comment|///   r3 = y.load();
+comment|///   r4 = x.load();
+comment|///  r1 = r3 = 1 and r2 = r4 = 0 is impossible as long as the accesses are all
+comment|///  seq_cst. But if they are lowered to monotonic accesses, no amount of
+comment|///  IR-level fences can prevent it.
+comment|/// @{
+name|virtual
+name|Instruction
+modifier|*
+name|emitLeadingFence
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
+argument_list|,
+name|AtomicOrdering
+name|Ord
+argument_list|,
+name|bool
+name|IsStore
+argument_list|,
+name|bool
+name|IsLoad
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|getInsertFencesForAtomic
+argument_list|()
+condition|)
+return|return
+name|nullptr
+return|;
+if|if
+condition|(
+name|isAtLeastRelease
+argument_list|(
+name|Ord
+argument_list|)
+operator|&&
+name|IsStore
+condition|)
+return|return
+name|Builder
+operator|.
+name|CreateFence
+argument_list|(
+name|Ord
+argument_list|)
+return|;
+else|else
+return|return
+name|nullptr
+return|;
+block|}
+name|virtual
+name|Instruction
+modifier|*
+name|emitTrailingFence
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
+argument_list|,
+name|AtomicOrdering
+name|Ord
+argument_list|,
+name|bool
+name|IsStore
+argument_list|,
+name|bool
+name|IsLoad
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|getInsertFencesForAtomic
+argument_list|()
+condition|)
+return|return
+name|nullptr
+return|;
+if|if
+condition|(
+name|isAtLeastAcquire
+argument_list|(
+name|Ord
+argument_list|)
+condition|)
+return|return
+name|Builder
+operator|.
+name|CreateFence
+argument_list|(
+name|Ord
+argument_list|)
+return|;
+else|else
+return|return
+name|nullptr
+return|;
+block|}
+comment|/// @}
+comment|/// Returns true if the given (atomic) store should be expanded by the
+comment|/// IR-level AtomicExpand pass into an "atomic xchg" which ignores its input.
 name|virtual
 name|bool
-name|shouldExpandAtomicInIR
+name|shouldExpandAtomicStoreInIR
 argument_list|(
-name|Instruction
+name|StoreInst
 operator|*
-name|Inst
+name|SI
 argument_list|)
 decl|const
 block|{
 return|return
 name|false
+return|;
+block|}
+comment|/// Returns true if the given (atomic) load should be expanded by the
+comment|/// IR-level AtomicExpand pass into a load-linked instruction
+comment|/// (through emitLoadLinked()).
+name|virtual
+name|bool
+name|shouldExpandAtomicLoadInIR
+argument_list|(
+name|LoadInst
+operator|*
+name|LI
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Returns true if the given AtomicRMW should be expanded by the
+comment|/// IR-level AtomicExpand pass into a loop using LoadLinked/StoreConditional.
+name|virtual
+name|bool
+name|shouldExpandAtomicRMWInIR
+argument_list|(
+name|AtomicRMWInst
+operator|*
+name|RMWI
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// On some platforms, an AtomicRMW that never actually modifies the value
+comment|/// (such as fetch_add of 0) can be turned into a fence followed by an
+comment|/// atomic load. This may sound useless, but it makes it possible for the
+comment|/// processor to keep the cacheline shared, dramatically improving
+comment|/// performance. And such idempotent RMWs are useful for implementing some
+comment|/// kinds of locks, see for example (justification + benchmarks):
+comment|/// http://www.hpl.hp.com/techreports/2012/HPL-2012-68.pdf
+comment|/// This method tries doing that transformation, returning the atomic load if
+comment|/// it succeeds, and nullptr otherwise.
+comment|/// If shouldExpandAtomicLoadInIR returns true on that load, it will undergo
+comment|/// another round of expansion.
+name|virtual
+name|LoadInst
+modifier|*
+name|lowerIdempotentRMWIntoFencedLoad
+argument_list|(
+name|AtomicRMWInst
+operator|*
+name|RMWI
+argument_list|)
+decl|const
+block|{
+return|return
+name|nullptr
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -3539,19 +4012,6 @@ name|Val
 parameter_list|)
 block|{
 name|UseUnderscoreLongJmp
-operator|=
-name|Val
-expr_stmt|;
-block|}
-comment|/// Indicate whether the target can generate code for jump tables.
-name|void
-name|setSupportJumpTables
-parameter_list|(
-name|bool
-name|Val
-parameter_list|)
-block|{
-name|SupportJumpTables
 operator|=
 name|Val
 expr_stmt|;
@@ -3698,6 +4158,38 @@ operator|=
 name|isCheap
 expr_stmt|;
 block|}
+comment|/// Tells the code generator that fsqrt is cheap, and should not be replaced
+comment|/// with an alternative sequence of instructions.
+name|void
+name|setFsqrtIsCheap
+parameter_list|(
+name|bool
+name|isCheap
+init|=
+name|true
+parameter_list|)
+block|{
+name|FsqrtIsCheap
+operator|=
+name|isCheap
+expr_stmt|;
+block|}
+comment|/// Tells the code generator that this target supports floating point
+comment|/// exceptions and cares about preserving floating point exception behavior.
+name|void
+name|setHasFloatingPointExceptions
+parameter_list|(
+name|bool
+name|FPExceptions
+init|=
+name|true
+parameter_list|)
+block|{
+name|HasFloatingPointExceptions
+operator|=
+name|FPExceptions
+expr_stmt|;
+block|}
 comment|/// Tells the code generator which bitwidths to bypass.
 name|void
 name|addBypassSlowDiv
@@ -3719,10 +4211,10 @@ operator|=
 name|FastBitWidth
 expr_stmt|;
 block|}
-comment|/// Tells the code generator that it shouldn't generate srl/add/sra for a
-comment|/// signed divide by power of two, and let the target handle it.
+comment|/// Tells the code generator that it shouldn't generate sra/srl/add/sra for a
+comment|/// signed divide by power of two; let the target handle it.
 name|void
-name|setPow2DivIsCheap
+name|setPow2SDivIsCheap
 parameter_list|(
 name|bool
 name|isCheap
@@ -3730,7 +4222,7 @@ init|=
 name|true
 parameter_list|)
 block|{
-name|Pow2DivIsCheap
+name|Pow2SDivIsCheap
 operator|=
 name|isCheap
 expr_stmt|;
@@ -3905,7 +4397,10 @@ name|unsigned
 name|ExtType
 parameter_list|,
 name|MVT
-name|VT
+name|ValVT
+parameter_list|,
+name|MVT
+name|MemVT
 parameter_list|,
 name|LegalizeAction
 name|Action
@@ -3919,18 +4414,27 @@ name|ISD
 operator|::
 name|LAST_LOADEXT_TYPE
 operator|&&
-name|VT
-operator|<
-name|MVT
-operator|::
-name|LAST_VALUETYPE
+name|ValVT
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+name|MemVT
+operator|.
+name|isValid
+argument_list|()
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
 name|LoadExtActions
 index|[
-name|VT
+name|ValVT
+operator|.
+name|SimpleTy
+index|]
+index|[
+name|MemVT
 operator|.
 name|SimpleTy
 index|]
@@ -3962,16 +4466,14 @@ block|{
 name|assert
 argument_list|(
 name|ValVT
-operator|<
-name|MVT
-operator|::
-name|LAST_VALUETYPE
+operator|.
+name|isValid
+argument_list|()
 operator|&&
 name|MemVT
-operator|<
-name|MVT
-operator|::
-name|LAST_VALUETYPE
+operator|.
+name|isValid
+argument_list|()
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
@@ -4015,10 +4517,9 @@ block|{
 name|assert
 argument_list|(
 name|VT
-operator|<
-name|MVT
-operator|::
-name|LAST_VALUETYPE
+operator|.
+name|isValid
+argument_list|()
 operator|&&
 name|IdxMode
 operator|<
@@ -4097,10 +4598,9 @@ block|{
 name|assert
 argument_list|(
 name|VT
-operator|<
-name|MVT
-operator|::
-name|LAST_VALUETYPE
+operator|.
+name|isValid
+argument_list|()
 operator|&&
 name|IdxMode
 operator|<
@@ -4176,10 +4676,9 @@ block|{
 name|assert
 argument_list|(
 name|VT
-operator|<
-name|MVT
-operator|::
-name|LAST_VALUETYPE
+operator|.
+name|isValid
+argument_list|()
 operator|&&
 operator|(
 name|unsigned
@@ -4388,7 +4887,8 @@ expr_stmt|;
 block|}
 comment|/// Set the target's preferred loop alignment. Default alignment is zero, it
 comment|/// means the target does not care about loop alignment.  The alignment is
-comment|/// specified in log2(bytes).
+comment|/// specified in log2(bytes). The target may also override
+comment|/// getPrefLoopAlignment to provide per-loop values.
 name|void
 name|setPrefLoopAlignment
 parameter_list|(
@@ -4806,6 +5306,30 @@ name|VT2
 argument_list|)
 return|;
 block|}
+comment|/// Return true if an fpext operation is free (for instance, because
+comment|/// single-precision floating-point numbers are implicitly extended to
+comment|/// double-precision).
+name|virtual
+name|bool
+name|isFPExtFree
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|VT
+operator|.
+name|isFloatingPoint
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 comment|/// Return true if an fneg operation is free to the point where it is never
 comment|/// worthwhile to replace it with a bitwise operation.
 name|virtual
@@ -4908,6 +5432,26 @@ argument_list|,
 name|Type
 operator|*
 name|Ty
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Return true if EXTRACT_SUBVECTOR is cheap for this result type
+comment|/// with this index. This is needed because EXTRACT_SUBVECTOR usually
+comment|/// has custom lowering that depends on the index of the first element,
+comment|/// and only the target knows which lowering is cheap.
+name|virtual
+name|bool
+name|isExtractSubvectorCheap
+argument_list|(
+name|EVT
+name|ResVT
+argument_list|,
+name|unsigned
+name|Index
 argument_list|)
 decl|const
 block|{
@@ -5055,11 +5599,6 @@ name|DataLayout
 modifier|*
 name|DL
 decl_stmt|;
-specifier|const
-name|TargetLoweringObjectFile
-modifier|&
-name|TLOF
-decl_stmt|;
 comment|/// True if this is a little endian target.
 name|bool
 name|IsLittleEndian
@@ -5091,6 +5630,10 @@ comment|/// unconditionally.
 name|bool
 name|IntDivIsCheap
 decl_stmt|;
+comment|// Don't expand fsqrt with an approximation based on the inverse sqrt.
+name|bool
+name|FsqrtIsCheap
+decl_stmt|;
 comment|/// Tells the code generator to bypass slow divide or remainder
 comment|/// instructions. For example, BypassSlowDivWidths[32,8] tells the code
 comment|/// generator to bypass 32-bit integer div/rem with an 8-bit unsigned integer
@@ -5105,16 +5648,21 @@ name|int
 operator|>
 name|BypassSlowDivWidths
 expr_stmt|;
-comment|/// Tells the code generator that it shouldn't generate srl/add/sra for a
-comment|/// signed divide by power of two, and let the target handle it.
+comment|/// Tells the code generator that it shouldn't generate sra/srl/add/sra for a
+comment|/// signed divide by power of two; let the target handle it.
 name|bool
-name|Pow2DivIsCheap
+name|Pow2SDivIsCheap
 decl_stmt|;
 comment|/// Tells the code generator that it shouldn't generate extra flow control
 comment|/// instructions and should attempt to combine flow control instructions via
 comment|/// predication.
 name|bool
 name|JumpIsExpensive
+decl_stmt|;
+comment|/// Whether the target supports or cares about preserving floating point
+comment|/// exception behavior.
+name|bool
+name|HasFloatingPointExceptions
 decl_stmt|;
 comment|/// This target prefers to use _setjmp to implement llvm.setjmp.
 comment|///
@@ -5127,11 +5675,6 @@ comment|///
 comment|/// Defaults to false.
 name|bool
 name|UseUnderscoreLongJmp
-decl_stmt|;
-comment|/// Whether the target can generate code for jumptables.  If it's not true,
-comment|/// then each jumptable must be lowered into if-then-else's.
-name|bool
-name|SupportJumpTables
 decl_stmt|;
 comment|/// Number of blocks threshold to use jump tables.
 name|int
@@ -5298,6 +5841,11 @@ comment|/// that indicates how instruction selection should deal with a load of 
 comment|/// specific value type and extension type.
 name|uint8_t
 name|LoadExtActions
+index|[
+name|MVT
+operator|::
+name|LAST_VALUETYPE
+index|]
 index|[
 name|MVT
 operator|::
@@ -6166,6 +6714,10 @@ comment|/// a mask of a single bit, a compare, and a branch into a single instru
 name|bool
 name|MaskAndBranchFoldingIsLegal
 decl_stmt|;
+comment|/// \see enableExtLdPromotion.
+name|bool
+name|EnableExtLdPromotion
+decl_stmt|;
 name|protected
 label|:
 comment|/// Return true if the value types that can be represented by the specified
@@ -6248,7 +6800,7 @@ name|LLVM_DELETED_FUNCTION
 block|;
 name|public
 operator|:
-comment|/// NOTE: The constructor takes ownership of TLOF.
+comment|/// NOTE: The TargetMachine owns TLOF.
 name|explicit
 name|TargetLowering
 argument_list|(
@@ -6256,11 +6808,6 @@ specifier|const
 name|TargetMachine
 operator|&
 name|TM
-argument_list|,
-specifier|const
-name|TargetLoweringObjectFile
-operator|*
-name|TLOF
 argument_list|)
 block|;
 comment|/// Returns true by value, base pointer and offset pointer and addressing mode
@@ -7173,6 +7720,9 @@ name|ImmutableCallSite
 operator|*
 name|CS
 block|;
+name|bool
+name|IsPatchPoint
+block|;
 name|SmallVector
 operator|<
 name|ISD
@@ -7268,7 +7818,12 @@ argument_list|)
 block|,
 name|CS
 argument_list|(
-argument|nullptr
+name|nullptr
+argument_list|)
+block|,
+name|IsPatchPoint
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|CallLoweringInfo
@@ -7600,6 +8155,22 @@ operator|*
 name|this
 return|;
 block|}
+name|CallLoweringInfo
+operator|&
+name|setIsPatchPoint
+argument_list|(
+argument|bool Value = true
+argument_list|)
+block|{
+name|IsPatchPoint
+operator|=
+name|Value
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 name|ArgListTy
 operator|&
 name|getArgs
@@ -7802,21 +8373,25 @@ comment|/// all the time, e.g. i1 on x86-64. It is also not necessary for non-C
 comment|/// calling conventions. The frontend should handle this and include all of
 comment|/// the necessary information.
 name|virtual
-name|MVT
+name|EVT
 name|getTypeForExtArgOrReturn
 argument_list|(
-argument|MVT VT
+argument|LLVMContext&Context
+argument_list|,
+argument|EVT VT
 argument_list|,
 argument|ISD::NodeType
 comment|/*ExtendKind*/
 argument_list|)
 specifier|const
 block|{
-name|MVT
+name|EVT
 name|MinVT
 operator|=
 name|getRegisterType
 argument_list|(
+name|Context
+argument_list|,
 name|MVT
 operator|::
 name|i32
@@ -8145,19 +8720,19 @@ block|;
 comment|/// Copy constructor for copying from a ConstraintInfo.
 name|AsmOperandInfo
 argument_list|(
-specifier|const
-name|InlineAsm
-operator|::
-name|ConstraintInfo
-operator|&
-name|info
+argument|InlineAsm::ConstraintInfo Info
 argument_list|)
 operator|:
 name|InlineAsm
 operator|::
 name|ConstraintInfo
 argument_list|(
-name|info
+name|std
+operator|::
+name|move
+argument_list|(
+name|Info
+argument_list|)
 argument_list|)
 block|,
 name|ConstraintType
@@ -8176,7 +8751,7 @@ name|ConstraintVT
 argument_list|(
 argument|MVT::Other
 argument_list|)
-block|{     }
+block|{}
 block|}
 block|;
 typedef|typedef
@@ -8534,6 +9109,201 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|virtual
+name|SDValue
+name|BuildSDIVPow2
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|Divisor
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|SDNode
+operator|*
+operator|>
+operator|*
+name|Created
+argument_list|)
+decl|const
+block|{
+return|return
+name|SDValue
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Indicate whether this target prefers to combine the given number of FDIVs
+end_comment
+
+begin_comment
+comment|/// with the same divisor.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|bool
+name|combineRepeatedFPDivisors
+argument_list|(
+name|unsigned
+name|NumUsers
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Hooks for building estimates in place of slower divisions and square
+end_comment
+
+begin_comment
+comment|/// roots.
+end_comment
+
+begin_comment
+comment|/// Return a reciprocal square root estimate value for the input operand.
+end_comment
+
+begin_comment
+comment|/// The RefinementSteps output is the number of Newton-Raphson refinement
+end_comment
+
+begin_comment
+comment|/// iterations required to generate a sufficient (though not necessarily
+end_comment
+
+begin_comment
+comment|/// IEEE-754 compliant) estimate for the value type.
+end_comment
+
+begin_comment
+comment|/// The boolean UseOneConstNR output is used to select a Newton-Raphson
+end_comment
+
+begin_comment
+comment|/// algorithm implementation that uses one constant or two constants.
+end_comment
+
+begin_comment
+comment|/// A target may choose to implement its own refinement within this function.
+end_comment
+
+begin_comment
+comment|/// If that's true, then return '0' as the number of RefinementSteps to avoid
+end_comment
+
+begin_comment
+comment|/// any further refinement of the estimate.
+end_comment
+
+begin_comment
+comment|/// An empty SDValue return means no estimate sequence can be created.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|SDValue
+name|getRsqrtEstimate
+argument_list|(
+name|SDValue
+name|Operand
+argument_list|,
+name|DAGCombinerInfo
+operator|&
+name|DCI
+argument_list|,
+name|unsigned
+operator|&
+name|RefinementSteps
+argument_list|,
+name|bool
+operator|&
+name|UseOneConstNR
+argument_list|)
+decl|const
+block|{
+return|return
+name|SDValue
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Return a reciprocal estimate value for the input operand.
+end_comment
+
+begin_comment
+comment|/// The RefinementSteps output is the number of Newton-Raphson refinement
+end_comment
+
+begin_comment
+comment|/// iterations required to generate a sufficient (though not necessarily
+end_comment
+
+begin_comment
+comment|/// IEEE-754 compliant) estimate for the value type.
+end_comment
+
+begin_comment
+comment|/// A target may choose to implement its own refinement within this function.
+end_comment
+
+begin_comment
+comment|/// If that's true, then return '0' as the number of RefinementSteps to avoid
+end_comment
+
+begin_comment
+comment|/// any further refinement of the estimate.
+end_comment
+
+begin_comment
+comment|/// An empty SDValue return means no estimate sequence can be created.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|SDValue
+name|getRecipEstimate
+argument_list|(
+name|SDValue
+name|Operand
+argument_list|,
+name|DAGCombinerInfo
+operator|&
+name|DCI
+argument_list|,
+name|unsigned
+operator|&
+name|RefinementSteps
+argument_list|)
+decl|const
+block|{
+return|return
+name|SDValue
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
 begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
@@ -8755,6 +9525,27 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// If this function returns true, SelectionDAGBuilder emits a
+end_comment
+
+begin_comment
+comment|/// LOAD_STACK_GUARD node when it is lowering Intrinsic::stackprotector.
+end_comment
+
+begin_expr_stmt
+name|virtual
+name|bool
+name|useLoadStackGuardNode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 unit|};

@@ -33,6 +33,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_function
 specifier|static
 name|void
@@ -126,6 +132,11 @@ name|char
 modifier|*
 name|triple
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|features
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
@@ -138,9 +149,13 @@ block|{
 name|LLVMDisasmContextRef
 name|D
 init|=
-name|LLVMCreateDisasm
+name|LLVMCreateDisasmCPUFeatures
 argument_list|(
 name|triple
+argument_list|,
+literal|""
+argument_list|,
+name|features
 argument_list|,
 name|NULL
 argument_list|,
@@ -168,7 +183,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ERROR: Couldn't create disassebler for triple %s\n"
+literal|"ERROR: Couldn't create disassembler for triple %s\n"
 argument_list|,
 name|triple
 argument_list|)
@@ -289,6 +304,7 @@ name|disbuflen
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|triple
@@ -298,21 +314,47 @@ index|[
 literal|0
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|features
+init|=
+name|tokens
+index|[
+literal|1
+index|]
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"triple: %s\n"
+literal|"triple: %s, features: %s\n"
 argument_list|,
 name|triple
+argument_list|,
+name|features
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|features
+argument_list|,
+literal|"NULL"
+argument_list|)
+condition|)
+name|features
+operator|=
+literal|""
 expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
-literal|1
+literal|2
 init|;
 name|i
 operator|<
@@ -363,6 +405,8 @@ block|}
 name|do_disassemble
 argument_list|(
 name|triple
+argument_list|,
+name|features
 argument_list|,
 name|disbuf
 argument_list|,

@@ -74,13 +74,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_LIVEINTERVAL_ANALYSIS_H
+name|LLVM_CODEGEN_LIVEINTERVALANALYSIS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_LIVEINTERVAL_ANALYSIS_H
+name|LLVM_CODEGEN_LIVEINTERVALANALYSIS_H
 end_define
 
 begin_include
@@ -199,11 +199,6 @@ block|;
 name|MachineRegisterInfo
 operator|*
 name|MRI
-block|;
-specifier|const
-name|TargetMachine
-operator|*
-name|TM
 block|;
 specifier|const
 name|TargetRegisterInfo
@@ -542,34 +537,16 @@ operator|=
 name|nullptr
 argument_list|)
 block|;
-comment|/// \brief Walk the values in the given interval and compute which ones
-comment|/// are dead.  Dead values are not deleted, however:
-comment|/// - Dead PHIDef values are marked as unused.
-comment|/// - New dead machine instructions are added to the dead vector.
-comment|/// - CanSeparate is set to true if the interval may have been separated
-comment|///   into multiple connected components.
+comment|/// Specialized version of
+comment|/// shrinkToUses(LiveInterval *li, SmallVectorImpl<MachineInstr*> *dead)
+comment|/// that works on a subregister live range and only looks at uses matching
+comment|/// the lane mask of the subregister range.
 name|void
-name|computeDeadValues
+name|shrinkToUses
 argument_list|(
-name|LiveInterval
-operator|*
-name|li
+argument|LiveInterval::SubRange&SR
 argument_list|,
-name|LiveRange
-operator|&
-name|LR
-argument_list|,
-name|bool
-operator|*
-name|CanSeparate
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineInstr
-operator|*
-operator|>
-operator|*
-name|dead
+argument|unsigned Reg
 argument_list|)
 block|;
 comment|/// extendToIndices - Extend the live range of LI to reach all points in
@@ -594,8 +571,8 @@ operator|>
 name|Indices
 argument_list|)
 block|;
-comment|/// pruneValue - If an LI value is live at Kill, prune its live range by
-comment|/// removing any liveness reachable from Kill. Add live range end points to
+comment|/// If @p LR has a live value at @p Kill, prune its live range by removing
+comment|/// any liveness reachable from Kill. Add live range end points to
 comment|/// EndPoints such that extendToIndices(LI, EndPoints) will reconstruct the
 comment|/// value's live range.
 comment|///
@@ -604,7 +581,20 @@ comment|/// SSA form after adding defs to a virtual register.
 name|void
 name|pruneValue
 argument_list|(
-argument|LiveInterval *LI
+argument|LiveRange&LR
+argument_list|,
+argument|SlotIndex Kill
+argument_list|,
+argument|SmallVectorImpl<SlotIndex> *EndPoints
+argument_list|)
+block|;
+comment|/// Subregister aware variant of pruneValue(LiveRange&LR, SlotIndex Kill,
+comment|/// SmallVectorImpl<SlotIndex>&EndPoints). Prunes the value in the main
+comment|/// range and all sub ranges.
+name|void
+name|pruneValue
+argument_list|(
+argument|LiveInterval&LI
 argument_list|,
 argument|SlotIndex Kill
 argument_list|,
@@ -1310,6 +1300,29 @@ name|void
 name|computeRegMasks
 argument_list|()
 block|;
+comment|/// Walk the values in @p LI and check for dead values:
+comment|/// - Dead PHIDef values are marked as unused.
+comment|/// - Dead operands are marked as such.
+comment|/// - Completely dead machine instructions are added to the @p dead vector
+comment|///   if it is not nullptr.
+comment|/// Returns true if any PHI value numbers have been removed which may
+comment|/// have separated the interval into multiple connected components.
+name|bool
+name|computeDeadValues
+argument_list|(
+name|LiveInterval
+operator|&
+name|LI
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MachineInstr
+operator|*
+operator|>
+operator|*
+name|dead
+argument_list|)
+block|;
 specifier|static
 name|LiveInterval
 operator|*
@@ -1347,6 +1360,27 @@ name|computeVirtRegInterval
 argument_list|(
 name|LiveInterval
 operator|&
+argument_list|)
+block|;
+comment|/// Helper function for repairIntervalsInRange(), walks backwards and
+comment|/// creates/modifies live segments in @p LR to match the operands found.
+comment|/// Only full operands or operands with subregisters matching @p LaneMask
+comment|/// are considered.
+name|void
+name|repairOldRegInRange
+argument_list|(
+argument|MachineBasicBlock::iterator Begin
+argument_list|,
+argument|MachineBasicBlock::iterator End
+argument_list|,
+argument|const SlotIndex endIdx
+argument_list|,
+argument|LiveRange&LR
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|unsigned LaneMask = ~
+literal|0u
 argument_list|)
 block|;
 name|class

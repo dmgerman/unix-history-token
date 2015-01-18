@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_STACKMAPS
+name|LLVM_CODEGEN_STACKMAPS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_STACKMAPS
+name|LLVM_CODEGEN_STACKMAPS_H
 end_define
 
 begin_include
@@ -292,6 +292,154 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/// MI-level Statepoint operands
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Statepoint operands take the form:
+end_comment
+
+begin_comment
+comment|///<num call arguments>,<call target>, [call arguments],
+end_comment
+
+begin_comment
+comment|///<StackMaps::ConstantOp>,<flags>,
+end_comment
+
+begin_comment
+comment|///<StackMaps::ConstantOp>,<num other args>, [other args],
+end_comment
+
+begin_comment
+comment|///   [gc values]
+end_comment
+
+begin_decl_stmt
+name|class
+name|StatepointOpers
+block|{
+name|private
+label|:
+enum|enum
+block|{
+name|NCallArgsPos
+init|=
+literal|0
+block|,
+name|CallTargetPos
+init|=
+literal|1
+block|}
+enum|;
+name|public
+label|:
+name|explicit
+name|StatepointOpers
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+operator|:
+name|MI
+argument_list|(
+argument|MI
+argument_list|)
+block|{ }
+comment|/// Get starting index of non call related arguments
+comment|/// (statepoint flags, vm state and gc state).
+name|unsigned
+name|getVarIdx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MI
+operator|->
+name|getOperand
+argument_list|(
+name|NCallArgsPos
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+operator|+
+literal|2
+return|;
+block|}
+comment|/// Returns the index of the operand containing the number of non-gc non-call
+comment|/// arguments.
+name|unsigned
+name|getNumVMSArgsIdx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getVarIdx
+argument_list|()
+operator|+
+literal|3
+return|;
+block|}
+comment|/// Returns the number of non-gc non-call arguments attached to the
+comment|/// statepoint.  Note that this is the number of arguments, not the number of
+comment|/// operands required to represent those arguments.
+name|unsigned
+name|getNumVMSArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MI
+operator|->
+name|getOperand
+argument_list|(
+name|getNumVMSArgsIdx
+argument_list|()
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+return|;
+block|}
+comment|/// Returns the target of the underlying call.
+specifier|const
+name|MachineOperand
+operator|&
+name|getCallTarget
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MI
+operator|->
+name|getOperand
+argument_list|(
+name|CallTargetPos
+argument_list|)
+return|;
+block|}
+name|private
+label|:
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_decl_stmt
 name|class
 name|StackMaps
@@ -511,6 +659,26 @@ operator|&
 name|AP
 argument_list|)
 expr_stmt|;
+name|void
+name|reset
+parameter_list|()
+block|{
+name|CSInfos
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|ConstPool
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|FnStackSize
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+block|}
 comment|/// \brief Generate a stackmap record for a stackmap instruction.
 comment|///
 comment|/// MI must be a raw STACKMAP, not a PATCHPOINT.
@@ -526,6 +694,16 @@ function_decl|;
 comment|/// \brief Generate a stackmap record for a patchpoint instruction.
 name|void
 name|recordPatchPoint
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
+function_decl|;
+comment|/// \brief Generate a stackmap record for a statepoint instruction.
+name|void
+name|recordStatepoint
 parameter_list|(
 specifier|const
 name|MachineInstr
@@ -569,9 +747,9 @@ expr_stmt|;
 typedef|typedef
 name|MapVector
 operator|<
-name|int64_t
+name|uint64_t
 operator|,
-name|int64_t
+name|uint64_t
 operator|>
 name|ConstantPool
 expr_stmt|;
@@ -622,9 +800,9 @@ argument|const MCExpr *CSOffsetExpr
 argument_list|,
 argument|uint64_t ID
 argument_list|,
-argument|LocationVec&Locations
+argument|LocationVec&&Locations
 argument_list|,
-argument|LiveOutVec&LiveOuts
+argument|LiveOutVec&&LiveOuts
 argument_list|)
 operator|:
 name|CSOffsetExpr
@@ -639,12 +817,17 @@ argument_list|)
 operator|,
 name|Locations
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|Locations
+argument_list|)
 argument_list|)
 operator|,
 name|LiveOuts
 argument_list|(
-argument|LiveOuts
+argument|std::move(LiveOuts)
 argument_list|)
 block|{}
 block|}
@@ -797,10 +980,6 @@ unit|}
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_STACKMAPS
-end_comment
 
 end_unit
 

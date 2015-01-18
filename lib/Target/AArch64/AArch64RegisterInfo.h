@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_AArch64REGISTERINFO_H
+name|LLVM_LIB_TARGET_AARCH64_AARCH64REGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_AArch64REGISTERINFO_H
+name|LLVM_LIB_TARGET_AARCH64_AARCH64REGISTERINFO_H
 end_define
 
 begin_define
@@ -365,10 +365,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_TARGET_AArch64REGISTERINFO_H
-end_comment
 
 end_unit
 

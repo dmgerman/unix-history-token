@@ -34,19 +34,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CODEGEN_ASMPRINTER_DEBUGLOCLIST_H__
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DEBUGLOCLIST_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CODEGEN_ASMPRINTER_DEBUGLOCLIST_H__
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DEBUGLOCLIST_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCSymbol.h"
+file|"DebugLocEntry.h"
 end_include
 
 begin_include
@@ -55,22 +55,26 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"DebugLocEntry.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|DwarfCompileUnit
+decl_stmt|;
+name|class
+name|MCSymbol
+decl_stmt|;
 struct|struct
 name|DebugLocList
 block|{
 name|MCSymbol
 modifier|*
 name|Label
+decl_stmt|;
+name|DwarfCompileUnit
+modifier|*
+name|CU
 decl_stmt|;
 name|SmallVector
 operator|<

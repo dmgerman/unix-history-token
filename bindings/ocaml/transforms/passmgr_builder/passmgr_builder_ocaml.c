@@ -68,7 +68,7 @@ operator|(
 name|char
 operator|*
 operator|)
-literal|"LLVMPassManagerBuilder"
+literal|"Llvm_passmgr_builder.t"
 block|,
 name|llvm_finalize_pmbuilder
 block|,
@@ -79,13 +79,8 @@ block|,
 name|custom_serialize_default
 block|,
 name|custom_deserialize_default
-ifdef|#
-directive|ifdef
-name|custom_compare_ext_default
 block|,
 name|custom_compare_ext_default
-endif|#
-directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt

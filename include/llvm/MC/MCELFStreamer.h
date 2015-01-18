@@ -196,11 +196,38 @@ operator|~
 name|MCELFStreamer
 argument_list|()
 block|;
+comment|/// state management
+name|void
+name|reset
+argument_list|()
+name|override
+block|{
+name|LocalCommons
+operator|.
+name|clear
+argument_list|()
+block|;
+name|BindingExplicitlySet
+operator|.
+name|clear
+argument_list|()
+block|;
+name|SeenIdent
+operator|=
+name|false
+block|;
+name|MCObjectStreamer
+operator|::
+name|reset
+argument_list|()
+block|;   }
 comment|/// @name MCStreamer Interface
 comment|/// @{
 name|void
 name|InitSections
-argument_list|()
+argument_list|(
+argument|bool NoExecStack
+argument_list|)
 name|override
 block|;
 name|void
@@ -498,9 +525,6 @@ name|Emitter
 parameter_list|,
 name|bool
 name|RelaxAll
-parameter_list|,
-name|bool
-name|NoExecStack
 parameter_list|,
 name|bool
 name|IsThumb

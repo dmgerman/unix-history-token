@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_ASMPRINTER_EHSTREAMER_H
+name|LLVM_LIB_CODEGEN_ASMPRINTER_EHSTREAMER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_ASMPRINTER_EHSTREAMER_H
+name|LLVM_LIB_CODEGEN_ASMPRINTER_EHSTREAMER_H
 end_define
 
 begin_include
@@ -89,6 +89,12 @@ name|MachineFunction
 decl_stmt|;
 name|class
 name|AsmPrinter
+decl_stmt|;
+name|class
+name|MCSymbol
+decl_stmt|;
+name|class
+name|MCSymbolRefExpr
 decl_stmt|;
 name|template
 operator|<
@@ -180,18 +186,19 @@ name|MCSymbol
 modifier|*
 name|BeginLabel
 decl_stmt|;
-comment|// zero indicates the start of the function.
+comment|// Null indicates the start of the function.
 name|MCSymbol
 modifier|*
 name|EndLabel
 decl_stmt|;
-comment|// zero indicates the end of the function.
-comment|// The landing pad starts at PadLabel.
-name|MCSymbol
+comment|// Null indicates the end of the function.
+comment|// LPad contains the landing pad start labels.
+specifier|const
+name|LandingPadInfo
 modifier|*
-name|PadLabel
+name|LPad
 decl_stmt|;
-comment|// zero indicates that there is no landing pad.
+comment|// Null indicates that there is no landing pad.
 name|unsigned
 name|Action
 decl_stmt|;
@@ -255,11 +262,6 @@ operator|&
 name|CallSites
 argument_list|,
 specifier|const
-name|RangeMapType
-operator|&
-name|PadMap
-argument_list|,
-specifier|const
 name|SmallVectorImpl
 operator|<
 specifier|const
@@ -309,6 +311,51 @@ name|unsigned
 name|TTypeEncoding
 parameter_list|)
 function_decl|;
+comment|// Helpers for for identifying what kind of clause an EH typeid or selector
+comment|// corresponds to. Negative selectors are for filter clauses, the zero
+comment|// selector is for cleanups, and positive selectors are for catch clauses.
+specifier|static
+name|bool
+name|isFilterEHSelector
+parameter_list|(
+name|int
+name|Selector
+parameter_list|)
+block|{
+return|return
+name|Selector
+operator|<
+literal|0
+return|;
+block|}
+specifier|static
+name|bool
+name|isCleanupEHSelector
+parameter_list|(
+name|int
+name|Selector
+parameter_list|)
+block|{
+return|return
+name|Selector
+operator|==
+literal|0
+return|;
+block|}
+specifier|static
+name|bool
+name|isCatchEHSelector
+parameter_list|(
+name|int
+name|Selector
+parameter_list|)
+block|{
+return|return
+name|Selector
+operator|>
+literal|0
+return|;
+block|}
 name|public
 label|:
 name|EHStreamer

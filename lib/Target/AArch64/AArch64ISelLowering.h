@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_AArch64_ISELLOWERING_H
+name|LLVM_LIB_TARGET_AARCH64_AARCH64ISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_AArch64_ISELLOWERING_H
+name|LLVM_LIB_TARGET_AARCH64_AARCH64ISELLOWERING_H
 end_define
 
 begin_include
@@ -314,6 +314,17 @@ name|SITOF
 block|,
 name|UITOF
 block|,
+comment|/// Natural vector cast. ISD::BITCAST is not natural in the big-endian
+comment|/// world w.r.t vectors; which causes additional REV instructions to be
+comment|/// generated to compensate for the byte-swapping. But sometimes we do
+comment|/// need to re-interpret the data in SIMD vector registers in big-endian
+comment|/// mode without emitting such REV instructions.
+name|NVCAST
+block|,
+name|SMULL
+block|,
+name|UMULL
+block|,
 comment|// NEON Load/Store with post-increment base updates
 name|LD2post
 init|=
@@ -388,13 +399,13 @@ operator|:
 name|explicit
 name|AArch64TargetLowering
 argument_list|(
+specifier|const
 name|TargetMachine
 operator|&
 name|TM
 argument_list|)
 block|;
-comment|/// Selects the correct CCAssignFn for a the given CallingConvention
-comment|/// value.
+comment|/// Selects the correct CCAssignFn for a given CallingConvention value.
 name|CCAssignFn
 operator|*
 name|CCAssignFnForCall
@@ -433,15 +444,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// allowsUnalignedMemoryAccesses - Returns true if the target allows
+comment|/// allowsMisalignedMemoryAccesses - Returns true if the target allows
 comment|/// unaligned memory accesses. of the specified type.
 name|bool
-name|allowsUnalignedMemoryAccesses
+name|allowsMisalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
 argument_list|,
 argument|unsigned AddrSpace =
 literal|0
+argument_list|,
+argument|unsigned Align =
+literal|1
 argument_list|,
 argument|bool *Fast = nullptr
 argument_list|)
@@ -1074,6 +1088,15 @@ name|override
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|bool
+name|hasLoadLinkedStoreConditional
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|Value
 modifier|*
@@ -1126,16 +1149,51 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
-name|shouldExpandAtomicInIR
+name|shouldExpandAtomicLoadInIR
 argument_list|(
-name|Instruction
+name|LoadInst
 operator|*
-name|Inst
+name|LI
 argument_list|)
 decl|const
 name|override
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|shouldExpandAtomicStoreInIR
+argument_list|(
+name|StoreInst
+operator|*
+name|SI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|shouldExpandAtomicRMWInIR
+argument_list|(
+name|AtomicRMWInst
+operator|*
+name|AI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|bool
+name|useLoadStackGuardNode
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|TargetLoweringBase
@@ -2155,6 +2213,50 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|SDValue
+name|BuildSDIVPow2
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|Divisor
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|SDNode
+operator|*
+operator|>
+operator|*
+name|Created
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|combineRepeatedFPDivisors
+argument_list|(
+name|unsigned
+name|NumUsers
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|ConstraintType
 name|getConstraintType
 argument_list|(
@@ -2421,6 +2523,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|bool
+name|functionArgumentNeedsConsecutiveRegisters
+argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+argument_list|,
+name|bool
+name|isVarArg
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 unit|};
 name|namespace
 name|AArch64
@@ -2455,10 +2578,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_TARGET_AArch64_ISELLOWERING_H
-end_comment
 
 end_unit
 

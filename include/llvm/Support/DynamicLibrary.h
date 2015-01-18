@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SYSTEM_DYNAMICLIBRARY_H
+name|LLVM_SUPPORT_DYNAMICLIBRARY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SYSTEM_DYNAMICLIBRARY_H
+name|LLVM_SUPPORT_DYNAMICLIBRARY_H
 end_define
 
 begin_include
@@ -102,6 +102,8 @@ name|void
 modifier|*
 name|Data
 decl_stmt|;
+name|public
+label|:
 name|explicit
 name|DynamicLibrary
 argument_list|(
@@ -118,12 +120,11 @@ argument_list|(
 argument|data
 argument_list|)
 block|{}
-name|public
-operator|:
 comment|/// Returns true if the object refers to a valid library.
 name|bool
 name|isValid
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Data
@@ -283,10 +284,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_SYSTEM_DYNAMIC_LIBRARY_H
-end_comment
 
 end_unit
 

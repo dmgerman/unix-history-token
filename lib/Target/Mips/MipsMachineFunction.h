@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPS_MACHINE_FUNCTION_INFO_H
+name|LLVM_LIB_TARGET_MIPS_MIPSMACHINEFUNCTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPS_MACHINE_FUNCTION_INFO_H
+name|LLVM_LIB_TARGET_MIPS_MIPSMACHINEFUNCTION_H
 end_define
 
 begin_include
@@ -154,10 +154,7 @@ operator|:
 name|explicit
 name|MipsCallEntry
 argument_list|(
-specifier|const
-name|StringRef
-operator|&
-name|N
+argument|StringRef N
 argument_list|)
 block|;
 name|explicit
@@ -419,10 +416,7 @@ comment|/// representing a GOT entry for an external function.
 name|MachinePointerInfo
 name|callPtrInfo
 argument_list|(
-specifier|const
-name|StringRef
-operator|&
-name|Name
+argument|StringRef Name
 argument_list|)
 block|;
 comment|/// \brief Create a MachinePointerInfo that has a MipsCallEntr object
@@ -574,10 +568,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// MIPS_MACHINE_FUNCTION_INFO_H
-end_comment
 
 end_unit
 

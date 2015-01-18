@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Config/config.h"
 end_include
 
@@ -719,6 +725,29 @@ name|namespace
 name|sys
 block|{
 name|namespace
+name|path
+block|{
+name|std
+operator|::
+name|error_code
+name|widenPath
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|Path8
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|wchar_t
+operator|>
+operator|&
+name|Path16
+argument_list|)
+expr_stmt|;
+block|}
+comment|// end namespace path
+name|namespace
 name|windows
 block|{
 name|std
@@ -735,6 +764,19 @@ name|std
 operator|::
 name|error_code
 name|UTF16ToUTF8
+argument_list|(
+argument|const wchar_t *utf16
+argument_list|,
+argument|size_t utf16_len
+argument_list|,
+argument|SmallVectorImpl<char>&utf8
+argument_list|)
+expr_stmt|;
+comment|/// Convert from UTF16 to the current code page used in the system
+name|std
+operator|::
+name|error_code
+name|UTF16ToCurCP
 argument_list|(
 argument|const wchar_t *utf16
 argument_list|,

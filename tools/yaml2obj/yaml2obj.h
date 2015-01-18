@@ -46,13 +46,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TOOLS_YAML2OBJ_H
+name|LLVM_TOOLS_YAML2OBJ_YAML2OBJ_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TOOLS_YAML2OBJ_H
+name|LLVM_TOOLS_YAML2OBJ_YAML2OBJ_H
 end_define
 
 begin_decl_stmt

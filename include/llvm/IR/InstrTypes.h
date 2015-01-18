@@ -101,8 +101,8 @@ decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                            TerminatorInst Class
 comment|//===----------------------------------------------------------------------===//
-comment|/// TerminatorInst - Subclasses of this class are all able to terminate a basic
-comment|/// block.  Thus, these are all the flow control type of operations.
+comment|/// Subclasses of this class are all able to terminate a basic
+comment|/// block. Thus, these are all the flow control type of operations.
 comment|///
 name|class
 name|TerminatorInst
@@ -201,19 +201,9 @@ argument_list|)
 operator|=
 literal|0
 block|;
-name|TerminatorInst
-operator|*
-name|clone_impl
-argument_list|()
-specifier|const
-name|override
-operator|=
-literal|0
-block|;
 name|public
 operator|:
-comment|/// getNumSuccessors - Return the number of successors that this terminator
-comment|/// has.
+comment|/// Return the number of successors that this terminator has.
 name|unsigned
 name|getNumSuccessors
 argument_list|()
@@ -224,8 +214,7 @@ name|getNumSuccessorsV
 argument_list|()
 return|;
 block|}
-comment|/// getSuccessor - Return the specified successor.
-comment|///
+comment|/// Return the specified successor.
 name|BasicBlock
 operator|*
 name|getSuccessor
@@ -241,8 +230,7 @@ name|idx
 argument_list|)
 return|;
 block|}
-comment|/// setSuccessor - Update the specified successor to point at the provided
-comment|/// block.
+comment|/// Update the specified successor to point at the provided block.
 name|void
 name|setSuccessor
 argument_list|(
@@ -643,7 +631,7 @@ argument_list|(
 name|Value
 argument_list|)
 block|;
-comment|/// Create() - Construct a binary instruction, given the opcode and the two
+comment|/// Construct a binary instruction, given the opcode and the two
 comment|/// operands.  Optionally (if InstBefore is specified) insert the instruction
 comment|/// into a BasicBlock right before the specified instruction.  The specified
 comment|/// Instruction is allowed to be a dereferenced end iterator.
@@ -664,7 +652,7 @@ argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
-comment|/// Create() - Construct a binary instruction, given the opcode and the two
+comment|/// Construct a binary instruction, given the opcode and the two
 comment|/// operands.  Also automatically insert this instruction to the end of the
 comment|/// BasicBlock specified.
 comment|///
@@ -684,7 +672,7 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
-comment|/// Create* - These methods just forward to Create, and are useful when you
+comment|/// These methods just forward to Create, and are useful when you
 comment|/// statically know what type of instruction you're going to create.  These
 comment|/// helpers just save some typing.
 define|#
@@ -1219,8 +1207,7 @@ name|DEFINE_HELPERS
 comment|/// Helper functions to construct and inspect unary operations (NEG and NOT)
 comment|/// via binary operators SUB and XOR:
 comment|///
-comment|/// CreateNeg, CreateNot - Create the NEG and NOT
-comment|///     instructions out of SUB and XOR instructions.
+comment|/// Create the NEG and NOT instructions out of SUB and XOR instructions.
 comment|///
 specifier|static
 name|BinaryOperator
@@ -1432,8 +1419,7 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 block|;
-comment|/// isNeg, isFNeg, isNot - Check if the given Value is a
-comment|/// NEG, FNeg, or NOT instruction.
+comment|/// Check if the given Value is a NEG, FNeg, or NOT instruction.
 comment|///
 specifier|static
 name|bool
@@ -1464,9 +1450,8 @@ operator|*
 name|V
 argument_list|)
 block|;
-comment|/// getNegArgument, getNotArgument - Helper functions to extract the
-comment|///     unary argument of a NEG, FNEG or NOT operation implemented via
-comment|///     Sub, FSub, or Xor.
+comment|/// Helper functions to extract the unary argument of a NEG, FNEG or NOT
+comment|/// operation implemented via Sub, FSub, or Xor.
 comment|///
 specifier|static
 specifier|const
@@ -1552,7 +1537,7 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// swapOperands - Exchange the two operands to this instruction.
+comment|/// Exchange the two operands to this instruction.
 comment|/// This instruction is safe to use on any binary instruction and
 comment|/// does not modify the semantics of the instruction.  If the instruction
 comment|/// cannot be reversed (ie, it's a Div), then return true.
@@ -1561,50 +1546,69 @@ name|bool
 name|swapOperands
 argument_list|()
 block|;
-comment|/// setHasNoUnsignedWrap - Set or clear the nsw flag on this instruction,
-comment|/// which must be an operator which supports this flag. See LangRef.html
-comment|/// for the meaning of this flag.
+comment|/// Set or clear the nsw flag on this instruction, which must be an operator
+comment|/// which supports this flag. See LangRef.html for the meaning of this flag.
 name|void
 name|setHasNoUnsignedWrap
 argument_list|(
 argument|bool b = true
 argument_list|)
 block|;
-comment|/// setHasNoSignedWrap - Set or clear the nsw flag on this instruction,
-comment|/// which must be an operator which supports this flag. See LangRef.html
-comment|/// for the meaning of this flag.
+comment|/// Set or clear the nsw flag on this instruction, which must be an operator
+comment|/// which supports this flag. See LangRef.html for the meaning of this flag.
 name|void
 name|setHasNoSignedWrap
 argument_list|(
 argument|bool b = true
 argument_list|)
 block|;
-comment|/// setIsExact - Set or clear the exact flag on this instruction,
-comment|/// which must be an operator which supports this flag. See LangRef.html
-comment|/// for the meaning of this flag.
+comment|/// Set or clear the exact flag on this instruction, which must be an operator
+comment|/// which supports this flag. See LangRef.html for the meaning of this flag.
 name|void
 name|setIsExact
 argument_list|(
 argument|bool b = true
 argument_list|)
 block|;
-comment|/// hasNoUnsignedWrap - Determine whether the no unsigned wrap flag is set.
+comment|/// Determine whether the no unsigned wrap flag is set.
 name|bool
 name|hasNoUnsignedWrap
 argument_list|()
 specifier|const
 block|;
-comment|/// hasNoSignedWrap - Determine whether the no signed wrap flag is set.
+comment|/// Determine whether the no signed wrap flag is set.
 name|bool
 name|hasNoSignedWrap
 argument_list|()
 specifier|const
 block|;
-comment|/// isExact - Determine whether the exact flag is set.
+comment|/// Determine whether the exact flag is set.
 name|bool
 name|isExact
 argument_list|()
 specifier|const
+block|;
+comment|/// Convenience method to copy supported wrapping, exact, and fast-math flags
+comment|/// from V to this instruction.
+name|void
+name|copyIRFlags
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+block|;
+comment|/// Logical 'and' of any supported wrapping, exact, and fast-math flags of
+comment|/// V and this instruction.
+name|void
+name|andIRFlags
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -1680,7 +1684,7 @@ argument_list|)
 comment|//===----------------------------------------------------------------------===//
 comment|//                               CastInst Class
 comment|//===----------------------------------------------------------------------===//
-comment|/// CastInst - This is the base class for all instructions that perform data
+comment|/// This is the base class for all instructions that perform data
 comment|/// casts. It is simply provided so that instruction category testing
 comment|/// can be performed with code like:
 comment|///
@@ -2082,6 +2086,43 @@ literal|0
 comment|///< Place to insert the instruction
 argument_list|)
 block|;
+comment|/// @brief Create a BitCast, a PtrToInt, or an IntToPTr cast instruction.
+comment|///
+comment|/// If the value is a pointer type and the destination an integer type,
+comment|/// creates a PtrToInt cast. If the value is an integer type and the
+comment|/// destination a pointer type, creates an IntToPtr cast. Otherwise, creates
+comment|/// a bitcast.
+specifier|static
+name|CastInst
+operator|*
+name|CreateBitOrPointerCast
+argument_list|(
+name|Value
+operator|*
+name|S
+argument_list|,
+comment|///< The pointer value to be casted (operand 0)
+name|Type
+operator|*
+name|Ty
+argument_list|,
+comment|///< The type to which cast should be made
+specifier|const
+name|Twine
+operator|&
+name|Name
+operator|=
+literal|""
+argument_list|,
+comment|///< Name for the instruction
+name|Instruction
+operator|*
+name|InsertBefore
+operator|=
+literal|0
+comment|///< Place to insert the instruction
+argument_list|)
+block|;
 comment|/// @brief Create a ZExt, BitCast, or Trunc for int -> int casts.
 specifier|static
 name|CastInst
@@ -2277,6 +2318,34 @@ name|Type
 operator|*
 name|DestTy
 comment|///< The Type to which the value should be cast.
+argument_list|)
+block|;
+comment|/// @brief Check whether a bitcast, inttoptr, or ptrtoint cast between these
+comment|/// types is valid and a no-op.
+comment|///
+comment|/// This ensures that any pointer<->integer cast has enough bits in the
+comment|/// integer and any other cast is a bitcast.
+specifier|static
+name|bool
+name|isBitOrNoopPointerCastable
+argument_list|(
+name|Type
+operator|*
+name|SrcTy
+argument_list|,
+comment|///< The Type from which the value should be cast.
+name|Type
+operator|*
+name|DestTy
+argument_list|,
+comment|///< The Type to which the value should be cast.
+specifier|const
+name|DataLayout
+operator|*
+name|Layout
+operator|=
+literal|0
+comment|///< Optional DataLayout.
 argument_list|)
 block|;
 comment|/// Returns the opcode necessary to cast Val into Ty using usual casting

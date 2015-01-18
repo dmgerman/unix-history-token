@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPU_INTRINSICINFO_H
+name|LLVM_LIB_TARGET_R600_AMDGPUINTRINSICINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPU_INTRINSICINFO_H
+name|LLVM_LIB_TARGET_R600_AMDGPUINTRINSICINFO_H
 end_define
 
 begin_include
@@ -120,11 +120,7 @@ block|{
 name|public
 operator|:
 name|AMDGPUIntrinsicInfo
-argument_list|(
-name|TargetMachine
-operator|*
-name|tm
-argument_list|)
+argument_list|()
 block|;
 name|std
 operator|::
@@ -187,10 +183,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDGPU_INTRINSICINFO_H
-end_comment
 
 end_unit
 

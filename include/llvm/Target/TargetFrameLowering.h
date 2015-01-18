@@ -393,6 +393,18 @@ name|MF
 argument_list|)
 decl|const
 block|{ }
+comment|/// Adjust the prologue to add an allocation at a fixed offset from the frame
+comment|/// pointer.
+name|virtual
+name|void
+name|adjustForFrameAllocatePrologue
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{ }
 comment|/// spillCalleeSavedRegisters - Issues instruction(s) to spill all callee
 comment|/// saved registers and returns true if it isn't possible / profitable to do
 comment|/// so by issuing a series of store instructions via
@@ -576,6 +588,37 @@ name|FrameReg
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Same as above, except that the 'base register' will always be RSP, not
+comment|/// RBP on x86.  This is used exclusively for lowering STATEPOINT nodes.
+comment|/// TODO: This should really be a parameterizable choice.
+name|virtual
+name|int
+name|getFrameIndexReferenceFromSP
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+name|int
+name|FI
+argument_list|,
+name|unsigned
+operator|&
+name|FrameReg
+argument_list|)
+decl|const
+block|{
+comment|// default to calling normal version, we override this on x86 only
+name|llvm_unreachable
+argument_list|(
+literal|"unimplemented for non-x86"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 comment|/// processFunctionBeforeCalleeSavedScan - This method is called immediately
 comment|/// before PrologEpilogInserter scans the physical registers used to determine
 comment|/// what callee saved registers should be spilled. This method is optional.

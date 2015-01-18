@@ -46,13 +46,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AArch64DISASSEMBLER_H
+name|LLVM_LIB_TARGET_AARCH64_DISASSEMBLER_AARCH64DISASSEMBLER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AArch64DISASSEMBLER_H
+name|LLVM_LIB_TARGET_AARCH64_DISASSEMBLER_AARCH64DISASSEMBLER_H
 end_define
 
 begin_include
@@ -105,23 +105,22 @@ operator|~
 name|AArch64Disassembler
 argument_list|()
 block|{}
-comment|/// getInstruction - See MCDisassembler.
 name|MCDisassembler
 operator|::
 name|DecodeStatus
 name|getInstruction
 argument_list|(
-argument|MCInst&instr
+argument|MCInst&Instr
 argument_list|,
-argument|uint64_t&size
+argument|uint64_t&Size
 argument_list|,
-argument|const MemoryObject&region
+argument|ArrayRef<uint8_t> Bytes
 argument_list|,
-argument|uint64_t address
+argument|uint64_t Address
 argument_list|,
-argument|raw_ostream&vStream
+argument|raw_ostream&VStream
 argument_list|,
-argument|raw_ostream&cStream
+argument|raw_ostream&CStream
 argument_list|)
 specifier|const
 name|override

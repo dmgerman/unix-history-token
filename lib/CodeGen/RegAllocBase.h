@@ -142,13 +142,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_REGALLOCBASE
+name|LLVM_LIB_CODEGEN_REGALLOCBASE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_REGALLOCBASE
+name|LLVM_LIB_CODEGEN_REGALLOCBASE_H
 end_define
 
 begin_include
@@ -345,6 +345,16 @@ name|char
 name|TimerGroupName
 index|[]
 decl_stmt|;
+comment|/// Method called when the allocator is about to remove a LiveInterval.
+name|virtual
+name|void
+name|aboutToRemoveInterval
+parameter_list|(
+name|LiveInterval
+modifier|&
+name|LI
+parameter_list|)
+block|{}
 name|public
 label|:
 comment|/// VerifyEnabled - True when -verify-regalloc is given.
@@ -371,10 +381,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// !defined(LLVM_CODEGEN_REGALLOCBASE)
-end_comment
 
 end_unit
 

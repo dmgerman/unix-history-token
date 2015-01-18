@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPSSEREGISTERINFO_H
+name|LLVM_LIB_TARGET_MIPS_MIPSSEREGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPSSEREGISTERINFO_H
+name|LLVM_LIB_TARGET_MIPS_MIPSSEREGISTERINFO_H
 end_define
 
 begin_include

@@ -1324,6 +1324,29 @@ condition|(
 name|isSmall
 argument_list|()
 condition|)
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|<=
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|uintptr_t
+operator|>
+operator|::
+name|digits
+operator|)
+operator|&&
+literal|"undefined behavior"
+argument_list|)
+expr_stmt|;
 name|setSmallBits
 argument_list|(
 name|getSmallBits
@@ -1339,6 +1362,7 @@ name|Idx
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|getPointer
 argument_list|()

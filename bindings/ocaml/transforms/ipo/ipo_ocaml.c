@@ -172,30 +172,6 @@ end_comment
 begin_function
 name|CAMLprim
 name|value
-name|llvm_add_always_inliner_pass
-parameter_list|(
-name|LLVMPassManagerRef
-name|PM
-parameter_list|)
-block|{
-name|LLVMAddAlwaysInlinerPass
-argument_list|(
-name|PM
-argument_list|)
-expr_stmt|;
-return|return
-name|Val_unit
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* [`Module] Llvm.PassManager.t -> unit */
-end_comment
-
-begin_function
-name|CAMLprim
-name|value
 name|llvm_add_global_dce
 parameter_list|(
 name|LLVMPassManagerRef
@@ -244,7 +220,7 @@ end_comment
 begin_function
 name|CAMLprim
 name|value
-name|llvm_add_ipc_propagation
+name|llvm_add_ip_constant_propagation
 parameter_list|(
 name|LLVMPassManagerRef
 name|PM
@@ -310,7 +286,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* [`Module] Llvm.PassManager.t -> bool -> unit */
+comment|/* [`Module] Llvm.PassManager.t -> all_but_main:bool -> unit */
 end_comment
 
 begin_function

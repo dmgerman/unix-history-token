@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SPARCREGISTERINFO_H
+name|LLVM_LIB_TARGET_SPARC_SPARCREGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SPARCREGISTERINFO_H
+name|LLVM_LIB_TARGET_SPARC_SPARCREGISTERINFO_H
 end_define
 
 begin_include

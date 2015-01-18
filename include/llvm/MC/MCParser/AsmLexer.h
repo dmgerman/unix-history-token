@@ -182,7 +182,10 @@ block|;
 name|bool
 name|isAtStartOfComment
 argument_list|(
-argument|char Char
+specifier|const
+name|char
+operator|*
+name|Ptr
 argument_list|)
 block|;
 name|bool

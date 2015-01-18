@@ -80,11 +80,23 @@ block|,
 comment|/// void operator delete[](void*, nothrow);
 name|ZdaPvRKSt9nothrow_t
 block|,
+comment|/// void operator delete[](void*, unsigned int);
+name|ZdaPvj
+block|,
+comment|/// void operator delete[](void*, unsigned long);
+name|ZdaPvm
+block|,
 comment|/// void operator delete(void*);
 name|ZdlPv
 block|,
 comment|/// void operator delete(void*, nothrow);
 name|ZdlPvRKSt9nothrow_t
+block|,
+comment|/// void operator delete(void*, unsigned int);
+name|ZdlPvj
+block|,
+comment|/// void operator delete(void*, unsigned long);
+name|ZdlPvm
 block|,
 comment|/// void *new[](unsigned int);
 name|Znaj
@@ -138,6 +150,13 @@ block|,
 comment|/// void *__memcpy_chk(void *s1, const void *s2, size_t n, size_t s1size);
 name|memcpy_chk
 block|,
+comment|/// void *__memmove_chk(void *s1, const void *s2, size_t n,
+comment|///                     size_t s1size);
+name|memmove_chk
+block|,
+comment|/// void *__memset_chk(void *s, char v, size_t n, size_t s1size);
+name|memset_chk
+block|,
 comment|/// double __sincospi_stret(double x);
 name|sincospi_stret
 block|,
@@ -159,8 +178,22 @@ block|,
 comment|/// long double __sqrt_finite(long double x);
 name|sqrtl_finite
 block|,
+comment|/// char *__stpcpy_chk(char *s1, const char *s2, size_t s1size);
+name|stpcpy_chk
+block|,
+comment|/// char *__stpncpy_chk(char *s1, const char *s2, size_t n,
+comment|///                     size_t s1size);
+name|stpncpy_chk
+block|,
+comment|/// char *__strcpy_chk(char *s1, const char *s2, size_t s1size);
+name|strcpy_chk
+block|,
 comment|/// char * __strdup(const char *s);
 name|dunder_strdup
+block|,
+comment|/// char *__strncpy_chk(char *s1, const char *s2, size_t n,
+comment|///                     size_t s1size);
+name|strncpy_chk
 block|,
 comment|/// char *__strndup(const char *s, size_t n);
 name|dunder_strndup

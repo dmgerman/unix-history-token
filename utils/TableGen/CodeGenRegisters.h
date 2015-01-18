@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CODEGEN_REGISTERS_H
+name|LLVM_UTILS_TABLEGEN_CODEGENREGISTERS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CODEGEN_REGISTERS_H
+name|LLVM_UTILS_TABLEGEN_CODEGENREGISTERS_H
 end_define
 
 begin_include
@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<list>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -141,6 +147,12 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<deque>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -148,6 +160,66 @@ block|{
 name|class
 name|CodeGenRegBank
 decl_stmt|;
+comment|/// Used to encode a step in a register lane mask transformation.
+comment|/// Mask the bits specified in Mask, then rotate them Rol bits to the left
+comment|/// assuming a wraparound at 32bits.
+struct|struct
+name|MaskRolPair
+block|{
+name|unsigned
+name|Mask
+decl_stmt|;
+name|uint8_t
+name|RotateLeft
+decl_stmt|;
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|MaskRolPair
+name|Other
+operator|)
+block|{
+return|return
+name|Mask
+operator|==
+name|Other
+operator|.
+name|Mask
+operator|&&
+name|RotateLeft
+operator|==
+name|Other
+operator|.
+name|RotateLeft
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|MaskRolPair
+name|Other
+operator|)
+block|{
+return|return
+name|Mask
+operator|!=
+name|Other
+operator|.
+name|Mask
+operator|||
+name|RotateLeft
+operator|!=
+name|Other
+operator|.
+name|RotateLeft
+return|;
+block|}
+block|}
+struct|;
 comment|/// CodeGenSubRegIndex - Represents a sub-register index.
 name|class
 name|CodeGenSubRegIndex
@@ -179,9 +251,19 @@ specifier|const
 name|unsigned
 name|EnumValue
 decl_stmt|;
+name|mutable
 name|unsigned
 name|LaneMask
 decl_stmt|;
+name|mutable
+name|SmallVector
+operator|<
+name|MaskRolPair
+operator|,
+literal|1
+operator|>
+name|CompositionLaneMaskTransform
+expr_stmt|;
 comment|// Are all super-registers containing this SubRegIndex covered by their
 comment|// sub-registers?
 name|bool
@@ -483,8 +565,9 @@ block|}
 comment|// Compute LaneMask from Composed. Return LaneMask.
 name|unsigned
 name|computeLaneMask
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 name|CompMap
@@ -717,6 +800,15 @@ literal|16
 operator|>
 name|RegUnitList
 expr_stmt|;
+typedef|typedef
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|16
+operator|>
+name|RegUnitLaneMaskList
+expr_stmt|;
 comment|// How many entries in RegUnitList are native?
 name|unsigned
 name|NumNativeRegUnits
@@ -732,6 +824,28 @@ specifier|const
 block|{
 return|return
 name|RegUnits
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|getRegUnitLaneMasks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|makeArrayRef
+argument_list|(
+name|RegUnitLaneMasks
+argument_list|)
+operator|.
+name|slice
+argument_list|(
+literal|0
+argument_list|,
+name|NumNativeRegUnits
+argument_list|)
 return|;
 block|}
 comment|// Get the native register units. This is a prefix of getRegUnits().
@@ -756,6 +870,20 @@ argument_list|,
 name|NumNativeRegUnits
 argument_list|)
 return|;
+block|}
+name|void
+name|setRegUnitLaneMasks
+parameter_list|(
+specifier|const
+name|RegUnitLaneMaskList
+modifier|&
+name|LaneMasks
+parameter_list|)
+block|{
+name|RegUnitLaneMasks
+operator|=
+name|LaneMasks
+expr_stmt|;
 block|}
 comment|// Inherit register units from subregisters.
 comment|// Return true if the RegUnits changed.
@@ -912,6 +1040,9 @@ expr_stmt|;
 name|RegUnitList
 name|RegUnits
 decl_stmt|;
+name|RegUnitLaneMaskList
+name|RegUnitLaneMasks
+decl_stmt|;
 block|}
 struct|;
 name|class
@@ -974,6 +1105,7 @@ comment|// Map SubRegIndex -> sub-class.  This is the largest sub-class where al
 comment|// registers have a SubRegIndex sub-register.
 name|DenseMap
 operator|<
+specifier|const
 name|CodeGenSubRegIndex
 operator|*
 operator|,
@@ -989,6 +1121,7 @@ comment|//   R:SubRegIndex in this RC for all R in SuperRC.
 comment|//
 name|DenseMap
 operator|<
+specifier|const
 name|CodeGenSubRegIndex
 operator|*
 operator|,
@@ -998,8 +1131,7 @@ name|CodeGenRegisterClass
 operator|*
 operator|,
 literal|8
-operator|>
-expr|>
+operator|>>
 name|SuperRegClasses
 expr_stmt|;
 comment|// Bit vector of TopoSigs for the registers in this class. This will be
@@ -1044,6 +1176,10 @@ operator|::
 name|string
 name|AltOrderSelect
 expr_stmt|;
+comment|/// Contains the combination of the lane masks of all subregisters.
+name|unsigned
+name|LaneMask
+decl_stmt|;
 comment|// Return the Record that defined this class, or NULL if the class was
 comment|// created by TableGen.
 name|Record
@@ -1178,6 +1314,7 @@ name|CodeGenRegisterClass
 modifier|*
 name|getSubClassWithSubReg
 argument_list|(
+specifier|const
 name|CodeGenSubRegIndex
 operator|*
 name|SubIdx
@@ -1196,6 +1333,7 @@ block|}
 name|void
 name|setSubClassWithSubReg
 parameter_list|(
+specifier|const
 name|CodeGenSubRegIndex
 modifier|*
 name|SubIdx
@@ -1218,6 +1356,7 @@ comment|// containing only SubIdx super-registers of this class.
 name|void
 name|getSuperRegClasses
 argument_list|(
+specifier|const
 name|CodeGenSubRegIndex
 operator|*
 name|SubIdx
@@ -1702,13 +1841,11 @@ block|{
 name|SetTheory
 name|Sets
 decl_stmt|;
-comment|// SubRegIndices.
 name|std
 operator|::
-name|vector
+name|deque
 operator|<
 name|CodeGenSubRegIndex
-operator|*
 operator|>
 name|SubRegIndices
 expr_stmt|;
@@ -1757,10 +1894,9 @@ decl_stmt|;
 comment|// Registers.
 name|std
 operator|::
-name|vector
+name|deque
 operator|<
 name|CodeGenRegister
-operator|*
 operator|>
 name|Registers
 expr_stmt|;
@@ -1806,10 +1942,9 @@ expr_stmt|;
 comment|// Register classes.
 name|std
 operator|::
-name|vector
+name|list
 operator|<
 name|CodeGenRegisterClass
-operator|*
 operator|>
 name|RegClasses
 expr_stmt|;
@@ -1935,13 +2070,37 @@ parameter_list|(
 name|CodeGenRegisterClass
 modifier|*
 name|RC
-parameter_list|,
-name|unsigned
-name|FirstSubRegRC
-init|=
-literal|0
 parameter_list|)
-function_decl|;
+block|{
+name|inferMatchingSuperRegClass
+argument_list|(
+name|RC
+argument_list|,
+name|RegClasses
+operator|.
+name|begin
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|inferMatchingSuperRegClass
+argument_list|(
+name|CodeGenRegisterClass
+operator|*
+name|RC
+argument_list|,
+name|std
+operator|::
+name|list
+operator|<
+name|CodeGenRegisterClass
+operator|>
+operator|::
+name|iterator
+name|FirstSubRegRC
+argument_list|)
+decl_stmt|;
 comment|// Iteratively prune unit sets.
 name|void
 name|pruneUnitSets
@@ -1964,7 +2123,13 @@ parameter_list|()
 function_decl|;
 comment|// Compute a lane mask for each sub-register index.
 name|void
-name|computeSubRegIndexLaneMasks
+name|computeSubRegLaneMasks
+parameter_list|()
+function_decl|;
+comment|/// Computes a lane mask for each register unit enumerated by a physical
+comment|/// register.
+name|void
+name|computeRegUnitLaneMasks
 parameter_list|()
 function_decl|;
 name|public
@@ -1987,13 +2152,17 @@ block|}
 comment|// Sub-register indices. The first NumNamedIndices are defined by the user
 comment|// in the .td files. The rest are synthesized such that all sub-registers
 comment|// have a unique name.
-name|ArrayRef
+specifier|const
+name|std
+operator|::
+name|deque
 operator|<
 name|CodeGenSubRegIndex
-operator|*
 operator|>
+operator|&
 name|getSubRegIndices
 argument_list|()
+specifier|const
 block|{
 return|return
 name|SubRegIndices
@@ -2076,10 +2245,9 @@ block|}
 specifier|const
 name|std
 operator|::
-name|vector
+name|deque
 operator|<
 name|CodeGenRegister
-operator|*
 operator|>
 operator|&
 name|getRegisters
@@ -2337,11 +2505,28 @@ name|RUID
 index|]
 return|;
 block|}
-name|ArrayRef
+name|std
+operator|::
+name|list
 operator|<
 name|CodeGenRegisterClass
-operator|*
 operator|>
+operator|&
+name|getRegClasses
+argument_list|()
+block|{
+return|return
+name|RegClasses
+return|;
+block|}
+specifier|const
+name|std
+operator|::
+name|list
+operator|<
+name|CodeGenRegisterClass
+operator|>
+operator|&
 name|getRegClasses
 argument_list|()
 specifier|const

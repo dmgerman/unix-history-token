@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_ERROR_OR_H
+name|LLVM_SUPPORT_ERROROR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_ERROR_OR_H
+name|LLVM_SUPPORT_ERROROR_H
 end_define
 
 begin_include
@@ -270,9 +270,9 @@ comment|///   buffer->write("adena");
 comment|/// \endcode
 comment|///
 comment|///
-comment|/// An implicit conversion to bool provides a way to check if there was an
-comment|/// error. The unary * and -> operators provide pointer like access to the
-comment|/// value. Accessing the value when there is an error has undefined behavior.
+comment|/// Implicit conversion to bool returns true if there is a usable value. The
+comment|/// unary * and -> operators provide pointer like access to the value. Accessing
+comment|/// the value when there is an error has undefined behavior.
 comment|///
 comment|/// When T is a reference type the behaivor is slightly different. The reference
 comment|/// is held in a std::reference_wrapper<std::remove_reference<T>::type>, and
@@ -486,6 +486,10 @@ operator|>
 name|ErrorOr
 argument_list|(
 argument|const ErrorOr<OtherT>&Other
+argument_list|,
+argument|typename std::enable_if<std::is_convertible<OtherT
+argument_list|,
+argument|T>::value>::type * =           nullptr
 argument_list|)
 block|{
 name|copyConstruct
@@ -493,56 +497,26 @@ argument_list|(
 name|Other
 argument_list|)
 block|;   }
-name|ErrorOr
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|ErrorOr
-operator|&
-name|Other
-operator|)
-block|{
-name|copyAssign
-argument_list|(
-name|Other
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 name|template
 operator|<
 name|class
 name|OtherT
 operator|>
+name|explicit
 name|ErrorOr
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|ErrorOr
-operator|<
-name|OtherT
-operator|>
-operator|&
-name|Other
-operator|)
+argument_list|(
+argument|const ErrorOr<OtherT>&Other
+argument_list|,
+argument|typename std::enable_if<           !std::is_convertible<OtherT
+argument_list|,
+argument|const T&>::value>::type * = nullptr
+argument_list|)
 block|{
-name|copyAssign
+name|copyConstruct
 argument_list|(
 name|Other
 argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
+block|;   }
 name|ErrorOr
 argument_list|(
 argument|ErrorOr&&Other
@@ -557,8 +531,7 @@ argument_list|(
 name|Other
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|template
 operator|<
 name|class
@@ -567,6 +540,37 @@ operator|>
 name|ErrorOr
 argument_list|(
 argument|ErrorOr<OtherT>&&Other
+argument_list|,
+argument|typename std::enable_if<std::is_convertible<OtherT
+argument_list|,
+argument|T>::value>::type * =           nullptr
+argument_list|)
+block|{
+name|moveConstruct
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Other
+argument_list|)
+argument_list|)
+block|;   }
+comment|// This might eventually need SFINAE but it's more complex than is_convertible
+comment|//& I'm too lazy to write it right now.
+name|template
+operator|<
+name|class
+name|OtherT
+operator|>
+name|explicit
+name|ErrorOr
+argument_list|(
+argument|ErrorOr<OtherT>&&Other
+argument_list|,
+argument|typename std::enable_if<!std::is_convertible<OtherT
+argument_list|,
+argument|T>::value>::type * =           nullptr
 argument_list|)
 block|{
 name|moveConstruct
@@ -584,19 +588,15 @@ operator|&
 name|operator
 operator|=
 operator|(
+specifier|const
 name|ErrorOr
-operator|&&
+operator|&
 name|Other
 operator|)
 block|{
-name|moveAssign
-argument_list|(
-name|std
-operator|::
-name|move
+name|copyAssign
 argument_list|(
 name|Other
-argument_list|)
 argument_list|)
 block|;
 return|return
@@ -604,20 +604,12 @@ operator|*
 name|this
 return|;
 block|}
-name|template
-operator|<
-name|class
-name|OtherT
-operator|>
 name|ErrorOr
-operator|&
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 name|ErrorOr
-operator|<
-name|OtherT
-operator|>
 operator|&&
 name|Other
 operator|)
@@ -688,7 +680,8 @@ name|ErrorOr
 operator|<
 name|T
 operator|>
-expr|>
+operator|*
+operator|>
 operator|(
 name|this
 operator|)

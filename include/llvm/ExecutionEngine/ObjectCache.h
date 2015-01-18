@@ -82,36 +82,33 @@ name|virtual
 name|void
 name|notifyObjectCompiled
 argument_list|(
-specifier|const
-name|Module
-operator|*
-name|M
+argument|const Module *M
 argument_list|,
-specifier|const
-name|MemoryBuffer
-operator|*
-name|Obj
+argument|MemoryBufferRef Obj
 argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-comment|/// getObjectCopy - Returns a pointer to a newly allocated MemoryBuffer that
-comment|/// contains the object which corresponds with Module M, or 0 if an object is
-comment|/// not available. The caller owns both the MemoryBuffer returned by this
-comment|/// and the memory it references.
+comment|/// Returns a pointer to a newly allocated MemoryBuffer that contains the
+comment|/// object which corresponds with Module M, or 0 if an object is not
+comment|/// available.
 name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MemoryBuffer
-modifier|*
+operator|>
 name|getObject
-parameter_list|(
+argument_list|(
 specifier|const
 name|Module
-modifier|*
+operator|*
 name|M
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}
