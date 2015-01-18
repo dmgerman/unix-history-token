@@ -549,6 +549,17 @@ name|EXC_DTRACE
 value|0x7c810808
 end_define
 
+begin_comment
+comment|/* Magic pointer to store TOC base for trap handlers on ppc64 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRAP_TOCBASE
+value|0x1f8
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
