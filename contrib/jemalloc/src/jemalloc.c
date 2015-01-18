@@ -7759,6 +7759,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|_malloc_first_thread
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|malloc_mutex_first_thread
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/******************************************************************************/
 end_comment

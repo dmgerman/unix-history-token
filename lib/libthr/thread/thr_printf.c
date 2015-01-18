@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"libc_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"thr_private.h"
 end_include
 
