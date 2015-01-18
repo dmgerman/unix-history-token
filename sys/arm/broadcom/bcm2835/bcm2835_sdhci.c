@@ -1939,6 +1939,7 @@ operator|=
 name|val32
 expr_stmt|;
 else|else
+block|{
 name|WR4
 argument_list|(
 name|sc
@@ -1951,6 +1952,19 @@ argument_list|,
 name|val32
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|off
+operator|==
+name|SDHCI_COMMAND_FLAGS
+condition|)
+name|sc
+operator|->
+name|cmd_and_mode
+operator|=
+name|val32
+expr_stmt|;
+block|}
 block|}
 end_function
 
