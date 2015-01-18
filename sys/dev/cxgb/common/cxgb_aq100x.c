@@ -1376,7 +1376,7 @@ name|phy
 parameter_list|,
 name|int
 modifier|*
-name|link_ok
+name|link_state
 parameter_list|,
 name|int
 modifier|*
@@ -1814,12 +1814,16 @@ name|done
 label|:
 if|if
 condition|(
-name|link_ok
+name|link_state
 condition|)
 operator|*
-name|link_ok
+name|link_state
 operator|=
 name|link
+condition|?
+name|PHY_LINK_UP
+else|:
+name|PHY_LINK_DOWN
 expr_stmt|;
 return|return
 operator|(
