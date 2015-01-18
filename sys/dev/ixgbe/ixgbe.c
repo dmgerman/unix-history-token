@@ -40,7 +40,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet/in_rss.h>
+file|<net/rss_config.h>
 end_include
 
 begin_endif

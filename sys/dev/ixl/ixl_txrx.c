@@ -6283,13 +6283,14 @@ name|u8
 name|ex
 init|=
 literal|0
+decl_stmt|;
 name|decoded
 operator|=
 name|decode_rx_desc_ptype
 argument_list|(
 name|ptype
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|ex
 operator|=
 name|decoded

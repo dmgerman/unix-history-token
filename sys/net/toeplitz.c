@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_rss.h>
+file|<net/rss_config.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/toeplitz.h>
+file|<net/toeplitz.h>
 end_include
 
 begin_include
