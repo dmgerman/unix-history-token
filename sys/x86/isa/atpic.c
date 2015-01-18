@@ -166,6 +166,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|DEV_MCA
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<i386/bios/mca_machdep.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__amd64__
 end_ifdef
 
