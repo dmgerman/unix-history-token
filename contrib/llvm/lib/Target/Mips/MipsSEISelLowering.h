@@ -189,11 +189,11 @@ operator|:
 name|bool
 name|isEligibleForTailCallOptimization
 argument_list|(
-argument|const MipsCC&MipsCCInfo
+argument|const CCState&CCInfo
 argument_list|,
 argument|unsigned NextStackOffset
 argument_list|,
-argument|const MipsFunctionInfo& FI
+argument|const MipsFunctionInfo&FI
 argument_list|)
 specifier|const
 name|override

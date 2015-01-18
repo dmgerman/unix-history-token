@@ -1871,7 +1871,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.5.0"
+value|"LLVM 3.5.1"
 end_define
 
 begin_comment
@@ -1893,7 +1893,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.5.0"
+value|"3.5.1"
 end_define
 
 begin_comment

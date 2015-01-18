@@ -142,7 +142,19 @@ name|FPExt
 block|,
 comment|// The floating-point value is fp-extended in the location.
 name|Indirect
+block|,
 comment|// The location contains pointer to the value.
+name|SExtUpper
+block|,
+comment|// The value is in the upper bits of the location and should be
+comment|// sign extended when retrieved.
+name|ZExtUpper
+block|,
+comment|// The value is in the upper bits of the location and should be
+comment|// zero extended when retrieved.
+name|AExtUpper
+comment|// The value is in the upper bits of the location and should be
+comment|// extended with undefined upper bits when retrieved.
 comment|// TODO: a subset of the value is in the location.
 block|}
 enum|;
@@ -599,6 +611,25 @@ name|ZExt
 operator|)
 return|;
 block|}
+name|bool
+name|isUpperBitsInLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HTP
+operator|==
+name|AExtUpper
+operator|||
+name|HTP
+operator|==
+name|SExtUpper
+operator|||
+name|HTP
+operator|==
+name|ZExtUpper
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// CCAssignFn - This function assigns a location for Val, updating State to
@@ -766,10 +797,10 @@ comment|// ByValRegs vector size still would be 2,
 comment|// while "%t" goes to the stack: it wouldn't be described in ByValRegs.
 comment|//
 comment|// Supposed use-case for this collection:
-comment|// 1. Initially ByValRegs is empty, InRegsParamsProceed is 0.
+comment|// 1. Initially ByValRegs is empty, InRegsParamsProcessed is 0.
 comment|// 2. HandleByVal fillups ByValRegs.
 comment|// 3. Argument analysis (LowerFormatArguments, for example). After
-comment|// some byval argument was analyzed, InRegsParamsProceed is increased.
+comment|// some byval argument was analyzed, InRegsParamsProcessed is increased.
 struct|struct
 name|ByValInfo
 block|{
@@ -822,10 +853,10 @@ literal|4
 operator|>
 name|ByValRegs
 expr_stmt|;
-comment|// InRegsParamsProceed - shows how many instances of ByValRegs was proceed
+comment|// InRegsParamsProcessed - shows how many instances of ByValRegs was proceed
 comment|// during argument analysis.
 name|unsigned
-name|InRegsParamsProceed
+name|InRegsParamsProcessed
 decl_stmt|;
 name|protected
 label|:
@@ -1640,12 +1671,12 @@ return|;
 block|}
 comment|// Returns count of byval in-regs arguments proceed.
 name|unsigned
-name|getInRegsParamsProceed
+name|getInRegsParamsProcessed
 argument_list|()
 specifier|const
 block|{
 return|return
-name|InRegsParamsProceed
+name|InRegsParamsProcessed
 return|;
 block|}
 comment|// Get information about N-th byval parameter that is stored in registers.
@@ -1742,15 +1773,15 @@ argument_list|()
 decl_stmt|;
 if|if
 condition|(
-name|InRegsParamsProceed
+name|InRegsParamsProcessed
 operator|<
 name|e
 condition|)
 operator|++
-name|InRegsParamsProceed
+name|InRegsParamsProcessed
 expr_stmt|;
 return|return
-name|InRegsParamsProceed
+name|InRegsParamsProcessed
 operator|<
 name|e
 return|;
@@ -1760,7 +1791,7 @@ name|void
 name|clearByValRegsInfo
 parameter_list|()
 block|{
-name|InRegsParamsProceed
+name|InRegsParamsProcessed
 operator|=
 literal|0
 expr_stmt|;
@@ -1775,7 +1806,7 @@ name|void
 name|rewindByValRegsInfo
 parameter_list|()
 block|{
-name|InRegsParamsProceed
+name|InRegsParamsProcessed
 operator|=
 literal|0
 expr_stmt|;
