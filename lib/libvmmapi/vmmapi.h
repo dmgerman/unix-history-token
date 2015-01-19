@@ -1159,6 +1159,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|vm_copy_teardown
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|vcpu
+parameter_list|,
+name|struct
+name|iovec
+modifier|*
+name|iov
+parameter_list|,
+name|int
+name|iovcnt
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* RTC */
 end_comment
