@@ -9,10 +9,6 @@ directive|include
 file|<linux/kmod.h>
 end_include
 
-begin_comment
-comment|/*   * kmod.h must be included before module.h since it includes (indirectly) sys/module.h  * To use the FBSD macro sys/module.h should define MODULE_VERSION before linux/module does. */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -20411,12 +20407,6 @@ name|mlx4_cleanup
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
 
 begin_function
 specifier|static
