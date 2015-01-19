@@ -202,6 +202,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
+name|cpu_maxphyaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
 name|cyrix_did
 decl_stmt|;
 end_decl_stmt
