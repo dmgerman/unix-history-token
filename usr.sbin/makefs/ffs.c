@@ -776,7 +776,7 @@ literal|"minfree"
 block|}
 block|,
 block|{
-literal|"maxbpf"
+literal|"maxbpg"
 block|,
 operator|&
 name|ffs_opts
