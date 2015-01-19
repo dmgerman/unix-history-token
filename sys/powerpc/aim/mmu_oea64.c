@@ -566,13 +566,6 @@ begin_comment
 comment|/* zone for pvo entries for managed pages */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BPVO_POOL_SIZE
-value|327680
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -590,6 +583,26 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|moea64_bpvo_pool_size
+init|=
+literal|327680
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.moea64_bpvo_pool_size"
+argument_list|,
+operator|&
+name|moea64_bpvo_pool_size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -3249,7 +3262,7 @@ argument_list|)
 expr_stmt|;
 name|size
 operator|=
-name|BPVO_POOL_SIZE
+name|moea64_bpvo_pool_size
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4029,7 +4042,7 @@ operator|*
 operator|)
 name|moea64_bootstrap_alloc
 argument_list|(
-name|BPVO_POOL_SIZE
+name|moea64_bpvo_pool_size
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -10626,7 +10639,7 @@ if|if
 condition|(
 name|moea64_bpvo_pool_index
 operator|>=
-name|BPVO_POOL_SIZE
+name|moea64_bpvo_pool_size
 condition|)
 block|{
 name|panic
@@ -10635,9 +10648,9 @@ literal|"moea64_enter: bpvo pool exhausted, %d, %d, %zd"
 argument_list|,
 name|moea64_bpvo_pool_index
 argument_list|,
-name|BPVO_POOL_SIZE
+name|moea64_bpvo_pool_size
 argument_list|,
-name|BPVO_POOL_SIZE
+name|moea64_bpvo_pool_size
 operator|*
 sizeof|sizeof
 argument_list|(
