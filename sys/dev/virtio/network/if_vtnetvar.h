@@ -438,8 +438,12 @@ name|VTNET_FLAG_MULTIQ
 value|0x0200
 define|#
 directive|define
-name|VTNET_FLAG_EVENT_IDX
+name|VTNET_FLAG_INDIRECT
 value|0x0400
+define|#
+directive|define
+name|VTNET_FLAG_EVENT_IDX
+value|0x0800
 name|int
 name|vtnet_link_active
 decl_stmt|;
