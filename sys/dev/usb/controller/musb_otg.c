@@ -1647,7 +1647,7 @@ expr_stmt|;
 comment|/* wait for interrupt */
 name|DPRINTFN
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"CSR0 DATAEND\n"
 argument_list|)
@@ -1735,7 +1735,7 @@ condition|)
 block|{
 name|DPRINTFN
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"EP0 BUSY\n"
 argument_list|)
@@ -1758,13 +1758,6 @@ goto|goto
 name|not_complete
 goto|;
 block|}
-comment|/* clear did stall flag */
-name|td
-operator|->
-name|did_stall
-operator|=
-literal|0
-expr_stmt|;
 comment|/* get the packet byte count */
 name|count
 operator|=
@@ -1787,7 +1780,7 @@ condition|)
 block|{
 name|DPRINTFN
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Invalid SETUP packet "
 literal|"length, %d bytes\n"
@@ -1803,6 +1796,13 @@ name|MUSB2_REG_TXCSRL
 argument_list|,
 name|MUSB2_MASK_CSR0L_RXPKTRDY_CLR
 argument_list|)
+expr_stmt|;
+comment|/* don't clear stall */
+name|td
+operator|->
+name|did_stall
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|not_complete
@@ -1820,7 +1820,7 @@ condition|)
 block|{
 name|DPRINTFN
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Unsupported SETUP packet "
 literal|"length, %d bytes\n"
@@ -1837,10 +1837,24 @@ argument_list|,
 name|MUSB2_MASK_CSR0L_RXPKTRDY_CLR
 argument_list|)
 expr_stmt|;
+comment|/* don't clear stall */
+name|td
+operator|->
+name|did_stall
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|not_complete
 goto|;
 block|}
+comment|/* clear did stall flag */
+name|td
+operator|->
+name|did_stall
+operator|=
+literal|0
+expr_stmt|;
 comment|/* receive data */
 name|bus_space_read_multi_1
 argument_list|(
