@@ -74,6 +74,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|kvmalloc
+parameter_list|(
+name|size
+parameter_list|)
+value|kmalloc((size), 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|kzalloc
 parameter_list|(
 name|size
@@ -149,6 +159,16 @@ begin_define
 define|#
 directive|define
 name|vfree
+parameter_list|(
+name|arg
+parameter_list|)
+value|kfree(arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kvfree
 parameter_list|(
 name|arg
 parameter_list|)

@@ -1298,6 +1298,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|__set_bit
+parameter_list|(
+name|i
+parameter_list|,
+name|a
+parameter_list|)
+define|\
+value|atomic_set_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< ((i) % NBLONG))
+end_define
+
+begin_define
+define|#
+directive|define
 name|set_bit
 parameter_list|(
 name|i
@@ -1306,6 +1319,19 @@ name|a
 parameter_list|)
 define|\
 value|atomic_set_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< ((i) % NBLONG))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__clear_bit
+parameter_list|(
+name|i
+parameter_list|,
+name|a
+parameter_list|)
+define|\
+value|atomic_clear_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< ((i) % NBLONG))
 end_define
 
 begin_define
