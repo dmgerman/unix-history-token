@@ -19,6 +19,12 @@ directive|define
 name|_USB_BUS_H_
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|usb_fs_privdata
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * The following structure defines the USB explore message sent to the USB  * explore process.  */
 end_comment
@@ -185,6 +191,25 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|USB_HAVE_UGEN
+name|struct
+name|usb_bus_msg
+name|cleanup_msg
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|usb_fs_privdata
+argument_list|)
+name|pd_cleanup_list
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * This mutex protects the USB hardware: 	 */
 name|struct
 name|mtx
@@ -287,6 +312,10 @@ name|uint8_t
 name|no_explore
 decl_stmt|;
 comment|/* don't explore USB ports */
+name|uint8_t
+name|dma_bits
+decl_stmt|;
+comment|/* number of DMA address lines */
 block|}
 struct|;
 end_struct

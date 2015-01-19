@@ -3180,13 +3180,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|tlb_flush
-value|cpu_tlb_flushID
-end_define
-
-begin_define
-define|#
-directive|define
 name|setttb
 value|cpu_setttb
 end_define

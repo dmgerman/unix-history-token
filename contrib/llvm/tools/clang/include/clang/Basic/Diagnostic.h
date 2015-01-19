@@ -102,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/type_traits.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -122,10 +122,16 @@ name|namespace
 name|clang
 block|{
 name|class
-name|DiagnosticConsumer
+name|DeclContext
 decl_stmt|;
 name|class
 name|DiagnosticBuilder
+decl_stmt|;
+name|class
+name|DiagnosticConsumer
+decl_stmt|;
+name|class
+name|DiagnosticErrorTrap
 decl_stmt|;
 name|class
 name|DiagnosticOptions
@@ -134,20 +140,24 @@ name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
-name|DeclContext
-decl_stmt|;
-name|class
 name|LangOptions
 decl_stmt|;
 name|class
 name|Preprocessor
 decl_stmt|;
 name|class
-name|DiagnosticErrorTrap
-decl_stmt|;
-name|class
 name|StoredDiagnostic
 decl_stmt|;
+name|namespace
+name|tok
+block|{
+enum_decl|enum
+name|TokenKind
+enum_decl|:
+name|unsigned
+name|short
+enum_decl|;
+block|}
 comment|/// \brief Annotates a diagnostic with some code that should be
 comment|/// inserted, removed, or replaced to fix the problem.
 comment|///
@@ -422,6 +432,22 @@ operator|<
 name|DiagnosticsEngine
 operator|>
 block|{
+name|DiagnosticsEngine
+argument_list|(
+argument|const DiagnosticsEngine&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+block|;
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|DiagnosticsEngine
+operator|&
+operator|)
+name|LLVM_DELETED_FUNCTION
+block|;
 name|public
 operator|:
 comment|/// \brief The level of the diagnostic, after it has been through mapping.
@@ -440,6 +466,12 @@ name|DiagnosticIDs
 operator|::
 name|Note
 block|,
+name|Remark
+operator|=
+name|DiagnosticIDs
+operator|::
+name|Remark
+block|,
 name|Warning
 operator|=
 name|DiagnosticIDs
@@ -457,19 +489,6 @@ operator|=
 name|DiagnosticIDs
 operator|::
 name|Fatal
-block|}
-block|;
-comment|/// \brief How do we handle otherwise-unmapped extension?
-comment|///
-comment|/// This is controlled by -pedantic and -pedantic-errors.
-block|enum
-name|ExtensionHandling
-block|{
-name|Ext_Ignore
-block|,
-name|Ext_Warn
-block|,
-name|Ext_Error
 block|}
 block|;    enum
 name|ArgumentKind
@@ -486,6 +505,9 @@ comment|///< int
 name|ak_uint
 block|,
 comment|///< unsigned
+name|ak_tokenkind
+block|,
+comment|///< enum TokenKind : unsigned
 name|ak_identifierinfo
 block|,
 comment|///< IdentifierInfo
@@ -505,7 +527,10 @@ name|ak_declcontext
 block|,
 comment|///< DeclContext *
 name|ak_qualtype_pair
+block|,
 comment|///< pair<QualType, QualType>
+name|ak_attr
+comment|///< Attr *
 block|}
 block|;
 comment|/// \brief Represents on argument value, which is a union discriminated
@@ -582,10 +607,12 @@ name|ConstexprBacktraceLimit
 decl_stmt|;
 comment|// Cap on depth of constexpr evaluation
 comment|// backtrace stack, 0 -> no limit.
-name|ExtensionHandling
+name|diag
+operator|::
+name|Severity
 name|ExtBehavior
-decl_stmt|;
-comment|// Map extensions onto warnings or errors?
+expr_stmt|;
+comment|// Map extensions to warnings or errors?
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticIDs
@@ -612,7 +639,7 @@ decl_stmt|;
 comment|/// \brief Mapping information for diagnostics.
 comment|///
 comment|/// Mapping info is packed into four bits per diagnostic.  The low three
-comment|/// bits are the mapping (an instance of diag::Mapping), or zero if unset.
+comment|/// bits are the mapping (an instance of diag::Severity), or zero if unset.
 comment|/// The high bit is set when the mapping was established as a user mapping.
 comment|/// If the high bit is clear, then the low bits are set to the default
 comment|/// value, and should be mapped with -pedantic, -Werror, etc.
@@ -629,7 +656,7 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
-name|DiagnosticMappingInfo
+name|DiagnosticMapping
 operator|>
 name|DiagMap
 expr_stmt|;
@@ -642,7 +669,7 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
-name|DiagnosticMappingInfo
+name|DiagnosticMapping
 operator|>
 operator|::
 name|iterator
@@ -655,21 +682,21 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
-name|DiagnosticMappingInfo
+name|DiagnosticMapping
 operator|>
 operator|::
 name|const_iterator
 name|const_iterator
 expr_stmt|;
 name|void
-name|setMappingInfo
+name|setMapping
 argument_list|(
 name|diag
 operator|::
 name|kind
 name|Diag
 argument_list|,
-name|DiagnosticMappingInfo
+name|DiagnosticMapping
 name|Info
 argument_list|)
 block|{
@@ -681,9 +708,9 @@ operator|=
 name|Info
 expr_stmt|;
 block|}
-name|DiagnosticMappingInfo
+name|DiagnosticMapping
 modifier|&
-name|getOrAddMappingInfo
+name|getOrAddMapping
 argument_list|(
 name|diag
 operator|::
@@ -1138,15 +1165,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// The PrevArgs array (whose length is NumPrevArgs) indicates the previous
+comment|/// The PrevArgs array indicates the previous arguments formatted for this
 end_comment
 
 begin_comment
-comment|/// arguments formatted for this diagnostic.  Implementations of this function
+comment|/// diagnostic.  Implementations of this function can use this information to
 end_comment
 
 begin_comment
-comment|/// can use this information to avoid redundancy across arguments.
+comment|/// avoid redundancy across arguments.
 end_comment
 
 begin_comment
@@ -1170,29 +1197,17 @@ operator|,
 name|intptr_t
 name|Val
 operator|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Modifier
 operator|,
-name|unsigned
-name|ModifierLen
-operator|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Argument
 operator|,
-name|unsigned
-name|ArgumentLen
-operator|,
-specifier|const
+name|ArrayRef
+operator|<
 name|ArgumentValue
-operator|*
+operator|>
 name|PrevArgs
-operator|,
-name|unsigned
-name|NumPrevArgs
 operator|,
 name|SmallVectorImpl
 operator|<
@@ -1269,6 +1284,34 @@ name|DelayedDiagArg2
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Optional flag value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Some flags accept values, for instance: -Wframe-larger-than=<value> and
+end_comment
+
+begin_comment
+comment|/// -Rpass=<value>. The content of this string is emitted after the flag name
+end_comment
+
+begin_comment
+comment|/// and '='.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|string
+name|FlagValue
+expr_stmt|;
+end_expr_stmt
+
 begin_label
 name|public
 label|:
@@ -1294,7 +1337,7 @@ name|DiagnosticConsumer
 operator|*
 name|client
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|bool
 name|ShouldOwnClient
@@ -1342,6 +1385,56 @@ block|{
 return|return
 operator|*
 name|DiagOpts
+return|;
+block|}
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|DiagState
+operator|::
+name|const_iterator
+operator|>
+name|diag_mapping_range
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// \brief Get the current set of diagnostic mappings.
+end_comment
+
+begin_expr_stmt
+name|diag_mapping_range
+name|getDiagnosticMappings
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|DiagState
+operator|&
+name|DS
+operator|=
+operator|*
+name|GetCurDiagState
+argument_list|()
+block|;
+return|return
+name|diag_mapping_range
+argument_list|(
+name|DS
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|DS
+operator|.
+name|end
+argument_list|()
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1421,7 +1514,7 @@ block|{
 return|return
 name|SourceMgr
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -2129,23 +2222,27 @@ begin_comment
 comment|/// This corresponds to the GCC -pedantic and -pedantic-errors option.
 end_comment
 
-begin_function
+begin_decl_stmt
 name|void
 name|setExtensionHandlingBehavior
-parameter_list|(
-name|ExtensionHandling
+argument_list|(
+name|diag
+operator|::
+name|Severity
 name|H
-parameter_list|)
+argument_list|)
 block|{
 name|ExtBehavior
 operator|=
 name|H
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_expr_stmt
-name|ExtensionHandling
+name|diag
+operator|::
+name|Severity
 name|getExtensionHandlingBehavior
 argument_list|()
 specifier|const
@@ -2241,7 +2338,7 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|setDiagnosticMapping
+name|setSeverity
 argument_list|(
 name|diag
 operator|::
@@ -2250,7 +2347,7 @@ name|Diag
 argument_list|,
 name|diag
 operator|::
-name|Mapping
+name|Severity
 name|Map
 argument_list|,
 name|SourceLocation
@@ -2284,6 +2381,18 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param Flavor The flavor of group to affect. -Rfoo does not affect the
+end_comment
+
+begin_comment
+comment|/// state of the -Wfoo group and vice versa.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \param Loc The source location that this change of diagnostic state should
 end_comment
 
@@ -2293,14 +2402,19 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|setDiagnosticGroupMapping
+name|setSeverityForGroup
 argument_list|(
+name|diag
+operator|::
+name|Flavor
+name|Flavor
+argument_list|,
 name|StringRef
 name|Group
 argument_list|,
 name|diag
 operator|::
-name|Mapping
+name|Severity
 name|Map
 argument_list|,
 name|SourceLocation
@@ -2308,33 +2422,6 @@ name|Loc
 operator|=
 name|SourceLocation
 argument_list|()
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Set the warning-as-error flag for the given diagnostic.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This function always only operates on the current diagnostic state.
-end_comment
-
-begin_decl_stmt
-name|void
-name|setDiagnosticWarningAsError
-argument_list|(
-name|diag
-operator|::
-name|kind
-name|Diag
-argument_list|,
-name|bool
-name|Enabled
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2373,33 +2460,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Set the error-as-fatal flag for the given diagnostic.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This function always only operates on the current diagnostic state.
-end_comment
-
-begin_decl_stmt
-name|void
-name|setDiagnosticErrorAsFatal
-argument_list|(
-name|diag
-operator|::
-name|kind
-name|Diag
-argument_list|,
-name|bool
-name|Enabled
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Set the error-as-fatal flag for the given diagnostic group.
 end_comment
 
@@ -2433,7 +2493,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Add the specified mapping to all diagnostics.
+comment|/// \brief Add the specified mapping to all diagnostics of the specified
+end_comment
+
+begin_comment
+comment|/// flavor.
 end_comment
 
 begin_comment
@@ -2450,11 +2514,16 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|setMappingToAllDiagnostics
+name|setSeverityForAll
 argument_list|(
 name|diag
 operator|::
-name|Mapping
+name|Flavor
+name|Flavor
+argument_list|,
+name|diag
+operator|::
+name|Severity
 name|Map
 argument_list|,
 name|SourceLocation
@@ -2558,7 +2627,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Return an ID for a diagnostic with the specified message and level.
+comment|/// \brief Return an ID for a diagnostic with the specified format string and
+end_comment
+
+begin_comment
+comment|/// level.
 end_comment
 
 begin_comment
@@ -2573,16 +2646,31 @@ begin_comment
 comment|/// created, otherwise the existing ID is returned.
 end_comment
 
-begin_function
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param FormatString A fixed diagnostic format string that will be hashed
+end_comment
+
+begin_comment
+comment|/// and mapped to a unique DiagID.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|unsigned
+name|N
+operator|>
 name|unsigned
 name|getCustomDiagID
-parameter_list|(
-name|Level
-name|L
-parameter_list|,
-name|StringRef
-name|Message
-parameter_list|)
+argument_list|(
+argument|Level L
+argument_list|,
+argument|const char (&FormatString)[N]
+argument_list|)
 block|{
 return|return
 name|Diags
@@ -2596,11 +2684,18 @@ name|Level
 operator|)
 name|L
 argument_list|,
-name|Message
+name|StringRef
+argument_list|(
+name|FormatString
+argument_list|,
+name|N
+operator|-
+literal|1
+argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Converts a diagnostic argument (as an intptr_t) into the string
@@ -2620,29 +2715,17 @@ argument_list|,
 name|intptr_t
 name|Val
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Modifier
 argument_list|,
-name|unsigned
-name|ModLen
-argument_list|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Argument
 argument_list|,
-name|unsigned
-name|ArgLen
-argument_list|,
-specifier|const
+name|ArrayRef
+operator|<
 name|ArgumentValue
-operator|*
+operator|>
 name|PrevArgs
-argument_list|,
-name|unsigned
-name|NumPrevArgs
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -2667,15 +2750,9 @@ name|Val
 argument_list|,
 name|Modifier
 argument_list|,
-name|ModLen
-argument_list|,
 name|Argument
 argument_list|,
-name|ArgLen
-argument_list|,
 name|PrevArgs
-argument_list|,
-name|NumPrevArgs
 argument_list|,
 name|Output
 argument_list|,
@@ -2765,6 +2842,72 @@ comment|//
 end_comment
 
 begin_comment
+comment|/// \brief Determine whether the diagnostic is known to be ignored.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This can be used to opportunistically avoid expensive checks when it's
+end_comment
+
+begin_comment
+comment|/// known for certain that the diagnostic has been suppressed at the
+end_comment
+
+begin_comment
+comment|/// specified location \p Loc.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Loc The source location we are interested in finding out the
+end_comment
+
+begin_comment
+comment|/// diagnostic state. Can be null in order to query the latest state.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isIgnored
+argument_list|(
+name|unsigned
+name|DiagID
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+block|{
+return|return
+name|Diags
+operator|->
+name|getDiagnosticSeverity
+argument_list|(
+name|DiagID
+argument_list|,
+name|Loc
+argument_list|,
+operator|*
+name|this
+argument_list|)
+operator|==
+name|diag
+operator|::
+name|Severity
+operator|::
+name|Ignored
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Based on the way the client configured the DiagnosticsEngine
 end_comment
 
@@ -2774,6 +2917,22 @@ end_comment
 
 begin_comment
 comment|/// the DiagnosticConsumer.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// To preserve invariant assumptions, this function should not be used to
+end_comment
+
+begin_comment
+comment|/// influence parse or semantic analysis actions. Instead consider using
+end_comment
+
+begin_comment
+comment|/// \c isIgnored().
 end_comment
 
 begin_comment
@@ -3028,6 +3187,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Return the value associated with this diagnostic flag.
+end_comment
+
+begin_expr_stmt
+name|StringRef
+name|getFlagValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FlagValue
+return|;
+block|}
+end_expr_stmt
+
 begin_label
 name|private
 label|:
@@ -3142,17 +3317,7 @@ comment|/// anyway.
 name|MaxArguments
 init|=
 literal|10
-block|,
-comment|/// \brief The maximum number of ranges we can hold.
-name|MaxRanges
-init|=
-literal|10
-block|,
-comment|/// \brief The maximum number of ranges we can hold.
-name|MaxFixItHints
-init|=
-literal|10
-block|}
+block|,   }
 enum|;
 end_enum
 
@@ -3164,28 +3329,6 @@ begin_decl_stmt
 name|signed
 name|char
 name|NumDiagArgs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// \brief The number of ranges in the DiagRanges array.
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|char
-name|NumDiagRanges
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// \brief The number of hints in the DiagFixItHints array.
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|char
-name|NumDiagFixItHints
 decl_stmt|;
 end_decl_stmt
 
@@ -3279,14 +3422,16 @@ begin_comment
 comment|/// \brief The list of ranges added to this diagnostic.
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|SmallVector
+operator|<
 name|CharSourceRange
+operator|,
+literal|8
+operator|>
 name|DiagRanges
-index|[
-name|MaxRanges
-index|]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief If valid, provides a hint with some code to insert, remove,
@@ -3296,22 +3441,24 @@ begin_comment
 comment|/// or modify at a particular position.
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|SmallVector
+operator|<
 name|FixItHint
+operator|,
+literal|8
+operator|>
 name|DiagFixItHints
-index|[
-name|MaxFixItHints
-index|]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-name|DiagnosticMappingInfo
-name|makeMappingInfo
+name|DiagnosticMapping
+name|makeUserMapping
 argument_list|(
 name|diag
 operator|::
-name|Mapping
+name|Severity
 name|Map
 argument_list|,
 name|SourceLocation
@@ -3326,10 +3473,10 @@ operator|.
 name|isValid
 argument_list|()
 decl_stmt|;
-name|DiagnosticMappingInfo
-name|MappingInfo
+name|DiagnosticMapping
+name|Mapping
 init|=
-name|DiagnosticMappingInfo
+name|DiagnosticMapping
 operator|::
 name|Make
 argument_list|(
@@ -3348,14 +3495,14 @@ condition|(
 name|isPragma
 condition|)
 block|{
-name|MappingInfo
+name|Mapping
 operator|.
 name|setNoWarningAsError
 argument_list|(
 name|true
 argument_list|)
 expr_stmt|;
-name|MappingInfo
+name|Mapping
 operator|.
 name|setNoErrorAsFatal
 argument_list|(
@@ -3364,7 +3511,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|MappingInfo
+name|Mapping
 return|;
 block|}
 end_decl_stmt
@@ -3672,10 +3819,6 @@ decl_stmt|;
 name|mutable
 name|unsigned
 name|NumArgs
-decl_stmt|,
-name|NumRanges
-decl_stmt|,
-name|NumFixits
 decl_stmt|;
 comment|/// \brief Status variable indicating if this diagnostic is still active.
 comment|///
@@ -3711,20 +3854,10 @@ argument_list|()
 operator|:
 name|DiagObj
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NumArgs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumRanges
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumFixits
 argument_list|(
 literal|0
 argument_list|)
@@ -3738,7 +3871,7 @@ name|IsForceEmit
 argument_list|(
 argument|false
 argument_list|)
-block|{ }
+block|{}
 name|explicit
 name|DiagnosticBuilder
 argument_list|(
@@ -3753,16 +3886,6 @@ name|diagObj
 argument_list|)
 operator|,
 name|NumArgs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumRanges
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumFixits
 argument_list|(
 literal|0
 argument_list|)
@@ -3783,6 +3906,20 @@ name|diagObj
 operator|&&
 literal|"DiagnosticBuilder requires a valid DiagnosticsEngine!"
 argument_list|)
+block|;
+name|diagObj
+operator|->
+name|DiagRanges
+operator|.
+name|clear
+argument_list|()
+block|;
+name|diagObj
+operator|->
+name|DiagFixItHints
+operator|.
+name|clear
+argument_list|()
 block|;   }
 name|friend
 name|class
@@ -3800,18 +3937,6 @@ name|NumDiagArgs
 operator|=
 name|NumArgs
 expr_stmt|;
-name|DiagObj
-operator|->
-name|NumDiagRanges
-operator|=
-name|NumRanges
-expr_stmt|;
-name|DiagObj
-operator|->
-name|NumDiagFixItHints
-operator|=
-name|NumFixits
-expr_stmt|;
 block|}
 comment|/// \brief Clear out the current diagnostic.
 name|void
@@ -3821,7 +3946,7 @@ specifier|const
 block|{
 name|DiagObj
 operator|=
-literal|0
+name|nullptr
 block|;
 name|IsActive
 operator|=
@@ -3924,18 +4049,6 @@ operator|=
 name|D
 operator|.
 name|NumArgs
-expr_stmt|;
-name|NumRanges
-operator|=
-name|D
-operator|.
-name|NumRanges
-expr_stmt|;
-name|NumFixits
-operator|=
-name|D
-operator|.
-name|NumFixits
 expr_stmt|;
 block|}
 comment|/// \brief Retrieve an empty diagnostic builder.
@@ -4109,26 +4222,14 @@ operator|&&
 literal|"Clients must not add to cleared diagnostic!"
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|NumRanges
-operator|<
-name|DiagnosticsEngine
-operator|::
-name|MaxRanges
-operator|&&
-literal|"Too many arguments to diagnostic!"
-argument_list|)
-expr_stmt|;
 name|DiagObj
 operator|->
 name|DiagRanges
-index|[
-name|NumRanges
-operator|++
-index|]
-operator|=
+operator|.
+name|push_back
+argument_list|(
 name|R
+argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -4149,53 +4250,30 @@ operator|&&
 literal|"Clients must not add to cleared diagnostic!"
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|NumFixits
-operator|<
-name|DiagnosticsEngine
-operator|::
-name|MaxFixItHints
-operator|&&
-literal|"Too many arguments to diagnostic!"
-argument_list|)
-expr_stmt|;
 name|DiagObj
 operator|->
 name|DiagFixItHints
-index|[
-name|NumFixits
-operator|++
-index|]
-operator|=
+operator|.
+name|push_back
+argument_list|(
 name|Hint
+argument_list|)
 expr_stmt|;
 block|}
-name|bool
-name|hasMaxRanges
-argument_list|()
-specifier|const
+name|void
+name|addFlagValue
+argument_list|(
+name|StringRef
+name|V
+argument_list|)
+decl|const
 block|{
-return|return
-name|NumRanges
-operator|==
-name|DiagnosticsEngine
-operator|::
-name|MaxRanges
-return|;
-block|}
-name|bool
-name|hasMaxFixItHints
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumFixits
-operator|==
-name|DiagnosticsEngine
-operator|::
-name|MaxFixItHints
-return|;
+name|DiagObj
+operator|->
+name|FlagValue
+operator|=
+name|V
+expr_stmt|;
 block|}
 block|}
 end_decl_stmt
@@ -4203,6 +4281,77 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_struct
+struct|struct
+name|AddFlagValue
+block|{
+name|explicit
+name|AddFlagValue
+argument_list|(
+argument|StringRef V
+argument_list|)
+block|:
+name|Val
+argument_list|(
+argument|V
+argument_list|)
+block|{}
+name|StringRef
+name|Val
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// \brief Register a value for the flag in the current diagnostic. This
+end_comment
+
+begin_comment
+comment|/// value will be shown as the suffix "=value" after the flag name. It is
+end_comment
+
+begin_comment
+comment|/// useful in cases where the diagnostic flag accepts values (e.g.,
+end_comment
+
+begin_comment
+comment|/// -Rpass or -Wframe-larger-than).
+end_comment
+
+begin_expr_stmt
+specifier|inline
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|DB
+operator|,
+specifier|const
+name|AddFlagValue
+name|V
+operator|)
+block|{
+name|DB
+operator|.
+name|addFlagValue
+argument_list|(
+name|V
+operator|.
+name|Val
+argument_list|)
+block|;
+return|return
+name|DB
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
@@ -4310,11 +4459,43 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|// We use enable_if here to prevent that this overload is selected for
+end_comment
+
+begin_comment
+comment|// pointers or other arguments that are implicitly convertible to bool.
+end_comment
+
 begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
 specifier|inline
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|is_same
+operator|<
+name|T
+operator|,
+name|bool
+operator|>
+operator|::
+name|value
+operator|,
 specifier|const
 name|DiagnosticBuilder
 operator|&
+operator|>
+operator|::
+name|type
 name|operator
 operator|<<
 operator|(
@@ -4323,7 +4504,7 @@ name|DiagnosticBuilder
 operator|&
 name|DB
 operator|,
-name|bool
+name|T
 name|I
 operator|)
 block|{
@@ -4370,6 +4551,48 @@ argument_list|,
 name|DiagnosticsEngine
 operator|::
 name|ak_uint
+argument_list|)
+block|;
+return|return
+name|DB
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|DB
+operator|,
+name|tok
+operator|::
+name|TokenKind
+name|I
+operator|)
+block|{
+name|DB
+operator|.
+name|AddTaggedVal
+argument_list|(
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|I
+operator|)
+argument_list|,
+name|DiagnosticsEngine
+operator|::
+name|ak_tokenkind
 argument_list|)
 block|;
 return|return
@@ -4444,11 +4667,11 @@ name|T
 operator|>
 specifier|inline
 name|typename
-name|llvm
+name|std
 operator|::
 name|enable_if
 operator|<
-name|llvm
+name|std
 operator|::
 name|is_same
 operator|<
@@ -4456,6 +4679,8 @@ name|T
 operator|,
 name|DeclContext
 operator|>
+operator|::
+name|value
 operator|,
 specifier|const
 name|DiagnosticBuilder
@@ -4538,6 +4763,55 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|DB
+operator|,
+name|ArrayRef
+operator|<
+name|SourceRange
+operator|>
+name|Ranges
+operator|)
+block|{
+for|for
+control|(
+specifier|const
+name|SourceRange
+modifier|&
+name|R
+range|:
+name|Ranges
+control|)
+name|DB
+operator|.
+name|AddSourceRange
+argument_list|(
+name|CharSourceRange
+operator|::
+name|getTokenRange
+argument_list|(
+name|R
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|DB
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  inline
 specifier|const
 name|DiagnosticBuilder
 operator|&
@@ -4639,6 +4913,11 @@ block|;
 name|CurDiagID
 operator|=
 name|DiagID
+block|;
+name|FlagValue
+operator|.
+name|clear
+argument_list|()
 block|;
 return|return
 name|DiagnosticBuilder
@@ -5085,7 +5364,10 @@ block|{
 return|return
 name|DiagObj
 operator|->
-name|NumDiagRanges
+name|DiagRanges
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
 comment|/// \pre Idx< getNumRanges()
@@ -5103,9 +5385,8 @@ name|assert
 argument_list|(
 name|Idx
 operator|<
-name|DiagObj
-operator|->
-name|NumDiagRanges
+name|getNumRanges
+argument_list|()
 operator|&&
 literal|"Invalid diagnostic range index!"
 argument_list|)
@@ -5129,18 +5410,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
-name|makeArrayRef
-argument_list|(
 name|DiagObj
 operator|->
 name|DiagRanges
-argument_list|,
-name|DiagObj
-operator|->
-name|NumDiagRanges
-argument_list|)
 return|;
 block|}
 name|unsigned
@@ -5151,7 +5423,10 @@ block|{
 return|return
 name|DiagObj
 operator|->
-name|NumDiagFixItHints
+name|DiagFixItHints
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
 specifier|const
@@ -5183,22 +5458,18 @@ name|Idx
 index|]
 return|;
 block|}
-specifier|const
+name|ArrayRef
+operator|<
 name|FixItHint
-operator|*
+operator|>
 name|getFixItHints
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getNumFixItHints
-argument_list|()
-operator|?
 name|DiagObj
 operator|->
 name|DiagFixItHints
-operator|:
-literal|0
 return|;
 block|}
 comment|/// \brief Format this diagnostic into a string, substituting the
@@ -5630,7 +5901,7 @@ name|Preprocessor
 modifier|*
 name|PP
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{}
 comment|/// \brief Callback to inform the diagnostic client that processing
@@ -5711,6 +5982,7 @@ argument|DiagnosticsEngine::Level DiagLevel
 argument_list|,
 argument|const Diagnostic&Info
 argument_list|)
+name|override
 block|{
 comment|// Just ignore it.
 block|}
@@ -5760,7 +6032,6 @@ operator|~
 name|ForwardingDiagnosticConsumer
 argument_list|()
 block|;
-name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
@@ -5768,17 +6039,18 @@ argument|DiagnosticsEngine::Level DiagLevel
 argument_list|,
 argument|const Diagnostic&Info
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|clear
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|IncludeInDiagnosticCounts
 argument_list|()
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -5843,6 +6115,35 @@ init|=
 literal|127
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// ProcessWarningOptions - Initialize the diagnostic client and process the
+end_comment
+
+begin_comment
+comment|/// warning options specified on the command line.
+end_comment
+
+begin_function_decl
+name|void
+name|ProcessWarningOptions
+parameter_list|(
+name|DiagnosticsEngine
+modifier|&
+name|Diags
+parameter_list|,
+specifier|const
+name|DiagnosticOptions
+modifier|&
+name|Opts
+parameter_list|,
+name|bool
+name|ReportDiags
+init|=
+name|true
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|}

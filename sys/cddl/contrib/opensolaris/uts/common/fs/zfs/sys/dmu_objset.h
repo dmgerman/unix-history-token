@@ -235,6 +235,9 @@ decl_stmt|;
 name|zfs_redundant_metadata_type_t
 name|os_redundant_metadata
 decl_stmt|;
+name|int
+name|os_recordsize
+decl_stmt|;
 comment|/* no lock needed: */
 name|struct
 name|dmu_tx

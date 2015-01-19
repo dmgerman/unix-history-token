@@ -2333,7 +2333,7 @@ if|if
 condition|(
 name|size
 operator|>
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 condition|)
 block|{
 name|ASSERT
@@ -3078,7 +3078,7 @@ if|if
 condition|(
 name|used
 operator|>
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 condition|)
 return|return
 operator|(
@@ -3222,7 +3222,7 @@ if|if
 condition|(
 name|spill_used
 operator|>
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 condition|)
 return|return
 operator|(
@@ -6927,8 +6927,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -7175,8 +7173,6 @@ argument_list|(
 name|db
 argument_list|,
 name|handle
-argument_list|,
-name|NULL
 argument_list|,
 name|sa_evict
 argument_list|)
@@ -9846,8 +9842,6 @@ argument_list|,
 name|oldhdl
 argument_list|,
 name|newhdl
-argument_list|,
-name|NULL
 argument_list|,
 name|sa_evict
 argument_list|)

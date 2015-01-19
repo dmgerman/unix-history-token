@@ -373,6 +373,10 @@ block|{}
 block|}
 struct|;
 block|}
+comment|// end namespace SystemZII
+name|class
+name|SystemZSubtarget
+decl_stmt|;
 name|class
 name|SystemZInstrInfo
 range|:
@@ -383,9 +387,9 @@ specifier|const
 name|SystemZRegisterInfo
 name|RI
 block|;
-name|SystemZTargetMachine
+name|SystemZSubtarget
 operator|&
-name|TM
+name|STI
 block|;
 name|void
 name|splitMove
@@ -482,13 +486,12 @@ operator|:
 name|explicit
 name|SystemZInstrInfo
 argument_list|(
-name|SystemZTargetMachine
+name|SystemZSubtarget
 operator|&
-name|TM
+name|STI
 argument_list|)
 block|;
 comment|// Override TargetInstrInfo.
-name|virtual
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(
@@ -497,9 +500,8 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
@@ -508,9 +510,8 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|isStackSlotCopy
 argument_list|(
@@ -521,9 +522,8 @@ argument_list|,
 argument|int&SrcFrameIndex
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|AnalyzeBranch
 argument_list|(
@@ -538,18 +538,16 @@ argument_list|,
 argument|bool AllowModify
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|unsigned
 name|RemoveBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|unsigned
 name|InsertBranch
 argument_list|(
@@ -564,7 +562,7 @@ argument_list|,
 argument|DebugLoc DL
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 name|bool
 name|analyzeCompare
@@ -580,7 +578,7 @@ argument_list|,
 argument|int&Value
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 name|bool
 name|optimizeCompareInstr
@@ -598,18 +596,16 @@ argument_list|,
 argument|const MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|isPredicable
 argument_list|(
 argument|MachineInstr *MI
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|isProfitableToIfCvt
 argument_list|(
@@ -622,9 +618,8 @@ argument_list|,
 argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|isProfitableToIfCvt
 argument_list|(
@@ -643,9 +638,8 @@ argument_list|,
 argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|PredicateInstruction
 argument_list|(
@@ -654,9 +648,8 @@ argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Pred
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|copyPhysReg
 argument_list|(
@@ -673,9 +666,8 @@ argument_list|,
 argument|bool KillSrc
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|storeRegToStackSlot
 argument_list|(
@@ -694,9 +686,8 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|loadRegFromStackSlot
 argument_list|(
@@ -713,9 +704,8 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|MachineInstr
 operator|*
 name|convertToThreeAddress
@@ -727,8 +717,8 @@ argument_list|,
 argument|LiveVariables *LV
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineInstr
 operator|*
 name|foldMemoryOperandImpl
@@ -742,8 +732,8 @@ argument_list|,
 argument|int FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineInstr
 operator|*
 name|foldMemoryOperandImpl
@@ -757,24 +747,23 @@ argument_list|,
 argument|MachineInstr* LoadMI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|expandPostRAPseudo
 argument_list|(
 argument|MachineBasicBlock::iterator MBBI
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|ReverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|// Return the SystemZRegisterInfo, which this class owns.
 specifier|const
@@ -869,8 +858,7 @@ name|getCompareAndBranch
 argument_list|(
 argument|unsigned Opcode
 argument_list|,
-argument|const MachineInstr *MI =
-literal|0
+argument|const MachineInstr *MI = nullptr
 argument_list|)
 specifier|const
 block|;

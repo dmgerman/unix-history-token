@@ -204,6 +204,11 @@ specifier|const
 name|ValueList
 operator|&
 name|arg_value_list
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|name
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -247,6 +252,11 @@ specifier|const
 name|ValueList
 operator|&
 name|arg_value_list
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|name
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -435,9 +445,11 @@ comment|/// @param[out] results
 comment|///     The result value will be put here after running the function.
 comment|///
 comment|/// @return
-comment|///     Returns one of the ExecutionResults enum indicating function call status.
+comment|///     Returns one of the ExpressionResults enum indicating function call status.
 comment|//------------------------------------------------------------------
-name|ExecutionResults
+name|lldb
+operator|::
+name|ExpressionResults
 name|ExecuteFunction
 argument_list|(
 name|ExecutionContext
@@ -679,12 +691,23 @@ block|;
 comment|///< The parser responsible for compiling the function.
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|IRExecutionUnit
 operator|>
-name|m_execution_unit_ap
+name|m_execution_unit_sp
 block|;
+name|lldb
+operator|::
+name|ModuleWP
+name|m_jit_module_wp
+block|;
+name|std
+operator|::
+name|string
+name|m_name
+block|;
+comment|///< The name of this clang function - for debugging purposes.
 name|Function
 operator|*
 name|m_function_ptr

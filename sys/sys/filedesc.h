@@ -782,6 +782,9 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
+parameter_list|,
+name|bool
+name|prepfiles
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -2789,7 +2789,7 @@ operator|==
 name|RLIM_INFINITY
 condition|)
 return|return;
-name|PROC_SLOCK
+name|PROC_STATLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2809,7 +2809,7 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-name|PROC_SUNLOCK
+name|PROC_STATUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -3854,7 +3854,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK_ASSERT
+name|PROC_STATLOCK_ASSERT
 argument_list|(
 name|p
 argument_list|,
@@ -3986,7 +3986,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|PROC_SLOCK_ASSERT
+name|PROC_STATLOCK_ASSERT
 argument_list|(
 name|p
 argument_list|,
@@ -4609,7 +4609,7 @@ break|break;
 case|case
 name|RUSAGE_THREAD
 case|:
-name|PROC_SLOCK
+name|PROC_STATLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -4631,7 +4631,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_STATUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -4863,7 +4863,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK_ASSERT
+name|PROC_STATLOCK_ASSERT
 argument_list|(
 name|td
 operator|->
@@ -5003,7 +5003,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|PROC_SLOCK_ASSERT
+name|PROC_STATLOCK_ASSERT
 argument_list|(
 name|p
 argument_list|,
@@ -5084,7 +5084,7 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|PROC_SLOCK
+name|PROC_STATLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -5105,7 +5105,7 @@ argument_list|,
 name|sp
 argument_list|)
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_STATUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -6048,6 +6048,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RACCT
+end_ifdef
+
 begin_function
 name|void
 name|ui_racct_foreach
@@ -6147,6 +6153,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Change the count associated with number of processes  * a given user is using.  When 'max' is 0, don't enforce a limit  */

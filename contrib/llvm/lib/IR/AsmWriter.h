@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/ADT/SetVector.h"
 end_include
 
 begin_include
@@ -111,6 +111,9 @@ name|Function
 decl_stmt|;
 name|class
 name|GlobalValue
+decl_stmt|;
+name|class
+name|Comdat
 decl_stmt|;
 name|class
 name|Module
@@ -231,7 +234,9 @@ name|TheModule
 decl_stmt|;
 name|private
 label|:
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|SlotTracker
 operator|>
@@ -248,6 +253,14 @@ name|AssemblyAnnotationWriter
 modifier|*
 name|AnnotationWriter
 decl_stmt|;
+name|SetVector
+operator|<
+specifier|const
+name|Comdat
+operator|*
+operator|>
+name|Comdats
+expr_stmt|;
 name|public
 label|:
 comment|/// Construct an AssemblyWriter with an external SlotTracker
@@ -358,6 +371,19 @@ name|SynchScope
 parameter_list|)
 function_decl|;
 name|void
+name|writeAtomicCmpXchg
+parameter_list|(
+name|AtomicOrdering
+name|SuccessOrdering
+parameter_list|,
+name|AtomicOrdering
+name|FailureOrdering
+parameter_list|,
+name|SynchronizationScope
+name|SynchScope
+parameter_list|)
+function_decl|;
+name|void
 name|writeAllMDNodes
 parameter_list|()
 function_decl|;
@@ -397,6 +423,15 @@ specifier|const
 name|GlobalAlias
 modifier|*
 name|GV
+parameter_list|)
+function_decl|;
+name|void
+name|printComdat
+parameter_list|(
+specifier|const
+name|Comdat
+modifier|*
+name|C
 parameter_list|)
 function_decl|;
 name|void

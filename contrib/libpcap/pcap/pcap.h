@@ -4,7 +4,7 @@ comment|/* -*- Mode: c; tab-width: 8; indent-tabs-mode: 1; c-basic-offset: 8; -*
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap/pcap.h,v 1.15 2008-10-06 15:27:32 gianluca Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -164,7 +164,7 @@ name|struct
 name|pcap_addr
 name|pcap_addr_t
 typedef|;
-comment|/*  * The first record in the file contains saved values for some  * of the flags used in the printout phases of tcpdump.  * Many fields here are 32 bit ints so compilers won't insert unwanted  * padding; these files need to be interchangeable across architectures.  *  * Do not change the layout of this structure, in any way (this includes  * changes that only affect the length of fields in this structure).  *  * Also, do not change the interpretation of any of the members of this  * structure, in any way (this includes using values other than  * LINKTYPE_ values, as defined in "savefile.c", in the "linktype"  * field).  *  * Instead:  *  *	introduce a new structure for the new format, if the layout  *	of the structure changed;  *  *	send mail to "tcpdump-workers@lists.tcpdump.org", requesting  *	a new magic number for your new capture file format, and, when  *	you get the new magic number, put it in "savefile.c";  *  *	use that magic number for save files with the changed file  *	header;  *  *	make the code in "savefile.c" capable of reading files with  *	the old file header as well as files with the new file header  *	(using the magic number to determine the header format).  *  * Then supply the changes by forking the branch at  *  *	https://github.com/mcr/libpcap/issues  *  * and issuing a pull request, so that future versions of libpcap and  * programs that use it (such as tcpdump) will be able to read your new  * capture file format.  */
+comment|/*  * The first record in the file contains saved values for some  * of the flags used in the printout phases of tcpdump.  * Many fields here are 32 bit ints so compilers won't insert unwanted  * padding; these files need to be interchangeable across architectures.  *  * Do not change the layout of this structure, in any way (this includes  * changes that only affect the length of fields in this structure).  *  * Also, do not change the interpretation of any of the members of this  * structure, in any way (this includes using values other than  * LINKTYPE_ values, as defined in "savefile.c", in the "linktype"  * field).  *  * Instead:  *  *	introduce a new structure for the new format, if the layout  *	of the structure changed;  *  *	send mail to "tcpdump-workers@lists.tcpdump.org", requesting  *	a new magic number for your new capture file format, and, when  *	you get the new magic number, put it in "savefile.c";  *  *	use that magic number for save files with the changed file  *	header;  *  *	make the code in "savefile.c" capable of reading files with  *	the old file header as well as files with the new file header  *	(using the magic number to determine the header format).  *  * Then supply the changes by forking the branch at  *  *	https://github.com/the-tcpdump-group/libpcap/issues  *  * and issuing a pull request, so that future versions of libpcap and  * programs that use it (such as tcpdump) will be able to read your new  * capture file format.  */
 struct|struct
 name|pcap_file_header
 block|{
@@ -195,7 +195,7 @@ decl_stmt|;
 comment|/* data link type (LINKTYPE_*) */
 block|}
 struct|;
-comment|/*  * Macros for the value returned by pcap_datalink_ext().  *   * If LT_FCS_LENGTH_PRESENT(x) is true, the LT_FCS_LENGTH(x) macro  * gives the FCS length of packets in the capture.  */
+comment|/*  * Macros for the value returned by pcap_datalink_ext().  *  * If LT_FCS_LENGTH_PRESENT(x) is true, the LT_FCS_LENGTH(x) macro  * gives the FCS length of packets in the capture.  */
 define|#
 directive|define
 name|LT_FCS_LENGTH_PRESENT
@@ -402,6 +402,16 @@ directive|define
 name|PCAP_IF_LOOPBACK
 value|0x00000001
 comment|/* interface is loopback */
+define|#
+directive|define
+name|PCAP_IF_UP
+value|0x00000002
+comment|/* interface is up */
+define|#
+directive|define
+name|PCAP_IF_RUNNING
+value|0x00000004
+comment|/* interface is running */
 comment|/*  * Representation of an interface address.  */
 struct|struct
 name|pcap_addr
@@ -513,6 +523,11 @@ directive|define
 name|PCAP_ERROR_PROMISC_PERM_DENIED
 value|-11
 comment|/* you don't have permission to capture in promiscuous mode */
+define|#
+directive|define
+name|PCAP_ERROR_TSTAMP_PRECISION_NOTSUP
+value|-12
+comment|/* the requested time stamp precision is not supported */
 comment|/*  * Warning codes for the pcap API.  * These will all be positive and non-zero, so they won't look like  * errors.  */
 define|#
 directive|define
@@ -624,12 +639,37 @@ name|int
 parameter_list|)
 function_decl|;
 name|int
+name|pcap_set_immediate_mode
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
 name|pcap_set_buffer_size
 parameter_list|(
 name|pcap_t
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+name|int
+name|pcap_set_tstamp_precision
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
+name|pcap_get_tstamp_precision
+parameter_list|(
+name|pcap_t
+modifier|*
 parameter_list|)
 function_decl|;
 name|int
@@ -707,6 +747,17 @@ directive|define
 name|PCAP_TSTAMP_ADAPTER_UNSYNCED
 value|4
 comment|/* device-provided, not synced with the system clock */
+comment|/*  * Time stamp resolution types.  * Not all systems and interfaces will necessarily support all of these  * resolutions when doing live captures; all of them can be requested  * when reading a savefile.  */
+define|#
+directive|define
+name|PCAP_TSTAMP_PRECISION_MICRO
+value|0
+comment|/* use timestamps with microsecond precision, default */
+define|#
+directive|define
+name|PCAP_TSTAMP_PRECISION_NANO
+value|1
+comment|/* use timestamps with nanosecond precision */
 name|pcap_t
 modifier|*
 name|pcap_open_live
@@ -736,6 +787,31 @@ parameter_list|)
 function_decl|;
 name|pcap_t
 modifier|*
+name|pcap_open_dead_with_tstamp_precision
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+name|pcap_t
+modifier|*
+name|pcap_open_offline_with_tstamp_precision
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|pcap_t
+modifier|*
 name|pcap_open_offline
 parameter_list|(
 specifier|const
@@ -752,6 +828,18 @@ name|defined
 argument_list|(
 name|WIN32
 argument_list|)
+name|pcap_t
+modifier|*
+name|pcap_hopen_offline_with_tstamp_precision
+parameter_list|(
+name|intptr_t
+parameter_list|,
+name|u_int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
 name|pcap_t
 modifier|*
 name|pcap_hopen_offline
@@ -771,6 +859,18 @@ name|LIBPCAP_EXPORTS
 argument_list|)
 define|#
 directive|define
+name|pcap_fopen_offline_with_tstamp_precision
+parameter_list|(
+name|f
+parameter_list|,
+name|p
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|pcap_hopen_offline_with_tstamp_precision(_get_osfhandle(_fileno(f)), p, b)
+define|#
+directive|define
 name|pcap_fopen_offline
 parameter_list|(
 name|f
@@ -782,6 +882,20 @@ value|pcap_hopen_offline(_get_osfhandle(_fileno(f)), b)
 else|#
 directive|else
 comment|/*LIBPCAP_EXPORTS*/
+specifier|static
+name|pcap_t
+modifier|*
+name|pcap_fopen_offline_with_tstamp_precision
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
 specifier|static
 name|pcap_t
 modifier|*
@@ -799,6 +913,19 @@ directive|endif
 else|#
 directive|else
 comment|/*WIN32*/
+name|pcap_t
+modifier|*
+name|pcap_fopen_offline_with_tstamp_precision
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
 name|pcap_t
 modifier|*
 name|pcap_fopen_offline
@@ -1364,6 +1491,15 @@ name|p
 parameter_list|,
 name|int
 name|size
+parameter_list|)
+function_decl|;
+name|Adapter
+modifier|*
+name|pcap_get_adapter
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 ifdef|#

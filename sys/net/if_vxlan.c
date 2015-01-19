@@ -10749,6 +10749,7 @@ name|vxl_min_port
 operator|+
 literal|1
 expr_stmt|;
+comment|/* check if flowid is set and not opaque */
 if|if
 condition|(
 name|M_HASHTYPE_GET

@@ -77,12 +77,6 @@ directive|include
 file|"llvm/Support/SwapByteOrder.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/type_traits.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -150,6 +144,7 @@ comment|// end namespace detail
 name|namespace
 name|endian
 block|{
+comment|/// Swap the bytes of value to match the given endianness.
 name|template
 operator|<
 name|typename
@@ -181,18 +176,18 @@ operator|==
 name|big
 operator|)
 condition|)
-return|return
 name|sys
 operator|::
-name|SwapByteOrder
+name|swapByteOrder
 argument_list|(
 name|value
 argument_list|)
-return|;
+expr_stmt|;
 return|return
 name|value
 return|;
 block|}
+comment|/// Read a value of a particular endianness from memory.
 name|template
 operator|<
 name|typename
@@ -257,6 +252,55 @@ name|ret
 operator|)
 return|;
 block|}
+comment|/// Read a value of a particular endianness from a buffer, and increment the
+comment|/// buffer past that value.
+name|template
+operator|<
+name|typename
+name|value_type
+operator|,
+name|endianness
+name|endian
+operator|,
+name|std
+operator|::
+name|size_t
+name|alignment
+operator|>
+specifier|inline
+name|value_type
+name|readNext
+argument_list|(
+argument|const unsigned char *&memory
+argument_list|)
+block|{
+name|value_type
+name|ret
+operator|=
+name|read
+operator|<
+name|value_type
+block|,
+name|endian
+block|,
+name|alignment
+operator|>
+operator|(
+name|memory
+operator|)
+block|;
+name|memory
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|value_type
+argument_list|)
+block|;
+return|return
+name|ret
+return|;
+block|}
+comment|/// Write a value to memory with a particular endianness.
 name|template
 operator|<
 name|typename

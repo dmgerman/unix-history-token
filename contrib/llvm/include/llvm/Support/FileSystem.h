@@ -120,12 +120,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -156,12 +150,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/system_error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctime>
 end_include
 
@@ -181,6 +169,18 @@ begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tuple>
 end_include
 
 begin_include
@@ -216,72 +216,32 @@ block|{
 name|namespace
 name|fs
 block|{
-comment|/// file_type - An "enum class" enumeration for the file system's view of the
-comment|///             type.
-struct|struct
+comment|/// An enumeration for the file system's view of the type.
+name|enum
+name|class
 name|file_type
-block|{
-enum|enum
-name|_
 block|{
 name|status_error
-block|,
+operator|,
 name|file_not_found
-block|,
+operator|,
 name|regular_file
-block|,
+operator|,
 name|directory_file
-block|,
+operator|,
 name|symlink_file
-block|,
+operator|,
 name|block_file
-block|,
+operator|,
 name|character_file
-block|,
+operator|,
 name|fifo_file
-block|,
+operator|,
 name|socket_file
-block|,
+operator|,
 name|type_unknown
 block|}
-enum|;
-name|file_type
-argument_list|(
-argument|_ v
-argument_list|)
-block|:
-name|v_
-argument_list|(
-argument|v
-argument_list|)
-block|{}
-name|explicit
-name|file_type
-argument_list|(
-argument|int v
-argument_list|)
-block|:
-name|v_
-argument_list|(
-argument|_(v)
-argument_list|)
-block|{}
-name|operator
-name|int
-argument_list|()
-specifier|const
-block|{
-return|return
-name|v_
-return|;
-block|}
-name|private
-label|:
-name|int
-name|v_
-decl_stmt|;
-block|}
-struct|;
+empty_stmt|;
 comment|/// space_info - Self explanatory.
 struct|struct
 name|space_info
@@ -653,25 +613,27 @@ operator|)
 specifier|const
 block|{
 return|return
+name|std
+operator|::
+name|tie
+argument_list|(
 name|Device
-operator|<
-name|Other
-operator|.
-name|Device
-operator|||
-operator|(
-name|Device
-operator|==
-name|Other
-operator|.
-name|Device
-operator|&&
+argument_list|,
 name|File
+argument_list|)
 operator|<
+name|std
+operator|::
+name|tie
+argument_list|(
+name|Other
+operator|.
+name|Device
+argument_list|,
 name|Other
 operator|.
 name|File
-operator|)
+argument_list|)
 return|;
 block|}
 name|uint64_t
@@ -695,7 +657,7 @@ block|}
 block|}
 empty_stmt|;
 comment|/// file_status - Represents the result of a call to stat and friends. It has
-comment|///               a platform specific member to store the result.
+comment|///               a platform-specific member to store the result.
 name|class
 name|file_status
 block|{
@@ -771,12 +733,55 @@ name|Perms
 decl_stmt|;
 name|public
 label|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LLVM_ON_UNIX
+argument_list|)
 name|file_status
 argument_list|()
 operator|:
+name|fs_st_dev
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|fs_st_ino
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|fs_st_mtime
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|fs_st_uid
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|fs_st_gid
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|fs_st_size
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|Type
 argument_list|(
-argument|file_type::status_error
+name|file_type
+operator|::
+name|status_error
+argument_list|)
+operator|,
+name|Perms
+argument_list|(
+argument|perms_not_known
 argument_list|)
 block|{}
 name|file_status
@@ -784,17 +789,46 @@ argument_list|(
 argument|file_type Type
 argument_list|)
 operator|:
+name|fs_st_dev
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|fs_st_ino
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|fs_st_mtime
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|fs_st_uid
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|fs_st_gid
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|fs_st_size
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|Type
 argument_list|(
-argument|Type
+name|Type
+argument_list|)
+operator|,
+name|Perms
+argument_list|(
+argument|perms_not_known
 argument_list|)
 block|{}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LLVM_ON_UNIX
-argument_list|)
 name|file_status
 argument_list|(
 argument|file_type Type
@@ -860,6 +894,106 @@ name|defined
 argument_list|(
 name|LLVM_ON_WIN32
 argument_list|)
+name|file_status
+argument_list|()
+operator|:
+name|LastWriteTimeHigh
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|LastWriteTimeLow
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|VolumeSerialNumber
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|FileSizeHigh
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|FileSizeLow
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|FileIndexHigh
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|FileIndexLow
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Type
+argument_list|(
+name|file_type
+operator|::
+name|status_error
+argument_list|)
+operator|,
+name|Perms
+argument_list|(
+argument|perms_not_known
+argument_list|)
+block|{}
+name|file_status
+argument_list|(
+argument|file_type Type
+argument_list|)
+operator|:
+name|LastWriteTimeHigh
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|LastWriteTimeLow
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|VolumeSerialNumber
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|FileSizeHigh
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|FileSizeLow
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|FileIndexHigh
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|FileIndexLow
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Type
+argument_list|(
+name|Type
+argument_list|)
+operator|,
+name|Perms
+argument_list|(
+argument|perms_not_known
+argument_list|)
+block|{}
 name|file_status
 argument_list|(
 argument|file_type Type
@@ -1200,7 +1334,9 @@ comment|/// relative/../path =><current-directory>/relative/../path
 comment|///
 comment|/// @param path A path that is modified to be an absolute path.
 comment|/// @returns errc::success if \a path has been made absolute, otherwise a
-comment|///          platform specific error_code.
+comment|///          platform-specific error_code.
+name|std
+operator|::
 name|error_code
 name|make_absolute
 argument_list|(
@@ -1211,138 +1347,92 @@ operator|>
 operator|&
 name|path
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+comment|/// @brief Normalize path separators in \a Path
+comment|///
+comment|/// If the path contains any '\' separators, they are transformed into '/'.
+comment|/// This is particularly useful when cross-compiling Windows on Linux, but is
+comment|/// safe to invoke on Windows, which accepts both characters as a path
+comment|/// separator.
+name|std
+operator|::
+name|error_code
+name|normalize_separators
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Path
+argument_list|)
+expr_stmt|;
 comment|/// @brief Create all the non-existent directories in path.
 comment|///
 comment|/// @param path Directories to create.
-comment|/// @param existed Set to true if \a path already existed, false otherwise.
-comment|/// @returns errc::success if is_directory(path) and existed have been set,
-comment|///          otherwise a platform specific error_code.
+comment|/// @returns errc::success if is_directory(path), otherwise a platform
+comment|///          specific error_code. If IgnoreExisting is false, also returns
+comment|///          error if the directory already existed.
+name|std
+operator|::
 name|error_code
-name|create_directories
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-modifier|&
-name|existed
-parameter_list|)
-function_decl|;
-comment|/// @brief Convenience function for clients that don't need to know if the
-comment|///        directory existed or not.
-specifier|inline
-name|error_code
-name|create_directories
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|Path
-parameter_list|)
-block|{
-name|bool
-name|Existed
-decl_stmt|;
-return|return
 name|create_directories
 argument_list|(
-name|Path
+argument|const Twine&path
 argument_list|,
-name|Existed
+argument|bool IgnoreExisting = true
 argument_list|)
-return|;
-block|}
+expr_stmt|;
 comment|/// @brief Create the directory in path.
 comment|///
 comment|/// @param path Directory to create.
-comment|/// @param existed Set to true if \a path already existed, false otherwise.
-comment|/// @returns errc::success if is_directory(path) and existed have been set,
-comment|///          otherwise a platform specific error_code.
+comment|/// @returns errc::success if is_directory(path), otherwise a platform
+comment|///          specific error_code. If IgnoreExisting is false, also returns
+comment|///          error if the directory already existed.
+name|std
+operator|::
 name|error_code
-name|create_directory
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-modifier|&
-name|existed
-parameter_list|)
-function_decl|;
-comment|/// @brief Convenience function for clients that don't need to know if the
-comment|///        directory existed or not.
-specifier|inline
-name|error_code
-name|create_directory
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|Path
-parameter_list|)
-block|{
-name|bool
-name|Existed
-decl_stmt|;
-return|return
 name|create_directory
 argument_list|(
-name|Path
+argument|const Twine&path
 argument_list|,
-name|Existed
+argument|bool IgnoreExisting = true
 argument_list|)
-return|;
-block|}
-comment|/// @brief Create a hard link from \a from to \a to.
+expr_stmt|;
+comment|/// @brief Create a link from \a from to \a to.
+comment|///
+comment|/// The link may be a soft or a hard link, depending on the platform. The caller
+comment|/// may not assume which one. Currently on windows it creates a hard link since
+comment|/// soft links require extra privileges. On unix, it creates a soft link since
+comment|/// hard links don't work on SMB file systems.
 comment|///
 comment|/// @param to The path to hard link to.
 comment|/// @param from The path to hard link from. This is created.
-comment|/// @returns errc::success if exists(to)&& exists(from)&& equivalent(to, from)
-comment|///          , otherwise a platform specific error_code.
+comment|/// @returns errc::success if the link was created, otherwise a platform
+comment|/// specific error_code.
+name|std
+operator|::
 name|error_code
-name|create_hard_link
-parameter_list|(
+name|create_link
+argument_list|(
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|to
-parameter_list|,
+argument_list|,
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|from
-parameter_list|)
-function_decl|;
-comment|/// @brief Create a symbolic link from \a from to \a to.
-comment|///
-comment|/// @param to The path to symbolically link to.
-comment|/// @param from The path to symbolically link from. This is created.
-comment|/// @returns errc::success if exists(to)&& exists(from)&& is_symlink(from),
-comment|///          otherwise a platform specific error_code.
-name|error_code
-name|create_symlink
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|to
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|from
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// @brief Get the current path.
 comment|///
 comment|/// @param result Holds the current path on return.
 comment|/// @returns errc::success if the current path has been stored in result,
-comment|///          otherwise a platform specific error_code.
+comment|///          otherwise a platform-specific error_code.
+name|std
+operator|::
 name|error_code
 name|current_path
 argument_list|(
@@ -1353,131 +1443,79 @@ operator|>
 operator|&
 name|result
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// @brief Remove path. Equivalent to POSIX remove().
 comment|///
 comment|/// @param path Input path.
-comment|/// @param existed Set to true if \a path existed, false if it did not.
-comment|///                undefined otherwise.
-comment|/// @returns errc::success if path has been removed and existed has been
-comment|///          successfully set, otherwise a platform specific error_code.
+comment|/// @returns errc::success if path has been removed or didn't exist, otherwise a
+comment|///          platform-specific error code. If IgnoreNonExisting is false, also
+comment|///          returns error if the file didn't exist.
+name|std
+operator|::
 name|error_code
-name|remove
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-modifier|&
-name|existed
-parameter_list|)
-function_decl|;
-comment|/// @brief Convenience function for clients that don't need to know if the file
-comment|///        existed or not.
-specifier|inline
-name|error_code
-name|remove
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|Path
-parameter_list|)
-block|{
-name|bool
-name|Existed
-decl_stmt|;
-return|return
 name|remove
 argument_list|(
-name|Path
+argument|const Twine&path
 argument_list|,
-name|Existed
+argument|bool IgnoreNonExisting = true
 argument_list|)
-return|;
-block|}
-comment|/// @brief Recursively remove all files below \a path, then \a path. Files are
-comment|///        removed as if by POSIX remove().
-comment|///
-comment|/// @param path Input path.
-comment|/// @param num_removed Number of files removed.
-comment|/// @returns errc::success if path has been removed and num_removed has been
-comment|///          successfully set, otherwise a platform specific error_code.
-name|error_code
-name|remove_all
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|uint32_t
-modifier|&
-name|num_removed
-parameter_list|)
-function_decl|;
-comment|/// @brief Convenience function for clients that don't need to know how many
-comment|///        files were removed.
-specifier|inline
-name|error_code
-name|remove_all
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|Path
-parameter_list|)
-block|{
-name|uint32_t
-name|Removed
-decl_stmt|;
-return|return
-name|remove_all
-argument_list|(
-name|Path
-argument_list|,
-name|Removed
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 comment|/// @brief Rename \a from to \a to. Files are renamed as if by POSIX rename().
 comment|///
 comment|/// @param from The path to rename from.
 comment|/// @param to The path to rename to. This is created.
+name|std
+operator|::
 name|error_code
 name|rename
-parameter_list|(
+argument_list|(
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|from
-parameter_list|,
+argument_list|,
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|to
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
+comment|/// @brief Copy the contents of \a From to \a To.
+comment|///
+comment|/// @param From The path to copy from.
+comment|/// @param To The path to copy to. This is created.
+name|std
+operator|::
+name|error_code
+name|copy_file
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|From
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|To
+argument_list|)
+expr_stmt|;
 comment|/// @brief Resize path to size. File is resized as if by POSIX truncate().
 comment|///
 comment|/// @param path Input path.
 comment|/// @param size Size to resize to.
 comment|/// @returns errc::success if \a path has been resized to \a size, otherwise a
-comment|///          platform specific error_code.
+comment|///          platform-specific error_code.
+name|std
+operator|::
 name|error_code
 name|resize_file
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|uint64_t
-name|size
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const Twine&path
+argument_list|,
+argument|uint64_t size
+argument_list|)
+expr_stmt|;
 comment|/// @}
 comment|/// @name Physical Observers
 comment|/// @{
@@ -1499,20 +1537,22 @@ comment|/// @param path Input path.
 comment|/// @param result Set to true if the file represented by status exists, false if
 comment|///               it does not. Undefined otherwise.
 comment|/// @returns errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
+comment|///          platform-specific error_code.
+name|std
+operator|::
 name|error_code
 name|exists
-parameter_list|(
+argument_list|(
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|path
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|result
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// @brief Simpler version of exists for clients that don't need to
 comment|///        differentiate between an error and false.
 specifier|inline
@@ -1594,25 +1634,27 @@ comment|/// @param B Input path B.
 comment|/// @param result Set to true if stat(A) and stat(B) have the same device and
 comment|///               inode (or equivalent).
 comment|/// @returns errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
+comment|///          platform-specific error_code.
+name|std
+operator|::
 name|error_code
 name|equivalent
-parameter_list|(
+argument_list|(
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|A
-parameter_list|,
+argument_list|,
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|B
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|result
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// @brief Simpler version of equivalent for clients that don't need to
 comment|///        differentiate between an error and false.
 specifier|inline
@@ -1664,20 +1706,22 @@ comment|/// @param path Input path.
 comment|/// @param result Set to true if \a path is a directory, false if it is not.
 comment|///               Undefined otherwise.
 comment|/// @returns errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
+comment|///          platform-specific error_code.
+name|std
+operator|::
 name|error_code
 name|is_directory
-parameter_list|(
+argument_list|(
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|path
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|result
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// @brief Simpler version of is_directory for clients that don't need to
 comment|///        differentiate between an error and false.
 specifier|inline
@@ -1722,20 +1766,22 @@ comment|/// @param path Input path.
 comment|/// @param result Set to true if \a path is a regular file, false if it is not.
 comment|///               Undefined otherwise.
 comment|/// @returns errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
+comment|///          platform-specific error_code.
+name|std
+operator|::
 name|error_code
 name|is_regular_file
-parameter_list|(
+argument_list|(
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|path
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|result
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// @brief Simpler version of is_regular_file for clients that don't need to
 comment|///        differentiate between an error and false.
 specifier|inline
@@ -1771,8 +1817,7 @@ comment|/// @brief Does this status represent something that exists but is not a
 comment|///        directory, regular file, or symlink?
 comment|///
 comment|/// @param status A file_status previously returned from status.
-comment|/// @returns exists(s)&& !is_regular_file(s)&& !is_directory(s)&&
-comment|///          !is_symlink(s)
+comment|/// @returns exists(s)&& !is_regular_file(s)&& !is_directory(s)
 name|bool
 name|is_other
 parameter_list|(
@@ -1787,115 +1832,86 @@ comment|/// @param path Input path.
 comment|/// @param result Set to true if \a path exists, but is not a directory, regular
 comment|///               file, or a symlink, false if it does not. Undefined otherwise.
 comment|/// @returns errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
+comment|///          platform-specific error_code.
+name|std
+operator|::
 name|error_code
 name|is_other
-parameter_list|(
+argument_list|(
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|path
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|result
-parameter_list|)
-function_decl|;
-comment|/// @brief Does status represent a symlink?
-comment|///
-comment|/// @param status A file_status previously returned from stat.
-comment|/// @returns status.type() == symlink_file.
-name|bool
-name|is_symlink
-parameter_list|(
-name|file_status
-name|status
-parameter_list|)
-function_decl|;
-comment|/// @brief Is path a symlink?
-comment|///
-comment|/// @param path Input path.
-comment|/// @param result Set to true if \a path is a symlink, false if it is not.
-comment|///               Undefined otherwise.
-comment|/// @returns errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|is_symlink
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-modifier|&
-name|result
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// @brief Get file status as if by POSIX stat().
 comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to the file status.
 comment|/// @returns errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
+comment|///          platform-specific error_code.
+name|std
+operator|::
 name|error_code
 name|status
-parameter_list|(
+argument_list|(
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|path
-parameter_list|,
+argument_list|,
 name|file_status
-modifier|&
+operator|&
 name|result
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// @brief A version for when a file descriptor is already available.
+name|std
+operator|::
 name|error_code
 name|status
-parameter_list|(
-name|int
-name|FD
-parameter_list|,
-name|file_status
-modifier|&
-name|Result
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|int FD
+argument_list|,
+argument|file_status&Result
+argument_list|)
+expr_stmt|;
 comment|/// @brief Get file size.
 comment|///
 comment|/// @param Path Input path.
 comment|/// @param Result Set to the size of the file in \a Path.
 comment|/// @returns errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
+comment|///          platform-specific error_code.
 specifier|inline
+name|std
+operator|::
 name|error_code
 name|file_size
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|Path
-parameter_list|,
-name|uint64_t
-modifier|&
-name|Result
-parameter_list|)
+argument_list|(
+argument|const Twine&Path
+argument_list|,
+argument|uint64_t&Result
+argument_list|)
 block|{
 name|file_status
 name|Status
-decl_stmt|;
+block|;
+name|std
+operator|::
 name|error_code
 name|EC
-init|=
+operator|=
 name|status
 argument_list|(
 name|Path
 argument_list|,
 name|Status
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|EC
@@ -1911,22 +1927,27 @@ name|getSize
 argument_list|()
 expr_stmt|;
 return|return
-name|error_code
+name|std
 operator|::
-name|success
+name|error_code
 argument_list|()
 return|;
 block|}
+comment|/// @brief Set the file modification and access time.
+comment|///
+comment|/// @returns errc::success if the file times were successfully set, otherwise a
+comment|///          platform-specific error_code or errc::function_not_supported on
+comment|///          platforms where the functionality isn't available.
+name|std
+operator|::
 name|error_code
 name|setLastModificationAndAccessTime
-parameter_list|(
-name|int
-name|FD
-parameter_list|,
-name|TimeValue
-name|Time
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|int FD
+argument_list|,
+argument|TimeValue Time
+argument_list|)
+expr_stmt|;
 comment|/// @brief Is status available?
 comment|///
 comment|/// @param s Input file status.
@@ -1943,20 +1964,22 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to true if status() != status_error.
 comment|/// @returns errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
+comment|///          platform-specific error_code.
+name|std
+operator|::
 name|error_code
 name|status_known
-parameter_list|(
+argument_list|(
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|path
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|result
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// @brief Create a uniquely named file.
 comment|///
 comment|/// Generates a unique path suitable for a temporary file and then opens it as a
@@ -1977,35 +2000,24 @@ comment|/// @param Model Name to base unique path off of.
 comment|/// @param ResultFD Set to the opened file's file descriptor.
 comment|/// @param ResultPath Set to the opened file's absolute path.
 comment|/// @returns errc::success if Result{FD,Path} have been successfully set,
-comment|///          otherwise a platform specific error_code.
+comment|///          otherwise a platform-specific error_code.
+name|std
+operator|::
 name|error_code
 name|createUniqueFile
 argument_list|(
-specifier|const
-name|Twine
-operator|&
-name|Model
+argument|const Twine&Model
 argument_list|,
-name|int
-operator|&
-name|ResultFD
+argument|int&ResultFD
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|ResultPath
+argument|SmallVectorImpl<char>&ResultPath
 argument_list|,
-name|unsigned
-name|Mode
-operator|=
-name|all_read
-operator||
-name|all_write
+argument|unsigned Mode = all_read | all_write
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// @brief Simpler version for clients that don't want an open file.
+name|std
+operator|::
 name|error_code
 name|createUniqueFile
 argument_list|(
@@ -2021,7 +2033,7 @@ operator|>
 operator|&
 name|ResultPath
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// @brief Create a file in the system temporary directory.
 comment|///
 comment|/// The filename is of the form prefix-random_chars.suffix. Since the directory
@@ -2030,49 +2042,35 @@ comment|/// The files are created with mode 0600.
 comment|///
 comment|/// This should be used for things like a temporary .s that is removed after
 comment|/// running the assembler.
+name|std
+operator|::
 name|error_code
 name|createTemporaryFile
 argument_list|(
-specifier|const
-name|Twine
-operator|&
-name|Prefix
+argument|const Twine&Prefix
 argument_list|,
-name|StringRef
-name|Suffix
+argument|StringRef Suffix
 argument_list|,
-name|int
-operator|&
-name|ResultFD
+argument|int&ResultFD
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|ResultPath
+argument|SmallVectorImpl<char>&ResultPath
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// @brief Simpler version for clients that don't want an open file.
+name|std
+operator|::
 name|error_code
 name|createTemporaryFile
 argument_list|(
-specifier|const
-name|Twine
-operator|&
-name|Prefix
+argument|const Twine&Prefix
 argument_list|,
-name|StringRef
-name|Suffix
+argument|StringRef Suffix
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|ResultPath
+argument|SmallVectorImpl<char>&ResultPath
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+name|std
+operator|::
 name|error_code
 name|createUniqueDirectory
 argument_list|(
@@ -2088,9 +2086,11 @@ operator|>
 operator|&
 name|ResultPath
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 enum|enum
 name|OpenFlags
+enum|:
+name|unsigned
 block|{
 name|F_None
 init|=
@@ -2109,11 +2109,16 @@ name|F_Append
 init|=
 literal|2
 block|,
-comment|/// F_Binary - The file should be opened in binary mode on platforms that
-comment|/// make this distinction.
-name|F_Binary
+comment|/// The file should be opened in text mode on platforms that make this
+comment|/// distinction.
+name|F_Text
 init|=
 literal|4
+block|,
+comment|/// Open the file for read and write.
+name|F_RW
+init|=
+literal|8
 block|}
 enum|;
 specifier|inline
@@ -2167,93 +2172,36 @@ return|return
 name|A
 return|;
 block|}
+name|std
+operator|::
 name|error_code
 name|openFileForWrite
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|Name
-parameter_list|,
-name|int
-modifier|&
-name|ResultFD
-parameter_list|,
-name|OpenFlags
-name|Flags
-parameter_list|,
-name|unsigned
-name|Mode
-init|=
+argument_list|(
+argument|const Twine&Name
+argument_list|,
+argument|int&ResultFD
+argument_list|,
+argument|OpenFlags Flags
+argument_list|,
+argument|unsigned Mode =
 literal|0666
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
 name|error_code
 name|openFileForRead
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|Name
-parameter_list|,
-name|int
-modifier|&
-name|ResultFD
-parameter_list|)
-function_decl|;
-comment|/// @brief Are \a path's first bytes \a magic?
-comment|///
-comment|/// @param path Input path.
-comment|/// @param magic Byte sequence to compare \a path's first len(magic) bytes to.
-comment|/// @returns errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|has_magic
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|magic
-parameter_list|,
-name|bool
-modifier|&
-name|result
-parameter_list|)
-function_decl|;
-comment|/// @brief Get \a path's first \a len bytes.
-comment|///
-comment|/// @param path Input path.
-comment|/// @param len Number of magic bytes to get.
-comment|/// @param result Set to the first \a len bytes in the file pointed to by
-comment|///               \a path. Or the entire file if file_size(path)< len, in which
-comment|///               case result.size() returns the size of the file.
-comment|/// @returns errc::success if result has been successfully set,
-comment|///          errc::value_too_large if len is larger then the file pointed to by
-comment|///          \a path, otherwise a platform specific error_code.
-name|error_code
-name|get_magic
 argument_list|(
 specifier|const
 name|Twine
 operator|&
-name|path
+name|Name
 argument_list|,
-name|uint32_t
-name|len
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
+name|int
 operator|&
-name|result
+name|ResultFD
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// @brief Identify the type of a binary file based on how magical it is.
 name|file_magic
 name|identify_magic
@@ -2267,32 +2215,32 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @param result Set to the type of file, or file_magic::unknown.
 comment|/// @returns errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
+comment|///          platform-specific error_code.
+name|std
+operator|::
 name|error_code
 name|identify_magic
-parameter_list|(
+argument_list|(
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|path
-parameter_list|,
+argument_list|,
 name|file_magic
-modifier|&
+operator|&
 name|result
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
 name|error_code
 name|getUniqueID
-parameter_list|(
-specifier|const
-name|Twine
-name|Path
-parameter_list|,
-name|UniqueID
-modifier|&
-name|Result
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const Twine Path
+argument_list|,
+argument|UniqueID&Result
+argument_list|)
+expr_stmt|;
 comment|/// This class represents a memory mapped file. It is based on
 comment|/// boost::iostreams::mapped_file.
 name|class
@@ -2335,7 +2283,7 @@ block|}
 enum|;
 name|private
 label|:
-comment|/// Platform specific mapping state.
+comment|/// Platform-specific mapping state.
 name|mapmode
 name|Mode
 decl_stmt|;
@@ -2362,28 +2310,24 @@ name|FileMappingHandle
 decl_stmt|;
 endif|#
 directive|endif
+name|std
+operator|::
 name|error_code
 name|init
-parameter_list|(
-name|int
-name|FD
-parameter_list|,
-name|bool
-name|CloseFD
-parameter_list|,
-name|uint64_t
-name|Offset
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|int FD
+argument_list|,
+argument|bool CloseFD
+argument_list|,
+argument|uint64_t Offset
+argument_list|)
+expr_stmt|;
 name|public
 label|:
 typedef|typedef
 name|char
 name|char_type
 typedef|;
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
 name|mapped_file_region
 argument_list|(
 name|mapped_file_region
@@ -2399,8 +2343,6 @@ name|mapped_file_region
 operator|&&
 operator|)
 decl_stmt|;
-endif|#
-directive|endif
 comment|/// Construct a mapped_file_region at \a path starting at \a offset of length
 comment|/// \a length and with access \a mode.
 comment|///
@@ -2425,7 +2367,7 @@ argument|uint64_t length
 argument_list|,
 argument|uint64_t offset
 argument_list|,
-argument|error_code&ec
+argument|std::error_code&ec
 argument_list|)
 empty_stmt|;
 comment|/// \param fd An open file descriptor to map. mapped_file_region takes
@@ -2443,7 +2385,7 @@ argument|uint64_t length
 argument_list|,
 argument|uint64_t offset
 argument_list|,
-argument|error_code&ec
+argument|std::error_code&ec
 argument_list|)
 empty_stmt|;
 operator|~
@@ -2483,58 +2425,6 @@ parameter_list|()
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// @brief Memory maps the contents of a file
-comment|///
-comment|/// @param path Path to file to map.
-comment|/// @param file_offset Byte offset in file where mapping should begin.
-comment|/// @param size Byte length of range of the file to map.
-comment|/// @param map_writable If true, the file will be mapped in r/w such
-comment|///        that changes to the mapped buffer will be flushed back
-comment|///        to the file.  If false, the file will be mapped read-only
-comment|///        and the buffer will be read-only.
-comment|/// @param result Set to the start address of the mapped buffer.
-comment|/// @returns errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|map_file_pages
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|off_t
-name|file_offset
-parameter_list|,
-name|size_t
-name|size
-parameter_list|,
-name|bool
-name|map_writable
-parameter_list|,
-name|void
-modifier|*
-modifier|&
-name|result
-parameter_list|)
-function_decl|;
-comment|/// @brief Memory unmaps the contents of a file
-comment|///
-comment|/// @param base Pointer to the start of the buffer.
-comment|/// @param size Byte length of the range to unmmap.
-comment|/// @returns errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|unmap_file_pages
-parameter_list|(
-name|void
-modifier|*
-name|base
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
 comment|/// Return the path to the main executable, given the value of argv[0] from
 comment|/// program startup and the address of main itself. In extremis, this function
 comment|/// may fail and return an empty path.
@@ -2637,15 +2527,15 @@ return|return
 name|Path
 return|;
 block|}
+name|std
+operator|::
 name|error_code
 name|status
 argument_list|(
-name|file_status
-operator|&
-name|result
+argument|file_status&result
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 name|bool
 name|operator
 operator|==
@@ -2738,29 +2628,35 @@ block|{
 struct_decl|struct
 name|DirIterState
 struct_decl|;
+name|std
+operator|::
 name|error_code
 name|directory_iterator_construct
-parameter_list|(
+argument_list|(
 name|DirIterState
-modifier|&
-parameter_list|,
+operator|&
+argument_list|,
 name|StringRef
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
 name|error_code
 name|directory_iterator_increment
-parameter_list|(
+argument_list|(
 name|DirIterState
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
 name|error_code
 name|directory_iterator_destruct
-parameter_list|(
+argument_list|(
 name|DirIterState
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+argument_list|)
+expr_stmt|;
 comment|/// DirIterState - Keeps state for the directory_iterator. It is reference
 comment|/// counted in order to preserve InputIterator semantics on copy.
 name|struct
@@ -2816,16 +2712,18 @@ name|public
 label|:
 name|explicit
 name|directory_iterator
-parameter_list|(
+argument_list|(
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|path
-parameter_list|,
+argument_list|,
+name|std
+operator|::
 name|error_code
-modifier|&
+operator|&
 name|ec
-parameter_list|)
+argument_list|)
 block|{
 name|State
 operator|=
@@ -2860,16 +2758,18 @@ expr_stmt|;
 block|}
 name|explicit
 name|directory_iterator
-parameter_list|(
+argument_list|(
 specifier|const
 name|directory_entry
-modifier|&
+operator|&
 name|de
-parameter_list|,
+argument_list|,
+name|std
+operator|::
 name|error_code
-modifier|&
+operator|&
 name|ec
-parameter_list|)
+argument_list|)
 block|{
 name|State
 operator|=
@@ -2900,7 +2800,7 @@ argument_list|()
 operator|:
 name|State
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|// No operator++ because we need error_code.
@@ -2908,7 +2808,7 @@ name|directory_iterator
 operator|&
 name|increment
 argument_list|(
-argument|error_code&ec
+argument|std::error_code&ec
 argument_list|)
 block|{
 name|ec
@@ -2979,11 +2879,10 @@ name|true
 return|;
 if|if
 condition|(
+operator|!
 name|RHS
 operator|.
 name|State
-operator|==
-literal|0
 condition|)
 return|return
 name|State
@@ -2995,9 +2894,8 @@ argument_list|()
 return|;
 if|if
 condition|(
+operator|!
 name|State
-operator|==
-literal|0
 condition|)
 return|return
 name|RHS
@@ -3021,6 +2919,9 @@ operator|->
 name|CurrentEntry
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|bool
 name|operator
 operator|!=
@@ -3042,16 +2943,18 @@ name|RHS
 operator|)
 return|;
 block|}
-comment|// Other members as required by
-comment|// C++ Std, 24.1.1 Input iterators [input.iterators]
-block|}
-end_decl_stmt
+end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|// Other members as required by
+end_comment
+
+begin_comment
+comment|// C++ Std, 24.1.1 Input iterators [input.iterators]
+end_comment
 
 begin_decl_stmt
+unit|};
 name|namespace
 name|detail
 block|{
@@ -3137,11 +3040,13 @@ name|Twine
 operator|&
 name|path
 argument_list|,
+name|std
+operator|::
 name|error_code
 operator|&
 name|ec
 argument_list|)
-operator|:
+range|:
 name|State
 argument_list|(
 argument|new detail::RecDirIterState
@@ -3183,11 +3088,13 @@ comment|// No operator++ because we need error_code.
 name|recursive_directory_iterator
 modifier|&
 name|increment
-parameter_list|(
+argument_list|(
+name|std
+operator|::
 name|error_code
-modifier|&
+operator|&
 name|ec
-parameter_list|)
+argument_list|)
 block|{
 specifier|const
 name|directory_iterator
@@ -3473,9 +3380,11 @@ specifier|const
 name|directory_iterator
 name|end_itr
 decl_stmt|;
+name|std
+operator|::
 name|error_code
 name|ec
-decl_stmt|;
+expr_stmt|;
 do|do
 block|{
 if|if

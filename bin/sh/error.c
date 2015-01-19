@@ -227,7 +227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called from trap.c when a SIGINT is received.  (If the user specifies  * that SIGINT is to be trapped or ignored using the trap builtin, then  * this routine is not called.)  Suppressint is nonzero when interrupts  * are held using the INTOFF macro.  If SIGINTs are not suppressed and  * the shell is not a root shell, then we want to be terminated if we  * get here, as if we were terminated directly by a SIGINT.  Arrange for  * this here.  */
+comment|/*  * Called from trap.c when a SIGINT is received and not suppressed, or when  * an interrupt is pending and interrupts are re-enabled using INTON.  * (If the user specifies that SIGINT is to be trapped or ignored using the  * trap builtin, then this routine is not called.)  Suppressint is nonzero  * when interrupts are held using the INTOFF macro.  If SIGINTs are not  * suppressed and the shell is not a root shell, then we want to be  * terminated if we get here, as if we were terminated directly by a SIGINT.  * Arrange for this here.  */
 end_comment
 
 begin_function
@@ -240,20 +240,6 @@ block|{
 name|sigset_t
 name|sigs
 decl_stmt|;
-comment|/* 	 * The !in_dotrap here is safe.  The only way we can arrive here 	 * with in_dotrap set is that a trap handler set SIGINT to SIG_DFL 	 * and killed itself. 	 */
-if|if
-condition|(
-name|suppressint
-operator|&&
-operator|!
-name|in_dotrap
-condition|)
-block|{
-name|intpending
-operator|++
-expr_stmt|;
-return|return;
-block|}
 name|intpending
 operator|=
 literal|0
@@ -309,6 +295,13 @@ argument_list|,
 name|SIGINT
 argument_list|)
 expr_stmt|;
+name|_exit
+argument_list|(
+literal|128
+operator|+
+name|SIGINT
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -338,6 +331,20 @@ argument_list|,
 literal|"%s: "
 argument_list|,
 name|commandname
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|arg0
+condition|)
+name|outfmt
+argument_list|(
+name|out2
+argument_list|,
+literal|"%s: "
+argument_list|,
+name|arg0
 argument_list|)
 expr_stmt|;
 name|doformat

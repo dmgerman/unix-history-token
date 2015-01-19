@@ -123,7 +123,7 @@ name|CodeCompleteConsumer
 modifier|*
 name|CompletionConsumer
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|bool
 name|SkipFunctionBodies

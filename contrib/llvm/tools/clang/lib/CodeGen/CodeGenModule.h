@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"SanitizerBlacklist.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Attr.h"
 end_include
 
@@ -158,13 +164,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Transforms/Utils/SpecialCaseList.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_decl_stmt
@@ -194,6 +194,9 @@ name|FunctionType
 decl_stmt|;
 name|class
 name|LLVMContext
+decl_stmt|;
+name|class
+name|IndexedInstrProfReader
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -278,9 +281,6 @@ name|class
 name|CXXDestructorDecl
 decl_stmt|;
 name|class
-name|MangleBuffer
-decl_stmt|;
-name|class
 name|Module
 decl_stmt|;
 name|namespace
@@ -306,6 +306,9 @@ name|CGObjCRuntime
 decl_stmt|;
 name|class
 name|CGOpenCLRuntime
+decl_stmt|;
+name|class
+name|CGOpenMPRuntime
 decl_stmt|;
 name|class
 name|CGCUDARuntime
@@ -380,33 +383,32 @@ name|RHS
 operator|)
 specifier|const
 block|{
-if|if
-condition|(
-name|priority
-operator|<
-name|RHS
-operator|.
-name|priority
-condition|)
 return|return
-name|true
-return|;
-return|return
+name|std
+operator|::
+name|tie
+argument_list|(
 name|priority
-operator|==
-name|RHS
-operator|.
-name|priority
-operator|&&
+argument_list|,
 name|lex_order
+argument_list|)
 operator|<
+name|std
+operator|::
+name|tie
+argument_list|(
+name|RHS
+operator|.
+name|priority
+argument_list|,
 name|RHS
 operator|.
 name|lex_order
+argument_list|)
 return|;
 block|}
 block|}
-empty_stmt|;
+struct|;
 struct|struct
 name|CodeGenTypeCache
 block|{
@@ -738,8 +740,132 @@ name|clang_arc_use
 expr_stmt|;
 block|}
 struct|;
-comment|/// CodeGenModule - This class organizes the cross-function state that is used
-comment|/// while generating LLVM code.
+comment|/// This class records statistics on instrumentation based profiling.
+name|class
+name|InstrProfStats
+block|{
+name|uint32_t
+name|VisitedInMainFile
+decl_stmt|;
+name|uint32_t
+name|MissingInMainFile
+decl_stmt|;
+name|uint32_t
+name|Visited
+decl_stmt|;
+name|uint32_t
+name|Missing
+decl_stmt|;
+name|uint32_t
+name|Mismatched
+decl_stmt|;
+name|public
+label|:
+name|InstrProfStats
+argument_list|()
+operator|:
+name|VisitedInMainFile
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|MissingInMainFile
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Visited
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Missing
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Mismatched
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|/// Record that we've visited a function and whether or not that function was
+comment|/// in the main source file.
+name|void
+name|addVisited
+argument_list|(
+argument|bool MainFile
+argument_list|)
+block|{
+if|if
+condition|(
+name|MainFile
+condition|)
+operator|++
+name|VisitedInMainFile
+expr_stmt|;
+operator|++
+name|Visited
+expr_stmt|;
+block|}
+comment|/// Record that a function we've visited has no profile data.
+name|void
+name|addMissing
+parameter_list|(
+name|bool
+name|MainFile
+parameter_list|)
+block|{
+if|if
+condition|(
+name|MainFile
+condition|)
+operator|++
+name|MissingInMainFile
+expr_stmt|;
+operator|++
+name|Missing
+expr_stmt|;
+block|}
+comment|/// Record that a function we've visited has mismatched profile data.
+name|void
+name|addMismatched
+parameter_list|(
+name|bool
+name|MainFile
+parameter_list|)
+block|{
+operator|++
+name|Mismatched
+expr_stmt|;
+block|}
+comment|/// Whether or not the stats we've gathered indicate any potential problems.
+name|bool
+name|hasDiagnostics
+parameter_list|()
+block|{
+return|return
+name|Missing
+operator|||
+name|Mismatched
+return|;
+block|}
+comment|/// Report potential problems we've found to \c Diags.
+name|void
+name|reportDiagnostics
+parameter_list|(
+name|DiagnosticsEngine
+modifier|&
+name|Diags
+parameter_list|,
+name|StringRef
+name|MainFile
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
+comment|/// This class organizes the cross-function state that is used while generating
+comment|/// LLVM code.
 name|class
 name|CodeGenModule
 range|:
@@ -761,24 +887,74 @@ name|CodeGenModule
 operator|&
 operator|)
 name|LLVM_DELETED_FUNCTION
+block|;    struct
+name|Structor
+block|{
+name|Structor
+argument_list|()
+operator|:
+name|Priority
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Initializer
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|AssociatedData
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+name|Structor
+argument_list|(
+argument|int Priority
+argument_list|,
+argument|llvm::Constant *Initializer
+argument_list|,
+argument|llvm::Constant *AssociatedData
+argument_list|)
+operator|:
+name|Priority
+argument_list|(
+name|Priority
+argument_list|)
+block|,
+name|Initializer
+argument_list|(
+name|Initializer
+argument_list|)
+block|,
+name|AssociatedData
+argument_list|(
+argument|AssociatedData
+argument_list|)
+block|{}
+name|int
+name|Priority
+block|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|Initializer
+block|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|AssociatedData
+block|;   }
 block|;
 typedef|typedef
 name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|llvm
-operator|::
-name|Constant
-operator|*
-operator|,
-name|int
+name|Structor
 operator|>
-expr|>
 name|CtorList
 expr_stmt|;
 name|ASTContext
@@ -817,10 +993,14 @@ name|TargetInfo
 modifier|&
 name|Target
 decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CGCXXABI
-modifier|&
+operator|>
 name|ABI
-decl_stmt|;
+expr_stmt|;
 name|llvm
 operator|::
 name|LLVMContext
@@ -843,7 +1023,7 @@ comment|// if TheTargetCodeGenInfo is NULL
 name|CodeGenTypes
 name|Types
 decl_stmt|;
-comment|/// VTables - Holds information about C++ vtables.
+comment|/// Holds information about C++ vtables.
 name|CodeGenVTables
 name|VTables
 decl_stmt|;
@@ -854,6 +1034,10 @@ decl_stmt|;
 name|CGOpenCLRuntime
 modifier|*
 name|OpenCLRuntime
+decl_stmt|;
+name|CGOpenMPRuntime
+modifier|*
+name|OpenMPRuntime
 decl_stmt|;
 name|CGCUDARuntime
 modifier|*
@@ -877,9 +1061,22 @@ name|RREntrypoints
 modifier|*
 name|RRData
 decl_stmt|;
-comment|// WeakRefReferences - A set of references that have only been seen via
-comment|// a weakref so far. This is used to remove the weak of the reference if we
-comment|// ever see a direct reference or a definition.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|IndexedInstrProfReader
+operator|>
+name|PGOReader
+expr_stmt|;
+name|InstrProfStats
+name|PGOStats
+decl_stmt|;
+comment|// A set of references that have only been seen via a weakref so far. This is
+comment|// used to remove the weak of the reference if we ever see a direct reference
+comment|// or a definition.
 name|llvm
 operator|::
 name|SmallPtrSet
@@ -893,29 +1090,91 @@ literal|10
 operator|>
 name|WeakRefReferences
 expr_stmt|;
-comment|/// DeferredDecls - This contains all the decls which have definitions but
-comment|/// which are deferred for emission and therefore should only be output if
-comment|/// they are actually used.  If a decl is in this, then it is known to have
-comment|/// not been referenced yet.
-name|llvm
+comment|/// This contains all the decls which have definitions but/ which are deferred
+comment|/// for emission and therefore should only be output if they are actually
+comment|/// used. If a decl is in this, then it is known to have not been referenced
+comment|/// yet.
+name|std
 operator|::
-name|StringMap
+name|map
 operator|<
+name|StringRef
+operator|,
 name|GlobalDecl
 operator|>
 name|DeferredDecls
 expr_stmt|;
-comment|/// DeferredDeclsToEmit - This is a list of deferred decls which we have seen
-comment|/// that *are* actually referenced.  These get code generated when the module
-comment|/// is done.
+comment|/// This is a list of deferred decls which we have seen that *are* actually
+comment|/// referenced. These get code generated when the module is done.
+struct|struct
+name|DeferredGlobal
+block|{
+name|DeferredGlobal
+argument_list|(
+argument|llvm::GlobalValue *GV
+argument_list|,
+argument|GlobalDecl GD
+argument_list|)
+block|:
+name|GV
+argument_list|(
+name|GV
+argument_list|)
+operator|,
+name|GD
+argument_list|(
+argument|GD
+argument_list|)
+block|{}
+name|llvm
+operator|::
+name|AssertingVH
+operator|<
+name|llvm
+operator|::
+name|GlobalValue
+operator|>
+name|GV
+expr_stmt|;
+name|GlobalDecl
+name|GD
+decl_stmt|;
+block|}
+struct|;
 name|std
 operator|::
 name|vector
 operator|<
-name|GlobalDecl
+name|DeferredGlobal
 operator|>
 name|DeferredDeclsToEmit
 expr_stmt|;
+name|void
+name|addDeferredDeclToEmit
+argument_list|(
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|GlobalDecl
+name|GD
+argument_list|)
+block|{
+name|DeferredDeclsToEmit
+operator|.
+name|push_back
+argument_list|(
+name|DeferredGlobal
+argument_list|(
+name|GV
+argument_list|,
+name|GD
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// List of alias we have emitted. Used to make sure that what they point to
 comment|/// is defined once we get to the end of the of the translation unit.
 name|std
@@ -945,7 +1204,7 @@ expr_stmt|;
 name|ReplacementsTy
 name|Replacements
 decl_stmt|;
-comment|/// DeferredVTables - A queue of (optional) vtables to consider emitting.
+comment|/// A queue of (optional) vtables to consider emitting.
 name|std
 operator|::
 name|vector
@@ -956,10 +1215,9 @@ operator|*
 operator|>
 name|DeferredVTables
 expr_stmt|;
-comment|/// LLVMUsed - List of global values which are required to be
-comment|/// present in the object file; bitcast to i8*. This is used for
-comment|/// forcing visibility of symbols which may otherwise be optimized
-comment|/// out.
+comment|/// List of global values which are required to be present in the object file;
+comment|/// bitcast to i8*. This is used for forcing visibility of symbols which may
+comment|/// otherwise be optimized out.
 name|std
 operator|::
 name|vector
@@ -970,20 +1228,30 @@ name|WeakVH
 operator|>
 name|LLVMUsed
 expr_stmt|;
-comment|/// GlobalCtors - Store the list of global constructors and their respective
-comment|/// priorities to be emitted when the translation unit is complete.
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|WeakVH
+operator|>
+name|LLVMCompilerUsed
+expr_stmt|;
+comment|/// Store the list of global constructors and their respective priorities to
+comment|/// be emitted when the translation unit is complete.
 name|CtorList
 name|GlobalCtors
 decl_stmt|;
-comment|/// GlobalDtors - Store the list of global destructors and their respective
-comment|/// priorities to be emitted when the translation unit is complete.
+comment|/// Store the list of global destructors and their respective priorities to be
+comment|/// emitted when the translation unit is complete.
 name|CtorList
 name|GlobalDtors
 decl_stmt|;
-comment|/// MangledDeclNames - A map of canonical GlobalDecls to their mangled names.
+comment|/// An ordered map of canonical GlobalDecls to their mangled names.
 name|llvm
 operator|::
-name|DenseMap
+name|MapVector
 operator|<
 name|GlobalDecl
 operator|,
@@ -993,8 +1261,15 @@ name|MangledDeclNames
 expr_stmt|;
 name|llvm
 operator|::
+name|StringMap
+operator|<
+name|GlobalDecl
+operator|,
+name|llvm
+operator|::
 name|BumpPtrAllocator
-name|MangledNamesAllocator
+operator|>
+name|Manglings
 expr_stmt|;
 comment|/// Global annotations.
 name|std
@@ -1033,8 +1308,13 @@ name|CFConstantStringMap
 expr_stmt|;
 name|llvm
 operator|::
-name|StringMap
+name|DenseMap
 operator|<
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|,
 name|llvm
 operator|::
 name|GlobalVariable
@@ -1181,8 +1461,7 @@ operator|*
 operator|>
 name|CXXThreadLocalInits
 expr_stmt|;
-comment|/// CXXGlobalInits - Global variables with initializers that need to run
-comment|/// before main.
+comment|/// Global variables with initializers that need to run before main.
 name|std
 operator|::
 name|vector
@@ -1259,8 +1538,8 @@ return|;
 block|}
 block|}
 struct|;
-comment|/// - Global variables with initializers whose order of initialization
-comment|/// is set by init_priority attribute.
+comment|/// Global variables with initializers whose order of initialization is set by
+comment|/// init_priority attribute.
 name|SmallVector
 operator|<
 name|GlobalInitData
@@ -1269,8 +1548,7 @@ literal|8
 operator|>
 name|PrioritizedCXXGlobalInits
 expr_stmt|;
-comment|/// CXXGlobalDtors - Global destructor functions and arguments that need to
-comment|/// run on termination.
+comment|/// Global destructor functions and arguments that need to run on termination.
 name|std
 operator|::
 name|vector
@@ -1317,15 +1595,15 @@ name|LinkerOptionsMetadata
 expr_stmt|;
 comment|/// @name Cache for Objective-C runtime types
 comment|/// @{
-comment|/// CFConstantStringClassRef - Cached reference to the class for constant
-comment|/// strings. This value has type int * but is actually an Obj-C class pointer.
+comment|/// Cached reference to the class for constant strings. This value has type
+comment|/// int * but is actually an Obj-C class pointer.
 name|llvm
 operator|::
 name|WeakVH
 name|CFConstantStringClassRef
 expr_stmt|;
-comment|/// ConstantStringClassRef - Cached reference to the class for constant
-comment|/// strings. This value has type int * but is actually an Obj-C class pointer.
+comment|/// Cached reference to the class for constant strings. This value has type
+comment|/// int * but is actually an Obj-C class pointer.
 name|llvm
 operator|::
 name|WeakVH
@@ -1351,6 +1629,10 @@ parameter_list|()
 function_decl|;
 name|void
 name|createOpenCLRuntime
+parameter_list|()
+function_decl|;
+name|void
+name|createOpenMPRuntime
 parameter_list|()
 function_decl|;
 name|void
@@ -1436,20 +1718,8 @@ expr_stmt|;
 name|GlobalDecl
 name|initializedGlobalDecl
 decl_stmt|;
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
-name|llvm
-operator|::
-name|SpecialCaseList
-operator|>
 name|SanitizerBlacklist
-expr_stmt|;
-specifier|const
-name|SanitizerOptions
-modifier|&
-name|SanOpts
+name|SanitizerBL
 decl_stmt|;
 comment|/// @}
 name|public
@@ -1487,13 +1757,16 @@ operator|~
 name|CodeGenModule
 argument_list|()
 expr_stmt|;
-comment|/// Release - Finalize LLVM code generation.
+name|void
+name|clear
+parameter_list|()
+function_decl|;
+comment|/// Finalize LLVM code generation.
 name|void
 name|Release
 parameter_list|()
 function_decl|;
-comment|/// getObjCRuntime() - Return a reference to the configured
-comment|/// Objective-C runtime.
+comment|/// Return a reference to the configured Objective-C runtime.
 name|CGObjCRuntime
 modifier|&
 name|getObjCRuntime
@@ -1512,8 +1785,7 @@ operator|*
 name|ObjCRuntime
 return|;
 block|}
-comment|/// hasObjCRuntime() - Return true iff an Objective-C runtime has
-comment|/// been configured.
+comment|/// Return true iff an Objective-C runtime has been configured.
 name|bool
 name|hasObjCRuntime
 parameter_list|()
@@ -1524,7 +1796,7 @@ operator|!
 name|ObjCRuntime
 return|;
 block|}
-comment|/// getOpenCLRuntime() - Return a reference to the configured OpenCL runtime.
+comment|/// Return a reference to the configured OpenCL runtime.
 name|CGOpenCLRuntime
 modifier|&
 name|getOpenCLRuntime
@@ -1534,7 +1806,7 @@ name|assert
 argument_list|(
 name|OpenCLRuntime
 operator|!=
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 return|return
@@ -1542,7 +1814,25 @@ operator|*
 name|OpenCLRuntime
 return|;
 block|}
-comment|/// getCUDARuntime() - Return a reference to the configured CUDA runtime.
+comment|/// Return a reference to the configured OpenMP runtime.
+name|CGOpenMPRuntime
+modifier|&
+name|getOpenMPRuntime
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|OpenMPRuntime
+operator|!=
+name|nullptr
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|OpenMPRuntime
+return|;
+block|}
+comment|/// Return a reference to the configured CUDA runtime.
 name|CGCUDARuntime
 modifier|&
 name|getCUDARuntime
@@ -1552,7 +1842,7 @@ name|assert
 argument_list|(
 name|CUDARuntime
 operator|!=
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 return|return
@@ -1575,7 +1865,7 @@ name|ObjCAutoRefCount
 operator|&&
 name|ARCData
 operator|!=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 return|return
@@ -1593,12 +1883,36 @@ name|assert
 argument_list|(
 name|RRData
 operator|!=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 return|return
 operator|*
 name|RRData
+return|;
+block|}
+name|InstrProfStats
+modifier|&
+name|getPGOStats
+parameter_list|()
+block|{
+return|return
+name|PGOStats
+return|;
+block|}
+name|llvm
+operator|::
+name|IndexedInstrProfReader
+operator|*
+name|getPGOReader
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PGOReader
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|llvm
@@ -1679,6 +1993,18 @@ operator|=
 name|C
 expr_stmt|;
 block|}
+name|bool
+name|lookupRepresentativeDecl
+argument_list|(
+name|StringRef
+name|MangledName
+argument_list|,
+name|GlobalDecl
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
 name|llvm
 operator|::
 name|Constant
@@ -1757,7 +2083,7 @@ name|llvm
 operator|::
 name|Constant
 operator|*
-name|getTypeDescriptor
+name|getTypeDescriptorFromMap
 argument_list|(
 argument|QualType Ty
 argument_list|)
@@ -1770,7 +2096,7 @@ index|]
 return|;
 block|}
 name|void
-name|setTypeDescriptor
+name|setTypeDescriptorInMap
 argument_list|(
 name|QualType
 name|Ty
@@ -1940,17 +2266,19 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function
+begin_expr_stmt
 name|CGCXXABI
-modifier|&
+operator|&
 name|getCXXABI
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
+operator|*
 name|ABI
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_expr_stmt
 name|llvm
@@ -1975,7 +2303,7 @@ block|{
 return|return
 name|TBAA
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -2189,7 +2517,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getSize - Emit the given number of characters as a value of type size_t.
+comment|/// Emit the given number of characters as a value of type size_t.
 end_comment
 
 begin_expr_stmt
@@ -2205,11 +2533,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// setGlobalVisibility - Set the visibility for the given LLVM
-end_comment
-
-begin_comment
-comment|/// GlobalValue.
+comment|/// Set the visibility for the given LLVM GlobalValue.
 end_comment
 
 begin_decl_stmt
@@ -2232,11 +2556,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// setTLSMode - Set the TLS mode for the given LLVM GlobalVariable
+comment|/// Set the TLS mode for the given LLVM GlobalVariable for the thread-local
 end_comment
 
 begin_comment
-comment|/// for the thread-local variable declaration D.
+comment|/// variable declaration D.
 end_comment
 
 begin_decl_stmt
@@ -2253,61 +2577,6 @@ specifier|const
 name|VarDecl
 operator|&
 name|D
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// TypeVisibilityKind - The kind of global variable that is passed to
-end_comment
-
-begin_comment
-comment|/// setTypeVisibility
-end_comment
-
-begin_enum
-enum|enum
-name|TypeVisibilityKind
-block|{
-name|TVK_ForVTT
-block|,
-name|TVK_ForVTable
-block|,
-name|TVK_ForConstructionVTable
-block|,
-name|TVK_ForRTTI
-block|,
-name|TVK_ForRTTIName
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/// setTypeVisibility - Set the visibility for the given global
-end_comment
-
-begin_comment
-comment|/// value which holds information about a type.
-end_comment
-
-begin_decl_stmt
-name|void
-name|setTypeVisibility
-argument_list|(
-name|llvm
-operator|::
-name|GlobalValue
-operator|*
-name|GV
-argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|D
-argument_list|,
-name|TypeVisibilityKind
-name|TVK
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2485,19 +2754,19 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// CreateOrReplaceCXXRuntimeVariable - Will return a global variable of the
+comment|/// Will return a global variable of the given type. If a variable with a
 end_comment
 
 begin_comment
-comment|/// given type. If a variable with a different type already exists then a new
+comment|/// different type already exists then a new  variable with the right type
 end_comment
 
 begin_comment
-comment|/// variable with the right type will be created and all uses of the old
+comment|/// will be created and all uses of the old variable will be replaced with a
 end_comment
 
 begin_comment
-comment|/// variable will be replaced with a bitcast to the new variable.
+comment|/// bitcast to the new variable.
 end_comment
 
 begin_expr_stmt
@@ -2517,19 +2786,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetGlobalVarAddressSpace - Return the address space of the underlying
+comment|/// Return the address space of the underlying global variable for D, as
 end_comment
 
 begin_comment
-comment|/// global variable for D, as determined by its declaration.  Normally this
+comment|/// determined by its declaration. Normally this is the same as the address
 end_comment
 
 begin_comment
-comment|/// is the same as the address space of D's type, but in CUDA, address spaces
+comment|/// space of D's type, but in CUDA, address spaces are associated with
 end_comment
 
 begin_comment
-comment|/// are associated with declarations, not types.
+comment|/// declarations, not types.
 end_comment
 
 begin_function_decl
@@ -2548,19 +2817,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// GetAddrOfGlobalVar - Return the llvm::Constant for the address of the
+comment|/// Return the llvm::Constant for the address of the given global variable.
 end_comment
 
 begin_comment
-comment|/// given global variable.  If Ty is non-null and if the global doesn't exist,
+comment|/// If Ty is non-null and if the global doesn't exist, then it will be greated
 end_comment
 
 begin_comment
-comment|/// then it will be greated with the specified type instead of whatever the
+comment|/// with the specified type instead of whatever the normal requested type
 end_comment
 
 begin_comment
-comment|/// normal requested type would be.
+comment|/// would be.
 end_comment
 
 begin_expr_stmt
@@ -2581,21 +2850,17 @@ name|Type
 operator|*
 name|Ty
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetAddrOfFunction - Return the address of the given function.  If Ty is
+comment|/// Return the address of the given function. If Ty is non-null, then this
 end_comment
 
 begin_comment
-comment|/// non-null, then this function will use the specified type if it has to
-end_comment
-
-begin_comment
-comment|/// create it.
+comment|/// function will use the specified type if it has to create it.
 end_comment
 
 begin_expr_stmt
@@ -2611,16 +2876,14 @@ argument|llvm::Type *Ty =
 literal|0
 argument_list|,
 argument|bool ForVTable = false
+argument_list|,
+argument|bool DontDefer = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetAddrOfRTTIDescriptor - Get the address of the RTTI descriptor
-end_comment
-
-begin_comment
-comment|/// for the given type.
+comment|/// Get the address of the RTTI descriptor for the given type.
 end_comment
 
 begin_expr_stmt
@@ -2638,7 +2901,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetAddrOfUuidDescriptor - Get the address of a uuid descriptor .
+comment|/// Get the address of a uuid descriptor .
 end_comment
 
 begin_expr_stmt
@@ -2657,7 +2920,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetAddrOfThunk - Get the address of the thunk for the given global decl.
+comment|/// Get the address of the thunk for the given global decl.
 end_comment
 
 begin_expr_stmt
@@ -2675,7 +2938,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetWeakRefReference - Get a reference to the target of VD.
+comment|/// Get a reference to the target of VD.
 end_comment
 
 begin_expr_stmt
@@ -2694,11 +2957,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetNonVirtualBaseClassOffset - Returns the offset from a derived class to
+comment|/// Returns the offset from a derived class to  a class. Returns null if the
 end_comment
 
 begin_comment
-comment|/// a class. Returns null if the offset is 0.
+comment|/// offset is 0.
 end_comment
 
 begin_expr_stmt
@@ -2872,7 +3135,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getUniqueBlockCount - Fetches the global unique block count.
+comment|/// Fetches the global unique block count.
 end_comment
 
 begin_function
@@ -2890,11 +3153,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// getBlockDescriptorType - Fetches the type of a generic block
-end_comment
-
-begin_comment
-comment|/// descriptor.
+comment|/// Fetches the type of a generic block descriptor.
 end_comment
 
 begin_expr_stmt
@@ -2908,7 +3167,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getGenericBlockLiteralType - The type of a generic block literal.
+comment|/// The type of a generic block literal.
 end_comment
 
 begin_expr_stmt
@@ -2922,11 +3181,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetAddrOfGlobalBlock - Gets the address of a block which
-end_comment
-
-begin_comment
-comment|/// requires no captures.
+comment|/// Gets the address of a block which requires no captures.
 end_comment
 
 begin_expr_stmt
@@ -2949,11 +3204,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetAddrOfConstantCFString - Return a pointer to a constant CFString object
-end_comment
-
-begin_comment
-comment|/// for the given string.
+comment|/// Return a pointer to a constant CFString object for the given string.
 end_comment
 
 begin_expr_stmt
@@ -2972,11 +3223,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetAddrOfConstantString - Return a pointer to a constant NSString object
+comment|/// Return a pointer to a constant NSString object for the given string. Or a
 end_comment
 
 begin_comment
-comment|/// for the given string. Or a user defined String object as defined via
+comment|/// user defined String object as defined via
 end_comment
 
 begin_comment
@@ -2999,11 +3250,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetConstantArrayFromStringLiteral - Return a constant array for the given
-end_comment
-
-begin_comment
-comment|/// string.
+comment|/// Return a constant array for the given string.
 end_comment
 
 begin_expr_stmt
@@ -3022,17 +3269,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetAddrOfConstantStringFromLiteral - Return a pointer to a constant array
-end_comment
-
-begin_comment
-comment|/// for the given string literal.
+comment|/// Return a pointer to a constant array for the given string literal.
 end_comment
 
 begin_expr_stmt
 name|llvm
 operator|::
-name|Constant
+name|GlobalVariable
 operator|*
 name|GetAddrOfConstantStringFromLiteral
 argument_list|(
@@ -3045,17 +3288,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetAddrOfConstantStringFromObjCEncode - Return a pointer to a constant
-end_comment
-
-begin_comment
-comment|/// array for the given ObjCEncodeExpr node.
+comment|/// Return a pointer to a constant array for the given ObjCEncodeExpr node.
 end_comment
 
 begin_expr_stmt
 name|llvm
 operator|::
-name|Constant
+name|GlobalVariable
 operator|*
 name|GetAddrOfConstantStringFromObjCEncode
 argument_list|(
@@ -3067,73 +3306,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetAddrOfConstantString - Returns a pointer to a character array
+comment|/// Returns a pointer to a character array containing the literal and a
 end_comment
 
 begin_comment
-comment|/// containing the literal. This contents are exactly that of the given
-end_comment
-
-begin_comment
-comment|/// string, i.e. it will not be null terminated automatically; see
-end_comment
-
-begin_comment
-comment|/// GetAddrOfConstantCString. Note that whether the result is actually a
-end_comment
-
-begin_comment
-comment|/// pointer to an LLVM constant depends on Feature.WriteableStrings.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// The result has pointer to array type.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param GlobalName If provided, the name to use for the global
-end_comment
-
-begin_comment
-comment|/// (if one is created).
-end_comment
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|GetAddrOfConstantString
-argument_list|(
-argument|StringRef Str
-argument_list|,
-argument|const char *GlobalName=
-literal|0
-argument_list|,
-argument|unsigned Alignment=
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// GetAddrOfConstantCString - Returns a pointer to a character array
-end_comment
-
-begin_comment
-comment|/// containing the literal and a terminating '\0' character. The result has
-end_comment
-
-begin_comment
-comment|/// pointer to array type.
+comment|/// terminating '\0' character. The result has pointer to array type.
 end_comment
 
 begin_comment
@@ -3151,27 +3328,26 @@ end_comment
 begin_expr_stmt
 name|llvm
 operator|::
-name|Constant
+name|GlobalVariable
 operator|*
 name|GetAddrOfConstantCString
 argument_list|(
-argument|const std::string&str
+argument|const std::string&Str
 argument_list|,
-argument|const char *GlobalName=
-literal|0
+argument|const char *GlobalName = nullptr
 argument_list|,
-argument|unsigned Alignment=
+argument|unsigned Alignment =
 literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetAddrOfConstantCompoundLiteral - Returns a pointer to a constant global
+comment|/// Returns a pointer to a constant global variable for the given file-scope
 end_comment
 
 begin_comment
-comment|/// variable for the given file-scope compound literal expression.
+comment|/// compound literal expression.
 end_comment
 
 begin_expr_stmt
@@ -3233,11 +3409,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// GetAddrOfCXXConstructor - Return the address of the constructor of the
-end_comment
-
-begin_comment
-comment|/// given type.
+comment|/// Return the address of the constructor of the given type.
 end_comment
 
 begin_expr_stmt
@@ -3251,18 +3423,15 @@ argument|const CXXConstructorDecl *ctor
 argument_list|,
 argument|CXXCtorType ctorType
 argument_list|,
-argument|const CGFunctionInfo *fnInfo =
-literal|0
+argument|const CGFunctionInfo *fnInfo = nullptr
+argument_list|,
+argument|bool DontDefer = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetAddrOfCXXDestructor - Return the address of the constructor of the
-end_comment
-
-begin_comment
-comment|/// given type.
+comment|/// Return the address of the constructor of the given type.
 end_comment
 
 begin_expr_stmt
@@ -3276,21 +3445,21 @@ argument|const CXXDestructorDecl *dtor
 argument_list|,
 argument|CXXDtorType dtorType
 argument_list|,
-argument|const CGFunctionInfo *fnInfo =
-literal|0
+argument|const CGFunctionInfo *fnInfo = nullptr
 argument_list|,
-argument|llvm::FunctionType *fnType =
-literal|0
+argument|llvm::FunctionType *fnType = nullptr
+argument_list|,
+argument|bool DontDefer = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getBuiltinLibFunction - Given a builtin id for a function like
+comment|/// Given a builtin id for a function like "__builtin_fabsf", return a
 end_comment
 
 begin_comment
-comment|/// "__builtin_fabsf", return a Function* for "fabsf".
+comment|/// Function* for "fabsf".
 end_comment
 
 begin_expr_stmt
@@ -3322,7 +3491,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// EmitTopLevelDecl - Emit code for a single top level declaration.
+comment|/// Emit code for a single top level declaration.
 end_comment
 
 begin_function_decl
@@ -3337,11 +3506,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// HandleCXXStaticMemberVarInstantiation - Tell the consumer that this
-end_comment
-
-begin_comment
-comment|// variable has been instantiated.
+comment|/// Tell the consumer that this variable has been instantiated.
 end_comment
 
 begin_function_decl
@@ -3391,20 +3556,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// AddUsedGlobal - Add a global which should be forced to be
-end_comment
-
-begin_comment
-comment|/// present in the object file; these are emitted to the llvm.used
-end_comment
-
-begin_comment
-comment|/// metadata global.
+comment|/// Add a global to a list to be added to the llvm.used metadata.
 end_comment
 
 begin_decl_stmt
 name|void
-name|AddUsedGlobal
+name|addUsedGlobal
 argument_list|(
 name|llvm
 operator|::
@@ -3416,11 +3573,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// AddCXXDtorEntry - Add a destructor and object to add to the C++ global
+comment|/// Add a global to a list to be added to the llvm.compiler.used metadata.
 end_comment
 
+begin_decl_stmt
+name|void
+name|addCompilerUsedGlobal
+argument_list|(
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/// destructor function.
+comment|/// Add a destructor and object to add to the C++ global destructor function.
 end_comment
 
 begin_decl_stmt
@@ -3458,11 +3628,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// CreateRuntimeFunction - Create a new runtime function with the specified
-end_comment
-
-begin_comment
-comment|/// type and name.
+comment|/// Create a new runtime function with the specified type and name.
 end_comment
 
 begin_expr_stmt
@@ -3482,11 +3648,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// CreateRuntimeVariable - Create a new runtime global variable with the
-end_comment
-
-begin_comment
-comment|/// specified type and name.
+comment|/// Create a new runtime global variable with the specified type and name.
 end_comment
 
 begin_expr_stmt
@@ -3576,7 +3738,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// UpdateCompleteType - Make sure that this type is translated.
+comment|// Make sure that this type is translated.
 end_comment
 
 begin_function_decl
@@ -3607,15 +3769,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// EmitConstantInit - Try to emit the initializer for the given declaration
+comment|/// Try to emit the initializer for the given declaration as a constant;
 end_comment
 
 begin_comment
-comment|/// as a constant; returns 0 if the expression cannot be emitted as a
-end_comment
-
-begin_comment
-comment|/// constant.
+comment|/// returns 0 if the expression cannot be emitted as a constant.
 end_comment
 
 begin_expr_stmt
@@ -3634,21 +3792,17 @@ name|CodeGenFunction
 operator|*
 name|CGF
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// EmitConstantExpr - Try to emit the given expression as a
+comment|/// Try to emit the given expression as a constant; returns 0 if the
 end_comment
 
 begin_comment
-comment|/// constant; returns 0 if the expression cannot be emitted as a
-end_comment
-
-begin_comment
-comment|/// constant.
+comment|/// expression cannot be emitted as a constant.
 end_comment
 
 begin_expr_stmt
@@ -3662,18 +3816,17 @@ argument|const Expr *E
 argument_list|,
 argument|QualType DestType
 argument_list|,
-argument|CodeGenFunction *CGF =
-literal|0
+argument|CodeGenFunction *CGF = nullptr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// EmitConstantValue - Emit the given constant value as a constant, in the
+comment|/// Emit the given constant value as a constant, in the type's scalar
 end_comment
 
 begin_comment
-comment|/// type's scalar representation.
+comment|/// representation.
 end_comment
 
 begin_expr_stmt
@@ -3687,18 +3840,17 @@ argument|const APValue&Value
 argument_list|,
 argument|QualType DestType
 argument_list|,
-argument|CodeGenFunction *CGF =
-literal|0
+argument|CodeGenFunction *CGF = nullptr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// EmitConstantValueForMemory - Emit the given constant value as a constant,
+comment|/// Emit the given constant value as a constant, in the type's memory
 end_comment
 
 begin_comment
-comment|/// in the type's memory representation.
+comment|/// representation.
 end_comment
 
 begin_expr_stmt
@@ -3712,22 +3864,21 @@ argument|const APValue&Value
 argument_list|,
 argument|QualType DestType
 argument_list|,
-argument|CodeGenFunction *CGF =
-literal|0
+argument|CodeGenFunction *CGF = nullptr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// EmitNullConstant - Return the result of value-initializing the given
+comment|/// Return the result of value-initializing the given type, i.e. a null
 end_comment
 
 begin_comment
-comment|/// type, i.e. a null expression of the given type.  This is usually,
+comment|/// expression of the given type.  This is usually, but not always, an LLVM
 end_comment
 
 begin_comment
-comment|/// but not always, an LLVM null constant.
+comment|/// null constant.
 end_comment
 
 begin_expr_stmt
@@ -3743,15 +3894,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// EmitNullConstantForBase - Return a null constant appropriate for
+comment|/// Return a null constant appropriate for zero-initializing a base class with
 end_comment
 
 begin_comment
-comment|/// zero-initializing a base class with the given type.  This is usually,
-end_comment
-
-begin_comment
-comment|/// but not always, an LLVM null constant.
+comment|/// the given type. This is usually, but not always, an LLVM null constant.
 end_comment
 
 begin_expr_stmt
@@ -3770,7 +3917,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Error - Emit a general error that something can't be done.
+comment|/// Emit a general error that something can't be done.
 end_comment
 
 begin_function_decl
@@ -3787,11 +3934,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// ErrorUnsupported - Print out an error that codegen doesn't support the
-end_comment
-
-begin_comment
-comment|/// specified stmt yet.
+comment|/// Print out an error that codegen doesn't support the specified stmt yet.
 end_comment
 
 begin_function_decl
@@ -3812,11 +3955,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// ErrorUnsupported - Print out an error that codegen doesn't support the
-end_comment
-
-begin_comment
-comment|/// specified decl yet.
+comment|/// Print out an error that codegen doesn't support the specified decl yet.
 end_comment
 
 begin_function_decl
@@ -3837,19 +3976,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// SetInternalFunctionAttributes - Set the attributes on the LLVM
+comment|/// Set the attributes on the LLVM function for the given decl and function
 end_comment
 
 begin_comment
-comment|/// function for the given decl and function info. This applies
+comment|/// info. This applies attributes necessary for handling the ABI as well as
 end_comment
 
 begin_comment
-comment|/// attributes necessary for handling the ABI as well as user
-end_comment
-
-begin_comment
-comment|/// specified attributes like section.
+comment|/// user specified attributes like section.
 end_comment
 
 begin_decl_stmt
@@ -3876,11 +4011,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// SetLLVMFunctionAttributes - Set the LLVM function attributes
-end_comment
-
-begin_comment
-comment|/// (sext, zext, etc).
+comment|/// Set the LLVM function attributes (sext, zext, etc).
 end_comment
 
 begin_decl_stmt
@@ -3907,11 +4038,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// SetLLVMFunctionAttributesForDefinition - Set the LLVM function attributes
+comment|/// Set the LLVM function attributes which only apply to a function
 end_comment
 
 begin_comment
-comment|/// which only apply to a function definintion.
+comment|/// definintion.
 end_comment
 
 begin_decl_stmt
@@ -3933,11 +4064,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// ReturnTypeUsesSRet - Return true iff the given type uses 'sret' when used
-end_comment
-
-begin_comment
-comment|/// as a return type.
+comment|/// Return true iff the given type uses 'sret' when used as a return type.
 end_comment
 
 begin_function_decl
@@ -3953,11 +4080,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// ReturnTypeUsesFPRet - Return true iff the given type uses 'fpret' when
+comment|/// Return true iff the given type uses an argument slot when 'sret' is used
 end_comment
 
 begin_comment
-comment|/// used as a return type.
+comment|/// as a return type.
+end_comment
+
+begin_function_decl
+name|bool
+name|ReturnSlotInterferesWithArgs
+parameter_list|(
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|FI
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Return true iff the given type uses 'fpret' when used as a return type.
 end_comment
 
 begin_function_decl
@@ -3971,11 +4114,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// ReturnTypeUsesFP2Ret - Return true iff the given type uses 'fp2ret' when
-end_comment
-
-begin_comment
-comment|/// used as a return type.
+comment|/// Return true iff the given type uses 'fp2ret' when used as a return type.
 end_comment
 
 begin_function_decl
@@ -3989,11 +4128,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// ConstructAttributeList - Get the LLVM attributes and calling convention to
+comment|/// Get the LLVM attributes and calling convention to use for a particular
 end_comment
 
 begin_comment
-comment|/// use for a particular function type.
+comment|/// function type.
 end_comment
 
 begin_comment
@@ -4063,15 +4202,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|StringRef
 name|getBlockMangledName
 parameter_list|(
 name|GlobalDecl
 name|GD
-parameter_list|,
-name|MangleBuffer
-modifier|&
-name|Buffer
 parameter_list|,
 specifier|const
 name|BlockDecl
@@ -4108,11 +4243,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitFundamentalRTTIDescriptors - Emit the RTTI descriptors for the
-end_comment
-
-begin_comment
-comment|/// builtin types.
+comment|/// Emit the RTTI descriptors for the builtin types.
 end_comment
 
 begin_function_decl
@@ -4189,12 +4320,12 @@ name|GD
 argument_list|,
 name|llvm
 operator|::
-name|GlobalValue
+name|Function
 operator|*
-name|V
+name|F
 argument_list|)
 block|{
-name|V
+name|F
 operator|->
 name|setLinkage
 argument_list|(
@@ -4208,11 +4339,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getVTableLinkage - Return the appropriate linkage for the vtable, VTT,
+comment|/// Return the appropriate linkage for the vtable, VTT, and type information
 end_comment
 
 begin_comment
-comment|/// and type information of the given class.
+comment|/// of the given class.
 end_comment
 
 begin_expr_stmt
@@ -4232,11 +4363,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetTargetTypeStoreSize - Return the store size, in character units, of
-end_comment
-
-begin_comment
-comment|/// the given LLVM type.
+comment|/// Return the store size, in character units, of the given LLVM type.
 end_comment
 
 begin_decl_stmt
@@ -4254,11 +4381,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// GetLLVMLinkageVarDefinition - Returns LLVM linkage for a global
-end_comment
-
-begin_comment
-comment|/// variable.
+comment|/// Returns LLVM linkage for a declarator.
 end_comment
 
 begin_expr_stmt
@@ -4267,11 +4390,32 @@ operator|::
 name|GlobalValue
 operator|::
 name|LinkageTypes
-name|GetLLVMLinkageVarDefinition
+name|getLLVMLinkageForDeclarator
 argument_list|(
-argument|const VarDecl *D
+argument|const DeclaratorDecl *D
 argument_list|,
-argument|bool isConstant
+argument|GVALinkage Linkage
+argument_list|,
+argument|bool IsConstantVariable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Returns LLVM linkage for a declarator.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|GlobalValue
+operator|::
+name|LinkageTypes
+name|getLLVMLinkageVarDefinition
+argument_list|(
+argument|const VarDecl *VD
+argument_list|,
+argument|bool IsConstant
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4336,11 +4480,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// EmitAnnotateAttr - Generate the llvm::ConstantStruct which contains the
+comment|/// Generate the llvm::ConstantStruct which contains the annotation
 end_comment
 
 begin_comment
-comment|/// annotation information for a given GlobalValue. The annotation struct is
+comment|/// information for a given GlobalValue. The annotation struct is
 end_comment
 
 begin_comment
@@ -4407,34 +4551,86 @@ end_decl_stmt
 
 begin_expr_stmt
 specifier|const
-name|llvm
-operator|::
-name|SpecialCaseList
+name|SanitizerBlacklist
 operator|&
 name|getSanitizerBlacklist
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|*
-name|SanitizerBlacklist
+name|SanitizerBL
 return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
+begin_decl_stmt
+name|void
+name|reportGlobalToASan
+argument_list|(
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|GV
+argument_list|,
 specifier|const
-name|SanitizerOptions
+name|VarDecl
 operator|&
-name|getSanOpts
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SanOpts
-return|;
-block|}
-end_expr_stmt
+name|D
+argument_list|,
+name|bool
+name|IsDynInit
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|reportGlobalToASan
+argument_list|(
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|GV
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|,
+name|StringRef
+name|Name
+argument_list|,
+name|bool
+name|IsDynInit
+operator|=
+name|false
+argument_list|,
+name|bool
+name|IsBlacklisted
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Disable sanitizer instrumentation for this global.
+end_comment
+
+begin_decl_stmt
+name|void
+name|disableSanitizerForGlobal
+argument_list|(
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|GV
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -4457,11 +4653,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// EmitGlobal - Emit code for a singal global function or var decl. Forward
+comment|/// Emit code for a singal global function or var decl. Forward declarations
 end_comment
 
 begin_comment
-comment|/// declarations are emitted lazily.
+comment|/// are emitted lazily.
 end_comment
 
 begin_function_decl
@@ -4506,7 +4702,9 @@ argument|GlobalDecl D
 argument_list|,
 argument|bool ForVTable
 argument_list|,
-argument|llvm::AttributeSet ExtraAttrs =                                             llvm::AttributeSet()
+argument|bool DontDefer = false
+argument_list|,
+argument|llvm::AttributeSet ExtraAttrs = llvm::AttributeSet()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4523,22 +4721,16 @@ argument_list|,
 argument|llvm::PointerType *PTy
 argument_list|,
 argument|const VarDecl *D
-argument_list|,
-argument|bool UnnamedAddr = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// SetCommonAttributes - Set attributes which are common to any
+comment|/// Set attributes which are common to any form of a global definition (alias,
 end_comment
 
 begin_comment
-comment|/// form of a global definition (alias, Objective-C method,
-end_comment
-
-begin_comment
-comment|/// function, global variable).
+comment|/// Objective-C method, function, global variable).
 end_comment
 
 begin_comment
@@ -4567,13 +4759,31 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|setNonAliasAttributes
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|GlobalObject
+operator|*
+name|GO
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/// SetFunctionDefinitionAttributes - Set attributes for a global definition.
+comment|/// Set attributes for a global definition.
 end_comment
 
 begin_decl_stmt
 name|void
-name|SetFunctionDefinitionAttributes
+name|setFunctionDefinitionAttributes
 argument_list|(
 specifier|const
 name|FunctionDecl
@@ -4582,19 +4792,15 @@ name|D
 argument_list|,
 name|llvm
 operator|::
-name|GlobalValue
+name|Function
 operator|*
-name|GV
+name|F
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// SetFunctionAttributes - Set function attributes for a function
-end_comment
-
-begin_comment
-comment|/// declaration.
+comment|/// Set function attributes for a function declaration.
 end_comment
 
 begin_decl_stmt
@@ -4616,25 +4822,39 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|EmitGlobalDefinition
-parameter_list|(
+argument_list|(
 name|GlobalDecl
 name|D
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|,
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+name|GV
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|EmitGlobalFunctionDefinition
-parameter_list|(
+argument_list|(
 name|GlobalDecl
 name|GD
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|,
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -4750,11 +4970,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitCXXConstructor - Emit a single constructor with the given type from
-end_comment
-
-begin_comment
-comment|/// a C++ constructor Decl.
+comment|/// Emit a single constructor with the given type from a C++ constructor Decl.
 end_comment
 
 begin_function_decl
@@ -4773,11 +4989,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitCXXDestructor - Emit a single destructor with the given type from
-end_comment
-
-begin_comment
-comment|/// a C++ destructor Decl.
+comment|/// Emit a single destructor with the given type from a C++ destructor Decl.
 end_comment
 
 begin_function_decl
@@ -4807,7 +5019,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitCXXGlobalInitFunc - Emit the function that initializes C++ globals.
+comment|/// Emit the function that initializes C++ globals.
 end_comment
 
 begin_function_decl
@@ -4818,7 +5030,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitCXXGlobalDtorFunc - Emit the function that destroys C++ globals.
+comment|/// Emit the function that destroys C++ globals.
 end_comment
 
 begin_function_decl
@@ -4829,11 +5041,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitCXXGlobalVarDeclInitFunc - Emit the function that initializes the
+comment|/// Emit the function that initializes the specified global (if PerformInit is
 end_comment
 
 begin_comment
-comment|/// specified global (if PerformInit is true) and registers its destructor.
+comment|/// true) and registers its destructor.
 end_comment
 
 begin_decl_stmt
@@ -4857,6 +5069,34 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|EmitPointerToInitFunc
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|VD
+argument_list|,
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|Addr
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|InitFunc
+argument_list|,
+name|InitSegAttr
+operator|*
+name|ISA
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|// FIXME: Hardcoding priority here is gross.
 end_comment
@@ -4875,6 +5115,14 @@ name|int
 name|Priority
 operator|=
 literal|65535
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|AssociatedData
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -4898,15 +5146,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// EmitCtorList - Generates a global array of functions and priorities using
+comment|/// Generates a global array of functions and priorities using the given list
 end_comment
 
 begin_comment
-comment|/// the given list and name. This array will have appending linkage and is
+comment|/// and name. This array will have appending linkage and is suitable for use
 end_comment
 
 begin_comment
-comment|/// suitable for use as a LLVM constructor or destructor array.
+comment|/// as a LLVM constructor or destructor array.
 end_comment
 
 begin_function_decl
@@ -4927,11 +5175,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitFundamentalRTTIDescriptor - Emit the RTTI descriptors for the
-end_comment
-
-begin_comment
-comment|/// given type.
+comment|/// Emit the RTTI descriptors for the given type.
 end_comment
 
 begin_function_decl
@@ -4945,11 +5189,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitDeferred - Emit any needed decls for which code generation
-end_comment
-
-begin_comment
-comment|/// was deferred.
+comment|/// Emit any needed decls for which code generation was deferred.
 end_comment
 
 begin_function_decl
@@ -4978,11 +5218,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitDeferredVTables - Emit any vtables which we deferred and
-end_comment
-
-begin_comment
-comment|/// still have a use for.
+comment|/// Emit any vtables which we deferred and still have a use for.
 end_comment
 
 begin_function_decl
@@ -4993,16 +5229,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitLLVMUsed - Emit the llvm.used metadata used to force
-end_comment
-
-begin_comment
-comment|/// references to global which may otherwise be optimized out.
+comment|/// Emit the llvm.used and llvm.compiler.used metadata.
 end_comment
 
 begin_function_decl
 name|void
-name|EmitLLVMUsed
+name|emitLLVMUsed
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -5052,11 +5284,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitCoverageFile - Emit the llvm.gcov metadata used to tell LLVM where
+comment|/// Emits target specific Metadata for global declarations.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitTargetMetadata
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Emit the llvm.gcov metadata used to tell LLVM where to emit the .gcno and
 end_comment
 
 begin_comment
-comment|/// to emit the .gcno and .gcda files in a way that persists in .bc files.
+comment|/// .gcda files in a way that persists in .bc files.
 end_comment
 
 begin_function_decl
@@ -5085,15 +5328,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// MayDeferGeneration - Determine if the given decl can be emitted
+comment|/// Determine if the given decl can be emitted lazily; this is only relevant
 end_comment
 
 begin_comment
-comment|/// lazily; this is only relevant for definitions. The given decl
-end_comment
-
-begin_comment
-comment|/// must be either a function or var decl.
+comment|/// for definitions. The given decl must be either a function or var decl.
 end_comment
 
 begin_function_decl
@@ -5109,11 +5348,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// SimplifyPersonality - Check whether we can use a "simpler", more
+comment|/// Check whether we can use a "simpler", more core exceptions personality
 end_comment
 
 begin_comment
-comment|/// core exceptions personality function.
+comment|/// function.
 end_comment
 
 begin_function_decl

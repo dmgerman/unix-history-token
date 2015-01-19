@@ -356,6 +356,12 @@ name|ucl_parser_add_chunk
 argument_list|(
 name|parser
 argument_list|,
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
 name|test_in
 argument_list|,
 name|inlen
@@ -524,6 +530,11 @@ name|ucl_parser_add_string
 argument_list|(
 name|parser2
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|emitted
 argument_list|,
 literal|0

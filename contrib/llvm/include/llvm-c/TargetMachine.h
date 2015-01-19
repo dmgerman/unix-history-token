@@ -119,7 +119,7 @@ name|T
 parameter_list|)
 function_decl|;
 comment|/*===-- Target ------------------------------------------------------------===*/
-comment|/** Finds the target corresponding to the given name and stores it in \p T.    Returns 0 on success. */
+comment|/** Finds the target corresponding to the given name and stores it in \p T.   Returns 0 on success. */
 name|LLVMTargetRef
 name|LLVMGetTargetFromName
 parameter_list|(
@@ -340,6 +340,17 @@ modifier|*
 name|LLVMGetDefaultTargetTriple
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+comment|/** Adds the target-specific analysis passes to the pass manager. */
+name|void
+name|LLVMAddAnalysisPasses
+parameter_list|(
+name|LLVMTargetMachineRef
+name|T
+parameter_list|,
+name|LLVMPassManagerRef
+name|PM
 parameter_list|)
 function_decl|;
 ifdef|#

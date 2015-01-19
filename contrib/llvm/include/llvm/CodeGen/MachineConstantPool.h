@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/SectionKind.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -387,6 +393,16 @@ name|getRelocationInfo
 argument_list|()
 specifier|const
 expr_stmt|;
+name|SectionKind
+name|getSectionKind
+argument_list|(
+specifier|const
+name|DataLayout
+operator|*
+name|DL
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// The MachineConstantPool class keeps track of constants referenced by a

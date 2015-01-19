@@ -246,12 +246,6 @@ comment|// cannot alias any other memory objects.
 name|bool
 name|isSpillSlot
 decl_stmt|;
-comment|// MayNeedSP - If true the stack object triggered the creation of the stack
-comment|// protector. We should allocate this object right after the stack
-comment|// protector.
-name|bool
-name|MayNeedSP
-decl_stmt|;
 comment|/// Alloca - If this stack object is originated from an Alloca instruction
 comment|/// this value saves the original IR allocation. Can be NULL.
 specifier|const
@@ -275,8 +269,6 @@ argument_list|,
 argument|bool IM
 argument_list|,
 argument|bool isSS
-argument_list|,
-argument|bool NSP
 argument_list|,
 argument|const AllocaInst *Val
 argument_list|)
@@ -304,11 +296,6 @@ operator|,
 name|isSpillSlot
 argument_list|(
 name|isSS
-argument_list|)
-operator|,
-name|MayNeedSP
-argument_list|(
-name|NSP
 argument_list|)
 operator|,
 name|Alloca
@@ -360,6 +347,16 @@ comment|/// ReturnAddressTaken - This boolean keeps track of whether there is a 
 comment|/// to builtin \@llvm.returnaddress.
 name|bool
 name|ReturnAddressTaken
+decl_stmt|;
+comment|/// HasStackMap - This boolean keeps track of whether there is a call
+comment|/// to builtin \@llvm.experimental.stackmap.
+name|bool
+name|HasStackMap
+decl_stmt|;
+comment|/// HasPatchPoint - This boolean keeps track of whether there is a call
+comment|/// to builtin \@llvm.experimental.patchpoint.
+name|bool
+name|HasPatchPoint
 decl_stmt|;
 comment|/// StackSize - The prolog/epilog code inserter calculates the final stack
 comment|/// offsets for all of the fixed size objects, updating the Objects list
@@ -525,6 +522,14 @@ name|ReturnAddressTaken
 operator|=
 name|false
 block|;
+name|HasStackMap
+operator|=
+name|false
+block|;
+name|HasPatchPoint
+operator|=
+name|false
+block|;
 name|AdjustsStack
 operator|=
 name|false
@@ -687,6 +692,58 @@ name|s
 parameter_list|)
 block|{
 name|ReturnAddressTaken
+operator|=
+name|s
+expr_stmt|;
+block|}
+comment|/// hasStackMap - This method may be called any time after instruction
+comment|/// selection is complete to determine if there is a call to builtin
+comment|/// \@llvm.experimental.stackmap.
+name|bool
+name|hasStackMap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasStackMap
+return|;
+block|}
+name|void
+name|setHasStackMap
+parameter_list|(
+name|bool
+name|s
+init|=
+name|true
+parameter_list|)
+block|{
+name|HasStackMap
+operator|=
+name|s
+expr_stmt|;
+block|}
+comment|/// hasPatchPoint - This method may be called any time after instruction
+comment|/// selection is complete to determine if there is a call to builtin
+comment|/// \@llvm.experimental.patchpoint.
+name|bool
+name|hasPatchPoint
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasPatchPoint
+return|;
+block|}
+name|void
+name|setHasPatchPoint
+parameter_list|(
+name|bool
+name|s
+init|=
+name|true
+parameter_list|)
+block|{
+name|HasPatchPoint
 operator|=
 name|s
 expr_stmt|;
@@ -1153,44 +1210,6 @@ operator|.
 name|Alloca
 return|;
 block|}
-comment|/// NeedsStackProtector - Returns true if the object may need stack
-comment|/// protectors.
-name|bool
-name|MayNeedStackProtector
-argument_list|(
-name|int
-name|ObjectIdx
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|unsigned
-argument_list|(
-name|ObjectIdx
-operator|+
-name|NumFixedObjects
-argument_list|)
-operator|<
-name|Objects
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Invalid Object Idx!"
-argument_list|)
-expr_stmt|;
-return|return
-name|Objects
-index|[
-name|ObjectIdx
-operator|+
-name|NumFixedObjects
-index|]
-operator|.
-name|MayNeedSP
-return|;
-block|}
 comment|/// getObjectOffset - Return the assigned stack offset of the specified object
 comment|/// from the incoming stack pointer.
 comment|///
@@ -1491,6 +1510,18 @@ name|bool
 name|Immutable
 parameter_list|)
 function_decl|;
+comment|/// CreateFixedSpillStackObject - Create a spill slot at a fixed location
+comment|/// on the stack.  Returns an index with a negative value.
+name|int
+name|CreateFixedSpillStackObject
+parameter_list|(
+name|uint64_t
+name|Size
+parameter_list|,
+name|int64_t
+name|SPOffset
+parameter_list|)
+function_decl|;
 comment|/// isFixedObjectIndex - Returns true if the specified index corresponds to a
 comment|/// fixed stack object.
 name|bool
@@ -1649,17 +1680,12 @@ parameter_list|,
 name|bool
 name|isSS
 parameter_list|,
-name|bool
-name|MayNeedSP
-init|=
-name|false
-parameter_list|,
 specifier|const
 name|AllocaInst
 modifier|*
 name|Alloca
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// CreateSpillStackObject - Create a new statically sized stack object that

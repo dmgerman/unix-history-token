@@ -281,64 +281,6 @@ begin_comment
 comment|/* has requested trailers */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * Structure shared between the ethernet driver modules and  * the address resolution code.  */
-end_comment
-
-begin_struct
-struct|struct
-name|arpcom
-block|{
-name|struct
-name|ifnet
-modifier|*
-name|ac_ifp
-decl_stmt|;
-comment|/* network-visible interface */
-name|void
-modifier|*
-name|ac_netgraph
-decl_stmt|;
-comment|/* ng_ether(4) netgraph node info */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|IFP2AC
-parameter_list|(
-name|ifp
-parameter_list|)
-value|((struct arpcom *)(ifp->if_l2com))
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC2IFP
-parameter_list|(
-name|ac
-parameter_list|)
-value|((ac)->ac_ifp)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
 begin_struct
 struct|struct
 name|arpstat

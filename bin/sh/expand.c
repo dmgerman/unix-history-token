@@ -850,7 +850,6 @@ name|exparg
 operator|.
 name|list
 expr_stmt|;
-comment|/* 	 * TODO - EXP_REDIR 	 */
 if|if
 condition|(
 name|flag
@@ -894,18 +893,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|flag
-operator|&
-name|EXP_REDIR
-condition|)
-comment|/*XXX - for now, just remove escapes */
-name|rmescapes
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|sp
 operator|=
 operator|(
@@ -1021,7 +1008,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform parameter expansion, command substitution and arithmetic  * expansion, and tilde expansion if requested via EXP_TILDE/EXP_VARTILDE.  * Processing ends at a CTLENDVAR or CTLENDARI character as well as '\0'.  * This is used to expand word in ${var+word} etc.  * If EXP_FULL, EXP_CASE or EXP_REDIR are set, keep and/or generate CTLESC  * characters to allow for further processing.  * If EXP_FULL is set, also preserve CTLQUOTEMARK characters.  */
+comment|/*  * Perform parameter expansion, command substitution and arithmetic  * expansion, and tilde expansion if requested via EXP_TILDE/EXP_VARTILDE.  * Processing ends at a CTLENDVAR or CTLENDARI character as well as '\0'.  * This is used to expand word in ${var+word} etc.  * If EXP_FULL or EXP_CASE are set, keep and/or generate CTLESC  * characters to allow for further processing.  * If EXP_FULL is set, also preserve CTLQUOTEMARK characters.  */
 end_comment
 
 begin_function
@@ -1050,8 +1037,6 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
-operator||
-name|EXP_REDIR
 operator|)
 decl_stmt|;
 comment|/* do CTLESC */
@@ -1484,8 +1469,6 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
-operator||
-name|EXP_REDIR
 operator|)
 decl_stmt|;
 while|while
@@ -1641,7 +1624,7 @@ name|STPUTS_QUOTES
 argument_list|(
 name|home
 argument_list|,
-name|SQSYNTAX
+name|DQSYNTAX
 argument_list|,
 name|expdest
 argument_list|)
@@ -2110,8 +2093,6 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
-operator||
-name|EXP_REDIR
 operator|)
 decl_stmt|;
 name|size_t
@@ -3139,8 +3120,6 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
-operator||
-name|EXP_REDIR
 operator|)
 decl_stmt|;
 name|varflags
@@ -4215,8 +4194,6 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
-operator||
-name|EXP_REDIR
 operator|)
 operator|&&
 name|subtype
@@ -5237,7 +5214,6 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-comment|/* TODO - EXP_REDIR */
 while|while
 condition|(
 name|str

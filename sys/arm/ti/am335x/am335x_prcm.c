@@ -586,6 +586,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|CM_RTC
+value|0x800
+end_define
+
+begin_define
+define|#
+directive|define
+name|CM_RTC_RTC_CLKCTRL
+value|(CM_RTC + 0x000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CM_RTC_CLKSTCTRL
+value|(CM_RTC + 0x004)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PRM_PER
 value|0xC00
 end_define
@@ -1320,6 +1341,12 @@ operator|=
 name|NULL
 block|, 	}
 block|,
+comment|/* RTC */
+name|AM335X_GENERIC_CLOCK_DEV
+argument_list|(
+name|RTC_CLK
+argument_list|)
+block|,
 block|{
 name|INVALID_CLK_IDENT
 block|,
@@ -1667,6 +1694,16 @@ argument_list|(
 name|SPINLOCK0_CLK
 argument_list|,
 name|CM_PER_SPINLOCK0_CLKCTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* RTC module */
+name|_CLK_DETAIL
+argument_list|(
+name|RTC_CLK
+argument_list|,
+name|CM_RTC_RTC_CLKCTRL
 argument_list|,
 literal|0
 argument_list|)

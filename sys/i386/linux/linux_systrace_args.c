@@ -3876,7 +3876,7 @@ name|p
 operator|->
 name|status
 expr_stmt|;
-comment|/* l_uint * */
+comment|/* l_int * */
 name|iarg
 index|[
 literal|2
@@ -13908,7 +13908,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"l_uint *"
+literal|"l_int *"
 expr_stmt|;
 break|break;
 case|case

@@ -501,13 +501,13 @@ define|#
 directive|define
 name|LAGG_OPT_USE_FLOWID
 value|0x01
-comment|/* use M_FLOWID */
+comment|/* enable use of flowid */
 comment|/* Pseudo flags which are used in ro_opts but not stored into sc_opts. */
 define|#
 directive|define
 name|LAGG_OPT_FLOWIDSHIFT
 value|0x02
-comment|/* Set flowid */
+comment|/* set flowid shift */
 define|#
 directive|define
 name|LAGG_OPT_FLOWIDSHIFT_MASK

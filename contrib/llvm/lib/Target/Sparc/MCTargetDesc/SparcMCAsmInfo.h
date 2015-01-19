@@ -78,10 +78,10 @@ range|:
 name|public
 name|MCAsmInfoELF
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -91,7 +91,6 @@ argument_list|(
 argument|StringRef TT
 argument_list|)
 block|;
-name|virtual
 specifier|const
 name|MCExpr
 operator|*
@@ -104,8 +103,8 @@ argument_list|,
 argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|MCExpr
 operator|*
@@ -118,6 +117,7 @@ argument_list|,
 argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
+name|override
 block|;  }
 decl_stmt|;
 block|}

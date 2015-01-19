@@ -303,7 +303,12 @@ comment|/**< Parse input in zero-copy mode if possible */
 name|UCL_PARSER_NO_TIME
 init|=
 literal|0x4
+block|,
 comment|/**< Do not parse time and treat time values as strings */
+name|UCL_PARSER_NO_IMPLICIT_ARRAYS
+init|=
+literal|0x8
+comment|/** Create explicit arrays instead of implicit ones */
 block|}
 name|ucl_parser_flags_t
 typedef|;
@@ -372,18 +377,33 @@ name|ucl_object_flags
 block|{
 name|UCL_OBJECT_ALLOCATED_KEY
 init|=
-literal|1
+literal|0x1
 block|,
 comment|/**< An object has key allocated internally */
 name|UCL_OBJECT_ALLOCATED_VALUE
 init|=
-literal|2
+literal|0x2
 block|,
 comment|/**< An object has a string value allocated internally */
 name|UCL_OBJECT_NEED_KEY_ESCAPE
 init|=
-literal|4
+literal|0x4
+block|,
 comment|/**< The key of an object need to be escaped on output */
+name|UCL_OBJECT_EPHEMERAL
+init|=
+literal|0x8
+block|,
+comment|/**< Temporary object that does not need to be freed really */
+name|UCL_OBJECT_MULTILINE
+init|=
+literal|0x10
+block|,
+comment|/**< String should be displayed as multiline string */
+name|UCL_OBJECT_MULTIVALUE
+init|=
+literal|0x20
+comment|/**< Object is a key with multiple values */
 block|}
 name|ucl_object_flags_t
 typedef|;
@@ -446,6 +466,26 @@ modifier|*
 name|prev
 decl_stmt|;
 comment|/**< Array handle			*/
+name|uint32_t
+name|keylen
+decl_stmt|;
+comment|/**< Lenght of a key		*/
+name|uint32_t
+name|len
+decl_stmt|;
+comment|/**< Size of an object		*/
+name|uint32_t
+name|ref
+decl_stmt|;
+comment|/**< Reference count		*/
+name|uint16_t
+name|flags
+decl_stmt|;
+comment|/**< Object flags			*/
+name|uint16_t
+name|type
+decl_stmt|;
+comment|/**< Real type				*/
 name|unsigned
 name|char
 modifier|*
@@ -455,30 +495,36 @@ literal|2
 index|]
 decl_stmt|;
 comment|/**< Pointer to allocated chunks */
-name|unsigned
-name|keylen
-decl_stmt|;
-comment|/**< Lenght of a key		*/
-name|unsigned
-name|len
-decl_stmt|;
-comment|/**< Size of an object		*/
-name|enum
-name|ucl_type
-name|type
-decl_stmt|;
-comment|/**< Real type				*/
-name|uint16_t
-name|ref
-decl_stmt|;
-comment|/**< Reference count		*/
-name|uint16_t
-name|flags
-decl_stmt|;
-comment|/**< Object flags			*/
 block|}
 name|ucl_object_t
 typedef|;
+comment|/**  * Destructor type for userdata objects  * @param ud user specified data pointer  */
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|ucl_userdata_dtor
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|ud
+parameter_list|)
+function_decl|;
+typedef|typedef
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|ucl_userdata_emitter
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|ud
+parameter_list|)
+function_decl|;
 comment|/** @} */
 comment|/**  * @defgroup utils Utility functions  * A number of utility functions simplify handling of UCL objects  *  * @{  */
 comment|/**  * Copy and return a key of an object, returned key is zero-terminated  * @param obj CL object  * @return zero terminated key  */
@@ -523,6 +569,47 @@ name|ucl_object_typed_new
 argument_list|(
 name|ucl_type_t
 name|type
+argument_list|)
+name|UCL_WARN_UNUSED_RESULT
+decl_stmt|;
+comment|/**  * Create new object with type and priority specified  * @param type type of a new object  * @param priority priority of an object  * @return new object  */
+name|UCL_EXTERN
+name|ucl_object_t
+modifier|*
+name|ucl_object_new_full
+argument_list|(
+name|ucl_type_t
+name|type
+argument_list|,
+name|unsigned
+name|priority
+argument_list|)
+name|UCL_WARN_UNUSED_RESULT
+decl_stmt|;
+comment|/**  * Create new object with userdata dtor  * @param dtor destructor function  * @return new object  */
+name|UCL_EXTERN
+name|ucl_object_t
+modifier|*
+name|ucl_object_new_userdata
+argument_list|(
+name|ucl_userdata_dtor
+name|dtor
+argument_list|,
+name|ucl_userdata_emitter
+name|emitter
+argument_list|)
+name|UCL_WARN_UNUSED_RESULT
+decl_stmt|;
+comment|/**  * Perform deep copy of an object copying everything  * @param other object to copy  * @return new object with refcount equal to 1  */
+name|UCL_EXTERN
+name|ucl_object_t
+modifier|*
+name|ucl_object_copy
+argument_list|(
+specifier|const
+name|ucl_object_t
+operator|*
+name|other
 argument_list|)
 name|UCL_WARN_UNUSED_RESULT
 decl_stmt|;
@@ -619,7 +706,7 @@ name|bv
 argument_list|)
 name|UCL_WARN_UNUSED_RESULT
 decl_stmt|;
-comment|/**  * Insert a object 'elt' to the hash 'top' and associate it with key 'key'  * @param top destination object (will be created automatically if top is NULL)  * @param elt element to insert (must NOT be NULL)  * @param key key to associate with this object (either const or preallocated)  * @param keylen length of the key (or 0 for NULL terminated keys)  * @param copy_key make an internal copy of key  * @return true if key has been inserted  */
+comment|/**  * Insert a object 'elt' to the hash 'top' and associate it with key 'key'  * @param top destination object (must be of type UCL_OBJECT)  * @param elt element to insert (must NOT be NULL)  * @param key key to associate with this object (either const or preallocated)  * @param keylen length of the key (or 0 for NULL terminated keys)  * @param copy_key make an internal copy of key  * @return true if key has been inserted  */
 name|UCL_EXTERN
 name|bool
 name|ucl_object_insert_key
@@ -644,7 +731,7 @@ name|bool
 name|copy_key
 parameter_list|)
 function_decl|;
-comment|/**  * Replace a object 'elt' to the hash 'top' and associate it with key 'key', old object will be unrefed,  * if no object has been found this function works like ucl_object_insert_key()  * @param top destination object (will be created automatically if top is NULL)  * @param elt element to insert (must NOT be NULL)  * @param key key to associate with this object (either const or preallocated)  * @param keylen length of the key (or 0 for NULL terminated keys)  * @param copy_key make an internal copy of key  * @return true if key has been inserted  */
+comment|/**  * Replace a object 'elt' to the hash 'top' and associate it with key 'key', old object will be unrefed,  * if no object has been found this function works like ucl_object_insert_key()  * @param top destination object (must be of type UCL_OBJECT)  * @param elt element to insert (must NOT be NULL)  * @param key key to associate with this object (either const or preallocated)  * @param keylen length of the key (or 0 for NULL terminated keys)  * @param copy_key make an internal copy of key  * @return true if key has been inserted  */
 name|UCL_EXTERN
 name|bool
 name|ucl_object_replace_key
@@ -667,6 +754,23 @@ name|keylen
 parameter_list|,
 name|bool
 name|copy_key
+parameter_list|)
+function_decl|;
+comment|/**  * Merge the keys from one object to another object. Overwrite on conflict  * @param top destination object (must be of type UCL_OBJECT)  * @param elt element to insert (must be of type UCL_OBJECT)  * @param copy copy rather than reference the elements  * @return true if all keys have been merged  */
+name|UCL_EXTERN
+name|bool
+name|ucl_object_merge
+parameter_list|(
+name|ucl_object_t
+modifier|*
+name|top
+parameter_list|,
+name|ucl_object_t
+modifier|*
+name|elt
+parameter_list|,
+name|bool
+name|copy
 parameter_list|)
 function_decl|;
 comment|/**  * Delete a object associated with key 'key', old object will be unrefered,  * @param top object  * @param key key associated to the object to remove  * @param keylen length of the key (or 0 for NULL terminated keys)  */
@@ -702,7 +806,7 @@ modifier|*
 name|key
 parameter_list|)
 function_decl|;
-comment|/**  * Delete key from `top` object returning the object deleted. This object is not  * released  * @param top object  * @param key key to remove  * @param keylen length of the key (or 0 for NULL terminated keys)  * @return removed object or NULL if object has not been found  */
+comment|/**  * Removes `key` from `top` object, returning the object that was removed. This  * object is not released, caller must unref the returned object when it is no  * longer needed.  * @param top object  * @param key key to remove  * @param keylen length of the key (or 0 for NULL terminated keys)  * @return removed object or NULL if object has not been found  */
 name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
@@ -722,7 +826,7 @@ name|keylen
 argument_list|)
 name|UCL_WARN_UNUSED_RESULT
 decl_stmt|;
-comment|/**  * Delete key from `top` object returning the object deleted. This object is not  * released  * @param top object  * @param key key to remove  * @return removed object or NULL if object has not been found  */
+comment|/**  * Removes `key` from `top` object returning the object that was removed. This  * object is not released, caller must unref the returned object when it is no  * longer needed.  * @param top object  * @param key key to remove  * @return removed object or NULL if object has not been found  */
 name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
@@ -739,7 +843,7 @@ name|key
 argument_list|)
 name|UCL_WARN_UNUSED_RESULT
 decl_stmt|;
-comment|/**  * Insert a object 'elt' to the hash 'top' and associate it with key 'key', if the specified key exist,  * try to merge its content  * @param top destination object (will be created automatically if top is NULL)  * @param elt element to insert (must NOT be NULL)  * @param key key to associate with this object (either const or preallocated)  * @param keylen length of the key (or 0 for NULL terminated keys)  * @param copy_key make an internal copy of key  * @return true if key has been inserted  */
+comment|/**  * Insert a object 'elt' to the hash 'top' and associate it with key 'key', if  * the specified key exist, try to merge its content  * @param top destination object (must be of type UCL_OBJECT)  * @param elt element to insert (must NOT be NULL)  * @param key key to associate with this object (either const or preallocated)  * @param keylen length of the key (or 0 for NULL terminated keys)  * @param copy_key make an internal copy of key  * @return true if key has been inserted  */
 name|UCL_EXTERN
 name|bool
 name|ucl_object_insert_key_merged
@@ -764,7 +868,7 @@ name|bool
 name|copy_key
 parameter_list|)
 function_decl|;
-comment|/**  * Append an element to the front of array object  * @param top destination object (will be created automatically if top is NULL)  * @param elt element to append (must NOT be NULL)  * @return true if value has been inserted  */
+comment|/**  * Append an element to the end of array object  * @param top destination object (must NOT be NULL)  * @param elt element to append (must NOT be NULL)  * @return true if value has been inserted  */
 name|UCL_EXTERN
 name|bool
 name|ucl_array_append
@@ -778,7 +882,7 @@ modifier|*
 name|elt
 parameter_list|)
 function_decl|;
-comment|/**  * Append an element to the start of array object  * @param top destination object (will be created automatically if top is NULL)  * @param elt element to append (must NOT be NULL)  * @return true if value has been inserted  */
+comment|/**  * Append an element to the start of array object  * @param top destination object (must NOT be NULL)  * @param elt element to append (must NOT be NULL)  * @return true if value has been inserted  */
 name|UCL_EXTERN
 name|bool
 name|ucl_array_prepend
@@ -792,7 +896,24 @@ modifier|*
 name|elt
 parameter_list|)
 function_decl|;
-comment|/**  * Removes an element `elt` from the array `top`. Caller must unref the returned object when it is not  * needed.  * @param top array ucl object  * @param elt element to remove  * @return removed element or NULL if `top` is NULL or not an array  */
+comment|/**  * Merge all elements of second array into the first array  * @param top destination array (must be of type UCL_ARRAY)  * @param elt array to copy elements from (must be of type UCL_ARRAY)  * @param copy copy elements instead of referencing them  * @return true if arrays were merged  */
+name|UCL_EXTERN
+name|bool
+name|ucl_array_merge
+parameter_list|(
+name|ucl_object_t
+modifier|*
+name|top
+parameter_list|,
+name|ucl_object_t
+modifier|*
+name|elt
+parameter_list|,
+name|bool
+name|copy
+parameter_list|)
+function_decl|;
+comment|/**  * Removes an element `elt` from the array `top`, returning the object that was  * removed. This object is not released, caller must unref the returned object  * when it is no longer needed.  * @param top array ucl object  * @param elt element to remove  * @return removed element or NULL if `top` is NULL or not an array  */
 name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
@@ -833,7 +954,7 @@ modifier|*
 name|top
 parameter_list|)
 function_decl|;
-comment|/**  * Removes the last element from the array `top`. Caller must unref the returned object when it is not  * needed.  * @param top array ucl object  * @return removed element or NULL if `top` is NULL or not an array  */
+comment|/**  * Removes the last element from the array `top`, returning the object that was  * removed. This object is not released, caller must unref the returned object  * when it is no longer needed.  * @param top array ucl object  * @return removed element or NULL if `top` is NULL or not an array  */
 name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
@@ -844,7 +965,18 @@ modifier|*
 name|top
 parameter_list|)
 function_decl|;
-comment|/**  * Return object identified by an index of the array `top`  * @param obj object to get a key from (must be of type UCL_ARRAY)  * @param index index to return  * @return object at the specified index or NULL if index is not found  */
+comment|/**  * Removes the first element from the array `top`, returning the object that was  * removed. This object is not released, caller must unref the returned object  * when it is no longer needed.  * @param top array ucl object  * @return removed element or NULL if `top` is NULL or not an array  */
+name|UCL_EXTERN
+name|ucl_object_t
+modifier|*
+name|ucl_array_pop_first
+parameter_list|(
+name|ucl_object_t
+modifier|*
+name|top
+parameter_list|)
+function_decl|;
+comment|/**  * Return object identified by index of the array `top`  * @param top object to get a key from (must be of type UCL_ARRAY)  * @param index array index to return  * @return object at the specified index or NULL if index is not found  */
 name|UCL_EXTERN
 specifier|const
 name|ucl_object_t
@@ -861,18 +993,25 @@ name|int
 name|index
 parameter_list|)
 function_decl|;
-comment|/**  * Removes the first element from the array `top`. Caller must unref the returned object when it is not  * needed.  * @param top array ucl object  * @return removed element or NULL if `top` is NULL or not an array  */
-name|UCL_EXTERN
+comment|/**  * Replace an element in an array with a different element, returning the object  * that was replaced. This object is not released, caller must unref the  * returned object when it is no longer needed.  * @param top destination object (must be of type UCL_ARRAY)  * @param elt element to append (must NOT be NULL)  * @param index array index in destination to overwrite with elt  * @return object that was replaced or NULL if index is not found  */
 name|ucl_object_t
 modifier|*
-name|ucl_array_pop_first
+name|ucl_array_replace_index
 parameter_list|(
 name|ucl_object_t
 modifier|*
 name|top
+parameter_list|,
+name|ucl_object_t
+modifier|*
+name|elt
+parameter_list|,
+name|unsigned
+name|int
+name|index
 parameter_list|)
 function_decl|;
-comment|/**  * Append a element to another element forming an implicit array  * @param head head to append (may be NULL)  * @param elt new element  * @return true if element has been inserted  */
+comment|/**  * Append a element to another element forming an implicit array  * @param head head to append (may be NULL)  * @param elt new element  * @return the new implicit array  */
 name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
@@ -1046,7 +1185,7 @@ modifier|*
 name|tlen
 parameter_list|)
 function_decl|;
-comment|/**  * Return object identified by a key in the specified object  * @param obj object to get a key from (must be of type UCL_OBJECT)  * @param key key to search  * @return object matched the specified key or NULL if key is not found  */
+comment|/**  * Return object identified by a key in the specified object  * @param obj object to get a key from (must be of type UCL_OBJECT)  * @param key key to search  * @return object matching the specified key or NULL if key was not found  */
 name|UCL_EXTERN
 specifier|const
 name|ucl_object_t
@@ -1064,7 +1203,7 @@ modifier|*
 name|key
 parameter_list|)
 function_decl|;
-comment|/**  * Return object identified by a fixed size key in the specified object  * @param obj object to get a key from (must be of type UCL_OBJECT)  * @param key key to search  * @param klen length of a key  * @return object matched the specified key or NULL if key is not found  */
+comment|/**  * Return object identified by a fixed size key in the specified object  * @param obj object to get a key from (must be of type UCL_OBJECT)  * @param key key to search  * @param klen length of a key  * @return object matching the specified key or NULL if key was not found  */
 name|UCL_EXTERN
 specifier|const
 name|ucl_object_t
@@ -1133,7 +1272,7 @@ modifier|*
 name|len
 parameter_list|)
 function_decl|;
-comment|/**  * Increase reference count for an object  * @param obj object to ref  */
+comment|/**  * Increase reference count for an object  * @param obj object to ref  * @return the referenced object  */
 name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
@@ -1204,6 +1343,32 @@ name|o2
 parameter_list|)
 parameter_list|)
 function_decl|;
+comment|/**  * Get the priority for specific UCL object  * @param obj any ucl object  * @return priority of an object  */
+name|UCL_EXTERN
+name|unsigned
+name|int
+name|ucl_object_get_priority
+parameter_list|(
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
+comment|/**  * Set explicit priority of an object.  * @param obj any ucl object  * @param priority new priroity value (only 4 least significant bits are considred)  */
+name|UCL_EXTERN
+name|void
+name|ucl_object_set_priority
+parameter_list|(
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|,
+name|unsigned
+name|int
+name|priority
+parameter_list|)
+function_decl|;
 comment|/**  * Opaque iterator object  */
 typedef|typedef
 name|void
@@ -1232,7 +1397,7 @@ parameter_list|)
 function_decl|;
 comment|/** @} */
 comment|/**  * @defgroup parser Parsing functions  * These functions are used to parse UCL objects  *  * @{  */
-comment|/**  * Macro handler for a parser  * @param data the content of macro  * @param len the length of content  * @param ud opaque user data  * @param err error pointer  * @return true if macro has been parsed  */
+comment|/**  * Macro handler for a parser  * @param data the content of macro  * @param len the length of content  * @param arguments arguments object  * @param ud opaque user data  * @param err error pointer  * @return true if macro has been parsed  */
 typedef|typedef
 name|bool
 function_decl|(
@@ -1248,6 +1413,11 @@ name|data
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|arguments
 parameter_list|,
 name|void
 modifier|*
@@ -1367,7 +1537,7 @@ modifier|*
 name|ud
 parameter_list|)
 function_decl|;
-comment|/**  * Load new chunk to a parser  * @param parser parser structure  * @param data the pointer to the beginning of a chunk  * @param len the length of a chunk  * @param err if *err is NULL it is set to parser error  * @return true if chunk has been added and false in case of error  */
+comment|/**  * Load new chunk to a parser  * @param parser parser structure  * @param data the pointer to the beginning of a chunk  * @param len the length of a chunk  * @return true if chunk has been added and false in case of error  */
 name|UCL_EXTERN
 name|bool
 name|ucl_parser_add_chunk
@@ -1385,6 +1555,29 @@ name|data
 parameter_list|,
 name|size_t
 name|len
+parameter_list|)
+function_decl|;
+comment|/**  * Load new chunk to a parser with the specified priority  * @param parser parser structure  * @param data the pointer to the beginning of a chunk  * @param len the length of a chunk  * @param priority the desired priority of a chunk (only 4 least significant bits  * are considered for this parameter)  * @return true if chunk has been added and false in case of error  */
+name|UCL_EXTERN
+name|bool
+name|ucl_parser_add_chunk_priority
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|unsigned
+name|priority
 parameter_list|)
 function_decl|;
 comment|/**  * Load ucl object from a string  * @param parser parser structure  * @param data the pointer to the string  * @param len the length of the string, if `len` is 0 then `data` must be zero-terminated string  * @return true if string has been added and false in case of error  */
@@ -1746,7 +1939,7 @@ decl_stmt|;
 comment|/** Current amount of indent tabs */
 name|unsigned
 name|int
-name|ident
+name|indent
 decl_stmt|;
 comment|/** Top level object */
 specifier|const

@@ -3232,6 +3232,10 @@ name|CPU_ID_CORTEXA9R3
 operator|||
 name|cputype
 operator|==
+name|CPU_ID_CORTEXA12R0
+operator|||
+name|cputype
+operator|==
 name|CPU_ID_CORTEXA15R0
 operator|||
 name|cputype

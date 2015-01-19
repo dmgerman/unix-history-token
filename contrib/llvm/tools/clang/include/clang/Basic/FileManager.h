@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/VirtualFileSystem.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -85,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
@@ -120,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/FileSystem.h"
+file|<memory>
 end_include
 
 begin_comment
@@ -131,6 +131,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
 end_include
 
 begin_ifdef
@@ -200,7 +206,7 @@ argument_list|()
 operator|:
 name|Name
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 specifier|const
@@ -219,16 +225,16 @@ empty_stmt|;
 comment|/// \brief Cached information about one file (either on disk
 comment|/// or in the virtual file system).
 comment|///
-comment|/// If the 'FD' member is valid, then this FileEntry has an open file
+comment|/// If the 'File' member is valid, then this FileEntry has an open file
 comment|/// descriptor for the file.
 name|class
 name|FileEntry
 block|{
-specifier|const
-name|char
-modifier|*
+name|std
+operator|::
+name|string
 name|Name
-decl_stmt|;
+expr_stmt|;
 comment|// Name of the file.
 name|off_t
 name|Size
@@ -263,113 +269,38 @@ decl_stmt|;
 name|bool
 name|InPCH
 decl_stmt|;
-comment|/// FD - The file descriptor for the file entry if it is opened and owned
-comment|/// by the FileEntry.  If not, this is set to -1.
-name|mutable
-name|int
-name|FD
+name|bool
+name|IsValid
 decl_stmt|;
+comment|// Is this \c FileEntry initialized and valid?
+comment|/// \brief The open file, if it is owned by the \p FileEntry.
+name|mutable
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|vfs
+operator|::
+name|File
+operator|>
+name|File
+expr_stmt|;
 name|friend
 name|class
 name|FileManager
 decl_stmt|;
-name|public
-label|:
-name|FileEntry
-argument_list|(
-argument|llvm::sys::fs::UniqueID UniqueID
-argument_list|,
-argument|bool IsNamedPipe
-argument_list|,
-argument|bool InPCH
-argument_list|)
-block|:
-name|Name
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|UniqueID
-argument_list|(
-name|UniqueID
-argument_list|)
-operator|,
-name|IsNamedPipe
-argument_list|(
-name|IsNamedPipe
-argument_list|)
-operator|,
-name|InPCH
-argument_list|(
-name|InPCH
-argument_list|)
-operator|,
-name|FD
-argument_list|(
-argument|-
-literal|1
-argument_list|)
-block|{}
-comment|// Add a default constructor for use with llvm::StringMap
-name|FileEntry
+name|void
+name|closeFile
 argument_list|()
-operator|:
-name|Name
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|UniqueID
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-operator|,
-name|IsNamedPipe
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|InPCH
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|FD
-argument_list|(
-argument|-
-literal|1
-argument_list|)
-block|{}
-name|FileEntry
-argument_list|(
-argument|const FileEntry&FE
-argument_list|)
+specifier|const
 block|{
-name|memcpy
-argument_list|(
-name|this
-argument_list|,
-operator|&
-name|FE
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|FE
-argument_list|)
-argument_list|)
+name|File
+operator|.
+name|reset
+argument_list|()
 block|;
-name|assert
-argument_list|(
-name|FD
-operator|==
-operator|-
-literal|1
-operator|&&
-literal|"Cannot copy a file-owning FileEntry"
-argument_list|)
-block|;   }
+comment|// rely on destructor to close File
+block|}
 name|void
 name|operator
 operator|=
@@ -377,36 +308,83 @@ operator|(
 specifier|const
 name|FileEntry
 operator|&
-name|FE
 operator|)
-block|{
-name|memcpy
-argument_list|(
-name|this
-argument_list|,
-operator|&
-name|FE
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|FE
-argument_list|)
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|FD
-operator|==
-operator|-
-literal|1
-operator|&&
-literal|"Cannot assign a file-owning FileEntry"
-argument_list|)
-block|;   }
-operator|~
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
+name|public
+label|:
 name|FileEntry
 argument_list|()
-expr_stmt|;
+operator|:
+name|UniqueID
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|,
+name|IsNamedPipe
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|InPCH
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsValid
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+comment|// FIXME: this is here to allow putting FileEntry in std::map.  Once we have
+comment|// emplace, we shouldn't need a copy constructor anymore.
+comment|/// Intentionally does not copy fields that are not set in an uninitialized
+comment|/// \c FileEntry.
+name|FileEntry
+argument_list|(
+specifier|const
+name|FileEntry
+operator|&
+name|FE
+argument_list|)
+operator|:
+name|UniqueID
+argument_list|(
+name|FE
+operator|.
+name|UniqueID
+argument_list|)
+operator|,
+name|IsNamedPipe
+argument_list|(
+name|FE
+operator|.
+name|IsNamedPipe
+argument_list|)
+operator|,
+name|InPCH
+argument_list|(
+name|FE
+operator|.
+name|InPCH
+argument_list|)
+operator|,
+name|IsValid
+argument_list|(
+argument|FE.IsValid
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isValid
+argument_list|()
+operator|&&
+literal|"Cannot copy an initialized FileEntry"
+argument_list|)
+block|;   }
 specifier|const
 name|char
 operator|*
@@ -416,6 +394,18 @@ specifier|const
 block|{
 return|return
 name|Name
+operator|.
+name|c_str
+argument_list|()
+return|;
+block|}
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsValid
 return|;
 block|}
 name|off_t
@@ -534,23 +524,49 @@ operator|<
 name|FileManager
 operator|>
 block|{
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|FS
+block|;
 name|FileSystemOptions
 name|FileSystemOpts
 block|;
-name|class
-name|UniqueDirContainer
-block|;
-name|class
-name|UniqueFileContainer
-block|;
 comment|/// \brief Cache for existing real directories.
-name|UniqueDirContainer
-operator|&
+name|std
+operator|::
+name|map
+operator|<
+name|llvm
+operator|::
+name|sys
+operator|::
+name|fs
+operator|::
+name|UniqueID
+block|,
+name|DirectoryEntry
+operator|>
 name|UniqueRealDirs
 block|;
 comment|/// \brief Cache for existing real files.
-name|UniqueFileContainer
-operator|&
+name|std
+operator|::
+name|map
+operator|<
+name|llvm
+operator|::
+name|sys
+operator|::
+name|fs
+operator|::
+name|UniqueID
+block|,
+name|FileEntry
+operator|>
 name|UniqueRealFiles
 block|;
 comment|/// \brief The virtual directories that we have allocated.
@@ -652,7 +668,9 @@ block|,
 name|NumFileCacheMisses
 block|;
 comment|// Caching.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|FileSystemStatCache
 operator|>
@@ -667,7 +685,7 @@ argument|FileData&Data
 argument_list|,
 argument|bool isFile
 argument_list|,
-argument|int *FileDescriptor
+argument|std::unique_ptr<vfs::File> *F
 argument_list|)
 block|;
 comment|/// Add all ancestors of the given path (pointing to either a file
@@ -686,6 +704,16 @@ specifier|const
 name|FileSystemOptions
 operator|&
 name|FileSystemOpts
+argument_list|,
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|FS
+operator|=
+name|nullptr
 argument_list|)
 block|;
 operator|~
@@ -774,6 +802,20 @@ return|return
 name|FileSystemOpts
 return|;
 block|}
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|getVirtualFileSystem
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FS
+return|;
+block|}
 comment|/// \brief Retrieve a file entry for a "virtual" file that acts as
 comment|/// if there were a file with the given name on disk.
 comment|///
@@ -800,10 +842,11 @@ name|getBufferForFile
 argument_list|(
 argument|const FileEntry *Entry
 argument_list|,
-argument|std::string *ErrorStr =
-literal|0
+argument|std::string *ErrorStr = nullptr
 argument_list|,
 argument|bool isVolatile = false
+argument_list|,
+argument|bool ShouldCloseOpenFile = true
 argument_list|)
 block|;
 name|llvm
@@ -814,20 +857,21 @@ name|getBufferForFile
 argument_list|(
 argument|StringRef Filename
 argument_list|,
-argument|std::string *ErrorStr =
-literal|0
+argument|std::string *ErrorStr = nullptr
 argument_list|)
 block|;
 comment|/// \brief Get the 'stat' information for the given \p Path.
 comment|///
 comment|/// If the path is relative, it will be resolved against the WorkingDir of the
 comment|/// FileManager's FileSystemOptions.
+comment|///
+comment|/// \returns false on success, true on error.
 name|bool
 name|getNoncachedStatValue
 argument_list|(
 argument|StringRef Path
 argument_list|,
-argument|llvm::sys::fs::file_status&Result
+argument|vfs::Status&Result
 argument_list|)
 block|;
 comment|/// \brief Remove the real file \p Entry from the cache.

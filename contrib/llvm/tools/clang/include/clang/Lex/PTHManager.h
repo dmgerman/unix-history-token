@@ -328,11 +328,12 @@ comment|///  be found.
 name|IdentifierInfo
 modifier|*
 name|get
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Name
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// Create - This method creates PTHManager objects.  The 'file' argument
 comment|///  is the name of the PTH file.  This method returns NULL upon failure.
 specifier|static

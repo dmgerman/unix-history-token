@@ -122,6 +122,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -171,7 +177,7 @@ argument_list|()
 operator|:
 name|Pool
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Refcount
@@ -263,7 +269,7 @@ argument_list|()
 operator|:
 name|S
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|explicit
@@ -410,7 +416,7 @@ expr_stmt|;
 block|}
 name|S
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 operator|~
@@ -508,6 +514,7 @@ argument_list|()
 return|;
 block|}
 specifier|inline
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()
@@ -516,7 +523,7 @@ block|{
 return|return
 name|S
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|inline
@@ -529,6 +536,7 @@ name|PooledStringPtr
 operator|&
 name|That
 operator|)
+specifier|const
 block|{
 return|return
 name|S
@@ -548,6 +556,7 @@ name|PooledStringPtr
 operator|&
 name|That
 operator|)
+specifier|const
 block|{
 return|return
 name|S

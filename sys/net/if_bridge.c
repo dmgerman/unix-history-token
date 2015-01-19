@@ -229,10 +229,6 @@ directive|include
 file|<netinet/in.h>
 end_include
 
-begin_comment
-comment|/* for struct arpcom */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -322,10 +318,6 @@ include|#
 directive|include
 file|<netinet/if_ether.h>
 end_include
-
-begin_comment
-comment|/* for struct arpcom */
-end_comment
 
 begin_include
 include|#
@@ -2392,7 +2384,7 @@ value|VNET(allow_llz_overlap)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
 argument_list|,
@@ -2400,6 +2392,8 @@ name|OID_AUTO
 argument_list|,
 name|allow_llz_overlap
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_VNET

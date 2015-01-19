@@ -1135,6 +1135,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* A valid GNU hash tag is available */
+name|bool
+name|dlopened
+range|:
+literal|1
+decl_stmt|;
+comment|/* dlopen()-ed (vs. load statically) */
 name|struct
 name|link_map
 name|linkmap

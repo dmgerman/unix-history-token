@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/type_traits.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<algorithm>
 end_include
 
@@ -288,7 +282,7 @@ argument_list|()
 operator|:
 name|Data
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Length
@@ -488,6 +482,55 @@ literal|1
 index|]
 return|;
 block|}
+comment|// copy - Allocate copy in Allocator and return StringRef to it.
+name|template
+operator|<
+name|typename
+name|Allocator
+operator|>
+name|StringRef
+name|copy
+argument_list|(
+argument|Allocator&A
+argument_list|)
+block|{
+name|char
+operator|*
+name|S
+operator|=
+name|A
+operator|.
+name|template
+name|Allocate
+operator|<
+name|char
+operator|>
+operator|(
+name|Length
+operator|)
+block|;
+name|std
+operator|::
+name|copy
+argument_list|(
+name|begin
+argument_list|()
+argument_list|,
+name|end
+argument_list|()
+argument_list|,
+name|S
+argument_list|)
+block|;
+return|return
+name|StringRef
+argument_list|(
+name|S
+argument_list|,
+name|Length
+argument_list|)
+return|;
+block|}
 comment|/// equals - Check for string equality, this is more efficient than
 comment|/// compare() when the relative ordering of inequal strings isn't needed.
 name|bool
@@ -681,9 +724,8 @@ specifier|const
 block|{
 if|if
 condition|(
+operator|!
 name|Data
-operator|==
-literal|0
 condition|)
 return|return
 name|std
@@ -1201,7 +1243,9 @@ name|typename
 name|T
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 name|std
 operator|::
@@ -1270,7 +1314,9 @@ name|typename
 name|T
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 operator|!
 name|std
@@ -2471,32 +2517,6 @@ name|true
 block|; }
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/// Construct a string ref from a boolean.
-end_comment
-
-begin_function
-specifier|inline
-name|StringRef
-name|toStringRef
-parameter_list|(
-name|bool
-name|B
-parameter_list|)
-block|{
-return|return
-name|StringRef
-argument_list|(
-name|B
-condition|?
-literal|"true"
-else|:
-literal|"false"
-argument_list|)
-return|;
-block|}
-end_function
 
 begin_endif
 unit|}

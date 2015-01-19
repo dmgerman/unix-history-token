@@ -1423,10 +1423,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* 	 * We now have a segment name to search for, and a directory to search. 	 * 	 * Suppress search for slots unless creating 	 * file and at end of pathname, in which case 	 * we watch for a place to put the new file in 	 * case it doesn't already exist. 	 */
-name|ino
-operator|=
-literal|0
-expr_stmt|;
 name|i_diroff
 operator|=
 name|dp
@@ -2084,10 +2080,8 @@ name|cn_flags
 operator|&
 name|MAKEENTRY
 operator|)
-operator|&&
-name|nameiop
 operator|!=
-name|CREATE
+literal|0
 condition|)
 name|cache_enter
 argument_list|(
@@ -3284,7 +3278,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ext2_dirbad: %s: bad dir ino %lu at offset %ld: %s\n"
+literal|"ext2_dirbad: %s: bad dir ino %ju at offset %ld: %s\n"
 argument_list|,
 name|mp
 operator|->
@@ -3293,7 +3287,7 @@ operator|.
 name|f_mntonname
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|ip
 operator|->
@@ -3313,7 +3307,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s: bad dir ino %lu at offset %ld: %s\n"
+literal|"%s: bad dir ino %ju at offset %ld: %s\n"
 argument_list|,
 name|mp
 operator|->
@@ -3322,7 +3316,7 @@ operator|.
 name|f_mntonname
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|ip
 operator|->

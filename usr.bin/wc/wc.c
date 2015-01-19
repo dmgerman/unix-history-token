@@ -648,13 +648,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|xo_emit
-argument_list|(
-literal|"{ek:filename/%s}"
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|doline
@@ -719,7 +712,7 @@ name|xo_emit_h
 argument_list|(
 name|xop
 argument_list|,
-literal|" {d:filename/%s}\n"
+literal|" {:filename/%s}\n"
 argument_list|,
 name|file
 argument_list|)

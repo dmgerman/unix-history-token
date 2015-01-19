@@ -144,12 +144,9 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|atf_tc_expect_fail
 argument_list|(
 literal|"Reported as kern/189941"

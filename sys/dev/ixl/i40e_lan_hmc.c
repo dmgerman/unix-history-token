@@ -3954,7 +3954,11 @@ expr_stmt|;
 else|else
 name|mask
 operator|=
-literal|0xFFFFFFFF
+operator|~
+operator|(
+name|u32
+operator|)
+literal|0
 expr_stmt|;
 comment|/* don't swizzle the bits until after the mask because the mask bits 	 * will be in a different bit position on big endian machines 	 */
 name|src_dword
@@ -4131,7 +4135,11 @@ expr_stmt|;
 else|else
 name|mask
 operator|=
-literal|0xFFFFFFFFFFFFFFFFUL
+operator|~
+operator|(
+name|u64
+operator|)
+literal|0
 expr_stmt|;
 comment|/* don't swizzle the bits until after the mask because the mask bits 	 * will be in a different bit position on big endian machines 	 */
 name|src_qword
@@ -4582,7 +4590,11 @@ expr_stmt|;
 else|else
 name|mask
 operator|=
-literal|0xFFFFFFFF
+operator|~
+operator|(
+name|u32
+operator|)
+literal|0
 expr_stmt|;
 comment|/* shift to correct alignment */
 name|mask
@@ -4745,7 +4757,11 @@ expr_stmt|;
 else|else
 name|mask
 operator|=
-literal|0xFFFFFFFFFFFFFFFFUL
+operator|~
+operator|(
+name|u64
+operator|)
+literal|0
 expr_stmt|;
 comment|/* shift to correct alignment */
 name|mask

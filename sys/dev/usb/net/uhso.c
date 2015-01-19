@@ -1134,7 +1134,7 @@ name|OID_AUTO
 argument_list|,
 name|auto_switch
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|uhso_autoswitch
@@ -1196,7 +1196,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|uhso_debug
@@ -2904,7 +2904,7 @@ literal|"radio"
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 name|sc
 argument_list|,

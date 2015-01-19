@@ -578,21 +578,15 @@ operator|)
 operator|/
 literal|1000000000
 expr_stmt|;
-name|ticks
-operator|=
-operator|(
-name|sec
-operator|<<
-literal|16
-operator|)
-operator|&
-name|BCM2835_WDOG_TIME_MASK
-expr_stmt|;
 if|if
 condition|(
-name|ticks
+name|sec
 operator|==
 literal|0
+operator|||
+name|sec
+operator|>
+literal|15
 condition|)
 block|{
 comment|/*  			 * Can't arm 			 * disable watchdog as watchdog(9) requires 			 */
@@ -602,7 +596,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Can't arm, timeout is less than 1 second\n"
+literal|"Can't arm, timeout must be between 1-15 seconds\n"
 argument_list|)
 expr_stmt|;
 name|WRITE
@@ -630,6 +624,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|ticks
+operator|=
+operator|(
+name|sec
+operator|<<
+literal|16
+operator|)
+operator|&
+name|BCM2835_WDOG_TIME_MASK
+expr_stmt|;
 name|reg
 operator|=
 operator|(

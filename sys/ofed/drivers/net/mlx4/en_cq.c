@@ -973,7 +973,7 @@ name|cq
 operator|->
 name|is_tx
 condition|)
-name|del_timer
+name|del_timer_sync
 argument_list|(
 operator|&
 name|cq

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libxo/xo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"extern.h"
 end_include
 
@@ -245,18 +251,42 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+name|xo_attr
+argument_list|(
+literal|"since"
+argument_list|,
+literal|"%lu"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+operator|*
+name|started
+argument_list|)
+expr_stmt|;
+name|xo_attr
+argument_list|(
+literal|"delta"
+argument_list|,
+literal|"%lu"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|diff
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|len
 operator|==
 name|width
 condition|)
-operator|(
-name|void
-operator|)
-name|wprintf
+name|xo_emit
 argument_list|(
-literal|L"%-7.7ls"
+literal|"{:login-time/%-7.7ls/%ls}"
 argument_list|,
 name|buf
 argument_list|)
@@ -268,12 +298,9 @@ name|width
 operator|<
 literal|7
 condition|)
-operator|(
-name|void
-operator|)
-name|wprintf
+name|xo_emit
 argument_list|(
-literal|L"%ls%.*s"
+literal|"{:login-time/%ls}%.*s"
 argument_list|,
 name|buf
 argument_list|,
@@ -286,12 +313,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-operator|(
-name|void
-operator|)
-name|wprintf
+name|xo_emit
 argument_list|(
-literal|L"%ls"
+literal|"{:login-time/%ls}"
 argument_list|,
 name|buf
 argument_list|)
@@ -340,12 +364,9 @@ name|idle
 operator|/
 literal|86400
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %dday%s "
+literal|" {:idle/%dday%s} "
 argument_list|,
 name|days
 argument_list|,
@@ -389,12 +410,9 @@ name|idle
 operator|>=
 literal|3600
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %2d:%02d "
+literal|" {:idle/%2d:%02d/} "
 argument_list|,
 call|(
 name|int
@@ -428,22 +446,16 @@ literal|60
 operator|==
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|"     - "
 argument_list|)
 expr_stmt|;
 comment|/* Else print the minutes idle. */
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"    %2d "
+literal|"    {:idle/%2d} "
 argument_list|,
 call|(
 name|int

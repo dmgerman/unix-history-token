@@ -188,7 +188,7 @@ struct|struct
 name|id_ts
 block|{
 comment|/* ICMP Timestamp */
-comment|/* 			 * The next 3 fields are in network format, 			 * milliseconds since 00:00 GMT 			 */
+comment|/* 			 * The next 3 fields are in network format, 			 * milliseconds since 00:00 UTC 			 */
 name|uint32_t
 name|its_otime
 decl_stmt|;

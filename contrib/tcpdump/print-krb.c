@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Initial contribution from John Hawkinson (jhawk@mit.edu).  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-krb.c,v 1.23 2003-11-16 09:36:26 guy Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -52,19 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"addrtoname.h"
 end_include
 
 begin_include
@@ -73,6 +44,17 @@ directive|include
 file|"extract.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|" [|kerberos]"
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 specifier|const
@@ -80,6 +62,9 @@ name|u_char
 modifier|*
 name|c_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -100,6 +85,9 @@ name|u_char
 modifier|*
 name|krb4_print_hdr
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -112,6 +100,9 @@ specifier|static
 name|void
 name|krb4_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -263,11 +254,11 @@ begin_struct
 struct|struct
 name|krb
 block|{
-name|u_int8_t
+name|uint8_t
 name|pvno
 decl_stmt|;
 comment|/* Protocol Version */
-name|u_int8_t
+name|uint8_t
 name|type
 decl_stmt|;
 comment|/* Type+B */
@@ -277,16 +268,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
-name|char
-name|tstr
-index|[]
-init|=
-literal|" [|kerberos]"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
+specifier|const
 name|struct
 name|tok
 name|type2str
@@ -358,6 +340,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|kerr2str
@@ -446,6 +429,10 @@ name|u_char
 modifier|*
 name|c_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -500,7 +487,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|isascii
+name|ND_ISASCII
 argument_list|(
 name|c
 argument_list|)
@@ -508,26 +495,25 @@ condition|)
 block|{
 name|c
 operator|=
-name|toascii
+name|ND_TOASCII
 argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|'M'
-argument_list|)
-expr_stmt|;
-name|putchar
-argument_list|(
-literal|'-'
+operator|(
+name|ndo
+operator|,
+literal|"M-"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
 operator|!
-name|isprint
+name|ND_ISPRINT
 argument_list|(
 name|c
 argument_list|)
@@ -538,15 +524,25 @@ operator|^=
 literal|0x40
 expr_stmt|;
 comment|/* DEL to ?, others to alpha */
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|'^'
+operator|(
+name|ndo
+operator|,
+literal|"^"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|putchar
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%c"
+operator|,
 name|c
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -572,6 +568,10 @@ name|u_char
 modifier|*
 name|krb4_print_hdr
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -585,19 +585,27 @@ expr_stmt|;
 define|#
 directive|define
 name|PRINT
-value|if ((cp = c_print(cp, snapend)) == NULL) goto trunc
+value|if ((cp = c_print(ndo, cp, ndo->ndo_snapend)) == NULL) goto trunc
 name|PRINT
 expr_stmt|;
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|'.'
+operator|(
+name|ndo
+operator|,
+literal|"."
+operator|)
 argument_list|)
 expr_stmt|;
 name|PRINT
 expr_stmt|;
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|'@'
+operator|(
+name|ndo
+operator|,
+literal|"@"
+operator|)
 argument_list|)
 expr_stmt|;
 name|PRINT
@@ -609,11 +617,15 @@ operator|)
 return|;
 name|trunc
 label|:
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
 name|tstr
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -632,6 +644,10 @@ specifier|static
 name|void
 name|krb4_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -654,7 +670,7 @@ decl_stmt|;
 define|#
 directive|define
 name|PRINT
-value|if ((cp = c_print(cp, snapend)) == NULL) goto trunc
+value|if ((cp = c_print(ndo, cp, ndo->ndo_snapend)) == NULL) goto trunc
 comment|/*  True if struct krb is little endian */
 define|#
 directive|define
@@ -690,14 +706,20 @@ operator|->
 name|type
 operator|)
 operator|>=
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 block|{
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
 name|tstr
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -714,10 +736,13 @@ operator|<<
 literal|1
 operator|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s %s: "
-argument_list|,
+operator|,
 name|IS_LENDIAN
 argument_list|(
 name|kp
@@ -726,7 +751,7 @@ condition|?
 literal|"le"
 else|:
 literal|"be"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|type2str
@@ -735,6 +760,7 @@ name|NULL
 argument_list|,
 name|type
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -752,6 +778,8 @@ name|cp
 operator|=
 name|krb4_print_hdr
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 operator|)
@@ -764,28 +792,36 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/* ctime */
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|cp
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %dmin "
-argument_list|,
+operator|,
 operator|*
 name|cp
 operator|++
 operator|*
 literal|5
+operator|)
 argument_list|)
 expr_stmt|;
 name|PRINT
 expr_stmt|;
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|'.'
+operator|(
+name|ndo
+operator|,
+literal|"."
+operator|)
 argument_list|)
 expr_stmt|;
 name|PRINT
@@ -798,50 +834,62 @@ name|cp
 operator|+=
 literal|2
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|cp
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"v%d "
-argument_list|,
+operator|,
 operator|*
 name|cp
 operator|++
+operator|)
 argument_list|)
 expr_stmt|;
 name|PRINT
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|cp
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" (%d)"
-argument_list|,
+operator|,
 operator|*
 name|cp
 operator|++
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|cp
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" (%d)"
-argument_list|,
+operator|,
 operator|*
 name|cp
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -855,6 +903,8 @@ name|cp
 operator|=
 name|krb4_print_hdr
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 operator|)
@@ -867,7 +917,7 @@ operator|+=
 literal|10
 expr_stmt|;
 comment|/* timestamp + n + exp + kvno */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|cp
@@ -887,11 +937,15 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" (%d)"
-argument_list|,
+operator|,
 name|len
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -905,6 +959,8 @@ name|cp
 operator|=
 name|krb4_print_hdr
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 operator|)
@@ -917,7 +973,7 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/* timestamp */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|cp
@@ -928,10 +984,13 @@ name|short
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|kerr2str
@@ -945,6 +1004,7 @@ argument_list|,
 name|cp
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -955,11 +1015,13 @@ name|PRINT
 expr_stmt|;
 break|break;
 default|default:
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(unknown)"
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -967,11 +1029,15 @@ block|}
 return|return;
 name|trunc
 label|:
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
 name|tstr
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -981,6 +1047,10 @@ begin_function
 name|void
 name|krb_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -1007,14 +1077,20 @@ if|if
 condition|(
 name|dat
 operator|>=
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 block|{
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
 name|tstr
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1035,30 +1111,40 @@ case|:
 case|case
 literal|3
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" v%d"
-argument_list|,
+operator|,
 name|kp
 operator|->
 name|pvno
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|4
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" v%d"
-argument_list|,
+operator|,
 name|kp
 operator|->
 name|pvno
+operator|)
 argument_list|)
 expr_stmt|;
 name|krb4_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 specifier|const
 name|u_char
@@ -1074,11 +1160,13 @@ case|:
 case|case
 literal|107
 case|:
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" v5"
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Decode ASN.1 here "someday" */

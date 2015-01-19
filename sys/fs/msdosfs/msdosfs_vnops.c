@@ -331,14 +331,11 @@ specifier|static
 name|int
 name|msdosfs_create
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_create_args
-comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 		struct vattr *a_vap; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|componentname
@@ -568,6 +565,32 @@ argument_list|(
 name|dep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|MAKEENTRY
+operator|)
+operator|!=
+literal|0
+condition|)
+name|cache_enter
+argument_list|(
+name|ap
+operator|->
+name|a_dvp
+argument_list|,
+operator|*
+name|ap
+operator|->
+name|a_vpp
+argument_list|,
+name|cnp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -588,14 +611,11 @@ specifier|static
 name|int
 name|msdosfs_mknod
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_mknod_args
-comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 		struct vattr *a_vap; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -610,14 +630,11 @@ specifier|static
 name|int
 name|msdosfs_open
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_open_args
-comment|/* { 		struct vnode *a_vp; 		int a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 		struct file *a_fp; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|denode
@@ -657,14 +674,11 @@ specifier|static
 name|int
 name|msdosfs_close
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_close_args
-comment|/* { 		struct vnode *a_vp; 		int a_fflag; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vnode
@@ -740,14 +754,11 @@ specifier|static
 name|int
 name|msdosfs_access
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_access_args
-comment|/* { 		struct vnode *a_vp; 		accmode_t a_accmode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vnode
@@ -894,14 +905,11 @@ specifier|static
 name|int
 name|msdosfs_getattr
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|denode
@@ -1413,14 +1421,11 @@ specifier|static
 name|int
 name|msdosfs_setattr
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_setattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vnode
@@ -2356,14 +2361,11 @@ specifier|static
 name|int
 name|msdosfs_read
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_read_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error
@@ -2889,14 +2891,11 @@ specifier|static
 name|int
 name|msdosfs_write
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_write_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|n
@@ -3805,14 +3804,11 @@ specifier|static
 name|int
 name|msdosfs_fsync
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_fsync_args
-comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vnode
@@ -3928,14 +3924,11 @@ specifier|static
 name|int
 name|msdosfs_remove
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_remove_args
-comment|/* { 		struct vnode *a_dvp; 		struct vnode *a_vp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|denode
@@ -4023,14 +4016,11 @@ specifier|static
 name|int
 name|msdosfs_link
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_link_args
-comment|/* { 		struct vnode *a_tdvp; 		struct vnode *a_vp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -4049,14 +4039,11 @@ specifier|static
 name|int
 name|msdosfs_rename
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_rename_args
-comment|/* { 		struct vnode *a_fdvp; 		struct vnode *a_fvp; 		struct componentname *a_fcnp; 		struct vnode *a_tdvp; 		struct vnode *a_tvp; 		struct componentname *a_tcnp; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vnode
@@ -5591,14 +5578,11 @@ specifier|static
 name|int
 name|msdosfs_mkdir
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_mkdir_args
-comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struvt componentname *a_cnp; 		struct vattr *a_vap; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|componentname
@@ -6239,14 +6223,11 @@ specifier|static
 name|int
 name|msdosfs_rmdir
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_rmdir_args
-comment|/* { 		struct vnode *a_dvp; 		struct vnode *a_vp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vnode
@@ -6394,14 +6375,11 @@ specifier|static
 name|int
 name|msdosfs_symlink
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_symlink_args
-comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 		struct vattr *a_vap; 		char *a_target; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -6416,14 +6394,11 @@ specifier|static
 name|int
 name|msdosfs_readdir
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_readdir_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		int *a_ncookies; 		u_long **a_cookies; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbnambuf
@@ -7698,14 +7673,11 @@ specifier|static
 name|int
 name|msdosfs_bmap
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_bmap_args
-comment|/* { 		struct vnode *a_vp; 		daddr_t a_bn; 		struct bufobj **a_bop; 		daddr_t *a_bnp; 		int *a_runp; 		int *a_runb; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|denode
@@ -8085,14 +8057,11 @@ specifier|static
 name|int
 name|msdosfs_strategy
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_strategy_args
-comment|/* { 		struct vnode *a_vp; 		struct buf *a_bp; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|buf
@@ -8271,14 +8240,11 @@ specifier|static
 name|int
 name|msdosfs_print
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_print_args
-comment|/* { 		struct vnode *vp; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|denode
@@ -8336,14 +8302,11 @@ specifier|static
 name|int
 name|msdosfs_pathconf
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_pathconf_args
-comment|/* { 		struct vnode *a_vp; 		int a_name; 		int *a_retval; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|msdosfsmount
@@ -8465,14 +8428,11 @@ specifier|static
 name|int
 name|msdosfs_vptofh
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_vptofh_args
-comment|/* { 		struct vnode *a_vp; 		struct fid *a_fhp; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|denode

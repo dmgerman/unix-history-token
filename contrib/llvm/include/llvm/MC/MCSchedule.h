@@ -106,11 +106,16 @@ decl_stmt|;
 comment|// Index of the resources kind that contains this kind.
 comment|// Number of resources that may be buffered.
 comment|//
-comment|// Buffered resources (BufferSize> 0 || BufferSize == -1) may be consumed at
-comment|// some indeterminate cycle after dispatch (e.g. for instructions that may
-comment|// issue out-of-order). Unbuffered resources (BufferSize == 0) always consume
-comment|// their resource some fixed number of cycles after dispatch (e.g. for
-comment|// instruction interlocking that may stall the pipeline).
+comment|// Buffered resources (BufferSize != 0) may be consumed at some indeterminate
+comment|// cycle after dispatch. This should be used for out-of-order cpus when
+comment|// instructions that use this resource can be buffered in a reservaton
+comment|// station.
+comment|//
+comment|// Unbuffered resources (BufferSize == 0) always consume their resource some
+comment|// fixed number of cycles after dispatch. If a resource is unbuffered, then
+comment|// the scheduler will avoid scheduling instructions with conflicting resources
+comment|// in the same cycle. This is for in-order cpus, or the in-order portion of
+comment|// an out-of-order cpus.
 name|int
 name|BufferSize
 decl_stmt|;
@@ -413,7 +418,7 @@ comment|// whether they are ready in this cycle. Latency still causes issue stal
 comment|// but we balance those stalls against other heuristics.
 comment|//
 comment|// "> 1" means the processor is out-of-order. This is a machine independent
-comment|// estimate of highly machine specific characteristics such are the register
+comment|// estimate of highly machine specific characteristics such as the register
 comment|// renaming pool and reorder buffer.
 name|unsigned
 name|MicroOpBufferSize
@@ -422,6 +427,21 @@ specifier|static
 specifier|const
 name|unsigned
 name|DefaultMicroOpBufferSize
+init|=
+literal|0
+decl_stmt|;
+comment|// LoopMicroOpBufferSize is the number of micro-ops that the processor may
+comment|// buffer for optimized loop execution. More generally, this represents the
+comment|// optimal number of micro-ops in a loop body. A loop may be partially
+comment|// unrolled to bring the count of micro-ops in the loop body closer to this
+comment|// number.
+name|unsigned
+name|LoopMicroOpBufferSize
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|DefaultLoopMicroOpBufferSize
 init|=
 literal|0
 decl_stmt|;
@@ -466,6 +486,10 @@ name|DefaultMispredictPenalty
 init|=
 literal|10
 decl_stmt|;
+name|bool
+name|PostRAScheduler
+decl_stmt|;
+comment|// default value is false
 name|bool
 name|CompleteModel
 decl_stmt|;
@@ -519,6 +543,11 @@ argument_list|(
 name|DefaultMicroOpBufferSize
 argument_list|)
 operator|,
+name|LoopMicroOpBufferSize
+argument_list|(
+name|DefaultLoopMicroOpBufferSize
+argument_list|)
+operator|,
 name|LoadLatency
 argument_list|(
 name|DefaultLoadLatency
@@ -534,6 +563,11 @@ argument_list|(
 name|DefaultMispredictPenalty
 argument_list|)
 operator|,
+name|PostRAScheduler
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|CompleteModel
 argument_list|(
 name|true
@@ -546,12 +580,12 @@ argument_list|)
 operator|,
 name|ProcResourceTable
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SchedClassTable
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NumProcResourceKinds
@@ -566,7 +600,7 @@ argument_list|)
 operator|,
 name|InstrItineraries
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 operator|(
@@ -586,11 +620,15 @@ argument|unsigned iw
 argument_list|,
 argument|int mbs
 argument_list|,
+argument|int lmbs
+argument_list|,
 argument|unsigned ll
 argument_list|,
 argument|unsigned hl
 argument_list|,
 argument|unsigned mp
+argument_list|,
+argument|bool postRASched
 argument_list|,
 argument|bool cm
 argument_list|,
@@ -617,6 +655,11 @@ argument_list|(
 name|mbs
 argument_list|)
 operator|,
+name|LoopMicroOpBufferSize
+argument_list|(
+name|lmbs
+argument_list|)
+operator|,
 name|LoadLatency
 argument_list|(
 name|ll
@@ -630,6 +673,11 @@ operator|,
 name|MispredictPenalty
 argument_list|(
 name|mp
+argument_list|)
+operator|,
+name|PostRAScheduler
+argument_list|(
+name|postRASched
 argument_list|)
 operator|,
 name|CompleteModel

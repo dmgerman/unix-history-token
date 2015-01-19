@@ -179,14 +179,13 @@ argument_list|(
 argument|str
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&OS
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;   }
 decl_stmt|;
 comment|/// PrettyStackTraceProgram - This object prints a specified program arguments
@@ -229,14 +228,13 @@ block|{
 name|EnablePrettyStackTrace
 argument_list|()
 block|;     }
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&OS
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;   }
 decl_stmt|;
 block|}

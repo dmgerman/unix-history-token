@@ -454,6 +454,9 @@ argument_list|,
 literal|"Checks mutexes"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 if|#
 directive|if
 name|defined
@@ -469,6 +472,8 @@ argument_list|,
 literal|"40"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -502,6 +507,9 @@ argument_list|(
 literal|"1: Mutex-test 2\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 if|#
 directive|if
 name|defined
@@ -513,6 +521,8 @@ argument_list|(
 literal|"PR port-powerpc/44387"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|PTHREAD_REQUIRE
@@ -645,6 +655,9 @@ argument_list|,
 literal|20000000
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 if|#
 directive|if
 name|defined
@@ -658,6 +671,8 @@ argument_list|(
 literal|41
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -761,6 +776,9 @@ literal|"Checks mutexes using a static "
 literal|"initializer"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 if|#
 directive|if
 name|defined
@@ -776,6 +794,8 @@ argument_list|,
 literal|"40"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -809,6 +829,9 @@ argument_list|(
 literal|"1: Mutex-test 3\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 if|#
 directive|if
 name|defined
@@ -820,6 +843,8 @@ argument_list|(
 literal|"PR port-powerpc/44387"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|global_x
@@ -941,6 +966,9 @@ argument_list|,
 literal|20000000
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 if|#
 directive|if
 name|defined
@@ -954,6 +982,8 @@ argument_list|(
 literal|41
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}

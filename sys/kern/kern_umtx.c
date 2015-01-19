@@ -482,16 +482,6 @@ parameter_list|)
 value|mtx_assert(&(uc)->uc_lock, MA_OWNED)
 end_define
 
-begin_define
-define|#
-directive|define
-name|UMTXQ_BUSY_ASSERT
-parameter_list|(
-name|uc
-parameter_list|)
-value|KASSERT(&(uc)->uc_busy, ("umtx chain is not busy"))
-end_define
-
 begin_comment
 comment|/*  * Don't propagate time-sharing priority, there is a security reason,  * a user can simply introduce PI-mutex, let thread A lock the mutex,  * and let another thread B block on the mutex, because B is  * sleeping, its priority will be boosted, this causes A's priority to  * be boosted via priority propagating too and will never be lowered even  * if it is using 100%CPU, this is unfair to other processes.  */
 end_comment
@@ -7214,9 +7204,17 @@ argument_list|(
 name|uc
 argument_list|)
 expr_stmt|;
-name|UMTXQ_BUSY_ASSERT
+name|KASSERT
 argument_list|(
 name|uc
+operator|->
+name|uc_busy
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"umtx chain is not busy"
+operator|)
 argument_list|)
 expr_stmt|;
 name|umtxq_insert

@@ -124,7 +124,7 @@ name|AliasSetTracker
 operator|*
 name|AST
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 block|}

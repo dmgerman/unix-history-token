@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -412,16 +418,20 @@ name|Args
 decl_stmt|;
 name|protected
 label|:
+comment|// Default ctor provided explicitly as it is not provided implicitly due to
+comment|// the presence of the (deleted) copy ctor above.
 name|ArgList
 argument_list|()
-expr_stmt|;
-name|public
-label|:
+block|{ }
+comment|// Virtual to provide a vtable anchor and because -Wnon-virtua-dtor warns, not
+comment|// because this type is ever actually destroyed polymorphically.
 name|virtual
 operator|~
 name|ArgList
 argument_list|()
 expr_stmt|;
+name|public
+label|:
 comment|/// @name Arg Access
 comment|/// @{
 comment|/// append - Append \p A to the arg list.
@@ -617,6 +627,40 @@ name|this
 argument_list|)
 return|;
 block|}
+name|iterator_range
+operator|<
+name|arg_iterator
+operator|>
+name|filtered
+argument_list|(
+argument|OptSpecifier Id0 =
+literal|0U
+argument_list|,
+argument|OptSpecifier Id1 =
+literal|0U
+argument_list|,
+argument|OptSpecifier Id2 =
+literal|0U
+argument_list|)
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|filtered_begin
+argument_list|(
+name|Id0
+argument_list|,
+name|Id1
+argument_list|,
+name|Id2
+argument_list|)
+argument_list|,
+name|filtered_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// @}
 comment|/// @name Arg Removal
 comment|/// @{
@@ -648,7 +692,7 @@ argument_list|(
 name|Id
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|bool
@@ -665,7 +709,7 @@ argument_list|(
 name|Id
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|bool
@@ -687,7 +731,7 @@ argument_list|,
 name|Id1
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|bool
@@ -714,7 +758,7 @@ argument_list|,
 name|Id2
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getLastArg - Return the last argument matching \p Id, or null.
@@ -1264,7 +1308,6 @@ operator|~
 name|InputArgList
 argument_list|()
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -1273,6 +1316,7 @@ argument_list|(
 argument|unsigned Index
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|ArgStrings
@@ -1281,11 +1325,11 @@ name|Index
 index|]
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getNumInputArgStrings
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|NumInputArgStrings
@@ -1312,7 +1356,11 @@ argument|StringRef String1
 argument_list|)
 specifier|const
 block|;
-name|virtual
+name|using
+name|ArgList
+operator|::
+name|MakeArgString
+block|;
 specifier|const
 name|char
 operator|*
@@ -1321,6 +1369,7 @@ argument_list|(
 argument|StringRef Str
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// @}
 block|}
@@ -1340,7 +1389,17 @@ name|BaseArgs
 block|;
 comment|/// The list of arguments we synthesized.
 name|mutable
-name|arglist_type
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Arg
+operator|>
+block|,
+literal|16
+operator|>
 name|SynthesizedArgs
 block|;
 name|public
@@ -1358,7 +1417,6 @@ operator|~
 name|DerivedArgList
 argument_list|()
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -1367,6 +1425,7 @@ argument_list|(
 argument|unsigned Index
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|BaseArgs
@@ -1377,11 +1436,11 @@ name|Index
 argument_list|)
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getNumInputArgStrings
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|BaseArgs
@@ -1408,17 +1467,16 @@ comment|/// (to be freed).
 name|void
 name|AddSynthesizedArg
 argument_list|(
-argument|Arg *A
-argument_list|)
-block|{
-name|SynthesizedArgs
-operator|.
-name|push_back
-argument_list|(
+name|Arg
+operator|*
 name|A
 argument_list|)
-block|;   }
-name|virtual
+block|;
+name|using
+name|ArgList
+operator|::
+name|MakeArgString
+block|;
 specifier|const
 name|char
 operator|*
@@ -1427,6 +1485,7 @@ argument_list|(
 argument|StringRef Str
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// AddFlagArg - Construct a new FlagArg for the given option \p Id and
 comment|/// append it to the argument list.

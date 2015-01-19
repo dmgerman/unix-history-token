@@ -3452,6 +3452,7 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Turn the receive filter on */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -3459,6 +3460,8 @@ argument_list|,
 name|SIS_RXFILT_CTL
 argument_list|,
 name|filter
+operator||
+name|SIS_RXFILTCTL_ENABLE
 argument_list|)
 expr_stmt|;
 name|CSR_READ_4
@@ -3562,7 +3565,7 @@ argument_list|,
 name|filter
 operator|&
 operator|~
-name|SIS_RXFILT_CTL
+name|SIS_RXFILTCTL_ENABLE
 argument_list|)
 expr_stmt|;
 name|CSR_READ_4
@@ -3817,6 +3820,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Turn the receive filter on */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -3824,6 +3828,8 @@ argument_list|,
 name|SIS_RXFILT_CTL
 argument_list|,
 name|filter
+operator||
+name|SIS_RXFILTCTL_ENABLE
 argument_list|)
 expr_stmt|;
 name|CSR_READ_4
@@ -9633,16 +9639,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Turn the receive filter on */
-name|SIS_SETBIT
-argument_list|(
-name|sc
-argument_list|,
-name|SIS_RXFILT_CTL
-argument_list|,
-name|SIS_RXFILTCTL_ENABLE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Load the address of the RX and TX lists. 	 */
 name|CSR_WRITE_4
 argument_list|(
@@ -10144,6 +10140,18 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|!=
+literal|0
+condition|)
 name|sis_rxfilter
 argument_list|(
 name|sc

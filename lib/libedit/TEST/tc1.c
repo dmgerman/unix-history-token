@@ -1,12 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: tc1.c,v 1.6 2014/06/18 20:12:15 christos Exp $	*/
+end_comment
+
+begin_comment
 comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"config.h"
 end_include
 
 begin_ifndef
@@ -48,15 +52,30 @@ name|SCCSID
 argument_list|)
 end_if
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)test.c	8.1 (Berkeley) 6/4/93"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)test.c	8.1 (Berkeley) 6/4/93";
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: tc1.c,v 1.6 2014/06/18 20:12:15 christos Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -66,14 +85,6 @@ end_endif
 begin_comment
 comment|/* not lint&& not SCCSID */
 end_comment
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$NetBSD: test.c,v 1.3 2009/07/17 12:25:52 christos Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|__FBSDID
@@ -86,12 +97,6 @@ end_expr_stmt
 begin_comment
 comment|/*  * test.c: A little test program  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"sys.h"
-end_include
 
 begin_include
 include|#
@@ -139,6 +144,12 @@ begin_include
 include|#
 directive|include
 file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -230,7 +241,7 @@ name|char
 name|a
 index|[]
 init|=
-literal|"\1\e[7m\1Edit$\1\e[0m\1 "
+literal|"\1\033[7m\1Edit$\1\033[0m\1 "
 decl_stmt|;
 specifier|static
 name|char
@@ -312,6 +323,11 @@ argument_list|)
 decl_stmt|;
 name|int
 name|len
+decl_stmt|;
+name|int
+name|res
+init|=
+name|CC_ERROR
 decl_stmt|;
 comment|/* 	 * Find the last word 	 */
 for|for
@@ -403,11 +419,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|closedir
-argument_list|(
-name|dd
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|el_insertstr
@@ -426,17 +437,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-return|return
-operator|(
+name|res
+operator|=
 name|CC_ERROR
-operator|)
-return|;
+expr_stmt|;
 else|else
-return|return
-operator|(
+name|res
+operator|=
 name|CC_REFRESH
-operator|)
-return|;
+expr_stmt|;
+break|break;
 block|}
 block|}
 name|closedir
@@ -445,9 +455,7 @@ name|dd
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|CC_ERROR
-operator|)
+name|res
 return|;
 block|}
 end_function
@@ -499,6 +507,16 @@ decl_stmt|;
 name|HistEvent
 name|ev
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)

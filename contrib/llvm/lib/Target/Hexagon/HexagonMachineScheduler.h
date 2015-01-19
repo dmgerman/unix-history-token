@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/PriorityQueue.h"
 end_include
 
@@ -237,7 +231,7 @@ argument_list|(
 operator|&
 name|TM
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 comment|// This hard requirement could be relaxed,
@@ -341,7 +335,7 @@ name|class
 name|VLIWMachineScheduler
 range|:
 name|public
-name|ScheduleDAGMI
+name|ScheduleDAGMILive
 block|{
 name|public
 operator|:
@@ -351,16 +345,20 @@ name|MachineSchedContext
 operator|*
 name|C
 argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MachineSchedStrategy
-operator|*
+operator|>
 name|S
 argument_list|)
 operator|:
-name|ScheduleDAGMI
+name|ScheduleDAGMILive
 argument_list|(
 argument|C
 argument_list|,
-argument|S
+argument|std::move(S)
 argument_list|)
 block|{}
 comment|/// Schedule - This is called back from ScheduleDAGInstrs::Run() when it's
@@ -369,8 +367,9 @@ name|virtual
 name|void
 name|schedule
 argument_list|()
+name|override
 block|;
-comment|/// Perform platform specific DAG postprocessing.
+comment|/// Perform platform-specific DAG postprocessing.
 name|void
 name|postprocessDAG
 argument_list|()
@@ -407,7 +406,7 @@ argument_list|()
 operator|:
 name|SU
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 block|,
 name|SCost
@@ -440,7 +439,7 @@ comment|/// Each Scheduling boundary is associated with ready queues. It tracks 
 comment|/// current cycle in whichever direction at has moved, and maintains the state
 comment|/// of "hazards" and other interlocks at the current cycle.
 block|struct
-name|SchedBoundary
+name|VLIWSchedBoundary
 block|{
 name|VLIWMachineScheduler
 operator|*
@@ -484,7 +483,7 @@ name|MaxMinLatency
 block|;
 comment|/// Pending queues extend the ready queues with the same ID and the
 comment|/// PendingFlag set.
-name|SchedBoundary
+name|VLIWSchedBoundary
 argument_list|(
 argument|unsigned ID
 argument_list|,
@@ -493,12 +492,12 @@ argument_list|)
 operator|:
 name|DAG
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|SchedModel
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Available
@@ -530,12 +529,12 @@ argument_list|)
 block|,
 name|HazardRec
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|ResourceModel
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|CurrCycle
@@ -559,7 +558,7 @@ literal|0
 argument_list|)
 block|{}
 operator|~
-name|SchedBoundary
+name|VLIWSchedBoundary
 argument_list|()
 block|{
 name|delete
@@ -656,10 +655,10 @@ operator|*
 name|SchedModel
 block|;
 comment|// State of the top and bottom scheduled instruction boundaries.
-name|SchedBoundary
+name|VLIWSchedBoundary
 name|Top
 block|;
-name|SchedBoundary
+name|VLIWSchedBoundary
 name|Bot
 block|;
 name|public
@@ -685,12 +684,12 @@ argument_list|()
 operator|:
 name|DAG
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|SchedModel
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Top
@@ -711,20 +710,18 @@ name|virtual
 name|void
 name|initialize
 argument_list|(
-name|ScheduleDAGMI
-operator|*
-name|dag
+argument|ScheduleDAGMI *dag
 argument_list|)
+name|override
 block|;
 name|virtual
 name|SUnit
 operator|*
 name|pickNode
 argument_list|(
-name|bool
-operator|&
-name|IsTopNode
+argument|bool&IsTopNode
 argument_list|)
+name|override
 block|;
 name|virtual
 name|void
@@ -734,24 +731,23 @@ argument|SUnit *SU
 argument_list|,
 argument|bool IsTopNode
 argument_list|)
+name|override
 block|;
 name|virtual
 name|void
 name|releaseTopNode
 argument_list|(
-name|SUnit
-operator|*
-name|SU
+argument|SUnit *SU
 argument_list|)
+name|override
 block|;
 name|virtual
 name|void
 name|releaseBottomNode
 argument_list|(
-name|SUnit
-operator|*
-name|SU
+argument|SUnit *SU
 argument_list|)
+name|override
 block|;
 name|unsigned
 name|ReportPackets

@@ -146,62 +146,34 @@ argument_list|)
 block|,
 name|TM
 argument_list|(
-name|TM_
-argument_list|)
-block|,
-name|Subtarget
-argument_list|(
-argument|TM.getSubtarget<MipsSubtarget>()
+argument|TM_
 argument_list|)
 block|{}
 comment|// Pass Name
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"MIPS DAG->DAG Pattern Instruction Selection"
 return|;
 block|}
-name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
+argument|MachineFunction&MF
 argument_list|)
+name|override
 block|;
-name|virtual
-name|SDNode
-operator|*
-name|Select
-argument_list|(
-argument|SDNode *N
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"unexpected"
-argument_list|)
-block|;   }
 name|protected
 operator|:
-comment|/// Keep a pointer to the MipsSubtarget around so that we can make the right
-comment|/// decision when generating code for different targets.
-specifier|const
-name|TargetMachine
+name|MipsTargetMachine
 operator|&
 name|TM
-block|;
-specifier|const
-name|MipsSubtarget
-operator|&
-name|Subtarget
 block|; }
 decl_stmt|;
 comment|/// createMipsISelDag - This pass converts a legalized DAG into a

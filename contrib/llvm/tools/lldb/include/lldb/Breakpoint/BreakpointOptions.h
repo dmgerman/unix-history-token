@@ -279,7 +279,8 @@ comment|///     The synchronicity of our callback.
 comment|//------------------------------------------------------------------
 name|bool
 name|IsCallbackSynchronous
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|m_callback_is_synchronous
@@ -491,8 +492,9 @@ comment|/// Returns true if the breakpoint option has a callback set.
 comment|//------------------------------------------------------------------
 name|bool
 name|HasCallback
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// This is the default empty callback.
 comment|/// @return

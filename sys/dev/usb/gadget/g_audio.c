@@ -327,7 +327,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_audio_debug
@@ -362,7 +362,7 @@ name|OID_AUTO
 argument_list|,
 name|mode
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_audio_mode
@@ -392,7 +392,7 @@ name|OID_AUTO
 argument_list|,
 name|pattern_interval
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_audio_pattern_interval

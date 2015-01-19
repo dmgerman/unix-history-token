@@ -3203,6 +3203,10 @@ expr_stmt|;
 break|break;
 comment|/* XXX lost of sync */
 block|}
+if|if
+condition|(
+operator|!
+operator|(
 name|MCLGET
 argument_list|(
 name|sc
@@ -3211,18 +3215,6 @@ name|m
 argument_list|,
 name|M_NOWAIT
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|sc
-operator|->
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
 operator|)
 condition|)
 block|{

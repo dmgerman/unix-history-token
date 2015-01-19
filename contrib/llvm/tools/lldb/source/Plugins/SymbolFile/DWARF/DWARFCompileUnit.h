@@ -324,9 +324,6 @@ parameter_list|,
 name|DWARFDebugAranges
 modifier|*
 name|debug_aranges
-parameter_list|,
-name|bool
-name|clear_dies_if_already_not_parsed
 parameter_list|)
 function_decl|;
 name|void

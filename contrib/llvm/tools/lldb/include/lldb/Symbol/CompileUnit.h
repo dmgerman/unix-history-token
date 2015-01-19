@@ -221,7 +221,7 @@ comment|/// Typically called by the SymbolFile plug-ins as they partially
 comment|/// parse the debug information.
 comment|///
 comment|/// @param[in] function_sp
-comment|///     A shared pointer to the a Function object.
+comment|///     A shared pointer to the Function object.
 comment|//------------------------------------------------------------------
 name|void
 name|AddFunction
@@ -343,7 +343,7 @@ comment|//------------------------------------------------------------------
 comment|/// Dump the compile unit contents to the stream \a s.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|///
 comment|/// @param[in] show_context
 comment|///     If \b true, variables will dump their symbol context
@@ -373,7 +373,7 @@ comment|/// inlined line table entries).
 comment|///
 comment|/// Multiple calls to this function can find all entries that match
 comment|/// a given file and line by starting with \a start_idx equal to zero,
-comment|/// and calling this function back with the return valeu + 1.
+comment|/// and calling this function back with the return value + 1.
 comment|///
 comment|/// @param[in] start_idx
 comment|///     The zero based index at which to start looking for matches.
@@ -595,7 +595,7 @@ comment|///     resolved. Only SymbolContext entries that can be resolved
 comment|///     using a LineEntry base address will be able to be resolved.
 comment|///
 comment|/// @param[out] sc_list
-comment|///     A SymbolContext list class that willl get any matching
+comment|///     A SymbolContext list class that will get any matching
 comment|///     entries appended to.
 comment|///
 comment|/// @return

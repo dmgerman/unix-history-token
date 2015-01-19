@@ -297,12 +297,18 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"svr4_find_socket: [%p,%d,%d]: "
+literal|"svr4_find_socket: [%p,%ju,%ju]: "
 operator|,
 name|td
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|dev
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|ino
 operator|)
 argument_list|)
@@ -602,7 +608,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"svr4_add_socket: %s [%p,%d,%d]\n"
+literal|"svr4_add_socket: %s [%p,%ju,%ju]\n"
 operator|,
 name|e
 operator|->
@@ -614,10 +620,16 @@ name|td
 operator|->
 name|td_proc
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|e
 operator|->
 name|dev
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|e
 operator|->
 name|ino
@@ -719,7 +731,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"svr4_delete_socket: %s [%p,%d,%d]\n"
+literal|"svr4_delete_socket: %s [%p,%ju,%ju]\n"
 operator|,
 name|e
 operator|->
@@ -730,12 +742,15 @@ operator|,
 name|p
 operator|,
 operator|(
-name|int
+name|uintmax_t
 operator|)
 name|e
 operator|->
 name|dev
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|e
 operator|->
 name|ino
@@ -825,7 +840,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"svr4_purge_sockcache: %s [%p,%d,%d]\n"
+literal|"svr4_purge_sockcache: %s [%p,%ju,%ju]\n"
 operator|,
 name|e
 operator|->
@@ -836,12 +851,15 @@ operator|,
 name|p
 operator|,
 operator|(
-name|int
+name|uintmax_t
 operator|)
 name|e
 operator|->
 name|dev
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|e
 operator|->
 name|ino

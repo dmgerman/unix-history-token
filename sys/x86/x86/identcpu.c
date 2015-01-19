@@ -2865,7 +2865,8 @@ literal|"\012SSSE3"
 comment|/* SSSE3 */
 literal|"\013CNXT-ID"
 comment|/* L1 context ID available */
-literal|"\014<b11>"
+literal|"\014SDBG"
+comment|/* IA32 silicon debug */
 literal|"\015FMA"
 comment|/* Fused Multiply Add */
 literal|"\016CX16"
@@ -4916,12 +4917,38 @@ argument_list|,
 name|regs
 argument_list|)
 expr_stmt|;
+name|cpu_maxphyaddr
+operator|=
+name|regs
+index|[
+literal|0
+index|]
+operator|&
+literal|0xff
+expr_stmt|;
 name|cpu_procinfo2
 operator|=
 name|regs
 index|[
 literal|2
 index|]
+expr_stmt|;
+block|}
+else|else
+block|{
+name|cpu_maxphyaddr
+operator|=
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_PAE
+operator|)
+operator|!=
+literal|0
+condition|?
+literal|36
+else|:
+literal|32
 expr_stmt|;
 block|}
 ifdef|#

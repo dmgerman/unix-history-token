@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|LIBXO_VERSION
-value|"0.1.4"
+value|"0.2.0"
 end_define
 
 begin_comment
@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|LIBXO_VERSION_NUMBER
-value|1004
+value|2000
 end_define
 
 begin_comment
@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|LIBXO_VERSION_STRING
-value|"1004"
+value|"2000"
 end_define
 
 begin_comment

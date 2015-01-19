@@ -76,6 +76,37 @@ comment|// The protocol is not intended to be robust, secure or fault-tolerant. 
 comment|// only here for testing purposes and is therefore intended to be the simplest
 comment|// implementation that will work.  It is assumed that the parent and child
 comment|// share characteristics like endianness.
+comment|//
+comment|// Quick description of the protocol:
+comment|//
+comment|// { Header + Payload Size + Payload }
+comment|//
+comment|// The protocol message consist of a header, the payload size (which can be
+comment|// zero), and the payload itself. The payload can contain any number of items,
+comment|// and the size has to be the sum of them all. Each end is responsible for
+comment|// reading/writing the correct number of items with the correct sizes.
+comment|//
+comment|// The current four known exchanges are:
+comment|//
+comment|//  * Allocate Space:
+comment|//   Parent: { LLI_AllocateSpace, 8, Alignment, Size }
+comment|//    Child: { LLI_AllocationResult, 8, Address }
+comment|//
+comment|//  * Load Data:
+comment|//   Parent: { LLI_LoadDataSection, 8+Size, Address, Data }
+comment|//    Child: { LLI_LoadComplete, 4, StatusCode }
+comment|//
+comment|//  * Load Code:
+comment|//   Parent: { LLI_LoadCodeSection, 8+Size, Address, Code }
+comment|//    Child: { LLI_LoadComplete, 4, StatusCode }
+comment|//
+comment|//  * Execute Code:
+comment|//   Parent: { LLI_Execute, 8, Address }
+comment|//    Child: { LLI_ExecutionResult, 4, Result }
+comment|//
+comment|// It is the responsibility of either side to check for correct headers,
+comment|// sizes and payloads, since any inconsistency would misalign the pipe, and
+comment|// result in data corruption.
 enum|enum
 name|LLIMessageType
 block|{
@@ -91,27 +122,42 @@ block|,
 comment|// Data = not used
 name|LLI_AllocateSpace
 block|,
-comment|// Data = struct { uint_32t Align, uint_32t Size }
+comment|// Data = struct { uint32_t Align, uint_32t Size }
 name|LLI_AllocationResult
 block|,
-comment|// Data = uint64_t AllocAddress (in Child memory space)
+comment|// Data = uint64_t Address (child memory space)
 name|LLI_LoadCodeSection
 block|,
-comment|// Data = uint32_t Addr, followed by section contests
+comment|// Data = uint64_t Address, void * SectionData
 name|LLI_LoadDataSection
 block|,
-comment|// Data = uint32_t Addr, followed by section contents
-name|LLI_LoadComplete
+comment|// Data = uint64_t Address, void * SectionData
+name|LLI_LoadResult
 block|,
-comment|// Data = not used
+comment|// Data = uint32_t LLIMessageStatus
 name|LLI_Execute
 block|,
-comment|// Data = Address of function to execute
+comment|// Data = uint64_t Address
 name|LLI_ExecutionResult
 block|,
-comment|// Data = uint64_t Result
+comment|// Data = uint32_t Result
 name|LLI_Terminate
 comment|// Data = not used
+block|}
+enum|;
+enum|enum
+name|LLIMessageStatus
+block|{
+name|LLI_Status_Success
+init|=
+literal|0
+block|,
+comment|// Operation succeeded
+name|LLI_Status_NotAllocated
+block|,
+comment|// Address+Size not allocated in child space
+name|LLI_Status_IncompleteMsg
+comment|// Size received doesn't match request
 block|}
 enum|;
 block|}

@@ -57,6 +57,51 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_typedef
+typedef|typedef
+name|void
+name|callout_func_t
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_struct
+struct|struct
+name|callout_args
+block|{
+name|sbintime_t
+name|time
+decl_stmt|;
+comment|/* absolute time for the event */
+name|sbintime_t
+name|precision
+decl_stmt|;
+comment|/* delta allowed wrt opt */
+name|void
+modifier|*
+name|arg
+decl_stmt|;
+comment|/* function argument */
+name|callout_func_t
+modifier|*
+name|func
+decl_stmt|;
+comment|/* function to call */
+name|int
+name|flags
+decl_stmt|;
+comment|/* flags passed to callout_reset() */
+name|int
+name|cpu
+decl_stmt|;
+comment|/* CPU we're scheduled on */
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|callout
@@ -87,7 +132,7 @@ union|;
 name|sbintime_t
 name|c_time
 decl_stmt|;
-comment|/* ticks to the event */
+comment|/* absolute time for the event */
 name|sbintime_t
 name|c_precision
 decl_stmt|;
@@ -97,28 +142,21 @@ modifier|*
 name|c_arg
 decl_stmt|;
 comment|/* function argument */
-name|void
-function_decl|(
+name|callout_func_t
 modifier|*
 name|c_func
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
+decl_stmt|;
 comment|/* function to call */
 name|struct
 name|lock_object
 modifier|*
 name|c_lock
 decl_stmt|;
-comment|/* lock to handle */
+comment|/* callback lock */
 name|int
 name|c_flags
 decl_stmt|;
 comment|/* state of this entry */
-specifier|volatile
 name|int
 name|c_cpu
 decl_stmt|;

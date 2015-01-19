@@ -51,14 +51,11 @@ directive|include
 file|<string.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -869,12 +866,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 comment|/* 	   Both FreeBSD and OS/X does not validate the second 	   argument to setenv(3) 	 */
 name|atf_tc_expect_signal
 argument_list|(

@@ -350,13 +350,20 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+operator|(
 name|name
 operator|=
 name|archive_entry_pathname
 argument_list|(
 name|entry
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+break|break;
 comment|/* Skip pseudo members. */
 if|if
 condition|(

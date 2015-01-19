@@ -1792,7 +1792,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXIT_REASON_MCE
+name|EXIT_REASON_MCE_DURING_ENTRY
 value|41
 end_define
 

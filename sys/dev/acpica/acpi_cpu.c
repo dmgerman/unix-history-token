@@ -273,6 +273,10 @@ decl_stmt|;
 comment|/* Child driver supported features. */
 comment|/* Runtime state. */
 name|int
+name|cpu_non_c2
+decl_stmt|;
+comment|/* Index of lowest non-C2 state. */
+name|int
 name|cpu_non_c3
 decl_stmt|;
 comment|/* Index of lowest non-C3 state. */
@@ -3148,6 +3152,14 @@ operator|++
 expr_stmt|;
 name|sc
 operator|->
+name|cpu_non_c2
+operator|=
+name|sc
+operator|->
+name|cpu_cx_count
+expr_stmt|;
+name|sc
+operator|->
 name|cpu_non_c3
 operator|=
 name|sc
@@ -3158,6 +3170,10 @@ name|sc
 operator|->
 name|cpu_cx_count
 operator|++
+expr_stmt|;
+name|cpu_deepest_sleep
+operator|=
+literal|1
 expr_stmt|;
 comment|/*       * The spec says P_BLK must be 6 bytes long.  However, some systems      * use it to indicate a fractional set of features present so we      * take 5 as C2.  Some may also have a value of 7 to indicate      * another C3 but most use _CST for this (as required) and having      * "only" C1-C3 is not a hardship.      */
 if|if
@@ -3273,6 +3289,10 @@ operator|->
 name|cpu_cx_count
 operator|++
 expr_stmt|;
+name|cpu_deepest_sleep
+operator|=
+literal|2
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -3375,9 +3395,9 @@ operator|->
 name|cpu_cx_count
 operator|++
 expr_stmt|;
-name|cpu_can_deep_sleep
+name|cpu_deepest_sleep
 operator|=
-literal|1
+literal|3
 expr_stmt|;
 block|}
 block|}
@@ -3600,6 +3620,12 @@ expr_stmt|;
 block|}
 name|sc
 operator|->
+name|cpu_non_c2
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
 name|cpu_non_c3
 operator|=
 literal|0
@@ -3630,6 +3656,10 @@ name|sc
 operator|->
 name|cpu_cx_count
 operator|++
+expr_stmt|;
+name|cpu_deepest_sleep
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Set up all valid states. */
 for|for
@@ -3765,6 +3795,14 @@ else|else
 block|{
 name|sc
 operator|->
+name|cpu_non_c2
+operator|=
+name|sc
+operator|->
+name|cpu_cx_count
+expr_stmt|;
+name|sc
+operator|->
 name|cpu_non_c3
 operator|=
 name|sc
@@ -3791,6 +3829,16 @@ operator|=
 name|sc
 operator|->
 name|cpu_cx_count
+expr_stmt|;
+if|if
+condition|(
+name|cpu_deepest_sleep
+operator|<
+literal|2
+condition|)
+name|cpu_deepest_sleep
+operator|=
+literal|2
 expr_stmt|;
 break|break;
 case|case
@@ -3829,9 +3877,9 @@ expr_stmt|;
 continue|continue;
 block|}
 else|else
-name|cpu_can_deep_sleep
+name|cpu_deepest_sleep
 operator|=
-literal|1
+literal|3
 expr_stmt|;
 break|break;
 block|}
@@ -4106,11 +4154,18 @@ name|sc
 operator|->
 name|cpu_cx_count
 operator|=
+name|min
+argument_list|(
+name|sc
+operator|->
+name|cpu_cx_count
+argument_list|,
 name|sc
 operator|->
 name|cpu_non_c3
 operator|+
 literal|1
+argument_list|)
 expr_stmt|;
 block|}
 name|AcpiInstallNotifyHandler
@@ -4643,7 +4698,25 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|cpu_disable_deep_sleep
+name|cpu_disable_c2_sleep
+condition|)
+name|i
+operator|=
+name|min
+argument_list|(
+name|sc
+operator|->
+name|cpu_cx_lowest
+argument_list|,
+name|sc
+operator|->
+name|cpu_non_c2
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|cpu_disable_c3_sleep
 condition|)
 name|i
 operator|=

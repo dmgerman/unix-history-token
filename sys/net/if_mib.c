@@ -89,7 +89,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_generic_system
 argument_list|,
@@ -97,6 +97,8 @@ name|IFMIB_IFCOUNT
 argument_list|,
 name|ifcount
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&

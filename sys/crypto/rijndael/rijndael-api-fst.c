@@ -106,6 +106,7 @@ parameter_list|,
 name|int
 name|keyLen
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|keyMaterial
@@ -384,6 +385,7 @@ name|keyInstance
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|BYTE
 modifier|*
 name|input
@@ -1920,6 +1922,7 @@ name|keyInstance
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|BYTE
 modifier|*
 name|input
@@ -2154,6 +2157,7 @@ index|]
 operator|=
 operator|(
 operator|(
+specifier|const
 name|u_int32_t
 operator|*
 operator|)
@@ -2187,6 +2191,7 @@ index|]
 operator|=
 operator|(
 operator|(
+specifier|const
 name|u_int32_t
 operator|*
 operator|)
@@ -2220,6 +2225,7 @@ index|]
 operator|=
 operator|(
 operator|(
+specifier|const
 name|u_int32_t
 operator|*
 operator|)
@@ -2253,6 +2259,7 @@ index|]
 operator|=
 operator|(
 operator|(
+specifier|const
 name|u_int32_t
 operator|*
 operator|)
@@ -2435,6 +2442,7 @@ name|keyInstance
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|BYTE
 modifier|*
 name|input
@@ -3873,6 +3881,7 @@ name|keyInstance
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|BYTE
 modifier|*
 name|input

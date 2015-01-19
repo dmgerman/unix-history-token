@@ -49,14 +49,11 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -140,12 +137,9 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 name|struct
 name|re_guts
 modifier|*
@@ -884,12 +878,9 @@ operator|)
 name|opnd
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 name|cs
 operator|=
 operator|&
@@ -1401,12 +1392,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|fprintf
 argument_list|(
 name|d

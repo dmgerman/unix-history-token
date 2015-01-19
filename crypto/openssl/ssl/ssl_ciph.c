@@ -4907,8 +4907,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\t%d: %s %lx %lx %lx\n"
 argument_list|,
 name|i
@@ -5443,8 +5445,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CIPHER_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Applying rule %d with %08lx/%08lx/%08lx/%08lx/%08lx %08lx (%d)\n"
 argument_list|,
 name|rule
@@ -5581,8 +5585,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|CIPHER_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\nName: %s:\nAlgo = %08lx/%08lx/%08lx/%08lx/%08lx Algo_strength = %08lx\n"
 argument_list|,
 name|cp
@@ -5730,8 +5736,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|CIPHER_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Action = %d\n"
 argument_list|,
 name|rule
@@ -7326,8 +7334,10 @@ name|KSSL_DEBUG
 end_ifdef
 
 begin_expr_stmt
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"ssl_create_cipher_list() for %d ciphers\n"
 argument_list|,
 name|num_of_ciphers
@@ -8184,8 +8194,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CIPHER_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"<%s>\n"
 argument_list|,
 name|curr

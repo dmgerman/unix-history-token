@@ -108,6 +108,11 @@ name|GetQualifiedTypeName
 argument_list|()
 block|;
 name|virtual
+name|ConstString
+name|GetDisplayTypeName
+argument_list|()
+block|;
+name|virtual
 name|size_t
 name|CalculateNumChildren
 argument_list|()

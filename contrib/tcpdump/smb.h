@@ -1,23 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/smb.h,v 1.9 2004-12-28 22:29:44 guy Exp $ (LBL) */
-end_comment
-
-begin_comment
 comment|/*  * Copyright (C) Andrew Tridgell 1995-1999  *  * This software may be distributed either under the terms of the  * BSD-style license that accompanies tcpdump or the GNU GPL version 2  * or later  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SMBMIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)<(b)?(a):(b))
-end_define
+begin_comment
+comment|/* for netdissect_options */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"netdissect.h"
+end_include
 
 begin_comment
 comment|/* the complete */
@@ -1021,6 +1015,9 @@ name|u_char
 modifier|*
 name|smb_fdata
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*

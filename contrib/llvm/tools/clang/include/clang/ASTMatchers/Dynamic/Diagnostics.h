@@ -66,18 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/ASTMatchers/Dynamic/VariantValue.h"
 end_include
 
@@ -109,6 +97,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -206,7 +206,7 @@ name|ET_None
 init|=
 literal|0
 block|,
-name|ET_RegistryNotFound
+name|ET_RegistryMatcherNotFound
 init|=
 literal|1
 block|,
@@ -225,6 +225,10 @@ block|,
 name|ET_RegistryAmbiguousOverload
 init|=
 literal|5
+block|,
+name|ET_RegistryValueNotFound
+init|=
+literal|6
 block|,
 name|ET_ParserStringError
 init|=

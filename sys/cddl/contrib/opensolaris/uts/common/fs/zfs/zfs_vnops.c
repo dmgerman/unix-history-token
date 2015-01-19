@@ -917,7 +917,7 @@ name|_FIO_SEEK_HOLE
 case|:
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|ddi_copyin
@@ -1012,7 +1012,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|ddi_copyout
@@ -2631,7 +2631,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 operator|(
@@ -2787,7 +2787,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 while|while
 condition|(
 name|n
@@ -3387,7 +3387,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * Pre-fault the pages to ensure slow (eg NFS) pages 	 * don't hold up txg. 	 * Skip this if uio contains loaned arc_buf. 	 */
 if|if
 condition|(
@@ -3436,7 +3436,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
 comment|/* 	 * If in append mode, set the io offset pointer to eof. 	 */
 if|if
 condition|(
@@ -3978,6 +3977,7 @@ operator|>
 name|max_blksz
 condition|)
 block|{
+comment|/* 				 * File's blocksize is already larger than the 				 * "recordsize" property.  Only let it grow to 				 * the next power of 2. 				 */
 name|ASSERT
 argument_list|(
 operator|!
@@ -3995,7 +3995,14 @@ name|MIN
 argument_list|(
 name|end_size
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+literal|1
+operator|<<
+name|highbit64
+argument_list|(
+name|zp
+operator|->
+name|z_blksz
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4578,7 +4585,7 @@ name|nbytes
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 operator|!
@@ -4602,7 +4609,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
 block|}
 name|zfs_range_unlock
 argument_list|(
@@ -6314,10 +6320,8 @@ name|cn_flags
 operator|&
 name|MAKEENTRY
 operator|)
-operator|&&
-name|nameiop
 operator|!=
-name|CREATE
+literal|0
 condition|)
 name|cache_enter
 argument_list|(
@@ -11764,7 +11768,7 @@ name|S_IFMT
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|vap
 operator|->
 name|va_fsid
@@ -11858,7 +11862,7 @@ name|z_size
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|vap
 operator|->
 name|va_rdev
@@ -19242,7 +19246,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -20362,7 +20366,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_comment
@@ -20628,7 +20632,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -22314,7 +22318,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_expr_stmt
@@ -22815,7 +22819,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 case|case
 name|_PC_XATTR_EXISTS
 case|:
@@ -23008,7 +23012,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 case|case
 name|_PC_MIN_HOLE_SIZE
 case|:
@@ -23027,7 +23031,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 case|case
 name|_PC_TIMESTAMP_RESOLUTION
 case|:
@@ -23044,7 +23048,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* sun */
 case|case
 name|_PC_ACL_EXTENDED
 case|:
@@ -23317,7 +23320,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -25070,7 +25073,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function
@@ -26687,6 +26690,22 @@ argument_list|,
 name|B_TRUE
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sa_bulk_update
+argument_list|(
+name|zp
+operator|->
+name|z_sa_hdl
+argument_list|,
+name|bulk
+argument_list|,
+name|count
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
 name|zfs_log_write
 argument_list|(
 name|zfsvfs
@@ -27543,6 +27562,8 @@ operator|->
 name|a_vap
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|mode
 decl_stmt|;
 name|ASSERT
@@ -27567,8 +27588,8 @@ name|va_mode
 operator|&
 name|ALLPERMS
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|zfs_create
 argument_list|(
 name|ap
@@ -27598,6 +27619,45 @@ name|cnp
 operator|->
 name|cn_thread
 argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FREEBSD_NAMECACHE
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|MAKEENTRY
+operator|)
+operator|!=
+literal|0
+condition|)
+name|cache_enter
+argument_list|(
+name|ap
+operator|->
+name|a_dvp
+argument_list|,
+operator|*
+name|ap
+operator|->
+name|a_vpp
+argument_list|,
+name|cnp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}

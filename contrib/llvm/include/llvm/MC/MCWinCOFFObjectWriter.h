@@ -115,6 +115,20 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+name|virtual
+name|bool
+name|recordRelocation
+argument_list|(
+specifier|const
+name|MCFixup
+operator|&
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// \brief Construct a new Win COFF writer instance.

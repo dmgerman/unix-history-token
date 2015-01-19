@@ -109,60 +109,48 @@ comment|/// whose machine code is at OLD turns into a call to NEW, perhaps by
 comment|/// overwriting OLD with a branch to NEW.  This is used for self-modifying
 comment|/// code.
 comment|///
-name|virtual
 name|void
 name|replaceMachineCodeForFunction
 argument_list|(
-name|void
-operator|*
-name|Old
+argument|void *Old
 argument_list|,
-name|void
-operator|*
-name|New
+argument|void *New
 argument_list|)
+name|override
 block|;
 comment|// getStubLayout - Returns the size and alignment of the largest call stub
 comment|// on Sparc.
-name|virtual
 name|StubLayout
 name|getStubLayout
 argument_list|()
+name|override
 block|;
 comment|/// emitFunctionStub - Use the specified JITCodeEmitter object to emit a
 comment|/// small native function that simply calls the function at the specified
 comment|/// address.
-name|virtual
 name|void
 operator|*
 name|emitFunctionStub
 argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
+argument|const Function *F
 argument_list|,
-name|void
-operator|*
-name|Fn
+argument|void *Fn
 argument_list|,
-name|JITCodeEmitter
-operator|&
-name|JCE
+argument|JITCodeEmitter&JCE
 argument_list|)
+name|override
 block|;
 comment|/// getLazyResolverFunction - Expose the lazy resolver to the JIT.
-name|virtual
 name|LazyResolverFn
 name|getLazyResolverFunction
 argument_list|(
-name|JITCompilerFn
+argument|JITCompilerFn
 argument_list|)
+name|override
 block|;
 comment|/// relocate - Before the JIT can run a block of code that has been emitted,
 comment|/// it must rewrite the code to contain the actual addresses of any
 comment|/// referenced global symbols.
-name|virtual
 name|void
 name|relocate
 argument_list|(
@@ -174,6 +162,7 @@ argument|unsigned NumRelocs
 argument_list|,
 argument|unsigned char *GOTBase
 argument_list|)
+name|override
 block|;
 comment|/// Initialize - Initialize internal stage for the function being JITted.
 name|void

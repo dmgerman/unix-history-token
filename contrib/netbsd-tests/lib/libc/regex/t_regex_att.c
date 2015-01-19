@@ -69,14 +69,11 @@ directive|include
 file|<atf-c.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -1956,12 +1953,9 @@ operator|+=
 name|l
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|ATF_CHECK_STREQ_MSG
 argument_list|(
 name|res
@@ -2945,12 +2939,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|atf_tc_expect_fail
 argument_list|(
 literal|"The expected and matched groups are mismatched on FreeBSD"

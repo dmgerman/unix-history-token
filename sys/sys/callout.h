@@ -79,23 +79,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CALLOUT_SHAREDLOCK
+name|CALLOUT_UNUSED_5
 value|0x0020
 end_define
 
 begin_comment
-comment|/* callout lock held in shared mode */
+comment|/* --available-- */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CALLOUT_DFRMIGRATION
+name|CALLOUT_DEFRESTART
 value|0x0040
 end_define
 
 begin_comment
-comment|/* callout in deferred migration mode */
+comment|/* callout restart is deferred */
 end_comment
 
 begin_define
@@ -118,6 +118,34 @@ end_define
 
 begin_comment
 comment|/* allow exec from hw int context */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLOUT_SET_LC
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 7)<< 16)
+end_define
+
+begin_comment
+comment|/* set lock class */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLOUT_GET_LC
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 16)& 7)
+end_define
+
+begin_comment
+comment|/* get lock class */
 end_comment
 
 begin_define
@@ -226,15 +254,33 @@ parameter_list|)
 value|((c)->c_flags&= ~CALLOUT_ACTIVE)
 end_define
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|int
 name|callout_drain
 parameter_list|(
-name|c
+name|struct
+name|callout
+modifier|*
 parameter_list|)
-value|_callout_stop_safe(c, 1)
-end_define
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|callout_drain_async
+parameter_list|(
+name|struct
+name|callout
+modifier|*
+parameter_list|,
+name|callout_func_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -333,14 +379,8 @@ name|sbintime_t
 parameter_list|,
 name|sbintime_t
 parameter_list|,
-name|void
-function_decl|(
+name|callout_func_t
 modifier|*
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
 parameter_list|,
 name|void
 modifier|*
@@ -370,7 +410,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|callout_reset_sbt_on((c), (sbt), (pr), (fn), (arg), (c)->c_cpu, flags)
+value|callout_reset_sbt_on((c), (sbt), (pr), (fn), (arg), (c)->c_cpu, (flags))
 end_define
 
 begin_define
@@ -391,7 +431,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|callout_reset_sbt_on((c), (sbt), (pr), (fn), (arg), PCPU_GET(cpuid), flags)
+value|callout_reset_sbt_on((c), (sbt), (pr), (fn), (arg), PCPU_GET(cpuid),\         (flags))
 end_define
 
 begin_define
@@ -410,7 +450,7 @@ parameter_list|,
 name|cpu
 parameter_list|)
 define|\
-value|callout_reset_sbt_on((c), (tick_sbt * (to_ticks)), 0, (fn), (arg), \         (cpu), C_HARDCLOCK)
+value|callout_reset_sbt_on((c), tick_sbt * (to_ticks), 0, (fn), (arg),	\         (cpu), C_HARDCLOCK)
 end_define
 
 begin_define
@@ -445,6 +485,59 @@ name|arg
 parameter_list|)
 define|\
 value|callout_reset_on((c), (on_tick), (fn), (arg), PCPU_GET(cpuid))
+end_define
+
+begin_define
+define|#
+directive|define
+name|callout_schedule_sbt_on
+parameter_list|(
+name|c
+parameter_list|,
+name|sbt
+parameter_list|,
+name|pr
+parameter_list|,
+name|cpu
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|callout_reset_sbt_on((c), (sbt), (pr), (c)->c_func, (c)->c_arg,	\         (cpu), (flags))
+end_define
+
+begin_define
+define|#
+directive|define
+name|callout_schedule_sbt
+parameter_list|(
+name|c
+parameter_list|,
+name|sbt
+parameter_list|,
+name|pr
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|callout_schedule_sbt_on((c), (sbt), (pr), (c)->c_cpu, (flags))
+end_define
+
+begin_define
+define|#
+directive|define
+name|callout_schedule_sbt_curcpu
+parameter_list|(
+name|c
+parameter_list|,
+name|sbt
+parameter_list|,
+name|pr
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|callout_schedule_sbt_on((c), (sbt), (pr), PCPU_GET(cpuid), (flags))
 end_define
 
 begin_function_decl
@@ -488,25 +581,13 @@ define|\
 value|callout_schedule_on((c), (on_tick), PCPU_GET(cpuid))
 end_define
 
-begin_define
-define|#
-directive|define
-name|callout_stop
-parameter_list|(
-name|c
-parameter_list|)
-value|_callout_stop_safe(c, 0)
-end_define
-
 begin_function_decl
 name|int
-name|_callout_stop_safe
+name|callout_stop
 parameter_list|(
 name|struct
 name|callout
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

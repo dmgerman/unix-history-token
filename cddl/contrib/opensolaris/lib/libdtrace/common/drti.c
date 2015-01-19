@@ -94,14 +94,11 @@ literal|"/dev/dtrace/helper"
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -143,14 +140,11 @@ begin_comment
 comment|/* DOF helper generation */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -293,14 +287,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_pragma
 pragma|#
@@ -346,12 +337,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|dof_hdr_t
 modifier|*
 name|dof
@@ -390,13 +378,12 @@ decl_stmt|;
 name|Link_map
 modifier|*
 name|lmp
+init|=
+name|NULL
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|Lmid_t
 name|lmid
 decl_stmt|;
@@ -417,13 +404,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 name|Elf
 modifier|*
 name|e
@@ -458,6 +441,9 @@ name|s
 decl_stmt|;
 name|size_t
 name|shstridx
+decl_stmt|;
+name|uint64_t
+name|aligned_filesz
 decl_stmt|;
 endif|#
 directive|endif
@@ -513,12 +499,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 name|dlinfo
@@ -573,13 +556,9 @@ else|else
 name|modname
 operator|++
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 name|elf_version
 argument_list|(
 name|EV_CURRENT
@@ -735,6 +714,7 @@ name|dofdata
 operator|->
 name|d_buf
 expr_stmt|;
+break|break;
 block|}
 block|}
 block|}
@@ -785,6 +765,31 @@ operator|->
 name|d_size
 condition|)
 block|{
+name|aligned_filesz
+operator|=
+operator|(
+name|shdr
+operator|.
+name|sh_addralign
+operator|==
+literal|0
+condition|?
+name|dof
+operator|->
+name|dofh_filesz
+else|:
+name|roundup2
+argument_list|(
+name|dof
+operator|->
+name|dofh_filesz
+argument_list|,
+name|shdr
+operator|.
+name|sh_addralign
+argument_list|)
+operator|)
+expr_stmt|;
 name|dof_next
 operator|=
 operator|(
@@ -798,9 +803,7 @@ operator|*
 operator|)
 name|dof
 operator|+
-name|dof
-operator|->
-name|dofh_filesz
+name|aligned_filesz
 operator|)
 expr_stmt|;
 endif|#
@@ -988,12 +991,9 @@ argument_list|,
 name|devnamep
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 comment|/* 		 * If the device path wasn't explicitly set, try again with 		 * the old device path. 		 */
 if|if
 condition|(
@@ -1078,13 +1078,9 @@ argument_list|,
 name|dof
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 name|gen
 operator|=
 name|dh
@@ -1102,13 +1098,9 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 comment|/* End of while loop */
 name|dof
 operator|=
@@ -1133,14 +1125,11 @@ directive|endif
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_pragma
 pragma|#

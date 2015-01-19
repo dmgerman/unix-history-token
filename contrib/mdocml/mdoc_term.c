@@ -1,28 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_term.c,v 1.258 2013/12/25 21:24:12 schwarze Exp $ */
+comment|/*	$Id: mdoc_term.c,v 1.299 2014/12/02 10:08:06 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2012, 2013 Ingo Schwarze<schwarze@openbsd.org>  * Copyright (c) 2013 Franco Fichtner<franco@lastsummer.de>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2012, 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  * Copyright (c) 2013 Franco Fichtner<franco@lastsummer.de>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|"config.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -75,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"mandoc_aux.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"out.h"
 end_include
 
@@ -116,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|DECL_ARGS
-value|struct termp *p, \ 		  struct termpair *pair, \ 	  	  const struct mdoc_meta *meta, \ 		  struct mdoc_node *n
+value|struct termp *p, \ 		  struct termpair *pair, \ 		  const struct mdoc_meta *meta, \ 		  struct mdoc_node *n
 end_define
 
 begin_struct
@@ -166,23 +161,6 @@ begin_function_decl
 specifier|static
 name|size_t
 name|a2height
-parameter_list|(
-specifier|const
-name|struct
-name|termp
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|size_t
-name|a2offs
 parameter_list|(
 specifier|const
 name|struct
@@ -301,16 +279,6 @@ begin_function_decl
 specifier|static
 name|void
 name|termp__t_post
-parameter_list|(
-name|DECL_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|termp_an_post
 parameter_list|(
 name|DECL_ARGS
 parameter_list|)
@@ -680,6 +648,16 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|termp_ll_pre
+parameter_list|(
+name|DECL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|termp_lk_pre
 parameter_list|(
 name|DECL_ARGS
@@ -751,6 +729,16 @@ begin_function_decl
 specifier|static
 name|int
 name|termp_sh_pre
+parameter_list|(
+name|DECL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|termp_skip_pre
 parameter_list|(
 name|DECL_ARGS
 parameter_list|)
@@ -956,7 +944,7 @@ comment|/* Ad */
 block|{
 name|termp_an_pre
 block|,
-name|termp_an_post
+name|NULL
 block|}
 block|,
 comment|/* An */
@@ -1087,7 +1075,7 @@ block|}
 block|,
 comment|/* Op */
 block|{
-name|NULL
+name|termp_ft_pre
 block|,
 name|NULL
 block|}
@@ -1283,7 +1271,7 @@ block|}
 block|,
 comment|/* Bx */
 block|{
-name|NULL
+name|termp_skip_pre
 block|,
 name|NULL
 block|}
@@ -1354,7 +1342,7 @@ block|}
 block|,
 comment|/* Ms */
 block|{
-name|NULL
+name|termp_li_pre
 block|,
 name|NULL
 block|}
@@ -1578,7 +1566,7 @@ block|}
 block|,
 comment|/* Hf */
 block|{
-name|NULL
+name|termp_under_pre
 block|,
 name|NULL
 block|}
@@ -1648,21 +1636,19 @@ block|}
 block|,
 comment|/* %C */
 block|{
-name|NULL
+name|termp_skip_pre
 block|,
 name|NULL
 block|}
 block|,
 comment|/* Es */
-comment|/* TODO */
 block|{
-name|NULL
+name|termp_quote_pre
 block|,
-name|NULL
+name|termp_quote_post
 block|}
 block|,
 comment|/* En */
-comment|/* TODO */
 block|{
 name|termp_xx_pre
 block|,
@@ -1705,6 +1691,13 @@ name|NULL
 block|}
 block|,
 comment|/* Ta */
+block|{
+name|termp_ll_pre
+block|,
+name|NULL
+block|}
+block|,
+comment|/* ll */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1726,15 +1719,14 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|mdoc_node
-modifier|*
-name|n
-decl_stmt|;
-specifier|const
-name|struct
 name|mdoc_meta
 modifier|*
 name|meta
+decl_stmt|;
+name|struct
+name|mdoc_node
+modifier|*
+name|n
 decl_stmt|;
 name|struct
 name|termp
@@ -1750,26 +1742,16 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-if|if
-condition|(
-literal|0
-operator|==
-name|p
-operator|->
-name|defindent
-condition|)
-name|p
-operator|->
-name|defindent
-operator|=
-literal|5
-expr_stmt|;
 name|p
 operator|->
 name|overstep
 operator|=
 literal|0
 expr_stmt|;
+name|p
+operator|->
+name|rmargin
+operator|=
 name|p
 operator|->
 name|maxrmargin
@@ -1789,27 +1771,14 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|p
-operator|->
-name|symtab
-condition|)
-name|p
-operator|->
-name|symtab
-operator|=
-name|mchars_alloc
-argument_list|()
-expr_stmt|;
 name|n
 operator|=
 name|mdoc_node
 argument_list|(
 name|mdoc
 argument_list|)
+operator|->
+name|child
 expr_stmt|;
 name|meta
 operator|=
@@ -1817,6 +1786,95 @@ name|mdoc_meta
 argument_list|(
 name|mdoc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|synopsisonly
+condition|)
+block|{
+while|while
+condition|(
+name|n
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|n
+operator|->
+name|tok
+operator|==
+name|MDOC_Sh
+operator|&&
+name|n
+operator|->
+name|sec
+operator|==
+name|SEC_SYNOPSIS
+condition|)
+block|{
+if|if
+condition|(
+name|n
+operator|->
+name|child
+operator|->
+name|next
+operator|->
+name|child
+operator|!=
+name|NULL
+condition|)
+name|print_mdoc_nodelist
+argument_list|(
+name|p
+argument_list|,
+name|NULL
+argument_list|,
+name|meta
+argument_list|,
+name|n
+operator|->
+name|child
+operator|->
+name|next
+operator|->
+name|child
+argument_list|)
+expr_stmt|;
+name|term_newln
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|n
+operator|=
+name|n
+operator|->
+name|next
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|p
+operator|->
+name|defindent
+operator|==
+literal|0
+condition|)
+name|p
+operator|->
+name|defindent
+operator|=
+literal|5
 expr_stmt|;
 name|term_begin
 argument_list|(
@@ -1832,9 +1890,23 @@ expr_stmt|;
 if|if
 condition|(
 name|n
-operator|->
-name|child
+operator|!=
+name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|n
+operator|->
+name|tok
+operator|!=
+name|MDOC_Sh
+condition|)
+name|term_vspace
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|print_mdoc_nodelist
 argument_list|(
 name|p
@@ -1844,15 +1916,15 @@ argument_list|,
 name|meta
 argument_list|,
 name|n
-operator|->
-name|child
 argument_list|)
 expr_stmt|;
+block|}
 name|term_end
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1896,10 +1968,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -2035,9 +2103,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_TEXT
-operator|)
 case|:
 if|if
 condition|(
@@ -2098,10 +2164,25 @@ name|TERMP_NOSPACE
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_EQN
-operator|)
 case|:
+if|if
+condition|(
+operator|!
+operator|(
+name|n
+operator|->
+name|flags
+operator|&
+name|MDOC_LINE
+operator|)
+condition|)
+name|p
+operator|->
+name|flags
+operator||=
+name|TERMP_NOSPACE
+expr_stmt|;
 name|term_eqn
 argument_list|(
 name|p
@@ -2111,11 +2192,34 @@ operator|->
 name|eqn
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|->
+name|next
+operator|!=
+name|NULL
+operator|&&
+operator|!
+operator|(
+name|n
+operator|->
+name|next
+operator|->
+name|flags
+operator|&
+name|MDOC_LINE
+operator|)
+condition|)
+name|p
+operator|->
+name|flags
+operator||=
+name|TERMP_NOSPACE
+expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_TBL
-operator|)
 case|:
 name|term_tbl
 argument_list|(
@@ -2139,11 +2243,17 @@ index|]
 operator|.
 name|pre
 operator|&&
-name|ENDBODY_NOT
-operator|==
+operator|(
 name|n
 operator|->
 name|end
+operator|==
+name|ENDBODY_NOT
+operator|||
+name|n
+operator|->
+name|nchild
+operator|)
 condition|)
 name|chld
 operator|=
@@ -2222,21 +2332,15 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_TEXT
-operator|)
 case|:
 break|break;
 case|case
-operator|(
 name|MDOC_TBL
-operator|)
 case|:
 break|break;
 case|case
-operator|(
 name|MDOC_EQN
-operator|)
 case|:
 break|break;
 default|default:
@@ -2332,6 +2436,15 @@ name|flags
 operator||=
 name|TERMP_SENTENCE
 expr_stmt|;
+if|if
+condition|(
+name|MDOC_ll
+operator|!=
+name|n
+operator|->
+name|tok
+condition|)
+block|{
 name|p
 operator|->
 name|offset
@@ -2344,6 +2457,7 @@ name|rmargin
 operator|=
 name|rmargin
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2369,6 +2483,9 @@ name|mdoc_meta
 modifier|*
 name|meta
 decl_stmt|;
+name|size_t
+name|sz
+decl_stmt|;
 name|meta
 operator|=
 operator|(
@@ -2386,7 +2503,7 @@ argument_list|,
 name|TERMFONT_NONE
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Output the footer in new-groff style, that is, three columns 	 * with the middle being the manual date and flanking columns 	 * being the operating system: 	 * 	 * SYSTEM                  DATE                    SYSTEM 	 */
+comment|/* 	 * Output the footer in new-groff style, that is, three columns 	 * with the middle being the manual date and flanking columns 	 * being the operating system: 	 * 	 * SYSTEM                  DATE                    SYSTEM 	 */
 name|term_vspace
 argument_list|(
 name|p
@@ -2398,15 +2515,8 @@ name|offset
 operator|=
 literal|0
 expr_stmt|;
-name|p
-operator|->
-name|rmargin
+name|sz
 operator|=
-operator|(
-name|p
-operator|->
-name|maxrmargin
-operator|-
 name|term_strlen
 argument_list|(
 name|p
@@ -2415,6 +2525,21 @@ name|meta
 operator|->
 name|date
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|rmargin
+operator|=
+name|p
+operator|->
+name|maxrmargin
+operator|>
+name|sz
+condition|?
+operator|(
+name|p
+operator|->
+name|maxrmargin
 operator|+
 name|term_len
 argument_list|(
@@ -2422,9 +2547,13 @@ name|p
 argument_list|,
 literal|1
 argument_list|)
+operator|-
+name|sz
 operator|)
 operator|/
 literal|2
+else|:
+literal|0
 expr_stmt|;
 name|p
 operator|->
@@ -2462,14 +2591,8 @@ name|p
 operator|->
 name|rmargin
 expr_stmt|;
-name|p
-operator|->
-name|rmargin
+name|sz
 operator|=
-name|p
-operator|->
-name|maxrmargin
-operator|-
 name|term_strlen
 argument_list|(
 name|p
@@ -2478,6 +2601,24 @@ name|meta
 operator|->
 name|os
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|rmargin
+operator|=
+name|p
+operator|->
+name|maxrmargin
+operator|>
+name|sz
+condition|?
+name|p
+operator|->
+name|maxrmargin
+operator|-
+name|sz
+else|:
+literal|0
 expr_stmt|;
 name|p
 operator|->
@@ -2587,27 +2728,23 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|,
-name|title
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-name|size_t
-name|buflen
-decl_stmt|,
-name|titlen
-decl_stmt|;
 specifier|const
 name|struct
 name|mdoc_meta
 modifier|*
 name|meta
+decl_stmt|;
+name|char
+modifier|*
+name|volume
+decl_stmt|,
+modifier|*
+name|title
+decl_stmt|;
+name|size_t
+name|vollen
+decl_stmt|,
+name|titlen
 decl_stmt|;
 name|meta
 operator|=
@@ -2620,20 +2757,6 @@ operator|)
 name|arg
 expr_stmt|;
 comment|/* 	 * The header is strange.  It has three components, which are 	 * really two with the first duplicated.  It goes like this: 	 * 	 * IDENTIFIER              TITLE                   IDENTIFIER 	 * 	 * The IDENTIFIER is NAME(SECTION), which is the command-name 	 * (if given, or "unknown" if not) followed by the manual page 	 * section.  These are given in `Dt'.  The TITLE is a free-form 	 * string depending on the manual volume.  If not specified, it 	 * switches on the manual section. 	 */
-name|p
-operator|->
-name|offset
-operator|=
-literal|0
-expr_stmt|;
-name|p
-operator|->
-name|rmargin
-operator|=
-name|p
-operator|->
-name|maxrmargin
-expr_stmt|;
 name|assert
 argument_list|(
 name|meta
@@ -2641,68 +2764,71 @@ operator|->
 name|vol
 argument_list|)
 expr_stmt|;
-name|strlcpy
+if|if
+condition|(
+name|NULL
+operator|==
+name|meta
+operator|->
+name|arch
+condition|)
+name|volume
+operator|=
+name|mandoc_strdup
 argument_list|(
-name|buf
+name|meta
+operator|->
+name|vol
+argument_list|)
+expr_stmt|;
+else|else
+name|mandoc_asprintf
+argument_list|(
+operator|&
+name|volume
+argument_list|,
+literal|"%s (%s)"
 argument_list|,
 name|meta
 operator|->
 name|vol
 argument_list|,
-name|BUFSIZ
+name|meta
+operator|->
+name|arch
 argument_list|)
 expr_stmt|;
-name|buflen
+name|vollen
 operator|=
 name|term_strlen
 argument_list|(
 name|p
 argument_list|,
-name|buf
+name|volume
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|NULL
+operator|==
 name|meta
 operator|->
-name|arch
+name|msec
 condition|)
-block|{
-name|strlcat
+name|title
+operator|=
+name|mandoc_strdup
 argument_list|(
-name|buf
-argument_list|,
-literal|" ("
-argument_list|,
-name|BUFSIZ
-argument_list|)
-expr_stmt|;
-name|strlcat
-argument_list|(
-name|buf
-argument_list|,
 name|meta
 operator|->
-name|arch
-argument_list|,
-name|BUFSIZ
-argument_list|)
-expr_stmt|;
-name|strlcat
-argument_list|(
-name|buf
-argument_list|,
-literal|")"
-argument_list|,
-name|BUFSIZ
-argument_list|)
-expr_stmt|;
-block|}
-name|snprintf
-argument_list|(
 name|title
-argument_list|,
-name|BUFSIZ
+argument_list|)
+expr_stmt|;
+else|else
+name|mandoc_asprintf
+argument_list|(
+operator|&
+name|title
 argument_list|,
 literal|"%s(%s)"
 argument_list|,
@@ -2756,7 +2882,7 @@ operator|+
 literal|1
 operator|)
 operator|+
-name|buflen
+name|vollen
 operator|<
 name|p
 operator|->
@@ -2767,12 +2893,7 @@ name|p
 operator|->
 name|maxrmargin
 operator|-
-name|term_strlen
-argument_list|(
-name|p
-argument_list|,
-name|buf
-argument_list|)
+name|vollen
 operator|+
 name|term_len
 argument_list|(
@@ -2784,11 +2905,19 @@ operator|)
 operator|/
 literal|2
 else|:
+name|vollen
+operator|<
+name|p
+operator|->
+name|maxrmargin
+condition|?
 name|p
 operator|->
 name|maxrmargin
 operator|-
-name|buflen
+name|vollen
+else|:
+literal|0
 expr_stmt|;
 name|term_word
 argument_list|(
@@ -2824,7 +2953,7 @@ name|p
 operator|->
 name|offset
 operator|+
-name|buflen
+name|vollen
 operator|+
 name|titlen
 operator|<
@@ -2846,7 +2975,7 @@ name|term_word
 argument_list|(
 name|p
 argument_list|,
-name|buf
+name|volume
 argument_list|)
 expr_stmt|;
 name|term_flushln
@@ -2935,6 +3064,16 @@ operator|=
 name|p
 operator|->
 name|maxrmargin
+expr_stmt|;
+name|free
+argument_list|(
+name|title
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|volume
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3042,153 +3181,7 @@ argument_list|,
 name|SCALE_MAX
 argument_list|)
 condition|)
-name|SCALE_HS_INIT
-argument_list|(
-operator|&
-name|su
-argument_list|,
-name|term_strlen
-argument_list|(
-name|p
-argument_list|,
-name|v
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|term_hspan
-argument_list|(
-name|p
-argument_list|,
-operator|&
-name|su
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|size_t
-name|a2offs
-parameter_list|(
-specifier|const
-name|struct
-name|termp
-modifier|*
-name|p
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|v
-parameter_list|)
 block|{
-name|struct
-name|roffsu
-name|su
-decl_stmt|;
-if|if
-condition|(
-literal|'\0'
-operator|==
-operator|*
-name|v
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-elseif|else
-if|if
-condition|(
-literal|0
-operator|==
-name|strcmp
-argument_list|(
-name|v
-argument_list|,
-literal|"left"
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-elseif|else
-if|if
-condition|(
-literal|0
-operator|==
-name|strcmp
-argument_list|(
-name|v
-argument_list|,
-literal|"indent"
-argument_list|)
-condition|)
-return|return
-operator|(
-name|term_len
-argument_list|(
-name|p
-argument_list|,
-name|p
-operator|->
-name|defindent
-operator|+
-literal|1
-argument_list|)
-operator|)
-return|;
-elseif|else
-if|if
-condition|(
-literal|0
-operator|==
-name|strcmp
-argument_list|(
-name|v
-argument_list|,
-literal|"indent-two"
-argument_list|)
-condition|)
-return|return
-operator|(
-name|term_len
-argument_list|(
-name|p
-argument_list|,
-operator|(
-name|p
-operator|->
-name|defindent
-operator|+
-literal|1
-operator|)
-operator|*
-literal|2
-argument_list|)
-operator|)
-return|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|a2roffsu
-argument_list|(
-name|v
-argument_list|,
-operator|&
-name|su
-argument_list|,
-name|SCALE_MAX
-argument_list|)
-condition|)
 name|SCALE_HS_INIT
 argument_list|(
 operator|&
@@ -3202,6 +3195,18 @@ name|v
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|su
+operator|.
+name|scale
+operator|/=
+name|term_strlen
+argument_list|(
+name|p
+argument_list|,
+literal|"0"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|term_hspan
@@ -3294,57 +3299,83 @@ name|comp
 condition|)
 return|return;
 comment|/* Do not vspace directly after Ss/Sh. */
-for|for
-control|(
 name|nn
 operator|=
 name|n
-init|;
+expr_stmt|;
+while|while
+condition|(
 name|nn
-condition|;
+operator|->
+name|prev
+operator|==
+name|NULL
+condition|)
+block|{
+do|do
+block|{
 name|nn
 operator|=
 name|nn
 operator|->
 name|parent
-control|)
-block|{
+expr_stmt|;
 if|if
 condition|(
-name|MDOC_BLOCK
-operator|!=
 name|nn
 operator|->
 name|type
+operator|==
+name|MDOC_ROOT
 condition|)
-continue|continue;
+return|return;
+block|}
+do|while
+condition|(
+name|nn
+operator|->
+name|type
+operator|!=
+name|MDOC_BLOCK
+condition|)
+do|;
 if|if
 condition|(
-name|MDOC_Ss
-operator|==
 name|nn
 operator|->
 name|tok
-condition|)
-return|return;
-if|if
-condition|(
+operator|==
 name|MDOC_Sh
-operator|==
+operator|||
 name|nn
 operator|->
 name|tok
+operator|==
+name|MDOC_Ss
 condition|)
 return|return;
 if|if
 condition|(
-name|NULL
-operator|==
 name|nn
 operator|->
-name|prev
+name|tok
+operator|==
+name|MDOC_It
+operator|&&
+name|nn
+operator|->
+name|parent
+operator|->
+name|parent
+operator|->
+name|norm
+operator|->
+name|Bl
+operator|.
+name|type
+operator|!=
+name|LIST_item
 condition|)
-continue|continue;
 break|break;
 block|}
 comment|/* A `-column' does not assert vspace within the list. */
@@ -3446,9 +3477,38 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
+begin_function
+specifier|static
+name|int
+name|termp_ll_pre
+parameter_list|(
+name|DECL_ARGS
+parameter_list|)
+block|{
+name|term_setwidth
+argument_list|(
+name|p
+argument_list|,
+name|n
+operator|->
+name|nchild
+condition|?
+name|n
+operator|->
+name|child
+operator|->
+name|string
+else|:
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -3470,7 +3530,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|7
+literal|24
 index|]
 decl_stmt|;
 name|int
@@ -3537,7 +3597,7 @@ name|Bl
 operator|.
 name|type
 expr_stmt|;
-comment|/*  	 * First calculate width and offset.  This is pretty easy unless 	 * we're a -column list, in which case all prior columns must 	 * be accounted for. 	 */
+comment|/* 	 * First calculate width and offset.  This is pretty easy unless 	 * we're a -column list, in which case all prior columns must 	 * be accounted for. 	 */
 name|width
 operator|=
 name|offset
@@ -3556,7 +3616,7 @@ name|offs
 condition|)
 name|offset
 operator|=
-name|a2offs
+name|a2width
 argument_list|(
 name|p
 argument_list|,
@@ -3575,9 +3635,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|LIST_column
-operator|)
 case|:
 if|if
 condition|(
@@ -3599,7 +3657,6 @@ name|Bl
 operator|.
 name|ncols
 expr_stmt|;
-comment|/* LINTED */
 name|dcol
 operator|=
 name|ncols
@@ -3731,7 +3788,7 @@ operator|.
 name|width
 condition|)
 break|break;
-comment|/*  		 * Note: buffer the width by 2, which is groff's magic 		 * number for buffering single arguments.  See the above 		 * handling for column for how this changes. 		 */
+comment|/* 		 * Note: buffer the width by 2, which is groff's magic 		 * number for buffering single arguments.  See the above 		 * handling for column for how this changes. 		 */
 name|assert
 argument_list|(
 name|bl
@@ -3767,34 +3824,26 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*  	 * List-type can override the width in the case of fixed-head 	 * values (bullet, dash/hyphen, enum).  Tags need a non-zero 	 * offset. 	 */
+comment|/* 	 * List-type can override the width in the case of fixed-head 	 * values (bullet, dash/hyphen, enum).  Tags need a non-zero 	 * offset. 	 */
 switch|switch
 condition|(
 name|type
 condition|)
 block|{
 case|case
-operator|(
 name|LIST_bullet
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_dash
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_hyphen
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_enum
-operator|)
 case|:
 if|if
 condition|(
@@ -3818,9 +3867,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|LIST_hang
-operator|)
 case|:
 if|if
 condition|(
@@ -3839,15 +3886,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|LIST_column
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_tag
-operator|)
 case|:
 if|if
 condition|(
@@ -3868,7 +3911,7 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/*  	 * Whitespace control.  Inset bodies need an initial space, 	 * while diagonal bodies need two. 	 */
+comment|/* 	 * Whitespace control.  Inset bodies need an initial space, 	 * while diagonal bodies need two. 	 */
 name|p
 operator|->
 name|flags
@@ -3881,9 +3924,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|LIST_diag
-operator|)
 case|:
 if|if
 condition|(
@@ -3902,9 +3943,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|LIST_inset
-operator|)
 case|:
 if|if
 condition|(
@@ -3913,6 +3952,14 @@ operator|==
 name|n
 operator|->
 name|type
+operator|&&
+name|n
+operator|->
+name|parent
+operator|->
+name|head
+operator|->
+name|nchild
 condition|)
 name|term_word
 argument_list|(
@@ -3937,9 +3984,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|LIST_diag
-operator|)
 case|:
 if|if
 condition|(
@@ -3967,9 +4012,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|LIST_enum
-operator|)
 case|:
 comment|/* 		 * Weird special case. 		 * Very narrow enum lists actually hang. 		 */
 if|if
@@ -3991,21 +4034,15 @@ name|TERMP_HANG
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_bullet
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_dash
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_hyphen
-operator|)
 case|:
 if|if
 condition|(
@@ -4030,9 +4067,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|LIST_hang
-operator|)
 case|:
 if|if
 condition|(
@@ -4046,6 +4081,14 @@ break|break;
 comment|/* 		 * This is ugly.  If `-hang' is specified and the body 		 * is a `Bl' or `Bd', then we want basically to nullify 		 * the "overstep" effect in term_flushln() and treat 		 * this as a `-ohang' list instead. 		 */
 if|if
 condition|(
+name|NULL
+operator|!=
+name|n
+operator|->
+name|next
+operator|&&
+name|NULL
+operator|!=
 name|n
 operator|->
 name|next
@@ -4081,6 +4124,8 @@ name|flags
 operator||=
 name|TERMP_NOBREAK
 operator||
+name|TERMP_BRIND
+operator||
 name|TERMP_HANG
 expr_stmt|;
 name|p
@@ -4091,9 +4136,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|LIST_tag
-operator|)
 case|:
 if|if
 condition|(
@@ -4109,6 +4152,8 @@ operator|->
 name|flags
 operator||=
 name|TERMP_NOBREAK
+operator||
+name|TERMP_BRIND
 expr_stmt|;
 name|p
 operator|->
@@ -4140,9 +4185,7 @@ name|TERMP_DANGLE
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|LIST_column
-operator|)
 case|:
 if|if
 condition|(
@@ -4193,9 +4236,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-operator|(
 name|LIST_diag
-operator|)
 case|:
 if|if
 condition|(
@@ -4211,6 +4252,8 @@ operator|->
 name|flags
 operator||=
 name|TERMP_NOBREAK
+operator||
+name|TERMP_BRIND
 expr_stmt|;
 name|p
 operator|->
@@ -4222,7 +4265,7 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/*  	 * Margin control.  Set-head-width lists have their right 	 * margins shortened.  The body for these lists has the offset 	 * necessarily lengthened.  Everybody gets the offset. 	 */
+comment|/* 	 * Margin control.  Set-head-width lists have their right 	 * margins shortened.  The body for these lists has the offset 	 * necessarily lengthened.  Everybody gets the offset. 	 */
 name|p
 operator|->
 name|offset
@@ -4235,9 +4278,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|LIST_hang
-operator|)
 case|:
 comment|/* 		 * Same stipulation as above, regarding `-hang'.  We 		 * don't want to recalculate rmargin and offsets when 		 * using `Bd' or `Bl' within `-hang' overstep lists. 		 */
 if|if
@@ -4248,6 +4289,14 @@ name|n
 operator|->
 name|type
 operator|&&
+name|NULL
+operator|!=
+name|n
+operator|->
+name|next
+operator|&&
+name|NULL
+operator|!=
 name|n
 operator|->
 name|next
@@ -4279,33 +4328,23 @@ condition|)
 break|break;
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_bullet
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_dash
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_enum
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_hyphen
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_tag
-operator|)
 case|:
 name|assert
 argument_list|(
@@ -4339,9 +4378,7 @@ name|width
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|LIST_column
-operator|)
 case|:
 name|assert
 argument_list|(
@@ -4358,7 +4395,7 @@ name|offset
 operator|+
 name|width
 expr_stmt|;
-comment|/*  		 * XXX - this behaviour is not documented: the 		 * right-most column is filled to the right margin. 		 */
+comment|/* 		 * XXX - this behaviour is not documented: the 		 * right-most column is filled to the right margin. 		 */
 if|if
 condition|(
 name|MDOC_HEAD
@@ -4396,7 +4433,7 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/*  	 * The dash, hyphen, bullet and enum lists all have a special 	 * HEAD character (temporarily bold, in some cases).   	 */
+comment|/* 	 * The dash, hyphen, bullet and enum lists all have a special 	 * HEAD character (temporarily bold, in some cases). 	 */
 if|if
 condition|(
 name|MDOC_HEAD
@@ -4411,9 +4448,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|LIST_bullet
-operator|)
 case|:
 name|term_fontpush
 argument_list|(
@@ -4436,15 +4471,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|LIST_dash
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_hyphen
-operator|)
 case|:
 name|term_fontpush
 argument_list|(
@@ -4467,9 +4498,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|LIST_enum
-operator|)
 case|:
 operator|(
 name|pair
@@ -4482,6 +4511,9 @@ name|count
 operator|)
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -4513,40 +4545,30 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/*  	 * If we're not going to process our children, indicate so here. 	 */
+comment|/* 	 * If we're not going to process our children, indicate so here. 	 */
 switch|switch
 condition|(
 name|type
 condition|)
 block|{
 case|case
-operator|(
 name|LIST_bullet
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_item
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_dash
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_hyphen
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_enum
-operator|)
 case|:
 if|if
 condition|(
@@ -4563,9 +4585,7 @@ operator|)
 return|;
 break|break;
 case|case
-operator|(
 name|LIST_column
-operator|)
 case|:
 if|if
 condition|(
@@ -4591,10 +4611,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -4639,21 +4655,15 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|LIST_item
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_diag
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|LIST_inset
-operator|)
 case|:
 if|if
 condition|(
@@ -4670,9 +4680,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|LIST_column
-operator|)
 case|:
 if|if
 condition|(
@@ -4696,27 +4704,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*  	 * Now that our output is flushed, we can reset our tags.  Since 	 * only `It' sets these flags, we're free to assume that nobody 	 * has munged them in the meanwhile. 	 */
+comment|/* 	 * Now that our output is flushed, we can reset our tags.  Since 	 * only `It' sets these flags, we're free to assume that nobody 	 * has munged them in the meanwhile. 	 */
 name|p
 operator|->
 name|flags
 operator|&=
 operator|~
-name|TERMP_DANGLE
-expr_stmt|;
-name|p
-operator|->
-name|flags
-operator|&=
-operator|~
+operator|(
 name|TERMP_NOBREAK
-expr_stmt|;
-name|p
-operator|->
-name|flags
-operator|&=
-operator|~
+operator||
+name|TERMP_BRIND
+operator||
+name|TERMP_DANGLE
+operator||
 name|TERMP_HANG
+operator|)
 expr_stmt|;
 name|p
 operator|->
@@ -4727,10 +4729,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -4739,6 +4737,11 @@ parameter_list|(
 name|DECL_ARGS
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 if|if
 condition|(
 name|MDOC_BLOCK
@@ -4788,6 +4791,60 @@ name|flags
 operator||=
 name|TERMP_NOSPACE
 expr_stmt|;
+name|cp
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|->
+name|prev
+operator|->
+name|child
+operator|!=
+name|NULL
+condition|)
+name|cp
+operator|=
+name|n
+operator|->
+name|prev
+operator|->
+name|child
+operator|->
+name|string
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+name|cp
+operator|=
+name|meta
+operator|->
+name|name
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+name|p
+operator|->
+name|offset
+operator|+=
+name|term_len
+argument_list|(
+name|p
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+else|else
 name|p
 operator|->
 name|offset
@@ -4799,54 +4856,12 @@ argument_list|,
 literal|1
 argument_list|)
 operator|+
-operator|(
-name|NULL
-operator|==
-name|n
-operator|->
-name|prev
-operator|->
-name|child
-condition|?
 name|term_strlen
 argument_list|(
 name|p
 argument_list|,
-name|meta
-operator|->
-name|name
+name|cp
 argument_list|)
-else|:
-name|MDOC_TEXT
-operator|==
-name|n
-operator|->
-name|prev
-operator|->
-name|child
-operator|->
-name|type
-condition|?
-name|term_strlen
-argument_list|(
-name|p
-argument_list|,
-name|n
-operator|->
-name|prev
-operator|->
-name|child
-operator|->
-name|string
-argument_list|)
-else|:
-name|term_len
-argument_list|(
-name|p
-argument_list|,
-literal|5
-argument_list|)
-operator|)
 expr_stmt|;
 return|return
 operator|(
@@ -4898,6 +4913,14 @@ name|n
 operator|->
 name|type
 operator|&&
+name|NULL
+operator|!=
+name|n
+operator|->
+name|next
+operator|&&
+name|NULL
+operator|!=
 name|n
 operator|->
 name|next
@@ -4912,6 +4935,8 @@ operator||=
 name|TERMP_NOSPACE
 operator||
 name|TERMP_NOBREAK
+operator||
+name|TERMP_BRIND
 expr_stmt|;
 name|p
 operator|->
@@ -5052,10 +5077,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -5094,6 +5115,14 @@ name|n
 operator|->
 name|type
 operator|&&
+name|NULL
+operator|!=
+name|n
+operator|->
+name|next
+operator|&&
+name|NULL
+operator|!=
 name|n
 operator|->
 name|next
@@ -5113,6 +5142,8 @@ operator|&=
 operator|~
 operator|(
 name|TERMP_NOBREAK
+operator||
+name|TERMP_BRIND
 operator||
 name|TERMP_HANG
 operator|)
@@ -5145,10 +5176,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5173,32 +5200,38 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|n
 operator|->
-name|child
-condition|)
-name|p
+name|nchild
+operator|==
+literal|0
+operator|&&
+operator|(
+name|n
+operator|->
+name|next
+operator|==
+name|NULL
+operator|||
+name|n
+operator|->
+name|next
+operator|->
+name|type
+operator|==
+name|MDOC_TEXT
+operator|||
+name|n
+operator|->
+name|next
 operator|->
 name|flags
-operator||=
-name|TERMP_NOSPACE
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|n
-operator|->
-name|next
-operator|&&
-name|n
-operator|->
-name|next
-operator|->
-name|line
-operator|==
-name|n
-operator|->
-name|line
+operator|&
+name|MDOC_LINE
+operator|)
+operator|)
 condition|)
 name|p
 operator|->
@@ -5213,10 +5246,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -5271,10 +5300,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5285,18 +5310,94 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|NULL
+name|n
+operator|->
+name|norm
+operator|->
+name|An
+operator|.
+name|auth
 operator|==
+name|AUTH_split
+condition|)
+block|{
+name|p
+operator|->
+name|flags
+operator|&=
+operator|~
+name|TERMP_NOSPLIT
+expr_stmt|;
+name|p
+operator|->
+name|flags
+operator||=
+name|TERMP_SPLIT
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|n
+operator|->
+name|norm
+operator|->
+name|An
+operator|.
+name|auth
+operator|==
+name|AUTH_nosplit
+condition|)
+block|{
+name|p
+operator|->
+name|flags
+operator|&=
+operator|~
+name|TERMP_SPLIT
+expr_stmt|;
+name|p
+operator|->
+name|flags
+operator||=
+name|TERMP_NOSPLIT
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|n
 operator|->
 name|child
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
-comment|/* 	 * If not in the AUTHORS section, `An -split' will cause 	 * newlines to occur before the author name.  If in the AUTHORS 	 * section, by default, the first `An' invocation is nosplit, 	 * then all subsequent ones, regardless of whether interspersed 	 * with other macros/text, are split.  -split, in this case, 	 * will override the condition of the implied first -nosplit. 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|flags
+operator|&
+name|TERMP_SPLIT
+condition|)
+name|term_newln
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|n
@@ -5304,75 +5405,21 @@ operator|->
 name|sec
 operator|==
 name|SEC_AUTHORS
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|!
 operator|(
-name|TERMP_ANPREC
-operator|&
 name|p
 operator|->
 name|flags
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|TERMP_SPLIT
 operator|&
-name|p
-operator|->
-name|flags
-condition|)
-name|term_newln
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-if|if
-condition|(
 name|TERMP_NOSPLIT
-operator|&
+operator|)
+condition|)
 name|p
 operator|->
 name|flags
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-name|term_newln
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-if|if
-condition|(
+operator||=
 name|TERMP_SPLIT
-operator|&
-name|p
-operator|->
-name|flags
-condition|)
-name|term_newln
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -5381,103 +5428,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|termp_an_post
-parameter_list|(
-name|DECL_ARGS
-parameter_list|)
-block|{
-if|if
-condition|(
-name|n
-operator|->
-name|child
-condition|)
-block|{
-if|if
-condition|(
-name|SEC_AUTHORS
-operator|==
-name|n
-operator|->
-name|sec
-condition|)
-name|p
-operator|->
-name|flags
-operator||=
-name|TERMP_ANPREC
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|AUTH_split
-operator|==
-name|n
-operator|->
-name|norm
-operator|->
-name|An
-operator|.
-name|auth
-condition|)
-block|{
-name|p
-operator|->
-name|flags
-operator|&=
-operator|~
-name|TERMP_NOSPLIT
-expr_stmt|;
-name|p
-operator|->
-name|flags
-operator||=
-name|TERMP_SPLIT
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|AUTH_nosplit
-operator|==
-name|n
-operator|->
-name|norm
-operator|->
-name|An
-operator|.
-name|auth
-condition|)
-block|{
-name|p
-operator|->
-name|flags
-operator|&=
-operator|~
-name|TERMP_SPLIT
-expr_stmt|;
-name|p
-operator|->
-name|flags
-operator||=
-name|TERMP_NOSPLIT
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -5511,10 +5461,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -5562,10 +5508,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5582,18 +5524,25 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|nchild
+operator|=
+name|n
+operator|->
+name|nchild
+expr_stmt|;
+if|if
+condition|(
+name|nchild
+operator|>
+literal|0
+condition|)
+block|{
 name|term_word
 argument_list|(
 name|p
 argument_list|,
 literal|"The"
 argument_list|)
-expr_stmt|;
-name|nchild
-operator|=
-name|n
-operator|->
-name|nchild
 expr_stmt|;
 for|for
 control|(
@@ -5648,13 +5597,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nchild
-operator|>
-literal|2
-operator|&&
 name|n
 operator|->
 name|next
+operator|==
+name|NULL
+condition|)
+continue|continue;
+if|if
+condition|(
+name|nchild
+operator|>
+literal|2
 condition|)
 block|{
 name|p
@@ -5676,14 +5630,10 @@ condition|(
 name|n
 operator|->
 name|next
-operator|&&
-name|NULL
+operator|->
+name|next
 operator|==
-name|n
-operator|->
-name|next
-operator|->
-name|next
+name|NULL
 condition|)
 name|term_word
 argument_list|(
@@ -5718,8 +5668,25 @@ name|term_word
 argument_list|(
 name|p
 argument_list|,
-literal|"the value 0 if successful; otherwise the value "
-literal|"-1 is returned and the global variable"
+literal|"the value\\~0 if successful;"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|term_word
+argument_list|(
+name|p
+argument_list|,
+literal|"Upon successful completion,"
+literal|" the value\\~0 is returned;"
+argument_list|)
+expr_stmt|;
+name|term_word
+argument_list|(
+name|p
+argument_list|,
+literal|"otherwise the value\\~\\-1 is returned"
+literal|" and the global variable"
 argument_list|)
 expr_stmt|;
 name|term_fontpush
@@ -5761,10 +5728,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -5890,7 +5853,7 @@ name|term_word
 argument_list|(
 name|p
 argument_list|,
-literal|"utilities exit"
+literal|"utilities exit\\~0"
 argument_list|)
 expr_stmt|;
 else|else
@@ -5898,14 +5861,14 @@ name|term_word
 argument_list|(
 name|p
 argument_list|,
-literal|"utility exits"
+literal|"utility exits\\~0"
 argument_list|)
 expr_stmt|;
 name|term_word
 argument_list|(
 name|p
 argument_list|,
-literal|"0 on success, and>0 if an error occurs."
+literal|"on success, and\\~>0 if an error occurs."
 argument_list|)
 expr_stmt|;
 name|p
@@ -5922,10 +5885,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5936,28 +5895,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|MDOC_BODY
-operator|!=
 name|n
 operator|->
 name|type
+operator|==
+name|MDOC_BODY
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
 name|term_word
 argument_list|(
 name|p
@@ -5965,17 +5908,6 @@ argument_list|,
 literal|"\\(en"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|term_word
-argument_list|(
-name|p
-argument_list|,
-literal|"\\(em"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
@@ -5983,10 +5915,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -6007,10 +5935,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -6035,10 +5959,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -6179,7 +6099,7 @@ modifier|*
 name|n
 parameter_list|)
 block|{
-comment|/*  	 * Obviously, if we're not in a SYNOPSIS or no prior macros 	 * exist, do nothing. 	 */
+comment|/* 	 * Obviously, if we're not in a SYNOPSIS or no prior macros 	 * exist, do nothing. 	 */
 if|if
 condition|(
 name|NULL
@@ -6248,33 +6168,23 @@ name|tok
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_Fd
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Fn
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Fo
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_In
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Vt
-operator|)
 case|:
 name|term_vspace
 argument_list|(
@@ -6283,9 +6193,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Ft
-operator|)
 case|:
 if|if
 condition|(
@@ -6414,10 +6322,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -6440,10 +6344,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -6477,10 +6377,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -6497,10 +6393,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -6509,7 +6401,6 @@ parameter_list|(
 name|DECL_ARGS
 parameter_list|)
 block|{
-comment|/* No vspace between consecutive `Sh' calls. */
 switch|switch
 condition|(
 name|n
@@ -6518,28 +6409,34 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_BLOCK
-operator|)
 case|:
+comment|/* 		 * Vertical space before sections, except 		 * when the previous section was empty. 		 */
 if|if
 condition|(
 name|n
 operator|->
 name|prev
-operator|&&
-name|MDOC_Sh
 operator|==
+name|NULL
+operator|||
+name|MDOC_Sh
+operator|!=
 name|n
 operator|->
 name|prev
 operator|->
 name|tok
-condition|)
-if|if
-condition|(
+operator|||
+operator|(
+name|n
+operator|->
+name|prev
+operator|->
+name|body
+operator|!=
 name|NULL
-operator|==
+operator|&&
 name|n
 operator|->
 name|prev
@@ -6547,8 +6444,10 @@ operator|->
 name|body
 operator|->
 name|child
+operator|!=
+name|NULL
+operator|)
 condition|)
-break|break;
 name|term_vspace
 argument_list|(
 name|p
@@ -6556,9 +6455,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_HEAD
-operator|)
 case|:
 name|term_fontpush
 argument_list|(
@@ -6569,9 +6466,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_BODY
-operator|)
 case|:
 name|p
 operator|->
@@ -6617,10 +6512,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -6637,9 +6528,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_HEAD
-operator|)
 case|:
 name|term_newln
 argument_list|(
@@ -6648,9 +6537,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_BODY
-operator|)
 case|:
 name|term_newln
 argument_list|(
@@ -6669,10 +6556,6 @@ break|break;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -6702,10 +6585,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -6737,10 +6616,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -6769,10 +6644,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -6823,10 +6694,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -6857,10 +6724,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -6942,6 +6805,8 @@ name|flags
 operator||=
 name|TERMP_NOBREAK
 operator||
+name|TERMP_BRIND
+operator||
 name|TERMP_HANG
 expr_stmt|;
 block|}
@@ -6992,6 +6857,8 @@ operator|&=
 operator|~
 operator|(
 name|TERMP_NOBREAK
+operator||
+name|TERMP_BRIND
 operator||
 name|TERMP_HANG
 operator|)
@@ -7153,10 +7020,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -7284,10 +7147,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -7298,6 +7157,10 @@ parameter_list|)
 block|{
 name|size_t
 name|tabwidth
+decl_stmt|,
+name|lm
+decl_stmt|,
+name|len
 decl_stmt|,
 name|rm
 decl_stmt|,
@@ -7346,6 +7209,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* Handle the -offset argument. */
 if|if
 condition|(
 name|n
@@ -7355,12 +7219,99 @@ operator|->
 name|Bd
 operator|.
 name|offs
+operator|==
+name|NULL
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|n
+operator|->
+name|norm
+operator|->
+name|Bd
+operator|.
+name|offs
+argument_list|,
+literal|"left"
+argument_list|)
+condition|)
+comment|/* nothing */
+empty_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|n
+operator|->
+name|norm
+operator|->
+name|Bd
+operator|.
+name|offs
+argument_list|,
+literal|"indent"
+argument_list|)
 condition|)
 name|p
 operator|->
 name|offset
 operator|+=
-name|a2offs
+name|term_len
+argument_list|(
+name|p
+argument_list|,
+name|p
+operator|->
+name|defindent
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|n
+operator|->
+name|norm
+operator|->
+name|Bd
+operator|.
+name|offs
+argument_list|,
+literal|"indent-two"
+argument_list|)
+condition|)
+name|p
+operator|->
+name|offset
+operator|+=
+name|term_len
+argument_list|(
+name|p
+argument_list|,
+operator|(
+name|p
+operator|->
+name|defindent
+operator|+
+literal|1
+operator|)
+operator|*
+literal|2
+argument_list|)
+expr_stmt|;
+else|else
+name|p
+operator|->
+name|offset
+operator|+=
+name|a2width
 argument_list|(
 name|p
 argument_list|,
@@ -7387,6 +7338,16 @@ operator|.
 name|type
 operator|&&
 name|DISP_unfilled
+operator|!=
+name|n
+operator|->
+name|norm
+operator|->
+name|Bd
+operator|.
+name|type
+operator|&&
+name|DISP_centered
 operator|!=
 name|n
 operator|->
@@ -7430,6 +7391,12 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
+name|lm
+operator|=
+name|p
+operator|->
+name|offset
+expr_stmt|;
 name|rm
 operator|=
 name|p
@@ -7469,6 +7436,78 @@ operator|->
 name|next
 control|)
 block|{
+if|if
+condition|(
+name|DISP_centered
+operator|==
+name|n
+operator|->
+name|norm
+operator|->
+name|Bd
+operator|.
+name|type
+condition|)
+block|{
+if|if
+condition|(
+name|MDOC_TEXT
+operator|==
+name|nn
+operator|->
+name|type
+condition|)
+block|{
+name|len
+operator|=
+name|term_strlen
+argument_list|(
+name|p
+argument_list|,
+name|nn
+operator|->
+name|string
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|offset
+operator|=
+name|len
+operator|>=
+name|rm
+condition|?
+literal|0
+else|:
+name|lm
+operator|+
+name|len
+operator|>=
+name|rm
+condition|?
+name|rm
+operator|-
+name|len
+else|:
+operator|(
+name|lm
+operator|+
+name|rm
+operator|-
+name|len
+operator|)
+operator|/
+literal|2
+expr_stmt|;
+block|}
+else|else
+name|p
+operator|->
+name|offset
+operator|=
+name|lm
+expr_stmt|;
+block|}
 name|print_mdoc_node
 argument_list|(
 name|p
@@ -7489,51 +7528,35 @@ name|tok
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_Sm
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_br
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_sp
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Bl
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_D1
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Dl
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Lp
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Pp
-operator|)
 case|:
 continue|continue;
 default|default:
@@ -7541,19 +7564,28 @@ break|break;
 block|}
 if|if
 condition|(
+name|p
+operator|->
+name|flags
+operator|&
+name|TERMP_NONEWLINE
+operator|||
+operator|(
 name|nn
 operator|->
 name|next
 operator|&&
+operator|!
+operator|(
 name|nn
 operator|->
 name|next
 operator|->
-name|line
-operator|==
-name|nn
-operator|->
-name|line
+name|flags
+operator|&
+name|MDOC_LINE
+operator|)
+operator|)
 condition|)
 continue|continue;
 name|term_flushln
@@ -7593,10 +7625,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -7689,10 +7717,6 @@ name|rmax
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -7803,10 +7827,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -7835,9 +7855,7 @@ name|tok
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_Bsx
-operator|)
 case|:
 name|pp
 operator|=
@@ -7845,9 +7863,7 @@ literal|"BSD/OS"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Dx
-operator|)
 case|:
 name|pp
 operator|=
@@ -7855,9 +7871,7 @@ literal|"DragonFly"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Fx
-operator|)
 case|:
 name|pp
 operator|=
@@ -7865,9 +7879,7 @@ literal|"FreeBSD"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Nx
-operator|)
 case|:
 name|pp
 operator|=
@@ -7875,9 +7887,7 @@ literal|"NetBSD"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Ox
-operator|)
 case|:
 name|pp
 operator|=
@@ -7885,9 +7895,7 @@ literal|"OpenBSD"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Ux
-operator|)
 case|:
 name|pp
 operator|=
@@ -7952,10 +7960,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -7964,6 +7968,25 @@ parameter_list|(
 name|DECL_ARGS
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|n
+operator|->
+name|next
+operator|==
+name|NULL
+operator|||
+name|n
+operator|->
+name|next
+operator|->
+name|flags
+operator|&
+name|MDOC_LINE
+operator|)
+condition|)
 name|p
 operator|->
 name|flags
@@ -7972,10 +7995,6 @@ name|TERMP_NOSPACE
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -7993,9 +8012,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_BLOCK
-operator|)
 case|:
 name|term_newln
 argument_list|(
@@ -8015,9 +8032,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_HEAD
-operator|)
 case|:
 name|term_fontpush
 argument_list|(
@@ -8046,6 +8061,23 @@ literal|2
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|MDOC_BODY
+case|:
+name|p
+operator|->
+name|offset
+operator|=
+name|term_len
+argument_list|(
+name|p
+argument_list|,
+name|p
+operator|->
+name|defindent
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -8057,10 +8089,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -8071,11 +8099,17 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|MDOC_HEAD
-operator|==
 name|n
 operator|->
 name|type
+operator|==
+name|MDOC_HEAD
+operator|||
+name|n
+operator|->
+name|type
+operator|==
+name|MDOC_BODY
 condition|)
 name|term_newln
 argument_list|(
@@ -8084,10 +8118,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -8118,10 +8148,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -8206,10 +8232,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -8262,10 +8284,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -8287,9 +8305,7 @@ name|tok
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_sp
-operator|)
 case|:
 name|len
 operator|=
@@ -8312,9 +8328,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_br
-operator|)
 case|:
 name|len
 operator|=
@@ -8365,9 +8379,21 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
+begin_function
+specifier|static
+name|int
+name|termp_skip_pre
+parameter_list|(
+name|DECL_ARGS
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -8404,34 +8430,46 @@ name|tok
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_Ao
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Aq
-operator|)
 case|:
 name|term_word
 argument_list|(
 name|p
 argument_list|,
+name|n
+operator|->
+name|parent
+operator|->
+name|prev
+operator|!=
+name|NULL
+operator|&&
+name|n
+operator|->
+name|parent
+operator|->
+name|prev
+operator|->
+name|tok
+operator|==
+name|MDOC_An
+condition|?
 literal|"<"
+else|:
+literal|"\\(la"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Bro
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Brq
-operator|)
 case|:
 name|term_word
 argument_list|(
@@ -8442,27 +8480,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Oo
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Op
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Bo
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Bq
-operator|)
 case|:
 name|term_word
 argument_list|(
@@ -8473,15 +8503,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Do
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Dq
-operator|)
 case|:
 name|term_word
 argument_list|(
@@ -8492,21 +8518,59 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|MDOC_En
+case|:
+if|if
+condition|(
+name|NULL
+operator|==
+name|n
+operator|->
+name|norm
+operator|->
+name|Es
+operator|||
+name|NULL
+operator|==
+name|n
+operator|->
+name|norm
+operator|->
+name|Es
+operator|->
+name|child
+condition|)
+return|return
 operator|(
-name|MDOC_Eo
+literal|1
 operator|)
+return|;
+name|term_word
+argument_list|(
+name|p
+argument_list|,
+name|n
+operator|->
+name|norm
+operator|->
+name|Es
+operator|->
+name|child
+operator|->
+name|string
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|MDOC_Eo
 case|:
 break|break;
 case|case
-operator|(
 name|MDOC_Po
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Pq
-operator|)
 case|:
 name|term_word
 argument_list|(
@@ -8517,21 +8581,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC__T
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Qo
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Qq
-operator|)
 case|:
 name|term_word
 argument_list|(
@@ -8542,21 +8600,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Ql
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_So
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Sq
-operator|)
 case|:
 name|term_word
 argument_list|(
@@ -8586,10 +8638,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -8600,19 +8648,44 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|n
+operator|->
+name|type
+operator|!=
 name|MDOC_BODY
-operator|!=
-name|n
-operator|->
-name|type
 operator|&&
-name|MDOC_ELEM
-operator|!=
 name|n
 operator|->
 name|type
+operator|!=
+name|MDOC_ELEM
 condition|)
 return|return;
+if|if
+condition|(
+operator|!
+operator|(
+name|n
+operator|->
+name|tok
+operator|==
+name|MDOC_En
+operator|||
+operator|(
+name|n
+operator|->
+name|tok
+operator|==
+name|MDOC_Eo
+operator|&&
+name|n
+operator|->
+name|end
+operator|==
+name|ENDBODY_SPACE
+operator|)
+operator|)
+condition|)
 name|p
 operator|->
 name|flags
@@ -8627,34 +8700,46 @@ name|tok
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_Ao
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Aq
-operator|)
 case|:
 name|term_word
 argument_list|(
 name|p
 argument_list|,
+name|n
+operator|->
+name|parent
+operator|->
+name|prev
+operator|!=
+name|NULL
+operator|&&
+name|n
+operator|->
+name|parent
+operator|->
+name|prev
+operator|->
+name|tok
+operator|==
+name|MDOC_An
+condition|?
 literal|">"
+else|:
+literal|"\\(ra"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Bro
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Brq
-operator|)
 case|:
 name|term_word
 argument_list|(
@@ -8665,27 +8750,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Oo
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Op
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Bo
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Bq
-operator|)
 case|:
 name|term_word
 argument_list|(
@@ -8696,15 +8773,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Do
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Dq
-operator|)
 case|:
 name|term_word
 argument_list|(
@@ -8715,21 +8788,76 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
+name|MDOC_En
+case|:
+if|if
+condition|(
+name|NULL
+operator|!=
+name|n
+operator|->
+name|norm
+operator|->
+name|Es
+operator|&&
+name|NULL
+operator|!=
+name|n
+operator|->
+name|norm
+operator|->
+name|Es
+operator|->
+name|child
+operator|&&
+name|NULL
+operator|!=
+name|n
+operator|->
+name|norm
+operator|->
+name|Es
+operator|->
+name|child
+operator|->
+name|next
+condition|)
+block|{
+name|p
+operator|->
+name|flags
+operator||=
+name|TERMP_NOSPACE
+expr_stmt|;
+name|term_word
+argument_list|(
+name|p
+argument_list|,
+name|n
+operator|->
+name|norm
+operator|->
+name|Es
+operator|->
+name|child
+operator|->
+name|next
+operator|->
+name|string
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|MDOC_Eo
-operator|)
 case|:
 break|break;
 case|case
-operator|(
 name|MDOC_Po
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Pq
-operator|)
 case|:
 name|term_word
 argument_list|(
@@ -8740,21 +8868,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC__T
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Qo
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Qq
-operator|)
 case|:
 name|term_word
 argument_list|(
@@ -8765,21 +8887,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Ql
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_So
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Sq
-operator|)
 case|:
 name|term_word
 argument_list|(
@@ -8797,10 +8913,6 @@ comment|/* NOTREACHED */
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -8890,6 +9002,8 @@ name|flags
 operator||=
 name|TERMP_NOBREAK
 operator||
+name|TERMP_BRIND
+operator||
 name|TERMP_HANG
 expr_stmt|;
 block|}
@@ -8929,6 +9043,8 @@ operator|&=
 operator|~
 operator|(
 name|TERMP_NOBREAK
+operator||
+name|TERMP_BRIND
 operator||
 name|TERMP_HANG
 operator|)
@@ -9003,10 +9119,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -9067,10 +9179,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -9162,10 +9270,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -9174,21 +9278,21 @@ parameter_list|(
 name|DECL_ARGS
 parameter_list|)
 block|{
-name|assert
-argument_list|(
-name|n
-operator|->
-name|child
-operator|&&
-name|MDOC_TEXT
+if|if
+condition|(
+name|NULL
 operator|==
 name|n
 operator|->
 name|child
+condition|)
+name|p
 operator|->
-name|type
-argument_list|)
+name|flags
+operator|^=
+name|TERMP_NONOSPACE
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 literal|0
@@ -9204,12 +9308,34 @@ operator|->
 name|string
 argument_list|)
 condition|)
-block|{
+name|p
+operator|->
+name|flags
+operator|&=
+operator|~
+name|TERMP_NONOSPACE
+expr_stmt|;
+else|else
+name|p
+operator|->
+name|flags
+operator||=
+name|TERMP_NONOSPACE
+expr_stmt|;
 if|if
 condition|(
 name|p
 operator|->
 name|col
+operator|&&
+operator|!
+operator|(
+name|TERMP_NONOSPACE
+operator|&
+name|p
+operator|->
+name|flags
+operator|)
 condition|)
 name|p
 operator|->
@@ -9218,21 +9344,6 @@ operator|&=
 operator|~
 name|TERMP_NOSPACE
 expr_stmt|;
-name|p
-operator|->
-name|flags
-operator|&=
-operator|~
-name|TERMP_NONOSPACE
-expr_stmt|;
-block|}
-else|else
-name|p
-operator|->
-name|flags
-operator||=
-name|TERMP_NONOSPACE
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -9240,10 +9351,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -9279,10 +9386,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -9408,10 +9511,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -9434,10 +9533,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -9564,10 +9659,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -9584,15 +9675,11 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_BLOCK
-operator|)
 case|:
 break|break;
 case|case
-operator|(
 name|MDOC_HEAD
-operator|)
 case|:
 return|return
 operator|(
@@ -9600,9 +9687,7 @@ literal|0
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_BODY
-operator|)
 case|:
 if|if
 condition|(
@@ -9641,10 +9726,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -9674,10 +9755,6 @@ operator|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -9736,10 +9813,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -9802,10 +9875,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static

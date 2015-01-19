@@ -598,6 +598,11 @@ literal|"Error allocating tokens "
 literal|"buffer\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -640,6 +645,11 @@ name|stderr
 argument_list|,
 literal|"Skip address out of range\n"
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|out
@@ -1942,9 +1952,15 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|err_msg
+operator|=
+literal|"error sending stop condtion\n"
+expr_stmt|;
 goto|goto
 name|err2
 goto|;
+block|}
 block|}
 block|}
 name|cmd
@@ -2071,9 +2087,15 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|err_msg
+operator|=
+literal|"error sending stop condtion\n"
+expr_stmt|;
 goto|goto
 name|err2
 goto|;
+block|}
 for|for
 control|(
 name|i

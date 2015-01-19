@@ -77,6 +77,9 @@ block|,
 comment|// 32-bit, relative to the start
 comment|// of the instruction. Used only
 comment|// for _GLOBAL_OFFSET_TABLE_.
+name|reloc_global_offset_table8
+block|,
+comment|// 64-bit variant.
 comment|// Marker
 name|LastTargetFixupKind
 block|,

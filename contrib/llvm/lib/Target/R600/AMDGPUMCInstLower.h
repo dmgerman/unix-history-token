@@ -52,20 +52,57 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCInst
-decl_stmt|;
-name|class
-name|MCContext
+name|AMDGPUSubtarget
 decl_stmt|;
 name|class
 name|MachineInstr
 decl_stmt|;
 name|class
+name|MCContext
+decl_stmt|;
+name|class
+name|MCInst
+decl_stmt|;
+name|class
 name|AMDGPUMCInstLower
 block|{
+comment|// This must be kept in sync with the SISubtarget class in SIInstrInfo.td
+enum|enum
+name|SISubtarget
+block|{
+name|SI
+init|=
+literal|0
+block|}
+enum|;
 name|MCContext
 modifier|&
 name|Ctx
+decl_stmt|;
+specifier|const
+name|AMDGPUSubtarget
+modifier|&
+name|ST
+decl_stmt|;
+comment|/// Convert a member of the AMDGPUSubtarget::Generation enum to the
+comment|/// SISubtarget enum.
+name|enum
+name|SISubtarget
+name|AMDGPUSubtargetToSISubtarget
+argument_list|(
+name|unsigned
+name|Gen
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Get the MC opcode for this MachineInstr.
+name|unsigned
+name|getMCOpcode
+argument_list|(
+name|unsigned
+name|MIOpcode
+argument_list|)
+decl|const
 decl_stmt|;
 name|public
 label|:
@@ -74,6 +111,11 @@ argument_list|(
 name|MCContext
 operator|&
 name|ctx
+argument_list|,
+specifier|const
+name|AMDGPUSubtarget
+operator|&
+name|ST
 argument_list|)
 expr_stmt|;
 comment|/// \brief Lower a MachineInstr to an MCInst

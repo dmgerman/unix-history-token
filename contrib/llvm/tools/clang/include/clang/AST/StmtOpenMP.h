@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- StmtOpenMP.h - Classes for OpenMP directives and clauses --*- C++ -*-===//
+comment|//===- StmtOpenMP.h - Classes for OpenMP directives  ------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,6 +66,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Expr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/OpenMPClause.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Stmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/OpenMPKinds.h"
 end_include
 
@@ -75,1257 +93,10 @@ directive|include
 file|"clang/Basic/SourceLocation.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"clang/AST/Expr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Stmt.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|//===----------------------------------------------------------------------===//
-comment|// AST classes for clauses.
-comment|//===----------------------------------------------------------------------===//
-comment|/// \brief This is a basic class for representing single OpenMP clause.
-comment|///
-name|class
-name|OMPClause
-block|{
-comment|/// \brief Starting location of the clause (the clause keyword).
-name|SourceLocation
-name|StartLoc
-decl_stmt|;
-comment|/// \brief Ending location of the clause.
-name|SourceLocation
-name|EndLoc
-decl_stmt|;
-comment|/// \brief Kind of the clause.
-name|OpenMPClauseKind
-name|Kind
-decl_stmt|;
-name|protected
-label|:
-name|OMPClause
-argument_list|(
-argument|OpenMPClauseKind K
-argument_list|,
-argument|SourceLocation StartLoc
-argument_list|,
-argument|SourceLocation EndLoc
-argument_list|)
-block|:
-name|StartLoc
-argument_list|(
-name|StartLoc
-argument_list|)
-operator|,
-name|EndLoc
-argument_list|(
-name|EndLoc
-argument_list|)
-operator|,
-name|Kind
-argument_list|(
-argument|K
-argument_list|)
-block|{}
-name|public
-operator|:
-comment|/// \brief Returns the starting location of the clause.
-name|SourceLocation
-name|getLocStart
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StartLoc
-return|;
-block|}
-comment|/// \brief Returns the ending location of the clause.
-name|SourceLocation
-name|getLocEnd
-argument_list|()
-specifier|const
-block|{
-return|return
-name|EndLoc
-return|;
-block|}
-comment|/// \brief Sets the starting location of the clause.
-name|void
-name|setLocStart
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|)
-block|{
-name|StartLoc
-operator|=
-name|Loc
-expr_stmt|;
-block|}
-comment|/// \brief Sets the ending location of the clause.
-name|void
-name|setLocEnd
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|)
-block|{
-name|EndLoc
-operator|=
-name|Loc
-expr_stmt|;
-block|}
-comment|/// \brief Returns kind of OpenMP clause (private, shared, reduction, etc.).
-name|OpenMPClauseKind
-name|getClauseKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Kind
-return|;
-block|}
-name|bool
-name|isImplicit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StartLoc
-operator|.
-name|isInvalid
-argument_list|()
-return|;
-block|}
-name|StmtRange
-name|children
-parameter_list|()
-function_decl|;
-name|ConstStmtRange
-name|children
-argument_list|()
-specifier|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|OMPClause
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|children
-argument_list|()
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|OMPClause
-modifier|*
-name|T
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-block|}
-empty_stmt|;
-comment|/// \brief This represents clauses with the list of variables like 'private',
-comment|/// 'firstprivate', 'copyin', 'shared', or 'reduction' clauses in the
-comment|/// '#pragma omp ...' directives.
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|class
-name|OMPVarList
-block|{
-name|friend
-name|class
-name|OMPClauseReader
-block|;
-comment|/// \brief Location of '('.
-name|SourceLocation
-name|LParenLoc
-block|;
-comment|/// \brief Number of variables in the list.
-name|unsigned
-name|NumVars
-block|;
-name|protected
-operator|:
-comment|/// \brief Fetches list of variables associated with this clause.
-name|llvm
-operator|::
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-name|getVarRefs
-argument_list|()
-block|{
-return|return
-name|llvm
-operator|::
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
-name|reinterpret_cast
-operator|<
-name|Expr
-operator|*
-operator|*
-operator|>
-operator|(
-name|static_cast
-operator|<
-name|T
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|+
-literal|1
-operator|)
-operator|,
-name|NumVars
-operator|)
-return|;
-block|}
-comment|/// \brief Sets the list of variables for this clause.
-name|void
-name|setVarRefs
-argument_list|(
-argument|ArrayRef<Expr *> VL
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|VL
-operator|.
-name|size
-argument_list|()
-operator|==
-name|NumVars
-operator|&&
-literal|"Number of variables is not the same as the preallocated buffer"
-argument_list|)
-block|;
-name|std
-operator|::
-name|copy
-argument_list|(
-name|VL
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|VL
-operator|.
-name|end
-argument_list|()
-argument_list|,
-name|reinterpret_cast
-operator|<
-name|Expr
-operator|*
-operator|*
-operator|>
-operator|(
-name|static_cast
-operator|<
-name|T
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|+
-literal|1
-operator|)
-argument_list|)
-block|;   }
-comment|/// \brief Build clause with number of variables \a N.
-comment|///
-comment|/// \param N Number of the variables in the clause.
-comment|///
-name|OMPVarList
-argument_list|(
-argument|SourceLocation LParenLoc
-argument_list|,
-argument|unsigned N
-argument_list|)
-operator|:
-name|LParenLoc
-argument_list|(
-name|LParenLoc
-argument_list|)
-block|,
-name|NumVars
-argument_list|(
-argument|N
-argument_list|)
-block|{ }
-name|public
-operator|:
-typedef|typedef
-name|llvm
-operator|::
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|::
-name|iterator
-name|varlist_iterator
-expr_stmt|;
-typedef|typedef
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-operator|::
-name|iterator
-name|varlist_const_iterator
-expr_stmt|;
-name|unsigned
-name|varlist_size
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumVars
-return|;
-block|}
-name|bool
-name|varlist_empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumVars
-operator|==
-literal|0
-return|;
-block|}
-name|varlist_iterator
-name|varlist_begin
-parameter_list|()
-block|{
-return|return
-name|getVarRefs
-argument_list|()
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|varlist_iterator
-name|varlist_end
-parameter_list|()
-block|{
-return|return
-name|getVarRefs
-argument_list|()
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|varlist_const_iterator
-name|varlist_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getVarRefs
-argument_list|()
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|varlist_const_iterator
-name|varlist_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getVarRefs
-argument_list|()
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-comment|/// \brief Sets the location of '('.
-name|void
-name|setLParenLoc
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|)
-block|{
-name|LParenLoc
-operator|=
-name|Loc
-expr_stmt|;
-block|}
-comment|/// \brief Returns the location of '('.
-name|SourceLocation
-name|getLParenLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LParenLoc
-return|;
-block|}
-comment|/// \brief Fetches list of all variables in the clause.
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-name|getVarRefs
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-operator|(
-name|reinterpret_cast
-operator|<
-specifier|const
-name|Expr
-operator|*
-specifier|const
-operator|*
-operator|>
-operator|(
-name|static_cast
-operator|<
-specifier|const
-name|T
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|+
-literal|1
-operator|)
-operator|,
-name|NumVars
-operator|)
-return|;
-block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/// \brief This represents 'default' clause in the '#pragma omp ...' directive.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \code
-end_comment
-
-begin_comment
-comment|/// #pragma omp parallel default(shared)
-end_comment
-
-begin_comment
-comment|/// \endcode
-end_comment
-
-begin_comment
-comment|/// In this example directive '#pragma omp parallel' has simple 'default'
-end_comment
-
-begin_comment
-comment|/// clause with kind 'shared'.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
-name|class
-name|OMPDefaultClause
-range|:
-name|public
-name|OMPClause
-block|{
-name|friend
-name|class
-name|OMPClauseReader
-block|;
-comment|/// \brief Location of '('.
-name|SourceLocation
-name|LParenLoc
-block|;
-comment|/// \brief A kind of the 'default' clause.
-name|OpenMPDefaultClauseKind
-name|Kind
-block|;
-comment|/// \brief Start location of the kind in source code.
-name|SourceLocation
-name|KindKwLoc
-block|;
-comment|/// \brief Set kind of the clauses.
-comment|///
-comment|/// \param K Argument of clause.
-comment|///
-name|void
-name|setDefaultKind
-argument_list|(
-argument|OpenMPDefaultClauseKind K
-argument_list|)
-block|{
-name|Kind
-operator|=
-name|K
-block|; }
-comment|/// \brief Set argument location.
-comment|///
-comment|/// \param KLoc Argument location.
-comment|///
-name|void
-name|setDefaultKindKwLoc
-argument_list|(
-argument|SourceLocation KLoc
-argument_list|)
-block|{
-name|KindKwLoc
-operator|=
-name|KLoc
-block|; }
-name|public
-operator|:
-comment|/// \brief Build 'default' clause with argument \a A ('none' or 'shared').
-comment|///
-comment|/// \param A Argument of the clause ('none' or 'shared').
-comment|/// \param ALoc Starting location of the argument.
-comment|/// \param StartLoc Starting location of the clause.
-comment|/// \param LParenLoc Location of '('.
-comment|/// \param EndLoc Ending location of the clause.
-comment|///
-name|OMPDefaultClause
-argument_list|(
-argument|OpenMPDefaultClauseKind A
-argument_list|,
-argument|SourceLocation ALoc
-argument_list|,
-argument|SourceLocation StartLoc
-argument_list|,
-argument|SourceLocation LParenLoc
-argument_list|,
-argument|SourceLocation EndLoc
-argument_list|)
-operator|:
-name|OMPClause
-argument_list|(
-name|OMPC_default
-argument_list|,
-name|StartLoc
-argument_list|,
-name|EndLoc
-argument_list|)
-block|,
-name|LParenLoc
-argument_list|(
-name|LParenLoc
-argument_list|)
-block|,
-name|Kind
-argument_list|(
-name|A
-argument_list|)
-block|,
-name|KindKwLoc
-argument_list|(
-argument|ALoc
-argument_list|)
-block|{ }
-comment|/// \brief Build an empty clause.
-comment|///
-name|OMPDefaultClause
-argument_list|()
-operator|:
-name|OMPClause
-argument_list|(
-name|OMPC_default
-argument_list|,
-name|SourceLocation
-argument_list|()
-argument_list|,
-name|SourceLocation
-argument_list|()
-argument_list|)
-block|,
-name|LParenLoc
-argument_list|(
-name|SourceLocation
-argument_list|()
-argument_list|)
-block|,
-name|Kind
-argument_list|(
-name|OMPC_DEFAULT_unknown
-argument_list|)
-block|,
-name|KindKwLoc
-argument_list|(
-argument|SourceLocation()
-argument_list|)
-block|{ }
-comment|/// \brief Sets the location of '('.
-name|void
-name|setLParenLoc
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
-block|{
-name|LParenLoc
-operator|=
-name|Loc
-block|; }
-comment|/// \brief Returns the location of '('.
-name|SourceLocation
-name|getLParenLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LParenLoc
-return|;
-block|}
-comment|/// \brief Returns kind of the clause.
-name|OpenMPDefaultClauseKind
-name|getDefaultKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Kind
-return|;
-block|}
-comment|/// \brief Returns location of clause kind.
-name|SourceLocation
-name|getDefaultKindKwLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|KindKwLoc
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getClauseKind
-argument_list|()
-operator|==
-name|OMPC_default
-return|;
-block|}
-name|StmtRange
-name|children
-argument_list|()
-block|{
-return|return
-name|StmtRange
-argument_list|()
-return|;
-block|}
-expr|}
-block|;
-comment|/// \brief This represents clause 'private' in the '#pragma omp ...' directives.
-comment|///
-comment|/// \code
-comment|/// #pragma omp parallel private(a,b)
-comment|/// \endcode
-comment|/// In this example directive '#pragma omp parallel' has clause 'private'
-comment|/// with the variables 'a' and 'b'.
-comment|///
-name|class
-name|OMPPrivateClause
-operator|:
-name|public
-name|OMPClause
-block|,
-name|public
-name|OMPVarList
-operator|<
-name|OMPPrivateClause
-operator|>
-block|{
-comment|/// \brief Build clause with number of variables \a N.
-comment|///
-comment|/// \param StartLoc Starting location of the clause.
-comment|/// \param LParenLoc Location of '('.
-comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param N Number of the variables in the clause.
-comment|///
-name|OMPPrivateClause
-argument_list|(
-argument|SourceLocation StartLoc
-argument_list|,
-argument|SourceLocation LParenLoc
-argument_list|,
-argument|SourceLocation EndLoc
-argument_list|,
-argument|unsigned N
-argument_list|)
-operator|:
-name|OMPClause
-argument_list|(
-name|OMPC_private
-argument_list|,
-name|StartLoc
-argument_list|,
-name|EndLoc
-argument_list|)
-block|,
-name|OMPVarList
-operator|<
-name|OMPPrivateClause
-operator|>
-operator|(
-name|LParenLoc
-expr|,
-name|N
-operator|)
-block|{ }
-comment|/// \brief Build an empty clause.
-comment|///
-comment|/// \param N Number of variables.
-comment|///
-name|explicit
-name|OMPPrivateClause
-argument_list|(
-argument|unsigned N
-argument_list|)
-operator|:
-name|OMPClause
-argument_list|(
-name|OMPC_private
-argument_list|,
-name|SourceLocation
-argument_list|()
-argument_list|,
-name|SourceLocation
-argument_list|()
-argument_list|)
-block|,
-name|OMPVarList
-operator|<
-name|OMPPrivateClause
-operator|>
-operator|(
-name|SourceLocation
-argument_list|()
-expr|,
-name|N
-operator|)
-block|{ }
-name|public
-operator|:
-comment|/// \brief Creates clause with a list of variables \a VL.
-comment|///
-comment|/// \param C AST context.
-comment|/// \param StartLoc Starting location of the clause.
-comment|/// \param LParenLoc Location of '('.
-comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param VL List of references to the variables.
-comment|///
-specifier|static
-name|OMPPrivateClause
-operator|*
-name|Create
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|SourceLocation StartLoc
-argument_list|,
-argument|SourceLocation LParenLoc
-argument_list|,
-argument|SourceLocation EndLoc
-argument_list|,
-argument|ArrayRef<Expr *> VL
-argument_list|)
-block|;
-comment|/// \brief Creates an empty clause with the place for \a N variables.
-comment|///
-comment|/// \param C AST context.
-comment|/// \param N The number of variables.
-comment|///
-specifier|static
-name|OMPPrivateClause
-operator|*
-name|CreateEmpty
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|unsigned N
-argument_list|)
-block|;
-name|StmtRange
-name|children
-argument_list|()
-block|{
-return|return
-name|StmtRange
-argument_list|(
-name|reinterpret_cast
-operator|<
-name|Stmt
-operator|*
-operator|*
-operator|>
-operator|(
-name|varlist_begin
-argument_list|()
-operator|)
-argument_list|,
-name|reinterpret_cast
-operator|<
-name|Stmt
-operator|*
-operator|*
-operator|>
-operator|(
-name|varlist_end
-argument_list|()
-operator|)
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getClauseKind
-argument_list|()
-operator|==
-name|OMPC_private
-return|;
-block|}
-expr|}
-block|;
-comment|/// \brief This represents clause 'firstprivate' in the '#pragma omp ...'
-comment|/// directives.
-comment|///
-comment|/// \code
-comment|/// #pragma omp parallel firstprivate(a,b)
-comment|/// \endcode
-comment|/// In this example directive '#pragma omp parallel' has clause 'firstprivate'
-comment|/// with the variables 'a' and 'b'.
-comment|///
-name|class
-name|OMPFirstprivateClause
-operator|:
-name|public
-name|OMPClause
-block|,
-name|public
-name|OMPVarList
-operator|<
-name|OMPFirstprivateClause
-operator|>
-block|{
-comment|/// \brief Build clause with number of variables \a N.
-comment|///
-comment|/// \param StartLoc Starting location of the clause.
-comment|/// \param LParenLoc Location of '('.
-comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param N Number of the variables in the clause.
-comment|///
-name|OMPFirstprivateClause
-argument_list|(
-argument|SourceLocation StartLoc
-argument_list|,
-argument|SourceLocation LParenLoc
-argument_list|,
-argument|SourceLocation EndLoc
-argument_list|,
-argument|unsigned N
-argument_list|)
-operator|:
-name|OMPClause
-argument_list|(
-name|OMPC_firstprivate
-argument_list|,
-name|StartLoc
-argument_list|,
-name|EndLoc
-argument_list|)
-block|,
-name|OMPVarList
-operator|<
-name|OMPFirstprivateClause
-operator|>
-operator|(
-name|LParenLoc
-expr|,
-name|N
-operator|)
-block|{ }
-comment|/// \brief Build an empty clause.
-comment|///
-comment|/// \param N Number of variables.
-comment|///
-name|explicit
-name|OMPFirstprivateClause
-argument_list|(
-argument|unsigned N
-argument_list|)
-operator|:
-name|OMPClause
-argument_list|(
-name|OMPC_firstprivate
-argument_list|,
-name|SourceLocation
-argument_list|()
-argument_list|,
-name|SourceLocation
-argument_list|()
-argument_list|)
-block|,
-name|OMPVarList
-operator|<
-name|OMPFirstprivateClause
-operator|>
-operator|(
-name|SourceLocation
-argument_list|()
-expr|,
-name|N
-operator|)
-block|{ }
-name|public
-operator|:
-comment|/// \brief Creates clause with a list of variables \a VL.
-comment|///
-comment|/// \param C AST context.
-comment|/// \param StartLoc Starting location of the clause.
-comment|/// \param LParenLoc Location of '('.
-comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param VL List of references to the variables.
-comment|///
-specifier|static
-name|OMPFirstprivateClause
-operator|*
-name|Create
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|SourceLocation StartLoc
-argument_list|,
-argument|SourceLocation LParenLoc
-argument_list|,
-argument|SourceLocation EndLoc
-argument_list|,
-argument|ArrayRef<Expr *> VL
-argument_list|)
-block|;
-comment|/// \brief Creates an empty clause with the place for \a N variables.
-comment|///
-comment|/// \param C AST context.
-comment|/// \param N The number of variables.
-comment|///
-specifier|static
-name|OMPFirstprivateClause
-operator|*
-name|CreateEmpty
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|unsigned N
-argument_list|)
-block|;
-name|StmtRange
-name|children
-argument_list|()
-block|{
-return|return
-name|StmtRange
-argument_list|(
-name|reinterpret_cast
-operator|<
-name|Stmt
-operator|*
-operator|*
-operator|>
-operator|(
-name|varlist_begin
-argument_list|()
-operator|)
-argument_list|,
-name|reinterpret_cast
-operator|<
-name|Stmt
-operator|*
-operator|*
-operator|>
-operator|(
-name|varlist_end
-argument_list|()
-operator|)
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getClauseKind
-argument_list|()
-operator|==
-name|OMPC_firstprivate
-return|;
-block|}
-expr|}
-block|;
-comment|/// \brief This represents clause 'shared' in the '#pragma omp ...' directives.
-comment|///
-comment|/// \code
-comment|/// #pragma omp parallel shared(a,b)
-comment|/// \endcode
-comment|/// In this example directive '#pragma omp parallel' has clause 'shared'
-comment|/// with the variables 'a' and 'b'.
-comment|///
-name|class
-name|OMPSharedClause
-operator|:
-name|public
-name|OMPClause
-block|,
-name|public
-name|OMPVarList
-operator|<
-name|OMPSharedClause
-operator|>
-block|{
-comment|/// \brief Build clause with number of variables \a N.
-comment|///
-comment|/// \param StartLoc Starting location of the clause.
-comment|/// \param LParenLoc Location of '('.
-comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param N Number of the variables in the clause.
-comment|///
-name|OMPSharedClause
-argument_list|(
-argument|SourceLocation StartLoc
-argument_list|,
-argument|SourceLocation LParenLoc
-argument_list|,
-argument|SourceLocation EndLoc
-argument_list|,
-argument|unsigned N
-argument_list|)
-operator|:
-name|OMPClause
-argument_list|(
-name|OMPC_shared
-argument_list|,
-name|StartLoc
-argument_list|,
-name|EndLoc
-argument_list|)
-block|,
-name|OMPVarList
-operator|<
-name|OMPSharedClause
-operator|>
-operator|(
-name|LParenLoc
-expr|,
-name|N
-operator|)
-block|{ }
-comment|/// \brief Build an empty clause.
-comment|///
-comment|/// \param N Number of variables.
-comment|///
-name|explicit
-name|OMPSharedClause
-argument_list|(
-argument|unsigned N
-argument_list|)
-operator|:
-name|OMPClause
-argument_list|(
-name|OMPC_shared
-argument_list|,
-name|SourceLocation
-argument_list|()
-argument_list|,
-name|SourceLocation
-argument_list|()
-argument_list|)
-block|,
-name|OMPVarList
-operator|<
-name|OMPSharedClause
-operator|>
-operator|(
-name|SourceLocation
-argument_list|()
-expr|,
-name|N
-operator|)
-block|{ }
-name|public
-operator|:
-comment|/// \brief Creates clause with a list of variables \a VL.
-comment|///
-comment|/// \param C AST context.
-comment|/// \param StartLoc Starting location of the clause.
-comment|/// \param LParenLoc Location of '('.
-comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param VL List of references to the variables.
-comment|///
-specifier|static
-name|OMPSharedClause
-operator|*
-name|Create
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|SourceLocation StartLoc
-argument_list|,
-argument|SourceLocation LParenLoc
-argument_list|,
-argument|SourceLocation EndLoc
-argument_list|,
-argument|ArrayRef<Expr *> VL
-argument_list|)
-block|;
-comment|/// \brief Creates an empty clause with \a N variables.
-comment|///
-comment|/// \param C AST context.
-comment|/// \param N The number of variables.
-comment|///
-specifier|static
-name|OMPSharedClause
-operator|*
-name|CreateEmpty
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|unsigned N
-argument_list|)
-block|;
-name|StmtRange
-name|children
-argument_list|()
-block|{
-return|return
-name|StmtRange
-argument_list|(
-name|reinterpret_cast
-operator|<
-name|Stmt
-operator|*
-operator|*
-operator|>
-operator|(
-name|varlist_begin
-argument_list|()
-operator|)
-argument_list|,
-name|reinterpret_cast
-operator|<
-name|Stmt
-operator|*
-operator|*
-operator|>
-operator|(
-name|varlist_end
-argument_list|()
-operator|)
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getClauseKind
-argument_list|()
-operator|==
-name|OMPC_shared
-return|;
-block|}
-expr|}
-block|;
 comment|//===----------------------------------------------------------------------===//
 comment|// AST classes for directives.
 comment|//===----------------------------------------------------------------------===//
@@ -1334,7 +105,7 @@ comment|/// directive.
 comment|///
 name|class
 name|OMPExecutableDirective
-operator|:
+range|:
 name|public
 name|Stmt
 block|{
@@ -1354,26 +125,70 @@ comment|/// \brief Ending location of the directive.
 name|SourceLocation
 name|EndLoc
 block|;
-comment|/// \brief Pointer to the list of clauses.
-name|llvm
-operator|::
+comment|/// \brief Numbers of clauses.
+specifier|const
+name|unsigned
+name|NumClauses
+block|;
+comment|/// \brief Number of child expressions/stmts.
+specifier|const
+name|unsigned
+name|NumChildren
+block|;
+comment|/// \brief Offset from this to the start of clauses.
+comment|/// There are NumClauses pointers to clauses, they are followed by
+comment|/// NumChildren pointers to child stmts/exprs (if the directive type
+comment|/// requires an associated stmt, then it has to be the first of them).
+specifier|const
+name|unsigned
+name|ClausesOffset
+block|;
+comment|/// \brief Get the clauses storage.
 name|MutableArrayRef
 operator|<
 name|OMPClause
 operator|*
 operator|>
-name|Clauses
-block|;
-comment|/// \brief Associated statement (if any) and expressions.
-name|llvm
-operator|::
-name|MutableArrayRef
+name|getClauses
+argument_list|()
+block|{
+name|OMPClause
+operator|*
+operator|*
+name|ClauseStorage
+operator|=
+name|reinterpret_cast
 operator|<
-name|Stmt
+name|OMPClause
+operator|*
 operator|*
 operator|>
-name|StmtAndExpressions
+operator|(
+name|reinterpret_cast
+operator|<
+name|char
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|+
+name|ClausesOffset
+operator|)
 block|;
+return|return
+name|MutableArrayRef
+operator|<
+name|OMPClause
+operator|*
+operator|>
+operator|(
+name|ClauseStorage
+expr|,
+name|NumClauses
+operator|)
+return|;
+block|}
 name|protected
 operator|:
 comment|/// \brief Build instance of directive of class \a K.
@@ -1402,7 +217,7 @@ argument|SourceLocation EndLoc
 argument_list|,
 argument|unsigned NumClauses
 argument_list|,
-argument|unsigned NumberOfExpressions
+argument|unsigned NumChildren
 argument_list|)
 operator|:
 name|Stmt
@@ -1417,45 +232,39 @@ argument_list|)
 block|,
 name|StartLoc
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|StartLoc
 argument_list|)
+argument_list|)
 block|,
 name|EndLoc
+argument_list|(
+name|std
+operator|::
+name|move
 argument_list|(
 name|EndLoc
 argument_list|)
+argument_list|)
 block|,
-name|Clauses
+name|NumClauses
 argument_list|(
-name|reinterpret_cast
-operator|<
-name|OMPClause
-operator|*
-operator|*
-operator|>
-operator|(
-name|static_cast
-operator|<
-name|T
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|+
-literal|1
-operator|)
-argument_list|,
 name|NumClauses
 argument_list|)
 block|,
-name|StmtAndExpressions
+name|NumChildren
 argument_list|(
-argument|reinterpret_cast<Stmt **>(Clauses.end())
-argument_list|,
-argument|NumberOfExpressions
+name|NumChildren
 argument_list|)
-block|{ }
+block|,
+name|ClausesOffset
+argument_list|(
+argument|llvm::RoundUpToAlignment(sizeof(T),                                                llvm::alignOf<OMPClause *>())
+argument_list|)
+block|{}
 comment|/// \brief Sets the list of variables for this clause.
 comment|///
 comment|/// \param Clauses The list of clauses for the directive.
@@ -1481,15 +290,215 @@ argument_list|(
 argument|Stmt *S
 argument_list|)
 block|{
-name|StmtAndExpressions
-index|[
-literal|0
-index|]
+name|assert
+argument_list|(
+name|hasAssociatedStmt
+argument_list|()
+operator|&&
+literal|"no associated statement."
+argument_list|)
+block|;
+operator|*
+name|child_begin
+argument_list|()
 operator|=
 name|S
 block|;   }
 name|public
 operator|:
+comment|/// \brief Iterates over a filtered subrange of clauses applied to a
+comment|/// directive.
+comment|///
+comment|/// This iterator visits only those declarations that meet some run-time
+comment|/// criteria.
+name|template
+operator|<
+name|class
+name|FilterPredicate
+operator|>
+name|class
+name|filtered_clause_iterator
+block|{
+name|ArrayRef
+operator|<
+name|OMPClause
+operator|*
+operator|>
+operator|::
+name|const_iterator
+name|Current
+block|;
+name|ArrayRef
+operator|<
+name|OMPClause
+operator|*
+operator|>
+operator|::
+name|const_iterator
+name|End
+block|;
+name|FilterPredicate
+name|Pred
+block|;
+name|void
+name|SkipToNextClause
+argument_list|()
+block|{
+while|while
+condition|(
+name|Current
+operator|!=
+name|End
+operator|&&
+operator|!
+name|Pred
+argument_list|(
+operator|*
+name|Current
+argument_list|)
+condition|)
+operator|++
+name|Current
+expr_stmt|;
+block|}
+name|public
+operator|:
+typedef|typedef
+specifier|const
+name|OMPClause
+modifier|*
+name|value_type
+typedef|;
+name|filtered_clause_iterator
+argument_list|()
+operator|:
+name|Current
+argument_list|()
+block|,
+name|End
+argument_list|()
+block|{}
+name|filtered_clause_iterator
+argument_list|(
+argument|ArrayRef<OMPClause *> Arr
+argument_list|,
+argument|FilterPredicate Pred
+argument_list|)
+operator|:
+name|Current
+argument_list|(
+name|Arr
+operator|.
+name|begin
+argument_list|()
+argument_list|)
+block|,
+name|End
+argument_list|(
+name|Arr
+operator|.
+name|end
+argument_list|()
+argument_list|)
+block|,
+name|Pred
+argument_list|(
+argument|Pred
+argument_list|)
+block|{
+name|SkipToNextClause
+argument_list|()
+block|;     }
+name|value_type
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+operator|*
+name|Current
+return|;
+block|}
+name|value_type
+name|operator
+operator|->
+expr|(
+block|)
+specifier|const
+block|{
+return|return
+operator|*
+name|Current
+return|;
+block|}
+name|filtered_clause_iterator
+operator|&
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+operator|++
+name|Current
+block|;
+name|SkipToNextClause
+argument_list|()
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|filtered_clause_iterator
+name|operator
+operator|++
+operator|(
+name|int
+operator|)
+block|{
+name|filtered_clause_iterator
+name|tmp
+argument_list|(
+operator|*
+name|this
+argument_list|)
+block|;
+operator|++
+operator|(
+operator|*
+name|this
+operator|)
+block|;
+return|return
+name|tmp
+return|;
+block|}
+name|bool
+name|operator
+operator|!
+operator|(
+operator|)
+block|{
+return|return
+name|Current
+operator|==
+name|End
+return|;
+block|}
+name|operator
+name|bool
+argument_list|()
+block|{
+return|return
+name|Current
+operator|!=
+name|End
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// \brief Returns starting location of directive kind.
 name|SourceLocation
 name|getLocStart
@@ -1516,28 +525,32 @@ comment|/// \param Loc New starting location of directive.
 comment|///
 name|void
 name|setLocStart
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
 block|{
 name|StartLoc
 operator|=
 name|Loc
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Set ending location of directive.
 comment|///
 comment|/// \param Loc New ending location of directive.
 comment|///
 name|void
 name|setLocEnd
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
 block|{
 name|EndLoc
 operator|=
 name|Loc
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Get number of clauses.
 name|unsigned
 name|getNumClauses
@@ -1545,10 +558,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Clauses
-operator|.
-name|size
-argument_list|()
+name|NumClauses
 return|;
 block|}
 comment|/// \brief Returns specified clause.
@@ -1556,30 +566,32 @@ comment|///
 comment|/// \param i Number of clause.
 comment|///
 name|OMPClause
-operator|*
+modifier|*
 name|getClause
 argument_list|(
-argument|unsigned i
-argument_list|)
-specifier|const
-block|{
-name|assert
-argument_list|(
+name|unsigned
 name|i
-operator|<
-name|Clauses
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"index out of bound!"
 argument_list|)
-block|;
+decl|const
+block|{
 return|return
-name|Clauses
+name|clauses
+argument_list|()
 index|[
 name|i
 index|]
+return|;
+block|}
+comment|/// \brief Returns true if directive has associated statement.
+name|bool
+name|hasAssociatedStmt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumChildren
+operator|>
+literal|0
 return|;
 block|}
 comment|/// \brief Returns statement associated with the directive.
@@ -1589,11 +601,25 @@ name|getAssociatedStmt
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|hasAssociatedStmt
+argument_list|()
+operator|&&
+literal|"no associated statement."
+argument_list|)
+block|;
 return|return
-name|StmtAndExpressions
-index|[
-literal|0
-index|]
+name|const_cast
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|(
+operator|*
+name|child_begin
+argument_list|()
+operator|)
 return|;
 block|}
 name|OpenMPDirectiveKind
@@ -1608,9 +634,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *S
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|S
+parameter_list|)
 block|{
 return|return
 name|S
@@ -1630,20 +659,45 @@ return|;
 block|}
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
+if|if
+condition|(
+operator|!
+name|hasAssociatedStmt
+argument_list|()
+condition|)
 return|return
 name|child_range
-argument_list|(
-name|StmtAndExpressions
-operator|.
-name|begin
 argument_list|()
-argument_list|,
-name|StmtAndExpressions
+return|;
+name|Stmt
+modifier|*
+modifier|*
+name|ChildStorage
+init|=
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|getClauses
+argument_list|()
 operator|.
 name|end
 argument_list|()
+operator|)
+decl_stmt|;
+return|return
+name|child_range
+argument_list|(
+name|ChildStorage
+argument_list|,
+name|ChildStorage
+operator|+
+name|NumChildren
 argument_list|)
 return|;
 block|}
@@ -1656,7 +710,8 @@ name|clauses
 argument_list|()
 block|{
 return|return
-name|Clauses
+name|getClauses
+argument_list|()
 return|;
 block|}
 name|ArrayRef
@@ -1669,23 +724,66 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Clauses
+name|const_cast
+operator|<
+name|OMPExecutableDirective
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getClauses
+argument_list|()
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief This represents '#pragma omp parallel' directive.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp parallel private(a,b) reduction(+: c,d)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp parallel' has clauses 'private'
+end_comment
+
+begin_comment
 comment|/// with the variables 'a' and 'b' and 'reduction' with operator '+' and
+end_comment
+
+begin_comment
 comment|/// variables 'c' and 'd'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPParallelDirective
-operator|:
+range|:
 name|public
 name|OMPExecutableDirective
 block|{
@@ -1700,7 +798,7 @@ argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
-argument|unsigned N
+argument|unsigned NumClauses
 argument_list|)
 operator|:
 name|OMPExecutableDirective
@@ -1715,19 +813,19 @@ argument|StartLoc
 argument_list|,
 argument|EndLoc
 argument_list|,
-argument|N
+argument|NumClauses
 argument_list|,
 literal|1
 argument_list|)
-block|{ }
+block|{}
 comment|/// \brief Build an empty directive.
 comment|///
-comment|/// \param N Number of clauses.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 name|explicit
 name|OMPParallelDirective
 argument_list|(
-argument|unsigned N
+argument|unsigned NumClauses
 argument_list|)
 operator|:
 name|OMPExecutableDirective
@@ -1742,11 +840,11 @@ argument|SourceLocation()
 argument_list|,
 argument|SourceLocation()
 argument_list|,
-argument|N
+argument|NumClauses
 argument_list|,
 literal|1
 argument_list|)
-block|{ }
+block|{}
 name|public
 operator|:
 comment|/// \brief Creates directive with a list of \a Clauses.
@@ -1776,7 +874,7 @@ block|;
 comment|/// \brief Creates an empty directive with the place for \a N clauses.
 comment|///
 comment|/// \param C AST context.
-comment|/// \param N The number of clauses.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 specifier|static
 name|OMPParallelDirective
@@ -1785,7 +883,7 @@ name|CreateEmpty
 argument_list|(
 argument|const ASTContext&C
 argument_list|,
-argument|unsigned N
+argument|unsigned NumClauses
 argument_list|,
 argument|EmptyShell
 argument_list|)
@@ -1804,6 +902,2026 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|OMPParallelDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp simd' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp simd private(a,b) linear(i,j:s) reduction(+:c,d)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp simd' has clauses 'private'
+comment|/// with the variables 'a' and 'b', 'linear' with variables 'i', 'j' and
+comment|/// linear step 's', 'reduction' with operator '+' and variables 'c' and 'd'.
+comment|///
+name|class
+name|OMPSimdDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Number of collapsed loops as specified by 'collapse' clause.
+name|unsigned
+name|CollapsedNum
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPSimdDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPSimdDirectiveClass
+argument_list|,
+name|OMPD_simd
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|,
+name|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|CollapsedNum
+argument_list|(
+argument|CollapsedNum
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPSimdDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPSimdDirectiveClass
+argument_list|,
+name|OMPD_simd
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|CollapsedNum
+argument_list|(
+argument|CollapsedNum
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPSimdDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive with the place
+comment|/// for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPSimdDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+name|unsigned
+name|getCollapsedNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CollapsedNum
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPSimdDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp for' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp for private(a,b) reduction(+:c,d)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp for' has clauses 'private' with the
+comment|/// variables 'a' and 'b' and 'reduction' with operator '+' and variables 'c'
+comment|/// and 'd'.
+comment|///
+name|class
+name|OMPForDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Number of collapsed loops as specified by 'collapse' clause.
+name|unsigned
+name|CollapsedNum
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPForDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPForDirectiveClass
+argument_list|,
+name|OMPD_for
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|,
+name|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|CollapsedNum
+argument_list|(
+argument|CollapsedNum
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPForDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPForDirectiveClass
+argument_list|,
+name|OMPD_for
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|CollapsedNum
+argument_list|(
+argument|CollapsedNum
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPForDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive with the place
+comment|/// for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPForDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+name|unsigned
+name|getCollapsedNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CollapsedNum
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPForDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp sections' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp sections private(a,b) reduction(+:c,d)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp sections' has clauses 'private' with
+comment|/// the variables 'a' and 'b' and 'reduction' with operator '+' and variables
+comment|/// 'c' and 'd'.
+comment|///
+name|class
+name|OMPSectionsDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPSectionsDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPSectionsDirectiveClass
+argument_list|,
+argument|OMPD_sections
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPSectionsDirective
+argument_list|(
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPSectionsDirectiveClass
+argument_list|,
+argument|OMPD_sections
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPSectionsDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive with the place for \a NumClauses
+comment|/// clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPSectionsDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPSectionsDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp section' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp section
+comment|/// \endcode
+comment|///
+name|class
+name|OMPSectionDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|///
+name|OMPSectionDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPSectionDirectiveClass
+argument_list|,
+argument|OMPD_section
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+name|explicit
+name|OMPSectionDirective
+argument_list|()
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPSectionDirectiveClass
+argument_list|,
+argument|OMPD_section
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPSectionDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive.
+comment|///
+comment|/// \param C AST context.
+comment|///
+specifier|static
+name|OMPSectionDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPSectionDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp single' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp single private(a,b) copyprivate(c,d)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp single' has clauses 'private' with
+comment|/// the variables 'a' and 'b' and 'copyprivate' with variables 'c' and 'd'.
+comment|///
+name|class
+name|OMPSingleDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPSingleDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPSingleDirectiveClass
+argument_list|,
+argument|OMPD_single
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPSingleDirective
+argument_list|(
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPSingleDirectiveClass
+argument_list|,
+argument|OMPD_single
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPSingleDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive with the place for \a NumClauses
+comment|/// clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPSingleDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPSingleDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp master' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp master
+comment|/// \endcode
+comment|///
+name|class
+name|OMPMasterDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|///
+name|OMPMasterDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPMasterDirectiveClass
+argument_list|,
+argument|OMPD_master
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+name|explicit
+name|OMPMasterDirective
+argument_list|()
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPMasterDirectiveClass
+argument_list|,
+argument|OMPD_master
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPMasterDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive.
+comment|///
+comment|/// \param C AST context.
+comment|///
+specifier|static
+name|OMPMasterDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPMasterDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp critical' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp critical
+comment|/// \endcode
+comment|///
+name|class
+name|OMPCriticalDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Name of the directive.
+name|DeclarationNameInfo
+name|DirName
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param Name Name of the directive.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|///
+name|OMPCriticalDirective
+argument_list|(
+argument|const DeclarationNameInfo&Name
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPCriticalDirectiveClass
+argument_list|,
+name|OMPD_critical
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|DirName
+argument_list|(
+argument|Name
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+name|explicit
+name|OMPCriticalDirective
+argument_list|()
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPCriticalDirectiveClass
+argument_list|,
+name|OMPD_critical
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|DirName
+argument_list|()
+block|{}
+comment|/// \brief Set name of the directive.
+comment|///
+comment|/// \param Name Name of the directive.
+comment|///
+name|void
+name|setDirectiveName
+argument_list|(
+argument|const DeclarationNameInfo&Name
+argument_list|)
+block|{
+name|DirName
+operator|=
+name|Name
+block|; }
+name|public
+operator|:
+comment|/// \brief Creates directive.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param Name Name of the directive.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPCriticalDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|const DeclarationNameInfo&Name
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive.
+comment|///
+comment|/// \param C AST context.
+comment|///
+specifier|static
+name|OMPCriticalDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|EmptyShell
+argument_list|)
+block|;
+comment|/// \brief Return name of the directive.
+comment|///
+name|DeclarationNameInfo
+name|getDirectiveName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DirName
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPCriticalDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp parallel for' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp parallel for private(a,b) reduction(+:c,d)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp parallel for' has clauses 'private'
+comment|/// with the variables 'a' and 'b' and 'reduction' with operator '+' and
+comment|/// variables 'c' and 'd'.
+comment|///
+name|class
+name|OMPParallelForDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Number of collapsed loops as specified by 'collapse' clause.
+name|unsigned
+name|CollapsedNum
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPParallelForDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPParallelForDirectiveClass
+argument_list|,
+name|OMPD_parallel_for
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|,
+name|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|CollapsedNum
+argument_list|(
+argument|CollapsedNum
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPParallelForDirective
+argument_list|(
+argument|unsigned CollapsedNum
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPParallelForDirectiveClass
+argument_list|,
+name|OMPD_parallel_for
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|CollapsedNum
+argument_list|(
+argument|CollapsedNum
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param CollapsedNum Number of collapsed loops.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPParallelForDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive with the place
+comment|/// for \a NumClauses clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param CollapsedNum Number of collapsed nested loops.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPParallelForDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|unsigned CollapsedNum
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+name|unsigned
+name|getCollapsedNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CollapsedNum
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPParallelForDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp parallel sections' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp parallel sections private(a,b) reduction(+:c,d)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp parallel sections' has clauses
+comment|/// 'private' with the variables 'a' and 'b' and 'reduction' with operator '+'
+comment|/// and variables 'c' and 'd'.
+comment|///
+name|class
+name|OMPParallelSectionsDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPParallelSectionsDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPParallelSectionsDirectiveClass
+argument_list|,
+argument|OMPD_parallel_sections
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPParallelSectionsDirective
+argument_list|(
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPParallelSectionsDirectiveClass
+argument_list|,
+argument|OMPD_parallel_sections
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPParallelSectionsDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive with the place for \a NumClauses
+comment|/// clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPParallelSectionsDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPParallelSectionsDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp task' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp task private(a,b) final(d)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp task' has clauses 'private' with the
+comment|/// variables 'a' and 'b' and 'final' with condition 'd'.
+comment|///
+name|class
+name|OMPTaskDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPTaskDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskDirectiveClass
+argument_list|,
+argument|OMPD_task
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPTaskDirective
+argument_list|(
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskDirectiveClass
+argument_list|,
+argument|OMPD_task
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param Clauses List of clauses.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPTaskDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive with the place for \a NumClauses
+comment|/// clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPTaskDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTaskDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp taskyield' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp taskyield
+comment|/// \endcode
+comment|///
+name|class
+name|OMPTaskyieldDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|///
+name|OMPTaskyieldDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskyieldDirectiveClass
+argument_list|,
+argument|OMPD_taskyield
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+name|explicit
+name|OMPTaskyieldDirective
+argument_list|()
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskyieldDirectiveClass
+argument_list|,
+argument|OMPD_taskyield
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|///
+specifier|static
+name|OMPTaskyieldDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive.
+comment|///
+comment|/// \param C AST context.
+comment|///
+specifier|static
+name|OMPTaskyieldDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTaskyieldDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp barrier' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp barrier
+comment|/// \endcode
+comment|///
+name|class
+name|OMPBarrierDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|///
+name|OMPBarrierDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPBarrierDirectiveClass
+argument_list|,
+argument|OMPD_barrier
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+name|explicit
+name|OMPBarrierDirective
+argument_list|()
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPBarrierDirectiveClass
+argument_list|,
+argument|OMPD_barrier
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|///
+specifier|static
+name|OMPBarrierDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive.
+comment|///
+comment|/// \param C AST context.
+comment|///
+specifier|static
+name|OMPBarrierDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPBarrierDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp taskwait' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp taskwait
+comment|/// \endcode
+comment|///
+name|class
+name|OMPTaskwaitDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|///
+name|OMPTaskwaitDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskwaitDirectiveClass
+argument_list|,
+argument|OMPD_taskwait
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+name|explicit
+name|OMPTaskwaitDirective
+argument_list|()
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskwaitDirectiveClass
+argument_list|,
+argument|OMPD_taskwait
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|///
+specifier|static
+name|OMPTaskwaitDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive.
+comment|///
+comment|/// \param C AST context.
+comment|///
+specifier|static
+name|OMPTaskwaitDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTaskwaitDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp flush' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp flush(a,b)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp flush' has 2 arguments- variables 'a'
+comment|/// and 'b'.
+comment|/// 'omp flush' directive does not have clauses but have an optional list of
+comment|/// variables to flush. This list of variables is stored within some fake clause
+comment|/// FlushClause.
+name|class
+name|OMPFlushDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|OMPFlushDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPFlushDirectiveClass
+argument_list|,
+argument|OMPD_flush
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|0
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+comment|/// \param NumClauses Number of clauses.
+comment|///
+name|explicit
+name|OMPFlushDirective
+argument_list|(
+argument|unsigned NumClauses
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPFlushDirectiveClass
+argument_list|,
+argument|OMPD_flush
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|NumClauses
+argument_list|,
+literal|0
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive with a list of \a Clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param Clauses List of clauses (only single OMPFlushClause clause is
+comment|/// allowed).
+comment|///
+specifier|static
+name|OMPFlushDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive with the place for \a NumClauses
+comment|/// clauses.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param NumClauses Number of clauses.
+comment|///
+specifier|static
+name|OMPFlushDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumClauses
+argument_list|,
+argument|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPFlushDirectiveClass
 return|;
 block|}
 expr|}

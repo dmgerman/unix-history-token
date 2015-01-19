@@ -35,15 +35,11 @@ directive|include
 file|<sys/objfs.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_include
 include|#
@@ -104,14 +100,11 @@ directive|include
 file|<gelf.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -511,13 +504,9 @@ modifier|*
 name|dm_extern
 decl_stmt|;
 comment|/* external symbol definitions */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 name|caddr_t
 name|dm_reloc_offset
 decl_stmt|;
@@ -1172,13 +1161,9 @@ name|int
 name|dt_errno
 decl_stmt|;
 comment|/* error resulting from last failed operation */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 specifier|const
 name|char
 modifier|*
@@ -1209,12 +1194,9 @@ name|int
 name|dt_ddefs_fd
 decl_stmt|;
 comment|/* file descriptor for D CTF debugging cache */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|int
 name|dt_stdout_fd
 decl_stmt|;
@@ -2149,12 +2131,9 @@ name|dtrace_hdl_t
 modifier|*
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 specifier|extern
 name|int
 name|dt_set_errno
@@ -2236,12 +2215,9 @@ parameter_list|,
 name|va_list
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 specifier|extern
 name|int
 name|dt_ioctl

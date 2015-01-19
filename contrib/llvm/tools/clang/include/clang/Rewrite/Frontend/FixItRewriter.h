@@ -267,7 +267,7 @@ argument_list|(
 name|ID
 argument_list|)
 operator|!=
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|// Iteration over files with changes.
@@ -333,22 +333,21 @@ expr|>
 operator|*
 name|RewrittenFiles
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// IncludeInDiagnosticCounts - This method (whose default implementation
 comment|/// returns true) indicates whether the diagnostics handled by this
 comment|/// DiagnosticConsumer should be included in the number of diagnostics
 comment|/// reported by DiagnosticsEngine.
-name|virtual
 name|bool
 name|IncludeInDiagnosticCounts
 argument_list|()
 specifier|const
+name|override
 expr_stmt|;
 comment|/// HandleDiagnostic - Handle this diagnostic, reporting it to the user or
 comment|/// capturing it to a log as needed.
-name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
@@ -362,6 +361,7 @@ name|Diagnostic
 operator|&
 name|Info
 argument_list|)
+name|override
 decl_stmt|;
 comment|/// \brief Emit a diagnostic via the adapted diagnostic client.
 name|void

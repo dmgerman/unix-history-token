@@ -350,7 +350,7 @@ argument_list|)
 block|:
 name|TG
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|init
@@ -368,7 +368,7 @@ argument_list|)
 block|:
 name|TG
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|init
@@ -389,16 +389,15 @@ argument_list|)
 operator|:
 name|TG
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|assert
 argument_list|(
+operator|!
 name|RHS
 operator|.
 name|TG
-operator|==
-literal|0
 operator|&&
 literal|"Can only copy uninitialized timers"
 argument_list|)
@@ -417,15 +416,13 @@ operator|)
 block|{
 name|assert
 argument_list|(
+operator|!
 name|TG
-operator|==
-literal|0
 operator|&&
+operator|!
 name|T
 operator|.
 name|TG
-operator|==
-literal|0
 operator|&&
 literal|"Can only assign uninit timers"
 argument_list|)
@@ -446,7 +443,7 @@ argument_list|()
 operator|:
 name|TG
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|void
@@ -487,7 +484,7 @@ block|{
 return|return
 name|TG
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// startTimer - Start the timer running.  Time between calls to

@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -111,17 +117,150 @@ block|{
 name|namespace
 name|dynamic
 block|{
+name|namespace
+name|internal
+block|{
+name|class
+name|MatcherDescriptor
+decl_stmt|;
+block|}
+typedef|typedef
+specifier|const
+name|internal
+operator|::
+name|MatcherDescriptor
+operator|*
+name|MatcherCtor
+expr_stmt|;
+struct|struct
+name|MatcherCompletion
+block|{
+name|MatcherCompletion
+argument_list|()
+block|{}
+name|MatcherCompletion
+argument_list|(
+argument|StringRef TypedText
+argument_list|,
+argument|StringRef MatcherDecl
+argument_list|)
+block|:
+name|TypedText
+argument_list|(
+name|TypedText
+argument_list|)
+operator|,
+name|MatcherDecl
+argument_list|(
+argument|MatcherDecl
+argument_list|)
+block|{}
+comment|/// \brief The text to type to select this matcher.
+name|std
+operator|::
+name|string
+name|TypedText
+expr_stmt|;
+comment|/// \brief The "declaration" of the matcher, with type information.
+name|std
+operator|::
+name|string
+name|MatcherDecl
+expr_stmt|;
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|MatcherCompletion
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|TypedText
+operator|==
+name|Other
+operator|.
+name|TypedText
+operator|&&
+name|MatcherDecl
+operator|==
+name|Other
+operator|.
+name|MatcherDecl
+return|;
+block|}
+block|}
+struct|;
 name|class
 name|Registry
 block|{
 name|public
 label|:
-comment|/// \brief Construct a matcher from the registry by name.
+comment|/// \brief Look up a matcher in the registry by name,
 comment|///
-comment|/// Consult the registry of known matchers and construct the appropriate
-comment|/// matcher by name.
+comment|/// \return An opaque value which may be used to refer to the matcher
+comment|/// constructor, or Optional<MatcherCtor>() if not found.
+specifier|static
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|MatcherCtor
+operator|>
+name|lookupMatcherCtor
+argument_list|(
+argument|StringRef MatcherName
+argument_list|)
+expr_stmt|;
+comment|/// \brief Compute the list of completions for \p Context.
 comment|///
-comment|/// \param MatcherName The name of the matcher to instantiate.
+comment|/// Each element of \p Context represents a matcher invocation, going from
+comment|/// outermost to innermost. Elements are pairs consisting of a reference to the
+comment|/// matcher constructor and the index of the next element in the argument list
+comment|/// of that matcher (or for the last element, the index of the completion
+comment|/// point in the argument list). An empty list requests completion for the
+comment|/// root matcher.
+comment|///
+comment|/// The completions are ordered first by decreasing relevance, then
+comment|/// alphabetically.  Relevance is determined by how closely the matcher's
+comment|/// type matches that of the context. For example, if the innermost matcher
+comment|/// takes a FunctionDecl matcher, the FunctionDecl matchers are returned
+comment|/// first, followed by the ValueDecl matchers, then NamedDecl, then Decl, then
+comment|/// polymorphic matchers.
+comment|///
+comment|/// Matchers which are technically convertible to the innermost context but
+comment|/// which would match either all or no nodes are excluded. For example,
+comment|/// namedDecl and varDecl are excluded in a FunctionDecl context, because
+comment|/// those matchers would match respectively all or no nodes in such a context.
+specifier|static
+name|std
+operator|::
+name|vector
+operator|<
+name|MatcherCompletion
+operator|>
+name|getCompletions
+argument_list|(
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MatcherCtor
+argument_list|,
+name|unsigned
+operator|>
+expr|>
+name|Context
+argument_list|)
+expr_stmt|;
+comment|/// \brief Construct a matcher from the registry.
+comment|///
+comment|/// \param Ctor The matcher constructor to instantiate.
 comment|///
 comment|/// \param NameRange The location of the name in the matcher source.
 comment|///   Useful for error reporting.
@@ -131,15 +270,15 @@ comment|///   values must be valid for the matcher requested. Otherwise, the fun
 comment|///   will return an error.
 comment|///
 comment|/// \return The matcher object constructed if no error was found.
-comment|///   A null matcher if the matcher is not found, or if the number of
-comment|///   arguments or argument types do not match the signature.
-comment|///   In that case \c Error will contain the description of the error.
+comment|///   A null matcher if the number of arguments or argument types do not match
+comment|///   the signature.  In that case \c Error will contain the description of
+comment|///   the error.
 specifier|static
 name|VariantMatcher
 name|constructMatcher
 argument_list|(
-name|StringRef
-name|MatcherName
+name|MatcherCtor
+name|Ctor
 argument_list|,
 specifier|const
 name|SourceRange
@@ -167,8 +306,8 @@ specifier|static
 name|VariantMatcher
 name|constructBoundMatcher
 argument_list|(
-name|StringRef
-name|MatcherName
+name|MatcherCtor
+name|Ctor
 argument_list|,
 specifier|const
 name|SourceRange

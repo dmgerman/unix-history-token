@@ -188,6 +188,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/rss_config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -359,7 +365,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_udp
 argument_list|,
@@ -367,6 +373,8 @@ name|UDPCTL_CHECKSUM
 argument_list|,
 name|checksum
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -424,7 +432,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_udp
 argument_list|,
@@ -432,6 +440,8 @@ name|OID_AUTO
 argument_list|,
 name|blackhole
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -945,7 +955,7 @@ name|udp_inpcb_init
 argument_list|,
 name|NULL
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|,
 name|IPI_HASHFIELDS_2TUPLE
 argument_list|)
@@ -972,7 +982,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
@@ -1030,7 +1040,7 @@ name|udplite_inpcb_init
 argument_list|,
 name|NULL
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|,
 name|IPI_HASHFIELDS_2TUPLE
 argument_list|)
@@ -1329,11 +1339,6 @@ block|{
 name|m_freem
 argument_list|(
 name|n
-argument_list|)
-expr_stmt|;
-name|IPSECSTAT_INC
-argument_list|(
-name|ips_in_polvio
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5241,15 +5246,10 @@ name|flowid
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|flowid_type
+name|uint8_t
+name|flowtype
 init|=
-literal|0
-decl_stmt|;
-name|int
-name|use_flowid
-init|=
-literal|0
+name|M_HASHTYPE_NONE
 decl_stmt|;
 comment|/* 	 * udp_output() may need to temporarily bind or connect the current 	 * inpcb.  As such, we don't know up front whether we will need the 	 * pcbinfo lock or not.  Do any work to decide what is needed up 	 * front before acquiring any locks. 	 */
 if|if
@@ -5603,7 +5603,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|flowid_type
+name|flowtype
 operator|=
 operator|*
 operator|(
@@ -5614,10 +5614,6 @@ name|CMSG_DATA
 argument_list|(
 name|cm
 argument_list|)
-expr_stmt|;
-name|use_flowid
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 ifdef|#
@@ -6742,15 +6738,11 @@ expr_stmt|;
 comment|/* 	 * Setup flowid / RSS information for outbound socket. 	 * 	 * Once the UDP code decides to set a flowid some other way, 	 * this allows the flowid to be overridden by userland. 	 */
 if|if
 condition|(
-name|use_flowid
+name|flowtype
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 block|{
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
-expr_stmt|;
 name|m
 operator|->
 name|m_pkthdr
@@ -6763,7 +6755,7 @@ name|M_HASHTYPE_SET
 argument_list|(
 name|m
 argument_list|,
-name|flowid_type
+name|flowtype
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -6809,12 +6801,6 @@ operator|.
 name|flowid
 operator|=
 name|hash_val
-expr_stmt|;
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
 expr_stmt|;
 name|M_HASHTYPE_SET
 argument_list|(

@@ -70,9 +70,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|HexagonTargetMachine
-decl_stmt|;
-name|class
 name|HexagonSelectionDAGInfo
 range|:
 name|public
@@ -84,16 +81,15 @@ name|explicit
 name|HexagonSelectionDAGInfo
 argument_list|(
 specifier|const
-name|HexagonTargetMachine
+name|DataLayout
 operator|&
-name|TM
+name|DL
 argument_list|)
 block|;
 operator|~
 name|HexagonSelectionDAGInfo
 argument_list|()
 block|;
-name|virtual
 name|SDValue
 name|EmitTargetCodeForMemcpy
 argument_list|(
@@ -120,6 +116,7 @@ argument_list|,
 argument|MachinePointerInfo SrcPtrInfo
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

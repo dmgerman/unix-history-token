@@ -245,6 +245,25 @@ end_comment
 
 begin_function_decl
 name|int
+name|ofw_bus_reg_to_rl
+parameter_list|(
+name|device_t
+parameter_list|,
+name|phandle_t
+parameter_list|,
+name|pcell_t
+parameter_list|,
+name|pcell_t
+parameter_list|,
+name|struct
+name|resource_list
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ofw_bus_intr_to_rl
 parameter_list|(
 name|device_t

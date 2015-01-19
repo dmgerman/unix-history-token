@@ -217,6 +217,11 @@ decl_stmt|,
 modifier|*
 name|iln
 decl_stmt|;
+name|idr_remove_all
+argument_list|(
+name|idr
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1895,9 +1900,11 @@ operator|(
 literal|1
 operator|<<
 operator|(
+operator|(
 name|layer
 operator|+
 literal|1
+operator|)
 operator|*
 name|IDR_BITS
 operator|)

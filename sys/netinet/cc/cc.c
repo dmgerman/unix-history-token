@@ -962,7 +962,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp_cc
 argument_list|,
@@ -970,6 +970,8 @@ name|OID_AUTO
 argument_list|,
 name|algorithm
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_STRING
 operator||
 name|CTLFLAG_RW

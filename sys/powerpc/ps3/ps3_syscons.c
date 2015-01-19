@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/openfirm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/vt/vt.h>
 end_include
 
@@ -319,12 +325,9 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|phandle_t root;
-endif|#
-directive|endif
+name|phandle_t
+name|root
+decl_stmt|;
 name|disable
 operator|=
 literal|0
@@ -353,12 +356,6 @@ operator|=
 operator|&
 name|ps3fb_softc
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|root = OF_finddevice("/"); 	if (OF_getprop(root, "compatible", compatible, sizeof(compatible))<= 0)                 return (0); 	 	if (strncmp(compatible, "sony,ps3", sizeof(compatible)) != 0) 		return (0);
-else|#
-directive|else
 name|TUNABLE_STR_FETCH
 argument_list|(
 literal|"hw.platform"
@@ -379,6 +376,57 @@ name|compatible
 argument_list|,
 literal|"ps3"
 argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|CN_INTERNAL
+operator|)
+return|;
+name|root
+operator|=
+name|OF_finddevice
+argument_list|(
+literal|"/"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|OF_getprop
+argument_list|(
+name|root
+argument_list|,
+literal|"compatible"
+argument_list|,
+name|compatible
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|compatible
+argument_list|)
+argument_list|)
+operator|<=
+literal|0
+condition|)
+return|return
+operator|(
+name|CN_DEAD
+operator|)
+return|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|compatible
+argument_list|,
+literal|"sony,ps3"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|compatible
+argument_list|)
+argument_list|)
 operator|!=
 literal|0
 condition|)
@@ -387,8 +435,6 @@ operator|(
 name|CN_DEAD
 operator|)
 return|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|CN_INTERNAL
@@ -611,6 +657,15 @@ argument_list|,
 name|VM_MEMATTR_WRITE_COMBINING
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|fb_info
+operator|.
+name|fb_flags
+operator|&=
+operator|~
+name|FB_FLAG_NOWRITE
+expr_stmt|;
 block|}
 end_function
 
@@ -717,7 +772,7 @@ name|fb_width
 operator|*
 literal|8
 expr_stmt|;
-comment|/* 	 * The loader puts the FB at 0x10000000, so use that for now. 	 */
+comment|/* 	 * Arbitrarily choose address for the framebuffer 	 */
 name|sc
 operator|->
 name|fb_info
@@ -725,6 +780,23 @@ operator|.
 name|fb_vbase
 operator|=
 literal|0x10000000
+expr_stmt|;
+name|sc
+operator|->
+name|fb_info
+operator|.
+name|fb_flags
+operator||=
+name|FB_FLAG_NOWRITE
+expr_stmt|;
+comment|/* Not available yet */
+name|sc
+operator|->
+name|fb_info
+operator|.
+name|fb_cmsize
+operator|=
+literal|16
 expr_stmt|;
 comment|/* 32-bit VGA palette */
 name|vt_generate_cons_palette

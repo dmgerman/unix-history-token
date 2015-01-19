@@ -622,6 +622,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|timingsafe_bcmp
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
 name|bsearch

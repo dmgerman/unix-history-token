@@ -1779,6 +1779,20 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|bus_get_domain
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+modifier|*
+name|domain
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|bus_release_resource
 parameter_list|(
 name|device_t

@@ -93,7 +93,7 @@ comment|//----------------------------------------------------------------------
 comment|/// @class FunctionInfo Function.h "lldb/Symbol/Function.h"
 comment|/// @brief A class that contains generic function information.
 comment|///
-comment|/// This provides generic function information that gets resused between
+comment|/// This provides generic function information that gets reused between
 comment|/// inline functions and function types.
 comment|//----------------------------------------------------------------------
 name|class
@@ -201,7 +201,7 @@ comment|/// Dump a description of the contents of this object to the
 comment|/// supplied stream \a s.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|//------------------------------------------------------------------
 name|void
 name|Dump
@@ -429,7 +429,7 @@ comment|/// Dump a description of the contents of this object to the
 comment|/// supplied stream \a s.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|//------------------------------------------------------------------
 name|void
 name|Dump
@@ -545,14 +545,14 @@ comment|/// names (Function::m_mangled), an optional return type
 comment|/// (Function::m_type), and contains lexical blocks
 comment|/// (Function::m_blocks).
 comment|///
-comment|/// The function inforation is split into a few pieces:
+comment|/// The function information is split into a few pieces:
 comment|///     @li The concrete instance information
 comment|///     @li The abstract information
 comment|///
 comment|/// The abstract information is found in the function type (Type) that
 comment|/// describes a function information, return type and parameter types.
 comment|///
-comment|/// The concreate information is the address range information and
+comment|/// The concrete information is the address range information and
 comment|/// specific locations for an instance of this function.
 comment|//----------------------------------------------------------------------
 name|class
@@ -886,7 +886,7 @@ argument_list|()
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Get accessor for the type that describes the function
-comment|/// return value type, and paramter types.
+comment|/// return value type, and parameter types.
 comment|///
 comment|/// @return
 comment|///     A type object pointer.
@@ -898,7 +898,7 @@ parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Get const accessor for the type that describes the function
-comment|/// return value type, and paramter types.
+comment|/// return value type, and parameter types.
 comment|///
 comment|/// @return
 comment|///     A const type object pointer.
@@ -925,7 +925,7 @@ comment|/// Dump a description of the contents of this object to the
 comment|/// supplied stream \a s.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|///
 comment|/// @param[in] show_context
 comment|///     If \b true, variables will dump their symbol context

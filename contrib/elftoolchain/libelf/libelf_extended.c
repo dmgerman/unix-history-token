@@ -30,7 +30,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelf_extended.c 2225 2011-11-26 18:55:54Z jkoshy $"
+literal|"$Id: libelf_extended.c 3005 2014-03-22 07:43:25Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -213,6 +213,8 @@ operator|->
 name|e_shnum
 operator|=
 name|shnum
+operator|&
+literal|0xFFFFU
 expr_stmt|;
 else|else
 operator|(
@@ -226,6 +228,8 @@ operator|->
 name|e_shnum
 operator|=
 name|shnum
+operator|&
+literal|0xFFFFU
 expr_stmt|;
 return|return
 operator|(
@@ -353,6 +357,8 @@ operator|->
 name|e_shstrndx
 operator|=
 name|shstrndx
+operator|&
+literal|0xFFFFU
 expr_stmt|;
 else|else
 operator|(
@@ -366,6 +372,8 @@ operator|->
 name|e_shstrndx
 operator|=
 name|shstrndx
+operator|&
+literal|0xFFFFU
 expr_stmt|;
 return|return
 operator|(
@@ -493,6 +501,8 @@ operator|->
 name|e_phnum
 operator|=
 name|phnum
+operator|&
+literal|0xFFFFU
 expr_stmt|;
 else|else
 operator|(
@@ -506,6 +516,8 @@ operator|->
 name|e_phnum
 operator|=
 name|phnum
+operator|&
+literal|0xFFFFU
 expr_stmt|;
 return|return
 operator|(

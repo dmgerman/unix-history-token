@@ -1231,6 +1231,8 @@ init|=
 block|{
 literal|"PR:"
 block|,
+literal|"Differential Revision:"
+block|,
 literal|"Submitted by:"
 block|,
 literal|"Reviewed by:"
@@ -1240,6 +1242,8 @@ block|,
 literal|"Obtained from:"
 block|,
 literal|"MFC after:"
+block|,
+literal|"MFH:"
 block|,
 literal|"Relnotes:"
 block|,
@@ -1601,6 +1605,14 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
+literal|"Differential Revision:\t"
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
 literal|"Submitted by:\t"
 name|APR_EOL_STR
 argument_list|)
@@ -1634,6 +1646,14 @@ argument_list|(
 name|default_msg
 argument_list|,
 literal|"MFC after:\t"
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
+literal|"MFH:\t\t"
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1693,7 +1713,7 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-literal|"> PR:            If a Bugzilla PR is affected by the change."
+literal|"> PR:                       If a Bugzilla PR is affected by the change."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1701,7 +1721,7 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-literal|"> Submitted by:  If someone else sent in the change."
+literal|"> Differential Revision:    https://reviews.freebsd.org/D### (*full* phabric URL needed)."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1709,7 +1729,7 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-literal|"> Reviewed by:   If someone else reviewed your modification."
+literal|"> Submitted by:             If someone else sent in the change."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1717,7 +1737,7 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-literal|"> Approved by:   If you needed approval for this commit."
+literal|"> Reviewed by:              If someone else reviewed your modification."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1725,7 +1745,7 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-literal|"> Obtained from: If the change is from a third party."
+literal|"> Approved by:              If you needed approval for this commit."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1733,7 +1753,7 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-literal|"> MFC after:     N [day[s]|week[s]|month[s]].  Request a reminder email."
+literal|"> Obtained from:            If the change is from a third party."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1741,7 +1761,7 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-literal|"> Relnotes:      Set to 'yes' for mention in release notes."
+literal|"> MFC after:                N [day[s]|week[s]|month[s]].  Request a reminder email."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1749,7 +1769,7 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-literal|"> Security:      Vulnerability reference (one per line) or description."
+literal|"> MFH:                      Ports tree branch name.  Request approval for merge."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1757,7 +1777,23 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-literal|"> Sponsored by:  If the change was sponsored by an organization."
+literal|"> Relnotes:                 Set to 'yes' for mention in release notes."
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
+literal|"> Security:                 Vulnerability reference (one per line) or description."
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
+literal|"> Sponsored by:             If the change was sponsored by an organization."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;

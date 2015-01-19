@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"DWARFDebugAbbrev.h"
 end_include
 
@@ -111,9 +105,6 @@ name|StringRef
 name|InfoSection
 decl_stmt|;
 name|StringRef
-name|AbbrevSection
-decl_stmt|;
-name|StringRef
 name|RangeSection
 decl_stmt|;
 name|uint32_t
@@ -171,7 +162,9 @@ expr_stmt|;
 name|class
 name|DWOHolder
 block|{
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|object
 operator|::
@@ -179,7 +172,9 @@ name|ObjectFile
 operator|>
 name|DWOFile
 expr_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|DWARFContext
 operator|>
@@ -212,7 +207,9 @@ return|;
 block|}
 block|}
 empty_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|DWOHolder
 operator|>
@@ -232,6 +229,17 @@ modifier|*
 name|offset_ptr
 parameter_list|)
 function_decl|;
+comment|/// Size in bytes of the unit header.
+name|virtual
+name|uint32_t
+name|getHeaderSize
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|11
+return|;
+block|}
 name|public
 label|:
 name|DWARFUnit
@@ -239,8 +247,6 @@ argument_list|(
 argument|const DWARFDebugAbbrev *DA
 argument_list|,
 argument|StringRef IS
-argument_list|,
-argument|StringRef AS
 argument_list|,
 argument|StringRef RS
 argument_list|,
@@ -423,29 +429,6 @@ return|return
 name|Offset
 return|;
 block|}
-comment|/// Size in bytes of the compile unit header.
-name|virtual
-name|uint32_t
-name|getSize
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|11
-return|;
-block|}
-name|uint32_t
-name|getFirstDIEOffset
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Offset
-operator|+
-name|getSize
-argument_list|()
-return|;
-block|}
 name|uint32_t
 name|getNextUnitOffset
 argument_list|()
@@ -457,21 +440,6 @@ operator|+
 name|Length
 operator|+
 literal|4
-return|;
-block|}
-comment|/// Size in bytes of the .debug_info data associated with this compile unit.
-name|size_t
-name|getDebugInfoSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Length
-operator|+
-literal|4
-operator|-
-name|getSize
-argument_list|()
 return|;
 block|}
 name|uint32_t
@@ -555,7 +523,7 @@ operator|.
 name|empty
 argument_list|()
 condition|?
-name|NULL
+name|nullptr
 else|:
 operator|&
 name|DieArray
@@ -575,17 +543,11 @@ name|getDWOId
 parameter_list|()
 function_decl|;
 name|void
-name|buildAddressRangeTable
+name|collectAddressRanges
 parameter_list|(
-name|DWARFDebugAranges
-modifier|*
-name|debug_aranges
-parameter_list|,
-name|bool
-name|clear_dies_if_already_not_parsed
-parameter_list|,
-name|uint32_t
-name|CUOffsetInAranges
+name|DWARFAddressRangesVector
+modifier|&
+name|CURanges
 parameter_list|)
 function_decl|;
 comment|/// getInlinedChainForAddress - fetches inlined chain for a given address.
@@ -600,6 +562,21 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
+comment|/// Size in bytes of the .debug_info data associated with this compile unit.
+name|size_t
+name|getDebugInfoSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Length
+operator|+
+literal|4
+operator|-
+name|getHeaderSize
+argument_list|()
+return|;
+block|}
 comment|/// extractDIEsIfNeeded - Parses a compile unit and indexes its DIEs if it
 comment|/// hasn't already been done. Returns the number of DIEs parsed at this call.
 name|size_t

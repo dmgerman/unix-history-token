@@ -3,29 +3,6 @@ begin_comment
 comment|/*  * pcap-dag.c: Packet capture interface for Endace DAG card.  *  * The functionality of this code attempts to mimic that of pcap-linux as much  * as possible.  This code is compiled in several different ways depending on  * whether DAG_ONLY and HAVE_DAG_API are defined.  If HAVE_DAG_API is not  * defined it should not get compiled in, otherwise if DAG_ONLY is defined then  * the 'dag_' function calls are renamed to 'pcap_' equivalents.  If DAG_ONLY  * is not defined then nothing is altered - the dag_ functions will be  * called as required from their pcap-linux/bpf equivalents.  *  * Authors: Richard Littin, Sean Irvine ({richard,sean}@reeltwo.com)  * Modifications: Jesper Peterson<support@endace.com>  *                Koryn Grant<support@endace.com>  *                Stephen Donnelly<support@endace.com>  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-dag.c,v 1.39 2008-04-14 20:40:58 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -158,15 +135,26 @@ file|"pcap-dag.h"
 end_include
 
 begin_comment
-comment|/*  * DAG devices have names beginning with "dag", followed by a number  * from 0 to MAXDAG.  */
+comment|/*  * DAG devices have names beginning with "dag", followed by a number  * from 0 to DAG_MAX_BOARDS, then optionally a colon and a stream number  * from 0 to DAG_STREAM_MAX.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DAG_MAX_BOARDS
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MAXDAG
-value|31
+name|DAG_MAX_BOARDS
+value|32
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -274,6 +262,70 @@ name|short
 name|vci
 decl_stmt|;
 comment|/* VCI */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Private data for capturing on DAG devices.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pcap_dag
+block|{
+name|struct
+name|pcap_stat
+name|stat
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DAG_STREAMS_API
+name|u_char
+modifier|*
+name|dag_mem_bottom
+decl_stmt|;
+comment|/* DAG card current memory bottom pointer */
+name|u_char
+modifier|*
+name|dag_mem_top
+decl_stmt|;
+comment|/* DAG card current memory top pointer */
+else|#
+directive|else
+comment|/* HAVE_DAG_STREAMS_API */
+name|void
+modifier|*
+name|dag_mem_base
+decl_stmt|;
+comment|/* DAG card memory base address */
+name|u_int
+name|dag_mem_bottom
+decl_stmt|;
+comment|/* DAG card current memory bottom offset */
+name|u_int
+name|dag_mem_top
+decl_stmt|;
+comment|/* DAG card current memory top offset */
+endif|#
+directive|endif
+comment|/* HAVE_DAG_STREAMS_API */
+name|int
+name|dag_fcs_bits
+decl_stmt|;
+comment|/* Number of checksum bits from link layer */
+name|int
+name|dag_offset_flags
+decl_stmt|;
+comment|/* Flags to pass to dag_offset(). */
+name|int
+name|dag_stream
+decl_stmt|;
+comment|/* DAG stream number */
+name|int
+name|dag_timeout
+decl_stmt|;
+comment|/* timeout specified to pcap_open_live. 				 * Same as in linux above, introduce 				 * generally? */
 block|}
 struct|;
 end_struct
@@ -546,6 +598,11 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|struct
+name|pcap_dag
+modifier|*
+name|pd
+decl_stmt|;
 if|if
 condition|(
 name|p
@@ -553,6 +610,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|pd
+operator|=
+name|p
+operator|->
+name|priv
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_DAG_STREAMS_API
@@ -564,10 +627,8 @@ name|p
 operator|->
 name|fd
 argument_list|,
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_stream
 argument_list|)
 operator|<
@@ -593,10 +654,8 @@ name|p
 operator|->
 name|fd
 argument_list|,
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_stream
 argument_list|)
 operator|<
@@ -893,7 +952,7 @@ comment|/* sanity check we have enough bytes */
 if|if
 condition|(
 name|len
-operator|<=
+operator|<
 operator|(
 literal|24
 operator|+
@@ -964,6 +1023,15 @@ modifier|*
 name|user
 parameter_list|)
 block|{
+name|struct
+name|pcap_dag
+modifier|*
+name|pd
+init|=
+name|p
+operator|->
+name|priv
+decl_stmt|;
 name|unsigned
 name|int
 name|processed
@@ -973,10 +1041,8 @@ decl_stmt|;
 name|int
 name|flags
 init|=
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_offset_flags
 decl_stmt|;
 name|unsigned
@@ -996,16 +1062,12 @@ decl_stmt|;
 comment|/* Get the next bufferful of packets (if necessary). */
 while|while
 condition|(
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_top
 operator|-
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_bottom
 operator|<
 name|dag_record_size
@@ -1040,10 +1102,8 @@ condition|(
 name|NULL
 operator|==
 operator|(
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_top
 operator|=
 name|dag_advance_stream
@@ -1052,18 +1112,14 @@ name|p
 operator|->
 name|fd
 argument_list|,
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_stream
 argument_list|,
 operator|&
 operator|(
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_bottom
 operator|)
 argument_list|)
@@ -1078,10 +1134,8 @@ block|}
 else|#
 directive|else
 comment|/* dag_offset does not support timeouts */
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_top
 operator|=
 name|dag_offset
@@ -1092,10 +1146,8 @@ name|fd
 argument_list|,
 operator|&
 operator|(
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_bottom
 operator|)
 argument_list|,
@@ -1110,16 +1162,12 @@ condition|(
 name|nonblocking
 operator|&&
 operator|(
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_top
 operator|-
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_bottom
 operator|<
 name|dag_record_size
@@ -1136,23 +1184,17 @@ condition|(
 operator|!
 name|nonblocking
 operator|&&
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_timeout
 operator|&&
 operator|(
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_top
 operator|-
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_bottom
 operator|<
 name|dag_record_size
@@ -1168,16 +1210,12 @@ block|}
 comment|/* Process the packets. */
 while|while
 condition|(
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_top
 operator|-
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_bottom
 operator|>=
 name|dag_record_size
@@ -1210,10 +1248,8 @@ name|dag_record_t
 operator|*
 operator|)
 operator|(
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_bottom
 operator|)
 decl_stmt|;
@@ -1228,16 +1264,12 @@ name|dag_record_t
 operator|*
 operator|)
 operator|(
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_base
 operator|+
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_bottom
 operator|)
 decl_stmt|;
@@ -1313,10 +1345,8 @@ operator|-
 literal|1
 return|;
 block|}
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_mem_bottom
 operator|+=
 name|rlen
@@ -1366,10 +1396,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|stat
 operator|.
 name|ps_drop
@@ -1386,10 +1414,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|stat
 operator|.
 name|ps_drop
@@ -1399,10 +1425,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|stat
 operator|.
 name|ps_drop
@@ -1880,10 +1904,8 @@ expr_stmt|;
 name|packet_len
 operator|-=
 operator|(
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_fcs_bits
 operator|>>
 literal|3
@@ -1938,10 +1960,8 @@ expr_stmt|;
 name|packet_len
 operator|-=
 operator|(
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_fcs_bits
 operator|>>
 literal|3
@@ -1984,10 +2004,8 @@ expr_stmt|;
 name|packet_len
 operator|-=
 operator|(
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_fcs_bits
 operator|>>
 literal|3
@@ -2343,10 +2361,8 @@ operator|=
 name|packet_len
 expr_stmt|;
 comment|/* Count the packet. */
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|stat
 operator|.
 name|ps_recv
@@ -2373,9 +2389,11 @@ name|processed
 operator|==
 name|cnt
 operator|&&
+operator|!
+name|PACKET_COUNT_IS_UNLIMITED
+argument_list|(
 name|cnt
-operator|>
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* Reached the user-specified limit. */
@@ -2445,6 +2463,15 @@ modifier|*
 name|handle
 parameter_list|)
 block|{
+name|struct
+name|pcap_dag
+modifier|*
+name|handlep
+init|=
+name|handle
+operator|->
+name|priv
+decl_stmt|;
 if|#
 directive|if
 literal|0
@@ -2587,10 +2614,8 @@ operator|+
 literal|16
 argument_list|,
 operator|&
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_stream
 argument_list|)
 operator|<
@@ -2623,10 +2648,8 @@ name|newDev
 expr_stmt|;
 if|if
 condition|(
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_stream
 operator|%
 literal|2
@@ -2783,10 +2806,8 @@ name|handle
 operator|->
 name|fd
 argument_list|,
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_stream
 argument_list|,
 literal|0
@@ -2826,10 +2847,8 @@ name|handle
 operator|->
 name|fd
 argument_list|,
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_stream
 argument_list|,
 operator|&
@@ -2865,19 +2884,37 @@ goto|goto
 name|faildetach
 goto|;
 block|}
-comment|/* Amount of data to collect in Bytes before calling callbacks. 	 * Important for efficiency, but can introduce latency 	 * at low packet rates if to_ms not set! 	 */
+if|if
+condition|(
+name|handle
+operator|->
+name|opt
+operator|.
+name|immediate
+condition|)
+block|{
+comment|/* Call callback immediately. 		 * XXX - is this the right way to handle this? 		 */
+name|mindata
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Amount of data to collect in Bytes before calling callbacks. 		 * Important for efficiency, but can introduce latency 		 * at low packet rates if to_ms not set! 		 */
 name|mindata
 operator|=
 literal|65536
 expr_stmt|;
-comment|/* Obey md.timeout (was to_ms) if supplied. This is a good idea! 	 * Recommend 10-100ms. Calls will time out even if no data arrived. 	 */
+block|}
+comment|/* Obey opt.timeout (was to_ms) if supplied. This is a good idea! 	 * Recommend 10-100ms. Calls will time out even if no data arrived. 	 */
 name|maxwait
 operator|.
 name|tv_sec
 operator|=
 name|handle
 operator|->
-name|md
+name|opt
 operator|.
 name|timeout
 operator|/
@@ -2890,7 +2927,7 @@ operator|=
 operator|(
 name|handle
 operator|->
-name|md
+name|opt
 operator|.
 name|timeout
 operator|%
@@ -2907,10 +2944,8 @@ name|handle
 operator|->
 name|fd
 argument_list|,
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_stream
 argument_list|,
 name|mindata
@@ -2950,10 +2985,8 @@ directive|else
 if|if
 condition|(
 operator|(
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_mem_base
 operator|=
 name|dag_mmap
@@ -3014,10 +3047,8 @@ name|handle
 operator|->
 name|fd
 argument_list|,
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_stream
 argument_list|)
 operator|<
@@ -3086,18 +3117,14 @@ endif|#
 directive|endif
 comment|/* HAVE_DAG_STREAMS_API */
 comment|/* 	 * Important! You have to ensure bottom is properly 	 * initialized to zero on startup, it won't give you 	 * a compiler warning if you make this mistake! 	 */
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_mem_bottom
 operator|=
 literal|0
 expr_stmt|;
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_mem_top
 operator|=
 literal|0
@@ -3132,10 +3159,8 @@ operator|)
 condition|)
 block|{
 comment|/* DAG 4.2S and 4.23S already strip the FCS.  Stripping the final word again truncates the packet. */
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_fcs_bits
 operator|=
 literal|0
@@ -3154,10 +3179,8 @@ block|}
 else|else
 block|{
 comment|/* 		 * Start out assuming it's 32 bits. 		 */
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_fcs_bits
 operator|=
 literal|32
@@ -3199,10 +3222,8 @@ operator|==
 literal|32
 condition|)
 block|{
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_fcs_bits
 operator|=
 name|n
@@ -3252,35 +3273,29 @@ name|linktype_ext
 operator|=
 name|LT_FCS_DATALINK_EXT
 argument_list|(
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_fcs_bits
 operator|/
 literal|16
 argument_list|)
 expr_stmt|;
 comment|/* And don't strip them. */
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_fcs_bits
 operator|=
 literal|0
 expr_stmt|;
 block|}
 block|}
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_timeout
 operator|=
 name|handle
 operator|->
-name|md
+name|opt
 operator|.
 name|timeout
 expr_stmt|;
@@ -3421,30 +3436,24 @@ name|cleanup_op
 operator|=
 name|dag_platform_cleanup
 expr_stmt|;
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|stat
 operator|.
 name|ps_drop
 operator|=
 literal|0
 expr_stmt|;
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|stat
 operator|.
 name|ps_recv
 operator|=
 literal|0
 expr_stmt|;
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|stat
 operator|.
 name|ps_ifdrop
@@ -3467,10 +3476,8 @@ name|handle
 operator|->
 name|fd
 argument_list|,
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_stream
 argument_list|)
 operator|<
@@ -3500,10 +3507,8 @@ name|handle
 operator|->
 name|fd
 argument_list|,
-name|handle
+name|handlep
 operator|->
-name|md
-operator|.
 name|dag_stream
 argument_list|)
 operator|<
@@ -3646,6 +3651,16 @@ name|pcap_t
 modifier|*
 name|p
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DAG_STREAMS_API
+name|long
+name|stream
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Does this look like a DAG device? */
 name|cp
 operator|=
@@ -3691,7 +3706,7 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/* Yes - is "dag" followed by a number from 0 to MAXDAG? */
+comment|/* Yes - is "dag" followed by a number from 0 to DAG_MAX_BOARDS-1 */
 name|cp
 operator|+=
 literal|3
@@ -3708,6 +3723,34 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DAG_STREAMS_API
+if|if
+condition|(
+operator|*
+name|cpend
+operator|==
+literal|':'
+condition|)
+block|{
+comment|/* Followed by a stream number. */
+name|stream
+operator|=
+name|strtol
+argument_list|(
+operator|++
+name|cpend
+argument_list|,
+operator|&
+name|cpend
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|cpend
@@ -3737,8 +3780,8 @@ operator|<
 literal|0
 operator|||
 name|devnum
-operator|>
-name|MAXDAG
+operator|>=
+name|DAG_MAX_BOARDS
 condition|)
 block|{
 comment|/* Followed by a non-valid number. */
@@ -3751,6 +3794,32 @@ return|return
 name|NULL
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_DAG_STREAMS_API
+if|if
+condition|(
+name|stream
+operator|<
+literal|0
+operator|||
+name|stream
+operator|>=
+name|DAG_STREAM_MAX
+condition|)
+block|{
+comment|/* Followed by a non-valid stream number. */
+operator|*
+name|is_ours
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+endif|#
+directive|endif
 comment|/* OK, it's probably ours. */
 operator|*
 name|is_ours
@@ -3764,6 +3833,12 @@ argument_list|(
 name|device
 argument_list|,
 name|ebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcap_dag
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3802,16 +3877,23 @@ modifier|*
 name|ps
 parameter_list|)
 block|{
+name|struct
+name|pcap_dag
+modifier|*
+name|pd
+init|=
+name|p
+operator|->
+name|priv
+decl_stmt|;
 comment|/* This needs to be filled out correctly.  Hopefully a dagapi call will 		 provide all necessary information. 	*/
-comment|/*p->md.stat.ps_recv = 0;*/
-comment|/*p->md.stat.ps_drop = 0;*/
+comment|/*pd->stat.ps_recv = 0;*/
+comment|/*pd->stat.ps_drop = 0;*/
 operator|*
 name|ps
 operator|=
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|stat
 expr_stmt|;
 return|return
@@ -3865,7 +3947,7 @@ decl_stmt|;
 name|int
 name|dagfd
 decl_stmt|;
-comment|/* Try all the DAGs 0-MAXDAG */
+comment|/* Try all the DAGs 0-DAG_MAX_BOARDS */
 for|for
 control|(
 name|c
@@ -3873,8 +3955,8 @@ operator|=
 literal|0
 init|;
 name|c
-operator|<=
-name|MAXDAG
+operator|<
+name|DAG_MAX_BOARDS
 condition|;
 name|c
 operator|++
@@ -4151,14 +4233,6 @@ return|return
 operator|-
 literal|1
 return|;
-name|p
-operator|->
-name|md
-operator|.
-name|use_bpf
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4211,7 +4285,16 @@ modifier|*
 name|errbuf
 parameter_list|)
 block|{
-comment|/* 	 * Set non-blocking mode on the FD. 	 * XXX - is that necessary?  If not, don't bother calling it, 	 * and have a "dag_getnonblock()" function that looks at 	 * "p->md.dag_offset_flags". 	 */
+name|struct
+name|pcap_dag
+modifier|*
+name|pd
+init|=
+name|p
+operator|->
+name|priv
+decl_stmt|;
+comment|/* 	 * Set non-blocking mode on the FD. 	 * XXX - is that necessary?  If not, don't bother calling it, 	 * and have a "dag_getnonblock()" function that looks at 	 * "pd->dag_offset_flags". 	 */
 if|if
 condition|(
 name|pcap_setnonblock_fd
@@ -4254,10 +4337,8 @@ name|p
 operator|->
 name|fd
 argument_list|,
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_stream
 argument_list|,
 operator|&
@@ -4314,10 +4395,8 @@ name|p
 operator|->
 name|fd
 argument_list|,
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_stream
 argument_list|,
 name|mindata
@@ -4360,10 +4439,8 @@ condition|(
 name|nonblock
 condition|)
 block|{
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_offset_flags
 operator||=
 name|DAGF_NONBLOCK
@@ -4371,10 +4448,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_offset_flags
 operator|&=
 operator|~
@@ -4399,6 +4474,15 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|struct
+name|pcap_dag
+modifier|*
+name|pd
+init|=
+name|p
+operator|->
+name|priv
+decl_stmt|;
 name|int
 name|index
 init|=
@@ -4504,10 +4588,8 @@ name|p
 operator|->
 name|fd
 argument_list|,
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|dag_stream
 argument_list|,
 name|types

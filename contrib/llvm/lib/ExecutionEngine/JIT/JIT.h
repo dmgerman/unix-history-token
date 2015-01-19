@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/PassManager.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/PassManager.h"
 end_include
 
 begin_decl_stmt
@@ -149,9 +149,7 @@ block|{}
 name|FunctionPassManager
 operator|&
 name|getPM
-argument_list|(
-argument|const MutexGuard&L
-argument_list|)
+argument_list|()
 block|{
 return|return
 name|PM
@@ -178,9 +176,7 @@ operator|>
 expr|>
 operator|&
 name|getPendingFunctions
-argument_list|(
-argument|const MutexGuard&L
-argument_list|)
+argument_list|()
 block|{
 return|return
 name|PendingFunctions
@@ -374,29 +370,28 @@ name|CMM
 argument_list|)
 return|;
 block|}
-name|virtual
 name|void
 name|addModule
-parameter_list|(
+argument_list|(
 name|Module
-modifier|*
+operator|*
 name|M
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// removeModule - Remove a Module from the list of modules.  Returns true if
 comment|/// M is found.
-name|virtual
 name|bool
 name|removeModule
-parameter_list|(
+argument_list|(
 name|Module
-modifier|*
+operator|*
 name|M
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// runFunction - Start execution with the specified function and arguments.
 comment|///
-name|virtual
 name|GenericValue
 name|runFunction
 argument_list|(
@@ -414,6 +409,7 @@ operator|>
 operator|&
 name|ArgValues
 argument_list|)
+name|override
 decl_stmt|;
 comment|/// getPointerToNamedFunction - This method returns the address of the
 comment|/// specified function by using the MemoryManager. As such it is only
@@ -423,7 +419,6 @@ comment|/// If AbortOnFailure is false and no function with the given name is
 comment|/// found, this function silently returns a null pointer. Otherwise,
 comment|/// it prints a message to stderr and aborts.
 comment|///
-name|virtual
 name|void
 modifier|*
 name|getPointerToNamedFunction
@@ -440,6 +435,7 @@ name|AbortOnFailure
 operator|=
 name|true
 argument_list|)
+name|override
 decl_stmt|;
 comment|// CompilationCallback - Invoked the first time that a call site is found,
 comment|// which causes lazy compilation of the target function.
@@ -455,12 +451,13 @@ comment|///
 name|void
 modifier|*
 name|getPointerToFunction
-parameter_list|(
+argument_list|(
 name|Function
-modifier|*
+operator|*
 name|F
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// addPointerToBasicBlock - Adds address of the specific basic block.
 name|void
 name|addPointerToBasicBlock
@@ -490,25 +487,27 @@ comment|/// block, assuming function is compiled.
 name|void
 modifier|*
 name|getPointerToBasicBlock
-parameter_list|(
+argument_list|(
 name|BasicBlock
-modifier|*
+operator|*
 name|BB
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// getOrEmitGlobalVariable - Return the address of the specified global
 comment|/// variable, possibly emitting it to memory if needed.  This is used by the
 comment|/// Emitter.
 name|void
 modifier|*
 name|getOrEmitGlobalVariable
-parameter_list|(
+argument_list|(
 specifier|const
 name|GlobalVariable
-modifier|*
+operator|*
 name|GV
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// getPointerToFunctionOrStub - If the specified function has been
 comment|/// code-gen'd, return a pointer to the function.  If not, compile it, or use
 comment|/// a stub to implement lazy compilation if available.
@@ -516,12 +515,13 @@ comment|///
 name|void
 modifier|*
 name|getPointerToFunctionOrStub
-parameter_list|(
+argument_list|(
 name|Function
-modifier|*
+operator|*
 name|F
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// recompileAndRelinkFunction - This method is used to force a function
 comment|/// which has already been compiled, to be compiled again, possibly
 comment|/// after it has been modified. Then the entry to the old copy is overwritten
@@ -531,23 +531,25 @@ comment|///
 name|void
 modifier|*
 name|recompileAndRelinkFunction
-parameter_list|(
+argument_list|(
 name|Function
-modifier|*
+operator|*
 name|F
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// freeMachineCodeForFunction - deallocate memory used to code-generate this
 comment|/// Function.
 comment|///
 name|void
 name|freeMachineCodeForFunction
-parameter_list|(
+argument_list|(
 name|Function
-modifier|*
+operator|*
 name|F
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// addPendingFunction - while jitting non-lazily, a called but non-codegen'd
 comment|/// function was encountered.  Add it to a pending list to be processed after
 comment|/// the current function.
@@ -602,36 +604,48 @@ decl_stmt|;
 comment|// Run the JIT on F and return information about the generated code
 name|void
 name|runJITOnFunction
-parameter_list|(
+argument_list|(
 name|Function
-modifier|*
+operator|*
 name|F
-parameter_list|,
+argument_list|,
 name|MachineCodeInfo
-modifier|*
+operator|*
 name|MCI
-init|=
-literal|0
-parameter_list|)
-function_decl|;
-name|virtual
+operator|=
+name|nullptr
+argument_list|)
+name|override
+decl_stmt|;
 name|void
 name|RegisterJITEventListener
-parameter_list|(
+argument_list|(
 name|JITEventListener
-modifier|*
+operator|*
 name|L
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|void
 name|UnregisterJITEventListener
-parameter_list|(
+argument_list|(
 name|JITEventListener
-modifier|*
+operator|*
 name|L
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
+name|TargetMachine
+modifier|*
+name|getTargetMachine
+parameter_list|()
+function|override
+block|{
+return|return
+operator|&
+name|TM
+return|;
+block|}
 comment|/// These functions correspond to the methods on JITEventListener.  They
 comment|/// iterate over the registered listeners and call the corresponding method on
 comment|/// each.
@@ -667,11 +681,7 @@ function_decl|;
 name|BasicBlockAddressMapTy
 modifier|&
 name|getBasicBlockAddressMap
-parameter_list|(
-specifier|const
-name|MutexGuard
-modifier|&
-parameter_list|)
+parameter_list|()
 block|{
 return|return
 name|BasicBlockAddressMap
@@ -703,15 +713,10 @@ parameter_list|(
 name|Function
 modifier|*
 name|F
-parameter_list|,
-specifier|const
-name|MutexGuard
-modifier|&
-name|locked
 parameter_list|)
 function_decl|;
 name|void
-name|updateFunctionStub
+name|updateFunctionStubUnlocked
 parameter_list|(
 name|Function
 modifier|*
@@ -719,32 +724,27 @@ name|F
 parameter_list|)
 function_decl|;
 name|void
-name|jitTheFunction
+name|jitTheFunctionUnlocked
 parameter_list|(
 name|Function
 modifier|*
 name|F
-parameter_list|,
-specifier|const
-name|MutexGuard
-modifier|&
-name|locked
 parameter_list|)
 function_decl|;
 name|protected
 label|:
 comment|/// getMemoryforGV - Allocate memory for a global variable.
-name|virtual
 name|char
 modifier|*
 name|getMemoryForGV
-parameter_list|(
+argument_list|(
 specifier|const
 name|GlobalVariable
-modifier|*
+operator|*
 name|GV
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 block|}
 end_decl_stmt
 

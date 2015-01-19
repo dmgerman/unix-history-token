@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)chared.h	8.1 (Berkeley) 6/4/93  *	$NetBSD: chared.h,v 1.18 2009/02/15 21:55:23 christos Exp $  * $FreeBSD$  */
+comment|/*	$NetBSD: chared.h,v 1.22 2014/06/18 18:12:28 christos Exp $	*/
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)chared.h	8.1 (Berkeley) 6/4/93  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -65,7 +69,7 @@ decl_stmt|;
 name|int
 name|offset
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 modifier|*
 name|macro
@@ -92,7 +96,7 @@ name|int
 name|cursor
 decl_stmt|;
 comment|/* position of saved cursor */
-name|char
+name|Char
 modifier|*
 name|buf
 decl_stmt|;
@@ -111,16 +115,16 @@ typedef|typedef
 struct|struct
 name|c_redo_t
 block|{
-name|char
+name|Char
 modifier|*
 name|buf
 decl_stmt|;
 comment|/* redo insert key sequence */
-name|char
+name|Char
 modifier|*
 name|pos
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 name|lim
 decl_stmt|;
@@ -128,7 +132,7 @@ name|el_action_t
 name|cmd
 decl_stmt|;
 comment|/* command to redo */
-name|char
+name|Char
 name|ch
 decl_stmt|;
 comment|/* char that invoked it */
@@ -156,7 +160,7 @@ block|{
 name|int
 name|action
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 name|pos
 decl_stmt|;
@@ -174,21 +178,58 @@ typedef|typedef
 struct|struct
 name|c_kill_t
 block|{
-name|char
+name|Char
 modifier|*
 name|buf
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 name|last
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 name|mark
 decl_stmt|;
 block|}
 name|c_kill_t
 typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|el_zfunc_t
+function_decl|)
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+specifier|const
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|el_afunc_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_comment
@@ -215,6 +256,20 @@ decl_stmt|;
 name|c_macro_t
 name|c_macro
 decl_stmt|;
+name|el_zfunc_t
+name|c_resizefun
+decl_stmt|;
+name|el_afunc_t
+name|c_aliasfun
+decl_stmt|;
+name|void
+modifier|*
+name|c_resizearg
+decl_stmt|;
+name|void
+modifier|*
+name|c_aliasarg
+decl_stmt|;
 block|}
 name|el_chared_t
 typedef|;
@@ -235,16 +290,6 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(strchr("*[]?", (a)) != NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isword
-parameter_list|(
-name|a
-parameter_list|)
-value|(isprint(a))
 end_define
 
 begin_define
@@ -345,7 +390,7 @@ name|protected
 name|int
 name|cv__isword
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -355,7 +400,7 @@ name|protected
 name|int
 name|cv__isWord
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -373,14 +418,14 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|char
+name|Char
 modifier|*
 name|cv__endword
 parameter_list|(
-name|char
+name|Char
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|int
@@ -390,7 +435,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -401,7 +446,7 @@ name|protected
 name|int
 name|ce__isword
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -426,7 +471,7 @@ name|EditLine
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|int
@@ -436,17 +481,17 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|char
+name|Char
 modifier|*
 name|cv_next_word
 parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|int
@@ -456,7 +501,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -464,14 +509,14 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|char
+name|Char
 modifier|*
 name|cv_prev_word
 parameter_list|(
-name|char
+name|Char
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|int
@@ -481,7 +526,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -489,14 +534,14 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|char
+name|Char
 modifier|*
 name|c__next_word
 parameter_list|(
-name|char
+name|Char
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|int
@@ -506,7 +551,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -514,14 +559,14 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|char
+name|Char
 modifier|*
 name|c__prev_word
 parameter_list|(
-name|char
+name|Char
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 name|int
@@ -531,7 +576,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|int
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -606,11 +651,11 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|char
+name|Char
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -647,6 +692,38 @@ name|EditLine
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|ch_resizefun
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|el_zfunc_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|ch_aliasfun
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|el_afunc_t
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

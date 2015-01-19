@@ -92,6 +92,9 @@ name|namespace
 name|clang
 block|{
 name|class
+name|GlobalModuleIndex
+decl_stmt|;
+name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
@@ -193,11 +196,23 @@ comment|/// then loading that module.
 name|class
 name|ModuleLoader
 block|{
+comment|// Building a module if true.
+name|bool
+name|BuildingModule
+decl_stmt|;
 name|public
 label|:
+name|explicit
 name|ModuleLoader
-argument_list|()
-operator|:
+argument_list|(
+argument|bool BuildingModule = false
+argument_list|)
+block|:
+name|BuildingModule
+argument_list|(
+name|BuildingModule
+argument_list|)
+operator|,
 name|HadFatalFailure
 argument_list|(
 argument|false
@@ -208,6 +223,29 @@ operator|~
 name|ModuleLoader
 argument_list|()
 expr_stmt|;
+comment|/// \brief Returns true if this instance is building a module.
+name|bool
+name|buildingModule
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BuildingModule
+return|;
+block|}
+comment|/// \brief Flag indicating whether this instance is building a module.
+name|void
+name|setBuildingModule
+parameter_list|(
+name|bool
+name|BuildingModuleFlag
+parameter_list|)
+block|{
+name|BuildingModule
+operator|=
+name|BuildingModuleFlag
+expr_stmt|;
+block|}
 comment|/// \brief Attempt to load the given module.
 comment|///
 comment|/// This routine attempts to load the module described by the given
@@ -271,6 +309,44 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|/// \brief Load, create, or return global module.
+comment|/// This function returns an existing global module index, if one
+comment|/// had already been loaded or created, or loads one if it
+comment|/// exists, or creates one if it doesn't exist.
+comment|/// Also, importantly, if the index doesn't cover all the modules
+comment|/// in the module map, it will be update to do so here, because
+comment|/// of its use in searching for needed module imports and
+comment|/// associated fixit messages.
+comment|/// \param TriggerLoc The location for what triggered the load.
+comment|/// \returns Returns null if load failed.
+name|virtual
+name|GlobalModuleIndex
+modifier|*
+name|loadGlobalModuleIndex
+parameter_list|(
+name|SourceLocation
+name|TriggerLoc
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// Check global module index for missing imports.
+comment|/// \param Name The symbol name to look for.
+comment|/// \param TriggerLoc The location for what triggered the load.
+comment|/// \returns Returns true if any modules with that symbol found.
+name|virtual
+name|bool
+name|lookupMissingImports
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|SourceLocation
+name|TriggerLoc
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 name|bool
 name|HadFatalFailure
 decl_stmt|;

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -79,6 +85,16 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|class
+name|raw_ostream
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|class
@@ -86,6 +102,9 @@ name|Decl
 decl_stmt|;
 name|class
 name|UsingDirectiveDecl
+decl_stmt|;
+name|class
+name|VarDecl
 decl_stmt|;
 comment|/// Scope - A scope is a transient data structure that is used while parsing the
 comment|/// program.  It assists with resolving identifiers to the appropriate
@@ -192,11 +211,33 @@ name|FnTryCatchScope
 init|=
 literal|0x4000
 block|,
-comment|/// \brief This is the scope of OpenMP executable directive
+comment|/// \brief This is the scope of OpenMP executable directive.
 name|OpenMPDirectiveScope
 init|=
 literal|0x8000
-block|}
+block|,
+comment|/// \brief This is the scope of some OpenMP loop directive.
+name|OpenMPLoopDirectiveScope
+init|=
+literal|0x10000
+block|,
+comment|/// \brief This is the scope of some OpenMP simd directive.
+comment|/// For example, it is used for 'omp simd', 'omp for simd'.
+comment|/// This flag is propagated to children scopes.
+name|OpenMPSimdDirectiveScope
+init|=
+literal|0x20000
+block|,
+comment|/// This scope corresponds to an enum.
+name|EnumScope
+init|=
+literal|0x40000
+block|,
+comment|/// This scope corresponds to a SEH try.
+name|SEHTryScope
+init|=
+literal|0x80000
+block|,   }
 enum|;
 name|private
 label|:
@@ -206,17 +247,32 @@ name|Scope
 modifier|*
 name|AnyParent
 decl_stmt|;
+comment|/// Flags - This contains a set of ScopeFlags, which indicates how the scope
+comment|/// interrelates with other control flow statements.
+name|unsigned
+name|Flags
+decl_stmt|;
 comment|/// Depth - This is the depth of this scope.  The translation-unit scope has
 comment|/// depth 0.
 name|unsigned
 name|short
 name|Depth
 decl_stmt|;
-comment|/// Flags - This contains a set of ScopeFlags, which indicates how the scope
-comment|/// interrelates with other control flow statements.
+comment|/// \brief Declarations with static linkage are mangled with the number of
+comment|/// scopes seen as a component.
 name|unsigned
 name|short
-name|Flags
+name|MSLocalManglingNumber
+decl_stmt|;
+comment|/// \brief SEH __try blocks get uniquely numbered within a function.  This
+comment|/// variable holds the index for an SEH try block.
+name|short
+name|SEHTryIndex
+decl_stmt|;
+comment|/// \brief SEH __try blocks get uniquely numbered within a function.  This
+comment|/// variable holds the next free index at a function's scope.
+name|short
+name|SEHTryIndexPool
 decl_stmt|;
 comment|/// PrototypeDepth - This is the number of function prototype scopes
 comment|/// enclosing this scope, including this scope.
@@ -235,6 +291,14 @@ comment|/// pointer is non-null and points to it.  This is used for label proces
 name|Scope
 modifier|*
 name|FnParent
+decl_stmt|;
+name|Scope
+modifier|*
+name|MSLocalManglingParent
+decl_stmt|;
+name|Scope
+modifier|*
+name|SEHTryParent
 decl_stmt|;
 comment|/// BreakParent/ContinueParent - This is a direct link to the innermost
 comment|/// BreakScope/ContinueScope which contains the contents of this scope
@@ -306,6 +370,21 @@ comment|/// \brief Used to determine if errors occurred in this scope.
 name|DiagnosticErrorTrap
 name|ErrorTrap
 decl_stmt|;
+comment|/// A lattice consisting of undefined, a single NRVO candidate variable in
+comment|/// this scope, or over-defined. The bit is true when over-defined.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|VarDecl
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|NRVO
+expr_stmt|;
 name|public
 label|:
 name|Scope
@@ -407,6 +486,26 @@ parameter_list|()
 block|{
 return|return
 name|FnParent
+return|;
+block|}
+specifier|const
+name|Scope
+operator|*
+name|getMSLocalManglingParent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MSLocalManglingParent
+return|;
+block|}
+name|Scope
+modifier|*
+name|getMSLocalManglingParent
+parameter_list|()
+block|{
+return|return
+name|MSLocalManglingParent
 return|;
 block|}
 comment|/// getContinueParent - Return the closest scope that a continue statement
@@ -542,33 +641,34 @@ operator|++
 return|;
 block|}
 typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
 name|DeclSetTy
 operator|::
 name|iterator
-name|decl_iterator
+operator|>
+name|decl_range
 expr_stmt|;
-name|decl_iterator
-name|decl_begin
+name|decl_range
+name|decls
 argument_list|()
 specifier|const
 block|{
 return|return
+name|decl_range
+argument_list|(
 name|DeclsInScope
 operator|.
 name|begin
 argument_list|()
-return|;
-block|}
-name|decl_iterator
-name|decl_end
-argument_list|()
-specifier|const
-block|{
-return|return
+argument_list|,
 name|DeclsInScope
 operator|.
 name|end
 argument_list|()
+argument_list|)
 return|;
 block|}
 name|bool
@@ -614,6 +714,94 @@ argument_list|(
 name|D
 argument_list|)
 expr_stmt|;
+block|}
+name|void
+name|incrementMSLocalManglingNumber
+parameter_list|()
+block|{
+if|if
+condition|(
+name|Scope
+modifier|*
+name|MSLMP
+init|=
+name|getMSLocalManglingParent
+argument_list|()
+condition|)
+name|MSLMP
+operator|->
+name|MSLocalManglingNumber
+operator|+=
+literal|1
+expr_stmt|;
+block|}
+name|void
+name|decrementMSLocalManglingNumber
+parameter_list|()
+block|{
+if|if
+condition|(
+name|Scope
+modifier|*
+name|MSLMP
+init|=
+name|getMSLocalManglingParent
+argument_list|()
+condition|)
+name|MSLMP
+operator|->
+name|MSLocalManglingNumber
+operator|-=
+literal|1
+expr_stmt|;
+block|}
+name|unsigned
+name|getMSLocalManglingNumber
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+specifier|const
+name|Scope
+modifier|*
+name|MSLMP
+init|=
+name|getMSLocalManglingParent
+argument_list|()
+condition|)
+return|return
+name|MSLMP
+operator|->
+name|MSLocalManglingNumber
+return|;
+return|return
+literal|1
+return|;
+block|}
+name|int
+name|getSEHTryIndex
+parameter_list|()
+block|{
+return|return
+name|SEHTryIndex
+return|;
+block|}
+name|int
+name|getSEHTryParentIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SEHTryParent
+operator|?
+name|SEHTryParent
+operator|->
+name|SEHTryIndex
+operator|:
+operator|-
+literal|1
+return|;
 block|}
 comment|/// isDeclScope - Return true if this is the scope that the specified decl is
 comment|/// declared in.
@@ -786,6 +974,41 @@ return|return
 name|false
 return|;
 block|}
+comment|/// isInObjcMethodOuterScope - Return true if this scope is an
+comment|/// Objective-C method outer most body.
+name|bool
+name|isInObjcMethodOuterScope
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+specifier|const
+name|Scope
+modifier|*
+name|S
+init|=
+name|this
+condition|)
+block|{
+comment|// If this scope is an objc method scope, then we succeed.
+if|if
+condition|(
+name|S
+operator|->
+name|getFlags
+argument_list|()
+operator|&
+name|ObjCMethodScope
+condition|)
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
 comment|/// isTemplateParamScope - Return true if this scope is a C++
 comment|/// template parameter scope.
 name|bool
@@ -935,6 +1158,79 @@ name|OpenMPDirectiveScope
 operator|)
 return|;
 block|}
+comment|/// \brief Determine whether this scope is some OpenMP loop directive scope
+comment|/// (for example, 'omp for', 'omp simd').
+name|bool
+name|isOpenMPLoopDirectiveScope
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getFlags
+argument_list|()
+operator|&
+name|Scope
+operator|::
+name|OpenMPLoopDirectiveScope
+condition|)
+block|{
+name|assert
+argument_list|(
+name|isOpenMPDirectiveScope
+argument_list|()
+operator|&&
+literal|"OpenMP loop directive scope is not a directive scope"
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Determine whether this scope is (or is nested into) some OpenMP
+comment|/// loop simd directive scope (for example, 'omp simd', 'omp for simd').
+name|bool
+name|isOpenMPSimdDirectiveScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlags
+argument_list|()
+operator|&
+name|Scope
+operator|::
+name|OpenMPSimdDirectiveScope
+return|;
+block|}
+comment|/// \brief Determine whether this scope is a loop having OpenMP loop
+comment|/// directive attached.
+name|bool
+name|isOpenMPLoopScope
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|Scope
+operator|*
+name|P
+operator|=
+name|getParent
+argument_list|()
+block|;
+return|return
+name|P
+operator|&&
+name|P
+operator|->
+name|isOpenMPLoopDirectiveScope
+argument_list|()
+return|;
+block|}
 comment|/// \brief Determine whether this scope is a C++ 'try' block.
 name|bool
 name|isTryScope
@@ -950,24 +1246,27 @@ operator|::
 name|TryScope
 return|;
 block|}
+comment|/// \brief Determine whether this scope is a SEH '__try' block.
+name|bool
+name|isSEHTryScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlags
+argument_list|()
+operator|&
+name|Scope
+operator|::
+name|SEHTryScope
+return|;
+block|}
 comment|/// containedInPrototypeScope - Return true if this or a parent scope
 comment|/// is a FunctionPrototypeScope.
 name|bool
 name|containedInPrototypeScope
 argument_list|()
 specifier|const
-expr_stmt|;
-typedef|typedef
-name|UsingDirectivesTy
-operator|::
-name|iterator
-name|udir_iterator
-expr_stmt|;
-typedef|typedef
-name|UsingDirectivesTy
-operator|::
-name|const_iterator
-name|const_udir_iterator
 expr_stmt|;
 name|void
 name|PushUsingDirective
@@ -985,52 +1284,107 @@ name|UDir
 argument_list|)
 expr_stmt|;
 block|}
-name|udir_iterator
-name|using_directives_begin
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|UsingDirectivesTy
+operator|::
+name|iterator
+operator|>
+name|using_directives_range
+expr_stmt|;
+name|using_directives_range
+name|using_directives
 parameter_list|()
 block|{
 return|return
+name|using_directives_range
+argument_list|(
 name|UsingDirectives
 operator|.
 name|begin
 argument_list|()
+argument_list|,
+name|UsingDirectives
+operator|.
+name|end
+argument_list|()
+argument_list|)
 return|;
 block|}
-name|udir_iterator
-name|using_directives_end
+name|void
+name|addNRVOCandidate
+parameter_list|(
+name|VarDecl
+modifier|*
+name|VD
+parameter_list|)
+block|{
+if|if
+condition|(
+name|NRVO
+operator|.
+name|getInt
+argument_list|()
+condition|)
+return|return;
+if|if
+condition|(
+name|NRVO
+operator|.
+name|getPointer
+argument_list|()
+operator|==
+name|nullptr
+condition|)
+block|{
+name|NRVO
+operator|.
+name|setPointer
+argument_list|(
+name|VD
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|NRVO
+operator|.
+name|getPointer
+argument_list|()
+operator|!=
+name|VD
+condition|)
+name|setNoNRVO
+argument_list|()
+expr_stmt|;
+block|}
+name|void
+name|setNoNRVO
 parameter_list|()
 block|{
-return|return
-name|UsingDirectives
+name|NRVO
 operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|const_udir_iterator
-name|using_directives_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UsingDirectives
+name|setInt
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|NRVO
 operator|.
-name|begin
-argument_list|()
-return|;
+name|setPointer
+argument_list|(
+name|nullptr
+argument_list|)
+expr_stmt|;
 block|}
-name|const_udir_iterator
-name|using_directives_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UsingDirectives
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
+name|void
+name|mergeNRVOIntoParent
+parameter_list|()
+function_decl|;
 comment|/// Init - This is used by the parser to implement scope caching.
 comment|///
 name|void
@@ -1044,12 +1398,39 @@ name|unsigned
 name|flags
 parameter_list|)
 function_decl|;
-block|}
-empty_stmt|;
+comment|/// \brief Sets up the specified scope flags and adjusts the scope state
+comment|/// variables accordingly.
+comment|///
+name|void
+name|AddFlags
+parameter_list|(
+name|unsigned
+name|Flags
+parameter_list|)
+function_decl|;
+name|void
+name|dumpImpl
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

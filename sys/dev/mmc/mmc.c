@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/mmc/mmcreg.h>
 end_include
 
@@ -128,9 +134,31 @@ decl_stmt|;
 name|uint32_t
 name|last_rca
 decl_stmt|;
+name|int
+name|squelched
+decl_stmt|;
+comment|/* suppress reporting of (expected) errors */
+name|int
+name|log_count
+decl_stmt|;
+name|struct
+name|timeval
+name|log_time
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|LOG_PPS
+value|5
+end_define
+
+begin_comment
+comment|/* Log no more than 5 errors per second. */
+end_comment
 
 begin_comment
 comment|/*  * Per-card data  */
@@ -2377,6 +2405,54 @@ operator|>
 literal|0
 condition|)
 do|;
+if|if
+condition|(
+name|err
+operator|!=
+name|MMC_ERR_NONE
+operator|&&
+name|sc
+operator|->
+name|squelched
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|ppsratecheck
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|log_time
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|log_count
+argument_list|,
+name|LOG_PPS
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"CMD%d failed, RESULT: %d\n"
+argument_list|,
+name|cmd
+operator|->
+name|opcode
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 return|return
 operator|(
 name|err
@@ -2414,6 +2490,12 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+comment|/* Squelch error reporting at lower levels, we report below. */
+name|sc
+operator|->
+name|squelched
+operator|++
+expr_stmt|;
 do|do
 block|{
 name|memset
@@ -2546,6 +2628,59 @@ operator|>
 literal|0
 condition|)
 do|;
+name|sc
+operator|->
+name|squelched
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+name|MMC_ERR_NONE
+operator|&&
+name|sc
+operator|->
+name|squelched
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|ppsratecheck
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|log_time
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|log_count
+argument_list|,
+name|LOG_PPS
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"ACMD%d failed, RESULT: %d\n"
+argument_list|,
+name|cmd
+operator|->
+name|opcode
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 return|return
 operator|(
 name|err
@@ -4193,6 +4328,12 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|squelched
+operator|++
+expr_stmt|;
+comment|/* Errors are expected, squelch reporting. */
 name|memset
 argument_list|(
 operator|&
@@ -4357,6 +4498,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|squelched
+operator|--
+expr_stmt|;
 name|mmcbr_set_bus_width
 argument_list|(
 name|sc
@@ -4424,6 +4570,12 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|squelched
+operator|++
+expr_stmt|;
+comment|/* Errors are expected, squelch reporting. */
 name|memset
 argument_list|(
 operator|&
@@ -4587,6 +4739,11 @@ name|cmd
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|squelched
+operator|--
 expr_stmt|;
 name|mmcbr_set_bus_width
 argument_list|(
@@ -8226,6 +8383,12 @@ condition|(
 literal|1
 condition|)
 block|{
+name|sc
+operator|->
+name|squelched
+operator|++
+expr_stmt|;
+comment|/* Errors are expected, squelch reporting. */
 name|err
 operator|=
 name|mmc_all_send_cid
@@ -8234,6 +8397,11 @@ name|sc
 argument_list|,
 name|raw_cid
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|squelched
+operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -8836,13 +9004,6 @@ operator|.
 name|au_size
 expr_stmt|;
 block|}
-name|mmc_select_card
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Find max supported bus width. */
 if|if
 condition|(
@@ -8949,6 +9110,13 @@ name|ivar
 argument_list|)
 expr_stmt|;
 block|}
+name|mmc_select_card
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|mmc_decode_cid_mmc
@@ -9150,6 +9318,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|mmc_select_card
+argument_list|(
+name|sc
+argument_list|,
+name|ivar
+operator|->
+name|rca
+argument_list|)
+expr_stmt|;
 comment|/* Only MMC>= 4.x cards support EXT_CSD. */
 if|if
 condition|(
@@ -9162,16 +9339,6 @@ operator|>=
 literal|4
 condition|)
 block|{
-comment|/* Card must be selected to fetch EXT_CSD. */
-name|mmc_select_card
-argument_list|(
-name|sc
-argument_list|,
-name|ivar
-operator|->
-name|rca
-argument_list|)
-expr_stmt|;
 name|mmc_send_ext_csd
 argument_list|(
 name|sc
@@ -9311,13 +9478,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mmc_select_card
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Handle HC erase sector size. */
 if|if
 condition|(
@@ -9448,6 +9608,13 @@ name|ivar
 argument_list|)
 expr_stmt|;
 block|}
+name|mmc_select_card
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -9764,6 +9931,12 @@ name|power_on
 condition|)
 block|{
 comment|/* 		 * First, try SD modes 		 */
+name|sc
+operator|->
+name|squelched
+operator|++
+expr_stmt|;
+comment|/* Errors are expected, squelch reporting. */
 name|mmcbr_set_mode
 argument_list|(
 name|dev
@@ -9943,6 +10116,11 @@ literal|"SD probe: OK (OCR: 0x%08x)\n"
 argument_list|,
 name|ocr
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|squelched
+operator|--
 expr_stmt|;
 name|mmcbr_set_ocr
 argument_list|(

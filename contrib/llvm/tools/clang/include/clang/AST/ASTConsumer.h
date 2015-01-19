@@ -73,6 +73,9 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|CXXMethodDecl
+decl_stmt|;
+name|class
 name|CXXRecordDecl
 decl_stmt|;
 name|class
@@ -80,9 +83,6 @@ name|Decl
 decl_stmt|;
 name|class
 name|DeclGroupRef
-decl_stmt|;
-name|class
-name|HandleTagDeclDefinition
 decl_stmt|;
 name|class
 name|ASTMutationListener
@@ -147,9 +147,7 @@ argument|ASTContext&Context
 argument_list|)
 block|{}
 comment|/// HandleTopLevelDecl - Handle the specified top-level declaration.  This is
-comment|/// called by the parser to process every top-level Decl*. Note that D can be
-comment|/// the head of a chain of Decls (e.g. for `int a, b` the chain will have two
-comment|/// elements). Use Decl::getNextDeclarator() to walk the chain.
+comment|/// called by the parser to process every top-level Decl*.
 comment|///
 comment|/// \returns true to continue parsing, or false to abort parsing.
 name|virtual
@@ -159,6 +157,17 @@ argument_list|(
 argument|DeclGroupRef D
 argument_list|)
 expr_stmt|;
+comment|/// \brief This callback is invoked each time an inline method definition is
+comment|/// completed.
+name|virtual
+name|void
+name|HandleInlineMethodDefinition
+parameter_list|(
+name|CXXMethodDecl
+modifier|*
+name|D
+parameter_list|)
+block|{}
 comment|/// HandleInterestingDecl - Handle the specified interesting declaration. This
 comment|/// is called by the AST reader when deserializing things that might interest
 comment|/// the consumer. The default implementation forwards to HandleTopLevelDecl.
@@ -345,7 +354,7 @@ name|GetASTMutationListener
 parameter_list|()
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief If the consumer is interested in entities being deserialized from
@@ -357,7 +366,7 @@ name|GetASTDeserializationListener
 parameter_list|()
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// PrintStats - If desired, print any statistics.

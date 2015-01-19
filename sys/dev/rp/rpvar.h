@@ -44,6 +44,10 @@ modifier|*
 name|rp_tty
 decl_stmt|;
 comment|/* cross reference */
+name|struct
+name|callout
+name|rp_timer
+decl_stmt|;
 name|unsigned
 name|char
 name|state

@@ -8,7 +8,7 @@ comment|/* include/llvm/Config/llvm-config.h.  Generated from llvm-config.h.in b
 end_comment
 
 begin_comment
-comment|/*===-- llvm/config/llvm-config.h - llvm configure variable -------*- C -*-===*/
+comment|/*===------- llvm/Config/llvm-config.h - llvm configuration -------*- C -*-===*/
 end_comment
 
 begin_comment
@@ -40,22 +40,20 @@ comment|/*===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* This file enumerates all of the llvm variables from configure so that    they can be in exported headers and won't override package specific    directives.  This is a C file so we can include it in the llvm-c headers.  */
-end_comment
-
-begin_comment
-comment|/* To avoid multiple inclusions of these variables when we include the exported    headers and config.h, conditionally include these.  */
-end_comment
-
-begin_comment
-comment|/* TODO: This is a bit of a hack.  */
+comment|/* This file enumerates variables from the LLVM configuration so that they    can be in exported headers and won't override package specific directives.    This is a C header that can be included in the llvm-c headers. */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CONFIG_H
+name|LLVM_CONFIG_H
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_CONFIG_H
+end_define
 
 begin_comment
 comment|/* Installation directory for binary executables */
@@ -256,78 +254,6 @@ comment|/* #undef LLVM_ON_WIN32 */
 end_comment
 
 begin_comment
-comment|/* Define to path to circo program if found or 'echo circo' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_CIRCO */
-end_comment
-
-begin_comment
-comment|/* Define to path to dot program if found or 'echo dot' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_DOT */
-end_comment
-
-begin_comment
-comment|/* Define to path to dotty program if found or 'echo dotty' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_DOTTY */
-end_comment
-
-begin_comment
-comment|/* Define to path to fdp program if found or 'echo fdp' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_FDP */
-end_comment
-
-begin_comment
-comment|/* Define to path to Graphviz program if found or 'echo Graphviz' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_GRAPHVIZ */
-end_comment
-
-begin_comment
-comment|/* Define to path to gv program if found or 'echo gv' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_GV */
-end_comment
-
-begin_comment
-comment|/* Define to path to neato program if found or 'echo neato' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_NEATO */
-end_comment
-
-begin_comment
-comment|/* Define to path to twopi program if found or 'echo twopi' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_TWOPI */
-end_comment
-
-begin_comment
-comment|/* Define to path to xdot.py program if found or 'echo xdot.py' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_XDOT_PY */
-end_comment
-
-begin_comment
 comment|/* Installation prefix directory */
 end_comment
 
@@ -379,7 +305,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|4
+value|5
 end_define
 
 begin_endif

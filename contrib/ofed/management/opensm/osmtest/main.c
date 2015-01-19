@@ -1805,10 +1805,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* something wrong */
-name|abort
+name|show_usage
 argument_list|()
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 block|}
 do|while

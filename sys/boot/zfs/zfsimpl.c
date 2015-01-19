@@ -96,6 +96,8 @@ literal|"com.delphix:extensible_dataset"
 block|,
 literal|"com.delphix:embedded_data"
 block|,
+literal|"org.open-zfs:large_blocks"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -5672,6 +5674,24 @@ name|i
 decl_stmt|,
 name|rc
 decl_stmt|;
+if|if
+condition|(
+name|bsize
+operator|>
+name|SPA_MAXBLOCKSIZE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ZFS: I/O error - blocks larger than 128K are not supported\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+block|}
 comment|/* 	 * Note: bsize may not be a power of two here so we need to do an 	 * actual divide rather than a bitshift. 	 */
 while|while
 condition|(

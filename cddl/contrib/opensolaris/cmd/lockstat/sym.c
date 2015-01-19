@@ -104,14 +104,11 @@ directive|include
 file|<elf.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -129,10 +126,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* FreeBSD */
-end_comment
 
 begin_include
 include|#
@@ -222,14 +215,11 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_ifdef
 ifdef|#
@@ -417,14 +407,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_function
 specifier|static
@@ -573,7 +560,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* FreeBSD */
+comment|/* !illumos */
 end_comment
 
 begin_function
@@ -667,7 +654,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(sun) */
+comment|/* illumos */
 end_comment
 
 begin_function
@@ -789,13 +776,9 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 name|void
 modifier|*
 name|ksyms
@@ -805,12 +788,9 @@ name|sz
 decl_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 if|if
 condition|(
 operator|(
@@ -898,12 +878,9 @@ operator|)
 return|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 operator|(
 name|void
 operator|)
@@ -925,7 +902,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* FreeBSD */
 comment|/*  	 * XXX - libelf needs to be fixed so it will work with 	 * non 'ordinary' files like /dev/ksyms.  The following 	 * is a work around for now. 	 */
 if|if
 condition|(

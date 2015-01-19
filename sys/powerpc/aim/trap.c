@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/uio.h>
 end_include
 
@@ -746,7 +752,11 @@ name|dtrace_trap_func
 call|)
 argument_list|(
 name|frame
+argument_list|,
+name|type
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return;
 endif|#
@@ -1221,7 +1231,7 @@ name|frame
 operator|->
 name|srr0
 operator|==
-literal|0x7c810808
+name|EXC_DTRACE
 condition|)
 block|{
 if|if

@@ -66,21 +66,41 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Mbufs are of a single size, MSIZE (sys/param.h), which includes overhead.  * An mbuf may add a single "mbuf cluster" of size MCLBYTES (also in  * sys/param.h), which has no additional overhead and is used instead of the  * internal data area; this is done when at least MINCLSIZE of data must be  * stored.  Additionally, it is possible to allocate a separate buffer  * externally and attach it to the mbuf in a way similar to that of mbuf  * clusters.  *  * NB: These calculation do not take actual compiler-induced alignment and  * padding inside the complete struct mbuf into account.  Appropriate  * attention is required when changing members of struct mbuf.  *  * MLEN is data length in a normal mbuf.  * MHLEN is data length in an mbuf with pktheader.  * MINCLSIZE is a smallest amount of data that should be put into cluster.  */
+comment|/*  * Mbufs are of a single size, MSIZE (sys/param.h), which includes overhead.  * An mbuf may add a single "mbuf cluster" of size MCLBYTES (also in  * sys/param.h), which has no additional overhead and is used instead of the  * internal data area; this is done when at least MINCLSIZE of data must be  * stored.  Additionally, it is possible to allocate a separate buffer  * externally and attach it to the mbuf in a way similar to that of mbuf  * clusters.  *  * NB: These calculation do not take actual compiler-induced alignment and  * padding inside the complete struct mbuf into account.  Appropriate  * attention is required when changing members of struct mbuf.  *  * MLEN is data length in a normal mbuf.  * MHLEN is data length in an mbuf with pktheader.  * MINCLSIZE is a smallest amount of data that should be put into cluster.  *  * Compile-time assertions in uipc_mbuf.c test these values to ensure that  * they are sensible.  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
+begin_define
+define|#
+directive|define
+name|MHSIZE
+value|offsetof(struct mbuf, M_dat.M_databuf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPKTHSIZE
+value|offsetof(struct mbuf, M_dat.MH.MH_dat.MH_databuf)
+end_define
 
 begin_define
 define|#
 directive|define
 name|MLEN
-value|((int)(MSIZE - sizeof(struct m_hdr)))
+value|((int)(MSIZE - MHSIZE))
 end_define
 
 begin_define
 define|#
 directive|define
 name|MHLEN
-value|((int)(MLEN - sizeof(struct pkthdr)))
+value|((int)(MSIZE - MPKTHSIZE))
 end_define
 
 begin_define
@@ -154,62 +174,6 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Header present at the beginning of every mbuf.  * Size ILP32: 24  *	 LP64: 32  */
-end_comment
-
-begin_struct
-struct|struct
-name|m_hdr
-block|{
-name|struct
-name|mbuf
-modifier|*
-name|mh_next
-decl_stmt|;
-comment|/* next buffer in chain */
-name|struct
-name|mbuf
-modifier|*
-name|mh_nextpkt
-decl_stmt|;
-comment|/* next chain in queue/record */
-name|caddr_t
-name|mh_data
-decl_stmt|;
-comment|/* location of data */
-name|int32_t
-name|mh_len
-decl_stmt|;
-comment|/* amount of data in this mbuf */
-name|uint32_t
-name|mh_type
-range|:
-literal|8
-decl_stmt|,
-comment|/* type of data in this mbuf */
-name|mh_flags
-range|:
-literal|24
-decl_stmt|;
-comment|/* flags; see below */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__LP64__
-argument_list|)
-name|uint32_t
-name|mh_pad
-decl_stmt|;
-comment|/* pad for 64bit alignment */
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Packet tag structure (see below for details).  */
 end_comment
 
@@ -252,7 +216,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Record/packet header in first mbuf of chain; valid only if M_PKTHDR is set.  * Size ILP32: 48  *	 LP64: 56  */
+comment|/*  * Record/packet header in first mbuf of chain; valid only if M_PKTHDR is set.  * Size ILP32: 48  *	 LP64: 56  * Compile-time assertions in uipc_mbuf.c test these values to ensure that  * they are correct.  */
 end_comment
 
 begin_struct
@@ -448,12 +412,12 @@ value|PH_loc.ptr
 end_define
 
 begin_comment
-comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  * Size ILP32: 28  *	 LP64: 48  */
+comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  * Size ILP32: 28  *	 LP64: 48  * Compile-time assertions in uipc_mbuf.c test these values to ensure that  * they are correct.  */
 end_comment
 
 begin_struct
 struct|struct
-name|m_ext
+name|struct_m_ext
 block|{
 specifier|volatile
 name|u_int
@@ -520,10 +484,52 @@ begin_struct
 struct|struct
 name|mbuf
 block|{
+comment|/* 	 * Header present at the beginning of every mbuf. 	 * Size ILP32: 24 	 *      LP64: 32 	 * Compile-time assertions in uipc_mbuf.c test these values to ensure 	 * that they are correct. 	 */
 name|struct
-name|m_hdr
-name|m_hdr
+name|mbuf
+modifier|*
+name|m_next
 decl_stmt|;
+comment|/* next buffer in chain */
+name|struct
+name|mbuf
+modifier|*
+name|m_nextpkt
+decl_stmt|;
+comment|/* next chain in queue/record */
+name|caddr_t
+name|m_data
+decl_stmt|;
+comment|/* location of data */
+name|int32_t
+name|m_len
+decl_stmt|;
+comment|/* amount of data in this mbuf */
+name|uint32_t
+name|m_type
+range|:
+literal|8
+decl_stmt|,
+comment|/* type of data in this mbuf */
+name|m_flags
+range|:
+literal|24
+decl_stmt|;
+comment|/* flags; see below */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+name|uint32_t
+name|m_pad
+decl_stmt|;
+comment|/* pad for 64bit alignment */
+endif|#
+directive|endif
+comment|/* 	 * A set of optional headers (packet header, external storage header) 	 * and internal data storage.  Historically, these arrays were sized 	 * to MHLEN (space left after a packet header) and MLEN (space left 	 * after only a regular mbuf header); they are now variable size in 	 * order to support future work on variable-size mbufs. 	 */
 union|union
 block|{
 struct|struct
@@ -536,14 +542,14 @@ comment|/* M_PKTHDR set */
 union|union
 block|{
 name|struct
-name|m_ext
+name|struct_m_ext
 name|MH_ext
 decl_stmt|;
 comment|/* M_EXT set */
 name|char
 name|MH_databuf
 index|[
-name|MHLEN
+literal|0
 index|]
 decl_stmt|;
 block|}
@@ -555,7 +561,7 @@ struct|;
 name|char
 name|M_databuf
 index|[
-name|MLEN
+literal|0
 index|]
 decl_stmt|;
 comment|/* !M_PKTHDR, !M_EXT */
@@ -565,48 +571,6 @@ union|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|m_next
-value|m_hdr.mh_next
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_len
-value|m_hdr.mh_len
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_data
-value|m_hdr.mh_data
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_type
-value|m_hdr.mh_type
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_flags
-value|m_hdr.mh_flags
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_nextpkt
-value|m_hdr.mh_nextpkt
-end_define
 
 begin_define
 define|#
@@ -731,12 +695,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_FLOWID
+name|M_UNUSED_8
 value|0x00000100
 end_define
 
 begin_comment
-comment|/* deprecated: flowid is valid */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -903,7 +867,7 @@ define|#
 directive|define
 name|M_COPYFLAGS
 define|\
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_PROMISC|M_VLANTAG|M_FLOWID| \      M_PROTOFLAGS)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_PROMISC|M_VLANTAG| \      M_PROTOFLAGS)
 end_define
 
 begin_comment
@@ -915,7 +879,7 @@ define|#
 directive|define
 name|M_FLAG_BITS
 define|\
-value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_BCAST\6M_MCAST" \     "\7M_PROMISC\10M_VLANTAG\11M_FLOWID"
+value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_BCAST\6M_MCAST" \     "\7M_PROMISC\10M_VLANTAG"
 end_define
 
 begin_define
@@ -2978,7 +2942,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|__inline
-name|void
+name|int
 name|m_clget
 parameter_list|(
 name|struct
@@ -3063,6 +3027,15 @@ name|how
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_EXT
+operator|)
+return|;
 block|}
 end_function
 
@@ -3358,6 +3331,11 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+while|while
+condition|(
+name|m
+condition|)
+block|{
 name|m
 operator|->
 name|m_flags
@@ -3365,6 +3343,13 @@ operator|&=
 operator|~
 name|M_PROTOFLAGS
 expr_stmt|;
+name|m
+operator|=
+name|m
+operator|->
+name|m_next
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3546,54 +3531,6 @@ value|KASSERT((((struct mbuf *)m)->m_flags& 0) == 0,			\ 	    ("%s: attempted us
 end_define
 
 begin_comment
-comment|/*  * Set the m_data pointer of a newly-allocated mbuf (m_get/MGET) to place an  * object of the specified size at the end of the mbuf, longword aligned.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_ALIGN
-parameter_list|(
-name|m
-parameter_list|,
-name|len
-parameter_list|)
-value|do {						\ 	KASSERT(!((m)->m_flags& (M_PKTHDR|M_EXT)),			\ 		("%s: M_ALIGN not normal mbuf", __func__));		\ 	KASSERT((m)->m_data == (m)->m_dat,				\ 		("%s: M_ALIGN not a virgin mbuf", __func__));		\ 	(m)->m_data += (MLEN - (len))& ~(sizeof(long) - 1);		\ } while (0)
-end_define
-
-begin_comment
-comment|/*  * As above, for mbufs allocated with m_gethdr/MGETHDR or initialized by  * M_DUP/MOVE_PKTHDR.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MH_ALIGN
-parameter_list|(
-name|m
-parameter_list|,
-name|len
-parameter_list|)
-value|do {						\ 	KASSERT((m)->m_flags& M_PKTHDR&& !((m)->m_flags& M_EXT),	\ 		("%s: MH_ALIGN not PKTHDR mbuf", __func__));		\ 	KASSERT((m)->m_data == (m)->m_pktdat,				\ 		("%s: MH_ALIGN not a virgin mbuf", __func__));		\ 	(m)->m_data += (MHLEN - (len))& ~(sizeof(long) - 1);		\ } while (0)
-end_define
-
-begin_comment
-comment|/*  * As above, for mbuf with external storage.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MEXT_ALIGN
-parameter_list|(
-name|m
-parameter_list|,
-name|len
-parameter_list|)
-value|do {						\ 	KASSERT((m)->m_flags& M_EXT,					\ 		("%s: MEXT_ALIGN not an M_EXT mbuf", __func__));	\ 	KASSERT((m)->m_data == (m)->m_ext.ext_buf,			\ 		("%s: MEXT_ALIGN not a virgin mbuf", __func__));	\ 	(m)->m_data += ((m)->m_ext.ext_size - (len))&			\ 	    ~(sizeof(long) - 1); 					\ } while (0)
-end_define
-
-begin_comment
 comment|/*  * Return the address of the start of the buffer associated with an mbuf,  * handling external storage, packet-header mbufs, and regular data mbufs.  */
 end_comment
 
@@ -3621,6 +3558,122 @@ name|m
 parameter_list|)
 define|\
 value|(((m)->m_flags& M_EXT) ? (m)->m_ext.ext_size :			\ 	 ((m)->m_flags& M_PKTHDR) ? MHLEN :				\ 	 MLEN)
+end_define
+
+begin_comment
+comment|/*  * Set the m_data pointer of a newly allocated mbuf to place an object of the  * specified size at the end of the mbuf, longword aligned.  *  * NB: Historically, we had M_ALIGN(), MH_ALIGN(), and MEXT_ALIGN() as  * separate macros, each asserting that it was called at the proper moment.  * This required callers to themselves test the storage type and call the  * right one.  Rather than require callers to be aware of those layout  * decisions, we centralize here.  */
+end_comment
+
+begin_function
+unit|static
+name|__inline
+name|void
+name|m_align
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+specifier|const
+name|char
+modifier|*
+name|msg
+init|=
+literal|"%s: not a virgin mbuf"
+decl_stmt|;
+endif|#
+directive|endif
+name|int
+name|adjust
+decl_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|m_data
+operator|==
+name|M_START
+argument_list|(
+name|m
+argument_list|)
+argument_list|,
+operator|(
+name|msg
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|adjust
+operator|=
+name|M_SIZE
+argument_list|(
+name|m
+argument_list|)
+operator|-
+name|len
+expr_stmt|;
+name|m
+operator|->
+name|m_data
+operator|+=
+name|adjust
+operator|&
+operator|~
+operator|(
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|M_ALIGN
+parameter_list|(
+name|m
+parameter_list|,
+name|len
+parameter_list|)
+value|m_align(m, len)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MH_ALIGN
+parameter_list|(
+name|m
+parameter_list|,
+name|len
+parameter_list|)
+value|m_align(m, len)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEXT_ALIGN
+parameter_list|(
+name|m
+parameter_list|,
+name|len
+parameter_list|)
+value|m_align(m, len)
 end_define
 
 begin_comment
@@ -3717,7 +3770,7 @@ value|m_copym((m), (o), (l), M_NOWAIT)
 end_define
 
 begin_decl_stmt
-unit|extern
+specifier|extern
 name|int
 name|max_datalen
 decl_stmt|;
@@ -3780,19 +3833,6 @@ end_struct_decl
 begin_function_decl
 name|void
 name|m_adj
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|m_align
 parameter_list|(
 name|struct
 name|mbuf
@@ -3998,31 +4038,6 @@ begin_function_decl
 name|struct
 name|mbuf
 modifier|*
-name|m_copymdata
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
 name|m_copypacket
 parameter_list|(
 name|struct
@@ -4088,6 +4103,8 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)

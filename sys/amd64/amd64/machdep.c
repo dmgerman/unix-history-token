@@ -3719,7 +3719,7 @@ if|if
 condition|(
 name|cpu_ident_amdc1e
 operator|&&
-name|cpu_disable_deep_sleep
+name|cpu_disable_c3_sleep
 condition|)
 block|{
 name|msr

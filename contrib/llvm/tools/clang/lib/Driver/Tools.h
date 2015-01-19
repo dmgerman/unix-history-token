@@ -99,12 +99,19 @@ name|namespace
 name|toolchains
 block|{
 name|class
-name|Darwin
+name|MachO
 decl_stmt|;
 block|}
 name|namespace
 name|tools
 block|{
+name|namespace
+name|visualstudio
+block|{
+name|class
+name|Compile
+decl_stmt|;
+block|}
 name|using
 name|llvm
 operator|::
@@ -227,6 +234,15 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|AddARM64TargetArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|void
 name|AddMIPSTargetArgs
 argument_list|(
 argument|const llvm::opt::ArgList&Args
@@ -309,6 +325,25 @@ argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
+name|visualstudio
+operator|::
+name|Compile
+operator|*
+name|getCLFallback
+argument_list|()
+specifier|const
+block|;
+name|mutable
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|visualstudio
+operator|::
+name|Compile
+operator|>
+name|CLFallback
+block|;
 name|public
 operator|:
 name|Clang
@@ -328,37 +363,36 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasGoodDiagnostics
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|hasIntegratedAssembler
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -375,6 +409,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 comment|/// \brief Clang integrated assembler tool.
@@ -404,37 +439,36 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasGoodDiagnostics
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|hasIntegratedAssembler
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -451,6 +485,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 comment|/// gcc - Generic GCC tool implementations.
@@ -493,7 +528,6 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -510,6 +544,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// RenderExtraToolArgs - Render any arguments necessary to force
 comment|/// the particular tool mode.
@@ -552,27 +587,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasGoodDiagnostics
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|RenderExtraToolArgs
 argument_list|(
@@ -581,63 +615,7 @@ argument_list|,
 argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
-block|;   }
-decl_stmt|;
-name|class
-name|LLVM_LIBRARY_VISIBILITY
-name|Precompile
-range|:
-name|public
-name|Common
-block|{
-name|public
-operator|:
-name|Precompile
-argument_list|(
-specifier|const
-name|ToolChain
-operator|&
-name|TC
-argument_list|)
-operator|:
-name|Common
-argument_list|(
-literal|"gcc::Precompile"
-argument_list|,
-literal|"gcc precompile"
-argument_list|,
-argument|TC
-argument_list|)
-block|{}
-name|virtual
-name|bool
-name|hasGoodDiagnostics
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|hasIntegratedCPP
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|void
-name|RenderExtraToolArgs
-argument_list|(
-argument|const JobAction&JA
-argument_list|,
-argument|llvm::opt::ArgStringList&CmdArgs
-argument_list|)
-specifier|const
+name|override
 block|;   }
 decl_stmt|;
 name|class
@@ -666,27 +644,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasGoodDiagnostics
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|RenderExtraToolArgs
 argument_list|(
@@ -695,53 +672,7 @@ argument_list|,
 argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
-block|;   }
-decl_stmt|;
-name|class
-name|LLVM_LIBRARY_VISIBILITY
-name|Assemble
-range|:
-name|public
-name|Common
-block|{
-name|public
-operator|:
-name|Assemble
-argument_list|(
-specifier|const
-name|ToolChain
-operator|&
-name|TC
-argument_list|)
-operator|:
-name|Common
-argument_list|(
-literal|"gcc::Assemble"
-argument_list|,
-literal|"assembler (via gcc)"
-argument_list|,
-argument|TC
-argument_list|)
-block|{}
-name|virtual
-name|bool
-name|hasIntegratedCPP
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|void
-name|RenderExtraToolArgs
-argument_list|(
-argument|const JobAction&JA
-argument_list|,
-argument|llvm::opt::ArgStringList&CmdArgs
-argument_list|)
-specifier|const
+name|override
 block|;   }
 decl_stmt|;
 name|class
@@ -770,27 +701,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|RenderExtraToolArgs
 argument_list|(
@@ -799,6 +729,7 @@ argument_list|,
 argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 block|}
@@ -834,17 +765,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|RenderExtraToolArgs
 argument_list|(
@@ -854,7 +784,6 @@ argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -871,6 +800,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 name|class
@@ -899,21 +829,21 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -929,7 +859,6 @@ argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -946,10 +875,153 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 block|}
 comment|// end namespace hexagon.
+name|namespace
+name|arm
+block|{
+name|StringRef
+name|getARMTargetCPU
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|getARMCPUForMArch
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|getLLVMArchSuffixForARM
+parameter_list|(
+name|StringRef
+name|CPU
+parameter_list|)
+function_decl|;
+block|}
+name|namespace
+name|mips
+block|{
+name|void
+name|getMipsCPUAndABI
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+name|StringRef
+operator|&
+name|CPUName
+argument_list|,
+name|StringRef
+operator|&
+name|ABIName
+argument_list|)
+decl_stmt|;
+name|bool
+name|hasMipsAbiArg
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Value
+argument_list|)
+decl_stmt|;
+name|bool
+name|isNaN2008
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+decl_stmt|;
+name|bool
+name|isFPXXDefault
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+name|StringRef
+name|CPUName
+argument_list|,
+name|StringRef
+name|ABIName
+argument_list|)
+decl_stmt|;
+block|}
 name|namespace
 name|darwin
 block|{
@@ -958,14 +1030,27 @@ operator|::
 name|Triple
 operator|::
 name|ArchType
-name|getArchTypeForDarwinArchName
+name|getArchTypeForMachOArchName
 argument_list|(
 argument|StringRef Str
 argument_list|)
 expr_stmt|;
+name|void
+name|setTripleTypeForMachOArchName
+argument_list|(
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|T
+argument_list|,
+name|StringRef
+name|Str
+argument_list|)
+decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
-name|DarwinTool
+name|MachOTool
 range|:
 name|public
 name|Tool
@@ -978,7 +1063,7 @@ block|;
 name|protected
 operator|:
 name|void
-name|AddDarwinArch
+name|AddMachOArch
 argument_list|(
 argument|const llvm::opt::ArgList&Args
 argument_list|,
@@ -989,9 +1074,9 @@ block|;
 specifier|const
 name|toolchains
 operator|::
-name|Darwin
+name|MachO
 operator|&
-name|getDarwinToolChain
+name|getMachOToolChain
 argument_list|()
 specifier|const
 block|{
@@ -1001,7 +1086,7 @@ operator|<
 specifier|const
 name|toolchains
 operator|::
-name|Darwin
+name|MachO
 operator|&
 operator|>
 operator|(
@@ -1012,7 +1097,7 @@ return|;
 block|}
 name|public
 operator|:
-name|DarwinTool
+name|MachOTool
 argument_list|(
 specifier|const
 name|char
@@ -1046,7 +1131,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
-name|DarwinTool
+name|MachOTool
 block|{
 name|public
 operator|:
@@ -1058,7 +1143,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|DarwinTool
+name|MachOTool
 argument_list|(
 literal|"darwin::Assemble"
 argument_list|,
@@ -1067,17 +1152,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1094,6 +1178,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -1101,7 +1186,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Link
 operator|:
 name|public
-name|DarwinTool
+name|MachOTool
 block|{
 name|bool
 name|NeedsTempPath
@@ -1133,7 +1218,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|DarwinTool
+name|MachOTool
 argument_list|(
 literal|"darwin::Link"
 argument_list|,
@@ -1142,27 +1227,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1179,6 +1263,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -1186,7 +1271,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Lipo
 operator|:
 name|public
-name|DarwinTool
+name|MachOTool
 block|{
 name|public
 operator|:
@@ -1198,7 +1283,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|DarwinTool
+name|MachOTool
 argument_list|(
 literal|"darwin::Lipo"
 argument_list|,
@@ -1207,17 +1292,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1234,6 +1318,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -1241,7 +1326,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Dsymutil
 operator|:
 name|public
-name|DarwinTool
+name|MachOTool
 block|{
 name|public
 operator|:
@@ -1253,7 +1338,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|DarwinTool
+name|MachOTool
 argument_list|(
 literal|"darwin::Dsymutil"
 argument_list|,
@@ -1262,27 +1347,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isDsymutilJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1299,6 +1383,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -1306,7 +1391,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|VerifyDebug
 operator|:
 name|public
-name|DarwinTool
+name|MachOTool
 block|{
 name|public
 operator|:
@@ -1318,7 +1403,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|DarwinTool
+name|MachOTool
 argument_list|(
 literal|"darwin::VerifyDebug"
 argument_list|,
@@ -1327,17 +1412,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1354,6 +1438,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;  }
 comment|/// openbsd -- Directly call GNU Binutils assembler and linker
@@ -1386,17 +1471,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1413,6 +1497,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -1441,27 +1526,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1478,6 +1562,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|; }
 comment|// end namespace openbsd
@@ -1511,17 +1596,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1538,6 +1622,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -1566,27 +1651,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1603,6 +1687,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|; }
 comment|// end namespace bitrig
@@ -1636,17 +1721,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1663,6 +1747,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -1691,27 +1776,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1728,6 +1812,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|; }
 comment|// end namespace freebsd
@@ -1761,17 +1846,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1788,6 +1872,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -1816,27 +1901,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1853,6 +1937,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|; }
 comment|// end namespace netbsd
@@ -1886,17 +1971,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1913,6 +1997,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -1941,27 +2026,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -1978,6 +2062,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|; }
 comment|/// minix -- Directly call GNU Binutils assembler and linker
@@ -2010,17 +2095,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -2037,6 +2121,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -2065,27 +2150,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -2102,6 +2186,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|; }
 comment|// end namespace minix
@@ -2135,17 +2220,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -2162,6 +2246,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -2190,27 +2275,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -2227,6 +2311,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|; }
 comment|// end namespace solaris
@@ -2260,17 +2345,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -2287,6 +2371,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -2315,27 +2400,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -2352,6 +2436,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|; }
 comment|// end namespace auroraux
@@ -2385,17 +2470,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -2412,6 +2496,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -2440,27 +2525,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -2477,6 +2561,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|; }
 comment|// end namespace dragonfly
@@ -2510,27 +2595,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -2547,6 +2631,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -2575,37 +2660,36 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedAssembler
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -2622,6 +2706,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;
 name|Command
 operator|*
@@ -2643,6 +2728,34 @@ specifier|const
 block|;   }
 block|; }
 comment|// end namespace visualstudio
+name|namespace
+name|arm
+block|{
+name|StringRef
+name|getARMFloatABI
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+block|; }
 name|namespace
 name|XCore
 block|{
@@ -2674,17 +2787,16 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -2701,6 +2813,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|;
 name|class
@@ -2729,27 +2842,26 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isLinkJob
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|ConstructJob
 argument_list|(
@@ -2766,6 +2878,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
+name|override
 block|;   }
 block|; }
 comment|// end namespace XCore.

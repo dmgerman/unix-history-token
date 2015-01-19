@@ -94,7 +94,7 @@ name|std
 operator|::
 name|map
 operator|<
-name|Graph
+name|GraphBase
 operator|::
 name|NodeId
 operator|,
@@ -240,7 +240,7 @@ comment|/// @param selection Selection for nodeId.
 name|void
 name|setSelection
 argument_list|(
-name|Graph
+name|GraphBase
 operator|::
 name|NodeId
 name|nodeId
@@ -263,7 +263,7 @@ comment|/// @return The selection for nodeId;
 name|unsigned
 name|getSelection
 argument_list|(
-name|Graph
+name|GraphBase
 operator|::
 name|NodeId
 name|nodeId

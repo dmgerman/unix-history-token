@@ -470,8 +470,6 @@ operator|->
 name|crp_flags
 operator|=
 name|CRYPTO_F_CBIFSYNC
-operator||
-name|CRYPTO_F_REL
 expr_stmt|;
 name|crp
 operator|->

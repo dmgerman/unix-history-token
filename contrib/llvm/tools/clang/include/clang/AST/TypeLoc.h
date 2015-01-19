@@ -276,12 +276,12 @@ argument_list|()
 operator|:
 name|Ty
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Data
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|TypeLoc
@@ -2631,7 +2631,7 @@ operator|->
 name|getIdentifier
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 operator|||
 name|D
 operator|->
@@ -3125,7 +3125,7 @@ argument_list|)
 expr_stmt|;
 name|setAttrExprOperand
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 block|}
@@ -3827,25 +3827,23 @@ name|this
 return|;
 block|}
 expr|struct
-name|DecayedLocInfo
+name|AdjustedLocInfo
 block|{ }
 block|;
 comment|// Nothing.
-comment|/// \brief Wrapper for source info for pointers decayed from arrays and
-comment|/// functions.
 name|class
-name|DecayedTypeLoc
+name|AdjustedTypeLoc
 operator|:
 name|public
 name|ConcreteTypeLoc
 operator|<
 name|UnqualTypeLoc
 block|,
-name|DecayedTypeLoc
+name|AdjustedTypeLoc
 block|,
-name|DecayedType
+name|AdjustedType
 block|,
-name|DecayedLocInfo
+name|AdjustedLocInfo
 operator|>
 block|{
 name|public
@@ -3900,7 +3898,7 @@ name|getLocalDataSize
 argument_list|()
 specifier|const
 block|{
-comment|// sizeof(DecayedLocInfo) is 1, but we don't need its address to be unique
+comment|// sizeof(AdjustedLocInfo) is 1, but we don't need its address to be unique
 comment|// anyway.  TypeLocBuilder can't handle data sizes of 1.
 return|return
 literal|0
@@ -3908,7 +3906,23 @@ return|;
 comment|// No data.
 block|}
 expr|}
-block|;   struct
+block|;
+comment|/// \brief Wrapper for source info for pointers decayed from arrays and
+comment|/// functions.
+name|class
+name|DecayedTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|AdjustedTypeLoc
+block|,
+name|DecayedTypeLoc
+block|,
+name|DecayedType
+operator|>
+block|{ }
+block|;  struct
 name|PointerLikeLocInfo
 block|{
 name|SourceLocation
@@ -4210,7 +4224,7 @@ argument_list|)
 block|;
 name|setClassTInfo
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|;   }
 name|SourceRange
@@ -4570,12 +4584,12 @@ operator|(
 name|getParmArray
 argument_list|()
 expr|,
-name|getNumArgs
+name|getNumParams
 argument_list|()
 operator|)
 return|;
 block|}
-comment|// ParmVarDecls* are stored after Info, one for each argument.
+comment|// ParmVarDecls* are stored after Info, one for each parameter.
 name|ParmVarDecl
 operator|*
 operator|*
@@ -4594,7 +4608,7 @@ argument_list|()
 return|;
 block|}
 name|unsigned
-name|getNumArgs
+name|getNumParams
 argument_list|()
 specifier|const
 block|{
@@ -4622,13 +4636,13 @@ name|getTypePtr
 argument_list|()
 operator|)
 operator|->
-name|getNumArgs
+name|getNumParams
 argument_list|()
 return|;
 block|}
 name|ParmVarDecl
 operator|*
-name|getArg
+name|getParam
 argument_list|(
 argument|unsigned i
 argument_list|)
@@ -4643,7 +4657,7 @@ index|]
 return|;
 block|}
 name|void
-name|setArg
+name|setParam
 argument_list|(
 argument|unsigned i
 argument_list|,
@@ -4659,7 +4673,7 @@ operator|=
 name|VD
 block|; }
 name|TypeLoc
-name|getResultLoc
+name|getReturnLoc
 argument_list|()
 specifier|const
 block|{
@@ -4721,7 +4735,7 @@ literal|0
 init|,
 name|e
 init|=
-name|getNumArgs
+name|getNumParams
 argument_list|()
 init|;
 name|i
@@ -4731,11 +4745,11 @@ condition|;
 operator|++
 name|i
 control|)
-name|setArg
+name|setParam
 argument_list|(
 name|i
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 block|}
@@ -4747,7 +4761,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getNumArgs
+name|getNumParams
 argument_list|()
 operator|*
 sizeof|sizeof
@@ -4783,7 +4797,7 @@ return|return
 name|getTypePtr
 argument_list|()
 operator|->
-name|getResultType
+name|getReturnType
 argument_list|()
 return|;
 block|}
@@ -4985,7 +4999,7 @@ argument_list|)
 block|;
 name|setSizeExpr
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 block|;   }
 name|QualType
@@ -6665,7 +6679,7 @@ argument_list|()
 operator|->
 name|QualifierData
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 return|return;
 block|}

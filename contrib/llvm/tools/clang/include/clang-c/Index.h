@@ -30,7 +30,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang-c/CXErrorCode.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang-c/CXString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang-c/BuildSystem.h"
 end_include
 
 begin_comment
@@ -48,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|CINDEX_VERSION_MINOR
-value|20
+value|27
 end_define
 
 begin_define
@@ -633,6 +645,45 @@ name|CXSourceRange
 name|range
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Identifies an array of ranges.  */
+typedef|typedef
+struct|struct
+block|{
+comment|/** \brief The number of ranges in the \c ranges array. */
+name|unsigned
+name|count
+decl_stmt|;
+comment|/**    * \brief An array of \c CXSourceRanges.    */
+name|CXSourceRange
+modifier|*
+name|ranges
+decl_stmt|;
+block|}
+name|CXSourceRangeList
+typedef|;
+comment|/**  * \brief Retrieve all ranges that were skipped by the preprocessor.  *  * The preprocessor will skip lines when they are surrounded by an  * if/ifdef/ifndef directive whose condition does not evaluate to true.  */
+name|CINDEX_LINKAGE
+name|CXSourceRangeList
+modifier|*
+name|clang_getSkippedRanges
+parameter_list|(
+name|CXTranslationUnit
+name|tu
+parameter_list|,
+name|CXFile
+name|file
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Destroy the given \c CXSourceRangeList.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_disposeSourceRangeList
+parameter_list|(
+name|CXSourceRangeList
+modifier|*
+name|ranges
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_DIAG Diagnostic reporting  *  * @{  */
 comment|/**  * \brief Describes the severity of a particular diagnostic.  */
@@ -1007,17 +1058,37 @@ modifier|*
 name|unsaved_files
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Create a translation unit from an AST file (-emit-ast).  */
+comment|/**  * \brief Same as \c clang_createTranslationUnit2, but returns  * the \c CXTranslationUnit instead of an error code.  In case of an error this  * routine returns a \c NULL \c CXTranslationUnit, without further detailed  * error codes.  */
 name|CINDEX_LINKAGE
 name|CXTranslationUnit
 name|clang_createTranslationUnit
 parameter_list|(
 name|CXIndex
+name|CIdx
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|ast_filename
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Create a translation unit from an AST file (\c -emit-ast).  *  * \param[out] out_TU A non-NULL pointer to store the created  * \c CXTranslationUnit.  *  * \returns Zero on success, otherwise returns an error code.  */
+name|CINDEX_LINKAGE
+name|enum
+name|CXErrorCode
+name|clang_createTranslationUnit2
+parameter_list|(
+name|CXIndex
+name|CIdx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ast_filename
+parameter_list|,
+name|CXTranslationUnit
+modifier|*
+name|out_TU
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Flags that control the creation of translation units.  *  * The enumerators in this enumeration type are meant to be bitwise  * ORed together to specify which options should be used when  * constructing the translation unit.  */
@@ -1078,7 +1149,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Parse the given source file and the translation unit corresponding  * to that file.  *  * This routine is the main entry point for the Clang C API, providing the  * ability to parse a source file into a translation unit that can then be  * queried by other functions in the API. This routine accepts a set of  * command-line arguments so that the compilation can be configured in the same  * way that the compiler is configured on the command line.  *  * \param CIdx The index object with which the translation unit will be   * associated.  *  * \param source_filename The name of the source file to load, or NULL if the  * source file is included in \p command_line_args.  *  * \param command_line_args The command-line arguments that would be  * passed to the \c clang executable if it were being invoked out-of-process.  * These command-line options will be parsed and will affect how the translation  * unit is parsed. Note that the following options are ignored: '-c',   * '-emit-ast', '-fsyntax-only' (which is the default), and '-o \<output file>'.  *  * \param num_command_line_args The number of command-line arguments in  * \p command_line_args.  *  * \param unsaved_files the files that have not yet been saved to disk  * but may be required for parsing, including the contents of  * those files.  The contents and name of these files (as specified by  * CXUnsavedFile) are copied when necessary, so the client only needs to  * guarantee their validity until the call to this function returns.  *  * \param num_unsaved_files the number of unsaved file entries in \p  * unsaved_files.  *  * \param options A bitmask of options that affects how the translation unit  * is managed but not its compilation. This should be a bitwise OR of the  * CXTranslationUnit_XXX flags.  *  * \returns A new translation unit describing the parsed code and containing  * any diagnostics produced by the compiler. If there is a failure from which  * the compiler cannot recover, returns NULL.  */
+comment|/**  * \brief Same as \c clang_parseTranslationUnit2, but returns  * the \c CXTranslationUnit instead of an error code.  In case of an error this  * routine returns a \c NULL \c CXTranslationUnit, without further detailed  * error codes.  */
 name|CINDEX_LINKAGE
 name|CXTranslationUnit
 name|clang_parseTranslationUnit
@@ -1111,6 +1182,46 @@ name|num_unsaved_files
 parameter_list|,
 name|unsigned
 name|options
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Parse the given source file and the translation unit corresponding  * to that file.  *  * This routine is the main entry point for the Clang C API, providing the  * ability to parse a source file into a translation unit that can then be  * queried by other functions in the API. This routine accepts a set of  * command-line arguments so that the compilation can be configured in the same  * way that the compiler is configured on the command line.  *  * \param CIdx The index object with which the translation unit will be   * associated.  *  * \param source_filename The name of the source file to load, or NULL if the  * source file is included in \c command_line_args.  *  * \param command_line_args The command-line arguments that would be  * passed to the \c clang executable if it were being invoked out-of-process.  * These command-line options will be parsed and will affect how the translation  * unit is parsed. Note that the following options are ignored: '-c',   * '-emit-ast', '-fsyntax-only' (which is the default), and '-o \<output file>'.  *  * \param num_command_line_args The number of command-line arguments in  * \c command_line_args.  *  * \param unsaved_files the files that have not yet been saved to disk  * but may be required for parsing, including the contents of  * those files.  The contents and name of these files (as specified by  * CXUnsavedFile) are copied when necessary, so the client only needs to  * guarantee their validity until the call to this function returns.  *  * \param num_unsaved_files the number of unsaved file entries in \p  * unsaved_files.  *  * \param options A bitmask of options that affects how the translation unit  * is managed but not its compilation. This should be a bitwise OR of the  * CXTranslationUnit_XXX flags.  *  * \param[out] out_TU A non-NULL pointer to store the created  * \c CXTranslationUnit, describing the parsed code and containing any  * diagnostics produced by the compiler.  *  * \returns Zero on success, otherwise returns an error code.  */
+name|CINDEX_LINKAGE
+name|enum
+name|CXErrorCode
+name|clang_parseTranslationUnit2
+parameter_list|(
+name|CXIndex
+name|CIdx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|source_filename
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|command_line_args
+parameter_list|,
+name|int
+name|num_command_line_args
+parameter_list|,
+name|struct
+name|CXUnsavedFile
+modifier|*
+name|unsaved_files
+parameter_list|,
+name|unsigned
+name|num_unsaved_files
+parameter_list|,
+name|unsigned
+name|options
+parameter_list|,
+name|CXTranslationUnit
+modifier|*
+name|out_TU
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Flags that control how translation units are saved.  *  * The enumerators in this enumeration type are meant to be bitwise  * ORed together to specify which options should be used when  * saving the translation unit.  */
@@ -1201,7 +1312,7 @@ name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Reparse the source files that produced this translation unit.  *  * This routine can be used to re-parse the source files that originally  * created the given translation unit, for example because those source files  * have changed (either on disk or as passed via \p unsaved_files). The  * source code will be reparsed with the same command-line options as it  * was originally parsed.   *  * Reparsing a translation unit invalidates all cursors and source locations  * that refer into that translation unit. This makes reparsing a translation  * unit semantically equivalent to destroying the translation unit and then  * creating a new translation unit with the same command-line arguments.  * However, it may be more efficient to reparse a translation   * unit using this routine.  *  * \param TU The translation unit whose contents will be re-parsed. The  * translation unit must originally have been built with   * \c clang_createTranslationUnitFromSourceFile().  *  * \param num_unsaved_files The number of unsaved file entries in \p  * unsaved_files.  *  * \param unsaved_files The files that have not yet been saved to disk  * but may be required for parsing, including the contents of  * those files.  The contents and name of these files (as specified by  * CXUnsavedFile) are copied when necessary, so the client only needs to  * guarantee their validity until the call to this function returns.  *   * \param options A bitset of options composed of the flags in CXReparse_Flags.  * The function \c clang_defaultReparseOptions() produces a default set of  * options recommended for most uses, based on the translation unit.  *  * \returns 0 if the sources could be reparsed. A non-zero value will be  * returned if reparsing was impossible, such that the translation unit is  * invalid. In such cases, the only valid call for \p TU is   * \c clang_disposeTranslationUnit(TU).  */
+comment|/**  * \brief Reparse the source files that produced this translation unit.  *  * This routine can be used to re-parse the source files that originally  * created the given translation unit, for example because those source files  * have changed (either on disk or as passed via \p unsaved_files). The  * source code will be reparsed with the same command-line options as it  * was originally parsed.   *  * Reparsing a translation unit invalidates all cursors and source locations  * that refer into that translation unit. This makes reparsing a translation  * unit semantically equivalent to destroying the translation unit and then  * creating a new translation unit with the same command-line arguments.  * However, it may be more efficient to reparse a translation   * unit using this routine.  *  * \param TU The translation unit whose contents will be re-parsed. The  * translation unit must originally have been built with   * \c clang_createTranslationUnitFromSourceFile().  *  * \param num_unsaved_files The number of unsaved file entries in \p  * unsaved_files.  *  * \param unsaved_files The files that have not yet been saved to disk  * but may be required for parsing, including the contents of  * those files.  The contents and name of these files (as specified by  * CXUnsavedFile) are copied when necessary, so the client only needs to  * guarantee their validity until the call to this function returns.  *   * \param options A bitset of options composed of the flags in CXReparse_Flags.  * The function \c clang_defaultReparseOptions() produces a default set of  * options recommended for most uses, based on the translation unit.  *  * \returns 0 if the sources could be reparsed.  A non-zero error code will be  * returned if reparsing was impossible, such that the translation unit is  * invalid. In such cases, the only valid call for \c TU is  * \c clang_disposeTranslationUnit(TU).  The error codes returned by this  * routine are described by the \c CXErrorCode enum.  */
 name|CINDEX_LINKAGE
 name|int
 name|clang_reparseTranslationUnit
@@ -1671,7 +1782,7 @@ name|CXCursor_UnexposedExpr
 init|=
 literal|100
 block|,
-comment|/**    * \brief An expression that refers to some value declaration, such    * as a function, varible, or enumerator.    */
+comment|/**    * \brief An expression that refers to some value declaration, such    * as a function, variable, or enumerator.    */
 name|CXCursor_DeclRefExpr
 init|=
 literal|101
@@ -1896,7 +2007,7 @@ name|CXCursor_ObjCBoolLiteralExpr
 init|=
 literal|145
 block|,
-comment|/** \brief Represents the "self" expression in a ObjC method.    */
+comment|/** \brief Represents the "self" expression in an Objective-C method.    */
 name|CXCursor_ObjCSelfExpr
 init|=
 literal|146
@@ -2079,9 +2190,84 @@ name|CXCursor_OMPParallelDirective
 init|=
 literal|232
 block|,
+comment|/** \brief OpenMP simd directive.    */
+name|CXCursor_OMPSimdDirective
+init|=
+literal|233
+block|,
+comment|/** \brief OpenMP for directive.    */
+name|CXCursor_OMPForDirective
+init|=
+literal|234
+block|,
+comment|/** \brief OpenMP sections directive.    */
+name|CXCursor_OMPSectionsDirective
+init|=
+literal|235
+block|,
+comment|/** \brief OpenMP section directive.    */
+name|CXCursor_OMPSectionDirective
+init|=
+literal|236
+block|,
+comment|/** \brief OpenMP single directive.    */
+name|CXCursor_OMPSingleDirective
+init|=
+literal|237
+block|,
+comment|/** \brief OpenMP parallel for directive.    */
+name|CXCursor_OMPParallelForDirective
+init|=
+literal|238
+block|,
+comment|/** \brief OpenMP parallel sections directive.    */
+name|CXCursor_OMPParallelSectionsDirective
+init|=
+literal|239
+block|,
+comment|/** \brief OpenMP task directive.    */
+name|CXCursor_OMPTaskDirective
+init|=
+literal|240
+block|,
+comment|/** \brief OpenMP master directive.    */
+name|CXCursor_OMPMasterDirective
+init|=
+literal|241
+block|,
+comment|/** \brief OpenMP critical directive.    */
+name|CXCursor_OMPCriticalDirective
+init|=
+literal|242
+block|,
+comment|/** \brief OpenMP taskyield directive.    */
+name|CXCursor_OMPTaskyieldDirective
+init|=
+literal|243
+block|,
+comment|/** \brief OpenMP barrier directive.    */
+name|CXCursor_OMPBarrierDirective
+init|=
+literal|244
+block|,
+comment|/** \brief OpenMP taskwait directive.    */
+name|CXCursor_OMPTaskwaitDirective
+init|=
+literal|245
+block|,
+comment|/** \brief OpenMP flush directive.    */
+name|CXCursor_OMPFlushDirective
+init|=
+literal|246
+block|,
+comment|/** \brief Windows Structured Exception Handling's leave statement.    */
+name|CXCursor_SEHLeaveStmt
+init|=
+literal|247
+block|,
 name|CXCursor_LastStmt
 init|=
-name|CXCursor_OMPParallelDirective
+name|CXCursor_SEHLeaveStmt
 block|,
 comment|/**    * \brief Cursor that represents the translation unit itself.    *    * The translation unit cursor exists primarily to act as the root    * cursor for traversing the contents of a translation unit.    */
 name|CXCursor_TranslationUnit
@@ -2130,9 +2316,37 @@ name|CXCursor_PackedAttr
 init|=
 literal|408
 block|,
+name|CXCursor_PureAttr
+init|=
+literal|409
+block|,
+name|CXCursor_ConstAttr
+init|=
+literal|410
+block|,
+name|CXCursor_NoDuplicateAttr
+init|=
+literal|411
+block|,
+name|CXCursor_CUDAConstantAttr
+init|=
+literal|412
+block|,
+name|CXCursor_CUDADeviceAttr
+init|=
+literal|413
+block|,
+name|CXCursor_CUDAGlobalAttr
+init|=
+literal|414
+block|,
+name|CXCursor_CUDAHostAttr
+init|=
+literal|415
+block|,
 name|CXCursor_LastAttr
 init|=
-name|CXCursor_PackedAttr
+name|CXCursor_CUDAHostAttr
 block|,
 comment|/* Preprocessing */
 name|CXCursor_PreprocessingDirective
@@ -2199,21 +2413,6 @@ index|]
 decl_stmt|;
 block|}
 name|CXCursor
-typedef|;
-comment|/**  * \brief A comment AST node.  */
-typedef|typedef
-struct|struct
-block|{
-specifier|const
-name|void
-modifier|*
-name|ASTNode
-decl_stmt|;
-name|CXTranslationUnit
-name|TranslationUnit
-decl_stmt|;
-block|}
-name|CXComment
 typedef|;
 comment|/**  * \defgroup CINDEX_CURSOR_MANIP Cursor manipulations  *  * @{  */
 comment|/**  * \brief Retrieve the NULL cursor, which represents no entity.  */
@@ -2464,21 +2663,20 @@ name|availability
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Describe the "language" of the entity referred to by a cursor.  */
-name|CINDEX_LINKAGE
-name|enum
+enum|enum
 name|CXLanguageKind
 block|{
 name|CXLanguage_Invalid
-operator|=
+init|=
 literal|0
-operator|,
+block|,
 name|CXLanguage_C
-operator|,
+block|,
 name|CXLanguage_ObjC
-operator|,
+block|,
 name|CXLanguage_CPlusPlus
 block|}
-empty_stmt|;
+enum|;
 comment|/**  * \brief Determine the "language" of the entity referred to by a given cursor.  */
 name|CINDEX_LINKAGE
 name|enum
@@ -2545,7 +2743,7 @@ name|CXCursor
 name|cursor
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Determine the semantic parent of the given cursor.  *  * The semantic parent of a cursor is the cursor that semantically contains  * the given \p cursor. For many declarations, the lexical and semantic parents  * are equivalent (the lexical parent is returned by   * \c clang_getCursorLexicalParent()). They diverge when declarations or  * definitions are provided out-of-line. For example:  *  * \code  * class C {  *  void f();  * };  *  * void C::f() { }  * \endcode  *  * In the out-of-line definition of \c C::f, the semantic parent is the   * the class \c C, of which this function is a member. The lexical parent is  * the place where the declaration actually occurs in the source code; in this  * case, the definition occurs in the translation unit. In general, the   * lexical parent for a given entity can change without affecting the semantics  * of the program, and the lexical parent of different declarations of the  * same entity may be different. Changing the semantic parent of a declaration,  * on the other hand, can have a major impact on semantics, and redeclarations  * of a particular entity should all have the same semantic context.  *  * In the example above, both declarations of \c C::f have \c C as their  * semantic context, while the lexical context of the first \c C::f is \c C  * and the lexical context of the second \c C::f is the translation unit.  *  * For global declarations, the semantic parent is the translation unit.  */
+comment|/**  * \brief Determine the semantic parent of the given cursor.  *  * The semantic parent of a cursor is the cursor that semantically contains  * the given \p cursor. For many declarations, the lexical and semantic parents  * are equivalent (the lexical parent is returned by   * \c clang_getCursorLexicalParent()). They diverge when declarations or  * definitions are provided out-of-line. For example:  *  * \code  * class C {  *  void f();  * };  *  * void C::f() { }  * \endcode  *  * In the out-of-line definition of \c C::f, the semantic parent is  * the class \c C, of which this function is a member. The lexical parent is  * the place where the declaration actually occurs in the source code; in this  * case, the definition occurs in the translation unit. In general, the  * lexical parent for a given entity can change without affecting the semantics  * of the program, and the lexical parent of different declarations of the  * same entity may be different. Changing the semantic parent of a declaration,  * on the other hand, can have a major impact on semantics, and redeclarations  * of a particular entity should all have the same semantic context.  *  * In the example above, both declarations of \c C::f have \c C as their  * semantic context, while the lexical context of the first \c C::f is \c C  * and the lexical context of the second \c C::f is the translation unit.  *  * For global declarations, the semantic parent is the translation unit.  */
 name|CINDEX_LINKAGE
 name|CXCursor
 name|clang_getCursorSemanticParent
@@ -2554,7 +2752,7 @@ name|CXCursor
 name|cursor
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Determine the lexical parent of the given cursor.  *  * The lexical parent of a cursor is the cursor in which the given \p cursor  * was actually written. For many declarations, the lexical and semantic parents  * are equivalent (the semantic parent is returned by   * \c clang_getCursorSemanticParent()). They diverge when declarations or  * definitions are provided out-of-line. For example:  *  * \code  * class C {  *  void f();  * };  *  * void C::f() { }  * \endcode  *  * In the out-of-line definition of \c C::f, the semantic parent is the   * the class \c C, of which this function is a member. The lexical parent is  * the place where the declaration actually occurs in the source code; in this  * case, the definition occurs in the translation unit. In general, the   * lexical parent for a given entity can change without affecting the semantics  * of the program, and the lexical parent of different declarations of the  * same entity may be different. Changing the semantic parent of a declaration,  * on the other hand, can have a major impact on semantics, and redeclarations  * of a particular entity should all have the same semantic context.  *  * In the example above, both declarations of \c C::f have \c C as their  * semantic context, while the lexical context of the first \c C::f is \c C  * and the lexical context of the second \c C::f is the translation unit.  *  * For declarations written in the global scope, the lexical parent is  * the translation unit.  */
+comment|/**  * \brief Determine the lexical parent of the given cursor.  *  * The lexical parent of a cursor is the cursor in which the given \p cursor  * was actually written. For many declarations, the lexical and semantic parents  * are equivalent (the semantic parent is returned by   * \c clang_getCursorSemanticParent()). They diverge when declarations or  * definitions are provided out-of-line. For example:  *  * \code  * class C {  *  void f();  * };  *  * void C::f() { }  * \endcode  *  * In the out-of-line definition of \c C::f, the semantic parent is  * the class \c C, of which this function is a member. The lexical parent is  * the place where the declaration actually occurs in the source code; in this  * case, the definition occurs in the translation unit. In general, the  * lexical parent for a given entity can change without affecting the semantics  * of the program, and the lexical parent of different declarations of the  * same entity may be different. Changing the semantic parent of a declaration,  * on the other hand, can have a major impact on semantics, and redeclarations  * of a particular entity should all have the same semantic context.  *  * In the example above, both declarations of \c C::f have \c C as their  * semantic context, while the lexical context of the first \c C::f is \c C  * and the lexical context of the second \c C::f is the translation unit.  *  * For declarations written in the global scope, the lexical parent is  * the translation unit.  */
 name|CINDEX_LINKAGE
 name|CXCursor
 name|clang_getCursorLexicalParent
@@ -2620,7 +2818,7 @@ parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the physical extent of the source construct referenced by  * the given cursor.  *  * The extent of a cursor starts with the file/line/column pointing at the  * first character within the source construct that the cursor refers to and  * ends with the last character withinin that source construct. For a  * declaration, the extent covers the declaration itself. For a reference,  * the extent covers the location of the reference (e.g., where the referenced  * entity was actually used).  */
+comment|/**  * \brief Retrieve the physical extent of the source construct referenced by  * the given cursor.  *  * The extent of a cursor starts with the file/line/column pointing at the  * first character within the source construct that the cursor refers to and  * ends with the last character within that source construct. For a  * declaration, the extent covers the declaration itself. For a reference,  * the extent covers the location of the reference (e.g., where the referenced  * entity was actually used).  */
 name|CINDEX_LINKAGE
 name|CXSourceRange
 name|clang_getCursorExtent
@@ -2634,7 +2832,7 @@ comment|/**  * \brief Describes the kind of type  */
 enum|enum
 name|CXTypeKind
 block|{
-comment|/**    * \brief Reprents an invalid type (e.g., where no type is available).    */
+comment|/**    * \brief Represents an invalid type (e.g., where no type is available).    */
 name|CXType_Invalid
 init|=
 literal|0
@@ -3099,7 +3297,7 @@ name|CXType
 name|T
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the result type associated with a function type.  *  * If a non-function type is passed in, an invalid type is returned.  */
+comment|/**  * \brief Retrieve the return type associated with a function type.  *  * If a non-function type is passed in, an invalid type is returned.  */
 name|CINDEX_LINKAGE
 name|CXType
 name|clang_getResultType
@@ -3108,7 +3306,7 @@ name|CXType
 name|T
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the number of non-variadic arguments associated with a  * function type.  *  * If a non-function type is passed in, -1 is returned.  */
+comment|/**  * \brief Retrieve the number of non-variadic parameters associated with a  * function type.  *  * If a non-function type is passed in, -1 is returned.  */
 name|CINDEX_LINKAGE
 name|int
 name|clang_getNumArgTypes
@@ -3117,7 +3315,7 @@ name|CXType
 name|T
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the type of an argument of a function type.  *  * If a non-function type is passed in or the function does not have enough  * parameters, an invalid type is returned.  */
+comment|/**  * \brief Retrieve the type of a parameter of a function type.  *  * If a non-function type is passed in or the function does not have enough  * parameters, an invalid type is returned.  */
 name|CINDEX_LINKAGE
 name|CXType
 name|clang_getArgType
@@ -3138,7 +3336,7 @@ name|CXType
 name|T
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the result type associated with a given cursor.  *  * This only returns a valid type if the cursor refers to a function or method.  */
+comment|/**  * \brief Retrieve the return type associated with a given cursor.  *  * This only returns a valid type if the cursor refers to a function or method.  */
 name|CINDEX_LINKAGE
 name|CXType
 name|clang_getCursorResultType
@@ -3288,6 +3486,27 @@ comment|/** \brief An rvalue ref-qualifier was provided (\c&&). */
 name|CXRefQualifier_RValue
 block|}
 enum|;
+comment|/**  * \brief Returns the number of template arguments for given class template  * specialization, or -1 if type \c T is not a class template specialization.  *  * Variadic argument packs count as only one argument, and can not be inspected  * further.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_Type_getNumTemplateArguments
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns the type template argument of a template class specialization  * at given index.  *  * This function only returns template type arguments and does not handle  * template template arguments or variadic packs.  */
+name|CINDEX_LINKAGE
+name|CXType
+name|clang_Type_getTemplateArgumentAsType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|,
+name|unsigned
+name|i
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Retrieve the ref-qualifier kind of a function or method.  *  * The ref-qualifier is returned for C++ functions or methods. For other types  * or non-C++ declarations, CXRefQualifier_None is returned.  */
 name|CINDEX_LINKAGE
 name|enum
@@ -3559,7 +3778,7 @@ parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve a range for a piece that forms the cursors spelling name.  * Most of the times there is only one range for the complete spelling but for  * objc methods and objc message expressions, there are multiple pieces for each  * selector identifier.  *   * \param pieceIndex the index of the spelling name piece. If this is greater  * than the actual number of pieces, it will return a NULL (invalid) range.  *    * \param options Reserved.  */
+comment|/**  * \brief Retrieve a range for a piece that forms the cursors spelling name.  * Most of the times there is only one range for the complete spelling but for  * Objective-C methods and Objective-C message expressions, there are multiple  * pieces for each selector identifier.  *   * \param pieceIndex the index of the spelling name piece. If this is greater  * than the actual number of pieces, it will return a NULL (invalid) range.  *    * \param options Reserved.  */
 name|CINDEX_LINKAGE
 name|CXSourceRange
 name|clang_Cursor_getSpellingNameRange
@@ -3613,7 +3832,7 @@ parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
-comment|/**  * \brief If the cursor points to a selector identifier in a objc method or  * message expression, this returns the selector index.  *  * After getting a cursor with #clang_getCursor, this can be called to  * determine if the location points to a selector identifier.  *  * \returns The selector index if the cursor is an objc method or message  * expression and the cursor is pointing to a selector identifier, or -1  * otherwise.  */
+comment|/**  * \brief If the cursor points to a selector identifier in an Objective-C  * method or message expression, this returns the selector index.  *  * After getting a cursor with #clang_getCursor, this can be called to  * determine if the location points to a selector identifier.  *  * \returns The selector index if the cursor is an Objective-C method or message  * expression and the cursor is pointing to a selector identifier, or -1  * otherwise.  */
 name|CINDEX_LINKAGE
 name|int
 name|clang_Cursor_getObjCSelectorIndex
@@ -3621,7 +3840,7 @@ parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Given a cursor pointing to a C++ method call or an ObjC message,  * returns non-zero if the method/message is "dynamic", meaning:  *   * For a C++ method: the call is virtual.  * For an ObjC message: the receiver is an object instance, not 'super' or a  * specific class.  *   * If the method/message is "static" or the cursor does not point to a  * method/message, it will return zero.  */
+comment|/**  * \brief Given a cursor pointing to a C++ method call or an Objective-C  * message, returns non-zero if the method/message is "dynamic", meaning:  *   * For a C++ method: the call is virtual.  * For an Objective-C message: the receiver is an object instance, not 'super'  * or a specific class.  *   * If the method/message is "static" or the cursor does not point to a  * method/message, it will return zero.  */
 name|CINDEX_LINKAGE
 name|int
 name|clang_Cursor_isDynamicCall
@@ -3630,7 +3849,7 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Given a cursor pointing to an ObjC message, returns the CXType of the  * receiver.  */
+comment|/**  * \brief Given a cursor pointing to an Objective-C message, returns the CXType  * of the receiver.  */
 name|CINDEX_LINKAGE
 name|CXType
 name|clang_Cursor_getReceiverType
@@ -3709,7 +3928,7 @@ name|unsigned
 name|reserved
 parameter_list|)
 function_decl|;
-comment|/**  * \brief 'Qualifiers' written next to the return and parameter types in  * ObjC method declarations.  */
+comment|/**  * \brief 'Qualifiers' written next to the return and parameter types in  * Objective-C method declarations.  */
 typedef|typedef
 enum|enum
 block|{
@@ -3743,7 +3962,7 @@ literal|0x20
 block|}
 name|CXObjCDeclQualifierKind
 typedef|;
-comment|/**  * \brief Given a cursor that represents an ObjC method or parameter  * declaration, return the associated ObjC qualifiers for the return type or the  * parameter respectively. The bits are formed from CXObjCDeclQualifierKind.  */
+comment|/**  * \brief Given a cursor that represents an Objective-C method or parameter  * declaration, return the associated Objective-C qualifiers for the return  * type or the parameter respectively. The bits are formed from  * CXObjCDeclQualifierKind.  */
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_Cursor_getObjCDeclQualifiers
@@ -3752,7 +3971,7 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Given a cursor that represents an ObjC method or property declaration,  * return non-zero if the declaration was affected by "@optional".  * Returns zero if the cursor is not such a declaration or it is "@required".  */
+comment|/**  * \brief Given a cursor that represents an Objective-C method or property  * declaration, return non-zero if the declaration was affected by "@optional".  * Returns zero if the cursor is not such a declaration or it is "@required".  */
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_Cursor_isObjCOptional
@@ -3797,15 +4016,6 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Given a cursor that represents a documentable entity (e.g.,  * declaration), return the associated parsed comment as a  * \c CXComment_FullComment AST node.  */
-name|CINDEX_LINKAGE
-name|CXComment
-name|clang_Cursor_getParsedComment
-parameter_list|(
-name|CXCursor
-name|C
-parameter_list|)
-function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_MODULE Module introspection  *  * The functions in this group provide access to information about modules.  *  * @{  */
 typedef|typedef
@@ -3820,6 +4030,16 @@ name|clang_Cursor_getModule
 parameter_list|(
 name|CXCursor
 name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Given a CXFile header file, return the module that contains it, if one  * exists.  */
+name|CINDEX_LINKAGE
+name|CXModule
+name|clang_getModuleForFile
+parameter_list|(
+name|CXTranslationUnit
+parameter_list|,
+name|CXFile
 parameter_list|)
 function_decl|;
 comment|/**  * \param Module a module object.  *  * \returns the module file where the provided module object came from.  */
@@ -3858,6 +4078,15 @@ name|CXModule
 name|Module
 parameter_list|)
 function_decl|;
+comment|/**  * \param Module a module object.  *  * \returns non-zero if the module is a system one.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_Module_isSystem
+parameter_list|(
+name|CXModule
+name|Module
+parameter_list|)
+function_decl|;
 comment|/**  * \param Module a module object.  *  * \returns the number of top level headers associated with this module.  */
 name|CINDEX_LINKAGE
 name|unsigned
@@ -3884,427 +4113,6 @@ name|Index
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
-comment|/**  * \defgroup CINDEX_COMMENT Comment AST introspection  *  * The routines in this group provide access to information in the  * documentation comment ASTs.  *  * @{  */
-comment|/**  * \brief Describes the type of the comment AST node (\c CXComment).  A comment  * node can be considered block content (e. g., paragraph), inline content  * (plain text) or neither (the root AST node).  */
-enum|enum
-name|CXCommentKind
-block|{
-comment|/**    * \brief Null comment.  No AST node is constructed at the requested location    * because there is no text or a syntax error.    */
-name|CXComment_Null
-init|=
-literal|0
-block|,
-comment|/**    * \brief Plain text.  Inline content.    */
-name|CXComment_Text
-init|=
-literal|1
-block|,
-comment|/**    * \brief A command with word-like arguments that is considered inline content.    *    * For example: \\c command.    */
-name|CXComment_InlineCommand
-init|=
-literal|2
-block|,
-comment|/**    * \brief HTML start tag with attributes (name-value pairs).  Considered    * inline content.    *    * For example:    * \verbatim    *<br><br /><a href="http://example.org/">    * \endverbatim    */
-name|CXComment_HTMLStartTag
-init|=
-literal|3
-block|,
-comment|/**    * \brief HTML end tag.  Considered inline content.    *    * For example:    * \verbatim    *</a>    * \endverbatim    */
-name|CXComment_HTMLEndTag
-init|=
-literal|4
-block|,
-comment|/**    * \brief A paragraph, contains inline comment.  The paragraph itself is    * block content.    */
-name|CXComment_Paragraph
-init|=
-literal|5
-block|,
-comment|/**    * \brief A command that has zero or more word-like arguments (number of    * word-like arguments depends on command name) and a paragraph as an    * argument.  Block command is block content.    *    * Paragraph argument is also a child of the block command.    *    * For example: \\brief has 0 word-like arguments and a paragraph argument.    *    * AST nodes of special kinds that parser knows about (e. g., \\param    * command) have their own node kinds.    */
-name|CXComment_BlockCommand
-init|=
-literal|6
-block|,
-comment|/**    * \brief A \\param or \\arg command that describes the function parameter    * (name, passing direction, description).    *    * For example: \\param [in] ParamName description.    */
-name|CXComment_ParamCommand
-init|=
-literal|7
-block|,
-comment|/**    * \brief A \\tparam command that describes a template parameter (name and    * description).    *    * For example: \\tparam T description.    */
-name|CXComment_TParamCommand
-init|=
-literal|8
-block|,
-comment|/**    * \brief A verbatim block command (e. g., preformatted code).  Verbatim    * block has an opening and a closing command and contains multiple lines of    * text (\c CXComment_VerbatimBlockLine child nodes).    *    * For example:    * \\verbatim    * aaa    * \\endverbatim    */
-name|CXComment_VerbatimBlockCommand
-init|=
-literal|9
-block|,
-comment|/**    * \brief A line of text that is contained within a    * CXComment_VerbatimBlockCommand node.    */
-name|CXComment_VerbatimBlockLine
-init|=
-literal|10
-block|,
-comment|/**    * \brief A verbatim line command.  Verbatim line has an opening command,    * a single line of text (up to the newline after the opening command) and    * has no closing command.    */
-name|CXComment_VerbatimLine
-init|=
-literal|11
-block|,
-comment|/**    * \brief A full comment attached to a declaration, contains block content.    */
-name|CXComment_FullComment
-init|=
-literal|12
-block|}
-enum|;
-comment|/**  * \brief The most appropriate rendering mode for an inline command, chosen on  * command semantics in Doxygen.  */
-enum|enum
-name|CXCommentInlineCommandRenderKind
-block|{
-comment|/**    * \brief Command argument should be rendered in a normal font.    */
-name|CXCommentInlineCommandRenderKind_Normal
-block|,
-comment|/**    * \brief Command argument should be rendered in a bold font.    */
-name|CXCommentInlineCommandRenderKind_Bold
-block|,
-comment|/**    * \brief Command argument should be rendered in a monospaced font.    */
-name|CXCommentInlineCommandRenderKind_Monospaced
-block|,
-comment|/**    * \brief Command argument should be rendered emphasized (typically italic    * font).    */
-name|CXCommentInlineCommandRenderKind_Emphasized
-block|}
-enum|;
-comment|/**  * \brief Describes parameter passing direction for \\param or \\arg command.  */
-enum|enum
-name|CXCommentParamPassDirection
-block|{
-comment|/**    * \brief The parameter is an input parameter.    */
-name|CXCommentParamPassDirection_In
-block|,
-comment|/**    * \brief The parameter is an output parameter.    */
-name|CXCommentParamPassDirection_Out
-block|,
-comment|/**    * \brief The parameter is an input and output parameter.    */
-name|CXCommentParamPassDirection_InOut
-block|}
-enum|;
-comment|/**  * \param Comment AST node of any kind.  *  * \returns the type of the AST node.  */
-name|CINDEX_LINKAGE
-name|enum
-name|CXCommentKind
-name|clang_Comment_getKind
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment AST node of any kind.  *  * \returns number of children of the AST node.  */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_Comment_getNumChildren
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment AST node of any kind.  *  * \param ChildIdx child index (zero-based).  *  * \returns the specified child of the AST node.  */
-name|CINDEX_LINKAGE
-name|CXComment
-name|clang_Comment_getChild
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|,
-name|unsigned
-name|ChildIdx
-parameter_list|)
-function_decl|;
-comment|/**  * \brief A \c CXComment_Paragraph node is considered whitespace if it contains  * only \c CXComment_Text nodes that are empty or whitespace.  *  * Other AST nodes (except \c CXComment_Paragraph and \c CXComment_Text) are  * never considered whitespace.  *  * \returns non-zero if \c Comment is whitespace.  */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_Comment_isWhitespace
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \returns non-zero if \c Comment is inline content and has a newline  * immediately following it in the comment text.  Newlines between paragraphs  * do not count.  */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_InlineContentComment_hasTrailingNewline
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_Text AST node.  *  * \returns text contained in the AST node.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_TextComment_getText
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_InlineCommand AST node.  *  * \returns name of the inline command.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_InlineCommandComment_getCommandName
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_InlineCommand AST node.  *  * \returns the most appropriate rendering mode, chosen on command  * semantics in Doxygen.  */
-name|CINDEX_LINKAGE
-name|enum
-name|CXCommentInlineCommandRenderKind
-name|clang_InlineCommandComment_getRenderKind
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_InlineCommand AST node.  *  * \returns number of command arguments.  */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_InlineCommandComment_getNumArgs
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_InlineCommand AST node.  *  * \param ArgIdx argument index (zero-based).  *  * \returns text of the specified argument.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_InlineCommandComment_getArgText
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|,
-name|unsigned
-name|ArgIdx
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_HTMLStartTag or \c CXComment_HTMLEndTag AST  * node.  *  * \returns HTML tag name.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_HTMLTagComment_getTagName
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_HTMLStartTag AST node.  *  * \returns non-zero if tag is self-closing (for example,&lt;br /&gt;).  */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_HTMLStartTagComment_isSelfClosing
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_HTMLStartTag AST node.  *  * \returns number of attributes (name-value pairs) attached to the start tag.  */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_HTMLStartTag_getNumAttrs
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_HTMLStartTag AST node.  *  * \param AttrIdx attribute index (zero-based).  *  * \returns name of the specified attribute.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_HTMLStartTag_getAttrName
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|,
-name|unsigned
-name|AttrIdx
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_HTMLStartTag AST node.  *  * \param AttrIdx attribute index (zero-based).  *  * \returns value of the specified attribute.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_HTMLStartTag_getAttrValue
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|,
-name|unsigned
-name|AttrIdx
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_BlockCommand AST node.  *  * \returns name of the block command.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_BlockCommandComment_getCommandName
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_BlockCommand AST node.  *  * \returns number of word-like arguments.  */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_BlockCommandComment_getNumArgs
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_BlockCommand AST node.  *  * \param ArgIdx argument index (zero-based).  *  * \returns text of the specified word-like argument.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_BlockCommandComment_getArgText
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|,
-name|unsigned
-name|ArgIdx
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_BlockCommand or  * \c CXComment_VerbatimBlockCommand AST node.  *  * \returns paragraph argument of the block command.  */
-name|CINDEX_LINKAGE
-name|CXComment
-name|clang_BlockCommandComment_getParagraph
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_ParamCommand AST node.  *  * \returns parameter name.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_ParamCommandComment_getParamName
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_ParamCommand AST node.  *  * \returns non-zero if the parameter that this AST node represents was found  * in the function prototype and \c clang_ParamCommandComment_getParamIndex  * function will return a meaningful value.  */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_ParamCommandComment_isParamIndexValid
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_ParamCommand AST node.  *  * \returns zero-based parameter index in function prototype.  */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_ParamCommandComment_getParamIndex
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_ParamCommand AST node.  *  * \returns non-zero if parameter passing direction was specified explicitly in  * the comment.  */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_ParamCommandComment_isDirectionExplicit
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_ParamCommand AST node.  *  * \returns parameter passing direction.  */
-name|CINDEX_LINKAGE
-name|enum
-name|CXCommentParamPassDirection
-name|clang_ParamCommandComment_getDirection
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_TParamCommand AST node.  *  * \returns template parameter name.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_TParamCommandComment_getParamName
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_TParamCommand AST node.  *  * \returns non-zero if the parameter that this AST node represents was found  * in the template parameter list and  * \c clang_TParamCommandComment_getDepth and  * \c clang_TParamCommandComment_getIndex functions will return a meaningful  * value.  */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_TParamCommandComment_isParamPositionValid
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_TParamCommand AST node.  *  * \returns zero-based nesting depth of this parameter in the template parameter list.  *  * For example,  * \verbatim  *     template<typename C, template<typename T> class TT>  *     void test(TT<int> aaa);  * \endverbatim  * for C and TT nesting depth is 0,  * for T nesting depth is 1.  */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_TParamCommandComment_getDepth
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_TParamCommand AST node.  *  * \returns zero-based parameter index in the template parameter list at a  * given nesting depth.  *  * For example,  * \verbatim  *     template<typename C, template<typename T> class TT>  *     void test(TT<int> aaa);  * \endverbatim  * for C and TT nesting depth is 0, so we can ask for index at depth 0:  * at depth 0 C's index is 0, TT's index is 1.  *  * For T nesting depth is 1, so we can ask for index at depth 0 and 1:  * at depth 0 T's index is 1 (same as TT's),  * at depth 1 T's index is 0.  */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_TParamCommandComment_getIndex
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|,
-name|unsigned
-name|Depth
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_VerbatimBlockLine AST node.  *  * \returns text contained in the AST node.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_VerbatimBlockLineComment_getText
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \param Comment a \c CXComment_VerbatimLine AST node.  *  * \returns text contained in the AST node.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_VerbatimLineComment_getText
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \brief Convert an HTML tag AST node to string.  *  * \param Comment a \c CXComment_HTMLStartTag or \c CXComment_HTMLEndTag AST  * node.  *  * \returns string containing an HTML tag.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_HTMLTagComment_getAsString
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \brief Convert a given full parsed comment to an HTML fragment.  *  * Specific details of HTML layout are subject to change.  Don't try to parse  * this HTML back into an AST, use other APIs instead.  *  * Currently the following CSS classes are used:  * \li "para-brief" for \\brief paragraph and equivalent commands;  * \li "para-returns" for \\returns paragraph and equivalent commands;  * \li "word-returns" for the "Returns" word in \\returns paragraph.  *  * Function argument documentation is rendered as a \<dl\> list with arguments  * sorted in function prototype order.  CSS classes used:  * \li "param-name-index-NUMBER" for parameter name (\<dt\>);  * \li "param-descr-index-NUMBER" for parameter description (\<dd\>);  * \li "param-name-index-invalid" and "param-descr-index-invalid" are used if  * parameter index is invalid.  *  * Template parameter documentation is rendered as a \<dl\> list with  * parameters sorted in template parameter list order.  CSS classes used:  * \li "tparam-name-index-NUMBER" for parameter name (\<dt\>);  * \li "tparam-descr-index-NUMBER" for parameter description (\<dd\>);  * \li "tparam-name-index-other" and "tparam-descr-index-other" are used for  * names inside template template parameters;  * \li "tparam-name-index-invalid" and "tparam-descr-index-invalid" are used if  * parameter position is invalid.  *  * \param Comment a \c CXComment_FullComment AST node.  *  * \returns string containing an HTML fragment.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_FullComment_getAsHTML
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * \brief Convert a given full parsed comment to an XML document.  *  * A Relax NG schema for the XML can be found in comment-xml-schema.rng file  * inside clang source tree.  *  * \param Comment a \c CXComment_FullComment AST node.  *  * \returns string containing an XML document.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_FullComment_getAsXML
-parameter_list|(
-name|CXComment
-name|Comment
-parameter_list|)
-function_decl|;
-comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_CPP C++ AST introspection  *  * The routines in this group provide access information in the ASTs specific  * to C++ language features.  *  * @{  */
 comment|/**  * \brief Determine if a C++ member function or member function template is  * pure virtual.  */
 name|CINDEX_LINKAGE
@@ -4328,6 +4136,15 @@ comment|/**  * \brief Determine if a C++ member function or member function temp
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_CXXMethod_isVirtual
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine if a C++ member function or member function template is  * declared 'const'.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_CXXMethod_isConst
 parameter_list|(
 name|CXCursor
 name|C
@@ -4380,7 +4197,7 @@ name|CXNameRange_WantTemplateArgs
 init|=
 literal|0x2
 block|,
-comment|/**    * \brief If the name is non-contiguous, return the full spanning range.    *    * Non-contiguous names occur in Objective-C when a selector with two or more    * parameters is used, or in C++ when using an operator:    * \code    * [object doSomething:here withValue:there]; // ObjC    * return some_vector[1]; // C++    * \endcode    */
+comment|/**    * \brief If the name is non-contiguous, return the full spanning range.    *    * Non-contiguous names occur in Objective-C when a selector with two or more    * parameters is used, or in C++ when using an operator:    * \code    * [object doSomething:here withValue:there]; // Objective-C    * return some_vector[1]; // C++    * \endcode    */
 name|CXNameRange_WantSinglePiece
 init|=
 literal|0x4
@@ -5107,7 +4924,7 @@ name|unsigned
 name|Index
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Determines what compeltions are appropriate for the context  * the given code completion.  *   * \param Results the code completion results to query  *  * \returns the kinds of completions that are appropriate for use  * along with the given code completion results.  */
+comment|/**  * \brief Determines what completions are appropriate for the context  * the given code completion.  *   * \param Results the code completion results to query  *  * \returns the kinds of completions that are appropriate for use  * along with the given code completion results.  */
 name|CINDEX_LINKAGE
 name|unsigned
 name|long
@@ -5817,7 +5634,7 @@ name|CXIdxContainerInfo
 modifier|*
 name|declAsContainer
 decl_stmt|;
-comment|/**    * \brief Whether the declaration exists in code or was created implicitly    * by the compiler, e.g. implicit objc methods for properties.    */
+comment|/**    * \brief Whether the declaration exists in code or was created implicitly    * by the compiler, e.g. implicit Objective-C methods for properties.    */
 name|int
 name|isImplicit
 decl_stmt|;
@@ -6017,7 +5834,7 @@ name|CXIdxEntityRef_Direct
 init|=
 literal|1
 block|,
-comment|/**    * \brief An implicit reference, e.g. a reference of an ObjC method via the    * dot syntax.    */
+comment|/**    * \brief An implicit reference, e.g. a reference of an Objective-C method    * via the dot syntax.    */
 name|CXIdxEntityRef_Implicit
 init|=
 literal|2
@@ -6368,14 +6185,14 @@ name|CXIndexOpt_SuppressWarnings
 init|=
 literal|0x8
 block|,
-comment|/**    * \brief Skip a function/method body that was already parsed during an    * indexing session assosiated with a \c CXIndexAction object.    * Bodies in system headers are always skipped.    */
+comment|/**    * \brief Skip a function/method body that was already parsed during an    * indexing session associated with a \c CXIndexAction object.    * Bodies in system headers are always skipped.    */
 name|CXIndexOpt_SkipParsedBodiesInSession
 init|=
 literal|0x10
 block|}
 name|CXIndexOptFlags
 typedef|;
-comment|/**  * \brief Index the given source file and the translation unit corresponding  * to that file via callbacks implemented through #IndexerCallbacks.  *  * \param client_data pointer data supplied by the client, which will  * be passed to the invoked callbacks.  *  * \param index_callbacks Pointer to indexing callbacks that the client  * implements.  *  * \param index_callbacks_size Size of #IndexerCallbacks structure that gets  * passed in index_callbacks.  *  * \param index_options A bitmask of options that affects how indexing is  * performed. This should be a bitwise OR of the CXIndexOpt_XXX flags.  *  * \param out_TU [out] pointer to store a CXTranslationUnit that can be reused  * after indexing is finished. Set to NULL if you do not require it.  *  * \returns If there is a failure from which the there is no recovery, returns  * non-zero, otherwise returns 0.  *  * The rest of the parameters are the same as #clang_parseTranslationUnit.  */
+comment|/**  * \brief Index the given source file and the translation unit corresponding  * to that file via callbacks implemented through #IndexerCallbacks.  *  * \param client_data pointer data supplied by the client, which will  * be passed to the invoked callbacks.  *  * \param index_callbacks Pointer to indexing callbacks that the client  * implements.  *  * \param index_callbacks_size Size of #IndexerCallbacks structure that gets  * passed in index_callbacks.  *  * \param index_options A bitmask of options that affects how indexing is  * performed. This should be a bitwise OR of the CXIndexOpt_XXX flags.  *  * \param[out] out_TU pointer to store a \c CXTranslationUnit that can be  * reused after indexing is finished. Set to \c NULL if you do not require it.  *  * \returns 0 on success or if there were errors from which the compiler could  * recover.  If there is a failure from which the there is no recovery, returns  * a non-zero \c CXErrorCode.  *  * The rest of the parameters are the same as #clang_parseTranslationUnit.  */
 name|CINDEX_LINKAGE
 name|int
 name|clang_indexSourceFile
@@ -6489,6 +6306,10 @@ parameter_list|)
 function_decl|;
 comment|/**  * @}  */
 comment|/**  * @}  */
+comment|/* Include the comment API for compatibility. This will eventually go away. */
+include|#
+directive|include
+file|"clang-c/Documentation.h"
 ifdef|#
 directive|ifdef
 name|__cplusplus

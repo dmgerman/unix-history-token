@@ -44,7 +44,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|sun
+name|illumos
 argument_list|)
 operator|&&
 operator|(

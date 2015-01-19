@@ -658,6 +658,20 @@ literal|16384000
 block|}
 block|,
 block|{
+literal|0x1415
+block|,
+literal|0xc120
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Oxford Semiconductor OXPCIe952 PCIe 16950 UART"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x14e4
 block|,
 literal|0x4344
@@ -844,6 +858,20 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x8086
+block|,
+literal|0x8cbd
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Intel Wildcat Point KT Controller"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x9710
 block|,
 literal|0x9820
@@ -932,11 +960,11 @@ literal|0x9710
 block|,
 literal|0x9922
 block|,
-literal|0xffff
+literal|0xa000
 block|,
-literal|0
+literal|0x1000
 block|,
-literal|"MosChip MCS9922 Multi I/O Controller"
+literal|"MosChip MCS9922 PCIe to Peripheral Controller"
 block|,
 literal|0x10
 block|}

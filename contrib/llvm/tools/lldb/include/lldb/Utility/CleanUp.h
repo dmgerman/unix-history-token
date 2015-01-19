@@ -66,7 +66,7 @@ comment|// This class is designed to be used with simple types for type T (like
 comment|// file descriptors, opaque handles, pointers, etc). If more complex
 comment|// type T objects are desired, we need to probably specialize this class
 comment|// to take "const T&" for all input T parameters. Yet if a type T is
-comment|// complex already it might be better to build the cleanup funcionality
+comment|// complex already it might be better to build the cleanup functionality
 comment|// into T.
 comment|//
 comment|// The cleanup function must take one argument that is of type T.
@@ -351,7 +351,7 @@ comment|// if it was valid. This function can be used to release the value
 end_comment
 
 begin_comment
-comment|// contained in this object so ownership can be transfered to the caller.
+comment|// contained in this object so ownership can be transferred to the caller.
 end_comment
 
 begin_comment
@@ -789,7 +789,7 @@ comment|// if it was valid. This function can be used to release the value
 end_comment
 
 begin_comment
-comment|// contained in this object so ownership can be transfered to the caller.
+comment|// contained in this object so ownership can be transferred to the caller.
 end_comment
 
 begin_comment

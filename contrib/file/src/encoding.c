@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: encoding.c,v 1.9 2013/11/19 20:45:50 christos Exp $"
+literal|"@(#)$File: encoding.c,v 1.10 2014/09/11 12:08:52 christos Exp $"
 argument_list|)
 end_macro
 
@@ -515,11 +515,6 @@ operator|*
 name|ulen
 operator|)
 argument_list|)
-expr_stmt|;
-operator|*
-name|code
-operator|=
-literal|"UTF-8 Unicode (with BOM)"
 expr_stmt|;
 operator|*
 name|code

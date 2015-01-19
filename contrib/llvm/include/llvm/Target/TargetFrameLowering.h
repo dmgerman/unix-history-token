@@ -263,6 +263,40 @@ return|return
 name|true
 return|;
 block|}
+comment|/// assignCalleeSavedSpillSlots - Allows target to override spill slot
+comment|/// assignment logic.  If implemented, assignCalleeSavedSpillSlots() should
+comment|/// assign frame slots to all CSI entries and return true.  If this method
+comment|/// returns false, spill slots will be assigned using generic implementation.
+comment|/// assignCalleeSavedSpillSlots() may add, delete or rearrange elements of
+comment|/// CSI.
+name|virtual
+name|bool
+name|assignCalleeSavedSpillSlots
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|CalleeSavedInfo
+operator|>
+operator|&
+name|CSI
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// getCalleeSavedSpillSlots - This method returns a pointer to an array of
 comment|/// pairs, that contains an entry for each callee saved register that must be
 comment|/// spilled to a particular stack location if it is spilled.
@@ -289,7 +323,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// targetHandlesStackFrameRounding - Returns true if the target is
@@ -557,7 +591,7 @@ name|RegScavenger
 operator|*
 name|RS
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 block|{    }
@@ -578,7 +612,7 @@ name|RegScavenger
 operator|*
 name|RS
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 block|{   }

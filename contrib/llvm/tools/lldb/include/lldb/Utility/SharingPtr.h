@@ -64,7 +64,7 @@ comment|// in CLR mode - as such we need to "hack around it" for MSVC++ builds o
 end_comment
 
 begin_comment
-comment|// using Windows specific instrinsics instead of the C++11 atomic support
+comment|// using Windows specific intrinsics instead of the C++11 atomic support
 end_comment
 
 begin_ifdef
@@ -262,8 +262,8 @@ name|void
 name|on_zero_shared
 argument_list|()
 block|;
-comment|// Outlaw copy constructor and assignment operator to keep effictive C++
-comment|// warnings down to a minumum
+comment|// Outlaw copy constructor and assignment operator to keep effective C++
+comment|// warnings down to a minimum
 name|shared_ptr_pointer
 argument_list|(
 specifier|const
@@ -571,6 +571,13 @@ name|public
 label|:
 name|SharingPtr
 argument_list|()
+expr_stmt|;
+name|SharingPtr
+argument_list|(
+name|std
+operator|::
+name|nullptr_t
+argument_list|)
 expr_stmt|;
 name|template
 operator|<
@@ -977,6 +984,34 @@ operator|>
 operator|::
 name|SharingPtr
 argument_list|()
+operator|:
+name|ptr_
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|cntrl_
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+name|template
+operator|<
+name|class
+name|T
+operator|>
+specifier|inline
+name|SharingPtr
+operator|<
+name|T
+operator|>
+operator|::
+name|SharingPtr
+argument_list|(
+name|std
+operator|::
+name|nullptr_t
+argument_list|)
 operator|:
 name|ptr_
 argument_list|(

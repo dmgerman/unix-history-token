@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1824,7 +1824,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vdev_mirror_io_start
 parameter_list|(
 name|zio_t
@@ -1875,6 +1875,12 @@ operator|!
 name|mm
 operator|->
 name|mm_replacing
+operator|&&
+name|mm
+operator|->
+name|mm_children
+operator|>
+literal|1
 condition|)
 block|{
 comment|/* 			 * For scrubbing reads we need to allocate a read 			 * buffer for each child and issue reads to all 			 * children.  If any child succeeds, it will copy its 			 * data into zio->io_data in vdev_mirror_scrub_done. 			 */
@@ -1950,16 +1956,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|zio_interrupt
+name|zio_execute
 argument_list|(
 name|zio
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
+return|return;
 block|}
 comment|/* 		 * For normal reads just pick one child. 		 */
 name|c
@@ -2069,16 +2071,11 @@ name|c
 operator|++
 expr_stmt|;
 block|}
-name|zio_interrupt
+name|zio_execute
 argument_list|(
 name|zio
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
 block|}
 end_function
 

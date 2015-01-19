@@ -2009,6 +2009,9 @@ name|struct
 name|regional
 modifier|*
 name|region
+parameter_list|,
+name|uint16_t
+name|flags
 parameter_list|)
 block|{
 if|if
@@ -2029,6 +2032,8 @@ argument_list|,
 name|pside
 argument_list|,
 name|region
+argument_list|,
+name|flags
 argument_list|)
 condition|)
 name|log_err
@@ -2183,6 +2188,10 @@ argument_list|,
 name|qstate
 operator|->
 name|is_priming
+argument_list|,
+name|qstate
+operator|->
+name|is_valrec
 argument_list|)
 return|;
 block|}
@@ -3365,14 +3374,7 @@ literal|0
 return|;
 if|if
 condition|(
-name|d1
-operator|->
-name|ttl
-operator|!=
-name|d2
-operator|->
-name|ttl
-operator|||
+comment|/* do not check ttl: d1->ttl != d2->ttl || */
 name|d1
 operator|->
 name|count
@@ -3448,20 +3450,7 @@ index|[
 name|i
 index|]
 operator|||
-name|d1
-operator|->
-name|rr_ttl
-index|[
-name|i
-index|]
-operator|!=
-name|d2
-operator|->
-name|rr_ttl
-index|[
-name|i
-index|]
-operator|||
+comment|/* no ttl check: d1->rr_ttl[i] != d2->rr_ttl[i] ||*/
 name|memcmp
 argument_list|(
 name|d1
@@ -3539,22 +3528,8 @@ name|q
 operator|->
 name|qdcount
 operator|||
-name|p
-operator|->
-name|ttl
-operator|!=
-name|q
-operator|->
-name|ttl
-operator|||
-name|p
-operator|->
-name|prefetch_ttl
-operator|!=
-name|q
-operator|->
-name|prefetch_ttl
-operator|||
+comment|/* do not check TTL, this may differ */
+comment|/* 		p->ttl != q->ttl || 		p->prefetch_ttl != q->prefetch_ttl || 		*/
 name|p
 operator|->
 name|security

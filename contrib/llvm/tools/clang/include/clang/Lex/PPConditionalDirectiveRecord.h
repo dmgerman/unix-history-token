@@ -355,7 +355,6 @@ specifier|const
 block|;
 name|private
 operator|:
-name|virtual
 name|void
 name|If
 argument_list|(
@@ -363,10 +362,10 @@ argument|SourceLocation Loc
 argument_list|,
 argument|SourceRange ConditionRange
 argument_list|,
-argument|bool ConditionValue
+argument|ConditionValueKind ConditionValue
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|Elif
 argument_list|(
@@ -374,12 +373,12 @@ argument|SourceLocation Loc
 argument_list|,
 argument|SourceRange ConditionRange
 argument_list|,
-argument|bool ConditionValue
+argument|ConditionValueKind ConditionValue
 argument_list|,
 argument|SourceLocation IfLoc
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|Ifdef
 argument_list|(
@@ -389,8 +388,8 @@ argument|const Token&MacroNameTok
 argument_list|,
 argument|const MacroDirective *MD
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|Ifndef
 argument_list|(
@@ -400,8 +399,8 @@ argument|const Token&MacroNameTok
 argument_list|,
 argument|const MacroDirective *MD
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|Else
 argument_list|(
@@ -409,8 +408,8 @@ argument|SourceLocation Loc
 argument_list|,
 argument|SourceLocation IfLoc
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|Endif
 argument_list|(
@@ -418,6 +417,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|SourceLocation IfLoc
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

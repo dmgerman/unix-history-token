@@ -107,6 +107,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/ConnectionFileDescriptor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/Condition.h"
 end_include
 
@@ -122,6 +128,12 @@ directive|include
 file|"lldb/Host/Mutex.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/Predicate.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -130,6 +142,18 @@ comment|//----------------------------------------------------------------------
 comment|/// @class Editline Editline.h "lldb/Host/Editline.h"
 comment|/// @brief A class that encapsulates editline functionality.
 comment|//----------------------------------------------------------------------
+name|class
+name|EditlineHistory
+decl_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|EditlineHistory
+operator|>
+name|EditlineHistorySP
+expr_stmt|;
 name|class
 name|Editline
 block|{
@@ -217,30 +241,20 @@ argument_list|)
 expr_stmt|;
 name|Editline
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|prog
+argument|const char *prog
 argument_list|,
 comment|// Used for the history file and for editrc program name
-specifier|const
-name|char
-operator|*
-name|prompt
+argument|const char *prompt
 argument_list|,
-name|FILE
-operator|*
-name|fin
+argument|bool configure_for_multiline
 argument_list|,
-name|FILE
-operator|*
-name|fout
+argument|FILE *fin
 argument_list|,
-name|FILE
-operator|*
-name|ferr
+argument|FILE *fout
+argument_list|,
+argument|FILE *ferr
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 operator|~
 name|Editline
 argument_list|()
@@ -253,6 +267,10 @@ operator|::
 name|string
 operator|&
 name|line
+argument_list|,
+name|bool
+operator|&
+name|interrupted
 argument_list|)
 decl_stmt|;
 name|Error
@@ -268,6 +286,10 @@ argument_list|,
 name|StringList
 operator|&
 name|lines
+argument_list|,
+name|bool
+operator|&
+name|interrupted
 argument_list|)
 decl_stmt|;
 name|bool
@@ -310,7 +332,7 @@ name|void
 name|Refresh
 parameter_list|()
 function_decl|;
-name|void
+name|bool
 name|Interrupt
 parameter_list|()
 function_decl|;
@@ -366,20 +388,6 @@ name|size_t
 name|len
 parameter_list|)
 function_decl|;
-comment|// Cache bytes and use them for input without using a FILE. Calling this function
-comment|// will set the getc callback in the editline
-name|size_t
-name|SetInputBuffer
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|c
-parameter_list|,
-name|size_t
-name|len
-parameter_list|)
-function_decl|;
 specifier|static
 name|int
 name|GetCharFromInputFileCallback
@@ -416,6 +424,25 @@ modifier|*
 name|p
 parameter_list|)
 function_decl|;
+name|void
+name|ShowLineNumbers
+parameter_list|(
+name|bool
+name|enable
+parameter_list|,
+name|uint32_t
+name|line_offset
+parameter_list|)
+block|{
+name|m_prompt_with_line_numbers
+operator|=
+name|enable
+expr_stmt|;
+name|m_line_offset
+operator|=
+name|line_offset
+expr_stmt|;
+block|}
 name|private
 label|:
 name|Error
@@ -428,24 +455,12 @@ operator|&
 name|line
 argument_list|)
 decl_stmt|;
-name|FileSpec
-name|GetHistoryFile
-parameter_list|()
-function_decl|;
 name|unsigned
 name|char
 name|HandleCompletion
 parameter_list|(
 name|int
 name|ch
-parameter_list|)
-function_decl|;
-name|int
-name|GetChar
-parameter_list|(
-name|char
-modifier|*
-name|c
 parameter_list|)
 function_decl|;
 specifier|static
@@ -527,20 +542,6 @@ name|int
 name|fd
 argument_list|)
 decl_stmt|;
-specifier|static
-name|int
-name|GetCharInputBufferCallback
-argument_list|(
-operator|::
-name|EditLine
-operator|*
-name|e
-argument_list|,
-name|char
-operator|*
-name|c
-argument_list|)
-decl_stmt|;
 name|enum
 name|class
 name|Command
@@ -560,20 +561,9 @@ name|EditLine
 operator|*
 name|m_editline
 expr_stmt|;
-operator|::
-name|History
-operator|*
-name|m_history
-expr_stmt|;
-operator|::
-name|HistEvent
-name|m_history_event
-expr_stmt|;
-name|std
-operator|::
-name|string
-name|m_program
-expr_stmt|;
+name|EditlineHistorySP
+name|m_history_sp
+decl_stmt|;
 name|std
 operator|::
 name|string
@@ -584,17 +574,14 @@ operator|::
 name|string
 name|m_lines_prompt
 expr_stmt|;
-name|std
+name|lldb_private
 operator|::
-name|string
-name|m_getc_buffer
+name|Predicate
+operator|<
+name|bool
+operator|>
+name|m_getting_char
 expr_stmt|;
-name|Mutex
-name|m_getc_mutex
-decl_stmt|;
-name|Condition
-name|m_getc_cond
-decl_stmt|;
 name|CompleteCallbackType
 name|m_completion_callback
 decl_stmt|;
@@ -602,7 +589,6 @@ name|void
 modifier|*
 name|m_completion_callback_baton
 decl_stmt|;
-comment|//    Mutex m_gets_mutex; // Make sure only one thread
 name|LineCompletedCallbackType
 name|m_line_complete_callback
 decl_stmt|;
@@ -614,10 +600,16 @@ name|Command
 name|m_lines_command
 decl_stmt|;
 name|uint32_t
+name|m_line_offset
+decl_stmt|;
+name|uint32_t
 name|m_lines_curr_line
 decl_stmt|;
 name|uint32_t
 name|m_lines_max_line
+decl_stmt|;
+name|ConnectionFileDescriptor
+name|m_file
 decl_stmt|;
 name|bool
 name|m_prompt_with_line_numbers

@@ -139,7 +139,7 @@ argument_list|)
 block|,
 name|Result
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|template

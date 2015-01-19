@@ -206,7 +206,7 @@ value|VNET(ipfastforward_active)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -214,6 +214,8 @@ name|OID_AUTO
 argument_list|,
 name|fastforwarding
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1713,47 +1715,6 @@ goto|goto
 name|consumed
 goto|;
 block|}
-ifndef|#
-directive|ifndef
-name|ALTQ
-comment|/* 	 * Check if there is enough space in the interface queue 	 */
-if|if
-condition|(
-operator|(
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_len
-operator|+
-name|ip_len
-operator|/
-name|ifp
-operator|->
-name|if_mtu
-operator|+
-literal|1
-operator|)
-operator|>=
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_maxlen
-condition|)
-block|{
-name|IPSTAT_INC
-argument_list|(
-name|ips_odropped
-argument_list|)
-expr_stmt|;
-comment|/* would send source quench here but that is depreciated */
-goto|goto
-name|drop
-goto|;
-block|}
-endif|#
-directive|endif
 comment|/* 	 * Check if media link state of interface is not down 	 */
 if|if
 condition|(

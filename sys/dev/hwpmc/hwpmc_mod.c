@@ -1585,6 +1585,13 @@ block|,
 operator|&
 name|pmc_sysent
 block|,
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|1100000
+operator|)
 block|{
 literal|0
 block|,
@@ -1592,7 +1599,17 @@ name|NULL
 block|}
 block|,
 name|SY_THR_STATIC_KLD
-block|, }
+block|,
+else|#
+directive|else
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -17776,14 +17793,16 @@ operator|)
 name|printf
 argument_list|(
 literal|"hwpmc: tunable \"callchaindepth\"=%d out of "
-literal|"range.\n"
+literal|"range - using %d.\n"
 argument_list|,
 name|pmc_callchaindepth
+argument_list|,
+name|PMC_CALLCHAIN_DEPTH_MAX
 argument_list|)
 expr_stmt|;
 name|pmc_callchaindepth
 operator|=
-name|PMC_CALLCHAIN_DEPTH
+name|PMC_CALLCHAIN_DEPTH_MAX
 expr_stmt|;
 block|}
 name|md

@@ -116,6 +116,23 @@ name|Level
 name|DiagnosticLevel
 block|;   }
 block|;
+name|void
+name|EmitDiagEntry
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|LogDiagnosticPrinter
+operator|::
+name|DiagEntry
+operator|&
+name|DE
+argument_list|)
+block|;
 name|raw_ostream
 operator|&
 name|OS
@@ -193,6 +210,7 @@ argument|const LangOptions&LO
 argument_list|,
 argument|const Preprocessor *PP
 argument_list|)
+name|override
 block|{
 name|LangOpts
 operator|=
@@ -202,8 +220,8 @@ block|;   }
 name|void
 name|EndSourceFile
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
@@ -211,6 +229,7 @@ argument|DiagnosticsEngine::Level DiagLevel
 argument_list|,
 argument|const Diagnostic&Info
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

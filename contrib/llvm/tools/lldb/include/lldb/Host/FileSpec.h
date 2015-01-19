@@ -130,6 +130,16 @@ name|eFileTypeOther
 block|}
 name|FileType
 typedef|;
+enum|enum
+name|PathSyntax
+block|{
+name|ePathSyntaxPosix
+block|,
+name|ePathSyntaxWindows
+block|,
+name|ePathSyntaxHostNative
+block|}
+enum|;
 name|FileSpec
 argument_list|()
 expr_stmt|;
@@ -159,6 +169,11 @@ name|path
 parameter_list|,
 name|bool
 name|resolve_path
+parameter_list|,
+name|PathSyntax
+name|syntax
+init|=
+name|ePathSyntaxHostNative
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -425,7 +440,7 @@ comment|/// contains a valid directory name, it will be displayed followed
 comment|/// by a directory delimiter, and the filename.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|//------------------------------------------------------------------
 name|void
 name|Dump
@@ -444,6 +459,18 @@ comment|///     \b true if the file exists on disk, \b false otherwise.
 comment|//------------------------------------------------------------------
 name|bool
 name|Exists
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Check if a file is readable by the current user
+comment|///
+comment|/// @return
+comment|///     \b true if the file exists on disk and is readable, \b false
+comment|///     otherwise.
+comment|//------------------------------------------------------------------
+name|bool
+name|Readable
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -475,6 +502,11 @@ parameter_list|()
 function_decl|;
 name|uint64_t
 name|GetByteSize
+argument_list|()
+specifier|const
+expr_stmt|;
+name|PathSyntax
+name|GetPathSyntax
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -588,6 +620,11 @@ name|path
 argument_list|,
 name|size_t
 name|max_path_length
+argument_list|,
+name|bool
+name|denormalize
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -604,7 +641,9 @@ name|std
 operator|::
 name|string
 name|GetPath
-argument_list|()
+argument_list|(
+argument|bool denormalize = true
+argument_list|)
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -754,7 +793,7 @@ comment|///
 comment|/// Returns a shared pointer to a data buffer that contains all or
 comment|/// part of the contents of a file. The data is memory mapped and
 comment|/// will lazily page in data from the file as memory is accessed.
-comment|/// The data that is mappped will start \a offset bytes into the
+comment|/// The data that is mapped will start \a offset bytes into the
 comment|/// file, and \a length bytes will be mapped. If \a length is
 comment|/// greater than the number of bytes available in the file starting
 comment|/// at \a offset, the number of bytes will be appropriately
@@ -772,7 +811,7 @@ comment|///     bytes into the file. If \a length is \c SIZE_MAX, map
 comment|///     as many bytes as possible.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the memeory mapped data. This shared
+comment|///     A shared pointer to the memory mapped data. This shared
 comment|///     pointer can contain a NULL DataBuffer pointer, so the contained
 comment|///     pointer must be checked prior to using it.
 comment|//------------------------------------------------------------------
@@ -872,8 +911,46 @@ operator|=
 name|NULL
 argument_list|)
 expr_stmt|;
+specifier|static
+name|void
+name|Normalize
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|path
+argument_list|,
+name|PathSyntax
+name|syntax
+operator|=
+name|ePathSyntaxHostNative
+argument_list|)
+decl_stmt|;
+specifier|static
+name|void
+name|DeNormalize
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|path
+argument_list|,
+name|PathSyntax
+name|syntax
+operator|=
+name|ePathSyntaxHostNative
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Change the file specificed with a new path.
+comment|/// Change the file specified with a new path.
 comment|///
 comment|/// Update the contents of this object with a new path. The path will
 comment|/// be split up into a directory and filename and stored as uniqued
@@ -896,6 +973,11 @@ name|path
 parameter_list|,
 name|bool
 name|resolve_path
+parameter_list|,
+name|PathSyntax
+name|syntax
+init|=
+name|ePathSyntaxHostNative
 parameter_list|)
 function_decl|;
 name|bool
@@ -954,42 +1036,26 @@ name|lines
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Resolves user name and links in \a src_path, and writes the output
-comment|/// to \a dst_path.  Note if the path pointed to by \a src_path does not
-comment|/// exist, the contents of \a src_path will be copied to \a dst_path
-comment|/// unchanged.
+comment|/// Resolves user name and links in \a path, and overwrites the input
+comment|/// argument with the resolved path.
 comment|///
-comment|/// @param[in] src_path
-comment|///     Input path to be resolved.
-comment|///
-comment|/// @param[in] dst_path
-comment|///     Buffer to store the resolved path.
-comment|///
-comment|/// @param[in] dst_len
-comment|///     Size of the buffer pointed to by dst_path.
-comment|///
-comment|/// @result
-comment|///     The number of characters required to write the resolved path.  If the
-comment|///     resolved path doesn't fit in dst_len, dst_len-1 characters will
-comment|///     be written to \a dst_path, but the actual required length will still be returned.
+comment|/// @param[in] path
+comment|///     Input path to be resolved, in the form of a llvm::SmallString or similar.
 comment|//------------------------------------------------------------------
 specifier|static
-name|size_t
+name|void
 name|Resolve
-parameter_list|(
-specifier|const
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
 name|char
-modifier|*
-name|src_path
-parameter_list|,
-name|char
-modifier|*
-name|dst_path
-parameter_list|,
-name|size_t
-name|dst_len
-parameter_list|)
-function_decl|;
+operator|>
+operator|&
+name|path
+argument_list|)
+decl_stmt|;
 name|FileSpec
 name|CopyByAppendingPathComponent
 argument_list|(
@@ -1034,33 +1100,21 @@ comment|///     Input path to be resolved.
 comment|///
 comment|/// @param[in] dst_path
 comment|///     Buffer to store the resolved path.
-comment|///
-comment|/// @param[in] dst_len
-comment|///     Size of the buffer pointed to by dst_path.
-comment|///
-comment|/// @result
-comment|///     The number of characters required to write the resolved path, or 0 if
-comment|///     the user name could not be found.  If the
-comment|///     resolved path doesn't fit in dst_len, dst_len-1 characters will
-comment|///     be written to \a dst_path, but the actual required length will still be returned.
 comment|//------------------------------------------------------------------
 specifier|static
-name|size_t
+name|void
 name|ResolveUsername
-parameter_list|(
-specifier|const
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
 name|char
-modifier|*
-name|src_path
-parameter_list|,
-name|char
-modifier|*
-name|dst_path
-parameter_list|,
-name|size_t
-name|dst_len
-parameter_list|)
-function_decl|;
+operator|>
+operator|&
+name|path
+argument_list|)
+decl_stmt|;
 specifier|static
 name|size_t
 name|ResolvePartialUsername
@@ -1155,6 +1209,10 @@ name|bool
 name|m_is_resolved
 decl_stmt|;
 comment|///< True if this path has been resolved.
+name|PathSyntax
+name|m_syntax
+decl_stmt|;
+comment|///< The syntax that this path uses (e.g. Windows / Posix)
 block|}
 empty_stmt|;
 comment|//----------------------------------------------------------------------

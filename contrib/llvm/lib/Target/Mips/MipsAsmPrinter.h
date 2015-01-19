@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"Mips16HardFloatInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"MipsMCInstLower.h"
 end_include
 
@@ -154,6 +160,22 @@ operator|*
 name|MI
 argument_list|)
 block|;
+comment|// Emit PseudoReturn, PseudoReturn64, PseudoIndirectBranch,
+comment|// and PseudoIndirectBranch64 as a JR, JR_MM, JALR, or JALR64 as appropriate
+comment|// for the target.
+name|void
+name|emitPseudoIndirectBranch
+argument_list|(
+name|MCStreamer
+operator|&
+name|OutStreamer
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+block|;
 comment|// lowerOperand - Convert a MachineOperand into the equivalent MCOperand.
 name|bool
 name|lowerOperand
@@ -180,8 +202,124 @@ comment|/// pool entries so we can properly mark them as data regions.
 name|bool
 name|InConstantPool
 block|;
+name|std
+operator|::
+name|map
+operator|<
+specifier|const
+name|char
+operator|*
+block|,
+specifier|const
+name|llvm
+operator|::
+name|Mips16HardFloatInfo
+operator|::
+name|FuncSignature
+operator|*
+operator|>
+name|StubsNeeded
+block|;
+name|void
+name|EmitJal
+argument_list|(
+name|MCSymbol
+operator|*
+name|Symbol
+argument_list|)
+block|;
+name|void
+name|EmitInstrReg
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Reg
+argument_list|)
+block|;
+name|void
+name|EmitInstrRegReg
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Reg1
+argument_list|,
+argument|unsigned Reg2
+argument_list|)
+block|;
+name|void
+name|EmitInstrRegRegReg
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Reg1
+argument_list|,
+argument|unsigned Reg2
+argument_list|,
+argument|unsigned Reg3
+argument_list|)
+block|;
+name|void
+name|EmitMovFPIntPair
+argument_list|(
+argument|unsigned MovOpc
+argument_list|,
+argument|unsigned Reg1
+argument_list|,
+argument|unsigned Reg2
+argument_list|,
+argument|unsigned FPReg1
+argument_list|,
+argument|unsigned FPReg2
+argument_list|,
+argument|bool LE
+argument_list|)
+block|;
+name|void
+name|EmitSwapFPIntParams
+argument_list|(
+argument|Mips16HardFloatInfo::FPParamVariant
+argument_list|,
+argument|bool LE
+argument_list|,
+argument|bool ToFP
+argument_list|)
+block|;
+name|void
+name|EmitSwapFPIntRetval
+argument_list|(
+argument|Mips16HardFloatInfo::FPReturnVariant
+argument_list|,
+argument|bool LE
+argument_list|)
+block|;
+name|void
+name|EmitFPCallStub
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+specifier|const
+name|Mips16HardFloatInfo
+operator|::
+name|FuncSignature
+operator|*
+argument_list|)
+block|;
+name|void
+name|NaClAlignIndirectJumpTargets
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+block|;
 name|bool
-name|UsingConstantPools
+name|isLongBranchPseudo
+argument_list|(
+argument|int Opcode
+argument_list|)
+specifier|const
 block|;
 name|public
 operator|:
@@ -198,6 +336,11 @@ block|;
 name|MipsMCInstLower
 name|MCInstLowering
 block|;
+comment|// We initialize the subtarget here and in runOnMachineFunction
+comment|// since there are certain target specific flags (ABI) that could
+comment|// reside on the TargetMachine, but are on the subtarget currently
+comment|// and we need them for the beginning of file output before we've
+comment|// seen a single function.
 name|explicit
 name|MipsAsmPrinter
 argument_list|(
@@ -219,7 +362,7 @@ argument_list|)
 block|,
 name|MCP
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|InConstantPool
@@ -227,13 +370,8 @@ argument_list|(
 name|false
 argument_list|)
 block|,
-name|MCInstLowering
-argument_list|(
-argument|*this
-argument_list|)
-block|{
 name|Subtarget
-operator|=
+argument_list|(
 operator|&
 name|TM
 operator|.
@@ -243,7 +381,38 @@ name|MipsSubtarget
 operator|>
 operator|(
 operator|)
+argument_list|)
+block|,
+name|MCInstLowering
+argument_list|(
+argument|*this
+argument_list|)
+block|{}
+specifier|const
+name|char
+operator|*
+name|getPassName
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|"Mips Assembly Printer"
+return|;
+block|}
+name|bool
+name|runOnMachineFunction
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+name|override
 block|;
+name|void
+name|EmitConstantPool
+argument_list|()
+name|override
+block|{
+name|bool
 name|UsingConstantPools
 operator|=
 operator|(
@@ -257,34 +426,7 @@ operator|->
 name|useConstantIslands
 argument_list|()
 operator|)
-block|;   }
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getPassName
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|"Mips Assembly Printer"
-return|;
-block|}
-name|virtual
-name|bool
-name|runOnMachineFunction
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
 block|;
-name|virtual
-name|void
-name|EmitConstantPool
-argument_list|()
-name|LLVM_OVERRIDE
-block|{
 if|if
 condition|(
 operator|!
@@ -300,27 +442,13 @@ block|}
 name|void
 name|EmitInstruction
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|)
+name|override
 block|;
 name|void
 name|printSavedRegsBitmask
-argument_list|(
-name|raw_ostream
-operator|&
-name|O
-argument_list|)
-block|;
-name|void
-name|printHex32
-argument_list|(
-argument|unsigned int Value
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
+argument_list|()
 block|;
 name|void
 name|emitFrameDirective
@@ -333,28 +461,28 @@ name|getCurrentABIString
 argument_list|()
 specifier|const
 block|;
-name|virtual
 name|void
 name|EmitFunctionEntryLabel
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|EmitFunctionBodyStart
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|EmitFunctionBodyEnd
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|isBlockOnlyReachableByFallthrough
 argument_list|(
-argument|const MachineBasicBlock*                                                  MBB
+argument|const MachineBasicBlock* MBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|PrintAsmOperand
@@ -369,6 +497,7 @@ argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
+name|override
 block|;
 name|bool
 name|PrintAsmMemoryOperand
@@ -383,6 +512,7 @@ argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
+name|override
 block|;
 name|void
 name|printOperand
@@ -443,25 +573,22 @@ argument|int opNum
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier =
-literal|0
+argument|const char *Modifier = nullptr
 argument_list|)
 block|;
 name|void
 name|EmitStartOfAsmFile
 argument_list|(
-name|Module
-operator|&
-name|M
+argument|Module&M
 argument_list|)
+name|override
 block|;
 name|void
 name|EmitEndOfAsmFile
 argument_list|(
-name|Module
-operator|&
-name|M
+argument|Module&M
 argument_list|)
+name|override
 block|;
 name|void
 name|PrintDebugValueComment

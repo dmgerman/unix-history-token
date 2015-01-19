@@ -102,12 +102,9 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|sighandler
 parameter_list|(
 name|int

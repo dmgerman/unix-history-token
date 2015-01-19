@@ -354,6 +354,26 @@ begin_comment
 comment|/* GPROF */
 end_comment
 
+begin_comment
+comment|/*  * Convenience for adding frame pointers to hand-coded ASM.  Useful for  * DTrace, HWPMC, and KDB.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PUSH_FRAME_POINTER
+define|\
+value|pushq	%rbp ;		\ 	movq	%rsp, %rbp ;
+end_define
+
+begin_define
+define|#
+directive|define
+name|POP_FRAME_POINTER
+define|\
+value|popq	%rbp
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

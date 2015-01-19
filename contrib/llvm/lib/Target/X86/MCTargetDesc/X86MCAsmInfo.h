@@ -96,10 +96,10 @@ range|:
 name|public
 name|MCAsmInfoDarwin
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -128,7 +128,6 @@ operator|&
 name|Triple
 argument_list|)
 block|;
-name|virtual
 specifier|const
 name|MCExpr
 operator|*
@@ -141,6 +140,7 @@ argument_list|,
 argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 name|class
@@ -149,10 +149,10 @@ range|:
 name|public
 name|MCAsmInfoELF
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -165,7 +165,6 @@ operator|&
 name|Triple
 argument_list|)
 block|;
-name|virtual
 specifier|const
 name|MCSection
 operator|*
@@ -174,6 +173,7 @@ argument_list|(
 argument|MCContext&Ctx
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 name|class
@@ -182,10 +182,10 @@ range|:
 name|public
 name|MCAsmInfoMicrosoft
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -205,10 +205,10 @@ range|:
 name|public
 name|MCAsmInfoGNUCOFF
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:

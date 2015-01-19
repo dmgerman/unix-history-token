@@ -1,23 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libmandoc.h,v 1.35 2013/12/15 21:23:52 schwarze Exp $ */
+comment|/*	$Id: libmandoc.h,v 1.51 2014/12/01 08:05:52 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2010, 2011, 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2009, 2010, 2011, 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LIBMANDOC_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LIBMANDOC_H
-end_define
 
 begin_enum
 enum|enum
@@ -53,9 +41,54 @@ block|}
 enum|;
 end_enum
 
+begin_struct
+struct|struct
+name|buf
+block|{
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|size_t
+name|sz
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|__BEGIN_DECLS
 end_macro
+
+begin_struct_decl
+struct_decl|struct
+name|mparse
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|mchars
+struct_decl|;
+end_struct_decl
+
+begin_enum_decl
+enum_decl|enum
+name|mandocerr
+enum_decl|;
+end_enum_decl
+
+begin_struct_decl
+struct_decl|struct
+name|tbl_span
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|eqn
+struct_decl|;
+end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -96,6 +129,32 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|-
+literal|0
+operator|>=
+literal|4
+end_if
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(__format__ (__printf__,
+literal|5
+argument|,
+literal|6
+argument|))
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -170,8 +229,6 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -229,8 +286,11 @@ name|struct
 name|mparse
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -276,7 +336,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|mdoc_addspan
 parameter_list|(
 name|struct
@@ -292,7 +352,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|mdoc_addeqn
 parameter_list|(
 name|struct
@@ -331,6 +391,8 @@ parameter_list|,
 name|struct
 name|mparse
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -376,7 +438,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|man_addspan
 parameter_list|(
 name|struct
@@ -392,7 +454,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|man_addeqn
 parameter_list|(
 name|struct
@@ -402,6 +464,44 @@ parameter_list|,
 specifier|const
 name|struct
 name|eqn
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|preconv_cue
+parameter_list|(
+specifier|const
+name|struct
+name|buf
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|preconv_encode
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
@@ -424,12 +524,16 @@ name|roff
 modifier|*
 name|roff_alloc
 parameter_list|(
-name|enum
-name|mparset
-parameter_list|,
 name|struct
 name|mparse
 modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|mchars
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -456,14 +560,9 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|char
+name|struct
+name|buf
 modifier|*
-modifier|*
-parameter_list|,
-name|size_t
-modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 modifier|*
@@ -554,17 +653,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|char		 roff_eqndelim(const struct roff *); void		 roff_openeqn(struct roff *, const char *,  			int, int, const char *); int		 roff_closeeqn(struct roff *);
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|int
+name|roff_getformat
+parameter_list|(
+specifier|const
+name|struct
+name|roff
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|const
@@ -599,15 +698,6 @@ end_function_decl
 begin_macro
 name|__END_DECLS
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!LIBMANDOC_H*/
-end_comment
 
 end_unit
 

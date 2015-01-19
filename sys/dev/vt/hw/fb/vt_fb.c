@@ -621,6 +621,15 @@ argument_list|(
 name|info
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|info
+operator|->
+name|fb_flags
+operator|&
+name|FB_FLAG_NOWRITE
+condition|)
+return|return;
 name|KASSERT
 argument_list|(
 operator|(
@@ -898,6 +907,15 @@ index|[
 name|color
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|info
+operator|->
+name|fb_flags
+operator|&
+name|FB_FLAG_NOWRITE
+condition|)
+return|return;
 name|KASSERT
 argument_list|(
 operator|(
@@ -1309,6 +1327,15 @@ operator|>>
 literal|3
 expr_stmt|;
 comment|/* Bytes per source line. */
+if|if
+condition|(
+name|info
+operator|->
+name|fb_flags
+operator|&
+name|FB_FLAG_NOWRITE
+condition|)
+return|return;
 name|KASSERT
 argument_list|(
 operator|(

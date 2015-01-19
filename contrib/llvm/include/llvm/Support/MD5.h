@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -31,14 +37,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|ArrayRef
-expr_stmt|;
 name|class
 name|MD5
 block|{

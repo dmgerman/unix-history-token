@@ -774,9 +774,9 @@ argument|, ptoa(vm_cnt.v_free_count), 	    ptoa(vm_cnt.v_free_count) /
 literal|1048576
 argument|);
 comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */
-argument|bufinit(); 	vm_pager_bufferinit(); }  extern char	kernel_text[]
+argument|bufinit(); 	vm_pager_bufferinit(); }  extern vm_offset_t	__startkernel
 argument_list|,
-argument|_end[];
+argument|__endkernel;
 ifndef|#
 directive|ifndef
 name|__powerpc64__
@@ -814,11 +814,9 @@ argument|*imisssize; extern void	*dlmisstrap
 argument_list|,
 argument|*dlmisssize; extern void	*dsmisstrap
 argument_list|,
-argument|*dsmisssize; char 		save_trap_init[
-literal|0x2f00
-argument|];
-comment|/* EXC_LAST */
-argument|uintptr_t powerpc_init(vm_offset_t startkernel, vm_offset_t endkernel,     vm_offset_t basekernel, void *mdp) { 	struct		pcpu *pc; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
+argument|*dsmisssize;  uintptr_t powerpc_init(vm_offset_t fdt, vm_offset_t toc, vm_offset_t ofentry, void *mdp) { 	struct		pcpu *pc; 	vm_offset_t	startkernel
+argument_list|,
+argument|endkernel; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
 argument_list|,
 argument|scratch;
 ifdef|#
@@ -845,8 +843,10 @@ literal|0
 argument|; 	cacheline_warn =
 literal|0
 argument|;
-comment|/* Save trap vectors. */
-argument|ofw_save_trap_vec(save_trap_init);
+comment|/* Store boot environment state */
+argument|OF_initial_setup((void *)fdt, NULL, (int (*)(void *))ofentry);
+comment|/* First guess at start/end kernel positions */
+argument|startkernel = __startkernel; 	endkernel = __endkernel;
 ifdef|#
 directive|ifdef
 name|WII
@@ -1143,6 +1143,18 @@ name|generictrap
 operator|=
 operator|&
 name|trapcode
+expr_stmt|;
+comment|/* Set TOC base so that the interrupt code can get at it */
+operator|*
+operator|(
+operator|(
+name|register_t
+operator|*
+operator|)
+name|TRAP_TOCBASE
+operator|)
+operator|=
+name|toc
 expr_stmt|;
 endif|#
 directive|endif
@@ -2499,6 +2511,25 @@ name|frame
 operator|->
 name|exc
 decl_stmt|;
+comment|/* Ignore DTrace traps. */
+if|if
+condition|(
+operator|*
+operator|(
+name|uint32_t
+operator|*
+operator|)
+name|frame
+operator|->
+name|srr0
+operator|==
+name|EXC_DTRACE
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|type

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=- AArch64MachineFuctionInfo.h - AArch64 machine function info -*- C++ -*-==//
+comment|//=- AArch64MachineFuctionInfo.h - AArch64 machine function info --*- C++ -*-=//
 end_comment
 
 begin_comment
@@ -50,14 +50,26 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AARCH64MACHINEFUNCTIONINFO_H
+name|AArch64MACHINEFUNCTIONINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AARCH64MACHINEFUNCTIONINFO_H
+name|AArch64MACHINEFUNCTIONINFO_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
 
 begin_include
 include|#
@@ -65,23 +77,24 @@ directive|include
 file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCLinkerOptimizationHint.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// This class is derived from MachineFunctionInfo and contains private AArch64
-comment|/// target-specific information for each MachineFunction.
+comment|/// AArch64FunctionInfo - This class is derived from MachineFunctionInfo and
+comment|/// contains private AArch64-specific information for each MachineFunction.
 name|class
-name|AArch64MachineFunctionInfo
+name|AArch64FunctionInfo
 range|:
 name|public
 name|MachineFunctionInfo
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 comment|/// Number of bytes of arguments this function has on the stack. If the callee
 comment|/// is expected to restore the argument stack this should be a multiple of 16,
 comment|/// all usable during a tail call.
@@ -100,63 +113,48 @@ comment|/// callee is expected to pop the args.
 name|unsigned
 name|ArgumentStackToRestore
 block|;
-comment|/// If the stack needs to be adjusted on frame entry in two stages, this
-comment|/// records the size of the first adjustment just prior to storing
-comment|/// callee-saved registers. The callee-saved slots are addressed assuming
-comment|/// SP ==<incoming-SP> - InitialStackAdjust.
+comment|/// HasStackFrame - True if this function has a stack frame. Set by
+comment|/// processFunctionBeforeCalleeSavedScan().
+name|bool
+name|HasStackFrame
+block|;
+comment|/// \brief Amount of stack frame size, not including callee-saved registers.
 name|unsigned
-name|InitialStackAdjust
+name|LocalStackSize
 block|;
-comment|/// Number of local-dynamic TLS accesses.
+comment|/// \brief Number of TLS accesses using the special (combinable)
+comment|/// _TLS_MODULE_BASE_ symbol.
 name|unsigned
-name|NumLocalDynamics
+name|NumLocalDynamicTLSAccesses
 block|;
-comment|/// @see AArch64 Procedure Call Standard, B.3
-comment|///
-comment|/// The Frame index of the area where LowerFormalArguments puts the
-comment|/// general-purpose registers that might contain variadic parameters.
+comment|/// \brief FrameIndex for start of varargs area for arguments passed on the
+comment|/// stack.
 name|int
-name|VariadicGPRIdx
+name|VarArgsStackIndex
 block|;
-comment|/// @see AArch64 Procedure Call Standard, B.3
-comment|///
-comment|/// The size of the frame object used to store the general-purpose registers
-comment|/// which might contain variadic arguments. This is the offset from
-comment|/// VariadicGPRIdx to what's stored in __gr_top.
+comment|/// \brief FrameIndex for start of varargs area for arguments passed in
+comment|/// general purpose registers.
+name|int
+name|VarArgsGPRIndex
+block|;
+comment|/// \brief Size of the varargs area for arguments passed in general purpose
+comment|/// registers.
 name|unsigned
-name|VariadicGPRSize
+name|VarArgsGPRSize
 block|;
-comment|/// @see AArch64 Procedure Call Standard, B.3
-comment|///
-comment|/// The Frame index of the area where LowerFormalArguments puts the
-comment|/// floating-point registers that might contain variadic parameters.
+comment|/// \brief FrameIndex for start of varargs area for arguments passed in
+comment|/// floating-point registers.
 name|int
-name|VariadicFPRIdx
+name|VarArgsFPRIndex
 block|;
-comment|/// @see AArch64 Procedure Call Standard, B.3
-comment|///
-comment|/// The size of the frame object used to store the floating-point registers
-comment|/// which might contain variadic arguments. This is the offset from
-comment|/// VariadicFPRIdx to what's stored in __vr_top.
+comment|/// \brief Size of the varargs area for arguments passed in floating-point
+comment|/// registers.
 name|unsigned
-name|VariadicFPRSize
-block|;
-comment|/// @see AArch64 Procedure Call Standard, B.3
-comment|///
-comment|/// The Frame index of an object pointing just past the last known stacked
-comment|/// argument on entry to a variadic function. This goes into the __stack field
-comment|/// of the va_list type.
-name|int
-name|VariadicStackIdx
-block|;
-comment|/// The offset of the frame pointer from the stack pointer on function
-comment|/// entry. This is expected to be negative.
-name|int
-name|FramePointerOffset
+name|VarArgsFPRSize
 block|;
 name|public
 operator|:
-name|AArch64MachineFunctionInfo
+name|AArch64FunctionInfo
 argument_list|()
 operator|:
 name|BytesInStackArgArea
@@ -169,48 +167,43 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|InitialStackAdjust
+name|HasStackFrame
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|NumLocalDynamicTLSAccesses
 argument_list|(
 literal|0
 argument_list|)
 block|,
-name|NumLocalDynamics
+name|VarArgsStackIndex
 argument_list|(
 literal|0
 argument_list|)
 block|,
-name|VariadicGPRIdx
+name|VarArgsGPRIndex
 argument_list|(
 literal|0
 argument_list|)
 block|,
-name|VariadicGPRSize
+name|VarArgsGPRSize
 argument_list|(
 literal|0
 argument_list|)
 block|,
-name|VariadicFPRIdx
+name|VarArgsFPRIndex
 argument_list|(
 literal|0
 argument_list|)
 block|,
-name|VariadicFPRSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VariadicStackIdx
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|FramePointerOffset
+name|VarArgsFPRSize
 argument_list|(
 literal|0
 argument_list|)
 block|{}
 name|explicit
-name|AArch64MachineFunctionInfo
+name|AArch64FunctionInfo
 argument_list|(
 name|MachineFunction
 operator|&
@@ -227,46 +220,46 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|InitialStackAdjust
+name|HasStackFrame
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|NumLocalDynamicTLSAccesses
 argument_list|(
 literal|0
 argument_list|)
 block|,
-name|NumLocalDynamics
+name|VarArgsStackIndex
 argument_list|(
 literal|0
 argument_list|)
 block|,
-name|VariadicGPRIdx
+name|VarArgsGPRIndex
 argument_list|(
 literal|0
 argument_list|)
 block|,
-name|VariadicGPRSize
+name|VarArgsGPRSize
 argument_list|(
 literal|0
 argument_list|)
 block|,
-name|VariadicFPRIdx
+name|VarArgsFPRIndex
 argument_list|(
 literal|0
 argument_list|)
 block|,
-name|VariadicFPRSize
+name|VarArgsFPRSize
 argument_list|(
 literal|0
 argument_list|)
-block|,
-name|VariadicStackIdx
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|FramePointerOffset
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+block|{
+operator|(
+name|void
+operator|)
+name|MF
+block|;   }
 name|unsigned
 name|getBytesInStackArgArea
 argument_list|()
@@ -285,7 +278,7 @@ block|{
 name|BytesInStackArgArea
 operator|=
 name|bytes
-block|;}
+block|; }
 name|unsigned
 name|getArgumentStackToRestore
 argument_list|()
@@ -305,32 +298,42 @@ name|ArgumentStackToRestore
 operator|=
 name|bytes
 block|;   }
-name|unsigned
-name|getInitialStackAdjust
+name|bool
+name|hasStackFrame
 argument_list|()
 specifier|const
 block|{
 return|return
-name|InitialStackAdjust
+name|HasStackFrame
 return|;
 block|}
 name|void
-name|setInitialStackAdjust
+name|setHasStackFrame
 argument_list|(
-argument|unsigned bytes
+argument|bool s
 argument_list|)
 block|{
-name|InitialStackAdjust
+name|HasStackFrame
 operator|=
-name|bytes
+name|s
+block|; }
+name|void
+name|setLocalStackSize
+argument_list|(
+argument|unsigned Size
+argument_list|)
+block|{
+name|LocalStackSize
+operator|=
+name|Size
 block|; }
 name|unsigned
-name|getNumLocalDynamicTLSAccesses
+name|getLocalStackSize
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NumLocalDynamics
+name|LocalStackSize
 return|;
 block|}
 name|void
@@ -338,127 +341,324 @@ name|incNumLocalDynamicTLSAccesses
 argument_list|()
 block|{
 operator|++
-name|NumLocalDynamics
-block|; }
-name|int
-name|getVariadicGPRIdx
-argument_list|()
-specifier|const
-block|{
-return|return
-name|VariadicGPRIdx
-return|;
-block|}
-name|void
-name|setVariadicGPRIdx
-argument_list|(
-argument|int Idx
-argument_list|)
-block|{
-name|VariadicGPRIdx
-operator|=
-name|Idx
+name|NumLocalDynamicTLSAccesses
 block|; }
 name|unsigned
-name|getVariadicGPRSize
+name|getNumLocalDynamicTLSAccesses
 argument_list|()
 specifier|const
 block|{
 return|return
-name|VariadicGPRSize
+name|NumLocalDynamicTLSAccesses
+return|;
+block|}
+name|int
+name|getVarArgsStackIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsStackIndex
 return|;
 block|}
 name|void
-name|setVariadicGPRSize
+name|setVarArgsStackIndex
+argument_list|(
+argument|int Index
+argument_list|)
+block|{
+name|VarArgsStackIndex
+operator|=
+name|Index
+block|; }
+name|int
+name|getVarArgsGPRIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsGPRIndex
+return|;
+block|}
+name|void
+name|setVarArgsGPRIndex
+argument_list|(
+argument|int Index
+argument_list|)
+block|{
+name|VarArgsGPRIndex
+operator|=
+name|Index
+block|; }
+name|unsigned
+name|getVarArgsGPRSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsGPRSize
+return|;
+block|}
+name|void
+name|setVarArgsGPRSize
 argument_list|(
 argument|unsigned Size
 argument_list|)
 block|{
-name|VariadicGPRSize
+name|VarArgsGPRSize
 operator|=
 name|Size
 block|; }
 name|int
-name|getVariadicFPRIdx
+name|getVarArgsFPRIndex
 argument_list|()
 specifier|const
 block|{
 return|return
-name|VariadicFPRIdx
+name|VarArgsFPRIndex
 return|;
 block|}
 name|void
-name|setVariadicFPRIdx
+name|setVarArgsFPRIndex
 argument_list|(
-argument|int Idx
+argument|int Index
 argument_list|)
 block|{
-name|VariadicFPRIdx
+name|VarArgsFPRIndex
 operator|=
-name|Idx
+name|Index
 block|; }
 name|unsigned
-name|getVariadicFPRSize
+name|getVarArgsFPRSize
 argument_list|()
 specifier|const
 block|{
 return|return
-name|VariadicFPRSize
+name|VarArgsFPRSize
 return|;
 block|}
 name|void
-name|setVariadicFPRSize
+name|setVarArgsFPRSize
 argument_list|(
 argument|unsigned Size
 argument_list|)
 block|{
-name|VariadicFPRSize
+name|VarArgsFPRSize
 operator|=
 name|Size
 block|; }
-name|int
-name|getVariadicStackIdx
+typedef|typedef
+name|SmallPtrSet
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+operator|,
+literal|16
+operator|>
+name|SetOfInstructions
+expr_stmt|;
+specifier|const
+name|SetOfInstructions
+operator|&
+name|getLOHRelated
 argument_list|()
 specifier|const
 block|{
 return|return
-name|VariadicStackIdx
+name|LOHRelated
 return|;
 block|}
-name|void
-name|setVariadicStackIdx
+comment|// Shortcuts for LOH related types.
+name|class
+name|MILOHDirective
+block|{
+name|MCLOHType
+name|Kind
+block|;
+comment|/// Arguments of this directive. Order matters.
+name|SmallVector
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+block|,
+literal|3
+operator|>
+name|Args
+block|;
+name|public
+operator|:
+typedef|typedef
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+operator|>
+name|LOHArgs
+expr_stmt|;
+name|MILOHDirective
 argument_list|(
-argument|int Idx
+argument|MCLOHType Kind
+argument_list|,
+argument|const LOHArgs&Args
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|Kind
+argument_list|)
+block|,
+name|Args
+argument_list|(
+argument|Args.begin()
+argument_list|,
+argument|Args.end()
 argument_list|)
 block|{
-name|VariadicStackIdx
-operator|=
-name|Idx
-block|; }
-name|int
-name|getFramePointerOffset
+name|assert
+argument_list|(
+name|isValidMCLOHType
+argument_list|(
+name|Kind
+argument_list|)
+operator|&&
+literal|"Invalid LOH directive type!"
+argument_list|)
+block|;     }
+name|MCLOHType
+name|getKind
 argument_list|()
 specifier|const
 block|{
 return|return
-name|FramePointerOffset
+name|Kind
 return|;
 block|}
-name|void
-name|setFramePointerOffset
-argument_list|(
-argument|int Idx
-argument_list|)
+specifier|const
+name|LOHArgs
+operator|&
+name|getArgs
+argument_list|()
+specifier|const
 block|{
-name|FramePointerOffset
-operator|=
-name|Idx
-block|; }
-expr|}
-block|;  }
+return|return
+name|Args
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_typedef
+typedef|typedef
+name|MILOHDirective
+operator|::
+name|LOHArgs
+name|MILOHArgs
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|SmallVector
+operator|<
+name|MILOHDirective
+operator|,
+literal|32
+operator|>
+name|MILOHContainer
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+specifier|const
+name|MILOHContainer
+operator|&
+name|getLOHContainer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LOHContainerSet
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Add a LOH directive of this @p Kind and this @p Args.
+end_comment
+
+begin_function
+name|void
+name|addLOHDirective
+parameter_list|(
+name|MCLOHType
+name|Kind
+parameter_list|,
+specifier|const
+name|MILOHArgs
+modifier|&
+name|Args
+parameter_list|)
+block|{
+name|LOHContainerSet
+operator|.
+name|push_back
+argument_list|(
+name|MILOHDirective
+argument_list|(
+name|Kind
+argument_list|,
+name|Args
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|LOHRelated
+operator|.
+name|insert
+argument_list|(
+name|Args
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Args
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_comment
+comment|// Hold the lists of LOHs.
+end_comment
+
+begin_decl_stmt
+name|MILOHContainer
+name|LOHContainerSet
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SetOfInstructions
+name|LOHRelated
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
+unit|}; }
 comment|// End llvm namespace
 end_comment
 
@@ -466,6 +666,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// AArch64MACHINEFUNCTIONINFO_H
+end_comment
 
 end_unit
 

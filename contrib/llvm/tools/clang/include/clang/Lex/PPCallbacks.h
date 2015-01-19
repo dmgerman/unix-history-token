@@ -508,13 +508,13 @@ name|Namespace
 argument_list|,
 name|diag
 operator|::
-name|Mapping
+name|Severity
 name|mapping
 argument_list|,
 name|StringRef
 name|Str
 argument_list|)
-block|{   }
+block|{}
 comment|/// \brief Called when an OpenCL extension is either disabled or
 comment|/// enabled with a pragma.
 name|virtual
@@ -665,6 +665,16 @@ name|SourceRange
 name|Range
 parameter_list|)
 block|{   }
+enum|enum
+name|ConditionValueKind
+block|{
+name|CVK_NotEvaluated
+block|,
+name|CVK_False
+block|,
+name|CVK_True
+block|}
+enum|;
 comment|/// \brief Hook called whenever an \#if is seen.
 comment|/// \param Loc the source location of the directive.
 comment|/// \param ConditionRange The SourceRange of the expression being tested.
@@ -681,7 +691,7 @@ parameter_list|,
 name|SourceRange
 name|ConditionRange
 parameter_list|,
-name|bool
+name|ConditionValueKind
 name|ConditionValue
 parameter_list|)
 block|{   }
@@ -701,7 +711,7 @@ parameter_list|,
 name|SourceRange
 name|ConditionRange
 parameter_list|,
-name|bool
+name|ConditionValueKind
 name|ConditionValue
 parameter_list|,
 name|SourceLocation
@@ -834,7 +844,6 @@ block|;
 name|delete
 name|First
 block|;   }
-name|virtual
 name|void
 name|FileChanged
 argument_list|(
@@ -846,6 +855,7 @@ argument|SrcMgr::CharacteristicKind FileType
 argument_list|,
 argument|FileID PrevFID
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -873,7 +883,6 @@ argument_list|,
 name|PrevFID
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|FileSkipped
 argument_list|(
@@ -883,6 +892,7 @@ argument|const Token&FilenameTok
 argument_list|,
 argument|SrcMgr::CharacteristicKind FileType
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -906,7 +916,6 @@ argument_list|,
 name|FileType
 argument_list|)
 block|;   }
-name|virtual
 name|bool
 name|FileNotFound
 argument_list|(
@@ -914,6 +923,7 @@ argument|StringRef FileName
 argument_list|,
 argument|SmallVectorImpl<char>&RecoveryPath
 argument_list|)
+name|override
 block|{
 return|return
 name|First
@@ -935,7 +945,6 @@ name|RecoveryPath
 argument_list|)
 return|;
 block|}
-name|virtual
 name|void
 name|InclusionDirective
 argument_list|(
@@ -957,6 +966,7 @@ argument|StringRef RelativePath
 argument_list|,
 argument|const Module *Imported
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1004,7 +1014,6 @@ argument_list|,
 name|Imported
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|moduleImport
 argument_list|(
@@ -1014,6 +1023,7 @@ argument|ModuleIdPath Path
 argument_list|,
 argument|const Module *Imported
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1037,10 +1047,10 @@ argument_list|,
 name|Imported
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|EndOfMainFile
 argument_list|()
+name|override
 block|{
 name|First
 operator|->
@@ -1052,7 +1062,6 @@ operator|->
 name|EndOfMainFile
 argument_list|()
 block|;   }
-name|virtual
 name|void
 name|Ident
 argument_list|(
@@ -1060,6 +1069,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|const std::string&str
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1079,7 +1089,6 @@ argument_list|,
 name|str
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|PragmaComment
 argument_list|(
@@ -1089,6 +1098,7 @@ argument|const IdentifierInfo *Kind
 argument_list|,
 argument|const std::string&Str
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1112,7 +1122,6 @@ argument_list|,
 name|Str
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|PragmaDetectMismatch
 argument_list|(
@@ -1122,6 +1131,7 @@ argument|const std::string&Name
 argument_list|,
 argument|const std::string&Value
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1145,7 +1155,6 @@ argument_list|,
 name|Value
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|PragmaMessage
 argument_list|(
@@ -1157,6 +1166,7 @@ argument|PragmaMessageKind Kind
 argument_list|,
 argument|StringRef Str
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1184,7 +1194,6 @@ argument_list|,
 name|Str
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|PragmaDiagnosticPush
 argument_list|(
@@ -1192,6 +1201,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|StringRef Namespace
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1211,7 +1221,6 @@ argument_list|,
 name|Namespace
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|PragmaDiagnosticPop
 argument_list|(
@@ -1219,6 +1228,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|StringRef Namespace
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1238,7 +1248,6 @@ argument_list|,
 name|Namespace
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|PragmaDiagnostic
 argument_list|(
@@ -1246,10 +1255,11 @@ argument|SourceLocation Loc
 argument_list|,
 argument|StringRef Namespace
 argument_list|,
-argument|diag::Mapping mapping
+argument|diag::Severity mapping
 argument_list|,
 argument|StringRef Str
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1277,7 +1287,6 @@ argument_list|,
 name|Str
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|PragmaOpenCLExtension
 argument_list|(
@@ -1289,6 +1298,7 @@ argument|SourceLocation StateLoc
 argument_list|,
 argument|unsigned State
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1316,7 +1326,6 @@ argument_list|,
 name|State
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|PragmaWarning
 argument_list|(
@@ -1326,6 +1335,7 @@ argument|StringRef WarningSpec
 argument_list|,
 argument|ArrayRef<int> Ids
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1349,7 +1359,6 @@ argument_list|,
 name|Ids
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|PragmaWarningPush
 argument_list|(
@@ -1357,6 +1366,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|int Level
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1376,12 +1386,12 @@ argument_list|,
 name|Level
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|PragmaWarningPop
 argument_list|(
 argument|SourceLocation Loc
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1397,7 +1407,6 @@ argument_list|(
 name|Loc
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|MacroExpands
 argument_list|(
@@ -1409,6 +1418,7 @@ argument|SourceRange Range
 argument_list|,
 argument|const MacroArgs *Args
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1436,7 +1446,6 @@ argument_list|,
 name|Args
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|MacroDefined
 argument_list|(
@@ -1444,6 +1453,7 @@ argument|const Token&MacroNameTok
 argument_list|,
 argument|const MacroDirective *MD
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1463,7 +1473,6 @@ argument_list|,
 name|MD
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|MacroUndefined
 argument_list|(
@@ -1471,6 +1480,7 @@ argument|const Token&MacroNameTok
 argument_list|,
 argument|const MacroDirective *MD
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1490,7 +1500,6 @@ argument_list|,
 name|MD
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|Defined
 argument_list|(
@@ -1500,6 +1509,7 @@ argument|const MacroDirective *MD
 argument_list|,
 argument|SourceRange Range
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1523,12 +1533,12 @@ argument_list|,
 name|Range
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|SourceRangeSkipped
 argument_list|(
 argument|SourceRange Range
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1545,7 +1555,6 @@ name|Range
 argument_list|)
 block|;   }
 comment|/// \brief Hook called whenever an \#if is seen.
-name|virtual
 name|void
 name|If
 argument_list|(
@@ -1553,8 +1562,9 @@ argument|SourceLocation Loc
 argument_list|,
 argument|SourceRange ConditionRange
 argument_list|,
-argument|bool ConditionValue
+argument|ConditionValueKind ConditionValue
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1579,7 +1589,6 @@ name|ConditionValue
 argument_list|)
 block|;   }
 comment|/// \brief Hook called whenever an \#elif is seen.
-name|virtual
 name|void
 name|Elif
 argument_list|(
@@ -1587,10 +1596,11 @@ argument|SourceLocation Loc
 argument_list|,
 argument|SourceRange ConditionRange
 argument_list|,
-argument|bool ConditionValue
+argument|ConditionValueKind ConditionValue
 argument_list|,
 argument|SourceLocation IfLoc
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1619,7 +1629,6 @@ name|IfLoc
 argument_list|)
 block|;   }
 comment|/// \brief Hook called whenever an \#ifdef is seen.
-name|virtual
 name|void
 name|Ifdef
 argument_list|(
@@ -1629,6 +1638,7 @@ argument|const Token&MacroNameTok
 argument_list|,
 argument|const MacroDirective *MD
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1653,7 +1663,6 @@ name|MD
 argument_list|)
 block|;   }
 comment|/// \brief Hook called whenever an \#ifndef is seen.
-name|virtual
 name|void
 name|Ifndef
 argument_list|(
@@ -1663,6 +1672,7 @@ argument|const Token&MacroNameTok
 argument_list|,
 argument|const MacroDirective *MD
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1687,7 +1697,6 @@ name|MD
 argument_list|)
 block|;   }
 comment|/// \brief Hook called whenever an \#else is seen.
-name|virtual
 name|void
 name|Else
 argument_list|(
@@ -1695,6 +1704,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|SourceLocation IfLoc
 argument_list|)
+name|override
 block|{
 name|First
 operator|->
@@ -1715,7 +1725,6 @@ name|IfLoc
 argument_list|)
 block|;   }
 comment|/// \brief Hook called whenever an \#endif is seen.
-name|virtual
 name|void
 name|Endif
 argument_list|(
@@ -1723,6 +1732,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|SourceLocation IfLoc
 argument_list|)
+name|override
 block|{
 name|First
 operator|->

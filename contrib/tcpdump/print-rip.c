@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1989, 1990, 1991, 1993, 1994, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rip.c,v 1.59 2006-03-23 14:58:44 hannes Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -58,12 +41,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
 end_include
 
@@ -89,19 +66,30 @@ directive|include
 file|"af.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|"[|rip]"
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|rip
 block|{
-name|u_int8_t
+name|uint8_t
 name|rip_cmd
 decl_stmt|;
 comment|/* request/response */
-name|u_int8_t
+name|uint8_t
 name|rip_vers
 decl_stmt|;
 comment|/* protocol version # */
-name|u_int8_t
+name|uint8_t
 name|unused
 index|[
 literal|2
@@ -247,29 +235,29 @@ value|20
 end_define
 
 begin_comment
-comment|/*  * rfc 1723  *   *  0                   1                   2                   3 3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * | Command (1)   | Version (1)   |           unused              |  * +---------------+---------------+-------------------------------+  * | Address Family Identifier (2) |        Route Tag (2)          |  * +-------------------------------+-------------------------------+  * |                         IP Address (4)                        |  * +---------------------------------------------------------------+  * |                         Subnet Mask (4)                       |  * +---------------------------------------------------------------+  * |                         Next Hop (4)                          |  * +---------------------------------------------------------------+  * |                         Metric (4)                            |  * +---------------------------------------------------------------+  *  */
+comment|/*  * rfc 1723  *  *  0                   1                   2                   3 3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * | Command (1)   | Version (1)   |           unused              |  * +---------------+---------------+-------------------------------+  * | Address Family Identifier (2) |        Route Tag (2)          |  * +-------------------------------+-------------------------------+  * |                         IP Address (4)                        |  * +---------------------------------------------------------------+  * |                         Subnet Mask (4)                       |  * +---------------------------------------------------------------+  * |                         Next Hop (4)                          |  * +---------------------------------------------------------------+  * |                         Metric (4)                            |  * +---------------------------------------------------------------+  *  */
 end_comment
 
 begin_struct
 struct|struct
 name|rip_netinfo
 block|{
-name|u_int16_t
+name|uint16_t
 name|rip_family
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|rip_tag
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rip_dest
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rip_dest_mask
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rip_router
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rip_metric
 decl_stmt|;
 comment|/* cost of route */
@@ -282,6 +270,10 @@ specifier|static
 name|void
 name|rip_entry_print_v1
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|struct
@@ -316,10 +308,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t AFI %s, "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|bsd_af_values
@@ -328,12 +323,15 @@ literal|"Unknown (%u)"
 argument_list|,
 name|family
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -378,8 +376,10 @@ block|{
 comment|/* MBZ fields not zero */
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -401,18 +401,23 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  AFI 0, %s, metric: %u"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ni
 operator|->
 name|rip_dest
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -420,23 +425,29 @@ name|ni
 operator|->
 name|rip_metric
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 comment|/* BSD_AFNUM_INET */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  %s, metric: %u"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ni
 operator|->
 name|rip_dest
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -444,6 +455,7 @@ name|ni
 operator|->
 name|rip_metric
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -454,6 +466,10 @@ specifier|static
 name|unsigned
 name|rip_entry_print_v2
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|struct
@@ -488,7 +504,7 @@ literal|0xFFFF
 condition|)
 block|{
 comment|/* variable-sized authentication structures */
-name|u_int16_t
+name|uint16_t
 name|auth_type
 init|=
 name|EXTRACT_16BITS
@@ -525,9 +541,13 @@ name|i
 init|=
 literal|0
 decl_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Simple Text Authentication data: "
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -543,9 +563,14 @@ operator|,
 name|i
 operator|++
 control|)
-name|putchar
+name|ND_PRINT
 argument_list|(
-name|isprint
+operator|(
+name|ndo
+operator|,
+literal|"%c"
+operator|,
+name|ND_ISPRINT
 argument_list|(
 operator|*
 name|p
@@ -555,6 +580,7 @@ operator|*
 name|p
 else|:
 literal|'.'
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -566,63 +592,82 @@ operator|==
 literal|3
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Auth header:"
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" Packet Len %u,"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|ni
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" Key-ID %u,"
-argument_list|,
+operator|,
 operator|*
 operator|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|ni
 operator|+
 literal|6
 operator|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" Auth Data Len %u,"
-argument_list|,
+operator|,
 operator|*
 operator|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|ni
 operator|+
 literal|7
 operator|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" SeqNo %u,"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -630,12 +675,16 @@ name|ni
 operator|->
 name|rip_dest_mask
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" MBZ %u,"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -643,12 +692,16 @@ name|ni
 operator|->
 name|rip_router
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" MBZ %u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -656,6 +709,7 @@ name|ni
 operator|->
 name|rip_metric
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -667,15 +721,21 @@ operator|==
 literal|1
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Auth trailer:"
+operator|)
 argument_list|)
 expr_stmt|;
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -695,10 +755,13 @@ comment|/* AT spans till the packet end */
 block|}
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Unknown (%u) Authentication data:"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -706,12 +769,15 @@ name|ni
 operator|->
 name|rip_tag
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -738,10 +804,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  AFI %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|bsd_af_values
@@ -750,12 +819,15 @@ literal|"Unknown (%u)"
 argument_list|,
 name|family
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -774,10 +846,13 @@ block|}
 else|else
 block|{
 comment|/* BSD_AFNUM_INET or AFI 0 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  AFI %s, %15s/%-2d, tag 0x%04x, metric: %u, next-hop: "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|bsd_af_values
@@ -786,15 +861,17 @@ literal|"%u"
 argument_list|,
 name|family
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ni
 operator|->
 name|rip_dest
 argument_list|)
-argument_list|,
+operator|,
 name|mask2plen
 argument_list|(
 name|EXTRACT_32BITS
@@ -805,7 +882,7 @@ operator|->
 name|rip_dest_mask
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -813,7 +890,7 @@ name|ni
 operator|->
 name|rip_tag
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -821,6 +898,7 @@ name|ni
 operator|->
 name|rip_metric
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -833,23 +911,33 @@ operator|->
 name|rip_router
 argument_list|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ni
 operator|->
 name|rip_router
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"self"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -867,6 +955,10 @@ begin_function
 name|void
 name|rip_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -898,21 +990,31 @@ name|j
 decl_stmt|;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|<
 name|dat
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|" [|rip]"
+operator|(
+name|ndo
+operator|,
+literal|" %s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 name|i
 operator|=
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|dat
 expr_stmt|;
@@ -937,9 +1039,15 @@ name|rp
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|" [|rip]"
+operator|(
+name|ndo
+operator|,
+literal|" %s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -961,12 +1069,17 @@ operator|*
 operator|)
 name|dat
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"%sRIPv%u"
-argument_list|,
 operator|(
-name|vflag
+name|ndo
+operator|,
+literal|"%sRIPv%u"
+operator|,
+operator|(
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>=
 literal|1
 operator|)
@@ -974,10 +1087,11 @@ condition|?
 literal|"\n\t"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|rp
 operator|->
 name|rip_vers
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -993,8 +1107,10 @@ case|:
 comment|/* 		 * RFC 1058. 		 * 		 * XXX - RFC 1058 says 		 * 		 * 0  Datagrams whose version number is zero are to be ignored. 		 *    These are from a previous version of the protocol, whose 		 *    packet format was machine-specific. 		 * 		 * so perhaps we should just dump the packet, in hex. 		 */
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -1010,10 +1126,13 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* dump version and lets see if we know the commands name*/
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s, length: %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|rip_cmd_values
@@ -1024,13 +1143,16 @@ name|rp
 operator|->
 name|rip_cmd
 argument_list|)
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<
 literal|1
 condition|)
@@ -1058,12 +1180,15 @@ operator|*
 name|ni
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", routes: %u%s"
-argument_list|,
+operator|,
 name|j
-argument_list|,
+operator|,
 name|rp
 operator|->
 name|rip_vers
@@ -1073,6 +1198,7 @@ condition|?
 literal|" or less"
 else|:
 literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 name|ni
@@ -1114,6 +1240,8 @@ condition|)
 block|{
 name|rip_entry_print_v1
 argument_list|(
+name|ndo
+argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
@@ -1139,6 +1267,8 @@ name|i
 operator|-=
 name|rip_entry_print_v2
 argument_list|(
+name|ndo
+argument_list|,
 name|ni
 argument_list|,
 name|i
@@ -1151,9 +1281,15 @@ if|if
 condition|(
 name|i
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"[|rip]"
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1174,7 +1310,9 @@ comment|/* fall through */
 default|default:
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
@@ -1184,8 +1322,10 @@ condition|(
 operator|!
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|rp
@@ -1202,7 +1342,9 @@ block|}
 comment|/* do we want to see an additionally hexdump ? */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
@@ -1212,8 +1354,10 @@ condition|(
 operator|!
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|rp

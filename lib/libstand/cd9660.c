@@ -830,6 +830,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 comment|/* Ignore this record and skip to the next. */
 name|p
 operator|+=
@@ -840,6 +841,24 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
+comment|/* Avoid infinite loops with corrupted file systems */
+if|if
+condition|(
+name|isonum_711
+argument_list|(
+name|sh
+operator|->
+name|length
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 block|}
 return|return
 operator|(
@@ -1512,7 +1531,9 @@ operator|++
 control|)
 block|{
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -1718,7 +1739,9 @@ literal|0
 condition|)
 block|{
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -2014,7 +2037,9 @@ name|ext_attr_length
 argument_list|)
 expr_stmt|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -2310,7 +2335,9 @@ name|ISO_DEFAULT_BLOCK_SIZE
 argument_list|)
 expr_stmt|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|16
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=

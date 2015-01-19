@@ -163,7 +163,7 @@ argument_list|)
 operator|,
 name|block
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|blockIdx

@@ -46,13 +46,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCExpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCParser/MCAsmParserExtension.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCExpr.h"
+file|"llvm/MC/MCTargetOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -60,22 +72,22 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCStreamer
-decl_stmt|;
-name|class
-name|StringRef
-decl_stmt|;
-name|class
-name|SMLoc
-decl_stmt|;
-name|class
 name|AsmToken
+decl_stmt|;
+name|class
+name|MCInst
 decl_stmt|;
 name|class
 name|MCParsedAsmOperand
 decl_stmt|;
 name|class
-name|MCInst
+name|MCStreamer
+decl_stmt|;
+name|class
+name|SMLoc
+decl_stmt|;
+name|class
+name|StringRef
 decl_stmt|;
 name|template
 operator|<
@@ -84,6 +96,17 @@ name|T
 operator|>
 name|class
 name|SmallVectorImpl
+expr_stmt|;
+typedef|typedef
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MCParsedAsmOperand
+operator|>>
+name|OperandVector
 expr_stmt|;
 enum|enum
 name|AsmRewriteKind
@@ -226,7 +249,7 @@ argument_list|()
 operator|:
 name|AsmRewrites
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|ParseInstructionInfo
@@ -310,6 +333,10 @@ comment|/// ms-style inline assembly.
 name|MCAsmParserSemaCallback
 operator|*
 name|SemaCallback
+block|;
+comment|/// Set of options which affects instrumentation of inline assembly.
+name|MCTargetOptions
+name|MCOptions
 block|;
 name|public
 operator|:
@@ -407,7 +434,7 @@ argument|StringRef Name
 argument_list|,
 argument|SMLoc NameLoc
 argument_list|,
-argument|SmallVectorImpl<MCParsedAsmOperand*>&Operands
+argument|OperandVector&Operands
 argument_list|)
 operator|=
 literal|0
@@ -458,7 +485,7 @@ argument|SMLoc IDLoc
 argument_list|,
 argument|unsigned&Opcode
 argument_list|,
-argument|SmallVectorImpl<MCParsedAsmOperand*>&Operands
+argument|OperandVector&Operands
 argument_list|,
 argument|MCStreamer&Out
 argument_list|,
@@ -469,6 +496,18 @@ argument_list|)
 operator|=
 literal|0
 block|;
+comment|/// Allows targets to let registers opt out of clobber lists.
+name|virtual
+name|bool
+name|OmitRegisterFromClobberLists
+argument_list|(
+argument|unsigned RegNo
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Allow a target to add special case operand matching for things that
 comment|/// tblgen doesn't/can't handle effectively. For example, literal
 comment|/// immediates on ARM. TableGen expects a token operand, but the parser
@@ -477,7 +516,7 @@ name|virtual
 name|unsigned
 name|validateTargetOperandClass
 argument_list|(
-argument|MCParsedAsmOperand *Op
+argument|MCParsedAsmOperand&Op
 argument_list|,
 argument|unsigned Kind
 argument_list|)
@@ -505,7 +544,7 @@ name|convertToMapAndConstraints
 argument_list|(
 argument|unsigned Kind
 argument_list|,
-argument|const SmallVectorImpl<MCParsedAsmOperand*>&Operands
+argument|const OperandVector&Operands
 argument_list|)
 operator|=
 literal|0
@@ -524,7 +563,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual

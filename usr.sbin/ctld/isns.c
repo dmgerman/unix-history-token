@@ -216,6 +216,8 @@ expr_stmt|;
 if|if
 condition|(
 name|req
+operator|->
+name|ir_buf
 operator|==
 name|NULL
 condition|)

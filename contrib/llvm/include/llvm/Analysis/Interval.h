@@ -180,35 +180,6 @@ name|Header
 argument_list|)
 block|;   }
 specifier|inline
-name|Interval
-argument_list|(
-specifier|const
-name|Interval
-operator|&
-name|I
-argument_list|)
-comment|// copy ctor
-operator|:
-name|HeaderNode
-argument_list|(
-name|I
-operator|.
-name|HeaderNode
-argument_list|)
-operator|,
-name|Nodes
-argument_list|(
-name|I
-operator|.
-name|Nodes
-argument_list|)
-operator|,
-name|Successors
-argument_list|(
-argument|I.Successors
-argument_list|)
-block|{}
-specifier|inline
 name|BasicBlock
 operator|*
 name|getHeaderNode

@@ -433,7 +433,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-literal|"newnfs"
+literal|"nfs"
 argument_list|,
 name|mntp
 argument_list|,

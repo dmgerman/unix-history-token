@@ -40,7 +40,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet/in_rss.h>
+file|<net/rss_config.h>
 end_include
 
 begin_endif
@@ -3821,15 +3821,12 @@ comment|/* Which queue to use */
 comment|/* 	 * When doing RSS, map it to the same outbound queue 	 * as the incoming flow would be mapped to. 	 * 	 * If everything is setup correctly, it should be the 	 * same bucket that the current CPU we're on is. 	 */
 if|if
 condition|(
-operator|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
-operator|)
+argument_list|)
 operator|!=
-literal|0
+name|M_HASHTYPE_NONE
 condition|)
 block|{
 ifdef|#
@@ -11223,6 +11220,17 @@ operator|)
 else|:
 name|mp_ncpus
 expr_stmt|;
+comment|/* Override based on tuneable */
+if|if
+condition|(
+name|ixgbe_num_queues
+operator|!=
+literal|0
+condition|)
+name|queues
+operator|=
+name|ixgbe_num_queues
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RSS
@@ -11241,36 +11249,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|ixgbe_num_queues
-operator|!=
-literal|0
-condition|)
-name|queues
-operator|=
-name|ixgbe_num_queues
-expr_stmt|;
-comment|/* Set max queues to 8 when autoconfiguring */
-elseif|else
-if|if
-condition|(
-operator|(
-name|ixgbe_num_queues
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|queues
-operator|>
-literal|8
-operator|)
-condition|)
-name|queues
-operator|=
-literal|8
-expr_stmt|;
 comment|/* reflect correct sysctl value */
 name|ixgbe_num_queues
 operator|=
@@ -19370,11 +19348,7 @@ literal|1
 operator|&&
 name|adapter
 operator|->
-name|hw
-operator|.
 name|fc
-operator|.
-name|requested_mode
 operator|==
 name|ixgbe_fc_none
 condition|)
@@ -20857,12 +20831,6 @@ operator|.
 name|rss
 argument_list|)
 expr_stmt|;
-name|sendmp
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
-expr_stmt|;
 switch|switch
 condition|(
 name|pkt_info
@@ -20975,9 +20943,10 @@ name|M_HASHTYPE_SET
 argument_list|(
 name|sendmp
 argument_list|,
-name|M_HASHTYPE_NONE
+name|M_HASHTYPE_OPAQUE
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 else|#
 directive|else
@@ -20992,11 +20961,12 @@ name|que
 operator|->
 name|msix
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|sendmp
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

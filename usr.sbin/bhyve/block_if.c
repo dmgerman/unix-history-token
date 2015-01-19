@@ -142,7 +142,7 @@ begin_define
 define|#
 directive|define
 name|BLOCKIF_MAXREQ
-value|32
+value|33
 end_define
 
 begin_enum
@@ -2454,6 +2454,8 @@ expr_stmt|;
 return|return
 operator|(
 name|BLOCKIF_MAXREQ
+operator|-
+literal|1
 operator|)
 return|;
 block|}

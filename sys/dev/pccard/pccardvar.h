@@ -12,42 +12,6 @@ comment|/*-  * Copyright (c) 1997 Marc Horowitz.  All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/*  * PCCARD_API_LEVEL.  When set to 5, we provide a 5.x compatible API  * for driver writers that have to share their code between 5.x and 6.x.  * The 5.x compatibility interfaces will be unsupported in 7.0, at which  * point we'll only support 6 and newer, etc.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PCCARD_API_LEVEL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PCCARD_API_LEVEL
-value|6
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|PCCARD_API_LEVEL
-operator|<
-literal|5
-end_elif
-
-begin_error
-error|#
-directive|error
-literal|"pccard API less than 5 unsupported"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Contains information about mapped/allocated i/o spaces.  */
 end_comment
 
@@ -877,14 +841,6 @@ parameter_list|)
 value|PCMCIA_CIS_ ## a ## _ ## b
 end_define
 
-begin_if
-if|#
-directive|if
-name|PCCARD_API_LEVEL
-operator|>=
-literal|6
-end_if
-
 begin_define
 define|#
 directive|define
@@ -900,116 +856,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCMCIA_CARD2_D
-parameter_list|(
-name|v1
-parameter_list|,
-name|p1
-parameter_list|,
-name|p2
-parameter_list|)
-define|\
-value|{ PCMCIA_STR_ ## p2, PCMCIA_VENDOR_ ## v1, PCCARD_P(v1, p1), \ 		  PCMCIA_CIS_ ## p2}
-end_define
-
-begin_define
-define|#
-directive|define
 name|PCMCIA_CARD
 parameter_list|(
 name|v
 parameter_list|,
 name|p
-parameter_list|)
-value|{ NULL, PCMCIA_VENDOR_ ## v, \ 		PCCARD_P(v, p), PCCARD_C(v, p) }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CARD2
-parameter_list|(
-name|v1
-parameter_list|,
-name|p1
-parameter_list|,
-name|p2
-parameter_list|)
-define|\
-value|{ NULL, PCMCIA_VENDOR_ ## v1, PCCARD_P(v1, p1), \ 		  PCMCIA_CIS_ ## p2}
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CARD_D
-parameter_list|(
-name|v
-parameter_list|,
-name|p
-parameter_list|,
-name|f
 parameter_list|)
 value|{ PCCARD_S(v, p), PCMCIA_VENDOR_ ## v, \ 		PCCARD_P(v, p), PCCARD_C(v, p) }
 end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CARD2_D
-parameter_list|(
-name|v1
-parameter_list|,
-name|p1
-parameter_list|,
-name|p2
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|{ PCMCIA_STR_ ## p2, PCMCIA_VENDOR_ ## v1, PCCARD_P(v1, p1), \ 		  PCMCIA_CIS_ ## p2}
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CARD
-parameter_list|(
-name|v
-parameter_list|,
-name|p
-parameter_list|,
-name|f
-parameter_list|)
-value|{ NULL, PCMCIA_VENDOR_ ## v, \ 		PCCARD_P(v, p), PCCARD_C(v, p) }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CARD2
-parameter_list|(
-name|v1
-parameter_list|,
-name|p1
-parameter_list|,
-name|p2
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|{ NULL, PCMCIA_VENDOR_ ## v1, PCCARD_P(v1, p1), \ 		  PCMCIA_CIS_ ## p2}
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Defines to decode the get_funce_disk return value.  See the PCMCIA standard  * for all the details of what these bits mean.  */

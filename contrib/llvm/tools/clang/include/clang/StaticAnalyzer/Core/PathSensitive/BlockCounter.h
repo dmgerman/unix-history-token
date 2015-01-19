@@ -67,15 +67,11 @@ directive|define
 name|LLVM_CLANG_GR_BLOCKCOUNTER
 end_define
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|BumpPtrAllocator
-decl_stmt|;
-block|}
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -116,7 +112,7 @@ argument_list|()
 operator|:
 name|Data
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|unsigned

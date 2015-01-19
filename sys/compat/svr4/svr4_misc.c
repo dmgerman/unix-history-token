@@ -3126,11 +3126,14 @@ argument_list|(
 name|mode
 argument_list|)
 condition|)
+block|{
 name|error
 operator|=
-name|kern_mkfifo
+name|kern_mkfifoat
 argument_list|(
 name|td
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 name|newpath
 argument_list|,
@@ -3139,12 +3142,16 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|error
 operator|=
-name|kern_mknod
+name|kern_mknodat
 argument_list|(
 name|td
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 name|newpath
 argument_list|,
@@ -3155,6 +3162,7 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|newpath
@@ -3904,7 +3912,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_STATLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -3920,7 +3928,7 @@ operator|&
 name|stime
 argument_list|)
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_STATUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -5706,7 +5714,7 @@ name|p
 operator|->
 name|p_ru
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_STATLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -5726,7 +5734,7 @@ operator|.
 name|ru_stime
 argument_list|)
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_STATUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -5873,7 +5881,7 @@ name|p
 operator|->
 name|p_ru
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_STATLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -5893,7 +5901,7 @@ operator|.
 name|ru_stime
 argument_list|)
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_STATUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -6033,7 +6041,7 @@ name|status
 operator|=
 name|SIGCONT
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_STATLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -6053,7 +6061,7 @@ operator|.
 name|ru_stime
 argument_list|)
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_STATUNLOCK
 argument_list|(
 name|p
 argument_list|)

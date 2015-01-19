@@ -156,7 +156,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
@@ -174,6 +174,15 @@ name|ConstantInt
 decl_stmt|;
 name|class
 name|ConstantFP
+decl_stmt|;
+name|class
+name|DiagnosticInfoOptimizationRemark
+decl_stmt|;
+name|class
+name|DiagnosticInfoOptimizationRemarkMissed
+decl_stmt|;
+name|class
+name|DiagnosticInfoOptimizationRemarkAnalysis
 decl_stmt|;
 name|class
 name|LLVMContext
@@ -309,7 +318,7 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -329,7 +338,7 @@ argument_list|,
 literal|1
 argument_list|)
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -1346,19 +1355,17 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 name|void
 name|deleted
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|allUsesReplacedWith
 argument_list|(
-name|Value
-operator|*
-name|VNew
+argument|Value *VNew
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1388,6 +1395,24 @@ expr_stmt|;
 name|void
 modifier|*
 name|InlineAsmDiagContext
+decl_stmt|;
+name|LLVMContext
+operator|::
+name|DiagnosticHandlerTy
+name|DiagnosticHandler
+expr_stmt|;
+name|void
+modifier|*
+name|DiagnosticContext
+decl_stmt|;
+name|LLVMContext
+operator|::
+name|YieldCallbackTy
+name|YieldCallback
+expr_stmt|;
+name|void
+modifier|*
+name|YieldOpaqueHandle
 decl_stmt|;
 typedef|typedef
 name|DenseMap
@@ -1546,9 +1571,11 @@ name|std
 operator|::
 name|pair
 operator|<
+specifier|const
 name|Function
 operator|*
 operator|,
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -1867,6 +1894,26 @@ name|DebugRecVH
 operator|>
 expr|>
 name|ScopeInlinedAtRecords
+expr_stmt|;
+comment|/// DiscriminatorTable - This table maps file:line locations to an
+comment|/// integer representing the next DWARF path discriminator to assign to
+comment|/// instructions in different blocks at the same location.
+name|DenseMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|>
+operator|,
+name|unsigned
+operator|>
+name|DiscriminatorTable
 expr_stmt|;
 comment|/// IntrinsicIDCache - Cache of intrinsic name (string) to numeric ID mappings
 comment|/// requested in this context

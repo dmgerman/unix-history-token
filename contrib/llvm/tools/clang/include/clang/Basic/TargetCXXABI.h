@@ -130,6 +130,14 @@ comment|///   - array cookies, and
 comment|///   - constructor/destructor signatures.
 name|iOS
 block|,
+comment|/// The iOS 64-bit ABI is follows ARM's published 64-bit ABI more
+comment|/// closely, but we don't guarantee to follow it perfectly.
+comment|///
+comment|/// It is documented here:
+comment|///    http://infocenter.arm.com
+comment|///                  /help/topic/com.arm.doc.ihi0059a/IHI0059A_cppabi64.pdf
+name|iOS64
+block|,
 comment|/// The generic AArch64 ABI is also a modified version of the Itanium ABI,
 comment|/// but it has fewer divergences than the 32-bit ARM ABI.
 comment|///
@@ -219,6 +227,9 @@ case|:
 case|case
 name|iOS
 case|:
+case|case
+name|iOS64
+case|:
 return|return
 name|true
 return|;
@@ -259,6 +270,9 @@ case|:
 case|case
 name|iOS
 case|:
+case|case
+name|iOS64
+case|:
 return|return
 name|false
 return|;
@@ -289,7 +303,7 @@ name|isMicrosoft
 argument_list|()
 return|;
 block|}
-comment|/// Are temporary objects passed by value to a call destroyed by the callee?
+comment|/// Are arguments to a call destroyed left to right in the callee?
 comment|/// This is a fundamental language change, since it implies that objects
 comment|/// passed by value do *not* live to the end of the full expression.
 comment|/// Temporaries passed to a function taking a const reference live to the end
@@ -297,7 +311,7 @@ comment|/// of the full expression as usual.  Both the caller and the callee mus
 comment|/// have access to the destructor, while only the caller needs the
 comment|/// destructor if this is false.
 name|bool
-name|isArgumentDestroyedByCallee
+name|areArgsDestroyedLeftToRightInCallee
 argument_list|()
 specifier|const
 block|{
@@ -384,6 +398,9 @@ block|{
 case|case
 name|GenericARM
 case|:
+case|case
+name|iOS64
+case|:
 return|return
 name|false
 return|;
@@ -436,7 +453,7 @@ name|AlwaysUseTailPadding
 block|,
 comment|/// Only allocate objects in the tail padding of a base class if
 comment|/// the base class is not POD according to the rules of C++ TR1.
-comment|/// This is non strictly conforming in C++11 mode.
+comment|/// This is non-strictly conforming in C++11 mode.
 name|UseTailPaddingUnlessPOD03
 block|,
 comment|/// Only allocate objects in the tail padding of a base class if
@@ -472,6 +489,14 @@ name|iOS
 case|:
 return|return
 name|UseTailPaddingUnlessPOD03
+return|;
+comment|// iOS on ARM64 uses the C++11 POD rules.  It does not honor the
+comment|// Itanium exception about classes with over-large bitfields.
+case|case
+name|iOS64
+case|:
+return|return
+name|UseTailPaddingUnlessPOD11
 return|;
 comment|// MSVC always allocates fields in the tail-padding of a base class
 comment|// subobject, even if they're POD.

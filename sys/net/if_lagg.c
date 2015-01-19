@@ -1708,7 +1708,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Default value for using M_FLOWID */
+comment|/* Default value for using flowid */
 end_comment
 
 begin_expr_stmt
@@ -1756,7 +1756,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Default value for using M_FLOWID */
+comment|/* Default value for flowid shift */
 end_comment
 
 begin_expr_stmt
@@ -4377,7 +4377,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Insert into the list of ports. Keep ports sorted by if_index. */
+comment|/* 	 * Insert into the list of ports. 	 * Keep ports sorted by if_index. It is handy, when configuration 	 * is predictable and `ifconfig laggN create ...` command 	 * will lead to the same result each time. 	 */
 name|SLIST_FOREACH
 argument_list|(
 argument|tlp
@@ -4419,7 +4419,7 @@ operator|->
 name|lp_ifp
 operator|->
 name|if_index
-operator|<
+operator|>
 name|ifp
 operator|->
 name|if_index
@@ -10576,13 +10576,12 @@ operator|&
 name|LAGG_OPT_USE_FLOWID
 operator|)
 operator|&&
-operator|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
-operator|)
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 name|p
 operator|=

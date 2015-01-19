@@ -1372,9 +1372,8 @@ specifier|const
 block|{
 if|if
 condition|(
+operator|!
 name|ImplicitUses
-operator|==
-literal|0
 condition|)
 return|return
 literal|0
@@ -1430,9 +1429,8 @@ specifier|const
 block|{
 if|if
 condition|(
+operator|!
 name|ImplicitDefs
-operator|==
-literal|0
 condition|)
 return|return
 literal|0
@@ -1532,7 +1530,7 @@ name|MCRegisterInfo
 operator|*
 name|MRI
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 block|{

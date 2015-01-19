@@ -135,11 +135,6 @@ name|NumDiagArgs
 argument_list|(
 literal|0
 argument_list|)
-operator|,
-name|NumDiagRanges
-argument_list|(
-literal|0
-argument_list|)
 block|{ }
 expr|enum
 block|{
@@ -159,11 +154,6 @@ comment|/// \brief The number of entries in Arguments.
 name|unsigned
 name|char
 name|NumDiagArgs
-decl_stmt|;
-comment|/// \brief This is the number of ranges in the DiagRanges array.
-name|unsigned
-name|char
-name|NumDiagRanges
 decl_stmt|;
 comment|/// \brief Specifies for each argument whether it is in DiagArgumentsStr
 comment|/// or in DiagArguments.
@@ -196,14 +186,14 @@ name|MaxArguments
 index|]
 expr_stmt|;
 comment|/// \brief The list of ranges added to this diagnostic.
-comment|///
-comment|/// It currently only support 10 ranges, could easily be extended if needed.
+name|SmallVector
+operator|<
 name|CharSourceRange
+operator|,
+literal|8
+operator|>
 name|DiagRanges
-index|[
-literal|10
-index|]
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief If valid, provides a hint with some code to insert, remove, or
 comment|/// modify at a particular position.
 name|SmallVector
@@ -287,9 +277,10 @@ literal|0
 expr_stmt|;
 name|Result
 operator|->
-name|NumDiagRanges
-operator|=
-literal|0
+name|DiagRanges
+operator|.
+name|clear
+argument_list|()
 expr_stmt|;
 name|Result
 operator|->
@@ -474,7 +465,7 @@ name|DiagStorage
 decl_stmt|;
 name|DiagStorage
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 name|void
@@ -497,35 +488,14 @@ operator|=
 name|getStorage
 argument_list|()
 expr_stmt|;
-name|assert
-argument_list|(
-name|DiagStorage
-operator|->
-name|NumDiagRanges
-operator|<
-name|llvm
-operator|::
-name|array_lengthof
-argument_list|(
 name|DiagStorage
 operator|->
 name|DiagRanges
-argument_list|)
-operator|&&
-literal|"Too many arguments to diagnostic!"
-argument_list|)
-expr_stmt|;
-name|DiagStorage
-operator|->
-name|DiagRanges
-index|[
-name|DiagStorage
-operator|->
-name|NumDiagRanges
-operator|++
-index|]
-operator|=
+operator|.
+name|push_back
+argument_list|(
 name|R
+argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -586,12 +556,12 @@ argument_list|)
 operator|,
 name|DiagStorage
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Allocator
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|PartialDiagnostic
@@ -608,7 +578,7 @@ argument_list|)
 operator|,
 name|DiagStorage
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Allocator
@@ -633,7 +603,7 @@ argument_list|)
 operator|,
 name|DiagStorage
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Allocator
@@ -663,9 +633,6 @@ name|DiagStorage
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
 name|PartialDiagnostic
 argument_list|(
 name|PartialDiagnostic
@@ -696,10 +663,8 @@ name|Other
 operator|.
 name|DiagStorage
 operator|=
-literal|0
+name|nullptr
 block|;   }
-endif|#
-directive|endif
 name|PartialDiagnostic
 argument_list|(
 specifier|const
@@ -770,7 +735,7 @@ argument_list|)
 operator|,
 name|DiagStorage
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Allocator
@@ -967,12 +932,6 @@ return|;
 block|}
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_decl_stmt
 name|PartialDiagnostic
 modifier|&
@@ -1009,7 +968,7 @@ name|Other
 operator|.
 name|DiagStorage
 operator|=
-literal|0
+name|nullptr
 block|;
 return|return
 operator|*
@@ -1017,11 +976,6 @@ name|this
 return|;
 block|}
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 operator|~
@@ -1302,70 +1256,39 @@ block|}
 comment|// Add all ranges.
 for|for
 control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
+specifier|const
+name|CharSourceRange
+modifier|&
+name|Range
+range|:
 name|DiagStorage
 operator|->
-name|NumDiagRanges
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
+name|DiagRanges
 control|)
 name|DB
 operator|.
 name|AddSourceRange
 argument_list|(
-name|DiagStorage
-operator|->
-name|DiagRanges
-index|[
-name|i
-index|]
+name|Range
 argument_list|)
 expr_stmt|;
 comment|// Add all fix-its.
 for|for
 control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
+specifier|const
+name|FixItHint
+modifier|&
+name|Fix
+range|:
 name|DiagStorage
 operator|->
 name|FixItHints
-operator|.
-name|size
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
 control|)
 name|DB
 operator|.
 name|AddFixItHint
 argument_list|(
-name|DiagStorage
-operator|->
-name|FixItHints
-index|[
-name|i
-index|]
+name|Fix
 argument_list|)
 expr_stmt|;
 block|}
@@ -1475,7 +1398,7 @@ block|{
 return|return
 name|DiagStorage
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -1690,11 +1613,11 @@ operator|>
 name|friend
 specifier|inline
 name|typename
-name|llvm
+name|std
 operator|::
 name|enable_if
 operator|<
-name|llvm
+name|std
 operator|::
 name|is_same
 operator|<
@@ -1702,6 +1625,8 @@ name|T
 operator|,
 name|DeclContext
 operator|>
+operator|::
+name|value
 operator|,
 specifier|const
 name|PartialDiagnostic

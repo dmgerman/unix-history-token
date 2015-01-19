@@ -2178,6 +2178,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kern_proc_cwd_out
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|,
+name|ssize_t
+name|maxlen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kern_proc_out
 parameter_list|(
 name|struct

@@ -609,6 +609,14 @@ operator|(
 literal|"Apple KeyLargo USB controller"
 operator|)
 return|;
+case|case
+literal|0x003f106b
+case|:
+return|return
+operator|(
+literal|"Apple KeyLargo/Intrepid USB controller"
+operator|)
+return|;
 default|default:
 break|break;
 block|}
@@ -754,6 +762,14 @@ operator|.
 name|devices_max
 operator|=
 name|OHCI_MAX_DEVICES
+expr_stmt|;
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|dma_bits
+operator|=
+literal|32
 expr_stmt|;
 comment|/* get all DMA memory */
 if|if

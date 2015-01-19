@@ -1050,24 +1050,6 @@ operator|->
 name|dom_rtattach
 argument_list|)
 expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"dom_rtoffset: %d   "
-argument_list|,
-name|d
-operator|->
-name|dom_rtoffset
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"dom_maxrtkey: %d\n"
-argument_list|,
-name|d
-operator|->
-name|dom_maxrtkey
-argument_list|)
-expr_stmt|;
 name|db_print_indent
 argument_list|(
 name|indent
@@ -1816,11 +1798,20 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"sb_cc: %u   "
+literal|"sb_acc: %u   "
 argument_list|,
 name|sb
 operator|->
-name|sb_cc
+name|sb_acc
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"sb_ccc: %u   "
+argument_list|,
+name|sb
+operator|->
+name|sb_ccc
 argument_list|)
 expr_stmt|;
 name|db_printf

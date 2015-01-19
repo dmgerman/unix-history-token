@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/metadata.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/psl.h>
 end_include
 
@@ -617,12 +623,18 @@ modifier|*
 name|args
 parameter_list|,
 name|vm_offset_t
+name|addr
+parameter_list|,
+name|vm_offset_t
 modifier|*
 name|modulep
 parameter_list|,
 name|vm_offset_t
 modifier|*
 name|kernendp
+parameter_list|,
+name|int
+name|add_smap
 parameter_list|)
 block|{
 name|struct
@@ -642,9 +654,6 @@ name|struct
 name|file_metadata
 modifier|*
 name|md
-decl_stmt|;
-name|vm_offset_t
-name|addr
 decl_stmt|;
 name|u_int64_t
 name|kernend
@@ -744,11 +753,14 @@ name|rootdev
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* find the last module in the chain */
+if|if
+condition|(
 name|addr
-operator|=
+operator|==
 literal|0
-expr_stmt|;
+condition|)
+block|{
+comment|/* find the last module in the chain */
 for|for
 control|(
 name|xp
@@ -796,6 +808,7 @@ operator|->
 name|f_size
 expr_stmt|;
 block|}
+block|}
 comment|/* pad to a page boundary */
 name|addr
 operator|=
@@ -806,27 +819,11 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* copy our environment */
-name|envp
+comment|/* place the metadata before anything */
+operator|*
+name|modulep
 operator|=
 name|addr
-expr_stmt|;
-name|addr
-operator|=
-name|bi_copyenv
-argument_list|(
-name|addr
-argument_list|)
-expr_stmt|;
-comment|/* pad to a page boundary */
-name|addr
-operator|=
-name|roundup
-argument_list|(
-name|addr
-argument_list|,
-name|PAGE_SIZE
-argument_list|)
 expr_stmt|;
 name|kfp
 operator|=
@@ -907,16 +904,28 @@ operator|&
 name|kernend
 argument_list|)
 expr_stmt|;
+name|file_addmetadata
+argument_list|(
+name|kfp
+argument_list|,
+name|MODINFOMD_MODULEP
+argument_list|,
+sizeof|sizeof
+name|modulep
+argument_list|,
+name|modulep
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|add_smap
+operator|!=
+literal|0
+condition|)
 name|bios_addsmapdata
 argument_list|(
 name|kfp
 argument_list|)
-expr_stmt|;
-comment|/* Figure out the size and location of the metadata */
-operator|*
-name|modulep
-operator|=
-name|addr
 expr_stmt|;
 name|size
 operator|=
@@ -925,13 +934,31 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|kernend
+comment|/* copy our environment */
+name|envp
 operator|=
 name|roundup
 argument_list|(
 name|addr
 operator|+
 name|size
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|addr
+operator|=
+name|bi_copyenv
+argument_list|(
+name|envp
+argument_list|)
+expr_stmt|;
+comment|/* set kernend */
+name|kernend
+operator|=
+name|roundup
+argument_list|(
+name|addr
 argument_list|,
 name|PAGE_SIZE
 argument_list|)
@@ -964,13 +991,37 @@ sizeof|sizeof
 name|kernend
 argument_list|)
 expr_stmt|;
+comment|/* patch MODINFOMD_ENVP */
+name|md
+operator|=
+name|file_findmetadata
+argument_list|(
+name|kfp
+argument_list|,
+name|MODINFOMD_ENVP
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+operator|&
+name|envp
+argument_list|,
+name|md
+operator|->
+name|md_data
+argument_list|,
+sizeof|sizeof
+name|envp
+argument_list|)
+expr_stmt|;
 comment|/* copy module list and metadata */
 operator|(
 name|void
 operator|)
 name|bi_copymodules64
 argument_list|(
-name|addr
+operator|*
+name|modulep
 argument_list|)
 expr_stmt|;
 return|return

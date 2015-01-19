@@ -1145,7 +1145,7 @@ name|qp
 init|=
 name|priv
 decl_stmt|;
-name|gs_bioq_init
+name|bioq_init
 argument_list|(
 operator|&
 name|qp
@@ -1277,7 +1277,7 @@ name|priv
 decl_stmt|;
 name|KASSERT
 argument_list|(
-name|gs_bioq_first
+name|bioq_first
 argument_list|(
 operator|&
 name|qp
@@ -1669,7 +1669,7 @@ expr_stmt|;
 block|}
 name|bp
 operator|=
-name|gs_bioq_takefirst
+name|bioq_takefirst
 argument_list|(
 operator|&
 name|qp
@@ -1698,7 +1698,7 @@ expr_stmt|;
 comment|/* are we expired ? */
 name|next
 operator|=
-name|gs_bioq_first
+name|bioq_first
 argument_list|(
 operator|&
 name|qp
@@ -2068,7 +2068,7 @@ return|;
 comment|/* allocation failed, tell upstream */
 if|if
 condition|(
-name|gs_bioq_first
+name|bioq_first
 argument_list|(
 operator|&
 name|qp
@@ -2162,7 +2162,7 @@ name|bio_caller1
 operator|=
 name|qp
 expr_stmt|;
-name|gs_bioq_disksort
+name|bioq_disksort
 argument_list|(
 operator|&
 name|qp

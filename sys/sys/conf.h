@@ -946,6 +946,23 @@ end_struct
 begin_define
 define|#
 directive|define
+name|DEV_MODULE_ORDERED
+parameter_list|(
+name|name
+parameter_list|,
+name|evh
+parameter_list|,
+name|arg
+parameter_list|,
+name|ord
+parameter_list|)
+define|\
+value|static moduledata_t name##_mod = {					\     #name,								\     evh,								\     arg									\ };									\ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, ord)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEV_MODULE
 parameter_list|(
 name|name
@@ -955,7 +972,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|static moduledata_t name##_mod = {					\     #name,								\     evh,								\     arg									\ };									\ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
+value|DEV_MODULE_ORDERED(name, evh, arg, SI_ORDER_MIDDLE)
 end_define
 
 begin_function_decl
@@ -1029,6 +1046,18 @@ end_function_decl
 begin_function_decl
 name|int
 name|count_dev
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|_dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|delist_dev
 parameter_list|(
 name|struct
 name|cdev
@@ -1942,6 +1971,11 @@ specifier|const
 name|char
 modifier|*
 name|_devname
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1962,17 +1996,6 @@ parameter_list|,
 name|off_t
 parameter_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|dumpsys
-parameter_list|(
-name|struct
-name|dumperinfo
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

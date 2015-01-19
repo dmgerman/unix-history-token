@@ -572,6 +572,12 @@ operator|->
 name|cpu
 operator|==
 name|NOCPU
+operator|||
+name|kt
+operator|->
+name|cpu
+operator|<
+literal|0
 condition|)
 return|return
 operator|(

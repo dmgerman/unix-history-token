@@ -103,20 +103,6 @@ directive|include
 file|"lldb/API/SBError.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|ASYNC
-value|true
-end_define
-
-begin_define
-define|#
-directive|define
-name|NO_ASYNC
-value|false
-end_define
-
 begin_decl_stmt
 name|class
 name|IOChannel
@@ -189,9 +175,11 @@ argument_list|()
 specifier|const
 block|;
 name|void
-name|ExecuteInitialCommands
+name|WriteInitialCommands
 argument_list|(
 argument|bool before_file
+argument_list|,
+argument|lldb::SBStream&strm
 argument_list|)
 block|;
 name|bool

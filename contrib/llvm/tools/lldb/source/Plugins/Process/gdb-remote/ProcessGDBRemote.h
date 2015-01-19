@@ -106,7 +106,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/ThreadSafeValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-forward.h"
 end_include
 
 begin_include
@@ -389,7 +401,13 @@ block|;
 name|virtual
 name|void
 name|DidAttach
-argument_list|()
+argument_list|(
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|process_arch
+argument_list|)
 block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
@@ -663,6 +681,18 @@ return|return
 name|m_gdb_comm
 return|;
 block|}
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|SendEventData
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|data
+argument_list|)
+block|;
 comment|//----------------------------------------------------------------------
 comment|// Override SetExitStatus so we can disconnect from the remote GDB server
 comment|//----------------------------------------------------------------------
@@ -673,6 +703,12 @@ argument_list|(
 argument|int exit_status
 argument_list|,
 argument|const char *cstr
+argument_list|)
+block|;
+name|void
+name|SetUserSpecifiedMaxMemoryTransferSize
+argument_list|(
+argument|uint64_t user_specified_max
 argument_list|)
 block|;
 name|protected
@@ -856,6 +892,28 @@ operator|*
 name|registers_array
 argument_list|)
 block|;
+specifier|const
+name|lldb
+operator|::
+name|DataBufferSP
+name|GetAuxvData
+argument_list|()
+name|override
+block|;
+name|lldb_private
+operator|::
+name|StructuredData
+operator|::
+name|ObjectSP
+name|GetExtendedInfoForThread
+argument_list|(
+argument|lldb::tid_t tid
+argument_list|)
+block|;
+name|void
+name|GetMaxMemorySize
+argument_list|()
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Broadcaster event bits definitions.
 comment|//------------------------------------------------------------------
@@ -1005,10 +1063,14 @@ name|tid_sig_collection
 name|m_continue_S_tids
 block|;
 comment|// 'S' for step with signal
-name|size_t
+name|uint64_t
 name|m_max_memory_size
 block|;
 comment|// The maximum number of bytes to read/write when reading and writing memory
+name|uint64_t
+name|m_remote_stub_max_memory_size
+block|;
+comment|// The maximum memory size the remote gdb stub can handle
 name|MMapMap
 name|m_addr_to_mmap_size
 block|;
@@ -1093,8 +1155,14 @@ parameter_list|()
 function_decl|;
 name|void
 name|DidLaunchOrAttach
-parameter_list|()
-function_decl|;
+argument_list|(
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|process_arch
+argument_list|)
+block|;
 name|lldb_private
 decl|::
 name|Error

@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -168,7 +162,7 @@ comment|// The objects created and saved by LLVMCreateDisasm() then used by
 comment|// LLVMDisasmInstruction().
 comment|//
 comment|// The LLVM target corresponding to the disassembler.
-comment|// FIXME: using llvm::OwningPtr<const llvm::Target> causes a malloc error
+comment|// FIXME: using std::unique_ptr<const llvm::Target> causes a malloc error
 comment|//        when this LLVMDisasmContext is deleted.
 specifier|const
 name|Target
@@ -176,9 +170,9 @@ modifier|*
 name|TheTarget
 decl_stmt|;
 comment|// The assembly information for the target architecture.
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 specifier|const
 name|llvm
@@ -188,9 +182,9 @@ operator|>
 name|MAI
 expr_stmt|;
 comment|// The register information for the target architecture.
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 specifier|const
 name|llvm
@@ -200,9 +194,9 @@ operator|>
 name|MRI
 expr_stmt|;
 comment|// The subtarget information for the target architecture.
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 specifier|const
 name|llvm
@@ -212,9 +206,9 @@ operator|>
 name|MSI
 expr_stmt|;
 comment|// The instruction information for the target architecture.
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 specifier|const
 name|llvm
@@ -224,9 +218,9 @@ operator|>
 name|MII
 expr_stmt|;
 comment|// The assembly context for creating symbols and MCExprs.
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 specifier|const
 name|llvm
@@ -236,9 +230,9 @@ operator|>
 name|Ctx
 expr_stmt|;
 comment|// The disassembler for the target architecture.
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 specifier|const
 name|llvm
@@ -248,9 +242,9 @@ operator|>
 name|DisAsm
 expr_stmt|;
 comment|// The instruction printer for the target architecture.
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 name|llvm
 operator|::

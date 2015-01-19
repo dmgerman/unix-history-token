@@ -2066,10 +2066,28 @@ range|:
 name|public
 name|ProgramPointTag
 block|{
+name|CheckName
+name|Name
+block|;
+name|friend
+name|class
+operator|::
+name|clang
+operator|::
+name|ento
+operator|::
+name|CheckerManager
+block|;
 name|public
 operator|:
 name|StringRef
 name|getTagDescription
+argument_list|()
+specifier|const
+name|override
+block|;
+name|CheckName
+name|getCheckName
 argument_list|()
 specifier|const
 block|;
@@ -2089,6 +2107,47 @@ argument_list|)
 specifier|const
 block|{ }
 block|}
+decl_stmt|;
+comment|/// Dump checker name to stream.
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|Out
+operator|,
+specifier|const
+name|CheckerBase
+operator|&
+name|Checker
+operator|)
+expr_stmt|;
+comment|/// Tag that can use a checker name as a message provider
+comment|/// (see SimpleProgramPointTag).
+name|class
+name|CheckerProgramPointTag
+range|:
+name|public
+name|SimpleProgramPointTag
+block|{
+name|public
+operator|:
+name|CheckerProgramPointTag
+argument_list|(
+argument|StringRef CheckerName
+argument_list|,
+argument|StringRef Msg
+argument_list|)
+block|;
+name|CheckerProgramPointTag
+argument_list|(
+argument|const CheckerBase *Checker
+argument_list|,
+argument|StringRef Msg
+argument_list|)
+block|; }
 decl_stmt|;
 name|template
 operator|<
@@ -2523,7 +2582,7 @@ argument_list|()
 operator|:
 name|Mgr
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|template

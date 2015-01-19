@@ -974,6 +974,17 @@ begin_comment
 comment|/* linker.hints file version */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LINKER_HINTS_MAX
+value|(1<< 20)
+end_define
+
+begin_comment
+comment|/* Allow at most 1MB for linker.hints */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

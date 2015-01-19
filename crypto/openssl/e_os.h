@@ -952,6 +952,7 @@ parameter_list|)
 value|_strlen31(s)
 comment|/* cut strings to 2GB */
 specifier|static
+name|__inline
 name|unsigned
 name|int
 name|_strlen31
@@ -1230,7 +1231,7 @@ name|DEFAULT_HOME
 value|"C:"
 endif|#
 directive|endif
-comment|/* Avoid Windows 8 SDK GetVersion deprecated problems */
+comment|/* Avoid Visual Studio 13 GetVersion deprecated problems */
 if|#
 directive|if
 name|defined
@@ -1246,6 +1247,13 @@ directive|define
 name|check_winnt
 parameter_list|()
 value|(1)
+define|#
+directive|define
+name|check_win_minplat
+parameter_list|(
+name|x
+parameter_list|)
+value|(1)
 else|#
 directive|else
 define|#
@@ -1253,31 +1261,13 @@ directive|define
 name|check_winnt
 parameter_list|()
 value|(GetVersion()< 0x80000000)
-endif|#
-directive|endif
-comment|/*  * Visual Studio: inline is available in C++ only, however  * __inline is available for C, see  * http://msdn.microsoft.com/en-us/library/z8y1yy88.aspx  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-specifier|inline
-argument_list|)
 define|#
 directive|define
-name|inline
-value|__inline
+name|check_win_minplat
+parameter_list|(
+name|x
+parameter_list|)
+value|(LOBYTE(LOWORD(GetVersion()))>= (x))
 endif|#
 directive|endif
 else|#
@@ -2520,6 +2510,64 @@ value|0
 include|#
 directive|include
 file|<OS.h>
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+specifier|inline
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC_VERSION__
+argument_list|)
+operator|&&
+name|__STDC_VERSION__
+operator|>=
+literal|199901L
+comment|/* do nothing, inline works */
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|__GNUC__
+operator|>=
+literal|2
+define|#
+directive|define
+name|inline
+value|__inline__
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+comment|/*    * Visual Studio: inline is available in C++ only, however    * __inline is available for C, see    * http://msdn.microsoft.com/en-us/library/z8y1yy88.aspx    */
+define|#
+directive|define
+name|inline
+value|__inline
+else|#
+directive|else
+define|#
+directive|define
+name|inline
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#

@@ -796,6 +796,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID2_SDBG
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID2_FMA
 value|0x00001000
 end_define

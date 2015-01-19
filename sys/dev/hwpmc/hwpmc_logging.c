@@ -27,11 +27,26 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|1100000
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/capsicum.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2472,9 +2487,18 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|1100000
+operator|)
 name|cap_rights_t
 name|rights
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * As long as it is possible to get a LOR between pmc_sx lock and 	 * proctree/allproc sx locks used for adding a new process, assure 	 * the former is not held here. 	 */
 name|sx_assert
 argument_list|(
@@ -2562,6 +2586,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* get a reference to the file state */
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|1100000
+operator|)
 name|error
 operator|=
 name|fget_write
@@ -2591,6 +2622,8 @@ condition|)
 goto|goto
 name|error
 goto|;
+endif|#
+directive|endif
 comment|/* mark process as owning a log file */
 name|po
 operator|->

@@ -903,7 +903,7 @@ value|VNET(bpf_optimize_writers)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_bpf
 argument_list|,
@@ -911,6 +911,8 @@ name|OID_AUTO
 argument_list|,
 name|optimize_writers
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -4543,7 +4545,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  FIONREAD		Check for read packet available.  *  SIOCGIFADDR		Get interface address - convenient hook to driver.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set read filter.  *  BIOCSETFNR		Set read filter without resetting descriptor.  *  BIOCSETWF		Set write filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  *  BIOCVERSION		Get filter language version.  *  BIOCGHDRCMPLT	Get "header already complete" flag  *  BIOCSHDRCMPLT	Set "header already complete" flag  *  BIOCGDIRECTION	Get packet direction flag  *  BIOCSDIRECTION	Set packet direction flag  *  BIOCGTSTAMP		Get time stamp format and resolution.  *  BIOCSTSTAMP		Set time stamp format and resolution.  *  BIOCLOCK		Set "locked" flag  *  BIOCFEEDBACK	Set packet feedback mode.  *  BIOCSETZBUF		Set current zero-copy buffer locations.  *  BIOCGETZMAX		Get maximum zero-copy buffer size.  *  BIOCROTZBUF		Force rotation of zero-copy buffer  *  BIOCSETBUFMODE	Set buffer mode.  *  BIOCGETBUFMODE	Get current buffer mode.  */
+comment|/*  *  FIONREAD		Check for read packet available.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set read filter.  *  BIOCSETFNR		Set read filter without resetting descriptor.  *  BIOCSETWF		Set write filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  *  BIOCVERSION		Get filter language version.  *  BIOCGHDRCMPLT	Get "header already complete" flag  *  BIOCSHDRCMPLT	Set "header already complete" flag  *  BIOCGDIRECTION	Get packet direction flag  *  BIOCSDIRECTION	Set packet direction flag  *  BIOCGTSTAMP		Get time stamp format and resolution.  *  BIOCSTSTAMP		Set time stamp format and resolution.  *  BIOCLOCK		Set "locked" flag  *  BIOCFEEDBACK	Set packet feedback mode.  *  BIOCSETZBUF		Set current zero-copy buffer locations.  *  BIOCGETZMAX		Get maximum zero-copy buffer size.  *  BIOCROTZBUF		Force rotation of zero-copy buffer  *  BIOCSETBUFMODE	Set buffer mode.  *  BIOCGETBUFMODE	Get current buffer mode.  */
 end_comment
 
 begin_comment
@@ -4901,56 +4903,6 @@ name|addr
 operator|=
 name|n
 expr_stmt|;
-break|break;
-block|}
-case|case
-name|SIOCGIFADDR
-case|:
-block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-if|if
-condition|(
-name|d
-operator|->
-name|bd_bif
-operator|==
-name|NULL
-condition|)
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-else|else
-block|{
-name|ifp
-operator|=
-name|d
-operator|->
-name|bd_bif
-operator|->
-name|bif_ifp
-expr_stmt|;
-name|error
-operator|=
-call|(
-modifier|*
-name|ifp
-operator|->
-name|if_ioctl
-call|)
-argument_list|(
-name|ifp
-argument_list|,
-name|cmd
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 block|}
 comment|/* 	 * Get buffer len [for read()]. 	 */

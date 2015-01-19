@@ -224,7 +224,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -322,15 +322,13 @@ argument_list|,
 name|INTR_TYPE_CAM
 operator||
 name|INTR_ENTROPY
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
 name|stg_intr
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|sc
 argument_list|,
 operator|&

@@ -119,6 +119,19 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_comment
+comment|// this needs to be outside of the namespace, to avoid conflict with llvm-c decl
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|LLVMOpaqueTargetData
+modifier|*
+name|LLVMTargetDataRef
+typedef|;
+end_typedef
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -137,6 +150,9 @@ name|StructType
 decl_stmt|;
 name|class
 name|StructLayout
+decl_stmt|;
+name|class
+name|Triple
 decl_stmt|;
 name|class
 name|GlobalVariable
@@ -179,12 +195,7 @@ comment|///< Floating point type alignment
 name|AGGREGATE_ALIGN
 init|=
 literal|'a'
-block|,
 comment|///< Aggregate alignment
-name|STACK_ALIGN
-init|=
-literal|'s'
-comment|///< Stack objects alignment
 block|}
 enum|;
 comment|/// Layout alignment element.
@@ -271,9 +282,9 @@ name|PrefAlign
 decl_stmt|;
 comment|///< Pref. alignment for this type/bitw
 name|uint32_t
-name|TypeBitWidth
+name|TypeByteWidth
 decl_stmt|;
-comment|///< Type bit width
+comment|///< Type byte width
 name|uint32_t
 name|AddressSpace
 decl_stmt|;
@@ -284,16 +295,16 @@ name|PointerAlignElem
 name|get
 parameter_list|(
 name|uint32_t
-name|addr_space
+name|AddressSpace
 parameter_list|,
 name|unsigned
-name|abi_align
+name|ABIAlign
 parameter_list|,
 name|unsigned
-name|pref_align
+name|PrefAlign
 parameter_list|,
 name|uint32_t
-name|bit_width
+name|TypeByteWidth
 parameter_list|)
 function_decl|;
 comment|/// Equality predicate
@@ -310,129 +321,194 @@ specifier|const
 expr_stmt|;
 block|}
 struct|;
-comment|/// DataLayout - This class holds a parsed version of the target data layout
-comment|/// string in a module and provides methods for querying it.  The target data
-comment|/// layout string is specified *by the target* - a frontend generating LLVM IR
-comment|/// is required to generate the right target data for the target being codegen'd
-comment|/// to.  If some measure of portability is desired, an empty string may be
-comment|/// specified in the module.
+comment|/// This class holds a parsed version of the target data layout string in a
+comment|/// module and provides methods for querying it. The target data layout string
+comment|/// is specified *by the target* - a frontend generating LLVM IR is required to
+comment|/// generate the right target data for the target being codegen'd to.
 name|class
 name|DataLayout
-range|:
-name|public
-name|ImmutablePass
 block|{
 name|private
-operator|:
+label|:
 name|bool
 name|LittleEndian
-block|;
+decl_stmt|;
 comment|///< Defaults to false
 name|unsigned
 name|StackNaturalAlign
-block|;
+decl_stmt|;
 comment|///< Stack natural alignment
+enum|enum
+name|ManglingModeT
+block|{
+name|MM_None
+block|,
+name|MM_ELF
+block|,
+name|MM_MachO
+block|,
+name|MM_WINCOFF
+block|,
+name|MM_Mips
+block|}
+enum|;
+name|ManglingModeT
+name|ManglingMode
+decl_stmt|;
 name|SmallVector
 operator|<
 name|unsigned
 name|char
-block|,
+operator|,
 literal|8
 operator|>
 name|LegalIntWidths
-block|;
+expr_stmt|;
 comment|///< Legal Integers.
 comment|/// Alignments - Where the primitive type alignment data is stored.
 comment|///
-comment|/// @sa init().
+comment|/// @sa reset().
 comment|/// @note Could support multiple size pointer alignments, e.g., 32-bit
 comment|/// pointers vs. 64-bit pointers by extending LayoutAlignment, but for now,
 comment|/// we don't.
 name|SmallVector
 operator|<
 name|LayoutAlignElem
-block|,
+operator|,
 literal|16
 operator|>
 name|Alignments
-block|;
-name|DenseMap
+expr_stmt|;
+typedef|typedef
+name|SmallVector
 operator|<
-name|unsigned
-block|,
 name|PointerAlignElem
+operator|,
+literal|8
 operator|>
+name|PointersTy
+expr_stmt|;
+name|PointersTy
 name|Pointers
-block|;
+decl_stmt|;
+name|PointersTy
+operator|::
+name|const_iterator
+name|findPointerLowerBound
+argument_list|(
+argument|uint32_t AddressSpace
+argument_list|)
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|DataLayout
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|findPointerLowerBound
+argument_list|(
+name|AddressSpace
+argument_list|)
+return|;
+block|}
+name|PointersTy
+operator|::
+name|iterator
+name|findPointerLowerBound
+argument_list|(
+argument|uint32_t AddressSpace
+argument_list|)
+expr_stmt|;
 comment|/// InvalidAlignmentElem - This member is a signal that a requested alignment
 comment|/// type and bit width were not found in the SmallVector.
 specifier|static
 specifier|const
 name|LayoutAlignElem
 name|InvalidAlignmentElem
-block|;
+decl_stmt|;
 comment|/// InvalidPointerElem - This member is a signal that a requested pointer
 comment|/// type and bit width were not found in the DenseSet.
 specifier|static
 specifier|const
 name|PointerAlignElem
 name|InvalidPointerElem
-block|;
+decl_stmt|;
 comment|// The StructType -> StructLayout map.
 name|mutable
 name|void
-operator|*
+modifier|*
 name|LayoutMap
-block|;
+decl_stmt|;
 comment|//! Set/initialize target alignments
 name|void
 name|setAlignment
-argument_list|(
-argument|AlignTypeEnum align_type
-argument_list|,
-argument|unsigned abi_align
-argument_list|,
-argument|unsigned pref_align
-argument_list|,
-argument|uint32_t bit_width
-argument_list|)
-block|;
+parameter_list|(
+name|AlignTypeEnum
+name|align_type
+parameter_list|,
+name|unsigned
+name|abi_align
+parameter_list|,
+name|unsigned
+name|pref_align
+parameter_list|,
+name|uint32_t
+name|bit_width
+parameter_list|)
+function_decl|;
 name|unsigned
 name|getAlignmentInfo
 argument_list|(
-argument|AlignTypeEnum align_type
+name|AlignTypeEnum
+name|align_type
 argument_list|,
-argument|uint32_t bit_width
+name|uint32_t
+name|bit_width
 argument_list|,
-argument|bool ABIAlign
+name|bool
+name|ABIAlign
 argument_list|,
-argument|Type *Ty
+name|Type
+operator|*
+name|Ty
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|//! Set/initialize pointer alignments
 name|void
 name|setPointerAlignment
-argument_list|(
-argument|uint32_t addr_space
-argument_list|,
-argument|unsigned abi_align
-argument_list|,
-argument|unsigned pref_align
-argument_list|,
-argument|uint32_t bit_width
-argument_list|)
-block|;
+parameter_list|(
+name|uint32_t
+name|AddrSpace
+parameter_list|,
+name|unsigned
+name|ABIAlign
+parameter_list|,
+name|unsigned
+name|PrefAlign
+parameter_list|,
+name|uint32_t
+name|TypeByteWidth
+parameter_list|)
+function_decl|;
 comment|//! Internal helper method that returns requested alignment for type.
 name|unsigned
 name|getAlignment
 argument_list|(
-argument|Type *Ty
+name|Type
+operator|*
+name|Ty
 argument_list|,
-argument|bool abi_or_pref
+name|bool
+name|abi_or_pref
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Valid alignment predicate.
 comment|///
 comment|/// Predicate that tests a LayoutAlignElem reference returned by get() against
@@ -440,9 +516,12 @@ comment|/// InvalidAlignmentElem.
 name|bool
 name|validAlignment
 argument_list|(
-argument|const LayoutAlignElem&align
-argument_list|)
 specifier|const
+name|LayoutAlignElem
+operator|&
+name|align
+argument_list|)
+decl|const
 block|{
 return|return
 operator|&
@@ -459,9 +538,12 @@ comment|/// InvalidPointerElem.
 name|bool
 name|validPointer
 argument_list|(
-argument|const PointerAlignElem&align
-argument_list|)
 specifier|const
+name|PointerAlignElem
+operator|&
+name|align
+argument_list|)
+decl|const
 block|{
 return|return
 operator|&
@@ -475,46 +557,46 @@ comment|/// Parses a target data specification string. Assert if the string is
 comment|/// malformed.
 name|void
 name|parseSpecifier
-argument_list|(
-argument|StringRef LayoutDescription
-argument_list|)
-block|;
+parameter_list|(
+name|StringRef
+name|LayoutDescription
+parameter_list|)
+function_decl|;
+comment|// Free all internal data structures.
+name|void
+name|clear
+parameter_list|()
+function_decl|;
 name|public
-operator|:
-comment|/// Default ctor.
-comment|///
-comment|/// @note This has to exist, because this is a pass, but it should never be
-comment|/// used.
-name|DataLayout
-argument_list|()
-block|;
-comment|/// Constructs a DataLayout from a specification string. See init().
+label|:
+comment|/// Constructs a DataLayout from a specification string. See reset().
 name|explicit
 name|DataLayout
 argument_list|(
 argument|StringRef LayoutDescription
 argument_list|)
-operator|:
-name|ImmutablePass
+block|:
+name|LayoutMap
 argument_list|(
-argument|ID
+argument|nullptr
 argument_list|)
 block|{
-name|init
+name|reset
 argument_list|(
 name|LayoutDescription
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// Initialize target data from properties stored in the module.
 name|explicit
 name|DataLayout
-argument_list|(
+parameter_list|(
 specifier|const
 name|Module
-operator|*
+modifier|*
 name|M
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|DataLayout
 argument_list|(
 specifier|const
@@ -523,75 +605,117 @@ operator|&
 name|DL
 argument_list|)
 operator|:
-name|ImmutablePass
+name|LayoutMap
 argument_list|(
-name|ID
+argument|nullptr
 argument_list|)
-block|,
+block|{
+operator|*
+name|this
+operator|=
+name|DL
+block|; }
+name|DataLayout
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+operator|)
+block|{
+name|clear
+argument_list|()
+block|;
 name|LittleEndian
-argument_list|(
+operator|=
 name|DL
 operator|.
 name|isLittleEndian
 argument_list|()
-argument_list|)
-block|,
+block|;
 name|StackNaturalAlign
-argument_list|(
+operator|=
 name|DL
 operator|.
 name|StackNaturalAlign
-argument_list|)
-block|,
+block|;
+name|ManglingMode
+operator|=
+name|DL
+operator|.
+name|ManglingMode
+block|;
 name|LegalIntWidths
-argument_list|(
+operator|=
 name|DL
 operator|.
 name|LegalIntWidths
-argument_list|)
-block|,
+block|;
 name|Alignments
-argument_list|(
+operator|=
 name|DL
 operator|.
 name|Alignments
-argument_list|)
-block|,
+block|;
 name|Pointers
-argument_list|(
+operator|=
 name|DL
 operator|.
 name|Pointers
-argument_list|)
-block|,
-name|LayoutMap
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|DataLayout
+operator|&
+name|Other
+operator|)
+specifier|const
+expr_stmt|;
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|DataLayout
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|Other
+operator|)
+return|;
+block|}
 operator|~
 name|DataLayout
 argument_list|()
-block|;
+expr_stmt|;
 comment|// Not virtual, do not subclass this class
-comment|/// DataLayout is an immutable pass, but holds state.  This allows the pass
-comment|/// manager to clear its mutable state.
-name|bool
-name|doFinalization
-argument_list|(
-name|Module
-operator|&
-name|M
-argument_list|)
-block|;
-comment|/// Parse a data layout string (with fallback to default values). Ensure that
-comment|/// the data layout pass is registered.
+comment|/// Parse a data layout string (with fallback to default values).
 name|void
-name|init
-argument_list|(
-argument|StringRef LayoutDescription
-argument_list|)
-block|;
+name|reset
+parameter_list|(
+name|StringRef
+name|LayoutDescription
+parameter_list|)
+function_decl|;
 comment|/// Layout endianness...
 name|bool
 name|isLittleEndian
@@ -621,7 +745,7 @@ name|string
 name|getStringRepresentation
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// isLegalInteger - This function returns true if the specified type is
 comment|/// known to be a native integer type supported by the CPU.  For example,
 comment|/// i64 is not native on most 32-bit CPUs and i37 is not native on any known
@@ -632,40 +756,21 @@ comment|///
 name|bool
 name|isLegalInteger
 argument_list|(
-argument|unsigned Width
+name|unsigned
+name|Width
 argument_list|)
-specifier|const
+decl|const
 block|{
 for|for
 control|(
 name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-operator|(
-name|unsigned
-operator|)
+name|LegalIntWidth
+range|:
 name|LegalIntWidths
-operator|.
-name|size
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
 control|)
 if|if
 condition|(
-name|LegalIntWidths
-index|[
-name|i
-index|]
+name|LegalIntWidth
 operator|==
 name|Width
 condition|)
@@ -715,10 +820,149 @@ name|StackNaturalAlign
 operator|)
 return|;
 block|}
+name|bool
+name|hasMicrosoftFastStdCallMangling
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ManglingMode
+operator|==
+name|MM_WINCOFF
+return|;
+block|}
+name|bool
+name|hasLinkerPrivateGlobalPrefix
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ManglingMode
+operator|==
+name|MM_MachO
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getLinkerPrivateGlobalPrefix
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|ManglingMode
+operator|==
+name|MM_MachO
+condition|)
+return|return
+literal|"l"
+return|;
+return|return
+name|getPrivateGlobalPrefix
+argument_list|()
+return|;
+block|}
+name|char
+name|getGlobalPrefix
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|ManglingMode
+condition|)
+block|{
+case|case
+name|MM_None
+case|:
+case|case
+name|MM_ELF
+case|:
+case|case
+name|MM_Mips
+case|:
+return|return
+literal|'\0'
+return|;
+case|case
+name|MM_MachO
+case|:
+case|case
+name|MM_WINCOFF
+case|:
+return|return
+literal|'_'
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"invalid mangling mode"
+argument_list|)
+expr_stmt|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getPrivateGlobalPrefix
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|ManglingMode
+condition|)
+block|{
+case|case
+name|MM_None
+case|:
+return|return
+literal|""
+return|;
+case|case
+name|MM_ELF
+case|:
+return|return
+literal|".L"
+return|;
+case|case
+name|MM_Mips
+case|:
+return|return
+literal|"$"
+return|;
+case|case
+name|MM_MachO
+case|:
+case|case
+name|MM_WINCOFF
+case|:
+return|return
+literal|"L"
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"invalid mangling mode"
+argument_list|)
+expr_stmt|;
+block|}
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getManglingComponent
+argument_list|(
+specifier|const
+name|Triple
+operator|&
+name|T
+argument_list|)
+expr_stmt|;
 comment|/// fitsInLegalInteger - This function returns true if the specified type fits
 comment|/// in a native integer type supported by the CPU.  For example, if the CPU
 comment|/// only supports i32 as a native integer type, then i27 fits in a legal
-comment|// integer type but i45 does not.
+comment|/// integer type but i45 does not.
 name|bool
 name|fitsInLegalInteger
 argument_list|(
@@ -730,35 +974,15 @@ block|{
 for|for
 control|(
 name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-operator|(
-name|unsigned
-operator|)
+name|LegalIntWidth
+range|:
 name|LegalIntWidths
-operator|.
-name|size
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
 control|)
 if|if
 condition|(
 name|Width
 operator|<=
-name|LegalIntWidths
-index|[
-name|i
-index|]
+name|LegalIntWidth
 condition|)
 return|return
 name|true
@@ -779,52 +1003,7 @@ operator|=
 literal|0
 argument_list|)
 decl|const
-block|{
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|PointerAlignElem
-operator|>
-operator|::
-name|const_iterator
-name|val
-operator|=
-name|Pointers
-operator|.
-name|find
-argument_list|(
-name|AS
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|val
-operator|==
-name|Pointers
-operator|.
-name|end
-argument_list|()
-condition|)
-block|{
-name|val
-operator|=
-name|Pointers
-operator|.
-name|find
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|val
-operator|->
-name|second
-operator|.
-name|ABIAlign
-return|;
-block|}
+decl_stmt|;
 comment|/// Return target's alignment for stack-based pointers
 comment|/// FIXME: The defaults need to be removed once all of
 comment|/// the backends/clients are updated.
@@ -837,52 +1016,7 @@ operator|=
 literal|0
 argument_list|)
 decl|const
-block|{
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|PointerAlignElem
-operator|>
-operator|::
-name|const_iterator
-name|val
-operator|=
-name|Pointers
-operator|.
-name|find
-argument_list|(
-name|AS
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|val
-operator|==
-name|Pointers
-operator|.
-name|end
-argument_list|()
-condition|)
-block|{
-name|val
-operator|=
-name|Pointers
-operator|.
-name|find
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|val
-operator|->
-name|second
-operator|.
-name|PrefAlign
-return|;
-block|}
+decl_stmt|;
 comment|/// Layout pointer size
 comment|/// FIXME: The defaults need to be removed once all of
 comment|/// the backends/clients are updated.
@@ -895,52 +1029,7 @@ operator|=
 literal|0
 argument_list|)
 decl|const
-block|{
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|PointerAlignElem
-operator|>
-operator|::
-name|const_iterator
-name|val
-operator|=
-name|Pointers
-operator|.
-name|find
-argument_list|(
-name|AS
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|val
-operator|==
-name|Pointers
-operator|.
-name|end
-argument_list|()
-condition|)
-block|{
-name|val
-operator|=
-name|Pointers
-operator|.
-name|find
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|val
-operator|->
-name|second
-operator|.
-name|TypeBitWidth
-return|;
-block|}
+decl_stmt|;
 comment|/// Layout pointer size, in bits
 comment|/// FIXME: The defaults need to be removed once all of
 comment|/// the backends/clients are updated.
@@ -1140,17 +1229,6 @@ name|BitWidth
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getCallFrameTypeAlignment - Return the minimum ABI-required alignment
-comment|/// for the specified type when it is part of a call frame.
-name|unsigned
-name|getCallFrameTypeAlignment
-argument_list|(
-name|Type
-operator|*
-name|Ty
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// getPrefTypeAlignment - Return the preferred stack/global alignment for
 comment|/// the specified type.  This is always at least as good as the ABI alignment.
 name|unsigned
@@ -1244,7 +1322,7 @@ operator|==
 literal|0
 operator|)
 condition|?
-literal|0
+name|nullptr
 else|:
 name|Type
 operator|::
@@ -1256,8 +1334,8 @@ name|LargestSize
 argument_list|)
 return|;
 block|}
-comment|/// getLargestLegalIntType - Return the size of largest legal integer type
-comment|/// size, or 0 if none are set.
+comment|/// getLargestLegalIntTypeSize - Return the size of largest legal integer
+comment|/// type size, or 0 if none are set.
 name|unsigned
 name|getLargestLegalIntTypeSize
 argument_list|()
@@ -1376,17 +1454,125 @@ literal|1
 argument_list|)
 return|;
 block|}
-specifier|static
-name|char
-name|ID
-decl_stmt|;
-comment|// Pass identification, replacement for typeid
 block|}
 end_decl_stmt
 
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_function
+specifier|inline
+name|DataLayout
+modifier|*
+name|unwrap
+parameter_list|(
+name|LLVMTargetDataRef
+name|P
+parameter_list|)
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|DataLayout
+operator|*
+operator|>
+operator|(
+name|P
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|inline
+name|LLVMTargetDataRef
+name|wrap
+parameter_list|(
+specifier|const
+name|DataLayout
+modifier|*
+name|P
+parameter_list|)
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|LLVMTargetDataRef
+operator|>
+operator|(
+name|const_cast
+operator|<
+name|DataLayout
+operator|*
+operator|>
+operator|(
+name|P
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|class
+name|DataLayoutPass
+range|:
+name|public
+name|ImmutablePass
+block|{
+name|DataLayout
+name|DL
+block|;
+name|public
+operator|:
+comment|/// This has to exist, because this is a pass, but it should never be used.
+name|DataLayoutPass
+argument_list|()
+block|;
+operator|~
+name|DataLayoutPass
+argument_list|()
+block|;
+specifier|const
+name|DataLayout
+operator|&
+name|getDataLayout
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DL
+return|;
+block|}
+comment|// For use with the C API. C++ code should always use the constructor that
+comment|// takes a module.
+name|explicit
+name|DataLayoutPass
+argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+block|;
+name|explicit
+name|DataLayoutPass
+argument_list|(
+specifier|const
+name|Module
+operator|*
+name|M
+argument_list|)
+block|;
+specifier|static
+name|char
+name|ID
+block|;
+comment|// Pass identification, replacement for typeid
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// StructLayout - used to lazily calculate structure layout information for a

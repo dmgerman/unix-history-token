@@ -151,11 +151,12 @@ name|MCContext
 operator|&
 name|Ctx
 argument_list|,
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MCRelocationInfo
 operator|>
-operator|&
 name|RelInfo
 argument_list|,
 specifier|const
@@ -187,6 +188,7 @@ argument|uint64_t Offset
 argument_list|,
 argument|uint64_t InstSize
 argument_list|)
+name|override
 block|;
 name|void
 name|tryAddingPcLoadReferenceComment
@@ -197,6 +199,7 @@ argument|int64_t Value
 argument_list|,
 argument|uint64_t Address
 argument_list|)
+name|override
 block|;
 comment|/// @}
 comment|/// \brief Look for an external function symbol at \p Addr.
@@ -219,11 +222,12 @@ name|MCContext
 operator|&
 name|Ctx
 argument_list|,
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MCRelocationInfo
 operator|>
-operator|&
 name|RelInfo
 argument_list|,
 specifier|const

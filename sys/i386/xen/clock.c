@@ -405,7 +405,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* local offset from GMT in seconds */
+comment|/* local offset from UTC in seconds */
 end_comment
 
 begin_decl_stmt

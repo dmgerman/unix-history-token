@@ -595,6 +595,21 @@ argument_list|,
 literal|"NAME"
 argument_list|)
 expr_stmt|;
+name|zprop_register_hidden
+argument_list|(
+name|ZPOOL_PROP_MAXBLOCKSIZE
+argument_list|,
+literal|"maxblocksize"
+argument_list|,
+name|PROP_TYPE_NUMBER
+argument_list|,
+name|PROP_READONLY
+argument_list|,
+name|ZFS_TYPE_POOL
+argument_list|,
+literal|"MAXBLOCKSIZE"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

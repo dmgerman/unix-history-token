@@ -13,14 +13,11 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -38,10 +35,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* FreeBSD */
-end_comment
 
 begin_include
 include|#
@@ -84,14 +77,11 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -200,15 +190,11 @@ directive|include
 file|<dt_provider.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_include
 include|#
@@ -529,15 +515,11 @@ begin_comment
 comment|/*  * Global variables that are formatted on FreeBSD based on the kernel file name.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -1138,12 +1120,9 @@ block|}
 block|,
 name|DT_VERS_1_0
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 operator|&
 name|dt_idops_type
 block|,
@@ -1696,12 +1675,9 @@ name|DIF_SUBR_INET_NTOA
 operator|,
 name|DT_ATTR_STABCMN
 operator|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|DT_VERS_1_5
 operator|,
 operator|&
@@ -1747,12 +1723,9 @@ name|DIF_SUBR_INET_NTOA6
 operator|,
 name|DT_ATTR_STABCMN
 operator|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|DT_VERS_1_5
 operator|,
 operator|&
@@ -2011,15 +1984,11 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_block
 block|{
@@ -2151,14 +2120,11 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_block
 block|{
@@ -2895,14 +2861,11 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_block
 block|{
@@ -3489,15 +3452,11 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_block
 block|{
@@ -4129,14 +4088,11 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_block
 block|{
@@ -4168,15 +4124,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_block
 block|{
@@ -5871,14 +5823,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_decl_stmt
 specifier|const
@@ -5960,14 +5909,11 @@ begin_comment
 comment|/* default library directory */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_decl_stmt
 specifier|const
@@ -6165,14 +6111,11 @@ name|dt_fdlist_t
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_pragma
 pragma|#
@@ -6343,12 +6286,9 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|struct
 name|dirent
 modifier|*
@@ -6654,6 +6594,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* !illumos */
 name|char
 modifier|*
 name|p
@@ -7022,6 +6963,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* illumos */
 block|}
 end_function
 
@@ -7086,14 +7028,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_function
 specifier|static
@@ -7578,12 +7517,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|ftfd
 operator|=
 name|open
@@ -7777,12 +7713,9 @@ name|dt_oflags
 operator|=
 name|flags
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|dtp
 operator|->
 name|dt_prcmode
@@ -7867,12 +7800,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|dtp
 operator|->
 name|dt_stdout_fd
@@ -8114,12 +8044,9 @@ operator|->
 name|dt_cpp_path
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 operator|(
 name|void
 operator|)
@@ -8397,12 +8324,9 @@ operator|)
 return|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 ifdef|#
 directive|ifdef
 name|__x86
@@ -8610,13 +8534,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * On FreeBSD the kernel module name can't be hard-coded. The 	 * 'kern.bootfile' sysctl value tells us exactly which file is being 	 * used as the kernel. 	 */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 block|{
 name|char
 name|bootfile
@@ -10632,12 +10552,9 @@ operator|->
 name|dt_ddefs_fd
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 name|dtp

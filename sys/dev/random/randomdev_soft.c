@@ -489,21 +489,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|MID_DEV_MODULE
-parameter_list|(
-name|name
-parameter_list|,
-name|evh
-parameter_list|,
-name|arg
-parameter_list|)
-define|\
-value|static moduledata_t name##_mod = {		\     #name,					\     evh,					\     arg						\ };						\ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
-end_define
-
 begin_if
 if|#
 directive|if
@@ -514,7 +499,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|MID_DEV_MODULE
+name|DEV_MODULE
 argument_list|(
 name|yarrow
 argument_list|,
@@ -540,7 +525,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|yarrow
 argument_list|,
-name|random_adaptors
+name|randomdev
 argument_list|,
 literal|1
 argument_list|,
@@ -566,7 +551,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|MID_DEV_MODULE
+name|DEV_MODULE
 argument_list|(
 name|fortuna
 argument_list|,
@@ -592,7 +577,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|fortuna
 argument_list|,
-name|random_adaptors
+name|randomdev
 argument_list|,
 literal|1
 argument_list|,

@@ -2160,19 +2160,6 @@ argument_list|,
 name|scred
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|sbp
-operator|->
-name|f_flags
-operator|=
-literal|0
-expr_stmt|;
-comment|/* copy of mount exported flags */
 name|smbfs_free_scred
 argument_list|(
 name|scred

@@ -398,7 +398,7 @@ typedef|;
 define|#
 directive|define
 name|ZIL_MAX_LOG_DATA
-value|(SPA_MAXBLOCKSIZE - sizeof (zil_chain_t) - \     sizeof (lr_write_t))
+value|(SPA_OLD_MAXBLOCKSIZE - sizeof (zil_chain_t) - \     sizeof (lr_write_t))
 ifdef|#
 directive|ifdef
 name|__cplusplus

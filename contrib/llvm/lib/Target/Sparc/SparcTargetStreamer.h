@@ -72,6 +72,13 @@ argument_list|()
 block|;
 name|public
 operator|:
+name|SparcTargetStreamer
+argument_list|(
+name|MCStreamer
+operator|&
+name|S
+argument_list|)
+block|;
 comment|/// Emit ".register<reg>, #ignore".
 name|virtual
 name|void
@@ -108,24 +115,28 @@ name|public
 operator|:
 name|SparcTargetAsmStreamer
 argument_list|(
+name|MCStreamer
+operator|&
+name|S
+argument_list|,
 name|formatted_raw_ostream
 operator|&
 name|OS
 argument_list|)
 block|;
-name|virtual
 name|void
 name|emitSparcRegisterIgnore
 argument_list|(
 argument|unsigned reg
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|emitSparcRegisterScratch
 argument_list|(
 argument|unsigned reg
 argument_list|)
+name|override
 block|;  }
 decl_stmt|;
 comment|// This part is for ELF object output
@@ -137,24 +148,31 @@ name|SparcTargetStreamer
 block|{
 name|public
 operator|:
+name|SparcTargetELFStreamer
+argument_list|(
+name|MCStreamer
+operator|&
+name|S
+argument_list|)
+block|;
 name|MCELFStreamer
 operator|&
 name|getStreamer
 argument_list|()
 block|;
-name|virtual
 name|void
 name|emitSparcRegisterIgnore
 argument_list|(
 argument|unsigned reg
 argument_list|)
+name|override
 block|{}
-name|virtual
 name|void
 name|emitSparcRegisterScratch
 argument_list|(
 argument|unsigned reg
 argument_list|)
+name|override
 block|{}
 block|}
 decl_stmt|;

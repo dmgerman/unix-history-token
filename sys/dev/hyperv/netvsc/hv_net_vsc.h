@@ -1713,10 +1713,6 @@ name|ifnet
 modifier|*
 name|hn_ifp
 decl_stmt|;
-name|struct
-name|arpcom
-name|arpcom
-decl_stmt|;
 name|device_t
 name|hn_dev
 decl_stmt|;

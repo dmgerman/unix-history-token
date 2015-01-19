@@ -669,7 +669,7 @@ name|Node
 return|;
 block|}
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|namespace
@@ -685,12 +685,12 @@ name|MatchCallback
 block|{
 name|public
 operator|:
-name|virtual
 name|void
 name|run
 argument_list|(
 argument|const MatchFinder::MatchResult&Result
 argument_list|)
+name|override
 block|{
 name|Nodes
 operator|.

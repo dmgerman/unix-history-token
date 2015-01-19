@@ -440,11 +440,16 @@ name|LDNS_RR_TYPE_TALINK
 init|=
 literal|58
 block|,
-comment|/** draft-barwood-dnsop-ds-publis */
 name|LDNS_RR_TYPE_CDS
 init|=
 literal|59
 block|,
+comment|/** RFC 7344 */
+name|LDNS_RR_TYPE_CDNSKEY
+init|=
+literal|60
+block|,
+comment|/** RFC 7344 */
 name|LDNS_RR_TYPE_SPF
 init|=
 literal|99
@@ -941,7 +946,7 @@ block|}
 enum|;
 typedef|typedef
 name|enum
-name|sldns_edns_option
+name|sldns_enum_edns_option
 name|sldns_edns_option
 typedef|;
 define|#

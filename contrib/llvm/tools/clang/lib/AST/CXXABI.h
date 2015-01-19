@@ -153,15 +153,6 @@ empty_stmt|;
 comment|/// Creates an instance of a C++ ABI class.
 name|CXXABI
 modifier|*
-name|CreateARMCXXABI
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Ctx
-parameter_list|)
-function_decl|;
-name|CXXABI
-modifier|*
 name|CreateItaniumCXXABI
 parameter_list|(
 name|ASTContext

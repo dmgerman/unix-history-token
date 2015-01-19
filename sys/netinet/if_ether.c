@@ -429,7 +429,7 @@ value|VNET(arp_maxhold)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_ether_inet
 argument_list|,
@@ -437,6 +437,8 @@ name|OID_AUTO
 argument_list|,
 name|max_age
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -453,7 +455,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_ether_inet
 argument_list|,
@@ -461,6 +463,8 @@ name|OID_AUTO
 argument_list|,
 name|maxtries
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -477,7 +481,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_ether_inet
 argument_list|,
@@ -485,6 +489,8 @@ name|OID_AUTO
 argument_list|,
 name|proxyall
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -501,7 +507,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_ether_inet
 argument_list|,
@@ -509,6 +515,8 @@ name|OID_AUTO
 argument_list|,
 name|wait
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -544,7 +552,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_ether_inet
 argument_list|,
@@ -552,6 +560,8 @@ name|OID_AUTO
 argument_list|,
 name|maxhold
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1203,7 +1213,7 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -1377,7 +1387,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Resolve an IP address into an ethernet address.  * On input:  *    ifp is the interface we use  *    rt0 is the route to the final destination (possibly useless)  *    m is the mbuf. May be NULL if we don't have a packet.  *    dst is the next hop,  *    desten is where we want the address.  *  * On success, desten is filled in and the function returns 0;  * If the packet must be held pending resolution, we return EWOULDBLOCK  * On other errors, we return the corresponding error code.  * Note that m_freem() handles NULL.  */
+comment|/*  * Resolve an IP address into an ethernet address.  * On input:  *    ifp is the interface we use  *    is_gw != if @dst represents gateway to some destination  *    m is the mbuf. May be NULL if we don't have a packet.  *    dst is the next hop,  *    desten is where we want the address.  *    flags returns lle entry flags.  *  * On success, desten and flags are filled in and the function returns 0;  * If the packet must be held pending resolution, we return EWOULDBLOCK  * On other errors, we return the corresponding error code.  * Note that m_freem() handles NULL.  */
 end_comment
 
 begin_function
@@ -1389,10 +1399,8 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-name|rt0
+name|int
+name|is_gw
 parameter_list|,
 name|struct
 name|mbuf
@@ -1409,11 +1417,9 @@ name|u_char
 modifier|*
 name|desten
 parameter_list|,
-name|struct
-name|llentry
+name|uint32_t
 modifier|*
-modifier|*
-name|lle
+name|pflags
 parameter_list|)
 block|{
 name|struct
@@ -1447,10 +1453,16 @@ name|error
 decl_stmt|,
 name|renew
 decl_stmt|;
-operator|*
-name|lle
-operator|=
+if|if
+condition|(
+name|pflags
+operator|!=
 name|NULL
+condition|)
+operator|*
+name|pflags
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1498,12 +1510,6 @@ operator|->
 name|m_flags
 operator|&
 name|M_MCAST
-operator|&&
-name|ifp
-operator|->
-name|if_type
-operator|!=
-name|IFT_ARCNET
 condition|)
 block|{
 comment|/* multicast */
@@ -1753,10 +1759,18 @@ name|la_preempt
 operator|--
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pflags
+operator|!=
+name|NULL
+condition|)
 operator|*
-name|lle
+name|pflags
 operator|=
 name|la
+operator|->
+name|la_flags
 expr_stmt|;
 name|error
 operator|=
@@ -2003,17 +2017,9 @@ comment|/* First request. */
 else|else
 name|error
 operator|=
-name|rt0
+name|is_gw
 operator|!=
-name|NULL
-operator|&&
-operator|(
-name|rt0
-operator|->
-name|rt_flags
-operator|&
-name|RTF_GATEWAY
-operator|)
+literal|0
 condition|?
 name|EHOSTUNREACH
 else|:

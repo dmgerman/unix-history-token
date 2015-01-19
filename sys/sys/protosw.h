@@ -1083,6 +1083,30 @@ define|#
 directive|define
 name|PRUS_MORETOCOME
 value|0x4
+define|#
+directive|define
+name|PRUS_NOTREADY
+value|0x8
+name|int
+function_decl|(
+modifier|*
+name|pru_ready
+function_decl|)
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+function_decl|;
 name|int
 function_decl|(
 modifier|*
@@ -1630,6 +1654,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pru_ready_notsupp
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pru_sense_null
 parameter_list|(
 name|struct
@@ -1825,26 +1869,12 @@ begin_comment
 comment|/* interface has come back up */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PRC_QUENCH2
-value|3
-end_define
-
 begin_comment
-comment|/* DEC congestion bit says slow down */
+comment|/* was	PRC_QUENCH2		3	DEC congestion bit says slow down */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PRC_QUENCH
-value|4
-end_define
-
 begin_comment
-comment|/* some one said to slow down */
+comment|/* was	PRC_QUENCH		4	Deprecated by RFC 6633 */
 end_comment
 
 begin_define

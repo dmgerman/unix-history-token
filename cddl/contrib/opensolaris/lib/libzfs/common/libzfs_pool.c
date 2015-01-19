@@ -1091,7 +1091,10 @@ name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
-literal|"FAULTED"
+name|zpool_pool_state_to_name
+argument_list|(
+name|POOL_STATE_UNAVAIL
+argument_list|)
 argument_list|,
 name|len
 argument_list|)
@@ -1804,7 +1807,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|nvlist_t
 modifier|*
 modifier|*
@@ -1876,7 +1879,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 return|return
 operator|(
 name|B_FALSE
@@ -2643,7 +2646,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 			 * bootfs property cannot be set on a disk which has 			 * been EFI labeled. 			 */
 if|if
 condition|(
@@ -2691,7 +2694,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 name|zpool_close
 argument_list|(
 name|zhp
@@ -9048,6 +9051,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
+
 begin_comment
 comment|/*  * This provides a very minimal check whether a given string is likely a  * c#t#d# style string.  Users of this are expected to do their own  * verification of the s# part.  */
 end_comment
@@ -9149,6 +9158,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Find a vdev that matches the search criteria specified. We use the  * the nvpair name to determine how we should look for the device.  * 'avail_spare' is set to TRUE if the provided guid refers to an AVAIL  * spare; but FALSE if its an INUSE spare.  */
@@ -9346,6 +9360,9 @@ literal|0
 condition|)
 break|break;
 comment|/* 		 * Search for the requested value. Special cases: 		 * 		 * - ZPOOL_CONFIG_PATH for whole disk entries.  These end in 		 *   "s0" or "s0/old".  The "s0" part is hidden from the user, 		 *   but included in the string, so this matches around it. 		 * - looking for a top-level vdev name (i.e. ZPOOL_CONFIG_TYPE). 		 * 		 * Otherwise, all other searches are simple string compares. 		 */
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 name|strcmp
@@ -9522,6 +9539,24 @@ operator|&&
 name|val
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|srchkey
+argument_list|,
+name|ZPOOL_CONFIG_TYPE
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|val
+condition|)
+block|{
+endif|#
+directive|endif
 name|char
 modifier|*
 name|type
@@ -9976,13 +10011,7 @@ name|NULL
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Given a physical path (minus the "/devices" prefix), find the  * associated vdev.  */
-end_comment
-
-begin_function
 name|nvlist_t
 modifier|*
 name|zpool_find_vdev_by_physpath
@@ -10112,13 +10141,7 @@ name|ret
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Determine if we have an "interior" top-level vdev (i.e mirror/raidz).  */
-end_comment
-
-begin_function
 name|boolean_t
 name|zpool_vdev_is_interior
 parameter_list|(
@@ -10169,9 +10192,6 @@ name|B_FALSE
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|nvlist_t
 modifier|*
 name|zpool_find_vdev
@@ -10425,9 +10445,6 @@ name|ret
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|vdev_online
@@ -10489,13 +10506,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Helper function for zpool_get_physpaths().  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|vdev_get_one_physpath
@@ -10629,9 +10640,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|vdev_get_physpaths
@@ -10885,13 +10893,7 @@ name|EZFS_POOL_INVALARG
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Get phys_path for a root pool config.  * Return 0 on success; non-zero on failure.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|zpool_get_config_physpath
@@ -11048,13 +11050,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Get phys_path for a root pool  * Return 0 on success; non-zero on failure.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_get_physpath
 parameter_list|(
@@ -11085,13 +11081,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * If the device has being dynamically expanded then we need to relabel  * the disk to use the new unallocated space.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|zpool_relabel_disk
@@ -11108,7 +11098,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|char
 name|path
 index|[
@@ -11285,20 +11275,14 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Bring the specified vdev online.   The 'flags' parameter is a set of the  * ZFS_ONLINE_* flags.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_vdev_online
 parameter_list|(
@@ -11697,13 +11681,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Take the specified vdev offline  */
-end_comment
-
-begin_function
 name|int
 name|zpool_vdev_offline
 parameter_list|(
@@ -11948,13 +11926,7 @@ operator|)
 return|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Mark the given vdev faulted.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_vdev_fault
 parameter_list|(
@@ -12108,13 +12080,7 @@ operator|)
 return|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Mark the given vdev degraded.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_vdev_degrade
 parameter_list|(
@@ -12245,13 +12211,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Returns TRUE if the given nvlist is a vdev that was originally swapped in as  * a hot spare.  */
-end_comment
-
-begin_function
 specifier|static
 name|boolean_t
 name|is_replacing_spare
@@ -12381,13 +12341,7 @@ name|B_FALSE
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Attach new_disk (fully described by nvroot) to old_disk.  * If 'replacing' is specified, the new disk will replace the old one.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_vdev_attach
 parameter_list|(
@@ -13228,13 +13182,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Detach the specified device.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_vdev_detach
 parameter_list|(
@@ -13497,13 +13445,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Find a mirror vdev in the source nvlist.  *  * The mchild array contains a list of disks in one of the top-level mirrors  * of the source pool.  The schild array contains a list of disks that the  * user specified on the command line.  We loop over the mchild array to  * see if any entry in the schild array matches.  *  * If a disk in the mchild array is found in the schild array, we return  * the index of that entry.  Otherwise we return -1.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|find_vdev_entry
@@ -13652,13 +13594,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Split a mirror pool.  If newroot points to null, then a new nvlist  * is generated and it is the responsibility of the caller to free it.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_vdev_split
 parameter_list|(
@@ -14777,13 +14713,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Remove the given device.  Currently, this is supported only for hot spares  * and level 2 cache devices.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_vdev_remove
 parameter_list|(
@@ -15044,13 +14974,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Clear the errors for the pool, or the particular device if specified.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_clear
 parameter_list|(
@@ -15478,13 +15402,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Similar to zpool_clear(), but takes a GUID (used by fmd).  */
-end_comment
-
-begin_function
 name|int
 name|zpool_vdev_clear
 parameter_list|(
@@ -15606,13 +15524,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Change the GUID for a pool.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_reguid
 parameter_list|(
@@ -15719,13 +15631,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Reopen the pool.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_reopen
 parameter_list|(
@@ -15832,13 +15738,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Convert from a devid string to a path.  */
-end_comment
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -15958,13 +15858,7 @@ name|path
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Convert from a path to a devid string.  */
-end_comment
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -16094,13 +15988,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_comment
 comment|/*  * Issue the necessary ioctl() to update the stored path value for the vdev.  We  * ignore any failure here, since a common case is for an unprivileged user to  * type 'zpool status', and we'll display the correct information anyway.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|set_path
@@ -16201,13 +16089,7 @@ name|zc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Given a vdev, return the name to display in iostat.  If the vdev has a path,  * we use that, stripping off any leading "/dev/dsk/"; if not, we use the type.  * We also check if this is a whole disk, in which case we strip off the  * trailing 's0' slice name.  *  * This routine is also responsible for identifying when disks have been  * reconfigured in a new location.  The kernel will have opened the device by  * devid, but the path will still refer to the old location.  To catch this, we  * first do a path -> devid translation (which is fast for the common case).  If  * the devid matches, we're done.  If not, we do a reverse devid -> path  * translation and issue the appropriate ioctl() to update the path of the vdev.  * If 'zhp' is NULL, then this is an exported pool, and we don't need to do any  * of these checks.  */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|zpool_vdev_name
@@ -16498,7 +16380,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|strncmp
@@ -16638,7 +16520,7 @@ return|;
 block|}
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 if|if
 condition|(
 name|strncmp
@@ -16668,7 +16550,7 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 block|}
 else|else
 block|{
@@ -16805,9 +16687,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|zbookmark_compare
@@ -16839,13 +16718,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Retrieve the persistent error log, uniquify the members, and return to the  * caller.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_get_errlog
 parameter_list|(
@@ -17334,13 +17207,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Upgrade a ZFS pool to the latest on-disk version.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_upgrade
 parameter_list|(
@@ -17428,9 +17295,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|zfs_save_arguments
 parameter_list|(
@@ -17512,9 +17376,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|int
 name|zpool_log_history
 parameter_list|(
@@ -17605,13 +17466,7 @@ name|err
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Perform ioctl to get some command history of a pool.  *  * 'buf' is the buffer to fill up to 'len' bytes.  'off' is the  * logical offset of the history buffer to start reading from.  *  * Upon return, 'off' is the next logical offset to read from and  * 'len' is the actual amount of bytes read into 'buf'.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|get_history
@@ -17835,13 +17690,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Process the buffer of nvlists, unpacking and storing each nvlist record  * into 'records'.  'leftover' is set to the number of bytes that weren't  * processed as there wasn't a complete record.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_history_unpack
 parameter_list|(
@@ -18053,31 +17902,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* from spa_history.c: spa_history_create_obj() */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|HIS_BUF_LEN_DEF
 value|(128<< 10)
-end_define
-
-begin_define
 define|#
 directive|define
 name|HIS_BUF_LEN_MAX
 value|(1<< 30)
-end_define
-
-begin_comment
 comment|/*  * Retrieve the command history of a pool.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_get_history
 parameter_list|(
@@ -18343,9 +18177,6 @@ name|err
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|zpool_obj_to_path
 parameter_list|(
@@ -18629,19 +18460,10 @@ name|mntpnt
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
-end_ifdef
-
-begin_comment
+name|illumos
 comment|/*  * Read the EFI label from the config, if a label does not exist then  * pass back the error to the caller. If the caller has passed a non-NULL  * diskaddr argument then we set it to the starting address of the EFI  * partition.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|read_efi_label
@@ -18796,13 +18618,7 @@ name|err
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * determine where a partition starts on a disk in the current  * configuration  */
-end_comment
-
-begin_function
 specifier|static
 name|diskaddr_t
 name|find_start_block
@@ -18938,22 +18754,10 @@ name|MAXOFFSET_T
 operator|)
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* sun */
-end_comment
-
-begin_comment
+comment|/* illumos */
 comment|/*  * Label an individual disk.  The name provided is the short name,  * stripped of any leading /dev path.  */
-end_comment
-
-begin_function
 name|int
 name|zpool_label_disk
 parameter_list|(
@@ -18973,7 +18777,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|char
 name|path
 index|[
@@ -19433,16 +19237,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|boolean_t
 name|supported_dump_vdev_type
@@ -19611,13 +19412,7 @@ name|B_TRUE
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Check if this zvol is allowable for use as a dump device; zero if  * it is,> 0 if it isn't,< 0 if it isn't a zvol.  *  * Allowable storage configurations include mirrors, all raidz variants, and  * pools with log, cache, and spare devices.  Pools which are backed by files or  * have missing/hole vdevs are not suitable.  */
-end_comment
-
-begin_function
 name|int
 name|zvol_check_dump_config
 parameter_list|(

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2013-2014 Mark R V Murray  * All rights reserved.  
 end_comment
 
 begin_comment
-comment|/* This implementation of Fortuna is based on the descriptions found in  * ISBN 0-471-22357-3 "Practical Cryptography" by Ferguson and Schneier  * ("K&S").  *  * The above book is superceded by ISBN 978-0-470-47424-2 "Cryptography  * Engineering" by Ferguson, Schneier and Kohno ("FS&K").  *  * This code has not yet caught up with FS&K, but differences are not  * expected to be complex.  */
+comment|/* This implementation of Fortuna is based on the descriptions found in  * ISBN 0-471-22357-3 "Practical Cryptography" by Ferguson and Schneier  * ("F&S").  *  * The above book is superseded by ISBN 978-0-470-47424-2 "Cryptography  * Engineering" by Ferguson, Schneier and Kohno ("FS&K").  The code has  * not yet fully caught up with FS&K.  */
 end_comment
 
 begin_include
@@ -905,20 +905,25 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* F&S - K = Hd(K|s) where Hd(m) is H(H(m)) */
+comment|/* FS&K - K = Hd(K|s) where Hd(m) is H(H(0^512|m)) */
 name|randomdev_hash_init
 argument_list|(
 operator|&
 name|context
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* FS&K defines Hd(m) as H(H(0^512|m)) */
-block|randomdev_hash_iterate(&context, zero_region, KEYSIZE);
-endif|#
-directive|endif
+name|randomdev_hash_iterate
+argument_list|(
+operator|&
+name|context
+argument_list|,
+name|zero_region
+argument_list|,
+literal|512
+operator|/
+literal|8
+argument_list|)
+expr_stmt|;
 name|randomdev_hash_iterate
 argument_list|(
 operator|&
@@ -1016,7 +1021,7 @@ condition|)
 name|random_adaptor_unblock
 argument_list|()
 expr_stmt|;
-comment|/* F&S - C = C + 1 */
+comment|/* FS&K - C = C + 1 */
 name|uint128_increment
 argument_list|(
 operator|&

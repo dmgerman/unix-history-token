@@ -118,22 +118,13 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|data_abort_handler
+name|abort_handler
 parameter_list|(
 name|struct
 name|trapframe
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|prefetch_abort_handler
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -571,7 +571,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -579,6 +579,8 @@ name|TCPCTL_MSSDFLT
 argument_list|,
 name|mssdflt
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -674,7 +676,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -682,6 +684,8 @@ name|TCPCTL_V6MSSDFLT
 argument_list|,
 name|v6mssdflt
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -730,7 +734,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -738,6 +742,8 @@ name|OID_AUTO
 argument_list|,
 name|minmss
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -766,7 +772,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -774,6 +780,8 @@ name|TCPCTL_DO_RFC1323
 argument_list|,
 name|rfc1323
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -880,7 +888,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -888,6 +896,8 @@ name|OID_AUTO
 argument_list|,
 name|pcbcount
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -926,7 +936,7 @@ value|VNET(icmp_may_rst)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -934,6 +944,8 @@ name|OID_AUTO
 argument_list|,
 name|icmp_may_rst
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -970,7 +982,7 @@ value|VNET(tcp_isn_reseed_interval)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -978,6 +990,8 @@ name|OID_AUTO
 argument_list|,
 name|isn_reseed_interval
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -6667,15 +6681,6 @@ name|cmd
 argument_list|)
 condition|)
 return|return;
-comment|/* 	 * Source quench is depreciated. 	 */
-elseif|else
-if|if
-condition|(
-name|cmd
-operator|==
-name|PRC_QUENCH
-condition|)
-return|return;
 comment|/* 	 * Hostdead is ugly because it goes linearly through all PCBs. 	 * XXX: We never get this from ICMP, otherwise it makes an 	 * excellent DoS attack on machines with many connections. 	 */
 elseif|else
 if|if
@@ -7233,15 +7238,6 @@ index|]
 operator|==
 literal|0
 operator|)
-condition|)
-return|return;
-comment|/* Source quench is depreciated. */
-elseif|else
-if|if
-condition|(
-name|cmd
-operator|==
-name|PRC_QUENCH
 condition|)
 return|return;
 comment|/* if the parameter is from icmp6, decode it. */
@@ -10993,7 +10989,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -11001,6 +10997,8 @@ name|TCPCTL_DROP
 argument_list|,
 name|drop
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_STRUCT
 operator||
 name|CTLFLAG_WR

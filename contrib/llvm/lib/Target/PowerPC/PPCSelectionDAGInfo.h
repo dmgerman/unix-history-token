@@ -84,9 +84,9 @@ name|explicit
 name|PPCSelectionDAGInfo
 argument_list|(
 specifier|const
-name|PPCTargetMachine
-operator|&
-name|TM
+name|DataLayout
+operator|*
+name|DL
 argument_list|)
 block|;
 operator|~

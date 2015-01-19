@@ -27,35 +27,26 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|termspeeds
 block|{
 name|int
-name|system
-decl_stmt|,
-comment|/* what the current time is */
-name|echotoggle
-decl_stmt|,
-comment|/* last time user entered echo character */
-name|modenegotiated
-decl_stmt|,
-comment|/* last time operating mode negotiated */
-name|didnetreceive
-decl_stmt|,
-comment|/* last time we read data from network */
-name|gotDM
+name|speed
 decl_stmt|;
-comment|/* when did we last see a data mark */
+name|int
+name|value
+decl_stmt|;
 block|}
-name|Clocks
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|extern
-name|Clocks
-name|clocks
+name|struct
+name|termspeeds
+name|termspeeds
+index|[]
 decl_stmt|;
 end_decl_stmt
 

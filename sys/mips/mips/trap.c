@@ -40,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_global.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -2549,7 +2543,11 @@ name|dtrace_trap_func
 call|)
 argument_list|(
 name|trapframe
+argument_list|,
+name|type
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(

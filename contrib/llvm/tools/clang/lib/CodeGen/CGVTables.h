@@ -121,17 +121,10 @@ name|CodeGenModule
 modifier|&
 name|CGM
 decl_stmt|;
-comment|// FIXME: Consider moving ItaniumVTContext and MicrosoftVTContext into
-comment|// respective CXXABI classes?
-name|ItaniumVTableContext
-name|ItaniumVTContext
+name|VTableContextBase
+modifier|*
+name|VTContext
 decl_stmt|;
-name|OwningPtr
-operator|<
-name|MicrosoftVTableContext
-operator|>
-name|MicrosoftVTContext
-expr_stmt|;
 comment|/// VTableAddressPointsMapTy - Address points for a single vtable.
 typedef|typedef
 name|llvm
@@ -239,6 +232,8 @@ argument_list|,
 argument|const VTableLayout::VTableThunkTy *VTableThunks
 argument_list|,
 argument|unsigned NumVTableThunks
+argument_list|,
+argument|llvm::Constant *RTTI
 argument_list|)
 expr_stmt|;
 name|CodeGenVTables
@@ -254,7 +249,14 @@ name|getItaniumVTableContext
 parameter_list|()
 block|{
 return|return
-name|ItaniumVTContext
+operator|*
+name|cast
+operator|<
+name|ItaniumVTableContext
+operator|>
+operator|(
+name|VTContext
+operator|)
 return|;
 block|}
 name|MicrosoftVTableContext
@@ -264,10 +266,13 @@ parameter_list|()
 block|{
 return|return
 operator|*
-name|MicrosoftVTContext
-operator|.
-name|get
-argument_list|()
+name|cast
+operator|<
+name|MicrosoftVTableContext
+operator|>
+operator|(
+name|VTContext
+operator|)
 return|;
 block|}
 comment|/// getSubVTTIndex - Return the index of the sub-VTT for the base class of the
@@ -331,7 +336,7 @@ argument_list|,
 argument|VTableAddressPointsMapTy& AddressPoints
 argument_list|)
 expr_stmt|;
-comment|/// GetAddrOfVTable - Get the address of the VTT for the given record decl.
+comment|/// GetAddrOfVTT - Get the address of the VTT for the given record decl.
 name|llvm
 operator|::
 name|GlobalVariable

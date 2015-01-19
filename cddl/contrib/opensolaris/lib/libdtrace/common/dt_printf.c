@@ -7,14 +7,11 @@ begin_comment
 comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -60,14 +57,11 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -2754,12 +2748,9 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * ctime(3C) returns a string of the form "Dec  3 17:20:00 1973\n\0". 	 * Below, we turn this into the canonical adb/mdb /[yY] format, 	 * "1973 Dec  3 17:20:00". 	 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 operator|(
 name|void
 operator|)
@@ -3050,12 +3041,9 @@ name|sv
 decl_stmt|,
 name|res
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 operator|(
@@ -3278,12 +3266,9 @@ operator|-
 literal|1
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 operator|(
@@ -4517,12 +4502,9 @@ block|,
 name|pfprint_uint
 block|}
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 block|{
 literal|"wc"
 block|,
@@ -9394,12 +9376,9 @@ operator|(
 name|rval
 operator|)
 return|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 name|pfd
@@ -9700,6 +9679,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* !illumos */
 comment|/* 	 * The 'standard output' (which is not necessarily stdout) 	 * treatment on FreeBSD is implemented differently than on 	 * Solaris because FreeBSD's freopen() will attempt to re-use 	 * the current file descriptor, causing the previous file to 	 * be closed and thereby preventing it from be re-activated 	 * later. 	 * 	 * For FreeBSD we use the concept of setting an output file 	 * pointer in the DTrace handle if a dtrace_freopen() has  	 * enabled another output file and we leave the caller's 	 * file pointer untouched. If it was actually stdout, then 	 * stdout remains open. If it was another file, then that 	 * file remains open. While a dtrace_freopen() has activated 	 * another file, we keep a pointer to that which we use in 	 * the output functions by preference and only use the caller's 	 * file pointer if no dtrace_freopen() call has been made. 	 * 	 * The check to see if we're re-activating the caller's 	 * output file is much the same as on Solaris. 	 */
 if|if
 condition|(
@@ -9908,6 +9888,7 @@ name|nfp
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* illumos */
 return|return
 operator|(
 name|rval

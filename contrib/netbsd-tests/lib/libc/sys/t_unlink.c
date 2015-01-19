@@ -296,12 +296,9 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|ATF_REQUIRE_ERRNO
 argument_list|(
 name|EISDIR

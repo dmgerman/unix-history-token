@@ -136,14 +136,12 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|major_t
-parameter_list|,
 name|uint64_t
 parameter_list|)
 function_decl|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 specifier|extern
 name|int
 name|zvol_open
@@ -275,7 +273,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 specifier|extern
 name|int
 name|zvol_ioctl
@@ -324,7 +322,7 @@ parameter_list|)
 function_decl|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 specifier|extern
 name|int
 name|zvol_get_volume_params
@@ -408,7 +406,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 if|#
 directive|if
 name|defined

@@ -109,10 +109,6 @@ name|ip6_pktopts
 modifier|*
 name|opt_or
 decl_stmt|;
-name|struct
-name|route_in6
-name|ro_or
-decl_stmt|;
 name|int
 name|flags_or
 decl_stmt|;
@@ -137,10 +133,6 @@ name|dst_or
 decl_stmt|;
 name|u_long
 name|mtu_or
-decl_stmt|;
-name|struct
-name|route_in6
-name|ro_pmtu_or
 decl_stmt|;
 block|}
 struct|;

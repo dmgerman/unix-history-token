@@ -281,7 +281,7 @@ argument_list|()
 operator|:
 name|D
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|explicit
@@ -383,7 +383,7 @@ block|{
 return|return
 name|D
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 name|bool
@@ -519,7 +519,7 @@ condition|?
 operator|&
 name|D
 else|:
-literal|0
+name|nullptr
 return|;
 return|return
 operator|&
@@ -547,7 +547,7 @@ name|D
 operator|+
 literal|1
 else|:
-literal|0
+name|nullptr
 return|;
 name|DeclGroup
 modifier|&
@@ -585,7 +585,7 @@ operator|?
 operator|&
 name|D
 operator|:
-literal|0
+name|nullptr
 return|;
 return|return
 operator|&
@@ -617,7 +617,7 @@ name|D
 operator|+
 literal|1
 operator|:
-literal|0
+name|nullptr
 return|;
 specifier|const
 name|DeclGroup

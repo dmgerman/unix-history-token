@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/namei.h>
 end_include
 
@@ -974,13 +980,17 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kern_eaccess
+name|kern_accessat
 argument_list|(
 name|td
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 name|path
 argument_list|,
 name|UIO_SYSSPACE
+argument_list|,
+name|AT_EACCESS
 argument_list|,
 name|bsd_flags
 argument_list|)

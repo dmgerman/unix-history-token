@@ -184,19 +184,12 @@ argument_list|,
 argument|StringRef ToText
 argument_list|)
 block|;
-name|virtual
 name|void
 name|run
 argument_list|(
-specifier|const
-name|ast_matchers
-operator|::
-name|MatchFinder
-operator|::
-name|MatchResult
-operator|&
-name|Result
+argument|const ast_matchers::MatchFinder::MatchResult&Result
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -228,19 +221,12 @@ argument_list|,
 argument|StringRef ToId
 argument_list|)
 block|;
-name|virtual
 name|void
 name|run
 argument_list|(
-specifier|const
-name|ast_matchers
-operator|::
-name|MatchFinder
-operator|::
-name|MatchResult
-operator|&
-name|Result
+argument|const ast_matchers::MatchFinder::MatchResult&Result
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -273,19 +259,12 @@ argument_list|,
 argument|bool PickTrueBranch
 argument_list|)
 block|;
-name|virtual
 name|void
 name|run
 argument_list|(
-specifier|const
-name|ast_matchers
-operator|::
-name|MatchFinder
-operator|::
-name|MatchResult
-operator|&
-name|Result
+argument|const ast_matchers::MatchFinder::MatchResult&Result
 argument_list|)
+name|override
 block|;
 name|private
 operator|:

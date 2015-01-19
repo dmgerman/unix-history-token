@@ -76,7 +76,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|PPCTargetMachine
+name|PPCSubtarget
 decl_stmt|;
 name|class
 name|PPCJITInfo
@@ -86,9 +86,9 @@ name|TargetJITInfo
 block|{
 name|protected
 operator|:
-name|PPCTargetMachine
+name|PPCSubtarget
 operator|&
-name|TM
+name|Subtarget
 block|;
 name|bool
 name|is64Bit
@@ -97,56 +97,35 @@ name|public
 operator|:
 name|PPCJITInfo
 argument_list|(
-argument|PPCTargetMachine&tm
-argument_list|,
-argument|bool tmIs64Bit
+name|PPCSubtarget
+operator|&
+name|STI
 argument_list|)
-operator|:
-name|TM
-argument_list|(
-argument|tm
-argument_list|)
-block|{
-name|useGOT
-operator|=
-literal|0
 block|;
-name|is64Bit
-operator|=
-name|tmIs64Bit
-block|;     }
-name|virtual
 name|StubLayout
 name|getStubLayout
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 operator|*
 name|emitFunctionStub
 argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
+argument|const Function *F
 argument_list|,
-name|void
-operator|*
-name|Fn
+argument|void *Fn
 argument_list|,
-name|JITCodeEmitter
-operator|&
-name|JCE
+argument|JITCodeEmitter&JCE
 argument_list|)
+name|override
 block|;
-name|virtual
 name|LazyResolverFn
 name|getLazyResolverFunction
 argument_list|(
-name|JITCompilerFn
+argument|JITCompilerFn
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|relocate
 argument_list|(
@@ -156,27 +135,24 @@ argument|MachineRelocation *MR
 argument_list|,
 argument|unsigned NumRelocs
 argument_list|,
-argument|unsigned char* GOTBase
+argument|unsigned char *GOTBase
 argument_list|)
+name|override
 block|;
 comment|/// replaceMachineCodeForFunction - Make it so that calling the function
 comment|/// whose machine code is at OLD turns into a call to NEW, perhaps by
 comment|/// overwriting OLD with a branch to NEW.  This is used for self-modifying
 comment|/// code.
 comment|///
-name|virtual
 name|void
 name|replaceMachineCodeForFunction
 argument_list|(
-name|void
-operator|*
-name|Old
+argument|void *Old
 argument_list|,
-name|void
-operator|*
-name|New
+argument|void *New
 argument_list|)
-block|;   }
+name|override
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

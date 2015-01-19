@@ -347,7 +347,7 @@ value|VNET(tcp_do_sack)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp_sack
 argument_list|,
@@ -355,6 +355,8 @@ name|OID_AUTO
 argument_list|,
 name|enable
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -390,7 +392,7 @@ value|VNET(tcp_sack_maxholes)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp_sack
 argument_list|,
@@ -398,6 +400,8 @@ name|OID_AUTO
 argument_list|,
 name|maxholes
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -433,7 +437,7 @@ value|VNET(tcp_sack_globalmaxholes)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp_sack
 argument_list|,
@@ -441,6 +445,8 @@ name|OID_AUTO
 argument_list|,
 name|globalmaxholes
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -476,7 +482,7 @@ value|VNET(tcp_sack_globalholes)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp_sack
 argument_list|,
@@ -484,6 +490,8 @@ name|OID_AUTO
 argument_list|,
 name|globalholes
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&

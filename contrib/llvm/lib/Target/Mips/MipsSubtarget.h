@@ -62,7 +62,37 @@ end_define
 begin_include
 include|#
 directive|include
-file|"MCTargetDesc/MipsReginfo.h"
+file|"MipsFrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MipsISelLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MipsInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MipsJITInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MipsSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -81,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetSubtargetInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MipsABIInfo.h"
 end_include
 
 begin_include
@@ -121,45 +157,39 @@ name|virtual
 name|void
 name|anchor
 argument_list|()
-block|;
-name|public
-operator|:
-comment|// NOTE: O64 will not be supported.
-expr|enum
-name|MipsABIEnum
-block|{
-name|UnknownABI
-block|,
-name|O32
-block|,
-name|N32
-block|,
-name|N64
-block|,
-name|EABI
-block|}
-block|;
-name|protected
-operator|:
-expr|enum
+block|;    enum
 name|MipsArchEnum
 block|{
+name|Mips1
+block|,
+name|Mips2
+block|,
 name|Mips32
 block|,
 name|Mips32r2
 block|,
+name|Mips32r6
+block|,
+name|Mips3
+block|,
+name|Mips4
+block|,
+name|Mips5
+block|,
 name|Mips64
 block|,
 name|Mips64r2
+block|,
+name|Mips64r6
 block|}
 block|;
 comment|// Mips architecture version
 name|MipsArchEnum
 name|MipsArchVersion
 block|;
-comment|// Mips supported ABIs
-name|MipsABIEnum
-name|MipsABI
+comment|// Selected ABI
+name|MipsABIInfo
+name|ABI
 block|;
 comment|// IsLittle - The target is Little Endian
 name|bool
@@ -171,9 +201,26 @@ comment|// floating point registers instead of only using even ones.
 name|bool
 name|IsSingleFloat
 block|;
+comment|// IsFPXX - MIPS O32 modeless ABI.
+name|bool
+name|IsFPXX
+block|;
+comment|// NoABICalls - Disable SVR4-style position-independent code.
+name|bool
+name|NoABICalls
+block|;
 comment|// IsFP64bit - The target processor has 64-bit floating point registers.
 name|bool
 name|IsFP64bit
+block|;
+comment|/// Are odd single-precision registers permitted?
+comment|/// This corresponds to -modd-spreg and -mno-odd-spreg
+name|bool
+name|UseOddSPReg
+block|;
+comment|// IsNan2008 - IEEE 754-2008 NaN encoding.
+name|bool
+name|IsNaN2008bit
 block|;
 comment|// IsFP64bit - General-purpose registers are 64 bits wide
 name|bool
@@ -182,6 +229,10 @@ block|;
 comment|// HasVFPU - Processor has a vector floating point unit.
 name|bool
 name|HasVFPU
+block|;
+comment|// CPU supports cnMIPS (Cavium Networks Octeon CPU).
+name|bool
+name|HasCnMips
 block|;
 comment|// isLinux - Target system is Linux. Is false we consider ELFOS for now.
 name|bool
@@ -192,25 +243,25 @@ name|bool
 name|UseSmallSection
 block|;
 comment|/// Features related to the presence of specific instructions.
-comment|// HasSEInReg - SEB and SEH (signext in register) instructions.
+comment|// HasMips3_32 - The subset of MIPS-III instructions added to MIPS32
 name|bool
-name|HasSEInReg
+name|HasMips3_32
 block|;
-comment|// HasCondMov - Conditional mov (MOVZ, MOVN) instructions.
+comment|// HasMips3_32r2 - The subset of MIPS-III instructions added to MIPS32r2
 name|bool
-name|HasCondMov
+name|HasMips3_32r2
 block|;
-comment|// HasSwap - Byte and half swap instructions.
+comment|// HasMips4_32 - Has the subset of MIPS-IV present in MIPS32
 name|bool
-name|HasSwap
+name|HasMips4_32
 block|;
-comment|// HasBitCount - Count leading '1' and '0' bits.
+comment|// HasMips4_32r2 - Has the subset of MIPS-IV present in MIPS32r2
 name|bool
-name|HasBitCount
+name|HasMips4_32r2
 block|;
-comment|// HasFPIdx -- Floating point indexed load/store instructions.
+comment|// HasMips5_32r2 - Has the subset of MIPS-V present in MIPS32r2
 name|bool
-name|HasFPIdx
+name|HasMips5_32r2
 block|;
 comment|// InMips16 -- can process Mips16 instructions
 name|bool
@@ -251,16 +302,6 @@ block|;
 name|InstrItineraryData
 name|InstrItins
 block|;
-comment|// The instance to the register info section object
-name|MipsReginfo
-name|MRI
-block|;
-comment|// Relocation Model
-name|Reloc
-operator|::
-name|Model
-name|RM
-block|;
 comment|// We can override the determination of whether we are in mips16 mode
 comment|// as from the command line
 block|enum
@@ -277,19 +318,72 @@ name|MipsTargetMachine
 operator|*
 name|TM
 block|;
+name|Triple
+name|TargetTriple
+block|;
+specifier|const
+name|DataLayout
+name|DL
+block|;
+comment|// Calculates type size& alignment
+specifier|const
+name|MipsSelectionDAGInfo
+name|TSInfo
+block|;
+name|MipsJITInfo
+name|JITInfo
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+specifier|const
+name|MipsInstrInfo
+operator|>
+name|InstrInfo
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+specifier|const
+name|MipsFrameLowering
+operator|>
+name|FrameLowering
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+specifier|const
+name|MipsTargetLowering
+operator|>
+name|TLInfo
+block|;
 name|public
 operator|:
-name|virtual
+comment|/// This overrides the PostRAScheduler bit in the SchedModel for each CPU.
 name|bool
-name|enablePostRAScheduler
+name|enablePostMachineScheduler
+argument_list|()
+specifier|const
+name|override
+block|;
+name|void
+name|getCriticalPathRCs
 argument_list|(
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|AntiDepBreakMode& Mode
-argument_list|,
-argument|RegClassVector& CriticalPathRCs
+argument|RegClassVector&CriticalPathRCs
 argument_list|)
 specifier|const
+name|override
+block|;
+name|CodeGenOpt
+operator|::
+name|Level
+name|getOptLevelToEnablePostRAScheduler
+argument_list|()
+specifier|const
+name|override
 block|;
 comment|/// Only O32 and EABI supported right now.
 name|bool
@@ -298,9 +392,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MipsABI
-operator|==
-name|EABI
+name|ABI
+operator|.
+name|IsEABI
+argument_list|()
 return|;
 block|}
 name|bool
@@ -309,9 +404,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MipsABI
-operator|==
-name|N64
+name|ABI
+operator|.
+name|IsN64
+argument_list|()
 return|;
 block|}
 name|bool
@@ -320,9 +416,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MipsABI
-operator|==
-name|N32
+name|ABI
+operator|.
+name|IsN32
+argument_list|()
 return|;
 block|}
 name|bool
@@ -331,18 +428,33 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MipsABI
-operator|==
-name|O32
+name|ABI
+operator|.
+name|IsO32
+argument_list|()
 return|;
 block|}
-name|unsigned
-name|getTargetABI
+name|bool
+name|isABI_FPXX
 argument_list|()
 specifier|const
 block|{
 return|return
-name|MipsABI
+name|isABI_O32
+argument_list|()
+operator|&&
+name|IsFPXX
+return|;
+block|}
+specifier|const
+name|MipsABIInfo
+operator|&
+name|getABI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ABI
 return|;
 block|}
 comment|/// This constructor initializes the data members to match that
@@ -356,8 +468,6 @@ argument_list|,
 argument|const std::string&FS
 argument_list|,
 argument|bool little
-argument_list|,
-argument|Reloc::Model RM
 argument_list|,
 argument|MipsTargetMachine *TM
 argument_list|)
@@ -373,6 +483,79 @@ argument|StringRef FS
 argument_list|)
 block|;
 name|bool
+name|hasMips1
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MipsArchVersion
+operator|>=
+name|Mips1
+return|;
+block|}
+name|bool
+name|hasMips2
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MipsArchVersion
+operator|>=
+name|Mips2
+return|;
+block|}
+name|bool
+name|hasMips3
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MipsArchVersion
+operator|>=
+name|Mips3
+return|;
+block|}
+name|bool
+name|hasMips4
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MipsArchVersion
+operator|>=
+name|Mips4
+return|;
+block|}
+name|bool
+name|hasMips5
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MipsArchVersion
+operator|>=
+name|Mips5
+return|;
+block|}
+name|bool
+name|hasMips4_32
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMips4_32
+return|;
+block|}
+name|bool
+name|hasMips4_32r2
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMips4_32r2
+return|;
+block|}
+name|bool
 name|hasMips32
 argument_list|()
 specifier|const
@@ -381,6 +564,18 @@ return|return
 name|MipsArchVersion
 operator|>=
 name|Mips32
+operator|&&
+name|MipsArchVersion
+operator|!=
+name|Mips3
+operator|&&
+name|MipsArchVersion
+operator|!=
+name|Mips4
+operator|&&
+name|MipsArchVersion
+operator|!=
+name|Mips5
 return|;
 block|}
 name|bool
@@ -395,7 +590,30 @@ name|Mips32r2
 operator|||
 name|MipsArchVersion
 operator|==
+name|Mips32r6
+operator|||
+name|MipsArchVersion
+operator|==
 name|Mips64r2
+operator|||
+name|MipsArchVersion
+operator|==
+name|Mips64r6
+return|;
+block|}
+name|bool
+name|hasMips32r6
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MipsArchVersion
+operator|==
+name|Mips32r6
+operator|||
+name|MipsArchVersion
+operator|==
+name|Mips64r6
 return|;
 block|}
 name|bool
@@ -418,6 +636,30 @@ return|return
 name|MipsArchVersion
 operator|==
 name|Mips64r2
+operator|||
+name|MipsArchVersion
+operator|==
+name|Mips64r6
+return|;
+block|}
+name|bool
+name|hasMips64r6
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MipsArchVersion
+operator|==
+name|Mips64r6
+return|;
+block|}
+name|bool
+name|hasCnMips
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCnMips
 return|;
 block|}
 name|bool
@@ -430,6 +672,25 @@ name|IsLittle
 return|;
 block|}
 name|bool
+name|isABICalls
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|NoABICalls
+return|;
+block|}
+name|bool
+name|isFPXX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsFPXX
+return|;
+block|}
+name|bool
 name|isFP64bit
 argument_list|()
 specifier|const
@@ -439,13 +700,31 @@ name|IsFP64bit
 return|;
 block|}
 name|bool
-name|isNotFP64bit
+name|useOddSPReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseOddSPReg
+return|;
+block|}
+name|bool
+name|noOddSPReg
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|!
-name|IsFP64bit
+name|UseOddSPReg
+return|;
+block|}
+name|bool
+name|isNaN2008
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsNaN2008bit
 return|;
 block|}
 name|bool
@@ -467,22 +746,26 @@ operator|!
 name|IsGP64bit
 return|;
 block|}
+name|unsigned
+name|getGPRSizeInBytes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isGP64bit
+argument_list|()
+operator|?
+literal|8
+operator|:
+literal|4
+return|;
+block|}
 name|bool
 name|isSingleFloat
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsSingleFloat
-return|;
-block|}
-name|bool
-name|isNotSingleFloat
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
 name|IsSingleFloat
 return|;
 block|}
@@ -500,35 +783,9 @@ name|inMips16Mode
 argument_list|()
 specifier|const
 block|{
-switch|switch
-condition|(
-name|OverrideMode
-condition|)
-block|{
-case|case
-name|NoOverride
-case|:
 return|return
 name|InMips16Mode
 return|;
-case|case
-name|Mips16Override
-case|:
-return|return
-name|true
-return|;
-case|case
-name|NoMips16Override
-case|:
-return|return
-name|false
-return|;
-block|}
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected mode"
-argument_list|)
-expr_stmt|;
 block|}
 name|bool
 name|inMips16ModeDefault
@@ -539,6 +796,10 @@ return|return
 name|InMips16Mode
 return|;
 block|}
+comment|// Hard float for mips16 means essentially to compile as soft float
+comment|// but to use a runtime library for soft float that is written with
+comment|// native mips32 floating point instructions (those runtime routines
+comment|// run in mips32 hard float mode).
 name|bool
 name|inMips16HardFloat
 argument_list|()
@@ -617,7 +878,7 @@ argument_list|()
 return|;
 block|}
 name|bool
-name|mipsSEUsesSoftFloat
+name|abiUsesSoftFloat
 argument_list|()
 specifier|const
 block|;
@@ -636,51 +897,6 @@ return|;
 block|}
 comment|/// Features related to the presence of specific instructions.
 name|bool
-name|hasSEInReg
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasSEInReg
-return|;
-block|}
-name|bool
-name|hasCondMov
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasCondMov
-return|;
-block|}
-name|bool
-name|hasSwap
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasSwap
-return|;
-block|}
-name|bool
-name|hasBitCount
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasBitCount
-return|;
-block|}
-name|bool
-name|hasFPIdx
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasFPIdx
-return|;
-block|}
-name|bool
 name|hasExtractInsert
 argument_list|()
 specifier|const
@@ -690,6 +906,16 @@ operator|!
 name|inMips16Mode
 argument_list|()
 operator|&&
+name|hasMips32r2
+argument_list|()
+return|;
+block|}
+name|bool
+name|hasMTHC1
+argument_list|()
+specifier|const
+block|{
+return|return
 name|hasMips32r2
 argument_list|()
 return|;
@@ -727,9 +953,20 @@ name|Os16
 return|;
 block|}
 block|;
+name|bool
+name|isTargetNaCl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSNaCl
+argument_list|()
+return|;
+block|}
 comment|// for now constant islands are on for the whole compilation unit but we only
 comment|// really use them if in addition we are in mips16 mode
-comment|//
 specifier|static
 name|bool
 name|useConstantIslands
@@ -743,22 +980,10 @@ block|{
 return|return
 name|hasMips64
 argument_list|()
-operator|?
+condition|?
 literal|16
-operator|:
+else|:
 literal|8
-return|;
-block|}
-comment|// Grab MipsRegInfo object
-specifier|const
-name|MipsReginfo
-operator|&
-name|getMReginfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MRI
 return|;
 block|}
 comment|// Grab relocation model
@@ -768,22 +993,135 @@ name|Model
 name|getRelocationModel
 argument_list|()
 specifier|const
+block|;
+name|MipsSubtarget
+operator|&
+name|initializeSubtargetDependencies
+argument_list|(
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|const TargetMachine *TM
+argument_list|)
+block|;
+comment|/// Does the system support unaligned memory access.
+comment|///
+comment|/// MIPS32r6/MIPS64r6 require full unaligned access support but does not
+comment|/// specify which component of the system provides it. Hardware, software, and
+comment|/// hybrid implementations are all valid.
+name|bool
+name|systemSupportsUnalignedAccess
+argument_list|()
+specifier|const
 block|{
 return|return
-name|RM
+name|hasMips32r6
+argument_list|()
 return|;
 block|}
-comment|/// \brief Reset the subtarget for the Mips target.
+comment|// Set helper classes
 name|void
-name|resetSubtarget
-argument_list|(
-name|MachineFunction
+name|setHelperClassesMips16
+argument_list|()
+block|;
+name|void
+name|setHelperClassesMipsSE
+argument_list|()
+block|;
+name|MipsJITInfo
 operator|*
-name|MF
-argument_list|)
-block|;   }
-decl_stmt|;
+name|getJITInfo
+argument_list|()
+block|{
+return|return
+operator|&
+name|JITInfo
+return|;
 block|}
+specifier|const
+name|MipsSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
+return|;
+block|}
+specifier|const
+name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|DL
+return|;
+block|}
+specifier|const
+name|MipsInstrInfo
+operator|*
+name|getInstrInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InstrInfo
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+specifier|const
+name|TargetFrameLowering
+operator|*
+name|getFrameLowering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FrameLowering
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+specifier|const
+name|MipsRegisterInfo
+operator|*
+name|getRegisterInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|InstrInfo
+operator|->
+name|getRegisterInfo
+argument_list|()
+return|;
+block|}
+specifier|const
+name|MipsTargetLowering
+operator|*
+name|getTargetLowering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TLInfo
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_comment

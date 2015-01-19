@@ -4398,6 +4398,13 @@ name|has_tls_reloc
 range|:
 literal|1
 decl_stmt|;
+comment|/* Nonzero if this section has a call to __tls_get_addr.  */
+name|unsigned
+name|int
+name|has_tls_get_addr_call
+range|:
+literal|1
+decl_stmt|;
 comment|/* Nonzero if this section has a gp reloc.  */
 name|unsigned
 name|int
@@ -4738,10 +4745,10 @@ comment|/* linker_mark, linker_has_input, gc_mark, gc_mark_from_eh,      */
 value|\      0,           0,                1,       0,                        \                                                                        \
 comment|/* segment_mark, sec_info_type, use_rela_p, has_tls_reloc,       */
 value|\      0,            0,             0,          0,                       \                                                                        \
-comment|/* has_gp_reloc, need_finalize_relax, reloc_done,                */
-value|\      0,            0,                   0,                             \                                                                        \
-comment|/* vma, lma, size, rawsize                                       */
-value|\      0,   0,   0,    0,                                                \                                                                        \
+comment|/* has_tls_get_addr_call, has_gp_reloc, need_finalize_relax,     */
+value|\      0,                     0,            0,                           \                                                                        \
+comment|/* reloc_done, vma, lma, size, rawsize                           */
+value|\      0,          0,   0,   0,    0,                                    \                                                                        \
 comment|/* output_offset, output_section,              alignment_power,  */
 value|\      0,             (struct bfd_section *)&SEC, 0,                    \                                                                        \
 comment|/* relocation, orelocation, reloc_count, filepos, rel_filepos,   */
@@ -7717,6 +7724,10 @@ name|BFD_RELOC_PPC64_PLTGOT16_LO_DS
 block|,
 comment|/* PowerPC and PowerPC64 thread-local storage relocations.  */
 name|BFD_RELOC_PPC_TLS
+block|,
+name|BFD_RELOC_PPC_TLSGD
+block|,
+name|BFD_RELOC_PPC_TLSLD
 block|,
 name|BFD_RELOC_PPC_DTPMOD
 block|,

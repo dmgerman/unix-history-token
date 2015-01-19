@@ -636,7 +636,7 @@ argument_list|)
 block|,
 name|SymbolTableEntry
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 expr|enum
@@ -866,7 +866,12 @@ block|}
 comment|/// isSized - Return true if this is a sized type.
 name|bool
 name|isSized
-argument_list|()
+argument_list|(
+argument|SmallPtrSet<const Type*
+argument_list|,
+literal|4
+argument|> *Visited = nullptr
+argument_list|)
 specifier|const
 block|;
 comment|/// hasName - Return true if this is a named struct that has a non-empty name.
@@ -878,7 +883,7 @@ block|{
 return|return
 name|SymbolTableEntry
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getName - Return the name for this struct type if it has an identity.
@@ -1460,6 +1465,91 @@ name|VTy
 operator|->
 name|getNumElements
 argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// VectorType::getHalfElementsVectorType - This static method returns
+comment|/// a VectorType with half as many elements as the input type and the
+comment|/// same element type.
+comment|///
+specifier|static
+name|VectorType
+operator|*
+name|getHalfElementsVectorType
+argument_list|(
+argument|VectorType *VTy
+argument_list|)
+block|{
+name|unsigned
+name|NumElts
+operator|=
+name|VTy
+operator|->
+name|getNumElements
+argument_list|()
+block|;
+name|assert
+argument_list|(
+operator|(
+name|NumElts
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"Cannot halve vector with odd number of elements."
+argument_list|)
+block|;
+return|return
+name|VectorType
+operator|::
+name|get
+argument_list|(
+name|VTy
+operator|->
+name|getElementType
+argument_list|()
+argument_list|,
+name|NumElts
+operator|/
+literal|2
+argument_list|)
+return|;
+block|}
+comment|/// VectorType::getDoubleElementsVectorType - This static method returns
+comment|/// a VectorType with twice  as many elements as the input type and the
+comment|/// same element type.
+comment|///
+specifier|static
+name|VectorType
+operator|*
+name|getDoubleElementsVectorType
+argument_list|(
+argument|VectorType *VTy
+argument_list|)
+block|{
+name|unsigned
+name|NumElts
+operator|=
+name|VTy
+operator|->
+name|getNumElements
+argument_list|()
+block|;
+return|return
+name|VectorType
+operator|::
+name|get
+argument_list|(
+name|VTy
+operator|->
+name|getElementType
+argument_list|()
+argument_list|,
+name|NumElts
+operator|*
+literal|2
 argument_list|)
 return|;
 block|}

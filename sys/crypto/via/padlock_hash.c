@@ -213,6 +213,7 @@ name|padlock_sha_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|uint8_t
 modifier|*
 name|buf
@@ -292,6 +293,10 @@ argument_list|)
 operator|)
 name|padlock_sha_init
 block|,
+name|NULL
+block|,
+name|NULL
+block|,
 operator|(
 name|int
 argument_list|(
@@ -301,6 +306,7 @@ argument_list|(
 name|void
 operator|*
 argument_list|,
+specifier|const
 name|uint8_t
 operator|*
 argument_list|,
@@ -362,6 +368,10 @@ argument_list|)
 operator|)
 name|padlock_sha_init
 block|,
+name|NULL
+block|,
+name|NULL
+block|,
 operator|(
 name|int
 argument_list|(
@@ -371,6 +381,7 @@ argument_list|(
 name|void
 operator|*
 argument_list|,
+specifier|const
 name|uint8_t
 operator|*
 argument_list|,
@@ -847,6 +858,7 @@ name|padlock_sha_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|uint8_t
 modifier|*
 name|buf

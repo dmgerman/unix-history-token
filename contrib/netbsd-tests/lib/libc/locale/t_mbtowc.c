@@ -129,12 +129,9 @@ argument_list|,
 literal|"C"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 name|ATF_REQUIRE
 argument_list|(
 name|setlocale
@@ -527,13 +524,9 @@ argument_list|,
 literal|"\244\242"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
 comment|/* Moved last as it fails */
 name|h_mbtowc
 argument_list|(
@@ -564,12 +557,9 @@ argument_list|,
 literal|"\241\241"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|atf_tc_expect_fail
 argument_list|(
 literal|"zh_CN.GB18030"

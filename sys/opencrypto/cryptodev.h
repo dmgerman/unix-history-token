@@ -8,7 +8,7 @@ comment|/*	$OpenBSD: cryptodev.h,v 1.31 2002/06/11 11:14:29 beck Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * The author of this code is Angelos D. Keromytis (angelos@cis.upenn.edu)  * Copyright (c) 2002-2006 Sam Leffler, Errno Consulting  *  * This code was written by Angelos D. Keromytis in Athens, Greece, in  * February 2000. Network Security Technologies Inc. (NSTI) kindly  * supported the development of this code.  *  * Copyright (c) 2000 Angelos D. Keromytis  *  * Permission to use, copy, and modify this software with or without fee  * is hereby granted, provided that this entire notice is included in  * all source code copies of any software which is or includes a copy or  * modification of this software.  *  * THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTY. IN PARTICULAR, NONE OF THE AUTHORS MAKES ANY  * REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE  * MERCHANTABILITY OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR  * PURPOSE.  *  * Copyright (c) 2001 Theo de Raadt  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *   notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *   notice, this list of conditions and the following disclaimer in the  *   documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *   derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Effort sponsored in part by the Defense Advanced Research Projects  * Agency (DARPA) and Air Force Research Laboratory, Air Force  * Materiel Command, USAF, under agreement number F30602-01-2-0537.  *  */
+comment|/*-  * The author of this code is Angelos D. Keromytis (angelos@cis.upenn.edu)  * Copyright (c) 2002-2006 Sam Leffler, Errno Consulting  *  * This code was written by Angelos D. Keromytis in Athens, Greece, in  * February 2000. Network Security Technologies Inc. (NSTI) kindly  * supported the development of this code.  *  * Copyright (c) 2000 Angelos D. Keromytis  *  * Permission to use, copy, and modify this software with or without fee  * is hereby granted, provided that this entire notice is included in  * all source code copies of any software which is or includes a copy or  * modification of this software.  *  * THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTY. IN PARTICULAR, NONE OF THE AUTHORS MAKES ANY  * REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE  * MERCHANTABILITY OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR  * PURPOSE.  *  * Copyright (c) 2001 Theo de Raadt  * Copyright (c) 2014 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by John-Mark Gurney  * under sponsorship of the FreeBSD Foundation and  * Rubicon Communications, LLC (Netgate).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *   notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *   notice, this list of conditions and the following disclaimer in the  *   documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *   derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Effort sponsored in part by the Defense Advanced Research Projects  * Agency (DARPA) and Air Force Research Laboratory, Air Force  * Materiel Command, USAF, under agreement number F30602-01-2-0537.  *  */
 end_comment
 
 begin_ifndef
@@ -289,6 +289,21 @@ begin_comment
 comment|/* Keep this updated */
 end_comment
 
+begin_comment
+comment|/* Maximum hash algorithm result length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AALG_MAX_RESULT_LEN
+value|64
+end_define
+
+begin_comment
+comment|/* Keep this updated */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -472,13 +487,89 @@ end_define
 begin_define
 define|#
 directive|define
+name|CRYPTO_AES_ICM
+value|23
+end_define
+
+begin_comment
+comment|/* commonly known as CTR mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_AES_NIST_GMAC
+value|24
+end_define
+
+begin_comment
+comment|/* cipher side */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_AES_NIST_GCM_16
+value|25
+end_define
+
+begin_comment
+comment|/* 16 byte ICV */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_AES_128_NIST_GMAC
+value|26
+end_define
+
+begin_comment
+comment|/* auth side */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_AES_192_NIST_GMAC
+value|27
+end_define
+
+begin_comment
+comment|/* auth side */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_AES_256_NIST_GMAC
+value|28
+end_define
+
+begin_comment
+comment|/* auth side */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CRYPTO_ALGORITHM_MAX
-value|22
+value|28
 end_define
 
 begin_comment
 comment|/* Keep updated - see below */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_ALGO_VALID
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>= CRYPTO_ALGORITHM_MIN&& \ 				 (x)<= CRYPTO_ALGORITHM_MAX)
+end_define
 
 begin_comment
 comment|/* Algorithm flags */
@@ -666,6 +757,54 @@ name|caddr_t
 name|mac
 decl_stmt|;
 comment|/* must be big enough for chosen MAC */
+name|caddr_t
+name|iv
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* op and flags the same as crypt_op */
+end_comment
+
+begin_struct
+struct|struct
+name|crypt_aead
+block|{
+name|u_int32_t
+name|ses
+decl_stmt|;
+name|u_int16_t
+name|op
+decl_stmt|;
+comment|/* i.e. COP_ENCRYPT */
+name|u_int16_t
+name|flags
+decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
+name|u_int
+name|aadlen
+decl_stmt|;
+name|u_int
+name|ivlen
+decl_stmt|;
+name|caddr_t
+name|src
+decl_stmt|,
+name|dst
+decl_stmt|;
+comment|/* become iov[] inside kernel */
+name|caddr_t
+name|aad
+decl_stmt|;
+comment|/* additional authenticated data */
+name|caddr_t
+name|tag
+decl_stmt|;
+comment|/* must fit for chosen TAG length */
 name|caddr_t
 name|iv
 decl_stmt|;
@@ -929,6 +1068,13 @@ name|CIOCFINDDEV
 value|_IOWR('c', 108, struct crypt_find_op)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CIOCCRYPTAEAD
+value|_IOWR('c', 109, struct crypt_aead)
+end_define
+
 begin_struct
 struct|struct
 name|cryptotstat
@@ -1023,6 +1169,42 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|CRYPTDEB
+parameter_list|(
+name|s
+parameter_list|)
+value|do { printf("%s:%d: %s\n", __FILE__, __LINE__, s); \ 			} while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CRYPTDEB
+parameter_list|(
+name|s
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Standard initialization structure beginning */
 end_comment
@@ -1108,19 +1290,23 @@ value|0x08
 comment|/* Compute SHA-1 of buffer for DSA */
 define|#
 directive|define
-name|CRD_F_KEY_EXPLICIT
-value|0x10
-comment|/* Key explicitly provided */
-define|#
-directive|define
 name|CRD_F_COMP
 value|0x0f
 comment|/* Set when doing compression */
+define|#
+directive|define
+name|CRD_F_KEY_EXPLICIT
+value|0x10
+comment|/* Key explicitly provided */
 name|struct
 name|cryptoini
 name|CRD_INI
 decl_stmt|;
 comment|/* Initialization/context data */
+define|#
+directive|define
+name|crd_esn
+value|CRD_INI.cri_esn
 define|#
 directive|define
 name|crd_iv
@@ -1189,11 +1375,6 @@ directive|define
 name|CRYPTO_F_IOV
 value|0x0002
 comment|/* Input/output are uio */
-define|#
-directive|define
-name|CRYPTO_F_REL
-value|0x0004
-comment|/* Must return data in same place */
 define|#
 directive|define
 name|CRYPTO_F_BATCH
@@ -1762,9 +1943,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|struct
-name|iovec
-modifier|*
+name|int
 name|cuio_getptr
 parameter_list|(
 name|struct
@@ -1816,6 +1995,45 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|iovec
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|crypto_mbuftoiov
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|mbuf
+parameter_list|,
+name|struct
+name|iovec
+modifier|*
+modifier|*
+name|iovptr
+parameter_list|,
+name|int
+modifier|*
+name|cnt
+parameter_list|,
+name|int
+modifier|*
+name|allocated
 parameter_list|)
 function_decl|;
 end_function_decl

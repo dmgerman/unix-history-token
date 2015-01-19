@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/rss_config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -51,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_pcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_rss.h>
 end_include
 
 begin_ifdef
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/in6_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_rss.h>
 end_include
 
 begin_endif
@@ -305,12 +311,10 @@ name|hash
 operator|=
 name|rss_hash_ip6_4tuple
 argument_list|(
-operator|*
 name|faddrp
 argument_list|,
 name|fport
 argument_list|,
-operator|*
 name|laddrp
 argument_list|,
 name|lport
@@ -342,10 +346,8 @@ name|hash
 operator|=
 name|rss_hash_ip6_2tuple
 argument_list|(
-operator|*
 name|faddrp
 argument_list|,
-operator|*
 name|laddrp
 argument_list|)
 expr_stmt|;

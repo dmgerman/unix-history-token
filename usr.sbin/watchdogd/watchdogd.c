@@ -419,7 +419,7 @@ specifier|static
 name|int
 name|nap
 init|=
-literal|1
+literal|10
 decl_stmt|;
 end_decl_stmt
 

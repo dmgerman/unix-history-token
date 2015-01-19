@@ -302,12 +302,11 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
+operator|!
 name|V
 operator|->
 name|getParent
 argument_list|()
-operator|==
-literal|0
 operator|&&
 literal|"Value already in a container!!"
 argument_list|)
@@ -382,7 +381,7 @@ name|V
 operator|->
 name|setParent
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|;
 if|if

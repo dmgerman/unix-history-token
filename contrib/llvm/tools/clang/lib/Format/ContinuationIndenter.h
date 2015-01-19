@@ -79,6 +79,12 @@ directive|include
 file|"clang/Format/Format.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Regex.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -220,6 +226,57 @@ name|bool
 name|Newline
 parameter_list|)
 function_decl|;
+comment|/// \brief Update 'State' according to the next token's fake left parentheses.
+name|void
+name|moveStatePastFakeLParens
+parameter_list|(
+name|LineState
+modifier|&
+name|State
+parameter_list|,
+name|bool
+name|Newline
+parameter_list|)
+function_decl|;
+comment|/// \brief Update 'State' according to the next token's fake r_parens.
+name|void
+name|moveStatePastFakeRParens
+parameter_list|(
+name|LineState
+modifier|&
+name|State
+parameter_list|)
+function_decl|;
+comment|/// \brief Update 'State' according to the next token being one of "(<{[".
+name|void
+name|moveStatePastScopeOpener
+parameter_list|(
+name|LineState
+modifier|&
+name|State
+parameter_list|,
+name|bool
+name|Newline
+parameter_list|)
+function_decl|;
+comment|/// \brief Update 'State' according to the next token being one of ")>}]".
+name|void
+name|moveStatePastScopeCloser
+parameter_list|(
+name|LineState
+modifier|&
+name|State
+parameter_list|)
+function_decl|;
+comment|/// \brief Update 'State' with the next token opening a nested block.
+name|void
+name|moveStateToNewBlock
+parameter_list|(
+name|LineState
+modifier|&
+name|State
+parameter_list|)
+function_decl|;
 comment|/// \brief If the current token sticks out over the end of the line, break
 comment|/// it if possible.
 comment|///
@@ -284,6 +341,16 @@ name|bool
 name|DryRun
 parameter_list|)
 function_decl|;
+comment|/// \brief Calculate the new column for a line wrap before the next token.
+name|unsigned
+name|getNewLineColumn
+parameter_list|(
+specifier|const
+name|LineState
+modifier|&
+name|State
+parameter_list|)
+function_decl|;
 comment|/// \brief Adds a multiline token to the \p State.
 comment|///
 comment|/// \returns Extra penalty for the first line of the literal: last line is
@@ -308,7 +375,7 @@ comment|///
 comment|/// This includes implicitly concatenated strings, strings that will be broken
 comment|/// by clang-format and string literals with escaped newlines.
 name|bool
-name|NextIsMultilineString
+name|nextIsMultilineString
 parameter_list|(
 specifier|const
 name|LineState
@@ -335,6 +402,11 @@ expr_stmt|;
 name|bool
 name|BinPackInconclusiveFunctions
 decl_stmt|;
+name|llvm
+operator|::
+name|Regex
+name|CommentPragmasRegex
+expr_stmt|;
 block|}
 empty_stmt|;
 struct|struct
@@ -398,6 +470,11 @@ argument_list|(
 name|NoLineBreak
 argument_list|)
 operator|,
+name|LastOperatorWrapped
+argument_list|(
+name|true
+argument_list|)
+operator|,
 name|ColonPos
 argument_list|(
 literal|0
@@ -436,6 +513,26 @@ operator|,
 name|ContainsUnwrappedBuilder
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|AlignColons
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|ObjCSelectorNameFound
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|HasMultipleNestedBlocks
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|JSFunctionInlined
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief The position to which a specific parenthesis level needs to be
@@ -488,6 +585,11 @@ comment|/// \brief Line breaking in this context would break a formatting rule.
 name|bool
 name|NoLineBreak
 decl_stmt|;
+comment|/// \brief True if the last binary operator on this level was wrapped to the
+comment|/// next line.
+name|bool
+name|LastOperatorWrapped
+decl_stmt|;
 comment|/// \brief The position of the colon in an ObjC method declaration/call.
 name|unsigned
 name|ColonPos
@@ -529,6 +631,34 @@ comment|/// \brief \c true if this \c ParenState contains multiple segments of a
 comment|/// builder-type call on one line.
 name|bool
 name|ContainsUnwrappedBuilder
+decl_stmt|;
+comment|/// \brief \c true if the colons of the curren ObjC method expression should
+comment|/// be aligned.
+comment|///
+comment|/// Not considered for memoization as it will always have the same value at
+comment|/// the same token.
+name|bool
+name|AlignColons
+decl_stmt|;
+comment|/// \brief \c true if at least one selector name was found in the current
+comment|/// ObjC method expression.
+comment|///
+comment|/// Not considered for memoization as it will always have the same value at
+comment|/// the same token.
+name|bool
+name|ObjCSelectorNameFound
+decl_stmt|;
+comment|/// \brief \c true if there are multiple nested blocks inside these parens.
+comment|///
+comment|/// Not considered for memoization as it will always have the same value at
+comment|/// the same token.
+name|bool
+name|HasMultipleNestedBlocks
+decl_stmt|;
+comment|// \brief The previous JavaScript 'function' keyword is not wrapped to a new
+comment|// line.
+name|bool
+name|JSFunctionInlined
 decl_stmt|;
 name|bool
 name|operator
@@ -647,6 +777,17 @@ name|NoLineBreak
 return|;
 if|if
 condition|(
+name|LastOperatorWrapped
+operator|!=
+name|Other
+operator|.
+name|LastOperatorWrapped
+condition|)
+return|return
+name|LastOperatorWrapped
+return|;
+if|if
+condition|(
 name|ColonPos
 operator|!=
 name|Other
@@ -749,6 +890,21 @@ operator|<
 name|Other
 operator|.
 name|ContainsUnwrappedBuilder
+return|;
+if|if
+condition|(
+name|JSFunctionInlined
+operator|!=
+name|Other
+operator|.
+name|JSFunctionInlined
+condition|)
+return|return
+name|JSFunctionInlined
+operator|<
+name|Other
+operator|.
+name|JSFunctionInlined
 return|;
 return|return
 name|false
@@ -775,15 +931,11 @@ comment|/// \brief \c true if this line contains a continued for-loop section.
 name|bool
 name|LineContainsContinuedForLoopSection
 decl_stmt|;
-comment|/// \brief The level of nesting inside (), [],<> and {}.
-name|unsigned
-name|ParenLevel
-decl_stmt|;
-comment|/// \brief The \c ParenLevel at the start of this line.
+comment|/// \brief The \c NestingLevel at the start of this line.
 name|unsigned
 name|StartOfLineLevel
 decl_stmt|;
-comment|/// \brief The lowest \c ParenLevel on the current line.
+comment|/// \brief The lowest \c NestingLevel on the current line.
 name|unsigned
 name|LowestLevelOnLine
 decl_stmt|;
@@ -882,21 +1034,6 @@ name|LineContainsContinuedForLoopSection
 condition|)
 return|return
 name|LineContainsContinuedForLoopSection
-return|;
-if|if
-condition|(
-name|ParenLevel
-operator|!=
-name|Other
-operator|.
-name|ParenLevel
-condition|)
-return|return
-name|ParenLevel
-operator|<
-name|Other
-operator|.
-name|ParenLevel
 return|;
 if|if
 condition|(

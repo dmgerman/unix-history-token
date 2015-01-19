@@ -95,14 +95,11 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -121,14 +118,11 @@ directive|include
 file|<libgen.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -499,14 +493,11 @@ name|g_dtp
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -848,7 +839,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|sun
+name|illumos
 argument_list|)
 operator|&&
 name|defined
@@ -987,7 +978,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|sun
+name|illumos
 argument_list|)
 operator|&&
 name|defined
@@ -1726,14 +1717,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_function
 specifier|static
@@ -2390,6 +2378,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* illumos */
+end_comment
 
 begin_function
 specifier|static
@@ -3064,12 +3056,9 @@ name|dof
 operator|->
 name|dofh_loadsz
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|oprintf
 argument_list|(
 literal|"dof-data-%d=0x%x"
@@ -3850,12 +3839,9 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 specifier|const
 name|psinfo_t
 modifier|*
@@ -3920,12 +3906,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 switch|switch
 condition|(
 name|Pstate
@@ -3949,12 +3932,9 @@ directive|endif
 case|case
 name|PS_UNDEAD
 case|:
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 comment|/* 		 * Ideally we would like to always report pr_wstat here, but it 		 * isn't possible given current /proc semantics.  If we grabbed 		 * the process, Ppsinfo() will either fail or return a zeroed 		 * psinfo_t depending on how far the parent is in reaping it. 		 * When /proc provides a stable pr_wstat in the status file, 		 * this code can be improved by examining this new pr_wstat. 		 */
 if|if
 condition|(
@@ -4018,12 +3998,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 block|}
 elseif|else
 if|if
@@ -6035,13 +6012,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 if|if
 condition|(
 name|sigaction
@@ -8172,12 +8145,9 @@ name|g_ofile
 operator|==
 name|NULL
 condition|)
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|g_ofile
 operator|=
 literal|"/kernel/drv/dtrace.conf"
@@ -8197,12 +8167,9 @@ name|g_ofile
 argument_list|)
 expr_stmt|;
 comment|/* strip out any old DOF directives */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|etcsystem_prune
 argument_list|()
 expr_stmt|;
@@ -8340,12 +8307,9 @@ argument_list|,
 name|g_ofile
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|etcsystem_add
 argument_list|()
 expr_stmt|;

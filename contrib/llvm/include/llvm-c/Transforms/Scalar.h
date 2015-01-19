@@ -58,6 +58,22 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/** See llvm::createScalarizerPass function. */
+name|void
+name|LLVMAddScalarizerPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createMergedLoadStoreMotionPass function. */
+name|void
+name|LLVMAddMergedLoadStoreMotionPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
 comment|/** See llvm::createGVNPass function. */
 name|void
 name|LLVMAddGVNPass

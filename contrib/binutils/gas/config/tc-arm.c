@@ -24584,7 +24584,7 @@ name|v
 parameter_list|,
 name|n
 parameter_list|)
-value|(v<< n | v>> (32 - n))
+value|(v<< (n % 32) | v>> ((32 - n) % 32))
 end_define
 
 begin_comment
@@ -28043,6 +28043,29 @@ name|imm
 operator|<<
 literal|21
 expr_stmt|;
+comment|/* If this is a vector we are using the APSR_nzcv syntax, encode as r15 */
+if|if
+condition|(
+name|inst
+operator|.
+name|operands
+index|[
+literal|2
+index|]
+operator|.
+name|isvec
+operator|!=
+literal|0
+condition|)
+name|inst
+operator|.
+name|instruction
+operator||=
+literal|15
+operator|<<
+literal|12
+expr_stmt|;
+else|else
 name|inst
 operator|.
 name|instruction
@@ -73425,7 +73448,7 @@ name|RCP
 expr|,
 name|I7b
 expr|,
-name|RR
+name|APSR_RR
 expr|,
 name|RCN
 expr|,
@@ -74155,7 +74178,7 @@ name|RCP
 expr|,
 name|I7b
 expr|,
-name|RR
+name|APSR_RR
 expr|,
 name|RCN
 expr|,

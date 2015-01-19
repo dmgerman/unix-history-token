@@ -1158,55 +1158,7 @@ comment|/* can do back-back transfers */
 end_comment
 
 begin_comment
-comment|/*  * Disklabel-specific ioctls.  *  * NB:<sys/disk.h> defines ioctls from 'd'/128 and up.  */
-end_comment
-
-begin_comment
-comment|/* get and set disklabel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIOCGDINFO
-value|_IOR('d', 101, struct disklabel)
-end_define
-
-begin_comment
-comment|/* get */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIOCSDINFO
-value|_IOW('d', 102, struct disklabel)
-end_define
-
-begin_comment
-comment|/* set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIOCWDINFO
-value|_IOW('d', 103, struct disklabel)
-end_define
-
-begin_comment
-comment|/* set, update disk */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIOCBSDBB
-value|_IOW('d', 110, void *)
-end_define
-
-begin_comment
-comment|/* write bootblocks */
+comment|/*  * NB:<sys/disk.h> defines ioctls from 'd'/128 and up.  */
 end_comment
 
 begin_comment

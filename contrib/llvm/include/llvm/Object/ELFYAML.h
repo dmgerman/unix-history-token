@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Object/YAML.h"
+file|"llvm/MC/YAML.h"
 end_include
 
 begin_include
@@ -126,11 +126,24 @@ argument|uint8_t
 argument_list|,
 argument|ELF_ELFOSABI
 argument_list|)
+comment|// Just use 64, since it can hold 32-bit values too.
+name|LLVM_YAML_STRONG_TYPEDEF
+argument_list|(
+argument|uint64_t
+argument_list|,
+argument|ELF_EF
+argument_list|)
 name|LLVM_YAML_STRONG_TYPEDEF
 argument_list|(
 argument|uint32_t
 argument_list|,
 argument|ELF_SHT
+argument_list|)
+name|LLVM_YAML_STRONG_TYPEDEF
+argument_list|(
+argument|uint8_t
+argument_list|,
+argument|ELF_REL
 argument_list|)
 comment|// Just use 64, since it can hold 32-bit values too.
 name|LLVM_YAML_STRONG_TYPEDEF
@@ -144,6 +157,12 @@ argument_list|(
 argument|uint8_t
 argument_list|,
 argument|ELF_STT
+argument_list|)
+name|LLVM_YAML_STRONG_TYPEDEF
+argument_list|(
+argument|uint8_t
+argument_list|,
+argument|ELF_STV
 argument_list|)
 comment|// For now, hardcode 64 bits everywhere that 32 or 64 would be needed
 comment|// since 64-bit can hold 32-bit values too.
@@ -164,6 +183,9 @@ name|Type
 decl_stmt|;
 name|ELF_EM
 name|Machine
+decl_stmt|;
+name|ELF_EF
+name|Flags
 decl_stmt|;
 name|llvm
 operator|::
@@ -200,6 +222,9 @@ operator|::
 name|Hex64
 name|Size
 expr_stmt|;
+name|ELF_STV
+name|Visibility
+decl_stmt|;
 block|}
 struct|;
 struct|struct
@@ -234,6 +259,18 @@ struct|;
 struct|struct
 name|Section
 block|{
+name|enum
+name|class
+name|SectionKind
+block|{
+name|RawContent
+operator|,
+name|Relocation
+block|}
+empty_stmt|;
+name|SectionKind
+name|Kind
+decl_stmt|;
 name|StringRef
 name|Name
 decl_stmt|;
@@ -250,13 +287,6 @@ operator|::
 name|Hex64
 name|Address
 expr_stmt|;
-name|object
-operator|::
-name|yaml
-operator|::
-name|BinaryRef
-name|Content
-expr_stmt|;
 name|StringRef
 name|Link
 decl_stmt|;
@@ -267,55 +297,168 @@ operator|::
 name|Hex64
 name|AddressAlign
 expr_stmt|;
+name|Section
+argument_list|(
+argument|SectionKind Kind
+argument_list|)
+block|:
+name|Kind
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
+name|virtual
+operator|~
+name|Section
+argument_list|()
+expr_stmt|;
 block|}
 struct|;
-struct|struct
-name|Object
+name|struct
+name|RawContentSection
+range|:
+name|Section
 block|{
-name|FileHeader
-name|Header
-decl_stmt|;
+name|yaml
+operator|::
+name|BinaryRef
+name|Content
+block|;
+name|llvm
+operator|::
+name|yaml
+operator|::
+name|Hex64
+name|Size
+block|;
+name|RawContentSection
+argument_list|()
+operator|:
+name|Section
+argument_list|(
+argument|SectionKind::RawContent
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Section *S
+argument_list|)
+block|{
+return|return
+name|S
+operator|->
+name|Kind
+operator|==
+name|SectionKind
+operator|::
+name|RawContent
+return|;
+block|}
+expr|}
+block|; struct
+name|Relocation
+block|{
+name|llvm
+operator|::
+name|yaml
+operator|::
+name|Hex64
+name|Offset
+block|;
+name|int64_t
+name|Addend
+block|;
+name|ELF_REL
+name|Type
+block|;
+name|StringRef
+name|Symbol
+block|; }
+block|; struct
+name|RelocationSection
+operator|:
+name|Section
+block|{
+name|StringRef
+name|Info
+block|;
 name|std
 operator|::
 name|vector
 operator|<
-name|Section
+name|Relocation
 operator|>
+name|Relocations
+block|;
+name|RelocationSection
+argument_list|()
+operator|:
+name|Section
+argument_list|(
+argument|SectionKind::Relocation
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Section *S
+argument_list|)
+block|{
+return|return
+name|S
+operator|->
+name|Kind
+operator|==
+name|SectionKind
+operator|::
+name|Relocation
+return|;
+block|}
+expr|}
+block|; struct
+name|Object
+block|{
+name|FileHeader
+name|Header
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Section
+operator|>>
 name|Sections
-expr_stmt|;
+block|;
 comment|// Although in reality the symbols reside in a section, it is a lot
 comment|// cleaner and nicer if we read them from the YAML as a separate
 comment|// top-level key, which automatically ensures that invariants like there
 comment|// being a single SHT_SYMTAB section are upheld.
 name|LocalGlobalWeakSymbols
 name|Symbols
-decl_stmt|;
-block|}
-struct|;
-block|}
+block|; }
+block|;  }
 comment|// end namespace ELFYAML
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// end namespace llvm
-end_comment
-
-begin_macro
 name|LLVM_YAML_IS_SEQUENCE_VECTOR
 argument_list|(
-argument|llvm::ELFYAML::Section
+argument|std::unique_ptr<llvm::ELFYAML::Section>
 argument_list|)
-end_macro
-
-begin_macro
 name|LLVM_YAML_IS_SEQUENCE_VECTOR
 argument_list|(
 argument|llvm::ELFYAML::Symbol
 argument_list|)
-end_macro
-
-begin_decl_stmt
+name|LLVM_YAML_IS_SEQUENCE_VECTOR
+argument_list|(
+argument|llvm::ELFYAML::Relocation
+argument_list|)
 name|namespace
 name|llvm
 block|{
@@ -348,7 +491,7 @@ operator|&
 name|Value
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -375,7 +518,7 @@ operator|&
 name|Value
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -402,7 +545,7 @@ operator|&
 name|Value
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -429,7 +572,7 @@ operator|&
 name|Value
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -456,7 +599,34 @@ operator|&
 name|Value
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|ScalarBitSetTraits
+operator|<
+name|ELFYAML
+operator|::
+name|ELF_EF
+operator|>
+block|{
+specifier|static
+name|void
+name|bitset
+argument_list|(
+name|IO
+operator|&
+name|IO
+argument_list|,
+name|ELFYAML
+operator|::
+name|ELF_EF
+operator|&
+name|Value
+argument_list|)
+block|; }
+block|;
 name|template
 operator|<
 operator|>
@@ -483,7 +653,7 @@ operator|&
 name|Value
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -510,7 +680,7 @@ operator|&
 name|Value
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -537,7 +707,61 @@ operator|&
 name|Value
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|ScalarEnumerationTraits
+operator|<
+name|ELFYAML
+operator|::
+name|ELF_STV
+operator|>
+block|{
+specifier|static
+name|void
+name|enumeration
+argument_list|(
+name|IO
+operator|&
+name|IO
+argument_list|,
+name|ELFYAML
+operator|::
+name|ELF_STV
+operator|&
+name|Value
+argument_list|)
+block|; }
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|ScalarEnumerationTraits
+operator|<
+name|ELFYAML
+operator|::
+name|ELF_REL
+operator|>
+block|{
+specifier|static
+name|void
+name|enumeration
+argument_list|(
+name|IO
+operator|&
+name|IO
+argument_list|,
+name|ELFYAML
+operator|::
+name|ELF_REL
+operator|&
+name|Value
+argument_list|)
+block|; }
+block|;
 name|template
 operator|<
 operator|>
@@ -564,7 +788,7 @@ operator|&
 name|FileHdr
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -591,7 +815,7 @@ operator|&
 name|Symbol
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -618,7 +842,7 @@ operator|&
 name|Symbols
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -627,7 +851,7 @@ name|MappingTraits
 operator|<
 name|ELFYAML
 operator|::
-name|Section
+name|Relocation
 operator|>
 block|{
 specifier|static
@@ -640,12 +864,68 @@ name|IO
 argument_list|,
 name|ELFYAML
 operator|::
+name|Relocation
+operator|&
+name|Rel
+argument_list|)
+block|; }
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|MappingTraits
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ELFYAML
+operator|::
 name|Section
+operator|>>
+block|{
+specifier|static
+name|void
+name|mapping
+argument_list|(
+name|IO
+operator|&
+name|IO
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ELFYAML
+operator|::
+name|Section
+operator|>
+operator|&
+name|Section
+argument_list|)
+block|;
+specifier|static
+name|StringRef
+name|validate
+argument_list|(
+name|IO
+operator|&
+name|io
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ELFYAML
+operator|::
+name|Section
+operator|>
 operator|&
 name|Section
 argument_list|)
 block|; }
-expr_stmt|;
+block|;
 name|template
 operator|<
 operator|>
@@ -672,8 +952,7 @@ operator|&
 name|Object
 argument_list|)
 block|; }
-expr_stmt|;
-block|}
+block|;  }
 comment|// end namespace yaml
 block|}
 end_decl_stmt

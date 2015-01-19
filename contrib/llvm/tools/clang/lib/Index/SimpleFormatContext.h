@@ -148,7 +148,7 @@ argument_list|)
 operator|,
 name|Diagnostics
 argument_list|(
-argument|new DiagnosticsEngine(new DiagnosticIDs,                                           DiagOpts.getPtr())
+argument|new DiagnosticsEngine(new DiagnosticIDs,                                           DiagOpts.get())
 argument_list|)
 operator|,
 name|Files
@@ -195,7 +195,6 @@ argument_list|,
 argument|StringRef Content
 argument_list|)
 block|{
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -237,15 +236,13 @@ argument_list|(
 name|Entry
 argument_list|,
 name|Source
-argument_list|,
-name|true
 argument_list|)
 block|;
 name|assert
 argument_list|(
 name|Entry
 operator|!=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 return|return

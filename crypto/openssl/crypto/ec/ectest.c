@@ -7165,6 +7165,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|nistp_single_test
 parameter_list|(
@@ -8016,6 +8017,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|nistp_tests
 parameter_list|()

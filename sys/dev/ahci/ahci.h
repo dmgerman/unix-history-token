@@ -866,6 +866,13 @@ name|AHCI_MAX_SLOTS
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|AHCI_MAX_IRQS
+value|16
+end_define
+
 begin_comment
 comment|/* SATA AHCI v1.0 register defines */
 end_comment
@@ -2676,7 +2683,7 @@ value|2
 block|}
 name|irqs
 index|[
-literal|16
+name|AHCI_MAX_IRQS
 index|]
 struct|;
 name|uint32_t
@@ -3121,9 +3128,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AHCI_Q_ABAR0
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AHCI_Q_BIT_STRING
 define|\
-value|"\020"			\ 	"\001NOFORCE"		\ 	"\002NOPMP"		\ 	"\003NONCQ"		\ 	"\0041CH"		\ 	"\0052CH"		\ 	"\0064CH"		\ 	"\007EDGEIS"		\ 	"\010SATA2"		\ 	"\011NOBSYRES"		\ 	"\012NOAA"		\ 	"\013NOCOUNT"		\ 	"\014ALTSIG"		\ 	"\015NOMSI"		\ 	"\016ATI_PMP_BUG"	\ 	"\017MAXIO_64K"		\ 	"\020SATA1_UNIT0"
+value|"\020"			\ 	"\001NOFORCE"		\ 	"\002NOPMP"		\ 	"\003NONCQ"		\ 	"\0041CH"		\ 	"\0052CH"		\ 	"\0064CH"		\ 	"\007EDGEIS"		\ 	"\010SATA2"		\ 	"\011NOBSYRES"		\ 	"\012NOAA"		\ 	"\013NOCOUNT"		\ 	"\014ALTSIG"		\ 	"\015NOMSI"		\ 	"\016ATI_PMP_BUG"	\ 	"\017MAXIO_64K"		\ 	"\020SATA1_UNIT0"	\ 	"\021ABAR0"
 end_define
 
 begin_function_decl

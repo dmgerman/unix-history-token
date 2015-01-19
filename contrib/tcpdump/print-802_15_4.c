@@ -3,6 +3,12 @@ begin_comment
 comment|/*  * Copyright (c) 2009  * 	Siemens AG, All rights reserved.  * 	Dmitry Eremin-Solenikov (dbaryshkov@gmail.com)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -24,24 +30,6 @@ begin_include
 include|#
 directive|include
 file|<tcpdump-stdinc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pcap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -104,7 +92,7 @@ specifier|static
 name|int
 name|extract_header_length
 parameter_list|(
-name|u_int16_t
+name|uint16_t
 name|fc
 parameter_list|)
 block|{
@@ -242,7 +230,6 @@ begin_function
 name|u_int
 name|ieee802_15_4_if_print
 parameter_list|(
-name|struct
 name|netdissect_options
 modifier|*
 name|ndo
@@ -269,10 +256,10 @@ decl_stmt|;
 name|int
 name|hdrlen
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|fc
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|seq
 decl_stmt|;
 if|if
@@ -346,7 +333,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 name|ND_PRINT
 argument_list|(
@@ -383,7 +372,9 @@ block|}
 if|if
 condition|(
 operator|!
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
 name|p
@@ -397,7 +388,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|u_int16_t
+name|uint16_t
 name|panid
 init|=
 literal|0
@@ -514,47 +505,147 @@ break|break;
 block|}
 name|ND_PRINT
 argument_list|(
-argument|(ndo,
+operator|(
+name|ndo
+operator|,
 literal|"< "
-argument|);  		switch ((fc>>
-literal|14
-argument|)&
-literal|0x3
-argument|) { 		case
-literal|0x00
-argument|: 			ND_PRINT((ndo,
-literal|"none "
-argument|)); 			break; 		case
-literal|0x01
-argument|: 			ND_PRINT((ndo,
-literal|"reserved source addressing mode"
-argument|)); 			return
-literal|0
-argument|; 		case
-literal|0x02
-argument|: 			if (!(fc& (
-literal|1
-argument|<<
-literal|6
-argument|))) { 				panid = EXTRACT_LE_16BITS(p); 				p +=
-literal|2
-argument|; 			} 			ND_PRINT((ndo,
-literal|"%04x:%04x "
-argument|, panid, EXTRACT_LE_16BITS(p))); 			p +=
-literal|2
-argument|; 			break; 		case
-literal|0x03
-argument|: 			if (!(fc& (
-literal|1
-argument|<<
-literal|6
-argument|))) { 				panid = EXTRACT_LE_16BITS(p); 				p +=
-literal|2
-argument|; 			}                         ND_PRINT((ndo,
-literal|"%04x:%s "
-argument|, panid, le64addr_string(p)))
+operator|)
 argument_list|)
-empty_stmt|;
+expr_stmt|;
+switch|switch
+condition|(
+operator|(
+name|fc
+operator|>>
+literal|14
+operator|)
+operator|&
+literal|0x3
+condition|)
+block|{
+case|case
+literal|0x00
+case|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"none "
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x01
+case|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"reserved source addressing mode"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
+literal|0x02
+case|:
+if|if
+condition|(
+operator|!
+operator|(
+name|fc
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|6
+operator|)
+operator|)
+condition|)
+block|{
+name|panid
+operator|=
+name|EXTRACT_LE_16BITS
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+block|}
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%04x:%04x "
+operator|,
+name|panid
+operator|,
+name|EXTRACT_LE_16BITS
+argument_list|(
+name|p
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+break|break;
+case|case
+literal|0x03
+case|:
+if|if
+condition|(
+operator|!
+operator|(
+name|fc
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|6
+operator|)
+operator|)
+condition|)
+block|{
+name|panid
+operator|=
+name|EXTRACT_LE_16BITS
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+block|}
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%04x:%s "
+operator|,
+name|panid
+operator|,
+name|le64addr_string
+argument_list|(
+name|p
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|p
 operator|+=
 literal|8
@@ -566,35 +657,25 @@ operator|-=
 name|hdrlen
 expr_stmt|;
 block|}
-end_function
-
-begin_if
 if|if
 condition|(
 operator|!
-name|suppress_default_print
-condition|)
-call|(
 name|ndo
 operator|->
-name|ndo_default_print
-call|)
+name|ndo_suppress_default_print
+condition|)
+name|ND_DEFAULTPRINT
 argument_list|(
-name|ndo
-argument_list|,
 name|p
 argument_list|,
 name|caplen
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_return
 return|return
 literal|0
 return|;
-end_return
+block|}
+end_function
 
-unit|}
 end_unit
 

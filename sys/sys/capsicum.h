@@ -730,7 +730,7 @@ begin_define
 define|#
 directive|define
 name|CAP_ALL0
-value|CAPRIGHT(0, 0x0000007FFFFFFFFFULL)
+value|CAPRIGHT(0, 0x000001FFFFFFFFFFULL)
 end_define
 
 begin_comment
@@ -740,8 +740,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CAP_UNUSED0_40
-value|CAPRIGHT(0, 0x0000008000000000ULL)
+name|CAP_UNUSED0_42
+value|CAPRIGHT(0, 0x0000020000000000ULL)
 end_define
 
 begin_comment

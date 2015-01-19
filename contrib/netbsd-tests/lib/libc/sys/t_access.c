@@ -63,14 +63,17 @@ directive|include
 file|<atf-c.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -466,6 +469,24 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|<
+literal|1100033
+name|atf_tc_expect_fail
+argument_list|(
+literal|"arguments to access aren't validated; see "
+literal|"bug # 181155 for more details"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|errno
 operator|=
 literal|0

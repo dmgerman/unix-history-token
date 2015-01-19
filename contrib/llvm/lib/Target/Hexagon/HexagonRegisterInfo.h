@@ -181,14 +181,14 @@ argument_list|)
 block|;
 comment|/// Code Generation virtual methods...
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF =
-literal|0
+argument|const MachineFunction *MF = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|TargetRegisterClass
@@ -197,8 +197,7 @@ specifier|const
 operator|*
 name|getCalleeSavedRegClasses
 argument_list|(
-argument|const MachineFunction *MF =
-literal|0
+argument|const MachineFunction *MF = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -208,6 +207,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|eliminateFrameIndex
@@ -218,9 +218,10 @@ argument|int SPAdj
 argument_list|,
 argument|unsigned FIOperandNum
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// determineFrameLayout - Determine the size of the frame and maximum call
 comment|/// frame size.
@@ -239,6 +240,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -250,6 +252,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -267,6 +270,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getFrameRegister

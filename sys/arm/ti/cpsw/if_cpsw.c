@@ -1814,9 +1814,7 @@ name|slot
 operator|->
 name|mbuf
 operator|->
-name|m_hdr
-operator|.
-name|mh_data
+name|m_data
 operator|)
 argument_list|,
 literal|" "
@@ -1835,9 +1833,7 @@ name|slot
 operator|->
 name|mbuf
 operator|->
-name|m_hdr
-operator|.
-name|mh_data
+name|m_data
 operator|)
 operator|+
 literal|14
@@ -2887,9 +2883,7 @@ name|sc
 operator|->
 name|null_mbuf
 operator|->
-name|m_hdr
-operator|.
-name|mh_data
+name|m_data
 argument_list|,
 literal|0
 argument_list|,
@@ -6164,9 +6158,7 @@ name|slot
 operator|->
 name|mbuf
 operator|->
-name|m_hdr
-operator|.
-name|mh_data
+name|m_data
 operator|+=
 name|bd
 operator|.
@@ -6176,9 +6168,7 @@ name|slot
 operator|->
 name|mbuf
 operator|->
-name|m_hdr
-operator|.
-name|mh_len
+name|m_len
 operator|=
 name|bd
 operator|.
@@ -7209,9 +7199,7 @@ name|sc
 operator|->
 name|null_mbuf
 operator|->
-name|m_hdr
-operator|.
-name|mh_data
+name|m_data
 argument_list|)
 expr_stmt|;
 name|m0

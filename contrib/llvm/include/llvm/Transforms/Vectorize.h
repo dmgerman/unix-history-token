@@ -111,6 +111,10 @@ comment|/// @brief Vectorize floating-point math intrinsics.
 name|bool
 name|VectorizeMath
 decl_stmt|;
+comment|/// @brief Vectorize bit intrinsics.
+name|bool
+name|VectorizeBitManipulations
+decl_stmt|;
 comment|/// @brief Vectorize the fused-multiply-add intrinsic.
 name|bool
 name|VectorizeFMA
@@ -213,6 +217,11 @@ name|bool
 name|NoUnrolling
 init|=
 name|false
+parameter_list|,
+name|bool
+name|AlwaysVectorize
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//

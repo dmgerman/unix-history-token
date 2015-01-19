@@ -8259,6 +8259,9 @@ break|break;
 default|default:
 if|if
 condition|(
+name|sbavail
+argument_list|(
+operator|&
 name|ep
 operator|->
 name|com
@@ -8266,8 +8269,7 @@ operator|.
 name|so
 operator|->
 name|so_rcv
-operator|.
-name|sb_cc
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -8300,6 +8302,9 @@ name|so
 operator|->
 name|so_state
 argument_list|,
+name|sbavail
+argument_list|(
+operator|&
 name|ep
 operator|->
 name|com
@@ -8307,8 +8312,7 @@ operator|.
 name|so
 operator|->
 name|so_rcv
-operator|.
-name|sb_cc
+argument_list|)
 argument_list|,
 name|ep
 operator|->

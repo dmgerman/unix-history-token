@@ -144,21 +144,37 @@ comment|/// actual type and declaration nodes, and read parts of declaration
 comment|/// contexts.
 name|class
 name|ExternalASTSource
+range|:
+name|public
+name|RefCountedBase
+operator|<
+name|ExternalASTSource
+operator|>
 block|{
+comment|/// Generation number for this external AST source. Must be increased
+comment|/// whenever we might have added new redeclarations for existing decls.
+name|uint32_t
+name|CurrentGeneration
+block|;
 comment|/// \brief Whether this AST source also provides information for
 comment|/// semantic analysis.
 name|bool
 name|SemaSource
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|ExternalSemaSource
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|ExternalASTSource
 argument_list|()
 operator|:
+name|CurrentGeneration
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|SemaSource
 argument_list|(
 argument|false
@@ -168,18 +184,18 @@ name|virtual
 operator|~
 name|ExternalASTSource
 argument_list|()
-expr_stmt|;
+block|;
 comment|/// \brief RAII class for safely pairing a StartedDeserializing call
 comment|/// with FinishedDeserializing.
 name|class
 name|Deserializing
 block|{
 name|ExternalASTSource
-modifier|*
+operator|*
 name|Source
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|explicit
 name|Deserializing
 argument_list|(
@@ -213,7 +229,19 @@ name|FinishedDeserializing
 argument_list|()
 block|;     }
 block|}
-empty_stmt|;
+block|;
+comment|/// \brief Get the current generation of this AST source. This number
+comment|/// is incremented each time the AST source lazily extends an existing
+comment|/// entity.
+name|uint32_t
+name|getGeneration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurrentGeneration
+return|;
+block|}
 comment|/// \brief Resolve a declaration ID into a declaration, potentially
 comment|/// building a new declaration.
 comment|///
@@ -223,13 +251,12 @@ comment|///
 comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|Decl
-modifier|*
+operator|*
 name|GetExternalDecl
-parameter_list|(
-name|uint32_t
-name|ID
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|uint32_t ID
+argument_list|)
+block|;
 comment|/// \brief Resolve a selector ID into a selector.
 comment|///
 comment|/// This operation only needs to be implemented if the AST source
@@ -239,11 +266,10 @@ comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|Selector
 name|GetExternalSelector
-parameter_list|(
-name|uint32_t
-name|ID
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|uint32_t ID
+argument_list|)
+block|;
 comment|/// \brief Returns the number of selectors known to the external AST
 comment|/// source.
 comment|///
@@ -251,8 +277,8 @@ comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|uint32_t
 name|GetNumExternalSelectors
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// \brief Resolve the offset of a statement in the decl stream into
 comment|/// a statement.
 comment|///
@@ -263,35 +289,31 @@ comment|///
 comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|Stmt
-modifier|*
+operator|*
 name|GetExternalDeclStmt
-parameter_list|(
-name|uint64_t
-name|Offset
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|uint64_t Offset
+argument_list|)
+block|;
 comment|/// \brief Resolve the offset of a set of C++ base specifiers in the decl
 comment|/// stream into an array of specifiers.
 comment|///
 comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|CXXBaseSpecifier
-modifier|*
+operator|*
 name|GetExternalCXXBaseSpecifiers
-parameter_list|(
-name|uint64_t
-name|Offset
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|uint64_t Offset
+argument_list|)
+block|;
 comment|/// \brief Update an out-of-date identifier.
 name|virtual
 name|void
 name|updateOutOfDateIdentifier
-parameter_list|(
-name|IdentifierInfo
-modifier|&
-name|II
-parameter_list|)
+argument_list|(
+argument|IdentifierInfo&II
+argument_list|)
 block|{ }
 comment|/// \brief Find all declarations with the given name in the given context,
 comment|/// and add them to the context by calling SetExternalVisibleDeclsForName
@@ -303,16 +325,12 @@ comment|/// The default implementation of this method is a no-op returning \c fa
 name|virtual
 name|bool
 name|FindExternalVisibleDeclsByName
-parameter_list|(
-specifier|const
-name|DeclContext
-modifier|*
-name|DC
-parameter_list|,
-name|DeclarationName
-name|Name
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const DeclContext *DC
+argument_list|,
+argument|DeclarationName Name
+argument_list|)
+block|;
 comment|/// \brief Ensures that the table of all visible declarations inside this
 comment|/// context is up to date.
 comment|///
@@ -320,25 +338,24 @@ comment|/// The default implementation of this function is a no-op.
 name|virtual
 name|void
 name|completeVisibleDeclsMap
-parameter_list|(
+argument_list|(
 specifier|const
 name|DeclContext
-modifier|*
+operator|*
 name|DC
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Retrieve the module that corresponds to the given module ID.
 name|virtual
 name|Module
-modifier|*
+operator|*
 name|getModule
-parameter_list|(
-name|unsigned
-name|ID
-parameter_list|)
+argument_list|(
+argument|unsigned ID
+argument_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Finds all declarations lexically contained within the given
@@ -379,7 +396,7 @@ operator|>
 operator|&
 name|Result
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// \brief Finds all declarations lexically contained within the given
 comment|/// DeclContext.
 comment|///
@@ -387,18 +404,9 @@ comment|/// \return true if an error occurred
 name|ExternalLoadResult
 name|FindExternalLexicalDecls
 argument_list|(
-specifier|const
-name|DeclContext
-operator|*
-name|DC
+argument|const DeclContext *DC
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|Decl
-operator|*
-operator|>
-operator|&
-name|Result
+argument|SmallVectorImpl<Decl*>&Result
 argument_list|)
 block|{
 return|return
@@ -406,7 +414,7 @@ name|FindExternalLexicalDecls
 argument_list|(
 name|DC
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
 name|Result
 argument_list|)
@@ -445,35 +453,40 @@ name|virtual
 name|void
 name|FindFileRegionDecls
 argument_list|(
-name|FileID
-name|File
+argument|FileID File
 argument_list|,
-name|unsigned
-name|Offset
+argument|unsigned Offset
 argument_list|,
-name|unsigned
-name|Length
+argument|unsigned Length
 argument_list|,
-name|SmallVectorImpl
-operator|<
+argument|SmallVectorImpl<Decl *>&Decls
+argument_list|)
+block|;
+comment|/// \brief Gives the external AST source an opportunity to complete
+comment|/// the redeclaration chain for a declaration. Called each time we
+comment|/// need the most recent declaration of a declaration after the
+comment|/// generation count is incremented.
+name|virtual
+name|void
+name|CompleteRedeclChain
+argument_list|(
+specifier|const
 name|Decl
 operator|*
-operator|>
-operator|&
-name|Decls
+name|D
 argument_list|)
-block|{}
+block|;
 comment|/// \brief Gives the external AST source an opportunity to complete
 comment|/// an incomplete type.
 name|virtual
 name|void
 name|CompleteType
-parameter_list|(
+argument_list|(
 name|TagDecl
-modifier|*
+operator|*
 name|Tag
-parameter_list|)
-block|{}
+argument_list|)
+block|;
 comment|/// \brief Gives the external AST source an opportunity to complete an
 comment|/// incomplete Objective-C class.
 comment|///
@@ -483,18 +496,18 @@ comment|/// \c ObjCInterfaceDecl::setExternallyCompleted().
 name|virtual
 name|void
 name|CompleteType
-parameter_list|(
+argument_list|(
 name|ObjCInterfaceDecl
-modifier|*
+operator|*
 name|Class
-parameter_list|)
-block|{ }
+argument_list|)
+block|;
 comment|/// \brief Loads comment ranges.
 name|virtual
 name|void
 name|ReadComments
-parameter_list|()
-block|{ }
+argument_list|()
+block|;
 comment|/// \brief Notify ExternalASTSource that we started deserialization of
 comment|/// a decl or type so until FinishedDeserializing is called there may be
 comment|/// decls that are initializing. Must be paired with FinishedDeserializing.
@@ -503,8 +516,8 @@ comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|void
 name|StartedDeserializing
-parameter_list|()
-block|{ }
+argument_list|()
+block|;
 comment|/// \brief Notify ExternalASTSource that we finished the deserialization of
 comment|/// a decl or type. Must be paired with StartedDeserializing.
 comment|///
@@ -512,8 +525,8 @@ comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|void
 name|FinishedDeserializing
-parameter_list|()
-block|{ }
+argument_list|()
+block|;
 comment|/// \brief Function that will be invoked when we begin parsing a new
 comment|/// translation unit involving this external AST source.
 comment|///
@@ -521,12 +534,12 @@ comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|void
 name|StartTranslationUnit
-parameter_list|(
+argument_list|(
 name|ASTConsumer
-modifier|*
+operator|*
 name|Consumer
-parameter_list|)
-block|{ }
+argument_list|)
+block|;
 comment|/// \brief Print any statistics that have been gathered regarding
 comment|/// the external AST source.
 comment|///
@@ -534,8 +547,8 @@ comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|void
 name|PrintStats
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// \brief Perform layout on the given record.
 comment|///
 comment|/// This routine allows the external AST source to provide an specific
@@ -619,42 +632,38 @@ operator|>
 operator|&
 name|VirtualBaseOffsets
 argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
+block|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Queries for performance analysis.
 comment|//===--------------------------------------------------------------------===//
-struct|struct
+block|struct
 name|MemoryBufferSizes
 block|{
 name|size_t
 name|malloc_bytes
-decl_stmt|;
+block|;
 name|size_t
 name|mmap_bytes
-decl_stmt|;
+block|;
 name|MemoryBufferSizes
 argument_list|(
 argument|size_t malloc_bytes
 argument_list|,
 argument|size_t mmap_bytes
 argument_list|)
-block|:
+operator|:
 name|malloc_bytes
 argument_list|(
 name|malloc_bytes
 argument_list|)
-operator|,
+block|,
 name|mmap_bytes
 argument_list|(
 argument|mmap_bytes
 argument_list|)
 block|{}
 block|}
-struct|;
+block|;
 comment|/// Return the amount of memory used by memory buffers, breaking down
 comment|/// by heap-backed versus mmap'ed memory.
 name|MemoryBufferSizes
@@ -683,49 +692,42 @@ name|virtual
 name|void
 name|getMemoryBufferSizes
 argument_list|(
-name|MemoryBufferSizes
-operator|&
-name|sizes
+argument|MemoryBufferSizes&sizes
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|protected
-label|:
+operator|:
 specifier|static
 name|DeclContextLookupResult
 name|SetExternalVisibleDeclsForName
 argument_list|(
-specifier|const
-name|DeclContext
-operator|*
-name|DC
+argument|const DeclContext *DC
 argument_list|,
-name|DeclarationName
-name|Name
+argument|DeclarationName Name
 argument_list|,
-name|ArrayRef
-operator|<
-name|NamedDecl
-operator|*
-operator|>
-name|Decls
+argument|ArrayRef<NamedDecl*> Decls
 argument_list|)
-decl_stmt|;
+block|;
 specifier|static
 name|DeclContextLookupResult
 name|SetNoExternalVisibleDeclsForName
-parameter_list|(
-specifier|const
-name|DeclContext
-modifier|*
-name|DC
-parameter_list|,
-name|DeclarationName
-name|Name
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
+argument_list|(
+argument|const DeclContext *DC
+argument_list|,
+argument|DeclarationName Name
+argument_list|)
+block|;
+comment|/// \brief Increment the current generation.
+name|uint32_t
+name|incrementGeneration
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+block|; }
+decl_stmt|;
 comment|/// \brief A lazy pointer to an AST node (of base type T) that resides
 comment|/// within an external AST source.
 comment|///
@@ -1013,30 +1015,601 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// \brief Represents a lazily-loaded vector of data.
+comment|/// \brief A lazy value (of type T) that is within an AST node of type Owner,
 end_comment
 
 begin_comment
-comment|///
+comment|/// where the value might change in later generations of the external AST
 end_comment
 
 begin_comment
-comment|/// The lazily-loaded vector of data contains data that is partially loaded
-end_comment
-
-begin_comment
-comment|/// from an external source and partially added by local translation. The
-end_comment
-
-begin_comment
-comment|/// items loaded from the external source are loaded lazily, when needed for
-end_comment
-
-begin_comment
-comment|/// iteration over the complete vector.
+comment|/// source.
 end_comment
 
 begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Owner
+operator|,
+name|typename
+name|T
+operator|,
+name|void
+argument_list|(
+name|ExternalASTSource
+operator|::
+operator|*
+name|Update
+argument_list|)
+argument_list|(
+name|Owner
+argument_list|)
+operator|>
+expr|struct
+name|LazyGenerationalUpdatePtr
+block|{
+comment|/// A cache of the value of this pointer, in the most recent generation in
+comment|/// which we queried it.
+block|struct
+name|LazyData
+block|{
+name|LazyData
+argument_list|(
+argument|ExternalASTSource *Source
+argument_list|,
+argument|T Value
+argument_list|)
+operator|:
+name|ExternalSource
+argument_list|(
+name|Source
+argument_list|)
+block|,
+name|LastGeneration
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|LastValue
+argument_list|(
+argument|Value
+argument_list|)
+block|{}
+name|ExternalASTSource
+operator|*
+name|ExternalSource
+block|;
+name|uint32_t
+name|LastGeneration
+block|;
+name|T
+name|LastValue
+block|;   }
+block|;
+comment|// Our value is represented as simply T if there is no external AST source.
+typedef|typedef
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|T
+operator|,
+name|LazyData
+operator|*
+operator|>
+name|ValueType
+expr_stmt|;
+name|ValueType
+name|Value
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|LazyGenerationalUpdatePtr
+argument_list|(
+argument|ValueType V
+argument_list|)
+end_macro
+
+begin_macro
+unit|:
+name|Value
+argument_list|(
+argument|V
+argument_list|)
+end_macro
+
+begin_block
+block|{}
+end_block
+
+begin_comment
+comment|// Defined in ASTContext.h
+end_comment
+
+begin_function_decl
+specifier|static
+name|ValueType
+name|makeValue
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|Ctx
+parameter_list|,
+name|T
+name|Value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_macro
+name|explicit
+end_macro
+
+begin_macro
+name|LazyGenerationalUpdatePtr
+argument_list|(
+argument|const ASTContext&Ctx
+argument_list|,
+argument|T Value = T()
+argument_list|)
+end_macro
+
+begin_macro
+unit|:
+name|Value
+argument_list|(
+argument|makeValue(Ctx, Value)
+argument_list|)
+end_macro
+
+begin_block
+block|{}
+end_block
+
+begin_comment
+comment|/// Create a pointer that is not potentially updated by later generations of
+end_comment
+
+begin_comment
+comment|/// the external AST source.
+end_comment
+
+begin_enum
+enum|enum
+name|NotUpdatedTag
+block|{
+name|NotUpdated
+block|}
+enum|;
+end_enum
+
+begin_macro
+name|LazyGenerationalUpdatePtr
+argument_list|(
+argument|NotUpdatedTag
+argument_list|,
+argument|T Value = T()
+argument_list|)
+end_macro
+
+begin_macro
+unit|:
+name|Value
+argument_list|(
+argument|Value
+argument_list|)
+end_macro
+
+begin_block
+block|{}
+end_block
+
+begin_comment
+comment|/// Forcibly set this pointer (which must be lazy) as needing updates.
+end_comment
+
+begin_function
+name|void
+name|markIncomplete
+parameter_list|()
+block|{
+name|Value
+operator|.
+name|template
+name|get
+operator|<
+name|LazyData
+operator|*
+operator|>
+operator|(
+operator|)
+operator|->
+name|LastGeneration
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Set the value of this pointer, in the current generation.
+end_comment
+
+begin_function
+name|void
+name|set
+parameter_list|(
+name|T
+name|NewValue
+parameter_list|)
+block|{
+if|if
+condition|(
+name|LazyData
+modifier|*
+name|LazyVal
+init|=
+name|Value
+operator|.
+name|template
+name|dyn_cast
+operator|<
+name|LazyData
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+block|{
+name|LazyVal
+operator|->
+name|LastValue
+operator|=
+name|NewValue
+expr_stmt|;
+return|return;
+block|}
+name|Value
+operator|=
+name|NewValue
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Set the value of this pointer, for this and all future generations.
+end_comment
+
+begin_function
+name|void
+name|setNotUpdated
+parameter_list|(
+name|T
+name|NewValue
+parameter_list|)
+block|{
+name|Value
+operator|=
+name|NewValue
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Get the value of this pointer, updating its owner if necessary.
+end_comment
+
+begin_function
+name|T
+name|get
+parameter_list|(
+name|Owner
+name|O
+parameter_list|)
+block|{
+if|if
+condition|(
+name|LazyData
+modifier|*
+name|LazyVal
+init|=
+name|Value
+operator|.
+name|template
+name|dyn_cast
+operator|<
+name|LazyData
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|LazyVal
+operator|->
+name|LastGeneration
+operator|!=
+name|LazyVal
+operator|->
+name|ExternalSource
+operator|->
+name|getGeneration
+argument_list|()
+condition|)
+block|{
+name|LazyVal
+operator|->
+name|LastGeneration
+operator|=
+name|LazyVal
+operator|->
+name|ExternalSource
+operator|->
+name|getGeneration
+argument_list|()
+expr_stmt|;
+operator|(
+name|LazyVal
+operator|->
+name|ExternalSource
+operator|->*
+name|Update
+operator|)
+operator|(
+name|O
+operator|)
+expr_stmt|;
+block|}
+return|return
+name|LazyVal
+operator|->
+name|LastValue
+return|;
+block|}
+return|return
+name|Value
+operator|.
+name|template
+name|get
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Get the most recently computed value of this pointer without updating it.
+end_comment
+
+begin_expr_stmt
+name|T
+name|getNotUpdated
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|LazyData
+modifier|*
+name|LazyVal
+init|=
+name|Value
+operator|.
+name|template
+name|dyn_cast
+operator|<
+name|LazyData
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|LazyVal
+operator|->
+name|LastValue
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|Value
+operator|.
+name|template
+name|get
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+return|;
+end_return
+
+begin_expr_stmt
+unit|}    void
+operator|*
+name|getOpaqueValue
+argument_list|()
+block|{
+return|return
+name|Value
+operator|.
+name|getOpaqueValue
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+specifier|static
+name|LazyGenerationalUpdatePtr
+name|getFromOpaqueValue
+parameter_list|(
+name|void
+modifier|*
+name|Ptr
+parameter_list|)
+block|{
+return|return
+name|LazyGenerationalUpdatePtr
+argument_list|(
+name|ValueType
+operator|::
+name|getFromOpaqueValue
+argument_list|(
+name|Ptr
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+unit|}; }
+comment|// end namespace clang
+end_comment
+
+begin_comment
+comment|/// Specialize PointerLikeTypeTraits to allow LazyGenerationalUpdatePtr to be
+end_comment
+
+begin_comment
+comment|/// placed into a PointerUnion.
+end_comment
+
+begin_macro
+unit|namespace
+name|llvm
+end_macro
+
+begin_block
+block|{
+name|template
+operator|<
+name|typename
+name|Owner
+operator|,
+name|typename
+name|T
+operator|,
+name|void
+argument_list|(
+name|clang
+operator|::
+name|ExternalASTSource
+operator|::
+operator|*
+name|Update
+argument_list|)
+argument_list|(
+name|Owner
+argument_list|)
+operator|>
+expr|struct
+name|PointerLikeTypeTraits
+operator|<
+name|clang
+operator|::
+name|LazyGenerationalUpdatePtr
+operator|<
+name|Owner
+operator|,
+name|T
+operator|,
+name|Update
+operator|>>
+block|{
+typedef|typedef
+name|clang
+operator|::
+name|LazyGenerationalUpdatePtr
+operator|<
+name|Owner
+operator|,
+name|T
+operator|,
+name|Update
+operator|>
+name|Ptr
+expr_stmt|;
+specifier|static
+name|void
+operator|*
+name|getAsVoidPointer
+argument_list|(
+argument|Ptr P
+argument_list|)
+block|{
+return|return
+name|P
+operator|.
+name|getOpaqueValue
+argument_list|()
+return|;
+block|}
+specifier|static
+name|Ptr
+name|getFromVoidPointer
+argument_list|(
+argument|void *P
+argument_list|)
+block|{
+return|return
+name|Ptr
+operator|::
+name|getFromOpaqueValue
+argument_list|(
+name|P
+argument_list|)
+return|;
+block|}
+block|enum
+block|{
+name|NumLowBitsAvailable
+operator|=
+name|PointerLikeTypeTraits
+operator|<
+name|T
+operator|>
+operator|::
+name|NumLowBitsAvailable
+operator|-
+literal|1
+block|}
+expr_stmt|;
+block|}
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_macro
+unit|}  namespace
+name|clang
+end_macro
+
+begin_block
+block|{
+comment|/// \brief Represents a lazily-loaded vector of data.
+comment|///
+comment|/// The lazily-loaded vector of data contains data that is partially loaded
+comment|/// from an external source and partially added by local translation. The
+comment|/// items loaded from the external source are loaded lazily, when needed for
+comment|/// iteration over the complete vector.
 name|template
 operator|<
 name|typename
@@ -1129,33 +1702,21 @@ name|value_type
 modifier|&
 name|reference
 typedef|;
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|value_type
 modifier|*
 name|pointer
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
 name|random_access_iterator_tag
 name|iterator_category
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|int
 name|difference_type
 typedef|;
-end_typedef
-
-begin_expr_stmt
 name|iterator
 argument_list|()
 operator|:
@@ -1210,9 +1771,6 @@ index|[
 name|Position
 index|]
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|Self
 operator|->
@@ -1221,10 +1779,11 @@ index|[
 name|Position
 index|]
 return|;
-end_return
+block|}
+end_block
 
 begin_expr_stmt
-unit|}          pointer
+name|pointer
 name|operator
 operator|->
 expr|(
@@ -1890,7 +2449,7 @@ name|From
 operator|=
 name|begin
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 name|true
 argument_list|)

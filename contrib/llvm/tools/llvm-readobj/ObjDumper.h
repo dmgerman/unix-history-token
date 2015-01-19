@@ -43,6 +43,18 @@ directive|define
 name|LLVM_READOBJ_OBJDUMPER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -54,17 +66,6 @@ name|class
 name|ObjectFile
 decl_stmt|;
 block|}
-name|class
-name|error_code
-decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|OwningPtr
-expr_stmt|;
 name|class
 name|StreamWriter
 decl_stmt|;
@@ -143,6 +144,18 @@ name|void
 name|printProgramHeaders
 parameter_list|()
 block|{ }
+comment|// Only implemented for ARM ELF at this time.
+name|virtual
+name|void
+name|printAttributes
+parameter_list|()
+block|{ }
+comment|// Only implemented for MIPS ELF at this time.
+name|virtual
+name|void
+name|printMipsPLTGOT
+parameter_list|()
+block|{ }
 name|protected
 label|:
 name|StreamWriter
@@ -151,6 +164,8 @@ name|W
 decl_stmt|;
 block|}
 empty_stmt|;
+name|std
+operator|::
 name|error_code
 name|createCOFFDumper
 argument_list|(
@@ -165,14 +180,18 @@ name|StreamWriter
 operator|&
 name|Writer
 argument_list|,
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|ObjDumper
 operator|>
 operator|&
 name|Result
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+name|std
+operator|::
 name|error_code
 name|createELFDumper
 argument_list|(
@@ -187,14 +206,18 @@ name|StreamWriter
 operator|&
 name|Writer
 argument_list|,
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|ObjDumper
 operator|>
 operator|&
 name|Result
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+name|std
+operator|::
 name|error_code
 name|createMachODumper
 argument_list|(
@@ -209,14 +232,16 @@ name|StreamWriter
 operator|&
 name|Writer
 argument_list|,
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|ObjDumper
 operator|>
 operator|&
 name|Result
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
 end_decl_stmt
 

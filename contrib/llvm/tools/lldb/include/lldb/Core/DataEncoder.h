@@ -272,7 +272,7 @@ name|m_byte_order
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Get a the data start pointer.
+comment|/// Get the data start pointer.
 comment|///
 comment|/// @return
 comment|///     Returns a pointer to the first byte contained in this
@@ -369,7 +369,7 @@ comment|/// @param[in] byte_size
 comment|///     The size in byte of the integer to encode.
 comment|///
 comment|/// @param[in] value
-comment|///     The integer value to write. The least significate bytes of
+comment|///     The integer value to write. The least significant bytes of
 comment|///     the integer value will be written if the size is less than
 comment|///     8 bytes.
 comment|///
@@ -398,7 +398,7 @@ comment|///     The offset in bytes into the contained data at which to
 comment|///     start encoding.
 comment|///
 comment|/// @param[int] src
-comment|///     The buffer that contains the the bytes to encode.
+comment|///     The buffer that contains the bytes to encode.
 comment|///
 comment|/// @param[in] src_len
 comment|///     The number of bytes to encode.

@@ -177,6 +177,16 @@ name|MCDR_DataRegionEnd
 comment|///< .end_data_region
 block|}
 enum|;
+enum|enum
+name|MCVersionMinType
+block|{
+name|MCVM_IOSVersionMin
+block|,
+comment|///< .ios_version_min
+name|MCVM_OSXVersionMin
+comment|///< .macosx_version_min
+block|}
+enum|;
 block|}
 end_decl_stmt
 

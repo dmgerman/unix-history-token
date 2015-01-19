@@ -543,6 +543,30 @@ literal|"Intel Lynx Point USB 2.0 controller USB-B"
 operator|)
 return|;
 case|case
+literal|0x8ca68086
+case|:
+return|return
+operator|(
+literal|"Intel Wildcat Point USB 2.0 controller USB-A"
+operator|)
+return|;
+case|case
+literal|0x8cad8086
+case|:
+return|return
+operator|(
+literal|"Intel Wildcat Point USB 2.0 controller USB-B"
+operator|)
+return|;
+case|case
+literal|0x9c268086
+case|:
+return|return
+operator|(
+literal|"Intel Lynx Point LP USB 2.0 controller USB"
+operator|)
+return|;
+case|case
 literal|0x00e01033
 case|:
 return|return
@@ -959,6 +983,14 @@ operator|.
 name|devices_max
 operator|=
 name|EHCI_MAX_DEVICES
+expr_stmt|;
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|dma_bits
+operator|=
+literal|32
 expr_stmt|;
 comment|/* get all DMA memory */
 if|if

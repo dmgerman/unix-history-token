@@ -153,6 +153,13 @@ directive|include
 file|"firmware/t4fw_interface.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|KTR_CXGBE
+value|KTR_SPARE3
+end_define
+
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
@@ -580,7 +587,11 @@ block|,
 comment|/* max WR size in desc */
 name|TX_SGL_SEGS
 init|=
-literal|36
+literal|39
+block|,
+name|TX_SGL_SEGS_TSO
+init|=
+literal|38
 block|,
 name|TX_WR_FLITS
 init|=
@@ -1091,6 +1102,9 @@ decl_stmt|;
 name|u_int
 name|tnl_cong_drops
 decl_stmt|;
+name|u_int
+name|tx_parse_error
+decl_stmt|;
 name|eventhandler_tag
 name|vlan_c
 decl_stmt|;
@@ -1198,65 +1212,18 @@ end_struct
 
 begin_struct
 struct|struct
-name|tx_map
+name|tx_sdesc
 block|{
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|bus_dmamap_t
-name|map
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* DMA maps used for tx */
-end_comment
-
-begin_struct
-struct|struct
-name|tx_maps
-block|{
-name|struct
-name|tx_map
-modifier|*
-name|maps
-decl_stmt|;
-name|uint32_t
-name|map_total
-decl_stmt|;
-comment|/* # of DMA maps */
-name|uint32_t
-name|map_pidx
-decl_stmt|;
-comment|/* next map to be used */
-name|uint32_t
-name|map_cidx
-decl_stmt|;
-comment|/* reclaimed up to this index */
-name|uint32_t
-name|map_avail
-decl_stmt|;
-comment|/* # of available maps */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|tx_sdesc
-block|{
+comment|/* m_nextpkt linked chain of frames */
 name|uint8_t
 name|desc_used
 decl_stmt|;
 comment|/* # of hardware descriptors used by the WR */
-name|uint8_t
-name|credits
-decl_stmt|;
-comment|/* NIC txq: # of frames sent out in the WR */
 block|}
 struct|;
 end_struct
@@ -1459,57 +1426,34 @@ name|EQ_ETH
 init|=
 literal|2
 block|,
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
 name|EQ_OFLD
 init|=
 literal|3
 block|,
-endif|#
-directive|endif
 comment|/* eq flags */
 name|EQ_TYPEMASK
 init|=
-literal|7
+literal|0x3
 block|,
-comment|/* 3 lsbits hold the type */
+comment|/* 2 lsbits hold the type (see above) */
 name|EQ_ALLOCATED
 init|=
 operator|(
 literal|1
 operator|<<
-literal|3
+literal|2
 operator|)
 block|,
 comment|/* firmware resources allocated */
-name|EQ_DOOMED
+name|EQ_ENABLED
 init|=
 operator|(
 literal|1
 operator|<<
-literal|4
+literal|3
 operator|)
 block|,
-comment|/* about to be destroyed */
-name|EQ_CRFLUSHED
-init|=
-operator|(
-literal|1
-operator|<<
-literal|5
-operator|)
-block|,
-comment|/* expecting an update from SGE */
-name|EQ_STALLED
-init|=
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
-block|,
-comment|/* out of hw descriptors or dmamaps */
+comment|/* open for business */
 block|}
 enum|;
 end_enum
@@ -1550,18 +1494,6 @@ name|int
 name|cntxt_id
 decl_stmt|;
 comment|/* SGE context id for the eq */
-name|bus_dma_tag_t
-name|desc_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|desc_map
-decl_stmt|;
-name|char
-name|lockname
-index|[
-literal|16
-index|]
-decl_stmt|;
 name|struct
 name|mtx
 name|eq_lock
@@ -1572,16 +1504,6 @@ modifier|*
 name|desc
 decl_stmt|;
 comment|/* KVA of descriptor ring */
-name|bus_addr_t
-name|ba
-decl_stmt|;
-comment|/* bus address of descriptor ring */
-name|struct
-name|sge_qstat
-modifier|*
-name|spg
-decl_stmt|;
-comment|/* status page, for convenience */
 name|uint16_t
 name|doorbells
 decl_stmt|;
@@ -1596,17 +1518,9 @@ name|udb_qid
 decl_stmt|;
 comment|/* relative qid within the doorbell page */
 name|uint16_t
-name|cap
+name|sidx
 decl_stmt|;
-comment|/* max # of desc, for convenience */
-name|uint16_t
-name|avail
-decl_stmt|;
-comment|/* available descriptors, for convenience */
-name|uint16_t
-name|qsize
-decl_stmt|;
-comment|/* size (# of entries) of the queue */
+comment|/* index of the entry with the status page */
 name|uint16_t
 name|cidx
 decl_stmt|;
@@ -1616,9 +1530,13 @@ name|pidx
 decl_stmt|;
 comment|/* producer idx (desc idx) */
 name|uint16_t
-name|pending
+name|equeqidx
 decl_stmt|;
-comment|/* # of descriptors used since last doorbell */
+comment|/* EQUEQ last requested at this pidx */
+name|uint16_t
+name|dbidx
+decl_stmt|;
+comment|/* pidx of the most recent doorbell */
 name|uint16_t
 name|iqid
 decl_stmt|;
@@ -1627,23 +1545,27 @@ name|uint8_t
 name|tx_chan
 decl_stmt|;
 comment|/* tx channel used by the eq */
-name|struct
-name|task
-name|tx_task
+specifier|volatile
+name|u_int
+name|equiq
 decl_stmt|;
-name|struct
-name|callout
-name|tx_callout
+comment|/* EQUIQ outstanding */
+name|bus_dma_tag_t
+name|desc_tag
 decl_stmt|;
-comment|/* stats */
-name|uint32_t
-name|egr_update
+name|bus_dmamap_t
+name|desc_map
 decl_stmt|;
-comment|/* # of SGE_EGR_UPDATE notifications for eq */
-name|uint32_t
-name|unstalled
+name|bus_addr_t
+name|ba
 decl_stmt|;
-comment|/* recovered from stall */
+comment|/* bus address of descriptor ring */
+name|char
+name|lockname
+index|[
+literal|16
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1901,6 +1823,12 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|mp_ring
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* txq: SGE egress queue + what's needed for Ethernet NIC */
 end_comment
@@ -1920,16 +1848,12 @@ modifier|*
 name|ifp
 decl_stmt|;
 comment|/* the interface this txq belongs to */
-name|bus_dma_tag_t
-name|tx_tag
-decl_stmt|;
-comment|/* tag for transmit buffers */
 name|struct
-name|buf_ring
+name|mp_ring
 modifier|*
-name|br
+name|r
 decl_stmt|;
-comment|/* tx buffer ring */
+comment|/* tx software ring */
 name|struct
 name|tx_sdesc
 modifier|*
@@ -1937,14 +1861,17 @@ name|sdesc
 decl_stmt|;
 comment|/* KVA of software descriptor ring */
 name|struct
-name|mbuf
+name|sglist
 modifier|*
-name|m
+name|gl
 decl_stmt|;
-comment|/* held up due to temporary resource shortage */
+name|__be32
+name|cpl_ctrl0
+decl_stmt|;
+comment|/* for convenience */
 name|struct
-name|tx_maps
-name|txmaps
+name|task
+name|tx_reclaim_task
 decl_stmt|;
 comment|/* stats for common events first */
 name|uint64_t
@@ -1972,22 +1899,22 @@ name|txpkt_wrs
 decl_stmt|;
 comment|/* # of txpkt work requests (not coalesced) */
 name|uint64_t
-name|txpkts_wrs
+name|txpkts0_wrs
 decl_stmt|;
-comment|/* # of coalesced tx work requests */
+comment|/* # of type0 coalesced tx work requests */
 name|uint64_t
-name|txpkts_pkts
+name|txpkts1_wrs
 decl_stmt|;
-comment|/* # of frames in coalesced tx work requests */
+comment|/* # of type1 coalesced tx work requests */
+name|uint64_t
+name|txpkts0_pkts
+decl_stmt|;
+comment|/* # of frames in type0 coalesced tx WRs */
+name|uint64_t
+name|txpkts1_pkts
+decl_stmt|;
+comment|/* # of frames in type1 coalesced tx WRs */
 comment|/* stats for not-that-common events */
-name|uint32_t
-name|no_dmamap
-decl_stmt|;
-comment|/* no DMA map to load the mbuf */
-name|uint32_t
-name|no_desc
-decl_stmt|;
-comment|/* out of hardware descriptors */
 block|}
 name|__aligned
 argument_list|(
@@ -2171,13 +2098,33 @@ decl_stmt|;
 name|int
 name|wr_len
 decl_stmt|;
-name|uint64_t
+name|char
 name|wr
 index|[]
 name|__aligned
 argument_list|(
 literal|16
 argument_list|)
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wrq_cookie
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|wrq_cookie
+argument_list|)
+name|link
+expr_stmt|;
+name|int
+name|ndesc
+decl_stmt|;
+name|int
+name|pidx
 decl_stmt|;
 block|}
 struct|;
@@ -2201,7 +2148,20 @@ name|adapter
 modifier|*
 name|adapter
 decl_stmt|;
-comment|/* List of WRs held up due to lack of tx descriptors */
+name|struct
+name|task
+name|wrq_tx_task
+decl_stmt|;
+comment|/* Tx desc reserved but WR not "committed" yet. */
+name|TAILQ_HEAD
+argument_list|(
+argument|wrq_incomplete_wrs
+argument_list|,
+argument|wrq_cookie
+argument_list|)
+name|incomplete_wrs
+expr_stmt|;
+comment|/* List of WRs ready to go out as soon as descriptors are available. */
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -2209,16 +2169,39 @@ argument|wrqe
 argument_list|)
 name|wr_list
 expr_stmt|;
+name|u_int
+name|nwr_pending
+decl_stmt|;
+name|u_int
+name|ndesc_needed
+decl_stmt|;
 comment|/* stats for common events first */
 name|uint64_t
-name|tx_wrs
+name|tx_wrs_direct
 decl_stmt|;
-comment|/* # of tx work requests */
+comment|/* # of WRs written directly to desc ring. */
+name|uint64_t
+name|tx_wrs_ss
+decl_stmt|;
+comment|/* # of WRs copied from scratch space. */
+name|uint64_t
+name|tx_wrs_copied
+decl_stmt|;
+comment|/* # of WRs queued and copied to desc ring. */
 comment|/* stats for not-that-common events */
-name|uint32_t
-name|no_desc
+comment|/* 	 * Scratch space for work requests that wrap around after reaching the 	 * status page, and some infomation about the last WR that used it. 	 */
+name|uint16_t
+name|ss_pidx
 decl_stmt|;
-comment|/* out of hardware descriptors */
+name|uint16_t
+name|ss_len
+decl_stmt|;
+name|uint8_t
+name|ss
+index|[
+name|SGE_MAX_WR_LEN
+index|]
+decl_stmt|;
 block|}
 name|__aligned
 argument_list|(
@@ -2551,6 +2534,9 @@ name|eqmap
 decl_stmt|;
 comment|/* eq->cntxt_id to eq mapping */
 name|int
+name|pad_boundary
+decl_stmt|;
+name|int
 name|pack_boundary
 decl_stmt|;
 name|int8_t
@@ -2758,7 +2744,7 @@ index|[
 name|NCHAN
 index|]
 decl_stmt|;
-comment|/* taskqueues that flush data out */
+comment|/* General purpose taskqueues */
 name|struct
 name|port_info
 modifier|*
@@ -3879,11 +3865,12 @@ modifier|*
 name|eq
 parameter_list|)
 block|{
+comment|/* not quite the same as qsize / 4, but this will do. */
 return|return
 operator|(
 name|eq
 operator|->
-name|qsize
+name|sidx
 operator|/
 literal|4
 operator|)
@@ -3894,28 +3881,6 @@ end_function
 begin_comment
 comment|/* t4_main.c */
 end_comment
-
-begin_function_decl
-name|void
-name|t4_tx_task
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|t4_tx_callout
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
@@ -4356,36 +4321,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|t4_alloc_tx_maps
-parameter_list|(
-name|struct
-name|tx_maps
-modifier|*
-parameter_list|,
-name|bus_dma_tag_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|t4_free_tx_maps
-parameter_list|(
-name|struct
-name|tx_maps
-modifier|*
-parameter_list|,
-name|bus_dma_tag_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|t4_intr_all
 parameter_list|(
@@ -4445,25 +4380,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|t4_eth_tx
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|sge_txq
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|t4_update_fl_bufsize
 parameter_list|(
@@ -4476,10 +4392,47 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|can_resume_tx
+name|parse_pkt
 parameter_list|(
 name|struct
-name|sge_eq
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|start_wrq_wr
+parameter_list|(
+name|struct
+name|sge_wrq
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|wrq_cookie
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|commit_wrq_wr
+parameter_list|(
+name|struct
+name|sge_wrq
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|wrq_cookie
 modifier|*
 parameter_list|)
 function_decl|;

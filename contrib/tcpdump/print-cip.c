@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Marko Kiiskila carnil@cs.tut.fi  *  * Tampere University of Technology - Telecommunications Laboratory  *  * Permission to use, copy, modify and distribute this  * software and its documentation is hereby granted,  * provided that both the copyright notice and this  * permission notice appear in all copies of the software,  * derivative works or modified versions, and any portions  * thereof, that both notices appear in supporting  * documentation, and that the use of this software is  * acknowledged in any publications resulting from using  * the software.  *  * TUT ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION AND DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS  * SOFTWARE.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-cip.c,v 1.26 2005-07-07 01:22:17 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -58,18 +41,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pcap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
 end_include
 
@@ -77,18 +48,6 @@ begin_include
 include|#
 directive|include
 file|"addrtoname.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ethertype.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ether.h"
 end_include
 
 begin_define
@@ -100,6 +59,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|unsigned
 name|char
 name|rfcllc
@@ -131,16 +91,24 @@ specifier|inline
 name|void
 name|cip_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|int
 name|length
 parameter_list|)
 block|{
 comment|/* 	 * There is no MAC-layer header, so just print the length. 	 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%d: "
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -154,6 +122,10 @@ begin_function
 name|u_int
 name|cip_if_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -204,9 +176,13 @@ operator|<
 name|RFC1483LLC_LEN
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|cip]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -217,10 +193,14 @@ return|;
 block|}
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 name|cip_print
 argument_list|(
+name|ndo
+argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
@@ -246,6 +226,8 @@ if|if
 condition|(
 name|llc_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -267,10 +249,14 @@ comment|/* ether_type not known, print raw packet */
 if|if
 condition|(
 operator|!
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 name|cip_print
 argument_list|(
+name|ndo
+argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
@@ -279,10 +265,13 @@ condition|(
 name|extracted_ethertype
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(LLC %s) "
-argument_list|,
+operator|,
 name|etherproto_string
 argument_list|(
 name|htons
@@ -290,15 +279,18 @@ argument_list|(
 name|extracted_ethertype
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
 operator|!
-name|suppress_default_print
+name|ndo
+operator|->
+name|ndo_suppress_default_print
 condition|)
-name|default_print
+name|ND_DEFAULTPRINT
 argument_list|(
 name|p
 argument_list|,
@@ -312,7 +304,7 @@ block|{
 comment|/* 		 * LLC header is absent; treat it as just IP. 		 */
 name|ip_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,

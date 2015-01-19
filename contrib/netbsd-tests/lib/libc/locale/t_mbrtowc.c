@@ -473,12 +473,9 @@ argument_list|,
 literal|"C"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 name|ATF_REQUIRE
 argument_list|(
 name|setlocale
@@ -1087,12 +1084,9 @@ name|test
 modifier|*
 name|t
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|atf_tc_expect_fail
 argument_list|(
 literal|"ja_* locale fails"

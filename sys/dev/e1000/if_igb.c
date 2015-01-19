@@ -227,6 +227,23 @@ directive|include
 file|<net/if_media.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RSS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/rss_config.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -286,23 +303,6 @@ include|#
 directive|include
 file|<netinet/udp.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RSS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_rss.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -4852,15 +4852,12 @@ comment|/* Which queue to use */
 comment|/* 	 * When doing RSS, map it to the same outbound queue 	 * as the incoming flow would be mapped to. 	 * 	 * If everything is setup correctly, it should be the 	 * same bucket that the current CPU we're on is. 	 */
 if|if
 condition|(
-operator|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
-operator|)
+argument_list|)
 operator|!=
-literal|0
+name|M_HASHTYPE_NONE
 condition|)
 block|{
 ifdef|#
@@ -13309,7 +13306,6 @@ goto|goto
 name|msi
 goto|;
 block|}
-comment|/* Figure out a reasonable auto config value */
 name|queues
 operator|=
 operator|(
@@ -13330,6 +13326,17 @@ operator|)
 else|:
 name|mp_ncpus
 expr_stmt|;
+comment|/* Override via tuneable */
+if|if
+condition|(
+name|igb_num_queues
+operator|!=
+literal|0
+condition|)
+name|queues
+operator|=
+name|igb_num_queues
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RSS
@@ -13348,17 +13355,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Manual override */
-if|if
-condition|(
-name|igb_num_queues
-operator|!=
-literal|0
-condition|)
-name|queues
-operator|=
-name|igb_num_queues
-expr_stmt|;
 comment|/* Sanity check based on HW */
 switch|switch
 condition|(
@@ -13420,6 +13416,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+comment|/* Final clamp on the actual hardware capability */
 if|if
 condition|(
 name|queues
@@ -13429,17 +13426,6 @@ condition|)
 name|queues
 operator|=
 name|maxqueues
-expr_stmt|;
-comment|/* Manual override */
-if|if
-condition|(
-name|igb_num_queues
-operator|!=
-literal|0
-condition|)
-name|queues
-operator|=
-name|igb_num_queues
 expr_stmt|;
 comment|/* 	** One vector (RX/TX pair) per queue 	** plus an additional for Link interrupt 	*/
 name|want
@@ -23707,14 +23693,6 @@ operator|.
 name|rss
 argument_list|)
 expr_stmt|;
-name|rxr
-operator|->
-name|fmp
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
-expr_stmt|;
 switch|switch
 condition|(
 name|pkt_info
@@ -23823,7 +23801,7 @@ name|rxr
 operator|->
 name|fmp
 argument_list|,
-name|M_HASHTYPE_NONE
+name|M_HASHTYPE_OPAQUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -23846,13 +23824,14 @@ name|que
 operator|->
 name|msix
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|rxr
 operator|->
 name|fmp
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

@@ -590,7 +590,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|((so)->so_rcv.sb_cc>= (so)->so_rcv.sb_lowat || \ 	!TAILQ_EMPTY(&(so)->so_comp) || (so)->so_error)
+value|(sbavail(&(so)->so_rcv)>= (so)->so_rcv.sb_lowat || \ 	!TAILQ_EMPTY(&(so)->so_comp) || (so)->so_error)
 end_define
 
 begin_define

@@ -148,12 +148,9 @@ operator|&
 name|tm
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|ATF_CHECK_MSG
 argument_list|(
 name|ret
@@ -310,12 +307,9 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|ATF_CHECK_MSG
 argument_list|(
 name|strptime
@@ -409,12 +403,9 @@ end_macro
 
 begin_block
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|atf_tc_expect_fail
 argument_list|(
 literal|"There are various issues with strptime on FreeBSD"
@@ -2059,12 +2050,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 name|h_fail
 argument_list|(
 literal|"sunday"
@@ -2140,12 +2128,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 name|h_fail
 argument_list|(
 literal|"SaturDay"

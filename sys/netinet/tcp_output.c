@@ -330,7 +330,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -338,6 +338,8 @@ name|OID_AUTO
 argument_list|,
 name|path_mtu_discovery
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -373,7 +375,7 @@ value|VNET(tcp_do_tso)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -381,6 +383,8 @@ name|OID_AUTO
 argument_list|,
 name|tso
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -418,7 +422,7 @@ value|VNET(tcp_sendspace)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -426,6 +430,8 @@ name|TCPCTL_SENDSPACE
 argument_list|,
 name|sendspace
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -461,7 +467,7 @@ value|VNET(tcp_do_autosndbuf)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -469,6 +475,8 @@ name|OID_AUTO
 argument_list|,
 name|sendbuf_auto
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -506,7 +514,7 @@ value|VNET(tcp_autosndbuf_inc)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -514,6 +522,8 @@ name|OID_AUTO
 argument_list|,
 name|sendbuf_inc
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -553,7 +563,7 @@ value|VNET(tcp_autosndbuf_max)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -561,6 +571,8 @@ name|OID_AUTO
 argument_list|,
 name|sendbuf_max
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1365,11 +1377,13 @@ if|if
 condition|(
 name|off
 operator|<
+name|sbused
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 condition|)
 name|flags
 operator|&=
@@ -1422,11 +1436,13 @@ name|long
 operator|)
 name|ulmin
 argument_list|(
+name|sbavail
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 argument_list|,
 name|sendwin
 argument_list|)
@@ -1448,11 +1464,13 @@ name|long
 operator|)
 name|ulmin
 argument_list|(
+name|sbavail
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 argument_list|,
 name|tp
 operator|->
@@ -1654,7 +1672,7 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Automatic sizing of send socket buffer.  Often the send buffer 	 * size is not optimally adjusted to the actual network conditions 	 * at hand (delay bandwidth product).  Setting the buffer size too 	 * small limits throughput on links with high bandwidth and high 	 * delay (eg. trans-continental/oceanic links).  Setting the 	 * buffer size too big consumes too much real kernel memory, 	 * especially with many connections on busy servers. 	 * 	 * The criteria to step up the send buffer one notch are: 	 *  1. receive window of remote host is larger than send buffer 	 *     (with a fudge factor of 5/4th); 	 *  2. send buffer is filled to 7/8th with data (so we actually 	 *     have data to make use of it); 	 *  3. send buffer fill has not hit maximal automatic size; 	 *  4. our send window (slow start and cogestion controlled) is 	 *     larger than sent but unacknowledged data in send buffer. 	 * 	 * The remote host receive window scaling factor may limit the 	 * growing of the send buffer before it reaches its allowed 	 * maximum. 	 * 	 * It scales directly with slow start or congestion window 	 * and does at most one step per received ACK.  This fast 	 * scaling has the drawback of growing the send buffer beyond 	 * what is strictly necessary to make full use of a given 	 * delay*bandwith product.  However testing has shown this not 	 * to be much of an problem.  At worst we are trading wasting 	 * of available bandwith (the non-use of it) for wasting some 	 * socket buffer memory. 	 * 	 * TODO: Shrink send buffer during idle periods together 	 * with congestion window.  Requires another timer.  Has to 	 * wait for upcoming tcp timer rewrite. 	 */
+comment|/* 	 * Automatic sizing of send socket buffer.  Often the send buffer 	 * size is not optimally adjusted to the actual network conditions 	 * at hand (delay bandwidth product).  Setting the buffer size too 	 * small limits throughput on links with high bandwidth and high 	 * delay (eg. trans-continental/oceanic links).  Setting the 	 * buffer size too big consumes too much real kernel memory, 	 * especially with many connections on busy servers. 	 * 	 * The criteria to step up the send buffer one notch are: 	 *  1. receive window of remote host is larger than send buffer 	 *     (with a fudge factor of 5/4th); 	 *  2. send buffer is filled to 7/8th with data (so we actually 	 *     have data to make use of it); 	 *  3. send buffer fill has not hit maximal automatic size; 	 *  4. our send window (slow start and cogestion controlled) is 	 *     larger than sent but unacknowledged data in send buffer. 	 * 	 * The remote host receive window scaling factor may limit the 	 * growing of the send buffer before it reaches its allowed 	 * maximum. 	 * 	 * It scales directly with slow start or congestion window 	 * and does at most one step per received ACK.  This fast 	 * scaling has the drawback of growing the send buffer beyond 	 * what is strictly necessary to make full use of a given 	 * delay*bandwith product.  However testing has shown this not 	 * to be much of an problem.  At worst we are trading wasting 	 * of available bandwith (the non-use of it) for wasting some 	 * socket buffer memory. 	 * 	 * TODO: Shrink send buffer during idle periods together 	 * with congestion window.  Requires another timer.  Has to 	 * wait for upcoming tcp timer rewrite. 	 * 	 * XXXGL: should there be used sbused() or sbavail()? 	 */
 if|if
 condition|(
 name|V_tcp_do_autosndbuf
@@ -1686,11 +1704,13 @@ name|so_snd
 operator|.
 name|sb_hiwat
 operator|&&
+name|sbused
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 operator|>=
 operator|(
 name|so
@@ -1704,22 +1724,26 @@ operator|*
 literal|7
 operator|)
 operator|&&
+name|sbused
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 operator|<
 name|V_tcp_autosndbuf_max
 operator|&&
 name|sendwin
 operator|>=
 operator|(
+name|sbused
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 operator|-
 operator|(
 name|tp
@@ -1874,11 +1898,13 @@ name|tp
 operator|->
 name|snd_una
 operator|+
+name|sbused
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 argument_list|)
 condition|)
 name|flags
@@ -1903,11 +1929,13 @@ name|tp
 operator|->
 name|snd_una
 operator|+
+name|sbused
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 argument_list|)
 condition|)
 name|flags
@@ -1972,11 +2000,13 @@ name|len
 operator|+
 name|off
 operator|>=
+name|sbavail
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 operator|&&
 operator|(
 name|tp
@@ -2373,11 +2403,13 @@ block|}
 comment|/* 	 * TCP window updates are not reliable, rather a polling protocol 	 * using ``persist'' packets is used to insure receipt of window 	 * updates.  The three ``states'' for the output side are: 	 *	idle			not doing retransmits or persists 	 *	persisting		to move a small or zero window 	 *	(re)transmitting	and thereby not persisting 	 * 	 * tcp_timer_active(tp, TT_PERSIST) 	 *	is true when we are in persist state. 	 * (tp->t_flags& TF_FORCEDATA) 	 *	is set when we are called to send a persist packet. 	 * tcp_timer_active(tp, TT_REXMT) 	 *	is set when we are retransmitting 	 * The output side is idle when both timers are zero. 	 * 	 * If send window is too small, there is data to transmit, and no 	 * retransmit or persist is pending, then go to persist state. 	 * If nothing happens soon, send when timer expires: 	 * if window is nonzero, transmit what we can, 	 * otherwise force out a byte. 	 */
 if|if
 condition|(
+name|sbavail
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 operator|&&
 operator|!
 name|tcp_timer_active
@@ -2951,9 +2983,6 @@ if|if
 condition|(
 name|len
 operator|>
-operator|(
-name|u_int
-operator|)
 name|max_len
 condition|)
 block|{
@@ -2963,9 +2992,6 @@ literal|1
 expr_stmt|;
 name|len
 operator|=
-operator|(
-name|u_int
-operator|)
 name|max_len
 expr_stmt|;
 block|}
@@ -3007,9 +3033,6 @@ name|mb
 operator|!=
 name|NULL
 operator|&&
-operator|(
-name|u_int
-operator|)
 name|max_len
 operator|<
 name|len
@@ -3109,9 +3132,6 @@ if|if
 condition|(
 name|len
 operator|>
-operator|(
-name|u_int
-operator|)
 name|max_len
 condition|)
 block|{
@@ -3121,9 +3141,6 @@ literal|1
 expr_stmt|;
 name|len
 operator|=
-operator|(
-name|u_int
-operator|)
 name|max_len
 expr_stmt|;
 block|}
@@ -3147,20 +3164,19 @@ operator|+
 name|len
 operator|)
 operator|<
+name|sbavail
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 condition|)
 block|{
 name|moff
 operator|=
 name|len
 operator|%
-operator|(
-name|u_int
-operator|)
 name|max_len
 expr_stmt|;
 if|if
@@ -3185,17 +3201,11 @@ if|if
 condition|(
 name|len
 operator|<=
-operator|(
-name|u_int
-operator|)
 name|max_len
 condition|)
 block|{
 name|len
 operator|=
-operator|(
-name|u_int
-operator|)
 name|max_len
 expr_stmt|;
 name|sendalot
@@ -3583,11 +3593,13 @@ name|off
 operator|+
 name|len
 operator|==
+name|sbused
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 condition|)
 name|flags
 operator||=
@@ -3716,7 +3728,7 @@ operator|>=
 name|hdrlen
 condition|)
 block|{
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,

@@ -4423,6 +4423,16 @@ name|termAytCharp
 block|}
 block|,
 block|{
+literal|"baudrate"
+block|,
+literal|"set remote baud rate"
+block|,
+name|DoBaudRate
+block|,
+name|ComPortBaudRate
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL

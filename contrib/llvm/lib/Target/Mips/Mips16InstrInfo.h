@@ -90,25 +90,25 @@ operator|:
 name|explicit
 name|Mips16InstrInfo
 argument_list|(
-name|MipsTargetMachine
+specifier|const
+name|MipsSubtarget
 operator|&
-name|TM
+name|STI
 argument_list|)
 block|;
-name|virtual
 specifier|const
 name|MipsRegisterInfo
 operator|&
 name|getRegisterInfo
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// isLoadFromStackSlot - If the specified machine instruction is a direct
 comment|/// load from a stack slot, return the virtual or physical register number of
 comment|/// the destination along with the FrameIndex of the loaded stack slot.  If
 comment|/// not, return 0.  This predicate must return 0 if the instruction has
 comment|/// any side effects other than loading from the stack slot.
-name|virtual
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(
@@ -117,13 +117,13 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isStoreToStackSlot - If the specified machine instruction is a direct
 comment|/// store to a stack slot, return the virtual or physical register number of
 comment|/// the source reg along with the FrameIndex of the loaded stack slot.  If
 comment|/// not, return 0.  This predicate must return 0 if the instruction has
 comment|/// any side effects other than storing to the stack slot.
-name|virtual
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
@@ -132,8 +132,8 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|copyPhysReg
 argument_list|(
@@ -150,8 +150,8 @@ argument_list|,
 argument|bool KillSrc
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|storeRegToStack
 argument_list|(
@@ -172,8 +172,8 @@ argument_list|,
 argument|int64_t Offset
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|loadRegFromStack
 argument_list|(
@@ -192,22 +192,23 @@ argument_list|,
 argument|int64_t Offset
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|expandPostRAPseudo
 argument_list|(
 argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getOppositeBranchOpc
 argument_list|(
 argument|unsigned Opc
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Adjust SP by FrameSize bytes. Save RA, S0, S1
 name|void
@@ -257,23 +258,6 @@ comment|// in place of FrameReg and the adjusted immediate field (&NewImm)
 comment|//
 name|unsigned
 name|loadImmediate
-argument_list|(
-argument|unsigned FrameReg
-argument_list|,
-argument|int64_t Imm
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator II
-argument_list|,
-argument|DebugLoc DL
-argument_list|,
-argument|unsigned&NewImm
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|basicLoadImmediate
 argument_list|(
 argument|unsigned FrameReg
 argument_list|,
@@ -358,16 +342,17 @@ argument_list|,
 argument|const MCAsmInfo&MAI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|private
 operator|:
-name|virtual
 name|unsigned
 name|getAnalyzableBrOpc
 argument_list|(
 argument|unsigned Opc
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|ExpandRetRA16

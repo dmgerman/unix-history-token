@@ -326,6 +326,12 @@ argument_list|(
 argument|uint32_t idx
 argument_list|)
 expr_stmt|;
+name|lldb
+operator|::
+name|SBTypeEnumMemberList
+name|GetEnumMembers
+argument_list|()
+expr_stmt|;
 name|uint32_t
 name|GetNumberOfTemplateArguments
 parameter_list|()
@@ -362,6 +368,12 @@ specifier|const
 name|char
 modifier|*
 name|GetName
+parameter_list|()
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|GetDisplayTypeName
 parameter_list|()
 function_decl|;
 name|lldb
@@ -477,6 +489,14 @@ decl_stmt|;
 name|friend
 name|class
 name|SBTarget
+decl_stmt|;
+name|friend
+name|class
+name|SBTypeEnumMember
+decl_stmt|;
+name|friend
+name|class
+name|SBTypeEnumMemberList
 decl_stmt|;
 name|friend
 name|class

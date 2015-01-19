@@ -206,10 +206,7 @@ begin_define
 define|#
 directive|define
 name|HACR
-parameter_list|(
-name|base
-parameter_list|)
-value|(base)
+value|0x0
 end_define
 
 begin_comment
@@ -220,10 +217,7 @@ begin_define
 define|#
 directive|define
 name|HASR
-parameter_list|(
-name|base
-parameter_list|)
-value|(base)
+value|0x0
 end_define
 
 begin_comment
@@ -234,10 +228,7 @@ begin_define
 define|#
 directive|define
 name|MMCR
-parameter_list|(
-name|base
-parameter_list|)
-value|(base+0x2)
+value|0x2
 end_define
 
 begin_comment
@@ -248,10 +239,7 @@ begin_define
 define|#
 directive|define
 name|PIOR0
-parameter_list|(
-name|base
-parameter_list|)
-value|(base+0x4)
+value|0x4
 end_define
 
 begin_comment
@@ -262,10 +250,7 @@ begin_define
 define|#
 directive|define
 name|PIOP0
-parameter_list|(
-name|base
-parameter_list|)
-value|(base+0x6)
+value|0x6
 end_define
 
 begin_comment
@@ -276,10 +261,7 @@ begin_define
 define|#
 directive|define
 name|PIOR1
-parameter_list|(
-name|base
-parameter_list|)
-value|(base+0x8)
+value|0x8
 end_define
 
 begin_comment
@@ -290,10 +272,7 @@ begin_define
 define|#
 directive|define
 name|PIOP1
-parameter_list|(
-name|base
-parameter_list|)
-value|(base+0xa)
+value|0xa
 end_define
 
 begin_comment
@@ -304,10 +283,7 @@ begin_define
 define|#
 directive|define
 name|PIOR2
-parameter_list|(
-name|base
-parameter_list|)
-value|(base+0xc)
+value|0xc
 end_define
 
 begin_comment
@@ -318,10 +294,7 @@ begin_define
 define|#
 directive|define
 name|PIOP2
-parameter_list|(
-name|base
-parameter_list|)
-value|(base+0xe)
+value|0xe
 end_define
 
 begin_comment
@@ -556,12 +529,100 @@ end_define
 begin_define
 define|#
 directive|define
+name|WL_READ_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+value|bus_read_1((sc)->res_ioport, (reg))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WL_READ_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+value|bus_read_2((sc)->res_ioport, (reg))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WL_READ_MULTI_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|buf
+parameter_list|,
+name|len
+parameter_list|)
+define|\
+value|bus_read_multi_2((sc)->res_ioport, (reg), (uint16_t *)(buf), (len))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WL_WRITE_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_write_1((sc)->res_ioport, (reg), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WL_WRITE_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_write_2((sc)->res_ioport, (reg), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WL_WRITE_MULTI_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|buf
+parameter_list|,
+name|len
+parameter_list|)
+define|\
+value|bus_write_multi_2((sc)->res_ioport, (reg), (uint16_t *)(buf), (len))
+end_define
+
+begin_define
+define|#
+directive|define
 name|CMD
 parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|{ \ 		   outw(HACR(sc->base),sc->hacr); \
+value|{ \ 		   WL_WRITE_2(sc, HACR, sc->hacr);		\
 comment|/* delay for 50 us, might only be needed sometimes */
 value|\ 		   DELAY(DELAYCONST); \ 	        }
 end_define
@@ -578,7 +639,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|{ \          outw(HACR(sc->base),sc->hacr | HACR_CA); \       }
+value|{ \          WL_WRITE_2(sc, HACR, sc->hacr | HACR_CA); \       }
 end_define
 
 begin_define
@@ -591,7 +652,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|while(inw(HASR(sc->base))& HASR_MMC_BUSY) ; \ 	outw(MMCR(sc->base), \ 	     (u_short)(((u_short)(val)<< 8) | ((cmd)<< 1) | 1))
+value|while (WL_READ_2(sc, HASR)& HASR_MMC_BUSY) ;	\ 	WL_WRITE_2(sc, MMCR,				\ 	     (u_short)(((u_short)(val)<< 8) | ((cmd)<< 1) | 1))
 end_define
 
 begin_endif

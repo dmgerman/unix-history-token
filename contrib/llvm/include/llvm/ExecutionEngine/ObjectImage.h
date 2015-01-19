@@ -8,7 +8,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//		       The LLVM Compiler Infrastructure
+comment|//                     The LLVM Compiler Infrastructure
 end_comment
 
 begin_comment
@@ -97,7 +97,9 @@ parameter_list|()
 function_decl|;
 name|protected
 label|:
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|ObjectBuffer
 operator|>
@@ -142,6 +144,32 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+name|iterator_range
+operator|<
+name|object
+operator|::
+name|symbol_iterator
+operator|>
+name|symbols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|object
+operator|::
+name|symbol_iterator
+operator|>
+operator|(
+name|begin_symbols
+argument_list|()
+operator|,
+name|end_symbols
+argument_list|()
+operator|)
+return|;
+block|}
 name|virtual
 name|object
 operator|::
@@ -162,6 +190,32 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+name|iterator_range
+operator|<
+name|object
+operator|::
+name|section_iterator
+operator|>
+name|sections
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|object
+operator|::
+name|section_iterator
+operator|>
+operator|(
+name|begin_sections
+argument_list|()
+operator|,
+name|end_sections
+argument_list|()
+operator|)
+return|;
+block|}
 name|virtual
 comment|/* Triple::ArchType */
 name|unsigned

@@ -506,6 +506,27 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* The XICP (root PIC) will handle all our interrupts */
+name|powerpc_register_pic
+argument_list|(
+name|root_pic
+argument_list|,
+name|OF_xref_from_node
+argument_list|(
+name|root
+argument_list|)
+argument_list|,
+literal|1
+operator|<<
+literal|24
+comment|/* 24-bit XIRR field */
+argument_list|,
+literal|1
+comment|/* Number of IPIs */
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|child

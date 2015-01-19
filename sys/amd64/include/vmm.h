@@ -1790,8 +1790,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|vrtc
+modifier|*
+name|vm_rtc
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * Inject exception 'vme' into the guest vcpu. This function returns 0 on  * success and non-zero on failure.  *  * Wrapper functions like 'vm_inject_gp()' should be preferred to calling  * this function directly because they enforce the trap-like or fault-like  * behavior of an exception.  *  * This function should only be called in the context of the thread that is  * executing this vcpu.  */
+comment|/*  * Inject exception 'vector' into the guest vcpu. This function returns 0 on  * success and non-zero on failure.  *  * Wrapper functions like 'vm_inject_gp()' should be preferred to calling  * this function directly because they enforce the trap-like or fault-like  * behavior of an exception.  *  * This function should only be called in the context of the thread that is  * executing this vcpu.  */
 end_comment
 
 begin_function_decl
@@ -1806,10 +1820,17 @@ parameter_list|,
 name|int
 name|vcpuid
 parameter_list|,
-name|struct
-name|vm_exception
-modifier|*
-name|vme
+name|int
+name|vector
+parameter_list|,
+name|int
+name|err_valid
+parameter_list|,
+name|uint32_t
+name|errcode
+parameter_list|,
+name|int
+name|restart_instruction
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2030,6 +2051,21 @@ name|copyinfo
 parameter_list|,
 name|size_t
 name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vcpu_trace_exceptions
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|vcpuid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2304,6 +2340,16 @@ name|rex_present
 range|:
 literal|1
 decl_stmt|,
+name|repz_present
+range|:
+literal|1
+decl_stmt|,
+comment|/* REP/REPE/REPZ prefix */
+name|repnz_present
+range|:
+literal|1
+decl_stmt|,
+comment|/* REPNE/REPNZ prefix */
 name|opsize_override
 range|:
 literal|1
@@ -2312,8 +2358,13 @@ comment|/* Operand size override */
 name|addrsize_override
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* Address size override */
+name|segment_override
+range|:
+literal|1
+decl_stmt|;
+comment|/* Segment override */
 name|uint8_t
 name|mod
 range|:
@@ -2357,6 +2408,10 @@ decl_stmt|;
 comment|/* VM_REG_GUEST_xyz */
 name|int
 name|index_register
+decl_stmt|;
+comment|/* VM_REG_GUEST_xyz */
+name|int
+name|segment_register
 decl_stmt|;
 comment|/* VM_REG_GUEST_xyz */
 name|int64_t
@@ -2881,6 +2936,20 @@ name|error_code
 parameter_list|,
 name|uint64_t
 name|cr2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vm_restart_instruction
+parameter_list|(
+name|void
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|vcpuid
 parameter_list|)
 function_decl|;
 end_function_decl

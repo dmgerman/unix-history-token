@@ -7437,12 +7437,22 @@ operator|->
 name|sc_tq
 argument_list|)
 expr_stmt|;
-name|callout_drain
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|callout_stop
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_cal_ch
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX ensure sc_invalid is 1 	 */
@@ -22120,6 +22130,11 @@ decl_stmt|;
 name|int
 name|nextcal
 decl_stmt|;
+name|ATH_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Force the hardware awake for ANI work. 	 */
 name|ath_power_set_power_state
 argument_list|(
@@ -23297,6 +23312,15 @@ argument_list|,
 name|HAL_PM_AWAKE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * And stop the calibration callout whilst we have 	 * ATH_LOCK held. 	 */
+name|callout_stop
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_cal_ch
+argument_list|)
+expr_stmt|;
 name|ATH_UNLOCK
 argument_list|(
 name|sc
@@ -23315,14 +23339,6 @@ condition|)
 name|csa_run_transition
 operator|=
 literal|1
-expr_stmt|;
-name|callout_drain
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_cal_ch
-argument_list|)
 expr_stmt|;
 name|ath_hal_setledstate
 argument_list|(
@@ -23924,11 +23940,6 @@ argument_list|,
 name|HAL_PM_AWAKE
 argument_list|)
 expr_stmt|;
-name|ATH_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Finally, start any timers and the task q thread 		 * (in case we didn't go through SCAN state). 		 */
 if|if
 condition|(
@@ -23967,6 +23978,11 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|taskqueue_unblock
 argument_list|(
 name|sc
@@ -25756,6 +25772,11 @@ name|do_reset
 init|=
 literal|0
 decl_stmt|;
+name|ATH_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -25784,21 +25805,11 @@ decl_stmt|;
 name|uint32_t
 name|hangs
 decl_stmt|;
-name|ATH_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ath_power_set_power_state
 argument_list|(
 name|sc
 argument_list|,
 name|HAL_PM_AWAKE
-argument_list|)
-expr_stmt|;
-name|ATH_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -25866,17 +25877,7 @@ operator|.
 name|ast_watchdog
 operator|++
 expr_stmt|;
-name|ATH_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ath_power_restore_power_state
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|ATH_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -27881,7 +27882,6 @@ block|{
 comment|/* 		 * Don't bother grabbing the lock unless the queue is empty. 		 */
 if|if
 condition|(
-operator|&
 name|an
 operator|->
 name|an_swq_depth

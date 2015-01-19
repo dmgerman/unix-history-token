@@ -151,7 +151,7 @@ comment|/// build a complete TextDiagnostic object can still get consistent
 comment|/// formatting of their diagnostic messages.
 comment|///
 comment|/// \param OS Where the message is printed
-comment|/// \param Level Used to colorizing the message
+comment|/// \param IsSupplemental true if this is a continuation note diagnostic
 comment|/// \param Message The text actually printed
 comment|/// \param CurrentColumn The starting column of the first line, accounting
 comment|///                      for any prefix.
@@ -164,7 +164,7 @@ name|printDiagnosticMessage
 argument_list|(
 argument|raw_ostream&OS
 argument_list|,
-argument|DiagnosticsEngine::Level Level
+argument|bool IsSupplemental
 argument_list|,
 argument|StringRef Message
 argument_list|,
@@ -177,7 +177,6 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|void
 name|emitDiagnosticMessage
 argument_list|(
@@ -195,8 +194,8 @@ argument|const SourceManager *SM
 argument_list|,
 argument|DiagOrStoredDiag D
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|emitDiagnosticLoc
 argument_list|(
@@ -210,8 +209,8 @@ argument|ArrayRef<CharSourceRange> Ranges
 argument_list|,
 argument|const SourceManager&SM
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|emitCodeContext
 argument_list|(
@@ -225,6 +224,7 @@ argument|ArrayRef<FixItHint> Hints
 argument_list|,
 argument|const SourceManager&SM
 argument_list|)
+name|override
 block|{
 name|emitSnippetAndCaret
 argument_list|(
@@ -239,14 +239,6 @@ argument_list|,
 name|SM
 argument_list|)
 block|;   }
-name|virtual
-name|void
-name|emitBasicNote
-argument_list|(
-argument|StringRef Message
-argument_list|)
-block|;
-name|virtual
 name|void
 name|emitIncludeLocation
 argument_list|(
@@ -256,8 +248,8 @@ argument|PresumedLoc PLoc
 argument_list|,
 argument|const SourceManager&SM
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|emitImportLocation
 argument_list|(
@@ -269,8 +261,8 @@ argument|StringRef ModuleName
 argument_list|,
 argument|const SourceManager&SM
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|emitBuildingModuleLocation
 argument_list|(
@@ -282,6 +274,7 @@ argument|StringRef ModuleName
 argument_list|,
 argument|const SourceManager&SM
 argument_list|)
+name|override
 block|;
 name|private
 operator|:

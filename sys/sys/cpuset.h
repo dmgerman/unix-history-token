@@ -384,6 +384,17 @@ begin_comment
 comment|/* Specifies a jail id. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CPU_WHICH_DOMAIN
+value|6
+end_define
+
+begin_comment
+comment|/* Specifies a NUMA domain id. */
+end_comment
+
 begin_comment
 comment|/*  * Reserved cpuset identifiers.  */
 end_comment

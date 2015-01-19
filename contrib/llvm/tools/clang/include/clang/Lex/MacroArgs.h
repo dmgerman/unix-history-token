@@ -164,7 +164,7 @@ argument_list|)
 operator|,
 name|ArgCache
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 operator|~

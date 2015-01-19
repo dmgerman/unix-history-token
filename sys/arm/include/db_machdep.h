@@ -59,7 +59,7 @@ define|#
 directive|define
 name|PC_REGS
 parameter_list|()
-value|((db_addr_t)kdb_thrctx->un_32.pcb32_pc)
+value|((db_addr_t)kdb_thrctx->pcb_regs.sf_pc)
 end_define
 
 begin_define

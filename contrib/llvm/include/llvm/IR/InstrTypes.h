@@ -122,8 +122,7 @@ argument|Use *Ops
 argument_list|,
 argument|unsigned NumOps
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 operator|:
 name|Instruction
@@ -202,12 +201,12 @@ argument_list|)
 operator|=
 literal|0
 block|;
-name|virtual
 name|TerminatorInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 operator|=
 literal|0
 block|;
@@ -336,8 +335,7 @@ argument|unsigned iType
 argument_list|,
 argument|Value *V
 argument_list|,
-argument|Instruction *IB =
-literal|0
+argument|Instruction *IB = nullptr
 argument_list|)
 operator|:
 name|Instruction
@@ -609,13 +607,12 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
-name|virtual
 name|BinaryOperator
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 name|public
 operator|:
@@ -664,8 +661,7 @@ argument|Value *S2
 argument_list|,
 argument|const Twine&Name = Twine()
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 comment|/// Create() - Construct a binary instruction, given the opcode and the two
@@ -1246,7 +1242,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 specifier|static
@@ -1288,7 +1284,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 specifier|static
@@ -1330,7 +1326,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 specifier|static
@@ -1372,7 +1368,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 specifier|static
@@ -1414,7 +1410,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 specifier|static
@@ -1696,11 +1692,10 @@ operator|:
 name|public
 name|UnaryInstruction
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|;
 name|protected
 operator|:
@@ -1716,8 +1711,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 operator|:
 name|UnaryInstruction
@@ -1806,7 +1800,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Place to insert the instruction
 argument_list|)
 block|;
@@ -1876,7 +1870,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Place to insert the instruction
 argument_list|)
 block|;
@@ -1936,7 +1930,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Place to insert the instruction
 argument_list|)
 block|;
@@ -1968,7 +1962,7 @@ name|InsertAtEnd
 comment|///< The block to insert the instruction into
 argument_list|)
 block|;
-comment|/// @brief Create a BitCast or a PtrToInt cast instruction
+comment|/// @brief Create a BitCast AddrSpaceCast, or a PtrToInt cast instruction.
 specifier|static
 name|CastInst
 operator|*
@@ -1996,11 +1990,71 @@ name|InsertAtEnd
 comment|///< The block to insert the instruction into
 argument_list|)
 block|;
-comment|/// @brief Create a BitCast or a PtrToInt cast instruction
+comment|/// @brief Create a BitCast, AddrSpaceCast or a PtrToInt cast instruction.
 specifier|static
 name|CastInst
 operator|*
 name|CreatePointerCast
+argument_list|(
+name|Value
+operator|*
+name|S
+argument_list|,
+comment|///< The pointer value to be casted (operand 0)
+name|Type
+operator|*
+name|Ty
+argument_list|,
+comment|///< The type to which cast should be made
+specifier|const
+name|Twine
+operator|&
+name|Name
+operator|=
+literal|""
+argument_list|,
+comment|///< Name for the instruction
+name|Instruction
+operator|*
+name|InsertBefore
+operator|=
+name|nullptr
+comment|///< Place to insert the instruction
+argument_list|)
+block|;
+comment|/// @brief Create a BitCast or an AddrSpaceCast cast instruction.
+specifier|static
+name|CastInst
+operator|*
+name|CreatePointerBitCastOrAddrSpaceCast
+argument_list|(
+name|Value
+operator|*
+name|S
+argument_list|,
+comment|///< The pointer value to be casted (operand 0)
+name|Type
+operator|*
+name|Ty
+argument_list|,
+comment|///< The type to which operand is casted
+specifier|const
+name|Twine
+operator|&
+name|Name
+argument_list|,
+comment|///< The name for the instruction
+name|BasicBlock
+operator|*
+name|InsertAtEnd
+comment|///< The block to insert the instruction into
+argument_list|)
+block|;
+comment|/// @brief Create a BitCast or an AddrSpaceCast cast instruction.
+specifier|static
+name|CastInst
+operator|*
+name|CreatePointerBitCastOrAddrSpaceCast
 argument_list|(
 name|Value
 operator|*
@@ -2047,8 +2101,7 @@ argument|const Twine&Name =
 literal|""
 argument_list|,
 comment|///< Name for the instruction
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 comment|///< Place to insert the instruction
 argument_list|)
 block|;
@@ -2102,7 +2155,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Place to insert the instruction
 argument_list|)
 block|;
@@ -2162,7 +2215,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Place to insert the instruction
 argument_list|)
 block|;
@@ -2300,6 +2353,15 @@ name|isNoopCast
 argument_list|(
 argument|Type *IntPtrTy
 comment|///< Integer type corresponding to pointer
+argument_list|)
+specifier|const
+block|;
+comment|/// @brief Determine if this cast is a no-op cast.
+name|bool
+name|isNoopCast
+argument_list|(
+argument|const DataLayout *DL
+comment|///< DataLayout to get the Int Ptr type from.
 argument_list|)
 specifier|const
 block|;
@@ -2492,8 +2554,7 @@ argument_list|,
 argument|const Twine&Name =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|CmpInst
@@ -2513,11 +2574,10 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
-name|virtual
 name|void
 name|anchor
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|// Out of line virtual method.
 name|public
@@ -2731,8 +2791,7 @@ argument_list|,
 argument|const Twine&Name =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 comment|/// Construct a compare instruction, given the opcode, the predicate and the

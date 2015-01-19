@@ -173,6 +173,7 @@ name|randomdev_hash
 modifier|*
 name|context
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|data
@@ -240,6 +241,7 @@ name|randomdev_key
 modifier|*
 name|context
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|data
@@ -289,6 +291,7 @@ name|randomdev_key
 modifier|*
 name|context
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|d_in

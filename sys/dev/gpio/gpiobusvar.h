@@ -33,6 +33,12 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -185,6 +191,11 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 comment|/* bus mutex */
+name|struct
+name|rman
+name|sc_intr_rman
+decl_stmt|;
+comment|/* isr resources */
 name|device_t
 name|sc_busdev
 decl_stmt|;
@@ -214,6 +225,11 @@ begin_struct
 struct|struct
 name|gpiobus_ivar
 block|{
+name|struct
+name|resource_list
+name|rl
+decl_stmt|;
+comment|/* isr resource list */
 name|uint32_t
 name|npins
 decl_stmt|;
@@ -325,12 +341,12 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|void
-name|gpiobus_print_pins
+name|int
+name|gpio_check_flags
 parameter_list|(
-name|struct
-name|gpiobus_ivar
-modifier|*
+name|uint32_t
+parameter_list|,
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl

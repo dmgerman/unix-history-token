@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- AArch64TargetObjectFile.h - AArch64 Object Info ---------*- C++ -*-===//
+comment|//===-- AArch64TargetObjectFile.h - AArch64 Object Info -*- C++ ---------*-===//
 end_comment
 
 begin_comment
@@ -31,44 +31,22 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// This file deals with any AArch64 specific requirements on object files.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_AARCH64_TARGETOBJECTFILE_H
+name|LLVM_TARGET_AArch64_TARGETOBJECTFILE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_AARCH64_TARGETOBJECTFILE_H
+name|LLVM_TARGET_AArch64_TARGETOBJECTFILE_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/TargetLoweringObjectFileImpl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetMachine.h"
 end_include
 
 begin_include
@@ -81,49 +59,70 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// AArch64ElfTargetObjectFile - This implementation is used for ELF
-comment|/// AArch64 targets.
 name|class
-name|AArch64ElfTargetObjectFile
-range|:
-name|public
-name|TargetLoweringObjectFileELF
-block|{
-name|virtual
-name|void
-name|Initialize
-argument_list|(
-name|MCContext
-operator|&
-name|Ctx
-argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
-argument_list|)
-block|;   }
+name|AArch64TargetMachine
 decl_stmt|;
+comment|/// This implementation is used for AArch64 ELF targets (Linux in particular).
 name|class
-name|AArch64LinuxTargetObjectFile
+name|AArch64_ELFTargetObjectFile
 range|:
 name|public
 name|TargetLoweringObjectFileELF
 block|{
-name|virtual
 name|void
 name|Initialize
 argument_list|(
-name|MCContext
-operator|&
-name|Ctx
+argument|MCContext&Ctx
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|const TargetMachine&TM
 argument_list|)
-block|;   }
+name|override
+block|; }
+decl_stmt|;
+comment|/// AArch64_MachoTargetObjectFile - This TLOF implementation is used for Darwin.
+name|class
+name|AArch64_MachoTargetObjectFile
+range|:
+name|public
+name|TargetLoweringObjectFileMachO
+block|{
+name|public
+operator|:
+specifier|const
+name|MCExpr
+operator|*
+name|getTTypeGlobalReference
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|unsigned Encoding
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|,
+argument|MachineModuleInfo *MMI
+argument_list|,
+argument|MCStreamer&Streamer
+argument_list|)
+specifier|const
+name|override
+block|;
+name|MCSymbol
+operator|*
+name|getCFIPersonalitySymbol
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|,
+argument|MachineModuleInfo *MMI
+argument_list|)
+specifier|const
+name|override
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

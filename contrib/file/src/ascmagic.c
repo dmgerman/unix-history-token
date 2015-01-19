@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: ascmagic.c,v 1.88 2014/02/12 23:20:53 christos Exp $"
+literal|"@(#)$File: ascmagic.c,v 1.91 2014/11/28 02:46:39 christos Exp $"
 argument_list|)
 end_macro
 
@@ -597,6 +597,8 @@ name|utf8_buf
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|,
 name|TEXTTEST
 argument_list|,

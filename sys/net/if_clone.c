@@ -334,6 +334,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|if_cloners_lock
+argument_list|,
+operator|&
+name|if_cloners_mtx
+argument_list|,
+literal|"if_cloners lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
 argument_list|(
@@ -369,15 +384,6 @@ define|#
 directive|define
 name|V_if_cloners
 value|VNET(if_cloners)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IF_CLONERS_LOCK_INIT
-parameter_list|()
-define|\
-value|mtx_init(&if_cloners_mtx, "if_cloners lock", NULL, MTX_DEF)
 end_define
 
 begin_define
@@ -552,19 +558,6 @@ argument_list|(
 operator|&
 name|V_if_cloners
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|if_clone_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|IF_CLONERS_LOCK_INIT
-argument_list|()
 expr_stmt|;
 block|}
 end_function

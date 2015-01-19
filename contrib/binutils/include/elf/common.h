@@ -2808,6 +2808,13 @@ name|NT_PROCSTAT_AUXV
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|NT_X86_XSTATE
+value|0x202
+end_define
+
 begin_comment
 comment|/* Note segments for core files on NetBSD systems.  Note name    must start with "NetBSD-CORE".  */
 end_comment

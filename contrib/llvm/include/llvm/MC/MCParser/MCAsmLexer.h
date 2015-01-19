@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/APInt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -93,6 +99,9 @@ block|,
 comment|// Integer values.
 name|Integer
 block|,
+name|BigNum
+block|,
+comment|// larger than 64 bits
 comment|// Real values.
 name|Real
 block|,
@@ -184,7 +193,7 @@ comment|/// a memory buffer owned by the source manager.
 name|StringRef
 name|Str
 decl_stmt|;
-name|int64_t
+name|APInt
 name|IntVal
 decl_stmt|;
 name|public
@@ -198,8 +207,7 @@ argument|TokenKind _Kind
 argument_list|,
 argument|StringRef _Str
 argument_list|,
-argument|int64_t _IntVal =
-literal|0
+argument|APInt _IntVal
 argument_list|)
 block|:
 name|Kind
@@ -215,6 +223,35 @@ operator|,
 name|IntVal
 argument_list|(
 argument|_IntVal
+argument_list|)
+block|{}
+name|AsmToken
+argument_list|(
+argument|TokenKind _Kind
+argument_list|,
+argument|StringRef _Str
+argument_list|,
+argument|int64_t _IntVal =
+literal|0
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|_Kind
+argument_list|)
+operator|,
+name|Str
+argument_list|(
+name|_Str
+argument_list|)
+operator|,
+name|IntVal
+argument_list|(
+literal|64
+argument_list|,
+argument|_IntVal
+argument_list|,
+argument|true
 argument_list|)
 block|{}
 name|TokenKind
@@ -352,6 +389,33 @@ argument_list|)
 block|;
 return|return
 name|IntVal
+operator|.
+name|getZExtValue
+argument_list|()
+return|;
+block|}
+name|APInt
+name|getAPIntVal
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|Kind
+operator|==
+name|Integer
+operator|||
+name|Kind
+operator|==
+name|BigNum
+operator|)
+operator|&&
+literal|"This token isn't an integer!"
+argument_list|)
+block|;
+return|return
+name|IntVal
 return|;
 block|}
 block|}
@@ -412,6 +476,9 @@ name|TokStart
 decl_stmt|;
 name|bool
 name|SkipSpace
+decl_stmt|;
+name|bool
+name|AllowAtInIdentifier
 decl_stmt|;
 name|MCAsmLexer
 argument_list|()
@@ -496,6 +563,20 @@ return|return
 name|CurTok
 return|;
 block|}
+comment|/// peekTok - Look ahead at the next token to be lexed.
+name|virtual
+specifier|const
+name|AsmToken
+name|peekTok
+parameter_list|(
+name|bool
+name|ShouldSkipSpace
+init|=
+name|true
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// getErrLoc - Get the current error location
 specifier|const
 name|SMLoc
@@ -586,6 +667,26 @@ block|{
 name|SkipSpace
 operator|=
 name|val
+expr_stmt|;
+block|}
+name|bool
+name|getAllowAtInIdentifier
+parameter_list|()
+block|{
+return|return
+name|AllowAtInIdentifier
+return|;
+block|}
+name|void
+name|setAllowAtInIdentifier
+parameter_list|(
+name|bool
+name|v
+parameter_list|)
+block|{
+name|AllowAtInIdentifier
+operator|=
+name|v
 expr_stmt|;
 block|}
 block|}

@@ -319,7 +319,7 @@ argument|llvm::Value *value
 argument_list|,
 argument|size_t size
 argument_list|,
-argument|off_t alignment
+argument|lldb::offset_t alignment
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -360,7 +360,9 @@ name|size_t
 operator|&
 name|size
 argument_list|,
-name|off_t
+name|lldb
+operator|::
+name|offset_t
 operator|&
 name|alignment
 argument_list|)
@@ -403,7 +405,7 @@ argument|const clang::NamedDecl *&decl
 argument_list|,
 argument|llvm::Value *&value
 argument_list|,
-argument|off_t&offset
+argument|lldb::offset_t&offset
 argument_list|,
 argument|ConstString&name
 argument_list|,
@@ -841,7 +843,9 @@ argument_list|,
 argument|NULL
 argument_list|)
 block|{         }
-name|off_t
+name|lldb
+operator|::
+name|offset_t
 name|m_struct_alignment
 block|;
 comment|///< The alignment of the struct in bytes.

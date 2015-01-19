@@ -94,14 +94,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_comment
 comment|/*  * On shared object unload, in __cxa_finalize, call and clear all installed  * atexit and __cxa_atexit handlers that are either installed by unloaded  * dso, or points to the functions provided by the dso.  *  * The reason of the change is to ensure that there is no lingering pointers  * to the unloaded code after the dlclose(3).  It is known reason for infinite  * stream of the crash reports for many programs which use loadable modules  * and fail to properly clean on module unload.  Examples are apache, php,  * perl etc.  *  * You pass the&dso_handle_1 and&dso_handle_2, which points inside the  * main binary, to the registration function.  The code from r211706,  * correctly detects that they are for the main binary, and on the first  * call to __cxa_finalize(), which also pass pointer to main binary, all  * registered functions from the main binary are executed.  */
@@ -576,12 +573,9 @@ name|normal_handler_1
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|ASSERT
 argument_list|(
 literal|0

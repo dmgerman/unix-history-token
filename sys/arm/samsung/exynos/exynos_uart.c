@@ -123,7 +123,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|s3c24x0_uart_param
+name|exynos4210_uart_param
 parameter_list|(
 name|struct
 name|uart_bas
@@ -147,7 +147,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|s3c2410_probe
+name|exynos4210_probe
 parameter_list|(
 name|struct
 name|uart_bas
@@ -160,7 +160,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|s3c2410_init
+name|exynos4210_init
 parameter_list|(
 name|struct
 name|uart_bas
@@ -181,7 +181,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|s3c2410_term
+name|exynos4210_term
 parameter_list|(
 name|struct
 name|uart_bas
@@ -194,7 +194,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|s3c2410_putc
+name|exynos4210_putc
 parameter_list|(
 name|struct
 name|uart_bas
@@ -209,7 +209,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|s3c2410_rxready
+name|exynos4210_rxready
 parameter_list|(
 name|struct
 name|uart_bas
@@ -222,7 +222,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|s3c2410_getc
+name|exynos4210_getc
 parameter_list|(
 name|struct
 name|uart_bas
@@ -303,7 +303,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|s3c24x0_uart_param
+name|exynos4210_uart_param
 parameter_list|(
 name|struct
 name|uart_bas
@@ -468,38 +468,38 @@ end_function
 begin_decl_stmt
 name|struct
 name|uart_ops
-name|uart_s3c2410_ops
+name|uart_exynos4210_ops
 init|=
 block|{
 operator|.
 name|probe
 operator|=
-name|s3c2410_probe
+name|exynos4210_probe
 block|,
 operator|.
 name|init
 operator|=
-name|s3c2410_init
+name|exynos4210_init
 block|,
 operator|.
 name|term
 operator|=
-name|s3c2410_term
+name|exynos4210_term
 block|,
 operator|.
 name|putc
 operator|=
-name|s3c2410_putc
+name|exynos4210_putc
 block|,
 operator|.
 name|rxready
 operator|=
-name|s3c2410_rxready
+name|exynos4210_rxready
 block|,
 operator|.
 name|getc
 operator|=
-name|s3c2410_getc
+name|exynos4210_getc
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -507,7 +507,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|s3c2410_probe
+name|exynos4210_probe
 parameter_list|(
 name|struct
 name|uart_bas
@@ -526,7 +526,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|s3c2410_init
+name|exynos4210_init
 parameter_list|(
 name|struct
 name|uart_bas
@@ -569,7 +569,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"s3c2410_init: Invalid rclk"
+literal|"exynos4210_init: Invalid rclk"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -599,7 +599,7 @@ operator||
 name|UFCON_FIFO_ENABLE
 argument_list|)
 expr_stmt|;
-name|s3c24x0_uart_param
+name|exynos4210_uart_param
 argument_list|(
 name|bas
 argument_list|,
@@ -641,7 +641,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|s3c2410_term
+name|exynos4210_term
 parameter_list|(
 name|struct
 name|uart_bas
@@ -656,7 +656,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|s3c2410_putc
+name|exynos4210_putc
 parameter_list|(
 name|struct
 name|uart_bas
@@ -704,7 +704,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|s3c2410_rxready
+name|exynos4210_rxready
 parameter_list|(
 name|struct
 name|uart_bas
@@ -734,7 +734,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|s3c2410_getc
+name|exynos4210_getc
 parameter_list|(
 name|struct
 name|uart_bas
@@ -814,7 +814,7 @@ end_function
 begin_function_decl
 specifier|static
 name|int
-name|s3c2410_bus_probe
+name|exynos4210_bus_probe
 parameter_list|(
 name|struct
 name|uart_softc
@@ -827,7 +827,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|s3c2410_bus_attach
+name|exynos4210_bus_attach
 parameter_list|(
 name|struct
 name|uart_softc
@@ -840,7 +840,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|s3c2410_bus_flush
+name|exynos4210_bus_flush
 parameter_list|(
 name|struct
 name|uart_softc
@@ -854,7 +854,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|s3c2410_bus_getsig
+name|exynos4210_bus_getsig
 parameter_list|(
 name|struct
 name|uart_softc
@@ -866,7 +866,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|s3c2410_bus_ioctl
+name|exynos4210_bus_ioctl
 parameter_list|(
 name|struct
 name|uart_softc
@@ -882,7 +882,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|s3c2410_bus_ipend
+name|exynos4210_bus_ipend
 parameter_list|(
 name|struct
 name|uart_softc
@@ -894,7 +894,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|s3c2410_bus_param
+name|exynos4210_bus_param
 parameter_list|(
 name|struct
 name|uart_softc
@@ -914,7 +914,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|s3c2410_bus_receive
+name|exynos4210_bus_receive
 parameter_list|(
 name|struct
 name|uart_softc
@@ -926,7 +926,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|s3c2410_bus_setsig
+name|exynos4210_bus_setsig
 parameter_list|(
 name|struct
 name|uart_softc
@@ -940,7 +940,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|s3c2410_bus_transmit
+name|exynos4210_bus_transmit
 parameter_list|(
 name|struct
 name|uart_softc
@@ -952,7 +952,7 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|kobj_method_t
-name|s3c2410_methods
+name|exynos4210_methods
 index|[]
 init|=
 block|{
@@ -960,70 +960,70 @@ name|KOBJMETHOD
 argument_list|(
 name|uart_probe
 argument_list|,
-name|s3c2410_bus_probe
+name|exynos4210_bus_probe
 argument_list|)
 block|,
 name|KOBJMETHOD
 argument_list|(
 name|uart_attach
 argument_list|,
-name|s3c2410_bus_attach
+name|exynos4210_bus_attach
 argument_list|)
 block|,
 name|KOBJMETHOD
 argument_list|(
 name|uart_flush
 argument_list|,
-name|s3c2410_bus_flush
+name|exynos4210_bus_flush
 argument_list|)
 block|,
 name|KOBJMETHOD
 argument_list|(
 name|uart_getsig
 argument_list|,
-name|s3c2410_bus_getsig
+name|exynos4210_bus_getsig
 argument_list|)
 block|,
 name|KOBJMETHOD
 argument_list|(
 name|uart_ioctl
 argument_list|,
-name|s3c2410_bus_ioctl
+name|exynos4210_bus_ioctl
 argument_list|)
 block|,
 name|KOBJMETHOD
 argument_list|(
 name|uart_ipend
 argument_list|,
-name|s3c2410_bus_ipend
+name|exynos4210_bus_ipend
 argument_list|)
 block|,
 name|KOBJMETHOD
 argument_list|(
 name|uart_param
 argument_list|,
-name|s3c2410_bus_param
+name|exynos4210_bus_param
 argument_list|)
 block|,
 name|KOBJMETHOD
 argument_list|(
 name|uart_receive
 argument_list|,
-name|s3c2410_bus_receive
+name|exynos4210_bus_receive
 argument_list|)
 block|,
 name|KOBJMETHOD
 argument_list|(
 name|uart_setsig
 argument_list|,
-name|s3c2410_bus_setsig
+name|exynos4210_bus_setsig
 argument_list|)
 block|,
 name|KOBJMETHOD
 argument_list|(
 name|uart_transmit
 argument_list|,
-name|s3c2410_bus_transmit
+name|exynos4210_bus_transmit
 argument_list|)
 block|,
 block|{
@@ -1037,7 +1037,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|s3c2410_bus_probe
+name|exynos4210_bus_probe
 parameter_list|(
 name|struct
 name|uart_softc
@@ -1068,7 +1068,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|s3c2410_bus_attach
+name|exynos4210_bus_attach
 parameter_list|(
 name|struct
 name|uart_softc
@@ -1099,7 +1099,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|s3c2410_bus_transmit
+name|exynos4210_bus_transmit
 parameter_list|(
 name|struct
 name|uart_softc
@@ -1136,7 +1136,7 @@ name|i
 operator|++
 control|)
 block|{
-name|s3c2410_putc
+name|exynos4210_putc
 argument_list|(
 operator|&
 name|sc
@@ -1232,7 +1232,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|s3c2410_bus_setsig
+name|exynos4210_bus_setsig
 parameter_list|(
 name|struct
 name|uart_softc
@@ -1254,7 +1254,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|s3c2410_bus_receive
+name|exynos4210_bus_receive
 parameter_list|(
 name|struct
 name|uart_softc
@@ -1317,7 +1317,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|s3c2410_bus_param
+name|exynos4210_bus_param
 parameter_list|(
 name|struct
 name|uart_softc
@@ -1369,7 +1369,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"s3c2410_init: Invalid rclk"
+literal|"exynos4210_init: Invalid rclk"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1382,7 +1382,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|s3c24x0_uart_param
+name|exynos4210_uart_param
 argument_list|(
 operator|&
 name|sc
@@ -1416,7 +1416,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|s3c2410_bus_ipend
+name|exynos4210_bus_ipend
 parameter_list|(
 name|struct
 name|uart_softc
@@ -1608,7 +1608,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|s3c2410_bus_flush
+name|exynos4210_bus_flush
 parameter_list|(
 name|struct
 name|uart_softc
@@ -1630,7 +1630,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|s3c2410_bus_getsig
+name|exynos4210_bus_getsig
 parameter_list|(
 name|struct
 name|uart_softc
@@ -1649,7 +1649,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|s3c2410_bus_ioctl
+name|exynos4210_bus_ioctl
 parameter_list|(
 name|struct
 name|uart_softc
@@ -1674,12 +1674,12 @@ end_function
 begin_decl_stmt
 name|struct
 name|uart_class
-name|uart_s3c2410_class
+name|uart_exynos4210_class
 init|=
 block|{
-literal|"s3c2410 class"
+literal|"exynos4210 class"
 block|,
-name|s3c2410_methods
+name|exynos4210_methods
 block|,
 literal|1
 block|,
@@ -1687,7 +1687,7 @@ operator|.
 name|uc_ops
 operator|=
 operator|&
-name|uart_s3c2410_ops
+name|uart_exynos4210_ops
 block|,
 operator|.
 name|uc_range

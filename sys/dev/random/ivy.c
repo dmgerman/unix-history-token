@@ -152,7 +152,7 @@ specifier|inline
 name|int
 name|ivy_rng_store
 parameter_list|(
-name|long
+name|u_long
 modifier|*
 name|buf
 parameter_list|)
@@ -160,8 +160,8 @@ block|{
 ifdef|#
 directive|ifdef
 name|__GNUCLIKE_ASM
-name|long
-name|tmp
+name|u_long
+name|rndval
 decl_stmt|;
 name|int
 name|retry
@@ -172,35 +172,24 @@ name|RETRY_COUNT
 expr_stmt|;
 asm|__asm __volatile(
 literal|"1:\n\t"
-literal|"rdrand	%2\n\t"
-comment|/* read randomness into tmp */
-literal|"jb		2f\n\t"
+literal|"rdrand	%1\n\t"
+comment|/* read randomness into rndval */
+literal|"jc		2f\n\t"
 comment|/* CF is set on success, exit retry loop */
 literal|"dec	%0\n\t"
 comment|/* otherwise, retry-- */
 literal|"jne	1b\n\t"
 comment|/* and loop if retries are not exhausted */
-literal|"jmp	3f\n"
-comment|/* failure, retry is 0, used as return value */
-literal|"2:\n\t"
-literal|"mov	%2,%1\n\t"
-comment|/* *buf = tmp */
-literal|"3:"
+literal|"2:"
 operator|:
-literal|"+q"
+literal|"+r"
 operator|(
 name|retry
 operator|)
 operator|,
-literal|"=m"
+literal|"=r"
 operator|(
-operator|*
-name|buf
-operator|)
-operator|,
-literal|"+q"
-operator|(
-name|tmp
+name|rndval
 operator|)
 operator|:
 operator|:
@@ -208,6 +197,14 @@ literal|"cc"
 block|)
 function|;
 end_function
+
+begin_expr_stmt
+operator|*
+name|buf
+operator|=
+name|rndval
+expr_stmt|;
+end_expr_stmt
 
 begin_return
 return|return
@@ -241,7 +238,7 @@ end_endif
 
 begin_comment
 unit|}
-comment|/* It is specifically allowed that buf is a multiple of sizeof(long) */
+comment|/* It is required that buf length is a multiple of sizeof(u_long). */
 end_comment
 
 begin_function
@@ -257,9 +254,11 @@ name|u_int
 name|c
 parameter_list|)
 block|{
-name|long
+name|u_long
 modifier|*
 name|b
+decl_stmt|,
+name|rndval
 decl_stmt|;
 name|u_int
 name|count
@@ -310,13 +309,19 @@ if|if
 condition|(
 name|ivy_rng_store
 argument_list|(
-name|b
-operator|++
+operator|&
+name|rndval
 argument_list|)
 operator|==
 literal|0
 condition|)
 break|break;
+operator|*
+name|b
+operator|++
+operator|=
+name|rndval
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -443,7 +448,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|rdrand
 argument_list|,
-name|random_adaptors
+name|randomdev
 argument_list|,
 literal|1
 argument_list|,

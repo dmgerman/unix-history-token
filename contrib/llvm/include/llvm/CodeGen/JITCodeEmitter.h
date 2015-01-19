@@ -153,10 +153,10 @@ range|:
 name|public
 name|MachineCodeEmitter
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -169,14 +169,12 @@ comment|/// startFunction - This callback is invoked when the specified function
 comment|/// about to be code generated.  This initializes the BufferBegin/End/Ptr
 comment|/// fields.
 comment|///
-name|virtual
 name|void
 name|startFunction
 argument_list|(
-name|MachineFunction
-operator|&
-name|F
+argument|MachineFunction&F
 argument_list|)
+name|override
 operator|=
 literal|0
 block|;
@@ -185,14 +183,12 @@ comment|/// finished code generation.  If a buffer overflow has occurred, this m
 comment|/// returns true (the callee is required to try again), otherwise it returns
 comment|/// false.
 comment|///
-name|virtual
 name|bool
 name|finishFunction
 argument_list|(
-name|MachineFunction
-operator|&
-name|F
+argument|MachineFunction&F
 argument_list|)
+name|override
 operator|=
 literal|0
 block|;
@@ -1217,19 +1213,19 @@ begin_comment
 comment|/// emitLabel - Emits a label
 end_comment
 
-begin_function_decl
-name|virtual
+begin_decl_stmt
 name|void
 name|emitLabel
-parameter_list|(
+argument_list|(
 name|MCSymbol
-modifier|*
+operator|*
 name|Label
-parameter_list|)
+argument_list|)
+name|override
 init|=
 literal|0
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// allocateSpace - Allocate a block of space in the current output buffer,
@@ -1244,7 +1240,6 @@ comment|/// failure.  Alignment is the alignment in bytes of the buffer desired.
 end_comment
 
 begin_function
-name|virtual
 name|void
 modifier|*
 name|allocateSpace
@@ -1255,6 +1250,7 @@ parameter_list|,
 name|unsigned
 name|Alignment
 parameter_list|)
+function|override
 block|{
 name|emitAlignment
 argument_list|(
@@ -1286,7 +1282,7 @@ name|BufferEnd
 expr_stmt|;
 name|Result
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 else|else
@@ -1348,19 +1344,19 @@ begin_comment
 comment|/// start of the block is, and can implement getMachineBasicBlockAddress.
 end_comment
 
-begin_function_decl
-name|virtual
+begin_decl_stmt
 name|void
 name|StartMachineBasicBlock
-parameter_list|(
+argument_list|(
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|MBB
-parameter_list|)
+argument_list|)
+name|override
 init|=
 literal|0
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// getCurrentPCValue - This returns the address that the next emitted byte
@@ -1375,11 +1371,11 @@ comment|///
 end_comment
 
 begin_expr_stmt
-name|virtual
 name|uintptr_t
 name|getCurrentPCValue
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|(
@@ -1403,6 +1399,7 @@ name|uintptr_t
 name|getCurrentPCOffset
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|CurBufferPtr
@@ -1437,6 +1434,7 @@ name|bool
 name|earlyResolveAddresses
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -1452,20 +1450,20 @@ begin_comment
 comment|/// noted with this interface.
 end_comment
 
-begin_function_decl
-name|virtual
+begin_decl_stmt
 name|void
 name|addRelocation
-parameter_list|(
+argument_list|(
 specifier|const
 name|MachineRelocation
-modifier|&
+operator|&
 name|MR
-parameter_list|)
+argument_list|)
+name|override
 init|=
 literal|0
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// FIXME: These should all be handled with relocations!
@@ -1484,7 +1482,6 @@ comment|///
 end_comment
 
 begin_decl_stmt
-name|virtual
 name|uintptr_t
 name|getConstantPoolEntryAddress
 argument_list|(
@@ -1492,6 +1489,7 @@ name|unsigned
 name|Index
 argument_list|)
 decl|const
+name|override
 init|=
 literal|0
 decl_stmt|;
@@ -1510,7 +1508,6 @@ comment|///
 end_comment
 
 begin_decl_stmt
-name|virtual
 name|uintptr_t
 name|getJumpTableEntryAddress
 argument_list|(
@@ -1518,6 +1515,7 @@ name|unsigned
 name|Index
 argument_list|)
 decl|const
+name|override
 init|=
 literal|0
 decl_stmt|;
@@ -1540,7 +1538,6 @@ comment|///
 end_comment
 
 begin_decl_stmt
-name|virtual
 name|uintptr_t
 name|getMachineBasicBlockAddress
 argument_list|(
@@ -1549,6 +1546,7 @@ operator|*
 name|MBB
 argument_list|)
 decl|const
+name|override
 init|=
 literal|0
 decl_stmt|;
@@ -1567,7 +1565,6 @@ comment|///
 end_comment
 
 begin_decl_stmt
-name|virtual
 name|uintptr_t
 name|getLabelAddress
 argument_list|(
@@ -1576,6 +1573,7 @@ operator|*
 name|Label
 argument_list|)
 decl|const
+name|override
 init|=
 literal|0
 decl_stmt|;
@@ -1589,19 +1587,19 @@ begin_comment
 comment|/// purposes.
 end_comment
 
-begin_function_decl
-name|virtual
+begin_decl_stmt
 name|void
 name|setModuleInfo
-parameter_list|(
+argument_list|(
 name|MachineModuleInfo
-modifier|*
+operator|*
 name|Info
-parameter_list|)
+argument_list|)
+name|override
 init|=
 literal|0
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// getLabelLocations - Return the label locations map of the label IDs to
@@ -1625,7 +1623,7 @@ name|getLabelLocations
 argument_list|()
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt

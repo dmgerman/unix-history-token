@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_global.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_sctp.h"
 end_include
 
@@ -8704,9 +8698,6 @@ expr_stmt|;
 break|break;
 case|case
 name|SIOCSIFADDR
-case|:
-case|case
-name|SIOCGIFADDR
 case|:
 ifdef|#
 directive|ifdef

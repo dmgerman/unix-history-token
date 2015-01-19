@@ -279,6 +279,10 @@ name|StackID
 name|m_stack_id
 block|;
 comment|// Use the stack ID so we can tell step out from step in.
+name|StackID
+name|m_parent_stack_id
+block|;
+comment|// Use the parent stack ID so we can identify tail calls and the like.
 name|bool
 name|m_no_more_plans
 block|;

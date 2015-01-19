@@ -138,12 +138,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/vnet.h>
 end_include
 
@@ -506,17 +500,6 @@ name|IPSEC_LEVEL_USE
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-expr|struct
-name|secpolicy
-argument_list|,
-name|ip4_def_policy
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* ECN ignore(-1)/forbidden(0)/allowed(1) */
 end_comment
@@ -545,6 +528,25 @@ operator|-
 literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+expr|struct
+name|secpolicy
+argument_list|,
+name|def_policy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_def_policy
+value|VNET(def_policy)
+end_define
 
 begin_comment
 comment|/*  * Crypto support requirements:  *  *  1	require hardware support  * -1	require software support  *  0	take anything  */
@@ -608,7 +610,7 @@ comment|/* net.inet.ipsec */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -616,12 +618,14 @@ name|IPSECCTL_DEF_POLICY
 argument_list|,
 name|def_policy
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|VNET_NAME
 argument_list|(
-name|ip4_def_policy
+name|def_policy
 argument_list|)
 operator|.
 name|policy
@@ -634,7 +638,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -642,6 +646,8 @@ name|IPSECCTL_DEF_ESP_TRANSLEV
 argument_list|,
 name|esp_trans_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -658,7 +664,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -666,6 +672,8 @@ name|IPSECCTL_DEF_ESP_NETLEV
 argument_list|,
 name|esp_net_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -682,7 +690,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -690,6 +698,8 @@ name|IPSECCTL_DEF_AH_TRANSLEV
 argument_list|,
 name|ah_trans_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -706,7 +716,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -714,6 +724,8 @@ name|IPSECCTL_DEF_AH_NETLEV
 argument_list|,
 name|ah_net_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -730,7 +742,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -738,6 +750,8 @@ name|IPSECCTL_AH_CLEARTOS
 argument_list|,
 name|ah_cleartos
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -754,7 +768,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -762,6 +776,8 @@ name|IPSECCTL_AH_OFFSETMASK
 argument_list|,
 name|ah_offsetmask
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -778,7 +794,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -786,6 +802,8 @@ name|IPSECCTL_DFBIT
 argument_list|,
 name|dfbit
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -802,7 +820,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -810,6 +828,8 @@ name|IPSECCTL_ECN
 argument_list|,
 name|ecn
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -826,7 +846,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -834,6 +854,8 @@ name|IPSECCTL_DEBUG
 argument_list|,
 name|debug
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -850,7 +872,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -858,6 +880,8 @@ name|OID_AUTO
 argument_list|,
 name|crypto_support
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -915,7 +939,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -923,6 +947,8 @@ name|OID_AUTO
 argument_list|,
 name|test_replay
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -955,7 +981,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -963,6 +989,8 @@ name|OID_AUTO
 argument_list|,
 name|test_integrity
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1108,7 +1136,7 @@ comment|/* net.inet6.ipsec6 */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1116,12 +1144,14 @@ name|IPSECCTL_DEF_POLICY
 argument_list|,
 name|def_policy
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|VNET_NAME
 argument_list|(
-name|ip4_def_policy
+name|def_policy
 argument_list|)
 operator|.
 name|policy
@@ -1134,7 +1164,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1142,6 +1172,8 @@ name|IPSECCTL_DEF_ESP_TRANSLEV
 argument_list|,
 name|esp_trans_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1158,7 +1190,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1166,6 +1198,8 @@ name|IPSECCTL_DEF_ESP_NETLEV
 argument_list|,
 name|esp_net_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1182,7 +1216,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1190,6 +1224,8 @@ name|IPSECCTL_DEF_AH_TRANSLEV
 argument_list|,
 name|ah_trans_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1206,7 +1242,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1214,6 +1250,8 @@ name|IPSECCTL_DEF_AH_NETLEV
 argument_list|,
 name|ah_net_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1230,7 +1268,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1238,6 +1276,8 @@ name|IPSECCTL_ECN
 argument_list|,
 name|ecn
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1254,7 +1294,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1262,6 +1302,8 @@ name|IPSECCTL_DEBUG
 argument_list|,
 name|debug
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1305,86 +1347,74 @@ begin_comment
 comment|/* INET6 */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ipsec_setspidx_inpcb
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|mbuf
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|inpcb
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ipsec_setspidx
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|mbuf
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|secpolicyindex
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ipsec4_get_ulp
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|secpolicyindex
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ipsec4_setspidx_ipaddr
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|mbuf
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|secpolicyindex
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -1392,103 +1422,88 @@ directive|ifdef
 name|INET6
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ipsec6_get_ulp
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|secpolicyindex
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ipsec6_setspidx_ipaddr
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|mbuf
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|secpolicyindex
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ipsec_delpcbpolicy
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|inpcbpolicy
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|secpolicy
 modifier|*
 name|ipsec_deepcopy_policy
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|secpolicy
-operator|*
+modifier|*
 name|src
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vshiftl
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|MALLOC_DEFINE
@@ -1544,7 +1559,7 @@ expr_stmt|;
 name|sp
 operator|=
 operator|&
-name|V_ip4_def_policy
+name|V_def_policy
 expr_stmt|;
 if|if
 condition|(
@@ -2167,9 +2182,6 @@ name|u_int
 name|dir
 parameter_list|,
 name|int
-name|flag
-parameter_list|,
-name|int
 modifier|*
 name|error
 parameter_list|)
@@ -2226,6 +2238,11 @@ name|sp
 operator|=
 name|NULL
 expr_stmt|;
+operator|*
+name|error
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|key_havesp
@@ -2245,15 +2262,7 @@ argument_list|,
 operator|&
 name|spidx
 argument_list|,
-operator|(
-name|flag
-operator|&
-name|IP_FORWARDING
-operator|)
-condition|?
 literal|0
-else|:
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2267,13 +2276,11 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: setpidx failed, dir %u flag %u\n"
+literal|"%s: setpidx failed, dir %u\n"
 operator|,
 name|__func__
 operator|,
 name|dir
-operator|,
-name|flag
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2345,9 +2352,6 @@ parameter_list|,
 name|u_int
 name|dir
 parameter_list|,
-name|u_int
-name|flag
-parameter_list|,
 name|int
 modifier|*
 name|error
@@ -2381,8 +2385,6 @@ argument_list|(
 name|m
 argument_list|,
 name|dir
-argument_list|,
-name|flag
 argument_list|,
 name|error
 argument_list|)
@@ -4679,14 +4681,6 @@ name|new
 operator|->
 name|sp_in
 operator|->
-name|state
-operator|=
-name|IPSEC_SPSTATE_ALIVE
-expr_stmt|;
-name|new
-operator|->
-name|sp_in
-operator|->
 name|policy
 operator|=
 name|IPSEC_POLICY_ENTRUST
@@ -4724,14 +4718,6 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-name|new
-operator|->
-name|sp_out
-operator|->
-name|state
-operator|=
-name|IPSEC_SPSTATE_ALIVE
-expr_stmt|;
 name|new
 operator|->
 name|sp_out
@@ -5199,14 +5185,6 @@ name|newchain
 expr_stmt|;
 name|dst
 operator|->
-name|state
-operator|=
-name|src
-operator|->
-name|state
-expr_stmt|;
-name|dst
-operator|->
 name|policy
 operator|=
 name|src
@@ -5437,12 +5415,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|newsp
-operator|->
-name|state
-operator|=
-name|IPSEC_SPSTATE_ALIVE
-expr_stmt|;
 comment|/* Clear old SP and set new SP. */
 name|KEY_FREESP
 argument_list|(
@@ -6571,6 +6543,10 @@ comment|/* Valid. */
 block|}
 end_function
 
+begin_comment
+comment|/*  * Non zero return value means security policy DISCARD or policy violation.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -6609,7 +6585,7 @@ literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get SP for this packet. 	 * When we are called from ip_forward(), we call 	 * ipsec_getpolicybyaddr() with IP_FORWARDING flag. 	 */
+comment|/* Get SP for this packet. */
 if|if
 condition|(
 name|inp
@@ -6623,8 +6599,6 @@ argument_list|(
 name|m
 argument_list|,
 name|IPSEC_DIR_INBOUND
-argument_list|,
-name|IP_FORWARDING
 argument_list|,
 operator|&
 name|error
@@ -6672,9 +6646,9 @@ else|else
 block|{
 name|result
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-comment|/* XXX Should be panic? 				 * -> No, there may be error. */
+comment|/* treat errors as policy violation */
 block|}
 return|return
 operator|(
@@ -7080,7 +7054,7 @@ literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Get SP for this packet. 	 * When we are called from ip_forward(), we call 	 * ipsec_getpolicybyaddr() with IP_FORWARDING flag. 	 */
+comment|/* Get SP for this packet. */
 if|if
 condition|(
 name|inp
@@ -7094,8 +7068,6 @@ argument_list|(
 name|m
 argument_list|,
 name|dir
-argument_list|,
-name|IP_FORWARDING
 argument_list|,
 operator|&
 name|error
@@ -8380,7 +8352,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ipsec_init
+name|def_policy_init
 parameter_list|(
 specifier|const
 name|void
@@ -8389,32 +8361,43 @@ name|unused
 name|__unused
 parameter_list|)
 block|{
-name|SECPOLICY_LOCK_INIT
+name|bzero
 argument_list|(
 operator|&
-name|V_ip4_def_policy
+name|V_def_policy
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|secpolicy
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|V_ip4_def_policy
+name|V_def_policy
+operator|.
+name|policy
+operator|=
+name|IPSEC_POLICY_NONE
+expr_stmt|;
+name|V_def_policy
 operator|.
 name|refcnt
 operator|=
 literal|1
 expr_stmt|;
-comment|/* NB: disallow free. */
 block|}
 end_function
 
 begin_expr_stmt
 name|VNET_SYSINIT
 argument_list|(
-name|ipsec_init
+name|def_policy_init
 argument_list|,
 name|SI_SUB_PROTO_DOMAININIT
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
-name|ipsec_init
+name|def_policy_init
 argument_list|,
 name|NULL
 argument_list|)

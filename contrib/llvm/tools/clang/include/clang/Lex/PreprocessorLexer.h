@@ -190,7 +190,7 @@ argument_list|()
 operator|:
 name|PP
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|InitialNumSLocEntries

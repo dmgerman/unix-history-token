@@ -62,6 +62,22 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
+comment|/// DWARFAddressRangesVector - represents a set of absolute address ranges.
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|uint64_t
+operator|,
+name|uint64_t
+operator|>>
+name|DWARFAddressRangesVector
+expr_stmt|;
 name|class
 name|DWARFDebugRangeList
 block|{
@@ -152,35 +168,6 @@ operator|-
 literal|1ULL
 return|;
 block|}
-name|bool
-name|containsAddress
-argument_list|(
-name|uint64_t
-name|BaseAddress
-argument_list|,
-name|uint64_t
-name|Address
-argument_list|)
-decl|const
-block|{
-return|return
-operator|(
-name|BaseAddress
-operator|+
-name|StartAddress
-operator|<=
-name|Address
-operator|)
-operator|&&
-operator|(
-name|Address
-operator|<
-name|BaseAddress
-operator|+
-name|EndAddress
-operator|)
-return|;
-block|}
 block|}
 struct|;
 name|private
@@ -233,17 +220,14 @@ modifier|*
 name|offset_ptr
 parameter_list|)
 function_decl|;
-comment|/// containsAddress - Returns true if range list contains the given
-comment|/// address. Has to be passed base address of the compile unit that
-comment|/// references this range list.
-name|bool
-name|containsAddress
+comment|/// getAbsoluteRanges - Returns absolute address ranges defined by this range
+comment|/// list. Has to be passed base address of the compile unit referencing this
+comment|/// range list.
+name|DWARFAddressRangesVector
+name|getAbsoluteRanges
 argument_list|(
 name|uint64_t
 name|BaseAddress
-argument_list|,
-name|uint64_t
-name|Address
 argument_list|)
 decl|const
 decl_stmt|;

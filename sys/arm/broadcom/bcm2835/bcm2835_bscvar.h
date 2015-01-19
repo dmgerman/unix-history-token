@@ -61,6 +61,9 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
+name|device_t
+name|sc_iicbus
+decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
@@ -123,39 +126,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BCM_BSC_SLOW
-value|10000
-end_define
-
-begin_comment
-comment|/*  10 kHz. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BCM_BSC_FAST
-value|50000
-end_define
-
-begin_comment
-comment|/*  50 kHz. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BCM_BSC_FASTEST
-value|100000
-end_define
-
-begin_comment
-comment|/* 100 kHz. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|BCM_BSC_WRITE
 parameter_list|(
 name|_sc
@@ -165,7 +135,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|bus_space_write_4(_sc->sc_bst, _sc->sc_bsh, _off, _val)
+value|bus_space_write_4((_sc)->sc_bst, (_sc)->sc_bsh, _off, _val)
 end_define
 
 begin_define
@@ -178,7 +148,7 @@ parameter_list|,
 name|_off
 parameter_list|)
 define|\
-value|bus_space_read_4(_sc->sc_bst, _sc->sc_bsh, _off)
+value|bus_space_read_4((_sc)->sc_bst, (_sc)->sc_bsh, _off)
 end_define
 
 begin_define

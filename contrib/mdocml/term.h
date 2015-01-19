@@ -1,33 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term.h,v 1.97 2013/12/25 00:39:31 schwarze Exp $ */
+comment|/*	$Id: term.h,v 1.108 2014/12/02 10:08:06 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012, 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012, 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TERM_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TERM_H
-end_define
-
-begin_macro
-name|__BEGIN_DECLS
-end_macro
-
-begin_struct_decl
-struct_decl|struct
-name|termp
-struct_decl|;
-end_struct_decl
 
 begin_enum
 enum|enum
@@ -85,6 +63,12 @@ begin_comment
 comment|/* FIXME */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|termp
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|void
@@ -134,6 +118,10 @@ name|tbl
 decl_stmt|;
 comment|/* table configuration */
 name|int
+name|synopsisonly
+decl_stmt|;
+comment|/* print the synopsis only */
+name|int
 name|mdocstyle
 decl_stmt|;
 comment|/* imitate mdoc(7) output */
@@ -145,6 +133,10 @@ name|size_t
 name|defrmargin
 decl_stmt|;
 comment|/* Right margin of the device. */
+name|size_t
+name|lastrmargin
+decl_stmt|;
+comment|/* Right margin before the last ll. */
 name|size_t
 name|rmargin
 decl_stmt|;
@@ -230,29 +222,34 @@ value|(1<< 8)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_DANGLE
+name|TERMP_BRIND
 value|(1<< 9)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_HANG
+name|TERMP_DANGLE
 value|(1<< 10)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_NOSPLIT
+name|TERMP_HANG
 value|(1<< 11)
-comment|/* See termp_an_pre/post(). */
+comment|/* See term_flushln(). */
+define|#
+directive|define
+name|TERMP_NOSPLIT
+value|(1<< 12)
+comment|/* Do not break line before .An. */
 define|#
 directive|define
 name|TERMP_SPLIT
-value|(1<< 12)
-comment|/* See termp_an_pre/post(). */
+value|(1<< 13)
+comment|/* Break line before .An. */
 define|#
 directive|define
-name|TERMP_ANPREC
-value|(1<< 13)
-comment|/* See termp_an_pre(). */
+name|TERMP_NONEWLINE
+value|(1<< 14)
+comment|/* No line break in nofill mode. */
 name|int
 modifier|*
 name|buf
@@ -263,12 +260,13 @@ name|termenc
 name|enc
 decl_stmt|;
 comment|/* Type of encoding. */
+specifier|const
 name|struct
 name|mchars
 modifier|*
 name|symtab
 decl_stmt|;
-comment|/* Encoded-symbol table. */
+comment|/* Character table. */
 name|enum
 name|termfont
 name|fontl
@@ -353,6 +351,21 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|setwidth
+function_decl|)
+parameter_list|(
+name|struct
+name|termp
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
 name|size_t
 function_decl|(
 modifier|*
@@ -398,6 +411,33 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_macro
+name|__BEGIN_DECLS
+end_macro
+
+begin_struct_decl
+struct_decl|struct
+name|tbl_span
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|eqn
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|ascii_uc2str
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -515,6 +555,21 @@ name|term_end
 parameter_list|(
 name|struct
 name|termp
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|term_setwidth
+parameter_list|(
+name|struct
+name|termp
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -677,15 +732,6 @@ end_function_decl
 begin_macro
 name|__END_DECLS
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!TERM_H*/
-end_comment
 
 end_unit
 

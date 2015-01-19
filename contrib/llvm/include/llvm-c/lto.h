@@ -103,8 +103,12 @@ begin_define
 define|#
 directive|define
 name|LTO_API_VERSION
-value|5
+value|10
 end_define
+
+begin_comment
+comment|/**  * \since prior to LTO_API_VERSION=3  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -183,6 +187,10 @@ name|lto_symbol_attributes
 typedef|;
 end_typedef
 
+begin_comment
+comment|/**  * \since prior to LTO_API_VERSION=3  */
+end_comment
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -199,6 +207,10 @@ name|lto_debug_model
 typedef|;
 end_typedef
 
+begin_comment
+comment|/**  * \since prior to LTO_API_VERSION=3  */
+end_comment
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -214,6 +226,10 @@ block|,
 name|LTO_CODEGEN_PIC_MODEL_DYNAMIC_NO_PIC
 init|=
 literal|2
+block|,
+name|LTO_CODEGEN_PIC_MODEL_DEFAULT
+init|=
+literal|3
 block|}
 name|lto_codegen_model
 typedef|;
@@ -226,7 +242,7 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
-name|LTOModule
+name|LLVMOpaqueLTOModule
 modifier|*
 name|lto_module_t
 typedef|;
@@ -239,7 +255,7 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
-name|LTOCodeGenerator
+name|LLVMOpaqueLTOCodeGenerator
 modifier|*
 name|lto_code_gen_t
 typedef|;
@@ -257,7 +273,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/**  * Returns a printable string.  */
+comment|/**  * Returns a printable string.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 specifier|const
 name|char
@@ -267,7 +283,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/**  * Returns the last error string or NULL if last operation was successful.  */
+comment|/**  * Returns the last error string or NULL if last operation was successful.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 specifier|const
 name|char
@@ -277,7 +293,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/**  * Checks if a file is a loadable object file.  */
+comment|/**  * Checks if a file is a loadable object file.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_bool_t
 name|lto_module_is_object_file
@@ -288,7 +304,7 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
-comment|/**  * Checks if a file is a loadable object compiled for requested target.  */
+comment|/**  * Checks if a file is a loadable object compiled for requested target.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_bool_t
 name|lto_module_is_object_file_for_target
@@ -304,7 +320,7 @@ modifier|*
 name|target_triple_prefix
 parameter_list|)
 function_decl|;
-comment|/**  * Checks if a buffer is a loadable object file.  */
+comment|/**  * Checks if a buffer is a loadable object file.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_bool_t
 name|lto_module_is_object_file_in_memory
@@ -318,7 +334,7 @@ name|size_t
 name|length
 parameter_list|)
 function_decl|;
-comment|/**  * Checks if a buffer is a loadable object compiled for requested target.  */
+comment|/**  * Checks if a buffer is a loadable object compiled for requested target.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_bool_t
 name|lto_module_is_object_file_in_memory_for_target
@@ -337,7 +353,7 @@ modifier|*
 name|target_triple_prefix
 parameter_list|)
 function_decl|;
-comment|/**  * Loads an object file from disk.  * Returns NULL on error (check lto_get_error_message() for details).  */
+comment|/**  * Loads an object file from disk.  * Returns NULL on error (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_module_t
 name|lto_module_create
@@ -348,7 +364,7 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
-comment|/**  * Loads an object file from memory.  * Returns NULL on error (check lto_get_error_message() for details).  */
+comment|/**  * Loads an object file from memory.  * Returns NULL on error (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_module_t
 name|lto_module_create_from_memory
@@ -362,7 +378,26 @@ name|size_t
 name|length
 parameter_list|)
 function_decl|;
-comment|/**  * Loads an object file from disk. The seek point of fd is not preserved.  * Returns NULL on error (check lto_get_error_message() for details).  */
+comment|/**  * Loads an object file from memory with an extra path argument.  * Returns NULL on error (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=9  */
+specifier|extern
+name|lto_module_t
+name|lto_module_create_from_memory_with_path
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|mem
+parameter_list|,
+name|size_t
+name|length
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+comment|/**  * Loads an object file from disk. The seek point of fd is not preserved.  * Returns NULL on error (check lto_get_error_message() for details).  *  * \since LTO_API_VERSION=5  */
 specifier|extern
 name|lto_module_t
 name|lto_module_create_from_fd
@@ -379,7 +414,7 @@ name|size_t
 name|file_size
 parameter_list|)
 function_decl|;
-comment|/**  * Loads an object file from disk. The seek point of fd is not preserved.  * Returns NULL on error (check lto_get_error_message() for details).  */
+comment|/**  * Loads an object file from disk. The seek point of fd is not preserved.  * Returns NULL on error (check lto_get_error_message() for details).  *  * \since LTO_API_VERSION=5  */
 specifier|extern
 name|lto_module_t
 name|lto_module_create_from_fd_at_offset
@@ -402,7 +437,7 @@ name|off_t
 name|offset
 parameter_list|)
 function_decl|;
-comment|/**  * Frees all memory internally allocated by the module.  * Upon return the lto_module_t is no longer valid.  */
+comment|/**  * Frees all memory internally allocated by the module.  * Upon return the lto_module_t is no longer valid.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|void
 name|lto_module_dispose
@@ -411,7 +446,7 @@ name|lto_module_t
 name|mod
 parameter_list|)
 function_decl|;
-comment|/**  * Returns triple string which the object module was compiled under.  */
+comment|/**  * Returns triple string which the object module was compiled under.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 specifier|const
 name|char
@@ -422,7 +457,7 @@ name|lto_module_t
 name|mod
 parameter_list|)
 function_decl|;
-comment|/**  * Sets triple string with which the object will be codegened.  */
+comment|/**  * Sets triple string with which the object will be codegened.  *  * \since LTO_API_VERSION=4  */
 specifier|extern
 name|void
 name|lto_module_set_target_triple
@@ -436,7 +471,7 @@ modifier|*
 name|triple
 parameter_list|)
 function_decl|;
-comment|/**  * Returns the number of symbols in the object module.  */
+comment|/**  * Returns the number of symbols in the object module.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|unsigned
 name|int
@@ -446,7 +481,7 @@ name|lto_module_t
 name|mod
 parameter_list|)
 function_decl|;
-comment|/**  * Returns the name of the ith symbol in the object module.  */
+comment|/**  * Returns the name of the ith symbol in the object module.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 specifier|const
 name|char
@@ -461,7 +496,7 @@ name|int
 name|index
 parameter_list|)
 function_decl|;
-comment|/**  * Returns the attributes of the ith symbol in the object module.  */
+comment|/**  * Returns the attributes of the ith symbol in the object module.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_symbol_attributes
 name|lto_module_get_symbol_attribute
@@ -474,7 +509,114 @@ name|int
 name|index
 parameter_list|)
 function_decl|;
-comment|/**  * Instantiates a code generator.  * Returns NULL on error (check lto_get_error_message() for details).  */
+comment|/**  * Returns the number of dependent libraries in the object module.  *  * \since LTO_API_VERSION=8  */
+specifier|extern
+name|unsigned
+name|int
+name|lto_module_get_num_deplibs
+parameter_list|(
+name|lto_module_t
+name|mod
+parameter_list|)
+function_decl|;
+comment|/**  * Returns the ith dependent library in the module.  *  * \since LTO_API_VERSION=8  */
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|lto_module_get_deplib
+parameter_list|(
+name|lto_module_t
+name|mod
+parameter_list|,
+name|unsigned
+name|int
+name|index
+parameter_list|)
+function_decl|;
+comment|/**  * Returns the number of linker options in the object module.  *  * \since LTO_API_VERSION=8  */
+specifier|extern
+name|unsigned
+name|int
+name|lto_module_get_num_linkeropts
+parameter_list|(
+name|lto_module_t
+name|mod
+parameter_list|)
+function_decl|;
+comment|/**  * Returns the ith linker option in the module.  *  * \since LTO_API_VERSION=8  */
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|lto_module_get_linkeropt
+parameter_list|(
+name|lto_module_t
+name|mod
+parameter_list|,
+name|unsigned
+name|int
+name|index
+parameter_list|)
+function_decl|;
+comment|/**  * Diagnostic severity.  *  * \since LTO_API_VERSION=7  */
+typedef|typedef
+enum|enum
+block|{
+name|LTO_DS_ERROR
+init|=
+literal|0
+block|,
+name|LTO_DS_WARNING
+init|=
+literal|1
+block|,
+name|LTO_DS_REMARK
+init|=
+literal|3
+block|,
+comment|// Added in LTO_API_VERSION=10.
+name|LTO_DS_NOTE
+init|=
+literal|2
+block|}
+name|lto_codegen_diagnostic_severity_t
+typedef|;
+comment|/**  * Diagnostic handler type.  * \p severity defines the severity.  * \p diag is the actual diagnostic.  * The diagnostic is not prefixed by any of severity keyword, e.g., 'error: '.  * \p ctxt is used to pass the context set with the diagnostic handler.  *  * \since LTO_API_VERSION=7  */
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|lto_diagnostic_handler_t
+function_decl|)
+parameter_list|(
+name|lto_codegen_diagnostic_severity_t
+name|severity
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|diag
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
+parameter_list|)
+function_decl|;
+comment|/**  * Set a diagnostic handler and the related context (void *).  * This is more general than lto_get_error_message, as the diagnostic handler  * can be called at anytime within lto.  *  * \since LTO_API_VERSION=7  */
+specifier|extern
+name|void
+name|lto_codegen_set_diagnostic_handler
+parameter_list|(
+name|lto_code_gen_t
+parameter_list|,
+name|lto_diagnostic_handler_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/**  * Instantiates a code generator.  * Returns NULL on error (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_code_gen_t
 name|lto_codegen_create
@@ -482,7 +624,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/**  * Frees all code generator and all memory it internally allocated.  * Upon return the lto_code_gen_t is no longer valid.  */
+comment|/**  * Frees all code generator and all memory it internally allocated.  * Upon return the lto_code_gen_t is no longer valid.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|void
 name|lto_codegen_dispose
@@ -490,7 +632,7 @@ parameter_list|(
 name|lto_code_gen_t
 parameter_list|)
 function_decl|;
-comment|/**  * Add an object module to the set of modules for which code will be generated.  * Returns true on error (check lto_get_error_message() for details).  */
+comment|/**  * Add an object module to the set of modules for which code will be generated.  * Returns true on error (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_bool_t
 name|lto_codegen_add_module
@@ -502,7 +644,7 @@ name|lto_module_t
 name|mod
 parameter_list|)
 function_decl|;
-comment|/**  * Sets if debug info should be generated.  * Returns true on error (check lto_get_error_message() for details).  */
+comment|/**  * Sets if debug info should be generated.  * Returns true on error (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_bool_t
 name|lto_codegen_set_debug_model
@@ -513,7 +655,7 @@ parameter_list|,
 name|lto_debug_model
 parameter_list|)
 function_decl|;
-comment|/**  * Sets which PIC code model to generated.  * Returns true on error (check lto_get_error_message() for details).  */
+comment|/**  * Sets which PIC code model to generated.  * Returns true on error (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_bool_t
 name|lto_codegen_set_pic_model
@@ -524,7 +666,7 @@ parameter_list|,
 name|lto_codegen_model
 parameter_list|)
 function_decl|;
-comment|/**  * Sets the cpu to generate code for.  */
+comment|/**  * Sets the cpu to generate code for.  *  * \since LTO_API_VERSION=4  */
 specifier|extern
 name|void
 name|lto_codegen_set_cpu
@@ -538,7 +680,7 @@ modifier|*
 name|cpu
 parameter_list|)
 function_decl|;
-comment|/**  * Sets the location of the assembler tool to run. If not set, libLTO  * will use gcc to invoke the assembler.  */
+comment|/**  * Sets the location of the assembler tool to run. If not set, libLTO  * will use gcc to invoke the assembler.  *  * \since LTO_API_VERSION=3  */
 specifier|extern
 name|void
 name|lto_codegen_set_assembler_path
@@ -552,7 +694,7 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
-comment|/**  * Sets extra arguments that libLTO should pass to the assembler.  */
+comment|/**  * Sets extra arguments that libLTO should pass to the assembler.  *  * \since LTO_API_VERSION=4  */
 specifier|extern
 name|void
 name|lto_codegen_set_assembler_args
@@ -570,7 +712,7 @@ name|int
 name|nargs
 parameter_list|)
 function_decl|;
-comment|/**  * Tells LTO optimization passes that this symbol must be preserved  * because it is referenced by native code or a command line option.  */
+comment|/**  * Adds to a list of all global symbols that must exist in the final generated  * code. If a function is not listed there, it might be inlined into every usage  * and optimized away.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|void
 name|lto_codegen_add_must_preserve_symbol
@@ -584,7 +726,7 @@ modifier|*
 name|symbol
 parameter_list|)
 function_decl|;
-comment|/**  * Writes a new object file at the specified path that contains the  * merged contents of all modules added so far.  * Returns true on error (check lto_get_error_message() for details).  */
+comment|/**  * Writes a new object file at the specified path that contains the  * merged contents of all modules added so far.  * Returns true on error (check lto_get_error_message() for details).  *  * \since LTO_API_VERSION=5  */
 specifier|extern
 name|lto_bool_t
 name|lto_codegen_write_merged_modules
@@ -598,7 +740,7 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
-comment|/**  * Generates code for all added modules into one native object file.  * On success returns a pointer to a generated mach-o/ELF buffer and  * length set to the buffer size.  The buffer is owned by the  * lto_code_gen_t and will be freed when lto_codegen_dispose()  * is called, or lto_codegen_compile() is called again.  * On failure, returns NULL (check lto_get_error_message() for details).  */
+comment|/**  * Generates code for all added modules into one native object file.  * On success returns a pointer to a generated mach-o/ELF buffer and  * length set to the buffer size.  The buffer is owned by the  * lto_code_gen_t and will be freed when lto_codegen_dispose()  * is called, or lto_codegen_compile() is called again.  * On failure, returns NULL (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 specifier|const
 name|void
@@ -613,7 +755,7 @@ modifier|*
 name|length
 parameter_list|)
 function_decl|;
-comment|/**  * Generates code for all added modules into one native object file.  * The name of the file is written to name. Returns true on error.  */
+comment|/**  * Generates code for all added modules into one native object file.  * The name of the file is written to name. Returns true on error.  *  * \since LTO_API_VERSION=5  */
 specifier|extern
 name|lto_bool_t
 name|lto_codegen_compile_to_file
@@ -628,7 +770,7 @@ modifier|*
 name|name
 parameter_list|)
 function_decl|;
-comment|/**  * Sets options to help debug codegen bugs.  */
+comment|/**  * Sets options to help debug codegen bugs.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|void
 name|lto_codegen_debug_options
@@ -641,7 +783,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/**  * Initializes LLVM disassemblers.  * FIXME: This doesn't really belong here.  */
+comment|/**  * Initializes LLVM disassemblers.  * FIXME: This doesn't really belong here.  *  * \since LTO_API_VERSION=5  */
 specifier|extern
 name|void
 name|lto_initialize_disassembler

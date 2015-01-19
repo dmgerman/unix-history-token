@@ -10781,11 +10781,12 @@ name|rxq
 operator|->
 name|vxrxq_id
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -15371,13 +15372,15 @@ name|sc
 operator|->
 name|vmx_ntxqueues
 expr_stmt|;
+comment|/* check if flowid is set */
 if|if
 condition|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 name|i
 operator|=

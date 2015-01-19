@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//== llvm/Support/APFloat.h - Arbitrary Precision Floating Point -*- C++ -*-==//
+comment|//===- llvm/ADT/APFloat.h - Arbitrary Precision Floating Point ---*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -403,6 +403,12 @@ name|APFloat
 operator|&
 argument_list|)
 expr_stmt|;
+name|APFloat
+argument_list|(
+name|APFloat
+operator|&&
+argument_list|)
+expr_stmt|;
 operator|~
 name|APFloat
 argument_list|()
@@ -556,7 +562,7 @@ name|Sem
 argument_list|,
 name|Negative
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -581,7 +587,7 @@ name|APInt
 modifier|*
 name|payload
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -617,7 +623,7 @@ name|APInt
 modifier|*
 name|payload
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -1219,6 +1225,15 @@ name|APFloat
 operator|&
 operator|)
 decl_stmt|;
+name|APFloat
+modifier|&
+name|operator
+init|=
+operator|(
+name|APFloat
+operator|&&
+operator|)
+decl_stmt|;
 comment|/// \brief Overload to compute a hash code for an APFloat value.
 comment|///
 comment|/// Note that the use of hash codes for floating point values is in general
@@ -1496,7 +1511,7 @@ name|APInt
 modifier|*
 name|fill
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 specifier|static

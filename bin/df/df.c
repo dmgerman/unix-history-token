@@ -147,6 +147,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libxo/xo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"extern.h"
 end_include
 
@@ -267,6 +273,10 @@ specifier|static
 name|void
 name|prthumanval
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|int64_t
 parameter_list|)
 function_decl|;
@@ -537,6 +547,26 @@ name|vfslist
 operator|=
 name|NULL
 expr_stmt|;
+name|argc
+operator|=
+name|xo_parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -673,7 +703,7 @@ name|vfslist
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -725,7 +755,7 @@ if|if
 condition|(
 name|lflag
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -738,7 +768,7 @@ name|vfslist
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -846,7 +876,7 @@ name|mntbuf
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -859,6 +889,16 @@ literal|0
 expr_stmt|;
 comment|/* continued in for loop below */
 block|}
+name|xo_open_container
+argument_list|(
+literal|"storage-system-information"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"filesystem"
+argument_list|)
+expr_stmt|;
 comment|/* iterate through specified filesystems */
 for|for
 control|(
@@ -899,7 +939,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -961,7 +1001,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"strdup failed"
 argument_list|)
@@ -986,7 +1026,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"mkdtemp(\"%s\") failed"
 argument_list|,
@@ -1021,7 +1061,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -1096,7 +1136,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -1155,7 +1195,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -1322,6 +1362,11 @@ operator|&
 name|maxwidths
 argument_list|)
 expr_stmt|;
+name|xo_close_list
+argument_list|(
+literal|"filesystem"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cflag
@@ -1334,6 +1379,14 @@ argument_list|,
 operator|&
 name|maxwidths
 argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"storage-system-information"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1558,7 +1611,7 @@ name|error
 operator|<
 literal|0
 condition|)
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"%s stats possibly stale"
 argument_list|,
@@ -1610,6 +1663,8 @@ parameter_list|)
 block|{
 name|prthumanval
 argument_list|(
+literal|"  {:blocks/%6s}"
+argument_list|,
 name|sfsp
 operator|->
 name|f_blocks
@@ -1621,6 +1676,8 @@ argument_list|)
 expr_stmt|;
 name|prthumanval
 argument_list|(
+literal|"  {:used/%6s}"
+argument_list|,
 name|used
 operator|*
 name|sfsp
@@ -1630,6 +1687,8 @@ argument_list|)
 expr_stmt|;
 name|prthumanval
 argument_list|(
+literal|"  {:available/%6s}"
+argument_list|,
 name|sfsp
 operator|->
 name|f_bavail
@@ -1647,6 +1706,11 @@ specifier|static
 name|void
 name|prthumanval
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
 name|int64_t
 name|bytes
 parameter_list|)
@@ -1706,12 +1770,22 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_attr
 argument_list|(
-literal|"  %6s"
+literal|"value"
+argument_list|,
+literal|"%lld"
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|bytes
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+name|fmt
 argument_list|,
 name|buf
 argument_list|)
@@ -1728,6 +1802,11 @@ specifier|static
 name|void
 name|prthumanvalinode
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
 name|int64_t
 name|bytes
 parameter_list|)
@@ -1777,12 +1856,22 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_attr
 argument_list|(
-literal|" %5s"
+literal|"value"
+argument_list|,
+literal|"%lld"
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|bytes
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+name|fmt
 argument_list|,
 name|buf
 argument_list|)
@@ -2095,12 +2184,9 @@ literal|"Avail"
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-*s"
+literal|"{T:/%-*s}"
 argument_list|,
 name|mwp
 operator|->
@@ -2113,12 +2199,9 @@ if|if
 condition|(
 name|Tflag
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"  %-*s"
+literal|"  {T:/%-*s}"
 argument_list|,
 name|mwp
 operator|->
@@ -2127,12 +2210,9 @@ argument_list|,
 literal|"Type"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %*s %*s %*s Capacity"
+literal|" {T:/%*s} {T:/%*s} {T:/%*s} Capacity"
 argument_list|,
 name|mwp
 operator|->
@@ -2204,12 +2284,9 @@ literal|"ifree"
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %*s %*s %%iused"
+literal|" {T:/%*s} {T:/%*s} {T:\%iused}"
 argument_list|,
 name|mwp
 operator|->
@@ -2227,15 +2304,17 @@ literal|"ifree"
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"  Mounted on\n"
+literal|"  {T:Mounted on}\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_open_instance
+argument_list|(
+literal|"filesystem"
+argument_list|)
+expr_stmt|;
 comment|/* Check for 0 block size.  Can this happen? */
 if|if
 condition|(
@@ -2246,7 +2325,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"File system %s does not have a block size, assuming 512."
 argument_list|,
@@ -2262,12 +2341,9 @@ operator|=
 literal|512
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-*s"
+literal|"{tk:name/%-*s}"
 argument_list|,
 name|mwp
 operator|->
@@ -2282,12 +2358,9 @@ if|if
 condition|(
 name|Tflag
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"  %-*s"
+literal|"  {:type/%-*s}"
 argument_list|,
 name|mwp
 operator|->
@@ -2337,17 +2410,16 @@ name|thousands
 condition|)
 name|format
 operator|=
-literal|" %*j'd %*j'd %*j'd"
+literal|" {t:total-blocks/%*j'd} {t:used-blocks/%*j'd} "
+literal|"{t:available-blocks/%*j'd}"
 expr_stmt|;
 else|else
 name|format
 operator|=
-literal|" %*jd %*jd %*jd"
+literal|" {t:total-blocks/%*jd} {t:used-blocks/%*jd} "
+literal|"{t:available-blocks/%*jd}"
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
 name|format
 argument_list|,
@@ -2402,12 +2474,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %5.0f%%"
+literal|" {:used-percent/%5.0f}{U:%%}"
 argument_list|,
 name|availblks
 operator|==
@@ -2452,21 +2521,22 @@ condition|(
 name|hflag
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|"  "
 argument_list|)
 expr_stmt|;
 name|prthumanvalinode
 argument_list|(
+literal|" {:inodes-used/%5s}"
+argument_list|,
 name|used
 argument_list|)
 expr_stmt|;
 name|prthumanvalinode
 argument_list|(
+literal|" {:inodes-free/%5s}"
+argument_list|,
 name|sfsp
 operator|->
 name|f_ffree
@@ -2481,17 +2551,14 @@ name|thousands
 condition|)
 name|format
 operator|=
-literal|" %*j'd %*j'd"
+literal|" {:inodes-used/%*j'd} {:inodes-free/%*j'd}"
 expr_stmt|;
 else|else
 name|format
 operator|=
-literal|" %*jd %*jd"
+literal|" {:inodes-used/%*jd} {:inodes-free/%*jd}"
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
 name|format
 argument_list|,
@@ -2517,12 +2584,9 @@ name|f_ffree
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %4.0f%% "
+literal|" {:inodes-used-percent/%4.0f}{U:%%} "
 argument_list|,
 name|inodes
 operator|==
@@ -2545,10 +2609,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|"  "
 argument_list|)
@@ -2568,24 +2629,23 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"  %s"
+literal|"  {:mounted-on}"
 argument_list|,
 name|sfsp
 operator|->
 name|f_mntonname
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"filesystem"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2964,13 +3024,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|xo_error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"usage: df [-b | -g | -H | -h | -k | -m | -P] [-acilnT] [-t type] [-,]\n"
 literal|"          [file | filesystem ...]\n"
 argument_list|)
@@ -3040,7 +3095,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl(vfs.conflist)"
 argument_list|)
@@ -3065,7 +3120,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"malloc failed"
 argument_list|)
@@ -3099,7 +3154,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl(vfs.conflist)"
 argument_list|)
@@ -3145,7 +3200,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"malloc failed"
 argument_list|)
@@ -3213,7 +3268,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"malloc failed"
 argument_list|)
@@ -3276,7 +3331,7 @@ name|cnt
 operator|>
 literal|0
 condition|)
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"malloc failed"
 argument_list|)

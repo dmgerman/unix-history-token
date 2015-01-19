@@ -471,17 +471,16 @@ operator|::
 name|CPMachineBasicBlock
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getRelocationInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|2
 return|;
 block|}
-name|virtual
 name|int
 name|getExistingMachineCPValue
 argument_list|(
@@ -489,15 +488,14 @@ argument|MachineConstantPool *CP
 argument_list|,
 argument|unsigned Alignment
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|addSelectionDAGCSEId
 argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|FoldingSetNodeID&ID
 argument_list|)
+name|override
 block|;
 comment|/// hasSameValue - Return true if this ARM constpool value can share the same
 comment|/// constantpool entry as another ARM constpool value.
@@ -543,13 +541,13 @@ operator|->
 name|Modifier
 return|;
 block|}
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|print
@@ -716,7 +714,6 @@ name|getBlockAddress
 argument_list|()
 specifier|const
 block|;
-name|virtual
 name|int
 name|getExistingMachineCPValue
 argument_list|(
@@ -724,34 +721,31 @@ argument|MachineConstantPool *CP
 argument_list|,
 argument|unsigned Alignment
 argument_list|)
+name|override
 block|;
 comment|/// hasSameValue - Return true if this ARM constpool value can share the same
 comment|/// constantpool entry as another ARM constpool value.
-name|virtual
 name|bool
 name|hasSameValue
 argument_list|(
-name|ARMConstantPoolValue
-operator|*
-name|ACPV
+argument|ARMConstantPoolValue *ACPV
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|addSelectionDAGCSEId
 argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|FoldingSetNodeID&ID
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -861,7 +855,6 @@ name|c_str
 argument_list|()
 return|;
 block|}
-name|virtual
 name|int
 name|getExistingMachineCPValue
 argument_list|(
@@ -869,34 +862,31 @@ argument|MachineConstantPool *CP
 argument_list|,
 argument|unsigned Alignment
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|addSelectionDAGCSEId
 argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|FoldingSetNodeID&ID
 argument_list|)
+name|override
 block|;
 comment|/// hasSameValue - Return true if this ARM constpool value can share the same
 comment|/// constantpool entry as another ARM constpool value.
-name|virtual
 name|bool
 name|hasSameValue
 argument_list|(
-name|ARMConstantPoolValue
-operator|*
-name|ACPV
+argument|ARMConstantPoolValue *ACPV
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -992,7 +982,6 @@ return|return
 name|MBB
 return|;
 block|}
-name|virtual
 name|int
 name|getExistingMachineCPValue
 argument_list|(
@@ -1000,34 +989,31 @@ argument|MachineConstantPool *CP
 argument_list|,
 argument|unsigned Alignment
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|addSelectionDAGCSEId
 argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|FoldingSetNodeID&ID
 argument_list|)
+name|override
 block|;
 comment|/// hasSameValue - Return true if this ARM constpool value can share the same
 comment|/// constantpool entry as another ARM constpool value.
-name|virtual
 name|bool
 name|hasSameValue
 argument_list|(
-name|ARMConstantPoolValue
-operator|*
-name|ACPV
+argument|ARMConstantPoolValue *ACPV
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool

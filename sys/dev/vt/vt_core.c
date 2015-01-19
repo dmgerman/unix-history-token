@@ -392,6 +392,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|VT_LOCK_ASSERT
+parameter_list|(
+name|vd
+parameter_list|,
+name|what
+parameter_list|)
+value|mtx_assert(&(vd)->vd_lock, what)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VT_UNIT
 parameter_list|(
 name|vw
@@ -1369,6 +1381,14 @@ modifier|*
 name|vd
 parameter_list|)
 block|{
+comment|/* 	 * As long as this function is called locked, callout_stop() 	 * has the same effect like callout_drain() with regard to 	 * preventing the callback function from executing. 	 */
+name|VT_LOCK_ASSERT
+argument_list|(
+name|vd
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1394,7 +1414,7 @@ literal|0
 argument_list|)
 condition|)
 return|return;
-name|callout_drain
+name|callout_stop
 argument_list|(
 operator|&
 name|vd
@@ -4035,6 +4055,24 @@ literal|0x1b
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KDB
+argument_list|)
+name|kdb_alt_break
+argument_list|(
+name|c
+argument_list|,
+operator|&
+name|vd
+operator|->
+name|vd_altbrk
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|terminal_input_char
@@ -12643,7 +12681,17 @@ name|VDF_ASYNC
 condition|)
 block|{
 comment|/* Stop vt_flush periodic task. */
+name|VT_LOCK
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
 name|vt_suspend_flush_timer
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+name|VT_UNLOCK
 argument_list|(
 name|vd
 argument_list|)

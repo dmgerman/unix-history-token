@@ -6038,6 +6038,8 @@ operator||
 name|LOCKLEAF
 operator||
 name|SAVESTART
+operator||
+name|NOCACHE
 argument_list|)
 expr_stmt|;
 name|nfsvno_setpathbuf
@@ -7253,6 +7255,8 @@ argument_list|,
 name|CREATE
 argument_list|,
 name|cnflags
+operator||
+name|NOCACHE
 argument_list|)
 expr_stmt|;
 name|nfsvno_setpathbuf
@@ -10147,6 +10151,8 @@ argument_list|,
 name|LOCKPARENT
 operator||
 name|SAVENAME
+operator||
+name|NOCACHE
 argument_list|)
 expr_stmt|;
 if|if
@@ -10650,6 +10656,8 @@ argument_list|,
 name|LOCKPARENT
 operator||
 name|SAVESTART
+operator||
+name|NOCACHE
 argument_list|)
 expr_stmt|;
 name|nfsvno_setpathbuf
@@ -11465,6 +11473,8 @@ argument_list|,
 name|LOCKPARENT
 operator||
 name|SAVENAME
+operator||
+name|NOCACHE
 argument_list|)
 expr_stmt|;
 name|nfsvno_setpathbuf
@@ -17327,6 +17337,8 @@ operator||
 name|LOCKLEAF
 operator||
 name|SAVESTART
+operator||
+name|NOCACHE
 argument_list|)
 expr_stmt|;
 else|else

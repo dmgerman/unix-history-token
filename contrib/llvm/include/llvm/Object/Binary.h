@@ -62,19 +62,28 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/Object/Error.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Object/Error.h"
+file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FileSystem.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|LLVMContext
+decl_stmt|;
 name|class
 name|MemoryBuffer
 decl_stmt|;
@@ -105,15 +114,19 @@ name|TypeID
 decl_stmt|;
 name|protected
 label|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MemoryBuffer
-modifier|*
+operator|>
 name|Data
-decl_stmt|;
+expr_stmt|;
 name|Binary
 argument_list|(
 argument|unsigned int Type
 argument_list|,
-argument|MemoryBuffer *Source
+argument|std::unique_ptr<MemoryBuffer> Source
 argument_list|)
 empty_stmt|;
 enum|enum
@@ -122,6 +135,9 @@ name|ID_Archive
 block|,
 name|ID_MachOUniversalBinary
 block|,
+name|ID_IR
+block|,
+comment|// LLVM IR
 comment|// Object and children.
 name|ID_StartObjects
 block|,
@@ -231,6 +247,18 @@ name|getData
 argument_list|()
 specifier|const
 expr_stmt|;
+name|MemoryBuffer
+modifier|*
+name|releaseBuffer
+parameter_list|()
+block|{
+return|return
+name|Data
+operator|.
+name|release
+argument_list|()
+return|;
+block|}
 name|StringRef
 name|getFileName
 argument_list|()
@@ -261,6 +289,19 @@ operator|&&
 name|TypeID
 operator|<
 name|ID_EndObjects
+return|;
+block|}
+name|bool
+name|isSymbolic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isIR
+argument_list|()
+operator|||
+name|isObject
+argument_list|()
 return|;
 block|}
 name|bool
@@ -327,6 +368,17 @@ name|ID_COFF
 return|;
 block|}
 name|bool
+name|isIR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeID
+operator|==
+name|ID_IR
+return|;
+block|}
+name|bool
 name|isLittleEndian
 argument_list|()
 specifier|const
@@ -356,39 +408,39 @@ block|}
 empty_stmt|;
 comment|/// @brief Create a Binary from Source, autodetecting the file type.
 comment|///
-comment|/// @param Source The data to create the Binary from. Ownership is transferred
-comment|///        to Result if successful. If an error is returned, Source is destroyed
-comment|///        by createBinary before returning.
-comment|/// @param Result A pointer to the resulting Binary if no error occured.
-name|error_code
+comment|/// @param Source The data to create the Binary from.
+name|ErrorOr
+operator|<
+name|Binary
+operator|*
+operator|>
 name|createBinary
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MemoryBuffer
-operator|*
+operator|>
 name|Source
 argument_list|,
-name|OwningPtr
+name|LLVMContext
+operator|*
+name|Context
+operator|=
+name|nullptr
+argument_list|)
+expr_stmt|;
+name|ErrorOr
 operator|<
 name|Binary
+operator|*
 operator|>
-operator|&
-name|Result
-argument_list|)
-decl_stmt|;
-name|error_code
 name|createBinary
 argument_list|(
-name|StringRef
-name|Path
-argument_list|,
-name|OwningPtr
-operator|<
-name|Binary
-operator|>
-operator|&
-name|Result
+argument|StringRef Path
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
 block|}
 end_decl_stmt

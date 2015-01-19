@@ -140,8 +140,7 @@ argument|const DeclarationName&Name
 argument_list|,
 argument|NamedDecl *NameDecl
 argument_list|,
-argument|NestedNameSpecifier *NNS =
-literal|0
+argument|NestedNameSpecifier *NNS = nullptr
 argument_list|,
 argument|unsigned CharDistance =
 literal|0
@@ -201,8 +200,7 @@ name|TypoCorrection
 argument_list|(
 argument|NamedDecl *Name
 argument_list|,
-argument|NestedNameSpecifier *NNS =
-literal|0
+argument|NestedNameSpecifier *NNS = nullptr
 argument_list|,
 argument|unsigned CharDistance =
 literal|0
@@ -262,8 +260,7 @@ name|TypoCorrection
 argument_list|(
 argument|DeclarationName Name
 argument_list|,
-argument|NestedNameSpecifier *NNS =
-literal|0
+argument|NestedNameSpecifier *NNS = nullptr
 argument_list|,
 argument|unsigned CharDistance =
 literal|0
@@ -309,7 +306,7 @@ argument_list|()
 operator|:
 name|CorrectionNameSpec
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|CharDistance
@@ -388,7 +385,7 @@ operator|=
 operator|(
 name|NNS
 operator|!=
-literal|0
+name|nullptr
 operator|)
 expr_stmt|;
 block|}
@@ -556,7 +553,7 @@ name|begin
 argument_list|()
 operator|)
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 name|template
@@ -720,7 +717,7 @@ name|CorrectionDecls
 operator|.
 name|push_back
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|ForceSpecifierReplacement
@@ -747,7 +744,7 @@ operator|.
 name|front
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 comment|// Check if this TypoCorrection is the given keyword.
@@ -1073,6 +1070,11 @@ argument_list|)
 operator|,
 name|IsObjCIvarLookup
 argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsAddressOfOperand
+argument_list|(
 argument|false
 argument_list|)
 block|{}
@@ -1150,6 +1152,9 @@ comment|// when looking up results.
 name|bool
 name|IsObjCIvarLookup
 decl_stmt|;
+name|bool
+name|IsAddressOfOperand
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// @brief Simple template class for restricting typo correction candidates
@@ -1167,12 +1172,12 @@ name|CorrectionCandidateCallback
 block|{
 name|public
 operator|:
-name|virtual
 name|bool
 name|ValidateCandidate
 argument_list|(
 argument|const TypoCorrection&candidate
 argument_list|)
+name|override
 block|{
 return|return
 name|candidate
@@ -1205,17 +1210,16 @@ argument_list|,
 argument|unsigned NumArgs
 argument_list|,
 argument|bool HasExplicitTemplateArgs
+argument_list|,
+argument|MemberExpr *ME = nullptr
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|ValidateCandidate
 argument_list|(
-specifier|const
-name|TypoCorrection
-operator|&
-name|candidate
+argument|const TypoCorrection&candidate
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -1224,6 +1228,14 @@ name|NumArgs
 block|;
 name|bool
 name|HasExplicitTemplateArgs
+block|;
+name|DeclContext
+operator|*
+name|CurContext
+block|;
+name|MemberExpr
+operator|*
+name|MemberFn
 block|; }
 block|;
 comment|// @brief Callback class that effectively disabled typo correction
@@ -1254,12 +1266,12 @@ name|WantRemainingKeywords
 operator|=
 name|false
 block|;   }
-name|virtual
 name|bool
 name|ValidateCandidate
 argument_list|(
 argument|const TypoCorrection&candidate
 argument_list|)
+name|override
 block|{
 return|return
 name|false

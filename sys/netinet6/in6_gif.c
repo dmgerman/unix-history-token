@@ -193,12 +193,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/in6_gif.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet6/in6_var.h>
 end_include
 
@@ -236,7 +230,15 @@ directive|include
 file|<net/if_gif.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|GIF_HLIM
+value|30
+end_define
+
 begin_expr_stmt
+specifier|static
 name|VNET_DEFINE
 argument_list|(
 name|int
@@ -264,7 +266,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ip6
 argument_list|,
@@ -272,6 +274,8 @@ name|IPV6CTL_GIF_HLIM
 argument_list|,
 name|gifhlim
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -308,6 +312,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|in6_gif_input
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -317,6 +339,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|protosw
 name|in6_gif_protosw
@@ -617,6 +640,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|in6_gif_input
 parameter_list|(

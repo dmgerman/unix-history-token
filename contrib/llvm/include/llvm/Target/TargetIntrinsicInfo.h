@@ -131,8 +131,7 @@ name|getName
 argument_list|(
 argument|unsigned IID
 argument_list|,
-argument|Type **Tys =
-literal|0
+argument|Type **Tys = nullptr
 argument_list|,
 argument|unsigned numTys =
 literal|0
@@ -202,7 +201,7 @@ operator|*
 operator|*
 name|Tys
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|unsigned
 name|numTys

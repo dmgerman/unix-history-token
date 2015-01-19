@@ -132,6 +132,11 @@ name|defined
 argument_list|(
 name|__AES__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__PCLMUL__
+argument_list|)
 end_if
 
 begin_include

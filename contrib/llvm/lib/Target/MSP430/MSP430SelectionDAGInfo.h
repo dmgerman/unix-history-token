@@ -84,9 +84,9 @@ name|explicit
 name|MSP430SelectionDAGInfo
 argument_list|(
 specifier|const
-name|MSP430TargetMachine
+name|DataLayout
 operator|&
-name|TM
+name|DL
 argument_list|)
 block|;
 operator|~

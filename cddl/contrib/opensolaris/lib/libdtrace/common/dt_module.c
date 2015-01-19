@@ -17,14 +17,11 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -96,14 +93,11 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -158,15 +152,11 @@ directive|include
 file|<dirent.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_include
 include|#
@@ -3211,12 +3201,9 @@ operator|(
 literal|0
 operator|)
 return|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|ctsp
 operator|->
 name|cts_data
@@ -5063,13 +5050,9 @@ name|dm_ctfp
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 if|if
 condition|(
 name|dmp
@@ -6033,12 +6016,9 @@ end_comment
 begin_function
 specifier|static
 name|void
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|dt_module_update
 parameter_list|(
 name|dtrace_hdl_t
@@ -6106,12 +6086,9 @@ name|Elf_Scn
 modifier|*
 name|sp
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 operator|(
 name|void
 operator|)
@@ -6561,9 +6538,6 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|is_elf_obj
-operator|&&
-operator|(
 name|sh
 operator|.
 name|sh_type
@@ -6575,7 +6549,6 @@ operator|.
 name|sh_type
 operator|==
 name|SHT_NOBITS
-operator|)
 condition|)
 block|{
 name|alignmask
@@ -6601,6 +6574,10 @@ name|sh_addr
 operator|=
 name|mapbase
 expr_stmt|;
+if|if
+condition|(
+name|is_elf_obj
+condition|)
 name|dmp
 operator|->
 name|dm_sec_offsets
@@ -6821,12 +6798,9 @@ name|dm_flags
 operator||=
 name|DT_DM_KERNEL
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|dmp
 operator|->
 name|dm_modid
@@ -6915,6 +6889,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* illumos */
 if|if
 condition|(
 name|dmp
@@ -7013,12 +6988,9 @@ argument_list|,
 name|dmp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 comment|/* 	 * Open /system/object and attempt to create a libdtrace module for 	 * each kernel module that is loaded on the current system. 	 */
 if|if
 condition|(
@@ -7243,12 +7215,9 @@ operator|=
 name|getppid
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|dt_idhash_lookup
 argument_list|(
 name|dtp
@@ -7281,12 +7250,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|dt_idhash_lookup
 argument_list|(
 name|dtp

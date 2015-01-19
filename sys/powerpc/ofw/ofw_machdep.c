@@ -188,7 +188,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|char
 name|save_trap_init
 index|[
@@ -448,17 +447,10 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|int
-name|apple_hack_mode
-decl_stmt|;
 name|phandle_t
 name|phandle
 decl_stmt|;
 name|sz
-operator|=
-literal|0
-expr_stmt|;
-name|apple_hack_mode
 operator|=
 literal|0
 expr_stmt|;
@@ -1010,6 +1002,31 @@ modifier|*
 parameter_list|)
 parameter_list|)
 block|{
+name|ofmsr
+index|[
+literal|0
+index|]
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+name|ofmsr
+index|[
+literal|0
+index|]
+operator|&=
+operator|~
+name|PSL_SF
+expr_stmt|;
+endif|#
+directive|endif
+asm|__asm __volatile("mfsprg0 %0" : "=&r"(ofmsr[1]));
+asm|__asm __volatile("mfsprg1 %0" : "=&r"(ofmsr[2]));
+asm|__asm __volatile("mfsprg2 %0" : "=&r"(ofmsr[3]));
+asm|__asm __volatile("mfsprg3 %0" : "=&r"(ofmsr[4]));
 if|if
 condition|(
 name|ofmsr
@@ -1032,6 +1049,10 @@ name|fdt
 operator|=
 name|fdt_ptr
 expr_stmt|;
+name|openfirmware_entry
+operator|=
+name|openfirm
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FDT_DTB_STATIC
@@ -1049,6 +1070,11 @@ name|fdt_static_dtb
 expr_stmt|;
 endif|#
 directive|endif
+name|ofw_save_trap_vec
+argument_list|(
+name|save_trap_init
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1247,6 +1273,18 @@ decl_stmt|;
 name|register_t
 name|oldmsr
 decl_stmt|;
+if|if
+condition|(
+name|openfirmware_entry
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 comment|/* 	 * Turn off exceptions - we really don't want to end up 	 * anywhere unexpected with PCPU set to something strange 	 * or the stack pointer wrong. 	 */
 name|oldmsr
 operator|=
@@ -1477,6 +1515,23 @@ name|struct
 name|ofw_rv_args
 name|rv_args
 decl_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|openfirmware_entry
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+ifdef|#
+directive|ifdef
+name|SMP
 name|rv_args
 operator|.
 name|args

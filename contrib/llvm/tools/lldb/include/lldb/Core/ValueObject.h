@@ -150,7 +150,7 @@ block|{
 comment|/// ValueObject:
 comment|///
 comment|/// This abstract class provides an interface to a particular value, be it a register, a local or global variable,
-comment|/// that is evaluated in some particular scope.  The ValueObject also has the capibility of being the "child" of
+comment|/// that is evaluated in some particular scope.  The ValueObject also has the capability of being the "child" of
 comment|/// some other variable object, and in turn of having children.
 comment|/// If a ValueObject is a root variable object - having no parent - then it must be constructed with respect to some
 comment|/// particular ExecutionContextScope.  If it is a child, it inherits the ExecutionContextScope from its parent.
@@ -847,7 +847,7 @@ name|GetTypeImpl
 argument_list|()
 block|;
 comment|//------------------------------------------------------------------
-comment|// Sublasses must implement the functions below.
+comment|// Subclasses must implement the functions below.
 comment|//------------------------------------------------------------------
 name|virtual
 name|uint64_t
@@ -867,11 +867,16 @@ operator|=
 literal|0
 block|;
 comment|//------------------------------------------------------------------
-comment|// Sublasses can implement the functions below.
+comment|// Subclasses can implement the functions below.
 comment|//------------------------------------------------------------------
 name|virtual
 name|ConstString
 name|GetTypeName
+argument_list|()
+block|;
+name|virtual
+name|ConstString
+name|GetDisplayTypeName
 argument_list|()
 block|;
 name|virtual
@@ -936,6 +941,14 @@ return|return
 name|false
 return|;
 block|}
+name|bool
+name|IsBaseClass
+argument_list|(
+name|uint32_t
+operator|&
+name|depth
+argument_list|)
+block|;
 name|virtual
 name|bool
 name|IsDereferenceOfParent
@@ -1081,7 +1094,9 @@ name|true
 return|;
 block|}
 name|virtual
-name|off_t
+name|lldb
+operator|::
+name|offset_t
 name|GetByteOffset
 argument_list|()
 block|{
@@ -1227,7 +1242,7 @@ name|decl
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
-comment|// The functions below should NOT be modified by sublasses
+comment|// The functions below should NOT be modified by subclasses
 comment|//------------------------------------------------------------------
 specifier|const
 name|Error
@@ -1719,6 +1734,19 @@ name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
+name|GetSyntheticBase
+argument_list|(
+argument|uint32_t offset
+argument_list|,
+argument|const ClangASTType& type
+argument_list|,
+argument|bool can_create
+argument_list|)
+block|;
+name|virtual
+name|lldb
+operator|::
+name|ValueObjectSP
 name|GetDynamicValue
 argument_list|(
 argument|lldb::DynamicValueType valueType
@@ -1820,6 +1848,18 @@ argument_list|,
 argument|AddressType address_type = eAddressTypeLoad
 argument_list|)
 block|{     }
+comment|// Find the address of the C++ vtable pointer
+name|virtual
+name|lldb
+operator|::
+name|addr_t
+name|GetCPPVTableAddress
+argument_list|(
+name|AddressType
+operator|&
+name|address_type
+argument_list|)
+block|;
 name|virtual
 name|lldb
 operator|::
@@ -1963,7 +2003,7 @@ name|CreateValueObjectFromData
 argument_list|(
 argument|const char* name
 argument_list|,
-argument|DataExtractor& data
+argument|const DataExtractor& data
 argument_list|,
 argument|const ExecutionContext& exe_ctx
 argument_list|,
@@ -2035,6 +2075,10 @@ argument_list|(
 name|DataExtractor
 operator|&
 name|data
+argument_list|,
+name|Error
+operator|&
+name|error
 argument_list|)
 block|;
 name|virtual
@@ -2437,9 +2481,10 @@ name|size_t
 name|count
 parameter_list|)
 block|{
-name|m_children_count
-operator|=
+name|Clear
+argument_list|(
 name|count
+argument_list|)
 expr_stmt|;
 block|}
 name|size_t
@@ -2452,12 +2497,13 @@ return|;
 block|}
 name|void
 name|Clear
-parameter_list|()
-block|{
-name|m_children_count
-operator|=
+parameter_list|(
+name|size_t
+name|new_count
+init|=
 literal|0
-expr_stmt|;
+parameter_list|)
+block|{
 name|Mutex
 operator|::
 name|Locker
@@ -2465,6 +2511,10 @@ name|locker
 argument_list|(
 name|m_mutex
 argument_list|)
+expr_stmt|;
+name|m_children_count
+operator|=
+name|new_count
 expr_stmt|;
 name|m_children
 operator|.
@@ -2877,7 +2927,7 @@ name|ClearDynamicTypeInformation
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|// Sublasses must implement the functions below.
+comment|// Subclasses must implement the functions below.
 comment|//------------------------------------------------------------------
 name|virtual
 name|ClangASTType

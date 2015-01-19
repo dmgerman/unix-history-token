@@ -1401,6 +1401,16 @@ argument|tcptw
 argument_list|)
 name|tw_2msl
 expr_stmt|;
+name|void
+modifier|*
+name|tw_pspare
+decl_stmt|;
+comment|/* TCP_SIGNATURE */
+name|u_int
+modifier|*
+name|tw_spare
+decl_stmt|;
+comment|/* TCP_SIGNATURE */
 block|}
 struct|;
 end_struct

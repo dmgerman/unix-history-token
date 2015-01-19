@@ -981,13 +981,6 @@ operator||
 name|TRUEPHY_CTRL_RSV0
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|N
-parameter_list|(
-name|arr
-parameter_list|)
-value|(int)(sizeof(arr) / sizeof(arr[0]))
 for|for
 control|(
 name|i
@@ -996,7 +989,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|truephy_dspcode
 argument_list|)
@@ -1058,9 +1051,6 @@ name|TRUEPHY_DATA
 argument_list|)
 expr_stmt|;
 block|}
-undef|#
-directive|undef
-name|N
 name|PHY_READ
 argument_list|(
 name|sc

@@ -453,7 +453,7 @@ name|CurBit
 operator|==
 literal|0
 operator|&&
-literal|"Unflused data remaining"
+literal|"Unflushed data remaining"
 argument_list|)
 block|;
 name|assert
@@ -1034,7 +1034,7 @@ name|i
 index|]
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|void
@@ -1745,7 +1745,7 @@ expr_stmt|;
 comment|// Know that blob data is consumed for assertion below.
 name|BlobData
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 else|else
@@ -1906,7 +1906,7 @@ expr_stmt|;
 comment|// Know that blob data is consumed for assertion below.
 name|BlobData
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 else|else
@@ -2019,7 +2019,7 @@ name|assert
 argument_list|(
 name|BlobData
 operator|==
-literal|0
+name|nullptr
 operator|&&
 literal|"Blob data specified for record that doesn't use it!"
 argument_list|)

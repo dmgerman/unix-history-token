@@ -143,6 +143,12 @@ directive|include
 file|"lldb/Host/Mutex.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/ObjectFile.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -185,10 +191,21 @@ name|class
 name|IRExecutionUnit
 range|:
 name|public
+name|std
+operator|::
+name|enable_shared_from_this
+operator|<
+name|IRExecutionUnit
+operator|>
+decl_stmt|,
+name|public
 name|IRMemoryMap
+decl_stmt|,
+name|public
+name|ObjectFileJITDelegate
 block|{
 name|public
-operator|:
+label|:
 comment|//------------------------------------------------------------------
 comment|/// Constructor
 comment|//------------------------------------------------------------------
@@ -238,14 +255,14 @@ operator|>
 operator|&
 name|cpu_features
 argument_list|)
-block|;
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Destructor
 comment|//------------------------------------------------------------------
 operator|~
 name|IRExecutionUnit
 argument_list|()
-block|;
+expr_stmt|;
 name|llvm
 operator|::
 name|Module
@@ -303,7 +320,7 @@ name|addr_t
 operator|&
 name|func_end
 argument_list|)
-block|;
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Accessors for IRForTarget and other clients that may want binary
 comment|/// data placed on their behalf.  The binary data is owned by the
@@ -320,15 +337,86 @@ argument|size_t size
 argument_list|,
 argument|Error&error
 argument_list|)
-block|;
+expr_stmt|;
 name|void
 name|FreeNow
 argument_list|(
-argument|lldb::addr_t allocation
+name|lldb
+operator|::
+name|addr_t
+name|allocation
 argument_list|)
-block|;
+decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// ObjectFileJITDelegate overrides
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|ByteOrder
+name|GetByteOrder
+argument_list|()
+specifier|const
+expr_stmt|;
+name|virtual
+name|uint32_t
+name|GetAddressByteSize
+argument_list|()
+specifier|const
+expr_stmt|;
+name|virtual
+name|void
+name|PopulateSymtab
+argument_list|(
+name|lldb_private
+operator|::
+name|ObjectFile
+operator|*
+name|obj_file
+argument_list|,
+name|lldb_private
+operator|::
+name|Symtab
+operator|&
+name|symtab
+argument_list|)
+decl_stmt|;
+name|virtual
+name|void
+name|PopulateSectionList
+argument_list|(
+name|lldb_private
+operator|::
+name|ObjectFile
+operator|*
+name|obj_file
+argument_list|,
+name|lldb_private
+operator|::
+name|SectionList
+operator|&
+name|section_list
+argument_list|)
+decl_stmt|;
+name|virtual
+name|bool
+name|GetArchitecture
+argument_list|(
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|arch
+argument_list|)
+decl_stmt|;
+name|lldb
+operator|::
+name|ModuleSP
+name|GetJITModule
+argument_list|()
+expr_stmt|;
 name|private
-operator|:
+label|:
 comment|//------------------------------------------------------------------
 comment|/// Look up the object in m_address_map that contains a given address,
 comment|/// find where it was copied to, and return the remote address at the
@@ -347,7 +435,7 @@ name|GetRemoteAddressForLocal
 argument_list|(
 argument|lldb::addr_t local_address
 argument_list|)
-block|;
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Look up the object in m_address_map that contains a given address,
 comment|/// find where it was copied to, and return its address range in the
@@ -375,7 +463,10 @@ expr_stmt|;
 name|AddrRange
 name|GetRemoteRangeForLocal
 argument_list|(
-argument|lldb::addr_t local_address
+name|lldb
+operator|::
+name|addr_t
+name|local_address
 argument_list|)
 decl_stmt|;
 comment|//------------------------------------------------------------------
@@ -464,6 +555,11 @@ name|IRExecutionUnit
 operator|&
 name|parent
 argument_list|)
+block|;
+name|virtual
+operator|~
+name|MemoryManager
+argument_list|()
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Passthrough interface stub
@@ -940,7 +1036,7 @@ comment|///< The address of the function in the target's memory
 comment|//------------------------------------------------------------------
 comment|/// Constructor
 comment|///
-comment|/// Initializes class variabes.
+comment|/// Initializes class variables.
 comment|///
 comment|/// @param[in] name
 comment|///     The name of the function.
@@ -992,14 +1088,45 @@ literal|1
 decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|/// @class AllocationRecord IRExecutionUnit.h "lldb/Expression/IRExecutionUnit.h"
-comment|/// @brief Enacpsulates a single allocation request made by the JIT.
+comment|/// @brief Encapsulates a single allocation request made by the JIT.
 comment|///
 comment|/// Allocations made by the JIT are first queued up and then applied in
 comment|/// bulk to the underlying process.
 comment|//----------------------------------------------------------------------
+name|enum
+name|class
+name|AllocationKind
+block|{
+name|Stub
+operator|,
+name|Code
+operator|,
+name|Data
+operator|,
+name|Global
+operator|,
+name|Bytes
+block|}
+empty_stmt|;
+specifier|static
+name|lldb
+operator|::
+name|SectionType
+name|GetSectionTypeFromSectionName
+argument_list|(
+argument|const llvm::StringRef&name
+argument_list|,
+argument|AllocationKind alloc_kind
+argument_list|)
+expr_stmt|;
 struct|struct
 name|AllocationRecord
 block|{
+name|std
+operator|::
+name|string
+name|m_name
+expr_stmt|;
 name|lldb
 operator|::
 name|addr_t
@@ -1011,6 +1138,11 @@ decl_stmt|;
 name|uint32_t
 name|m_permissions
 decl_stmt|;
+name|lldb
+operator|::
+name|SectionType
+name|m_sect_type
+expr_stmt|;
 name|size_t
 name|m_size
 decl_stmt|;
@@ -1026,13 +1158,20 @@ argument|uintptr_t host_address
 argument_list|,
 argument|uint32_t permissions
 argument_list|,
+argument|lldb::SectionType sect_type
+argument_list|,
 argument|size_t size
 argument_list|,
 argument|unsigned alignment
 argument_list|,
-argument|unsigned section_id = eSectionIDInvalid
+argument|unsigned section_id
+argument_list|,
+argument|const char *name
 argument_list|)
 block|:
+name|m_name
+argument_list|()
+operator|,
 name|m_process_address
 argument_list|(
 name|LLDB_INVALID_ADDRESS
@@ -1046,6 +1185,11 @@ operator|,
 name|m_permissions
 argument_list|(
 name|permissions
+argument_list|)
+operator|,
+name|m_sect_type
+argument_list|(
+name|sect_type
 argument_list|)
 operator|,
 name|m_size
@@ -1062,15 +1206,29 @@ name|m_section_id
 argument_list|(
 argument|section_id
 argument_list|)
-block|{         }
+block|{
+if|if
+condition|(
+name|name
+operator|&&
+name|name
+index|[
+literal|0
+index|]
+condition|)
+name|m_name
+operator|=
+name|name
+expr_stmt|;
+block|}
 name|void
 name|dump
-argument_list|(
+parameter_list|(
 name|Log
-operator|*
+modifier|*
 name|log
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 typedef|typedef
@@ -1167,14 +1325,11 @@ name|addr_t
 name|m_function_end_load_addr
 expr_stmt|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// namespace lldb_private
 end_comment
 

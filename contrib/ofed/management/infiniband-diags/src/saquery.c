@@ -72,37 +72,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<infiniband/opensm/osm_log.h>
+file|<opensm/osm_log.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<infiniband/vendor/osm_vendor_api.h>
+file|<vendor/osm_vendor_api.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<infiniband/vendor/osm_vendor_sa_api.h>
+file|<vendor/osm_vendor_sa_api.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<infiniband/opensm/osm_mad_pool.h>
+file|<opensm/osm_mad_pool.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<infiniband/complib/cl_debug.h>
+file|<complib/cl_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<infiniband/complib/cl_nodenamemap.h>
+file|<complib/cl_nodenamemap.h>
 end_include
 
 begin_include

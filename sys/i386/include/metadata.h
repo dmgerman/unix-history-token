@@ -36,6 +36,13 @@ name|MODINFOMD_DTBP
 value|0x1003
 end_define
 
+begin_define
+define|#
+directive|define
+name|MODINFOMD_MODULEP
+value|0x1006
+end_define
+
 begin_endif
 endif|#
 directive|endif

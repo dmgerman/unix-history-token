@@ -248,12 +248,12 @@ argument_list|)
 operator|,
 name|NextPredecessor
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|NextSuccessor
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{}
 name|virtual
@@ -368,7 +368,7 @@ argument_list|)
 block|,
 name|Distance
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{ }
 block|}
@@ -535,7 +535,7 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|/// isPeelFirst - Returns true if peeling the first iteration from
@@ -728,6 +728,7 @@ name|bool
 name|isLoopIndependent
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|LoopIndependent
@@ -740,6 +741,7 @@ name|bool
 name|isConfused
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -751,6 +753,7 @@ name|bool
 name|isConsistent
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Consistent
@@ -762,6 +765,7 @@ name|unsigned
 name|getLevels
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Levels
@@ -775,6 +779,7 @@ argument_list|(
 argument|unsigned Level
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getDistance - Returns the distance (or NULL) associated with a
 comment|/// particular level.
@@ -786,6 +791,7 @@ argument_list|(
 argument|unsigned Level
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isPeelFirst - Returns true if peeling the first iteration from
 comment|/// this loop will break this dependence.
@@ -795,6 +801,7 @@ argument_list|(
 argument|unsigned Level
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isPeelLast - Returns true if peeling the last iteration from
 comment|/// this loop will break this dependence.
@@ -804,6 +811,7 @@ argument_list|(
 argument|unsigned Level
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isSplitable - Returns true if splitting the loop will break
 comment|/// the dependence.
@@ -813,6 +821,7 @@ argument_list|(
 argument|unsigned Level
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isScalar - Returns true if a particular level is scalar; that is,
 comment|/// if no subscript in the source or destination mention the induction
@@ -823,6 +832,7 @@ argument_list|(
 argument|unsigned Level
 argument_list|)
 specifier|const
+name|override
 block|;
 name|private
 operator|:
@@ -2241,6 +2251,8 @@ argument_list|,
 argument|const SCEV *DstSCEV
 argument_list|,
 argument|SmallVectorImpl<Subscript>&Pair
+argument_list|,
+argument|const SCEV *ElementSize
 argument_list|)
 specifier|const
 block|;
@@ -2271,14 +2283,14 @@ block|;     }
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|F
+argument|Function&F
 argument_list|)
+name|override
 block|;
 name|void
 name|releaseMemory
 argument_list|()
+name|override
 block|;
 name|void
 name|getAnalysisUsage
@@ -2286,16 +2298,17 @@ argument_list|(
 argument|AnalysisUsage&
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&
 argument_list|,
-argument|const Module * =
-literal|0
+argument|const Module * = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 comment|// class DependenceAnalysis

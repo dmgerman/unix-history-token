@@ -48,7 +48,7 @@ comment|// Clang headers like to use NDEBUG inside of them to enable/disable deb
 end_comment
 
 begin_comment
-comment|// releated features using "#ifndef NDEBUG" preprocessor blocks to do one thing
+comment|// related features using "#ifndef NDEBUG" preprocessor blocks to do one thing
 end_comment
 
 begin_comment

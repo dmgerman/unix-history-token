@@ -892,7 +892,18 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Empty device string, or unknown device name, or a bare, known  	 * device name.  	 */
+comment|/* Ignore optional spaces after the device name. */
+while|while
+condition|(
+operator|*
+name|p
+operator|==
+literal|' '
+condition|)
+name|p
+operator|++
+expr_stmt|;
+comment|/* Unknown device name, or a known name without unit number.  */
 if|if
 condition|(
 operator|(

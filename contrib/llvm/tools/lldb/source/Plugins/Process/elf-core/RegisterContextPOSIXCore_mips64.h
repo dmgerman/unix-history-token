@@ -46,7 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"Plugins/Process/POSIX/RegisterContextPOSIX_mips64.h"
+file|"lldb/Core/DataBufferHeap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"Plugins/Process/Utility/RegisterContextPOSIX_mips64.h"
 end_include
 
 begin_decl_stmt
@@ -66,6 +72,8 @@ name|Thread
 operator|&
 name|thread
 argument_list|,
+name|lldb_private
+operator|::
 name|RegisterInfoInterface
 operator|*
 name|register_info
@@ -173,11 +181,15 @@ argument_list|()
 block|;
 name|private
 operator|:
-name|uint64_t
-name|m_reg
-index|[
-literal|40
-index|]
+name|lldb
+operator|::
+name|DataBufferSP
+name|m_gpr_buffer
+block|;
+name|lldb_private
+operator|::
+name|DataExtractor
+name|m_gpr
 block|; }
 decl_stmt|;
 end_decl_stmt

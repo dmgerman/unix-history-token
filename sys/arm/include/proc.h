@@ -52,6 +52,10 @@ name|register_t
 name|md_saved_cspr
 decl_stmt|;
 comment|/* (k) */
+name|register_t
+name|md_spurflt_addr
+decl_stmt|;
+comment|/* (k) Spurious page fault address. */
 name|int
 name|md_ptrace_instr
 decl_stmt|;

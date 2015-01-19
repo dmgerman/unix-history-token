@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARM.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ARMBaseInstrInfo.h"
 end_include
 
@@ -75,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|"ARMRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMSubtarget.h"
 end_include
 
 begin_decl_stmt
@@ -117,6 +105,7 @@ argument_list|(
 argument|MCInst&NopInst
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Return the non-pre/post incrementing version of 'Opc'. Return 0
 comment|// if there is not such an opcode.
@@ -126,6 +115,7 @@ argument_list|(
 argument|unsigned Opc
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
 comment|/// such, whenever a client has an instance of instruction info, it should
@@ -137,6 +127,7 @@ operator|&
 name|getRegisterInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|RI

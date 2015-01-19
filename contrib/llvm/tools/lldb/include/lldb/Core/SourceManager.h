@@ -272,7 +272,7 @@ comment|// The original file spec that was used (can be different from m_file_sp
 name|FileSpec
 name|m_file_spec
 decl_stmt|;
-comment|// The actualy file spec being used (if the target has source mappings, this might be different from m_file_spec_orig)
+comment|// The actually file spec being used (if the target has source mappings, this might be different from m_file_spec_orig)
 name|TimeValue
 name|m_mod_time
 decl_stmt|;

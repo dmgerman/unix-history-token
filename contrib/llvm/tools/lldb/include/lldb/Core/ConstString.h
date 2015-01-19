@@ -510,7 +510,7 @@ comment|/// Compares the C string values contained in \a lhs and \a rhs and
 comment|/// returns an integer result.
 comment|///
 comment|/// NOTE: only call this function when you want a true string
-comment|/// comparision. If you want string equality use the, use the ==
+comment|/// comparison. If you want string equality use the, use the ==
 comment|/// operator as it is much more efficient. Also if you want string
 comment|/// inequality, use the != operator for the same reasons.
 comment|///
@@ -647,7 +647,7 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Set the C string value and its mangled counterpart.
 comment|///
-comment|/// Object files and debug sybmols often use mangled string to
+comment|/// Object files and debug symbols often use mangled string to
 comment|/// represent the linkage name for a symbol, function or global.
 comment|/// The string pool can efficiently store these values and their
 comment|/// counterparts so when we run into another instance of a mangled
@@ -680,7 +680,7 @@ comment|//------------------------------------------------------------------
 comment|/// Retrieve the mangled or demangled counterpart for a mangled
 comment|/// or demangled ConstString.
 comment|///
-comment|/// Object files and debug sybmols often use mangled string to
+comment|/// Object files and debug symbols often use mangled string to
 comment|/// represent the linkage name for a symbol, function or global.
 comment|/// The string pool can efficiently store these values and their
 comment|/// counterparts so when we run into another instance of a mangled
@@ -781,7 +781,7 @@ block|}
 comment|//------------------------------------------------------------------
 comment|/// Get the size in bytes of the current global string pool.
 comment|///
-comment|/// Reports the the size in bytes of all shared C string values,
+comment|/// Reports the size in bytes of all shared C string values,
 comment|/// containers and any other values as a byte size for the
 comment|/// entire string pool.
 comment|///

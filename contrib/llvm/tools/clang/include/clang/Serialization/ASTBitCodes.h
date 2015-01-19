@@ -642,9 +642,6 @@ comment|/// \brief The block containing the definitions of all of the
 comment|/// types and decls used within the AST file.
 name|DECLTYPES_BLOCK_ID
 block|,
-comment|/// \brief The block containing DECL_UPDATES records.
-name|DECL_UPDATES_BLOCK_ID
-block|,
 comment|/// \brief The block containing the detailed preprocessing record.
 name|PREPROCESSOR_DETAIL_BLOCK_ID
 block|,
@@ -740,6 +737,17 @@ comment|/// \brief Record code for the preprocessor options table.
 name|PREPROCESSOR_OPTIONS
 init|=
 literal|12
+block|,
+comment|/// \brief Record code for the module name.
+name|MODULE_NAME
+init|=
+literal|13
+block|,
+comment|/// \brief Record code for the module map file that was used to build this
+comment|/// AST file.
+name|MODULE_MAP_FILE
+init|=
+literal|14
 block|}
 enum|;
 comment|/// \brief Record types that occur within the input-files block
@@ -820,15 +828,15 @@ name|IDENTIFIER_TABLE
 init|=
 literal|5
 block|,
-comment|/// \brief Record code for the array of external definitions.
+comment|/// \brief Record code for the array of eagerly deserialized decls.
 comment|///
-comment|/// The AST file contains a list of all of the unnamed external
-comment|/// definitions present within the parsed headers, stored as an
-comment|/// array of declaration IDs. These external definitions will be
+comment|/// The AST file contains a list of all of the declarations that should be
+comment|/// eagerly deserialized present within the parsed headers, stored as an
+comment|/// array of declaration IDs. These declarations will be
 comment|/// reported to the AST consumer after the AST file has been
 comment|/// read, since their presence can affect the semantics of the
 comment|/// program (e.g., for code generation).
-name|EXTERNAL_DEFINITIONS
+name|EAGERLY_DESERIALIZED_DECLS
 init|=
 literal|6
 block|,
@@ -1100,6 +1108,11 @@ comment|/// \brief Record code for late parsed template functions.
 name|LATE_PARSED_TEMPLATE
 init|=
 literal|50
+block|,
+comment|/// \brief Record code for \#pragma optimize options.
+name|OPTIMIZE_PRAGMA_OPTIONS
+init|=
+literal|51
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -1747,6 +1760,11 @@ comment|/// \brief A DecayedType record.
 name|TYPE_DECAYED
 init|=
 literal|41
+block|,
+comment|/// \brief An AdjustedType record.
+name|TYPE_ADJUSTED
+init|=
+literal|42
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -2450,9 +2468,6 @@ comment|// UnresolvedMemberExpr
 name|EXPR_CXX_UNRESOLVED_LOOKUP
 block|,
 comment|// UnresolvedLookupExpr
-name|EXPR_CXX_UNARY_TYPE_TRAIT
-block|,
-comment|// UnaryTypeTraitExpr
 name|EXPR_CXX_EXPRESSION_TRAIT
 block|,
 comment|// ExpressionTraitExpr
@@ -2465,9 +2480,6 @@ comment|// OpaqueValueExpr
 name|EXPR_BINARY_CONDITIONAL_OPERATOR
 block|,
 comment|// BinaryConditionalOperator
-name|EXPR_BINARY_TYPE_TRAIT
-block|,
-comment|// BinaryTypeTraitExpr
 name|EXPR_TYPE_TRAIT
 block|,
 comment|// TypeTraitExpr
@@ -2510,6 +2522,9 @@ comment|// CXXUuidofExpr (of expr).
 name|EXPR_CXX_UUIDOF_TYPE
 block|,
 comment|// CXXUuidofExpr (of type).
+name|STMT_SEH_LEAVE
+block|,
+comment|// SEHLeaveStmt
 name|STMT_SEH_EXCEPT
 block|,
 comment|// SEHExceptStmt
@@ -2521,6 +2536,34 @@ block|,
 comment|// SEHTryStmt
 comment|// OpenMP drectives
 name|STMT_OMP_PARALLEL_DIRECTIVE
+block|,
+name|STMT_OMP_SIMD_DIRECTIVE
+block|,
+name|STMT_OMP_FOR_DIRECTIVE
+block|,
+name|STMT_OMP_SECTIONS_DIRECTIVE
+block|,
+name|STMT_OMP_SECTION_DIRECTIVE
+block|,
+name|STMT_OMP_SINGLE_DIRECTIVE
+block|,
+name|STMT_OMP_MASTER_DIRECTIVE
+block|,
+name|STMT_OMP_CRITICAL_DIRECTIVE
+block|,
+name|STMT_OMP_PARALLEL_FOR_DIRECTIVE
+block|,
+name|STMT_OMP_PARALLEL_SECTIONS_DIRECTIVE
+block|,
+name|STMT_OMP_TASK_DIRECTIVE
+block|,
+name|STMT_OMP_TASKYIELD_DIRECTIVE
+block|,
+name|STMT_OMP_BARRIER_DIRECTIVE
+block|,
+name|STMT_OMP_TASKWAIT_DIRECTIVE
+block|,
+name|STMT_OMP_FLUSH_DIRECTIVE
 block|,
 comment|// ARC
 name|EXPR_OBJC_BRIDGED_CAST

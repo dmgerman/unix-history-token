@@ -134,6 +134,7 @@ argument_list|,
 argument|const std::string&Banner
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// runOnLoop - This method should be implemented by the subclass to perform
 comment|// whatever action is necessary for the specified Loop.
@@ -200,13 +201,11 @@ comment|// LPPassManger as expected.
 name|void
 name|preparePassManager
 argument_list|(
-name|PMStack
-operator|&
-name|PMS
+argument|PMStack&PMS
 argument_list|)
+name|override
 block|;
 comment|/// Assign pass manager to manage this pass
-name|virtual
 name|void
 name|assignPassManager
 argument_list|(
@@ -214,13 +213,14 @@ argument|PMStack&PMS
 argument_list|,
 argument|PassManagerType PMT
 argument_list|)
+name|override
 block|;
 comment|///  Return what kind of Pass Manager can manage this pass.
-name|virtual
 name|PassManagerType
 name|getPotentialPassManagerType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|PMT_LoopPassManager
@@ -256,27 +256,37 @@ argument_list|,
 argument|Loop *L
 argument_list|)
 block|{}
-expr|}
-block|;
+name|protected
+operator|:
+comment|/// skipOptnoneFunction - Containing function has Attribute::OptimizeNone
+comment|/// and most transformation passes should skip it.
+name|bool
+name|skipOptnoneFunction
+argument_list|(
+argument|const Loop *L
+argument_list|)
+specifier|const
+block|; }
+decl_stmt|;
 name|class
 name|LPPassManager
-operator|:
+range|:
 name|public
 name|FunctionPass
-block|,
+decl_stmt|,
 name|public
 name|PMDataManager
 block|{
 name|public
-operator|:
+label|:
 specifier|static
 name|char
 name|ID
-block|;
+decl_stmt|;
 name|explicit
 name|LPPassManager
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// run - Execute all of the passes scheduled for execution.  Keep track of
 comment|/// whether any of the passes modifies the module, and if so, return true.
 name|bool
@@ -286,43 +296,47 @@ name|Function
 operator|&
 name|F
 argument_list|)
-block|;
+name|override
+decl_stmt|;
 comment|/// Pass Manager itself does not invalidate any analysis info.
 comment|// LPPassManager needs LoopInfo.
 name|void
 name|getAnalysisUsage
 argument_list|(
-argument|AnalysisUsage&Info
+name|AnalysisUsage
+operator|&
+name|Info
 argument_list|)
-specifier|const
-block|;
-name|virtual
+decl|const
+name|override
+decl_stmt|;
 specifier|const
 name|char
 operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"Loop Pass Manager"
 return|;
 block|}
-name|virtual
 name|PMDataManager
-operator|*
+modifier|*
 name|getAsPMDataManager
-argument_list|()
+parameter_list|()
+function|override
 block|{
 return|return
 name|this
 return|;
 block|}
-name|virtual
 name|Pass
-operator|*
+modifier|*
 name|getAsPass
-argument_list|()
+parameter_list|()
+function|override
 block|{
 return|return
 name|this
@@ -332,15 +346,18 @@ comment|/// Print passes managed by this manager
 name|void
 name|dumpPassStructure
 argument_list|(
-argument|unsigned Offset
+name|unsigned
+name|Offset
 argument_list|)
-block|;
+name|override
+decl_stmt|;
 name|LoopPass
-operator|*
+modifier|*
 name|getContainedPass
-argument_list|(
-argument|unsigned N
-argument_list|)
+parameter_list|(
+name|unsigned
+name|N
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -353,11 +370,11 @@ argument_list|()
 operator|&&
 literal|"Pass number out of range!"
 argument_list|)
-block|;
+expr_stmt|;
 name|LoopPass
-operator|*
+modifier|*
 name|LP
-operator|=
+init|=
 name|static_cast
 operator|<
 name|LoopPass
@@ -369,66 +386,66 @@ index|[
 name|N
 index|]
 operator|)
-block|;
+decl_stmt|;
 return|return
 name|LP
 return|;
 block|}
-name|virtual
 name|PassManagerType
 name|getPassManagerType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|PMT_LoopPassManager
 return|;
 block|}
 name|public
-operator|:
+label|:
 comment|// Delete loop from the loop queue and loop nest (LoopInfo).
 name|void
 name|deleteLoopFromQueue
-argument_list|(
+parameter_list|(
 name|Loop
-operator|*
+modifier|*
 name|L
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|// Insert loop into the loop queue and add it as a child of the
 comment|// given parent.
 name|void
 name|insertLoop
-argument_list|(
+parameter_list|(
 name|Loop
-operator|*
+modifier|*
 name|L
-argument_list|,
+parameter_list|,
 name|Loop
-operator|*
+modifier|*
 name|ParentLoop
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|// Insert a loop into the loop queue.
 name|void
 name|insertLoopIntoQueue
-argument_list|(
+parameter_list|(
 name|Loop
-operator|*
+modifier|*
 name|L
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|// Reoptimize this loop. LPPassManager will re-insert this loop into the
 comment|// queue. This allows LoopPass to change loop nest for the loop. This
 comment|// utility may send LPPassManager into infinite loops so use caution.
 name|void
 name|redoLoop
-argument_list|(
+parameter_list|(
 name|Loop
-operator|*
+modifier|*
 name|L
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// SimpleAnalysis - Provides simple interface to update analysis info
 comment|/// maintained by various passes. Note, if required this interface can
@@ -439,36 +456,36 @@ comment|/// cloneBasicBlockSimpleAnalysis - Invoke cloneBasicBlockAnalysis hook 
 comment|/// all passes that implement simple analysis interface.
 name|void
 name|cloneBasicBlockSimpleAnalysis
-argument_list|(
+parameter_list|(
 name|BasicBlock
-operator|*
+modifier|*
 name|From
-argument_list|,
+parameter_list|,
 name|BasicBlock
-operator|*
+modifier|*
 name|To
-argument_list|,
+parameter_list|,
 name|Loop
-operator|*
+modifier|*
 name|L
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// deleteSimpleAnalysisValue - Invoke deleteAnalysisValue hook for all passes
 comment|/// that implement simple analysis interface.
 name|void
 name|deleteSimpleAnalysisValue
-argument_list|(
+parameter_list|(
 name|Value
-operator|*
+modifier|*
 name|V
-argument_list|,
+parameter_list|,
 name|Loop
-operator|*
+modifier|*
 name|L
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|private
-operator|:
+label|:
 name|std
 operator|::
 name|deque
@@ -477,22 +494,24 @@ name|Loop
 operator|*
 operator|>
 name|LQ
-block|;
+expr_stmt|;
 name|bool
 name|skipThisLoop
-block|;
+decl_stmt|;
 name|bool
 name|redoThisLoop
-block|;
+decl_stmt|;
 name|LoopInfo
-operator|*
+modifier|*
 name|LI
-block|;
+decl_stmt|;
 name|Loop
-operator|*
+modifier|*
 name|CurrentLoop
-block|; }
-block|;  }
+decl_stmt|;
+block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

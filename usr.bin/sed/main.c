@@ -1757,6 +1757,9 @@ if|if
 condition|(
 name|len
 operator|>
+operator|(
+name|ssize_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|oldfname
@@ -1806,6 +1809,9 @@ if|if
 condition|(
 name|len
 operator|>=
+operator|(
+name|ssize_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|tmpfname
@@ -2195,7 +2201,9 @@ begin_function
 specifier|static
 name|int
 name|next_files_have_lines
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|s_flist

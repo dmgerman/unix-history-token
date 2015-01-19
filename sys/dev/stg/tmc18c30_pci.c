@@ -284,15 +284,13 @@ argument_list|,
 name|INTR_TYPE_CAM
 operator||
 name|INTR_ENTROPY
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
 name|stg_intr
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|sc
 argument_list|,
 operator|&

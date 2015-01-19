@@ -325,11 +325,6 @@ name|void
 modifier|*
 name|db_user_ptr
 decl_stmt|;
-name|void
-modifier|*
-modifier|*
-name|db_user_data_ptr_ptr
-decl_stmt|;
 name|dmu_buf_evict_func_t
 modifier|*
 name|db_evict_func

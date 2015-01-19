@@ -20,7 +20,7 @@ comment|/*  * Miscellaneous internetwork  * definitions for kernel.  */
 end_comment
 
 begin_comment
-comment|/*  * Network types.  *  * Internally the system keeps counters in the headers with the bytes  * swapped so that VAX instructions will work on them.  It reverses  * the bytes before transmission at each protocol level.  The n_ types  * represent the types with the bytes in ``high-ender'' order.  */
+comment|/*  * Network types.  *  * Internally the system keeps counters in the headers with the bytes  * swapped so that VAX instructions will work on them.  It reverses  * the bytes before transmission at each protocol level.  The n_ types  * represent the types with the bytes in ``high-ender'' order. Network  * byte order is usually referered to as big-endian these days rather  * than high-ender, which sadly invokes an Orson Scott Card novel, or  * worse, the movie.  */
 end_comment
 
 begin_typedef
@@ -53,7 +53,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* ms since 00:00 GMT, byte rev */
+comment|/* ms since 00:00 UTC, byte rev */
 end_comment
 
 begin_ifdef

@@ -145,11 +145,11 @@ name|false
 expr_stmt|;
 name|TheMacro
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|DefinedMacro
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 name|SourceLocation
@@ -217,11 +217,11 @@ name|false
 expr_stmt|;
 name|DefinedMacro
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|TheMacro
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 comment|/// getHasReadAnyTokensVal - This is used for the \#ifndef hande-shake at the
@@ -389,7 +389,7 @@ return|return
 name|TheMacro
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief If the ControllingMacro is followed by a macro definition, return

@@ -183,6 +183,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/dmu_objset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/refcount.h>
 end_include
 
@@ -763,7 +769,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -1500,7 +1506,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function
@@ -1575,14 +1581,13 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * Cleanup vfs& vnode ops 	 */
 name|zfs_remove_op_tables
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
 comment|/* 	 * Cleanup zcache 	 */
 if|if
 condition|(
@@ -1609,7 +1614,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_decl_stmt
@@ -1968,7 +1973,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function
@@ -3130,7 +3135,7 @@ comment|/* z_prefetch default is enabled */
 break|break;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 case|case
 name|VBLK
 case|:
@@ -3179,13 +3184,12 @@ block|}
 break|break;
 endif|#
 directive|endif
-comment|/* sun */
 case|case
 name|VFIFO
 case|:
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 case|case
 name|VSOCK
 case|:
@@ -3194,7 +3198,6 @@ name|VDOOR
 case|:
 endif|#
 directive|endif
-comment|/* sun */
 name|vp
 operator|->
 name|v_op
@@ -3241,7 +3244,7 @@ block|}
 break|break;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 case|case
 name|VLNK
 case|:
@@ -3264,7 +3267,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* sun */
 block|}
 name|mutex_enter
 argument_list|(
@@ -7197,7 +7199,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -7254,10 +7256,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* sun */
-end_comment
 
 begin_comment
 comment|/*  * Increase the file length  *  *	IN:	zp	- znode of file to free data in.  *		end	- new end-of-file  *  *	RETURN:	0 on success, error code on failure  */
@@ -7401,6 +7399,7 @@ operator|->
 name|z_max_blksz
 condition|)
 block|{
+comment|/* 			 * File's blocksize is already larger than the 			 * "recordsize" property.  Only let it grow to 			 * the next power of 2. 			 */
 name|ASSERT
 argument_list|(
 operator|!
@@ -7418,7 +7417,14 @@ name|MIN
 argument_list|(
 name|end
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+literal|1
+operator|<<
+name|highbit64
+argument_list|(
+name|zp
+operator|->
+name|z_blksz
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

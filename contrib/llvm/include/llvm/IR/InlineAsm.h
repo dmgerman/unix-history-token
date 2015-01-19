@@ -500,15 +500,6 @@ comment|///Default constructor.
 name|ConstraintInfo
 argument_list|()
 expr_stmt|;
-comment|/// Copy constructor.
-name|ConstraintInfo
-argument_list|(
-specifier|const
-name|ConstraintInfo
-operator|&
-name|other
-argument_list|)
-expr_stmt|;
 comment|/// Parse - Analyze the specified string (e.g. "=*&{eax}") and fill in the
 comment|/// fields in this structure.  If the constraint string is not understood,
 comment|/// return true, otherwise return false.
@@ -584,107 +575,104 @@ return|;
 block|}
 comment|// These are helper methods for dealing with flags in the INLINEASM SDNode
 comment|// in the backend.
-name|enum
-name|LLVM_ENUM_INT_TYPE
-function|(
+enum_decl|enum :
 name|uint32_t
-function|)
 block|{
 comment|// Fixed operands on an INLINEASM SDNode.
 name|Op_InputChain
-operator|=
+init|=
 literal|0
-operator|,
+block|,
 name|Op_AsmString
-operator|=
+init|=
 literal|1
-operator|,
+block|,
 name|Op_MDNode
-operator|=
+init|=
 literal|2
-operator|,
+block|,
 name|Op_ExtraInfo
-operator|=
+init|=
 literal|3
-operator|,
+block|,
 comment|// HasSideEffects, IsAlignStack, AsmDialect.
 name|Op_FirstOperand
-operator|=
+init|=
 literal|4
-operator|,
+block|,
 comment|// Fixed operands on an INLINEASM MachineInstr.
 name|MIOp_AsmString
-operator|=
+init|=
 literal|0
-operator|,
+block|,
 name|MIOp_ExtraInfo
-operator|=
+init|=
 literal|1
-operator|,
+block|,
 comment|// HasSideEffects, IsAlignStack, AsmDialect.
 name|MIOp_FirstOperand
-operator|=
+init|=
 literal|2
-operator|,
+block|,
 comment|// Interpretation of the MIOp_ExtraInfo bit field.
 name|Extra_HasSideEffects
-operator|=
+init|=
 literal|1
-operator|,
+block|,
 name|Extra_IsAlignStack
-operator|=
+init|=
 literal|2
-operator|,
+block|,
 name|Extra_AsmDialect
-operator|=
+init|=
 literal|4
-operator|,
+block|,
 name|Extra_MayLoad
-operator|=
+init|=
 literal|8
-operator|,
+block|,
 name|Extra_MayStore
-operator|=
+init|=
 literal|16
-operator|,
+block|,
 comment|// Inline asm operands map to multiple SDNode / MachineInstr operands.
 comment|// The first operand is an immediate describing the asm operand, the low
 comment|// bits is the kind:
 name|Kind_RegUse
-operator|=
+init|=
 literal|1
-operator|,
+block|,
 comment|// Input register, "r".
 name|Kind_RegDef
-operator|=
+init|=
 literal|2
-operator|,
+block|,
 comment|// Output register, "=r".
 name|Kind_RegDefEarlyClobber
-operator|=
+init|=
 literal|3
-operator|,
+block|,
 comment|// Early-clobber output register, "=&r".
 name|Kind_Clobber
-operator|=
+init|=
 literal|4
-operator|,
+block|,
 comment|// Clobbered register, "~r".
 name|Kind_Imm
-operator|=
+init|=
 literal|5
-operator|,
+block|,
 comment|// Immediate.
 name|Kind_Mem
-operator|=
+init|=
 literal|6
-operator|,
+block|,
 comment|// Memory operand, "m".
 name|Flag_MatchingOperand
-operator|=
+init|=
 literal|0x80000000
 block|}
-empty_stmt|;
+enum_decl|;
 specifier|static
 name|unsigned
 name|getFlagWord

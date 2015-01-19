@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"SetTheory.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -96,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
 begin_include
@@ -109,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/TableGen/Record.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/TableGen/SetTheory.h"
 end_include
 
 begin_include
@@ -323,7 +323,7 @@ operator|.
 name|end
 argument_list|()
 condition|?
-literal|0
+name|nullptr
 else|:
 name|I
 operator|->
@@ -451,7 +451,7 @@ operator|==
 name|B
 operator|)
 condition|?
-literal|0
+name|nullptr
 else|:
 name|Ins
 operator|.
@@ -1254,7 +1254,7 @@ expr_stmt|;
 block|}
 comment|// getSubClasses - Returns a constant BitVector of subclasses indexed by
 comment|// EnumValue.
-comment|// The SubClasses vector includs an entry for this class.
+comment|// The SubClasses vector includes an entry for this class.
 specifier|const
 name|BitVector
 operator|&
@@ -1389,33 +1389,6 @@ name|SpillAlignment
 decl_stmt|;
 name|Key
 argument_list|(
-specifier|const
-name|Key
-operator|&
-name|O
-argument_list|)
-operator|:
-name|Members
-argument_list|(
-name|O
-operator|.
-name|Members
-argument_list|)
-operator|,
-name|SpillSize
-argument_list|(
-name|O
-operator|.
-name|SpillSize
-argument_list|)
-operator|,
-name|SpillAlignment
-argument_list|(
-argument|O.SpillAlignment
-argument_list|)
-block|{}
-name|Key
-argument_list|(
 argument|const CodeGenRegister::Set *M
 argument_list|,
 argument|unsigned S =
@@ -1424,7 +1397,7 @@ argument_list|,
 argument|unsigned A =
 literal|0
 argument_list|)
-operator|:
+block|:
 name|Members
 argument_list|(
 name|M
@@ -1581,8 +1554,8 @@ index|[
 literal|1
 index|]
 operator|=
-literal|0
-block|; }
+name|nullptr
+block|;     }
 name|ArrayRef
 operator|<
 specifier|const
@@ -2220,7 +2193,7 @@ name|CodeGenRegister
 modifier|*
 name|R1
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 name|RegUnits

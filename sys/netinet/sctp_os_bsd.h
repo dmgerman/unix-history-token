@@ -1363,11 +1363,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_BUF_EXTEND_SIZE
-parameter_list|(
-name|m
-parameter_list|)
-value|(m->m_ext.ext_size)
+name|SCTP_BUF_SIZE
+value|M_SIZE
 end_define
 
 begin_define
@@ -1406,7 +1403,7 @@ name|m
 parameter_list|,
 name|len
 parameter_list|)
-value|if(m->m_flags& M_PKTHDR) { \                                      MH_ALIGN(m, len); \                                   } else if ((m->m_flags& M_EXT) == 0) { \                                      M_ALIGN(m, len); \                                   }
+value|M_ALIGN(m, len)
 end_define
 
 begin_comment
@@ -1772,6 +1769,17 @@ parameter_list|(
 name|so
 parameter_list|)
 value|((so)->so_type)
+end_define
+
+begin_comment
+comment|/* Use a macro for renaming sb_cc to sb_ccc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sb_cc
+value|sb_ccc
 end_define
 
 begin_comment

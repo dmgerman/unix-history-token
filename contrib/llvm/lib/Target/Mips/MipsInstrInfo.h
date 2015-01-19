@@ -44,6 +44,22 @@ comment|//
 end_comment
 
 begin_comment
+comment|// FIXME: We need to override TargetInstrInfo::getInlineAsmLength method in
+end_comment
+
+begin_comment
+comment|// order for MipsLongBranch pass to work correctly when the code has inline
+end_comment
+
+begin_comment
+comment|// assembly.  The returned value doesn't have to be the asm instruction's exact
+end_comment
+
+begin_comment
+comment|// size in bytes; MipsLongBranch only expects it to be the correct upper bound.
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -124,9 +140,10 @@ argument_list|()
 block|;
 name|protected
 operator|:
-name|MipsTargetMachine
+specifier|const
+name|MipsSubtarget
 operator|&
-name|TM
+name|Subtarget
 block|;
 name|unsigned
 name|UncondBrOpc
@@ -158,7 +175,7 @@ block|;
 name|explicit
 name|MipsInstrInfo
 argument_list|(
-argument|MipsTargetMachine&TM
+argument|const MipsSubtarget&STI
 argument_list|,
 argument|unsigned UncondBrOpc
 argument_list|)
@@ -169,13 +186,12 @@ name|MipsInstrInfo
 operator|*
 name|create
 argument_list|(
-name|MipsTargetMachine
+name|MipsSubtarget
 operator|&
-name|TM
+name|STI
 argument_list|)
 block|;
 comment|/// Branch Analysis
-name|virtual
 name|bool
 name|AnalyzeBranch
 argument_list|(
@@ -190,16 +206,16 @@ argument_list|,
 argument|bool AllowModify
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|RemoveBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|InsertBranch
 argument_list|(
@@ -214,14 +230,15 @@ argument_list|,
 argument|DebugLoc DL
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|ReverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
+name|override
 block|;
 name|BranchType
 name|AnalyzeBranch
@@ -241,7 +258,6 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Insert nop instruction when hazard condition is found
-name|virtual
 name|void
 name|insertNoop
 argument_list|(
@@ -250,6 +266,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
 comment|/// such, whenever a client has an instance of instruction info, it should
@@ -283,7 +300,6 @@ argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|void
 name|storeRegToStackSlot
 argument_list|(
@@ -302,6 +318,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|{
 name|storeRegToStack
 argument_list|(
@@ -322,7 +339,6 @@ argument_list|,
 literal|0
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|loadRegFromStackSlot
 argument_list|(
@@ -339,6 +355,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|{
 name|loadRegFromStack
 argument_list|(
@@ -480,9 +497,10 @@ name|MipsInstrInfo
 modifier|*
 name|createMips16InstrInfo
 parameter_list|(
-name|MipsTargetMachine
+specifier|const
+name|MipsSubtarget
 modifier|&
-name|TM
+name|STI
 parameter_list|)
 function_decl|;
 specifier|const
@@ -490,9 +508,10 @@ name|MipsInstrInfo
 modifier|*
 name|createMipsSEInstrInfo
 parameter_list|(
-name|MipsTargetMachine
+specifier|const
+name|MipsSubtarget
 modifier|&
-name|TM
+name|STI
 parameter_list|)
 function_decl|;
 block|}

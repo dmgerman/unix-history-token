@@ -1189,9 +1189,9 @@ name|string
 name|m_error
 expr_stmt|;
 name|friend
-name|class
+struct_decl|struct
 name|StringSummaryFormat
-decl_stmt|;
+struct_decl|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ValueObjectPrinter

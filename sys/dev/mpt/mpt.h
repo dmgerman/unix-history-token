@@ -2682,10 +2682,10 @@ name|priority
 parameter_list|,
 name|wmesg
 parameter_list|,
-name|timo
+name|sbt
 parameter_list|)
 define|\
-value|msleep(ident,&(mpt)->mpt_lock, priority, wmesg, timo)
+value|msleep_sbt(ident,&(mpt)->mpt_lock, priority, wmesg, sbt, 0, 0)
 end_define
 
 begin_define
@@ -2695,14 +2695,14 @@ name|mpt_req_timeout
 parameter_list|(
 name|req
 parameter_list|,
-name|ticks
+name|sbt
 parameter_list|,
 name|func
 parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|callout_reset(&(req)->callout, (ticks), (func), (arg))
+value|callout_reset_sbt(&(req)->callout, (sbt), 0, (func), (arg), 0)
 end_define
 
 begin_define

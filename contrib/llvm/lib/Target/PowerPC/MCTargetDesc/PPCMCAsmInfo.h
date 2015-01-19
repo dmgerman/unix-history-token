@@ -84,21 +84,13 @@ range|:
 name|public
 name|MCAsmInfoDarwin
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
-comment|/// This version of the constructor is here to maintain ABI compatibility
-comment|/// with LLVM 3.4.0.
-name|explicit
-name|PPCMCAsmInfoDarwin
-argument_list|(
-argument|bool is64Bit
-argument_list|)
-block|;
 name|explicit
 name|PPCMCAsmInfoDarwin
 argument_list|(
@@ -114,10 +106,10 @@ range|:
 name|public
 name|MCAsmInfoELF
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -125,6 +117,8 @@ name|explicit
 name|PPCLinuxMCAsmInfo
 argument_list|(
 argument|bool is64Bit
+argument_list|,
+argument|const Triple&
 argument_list|)
 block|;   }
 decl_stmt|;

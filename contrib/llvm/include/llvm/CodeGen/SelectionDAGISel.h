@@ -119,9 +119,6 @@ name|class
 name|TargetLibraryInfo
 decl_stmt|;
 name|class
-name|TargetTransformInfo
-decl_stmt|;
-name|class
 name|FunctionLoweringInfo
 decl_stmt|;
 name|class
@@ -154,11 +151,6 @@ specifier|const
 name|TargetLibraryInfo
 operator|*
 name|LibInfo
-block|;
-specifier|const
-name|TargetTransformInfo
-operator|*
-name|TTI
 block|;
 name|FunctionLoweringInfo
 operator|*
@@ -224,22 +216,20 @@ name|getTargetLowering
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
+argument|MachineFunction&MF
 argument_list|)
+name|override
 block|;
 name|virtual
 name|void
@@ -397,6 +387,16 @@ block|,
 name|OPC_CheckChild7Type
 block|,
 name|OPC_CheckInteger
+block|,
+name|OPC_CheckChild0Integer
+block|,
+name|OPC_CheckChild1Integer
+block|,
+name|OPC_CheckChild2Integer
+block|,
+name|OPC_CheckChild3Integer
+block|,
+name|OPC_CheckChild4Integer
 block|,
 name|OPC_CheckCondCode
 block|,
@@ -747,6 +747,24 @@ argument_list|)
 block|;
 name|SDNode
 operator|*
+name|Select_READ_REGISTER
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
+name|Select_WRITE_REGISTER
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
 name|Select_UNDEF
 argument_list|(
 name|SDNode
@@ -778,9 +796,7 @@ argument|unsigned TargetOpc
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
-argument|const SDValue *Ops
-argument_list|,
-argument|unsigned NumOps
+argument|ArrayRef<SDValue> Ops
 argument_list|,
 argument|unsigned EmitNodeInfo
 argument_list|)

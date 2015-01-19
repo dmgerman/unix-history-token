@@ -1484,21 +1484,21 @@ block|{
 name|int
 name|rcode
 decl_stmt|;
-comment|/* If the CD bit is on in the original request, then we don't bother to 	 * validate anything.*/
+comment|/* If the CD bit is on in the original request, then you could think 	 * that we don't bother to validate anything. 	 * But this is signalled internally with the valrec flag. 	 * User queries are validated with BIT_CD to make our cache clean 	 * so that bogus messages get retried by the upstream also for 	 * downstream validators that set BIT_CD. 	 * For DNS64 bit_cd signals no dns64 processing, but we want to 	 * provide validation there too */
+comment|/* 	if(qstate->query_flags& BIT_CD) { 		verbose(VERB_ALGO, "not validating response due to CD bit"); 		return 0; 	} 	*/
 if|if
 condition|(
 name|qstate
 operator|->
-name|query_flags
-operator|&
-name|BIT_CD
+name|is_valrec
 condition|)
 block|{
 name|verbose
 argument_list|(
 name|VERB_ALGO
 argument_list|,
-literal|"not validating response due to CD bit"
+literal|"not validating response, is valrec"
+literal|"(validation recursion lookup)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1751,6 +1751,9 @@ name|struct
 name|query_info
 name|ask
 decl_stmt|;
+name|int
+name|valrec
+decl_stmt|;
 name|ask
 operator|.
 name|qname
@@ -1797,6 +1800,22 @@ name|attach_sub
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* enable valrec flag to avoid recursion to the same validation 	 * routine, this lookup is simply a lookup. DLVs need validation */
+if|if
+condition|(
+name|qtype
+operator|==
+name|LDNS_RR_TYPE_DLV
+condition|)
+name|valrec
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|valrec
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1824,6 +1843,8 @@ name|flags
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+name|valrec
 argument_list|,
 operator|&
 name|newq
@@ -9233,6 +9254,10 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+name|qstate
+operator|->
+name|query_flags
 argument_list|)
 condition|)
 block|{
@@ -9276,6 +9301,10 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+name|qstate
+operator|->
+name|query_flags
 argument_list|)
 condition|)
 block|{

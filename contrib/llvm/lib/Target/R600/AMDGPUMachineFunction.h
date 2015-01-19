@@ -82,6 +82,9 @@ name|void
 name|anchor
 argument_list|()
 block|;
+name|unsigned
+name|ShaderType
+block|;
 name|public
 operator|:
 name|AMDGPUMachineFunction
@@ -91,9 +94,6 @@ name|MachineFunction
 operator|&
 name|MF
 argument_list|)
-block|;
-name|unsigned
-name|ShaderType
 block|;
 comment|/// A map to keep track of local memory objects and their offsets within
 comment|/// the local memory space.
@@ -112,9 +112,18 @@ block|;
 comment|/// Number of bytes in the LDS that are being used.
 name|unsigned
 name|LDSSize
-block|; }
-decl_stmt|;
+block|;
+name|unsigned
+name|getShaderType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ShaderType
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_endif

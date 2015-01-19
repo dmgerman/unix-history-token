@@ -162,6 +162,8 @@ directive|ifndef
 name|XEN
 name|device_t
 name|acpi_dev
+init|=
+name|NULL
 decl_stmt|;
 endif|#
 directive|endif

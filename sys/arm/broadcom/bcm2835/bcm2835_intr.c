@@ -329,10 +329,12 @@ define|#
 directive|define
 name|intc_read_4
 parameter_list|(
+name|_sc
+parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(bcm_intc_sc->intc_bst, bcm_intc_sc->intc_bsh, reg)
+value|bus_space_read_4((_sc)->intc_bst, (_sc)->intc_bsh, (reg))
 end_define
 
 begin_define
@@ -340,12 +342,14 @@ define|#
 directive|define
 name|intc_write_4
 parameter_list|(
+name|_sc
+parameter_list|,
 name|reg
 parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(bcm_intc_sc->intc_bst, bcm_intc_sc->intc_bsh, reg, val)
+value|bus_space_write_4((_sc)->intc_bst, (_sc)->intc_bsh, (reg), (val))
 end_define
 
 begin_function
@@ -593,6 +597,13 @@ name|int
 name|last_irq
 parameter_list|)
 block|{
+name|struct
+name|bcm_intc_softc
+modifier|*
+name|sc
+init|=
+name|bcm_intc_sc
+decl_stmt|;
 name|uint32_t
 name|pending
 decl_stmt|;
@@ -626,6 +637,8 @@ name|pending
 operator|=
 name|intc_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_PENDING_BASIC
 argument_list|)
 expr_stmt|;
@@ -685,6 +698,8 @@ name|pending
 operator|=
 name|intc_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_PENDING_BANK1
 argument_list|)
 expr_stmt|;
@@ -743,6 +758,8 @@ name|pending
 operator|=
 name|intc_read_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_PENDING_BANK2
 argument_list|)
 expr_stmt|;
@@ -799,6 +816,13 @@ name|uintptr_t
 name|nb
 parameter_list|)
 block|{
+name|struct
+name|bcm_intc_softc
+modifier|*
+name|sc
+init|=
+name|bcm_intc_sc
+decl_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: %d\n"
@@ -817,6 +841,8 @@ argument_list|)
 condition|)
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_DISABLE_BASIC
 argument_list|,
 operator|(
@@ -836,6 +862,8 @@ argument_list|)
 condition|)
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_DISABLE_BANK1
 argument_list|,
 operator|(
@@ -858,6 +886,8 @@ argument_list|)
 condition|)
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_DISABLE_BANK2
 argument_list|,
 operator|(
@@ -889,6 +919,13 @@ name|uintptr_t
 name|nb
 parameter_list|)
 block|{
+name|struct
+name|bcm_intc_softc
+modifier|*
+name|sc
+init|=
+name|bcm_intc_sc
+decl_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: %d\n"
@@ -907,6 +944,8 @@ argument_list|)
 condition|)
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_ENABLE_BASIC
 argument_list|,
 operator|(
@@ -926,6 +965,8 @@ argument_list|)
 condition|)
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_ENABLE_BANK1
 argument_list|,
 operator|(
@@ -948,6 +989,8 @@ argument_list|)
 condition|)
 name|intc_write_4
 argument_list|(
+name|sc
+argument_list|,
 name|INTC_ENABLE_BANK2
 argument_list|,
 operator|(

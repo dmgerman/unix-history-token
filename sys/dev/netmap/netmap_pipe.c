@@ -855,11 +855,7 @@ name|m
 expr_stmt|;
 name|m
 operator|=
-name|rxkring
-operator|->
-name|nkr_num_slots
-operator|-
-literal|1
+name|lim_rx
 expr_stmt|;
 comment|/* max avail space on destination */
 name|busy
@@ -879,7 +875,7 @@ literal|0
 condition|)
 name|busy
 operator|+=
-name|txkring
+name|rxkring
 operator|->
 name|nkr_num_slots
 expr_stmt|;
@@ -1006,7 +1002,7 @@ name|lim_tx
 argument_list|)
 expr_stmt|;
 block|}
-name|wmb
+name|mb
 argument_list|()
 expr_stmt|;
 comment|/* make sure the slots are updated before publishing them */
@@ -1067,7 +1063,7 @@ argument_list|,
 name|j
 argument_list|)
 expr_stmt|;
-name|wmb
+name|mb
 argument_list|()
 expr_stmt|;
 comment|/* make sure rxkring->nr_hwtail is updated before notifying */
@@ -1177,10 +1173,10 @@ operator|->
 name|rtail
 argument_list|)
 expr_stmt|;
-name|rmb
+name|mb
 argument_list|()
 expr_stmt|;
-comment|/* paired with the first wmb() in txsync */
+comment|/* paired with the first mb() in txsync */
 name|nm_rxsync_finalize
 argument_list|(
 name|rxkring
@@ -1196,7 +1192,7 @@ name|nr_hwcur
 condition|)
 block|{
 comment|/* we have released some slots, notify the other end */
-name|wmb
+name|mb
 argument_list|()
 expr_stmt|;
 comment|/* make sure nr_hwcur is updated before notifying */

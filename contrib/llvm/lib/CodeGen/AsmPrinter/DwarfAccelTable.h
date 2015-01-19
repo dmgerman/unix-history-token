@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -117,12 +123,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/FormattedStream.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
 end_include
 
 begin_include
@@ -263,10 +263,7 @@ name|class
 name|AsmPrinter
 decl_stmt|;
 name|class
-name|DIE
-decl_stmt|;
-name|class
-name|DwarfUnits
+name|DwarfFile
 decl_stmt|;
 name|class
 name|DwarfAccelTable
@@ -494,6 +491,7 @@ name|uint16_t
 name|form
 decl_stmt|;
 comment|// DWARF DW_FORM_ defines
+name|LLVM_CONSTEXPR
 name|Atom
 argument_list|(
 argument|uint16_t type
@@ -667,6 +665,7 @@ label|:
 struct|struct
 name|HashDataContents
 block|{
+specifier|const
 name|DIE
 modifier|*
 name|Die
@@ -678,7 +677,7 @@ decl_stmt|;
 comment|// Specific flags to output
 name|HashDataContents
 argument_list|(
-argument|DIE *D
+argument|const DIE *D
 argument_list|,
 argument|char Flags
 argument_list|)
@@ -744,6 +743,37 @@ block|}
 struct|;
 name|private
 label|:
+comment|// String Data
+struct|struct
+name|DataArray
+block|{
+name|MCSymbol
+modifier|*
+name|StrSym
+decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|HashDataContents
+operator|*
+operator|>
+name|Values
+expr_stmt|;
+name|DataArray
+argument_list|()
+operator|:
+name|StrSym
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+block|}
+struct|;
+name|friend
+struct_decl|struct
+name|HashData
+struct_decl|;
 struct|struct
 name|HashData
 block|{
@@ -757,11 +787,10 @@ name|MCSymbol
 modifier|*
 name|Sym
 decl_stmt|;
-name|ArrayRef
-operator|<
-name|HashDataContents
-operator|*
-operator|>
+name|DwarfAccelTable
+operator|::
+name|DataArray
+operator|&
 name|Data
 expr_stmt|;
 comment|// offsets
@@ -769,7 +798,7 @@ name|HashData
 argument_list|(
 argument|StringRef S
 argument_list|,
-argument|ArrayRef<HashDataContents *> Data
+argument|DwarfAccelTable::DataArray&Data
 argument_list|)
 block|:
 name|Str
@@ -847,30 +876,20 @@ literal|"\n"
 expr_stmt|;
 for|for
 control|(
-name|size_t
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|<
+name|HashDataContents
+modifier|*
+name|C
+range|:
 name|Data
 operator|.
-name|size
-argument_list|()
-condition|;
-name|i
-operator|++
+name|Values
 control|)
 block|{
 name|O
 operator|<<
 literal|"  Offset: "
 operator|<<
-name|Data
-index|[
-name|i
-index|]
+name|C
 operator|->
 name|Die
 operator|->
@@ -887,10 +906,7 @@ name|dwarf
 operator|::
 name|TagString
 argument_list|(
-name|Data
-index|[
-name|i
-index|]
+name|C
 operator|->
 name|Die
 operator|->
@@ -904,10 +920,7 @@ name|O
 operator|<<
 literal|"  Flags: "
 operator|<<
-name|Data
-index|[
-name|i
-index|]
+name|C
 operator|->
 name|Flags
 operator|<<
@@ -984,7 +997,7 @@ parameter_list|(
 name|AsmPrinter
 modifier|*
 parameter_list|,
-name|DwarfUnits
+name|DwarfFile
 modifier|*
 name|D
 parameter_list|)
@@ -1008,17 +1021,6 @@ name|HashData
 operator|*
 operator|>
 name|Data
-expr_stmt|;
-comment|// String Data
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|HashDataContents
-operator|*
-operator|>
-name|DataArray
 expr_stmt|;
 typedef|typedef
 name|StringMap
@@ -1072,19 +1074,23 @@ name|Atom
 operator|>
 argument_list|)
 expr_stmt|;
-operator|~
-name|DwarfAccelTable
-argument_list|()
-expr_stmt|;
 name|void
 name|AddName
 parameter_list|(
 name|StringRef
+name|Name
 parameter_list|,
+name|MCSymbol
+modifier|*
+name|StrSym
+parameter_list|,
+specifier|const
 name|DIE
 modifier|*
+name|Die
 parameter_list|,
 name|char
+name|Flags
 init|=
 literal|0
 parameter_list|)
@@ -1107,7 +1113,7 @@ parameter_list|,
 name|MCSymbol
 modifier|*
 parameter_list|,
-name|DwarfUnits
+name|DwarfFile
 modifier|*
 parameter_list|)
 function_decl|;

@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/UserID.h"
 end_include
 
@@ -149,6 +155,16 @@ specifier|const
 block|;
 name|bool
 name|GetTraceEnabledState
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|GetStepInAvoidsNoDebug
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|GetStepOutAvoidsNoDebug
 argument_list|()
 specifier|const
 block|; }
@@ -437,11 +453,30 @@ modifier|&
 name|GetGlobalProperties
 parameter_list|()
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Constructor
+comment|///
+comment|/// @param [in] process
+comment|///
+comment|/// @param [in] tid
+comment|///
+comment|/// @param [in] use_invalid_index_id
+comment|///     Optional parameter, defaults to false.  The only subclass that
+comment|///     is likely to set use_invalid_index_id == true is the HistoryThread
+comment|///     class.  In that case, the Thread we are constructing represents
+comment|///     a thread from earlier in the program execution.  We may have the
+comment|///     tid of the original thread that they represent but we don't want
+comment|///     to reuse the IndexID of that thread, or create a new one.  If a
+comment|///     client wants to know the original thread's IndexID, they should use
+comment|///     Thread::GetExtendedBacktraceOriginatingIndexID().
+comment|//------------------------------------------------------------------
 name|Thread
 argument_list|(
 argument|Process&process
 argument_list|,
 argument|lldb::tid_t tid
+argument_list|,
+argument|bool use_invalid_index_id = false
 argument_list|)
 empty_stmt|;
 name|virtual
@@ -511,6 +546,16 @@ return|return
 name|m_resume_state
 return|;
 block|}
+comment|// This sets the "external resume state" of the thread.  If the thread is suspended here, it should never
+comment|// get scheduled.  Note that just because a thread is marked as "running" does not mean we will let it run in
+comment|// a given bit of process control.  For instance "step" tries to stay on the selected thread it was issued on,
+comment|// which may involve suspending other threads temporarily.  This temporary suspension is NOT reflected in the
+comment|// state set here and reported in GetResumeState.
+comment|//
+comment|// If you are just preparing all threads to run, you should not override the threads that are
+comment|// marked as suspended by the debugger.  In that case, pass override_suspend = false.  If you want
+comment|// to force the thread to run (e.g. the "thread continue" command, or are resetting the state
+comment|// (e.g. in SBThread::Resume()), then pass true to override_suspend.
 name|void
 name|SetResumeState
 argument_list|(
@@ -518,8 +563,25 @@ name|lldb
 operator|::
 name|StateType
 name|state
+argument_list|,
+name|bool
+name|override_suspend
+operator|=
+name|false
 argument_list|)
 block|{
+if|if
+condition|(
+name|m_resume_state
+operator|==
+name|lldb
+operator|::
+name|eStateSuspended
+operator|&&
+operator|!
+name|override_suspend
+condition|)
+return|return;
 name|m_resume_state
 operator|=
 name|state
@@ -678,6 +740,44 @@ return|return
 name|NULL
 return|;
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Retrieve a dictionary of information about this thread
+comment|///
+comment|/// On Mac OS X systems there may be voucher information.
+comment|/// The top level dictionary returned will have an "activity" key and the
+comment|/// value of the activity is a dictionary.  Keys in that dictionary will
+comment|/// be "name" and "id", among others.
+comment|/// There may also be "trace_messages" (an array) with each entry in that array
+comment|/// being a dictionary (keys include "message" with the text of the trace
+comment|/// message).
+comment|//------------------------------------------------------------------
+name|StructuredData
+operator|::
+name|ObjectSP
+name|GetExtendedInfo
+argument_list|()
+block|{
+if|if
+condition|(
+name|m_extended_info_fetched
+operator|==
+name|false
+condition|)
+block|{
+name|m_extended_info
+operator|=
+name|FetchThreadExtendedInfo
+argument_list|()
+expr_stmt|;
+name|m_extended_info_fetched
+operator|=
+name|true
+expr_stmt|;
+block|}
+return|return
+name|m_extended_info
+return|;
+block|}
 name|virtual
 specifier|const
 name|char
@@ -699,6 +799,21 @@ modifier|*
 name|name
 parameter_list|)
 block|{     }
+comment|//------------------------------------------------------------------
+comment|/// Retrieve the Queue ID for the queue currently using this Thread
+comment|///
+comment|/// If this Thread is doing work on behalf of a libdispatch/GCD queue,
+comment|/// retrieve the QueueID.
+comment|///
+comment|/// This is a unique identifier for the libdispatch/GCD queue in a
+comment|/// process.  Often starting at 1 for the initial system-created
+comment|/// queues and incrementing, a QueueID will not be reused for a
+comment|/// different queue during the lifetime of a proces.
+comment|///
+comment|/// @return
+comment|///     A QueueID if the Thread subclass implements this, else
+comment|///     LLDB_INVALID_QUEUE_ID.
+comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
 operator|::
@@ -720,6 +835,16 @@ name|queue_id_t
 name|new_val
 argument_list|)
 block|{     }
+comment|//------------------------------------------------------------------
+comment|/// Retrieve the Queue name for the queue currently using this Thread
+comment|///
+comment|/// If this Thread is doing work on behalf of a libdispatch/GCD queue,
+comment|/// retrieve the Queue name.
+comment|///
+comment|/// @return
+comment|///     The Queue name, if the Thread subclass implements this, else
+comment|///     NULL.
+comment|//------------------------------------------------------------------
 name|virtual
 specifier|const
 name|char
@@ -741,6 +866,57 @@ modifier|*
 name|name
 parameter_list|)
 block|{     }
+comment|//------------------------------------------------------------------
+comment|/// Retrieve the Queue for this thread, if any.
+comment|///
+comment|/// @return
+comment|///     A QueueSP for the queue that is currently associated with this
+comment|///     thread.
+comment|///     An empty shared pointer indicates that this thread is not
+comment|///     associated with a queue, or libdispatch queues are not
+comment|///     supported on this target.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|QueueSP
+name|GetQueue
+argument_list|()
+block|{
+return|return
+name|lldb
+operator|::
+name|QueueSP
+argument_list|()
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Retrieve the address of the libdispatch_queue_t struct for queue
+comment|/// currently using this Thread
+comment|///
+comment|/// If this Thread is doing work on behalf of a libdispatch/GCD queue,
+comment|/// retrieve the address of the libdispatch_queue_t structure describing
+comment|/// the queue.
+comment|///
+comment|/// This address may be reused for different queues later in the Process
+comment|/// lifetime and should not be used to identify a queue uniquely.  Use
+comment|/// the GetQueueID() call for that.
+comment|///
+comment|/// @return
+comment|///     The Queue's libdispatch_queue_t address if the Thread subclass
+comment|///     implements this, else LLDB_INVALID_ADDRESS.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|addr_t
+name|GetQueueLibdispatchQueueAddress
+argument_list|()
+block|{
+return|return
+name|LLDB_INVALID_ADDRESS
+return|;
+block|}
 name|virtual
 name|uint32_t
 name|GetStackFrameCount
@@ -1067,6 +1243,22 @@ name|uint32_t
 name|frame_idx
 parameter_list|)
 function_decl|;
+name|bool
+name|GetDescription
+argument_list|(
+name|Stream
+operator|&
+name|s
+argument_list|,
+name|lldb
+operator|::
+name|DescriptionLevel
+name|level
+argument_list|,
+name|bool
+name|json_output
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Default implementation for stepping into.
 comment|///
@@ -1077,10 +1269,14 @@ comment|/// @param[in] source_step
 comment|///     If true and the frame has debug info, then do a source level
 comment|///     step in, else do a single instruction step in.
 comment|///
-comment|/// @param[in] avoid_code_without_debug_info
+comment|/// @param[in] step_in_avoids_code_without_debug_info
 comment|///     If \a true, then avoid stepping into code that doesn't have
-comment|///     debug info, else step into any code regardless of wether it
+comment|///     debug info, else step into any code regardless of whether it
 comment|///     has debug info.
+comment|///
+comment|/// @param[in] step_out_avoids_code_without_debug_info
+comment|///     If \a true, then if you step out to code with no debug info, keep
+comment|///     stepping out till you get to code with debug info.
 comment|///
 comment|/// @return
 comment|///     An error that describes anything that went wrong
@@ -1092,8 +1288,15 @@ parameter_list|(
 name|bool
 name|source_step
 parameter_list|,
-name|bool
-name|avoid_code_without_debug_info
+name|LazyBool
+name|step_in_avoids_code_without_debug_info
+init|=
+name|eLazyBoolCalculate
+parameter_list|,
+name|LazyBool
+name|step_out_avoids_code_without_debug_info
+init|=
+name|eLazyBoolCalculate
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -1115,6 +1318,11 @@ name|StepOver
 parameter_list|(
 name|bool
 name|source_step
+parameter_list|,
+name|LazyBool
+name|step_out_avoids_code_without_debug_info
+init|=
+name|eLazyBoolCalculate
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -1167,6 +1375,22 @@ argument_list|(
 argument|const lldb::ModuleSP module
 argument_list|)
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Check whether this thread is safe to run functions
+comment|///
+comment|/// The SystemRuntime may know of certain thread states (functions in
+comment|/// process of execution, for instance) which can make it unsafe for
+comment|/// functions to be called.
+comment|///
+comment|/// @return
+comment|///     True if it is safe to call functions on this thread.
+comment|///     False if function calls should be avoided on this thread.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|SafeToCallFunctions
+parameter_list|()
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|// Thread Plan Providers:
 comment|// This section provides the basic thread plans that the Process control
@@ -1266,6 +1490,10 @@ comment|///
 comment|/// @param[in] stop_other_threads
 comment|///    \b true if we will stop other threads while we single step this one.
 comment|///
+comment|/// @param[in] step_out_avoids_code_without_debug_info
+comment|///    If eLazyBoolYes, if the step over steps out it will continue to step out till it comes to a frame with debug info.
+comment|///    If eLazyBoolCalculate, we will consult the default set in the thread.
+comment|///
 comment|/// @return
 comment|///     A shared pointer to the newly queued thread plan, or NULL if the plan could not be queued.
 comment|//------------------------------------------------------------------
@@ -1282,6 +1510,8 @@ argument_list|,
 argument|const SymbolContext&addr_context
 argument_list|,
 argument|lldb::RunMode stop_other_threads
+argument_list|,
+argument|LazyBool step_out_avoids_code_without_debug_info = eLazyBoolCalculate
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -1310,8 +1540,13 @@ comment|///
 comment|/// @param[in] stop_other_threads
 comment|///    \b true if we will stop other threads while we single step this one.
 comment|///
-comment|/// @param[in] avoid_code_without_debug_info
-comment|///    If \b true we will step out if we step into code with no debug info.
+comment|/// @param[in] step_in_avoids_code_without_debug_info
+comment|///    If eLazyBoolYes we will step out if we step into code with no debug info.
+comment|///    If eLazyBoolCalculate we will consult the default set in the thread.
+comment|///
+comment|/// @param[in] step_out_avoids_code_without_debug_info
+comment|///    If eLazyBoolYes, if the step over steps out it will continue to step out till it comes to a frame with debug info.
+comment|///    If eLazyBoolCalculate, it will consult the default set in the thread.
 comment|///
 comment|/// @return
 comment|///     A shared pointer to the newly queued thread plan, or NULL if the plan could not be queued.
@@ -1332,12 +1567,72 @@ argument|const char *step_in_target
 argument_list|,
 argument|lldb::RunMode stop_other_threads
 argument_list|,
-argument|bool avoid_code_without_debug_info
+argument|LazyBool step_in_avoids_code_without_debug_info = eLazyBoolCalculate
+argument_list|,
+argument|LazyBool step_out_avoids_code_without_debug_info = eLazyBoolCalculate
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Queue the plan used to step out of the function at the current PC of
 comment|/// \a thread.
+comment|///
+comment|/// @param[in] abort_other_plans
+comment|///    \b true if we discard the currently queued plans and replace them with this one.
+comment|///    Otherwise this plan will go on the end of the plan stack.
+comment|///
+comment|/// @param[in] addr_context
+comment|///    When dealing with stepping through inlined functions the current PC is not enough information to know
+comment|///    what "step" means.  For instance a series of nested inline functions might start at the same address.
+comment|//     The \a addr_context provides the current symbol context the step
+comment|///    is supposed to be out of.
+comment|//   FIXME: Currently unused.
+comment|///
+comment|/// @param[in] first_insn
+comment|///     \b true if this is the first instruction of a function.
+comment|///
+comment|/// @param[in] stop_other_threads
+comment|///    \b true if we will stop other threads while we single step this one.
+comment|///
+comment|/// @param[in] stop_vote
+comment|/// @param[in] run_vote
+comment|///    See standard meanings for the stop& run votes in ThreadPlan.h.
+comment|///
+comment|/// @param[in] step_out_avoids_code_without_debug_info
+comment|///    If eLazyBoolYes, if the step over steps out it will continue to step out till it comes to a frame with debug info.
+comment|///    If eLazyBoolCalculate, it will consult the default set in the thread.
+comment|///
+comment|/// @return
+comment|///     A shared pointer to the newly queued thread plan, or NULL if the plan could not be queued.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|ThreadPlanSP
+name|QueueThreadPlanForStepOut
+argument_list|(
+argument|bool abort_other_plans
+argument_list|,
+argument|SymbolContext *addr_context
+argument_list|,
+argument|bool first_insn
+argument_list|,
+argument|bool stop_other_threads
+argument_list|,
+argument|Vote stop_vote
+argument_list|,
+comment|// = eVoteYes,
+argument|Vote run_vote
+argument_list|,
+comment|// = eVoteNoOpinion);
+argument|uint32_t frame_idx
+argument_list|,
+argument|LazyBool step_out_avoids_code_without_debug_info = eLazyBoolCalculate
+argument_list|)
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Queue the plan used to step out of the function at the current PC of
+comment|/// a thread.  This version does not consult the should stop here callback, and should only
+comment|/// be used by other thread plans when they need to retain control of the step out.
 comment|///
 comment|/// @param[in] abort_other_plans
 comment|///    \b true if we discard the currently queued plans and replace them with this one.
@@ -1367,7 +1662,7 @@ name|virtual
 name|lldb
 operator|::
 name|ThreadPlanSP
-name|QueueThreadPlanForStepOut
+name|QueueThreadPlanForStepOutNoShouldStop
 argument_list|(
 argument|bool abort_other_plans
 argument_list|,
@@ -1535,6 +1830,20 @@ name|lldb
 operator|::
 name|ValueObjectSP
 name|GetReturnValueObject
+argument_list|()
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Gets the outer-most expression variable from the completed plans
+comment|///
+comment|/// @return
+comment|///     A ClangExpressionVariableSP, either empty if there is no
+comment|///     plan completed an expression during the current stop
+comment|///     or the expression variable that was made for the completed expression.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|ClangExpressionVariableSP
+name|GetExpressionVariable
 argument_list|()
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -2068,6 +2377,24 @@ return|return
 name|false
 return|;
 block|}
+comment|// Subclasses that have a way to get an extended info dictionary for this thread should
+comment|// fill
+name|virtual
+name|lldb_private
+operator|::
+name|StructuredData
+operator|::
+name|ObjectSP
+name|FetchThreadExtendedInfo
+argument_list|()
+block|{
+return|return
+name|StructuredData
+operator|::
+name|ObjectSP
+argument_list|()
+return|;
+block|}
 name|lldb
 operator|::
 name|StackFrameListSP
@@ -2161,7 +2488,7 @@ name|StateType
 name|m_temporary_resume_state
 expr_stmt|;
 comment|///< This state records what the thread was told to do by the thread plan logic for the current resume.
-comment|/// It gets set in Thread::ShoudResume.
+comment|/// It gets set in Thread::ShouldResume.
 name|std
 operator|::
 name|unique_ptr
@@ -2181,6 +2508,16 @@ name|m_override_should_notify
 decl_stmt|;
 name|private
 label|:
+name|bool
+name|m_extended_info_fetched
+decl_stmt|;
+comment|// Have we tried to retrieve the m_extended_info for this thread?
+name|StructuredData
+operator|::
+name|ObjectSP
+name|m_extended_info
+expr_stmt|;
+comment|// The extended info for this thread
 comment|//------------------------------------------------------------------
 comment|// For Thread only
 comment|//------------------------------------------------------------------

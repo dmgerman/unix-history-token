@@ -290,7 +290,7 @@ value|((Flags)& R600_InstFlag::NATIVE_OPERANDS)
 end_define
 
 begin_comment
-comment|/// \brief Defines for extracting register infomation from register encoding
+comment|/// \brief Defines for extracting register information from register encoding
 end_comment
 
 begin_define

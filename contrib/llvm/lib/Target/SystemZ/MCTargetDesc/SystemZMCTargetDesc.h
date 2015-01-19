@@ -234,6 +234,7 @@ index|]
 return|;
 block|}
 block|}
+comment|// end namespace SystemZMC
 name|MCCodeEmitter
 modifier|*
 name|createSystemZMCCodeEmitter

@@ -940,13 +940,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"pci%d:%d:%d fault acc %x adt 0x%x reason 0x%x addr %jx\n"
+literal|"pci%d:%d:%d sid %x fault acc %x adt 0x%x reason 0x%x "
+literal|"addr %jx\n"
 argument_list|,
 name|bus
 argument_list|,
 name|slot
 argument_list|,
 name|func
+argument_list|,
+name|sid
 argument_list|,
 name|DMAR_FRCD2_T
 argument_list|(

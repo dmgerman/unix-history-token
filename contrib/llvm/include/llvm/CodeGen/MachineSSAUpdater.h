@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -106,9 +112,6 @@ operator|>
 name|class
 name|SSAUpdaterTraits
 expr_stmt|;
-name|class
-name|BumpPtrAllocator
-decl_stmt|;
 comment|/// MachineSSAUpdater - This class updates SSA form for a set of virtual
 comment|/// registers defined in multiple blocks.  This is used when code duplication
 comment|/// or another unstructured transformation wants to rewrite a set of uses of one
@@ -180,7 +183,7 @@ operator|>
 operator|*
 name|InsertedPHIs
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 operator|~
@@ -272,16 +275,6 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-name|void
-name|ReplaceRegWith
-parameter_list|(
-name|unsigned
-name|OldReg
-parameter_list|,
-name|unsigned
-name|NewReg
-parameter_list|)
-function_decl|;
 name|unsigned
 name|GetValueAtEndOfBlockInternal
 parameter_list|(

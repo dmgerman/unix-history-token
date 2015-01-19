@@ -1783,6 +1783,12 @@ case|:
 case|case
 name|AR71XX_SOC_AR9344
 case|:
+case|case
+name|AR71XX_SOC_QCA9556
+case|:
+case|case
+name|AR71XX_SOC_QCA9558
+case|:
 comment|/* ACK/clear the given interrupt */
 name|ATH_WRITE_REG
 argument_list|(

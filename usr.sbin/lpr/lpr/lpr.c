@@ -1924,8 +1924,11 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%u %ju"
+literal|"%ju %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|statb
 operator|.
 name|st_dev

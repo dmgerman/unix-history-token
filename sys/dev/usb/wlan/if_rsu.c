@@ -278,7 +278,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|rsu_debug
@@ -593,6 +593,13 @@ argument_list|(
 name|SWEEX2
 argument_list|,
 name|LW154
+argument_list|)
+block|,
+name|RSU_DEV_HT
+argument_list|(
+name|TRENDNET
+argument_list|,
+name|TEW646UBH
 argument_list|)
 block|,
 undef|#
@@ -2160,6 +2167,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|RSU_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -2178,11 +2190,6 @@ goto|goto
 name|fail_rom
 goto|;
 block|}
-name|RSU_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|sc

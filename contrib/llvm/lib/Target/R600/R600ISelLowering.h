@@ -91,7 +91,6 @@ operator|&
 name|TM
 argument_list|)
 block|;
-name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -101,8 +100,8 @@ argument_list|,
 argument|MachineBasicBlock * BB
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -111,8 +110,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|PerformDAGCombine
 argument_list|(
@@ -121,6 +120,7 @@ argument_list|,
 argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|ReplaceNodeResults
@@ -132,8 +132,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerFormalArguments
 argument_list|(
@@ -152,8 +152,8 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
@@ -162,6 +162,7 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 name|private
 operator|:
@@ -170,7 +171,7 @@ name|Gen
 block|;
 comment|/// Each OpenCL kernel has nine implicit parameters that are stored in the
 comment|/// first nine dwords of a Vertex Buffer.  These implicit parameters are
-comment|/// lowered to load instructions which retreive the values from the Vertex
+comment|/// lowered to load instructions which retrieve the values from the Vertex
 comment|/// Buffer.
 name|SDValue
 name|LowerImplicitParameter
@@ -209,9 +210,26 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Lower ROTL opcode to BITALIGN
 name|SDValue
-name|LowerROTL
+name|vectorToVerticalVector
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDValue Vector
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerEXTRACT_VECTOR_ELT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerINSERT_VECTOR_ELT
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -256,7 +274,34 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerBRCOND
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerTrig
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerSHLParts
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerSRXParts
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -295,7 +340,6 @@ argument|SDValue Op
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|SDNode
 operator|*
 name|PostISelFolding
@@ -305,6 +349,7 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

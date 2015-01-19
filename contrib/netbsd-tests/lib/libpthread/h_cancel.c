@@ -72,11 +72,16 @@ index|[]
 init|=
 literal|"You should not see this.\n"
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|printf
 argument_list|(
 literal|"Cancellation test: Self-cancellation and disabling.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|pthread_cancel
 argument_list|(
 name|pthread_self

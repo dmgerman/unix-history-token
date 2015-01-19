@@ -47,6 +47,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CODEGEN_ASMPRINTER_DIEHASH_H__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CODEGEN_ASMPRINTER_DIEHASH_H__
+end_define
+
 begin_include
 include|#
 directive|include
@@ -69,6 +81,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|AsmPrinter
+decl_stmt|;
 name|class
 name|CompileUnit
 decl_stmt|;
@@ -249,16 +264,30 @@ block|}
 struct|;
 name|public
 label|:
+name|DIEHash
+argument_list|(
+name|AsmPrinter
+operator|*
+name|A
+operator|=
+name|nullptr
+argument_list|)
+operator|:
+name|AP
+argument_list|(
+argument|A
+argument_list|)
+block|{}
 comment|/// \brief Computes the ODR signature.
 name|uint64_t
 name|computeDIEODRSignature
-parameter_list|(
+argument_list|(
 specifier|const
 name|DIE
-modifier|&
+operator|&
 name|Die
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// \brief Computes the CU signature.
 name|uint64_t
 name|computeCUSignature
@@ -313,8 +342,24 @@ name|Die
 parameter_list|)
 function_decl|;
 comment|// Routines that add DIEValues to the hash.
-name|private
+name|public
 label|:
+comment|/// \brief Adds \param Value to the hash.
+name|void
+name|update
+parameter_list|(
+name|uint8_t
+name|Value
+parameter_list|)
+block|{
+name|Hash
+operator|.
+name|update
+argument_list|(
+name|Value
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief Encodes and adds \param Value to the hash as a ULEB128.
 name|void
 name|addULEB128
@@ -331,6 +376,8 @@ name|int64_t
 name|Value
 parameter_list|)
 function_decl|;
+name|private
+label|:
 comment|/// \brief Adds \param Str to the hash and includes a NULL byte.
 name|void
 name|addString
@@ -369,6 +416,31 @@ name|Tag
 name|Tag
 argument_list|)
 decl_stmt|;
+comment|/// \brief Hashes the data in a block like DIEValue, e.g. DW_FORM_block or
+comment|/// DW_FORM_exprloc.
+name|void
+name|hashBlockData
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|DIEValue
+operator|*
+operator|>
+operator|&
+name|Values
+argument_list|)
+decl_stmt|;
+comment|/// \brief Hashes the contents pointed to in the .debug_loc section.
+name|void
+name|hashLocList
+parameter_list|(
+specifier|const
+name|DIELocList
+modifier|&
+name|LocList
+parameter_list|)
+function_decl|;
 comment|/// \brief Hashes an individual attribute.
 name|void
 name|hashAttribute
@@ -452,6 +524,10 @@ label|:
 name|MD5
 name|Hash
 decl_stmt|;
+name|AsmPrinter
+modifier|*
+name|AP
+decl_stmt|;
 name|DenseMap
 operator|<
 specifier|const
@@ -466,6 +542,11 @@ block|}
 empty_stmt|;
 block|}
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

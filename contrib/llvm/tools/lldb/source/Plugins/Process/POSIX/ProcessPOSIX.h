@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Target/UnixSignals.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ProcessMessage.h"
 end_include
 
@@ -124,6 +118,12 @@ operator|::
 name|Listener
 operator|&
 name|listener
+argument_list|,
+name|lldb_private
+operator|::
+name|UnixSignalsSP
+operator|&
+name|unix_signals_sp
 argument_list|)
 block|;
 name|virtual
@@ -448,6 +448,14 @@ argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
 block|;
+specifier|const
+name|lldb
+operator|::
+name|DataBufferSP
+name|GetAuxvData
+argument_list|()
+name|override
+block|;
 comment|//--------------------------------------------------------------------------
 comment|// ProcessPOSIX internal API.
 comment|/// Registers the given message with this process.
@@ -476,13 +484,6 @@ operator|*
 name|m_monitor
 return|;
 block|}
-name|lldb_private
-operator|::
-name|UnixSignals
-operator|&
-name|GetUnixSignals
-argument_list|()
-block|;
 specifier|const
 name|char
 operator|*
@@ -490,8 +491,6 @@ name|GetFilePath
 argument_list|(
 specifier|const
 name|lldb_private
-operator|::
-name|ProcessLaunchInfo
 operator|::
 name|FileAction
 operator|*
@@ -513,7 +512,7 @@ argument|lldb::tid_t stop_tid
 argument_list|)
 block|;
 comment|/// Adds the thread to the list of threads for which we have received the initial stopping signal.
-comment|/// The \p stop_tid paramter indicates the thread which the stop happened for.
+comment|/// The \p stop_tid parameter indicates the thread which the stop happened for.
 name|bool
 name|AddThreadForInitialStopIfNeeded
 argument_list|(
@@ -573,12 +572,6 @@ block|;
 comment|/// Drive any exit events to completion.
 name|bool
 name|m_exit_now
-block|;
-comment|/// OS-specific signal set.
-name|lldb_private
-operator|::
-name|UnixSignals
-name|m_signals
 block|;
 comment|/// Returns true if the process has exited.
 name|bool

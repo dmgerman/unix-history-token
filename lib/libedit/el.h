@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)el.h	8.1 (Berkeley) 6/4/93  *	$NetBSD: el.h,v 1.17 2006/12/15 22:13:33 christos Exp $  * $FreeBSD$  */
+comment|/*	$NetBSD: el.h,v 1.25 2011/07/29 23:44:44 christos Exp $	*/
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)el.h	8.1 (Berkeley) 6/4/93  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -44,6 +48,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"histedit.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"chartype.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -57,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|EL_BUFSIZ
-value|1024
+value|((size_t)1024)
 end_define
 
 begin_comment
@@ -90,6 +106,38 @@ define|#
 directive|define
 name|UNBUFFERED
 value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHARSET_IS_UTF8
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGNORE_EXTCHARS
+value|0x20
+end_define
+
+begin_comment
+comment|/* Ignore characters read> 0xff */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NARROW_HISTORY
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|NARROW_READ
+value|0x80
 end_define
 
 begin_typedef
@@ -137,23 +185,23 @@ typedef|typedef
 struct|struct
 name|el_line_t
 block|{
-name|char
+name|Char
 modifier|*
 name|buffer
 decl_stmt|;
 comment|/* Input line			*/
-name|char
+name|Char
 modifier|*
 name|cursor
 decl_stmt|;
 comment|/* Cursor position		*/
-name|char
+name|Char
 modifier|*
 name|lastchar
 decl_stmt|;
 comment|/* Last character		*/
 specifier|const
-name|char
+name|Char
 modifier|*
 name|limit
 decl_stmt|;
@@ -196,7 +244,7 @@ name|el_action_t
 name|thiscmd
 decl_stmt|;
 comment|/* this command 		*/
-name|char
+name|Char
 name|thisch
 decl_stmt|;
 comment|/* char that generated it	*/
@@ -208,16 +256,6 @@ end_typedef
 begin_comment
 comment|/*  * Until we come up with something better...  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|el_strdup
-parameter_list|(
-name|a
-parameter_list|)
-value|strdup(a)
-end_define
 
 begin_define
 define|#
@@ -266,13 +304,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"key.h"
+file|"keymacro.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"term.h"
+file|"terminal.h"
 end_include
 
 begin_include
@@ -339,7 +377,7 @@ begin_struct
 struct|struct
 name|editline
 block|{
-name|char
+name|Char
 modifier|*
 name|el_prog
 decl_stmt|;
@@ -364,6 +402,14 @@ name|el_infd
 decl_stmt|;
 comment|/* Input file descriptor	*/
 name|int
+name|el_outfd
+decl_stmt|;
+comment|/* Output file descriptor	*/
+name|int
+name|el_errfd
+decl_stmt|;
+comment|/* Error file descriptor	*/
+name|int
 name|el_flags
 decl_stmt|;
 comment|/* Various flags.		*/
@@ -375,13 +421,13 @@ name|coord_t
 name|el_cursor
 decl_stmt|;
 comment|/* Cursor location		*/
-name|char
+name|Char
 modifier|*
 modifier|*
 name|el_display
 decl_stmt|;
 comment|/* Real screen image = what is there */
-name|char
+name|Char
 modifier|*
 modifier|*
 name|el_vdisplay
@@ -400,8 +446,8 @@ name|el_state_t
 name|el_state
 decl_stmt|;
 comment|/* Current editor state		*/
-name|el_term_t
-name|el_term
+name|el_terminal_t
+name|el_terminal
 decl_stmt|;
 comment|/* Terminal dependent stuff	*/
 name|el_tty_t
@@ -428,8 +474,8 @@ name|el_map_t
 name|el_map
 decl_stmt|;
 comment|/* Key mapping stuff		*/
-name|el_key_t
-name|el_key
+name|el_keymacro_t
+name|el_keymacro
 decl_stmt|;
 comment|/* Key binding stuff		*/
 name|el_history_t
@@ -448,6 +494,23 @@ name|el_read_t
 name|el_read
 decl_stmt|;
 comment|/* Character reading stuff	*/
+ifdef|#
+directive|ifdef
+name|WIDECHAR
+name|ct_buffer_t
+name|el_scratch
+decl_stmt|;
+comment|/* Scratch conversion buffer    */
+name|ct_buffer_t
+name|el_lgcyconv
+decl_stmt|;
+comment|/* Buffer for legacy wrappers   */
+name|LineInfo
+name|el_lgcylinfo
+decl_stmt|;
+comment|/* Legacy LineInfo buffer       */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -463,7 +526,7 @@ parameter_list|,
 name|int
 parameter_list|,
 specifier|const
-name|char
+name|Char
 modifier|*
 modifier|*
 parameter_list|)

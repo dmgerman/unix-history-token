@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -93,9 +87,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|error_code
-decl_stmt|;
 comment|/// FileOutputBuffer - This interface provides simple way to create an in-memory
 comment|/// buffer which will be written to a file. During the lifetime of these
 comment|/// objects, the content or existence of the specified file is undefined. That
@@ -120,28 +111,21 @@ comment|/// Factory method to create an OutputBuffer object which manages a read
 comment|/// buffer of the specified size. When committed, the buffer will be written
 comment|/// to the file at the specified path.
 specifier|static
+name|std
+operator|::
 name|error_code
 name|create
 argument_list|(
-name|StringRef
-name|FilePath
+argument|StringRef FilePath
 argument_list|,
-name|size_t
-name|Size
+argument|size_t Size
 argument_list|,
-name|OwningPtr
-operator|<
-name|FileOutputBuffer
-operator|>
-operator|&
-name|Result
+argument|std::unique_ptr<FileOutputBuffer>&Result
 argument_list|,
-name|unsigned
-name|Flags
-operator|=
+argument|unsigned Flags =
 literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// Returns a pointer to the start of the buffer.
 name|uint8_t
 modifier|*
@@ -209,16 +193,15 @@ comment|/// buffer.  If commit() is not called before this object's destructor
 comment|/// is called, the file is deleted in the destructor. The optional parameter
 comment|/// is used if it turns out you want the file size to be smaller than
 comment|/// initially requested.
+name|std
+operator|::
 name|error_code
 name|commit
-parameter_list|(
-name|int64_t
-name|NewSmallerSize
-init|=
-operator|-
+argument_list|(
+argument|int64_t NewSmallerSize = -
 literal|1
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// If this object was previously committed, the destructor just deletes
 comment|/// this object.  If this object was not committed, the destructor
 comment|/// deallocates the buffer and the target file is never written.
@@ -254,7 +237,9 @@ argument_list|,
 argument|StringRef TempPath
 argument_list|)
 empty_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|llvm
 operator|::

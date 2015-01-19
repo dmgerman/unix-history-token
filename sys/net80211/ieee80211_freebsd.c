@@ -2024,7 +2024,7 @@ name|m
 operator|!=
 name|NULL
 condition|)
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,

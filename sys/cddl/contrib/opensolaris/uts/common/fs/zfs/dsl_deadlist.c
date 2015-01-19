@@ -596,7 +596,7 @@ name|bpobj_alloc
 argument_list|(
 name|os
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|tx
 argument_list|)
@@ -827,7 +827,7 @@ name|dl
 operator|->
 name|dl_os
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|tx
 argument_list|)
@@ -1290,7 +1290,7 @@ name|dl
 operator|->
 name|dl_os
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|tx
 argument_list|)
@@ -1593,9 +1593,10 @@ argument_list|(
 operator|&
 name|dl
 argument_list|,
+name|dsl_dataset_phys
+argument_list|(
 name|ds
-operator|->
-name|ds_phys
+argument_list|)
 operator|->
 name|ds_prev_snap_txg
 argument_list|,
@@ -1604,9 +1605,10 @@ argument_list|)
 expr_stmt|;
 name|mrs_obj
 operator|=
+name|dsl_dataset_phys
+argument_list|(
 name|ds
-operator|->
-name|ds_phys
+argument_list|)
 operator|->
 name|ds_prev_snap_obj
 expr_stmt|;
@@ -1742,7 +1744,7 @@ name|dl
 operator|->
 name|dl_os
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|tx
 argument_list|)

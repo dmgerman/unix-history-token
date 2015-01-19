@@ -98,6 +98,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|///< Print cl.exe style /showIncludes info.
+name|unsigned
+name|IncludeModuleFiles
+range|:
+literal|1
+decl_stmt|;
+comment|///< Include module file dependencies.
 comment|/// The file to write dependency output to.
 name|std
 operator|::
@@ -131,6 +137,12 @@ operator|::
 name|string
 name|DOTOutputFile
 expr_stmt|;
+comment|/// \brief The directory to copy module dependencies to when collecting them.
+name|std
+operator|::
+name|string
+name|ModuleDependencyOutputDir
+expr_stmt|;
 name|public
 label|:
 name|DependencyOutputOptions
@@ -153,6 +165,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|PrintShowIncludes
+operator|=
+literal|0
+expr_stmt|;
+name|IncludeModuleFiles
 operator|=
 literal|0
 expr_stmt|;

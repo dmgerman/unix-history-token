@@ -68,12 +68,9 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|timer_signal_handler
 parameter_list|(
 name|int

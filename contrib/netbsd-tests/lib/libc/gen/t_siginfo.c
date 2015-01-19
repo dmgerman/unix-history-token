@@ -13,14 +13,11 @@ directive|include
 file|<atf-c.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -369,12 +366,9 @@ operator|.
 name|ss_flags
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 for|for
 control|(
 name|i
@@ -679,12 +673,9 @@ operator|->
 name|si_status
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 name|printf
 argument_list|(
 literal|"si_utime=%lu\n"

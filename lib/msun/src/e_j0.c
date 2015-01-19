@@ -365,11 +365,11 @@ else|else
 return|return
 name|one
 operator|-
-literal|0.25
-operator|*
 name|x
 operator|*
 name|x
+operator|/
+literal|4
 return|;
 block|}
 block|}

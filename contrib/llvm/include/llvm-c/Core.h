@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm-c/Support.h"
 end_include
 
 begin_ifdef
@@ -37,10 +37,6 @@ comment|/**  * @defgroup LLVMC LLVM-C: C interface to LLVM  *  * This module exp
 comment|/**  * @defgroup LLVMCTransforms Transforms  */
 comment|/**  * @defgroup LLVMCCore Core  *  * This modules provide an interface to libLLVMCore, which implements  * the LLVM intermediate representation as well as other related types  * and utilities.  *  * LLVM uses a polymorphic type hierarchy which C cannot represent, therefore  * parameters must be passed as base types. Despite the declared types, most  * of the functions provided operate only on branches of the type hierarchy.  * The declared parameter names are descriptive and specify which type is  * required. Additionally, each type hierarchy is documented along with the  * functions that operate upon it. For more detail, refer to LLVM's C++ code.  * If in doubt, refer to Core.cpp, which performs parameter downcasts in the  * form unwrap<RequiredType>(Param).  *  * Many exotic languages can interoperate with C code but have a harder time  * with C++ due to name mangling. So in addition to C, this interface enables  * tools written in such languages.  *  * @{  */
 comment|/**  * @defgroup LLVMCCoreTypes Types and Enumerations  *  * @{  */
-typedef|typedef
-name|int
-name|LLVMBool
-typedef|;
 comment|/* Opaque types. */
 comment|/**  * The top-level container for all LLVM global data. See the LLVMContext class.  */
 typedef|typedef
@@ -91,13 +87,6 @@ name|LLVMOpaqueModuleProvider
 modifier|*
 name|LLVMModuleProviderRef
 typedef|;
-comment|/**  * Used to provide a module to JIT or interpreter.  *  * @see llvm::MemoryBuffer  */
-typedef|typedef
-name|struct
-name|LLVMOpaqueMemoryBuffer
-modifier|*
-name|LLVMMemoryBufferRef
-typedef|;
 comment|/** @see llvm::PassManagerBase */
 typedef|typedef
 name|struct
@@ -118,6 +107,13 @@ name|struct
 name|LLVMOpaqueUse
 modifier|*
 name|LLVMUseRef
+typedef|;
+comment|/**  * @see llvm::DiagnosticInfo  */
+typedef|typedef
+name|struct
+name|LLVMOpaqueDiagnosticInfo
+modifier|*
+name|LLVMDiagnosticInfoRef
 typedef|;
 typedef|typedef
 enum|enum
@@ -277,7 +273,7 @@ init|=
 literal|1
 operator|<<
 literal|31
-comment|/* FIXME: These attributes are currently not included in the C API as        a temporary measure until the API/ABI impact to the C API is understood        and the path forward agreed upon.     LLVMAddressSafety = 1ULL<< 32,     LLVMStackProtectStrongAttribute = 1ULL<<33,     LLVMCold = 1ULL<< 34,     LLVMOptimizeNone = 1ULL<< 35     */
+comment|/* FIXME: These attributes are currently not included in the C API as        a temporary measure until the API/ABI impact to the C API is understood        and the path forward agreed upon.     LLVMAddressSafety = 1ULL<< 32,     LLVMStackProtectStrongAttribute = 1ULL<<33,     LLVMCold = 1ULL<< 34,     LLVMOptimizeNone = 1ULL<< 35,     LLVMInAllocaAttribute = 1ULL<< 36,     LLVMNonNullAttribute = 1ULL<< 37,     LLVMJumpTableAttribute = 1ULL<< 38,     LLVMDereferenceableAttribute = 1ULL<< 39,     */
 block|}
 name|LLVMAttribute
 typedef|;
@@ -618,10 +614,10 @@ block|,
 comment|/**< Like Internal, but omit from symbol table */
 name|LLVMDLLImportLinkage
 block|,
-comment|/**< Function to be imported from DLL */
+comment|/**< Obsolete */
 name|LLVMDLLExportLinkage
 block|,
-comment|/**< Function to be accessible from DLL */
+comment|/**< Obsolete */
 name|LLVMExternalWeakLinkage
 block|,
 comment|/**< ExternalWeak linkage description */
@@ -652,6 +648,25 @@ name|LLVMProtectedVisibility
 comment|/**< The GV is protected */
 block|}
 name|LLVMVisibility
+typedef|;
+typedef|typedef
+enum|enum
+block|{
+name|LLVMDefaultStorageClass
+init|=
+literal|0
+block|,
+name|LLVMDLLImportStorageClass
+init|=
+literal|1
+block|,
+comment|/**< Function to be imported from DLL. */
+name|LLVMDLLExportStorageClass
+init|=
+literal|2
+comment|/**< Function to be accessible from DLL. */
+block|}
+name|LLVMDLLStorageClass
 typedef|;
 typedef|typedef
 enum|enum
@@ -882,6 +897,19 @@ comment|/**< Sets the value if it's greater than the                            
 block|}
 name|LLVMAtomicRMWBinOp
 typedef|;
+typedef|typedef
+enum|enum
+block|{
+name|LLVMDSError
+block|,
+name|LLVMDSWarning
+block|,
+name|LLVMDSRemark
+block|,
+name|LLVMDSNote
+block|}
+name|LLVMDiagnosticSeverity
+typedef|;
 comment|/**  * @}  */
 name|void
 name|LLVMInitializeCore
@@ -952,6 +980,32 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/**  * @defgroup LLVMCCoreContext Contexts  *  * Contexts are execution states for the core LLVM IR system.  *  * Most types are tied to a context instance. Multiple contexts can  * exist simultaneously. A single context is not thread safe. However,  * different contexts can execute on different threads simultaneously.  *  * @{  */
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|LLVMDiagnosticHandler
+function_decl|)
+parameter_list|(
+name|LLVMDiagnosticInfoRef
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|LLVMYieldCallback
+function_decl|)
+parameter_list|(
+name|LLVMContextRef
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/**  * Create a new context.  *  * Every call to this function should be paired with a call to  * LLVMContextDispose() or the context will leak memory.  */
 name|LLVMContextRef
 name|LLVMContextCreate
@@ -966,12 +1020,59 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+comment|/**  * Set the diagnostic handler for this context.  */
+name|void
+name|LLVMContextSetDiagnosticHandler
+parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|,
+name|LLVMDiagnosticHandler
+name|Handler
+parameter_list|,
+name|void
+modifier|*
+name|DiagnosticContext
+parameter_list|)
+function_decl|;
+comment|/**  * Set the yield callback function for this context.  *  * @see LLVMContext::setYieldCallback()  */
+name|void
+name|LLVMContextSetYieldCallback
+parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|,
+name|LLVMYieldCallback
+name|Callback
+parameter_list|,
+name|void
+modifier|*
+name|OpaqueHandle
+parameter_list|)
+function_decl|;
 comment|/**  * Destroy a context instance.  *  * This should be called for every call to LLVMContextCreate() or memory  * will be leaked.  */
 name|void
 name|LLVMContextDispose
 parameter_list|(
 name|LLVMContextRef
 name|C
+parameter_list|)
+function_decl|;
+comment|/**  * Return a string representation of the DiagnosticInfo. Use  * LLVMDisposeMessage to free the string.  *  * @see DiagnosticInfo::print()  */
+name|char
+modifier|*
+name|LLVMGetDiagInfoDescription
+parameter_list|(
+name|LLVMDiagnosticInfoRef
+name|DI
+parameter_list|)
+function_decl|;
+comment|/**  * Return an enum LLVMDiagnosticSeverity.  *  * @see DiagnosticInfo::getSeverity()  */
+name|LLVMDiagnosticSeverity
+name|LLVMGetDiagInfoSeverity
+parameter_list|(
+name|LLVMDiagnosticInfoRef
+name|DI
 parameter_list|)
 function_decl|;
 name|unsigned
@@ -1768,7 +1869,7 @@ parameter_list|(
 name|macro
 parameter_list|)
 define|\
-value|macro(Argument)                           \   macro(BasicBlock)                         \   macro(InlineAsm)                          \   macro(MDNode)                             \   macro(MDString)                           \   macro(User)                               \     macro(Constant)                         \       macro(BlockAddress)                   \       macro(ConstantAggregateZero)          \       macro(ConstantArray)                  \       macro(ConstantDataSequential)         \         macro(ConstantDataArray)            \         macro(ConstantDataVector)           \       macro(ConstantExpr)                   \       macro(ConstantFP)                     \       macro(ConstantInt)                    \       macro(ConstantPointerNull)            \       macro(ConstantStruct)                 \       macro(ConstantVector)                 \       macro(GlobalValue)                    \         macro(Function)                     \         macro(GlobalAlias)                  \         macro(GlobalVariable)               \       macro(UndefValue)                     \     macro(Instruction)                      \       macro(BinaryOperator)                 \       macro(CallInst)                       \         macro(IntrinsicInst)                \           macro(DbgInfoIntrinsic)           \             macro(DbgDeclareInst)           \           macro(MemIntrinsic)               \             macro(MemCpyInst)               \             macro(MemMoveInst)              \             macro(MemSetInst)               \       macro(CmpInst)                        \         macro(FCmpInst)                     \         macro(ICmpInst)                     \       macro(ExtractElementInst)             \       macro(GetElementPtrInst)              \       macro(InsertElementInst)              \       macro(InsertValueInst)                \       macro(LandingPadInst)                 \       macro(PHINode)                        \       macro(SelectInst)                     \       macro(ShuffleVectorInst)              \       macro(StoreInst)                      \       macro(TerminatorInst)                 \         macro(BranchInst)                   \         macro(IndirectBrInst)               \         macro(InvokeInst)                   \         macro(ReturnInst)                   \         macro(SwitchInst)                   \         macro(UnreachableInst)              \         macro(ResumeInst)                   \       macro(UnaryInstruction)               \         macro(AllocaInst)                   \         macro(CastInst)                     \           macro(AddrSpaceCastInst)          \           macro(BitCastInst)                \           macro(FPExtInst)                  \           macro(FPToSIInst)                 \           macro(FPToUIInst)                 \           macro(FPTruncInst)                \           macro(IntToPtrInst)               \           macro(PtrToIntInst)               \           macro(SExtInst)                   \           macro(SIToFPInst)                 \           macro(TruncInst)                  \           macro(UIToFPInst)                 \           macro(ZExtInst)                   \         macro(ExtractValueInst)             \         macro(LoadInst)                     \         macro(VAArgInst)
+value|macro(Argument)                           \   macro(BasicBlock)                         \   macro(InlineAsm)                          \   macro(MDNode)                             \   macro(MDString)                           \   macro(User)                               \     macro(Constant)                         \       macro(BlockAddress)                   \       macro(ConstantAggregateZero)          \       macro(ConstantArray)                  \       macro(ConstantDataSequential)         \         macro(ConstantDataArray)            \         macro(ConstantDataVector)           \       macro(ConstantExpr)                   \       macro(ConstantFP)                     \       macro(ConstantInt)                    \       macro(ConstantPointerNull)            \       macro(ConstantStruct)                 \       macro(ConstantVector)                 \       macro(GlobalValue)                    \         macro(GlobalAlias)                  \         macro(GlobalObject)                 \           macro(Function)                   \           macro(GlobalVariable)             \       macro(UndefValue)                     \     macro(Instruction)                      \       macro(BinaryOperator)                 \       macro(CallInst)                       \         macro(IntrinsicInst)                \           macro(DbgInfoIntrinsic)           \             macro(DbgDeclareInst)           \           macro(MemIntrinsic)               \             macro(MemCpyInst)               \             macro(MemMoveInst)              \             macro(MemSetInst)               \       macro(CmpInst)                        \         macro(FCmpInst)                     \         macro(ICmpInst)                     \       macro(ExtractElementInst)             \       macro(GetElementPtrInst)              \       macro(InsertElementInst)              \       macro(InsertValueInst)                \       macro(LandingPadInst)                 \       macro(PHINode)                        \       macro(SelectInst)                     \       macro(ShuffleVectorInst)              \       macro(StoreInst)                      \       macro(TerminatorInst)                 \         macro(BranchInst)                   \         macro(IndirectBrInst)               \         macro(InvokeInst)                   \         macro(ReturnInst)                   \         macro(SwitchInst)                   \         macro(UnreachableInst)              \         macro(ResumeInst)                   \       macro(UnaryInstruction)               \         macro(AllocaInst)                   \         macro(CastInst)                     \           macro(AddrSpaceCastInst)          \           macro(BitCastInst)                \           macro(FPExtInst)                  \           macro(FPToSIInst)                 \           macro(FPToUIInst)                 \           macro(FPTruncInst)                \           macro(IntToPtrInst)               \           macro(PtrToIntInst)               \           macro(SExtInst)                   \           macro(SIToFPInst)                 \           macro(TruncInst)                  \           macro(UIToFPInst)                 \           macro(ZExtInst)                   \         macro(ExtractValueInst)             \         macro(LoadInst)                     \         macro(VAArgInst)
 comment|/**  * @defgroup LLVMCCoreValueGeneral General APIs  *  * Functions in this section work on all LLVMValueRef instances,  * regardless of their sub-type. They correspond to functions available  * on llvm::Value.  *  * @{  */
 comment|/**  * Obtain the type of a value.  *  * @see llvm::Value::getType()  */
 name|LLVMTypeRef
@@ -2948,8 +3049,42 @@ name|LLVMVisibility
 name|Viz
 parameter_list|)
 function_decl|;
+name|LLVMDLLStorageClass
+name|LLVMGetDLLStorageClass
+parameter_list|(
+name|LLVMValueRef
+name|Global
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMSetDLLStorageClass
+parameter_list|(
+name|LLVMValueRef
+name|Global
+parameter_list|,
+name|LLVMDLLStorageClass
+name|Class
+parameter_list|)
+function_decl|;
+name|LLVMBool
+name|LLVMHasUnnamedAddr
+parameter_list|(
+name|LLVMValueRef
+name|Global
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMSetUnnamedAddr
+parameter_list|(
+name|LLVMValueRef
+name|Global
+parameter_list|,
+name|LLVMBool
+name|HasUnnamedAddr
+parameter_list|)
+function_decl|;
 comment|/**  * @defgroup LLVMCCoreValueWithAlignment Values with alignment  *  * Functions in this group only apply to values with alignment, i.e.  * global variables, load and store instructions.  */
-comment|/**  * Obtain the preferred alignment of the value.  * @see llvm::LoadInst::getAlignment()  * @see llvm::StoreInst::getAlignment()  * @see llvm::GlobalValue::getAlignment()  */
+comment|/**  * Obtain the preferred alignment of the value.  * @see llvm::AllocaInst::getAlignment()  * @see llvm::LoadInst::getAlignment()  * @see llvm::StoreInst::getAlignment()  * @see llvm::GlobalValue::getAlignment()  */
 name|unsigned
 name|LLVMGetAlignment
 parameter_list|(
@@ -2957,7 +3092,7 @@ name|LLVMValueRef
 name|V
 parameter_list|)
 function_decl|;
-comment|/**  * Set the preferred alignment of the value.  * @see llvm::LoadInst::setAlignment()  * @see llvm::StoreInst::setAlignment()  * @see llvm::GlobalValue::setAlignment()  */
+comment|/**  * Set the preferred alignment of the value.  * @see llvm::AllocaInst::setAlignment()  * @see llvm::LoadInst::setAlignment()  * @see llvm::StoreInst::setAlignment()  * @see llvm::GlobalValue::setAlignment()  */
 name|void
 name|LLVMSetAlignment
 parameter_list|(
@@ -5549,6 +5684,24 @@ name|Name
 parameter_list|)
 function_decl|;
 name|LLVMValueRef
+name|LLVMBuildFence
+parameter_list|(
+name|LLVMBuilderRef
+name|B
+parameter_list|,
+name|LLVMAtomicOrdering
+name|ordering
+parameter_list|,
+name|LLVMBool
+name|singleThread
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Name
+parameter_list|)
+function_decl|;
+name|LLVMValueRef
 name|LLVMBuildAtomicRMW
 parameter_list|(
 name|LLVMBuilderRef
@@ -5763,14 +5916,14 @@ parameter_list|)
 function_decl|;
 comment|/**  * @}  */
 comment|/**  * @defgroup LLVMCCoreThreading Threading  *  * Handle the structures needed to make LLVM safe for multithreading.  *  * @{  */
-comment|/** Allocate and initialize structures needed to make LLVM safe for     multithreading. The return value indicates whether multithreaded     initialization succeeded. Must be executed in isolation from all     other LLVM api calls.     @see llvm::llvm_start_multithreaded */
+comment|/** Deprecated: Multi-threading can only be enabled/disabled with the compile     time define LLVM_ENABLE_THREADS.  This function always returns     LLVMIsMultithreaded(). */
 name|LLVMBool
 name|LLVMStartMultithreaded
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/** Deallocate structures necessary to make LLVM safe for multithreading.     Must be executed in isolation from all other LLVM api calls.     @see llvm::llvm_stop_multithreaded */
+comment|/** Deprecated: Multi-threading can only be enabled/disabled with the compile     time define LLVM_ENABLE_THREADS. */
 name|void
 name|LLVMStopMultithreaded
 parameter_list|(

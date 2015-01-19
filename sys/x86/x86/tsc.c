@@ -2208,10 +2208,12 @@ goto|goto
 name|init
 goto|;
 block|}
-comment|/* 	 * We cannot use the TSC if it stops incrementing in deep sleep. 	 * Currently only Intel CPUs are known for this problem unless 	 * the invariant TSC bit is set. 	 */
+comment|/* 	 * We cannot use the TSC if it stops incrementing while idle. 	 * Intel CPUs without a C-state invariant TSC can stop the TSC 	 * in either C2 or C3. 	 */
 if|if
 condition|(
-name|cpu_can_deep_sleep
+name|cpu_deepest_sleep
+operator|>=
+literal|2
 operator|&&
 name|cpu_vendor_id
 operator|==
@@ -2237,7 +2239,7 @@ name|tsc_timecounter
 operator|.
 name|tc_flags
 operator||=
-name|TC_FLAGS_C3STOP
+name|TC_FLAGS_C2STOP
 expr_stmt|;
 if|if
 condition|(
@@ -2245,7 +2247,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"TSC timecounter disabled: C3 enabled.\n"
+literal|"TSC timecounter disabled: C2/C3 may halt it.\n"
 argument_list|)
 expr_stmt|;
 goto|goto

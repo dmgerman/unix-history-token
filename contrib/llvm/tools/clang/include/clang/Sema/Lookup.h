@@ -218,12 +218,12 @@ argument_list|)
 operator|,
 name|Paths
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NamingClass
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SemaRef
@@ -309,12 +309,12 @@ argument_list|)
 operator|,
 name|Paths
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NamingClass
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SemaRef
@@ -396,12 +396,12 @@ argument_list|)
 operator|,
 name|Paths
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NamingClass
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SemaRef
@@ -666,8 +666,11 @@ name|getResultKind
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
 name|sanity
 argument_list|()
+argument_list|)
 block|;
 return|return
 name|ResultKind
@@ -827,7 +830,7 @@ name|IDNS
 argument_list|)
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 if|if
 condition|(
@@ -898,7 +901,7 @@ block|{
 return|return
 name|NamingClass
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Returns the 'naming class' for this lookup, i.e. the
@@ -1152,7 +1155,7 @@ argument_list|)
 expr_stmt|;
 name|Paths
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 block|}
@@ -1197,7 +1200,7 @@ argument_list|)
 expr_stmt|;
 name|Paths
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 block|}
@@ -1221,7 +1224,7 @@ operator|!=
 name|Found
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|dyn_cast
@@ -1452,11 +1455,11 @@ argument_list|)
 expr_stmt|;
 name|Paths
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 name|NamingClass
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|Shadowed
 operator|=
@@ -2043,28 +2046,14 @@ comment|// Sanity checks.
 end_comment
 
 begin_expr_stmt
-name|void
-name|sanityImpl
+name|bool
+name|sanity
 argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|void
-name|sanity
-argument_list|()
-specifier|const
-block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|sanityImpl
-argument_list|()
-block|;
-endif|#
-directive|endif
-block|}
 name|bool
 name|sanityCheckUnresolved
 argument_list|()

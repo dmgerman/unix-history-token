@@ -124,10 +124,9 @@ argument_list|)
 block|,
 name|LastMI
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
-name|virtual
 name|HazardType
 name|getHazardType
 argument_list|(
@@ -135,30 +134,29 @@ argument|SUnit *SU
 argument_list|,
 argument|int Stalls
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|Reset
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|EmitInstruction
 argument_list|(
-name|SUnit
-operator|*
-name|SU
+argument|SUnit *SU
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|AdvanceCycle
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|RecedeCycle
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
 block|}

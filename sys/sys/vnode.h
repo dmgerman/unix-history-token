@@ -2430,6 +2430,24 @@ begin_comment
 comment|/*  * Finally, include the default set of vnode operations.  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|void
+name|vop_getpages_iodone_t
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|vm_page_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_include
 include|#
 directive|include
@@ -2452,6 +2470,13 @@ define|#
 directive|define
 name|VN_OPEN_NOCAPCHECK
 value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|VN_OPEN_NAMECACHE
+value|0x00000004
 end_define
 
 begin_comment

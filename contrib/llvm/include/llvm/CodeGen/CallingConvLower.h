@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/CallingConv.h"
 end_include
 
@@ -104,13 +98,16 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|TargetRegisterInfo
+name|CCState
+decl_stmt|;
+name|class
+name|MVT
 decl_stmt|;
 name|class
 name|TargetMachine
 decl_stmt|;
 name|class
-name|CCState
+name|TargetRegisterInfo
 decl_stmt|;
 comment|/// CCValAssign - Represent assignment of one arg/retval to a location.
 name|class
@@ -141,8 +138,23 @@ block|,
 comment|// The value is vector-widened in the location.
 comment|// FIXME: Not implemented yet. Code that uses AExt to mean
 comment|// vector-widen should be fixed to use VExt instead.
+name|FPExt
+block|,
+comment|// The floating-point value is fp-extended in the location.
 name|Indirect
+block|,
 comment|// The location contains pointer to the value.
+name|SExtUpper
+block|,
+comment|// The value is in the upper bits of the location and should be
+comment|// sign extended when retrieved.
+name|ZExtUpper
+block|,
+comment|// The value is in the upper bits of the location and should be
+comment|// zero extended when retrieved.
+name|AExtUpper
+comment|// The value is in the upper bits of the location and should be
+comment|// extended with undefined upper bits when retrieved.
 comment|// TODO: a subset of the value is in the location.
 block|}
 enum|;
@@ -418,6 +430,72 @@ return|return
 name|Ret
 return|;
 block|}
+comment|// There is no need to differentiate between a pending CCValAssign and other
+comment|// kinds, as they are stored in a different list.
+specifier|static
+name|CCValAssign
+name|getPending
+parameter_list|(
+name|unsigned
+name|ValNo
+parameter_list|,
+name|MVT
+name|ValVT
+parameter_list|,
+name|MVT
+name|LocVT
+parameter_list|,
+name|LocInfo
+name|HTP
+parameter_list|)
+block|{
+return|return
+name|getReg
+argument_list|(
+name|ValNo
+argument_list|,
+name|ValVT
+argument_list|,
+literal|0
+argument_list|,
+name|LocVT
+argument_list|,
+name|HTP
+argument_list|)
+return|;
+block|}
+name|void
+name|convertToReg
+parameter_list|(
+name|unsigned
+name|RegNo
+parameter_list|)
+block|{
+name|Loc
+operator|=
+name|RegNo
+expr_stmt|;
+name|isMem
+operator|=
+name|false
+expr_stmt|;
+block|}
+name|void
+name|convertToMem
+parameter_list|(
+name|unsigned
+name|Offset
+parameter_list|)
+block|{
+name|Loc
+operator|=
+name|Offset
+expr_stmt|;
+name|isMem
+operator|=
+name|true
+expr_stmt|;
+block|}
 name|unsigned
 name|getValNo
 argument_list|()
@@ -531,6 +609,25 @@ name|HTP
 operator|==
 name|ZExt
 operator|)
+return|;
+block|}
+name|bool
+name|isUpperBitsInLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HTP
+operator|==
+name|AExtUpper
+operator|||
+name|HTP
+operator|==
+name|SExtUpper
+operator|||
+name|HTP
+operator|==
+name|ZExtUpper
 return|;
 block|}
 block|}
@@ -667,6 +764,14 @@ literal|16
 operator|>
 name|UsedRegs
 expr_stmt|;
+name|SmallVector
+operator|<
+name|CCValAssign
+operator|,
+literal|4
+operator|>
+name|PendingLocs
+expr_stmt|;
 comment|// ByValInfo and SmallVector<ByValInfo, 4> ByValRegs:
 comment|//
 comment|// Vector of ByValInfo instances (ByValRegs) is introduced for byval registers
@@ -692,10 +797,10 @@ comment|// ByValRegs vector size still would be 2,
 comment|// while "%t" goes to the stack: it wouldn't be described in ByValRegs.
 comment|//
 comment|// Supposed use-case for this collection:
-comment|// 1. Initially ByValRegs is empty, InRegsParamsProceed is 0.
+comment|// 1. Initially ByValRegs is empty, InRegsParamsProcessed is 0.
 comment|// 2. HandleByVal fillups ByValRegs.
 comment|// 3. Argument analysis (LowerFormatArguments, for example). After
-comment|// some byval argument was analyzed, InRegsParamsProceed is increased.
+comment|// some byval argument was analyzed, InRegsParamsProcessed is increased.
 struct|struct
 name|ByValInfo
 block|{
@@ -748,10 +853,10 @@ literal|4
 operator|>
 name|ByValRegs
 expr_stmt|;
-comment|// InRegsParamsProceed - shows how many instances of ByValRegs was proceed
+comment|// InRegsParamsProcessed - shows how many instances of ByValRegs was proceed
 comment|// during argument analysis.
 name|unsigned
-name|InRegsParamsProceed
+name|InRegsParamsProcessed
 decl_stmt|;
 name|protected
 label|:
@@ -1020,7 +1125,7 @@ name|unsigned
 name|getFirstUnallocated
 argument_list|(
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|Regs
 argument_list|,
@@ -1132,7 +1237,7 @@ name|unsigned
 name|AllocateReg
 parameter_list|(
 specifier|const
-name|uint16_t
+name|MCPhysReg
 modifier|*
 name|Regs
 parameter_list|,
@@ -1178,17 +1283,138 @@ return|return
 name|Reg
 return|;
 block|}
-comment|/// Version of AllocateReg with list of registers to be shadowed.
+comment|/// AllocateRegBlock - Attempt to allocate a block of RegsRequired consecutive
+comment|/// registers. If this is not possible, return zero. Otherwise, return the first
+comment|/// register of the block that were allocated, marking the entire block as allocated.
 name|unsigned
-name|AllocateReg
+name|AllocateRegBlock
 parameter_list|(
 specifier|const
 name|uint16_t
 modifier|*
 name|Regs
 parameter_list|,
+name|unsigned
+name|NumRegs
+parameter_list|,
+name|unsigned
+name|RegsRequired
+parameter_list|)
+block|{
+for|for
+control|(
+name|unsigned
+name|StartIdx
+init|=
+literal|0
+init|;
+name|StartIdx
+operator|<=
+name|NumRegs
+operator|-
+name|RegsRequired
+condition|;
+operator|++
+name|StartIdx
+control|)
+block|{
+name|bool
+name|BlockAvailable
+init|=
+name|true
+decl_stmt|;
+comment|// Check for already-allocated regs in this block
+for|for
+control|(
+name|unsigned
+name|BlockIdx
+init|=
+literal|0
+init|;
+name|BlockIdx
+operator|<
+name|RegsRequired
+condition|;
+operator|++
+name|BlockIdx
+control|)
+block|{
+if|if
+condition|(
+name|isAllocated
+argument_list|(
+name|Regs
+index|[
+name|StartIdx
+operator|+
+name|BlockIdx
+index|]
+argument_list|)
+condition|)
+block|{
+name|BlockAvailable
+operator|=
+name|false
+expr_stmt|;
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|BlockAvailable
+condition|)
+block|{
+comment|// Mark the entire block as allocated
+for|for
+control|(
+name|unsigned
+name|BlockIdx
+init|=
+literal|0
+init|;
+name|BlockIdx
+operator|<
+name|RegsRequired
+condition|;
+operator|++
+name|BlockIdx
+control|)
+block|{
+name|MarkAllocated
+argument_list|(
+name|Regs
+index|[
+name|StartIdx
+operator|+
+name|BlockIdx
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|Regs
+index|[
+name|StartIdx
+index|]
+return|;
+block|}
+block|}
+comment|// No block was available
+return|return
+literal|0
+return|;
+block|}
+comment|/// Version of AllocateReg with list of registers to be shadowed.
+name|unsigned
+name|AllocateReg
+parameter_list|(
 specifier|const
-name|uint16_t
+name|MCPhysReg
+modifier|*
+name|Regs
+parameter_list|,
+specifier|const
+name|MCPhysReg
 modifier|*
 name|ShadowRegs
 parameter_list|,
@@ -1346,6 +1572,57 @@ name|Align
 argument_list|)
 return|;
 block|}
+comment|/// Version of AllocateStack with list of extra registers to be shadowed.
+comment|/// Note that, unlike AllocateReg, this shadows ALL of the shadow registers.
+name|unsigned
+name|AllocateStack
+parameter_list|(
+name|unsigned
+name|Size
+parameter_list|,
+name|unsigned
+name|Align
+parameter_list|,
+specifier|const
+name|MCPhysReg
+modifier|*
+name|ShadowRegs
+parameter_list|,
+name|unsigned
+name|NumShadowRegs
+parameter_list|)
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|NumShadowRegs
+condition|;
+operator|++
+name|i
+control|)
+name|MarkAllocated
+argument_list|(
+name|ShadowRegs
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+name|AllocateStack
+argument_list|(
+name|Size
+argument_list|,
+name|Align
+argument_list|)
+return|;
+block|}
 comment|// HandleByVal - Allocate a stack slot large enough to pass an argument by
 comment|// value. The size and alignment information of the argument is encoded in its
 comment|// parameter attribute.
@@ -1394,12 +1671,12 @@ return|;
 block|}
 comment|// Returns count of byval in-regs arguments proceed.
 name|unsigned
-name|getInRegsParamsProceed
+name|getInRegsParamsProcessed
 argument_list|()
 specifier|const
 block|{
 return|return
-name|InRegsParamsProceed
+name|InRegsParamsProcessed
 return|;
 block|}
 comment|// Get information about N-th byval parameter that is stored in registers.
@@ -1496,15 +1773,15 @@ argument_list|()
 decl_stmt|;
 if|if
 condition|(
-name|InRegsParamsProceed
+name|InRegsParamsProcessed
 operator|<
 name|e
 condition|)
 operator|++
-name|InRegsParamsProceed
+name|InRegsParamsProcessed
 expr_stmt|;
 return|return
-name|InRegsParamsProceed
+name|InRegsParamsProcessed
 operator|<
 name|e
 return|;
@@ -1514,7 +1791,7 @@ name|void
 name|clearByValRegsInfo
 parameter_list|()
 block|{
-name|InRegsParamsProceed
+name|InRegsParamsProcessed
 operator|=
 literal|0
 expr_stmt|;
@@ -1524,6 +1801,16 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
+comment|// Rewind byval registers tracking info.
+name|void
+name|rewindByValRegsInfo
+parameter_list|()
+block|{
+name|InRegsParamsProcessed
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|ParmContext
 name|getCallOrPrologue
 argument_list|()
@@ -1531,6 +1818,21 @@ specifier|const
 block|{
 return|return
 name|CallOrPrologue
+return|;
+block|}
+comment|// Get list of pending assignments
+name|SmallVectorImpl
+operator|<
+name|llvm
+operator|::
+name|CCValAssign
+operator|>
+operator|&
+name|getPendingLocs
+argument_list|()
+block|{
+return|return
+name|PendingLocs
 return|;
 block|}
 name|private

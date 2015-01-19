@@ -260,16 +260,6 @@ literal|0
 decl_stmt|;
 name|virtual
 name|void
-name|emitBasicNote
-parameter_list|(
-name|StringRef
-name|Message
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-name|virtual
-name|void
 name|emitCodeContext
 argument_list|(
 name|SourceLocation
@@ -389,6 +379,13 @@ argument_list|)
 block|{}
 name|private
 label|:
+name|void
+name|emitBasicNote
+parameter_list|(
+name|StringRef
+name|Message
+parameter_list|)
+function_decl|;
 name|void
 name|emitIncludeStack
 argument_list|(
@@ -578,7 +575,7 @@ operator|(
 name|Diagnostic
 operator|*
 operator|)
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 name|void
@@ -625,14 +622,6 @@ operator|~
 name|DiagnosticNoteRenderer
 argument_list|()
 block|;
-name|virtual
-name|void
-name|emitBasicNote
-argument_list|(
-argument|StringRef Message
-argument_list|)
-block|;
-name|virtual
 name|void
 name|emitIncludeLocation
 argument_list|(
@@ -642,8 +631,8 @@ argument|PresumedLoc PLoc
 argument_list|,
 argument|const SourceManager&SM
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|emitImportLocation
 argument_list|(
@@ -655,8 +644,8 @@ argument|StringRef ModuleName
 argument_list|,
 argument|const SourceManager&SM
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|emitBuildingModuleLocation
 argument_list|(
@@ -668,6 +657,7 @@ argument|StringRef ModuleName
 argument_list|,
 argument|const SourceManager&SM
 argument_list|)
+name|override
 block|;
 name|virtual
 name|void

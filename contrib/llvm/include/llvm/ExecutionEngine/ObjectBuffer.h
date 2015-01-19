@@ -8,7 +8,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//		       The LLVM Compiler Infrastructure
+comment|//                     The LLVM Compiler Infrastructure
 end_comment
 
 begin_comment
@@ -62,12 +62,6 @@ define|#
 directive|define
 name|LLVM_EXECUTIONENGINE_OBJECTBUFFER_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
 
 begin_include
 include|#
@@ -147,7 +141,10 @@ operator|->
 name|getBuffer
 argument_list|()
 argument_list|,
-literal|""
+name|Buffer
+operator|->
+name|getBufferIdentifier
+argument_list|()
 argument_list|,
 name|false
 argument_list|)
@@ -194,7 +191,9 @@ block|}
 name|protected
 label|:
 comment|// The memory contained in an ObjectBuffer
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MemoryBuffer
 operator|>
@@ -212,10 +211,10 @@ range|:
 name|public
 name|ObjectBuffer
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:

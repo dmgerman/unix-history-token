@@ -426,7 +426,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// in some cases, compilers will output different names for one same type. when tht happens, it might be impossible
+comment|// in some cases, compilers will output different names for one same type. when that happens, it might be impossible
 end_comment
 
 begin_comment

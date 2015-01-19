@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/Dominators.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineDominators.h"
 end_include
 
@@ -292,33 +286,30 @@ name|B
 argument_list|)
 return|;
 block|}
-name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
+argument|MachineFunction&MF
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|llvm::raw_ostream&OS
 argument_list|,
-argument|const Module *M =
-literal|0
+argument|const Module *M = nullptr
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

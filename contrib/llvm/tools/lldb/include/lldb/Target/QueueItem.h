@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/Address.h"
 end_include
 
@@ -102,6 +108,12 @@ operator|:
 name|QueueItem
 argument_list|(
 argument|lldb::QueueSP queue_sp
+argument_list|,
+argument|lldb::ProcessSP process_sp
+argument_list|,
+argument|lldb::addr_t item_ref
+argument_list|,
+argument|lldb_private::Address address
 argument_list|)
 block|;
 operator|~
@@ -120,7 +132,6 @@ operator|::
 name|QueueItemKind
 name|GetKind
 argument_list|()
-specifier|const
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Set the type of work item this is
@@ -225,11 +236,7 @@ operator|::
 name|addr_t
 name|GetItemThatEnqueuedThis
 argument_list|()
-block|{
-return|return
-name|m_item_that_enqueued_this_ref
-return|;
-block|}
+block|;
 name|void
 name|SetEnqueueingThreadID
 argument_list|(
@@ -245,11 +252,7 @@ operator|::
 name|tid_t
 name|GetEnqueueingThreadID
 argument_list|()
-block|{
-return|return
-name|m_enqueueing_thread_id
-return|;
-block|}
+block|;
 name|void
 name|SetEnqueueingQueueID
 argument_list|(
@@ -265,11 +268,7 @@ operator|::
 name|queue_id_t
 name|GetEnqueueingQueueID
 argument_list|()
-block|{
-return|return
-name|m_enqueueing_queue_id
-return|;
-block|}
+block|;
 name|void
 name|SetTargetQueueID
 argument_list|(
@@ -293,11 +292,7 @@ block|;     }
 name|uint32_t
 name|GetStopID
 argument_list|()
-block|{
-return|return
-name|m_stop_id
-return|;
-block|}
+block|;
 name|void
 name|SetEnqueueingBacktrace
 argument_list|(
@@ -319,11 +314,7 @@ operator|>
 operator|&
 name|GetEnqueueingBacktrace
 argument_list|()
-block|{
-return|return
-name|m_backtrace
-return|;
-block|}
+block|;
 name|void
 name|SetThreadLabel
 argument_list|(
@@ -339,11 +330,7 @@ operator|::
 name|string
 name|GetThreadLabel
 argument_list|()
-block|{
-return|return
-name|m_thread_label
-return|;
-block|}
+block|;
 name|void
 name|SetQueueLabel
 argument_list|(
@@ -359,11 +346,7 @@ operator|::
 name|string
 name|GetQueueLabel
 argument_list|()
-block|{
-return|return
-name|m_queue_label
-return|;
-block|}
+block|;
 name|void
 name|SetTargetQueueLabel
 argument_list|(
@@ -374,8 +357,18 @@ name|m_target_queue_label
 operator|=
 name|queue_name
 block|;     }
+name|lldb
+operator|::
+name|ProcessSP
+name|GetProcessSP
+argument_list|()
+block|;
 name|protected
 operator|:
+name|void
+name|FetchEntireItem
+argument_list|()
+block|;
 name|lldb
 operator|::
 name|QueueWP
@@ -383,13 +376,27 @@ name|m_queue_wp
 block|;
 name|lldb
 operator|::
-name|QueueItemKind
-name|m_kind
+name|ProcessWP
+name|m_process_wp
 block|;
+name|lldb
+operator|::
+name|addr_t
+name|m_item_ref
+block|;
+comment|// the token we can be used to fetch more information about this queue item
 name|lldb_private
 operator|::
 name|Address
 name|m_address
+block|;
+name|bool
+name|m_have_fetched_entire_item
+block|;
+name|lldb
+operator|::
+name|QueueItemKind
+name|m_kind
 block|;
 name|lldb
 operator|::

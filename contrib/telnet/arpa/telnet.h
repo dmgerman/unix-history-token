@@ -864,6 +864,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|COMPORT_SET_BAUDRATE
+value|1
+end_define
+
+begin_comment
+comment|/* RFC2217 - Com Port Set Baud Rate */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NTELOPTS
 value|(1+TELOPT_KERMIT)
 end_define
