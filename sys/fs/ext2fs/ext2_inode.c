@@ -455,11 +455,6 @@ name|NIADDR
 index|]
 decl_stmt|;
 name|struct
-name|bufobj
-modifier|*
-name|bo
-decl_stmt|;
-name|struct
 name|m_ext2fs
 modifier|*
 name|fs
@@ -501,13 +496,6 @@ name|VTOI
 argument_list|(
 name|ovp
 argument_list|)
-expr_stmt|;
-name|bo
-operator|=
-operator|&
-name|ovp
-operator|->
-name|v_bufobj
 expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
