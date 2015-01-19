@@ -2340,6 +2340,16 @@ name|rex_present
 range|:
 literal|1
 decl_stmt|,
+name|repz_present
+range|:
+literal|1
+decl_stmt|,
+comment|/* REP/REPE/REPZ prefix */
+name|repnz_present
+range|:
+literal|1
+decl_stmt|,
+comment|/* REPNE/REPNZ prefix */
 name|opsize_override
 range|:
 literal|1
@@ -2348,8 +2358,13 @@ comment|/* Operand size override */
 name|addrsize_override
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* Address size override */
+name|segment_override
+range|:
+literal|1
+decl_stmt|;
+comment|/* Segment override */
 name|uint8_t
 name|mod
 range|:
@@ -2393,6 +2408,10 @@ decl_stmt|;
 comment|/* VM_REG_GUEST_xyz */
 name|int
 name|index_register
+decl_stmt|;
+comment|/* VM_REG_GUEST_xyz */
+name|int
+name|segment_register
 decl_stmt|;
 comment|/* VM_REG_GUEST_xyz */
 name|int64_t
