@@ -127,6 +127,9 @@ comment|/* fake generic inq response */
 name|UQ_MSC_NO_INQUIRY_EVPD
 block|,
 comment|/* does not support inq EVPD */
+name|UQ_MSC_NO_PREVENT_ALLOW
+block|,
+comment|/* does not support medium removal */
 name|UQ_MSC_NO_SYNC_CACHE
 block|,
 comment|/* does not support sync cache */
