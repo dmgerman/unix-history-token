@@ -408,7 +408,7 @@ begin_define
 define|#
 directive|define
 name|USB_MAX_AUTO_QUIRK
-value|4
+value|8
 end_define
 
 begin_comment
