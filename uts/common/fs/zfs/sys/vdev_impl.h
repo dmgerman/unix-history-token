@@ -312,6 +312,12 @@ decl_stmt|;
 name|avl_tree_t
 name|vq_active_tree
 decl_stmt|;
+name|avl_tree_t
+name|vq_read_offset_tree
+decl_stmt|;
+name|avl_tree_t
+name|vq_write_offset_tree
+decl_stmt|;
 name|uint64_t
 name|vq_last_offset
 decl_stmt|;

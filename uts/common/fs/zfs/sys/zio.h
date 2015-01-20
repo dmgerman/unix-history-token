@@ -1045,6 +1045,9 @@ decl_stmt|;
 name|avl_node_t
 name|io_queue_node
 decl_stmt|;
+name|avl_node_t
+name|io_offset_node
+decl_stmt|;
 comment|/* Internal pipeline state */
 name|enum
 name|zio_flag
