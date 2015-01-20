@@ -107,14 +107,18 @@ comment|/* barrier */
 name|generic_bs_barrier
 block|,
 comment|/* read (single) */
-name|generic_bs_r_1
-block|,
-name|generic_armv4_bs_r_2
-block|,
-name|generic_bs_r_4
-block|,
 name|NULL
 block|,
+comment|/* bs_r_1, Use inline code in bus.h */
+name|NULL
+block|,
+comment|/* bs_r_2, Use inline code in bus.h */
+name|NULL
+block|,
+comment|/* bs_r_4, Use inline code in bus.h */
+name|NULL
+block|,
+comment|/* bs_r_8, Use inline code in bus.h */
 comment|/* read multiple */
 name|generic_bs_rm_1
 block|,
@@ -134,14 +138,18 @@ block|,
 name|NULL
 block|,
 comment|/* write (single) */
-name|generic_bs_w_1
-block|,
-name|generic_armv4_bs_w_2
-block|,
-name|generic_bs_w_4
-block|,
 name|NULL
 block|,
+comment|/* bs_w_1, Use inline code in bus.h */
+name|NULL
+block|,
+comment|/* bs_w_2, Use inline code in bus.h */
+name|NULL
+block|,
+comment|/* bs_w_4, Use inline code in bus.h */
+name|NULL
+block|,
+comment|/* bs_w_8, Use inline code in bus.h */
 comment|/* write multiple */
 name|generic_bs_wm_1
 block|,
@@ -190,12 +198,16 @@ block|,
 comment|/* read stream (single) */
 name|NULL
 block|,
+comment|/* bs_r_1_s, Use inline code in bus.h */
 name|NULL
 block|,
+comment|/* bs_r_2_s, Use inline code in bus.h */
 name|NULL
 block|,
+comment|/* bs_r_4_s, Use inline code in bus.h */
 name|NULL
 block|,
+comment|/* bs_r_8_s, Use inline code in bus.h */
 comment|/* read multiple stream */
 name|NULL
 block|,
@@ -218,12 +230,16 @@ block|,
 comment|/* write stream (single) */
 name|NULL
 block|,
+comment|/* bs_w_1_s, Use inline code in bus.h */
 name|NULL
 block|,
+comment|/* bs_w_2_s, Use inline code in bus.h */
 name|NULL
 block|,
+comment|/* bs_w_4_s, Use inline code in bus.h */
 name|NULL
 block|,
+comment|/* bs_w_8_s, Use inline code in bus.h */
 comment|/* write multiple stream */
 name|NULL
 block|,
