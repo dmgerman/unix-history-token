@@ -8524,6 +8524,7 @@ name|prop
 operator|==
 name|ZFS_PROP_REFRESERVATION
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -8540,6 +8541,24 @@ argument_list|,
 name|propname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"use 'zfs "
+literal|"inherit -S %s' to revert to received "
+literal|"value\n"
+argument_list|)
+argument_list|,
+name|propname
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1
