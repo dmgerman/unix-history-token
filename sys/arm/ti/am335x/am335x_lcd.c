@@ -802,6 +802,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LCD_END_OF_INT_IND
+value|0x68
+end_define
+
+begin_define
+define|#
+directive|define
 name|LCD_CLKC_ENABLE
 value|0x6C
 end_define
@@ -1982,6 +1989,15 @@ condition|)
 block|{
 comment|/* TODO: Handle ACB */
 block|}
+name|LCD_WRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|LCD_END_OF_INT_IND
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
