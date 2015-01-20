@@ -2051,6 +2051,10 @@ name|max_ncpus
 value|64
 define|#
 directive|define
+name|boot_ncpus
+value|(sysconf(_SC_NPROCESSORS_ONLN))
+define|#
+directive|define
 name|minclsyspri
 value|60
 define|#
