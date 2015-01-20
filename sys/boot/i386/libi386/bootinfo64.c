@@ -661,6 +661,9 @@ decl_stmt|;
 name|u_int64_t
 name|envp
 decl_stmt|;
+name|u_int64_t
+name|module
+decl_stmt|;
 name|vm_offset_t
 name|size
 decl_stmt|;
@@ -820,6 +823,8 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* place the metadata before anything */
+name|module
+operator|=
 operator|*
 name|modulep
 operator|=
@@ -911,9 +916,10 @@ argument_list|,
 name|MODINFOMD_MODULEP
 argument_list|,
 sizeof|sizeof
-name|modulep
+name|module
 argument_list|,
-name|modulep
+operator|&
+name|module
 argument_list|)
 expr_stmt|;
 if|if
