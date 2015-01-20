@@ -6067,7 +6067,7 @@ name|DD_USED_CHILD_RSRV
 argument_list|,
 name|DD_USED_CHILD
 argument_list|,
-name|tx
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -6098,6 +6098,10 @@ parameter_list|)
 block|{
 name|ASSERT
 argument_list|(
+name|tx
+operator|==
+name|NULL
+operator|||
 name|dmu_tx_is_syncing
 argument_list|(
 name|tx
@@ -6137,6 +6141,12 @@ name|DD_FLAG_USED_BREAKDOWN
 operator|)
 condition|)
 return|return;
+if|if
+condition|(
+name|tx
+operator|!=
+name|NULL
+condition|)
 name|dmu_buf_will_dirty
 argument_list|(
 name|dd
