@@ -20,13 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/mman.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/mman.h>
 end_include
 
 begin_include
@@ -59,6 +59,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<atf-c.h>
+end_include
+
 begin_comment
 comment|/*  * BUFSIZE is the number of bytes of rc4 output to compare.  The probability  * that this test fails spuriously is 2**(-BUFSIZE * 8).  */
 end_comment
@@ -74,18 +80,24 @@ begin_comment
 comment|/*  * Test whether arc4random_buf() returns the same sequence of bytes in both  * parent and child processes.  (Hint: It shouldn't.)  */
 end_comment
 
-begin_function
-name|int
-name|main
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
-parameter_list|)
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
+name|test_arc4random
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|test_arc4random
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 struct|struct
 name|shared_page
@@ -174,24 +186,13 @@ operator|=
 name|fork
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|pid
-operator|<
+name|ATF_REQUIRE
+argument_list|(
 literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"fail 1 - fork\n"
+operator|<=
+name|pid
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|pid
@@ -237,8 +238,8 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|ATF_CHECK_MSG
+argument_list|(
 name|memcmp
 argument_list|(
 name|page
@@ -251,33 +252,39 @@ name|childbuf
 argument_list|,
 name|BUFSIZE
 argument_list|)
-operator|==
+operator|!=
 literal|0
-condition|)
+argument_list|,
+literal|"sequences are the same"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ATF_TP_ADD_TCS
+argument_list|(
+argument|tp
+argument_list|)
+end_macro
+
+begin_block
 block|{
-name|printf
+name|ATF_TP_ADD_TC
 argument_list|(
-literal|"fail 1 - sequences are the same\n"
+name|tp
+argument_list|,
+name|test_arc4random
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|atf_no_error
+argument_list|()
+operator|)
+return|;
 block|}
-name|printf
-argument_list|(
-literal|"ok 1 - sequences are different\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_block
 
 end_unit
 
