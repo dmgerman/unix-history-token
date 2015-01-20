@@ -42,16 +42,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|strdup
-parameter_list|(
-name|ptr
-parameter_list|)
-value|strdup((ptr), M_SOLARIS)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ddi_driver_major
 parameter_list|(
 name|zfs_dip
