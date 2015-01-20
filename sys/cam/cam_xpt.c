@@ -336,6 +336,9 @@ begin_struct
 struct|struct
 name|xpt_softc
 block|{
+name|uint32_t
+name|xpt_generation
+decl_stmt|;
 comment|/* number of high powered commands that can go through right now */
 name|struct
 name|mtx
@@ -594,6 +597,29 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Bus registration wait time"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern_cam
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|xpt_generation
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|xsoftc
+operator|.
+name|xpt_generation
+argument_list|,
+literal|0
+argument_list|,
+literal|"CAM peripheral generation count"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4480,6 +4506,16 @@ operator|->
 name|eb_mtx
 argument_list|)
 expr_stmt|;
+name|atomic_add_32
+argument_list|(
+operator|&
+name|xsoftc
+operator|.
+name|xpt_generation
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -4560,6 +4596,16 @@ operator|->
 name|bus
 operator|->
 name|eb_mtx
+argument_list|)
+expr_stmt|;
+name|atomic_add_32
+argument_list|(
+operator|&
+name|xsoftc
+operator|.
+name|xpt_generation
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
