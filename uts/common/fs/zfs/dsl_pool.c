@@ -1200,11 +1200,14 @@ operator|->
 name|dp_dirty_dirs
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We can't set retry to TRUE since we're explicitly specifying 	 * a spa to flush. This is good enough; any missed buffers for 	 * this spa won't cause trouble, and they'll eventually fall 	 * out of the ARC just like any other unused buffer. 	 */
 name|arc_flush
 argument_list|(
 name|dp
 operator|->
 name|dp_spa
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|txg_fini
