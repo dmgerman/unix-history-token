@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -51,10 +45,30 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_function
-name|void
+begin_include
+include|#
+directive|include
+file|<atf-c.h>
+end_include
+
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|test_preexisting
-parameter_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|test_preexisting
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/*  	 * Use a pre-existing buffer. 	 */
 name|char
@@ -114,7 +128,7 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|fp
 operator|!=
@@ -138,7 +152,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|nofw
 operator|==
@@ -156,7 +170,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|rc
 operator|==
@@ -178,7 +192,7 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|fp
 operator|!=
@@ -212,7 +226,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|nofr
 operator|==
@@ -223,7 +237,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*  	 * Since a write on a FILE * retrieved by fmemopen 	 * will add a '\0' (if there's space), we can check 	 * the strings for equality. 	 */
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|strcmp
 argument_list|(
@@ -243,7 +257,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|rc
 operator|==
@@ -262,7 +276,7 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|fp
 operator|!=
@@ -286,7 +300,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|nofw
 operator|==
@@ -302,7 +316,7 @@ name|fp
 argument_list|)
 expr_stmt|;
 comment|/* Check that the string was not modified after the first 4 bytes. */
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|strcmp
 argument_list|(
@@ -315,12 +329,26 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|test_autoalloc
-parameter_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|test_autoalloc
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/*  	 * Let fmemopen allocate the buffer. 	 */
 name|char
@@ -358,7 +386,7 @@ argument_list|,
 literal|"w+"
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|fp
 operator|!=
@@ -393,7 +421,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|nofw
 operator|==
@@ -409,7 +437,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|pos
 operator|==
@@ -430,7 +458,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|nofw
 operator|==
@@ -445,7 +473,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|rc
 operator|==
@@ -464,7 +492,7 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|fp
 operator|==
@@ -482,7 +510,7 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|fp
 operator|==
@@ -490,12 +518,26 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|test_data_length
-parameter_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|test_data_length
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* 	 * Here we test that a read operation doesn't go past the end of the 	 * data actually written, and that a SEEK_END seeks from the end of the 	 * data, not of the whole buffer. 	 */
 name|FILE
@@ -566,7 +608,7 @@ argument_list|,
 literal|"w+"
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|fp
 operator|!=
@@ -590,7 +632,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|nofw
 operator|==
@@ -612,7 +654,7 @@ argument_list|,
 name|SEEK_END
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|rc
 operator|==
@@ -626,7 +668,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|pos
 operator|==
@@ -644,7 +686,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|rc
 operator|==
@@ -666,7 +708,7 @@ argument_list|,
 literal|"a+"
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|fp
 operator|!=
@@ -690,7 +732,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|nofw
 operator|==
@@ -712,7 +754,7 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|rc
 operator|==
@@ -727,7 +769,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|pos
 operator|==
@@ -751,7 +793,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|nofr
 operator|==
@@ -762,7 +804,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Make sure the two strings are there. */
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|strncmp
 argument_list|(
@@ -781,7 +823,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|strncmp
 argument_list|(
@@ -813,7 +855,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|rc
 operator|==
@@ -821,12 +863,26 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|test_binary
-parameter_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|test_binary
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* 	 * Make sure that NULL bytes are never appended when opening a buffer 	 * in binary mode. 	 */
 name|FILE
@@ -881,7 +937,7 @@ argument_list|,
 literal|"w+b"
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|fp
 operator|!=
@@ -905,7 +961,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|nofw
 operator|==
@@ -932,7 +988,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|buf
 index|[
@@ -950,7 +1006,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|rc
 operator|==
@@ -958,12 +1014,26 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|test_append_binary_pos
-parameter_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|test_append_binary_pos
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* 	 * For compatibility with other implementations (glibc), we set the 	 * position to 0 when opening an automatically allocated binary stream 	 * for appending. 	 */
 name|FILE
@@ -981,7 +1051,7 @@ argument_list|,
 literal|"ab+"
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|ftell
 argument_list|(
@@ -1017,14 +1087,17 @@ argument_list|,
 literal|"ab+"
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|ftell
 argument_list|(
 name|fp
 argument_list|)
 operator|==
-literal|5
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -1033,14 +1106,28 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|test_size_0
-parameter_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|test_size_0
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
-comment|/* 	 * POSIX mandates that we return EINVAL if size is 0 	 */
+comment|/* 	 * POSIX mandates that we return EINVAL if size is 0. 	 */
 name|FILE
 modifier|*
 name|fp
@@ -1056,14 +1143,14 @@ argument_list|,
 literal|"r+"
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|fp
 operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_REQUIRE
 argument_list|(
 name|errno
 operator|==
@@ -1071,40 +1158,67 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
-name|main
-parameter_list|(
-name|void
-parameter_list|)
+begin_macro
+name|ATF_TP_ADD_TCS
+argument_list|(
+argument|tp
+argument_list|)
+end_macro
+
+begin_block
 block|{
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|test_autoalloc
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|test_preexisting
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|test_data_length
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|test_binary
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|test_append_binary_pos
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|test_size_0
-argument_list|()
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|atf_no_error
+argument_list|()
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 
