@@ -4343,12 +4343,9 @@ name|xfer
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 goto|goto
 name|tr_setup
 goto|;
-block|}
 block|}
 break|break;
 block|}
@@ -5177,7 +5174,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-else|else
 goto|goto
 name|tr_setup
 goto|;
@@ -5266,9 +5262,7 @@ name|sc_notify_state
 condition|)
 block|{
 case|case
-operator|(
 name|CDCE_NOTIFY_NETWORK_CONNECTION
-operator|)
 case|:
 name|sc
 operator|->
@@ -5278,9 +5272,7 @@ name|CDCE_NOTIFY_SPEED_CHANGE
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|CDCE_NOTIFY_SPEED_CHANGE
-operator|)
 case|:
 name|sc
 operator|->
@@ -5621,12 +5613,9 @@ name|xfer
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 goto|goto
 name|tr_setup
 goto|;
-block|}
 block|}
 break|break;
 block|}
