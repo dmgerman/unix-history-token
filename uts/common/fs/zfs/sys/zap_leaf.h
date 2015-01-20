@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -301,6 +301,9 @@ typedef|typedef
 struct|struct
 name|zap_leaf
 block|{
+name|dmu_buf_user_t
+name|l_dbu
+decl_stmt|;
 name|krwlock_t
 name|l_rwlock
 decl_stmt|;

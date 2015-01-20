@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -320,14 +320,10 @@ name|avl_node_t
 name|db_link
 decl_stmt|;
 comment|/* Data which is unique to data (leaf) blocks: */
-comment|/* stuff we store for the user (see dmu_buf_set_user) */
-name|void
+comment|/* User callback information. */
+name|dmu_buf_user_t
 modifier|*
-name|db_user_ptr
-decl_stmt|;
-name|dmu_buf_evict_func_t
-modifier|*
-name|db_evict_func
+name|db_user
 decl_stmt|;
 name|uint8_t
 name|db_immediate_evict

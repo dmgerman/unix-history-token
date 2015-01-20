@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -166,6 +166,9 @@ typedef|;
 struct|struct
 name|dsl_dir
 block|{
+name|dmu_buf_user_t
+name|dd_dbu
+decl_stmt|;
 comment|/* These are immutable; no lock needed: */
 name|uint64_t
 name|dd_object
@@ -248,6 +251,18 @@ return|;
 block|}
 name|void
 name|dsl_dir_rele
+parameter_list|(
+name|dsl_dir_t
+modifier|*
+name|dd
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+name|void
+name|dsl_dir_async_rele
 parameter_list|(
 name|dsl_dir_t
 modifier|*

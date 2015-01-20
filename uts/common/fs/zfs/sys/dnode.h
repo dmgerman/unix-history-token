@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -616,6 +616,10 @@ typedef|typedef
 struct|struct
 name|dnode_children
 block|{
+name|dmu_buf_user_t
+name|dnc_dbu
+decl_stmt|;
+comment|/* User evict data */
 name|size_t
 name|dnc_count
 decl_stmt|;
@@ -644,8 +648,7 @@ decl_stmt|;
 block|}
 name|free_range_t
 typedef|;
-name|dnode_t
-modifier|*
+name|void
 name|dnode_special_open
 parameter_list|(
 name|struct

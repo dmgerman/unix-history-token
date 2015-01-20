@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_comment
@@ -187,7 +187,7 @@ name|objset_phys_t
 modifier|*
 name|os_phys
 decl_stmt|;
-comment|/* 	 * The following "special" dnodes have no parent and are exempt from 	 * dnode_move(), but they root their descendents in this objset using 	 * handles anyway, so that all access to dnodes from dbufs consistently 	 * uses handles. 	 */
+comment|/* 	 * The following "special" dnodes have no parent, are exempt 	 * from dnode_move(), and are not recorded in os_dnodes, but they 	 * root their descendents in this objset using handles anyway, so 	 * that all access to dnodes from dbufs consistently uses handles. 	 */
 name|dnode_handle_t
 name|os_meta_dnode
 decl_stmt|;
@@ -200,6 +200,9 @@ decl_stmt|;
 name|zilog_t
 modifier|*
 name|os_zil
+decl_stmt|;
+name|list_node_t
+name|os_evicting_node
 decl_stmt|;
 comment|/* can change, under dsl_dir's locks: */
 name|enum
@@ -219,6 +222,9 @@ name|os_dedup_checksum
 decl_stmt|;
 name|boolean_t
 name|os_dedup_verify
+decl_stmt|;
+name|boolean_t
+name|os_evicting
 decl_stmt|;
 name|zfs_logbias_op_t
 name|os_logbias
@@ -709,6 +715,14 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|)
+function_decl|;
+name|void
+name|dmu_objset_evict_done
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
 parameter_list|)
 function_decl|;
 name|void

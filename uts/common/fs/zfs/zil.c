@@ -2203,10 +2203,9 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 name|panic
 argument_list|(

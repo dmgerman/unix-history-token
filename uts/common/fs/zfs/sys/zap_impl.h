@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -278,6 +278,9 @@ typedef|typedef
 struct|struct
 name|zap
 block|{
+name|dmu_buf_user_t
+name|zap_dbu
+decl_stmt|;
 name|objset_t
 modifier|*
 name|zap_objset
@@ -482,13 +485,9 @@ function_decl|;
 name|void
 name|zap_evict
 parameter_list|(
-name|dmu_buf_t
-modifier|*
-name|db
-parameter_list|,
 name|void
 modifier|*
-name|vmzap
+name|dbu
 parameter_list|)
 function_decl|;
 name|zap_name_t

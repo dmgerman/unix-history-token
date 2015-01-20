@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_include
@@ -1994,15 +1994,31 @@ name|TRUE
 expr_stmt|;
 block|}
 comment|/* 	 * Make sure that zap_ismicro is set before we let others see 	 * it, because zap_lockdir() checks zap_ismicro without the lock 	 * held. 	 */
+name|dmu_buf_init_user
+argument_list|(
+operator|&
+name|zap
+operator|->
+name|zap_dbu
+argument_list|,
+name|zap_evict
+argument_list|,
+operator|&
+name|zap
+operator|->
+name|zap_dbuf
+argument_list|)
+expr_stmt|;
 name|winner
 operator|=
 name|dmu_buf_set_user
 argument_list|(
 name|db
 argument_list|,
+operator|&
 name|zap
-argument_list|,
-name|zap_evict
+operator|->
+name|zap_dbu
 argument_list|)
 expr_stmt|;
 if|if
@@ -3613,33 +3629,20 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|_NOTE
-argument_list|(
-argument|ARGSUSED(
-literal|0
-argument|)
-argument_list|)
-end_macro
-
 begin_function
 name|void
 name|zap_evict
 parameter_list|(
-name|dmu_buf_t
-modifier|*
-name|db
-parameter_list|,
 name|void
 modifier|*
-name|vzap
+name|dbu
 parameter_list|)
 block|{
 name|zap_t
 modifier|*
 name|zap
 init|=
-name|vzap
+name|dbu
 decl_stmt|;
 name|rw_destroy
 argument_list|(

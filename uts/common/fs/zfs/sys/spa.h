@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -1687,6 +1687,19 @@ name|tag
 parameter_list|)
 function_decl|;
 specifier|extern
+name|void
+name|spa_async_close
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+specifier|extern
 name|boolean_t
 name|spa_refcount_zero
 parameter_list|(
@@ -2200,6 +2213,39 @@ specifier|extern
 name|metaslab_class_t
 modifier|*
 name|spa_log_class
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|spa_evicting_os_register
+parameter_list|(
+name|spa_t
+modifier|*
+parameter_list|,
+name|objset_t
+modifier|*
+name|os
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|spa_evicting_os_deregister
+parameter_list|(
+name|spa_t
+modifier|*
+parameter_list|,
+name|objset_t
+modifier|*
+name|os
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|spa_evicting_os_wait
 parameter_list|(
 name|spa_t
 modifier|*

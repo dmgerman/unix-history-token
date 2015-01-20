@@ -2758,10 +2758,9 @@ operator|!=
 name|NULL
 operator|&&
 operator|!
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 operator|&&
 operator|!
 name|BP_IS_HOLE

@@ -2513,10 +2513,9 @@ operator|)
 return|;
 if|if
 condition|(
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 block|{
 comment|/* 		 * Snapshots are treated as descendents only, 		 * local permissions do not apply. 		 */

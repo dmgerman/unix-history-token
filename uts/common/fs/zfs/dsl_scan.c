@@ -1774,10 +1774,9 @@ name|scn_max_txg
 decl_stmt|;
 if|if
 condition|(
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 return|return
 operator|(
@@ -4028,10 +4027,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 block|{
 comment|/* Note, scn_cur_{min,max}_txg stays the same. */
@@ -4185,10 +4183,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 block|{
 comment|/* 			 * We keep the same mintxg; it could be> 			 * ds_creation_txg if the previous snapshot was 			 * deleted too. 			 */
@@ -5252,10 +5249,9 @@ name|scn
 argument_list|)
 operator|&&
 operator|!
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 name|dsl_scan_zil
 argument_list|(

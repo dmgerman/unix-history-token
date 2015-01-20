@@ -544,10 +544,9 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|snapds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 return|return
 operator|(

@@ -642,9 +642,6 @@ decl_stmt|;
 name|boolean_t
 name|inheritable
 decl_stmt|;
-name|boolean_t
-name|snapshot
-decl_stmt|;
 name|uint64_t
 name|zapobj
 decl_stmt|;
@@ -672,13 +669,6 @@ argument_list|(
 name|prop
 argument_list|)
 operator|)
-expr_stmt|;
-name|snapshot
-operator|=
-name|dsl_dataset_is_snapshot
-argument_list|(
-name|ds
-argument_list|)
 expr_stmt|;
 name|zapobj
 operator|=
@@ -713,7 +703,9 @@ name|err
 decl_stmt|;
 name|ASSERT
 argument_list|(
-name|snapshot
+name|ds
+operator|->
+name|ds_is_snapshot
 argument_list|)
 expr_stmt|;
 comment|/* Check for a local value. */
@@ -911,7 +903,9 @@ name|buf
 argument_list|,
 name|setpoint
 argument_list|,
-name|snapshot
+name|ds
+operator|->
+name|ds_is_snapshot
 argument_list|)
 operator|)
 return|;
@@ -2482,10 +2476,9 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 block|{
 name|ASSERT
@@ -2957,10 +2950,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 block|{
 name|dsl_prop_cb_record_t
@@ -3598,10 +3590,9 @@ block|}
 block|}
 if|if
 condition|(
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 operator|&&
 name|version
 operator|<
@@ -4672,10 +4663,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 name|flags
 operator||=
