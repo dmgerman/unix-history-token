@@ -776,7 +776,7 @@ argument|);
 comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */
 argument|bufinit(); 	vm_pager_bufferinit(); }  extern vm_offset_t	__startkernel
 argument_list|,
-argument|__endkernel;
+argument|__endkernel; extern unsigned char	__bss_start[]; extern unsigned char	__sbss_start[]; extern unsigned char	__sbss_end[]; extern unsigned char	_end[];
 ifndef|#
 directive|ifndef
 name|__powerpc64__
@@ -843,8 +843,6 @@ literal|0
 argument|; 	cacheline_warn =
 literal|0
 argument|;
-comment|/* Store boot environment state */
-argument|OF_initial_setup((void *)fdt, NULL, (int (*)(void *))ofentry);
 comment|/* First guess at start/end kernel positions */
 argument|startkernel = __startkernel; 	endkernel = __endkernel;
 ifdef|#
@@ -858,6 +856,10 @@ literal|16
 argument|| MPC750CL))  		mdp = NULL;
 endif|#
 directive|endif
+comment|/* Check for ePAPR loader, which puts a magic value into r6 */
+argument|if (mdp == (void *)
+literal|0x65504150
+argument|) 		mdp = NULL;
 comment|/* 	 * Parse metadata if present and fetch parameters.  Must be done 	 * before console is inited so cninit gets the right value of 	 * boothowto. 	 */
 argument|if (mdp != NULL) { 		preload_metadata = mdp; 		kmdp = preload_search_by_type(
 literal|"elf kernel"
@@ -868,7 +870,9 @@ name|DDB
 argument|ksym_start = MD_FETCH(kmdp, MODINFOMD_SSYM, uintptr_t); 			ksym_end = MD_FETCH(kmdp, MODINFOMD_ESYM, uintptr_t); 			db_fetch_ksymtab(ksym_start, ksym_end);
 endif|#
 directive|endif
-argument|} 	}
+argument|} 	} else { 		bzero(__sbss_start, __sbss_end - __sbss_start); 		bzero(__bss_start, _end - __bss_start); 	}
+comment|/* Store boot environment state */
+argument|OF_initial_setup((void *)fdt, NULL, (int (*)(void *))ofentry);
 comment|/* 	 * Init params/tunables that can be overridden by the loader 	 */
 argument|init_param1();
 comment|/* 	 * Start initializing proc0 and thread0. 	 */
