@@ -434,6 +434,10 @@ name|bs_wr_8_s
 operator|=
 name|BS_UNIMPLEMENTED
 block|, }
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
