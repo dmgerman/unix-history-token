@@ -69,14 +69,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|bs_protos
-argument_list|(
-name|generic_armv4
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * The bus space tag.  This is constant for all instances, so  * we never have to explicitly "create" it.  */
 end_comment
@@ -113,7 +105,7 @@ block|,
 comment|/* read (single) */
 name|generic_bs_r_1
 block|,
-name|generic_armv4_bs_r_2
+name|generic_bs_r_2
 block|,
 name|generic_bs_r_4
 block|,
@@ -122,7 +114,7 @@ block|,
 comment|/* read multiple */
 name|generic_bs_rm_1
 block|,
-name|generic_armv4_bs_rm_2
+name|generic_bs_rm_2
 block|,
 name|generic_bs_rm_4
 block|,
@@ -131,7 +123,7 @@ block|,
 comment|/* read region */
 name|generic_bs_rr_1
 block|,
-name|generic_armv4_bs_rr_2
+name|generic_bs_rr_2
 block|,
 name|generic_bs_rr_4
 block|,
@@ -140,7 +132,7 @@ block|,
 comment|/* write (single) */
 name|generic_bs_w_1
 block|,
-name|generic_armv4_bs_w_2
+name|generic_bs_w_2
 block|,
 name|generic_bs_w_4
 block|,
@@ -149,7 +141,7 @@ block|,
 comment|/* write multiple */
 name|generic_bs_wm_1
 block|,
-name|generic_armv4_bs_wm_2
+name|generic_bs_wm_2
 block|,
 name|generic_bs_wm_4
 block|,
@@ -203,7 +195,7 @@ block|,
 comment|/* read multiple stream */
 name|NULL
 block|,
-name|generic_armv4_bs_rm_2
+name|generic_bs_rm_2
 block|,
 comment|/* bus_space_read_multi_stream_2 */
 name|NULL
@@ -231,7 +223,7 @@ block|,
 comment|/* write multiple stream */
 name|NULL
 block|,
-name|generic_armv4_bs_wm_2
+name|generic_bs_wm_2
 block|,
 comment|/* bus_space_write_multi_stream_2 */
 name|NULL

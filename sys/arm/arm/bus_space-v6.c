@@ -47,14 +47,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|bs_protos
-argument_list|(
-name|generic_armv4
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
 name|void
@@ -162,7 +154,7 @@ block|,
 operator|.
 name|bs_rm_2
 operator|=
-name|generic_armv4_bs_rm_2
+name|generic_bs_rm_2
 block|,
 operator|.
 name|bs_rm_4
@@ -183,7 +175,7 @@ block|,
 operator|.
 name|bs_rr_2
 operator|=
-name|generic_armv4_bs_rr_2
+name|generic_bs_rr_2
 block|,
 operator|.
 name|bs_rr_4
@@ -229,7 +221,7 @@ block|,
 operator|.
 name|bs_wm_2
 operator|=
-name|generic_armv4_bs_wm_2
+name|generic_bs_wm_2
 block|,
 operator|.
 name|bs_wm_4
@@ -250,7 +242,7 @@ block|,
 operator|.
 name|bs_wr_2
 operator|=
-name|generic_armv4_bs_wr_2
+name|generic_bs_wr_2
 block|,
 operator|.
 name|bs_wr_4
@@ -292,7 +284,7 @@ block|,
 operator|.
 name|bs_sr_2
 operator|=
-name|generic_armv4_bs_sr_2
+name|generic_bs_sr_2
 block|,
 operator|.
 name|bs_sr_4
@@ -313,7 +305,7 @@ block|,
 operator|.
 name|bs_c_2
 operator|=
-name|generic_armv4_bs_c_2
+name|generic_bs_c_2
 block|,
 operator|.
 name|bs_c_4
@@ -359,7 +351,7 @@ block|,
 operator|.
 name|bs_rm_2_s
 operator|=
-name|generic_armv4_bs_rm_2
+name|generic_bs_rm_2
 block|,
 operator|.
 name|bs_rm_4_s
@@ -380,7 +372,7 @@ block|,
 operator|.
 name|bs_rr_2_s
 operator|=
-name|generic_armv4_bs_rr_2
+name|generic_bs_rr_2
 block|,
 operator|.
 name|bs_rr_4_s
@@ -426,7 +418,7 @@ block|,
 operator|.
 name|bs_wm_2_s
 operator|=
-name|generic_armv4_bs_wm_2
+name|generic_bs_wm_2
 block|,
 operator|.
 name|bs_wm_4_s
@@ -447,7 +439,7 @@ block|,
 operator|.
 name|bs_wr_2_s
 operator|=
-name|generic_armv4_bs_wr_2
+name|generic_bs_wr_2
 block|,
 operator|.
 name|bs_wr_4_s

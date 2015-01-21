@@ -99,14 +99,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|bs_protos
-argument_list|(
-name|generic_armv4
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|struct
 name|bus_space
@@ -140,7 +132,7 @@ block|,
 comment|/* read (single) */
 name|generic_bs_r_1
 block|,
-name|generic_armv4_bs_r_2
+name|generic_bs_r_2
 block|,
 name|generic_bs_r_4
 block|,
@@ -149,7 +141,7 @@ block|,
 comment|/* read multiple */
 name|generic_bs_rm_1
 block|,
-name|generic_armv4_bs_rm_2
+name|generic_bs_rm_2
 block|,
 name|generic_bs_rm_4
 block|,
@@ -158,7 +150,7 @@ block|,
 comment|/* read region */
 name|generic_bs_rr_1
 block|,
-name|generic_armv4_bs_rr_2
+name|generic_bs_rr_2
 block|,
 name|generic_bs_rr_4
 block|,
@@ -167,7 +159,7 @@ block|,
 comment|/* write (single) */
 name|generic_bs_w_1
 block|,
-name|generic_armv4_bs_w_2
+name|generic_bs_w_2
 block|,
 name|generic_bs_w_4
 block|,
@@ -176,7 +168,7 @@ block|,
 comment|/* write multiple */
 name|generic_bs_wm_1
 block|,
-name|generic_armv4_bs_wm_2
+name|generic_bs_wm_2
 block|,
 name|generic_bs_wm_4
 block|,
@@ -185,7 +177,7 @@ block|,
 comment|/* write region */
 name|generic_bs_wr_1
 block|,
-name|generic_armv4_bs_wr_2
+name|generic_bs_wr_2
 block|,
 name|generic_bs_wr_4
 block|,
@@ -203,7 +195,7 @@ block|,
 comment|/* set region */
 name|generic_bs_sr_1
 block|,
-name|generic_armv4_bs_sr_2
+name|generic_bs_sr_2
 block|,
 name|NULL
 block|,
@@ -212,7 +204,7 @@ block|,
 comment|/* copy */
 name|NULL
 block|,
-name|generic_armv4_bs_c_2
+name|generic_bs_c_2
 block|,
 name|NULL
 block|,

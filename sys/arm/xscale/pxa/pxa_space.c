@@ -101,14 +101,6 @@ end_expr_stmt
 begin_expr_stmt
 name|bs_protos
 argument_list|(
-name|generic_armv4
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|bs_protos
-argument_list|(
 name|pxa
 argument_list|)
 expr_stmt|;
@@ -407,7 +399,7 @@ argument|u_int16_t
 argument_list|,
 argument|pxa_bs_r_2
 argument_list|,
-argument|generic_armv4_bs_r_2
+argument|generic_bs_r_2
 argument_list|)
 end_macro
 
@@ -461,7 +453,7 @@ argument|u_int16_t
 argument_list|,
 argument|pxa_bs_w_2
 argument_list|,
-argument|generic_armv4_bs_w_2
+argument|generic_bs_w_2
 argument_list|)
 end_macro
 
@@ -515,7 +507,7 @@ argument|u_int16_t
 argument_list|,
 argument|pxa_bs_rm_2
 argument_list|,
-argument|generic_armv4_bs_rm_2
+argument|generic_bs_rm_2
 argument_list|)
 end_macro
 
@@ -569,7 +561,7 @@ argument|u_int16_t
 argument_list|,
 argument|pxa_bs_wm_2
 argument_list|,
-argument|generic_armv4_bs_wm_2
+argument|generic_bs_wm_2
 argument_list|)
 end_macro
 
