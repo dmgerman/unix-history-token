@@ -5955,6 +5955,13 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+name|xfer
+operator|->
+name|flag
+operator|&=
+operator|~
+name|FWXF_INQ
+expr_stmt|;
 if|#
 directive|if
 literal|0
