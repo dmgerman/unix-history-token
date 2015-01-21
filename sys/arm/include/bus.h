@@ -3184,6 +3184,22 @@ define|\
 value|bs_map_proto(f);		\ bs_unmap_proto(f);		\ bs_subregion_proto(f);		\ bs_alloc_proto(f);		\ bs_free_proto(f);		\ bs_mmap_proto(f);		\ bs_barrier_proto(f);		\ bs_r_1_proto(f);		\ bs_r_2_proto(f);		\ bs_r_4_proto(f);		\ bs_r_8_proto(f);		\ bs_r_1_s_proto(f);		\ bs_r_2_s_proto(f);		\ bs_r_4_s_proto(f);		\ bs_w_1_proto(f);		\ bs_w_2_proto(f);		\ bs_w_4_proto(f);		\ bs_w_8_proto(f);		\ bs_w_1_s_proto(f);		\ bs_w_2_s_proto(f);		\ bs_w_4_s_proto(f);		\ bs_rm_1_proto(f);		\ bs_rm_2_proto(f);		\ bs_rm_4_proto(f);		\ bs_rm_8_proto(f);		\ bs_wm_1_proto(f);		\ bs_wm_2_proto(f);		\ bs_wm_4_proto(f);		\ bs_wm_8_proto(f);		\ bs_rr_1_proto(f);		\ bs_rr_2_proto(f);		\ bs_rr_4_proto(f);		\ bs_rr_8_proto(f);		\ bs_wr_1_proto(f);		\ bs_wr_2_proto(f);		\ bs_wr_4_proto(f);		\ bs_wr_8_proto(f);		\ bs_sm_1_proto(f);		\ bs_sm_2_proto(f);		\ bs_sm_4_proto(f);		\ bs_sm_8_proto(f);		\ bs_sr_1_proto(f);		\ bs_sr_2_proto(f);		\ bs_sr_4_proto(f);		\ bs_sr_8_proto(f);		\ bs_c_1_proto(f);		\ bs_c_2_proto(f);		\ bs_c_4_proto(f);		\ bs_c_8_proto(f);
 end_define
 
+begin_function_decl
+name|void
+name|generic_bs_unimplemented
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|BS_UNIMPLEMENTED
+value|(void *)generic_bs_unimplemented
+end_define
+
 begin_define
 define|#
 directive|define

@@ -47,29 +47,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function
-specifier|static
-name|void
-name|bs_unimplemented
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|panic
-argument_list|(
-literal|"unimplemented bus_space function called"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|BS_UNIMPLEMENTED
-value|(void *)bs_unimplemented
-end_define
-
 begin_comment
 comment|/*  * The bus space tag.  This is constant for all instances, so  * we never have to explicitly "create" it.  */
 end_comment

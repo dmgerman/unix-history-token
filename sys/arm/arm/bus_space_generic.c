@@ -93,6 +93,21 @@ directive|include
 file|<machine/devmap.h>
 end_include
 
+begin_function
+name|void
+name|generic_bs_unimplemented
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+literal|"unimplemented bus_space function called"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* Prototypes for all the bus_space structure functions */
 end_comment
