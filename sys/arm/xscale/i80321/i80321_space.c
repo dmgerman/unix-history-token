@@ -125,185 +125,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|bs_protos
-argument_list|(
-name|generic
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * Template bus_space -- copied, and the bits that are NULL are  * filled in.  */
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|struct
-name|bus_space
-name|i80321_bs_tag_template
-init|=
-block|{
-comment|/* cookie */
-operator|(
-name|void
-operator|*
-operator|)
-literal|0
-block|,
-comment|/* mapping/unmapping */
-name|NULL
-block|,
-name|NULL
-block|,
-name|i80321_bs_subregion
-block|,
-comment|/* allocation/deallocation */
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* barrier */
-name|i80321_bs_barrier
-block|,
-comment|/* read (single) */
-name|generic_bs_r_1
-block|,
-name|generic_bs_r_2
-block|,
-name|generic_bs_r_4
-block|,
-name|NULL
-block|,
-comment|/* read multiple */
-name|generic_bs_rm_1
-block|,
-name|generic_bs_rm_2
-block|,
-name|generic_bs_rm_4
-block|,
-name|NULL
-block|,
-comment|/* read region */
-name|generic_bs_rr_1
-block|,
-name|generic_bs_rr_2
-block|,
-name|generic_bs_rr_4
-block|,
-name|NULL
-block|,
-comment|/* write (single) */
-name|generic_bs_w_1
-block|,
-name|generic_bs_w_2
-block|,
-name|generic_bs_w_4
-block|,
-name|NULL
-block|,
-comment|/* write multiple */
-name|generic_bs_wm_1
-block|,
-name|generic_bs_wm_2
-block|,
-name|generic_bs_wm_4
-block|,
-name|NULL
-block|,
-comment|/* write region */
-name|NULL
-block|,
-name|generic_bs_wr_2
-block|,
-name|generic_bs_wr_4
-block|,
-name|NULL
-block|,
-comment|/* set multiple */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* set region */
-name|NULL
-block|,
-name|generic_bs_sr_2
-block|,
-name|generic_bs_sr_4
-block|,
-name|NULL
-block|,
-comment|/* copy */
-name|NULL
-block|,
-name|generic_bs_c_2
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* read (single) stream */
-name|generic_bs_r_1
-block|,
-name|generic_bs_r_2
-block|,
-name|generic_bs_r_4
-block|,
-name|NULL
-block|,
-comment|/* read multiple stream */
-name|generic_bs_rm_1
-block|,
-name|generic_bs_rm_2
-block|,
-name|generic_bs_rm_4
-block|,
-name|NULL
-block|,
-comment|/* read region stream */
-name|generic_bs_rr_1
-block|,
-name|generic_bs_rr_2
-block|,
-name|generic_bs_rr_4
-block|,
-name|NULL
-block|,
-comment|/* write (single) stream */
-name|generic_bs_w_1
-block|,
-name|generic_bs_w_2
-block|,
-name|generic_bs_w_4
-block|,
-name|NULL
-block|,
-comment|/* write multiple stream */
-name|generic_bs_wm_1
-block|,
-name|generic_bs_wm_2
-block|,
-name|generic_bs_wm_4
-block|,
-name|NULL
-block|,
-comment|/* write region stream */
-name|NULL
-block|,
-name|generic_bs_wr_2
-block|,
-name|generic_bs_wr_4
-block|,
-name|NULL
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|i80321_bs_init
@@ -319,7 +140,8 @@ block|{
 operator|*
 name|bs
 operator|=
-name|i80321_bs_tag_template
+operator|*
+name|arm_base_bs_tag
 expr_stmt|;
 name|bs
 operator|->
@@ -345,7 +167,8 @@ block|{
 operator|*
 name|bs
 operator|=
-name|i80321_bs_tag_template
+operator|*
+name|arm_base_bs_tag
 expr_stmt|;
 name|bs
 operator|->
@@ -395,7 +218,8 @@ block|{
 operator|*
 name|bs
 operator|=
-name|i80321_bs_tag_template
+operator|*
+name|arm_base_bs_tag
 expr_stmt|;
 name|bs
 operator|->
