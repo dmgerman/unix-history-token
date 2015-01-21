@@ -9597,7 +9597,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|//printf("ZFS: Replaying ZIL on %s...\n", os->os->os_spa->spa_name);
 name|zr
 operator|.
 name|zr_replay
@@ -9721,7 +9720,6 @@ name|zl_replay
 operator|=
 name|B_FALSE
 expr_stmt|;
-comment|//printf("ZFS: Replay of ZIL on %s finished.\n", os->os->os_spa->spa_name);
 block|}
 end_function
 
