@@ -155,12 +155,6 @@ directive|include
 file|"mbox_if.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
