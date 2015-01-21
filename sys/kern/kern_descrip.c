@@ -12159,10 +12159,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|fp
@@ -12180,15 +12176,6 @@ operator|->
 name|f_count
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fp
-operator|->
-name|f_ops
-operator|!=
-operator|&
-name|badfileops
-condition|)
 name|error
 operator|=
 name|fo_close
@@ -17223,7 +17210,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|EBADF
+literal|0
 operator|)
 return|;
 block|}
