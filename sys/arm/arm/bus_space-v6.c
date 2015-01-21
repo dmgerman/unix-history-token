@@ -380,7 +380,7 @@ block|,
 operator|.
 name|bs_rr_2_s
 operator|=
-name|generic_bs_rr_2
+name|generic_armv4_bs_rr_2
 block|,
 operator|.
 name|bs_rr_4_s
@@ -447,12 +447,12 @@ block|,
 operator|.
 name|bs_wr_2_s
 operator|=
-name|generic_bs_wr_4
+name|generic_armv4_bs_wr_2
 block|,
 operator|.
 name|bs_wr_4_s
 operator|=
-name|generic_bs_wr_8
+name|generic_bs_wr_4
 block|,
 operator|.
 name|bs_wr_8_s
