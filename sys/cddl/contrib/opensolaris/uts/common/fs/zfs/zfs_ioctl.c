@@ -10613,11 +10613,6 @@ name|zvol_set_volsize
 argument_list|(
 name|dsname
 argument_list|,
-name|ddi_driver_major
-argument_list|(
-name|zfs_dip
-argument_list|)
-argument_list|,
 name|intval
 argument_list|)
 expr_stmt|;
