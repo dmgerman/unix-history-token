@@ -66,7 +66,6 @@ operator|)
 return|;
 return|return
 operator|(
-operator|-
 name|EPERM
 operator|)
 return|;
@@ -107,7 +106,6 @@ literal|0
 condition|)
 return|return
 operator|(
-operator|-
 name|EINVAL
 operator|)
 return|;

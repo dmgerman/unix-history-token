@@ -1948,8 +1948,6 @@ name|save_set
 decl_stmt|;
 name|int
 name|ret
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|i
