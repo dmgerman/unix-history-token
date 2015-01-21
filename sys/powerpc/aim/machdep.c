@@ -917,7 +917,7 @@ argument|case IBM970: 		case IBM970FX: 		case IBM970MP: 		case IBM970GX: 			scra
 ifdef|#
 directive|ifdef
 name|__powerpc64__
-argument|case IBMPOWER7:
+argument|case IBMPOWER7: 		case IBMPOWER7PLUS: 		case IBMPOWER8: 		case IBMPOWER8E:
 comment|/* XXX: get from ibm,slb-size in device tree */
 argument|n_slbs =
 literal|32
