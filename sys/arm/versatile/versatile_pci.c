@@ -143,12 +143,6 @@ directive|include
 file|<machine/fdt.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<arm/versatile/versatile_pci_bus_space.h>
-end_include
-
 begin_define
 define|#
 directive|define
