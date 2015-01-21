@@ -1656,7 +1656,7 @@ name|rman_set_bustag
 argument_list|(
 name|r
 argument_list|,
-name|versatile_bus_space_pcimem
+name|arm_base_bs_tag
 argument_list|)
 expr_stmt|;
 name|res

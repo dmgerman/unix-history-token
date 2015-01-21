@@ -1220,6 +1220,13 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|bus_space_tag_t
+name|arm_base_bs_tag
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Utility macros; INTERNAL USE ONLY.  */
 end_comment

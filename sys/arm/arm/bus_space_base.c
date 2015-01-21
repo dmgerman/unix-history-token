@@ -61,7 +61,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|bus_space
-name|arm_base_tag
+name|arm_base_bus_space
 init|=
 block|{
 comment|/* privdata is whatever the implementer wants; unused in base tag */
@@ -448,7 +448,7 @@ name|bus_space_tag_t
 name|fdtbus_bs_tag
 init|=
 operator|&
-name|arm_base_tag
+name|arm_base_bus_space
 decl_stmt|;
 end_decl_stmt
 
@@ -456,6 +456,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|bus_space_tag_t
+name|arm_base_bs_tag
+init|=
+operator|&
+name|arm_base_bus_space
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
