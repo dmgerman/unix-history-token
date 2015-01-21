@@ -10660,6 +10660,7 @@ name|seq_t
 name|seq
 decl_stmt|;
 name|cap_rights_t
+modifier|*
 name|haverights
 decl_stmt|;
 name|int
@@ -10779,7 +10780,6 @@ directive|ifdef
 name|CAPABILITIES
 name|haverights
 operator|=
-operator|*
 name|cap_rights_fde
 argument_list|(
 operator|&
@@ -10797,7 +10797,6 @@ name|error
 operator|=
 name|cap_check
 argument_list|(
-operator|&
 name|haverights
 argument_list|,
 name|needrightsp
@@ -10973,6 +10972,7 @@ name|CAPABILITIES
 operator|*
 name|haverightsp
 operator|=
+operator|*
 name|haverights
 expr_stmt|;
 else|#
