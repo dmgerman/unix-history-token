@@ -2175,9 +2175,9 @@ define|#
 directive|define
 name|NSEC_TO_TICK
 parameter_list|(
-name|usec
+name|nsec
 parameter_list|)
-value|((usec) / (NANOSEC / hz))
+value|((nsec) / (NANOSEC / hz))
 define|#
 directive|define
 name|gethrestime_sec
