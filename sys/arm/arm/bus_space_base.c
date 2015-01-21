@@ -35,6 +35,12 @@ directive|include
 file|<machine/bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_platform.h"
+end_include
+
 begin_comment
 comment|/* Prototypes for all the bus_space structure functions */
 end_comment
@@ -55,7 +61,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|bus_space
-name|_base_tag
+name|arm_base_tag
 init|=
 block|{
 comment|/* privdata is whatever the implementer wants; unused in base tag */
@@ -431,14 +437,25 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
 begin_decl_stmt
 name|bus_space_tag_t
 name|fdtbus_bs_tag
 init|=
 operator|&
-name|_base_tag
+name|arm_base_tag
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
