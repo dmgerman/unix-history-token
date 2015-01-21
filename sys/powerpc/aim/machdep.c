@@ -796,7 +796,9 @@ argument|extern void	*rstcode
 argument_list|,
 argument|*rstsize; extern void	*trapcode
 argument_list|,
-argument|*trapsize; extern void	*slbtrap
+argument|*trapsize
+argument_list|,
+argument|*trapcode2; extern void	*slbtrap
 argument_list|,
 argument|*slbtrapsize; extern void	*alitrap
 argument_list|,
@@ -1149,6 +1151,19 @@ operator|&
 name|trapcode
 expr_stmt|;
 comment|/* Set TOC base so that the interrupt code can get at it */
+operator|*
+operator|(
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+name|TRAP_GENTRAP
+operator|)
+operator|=
+operator|&
+name|trapcode2
+expr_stmt|;
 operator|*
 operator|(
 operator|(
