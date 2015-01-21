@@ -128,33 +128,6 @@ parameter_list|)
 value|({					\ 	__tcb_type(name) __result;				\ 								\ 	u_long __i;						\ 	__asm __volatile("movq %%fs:%1, %0"			\ 	    : "=r" (__i)					\ 	    : "m" (*(volatile u_long *)(__tcb_offset(name))));  \ 	__result = (__tcb_type(name))__i;			\ 								\ 	__result;						\ })
 end_define
 
-begin_function_decl
-name|struct
-name|tcb
-modifier|*
-name|_tcb_ctor
-parameter_list|(
-name|struct
-name|pthread
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_tcb_dtor
-parameter_list|(
-name|struct
-name|tcb
-modifier|*
-name|tcb
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|__inline
