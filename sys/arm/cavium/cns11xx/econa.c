@@ -169,186 +169,9 @@ name|APB_clock
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|bs_protos
-argument_list|(
-name|generic
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|struct
-name|bus_space
-name|econa_bs_tag
-init|=
-block|{
-comment|/* cookie */
-operator|(
-name|void
-operator|*
-operator|)
-literal|0
-block|,
-comment|/* mapping/unmapping */
-name|generic_bs_map
-block|,
-name|generic_bs_unmap
-block|,
-name|generic_bs_subregion
-block|,
-comment|/* allocation/deallocation */
-name|generic_bs_alloc
-block|,
-name|generic_bs_free
-block|,
-comment|/* barrier */
-name|generic_bs_barrier
-block|,
-comment|/* read (single) */
-name|generic_bs_r_1
-block|,
-name|generic_bs_r_2
-block|,
-name|generic_bs_r_4
-block|,
-name|NULL
-block|,
-comment|/* read multiple */
-name|generic_bs_rm_1
-block|,
-name|generic_bs_rm_2
-block|,
-name|generic_bs_rm_4
-block|,
-name|NULL
-block|,
-comment|/* read region */
-name|generic_bs_rr_1
-block|,
-name|generic_bs_rr_2
-block|,
-name|generic_bs_rr_4
-block|,
-name|NULL
-block|,
-comment|/* write (single) */
-name|generic_bs_w_1
-block|,
-name|generic_bs_w_2
-block|,
-name|generic_bs_w_4
-block|,
-name|NULL
-block|,
-comment|/* write multiple */
-name|generic_bs_wm_1
-block|,
-name|generic_bs_wm_2
-block|,
-name|generic_bs_wm_4
-block|,
-name|NULL
-block|,
-comment|/* write region */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* set multiple */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* set region */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* copy */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* read (single) stream */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* read multiple stream */
-name|NULL
-block|,
-name|generic_bs_rm_2
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* read region stream */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* write (single) stream */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* write multiple stream */
-name|NULL
-block|,
-name|generic_bs_wm_2
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* write region stream */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|bus_space_tag_t
 name|obio_tag
-init|=
-operator|&
-name|econa_bs_tag
 decl_stmt|;
 end_decl_stmt
 
@@ -1654,6 +1477,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|obio_tag
+operator|=
+name|arm_base_bs_tag
+expr_stmt|;
 name|econa_softc
 operator|=
 name|sc
@@ -1662,8 +1489,7 @@ name|sc
 operator|->
 name|ec_st
 operator|=
-operator|&
-name|econa_bs_tag
+name|arm_base_bs_tag
 expr_stmt|;
 name|sc
 operator|->
@@ -2208,8 +2034,7 @@ name|rle
 operator|->
 name|res
 argument_list|,
-operator|&
-name|econa_bs_tag
+name|arm_base_bs_tag
 argument_list|)
 expr_stmt|;
 name|rman_set_bushandle
