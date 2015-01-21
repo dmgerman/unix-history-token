@@ -740,13 +740,10 @@ name|fw_device
 modifier|*
 name|fwdev
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splfw
-argument_list|()
+name|FW_GLOCK
+argument_list|(
+name|fc
+argument_list|)
 expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
@@ -771,9 +768,9 @@ operator|!=
 name|FWDEVINVAL
 condition|)
 break|break;
-name|splx
+name|FW_GUNLOCK
 argument_list|(
-name|s
+name|fc
 argument_list|)
 expr_stmt|;
 return|return
@@ -808,14 +805,6 @@ name|fw_device
 modifier|*
 name|fwdev
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splfw
-argument_list|()
-expr_stmt|;
 name|FW_GLOCK
 argument_list|(
 name|fc
@@ -845,11 +834,6 @@ break|break;
 name|FW_GUNLOCK
 argument_list|(
 name|fc
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -1465,14 +1449,6 @@ name|xfer
 operator|->
 name|fc
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splfw
-argument_list|()
-expr_stmt|;
 comment|/* Protect from interrupt/timeout */
 name|FW_GLOCK
 argument_list|(
@@ -1508,11 +1484,6 @@ directive|endif
 name|FW_GUNLOCK
 argument_list|(
 name|fc
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 comment|/* XXX just queue for mbuf */
@@ -1589,6 +1560,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Just use a per-packet callout? */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1639,8 +1614,6 @@ name|xfer_timeout
 expr_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|s
 decl_stmt|;
 name|split_timeout
 operator|.
@@ -1678,11 +1651,6 @@ operator|&
 name|xfer_timeout
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splfw
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1699,7 +1667,12 @@ literal|0
 init|;
 name|i
 operator|<
-literal|0x40
+name|nitems
+argument_list|(
+name|fc
+operator|->
+name|tlabels
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -1827,11 +1800,6 @@ operator|&
 name|fc
 operator|->
 name|tlabel_lock
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|fc
