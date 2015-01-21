@@ -63,8 +63,7 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|bus_space
+name|bus_space_tag_t
 name|obio_bs_tag
 decl_stmt|;
 end_decl_stmt
