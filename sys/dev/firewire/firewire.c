@@ -3948,6 +3948,15 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* Bump generation and reload. */
+name|src
+operator|->
+name|businfo
+operator|.
+name|generation
+operator|++
+expr_stmt|;
+comment|/* Handle generation count wraps. */
 if|if
 condition|(
 name|src
@@ -3955,9 +3964,8 @@ operator|->
 name|businfo
 operator|.
 name|generation
-operator|++
-operator|>
-name|FW_MAX_GENERATION
+operator|<
+name|FW_GENERATION_CHANGEABLE
 condition|)
 name|src
 operator|->
@@ -3966,6 +3974,16 @@ operator|.
 name|generation
 operator|=
 name|FW_GENERATION_CHANGEABLE
+expr_stmt|;
+comment|/* Recalculate CRC to account for generation change. */
+name|crom_load
+argument_list|(
+name|src
+argument_list|,
+name|newrom
+argument_list|,
+name|CROMSIZE
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -5892,6 +5910,15 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|if
+condition|(
+name|xfer
+operator|->
+name|fc
+operator|!=
+name|NULL
+condition|)
+block|{
 name|FW_GLOCK
 argument_list|(
 name|xfer
@@ -5945,15 +5972,6 @@ operator|->
 name|fc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|xfer
-operator|->
-name|fc
-operator|!=
-name|NULL
-condition|)
-block|{
 comment|/* 		 * Ensure that any tlabel owner can't access this 		 * xfer after it's freed. 		 */
 name|fw_tl_free
 argument_list|(
