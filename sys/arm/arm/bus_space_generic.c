@@ -109,8 +109,7 @@ begin_function
 name|int
 name|generic_bs_map
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 name|t
 parameter_list|,
 name|bus_addr_t
@@ -172,8 +171,7 @@ begin_function
 name|int
 name|generic_bs_alloc
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 name|t
 parameter_list|,
 name|bus_addr_t
@@ -215,8 +213,7 @@ begin_function
 name|void
 name|generic_bs_unmap
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 name|t
 parameter_list|,
 name|bus_space_handle_t
@@ -243,8 +240,7 @@ begin_function
 name|void
 name|generic_bs_free
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 name|t
 parameter_list|,
 name|bus_space_handle_t
@@ -266,8 +262,7 @@ begin_function
 name|int
 name|generic_bs_subregion
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 name|t
 parameter_list|,
 name|bus_space_handle_t
@@ -303,8 +298,7 @@ begin_function
 name|void
 name|generic_bs_barrier
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 name|t
 parameter_list|,
 name|bus_space_handle_t

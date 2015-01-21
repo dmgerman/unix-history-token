@@ -125,7 +125,7 @@ init|=
 block|{
 comment|/* cookie */
 operator|.
-name|bs_cookie
+name|bs_privdata
 operator|=
 operator|(
 name|void

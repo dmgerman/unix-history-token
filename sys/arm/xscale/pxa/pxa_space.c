@@ -277,7 +277,7 @@ argument_list|)
 expr_stmt|;
 name|_obio_tag
 operator|.
-name|bs_cookie
+name|bs_privdata
 operator|=
 operator|(
 name|void
@@ -355,7 +355,7 @@ argument_list|)
 expr_stmt|;
 name|tag
 operator|->
-name|bs_cookie
+name|bs_privdata
 operator|=
 operator|(
 name|void
@@ -386,7 +386,7 @@ parameter_list|,
 name|base
 parameter_list|)
 define|\
-value|type								\ 	proto(void *cookie, bus_space_handle_t bsh, bus_size_t offset)	\ 	{								\ 		bus_addr_t	tag_offset;				\ 		type		value;					\ 		tag_offset = (bus_addr_t)cookie;			\ 		value = base(NULL, bsh + tag_offset, offset);		\ 		return (value);						\ 	}
+value|type								\ 	proto(bus_space_tag_t tag, bus_space_handle_t bsh, bus_size_t offset)	\ 	{								\ 		bus_addr_t	tag_offset;				\ 		type		value;					\ 		tag_offset = (bus_addr_t)tag->bs_privdata;		\ 		value = base(NULL, bsh + tag_offset, offset);		\ 		return (value);						\ 	}
 end_define
 
 begin_macro
@@ -440,7 +440,7 @@ parameter_list|,
 name|base
 parameter_list|)
 define|\
-value|void								\ 	proto(void *cookie, bus_space_handle_t bsh, bus_size_t offset,	\ 	    type value)							\ 	{								\ 		bus_addr_t	tag_offset;				\ 		tag_offset = (bus_addr_t)cookie;			\ 		base(NULL, bsh + tag_offset, offset, value);		\ 	}
+value|void								\ 	proto(bus_space_tag_t tag, bus_space_handle_t bsh, bus_size_t offset,	\ 	    type value)							\ 	{								\ 		bus_addr_t	tag_offset;				\ 		tag_offset = (bus_addr_t)tag->bs_privdata;		\ 		base(NULL, bsh + tag_offset, offset, value);		\ 	}
 end_define
 
 begin_macro
@@ -494,7 +494,7 @@ parameter_list|,
 name|base
 parameter_list|)
 define|\
-value|void								\ 	proto(void *cookie, bus_space_handle_t bsh, bus_size_t offset,	\ 	    type *dest, bus_size_t count)				\ 	{								\ 		bus_addr_t	tag_offset;				\ 		tag_offset = (bus_addr_t)cookie;			\ 		base(NULL, bsh + tag_offset, offset, dest, count);	\ 	}
+value|void								\ 	proto(bus_space_tag_t tag, bus_space_handle_t bsh, bus_size_t offset,	\ 	    type *dest, bus_size_t count)				\ 	{								\ 		bus_addr_t	tag_offset;				\ 		tag_offset = (bus_addr_t)tag->bs_privdata;		\ 		base(NULL, bsh + tag_offset, offset, dest, count);	\ 	}
 end_define
 
 begin_macro
@@ -548,7 +548,7 @@ parameter_list|,
 name|base
 parameter_list|)
 define|\
-value|void								\ 	proto(void *cookie, bus_space_handle_t bsh, bus_size_t offset,	\ 	    const type *src, bus_size_t count)				\ 	{								\ 		bus_addr_t	tag_offset;				\ 		tag_offset = (bus_addr_t)cookie;			\ 		base(NULL, bsh + tag_offset, offset, src, count);	\ 	}
+value|void								\ 	proto(bus_space_tag_t tag, bus_space_handle_t bsh, bus_size_t offset,	\ 	    const type *src, bus_size_t count)				\ 	{								\ 		bus_addr_t	tag_offset;				\ 		tag_offset = (bus_addr_t)tag->bs_privdata;		\ 		base(NULL, bsh + tag_offset, offset, src, count);	\ 	}
 end_define
 
 begin_macro

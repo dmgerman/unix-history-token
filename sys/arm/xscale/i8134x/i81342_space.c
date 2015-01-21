@@ -337,7 +337,7 @@ name|i81342_bs_tag_template
 expr_stmt|;
 name|bs
 operator|->
-name|bs_cookie
+name|bs_privdata
 operator|=
 name|cookie
 expr_stmt|;
@@ -363,7 +363,7 @@ name|i81342_bs_tag_template
 expr_stmt|;
 name|bs
 operator|->
-name|bs_cookie
+name|bs_privdata
 operator|=
 name|cookie
 expr_stmt|;
@@ -413,7 +413,7 @@ name|i81342_bs_tag_template
 expr_stmt|;
 name|bs
 operator|->
-name|bs_cookie
+name|bs_privdata
 operator|=
 name|cookie
 expr_stmt|;
@@ -452,9 +452,8 @@ begin_function
 name|int
 name|i81342_bs_subregion
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_space_handle_t
 name|bsh
@@ -489,9 +488,8 @@ begin_function
 name|void
 name|i81342_bs_barrier
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_space_handle_t
 name|bsh
@@ -518,9 +516,8 @@ begin_function
 name|int
 name|i81342_io_bs_map
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_addr_t
 name|bpa
@@ -553,9 +550,8 @@ begin_function
 name|void
 name|i81342_io_bs_unmap
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_space_handle_t
 name|h
@@ -572,9 +568,8 @@ begin_function
 name|int
 name|i81342_io_bs_alloc
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_addr_t
 name|rstart
@@ -615,9 +610,8 @@ begin_function
 name|void
 name|i81342_io_bs_free
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_space_handle_t
 name|bsh
@@ -667,9 +661,8 @@ begin_function
 name|int
 name|i81342_mem_bs_map
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_addr_t
 name|bpa
@@ -695,7 +688,9 @@ expr|struct
 name|i81342_pci_softc
 operator|*
 operator|)
-name|t
+name|tag
+operator|->
+name|bs_privdata
 decl_stmt|;
 name|struct
 name|i81342_pci_map
@@ -937,9 +932,8 @@ begin_function
 name|void
 name|i81342_mem_bs_unmap
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_space_handle_t
 name|h
@@ -951,7 +945,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|vm_offset_t va, endva;  	va = trunc_page((vm_offset_t)t); 	endva = va + round_page(size);
+block|vm_offset_t va, endva;  	va = trunc_page((vm_offset_t)h); 	endva = va + round_page(size);
 comment|/* Free the kernel virtual mapping. */
 block|kva_free(va, endva - va);
 endif|#
@@ -963,9 +957,8 @@ begin_function
 name|int
 name|i81342_mem_bs_alloc
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_addr_t
 name|rstart
@@ -1006,9 +999,8 @@ begin_function
 name|void
 name|i81342_mem_bs_free
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_space_handle_t
 name|bsh

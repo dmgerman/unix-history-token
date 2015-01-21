@@ -61,7 +61,7 @@ block|{
 comment|/* cookie */
 name|void
 modifier|*
-name|bs_cookie
+name|bs_privdata
 decl_stmt|;
 comment|/* mapping/unmapping */
 name|int
@@ -70,8 +70,7 @@ modifier|*
 name|bs_map
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_addr_t
 parameter_list|,
@@ -89,8 +88,7 @@ modifier|*
 name|bs_unmap
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
@@ -103,8 +101,7 @@ modifier|*
 name|bs_subregion
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
@@ -123,8 +120,7 @@ modifier|*
 name|bs_alloc
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_addr_t
 parameter_list|,
@@ -151,8 +147,7 @@ modifier|*
 name|bs_free
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
@@ -167,8 +162,7 @@ modifier|*
 name|bs_barrier
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
@@ -180,56 +174,52 @@ name|int
 parameter_list|)
 function_decl|;
 comment|/* read (single) */
-name|u_int8_t
+name|uint8_t
 function_decl|(
 modifier|*
 name|bs_r_1
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
 function_decl|;
-name|u_int16_t
+name|uint16_t
 function_decl|(
 modifier|*
 name|bs_r_2
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
 function_decl|;
-name|u_int32_t
+name|uint32_t
 function_decl|(
 modifier|*
 name|bs_r_4
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
 function_decl|;
-name|u_int64_t
+name|uint64_t
 function_decl|(
 modifier|*
 name|bs_r_8
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
@@ -243,14 +233,13 @@ modifier|*
 name|bs_rm_1
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -262,14 +251,13 @@ modifier|*
 name|bs_rm_2
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -281,14 +269,13 @@ modifier|*
 name|bs_rm_4
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -300,14 +287,13 @@ modifier|*
 name|bs_rm_8
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -320,14 +306,13 @@ modifier|*
 name|bs_rr_1
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -339,14 +324,13 @@ modifier|*
 name|bs_rr_2
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -358,14 +342,13 @@ modifier|*
 name|bs_rr_4
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -377,14 +360,13 @@ modifier|*
 name|bs_rr_8
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -397,14 +379,13 @@ modifier|*
 name|bs_w_1
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|)
 function_decl|;
 name|void
@@ -413,14 +394,13 @@ modifier|*
 name|bs_w_2
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 name|void
@@ -429,14 +409,13 @@ modifier|*
 name|bs_w_4
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 name|void
@@ -445,14 +424,13 @@ modifier|*
 name|bs_w_8
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 parameter_list|)
 function_decl|;
 comment|/* write multiple */
@@ -462,15 +440,14 @@ modifier|*
 name|bs_wm_1
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -482,15 +459,14 @@ modifier|*
 name|bs_wm_2
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -502,15 +478,14 @@ modifier|*
 name|bs_wm_4
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -522,15 +497,14 @@ modifier|*
 name|bs_wm_8
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int64_t
+name|uint64_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -543,15 +517,14 @@ modifier|*
 name|bs_wr_1
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -563,15 +536,14 @@ modifier|*
 name|bs_wr_2
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -583,15 +555,14 @@ modifier|*
 name|bs_wr_4
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -603,15 +574,14 @@ modifier|*
 name|bs_wr_8
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int64_t
+name|uint64_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -624,14 +594,13 @@ modifier|*
 name|bs_sm_1
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
@@ -642,14 +611,13 @@ modifier|*
 name|bs_sm_2
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
@@ -660,14 +628,13 @@ modifier|*
 name|bs_sm_4
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
@@ -678,14 +645,13 @@ modifier|*
 name|bs_sm_8
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
@@ -697,14 +663,13 @@ modifier|*
 name|bs_sr_1
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
@@ -715,14 +680,13 @@ modifier|*
 name|bs_sr_2
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
@@ -733,14 +697,13 @@ modifier|*
 name|bs_sr_4
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
@@ -751,14 +714,13 @@ modifier|*
 name|bs_sr_8
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
@@ -770,8 +732,7 @@ modifier|*
 name|bs_c_1
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
@@ -790,8 +751,7 @@ modifier|*
 name|bs_c_2
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
@@ -810,8 +770,7 @@ modifier|*
 name|bs_c_4
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
@@ -830,8 +789,7 @@ modifier|*
 name|bs_c_8
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
@@ -845,56 +803,52 @@ name|bus_size_t
 parameter_list|)
 function_decl|;
 comment|/* read stream (single) */
-name|u_int8_t
+name|uint8_t
 function_decl|(
 modifier|*
 name|bs_r_1_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
 function_decl|;
-name|u_int16_t
+name|uint16_t
 function_decl|(
 modifier|*
 name|bs_r_2_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
 function_decl|;
-name|u_int32_t
+name|uint32_t
 function_decl|(
 modifier|*
 name|bs_r_4_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|)
 function_decl|;
-name|u_int64_t
+name|uint64_t
 function_decl|(
 modifier|*
 name|bs_r_8_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
@@ -908,14 +862,13 @@ modifier|*
 name|bs_rm_1_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -927,14 +880,13 @@ modifier|*
 name|bs_rm_2_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -946,14 +898,13 @@ modifier|*
 name|bs_rm_4_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -965,14 +916,13 @@ modifier|*
 name|bs_rm_8_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -985,14 +935,13 @@ modifier|*
 name|bs_rr_1_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -1004,14 +953,13 @@ modifier|*
 name|bs_rr_2_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -1023,14 +971,13 @@ modifier|*
 name|bs_rr_4_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -1042,14 +989,13 @@ modifier|*
 name|bs_rr_8_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -1062,14 +1008,13 @@ modifier|*
 name|bs_w_1_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|)
 function_decl|;
 name|void
@@ -1078,14 +1023,13 @@ modifier|*
 name|bs_w_2_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 name|void
@@ -1094,14 +1038,13 @@ modifier|*
 name|bs_w_4_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 name|void
@@ -1110,14 +1053,13 @@ modifier|*
 name|bs_w_8_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 parameter_list|)
 function_decl|;
 comment|/* write multiple stream */
@@ -1127,15 +1069,14 @@ modifier|*
 name|bs_wm_1_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -1147,15 +1088,14 @@ modifier|*
 name|bs_wm_2_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -1167,15 +1107,14 @@ modifier|*
 name|bs_wm_4_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -1187,15 +1126,14 @@ modifier|*
 name|bs_wm_8_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int64_t
+name|uint64_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -1208,15 +1146,14 @@ modifier|*
 name|bs_wr_1_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -1228,15 +1165,14 @@ modifier|*
 name|bs_wr_2_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -1248,15 +1184,14 @@ modifier|*
 name|bs_wr_4_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -1268,15 +1203,14 @@ modifier|*
 name|bs_wr_8_s
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|bus_space_tag_t
 parameter_list|,
 name|bus_space_handle_t
 parameter_list|,
 name|bus_size_t
 parameter_list|,
 specifier|const
-name|u_int64_t
+name|uint64_t
 modifier|*
 parameter_list|,
 name|bus_size_t
@@ -1334,7 +1268,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|(*(t)->__bs_opname(type,sz))((t)->bs_cookie, h, o, a, c)
+value|(*(t)->__bs_opname(type,sz))((t), h, o, a, c)
 end_define
 
 begin_define
@@ -1357,7 +1291,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|(*(t)->__bs_opname(type,sz))((t)->bs_cookie, h, o, v, c)
+value|(*(t)->__bs_opname(type,sz))((t), h, o, v, c)
 end_define
 
 begin_define
@@ -1380,7 +1314,7 @@ parameter_list|,
 name|cnt
 parameter_list|)
 define|\
-value|(*(t)->__bs_opname(c,sz))((t)->bs_cookie, h1, o1, h2, o2, cnt)
+value|(*(t)->__bs_opname(c,sz))((t), h1, o1, h2, o2, cnt)
 end_define
 
 begin_define
@@ -1409,7 +1343,7 @@ parameter_list|,
 name|o
 parameter_list|)
 define|\
-value|(*(t)->__bs_opname_s(r,sz))((t)->bs_cookie, h, o)
+value|(*(t)->__bs_opname_s(r,sz))((t), h, o)
 end_define
 
 begin_define
@@ -1428,7 +1362,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|(*(t)->__bs_opname_s(w,sz))((t)->bs_cookie, h, o, v)
+value|(*(t)->__bs_opname_s(w,sz))((t), h, o, v)
 end_define
 
 begin_define
@@ -1451,7 +1385,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|(*(t)->__bs_opname_s(type,sz))((t)->bs_cookie, h, o, a, c)
+value|(*(t)->__bs_opname_s(type,sz))((t), h, o, a, c)
 end_define
 
 begin_define
@@ -1466,7 +1400,7 @@ parameter_list|,
 name|TYP
 parameter_list|)
 define|\
-value|static inline TYP						\ 	IFN(bus_space_tag_t t, bus_space_handle_t h, bus_size_t o)	\ 	{								\ 									\ 		if (__predict_true(t->MBR == NULL))			\ 			return (*(volatile TYP *)(h + o));		\ 		else							\ 			return (t->MBR(t->bs_cookie, h, o));		\ 	}
+value|static inline TYP						\ 	IFN(bus_space_tag_t t, bus_space_handle_t h, bus_size_t o)	\ 	{								\ 									\ 		if (__predict_true(t->MBR == NULL))			\ 			return (*(volatile TYP *)(h + o));		\ 		else							\ 			return (t->MBR(t, h, o));		\ 	}
 end_define
 
 begin_define
@@ -1481,7 +1415,7 @@ parameter_list|,
 name|TYP
 parameter_list|)
 define|\
-value|static inline void						\ 	IFN(bus_space_tag_t t, bus_space_handle_t h, bus_size_t o, TYP v)\ 	{								\ 									\ 		if (__predict_true(t->MBR == NULL))			\ 			*(volatile TYP *)(h + o) = v;			\ 		else							\ 			t->MBR(t->bs_cookie, h, o, v);			\ 	}
+value|static inline void						\ 	IFN(bus_space_tag_t t, bus_space_handle_t h, bus_size_t o, TYP v)\ 	{								\ 									\ 		if (__predict_true(t->MBR == NULL))			\ 			*(volatile TYP *)(h + o) = v;			\ 		else							\ 			t->MBR(t, h, o, v);			\ 	}
 end_define
 
 begin_comment
@@ -1504,7 +1438,7 @@ parameter_list|,
 name|hp
 parameter_list|)
 define|\
-value|(*(t)->bs_map)((t)->bs_cookie, (a), (s), (c), (hp))
+value|(*(t)->bs_map)((t), (a), (s), (c), (hp))
 end_define
 
 begin_define
@@ -1519,7 +1453,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|(*(t)->bs_unmap)((t)->bs_cookie, (h), (s))
+value|(*(t)->bs_unmap)((t), (h), (s))
 end_define
 
 begin_define
@@ -1538,7 +1472,7 @@ parameter_list|,
 name|hp
 parameter_list|)
 define|\
-value|(*(t)->bs_subregion)((t)->bs_cookie, (h), (o), (s), (hp))
+value|(*(t)->bs_subregion)((t), (h), (o), (s), (hp))
 end_define
 
 begin_comment
@@ -1569,7 +1503,7 @@ parameter_list|,
 name|hp
 parameter_list|)
 define|\
-value|(*(t)->bs_alloc)((t)->bs_cookie, (rs), (re), (s), (a), (b),	\ 	    (c), (ap), (hp))
+value|(*(t)->bs_alloc)((t), (rs), (re), (s), (a), (b),	\ 	    (c), (ap), (hp))
 end_define
 
 begin_define
@@ -1584,7 +1518,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|(*(t)->bs_free)((t)->bs_cookie, (h), (s))
+value|(*(t)->bs_free)((t), (h), (s))
 end_define
 
 begin_comment
@@ -1607,7 +1541,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|(*(t)->bs_barrier)((t)->bs_cookie, (h), (o), (l), (f))
+value|(*(t)->bs_barrier)((t), (h), (o), (l), (f))
 end_define
 
 begin_define
@@ -2708,7 +2642,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|int	__bs_c(f,_bs_map) (void *t, bus_addr_t addr,		\ 	    bus_size_t size, int cacheable, bus_space_handle_t *bshp);
+value|int	__bs_c(f,_bs_map) (bus_space_tag_t t, bus_addr_t addr,		\ 	    bus_size_t size, int cacheable, bus_space_handle_t *bshp);
 end_define
 
 begin_define
@@ -2719,7 +2653,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_unmap) (void *t, bus_space_handle_t bsh,		\ 	    bus_size_t size);
+value|void	__bs_c(f,_bs_unmap) (bus_space_tag_t t, bus_space_handle_t bsh,		\ 	    bus_size_t size);
 end_define
 
 begin_define
@@ -2730,7 +2664,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|int	__bs_c(f,_bs_subregion) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, bus_size_t size, 			\ 	    bus_space_handle_t *nbshp);
+value|int	__bs_c(f,_bs_subregion) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, bus_size_t size, 			\ 	    bus_space_handle_t *nbshp);
 end_define
 
 begin_define
@@ -2741,7 +2675,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|int	__bs_c(f,_bs_alloc) (void *t, bus_addr_t rstart,		\ 	    bus_addr_t rend, bus_size_t size, bus_size_t align,		\ 	    bus_size_t boundary, int cacheable, bus_addr_t *addrp,	\ 	    bus_space_handle_t *bshp);
+value|int	__bs_c(f,_bs_alloc) (bus_space_tag_t t, bus_addr_t rstart,		\ 	    bus_addr_t rend, bus_size_t size, bus_size_t align,		\ 	    bus_size_t boundary, int cacheable, bus_addr_t *addrp,	\ 	    bus_space_handle_t *bshp);
 end_define
 
 begin_define
@@ -2752,7 +2686,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_free) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t size);
+value|void	__bs_c(f,_bs_free) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t size);
 end_define
 
 begin_define
@@ -2774,7 +2708,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_barrier) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, bus_size_t len, int flags);
+value|void	__bs_c(f,_bs_barrier) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, bus_size_t len, int flags);
 end_define
 
 begin_define
@@ -2785,7 +2719,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|u_int8_t	__bs_c(f,_bs_r_1) (void *t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
+value|uint8_t	__bs_c(f,_bs_r_1) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
 end_define
 
 begin_define
@@ -2796,7 +2730,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|u_int16_t	__bs_c(f,_bs_r_2) (void *t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
+value|uint16_t	__bs_c(f,_bs_r_2) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
 end_define
 
 begin_define
@@ -2807,7 +2741,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|u_int32_t	__bs_c(f,_bs_r_4) (void *t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
+value|uint32_t	__bs_c(f,_bs_r_4) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
 end_define
 
 begin_define
@@ -2818,7 +2752,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|u_int64_t	__bs_c(f,_bs_r_8) (void *t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
+value|uint64_t	__bs_c(f,_bs_r_8) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
 end_define
 
 begin_define
@@ -2829,7 +2763,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|u_int8_t	__bs_c(f,_bs_r_1_s) (void *t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
+value|uint8_t	__bs_c(f,_bs_r_1_s) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
 end_define
 
 begin_define
@@ -2840,7 +2774,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|u_int16_t	__bs_c(f,_bs_r_2_s) (void *t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
+value|uint16_t	__bs_c(f,_bs_r_2_s) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
 end_define
 
 begin_define
@@ -2851,7 +2785,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|u_int32_t	__bs_c(f,_bs_r_4_s) (void *t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
+value|uint32_t	__bs_c(f,_bs_r_4_s) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 		    bus_size_t offset);
 end_define
 
 begin_define
@@ -2862,7 +2796,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_w_1) (void *t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, u_int8_t value);
+value|void	__bs_c(f,_bs_w_1) (bus_space_tag_t t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, uint8_t value);
 end_define
 
 begin_define
@@ -2873,7 +2807,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_w_2) (void *t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, u_int16_t value);
+value|void	__bs_c(f,_bs_w_2) (bus_space_tag_t t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, uint16_t value);
 end_define
 
 begin_define
@@ -2884,7 +2818,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_w_4) (void *t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, u_int32_t value);
+value|void	__bs_c(f,_bs_w_4) (bus_space_tag_t t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, uint32_t value);
 end_define
 
 begin_define
@@ -2895,7 +2829,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_w_8) (void *t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, u_int64_t value);
+value|void	__bs_c(f,_bs_w_8) (bus_space_tag_t t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, uint64_t value);
 end_define
 
 begin_define
@@ -2906,7 +2840,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_w_1_s) (void *t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, u_int8_t value);
+value|void	__bs_c(f,_bs_w_1_s) (bus_space_tag_t t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, uint8_t value);
 end_define
 
 begin_define
@@ -2917,7 +2851,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_w_2_s) (void *t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, u_int16_t value);
+value|void	__bs_c(f,_bs_w_2_s) (bus_space_tag_t t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, uint16_t value);
 end_define
 
 begin_define
@@ -2928,7 +2862,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_w_4_s) (void *t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, u_int32_t value);
+value|void	__bs_c(f,_bs_w_4_s) (bus_space_tag_t t, bus_space_handle_t bsh,		\ 	    bus_size_t offset, uint32_t value);
 end_define
 
 begin_define
@@ -2939,7 +2873,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_rm_1) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int8_t *addr, bus_size_t count);
+value|void	__bs_c(f,_bs_rm_1) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint8_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -2950,7 +2884,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_rm_2) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int16_t *addr, bus_size_t count);
+value|void	__bs_c(f,_bs_rm_2) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint16_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -2961,7 +2895,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_rm_4) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int32_t *addr, bus_size_t count);
+value|void	__bs_c(f,_bs_rm_4) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint32_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -2972,7 +2906,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_rm_8) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int64_t *addr, bus_size_t count);
+value|void	__bs_c(f,_bs_rm_8) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint64_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -2983,7 +2917,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_wm_1) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const u_int8_t *addr, bus_size_t count);
+value|void	__bs_c(f,_bs_wm_1) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const uint8_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -2994,7 +2928,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_wm_2) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const u_int16_t *addr, bus_size_t count);
+value|void	__bs_c(f,_bs_wm_2) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const uint16_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -3005,7 +2939,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_wm_4) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const u_int32_t *addr, bus_size_t count);
+value|void	__bs_c(f,_bs_wm_4) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const uint32_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -3016,7 +2950,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_wm_8) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const u_int64_t *addr, bus_size_t count);
+value|void	__bs_c(f,_bs_wm_8) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const uint64_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -3027,7 +2961,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f, _bs_rr_1) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int8_t *addr, bus_size_t count);
+value|void	__bs_c(f, _bs_rr_1) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint8_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -3038,7 +2972,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f, _bs_rr_2) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int16_t *addr, bus_size_t count);
+value|void	__bs_c(f, _bs_rr_2) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint16_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -3049,7 +2983,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f, _bs_rr_4) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int32_t *addr, bus_size_t count);
+value|void	__bs_c(f, _bs_rr_4) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint32_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -3060,7 +2994,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f, _bs_rr_8) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int64_t *addr, bus_size_t count);
+value|void	__bs_c(f, _bs_rr_8) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint64_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -3071,7 +3005,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f, _bs_wr_1) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const u_int8_t *addr, bus_size_t count);
+value|void	__bs_c(f, _bs_wr_1) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const uint8_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -3082,7 +3016,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f, _bs_wr_2) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const u_int16_t *addr, bus_size_t count);
+value|void	__bs_c(f, _bs_wr_2) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const uint16_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -3093,7 +3027,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f, _bs_wr_4) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const u_int32_t *addr, bus_size_t count);
+value|void	__bs_c(f, _bs_wr_4) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const uint32_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -3104,7 +3038,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f, _bs_wr_8) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const u_int64_t *addr, bus_size_t count);
+value|void	__bs_c(f, _bs_wr_8) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, const uint64_t *addr, bus_size_t count);
 end_define
 
 begin_define
@@ -3115,7 +3049,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_sm_1) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int8_t value, bus_size_t count);
+value|void	__bs_c(f,_bs_sm_1) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint8_t value, bus_size_t count);
 end_define
 
 begin_define
@@ -3126,7 +3060,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_sm_2) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int16_t value, bus_size_t count);
+value|void	__bs_c(f,_bs_sm_2) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint16_t value, bus_size_t count);
 end_define
 
 begin_define
@@ -3137,7 +3071,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_sm_4) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int32_t value, bus_size_t count);
+value|void	__bs_c(f,_bs_sm_4) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint32_t value, bus_size_t count);
 end_define
 
 begin_define
@@ -3148,7 +3082,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_sm_8) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int64_t value, bus_size_t count);
+value|void	__bs_c(f,_bs_sm_8) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint64_t value, bus_size_t count);
 end_define
 
 begin_define
@@ -3159,7 +3093,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_sr_1) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int8_t value, bus_size_t count);
+value|void	__bs_c(f,_bs_sr_1) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint8_t value, bus_size_t count);
 end_define
 
 begin_define
@@ -3170,7 +3104,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_sr_2) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int16_t value, bus_size_t count);
+value|void	__bs_c(f,_bs_sr_2) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint16_t value, bus_size_t count);
 end_define
 
 begin_define
@@ -3181,7 +3115,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_sr_4) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int32_t value, bus_size_t count);
+value|void	__bs_c(f,_bs_sr_4) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint32_t value, bus_size_t count);
 end_define
 
 begin_define
@@ -3192,7 +3126,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_sr_8) (void *t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, u_int64_t value, bus_size_t count);
+value|void	__bs_c(f,_bs_sr_8) (bus_space_tag_t t, bus_space_handle_t bsh,	\ 	    bus_size_t offset, uint64_t value, bus_size_t count);
 end_define
 
 begin_define
@@ -3203,7 +3137,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_c_1) (void *t, bus_space_handle_t bsh1,	\ 	    bus_size_t offset1, bus_space_handle_t bsh2,		\ 	    bus_size_t offset2, bus_size_t count);
+value|void	__bs_c(f,_bs_c_1) (bus_space_tag_t t, bus_space_handle_t bsh1,	\ 	    bus_size_t offset1, bus_space_handle_t bsh2,		\ 	    bus_size_t offset2, bus_size_t count);
 end_define
 
 begin_define
@@ -3214,7 +3148,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_c_2) (void *t, bus_space_handle_t bsh1,	\ 	    bus_size_t offset1, bus_space_handle_t bsh2,		\ 	    bus_size_t offset2, bus_size_t count);
+value|void	__bs_c(f,_bs_c_2) (bus_space_tag_t t, bus_space_handle_t bsh1,	\ 	    bus_size_t offset1, bus_space_handle_t bsh2,		\ 	    bus_size_t offset2, bus_size_t count);
 end_define
 
 begin_define
@@ -3225,7 +3159,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_c_4) (void *t, bus_space_handle_t bsh1,	\ 	    bus_size_t offset1, bus_space_handle_t bsh2,		\ 	    bus_size_t offset2, bus_size_t count);
+value|void	__bs_c(f,_bs_c_4) (bus_space_tag_t t, bus_space_handle_t bsh1,	\ 	    bus_size_t offset1, bus_space_handle_t bsh2,		\ 	    bus_size_t offset2, bus_size_t count);
 end_define
 
 begin_define
@@ -3236,7 +3170,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|void	__bs_c(f,_bs_c_8) (void *t, bus_space_handle_t bsh1,	\ 	    bus_size_t offset1, bus_space_handle_t bsh2,		\ 	    bus_size_t offset2, bus_size_t count);
+value|void	__bs_c(f,_bs_c_8) (bus_space_tag_t t, bus_space_handle_t bsh1,	\ 	    bus_size_t offset1, bus_space_handle_t bsh2,		\ 	    bus_size_t offset2, bus_size_t count);
 end_define
 
 begin_define
