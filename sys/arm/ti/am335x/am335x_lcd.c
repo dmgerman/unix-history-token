@@ -1833,7 +1833,9 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 if|if
 condition|(
@@ -1887,7 +1889,9 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 if|if
 condition|(
@@ -1989,6 +1993,8 @@ condition|)
 block|{
 comment|/* TODO: Handle ACB */
 block|}
+name|done
+label|:
 name|LCD_WRITE4
 argument_list|(
 name|sc
