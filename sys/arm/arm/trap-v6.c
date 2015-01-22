@@ -203,6 +203,27 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|last_fault_code
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* For the benefit of pmap_fault_fixup() */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|ksig
@@ -1401,6 +1422,15 @@ name|ftype
 operator||=
 name|VM_PROT_EXECUTE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|last_fault_code
+operator|=
+name|fsr
+expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|ARM_NEW_PMAP
