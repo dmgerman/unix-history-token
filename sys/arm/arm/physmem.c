@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/physmem.h>
 end_include
 
@@ -171,12 +177,18 @@ comment|/* of zeroes to terminate. */
 end_comment
 
 begin_comment
-comment|/* This is the total number of hardware pages, excluded or not. */
+comment|/*  * realmem is the total number of hardware pages, excluded or not.  * Maxmem is one greater than the last physical page number.  */
 end_comment
 
 begin_decl_stmt
 name|long
 name|realmem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|Maxmem
 decl_stmt|;
 end_decl_stmt
 
@@ -475,7 +487,7 @@ end_comment
 
 begin_function
 specifier|static
-name|long
+name|size_t
 name|regions_to_avail
 parameter_list|(
 name|vm_paddr_t
@@ -484,6 +496,10 @@ name|avail
 parameter_list|,
 name|uint32_t
 name|exflags
+parameter_list|,
+name|long
+modifier|*
+name|pavail
 parameter_list|)
 block|{
 name|size_t
@@ -771,9 +787,18 @@ literal|"Not enough space in the dump/phys_avail arrays"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pavail
+condition|)
+operator|*
+name|pavail
+operator|=
+name|availmem
+expr_stmt|;
 return|return
 operator|(
-name|availmem
+name|acnt
 operator|)
 return|;
 block|}
@@ -1059,7 +1084,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process all the regions added earlier into the global avail lists.  */
+comment|/*  * Process all the regions added earlier into the global avail lists.  *  * Updates the kernel global 'physmem' with the number of physical pages  * available for use (all pages not in any exclusion region).  *  * Updates the kernel global 'Maxmem' with the page number one greater then the  * last page of physical memory in the system.  */
 end_comment
 
 begin_function
@@ -1069,20 +1094,51 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|size_t
+name|nextidx
+decl_stmt|;
 name|regions_to_avail
 argument_list|(
 name|dump_avail
 argument_list|,
 name|EXFLAG_NODUMP
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-name|physmem
+name|nextidx
 operator|=
 name|regions_to_avail
 argument_list|(
 name|phys_avail
 argument_list|,
 name|EXFLAG_NOALLOC
+argument_list|,
+operator|&
+name|physmem
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nextidx
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"No memory entries in phys_avail"
+argument_list|)
+expr_stmt|;
+name|Maxmem
+operator|=
+name|atop
+argument_list|(
+name|phys_avail
+index|[
+name|nextidx
+operator|-
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 block|}
