@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -160,7 +166,7 @@ name|E
 parameter_list|,
 name|EH
 parameter_list|)
-value|do {				\ 		if (fsz != (EH)->e_shentsize ||			\ 		    shoff + fsz * shnum> e->e_rawsize) {	\ 			LIBELF_SET_ERROR(HEADER, 0);		\ 			return (0);				\ 		}						\ 	} while (0)
+value|do {				\ 		if (shoff> e->e_rawsize ||			\ 		    fsz != (EH)->e_shentsize ||			\ 		    shnum> SIZE_MAX / fsz ||			\ 		    fsz * shnum> e->e_rawsize - shoff) {	\ 			LIBELF_SET_ERROR(HEADER, 0);		\ 			return (0);				\ 		}						\ 	} while (0)
 name|ec
 operator|=
 name|e
