@@ -794,23 +794,23 @@ endif|#
 directive|endif
 argument|extern void	*rstcode
 argument_list|,
-argument|*rstsize; extern void	*trapcode
+argument|*rstcodeend; extern void	*trapcode
 argument_list|,
-argument|*trapsize
+argument|*trapcodeend
 argument_list|,
 argument|*trapcode2; extern void	*slbtrap
 argument_list|,
-argument|*slbtrapsize; extern void	*alitrap
+argument|*slbtrapend; extern void	*alitrap
 argument_list|,
-argument|*alisize; extern void	*dsitrap
+argument|*aliend; extern void	*dsitrap
 argument_list|,
-argument|*dsisize; extern void	*decrint
+argument|*dsiend; extern void	*decrint
 argument_list|,
 argument|*decrsize; extern void     *extint
 argument_list|,
 argument|*extsize; extern void	*dblow
 argument_list|,
-argument|*dbsize; extern void	*imisstrap
+argument|*dbend; extern void	*imisstrap
 argument_list|,
 argument|*imisssize; extern void	*dlmisstrap
 argument_list|,
@@ -818,7 +818,9 @@ argument|*dlmisssize; extern void	*dsmisstrap
 argument_list|,
 argument|*dsmisssize;  uintptr_t powerpc_init(vm_offset_t fdt, vm_offset_t toc, vm_offset_t ofentry, void *mdp) { 	struct		pcpu *pc; 	vm_offset_t	startkernel
 argument_list|,
-argument|endkernel; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
+argument|endkernel; 	void		*generictrap; 	size_t		trap_offset
+argument_list|,
+argument|trapsize; 	void		*kmdp;         char		*env; 	register_t	msr
 argument_list|,
 argument|scratch;
 ifdef|#
@@ -1177,6 +1179,20 @@ name|toc
 expr_stmt|;
 endif|#
 directive|endif
+name|trapsize
+operator|=
+operator|(
+name|size_t
+operator|)
+operator|&
+name|trapcodeend
+operator|-
+operator|(
+name|size_t
+operator|)
+operator|&
+name|trapcode
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
@@ -1196,7 +1212,13 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|rstsize
+name|rstcodeend
+operator|-
+operator|(
+name|size_t
+operator|)
+operator|&
+name|rstcode
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1221,7 +1243,13 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|dbsize
+name|dbend
+operator|-
+operator|(
+name|size_t
+operator|)
+operator|&
+name|dblow
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1243,7 +1271,13 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|dbsize
+name|dbend
+operator|-
+operator|(
+name|size_t
+operator|)
+operator|&
+name|dblow
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1265,7 +1299,13 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|dbsize
+name|dbend
+operator|-
+operator|(
+name|size_t
+operator|)
+operator|&
+name|dblow
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1287,7 +1327,13 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|dbsize
+name|dbend
+operator|-
+operator|(
+name|size_t
+operator|)
+operator|&
+name|dblow
 argument_list|)
 expr_stmt|;
 else|#
@@ -1302,10 +1348,6 @@ operator|*
 operator|)
 name|EXC_MCHK
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
@@ -1319,10 +1361,6 @@ operator|*
 operator|)
 name|EXC_PGM
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
@@ -1336,10 +1374,6 @@ operator|*
 operator|)
 name|EXC_TRC
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
@@ -1353,10 +1387,6 @@ operator|*
 operator|)
 name|EXC_BPT
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
@@ -1381,7 +1411,13 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|alisize
+name|aliend
+operator|-
+operator|(
+name|size_t
+operator|)
+operator|&
+name|alitrap
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1403,7 +1439,13 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|dsisize
+name|dsitrap
+operator|-
+operator|(
+name|size_t
+operator|)
+operator|&
+name|dsitrap
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1416,10 +1458,6 @@ operator|*
 operator|)
 name|EXC_ISI
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
@@ -1441,7 +1479,13 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|slbtrapsize
+name|slbtrapend
+operator|-
+operator|(
+name|size_t
+operator|)
+operator|&
+name|slbtrap
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1459,7 +1503,13 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|slbtrapsize
+name|slbtrapend
+operator|-
+operator|(
+name|size_t
+operator|)
+operator|&
+name|slbtrap
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1474,10 +1524,6 @@ operator|*
 operator|)
 name|EXC_EXI
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
@@ -1491,10 +1537,6 @@ operator|*
 operator|)
 name|EXC_FPU
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
@@ -1508,10 +1550,6 @@ operator|*
 operator|)
 name|EXC_DECR
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
@@ -1525,10 +1563,6 @@ operator|*
 operator|)
 name|EXC_SC
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
@@ -1542,10 +1576,6 @@ operator|*
 operator|)
 name|EXC_FPA
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
@@ -1559,10 +1589,6 @@ operator|*
 operator|)
 name|EXC_VEC
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
@@ -1576,10 +1602,6 @@ operator|*
 operator|)
 name|EXC_PERF
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
@@ -1593,10 +1615,6 @@ operator|*
 operator|)
 name|EXC_VECAST_G4
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
@@ -1610,10 +1628,6 @@ operator|*
 operator|)
 name|EXC_VECAST_G5
 argument_list|,
-operator|(
-name|size_t
-operator|)
-operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
