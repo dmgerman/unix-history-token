@@ -2769,10 +2769,10 @@ decl_stmt|;
 name|zbookmark_phys_t
 name|zb
 decl_stmt|;
-name|uint32_t
+name|arc_flags_t
 name|aflags
 init|=
-name|ARC_NOWAIT
+name|ARC_FLAG_NOWAIT
 decl_stmt|;
 name|DB_DNODE_ENTER
 argument_list|(
@@ -3099,7 +3099,7 @@ argument_list|)
 condition|)
 name|aflags
 operator||=
-name|ARC_L2CACHE
+name|ARC_FLAG_L2CACHE
 expr_stmt|;
 if|if
 condition|(
@@ -3110,7 +3110,7 @@ argument_list|)
 condition|)
 name|aflags
 operator||=
-name|ARC_L2COMPRESS
+name|ARC_FLAG_L2COMPRESS
 expr_stmt|;
 name|SET_BOOKMARK
 argument_list|(
@@ -3200,7 +3200,7 @@ if|if
 condition|(
 name|aflags
 operator|&
-name|ARC_CACHED
+name|ARC_FLAG_CACHED
 condition|)
 operator|*
 name|flags
@@ -10020,12 +10020,12 @@ name|dn_objset
 operator|->
 name|os_dsl_dataset
 decl_stmt|;
-name|uint32_t
+name|arc_flags_t
 name|aflags
 init|=
-name|ARC_NOWAIT
+name|ARC_FLAG_NOWAIT
 operator||
-name|ARC_PREFETCH
+name|ARC_FLAG_PREFETCH
 decl_stmt|;
 name|zbookmark_phys_t
 name|zb

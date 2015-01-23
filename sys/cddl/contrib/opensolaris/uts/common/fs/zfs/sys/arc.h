@@ -89,6 +89,134 @@ decl_stmt|;
 name|arc_done_func_t
 name|arc_getbuf_func
 decl_stmt|;
+typedef|typedef
+enum|enum
+name|arc_flags
+block|{
+comment|/* 	 * Public flags that can be passed into the ARC by external consumers. 	 */
+name|ARC_FLAG_NONE
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+comment|/* No flags set */
+name|ARC_FLAG_WAIT
+init|=
+literal|1
+operator|<<
+literal|1
+block|,
+comment|/* perform sync I/O */
+name|ARC_FLAG_NOWAIT
+init|=
+literal|1
+operator|<<
+literal|2
+block|,
+comment|/* perform async I/O */
+name|ARC_FLAG_PREFETCH
+init|=
+literal|1
+operator|<<
+literal|3
+block|,
+comment|/* I/O is a prefetch */
+name|ARC_FLAG_CACHED
+init|=
+literal|1
+operator|<<
+literal|4
+block|,
+comment|/* I/O was in cache */
+name|ARC_FLAG_L2CACHE
+init|=
+literal|1
+operator|<<
+literal|5
+block|,
+comment|/* cache in L2ARC */
+name|ARC_FLAG_L2COMPRESS
+init|=
+literal|1
+operator|<<
+literal|6
+block|,
+comment|/* compress in L2ARC */
+comment|/* 	 * Private ARC flags.  These flags are private ARC only flags that 	 * will show up in b_flags in the arc_hdr_buf_t. These flags should 	 * only be set by ARC code. 	 */
+name|ARC_FLAG_IN_HASH_TABLE
+init|=
+literal|1
+operator|<<
+literal|7
+block|,
+comment|/* buffer is hashed */
+name|ARC_FLAG_IO_IN_PROGRESS
+init|=
+literal|1
+operator|<<
+literal|8
+block|,
+comment|/* I/O in progress */
+name|ARC_FLAG_IO_ERROR
+init|=
+literal|1
+operator|<<
+literal|9
+block|,
+comment|/* I/O failed for buf */
+name|ARC_FLAG_FREED_IN_READ
+init|=
+literal|1
+operator|<<
+literal|10
+block|,
+comment|/* freed during read */
+name|ARC_FLAG_BUF_AVAILABLE
+init|=
+literal|1
+operator|<<
+literal|11
+block|,
+comment|/* block not in use */
+name|ARC_FLAG_INDIRECT
+init|=
+literal|1
+operator|<<
+literal|12
+block|,
+comment|/* indirect block */
+name|ARC_FLAG_FREE_IN_PROGRESS
+init|=
+literal|1
+operator|<<
+literal|13
+block|,
+comment|/*  about to be freed */
+name|ARC_FLAG_L2_WRITING
+init|=
+literal|1
+operator|<<
+literal|14
+block|,
+comment|/* write in progress */
+name|ARC_FLAG_L2_EVICTED
+init|=
+literal|1
+operator|<<
+literal|15
+block|,
+comment|/* evicted during I/O */
+name|ARC_FLAG_L2_WRITE_HEAD
+init|=
+literal|1
+operator|<<
+literal|16
+block|,
+comment|/* head of write list */
+block|}
+name|arc_flags_t
+typedef|;
 struct|struct
 name|arc_buf
 block|{
@@ -131,37 +259,6 @@ name|ARC_BUFC_NUMTYPES
 block|}
 name|arc_buf_contents_t
 typedef|;
-comment|/*  * These are the flags we pass into calls to the arc  */
-define|#
-directive|define
-name|ARC_WAIT
-value|(1<< 1)
-comment|/* perform I/O synchronously */
-define|#
-directive|define
-name|ARC_NOWAIT
-value|(1<< 2)
-comment|/* perform I/O asynchronously */
-define|#
-directive|define
-name|ARC_PREFETCH
-value|(1<< 3)
-comment|/* I/O is a prefetch */
-define|#
-directive|define
-name|ARC_CACHED
-value|(1<< 4)
-comment|/* I/O was already in cache */
-define|#
-directive|define
-name|ARC_L2CACHE
-value|(1<< 5)
-comment|/* cache in L2ARC */
-define|#
-directive|define
-name|ARC_L2COMPRESS
-value|(1<< 6)
-comment|/* compress in L2ARC */
 comment|/*  * The following breakdows of arc_size exist for kstat only.  */
 typedef|typedef
 enum|enum
@@ -373,7 +470,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|uint32_t
+name|arc_flags_t
 modifier|*
 name|arc_flags
 parameter_list|,
