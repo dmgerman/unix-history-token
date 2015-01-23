@@ -1796,6 +1796,11 @@ name|length
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|baseptr
+operator|!=
+literal|'.'
+operator|&&
 name|dnsptr
 index|[
 operator|-
