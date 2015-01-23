@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/sysmacros.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/zfs_context.h>
 end_include
 
@@ -684,13 +690,11 @@ literal|0
 decl_stmt|;
 while|while
 condition|(
+operator|!
+name|ISP2
+argument_list|(
 name|p2
-operator|&
-operator|(
-name|p2
-operator|-
-literal|1
-operator|)
+argument_list|)
 condition|)
 name|p2
 operator|&=
