@@ -1953,7 +1953,7 @@ name|void
 operator|)
 name|clock_gettime
 argument_list|(
-name|CLOCK_MONOTONIC
+name|CLOCK_UPTIME
 argument_list|,
 operator|&
 name|sp
