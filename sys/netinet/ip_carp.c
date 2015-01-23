@@ -9972,7 +9972,7 @@ name|sc
 argument_list|,
 name|INIT
 argument_list|,
-literal|"hw interface down"
+literal|"hardware interface down"
 argument_list|)
 expr_stmt|;
 name|carp_setrun
@@ -10011,7 +10011,7 @@ name|sc
 argument_list|,
 name|INIT
 argument_list|,
-literal|"hw interface up"
+literal|"hardware interface up"
 argument_list|)
 expr_stmt|;
 name|carp_setrun
