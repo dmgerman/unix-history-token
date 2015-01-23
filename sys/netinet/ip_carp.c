@@ -8652,7 +8652,7 @@ name|sc
 argument_list|,
 name|BACKUP
 argument_list|,
-literal|"SIOCSVH"
+literal|"user requested via ifconfig"
 argument_list|)
 expr_stmt|;
 name|carp_setrun
@@ -8675,7 +8675,7 @@ name|carp_master_down_locked
 argument_list|(
 name|sc
 argument_list|,
-literal|"SIOCSVH"
+literal|"user requested via ifconfig"
 argument_list|)
 expr_stmt|;
 break|break;
