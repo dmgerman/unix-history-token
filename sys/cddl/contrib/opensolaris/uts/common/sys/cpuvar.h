@@ -1812,6 +1812,17 @@ parameter_list|(
 name|cpu_t
 modifier|*
 name|off_cp
+parameter_list|,
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|func
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 parameter_list|)
 function_decl|;
 name|void
