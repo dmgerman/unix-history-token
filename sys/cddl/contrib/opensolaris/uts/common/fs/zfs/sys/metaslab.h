@@ -87,8 +87,7 @@ name|metaslab_ops_t
 modifier|*
 name|zfs_metaslab_ops
 decl_stmt|;
-name|metaslab_t
-modifier|*
+name|int
 name|metaslab_init
 parameter_list|(
 name|metaslab_group_t
@@ -99,6 +98,10 @@ parameter_list|,
 name|uint64_t
 parameter_list|,
 name|uint64_t
+parameter_list|,
+name|metaslab_t
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 name|void
