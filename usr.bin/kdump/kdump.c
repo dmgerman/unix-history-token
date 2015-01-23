@@ -3686,6 +3686,9 @@ case|:
 case|case
 name|SYS_unlinkat
 case|:
+case|case
+name|SYS_utimensat
+case|:
 name|putchar
 argument_list|(
 literal|'('
