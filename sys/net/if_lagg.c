@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/hash.h>
+file|<sys/fnv_hash.h>
 end_include
 
 begin_include
@@ -9074,7 +9074,7 @@ condition|)
 block|{
 name|p
 operator|=
-name|hash32_buf
+name|fnv_32_buf
 argument_list|(
 operator|&
 name|eh
@@ -9088,7 +9088,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|hash32_buf
+name|fnv_32_buf
 argument_list|(
 operator|&
 name|eh
@@ -9123,7 +9123,7 @@ condition|)
 block|{
 name|p
 operator|=
-name|hash32_buf
+name|fnv_32_buf
 argument_list|(
 operator|&
 name|m
@@ -9190,7 +9190,7 @@ name|LAGG_F_HASHL2
 condition|)
 name|p
 operator|=
-name|hash32_buf
+name|fnv_32_buf
 argument_list|(
 operator|&
 name|vlan
@@ -9280,7 +9280,7 @@ condition|)
 block|{
 name|p
 operator|=
-name|hash32_buf
+name|fnv_32_buf
 argument_list|(
 operator|&
 name|ip
@@ -9298,7 +9298,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|hash32_buf
+name|fnv_32_buf
 argument_list|(
 operator|&
 name|ip
@@ -9393,7 +9393,7 @@ condition|)
 break|break;
 name|p
 operator|=
-name|hash32_buf
+name|fnv_32_buf
 argument_list|(
 name|ports
 argument_list|,
@@ -9458,7 +9458,7 @@ name|out
 goto|;
 name|p
 operator|=
-name|hash32_buf
+name|fnv_32_buf
 argument_list|(
 operator|&
 name|ip6
@@ -9476,7 +9476,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|hash32_buf
+name|fnv_32_buf
 argument_list|(
 operator|&
 name|ip6
@@ -9502,7 +9502,7 @@ name|IPV6_FLOWLABEL_MASK
 expr_stmt|;
 name|p
 operator|=
-name|hash32_buf
+name|fnv_32_buf
 argument_list|(
 operator|&
 name|flow
@@ -10235,6 +10235,9 @@ name|lagg_lb
 modifier|*
 name|lb
 decl_stmt|;
+name|uint32_t
+name|seed
+decl_stmt|;
 name|lb
 operator|=
 name|malloc
@@ -10258,12 +10261,35 @@ name|sc_capabilities
 operator|=
 name|IFCAP_LAGG_FULLDUPLEX
 expr_stmt|;
+name|seed
+operator|=
+name|arc4random
+argument_list|()
+expr_stmt|;
 name|lb
 operator|->
 name|lb_key
 operator|=
-name|arc4random
-argument_list|()
+name|FNV1_32_INIT
+expr_stmt|;
+name|lb
+operator|->
+name|lb_key
+operator|=
+name|fnv_32_buf
+argument_list|(
+operator|&
+name|seed
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|seed
+argument_list|)
+argument_list|,
+name|lb
+operator|->
+name|lb_key
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
