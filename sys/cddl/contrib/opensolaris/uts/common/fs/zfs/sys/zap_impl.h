@@ -162,7 +162,7 @@ parameter_list|,
 name|mze
 parameter_list|)
 define|\
-value|(&(zap)->zap_m.zap_phys->mz_chunk[(mze)->mze_chunkid])
+value|(&zap_m_phys(zap)->mz_chunk[(mze)->mze_chunkid])
 comment|/*  * The (fat) zap is stored in one object. It is an array of  * 1<<FZAP_BLOCK_SHIFT byte blocks. The layout looks like one of:  *  * ptrtbl fits in first block:  * 	[zap_phys_t zap_ptrtbl_shift< 6] [zap_leaf_t] ...  *  * ptrtbl too big for first block:  * 	[zap_phys_t zap_ptrtbl_shift>= 6] [zap_leaf_t] [ptrtbl] ...  *  */
 struct_decl|struct
 name|dmu_buf
@@ -201,7 +201,7 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|((uint64_t *)(zap)->zap_f.zap_phys) \ 	[(idx) + (1<<ZAP_EMBEDDED_PTRTBL_SHIFT(zap))]
+value|((uint64_t *)zap_f_phys(zap)) \ 	[(idx) + (1<<ZAP_EMBEDDED_PTRTBL_SHIFT(zap))]
 comment|/*  * TAKE NOTE:  * If zap_phys_t is modified, zap_byteswap() must be modified.  */
 typedef|typedef
 struct|struct
@@ -306,10 +306,6 @@ union|union
 block|{
 struct|struct
 block|{
-name|zap_phys_t
-modifier|*
-name|zap_phys
-decl_stmt|;
 comment|/* 			 * zap_num_entries_mtx protects 			 * zap_num_entries 			 */
 name|kmutex_t
 name|zap_num_entries_mtx
@@ -322,10 +318,6 @@ name|zap_fat
 struct|;
 struct|struct
 block|{
-name|mzap_phys_t
-modifier|*
-name|zap_phys
-decl_stmt|;
 name|int16_t
 name|zap_num_entries
 decl_stmt|;
@@ -347,6 +339,46 @@ union|;
 block|}
 name|zap_t
 typedef|;
+specifier|inline
+name|zap_phys_t
+modifier|*
+name|zap_f_phys
+parameter_list|(
+name|zap_t
+modifier|*
+name|zap
+parameter_list|)
+block|{
+return|return
+operator|(
+name|zap
+operator|->
+name|zap_dbuf
+operator|->
+name|db_data
+operator|)
+return|;
+block|}
+specifier|inline
+name|mzap_phys_t
+modifier|*
+name|zap_m_phys
+parameter_list|(
+name|zap_t
+modifier|*
+name|zap
+parameter_list|)
+block|{
+return|return
+operator|(
+name|zap
+operator|->
+name|zap_dbuf
+operator|->
+name|db_data
+operator|)
+return|;
+block|}
 typedef|typedef
 struct|struct
 name|zap_name
