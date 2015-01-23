@@ -307,6 +307,24 @@ end_endif
 begin_macro
 name|OPT
 argument_list|(
+literal|'P'
+argument_list|,
+literal|"parameter"
+argument_list|,
+literal|0
+argument_list|,
+literal|"            set file engine parameter limits\n"
+literal|"                               indir        15 recursion limit for indirection\n"
+literal|"                               name         30 use limit for name/use magic\n"
+literal|"                               elf_notes   256 max ELF notes processed\n"
+literal|"                               elf_phnum   128 max ELF prog sections processed\n"
+literal|"                               elf_shnum 32768 max ELF sections processed\n"
+argument_list|)
+end_macro
+
+begin_macro
+name|OPT
+argument_list|(
 literal|'r'
 argument_list|,
 literal|"raw"
@@ -314,19 +332,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"                  don't translate unprintable chars to \\ooo\n"
-argument_list|)
-end_macro
-
-begin_macro
-name|OPT
-argument_list|(
-literal|'R'
-argument_list|,
-literal|"recursion"
-argument_list|,
-literal|0
-argument_list|,
-literal|"            set maximum recursion level\n"
 argument_list|)
 end_macro
 

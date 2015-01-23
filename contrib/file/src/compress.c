@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: compress.c,v 1.75 2014/12/04 15:56:46 christos Exp $"
+literal|"@(#)$File: compress.c,v 1.77 2014/12/12 16:33:01 christos Exp $"
 argument_list|)
 end_macro
 
@@ -70,6 +70,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_if
@@ -573,6 +579,9 @@ name|flags
 operator|&
 name|MAGIC_MIME
 decl_stmt|;
+name|sig_t
+name|osigpipe
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -588,6 +597,15 @@ condition|)
 return|return
 literal|0
 return|;
+name|osigpipe
+operator|=
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -774,6 +792,16 @@ block|}
 block|}
 name|error
 label|:
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|osigpipe
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|newbuf
@@ -2733,7 +2761,29 @@ name|WIFEXITED
 argument_list|(
 name|status
 argument_list|)
-operator|||
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Child not exited (0x%x)\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+elseif|else
+if|if
+condition|(
 name|WEXITSTATUS
 argument_list|(
 name|status
@@ -2752,17 +2802,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Child status (0x%x)\n"
+literal|"Child exited (0x%d)\n"
 argument_list|,
+name|WEXITSTATUS
+argument_list|(
 name|status
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|n
-operator|=
-name|NODATA
-expr_stmt|;
 block|}
 operator|(
 name|void
