@@ -41,7 +41,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: magic.c,v 1.90 2014/12/04 15:56:46 christos Exp $"
+literal|"@(#)$File: magic.c,v 1.91 2014/12/16 23:18:40 christos Exp $"
 argument_list|)
 end_macro
 
@@ -2583,6 +2583,24 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+case|case
+name|MAGIC_PARAM_ELF_NOTES_MAX
+case|:
+name|ms
+operator|->
+name|elf_notes_max
+operator|=
+operator|*
+operator|(
+specifier|const
+name|size_t
+operator|*
+operator|)
+name|val
+expr_stmt|;
+return|return
+literal|0
+return|;
 default|default:
 name|errno
 operator|=
@@ -2683,6 +2701,23 @@ operator|=
 name|ms
 operator|->
 name|elf_shnum_max
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
+name|MAGIC_PARAM_ELF_NOTES_MAX
+case|:
+operator|*
+operator|(
+name|size_t
+operator|*
+operator|)
+name|val
+operator|=
+name|ms
+operator|->
+name|elf_notes_max
 expr_stmt|;
 return|return
 literal|0

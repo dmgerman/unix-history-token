@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.161 2014/12/04 15:56:46 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.164 2015/01/01 17:07:34 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -967,7 +967,7 @@ parameter_list|(
 name|t
 parameter_list|)
 define|\
-value|((t) == FILE_STRING || \ 	 (t) == FILE_PSTRING || \ 	 (t) == FILE_BESTRING16 || \ 	 (t) == FILE_LESTRING16 || \ 	 (t) == FILE_REGEX || \ 	 (t) == FILE_SEARCH || \ 	 (t) == FILE_NAME || \ 	 (t) == FILE_USE)
+value|((t) == FILE_STRING || \ 	 (t) == FILE_PSTRING || \ 	 (t) == FILE_BESTRING16 || \ 	 (t) == FILE_LESTRING16 || \ 	 (t) == FILE_REGEX || \ 	 (t) == FILE_SEARCH || \ 	 (t) == FILE_INDIRECT || \ 	 (t) == FILE_NAME || \ 	 (t) == FILE_USE)
 define|#
 directive|define
 name|FILE_FMT_NONE
@@ -1459,6 +1459,20 @@ name|STRING_DEFAULT_RANGE
 value|100
 end_define
 
+begin_define
+define|#
+directive|define
+name|INDIRECT_RELATIVE
+value|BIT(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAR_INDIRECT_RELATIVE
+value|'r'
+end_define
+
 begin_comment
 comment|/* list of magic entries */
 end_comment
@@ -1703,6 +1717,9 @@ decl_stmt|;
 name|uint16_t
 name|elf_phnum_max
 decl_stmt|;
+name|uint16_t
+name|elf_notes_max
+decl_stmt|;
 define|#
 directive|define
 name|FILE_INDIR_MAX
@@ -1719,6 +1736,10 @@ define|#
 directive|define
 name|FILE_ELF_PHNUM_MAX
 value|128
+define|#
+directive|define
+name|FILE_ELF_NOTES_MAX
+value|256
 block|}
 struct|;
 end_struct
@@ -2529,6 +2550,24 @@ specifier|const
 name|struct
 name|magic
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|char
+modifier|*
+name|file_printable
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|,
 specifier|const
 name|char
