@@ -3485,6 +3485,7 @@ operator|)
 name|vdevid
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
 name|vdev_t
 modifier|*
@@ -3521,6 +3522,7 @@ operator|)
 name|vdevid
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -3547,6 +3549,7 @@ operator|)
 name|vdevid
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
