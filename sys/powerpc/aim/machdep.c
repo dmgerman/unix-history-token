@@ -1439,7 +1439,7 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|dsitrap
+name|dsiend
 operator|-
 operator|(
 name|size_t
