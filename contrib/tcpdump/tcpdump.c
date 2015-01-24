@@ -233,6 +233,21 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CAPSICUM
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -256,21 +271,6 @@ include|#
 directive|include
 file|<nv.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CAPSICUM
-end_ifdef
 
 begin_include
 include|#
@@ -4339,12 +4339,12 @@ name|HAVE_CAPSICUM
 name|cap_rights_t
 name|rights
 decl_stmt|;
-name|int
-name|cansandbox
-decl_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_CAPSICUM */
+name|int
+name|cansandbox
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|WIN32
