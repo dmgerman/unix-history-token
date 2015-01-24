@@ -245,8 +245,6 @@ name|ova
 operator|=
 literal|0
 expr_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 while|while
 condition|(
 name|uio
