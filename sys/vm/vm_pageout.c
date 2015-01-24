@@ -650,6 +650,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|int
+name|vm_panic_on_oom
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|panic_on_oom
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|vm_panic_on_oom
+argument_list|,
+literal|0
+argument_list|,
+literal|"panic on out of memory instead of killing the largest process"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -5760,6 +5790,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|vm_panic_on_oom
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"out of swap space"
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|bigproc
