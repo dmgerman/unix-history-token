@@ -1781,6 +1781,16 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
+comment|/* Read value back to make sure it reached the hardware */
+name|reg
+operator|=
+name|LCD_READ4
+argument_list|(
+name|sc
+argument_list|,
+name|LCD_IRQSTATUS
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|reg
@@ -2002,6 +2012,16 @@ argument_list|,
 name|LCD_END_OF_INT_IND
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Read value back to make sure it reached the hardware */
+name|reg
+operator|=
+name|LCD_READ4
+argument_list|(
+name|sc
+argument_list|,
+name|LCD_END_OF_INT_IND
 argument_list|)
 expr_stmt|;
 block|}
