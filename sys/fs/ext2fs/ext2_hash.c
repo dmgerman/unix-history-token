@@ -1064,14 +1064,6 @@ decl_stmt|;
 name|uint32_t
 name|buf_val
 decl_stmt|;
-name|int
-name|len
-decl_stmt|,
-name|i
-decl_stmt|;
-name|int
-name|buf_byte
-decl_stmt|;
 specifier|const
 name|unsigned
 name|char
@@ -1099,6 +1091,14 @@ name|char
 operator|*
 operator|)
 name|src
+decl_stmt|;
+name|int
+name|len
+decl_stmt|,
+name|i
+decl_stmt|;
+name|int
+name|buf_byte
 decl_stmt|;
 if|if
 condition|(
@@ -1397,6 +1397,7 @@ name|unsigned_char
 operator|=
 literal|1
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|EXT2_HTREE_TEA
 case|:
@@ -1458,6 +1459,7 @@ name|unsigned_char
 operator|=
 literal|1
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|EXT2_HTREE_LEGACY
 case|:
@@ -1480,6 +1482,7 @@ name|unsigned_char
 operator|=
 literal|1
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|EXT2_HTREE_HALF_MD4
 case|:
