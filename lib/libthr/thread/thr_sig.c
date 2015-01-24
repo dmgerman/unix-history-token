@@ -2439,7 +2439,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|_sigprocmask
+name|__thr_sigprocmask
 argument_list|(
 name|how
 argument_list|,
