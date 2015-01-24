@@ -10638,7 +10638,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_WHEEL
 argument_list|,
-literal|0660
+literal|0600
 argument_list|,
 literal|"netmap"
 argument_list|)
@@ -10658,7 +10658,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_WHEEL
 argument_list|,
-literal|0660
+literal|0600
 argument_list|,
 literal|"netmap"
 argument_list|)
