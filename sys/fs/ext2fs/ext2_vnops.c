@@ -5635,10 +5635,6 @@ name|dvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Verify the directory is empty (and valid). 	 * (Rmdir ".." won't be valid since 	 *  ".." will contain a reference to 	 *  the current directory and thus be 	 *  non-empty.) 	 */
-name|error
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|ip
@@ -6152,11 +6148,6 @@ operator|->
 name|a_vp
 decl_stmt|;
 name|struct
-name|inode
-modifier|*
-name|ip
-decl_stmt|;
-name|struct
 name|bufobj
 modifier|*
 name|bo
@@ -6167,13 +6158,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ip
-operator|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vp

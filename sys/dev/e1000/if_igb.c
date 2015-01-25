@@ -227,6 +227,23 @@ directive|include
 file|<net/if_media.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RSS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/rss_config.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -286,23 +303,6 @@ include|#
 directive|include
 file|<netinet/udp.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RSS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_rss.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

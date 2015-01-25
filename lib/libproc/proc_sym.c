@@ -1747,11 +1747,11 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
+operator|!=
 literal|0
 condition|)
 goto|goto
-name|out
+name|err2
 goto|;
 name|out
 label|:

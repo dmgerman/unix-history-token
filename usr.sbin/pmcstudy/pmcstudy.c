@@ -9778,6 +9778,17 @@ argument_list|(
 literal|"Nothing to do -- no counters built\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|io
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 name|lace_cpus_together
@@ -10819,9 +10830,9 @@ name|memset
 argument_list|(
 name|more
 argument_list|,
-name|sz
-argument_list|,
 literal|0
+argument_list|,
+name|sz
 argument_list|)
 expr_stmt|;
 name|memcpy

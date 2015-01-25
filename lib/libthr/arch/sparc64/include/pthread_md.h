@@ -75,36 +75,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The tcb constructors.  */
-end_comment
-
-begin_function_decl
-name|struct
-name|tcb
-modifier|*
-name|_tcb_ctor
-parameter_list|(
-name|struct
-name|pthread
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_tcb_dtor
-parameter_list|(
-name|struct
-name|tcb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Called from the thread to set its private data. */
 end_comment
 

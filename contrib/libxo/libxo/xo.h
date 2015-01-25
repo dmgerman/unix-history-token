@@ -82,6 +82,7 @@ begin_typedef
 typedef|typedef
 name|unsigned
 name|long
+name|long
 name|xo_xof_flags_t
 typedef|;
 end_typedef
@@ -89,8 +90,18 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|XOF_BIT
+parameter_list|(
+name|_n
+parameter_list|)
+value|((xo_xof_flags_t) 1<< (_n))
+end_define
+
+begin_define
+define|#
+directive|define
 name|XOF_CLOSE_FP
-value|(1<<0)
+value|XOF_BIT(0)
 end_define
 
 begin_comment
@@ -101,7 +112,7 @@ begin_define
 define|#
 directive|define
 name|XOF_PRETTY
-value|(1<<1)
+value|XOF_BIT(1)
 end_define
 
 begin_comment
@@ -112,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|XOF_DIV_OPEN
-value|(1<<2)
+value|XOF_BIT(2)
 end_define
 
 begin_comment
@@ -123,18 +134,18 @@ begin_define
 define|#
 directive|define
 name|XOF_LINE_OPEN
-value|(1<<3)
+value|XOF_BIT(3)
 end_define
 
 begin_comment
-comment|/** Internal use only: a<div class="line"> */
+comment|/** Internal use only:<div class="line"> */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XOF_WARN
-value|(1<<4)
+value|XOF_BIT(4)
 end_define
 
 begin_comment
@@ -145,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|XOF_XPATH
-value|(1<<5)
+value|XOF_BIT(5)
 end_define
 
 begin_comment
@@ -156,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|XOF_INFO
-value|(1<<6)
+value|XOF_BIT(6)
 end_define
 
 begin_comment
@@ -167,7 +178,7 @@ begin_define
 define|#
 directive|define
 name|XOF_WARN_XML
-value|(1<<7)
+value|XOF_BIT(7)
 end_define
 
 begin_comment
@@ -178,18 +189,18 @@ begin_define
 define|#
 directive|define
 name|XOF_NO_ENV
-value|(1<<8)
+value|XOF_BIT(8)
 end_define
 
 begin_comment
-comment|/** Don't look at the LIBXO_OPTIONS env var */
+comment|/** Don't look at LIBXO_OPTIONS env var */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XOF_NO_VA_ARG
-value|(1<<9)
+value|XOF_BIT(9)
 end_define
 
 begin_comment
@@ -200,7 +211,7 @@ begin_define
 define|#
 directive|define
 name|XOF_DTRT
-value|(1<<10)
+value|XOF_BIT(10)
 end_define
 
 begin_comment
@@ -211,7 +222,7 @@ begin_define
 define|#
 directive|define
 name|XOF_KEYS
-value|(1<<11)
+value|XOF_BIT(11)
 end_define
 
 begin_comment
@@ -222,7 +233,7 @@ begin_define
 define|#
 directive|define
 name|XOF_IGNORE_CLOSE
-value|(1<<12)
+value|XOF_BIT(12)
 end_define
 
 begin_comment
@@ -233,7 +244,7 @@ begin_define
 define|#
 directive|define
 name|XOF_NOT_FIRST
-value|(1<<13)
+value|XOF_BIT(13)
 end_define
 
 begin_comment
@@ -244,7 +255,7 @@ begin_define
 define|#
 directive|define
 name|XOF_NO_LOCALE
-value|(1<<14)
+value|XOF_BIT(14)
 end_define
 
 begin_comment
@@ -255,7 +266,7 @@ begin_define
 define|#
 directive|define
 name|XOF_TOP_EMITTED
-value|(1<<15)
+value|XOF_BIT(15)
 end_define
 
 begin_comment
@@ -266,7 +277,7 @@ begin_define
 define|#
 directive|define
 name|XOF_NO_TOP
-value|(1<<16)
+value|XOF_BIT(16)
 end_define
 
 begin_comment
@@ -277,7 +288,7 @@ begin_define
 define|#
 directive|define
 name|XOF_ANCHOR
-value|(1<<17)
+value|XOF_BIT(17)
 end_define
 
 begin_comment
@@ -288,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|XOF_UNITS
-value|(1<<18)
+value|XOF_BIT(18)
 end_define
 
 begin_comment
@@ -299,7 +310,7 @@ begin_define
 define|#
 directive|define
 name|XOF_UNITS_PENDING
-value|(1<<19)
+value|XOF_BIT(19)
 end_define
 
 begin_comment
@@ -310,18 +321,18 @@ begin_define
 define|#
 directive|define
 name|XOF_UNDERSCORES
-value|(1<<20)
+value|XOF_BIT(20)
 end_define
 
 begin_comment
-comment|/** Replace dashes with underscores (JSON)  */
+comment|/** Replace dashes with underscores (JSON)*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XOF_COLUMNS
-value|(1<<21)
+value|XOF_BIT(21)
 end_define
 
 begin_comment
@@ -332,11 +343,33 @@ begin_define
 define|#
 directive|define
 name|XOF_FLUSH
-value|(1<<22)
+value|XOF_BIT(22)
 end_define
 
 begin_comment
 comment|/** Flush after each xo_emit call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XOF_FLUSH_LINE
+value|XOF_BIT(23)
+end_define
+
+begin_comment
+comment|/** Flush after each newline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XOF_NO_CLOSE
+value|XOF_BIT(24)
+end_define
+
+begin_comment
+comment|/** xo_finish won't close open elements */
 end_comment
 
 begin_comment
@@ -417,6 +450,20 @@ name|void
 function_decl|(
 modifier|*
 name|xo_close_func_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|xo_flush_func_t
 function_decl|)
 parameter_list|(
 name|void
@@ -563,6 +610,9 @@ name|write_func
 parameter_list|,
 name|xo_close_func_t
 name|close_func
+parameter_list|,
+name|xo_flush_func_t
+name|flush_func
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1089,6 +1139,62 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|xo_open_marker_h
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|xo_open_marker
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|xo_close_marker_h
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|xo_close_marker
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|xo_attr_h
 parameter_list|(
 name|xo_handle_t
@@ -1205,7 +1311,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|xo_flush_h
 parameter_list|(
 name|xo_handle_t
@@ -1216,7 +1322,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|xo_flush
 parameter_list|(
 name|void
@@ -1225,7 +1331,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|xo_finish_h
 parameter_list|(
 name|xo_handle_t
@@ -1236,7 +1342,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|xo_finish
 parameter_list|(
 name|void
@@ -1510,6 +1616,29 @@ name|xo_version_extra
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|xo_dump_stack
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|xo_set_program
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -25,7 +25,7 @@ name|void
 parameter_list|)
 block|{
 return|return
-literal|"libelftc r3130"
+literal|"elftoolchain r3136M"
 return|;
 block|}
 end_function

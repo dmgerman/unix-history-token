@@ -1473,7 +1473,11 @@ operator|)
 return|;
 block|}
 block|}
-do|do
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|alt
 operator|=
@@ -1574,7 +1578,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* sa_ignore NO_NULL_CHK */
 if|if
 condition|(
 operator|(
@@ -1619,13 +1622,6 @@ operator|=
 name|alt
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|alt
-operator|!=
-name|NULL
-condition|)
-do|;
 if|if
 condition|(
 name|alt
@@ -1643,7 +1639,11 @@ name|mnet
 operator|=
 name|net
 expr_stmt|;
-do|do
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(
@@ -1706,8 +1706,16 @@ operator|.
 name|nets
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|alt
+operator|==
+name|NULL
+condition|)
+block|{
+break|break;
 block|}
-comment|/* sa_ignore NO_NULL_CHK */
+block|}
 if|if
 condition|(
 operator|(
@@ -1736,13 +1744,6 @@ operator|=
 name|alt
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|alt
-operator|!=
-name|NULL
-condition|)
-do|;
 block|}
 if|if
 condition|(

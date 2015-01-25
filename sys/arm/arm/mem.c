@@ -205,8 +205,6 @@ name|addr
 decl_stmt|,
 name|eaddr
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 while|while
 condition|(
 name|uio

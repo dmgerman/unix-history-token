@@ -301,10 +301,16 @@ name|u8
 name|pixel_clock_mhz
 decl_stmt|;
 comment|/* need to multiply by 10 */
-name|u16
-name|sec_gtf_toggle
+name|u8
+name|flags
 decl_stmt|;
-comment|/* A000=use above, 20=use below */
+union|union
+block|{
+struct|struct
+block|{
+name|u8
+name|reserved
+decl_stmt|;
 name|u8
 name|hfreq_start_khz
 decl_stmt|;
@@ -323,6 +329,53 @@ name|u8
 name|j
 decl_stmt|;
 comment|/* need to divide by 2 */
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
+name|gtf2
+struct|;
+struct|struct
+block|{
+name|u8
+name|version
+decl_stmt|;
+name|u8
+name|data1
+decl_stmt|;
+comment|/* high 6 bits: extra clock resolution */
+name|u8
+name|data2
+decl_stmt|;
+comment|/* plus low 2 of above: max hactive */
+name|u8
+name|supported_aspects
+decl_stmt|;
+name|u8
+name|flags
+decl_stmt|;
+comment|/* preferred aspect and blanking support */
+name|u8
+name|supported_scalings
+decl_stmt|;
+name|u8
+name|preferred_refresh
+decl_stmt|;
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
+name|cvt
+struct|;
+block|}
+name|formula
+union|;
 block|}
 name|__attribute__
 argument_list|(

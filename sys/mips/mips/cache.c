@@ -157,9 +157,6 @@ operator|=
 name|mipsNN_icache_sync_range_index_32
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|CPU_CNMIPS
 case|case
 literal|128
 case|:
@@ -182,8 +179,6 @@ operator|=
 name|mipsNN_icache_sync_range_index_128
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|MIPS_DISABLE_L1_CACHE
@@ -411,9 +406,6 @@ expr_stmt|;
 endif|#
 directive|endif
 break|break;
-ifdef|#
-directive|ifdef
-name|CPU_CNMIPS
 case|case
 literal|128
 case|:
@@ -460,8 +452,6 @@ operator|=
 name|mipsNN_pdcache_wb_range_128
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|MIPS_DISABLE_L1_CACHE

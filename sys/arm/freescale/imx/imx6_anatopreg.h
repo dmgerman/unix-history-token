@@ -221,6 +221,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|IMX6_ANALOG_CCM_PLL_AUDIO_ENABLE
+value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX6_ANALOG_CCM_PLL_AUDIO_DIV_SELECT_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX6_ANALOG_CCM_PLL_AUDIO_DIV_SELECT_MASK
+value|0x7f
+end_define
+
+begin_define
+define|#
+directive|define
 name|IMX6_ANALOG_CCM_PLL_AUDIO_SET
 value|0x074
 end_define

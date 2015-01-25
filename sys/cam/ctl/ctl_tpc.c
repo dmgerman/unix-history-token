@@ -5435,7 +5435,7 @@ index|]
 operator|.
 name|ptr
 operator|=
-name|tior
+name|tiow
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(

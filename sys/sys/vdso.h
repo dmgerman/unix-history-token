@@ -202,6 +202,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|timecounter
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|timekeep_push_vdso
@@ -235,6 +241,11 @@ name|struct
 name|vdso_timehands
 modifier|*
 name|vdso_th
+parameter_list|,
+name|struct
+name|timecounter
+modifier|*
+name|tc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -346,6 +357,11 @@ name|struct
 name|vdso_timehands32
 modifier|*
 name|vdso_th32
+parameter_list|,
+name|struct
+name|timecounter
+modifier|*
+name|tc
 parameter_list|)
 function_decl|;
 end_function_decl

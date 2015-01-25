@@ -592,13 +592,6 @@ name|si_cred
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Avoid race with dev_rel() by setting the initial 	 * reference count to 1. This last reference is taken 	 * by the destroy_dev() function. 	 */
-name|cdev
-operator|->
-name|si_refcount
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 name|cdev
@@ -847,6 +840,30 @@ operator|->
 name|de_dirent
 operator|->
 name|d_type
+condition|)
+continue|continue;
+comment|/* 		 * The race with finding non-active name is not 		 * completely closed by the check, but it is similar 		 * to the devfs_allocv() in making it unlikely enough. 		 */
+if|if
+condition|(
+name|de
+operator|->
+name|de_dirent
+operator|->
+name|d_type
+operator|==
+name|DT_CHR
+operator|&&
+operator|(
+name|de
+operator|->
+name|de_cdp
+operator|->
+name|cdp_flags
+operator|&
+name|CDP_ACTIVE
+operator|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 if|if

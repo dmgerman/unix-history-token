@@ -1376,6 +1376,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_NEW
 argument_list|)
 expr_stmt|;
 return|return

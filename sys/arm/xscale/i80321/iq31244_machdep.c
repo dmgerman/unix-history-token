@@ -1135,7 +1135,6 @@ argument_list|()
 expr_stmt|;
 name|i80321_sdram_bounds
 argument_list|(
-operator|&
 name|obio_bs_tag
 argument_list|,
 name|IQ80321_80321_VBASE

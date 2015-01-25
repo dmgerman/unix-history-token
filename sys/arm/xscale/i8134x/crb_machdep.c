@@ -1066,7 +1066,6 @@ argument_list|()
 expr_stmt|;
 name|i81342_sdram_bounds
 argument_list|(
-operator|&
 name|obio_bs_tag
 argument_list|,
 name|IOP34X_VADDR

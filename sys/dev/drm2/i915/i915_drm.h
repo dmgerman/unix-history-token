@@ -1327,6 +1327,13 @@ name|I915_PARAM_HAS_LLC
 value|17
 end_define
 
+begin_define
+define|#
+directive|define
+name|I915_PARAM_HAS_ALIASING_PPGTT
+value|18
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct

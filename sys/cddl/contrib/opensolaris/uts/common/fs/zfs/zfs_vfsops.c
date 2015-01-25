@@ -719,6 +719,18 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * Ignore the system syncher.  ZFS already commits async data 	 * at zfs_txg_timeout intervals. 	 */
+if|if
+condition|(
+name|waitfor
+operator|==
+name|MNT_LAZY
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|vfsp

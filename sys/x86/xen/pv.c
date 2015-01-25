@@ -1707,7 +1707,7 @@ name|kmdp
 argument_list|,
 name|MODINFOMD_MODULEP
 argument_list|,
-name|int
+name|vm_paddr_t
 argument_list|)
 expr_stmt|;
 name|off

@@ -131,193 +131,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|bs_protos
-argument_list|(
-name|generic
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|bs_protos
-argument_list|(
-name|generic_armv4
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * Template bus_space -- copied, and the bits that are NULL are  * filled in.  */
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|struct
-name|bus_space
-name|i81342_bs_tag_template
-init|=
-block|{
-comment|/* cookie */
-operator|(
-name|void
-operator|*
-operator|)
-literal|0
-block|,
-comment|/* mapping/unmapping */
-name|NULL
-block|,
-name|NULL
-block|,
-name|i81342_bs_subregion
-block|,
-comment|/* allocation/deallocation */
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* barrier */
-name|i81342_bs_barrier
-block|,
-comment|/* read (single) */
-name|generic_bs_r_1
-block|,
-name|generic_armv4_bs_r_2
-block|,
-name|generic_bs_r_4
-block|,
-name|NULL
-block|,
-comment|/* read multiple */
-name|generic_bs_rm_1
-block|,
-name|generic_armv4_bs_rm_2
-block|,
-name|generic_bs_rm_4
-block|,
-name|NULL
-block|,
-comment|/* read region */
-name|generic_bs_rr_1
-block|,
-name|generic_armv4_bs_rr_2
-block|,
-name|generic_bs_rr_4
-block|,
-name|NULL
-block|,
-comment|/* write (single) */
-name|generic_bs_w_1
-block|,
-name|generic_armv4_bs_w_2
-block|,
-name|generic_bs_w_4
-block|,
-name|NULL
-block|,
-comment|/* write multiple */
-name|generic_bs_wm_1
-block|,
-name|generic_armv4_bs_wm_2
-block|,
-name|generic_bs_wm_4
-block|,
-name|NULL
-block|,
-comment|/* write region */
-name|NULL
-block|,
-name|generic_armv4_bs_wr_2
-block|,
-name|generic_bs_wr_4
-block|,
-name|NULL
-block|,
-comment|/* set multiple */
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* set region */
-name|NULL
-block|,
-name|generic_armv4_bs_sr_2
-block|,
-name|generic_bs_sr_4
-block|,
-name|NULL
-block|,
-comment|/* copy */
-name|NULL
-block|,
-name|generic_armv4_bs_c_2
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-comment|/* read (single) stream */
-name|generic_bs_r_1
-block|,
-name|generic_armv4_bs_r_2
-block|,
-name|generic_bs_r_4
-block|,
-name|NULL
-block|,
-comment|/* read multiple stream */
-name|generic_bs_rm_1
-block|,
-name|generic_armv4_bs_rm_2
-block|,
-name|generic_bs_rm_4
-block|,
-name|NULL
-block|,
-comment|/* read region stream */
-name|generic_bs_rr_1
-block|,
-name|generic_armv4_bs_rr_2
-block|,
-name|generic_bs_rr_4
-block|,
-name|NULL
-block|,
-comment|/* write (single) stream */
-name|generic_bs_w_1
-block|,
-name|generic_armv4_bs_w_2
-block|,
-name|generic_bs_w_4
-block|,
-name|NULL
-block|,
-comment|/* write multiple stream */
-name|generic_bs_wm_1
-block|,
-name|generic_armv4_bs_wm_2
-block|,
-name|generic_bs_wm_4
-block|,
-name|NULL
-block|,
-comment|/* write region stream */
-name|NULL
-block|,
-name|generic_armv4_bs_wr_2
-block|,
-name|generic_bs_wr_4
-block|,
-name|NULL
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|i81342_bs_init
@@ -333,11 +146,12 @@ block|{
 operator|*
 name|bs
 operator|=
-name|i81342_bs_tag_template
+operator|*
+name|arm_base_bs_tag
 expr_stmt|;
 name|bs
 operator|->
-name|bs_cookie
+name|bs_privdata
 operator|=
 name|cookie
 expr_stmt|;
@@ -359,11 +173,12 @@ block|{
 operator|*
 name|bs
 operator|=
-name|i81342_bs_tag_template
+operator|*
+name|arm_base_bs_tag
 expr_stmt|;
 name|bs
 operator|->
-name|bs_cookie
+name|bs_privdata
 operator|=
 name|cookie
 expr_stmt|;
@@ -409,11 +224,12 @@ block|{
 operator|*
 name|bs
 operator|=
-name|i81342_bs_tag_template
+operator|*
+name|arm_base_bs_tag
 expr_stmt|;
 name|bs
 operator|->
-name|bs_cookie
+name|bs_privdata
 operator|=
 name|cookie
 expr_stmt|;
@@ -452,9 +268,8 @@ begin_function
 name|int
 name|i81342_bs_subregion
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_space_handle_t
 name|bsh
@@ -489,9 +304,8 @@ begin_function
 name|void
 name|i81342_bs_barrier
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_space_handle_t
 name|bsh
@@ -518,9 +332,8 @@ begin_function
 name|int
 name|i81342_io_bs_map
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_addr_t
 name|bpa
@@ -553,9 +366,8 @@ begin_function
 name|void
 name|i81342_io_bs_unmap
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_space_handle_t
 name|h
@@ -572,9 +384,8 @@ begin_function
 name|int
 name|i81342_io_bs_alloc
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_addr_t
 name|rstart
@@ -615,9 +426,8 @@ begin_function
 name|void
 name|i81342_io_bs_free
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_space_handle_t
 name|bsh
@@ -667,9 +477,8 @@ begin_function
 name|int
 name|i81342_mem_bs_map
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_addr_t
 name|bpa
@@ -695,7 +504,9 @@ expr|struct
 name|i81342_pci_softc
 operator|*
 operator|)
-name|t
+name|tag
+operator|->
+name|bs_privdata
 decl_stmt|;
 name|struct
 name|i81342_pci_map
@@ -937,9 +748,8 @@ begin_function
 name|void
 name|i81342_mem_bs_unmap
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_space_handle_t
 name|h
@@ -951,7 +761,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|vm_offset_t va, endva;  	va = trunc_page((vm_offset_t)t); 	endva = va + round_page(size);
+block|vm_offset_t va, endva;  	va = trunc_page((vm_offset_t)h); 	endva = va + round_page(size);
 comment|/* Free the kernel virtual mapping. */
 block|kva_free(va, endva - va);
 endif|#
@@ -963,9 +773,8 @@ begin_function
 name|int
 name|i81342_mem_bs_alloc
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_addr_t
 name|rstart
@@ -1006,9 +815,8 @@ begin_function
 name|void
 name|i81342_mem_bs_free
 parameter_list|(
-name|void
-modifier|*
-name|t
+name|bus_space_tag_t
+name|tag
 parameter_list|,
 name|bus_space_handle_t
 name|bsh

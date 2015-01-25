@@ -6240,9 +6240,7 @@ name|timecounter
 operator|=
 name|newtc
 expr_stmt|;
-name|timekeep_push_vdso
-argument_list|()
-expr_stmt|;
+comment|/* 		 * The vdso timehands update is deferred until the next 		 * 'tc_windup()'. 		 * 		 * This is prudent given that 'timekeep_push_vdso()' does not 		 * use any locking and that it can be called in hard interrupt 		 * context via 'tc_windup()'. 		 */
 return|return
 operator|(
 literal|0
@@ -8775,9 +8773,6 @@ name|vdso_th_enable
 operator|=
 name|old_vdso_th_enable
 expr_stmt|;
-name|timekeep_push_vdso
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -8887,6 +8882,10 @@ operator|=
 name|cpu_fill_vdso_timehands
 argument_list|(
 name|vdso_th
+argument_list|,
+name|th
+operator|->
+name|th_counter
 argument_list|)
 expr_stmt|;
 if|if
@@ -9042,6 +9041,10 @@ operator|=
 name|cpu_fill_vdso_timehands32
 argument_list|(
 name|vdso_th32
+argument_list|,
+name|th
+operator|->
+name|th_counter
 argument_list|)
 expr_stmt|;
 if|if

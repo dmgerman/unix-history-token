@@ -149,12 +149,6 @@ directive|include
 file|<arm/ti/ti_pruss.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

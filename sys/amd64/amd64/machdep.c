@@ -7265,6 +7265,13 @@ block|}
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|PAGES_PER_GB
+value|(1024 * 1024 * 1024 / PAGE_SIZE)
+end_define
+
 begin_comment
 comment|/*  * Populate the (physmap) array with base/bound pairs describing the  * available physical memory in the system, then test this memory and  * build the phys_avail array describing the actually-available memory.  *  * Total memory size may be set by the kernel environment variable  * hw.physmem or the compile-time define MAXMEM.  *  * XXX first should be vm_paddr_t.  */
 end_comment
@@ -7313,6 +7320,9 @@ name|quad_t
 name|dcons_addr
 decl_stmt|,
 name|dcons_size
+decl_stmt|;
+name|int
+name|page_counter
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -7683,6 +7693,21 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * physmap is in bytes, so when converting to page boundaries, 	 * round up the start address and round down the end address. 	 */
+name|page_counter
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|memtest
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Testing system memory"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -7829,6 +7854,25 @@ condition|)
 goto|goto
 name|skip_memtest
 goto|;
+comment|/* 			 * Print a "." every GB to show we're making 			 * progress. 			 */
+name|page_counter
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|page_counter
+operator|%
+name|PAGES_PER_GB
+operator|)
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"."
+argument_list|)
+expr_stmt|;
 comment|/* 			 * map page into kernel: valid, read/write,non-cacheable 			 */
 operator|*
 name|pte
@@ -8128,6 +8172,17 @@ literal|0
 expr_stmt|;
 name|invltlb
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|memtest
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX 	 * The last chunk must contain at least one page plus the message 	 * buffer to avoid complicating other code (message buffer address 	 * calculation, etc.). 	 */
 while|while

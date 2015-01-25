@@ -15455,13 +15455,6 @@ argument_list|,
 name|sctp_next
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|chk
-operator|->
-name|data
-condition|)
-block|{
 name|sctp_m_freem
 argument_list|(
 name|chk
@@ -15475,7 +15468,6 @@ name|data
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|stcb
 operator|->
 name|asoc

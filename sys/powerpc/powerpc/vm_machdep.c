@@ -175,24 +175,6 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|uintptr_t
-name|tocbase
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Finish a fork operation, with process p2 nearly set up.  * Copy and update the pcb, set up the stack so that the child  * ready to run and return to user mode.  */
 end_comment
@@ -419,7 +401,16 @@ name|cf
 operator|->
 name|cf_toc
 operator|=
-name|tocbase
+operator|(
+operator|(
+name|register_t
+operator|*
+operator|)
+name|fork_return
+operator|)
+index|[
+literal|1
+index|]
 expr_stmt|;
 endif|#
 directive|endif

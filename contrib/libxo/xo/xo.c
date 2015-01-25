@@ -1709,13 +1709,10 @@ argument_list|(
 name|NULL
 argument_list|,
 name|XOF_NO_VA_ARG
-argument_list|)
-expr_stmt|;
-name|xo_set_flags
-argument_list|(
-name|NULL
-argument_list|,
+operator||
 name|XOF_NO_TOP
+operator||
+name|XOF_NO_CLOSE
 argument_list|)
 expr_stmt|;
 name|fmt

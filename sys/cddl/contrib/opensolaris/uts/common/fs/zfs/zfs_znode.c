@@ -3558,7 +3558,7 @@ name|obj
 operator|=
 literal|0
 expr_stmt|;
-name|gethrestime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|now
@@ -6970,7 +6970,7 @@ block|{
 name|timestruc_t
 name|now
 decl_stmt|;
-name|gethrestime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|now

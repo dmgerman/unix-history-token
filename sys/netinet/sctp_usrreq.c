@@ -23701,11 +23701,6 @@ name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-name|struct
-name|sctp_nets
-modifier|*
-name|net
-decl_stmt|;
 comment|/* FIXME MT: check correct? */
 name|SCTP_CHECK_AND_CAST
 argument_list|(
@@ -23754,15 +23749,6 @@ argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
-name|net
-operator|=
-name|sctp_findnet
-argument_list|(
-name|stcb
-argument_list|,
-name|sa
-argument_list|)
-expr_stmt|;
 block|}
 name|SCTP_INP_RUNLOCK
 argument_list|(
@@ -23787,8 +23773,7 @@ name|inp
 argument_list|,
 name|sa
 argument_list|,
-operator|&
-name|net
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

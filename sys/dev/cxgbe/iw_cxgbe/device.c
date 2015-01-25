@@ -1482,18 +1482,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_undef
-undef|#
-directive|undef
-name|MODULE_VERSION
-end_undef
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
-
 begin_comment
 comment|/*  * t4_tom won't load on kernels without TCP_OFFLOAD and this module's dependency  * on t4_tom ensures that it won't either.  So we don't directly check for  * TCP_OFFLOAD here.  */
 end_comment
@@ -1646,6 +1634,22 @@ argument_list|(
 name|iw_cxgbe
 argument_list|,
 name|ibcore
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|iw_cxgbe
+argument_list|,
+name|linuxapi
 argument_list|,
 literal|1
 argument_list|,

@@ -163,7 +163,6 @@ name|bas
 operator|.
 name|bst
 operator|=
-operator|&
 name|obio_bs_tag
 expr_stmt|;
 name|di
@@ -208,7 +207,6 @@ name|UART_PARITY_NONE
 expr_stmt|;
 name|uart_bus_space_io
 operator|=
-operator|&
 name|obio_bs_tag
 expr_stmt|;
 name|uart_bus_space_mem

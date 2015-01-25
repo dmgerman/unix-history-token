@@ -147,8 +147,6 @@ operator|.
 name|d_flags
 operator|=
 name|D_MEM
-operator||
-name|D_NEEDGIANT
 block|,
 operator|.
 name|d_open

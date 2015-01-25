@@ -84,6 +84,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|imx_ccm_ssi_configure
+parameter_list|(
+name|device_t
+name|_ssidev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

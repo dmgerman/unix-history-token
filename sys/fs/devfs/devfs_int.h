@@ -104,6 +104,10 @@ define|#
 directive|define
 name|CDP_SCHED_DTR
 value|(1<< 1)
+define|#
+directive|define
+name|CDP_UNREF_DTR
+value|(1<< 2)
 name|u_int
 name|cdp_inuse
 decl_stmt|;
