@@ -2695,7 +2695,7 @@ specifier|static
 name|int
 name|timestamp_precision
 init|=
-name|TSP_SEC
+name|TSP_USEC
 decl_stmt|;
 end_decl_stmt
 
