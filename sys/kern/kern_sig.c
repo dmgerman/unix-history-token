@@ -12749,14 +12749,19 @@ comment|/*  * Permit the delivery of SIGSTOP for the current thread.  This does 
 end_comment
 
 begin_function
-name|void
+name|int
 name|sigallowstop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|thread
 modifier|*
 name|td
+decl_stmt|;
+name|int
+name|prev
 decl_stmt|;
 name|td
 operator|=
@@ -12766,6 +12771,18 @@ name|thread_lock
 argument_list|(
 name|td
 argument_list|)
+expr_stmt|;
+name|prev
+operator|=
+operator|(
+name|td
+operator|->
+name|td_flags
+operator|&
+name|TDF_SBDRY
+operator|)
+operator|!=
+literal|0
 expr_stmt|;
 name|td
 operator|->
@@ -12779,6 +12796,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|prev
+operator|)
+return|;
 block|}
 end_function
 
