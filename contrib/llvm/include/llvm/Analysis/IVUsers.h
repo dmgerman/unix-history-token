@@ -634,12 +634,10 @@ name|Instruction
 operator|*
 name|I
 argument_list|,
-name|SmallPtrSet
+name|SmallPtrSetImpl
 operator|<
 name|Loop
 operator|*
-argument_list|,
-literal|16
 operator|>
 operator|&
 name|SimpleLoopNests

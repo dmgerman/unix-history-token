@@ -100,6 +100,9 @@ decl_stmt|;
 name|class
 name|MDNode
 decl_stmt|;
+struct_decl|struct
+name|AAMDNodes
+struct_decl|;
 name|template
 operator|<
 name|typename
@@ -584,8 +587,7 @@ name|unsigned
 argument_list|,
 name|MDNode
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|&
 name|MDs
 argument_list|)
@@ -617,8 +619,7 @@ name|unsigned
 argument_list|,
 name|MDNode
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|&
 name|MDs
 argument_list|)
@@ -635,6 +636,23 @@ name|MDs
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// getAAMetadata - Fills the AAMDNodes structure with AA metadata from
+comment|/// this instruction. When Merge is true, the existing AA metadata is
+comment|/// merged with that from this instruction providing the most-general result.
+name|void
+name|getAAMetadata
+argument_list|(
+name|AAMDNodes
+operator|&
+name|N
+argument_list|,
+name|bool
+name|Merge
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// setMetadata - Set the metadata of the specified kind to the specified
 comment|/// node.  This updates/replaces metadata if already present, or removes it if
 comment|/// Node is null.
@@ -680,12 +698,7 @@ block|{
 return|return
 name|dropUnknownMetadata
 argument_list|(
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 return|;
 block|}
@@ -733,6 +746,17 @@ name|IDs
 argument_list|)
 return|;
 block|}
+comment|/// setAAMetadata - Sets the metadata on this instruction from the
+comment|/// AAMDNodes structure.
+name|void
+name|setAAMetadata
+parameter_list|(
+specifier|const
+name|AAMDNodes
+modifier|&
+name|N
+parameter_list|)
+function_decl|;
 comment|/// setDebugLoc - Set the debug location information for this instruction.
 name|void
 name|setDebugLoc
@@ -810,11 +834,21 @@ name|bool
 name|B
 parameter_list|)
 function_decl|;
-comment|/// Convenience function for setting all the fast-math flags on this
+comment|/// Convenience function for setting multiple fast-math flags on this
 comment|/// instruction, which must be an operator which supports these flags. See
-comment|/// LangRef.html for the meaning of these flats.
+comment|/// LangRef.html for the meaning of these flags.
 name|void
 name|setFastMathFlags
+parameter_list|(
+name|FastMathFlags
+name|FMF
+parameter_list|)
+function_decl|;
+comment|/// Convenience function for transferring all fast-math flag values to this
+comment|/// instruction, which must be an operator which supports these flags. See
+comment|/// LangRef.html for the meaning of these flags.
+name|void
+name|copyFastMathFlags
 parameter_list|(
 name|FastMathFlags
 name|FMF
@@ -852,7 +886,7 @@ specifier|const
 expr_stmt|;
 comment|/// Convenience function for getting all the fast-math flags, which must be an
 comment|/// operator which supports these flags. See LangRef.html for the meaning of
-comment|/// these flats.
+comment|/// these flags.
 name|FastMathFlags
 name|getFastMathFlags
 argument_list|()
@@ -920,8 +954,7 @@ name|unsigned
 argument_list|,
 name|MDNode
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|&
 argument_list|)
 decl|const
@@ -939,8 +972,7 @@ name|unsigned
 argument_list|,
 name|MDNode
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|&
 argument_list|)
 decl|const
@@ -1088,6 +1120,14 @@ name|mayWriteToMemory
 argument_list|()
 return|;
 block|}
+comment|/// isAtomic - Return true if this instruction has an
+comment|/// AtomicOrdering of unordered or higher.
+comment|///
+name|bool
+name|isAtomic
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// mayThrow - Return true if this instruction may throw an exception.
 comment|///
 name|bool

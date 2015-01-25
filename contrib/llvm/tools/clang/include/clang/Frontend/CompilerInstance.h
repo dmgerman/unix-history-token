@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTConsumer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -361,6 +367,17 @@ operator|*
 operator|>
 name|KnownModules
 block|;
+comment|/// \brief Module names that have an override for the target file.
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ModuleFileOverrides
+block|;
 comment|/// \brief The location of the module-import keyword for the last module
 comment|/// import.
 name|SourceLocation
@@ -668,6 +685,18 @@ return|return
 name|Invocation
 operator|->
 name|getDiagnosticOpts
+argument_list|()
+return|;
+block|}
+name|FileSystemOptions
+operator|&
+name|getFileSystemOpts
+argument_list|()
+block|{
+return|return
+name|Invocation
+operator|->
+name|getFileSystemOpts
 argument_list|()
 return|;
 block|}
@@ -1281,16 +1310,22 @@ return|;
 block|}
 comment|/// takeASTConsumer - Remove the current AST consumer and give ownership to
 comment|/// the caller.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|takeASTConsumer
 argument_list|()
 block|{
 return|return
+name|std
+operator|::
+name|move
+argument_list|(
 name|Consumer
-operator|.
-name|release
-argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// setASTConsumer - Replace the current AST consumer; the compiler instance
@@ -1298,8 +1333,12 @@ comment|/// takes ownership of \p Value.
 name|void
 name|setASTConsumer
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|Value
 argument_list|)
 block|;
@@ -1336,30 +1375,19 @@ operator|*
 name|TheSema
 return|;
 block|}
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Sema
-operator|*
+operator|>
 name|takeSema
 argument_list|()
-block|{
-return|return
-name|TheSema
-operator|.
-name|release
-argument_list|()
-return|;
-block|}
+block|;
 name|void
 name|resetAndLeakSema
 argument_list|()
-block|{
-name|BuryPointer
-argument_list|(
-name|TheSema
-operator|.
-name|release
-argument_list|()
-argument_list|)
-block|; }
+block|;
 comment|/// }
 comment|/// @name Module Management
 comment|/// {
@@ -1434,20 +1462,6 @@ block|;
 return|return
 operator|*
 name|CompletionConsumer
-return|;
-block|}
-comment|/// takeCodeCompletionConsumer - Remove the current code completion consumer
-comment|/// and give ownership to the caller.
-name|CodeCompleteConsumer
-operator|*
-name|takeCodeCompletionConsumer
-argument_list|()
-block|{
-return|return
-name|CompletionConsumer
-operator|.
-name|release
-argument_list|()
 return|;
 block|}
 comment|/// setCodeCompletionConsumer - Replace the current code completion consumer;
@@ -1747,7 +1761,7 @@ comment|/// is true, createOutputFile will create a new temporary file that must
 comment|/// renamed to \p OutputPath in the end.
 comment|///
 comment|/// \param OutputPath - If given, the path to the output file.
-comment|/// \param Error [out] - On failure, the error message.
+comment|/// \param Error [out] - On failure, the error.
 comment|/// \param BaseInput - If \p OutputPath is empty, the input path name to use
 comment|/// for deriving the output path.
 comment|/// \param Extension - The extension to use for derived output names.
@@ -1772,7 +1786,7 @@ name|createOutputFile
 argument_list|(
 argument|StringRef OutputPath
 argument_list|,
-argument|std::string&Error
+argument|std::error_code&Error
 argument_list|,
 argument|bool Binary
 argument_list|,
@@ -1850,6 +1864,12 @@ comment|// Create module manager.
 name|void
 name|createModuleManager
 argument_list|()
+block|;
+name|bool
+name|loadModuleFile
+argument_list|(
+argument|StringRef FileName
+argument_list|)
 block|;
 name|ModuleLoadResult
 name|loadModule

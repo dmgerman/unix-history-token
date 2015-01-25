@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_LIB_DRIVER_TOOLS_H_
+name|LLVM_CLANG_LIB_DRIVER_TOOLS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_LIB_DRIVER_TOOLS_H_
+name|LLVM_CLANG_LIB_DRIVER_TOOLS_H
 end_define
 
 begin_include
@@ -252,6 +252,15 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|AddPPCTargetArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|void
 name|AddR600TargetArgs
 argument_list|(
 argument|const llvm::opt::ArgList&Args
@@ -361,6 +370,8 @@ argument_list|,
 literal|"clang frontend"
 argument_list|,
 argument|TC
+argument_list|,
+argument|RF_Full
 argument_list|)
 block|{}
 name|bool
@@ -385,6 +396,16 @@ return|;
 block|}
 name|bool
 name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|canEmitIR
 argument_list|()
 specifier|const
 name|override
@@ -437,6 +458,8 @@ argument_list|,
 literal|"clang integrated assembler"
 argument_list|,
 argument|TC
+argument_list|,
+argument|RF_Full
 argument_list|)
 block|{}
 name|bool
@@ -488,6 +511,54 @@ specifier|const
 name|override
 block|;   }
 decl_stmt|;
+comment|/// \brief Base class for all GNU tools that provide the same behavior when
+comment|/// it comes to response files support
+name|class
+name|GnuTool
+range|:
+name|public
+name|Tool
+block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|public
+operator|:
+name|GnuTool
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Name
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|ShortName
+argument_list|,
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+argument|Name
+argument_list|,
+argument|ShortName
+argument_list|,
+argument|TC
+argument_list|,
+argument|RF_Full
+argument_list|,
+argument|llvm::sys::WEM_CurrentCodePage
+argument_list|)
+block|{}
+block|}
+decl_stmt|;
 comment|/// gcc - Generic GCC tool implementations.
 name|namespace
 name|gcc
@@ -497,7 +568,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Common
 range|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -519,7 +590,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 argument|Name
 argument_list|,
@@ -744,7 +815,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 range|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -756,7 +827,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"hexagon::Assemble"
 argument_list|,
@@ -808,7 +879,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Link
 range|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -820,7 +891,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"hexagon::Link"
 argument_list|,
@@ -985,6 +1056,19 @@ name|Value
 argument_list|)
 decl_stmt|;
 name|bool
+name|isUCLibc
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+decl_stmt|;
+name|bool
 name|isNaN2008
 argument_list|(
 specifier|const
@@ -1019,6 +1103,28 @@ name|CPUName
 argument_list|,
 name|StringRef
 name|ABIName
+argument_list|)
+decl_stmt|;
+block|}
+name|namespace
+name|ppc
+block|{
+name|bool
+name|hasPPCAbiArg
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Value
 argument_list|)
 decl_stmt|;
 block|}
@@ -1099,20 +1205,18 @@ name|public
 operator|:
 name|MachOTool
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|Name
+argument|const char *Name
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|ShortName
+argument|const char *ShortName
 argument_list|,
-specifier|const
-name|ToolChain
-operator|&
-name|TC
+argument|const ToolChain&TC
+argument_list|,
+argument|ResponseFileSupport ResponseSupport = RF_None
+argument_list|,
+argument|llvm::sys::WindowsEncodingMethod ResponseEncoding = llvm::sys::WEM_UTF8
+argument_list|,
+argument|const char *ResponseFlag =
+literal|"@"
 argument_list|)
 operator|:
 name|Tool
@@ -1122,6 +1226,12 @@ argument_list|,
 argument|ShortName
 argument_list|,
 argument|TC
+argument_list|,
+argument|ResponseSupport
+argument_list|,
+argument|ResponseEncoding
+argument_list|,
+argument|ResponseFlag
 argument_list|)
 block|{}
 expr|}
@@ -1225,6 +1335,12 @@ argument_list|,
 literal|"linker"
 argument_list|,
 argument|TC
+argument_list|,
+argument|RF_FileList
+argument_list|,
+argument|llvm::sys::WEM_UTF8
+argument_list|,
+literal|"-filelist"
 argument_list|)
 block|{}
 name|bool
@@ -1450,7 +1566,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -1462,7 +1578,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"openbsd::Assemble"
 argument_list|,
@@ -1505,7 +1621,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Link
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -1517,7 +1633,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"openbsd::Link"
 argument_list|,
@@ -1575,7 +1691,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -1587,7 +1703,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"bitrig::Assemble"
 argument_list|,
@@ -1630,7 +1746,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Link
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -1642,7 +1758,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"bitrig::Link"
 argument_list|,
@@ -1700,7 +1816,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -1712,7 +1828,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"freebsd::Assemble"
 argument_list|,
@@ -1755,7 +1871,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Link
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -1767,7 +1883,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"freebsd::Link"
 argument_list|,
@@ -1825,7 +1941,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -1837,7 +1953,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"netbsd::Assemble"
 argument_list|,
@@ -1880,7 +1996,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Link
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -1892,7 +2008,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"netbsd::Link"
 argument_list|,
@@ -1950,7 +2066,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -1962,7 +2078,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"GNU::Assemble"
 argument_list|,
@@ -2005,7 +2121,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Link
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -2017,7 +2133,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"GNU::Link"
 argument_list|,
@@ -2074,7 +2190,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -2086,7 +2202,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"minix::Assemble"
 argument_list|,
@@ -2129,7 +2245,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Link
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -2141,7 +2257,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"minix::Link"
 argument_list|,
@@ -2315,131 +2431,6 @@ name|override
 block|;   }
 block|; }
 comment|// end namespace solaris
-comment|/// auroraux -- Directly call GNU Binutils assembler and linker
-name|namespace
-name|auroraux
-block|{
-name|class
-name|LLVM_LIBRARY_VISIBILITY
-name|Assemble
-operator|:
-name|public
-name|Tool
-block|{
-name|public
-operator|:
-name|Assemble
-argument_list|(
-specifier|const
-name|ToolChain
-operator|&
-name|TC
-argument_list|)
-operator|:
-name|Tool
-argument_list|(
-literal|"auroraux::Assemble"
-argument_list|,
-literal|"assembler"
-argument_list|,
-argument|TC
-argument_list|)
-block|{}
-name|bool
-name|hasIntegratedCPP
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|false
-return|;
-block|}
-name|void
-name|ConstructJob
-argument_list|(
-argument|Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const InputInfo&Output
-argument_list|,
-argument|const InputInfoList&Inputs
-argument_list|,
-argument|const llvm::opt::ArgList&TCArgs
-argument_list|,
-argument|const char *LinkingOutput
-argument_list|)
-specifier|const
-name|override
-block|;   }
-block|;
-name|class
-name|LLVM_LIBRARY_VISIBILITY
-name|Link
-operator|:
-name|public
-name|Tool
-block|{
-name|public
-operator|:
-name|Link
-argument_list|(
-specifier|const
-name|ToolChain
-operator|&
-name|TC
-argument_list|)
-operator|:
-name|Tool
-argument_list|(
-literal|"auroraux::Link"
-argument_list|,
-literal|"linker"
-argument_list|,
-argument|TC
-argument_list|)
-block|{}
-name|bool
-name|hasIntegratedCPP
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|false
-return|;
-block|}
-name|bool
-name|isLinkJob
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|true
-return|;
-block|}
-name|void
-name|ConstructJob
-argument_list|(
-argument|Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const InputInfo&Output
-argument_list|,
-argument|const InputInfoList&Inputs
-argument_list|,
-argument|const llvm::opt::ArgList&TCArgs
-argument_list|,
-argument|const char *LinkingOutput
-argument_list|)
-specifier|const
-name|override
-block|;   }
-block|; }
-comment|// end namespace auroraux
 comment|/// dragonfly -- Directly call GNU Binutils assembler and linker
 name|namespace
 name|dragonfly
@@ -2449,7 +2440,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -2461,7 +2452,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"dragonfly::Assemble"
 argument_list|,
@@ -2504,7 +2495,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Link
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -2516,7 +2507,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"dragonfly::Link"
 argument_list|,
@@ -2593,6 +2584,10 @@ argument_list|,
 literal|"linker"
 argument_list|,
 argument|TC
+argument_list|,
+argument|RF_Full
+argument_list|,
+argument|llvm::sys::WEM_UTF16
 argument_list|)
 block|{}
 name|bool
@@ -2658,6 +2653,10 @@ argument_list|,
 literal|"compiler"
 argument_list|,
 argument|TC
+argument_list|,
+argument|RF_Full
+argument_list|,
+argument|llvm::sys::WEM_UTF16
 argument_list|)
 block|{}
 name|bool
@@ -2708,8 +2707,12 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Command
-operator|*
+operator|>
 name|GetCommand
 argument_list|(
 argument|Compilation&C
@@ -2882,6 +2885,131 @@ name|override
 block|;   }
 block|; }
 comment|// end namespace XCore.
+name|namespace
+name|CrossWindows
+block|{
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Assemble
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Assemble
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"CrossWindows::Assemble"
+argument_list|,
+literal|"as"
+argument_list|,
+argument|TC
+argument_list|)
+block|{ }
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Link
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Link
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"CrossWindows::Link"
+argument_list|,
+literal|"ld"
+argument_list|,
+argument|TC
+argument_list|,
+argument|RF_Full
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|; }
 block|}
 comment|// end namespace toolchains
 block|}
@@ -2897,10 +3025,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// CLANG_LIB_DRIVER_TOOLS_H_
-end_comment
 
 end_unit
 

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_POWERPC_H
+name|LLVM_LIB_TARGET_POWERPC_PPC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_POWERPC_H
+name|LLVM_LIB_TARGET_POWERPC_PPC_H
 end_define
 
 begin_include
@@ -100,9 +100,6 @@ name|FunctionPass
 decl_stmt|;
 name|class
 name|ImmutablePass
-decl_stmt|;
-name|class
-name|JITCodeEmitter
 decl_stmt|;
 name|class
 name|MachineInstr
@@ -164,19 +161,6 @@ parameter_list|(
 name|PPCTargetMachine
 modifier|&
 name|TM
-parameter_list|)
-function_decl|;
-name|FunctionPass
-modifier|*
-name|createPPCJITCodeEmitterPass
-parameter_list|(
-name|PPCTargetMachine
-modifier|&
-name|TM
-parameter_list|,
-name|JITCodeEmitter
-modifier|&
-name|MCE
 parameter_list|)
 function_decl|;
 name|void

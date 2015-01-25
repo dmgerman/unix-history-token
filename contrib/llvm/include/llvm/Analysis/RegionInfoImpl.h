@@ -54,12 +54,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/RegionInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/PostOrderIterator.h"
 end_include
 
@@ -79,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Analysis/PostDominators.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/RegionInfo.h"
 end_include
 
 begin_include
@@ -124,28 +124,15 @@ file|<set>
 end_include
 
 begin_decl_stmt
-name|using
 name|namespace
 name|llvm
-decl_stmt|;
-end_decl_stmt
-
-begin_define
+block|{
 define|#
 directive|define
 name|DEBUG_TYPE
 value|"region"
-end_define
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// RegionBase Implementation
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -250,10 +237,11 @@ operator|.
 name|clear
 argument_list|()
 expr_stmt|;
-end_expr_stmt
+block|}
+end_decl_stmt
 
 begin_expr_stmt
-unit|}  template
+name|template
 operator|<
 name|class
 name|Tr
@@ -5581,8 +5569,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
+begin_undef
 unit|}
+undef|#
+directive|undef
+name|DEBUG_TYPE
+end_undef
+
+begin_comment
+unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

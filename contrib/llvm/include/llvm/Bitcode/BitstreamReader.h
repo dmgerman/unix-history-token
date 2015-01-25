@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/StreamableMemoryObject.h"
+file|"llvm/Support/StreamingMemoryObject.h"
 end_include
 
 begin_include
@@ -106,18 +106,17 @@ block|{
 name|class
 name|Deserializer
 decl_stmt|;
-comment|/// BitstreamReader - This class is used to read from an LLVM bitcode stream,
-comment|/// maintaining information that is global to decoding the entire file.  While
-comment|/// a file is being read, multiple cursors can be independently advanced or
-comment|/// skipped around within the file.  These are represented by the
-comment|/// BitstreamCursor class.
+comment|/// This class is used to read from an LLVM bitcode stream, maintaining
+comment|/// information that is global to decoding the entire file. While a file is
+comment|/// being read, multiple cursors can be independently advanced or skipped around
+comment|/// within the file.  These are represented by the BitstreamCursor class.
 name|class
 name|BitstreamReader
 block|{
 name|public
 label|:
-comment|/// BlockInfo - This contains information emitted to BLOCKINFO_BLOCK blocks.
-comment|/// These describe abbreviations that all blocks of the specified ID inherit.
+comment|/// This contains information emitted to BLOCKINFO_BLOCK blocks. These
+comment|/// describe abbreviations that all blocks of the specified ID inherit.
 struct|struct
 name|BlockInfo
 block|{
@@ -128,9 +127,10 @@ name|std
 operator|::
 name|vector
 operator|<
+name|IntrusiveRefCntPtr
+operator|<
 name|BitCodeAbbrev
-operator|*
-operator|>
+operator|>>
 name|Abbrevs
 expr_stmt|;
 name|std
@@ -163,7 +163,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|StreamableMemoryObject
+name|MemoryObject
 operator|>
 name|BitcodeBytes
 expr_stmt|;
@@ -175,9 +175,8 @@ name|BlockInfo
 operator|>
 name|BlockInfoRecords
 expr_stmt|;
-comment|/// IgnoreBlockInfoNames - This is set to true if we don't care about the
-comment|/// block/record name information in the BlockInfo block. Only llvm-bcanalyzer
-comment|/// uses this.
+comment|/// This is set to true if we don't care about the block/record name
+comment|/// information in the BlockInfo block. Only llvm-bcanalyzer uses this.
 name|bool
 name|IgnoreBlockInfoNames
 decl_stmt|;
@@ -213,11 +212,12 @@ argument|const unsigned char *Start
 argument_list|,
 argument|const unsigned char *End
 argument_list|)
-block|{
+operator|:
 name|IgnoreBlockInfoNames
-operator|=
-name|true
-block|;
+argument_list|(
+argument|true
+argument_list|)
+block|{
 name|init
 argument_list|(
 name|Start
@@ -227,23 +227,104 @@ argument_list|)
 block|;   }
 name|BitstreamReader
 argument_list|(
-argument|StreamableMemoryObject *bytes
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryObject
+operator|>
+name|BitcodeBytes
+argument_list|)
+operator|:
+name|BitcodeBytes
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|BitcodeBytes
+argument_list|)
+argument_list|)
+operator|,
+name|IgnoreBlockInfoNames
+argument_list|(
+argument|true
+argument_list|)
+block|{}
+name|BitstreamReader
+argument_list|(
+argument|BitstreamReader&&Other
 argument_list|)
 block|{
-name|BitcodeBytes
-operator|.
-name|reset
+operator|*
+name|this
+operator|=
+name|std
+operator|::
+name|move
 argument_list|(
-name|bytes
+name|Other
 argument_list|)
 block|;   }
+name|BitstreamReader
+operator|&
+name|operator
+operator|=
+operator|(
+name|BitstreamReader
+operator|&&
+name|Other
+operator|)
+block|{
+name|BitcodeBytes
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|Other
+operator|.
+name|BitcodeBytes
+argument_list|)
+block|;
+comment|// Explicitly swap block info, so that nothing gets destroyed twice.
+name|std
+operator|::
+name|swap
+argument_list|(
+name|BlockInfoRecords
+argument_list|,
+name|Other
+operator|.
+name|BlockInfoRecords
+argument_list|)
+block|;
+name|IgnoreBlockInfoNames
+operator|=
+name|Other
+operator|.
+name|IgnoreBlockInfoNames
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 name|void
 name|init
-argument_list|(
-argument|const unsigned char *Start
-argument_list|,
-argument|const unsigned char *End
-argument_list|)
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|Start
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|End
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -261,7 +342,7 @@ literal|0
 operator|&&
 literal|"Bitcode stream not a multiple of 4 bytes"
 argument_list|)
-block|;
+expr_stmt|;
 name|BitcodeBytes
 operator|.
 name|reset
@@ -273,100 +354,31 @@ argument_list|,
 name|End
 argument_list|)
 argument_list|)
-block|;   }
-name|StreamableMemoryObject
-operator|&
+expr_stmt|;
+block|}
+name|MemoryObject
+modifier|&
 name|getBitcodeBytes
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|*
 name|BitcodeBytes
 return|;
 block|}
-operator|~
-name|BitstreamReader
-argument_list|()
-block|{
-comment|// Free the BlockInfoRecords.
-while|while
-condition|(
-operator|!
-name|BlockInfoRecords
-operator|.
-name|empty
-argument_list|()
-condition|)
-block|{
-name|BlockInfo
-modifier|&
-name|Info
-init|=
-name|BlockInfoRecords
-operator|.
-name|back
-argument_list|()
-decl_stmt|;
-comment|// Free blockinfo abbrev info.
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
-name|Info
-operator|.
-name|Abbrevs
-operator|.
-name|size
-argument_list|()
-operator|)
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-name|Info
-operator|.
-name|Abbrevs
-index|[
-name|i
-index|]
-operator|->
-name|dropRef
-argument_list|()
-expr_stmt|;
-name|BlockInfoRecords
-operator|.
-name|pop_back
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-comment|/// CollectBlockInfoNames - This is called by clients that want block/record
-comment|/// name information.
+comment|/// This is called by clients that want block/record name information.
 name|void
 name|CollectBlockInfoNames
-argument_list|()
+parameter_list|()
 block|{
 name|IgnoreBlockInfoNames
 operator|=
 name|false
-block|; }
+expr_stmt|;
+block|}
 name|bool
 name|isIgnoringBlockInfoNames
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|IgnoreBlockInfoNames
@@ -375,9 +387,9 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Block Manipulation
 comment|//===--------------------------------------------------------------------===//
-comment|/// hasBlockInfoRecords - Return true if we've already read and processed the
-comment|/// block info block for this Bitstream.  We only process it for the first
-comment|/// cursor that walks over it.
+comment|/// Return true if we've already read and processed the block info block for
+comment|/// this Bitstream. We only process it for the first cursor that walks over
+comment|/// it.
 name|bool
 name|hasBlockInfoRecords
 argument_list|()
@@ -391,8 +403,8 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// getBlockInfo - If there is block info for the specified ID, return it,
-comment|/// otherwise return null.
+comment|/// If there is block info for the specified ID, return it, otherwise return
+comment|/// null.
 specifier|const
 name|BlockInfo
 modifier|*
@@ -533,16 +545,41 @@ name|back
 argument_list|()
 return|;
 block|}
+comment|/// Takes block info from the other bitstream reader.
+comment|///
+comment|/// This is a "take" operation because BlockInfo records are non-trivial, and
+comment|/// indeed rather expensive.
+name|void
+name|takeBlockInfo
+argument_list|(
+name|BitstreamReader
+operator|&&
+name|Other
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|hasBlockInfoRecords
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|BlockInfoRecords
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|Other
+operator|.
+name|BlockInfoRecords
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 empty_stmt|;
-comment|/// BitstreamEntry - When advancing through a bitstream cursor, each advance can
-comment|/// discover a few different kinds of entries:
-comment|///   Error    - Malformed bitcode was found.
-comment|///   EndBlock - We've reached the end of the current block, (or the end of the
-comment|///              file, which is treated like a series of EndBlock records.
-comment|///   SubBlock - This is the start of a new subblock of a specific ID.
-comment|///   Record   - This is a record with a specific AbbrevID.
-comment|///
+comment|/// When advancing through a bitstream cursor, each advance can discover a few
+comment|/// different kinds of entries:
 struct|struct
 name|BitstreamEntry
 block|{
@@ -550,11 +587,16 @@ enum|enum
 block|{
 name|Error
 block|,
+comment|// Malformed bitcode was found.
 name|EndBlock
 block|,
+comment|// We've reached the end of the current block, (or the end of the
+comment|// file, which is treated like a series of EndBlock records.
 name|SubBlock
 block|,
+comment|// This is the start of a new subblock of a specific ID.
 name|Record
+comment|// This is a record with a specific AbbrevID.
 block|}
 name|Kind
 enum|;
@@ -653,9 +695,9 @@ return|;
 block|}
 block|}
 struct|;
-comment|/// BitstreamCursor - This represents a position within a bitcode file.  There
-comment|/// may be multiple independent cursors reading within one bitstream, each
-comment|/// maintaining their own local state.
+comment|/// This represents a position within a bitcode file. There may be multiple
+comment|/// independent cursors reading within one bitstream, each maintaining their own
+comment|/// local state.
 comment|///
 comment|/// Unlike iterators, BitstreamCursors are heavy-weight objects that should not
 comment|/// be passed by value.
@@ -673,36 +715,41 @@ decl_stmt|;
 name|size_t
 name|NextChar
 decl_stmt|;
-comment|/// CurWord/word_t - This is the current data we have pulled from the stream
-comment|/// but have not returned to the client.  This is specifically and
-comment|/// intentionally defined to follow the word size of the host machine for
-comment|/// efficiency.  We use word_t in places that are aware of this to make it
-comment|/// perfectly explicit what is going on.
+comment|// The size of the bicode. 0 if we don't know it yet.
+name|size_t
+name|Size
+decl_stmt|;
+comment|/// This is the current data we have pulled from the stream but have not
+comment|/// returned to the client. This is specifically and intentionally defined to
+comment|/// follow the word size of the host machine for efficiency. We use word_t in
+comment|/// places that are aware of this to make it perfectly explicit what is going
+comment|/// on.
 typedef|typedef
-name|uint32_t
+name|size_t
 name|word_t
 typedef|;
 name|word_t
 name|CurWord
 decl_stmt|;
-comment|/// BitsInCurWord - This is the number of bits in CurWord that are valid. This
-comment|/// is always from [0...31/63] inclusive (depending on word size).
+comment|/// This is the number of bits in CurWord that are valid. This is always from
+comment|/// [0...bits_of(size_t)-1] inclusive.
 name|unsigned
 name|BitsInCurWord
 decl_stmt|;
-comment|// CurCodeSize - This is the declared size of code values used for the current
-comment|// block, in bits.
+comment|// This is the declared size of code values used for the current block, in
+comment|// bits.
 name|unsigned
 name|CurCodeSize
 decl_stmt|;
-comment|/// CurAbbrevs - Abbrevs installed at in this block.
+comment|/// Abbrevs installed at in this block.
 name|std
 operator|::
 name|vector
 operator|<
+name|IntrusiveRefCntPtr
+operator|<
 name|BitCodeAbbrev
-operator|*
-operator|>
+operator|>>
 name|CurAbbrevs
 expr_stmt|;
 struct|struct
@@ -715,9 +762,10 @@ name|std
 operator|::
 name|vector
 operator|<
+name|IntrusiveRefCntPtr
+operator|<
 name|BitCodeAbbrev
-operator|*
-operator|>
+operator|>>
 name|PrevAbbrevs
 expr_stmt|;
 name|explicit
@@ -733,7 +781,7 @@ argument_list|)
 block|{}
 block|}
 struct|;
-comment|/// BlockScope - This tracks the codesize of parent blocks.
+comment|/// This tracks the codesize of parent blocks.
 name|SmallVector
 operator|<
 name|Block
@@ -746,146 +794,64 @@ name|public
 label|:
 name|BitstreamCursor
 argument_list|()
-operator|:
-name|BitStream
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|NextChar
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|BitstreamCursor
-argument_list|(
-specifier|const
-name|BitstreamCursor
-operator|&
-name|RHS
-argument_list|)
-operator|:
-name|BitStream
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|NextChar
-argument_list|(
-literal|0
-argument_list|)
 block|{
-name|operator
-operator|=
-operator|(
-name|RHS
-operator|)
-block|;   }
-name|explicit
-name|BitstreamCursor
-argument_list|(
-name|BitstreamReader
-operator|&
-name|R
-argument_list|)
-operator|:
-name|BitStream
-argument_list|(
-argument|&R
-argument_list|)
-block|{
-name|NextChar
-operator|=
-literal|0
-block|;
-name|CurWord
-operator|=
-literal|0
-block|;
-name|BitsInCurWord
-operator|=
-literal|0
-block|;
-name|CurCodeSize
-operator|=
-literal|2
-block|;   }
-name|void
 name|init
 argument_list|(
-argument|BitstreamReader&R
+name|nullptr
 argument_list|)
+expr_stmt|;
+block|}
+name|explicit
+name|BitstreamCursor
+parameter_list|(
+name|BitstreamReader
+modifier|&
+name|R
+parameter_list|)
+block|{
+name|init
+argument_list|(
+operator|&
+name|R
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|init
+parameter_list|(
+name|BitstreamReader
+modifier|*
+name|R
+parameter_list|)
 block|{
 name|freeState
 argument_list|()
-block|;
+expr_stmt|;
 name|BitStream
 operator|=
-operator|&
 name|R
-block|;
+expr_stmt|;
 name|NextChar
 operator|=
 literal|0
-block|;
-name|CurWord
+expr_stmt|;
+name|Size
 operator|=
 literal|0
-block|;
+expr_stmt|;
 name|BitsInCurWord
 operator|=
 literal|0
-block|;
+expr_stmt|;
 name|CurCodeSize
 operator|=
 literal|2
-block|;   }
-operator|~
-name|BitstreamCursor
-argument_list|()
-block|{
-name|freeState
-argument_list|()
-block|;   }
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|BitstreamCursor
-operator|&
-name|RHS
-operator|)
 expr_stmt|;
+block|}
 name|void
 name|freeState
 parameter_list|()
 function_decl|;
-name|bool
-name|isEndPos
-parameter_list|(
-name|size_t
-name|pos
-parameter_list|)
-block|{
-return|return
-name|BitStream
-operator|->
-name|getBitcodeBytes
-argument_list|()
-operator|.
-name|isObjectEnd
-argument_list|(
-name|static_cast
-operator|<
-name|uint64_t
-operator|>
-operator|(
-name|pos
-operator|)
-argument_list|)
-return|;
-block|}
 name|bool
 name|canSkipToPos
 argument_list|(
@@ -919,76 +885,40 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|uint32_t
-name|getWord
-parameter_list|(
-name|size_t
-name|pos
-parameter_list|)
-block|{
-name|uint8_t
-name|buf
-index|[
-literal|4
-index|]
-init|=
-block|{
-literal|0xFF
-block|,
-literal|0xFF
-block|,
-literal|0xFF
-block|,
-literal|0xFF
-block|}
-decl_stmt|;
-name|BitStream
-operator|->
-name|getBitcodeBytes
-argument_list|()
-operator|.
-name|readBytes
-argument_list|(
-name|pos
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-return|return
-operator|*
-name|reinterpret_cast
-operator|<
-name|support
-operator|::
-name|ulittle32_t
-operator|*
-operator|>
-operator|(
-name|buf
-operator|)
-return|;
-block|}
 name|bool
 name|AtEndOfStream
 parameter_list|()
 block|{
+if|if
+condition|(
+name|BitsInCurWord
+operator|!=
+literal|0
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|Size
+operator|!=
+literal|0
+condition|)
+return|return
+name|Size
+operator|==
+name|NextChar
+return|;
+name|fillCurWord
+argument_list|()
+expr_stmt|;
 return|return
 name|BitsInCurWord
 operator|==
 literal|0
-operator|&&
-name|isEndPos
-argument_list|(
-name|NextChar
-argument_list|)
 return|;
 block|}
-comment|/// getAbbrevIDWidth - Return the number of bits used to encode an abbrev #.
+comment|/// Return the number of bits used to encode an abbrev #.
 name|unsigned
 name|getAbbrevIDWidth
 argument_list|()
@@ -998,7 +928,7 @@ return|return
 name|CurCodeSize
 return|;
 block|}
-comment|/// GetCurrentBitNo - Return the bit # of the bit we are reading.
+comment|/// Return the bit # of the bit we are reading.
 name|uint64_t
 name|GetCurrentBitNo
 argument_list|()
@@ -1035,22 +965,20 @@ block|}
 comment|/// Flags that modify the behavior of advance().
 enum|enum
 block|{
-comment|/// AF_DontPopBlockAtEnd - If this flag is used, the advance() method does
-comment|/// not automatically pop the block scope when the end of a block is
-comment|/// reached.
+comment|/// If this flag is used, the advance() method does not automatically pop
+comment|/// the block scope when the end of a block is reached.
 name|AF_DontPopBlockAtEnd
 init|=
 literal|1
 block|,
-comment|/// AF_DontAutoprocessAbbrevs - If this flag is used, abbrev entries are
-comment|/// returned just like normal records.
+comment|/// If this flag is used, abbrev entries are returned just like normal
+comment|/// records.
 name|AF_DontAutoprocessAbbrevs
 init|=
 literal|2
 block|}
 enum|;
-comment|/// advance - Advance the current bitstream, returning the next entry in the
-comment|/// stream.
+comment|/// Advance the current bitstream, returning the next entry in the stream.
 name|BitstreamEntry
 name|advance
 parameter_list|(
@@ -1156,8 +1084,8 @@ argument_list|)
 return|;
 block|}
 block|}
-comment|/// advanceSkippingSubblocks - This is a convenience function for clients that
-comment|/// don't expect any subblocks.  This just skips over them automatically.
+comment|/// This is a convenience function for clients that don't expect any
+comment|/// subblocks. This just skips over them automatically.
 name|BitstreamEntry
 name|advanceSkippingSubblocks
 parameter_list|(
@@ -1208,7 +1136,7 @@ argument_list|()
 return|;
 block|}
 block|}
-comment|/// JumpToBit - Reset the stream to the specified bit number.
+comment|/// Reset the stream to the specified bit number.
 name|void
 name|JumpToBit
 parameter_list|(
@@ -1274,124 +1202,35 @@ name|BitsInCurWord
 operator|=
 literal|0
 expr_stmt|;
-name|CurWord
-operator|=
-literal|0
-expr_stmt|;
 comment|// Skip over any bits that are already consumed.
 if|if
 condition|(
 name|WordBitNo
 condition|)
-block|{
-if|if
-condition|(
-sizeof|sizeof
-argument_list|(
-name|word_t
-argument_list|)
-operator|>
-literal|4
-condition|)
-name|Read64
-argument_list|(
-name|WordBitNo
-argument_list|)
-expr_stmt|;
-else|else
 name|Read
 argument_list|(
 name|WordBitNo
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|uint32_t
-name|Read
-parameter_list|(
-name|unsigned
-name|NumBits
-parameter_list|)
+name|void
+name|fillCurWord
+parameter_list|()
 block|{
 name|assert
 argument_list|(
-name|NumBits
-operator|&&
-name|NumBits
-operator|<=
-literal|32
-operator|&&
-literal|"Cannot return zero or more than 32 bits!"
-argument_list|)
-expr_stmt|;
-comment|// If the field is fully contained by CurWord, return it quickly.
-if|if
-condition|(
-name|BitsInCurWord
-operator|>=
-name|NumBits
-condition|)
-block|{
-name|uint32_t
-name|R
-init|=
-name|uint32_t
-argument_list|(
-name|CurWord
-argument_list|)
-operator|&
-operator|(
-operator|~
-literal|0U
-operator|>>
-operator|(
-literal|32
-operator|-
-name|NumBits
-operator|)
-operator|)
-decl_stmt|;
-name|CurWord
-operator|>>=
-name|NumBits
-expr_stmt|;
-name|BitsInCurWord
-operator|-=
-name|NumBits
-expr_stmt|;
-return|return
-name|R
-return|;
-block|}
-comment|// If we run out of data, stop at the end of the stream.
-if|if
-condition|(
-name|isEndPos
-argument_list|(
+name|Size
+operator|==
+literal|0
+operator|||
 name|NextChar
+operator|<
+operator|(
+name|unsigned
+operator|)
+name|Size
 argument_list|)
-condition|)
-block|{
-name|CurWord
-operator|=
-literal|0
 expr_stmt|;
-name|BitsInCurWord
-operator|=
-literal|0
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-name|uint32_t
-name|R
-init|=
-name|uint32_t
-argument_list|(
-name|CurWord
-argument_list|)
-decl_stmt|;
 comment|// Read the next word from the stream.
 name|uint8_t
 name|Array
@@ -1406,6 +1245,9 @@ block|{
 literal|0
 block|}
 decl_stmt|;
+name|uint64_t
+name|BytesRead
+init|=
 name|BitStream
 operator|->
 name|getBitcodeBytes
@@ -1413,22 +1255,37 @@ argument_list|()
 operator|.
 name|readBytes
 argument_list|(
-name|NextChar
+name|Array
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Array
 argument_list|)
 argument_list|,
-name|Array
+name|NextChar
 argument_list|)
+decl_stmt|;
+comment|// If we run out of data, stop at the end of the stream.
+if|if
+condition|(
+name|BytesRead
+operator|==
+literal|0
+condition|)
+block|{
+name|Size
+operator|=
+name|NextChar
 expr_stmt|;
-comment|// Handle big-endian byte-swapping if necessary.
+return|return;
+block|}
+name|CurWord
+operator|=
 name|support
 operator|::
-name|detail
+name|endian
 operator|::
-name|packed_endian_specific_integral
+name|read
 operator|<
 name|word_t
 operator|,
@@ -1440,149 +1297,184 @@ name|support
 operator|::
 name|unaligned
 operator|>
-name|EndianValue
-expr_stmt|;
-name|memcpy
-argument_list|(
-operator|&
-name|EndianValue
-argument_list|,
+operator|(
 name|Array
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Array
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|CurWord
-operator|=
-name|EndianValue
+operator|)
 expr_stmt|;
 name|NextChar
 operator|+=
-sizeof|sizeof
-argument_list|(
-name|word_t
-argument_list|)
-expr_stmt|;
-comment|// Extract NumBits-BitsInCurWord from what we just read.
-name|unsigned
-name|BitsLeft
-init|=
-name|NumBits
-operator|-
-name|BitsInCurWord
-decl_stmt|;
-comment|// Be careful here, BitsLeft is in the range [1..32]/[1..64] inclusive.
-name|R
-operator||=
-name|uint32_t
-argument_list|(
-operator|(
-name|CurWord
-operator|&
-operator|(
-name|word_t
-argument_list|(
-operator|~
-literal|0ULL
-argument_list|)
-operator|>>
-operator|(
-sizeof|sizeof
-argument_list|(
-name|word_t
-argument_list|)
-operator|*
-literal|8
-operator|-
-name|BitsLeft
-operator|)
-operator|)
-operator|)
-operator|<<
-name|BitsInCurWord
-argument_list|)
-expr_stmt|;
-comment|// BitsLeft bits have just been used up from CurWord.  BitsLeft is in the
-comment|// range [1..32]/[1..64] so be careful how we shift.
-if|if
-condition|(
-name|BitsLeft
-operator|!=
-sizeof|sizeof
-argument_list|(
-name|word_t
-argument_list|)
-operator|*
-literal|8
-condition|)
-name|CurWord
-operator|>>=
-name|BitsLeft
-expr_stmt|;
-else|else
-name|CurWord
-operator|=
-literal|0
+name|BytesRead
 expr_stmt|;
 name|BitsInCurWord
 operator|=
-sizeof|sizeof
-argument_list|(
-name|word_t
-argument_list|)
+name|BytesRead
 operator|*
 literal|8
-operator|-
-name|BitsLeft
 expr_stmt|;
-return|return
-name|R
-return|;
 block|}
-name|uint64_t
-name|Read64
+name|word_t
+name|Read
 parameter_list|(
 name|unsigned
 name|NumBits
 parameter_list|)
 block|{
-if|if
-condition|(
+specifier|static
+specifier|const
+name|unsigned
+name|BitsInWord
+init|=
+sizeof|sizeof
+argument_list|(
+name|word_t
+argument_list|)
+operator|*
+literal|8
+decl_stmt|;
+name|assert
+argument_list|(
+name|NumBits
+operator|&&
 name|NumBits
 operator|<=
-literal|32
-condition|)
-return|return
-name|Read
-argument_list|(
-name|NumBits
+name|BitsInWord
+operator|&&
+literal|"Cannot return zero or more than BitsInWord bits!"
 argument_list|)
-return|;
-name|uint64_t
-name|V
+expr_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|Mask
 init|=
-name|Read
+sizeof|sizeof
 argument_list|(
-literal|32
+name|word_t
 argument_list|)
+operator|>
+literal|4
+condition|?
+literal|0x3f
+else|:
+literal|0x1f
 decl_stmt|;
-return|return
-name|V
-operator||
+comment|// If the field is fully contained by CurWord, return it quickly.
+if|if
+condition|(
+name|BitsInCurWord
+operator|>=
+name|NumBits
+condition|)
+block|{
+name|word_t
+name|R
+init|=
+name|CurWord
+operator|&
 operator|(
-name|uint64_t
-operator|)
-name|Read
+operator|~
+name|word_t
 argument_list|(
+literal|0
+argument_list|)
+operator|>>
+operator|(
+name|BitsInWord
+operator|-
+name|NumBits
+operator|)
+operator|)
+decl_stmt|;
+comment|// Use a mask to avoid undefined behavior.
+name|CurWord
+operator|>>=
+operator|(
+name|NumBits
+operator|&
+name|Mask
+operator|)
+expr_stmt|;
+name|BitsInCurWord
+operator|-=
+name|NumBits
+expr_stmt|;
+return|return
+name|R
+return|;
+block|}
+name|word_t
+name|R
+init|=
+name|BitsInCurWord
+condition|?
+name|CurWord
+else|:
+literal|0
+decl_stmt|;
+name|unsigned
+name|BitsLeft
+init|=
 name|NumBits
 operator|-
-literal|32
+name|BitsInCurWord
+decl_stmt|;
+name|fillCurWord
+argument_list|()
+expr_stmt|;
+comment|// If we run out of data, stop at the end of the stream.
+if|if
+condition|(
+name|BitsLeft
+operator|>
+name|BitsInCurWord
+condition|)
+return|return
+literal|0
+return|;
+name|word_t
+name|R2
+init|=
+name|CurWord
+operator|&
+operator|(
+operator|~
+name|word_t
+argument_list|(
+literal|0
 argument_list|)
+operator|>>
+operator|(
+name|BitsInWord
+operator|-
+name|BitsLeft
+operator|)
+operator|)
+decl_stmt|;
+comment|// Use a mask to avoid undefined behavior.
+name|CurWord
+operator|>>=
+operator|(
+name|BitsLeft
+operator|&
+name|Mask
+operator|)
+expr_stmt|;
+name|BitsInCurWord
+operator|-=
+name|BitsLeft
+expr_stmt|;
+name|R
+operator||=
+name|R2
 operator|<<
-literal|32
+operator|(
+name|NumBits
+operator|-
+name|BitsLeft
+operator|)
+expr_stmt|;
+return|return
+name|R
 return|;
 block|}
 name|uint32_t
@@ -1694,8 +1586,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|// ReadVBR64 - Read a VBR that may have a value up to 64-bits in size.  The
-comment|// chunk size of the VBR must still be<= 32 bits though.
+comment|// Read a VBR that may have a value up to 64-bits in size. The chunk size of
+comment|// the VBR must still be<= 32 bits though.
 name|uint64_t
 name|ReadVBR64
 parameter_list|(
@@ -1847,10 +1739,6 @@ name|BitsInCurWord
 operator|=
 literal|0
 expr_stmt|;
-name|CurWord
-operator|=
-literal|0
-expr_stmt|;
 block|}
 name|public
 label|:
@@ -1867,8 +1755,7 @@ return|;
 block|}
 comment|// Block header:
 comment|//    [ENTER_SUBBLOCK, blockid, newcodelen,<align4bytes>, blocklen]
-comment|/// ReadSubBlockID - Having read the ENTER_SUBBLOCK code, read the BlockID for
-comment|/// the block.
+comment|/// Having read the ENTER_SUBBLOCK code, read the BlockID for the block.
 name|unsigned
 name|ReadSubBlockID
 parameter_list|()
@@ -1882,9 +1769,8 @@ name|BlockIDWidth
 argument_list|)
 return|;
 block|}
-comment|/// SkipBlock - Having read the ENTER_SUBBLOCK abbrevid and a BlockID, skip
-comment|/// over the body of this block.  If the block record is malformed, return
-comment|/// true.
+comment|/// Having read the ENTER_SUBBLOCK abbrevid and a BlockID, skip over the body
+comment|/// of this block. If the block record is malformed, return true.
 name|bool
 name|SkipBlock
 parameter_list|()
@@ -1950,8 +1836,8 @@ return|return
 name|false
 return|;
 block|}
-comment|/// EnterSubBlock - Having read the ENTER_SUBBLOCK abbrevid, enter
-comment|/// the block, and return true if the block has an error.
+comment|/// Having read the ENTER_SUBBLOCK abbrevid, enter the block, and return true
+comment|/// if the block has an error.
 name|bool
 name|EnterSubBlock
 parameter_list|(
@@ -2006,52 +1892,18 @@ argument_list|()
 operator|.
 name|PrevCodeSize
 expr_stmt|;
-comment|// Delete abbrevs from popped scope.
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
 name|CurAbbrevs
-operator|.
-name|size
-argument_list|()
-operator|)
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-name|CurAbbrevs
-index|[
-name|i
-index|]
-operator|->
-name|dropRef
-argument_list|()
-expr_stmt|;
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|BlockScope
 operator|.
 name|back
 argument_list|()
 operator|.
 name|PrevAbbrevs
-operator|.
-name|swap
-argument_list|(
-name|CurAbbrevs
 argument_list|)
 expr_stmt|;
 name|BlockScope
@@ -2063,52 +1915,9 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Record Processing
 comment|//===--------------------------------------------------------------------===//
-name|private
-label|:
-name|void
-name|readAbbreviatedLiteral
-argument_list|(
-specifier|const
-name|BitCodeAbbrevOp
-operator|&
-name|Op
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|uint64_t
-operator|>
-operator|&
-name|Vals
-argument_list|)
-decl_stmt|;
-name|void
-name|readAbbreviatedField
-argument_list|(
-specifier|const
-name|BitCodeAbbrevOp
-operator|&
-name|Op
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|uint64_t
-operator|>
-operator|&
-name|Vals
-argument_list|)
-decl_stmt|;
-name|void
-name|skipAbbreviatedField
-parameter_list|(
-specifier|const
-name|BitCodeAbbrevOp
-modifier|&
-name|Op
-parameter_list|)
-function_decl|;
 name|public
 label|:
-comment|/// getAbbrev - Return the abbreviation for the specified AbbrevId.
+comment|/// Return the abbreviation for the specified AbbrevId.
 specifier|const
 name|BitCodeAbbrev
 modifier|*
@@ -2144,9 +1953,12 @@ name|CurAbbrevs
 index|[
 name|AbbrevNo
 index|]
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
-comment|/// skipRecord - Read the current record and discard it.
+comment|/// Read the current record and discard it.
 name|void
 name|skipRecord
 parameter_list|(

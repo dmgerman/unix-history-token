@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARMFPUNAME_H
+name|LLVM_LIB_TARGET_ARM_ARMFPUNAME_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARMFPUNAME_H
+name|LLVM_LIB_TARGET_ARM_ARMFPUNAME_H
 end_define
 
 begin_decl_stmt
@@ -83,10 +83,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// ARMFPUNAME_H
-end_comment
 
 end_unit
 

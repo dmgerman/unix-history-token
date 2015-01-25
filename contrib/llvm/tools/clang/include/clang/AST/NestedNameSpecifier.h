@@ -95,6 +95,9 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|CXXRecordDecl
+decl_stmt|;
+name|class
 name|NamespaceAliasDecl
 decl_stmt|;
 name|class
@@ -141,7 +144,7 @@ name|StoredIdentifier
 operator|=
 literal|0
 block|,
-name|StoredNamespaceOrAlias
+name|StoredDecl
 operator|=
 literal|1
 block|,
@@ -209,6 +212,10 @@ name|TypeSpecWithTemplate
 block|,
 comment|/// \brief The global specifier '::'. There is no stored value.
 name|Global
+block|,
+comment|/// \brief Microsoft's '__super' specifier, stored as a CXXRecordDecl* of
+comment|/// the class it appeared in.
+name|Super
 block|}
 block|;
 name|private
@@ -402,6 +409,23 @@ operator|&
 name|Context
 argument_list|)
 block|;
+comment|/// \brief Returns the nested name specifier representing the __super scope
+comment|/// for the given CXXRecordDecl.
+specifier|static
+name|NestedNameSpecifier
+operator|*
+name|SuperSpecifier
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|Context
+argument_list|,
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+block|;
 comment|/// \brief Return the prefix of this nested name specifier.
 comment|///
 comment|/// The prefix contains all of the parts of the nested name
@@ -469,6 +493,14 @@ comment|/// specifier.
 name|NamespaceAliasDecl
 operator|*
 name|getAsNamespaceAlias
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Retrieve the record declaration stored in this nested name
+comment|/// specifier.
+name|CXXRecordDecl
+operator|*
+name|getAsRecordDecl
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1212,6 +1244,37 @@ parameter_list|(
 name|ASTContext
 modifier|&
 name|Context
+parameter_list|,
+name|SourceLocation
+name|ColonColonLoc
+parameter_list|)
+function_decl|;
+comment|/// \brief Turns this (empty) nested-name-specifier into '__super'
+comment|/// nested-name-specifier.
+comment|///
+comment|/// \param Context The AST context in which this nested-name-specifier
+comment|/// resides.
+comment|///
+comment|/// \param RD The declaration of the class in which nested-name-specifier
+comment|/// appeared.
+comment|///
+comment|/// \param SuperLoc The location of the '__super' keyword.
+comment|/// name.
+comment|///
+comment|/// \param ColonColonLoc The location of the trailing '::'.
+name|void
+name|MakeSuper
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+name|SourceLocation
+name|SuperLoc
 parameter_list|,
 name|SourceLocation
 name|ColonColonLoc

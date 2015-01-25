@@ -256,6 +256,19 @@ comment|/// Symbols - Bindings of names to symbols.
 name|SymbolTable
 name|Symbols
 decl_stmt|;
+comment|/// ELF sections can have a corresponding symbol. This maps one to the
+comment|/// other.
+name|DenseMap
+operator|<
+specifier|const
+name|MCSectionELF
+operator|*
+operator|,
+name|MCSymbol
+operator|*
+operator|>
+name|SectionSymbols
+expr_stmt|;
 comment|/// A maping from a local label number and an instance count to a symbol.
 comment|/// For example, in the assembly
 comment|///     1:
@@ -700,6 +713,24 @@ modifier|&
 name|Name
 parameter_list|)
 function_decl|;
+name|MCSymbol
+modifier|*
+name|getOrCreateSectionSymbol
+parameter_list|(
+specifier|const
+name|MCSectionELF
+modifier|&
+name|Section
+parameter_list|)
+function_decl|;
+name|MCSymbol
+modifier|*
+name|getOrCreateFrameAllocSymbol
+parameter_list|(
+name|StringRef
+name|FuncName
+parameter_list|)
+function_decl|;
 comment|/// LookupSymbol - Get the symbol for \p Name, or null.
 name|MCSymbol
 modifier|*
@@ -898,6 +929,26 @@ name|getCOFFSection
 parameter_list|(
 name|StringRef
 name|Section
+parameter_list|)
+function_decl|;
+comment|/// Gets or creates a section equivalent to Sec that is associated with the
+comment|/// section containing KeySym. For example, to create a debug info section
+comment|/// associated with an inline function, pass the normal debug info section
+comment|/// as Sec and the function symbol as KeySym.
+specifier|const
+name|MCSectionCOFF
+modifier|*
+name|getAssociativeCOFFSection
+parameter_list|(
+specifier|const
+name|MCSectionCOFF
+modifier|*
+name|Sec
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+name|KeySym
 parameter_list|)
 function_decl|;
 comment|/// @}

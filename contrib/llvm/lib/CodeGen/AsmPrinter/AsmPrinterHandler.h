@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CODEGEN_ASMPRINTER_ASMPRINTERHANDLER_H__
+name|LLVM_LIB_CODEGEN_ASMPRINTER_ASMPRINTERHANDLER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CODEGEN_ASMPRINTER_ASMPRINTERHANDLER_H__
+name|LLVM_LIB_CODEGEN_ASMPRINTER_ASMPRINTERHANDLER_H
 end_define
 
 begin_include

@@ -121,6 +121,9 @@ name|class
 name|AliasAnalysis
 decl_stmt|;
 name|class
+name|AssumptionCache
+decl_stmt|;
+name|class
 name|DataLayout
 decl_stmt|;
 name|class
@@ -1083,26 +1086,18 @@ comment|/// pointer. May be UnknownSize if the sizes are unknown.
 name|uint64_t
 name|Size
 decl_stmt|;
-comment|/// TBAATag - The TBAA tag associated with dereferences of the
-comment|/// pointer. May be null if there are no tags or conflicting tags.
-specifier|const
-name|MDNode
-modifier|*
-name|TBAATag
+comment|/// AATags - The AA tags associated with dereferences of the
+comment|/// pointer. The members may be null if there are no tags or
+comment|/// conflicting tags.
+name|AAMDNodes
+name|AATags
 decl_stmt|;
 name|NonLocalPointerInfo
 argument_list|()
 operator|:
 name|Size
 argument_list|(
-name|AliasAnalysis
-operator|::
-name|UnknownSize
-argument_list|)
-operator|,
-name|TBAATag
-argument_list|(
-argument|nullptr
+argument|AliasAnalysis::UnknownSize
 argument_list|)
 block|{}
 block|}
@@ -1285,6 +1280,13 @@ name|DT
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|AssumptionCache
+modifier|*
+name|AC
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|std
 operator|::
@@ -1461,11 +1463,11 @@ comment|/// getNonLocalPointerDependency - Perform a full dependency query for a
 end_comment
 
 begin_comment
-comment|/// access to the specified (non-volatile) memory location, returning the
+comment|/// access to the QueryInst's specified memory location, returning the set
 end_comment
 
 begin_comment
-comment|/// set of instructions that either define or clobber the value.
+comment|/// of instructions that either define or clobber the value.
 end_comment
 
 begin_comment
@@ -1473,26 +1475,36 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This method assumes the pointer has a "NonLocal" dependency within BB.
+comment|/// Warning: For a volatile query instruction, the dependencies will be
+end_comment
+
+begin_comment
+comment|/// accurate, and thus usable for reordering, but it is never legal to
+end_comment
+
+begin_comment
+comment|/// remove the query instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This method assumes the pointer has a "NonLocal" dependency within
+end_comment
+
+begin_comment
+comment|/// QueryInst's parent basic block.
 end_comment
 
 begin_decl_stmt
 name|void
 name|getNonLocalPointerDependency
 argument_list|(
-specifier|const
-name|AliasAnalysis
-operator|::
-name|Location
-operator|&
-name|Loc
-argument_list|,
-name|bool
-name|isLoad
-argument_list|,
-name|BasicBlock
+name|Instruction
 operator|*
-name|BB
+name|QueryInst
 argument_list|,
 name|SmallVectorImpl
 operator|<

@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_CODEGEN_CGBUILDER_H
+name|LLVM_CLANG_LIB_CODEGEN_CGBUILDER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_CODEGEN_CGBUILDER_H
+name|LLVM_CLANG_LIB_CODEGEN_CGBUILDER_H
 end_define
 
 begin_include
@@ -60,7 +60,7 @@ name|class
 name|CodeGenFunction
 decl_stmt|;
 comment|/// \brief This is an IRBuilder insertion helper that forwards to
-comment|/// CodeGenFunction::InsertHelper, which adds nesessary metadata to
+comment|/// CodeGenFunction::InsertHelper, which adds necessary metadata to
 comment|/// instructions.
 name|template
 operator|<

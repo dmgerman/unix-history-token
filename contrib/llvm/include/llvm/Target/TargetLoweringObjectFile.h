@@ -500,18 +500,6 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|/// \brief True if the section is atomized using the symbols in it.
-comment|/// This is false if the section is not atomized at all (most ELF sections) or
-comment|/// if it is atomized based on its contents (MachO' __TEXT,__cstring for
-comment|/// example).
-name|virtual
-name|bool
-name|isSectionAtomizableBySymbols
-argument_list|(
-argument|const MCSection&Section
-argument_list|)
-specifier|const
-block|;
 name|protected
 operator|:
 name|virtual
@@ -529,6 +517,8 @@ argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
+operator|=
+literal|0
 block|; }
 decl_stmt|;
 block|}

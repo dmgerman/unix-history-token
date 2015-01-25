@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FILESYSTEMSTATCACHE_H
+name|LLVM_CLANG_BASIC_FILESYSTEMSTATCACHE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FILESYSTEMSTATCACHE_H
+name|LLVM_CLANG_BASIC_FILESYSTEMSTATCACHE_H
 end_define
 
 begin_include
@@ -263,15 +263,21 @@ comment|/// \brief Sets the next stat call cache in the chain of stat caches.
 comment|/// Takes ownership of the given stat cache.
 name|void
 name|setNextStatCache
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FileSystemStatCache
-modifier|*
+operator|>
 name|Cache
-parameter_list|)
+argument_list|)
 block|{
 name|NextStatCache
-operator|.
-name|reset
+operator|=
+name|std
+operator|::
+name|move
 argument_list|(
 name|Cache
 argument_list|)
@@ -293,16 +299,22 @@ block|}
 comment|/// \brief Retrieve the next stat call cache in the chain, transferring
 comment|/// ownership of this cache (and, transitively, all of the remaining caches)
 comment|/// to the caller.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FileSystemStatCache
-modifier|*
+operator|>
 name|takeNextStatCache
-parameter_list|()
+argument_list|()
 block|{
 return|return
+name|std
+operator|::
+name|move
+argument_list|(
 name|NextStatCache
-operator|.
-name|release
-argument_list|()
+argument_list|)
 return|;
 block|}
 name|protected

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_LEX_EXTERNAL_PREPROCESSOR_SOURCE_H
+name|LLVM_CLANG_LEX_EXTERNALPREPROCESSORSOURCE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_LEX_EXTERNAL_PREPROCESSOR_SOURCE_H
+name|LLVM_CLANG_LEX_EXTERNALPREPROCESSORSOURCE_H
 end_define
 
 begin_decl_stmt
@@ -114,10 +114,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_LEX_EXTERNAL_PREPROCESSOR_SOURCE_H
-end_comment
 
 end_unit
 

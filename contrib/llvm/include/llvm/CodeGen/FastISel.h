@@ -84,90 +84,28 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetLowering.h"
+file|"llvm/IR/CallingConv.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/CallingConv.h"
+file|"llvm/IR/IntrinsicInst.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetLowering.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|AllocaInst
-decl_stmt|;
-name|class
-name|Constant
-decl_stmt|;
-name|class
-name|ConstantFP
-decl_stmt|;
-name|class
-name|CallInst
-decl_stmt|;
-name|class
-name|DataLayout
-decl_stmt|;
-name|class
-name|FunctionLoweringInfo
-decl_stmt|;
-name|class
-name|Instruction
-decl_stmt|;
-name|class
-name|IntrinsicInst
-decl_stmt|;
-name|class
-name|LoadInst
-decl_stmt|;
-name|class
-name|MVT
-decl_stmt|;
-name|class
-name|MachineConstantPool
-decl_stmt|;
-name|class
-name|MachineFrameInfo
-decl_stmt|;
-name|class
-name|MachineFunction
-decl_stmt|;
-name|class
-name|MachineInstr
-decl_stmt|;
-name|class
-name|MachineRegisterInfo
-decl_stmt|;
-name|class
-name|TargetInstrInfo
-decl_stmt|;
-name|class
-name|TargetLibraryInfo
-decl_stmt|;
-name|class
-name|TargetLowering
-decl_stmt|;
-name|class
-name|TargetMachine
-decl_stmt|;
-name|class
-name|TargetRegisterClass
-decl_stmt|;
-name|class
-name|TargetRegisterInfo
-decl_stmt|;
-name|class
-name|User
-decl_stmt|;
-name|class
-name|Value
-decl_stmt|;
-comment|/// This is a fast-path instruction selection class that generates poor code and
-comment|/// doesn't support illegal types or non-trivial lowering, but runs quickly.
+comment|/// \brief This is a fast-path instruction selection class that generates poor
+comment|/// code and doesn't support illegal types or non-trivial lowering, but runs
+comment|/// quickly.
 name|class
 name|FastISel
 block|{
@@ -185,42 +123,42 @@ modifier|*
 name|Ty
 decl_stmt|;
 name|bool
-name|isSExt
+name|IsSExt
 range|:
 literal|1
 decl_stmt|;
 name|bool
-name|isZExt
+name|IsZExt
 range|:
 literal|1
 decl_stmt|;
 name|bool
-name|isInReg
+name|IsInReg
 range|:
 literal|1
 decl_stmt|;
 name|bool
-name|isSRet
+name|IsSRet
 range|:
 literal|1
 decl_stmt|;
 name|bool
-name|isNest
+name|IsNest
 range|:
 literal|1
 decl_stmt|;
 name|bool
-name|isByVal
+name|IsByVal
 range|:
 literal|1
 decl_stmt|;
 name|bool
-name|isInAlloca
+name|IsInAlloca
 range|:
 literal|1
 decl_stmt|;
 name|bool
-name|isReturned
+name|IsReturned
 range|:
 literal|1
 decl_stmt|;
@@ -240,42 +178,42 @@ argument_list|(
 name|nullptr
 argument_list|)
 operator|,
-name|isSExt
+name|IsSExt
 argument_list|(
 name|false
 argument_list|)
 operator|,
-name|isZExt
+name|IsZExt
 argument_list|(
 name|false
 argument_list|)
 operator|,
-name|isInReg
+name|IsInReg
 argument_list|(
 name|false
 argument_list|)
 operator|,
-name|isSRet
+name|IsSRet
 argument_list|(
 name|false
 argument_list|)
 operator|,
-name|isNest
+name|IsNest
 argument_list|(
 name|false
 argument_list|)
 operator|,
-name|isByVal
+name|IsByVal
 argument_list|(
 name|false
 argument_list|)
 operator|,
-name|isInAlloca
+name|IsInAlloca
 argument_list|(
 name|false
 argument_list|)
 operator|,
-name|isReturned
+name|IsReturned
 argument_list|(
 name|false
 argument_list|)
@@ -284,7 +222,9 @@ name|Alignment
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
+comment|/// \brief Set CallLoweringInfo attribute flags based on a call instruction
+comment|/// and called function attributes.
 name|void
 name|setAttributes
 argument_list|(
@@ -341,8 +281,8 @@ name|IsReturnValueUsed
 range|:
 literal|1
 decl_stmt|;
-comment|// IsTailCall should be modified by implementations of
-comment|// FastLowerCall that perform tail call conversions.
+comment|// \brief IsTailCall Should be modified by implementations of FastLowerCall
+comment|// that perform tail call conversions.
 name|bool
 name|IsTailCall
 decl_stmt|;
@@ -380,6 +320,9 @@ name|ResultReg
 decl_stmt|;
 name|unsigned
 name|NumResultRegs
+decl_stmt|;
+name|bool
+name|IsPatchPoint
 decl_stmt|;
 name|SmallVector
 operator|<
@@ -511,6 +454,11 @@ name|NumResultRegs
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|IsPatchPoint
+argument_list|(
+argument|false
+argument_list|)
 block|{}
 name|CallLoweringInfo
 operator|&
@@ -606,13 +554,6 @@ operator|.
 name|getCallingConv
 argument_list|()
 block|;
-name|NumFixedArgs
-operator|=
-name|FuncTy
-operator|->
-name|getNumParams
-argument_list|()
-block|;
 name|Args
 operator|=
 name|std
@@ -621,6 +562,13 @@ name|move
 argument_list|(
 name|ArgsList
 argument_list|)
+block|;
+name|NumFixedArgs
+operator|=
+name|FuncTy
+operator|->
+name|getNumParams
+argument_list|()
 block|;
 name|CS
 operator|=
@@ -750,6 +698,15 @@ operator|.
 name|getCallingConv
 argument_list|()
 expr_stmt|;
+name|Args
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|ArgsList
+argument_list|)
+expr_stmt|;
 name|NumFixedArgs
 operator|=
 operator|(
@@ -765,15 +722,6 @@ name|getNumParams
 argument_list|()
 else|:
 name|FixedArgs
-expr_stmt|;
-name|Args
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|ArgsList
-argument_list|)
 expr_stmt|;
 name|CS
 operator|=
@@ -826,6 +774,15 @@ name|CallConv
 operator|=
 name|CC
 expr_stmt|;
+name|Args
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|ArgsList
+argument_list|)
+expr_stmt|;
 name|NumFixedArgs
 operator|=
 operator|(
@@ -842,6 +799,52 @@ argument_list|()
 else|:
 name|FixedArgs
 expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|CallLoweringInfo
+modifier|&
+name|setCallee
+argument_list|(
+name|CallingConv
+operator|::
+name|ID
+name|CC
+argument_list|,
+name|Type
+operator|*
+name|ResultTy
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Target
+argument_list|,
+name|ArgListTy
+operator|&&
+name|ArgsList
+argument_list|,
+name|unsigned
+name|FixedArgs
+operator|=
+operator|~
+literal|0U
+argument_list|)
+block|{
+name|RetTy
+operator|=
+name|ResultTy
+expr_stmt|;
+name|SymName
+operator|=
+name|Target
+expr_stmt|;
+name|CallConv
+operator|=
+name|CC
+expr_stmt|;
 name|Args
 operator|=
 name|std
@@ -850,6 +853,22 @@ name|move
 argument_list|(
 name|ArgsList
 argument_list|)
+expr_stmt|;
+name|NumFixedArgs
+operator|=
+operator|(
+name|FixedArgs
+operator|==
+operator|~
+literal|0U
+operator|)
+condition|?
+name|Args
+operator|.
+name|size
+argument_list|()
+else|:
+name|FixedArgs
 expr_stmt|;
 return|return
 operator|*
@@ -867,6 +886,25 @@ name|true
 parameter_list|)
 block|{
 name|IsTailCall
+operator|=
+name|Value
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|CallLoweringInfo
+modifier|&
+name|setIsPatchPoint
+parameter_list|(
+name|bool
+name|Value
+init|=
+name|true
+parameter_list|)
+block|{
+name|IsPatchPoint
 operator|=
 name|Value
 expr_stmt|;
@@ -986,25 +1024,28 @@ name|TargetLibraryInfo
 modifier|*
 name|LibInfo
 decl_stmt|;
-comment|/// The position of the last instruction for materializing constants for use
-comment|/// in the current block. It resets to EmitStartPt when it makes sense (for
-comment|/// example, it's usually profitable to avoid function calls between the
+name|bool
+name|SkipTargetIndependentISel
+decl_stmt|;
+comment|/// \brief The position of the last instruction for materializing constants
+comment|/// for use in the current block. It resets to EmitStartPt when it makes sense
+comment|/// (for example, it's usually profitable to avoid function calls between the
 comment|/// definition and the use)
 name|MachineInstr
 modifier|*
 name|LastLocalValue
 decl_stmt|;
-comment|/// The top most instruction in the current block that is allowed for emitting
-comment|/// local variables. LastLocalValue resets to EmitStartPt when it makes sense
-comment|/// (for example, on function calls)
+comment|/// \brief The top most instruction in the current block that is allowed for
+comment|/// emitting local variables. LastLocalValue resets to EmitStartPt when it
+comment|/// makes sense (for example, on function calls)
 name|MachineInstr
 modifier|*
 name|EmitStartPt
 decl_stmt|;
 name|public
 label|:
-comment|/// Return the position of the last instruction emitted for materializing
-comment|/// constants for use in the current block.
+comment|/// \brief Return the position of the last instruction emitted for
+comment|/// materializing constants for use in the current block.
 name|MachineInstr
 modifier|*
 name|getLastLocalValue
@@ -1014,8 +1055,8 @@ return|return
 name|LastLocalValue
 return|;
 block|}
-comment|/// Update the position of the last instruction emitted for materializing
-comment|/// constants for use in the current block.
+comment|/// \brief Update the position of the last instruction emitted for
+comment|/// materializing constants for use in the current block.
 name|void
 name|setLastLocalValue
 parameter_list|(
@@ -1033,13 +1074,13 @@ operator|=
 name|I
 expr_stmt|;
 block|}
-comment|/// Set the current block to which generated machine instructions will be
-comment|/// appended, and clear the local CSE map.
+comment|/// \brief Set the current block to which generated machine instructions will
+comment|/// be appended, and clear the local CSE map.
 name|void
 name|startNewBlock
 parameter_list|()
 function_decl|;
-comment|/// Return current debug location information.
+comment|/// \brief Return current debug location information.
 name|DebugLoc
 name|getCurDebugLoc
 argument_list|()
@@ -1049,17 +1090,18 @@ return|return
 name|DbgLoc
 return|;
 block|}
-comment|/// Do "fast" instruction selection for function arguments and append machine
-comment|/// instructions to the current block. Return true if it is successful.
+comment|/// \brief Do "fast" instruction selection for function arguments and append
+comment|/// the machine instructions to the current block. Returns true when
+comment|/// successful.
 name|bool
-name|LowerArguments
+name|lowerArguments
 parameter_list|()
 function_decl|;
-comment|/// Do "fast" instruction selection for the given LLVM IR instruction, and
-comment|/// append generated machine instructions to the current block. Return true if
-comment|/// selection was successful.
+comment|/// \brief Do "fast" instruction selection for the given LLVM IR instruction
+comment|/// and append the generated machine instructions to the current block.
+comment|/// Returns true if selection was successful.
 name|bool
-name|SelectInstruction
+name|selectInstruction
 parameter_list|(
 specifier|const
 name|Instruction
@@ -1067,11 +1109,11 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
-comment|/// Do "fast" instruction selection for the given LLVM IR operator
+comment|/// \brief Do "fast" instruction selection for the given LLVM IR operator
 comment|/// (Instruction or ConstantExpr), and append generated machine instructions
 comment|/// to the current block. Return true if selection was successful.
 name|bool
-name|SelectOperator
+name|selectOperator
 parameter_list|(
 specifier|const
 name|User
@@ -1082,8 +1124,8 @@ name|unsigned
 name|Opcode
 parameter_list|)
 function_decl|;
-comment|/// Create a virtual register and arrange for it to be assigned the value for
-comment|/// the given LLVM value.
+comment|/// \brief Create a virtual register and arrange for it to be assigned the
+comment|/// value for the given LLVM value.
 name|unsigned
 name|getRegForValue
 parameter_list|(
@@ -1093,8 +1135,9 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-comment|/// Look up the value to see if its value is already cached in a register. It
-comment|/// may be defined by instructions across blocks or defined locally.
+comment|/// \brief Look up the value to see if its value is already cached in a
+comment|/// register. It may be defined by instructions across blocks or defined
+comment|/// locally.
 name|unsigned
 name|lookUpRegForValue
 parameter_list|(
@@ -1104,8 +1147,8 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-comment|/// This is a wrapper around getRegForValue that also takes care of truncating
-comment|/// or sign-extending the given getelementptr index value.
+comment|/// \brief This is a wrapper around getRegForValue that also takes care of
+comment|/// truncating or sign-extending the given getelementptr index value.
 name|std
 operator|::
 name|pair
@@ -1175,13 +1218,13 @@ return|return
 name|false
 return|;
 block|}
-comment|/// Reset InsertPt to prepare for inserting instructions into the current
-comment|/// block.
+comment|/// \brief Reset InsertPt to prepare for inserting instructions into the
+comment|/// current block.
 name|void
 name|recomputeInsertPt
 parameter_list|()
 function_decl|;
-comment|/// Remove all dead instructions between the I and E.
+comment|/// \brief Remove all dead instructions between the I and E.
 name|void
 name|removeDeadCode
 argument_list|(
@@ -1209,13 +1252,13 @@ name|DL
 decl_stmt|;
 block|}
 struct|;
-comment|/// Prepare InsertPt to begin inserting instructions into the local value area
-comment|/// and return the old insert position.
+comment|/// \brief Prepare InsertPt to begin inserting instructions into the local
+comment|/// value area and return the old insert position.
 name|SavePoint
 name|enterLocalValueArea
 parameter_list|()
 function_decl|;
-comment|/// Reset InsertPt to the given old insert position.
+comment|/// \brief Reset InsertPt to the given old insert position.
 name|void
 name|leaveLocalValueArea
 parameter_list|(
@@ -1235,21 +1278,26 @@ name|FastISel
 parameter_list|(
 name|FunctionLoweringInfo
 modifier|&
-name|funcInfo
+name|FuncInfo
 parameter_list|,
 specifier|const
 name|TargetLibraryInfo
 modifier|*
-name|libInfo
+name|LibInfo
+parameter_list|,
+name|bool
+name|SkipTargetIndependentISel
+init|=
+name|false
 parameter_list|)
 function_decl|;
-comment|/// This method is called by target-independent code when the normal FastISel
-comment|/// process fails to select an instruction.  This gives targets a chance to
-comment|/// emit code for anything that doesn't fit into FastISel's framework. It
-comment|/// returns true if it was successful.
+comment|/// \brief This method is called by target-independent code when the normal
+comment|/// FastISel process fails to select an instruction. This gives targets a
+comment|/// chance to emit code for anything that doesn't fit into FastISel's
+comment|/// framework. It returns true if it was successful.
 name|virtual
 name|bool
-name|TargetSelectInstruction
+name|fastSelectInstruction
 parameter_list|(
 specifier|const
 name|Instruction
@@ -1259,29 +1307,29 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// This method is called by target-independent code to do target specific
-comment|/// argument lowering. It returns true if it was successful.
+comment|/// \brief This method is called by target-independent code to do target-
+comment|/// specific argument lowering. It returns true if it was successful.
 name|virtual
 name|bool
-name|FastLowerArguments
+name|fastLowerArguments
 parameter_list|()
 function_decl|;
-comment|/// \brief This method is called by target-independent code to do target
+comment|/// \brief This method is called by target-independent code to do target-
 comment|/// specific call lowering. It returns true if it was successful.
 name|virtual
 name|bool
-name|FastLowerCall
+name|fastLowerCall
 parameter_list|(
 name|CallLoweringInfo
 modifier|&
 name|CLI
 parameter_list|)
 function_decl|;
-comment|/// \brief This method is called by target-independent code to do target
+comment|/// \brief This method is called by target-independent code to do target-
 comment|/// specific intrinsic lowering. It returns true if it was successful.
 name|virtual
 name|bool
-name|FastLowerIntrinsicCall
+name|fastLowerIntrinsicCall
 parameter_list|(
 specifier|const
 name|IntrinsicInst
@@ -1289,11 +1337,11 @@ modifier|*
 name|II
 parameter_list|)
 function_decl|;
-comment|/// This method is called by target-independent code to request that an
+comment|/// \brief This method is called by target-independent code to request that an
 comment|/// instruction with the given type and opcode be emitted.
 name|virtual
 name|unsigned
-name|FastEmit_
+name|fastEmit_
 parameter_list|(
 name|MVT
 name|VT
@@ -1305,11 +1353,11 @@ name|unsigned
 name|Opcode
 parameter_list|)
 function_decl|;
-comment|/// This method is called by target-independent code to request that an
+comment|/// \brief This method is called by target-independent code to request that an
 comment|/// instruction with the given type, opcode, and register operand be emitted.
 name|virtual
 name|unsigned
-name|FastEmit_r
+name|fastEmit_r
 parameter_list|(
 name|MVT
 name|VT
@@ -1327,11 +1375,11 @@ name|bool
 name|Op0IsKill
 parameter_list|)
 function_decl|;
-comment|/// This method is called by target-independent code to request that an
+comment|/// \brief This method is called by target-independent code to request that an
 comment|/// instruction with the given type, opcode, and register operands be emitted.
 name|virtual
 name|unsigned
-name|FastEmit_rr
+name|fastEmit_rr
 parameter_list|(
 name|MVT
 name|VT
@@ -1355,12 +1403,12 @@ name|bool
 name|Op1IsKill
 parameter_list|)
 function_decl|;
-comment|/// This method is called by target-independent code to request that an
+comment|/// \brief This method is called by target-independent code to request that an
 comment|/// instruction with the given type, opcode, and register and immediate
-comment|/// operands be emitted.
+comment|// operands be emitted.
 name|virtual
 name|unsigned
-name|FastEmit_ri
+name|fastEmit_ri
 parameter_list|(
 name|MVT
 name|VT
@@ -1381,12 +1429,12 @@ name|uint64_t
 name|Imm
 parameter_list|)
 function_decl|;
-comment|/// This method is called by target-independent code to request that an
+comment|/// \brief This method is called by target-independent code to request that an
 comment|/// instruction with the given type, opcode, and register and floating-point
 comment|/// immediate operands be emitted.
 name|virtual
 name|unsigned
-name|FastEmit_rf
+name|fastEmit_rf
 parameter_list|(
 name|MVT
 name|VT
@@ -1409,12 +1457,12 @@ modifier|*
 name|FPImm
 parameter_list|)
 function_decl|;
-comment|/// This method is called by target-independent code to request that an
+comment|/// \brief This method is called by target-independent code to request that an
 comment|/// instruction with the given type, opcode, and register and immediate
 comment|/// operands be emitted.
 name|virtual
 name|unsigned
-name|FastEmit_rri
+name|fastEmit_rri
 parameter_list|(
 name|MVT
 name|VT
@@ -1441,13 +1489,13 @@ name|uint64_t
 name|Imm
 parameter_list|)
 function_decl|;
-comment|/// \brief This method is a wrapper of FastEmit_ri.
+comment|/// \brief This method is a wrapper of fastEmit_ri.
 comment|///
 comment|/// It first tries to emit an instruction with an immediate operand using
-comment|/// FastEmit_ri.  If that fails, it materializes the immediate into a register
-comment|/// and try FastEmit_rr instead.
+comment|/// fastEmit_ri.  If that fails, it materializes the immediate into a register
+comment|/// and try fastEmit_rr instead.
 name|unsigned
-name|FastEmit_ri_
+name|fastEmit_ri_
 parameter_list|(
 name|MVT
 name|VT
@@ -1468,11 +1516,11 @@ name|MVT
 name|ImmType
 parameter_list|)
 function_decl|;
-comment|/// This method is called by target-independent code to request that an
+comment|/// \brief This method is called by target-independent code to request that an
 comment|/// instruction with the given type, opcode, and immediate operand be emitted.
 name|virtual
 name|unsigned
-name|FastEmit_i
+name|fastEmit_i
 parameter_list|(
 name|MVT
 name|VT
@@ -1487,12 +1535,12 @@ name|uint64_t
 name|Imm
 parameter_list|)
 function_decl|;
-comment|/// This method is called by target-independent code to request that an
+comment|/// \brief This method is called by target-independent code to request that an
 comment|/// instruction with the given type, opcode, and floating-point immediate
 comment|/// operand be emitted.
 name|virtual
 name|unsigned
-name|FastEmit_f
+name|fastEmit_f
 parameter_list|(
 name|MVT
 name|VT
@@ -1509,10 +1557,10 @@ modifier|*
 name|FPImm
 parameter_list|)
 function_decl|;
-comment|/// Emit a MachineInstr with no operands and a result register in the given
-comment|/// register class.
+comment|/// \brief Emit a MachineInstr with no operands and a result register in the
+comment|/// given register class.
 name|unsigned
-name|FastEmitInst_
+name|fastEmitInst_
 parameter_list|(
 name|unsigned
 name|MachineInstOpcode
@@ -1523,10 +1571,10 @@ modifier|*
 name|RC
 parameter_list|)
 function_decl|;
-comment|/// Emit a MachineInstr with one register operand and a result register in the
-comment|/// given register class.
+comment|/// \brief Emit a MachineInstr with one register operand and a result register
+comment|/// in the given register class.
 name|unsigned
-name|FastEmitInst_r
+name|fastEmitInst_r
 parameter_list|(
 name|unsigned
 name|MachineInstOpcode
@@ -1543,10 +1591,10 @@ name|bool
 name|Op0IsKill
 parameter_list|)
 function_decl|;
-comment|/// Emit a MachineInstr with two register operands and a result register in
-comment|/// the given register class.
+comment|/// \brief Emit a MachineInstr with two register operands and a result
+comment|/// register in the given register class.
 name|unsigned
-name|FastEmitInst_rr
+name|fastEmitInst_rr
 parameter_list|(
 name|unsigned
 name|MachineInstOpcode
@@ -1569,10 +1617,10 @@ name|bool
 name|Op1IsKill
 parameter_list|)
 function_decl|;
-comment|/// Emit a MachineInstr with three register operands and a result register in
-comment|/// the given register class.
+comment|/// \brief Emit a MachineInstr with three register operands and a result
+comment|/// register in the given register class.
 name|unsigned
-name|FastEmitInst_rrr
+name|fastEmitInst_rrr
 parameter_list|(
 name|unsigned
 name|MachineInstOpcode
@@ -1601,10 +1649,10 @@ name|bool
 name|Op2IsKill
 parameter_list|)
 function_decl|;
-comment|/// Emit a MachineInstr with a register operand, an immediate, and a result
-comment|/// register in the given register class.
+comment|/// \brief Emit a MachineInstr with a register operand, an immediate, and a
+comment|/// result register in the given register class.
 name|unsigned
-name|FastEmitInst_ri
+name|fastEmitInst_ri
 parameter_list|(
 name|unsigned
 name|MachineInstOpcode
@@ -1624,9 +1672,10 @@ name|uint64_t
 name|Imm
 parameter_list|)
 function_decl|;
-comment|/// Emit a MachineInstr with one register operand and two immediate operands.
+comment|/// \brief Emit a MachineInstr with one register operand and two immediate
+comment|/// operands.
 name|unsigned
-name|FastEmitInst_rii
+name|fastEmitInst_rii
 parameter_list|(
 name|unsigned
 name|MachineInstOpcode
@@ -1649,10 +1698,10 @@ name|uint64_t
 name|Imm2
 parameter_list|)
 function_decl|;
-comment|/// Emit a MachineInstr with two register operands and a result register in
-comment|/// the given register class.
+comment|/// \brief Emit a MachineInstr with two register operands and a result
+comment|/// register in the given register class.
 name|unsigned
-name|FastEmitInst_rf
+name|fastEmitInst_rf
 parameter_list|(
 name|unsigned
 name|MachineInstOpcode
@@ -1674,71 +1723,71 @@ modifier|*
 name|FPImm
 parameter_list|)
 function_decl|;
-comment|/// Emit a MachineInstr with two register operands, an immediate, and a result
+comment|/// \brief Emit a MachineInstr with two register operands, an immediate, and a
+comment|/// result register in the given register class.
+name|unsigned
+name|fastEmitInst_rri
+parameter_list|(
+name|unsigned
+name|MachineInstOpcode
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|,
+name|unsigned
+name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
+parameter_list|,
+name|unsigned
+name|Op1
+parameter_list|,
+name|bool
+name|Op1IsKill
+parameter_list|,
+name|uint64_t
+name|Imm
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit a MachineInstr with two register operands, two immediates
+comment|/// operands, and a result register in the given register class.
+name|unsigned
+name|fastEmitInst_rrii
+parameter_list|(
+name|unsigned
+name|MachineInstOpcode
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|,
+name|unsigned
+name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
+parameter_list|,
+name|unsigned
+name|Op1
+parameter_list|,
+name|bool
+name|Op1IsKill
+parameter_list|,
+name|uint64_t
+name|Imm1
+parameter_list|,
+name|uint64_t
+name|Imm2
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit a MachineInstr with a single immediate operand, and a result
 comment|/// register in the given register class.
 name|unsigned
-name|FastEmitInst_rri
-parameter_list|(
-name|unsigned
-name|MachineInstOpcode
-parameter_list|,
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|RC
-parameter_list|,
-name|unsigned
-name|Op0
-parameter_list|,
-name|bool
-name|Op0IsKill
-parameter_list|,
-name|unsigned
-name|Op1
-parameter_list|,
-name|bool
-name|Op1IsKill
-parameter_list|,
-name|uint64_t
-name|Imm
-parameter_list|)
-function_decl|;
-comment|/// Emit a MachineInstr with two register operands, two immediates operands,
-comment|/// and a result register in the given register class.
-name|unsigned
-name|FastEmitInst_rrii
-parameter_list|(
-name|unsigned
-name|MachineInstOpcode
-parameter_list|,
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|RC
-parameter_list|,
-name|unsigned
-name|Op0
-parameter_list|,
-name|bool
-name|Op0IsKill
-parameter_list|,
-name|unsigned
-name|Op1
-parameter_list|,
-name|bool
-name|Op1IsKill
-parameter_list|,
-name|uint64_t
-name|Imm1
-parameter_list|,
-name|uint64_t
-name|Imm2
-parameter_list|)
-function_decl|;
-comment|/// Emit a MachineInstr with a single immediate operand, and a result register
-comment|/// in the given register class.
-name|unsigned
-name|FastEmitInst_i
+name|fastEmitInst_i
 parameter_list|(
 name|unsigned
 name|MachineInstrOpcode
@@ -1752,9 +1801,9 @@ name|uint64_t
 name|Imm
 parameter_list|)
 function_decl|;
-comment|/// Emit a MachineInstr with a two immediate operands.
+comment|/// \brief Emit a MachineInstr with a two immediate operands.
 name|unsigned
-name|FastEmitInst_ii
+name|fastEmitInst_ii
 parameter_list|(
 name|unsigned
 name|MachineInstrOpcode
@@ -1771,10 +1820,10 @@ name|uint64_t
 name|Imm2
 parameter_list|)
 function_decl|;
-comment|/// Emit a MachineInstr for an extract_subreg from a specified index of a
-comment|/// superregister to a specified type.
+comment|/// \brief Emit a MachineInstr for an extract_subreg from a specified index of
+comment|/// a superregister to a specified type.
 name|unsigned
-name|FastEmitInst_extractsubreg
+name|fastEmitInst_extractsubreg
 parameter_list|(
 name|MVT
 name|RetVT
@@ -1789,10 +1838,10 @@ name|uint32_t
 name|Idx
 parameter_list|)
 function_decl|;
-comment|/// Emit MachineInstrs to compute the value of Op with all but the least
-comment|/// significant bit set to zero.
+comment|/// \brief Emit MachineInstrs to compute the value of Op with all but the
+comment|/// least significant bit set to zero.
 name|unsigned
-name|FastEmitZExtFromI1
+name|fastEmitZExtFromI1
 parameter_list|(
 name|MVT
 name|VT
@@ -1804,10 +1853,10 @@ name|bool
 name|Op0IsKill
 parameter_list|)
 function_decl|;
-comment|/// Emit an unconditional branch to the given block, unless it is the
+comment|/// \brief Emit an unconditional branch to the given block, unless it is the
 comment|/// immediate (fall-through) successor, and update the CFG.
 name|void
-name|FastEmitBranch
+name|fastEmitBranch
 parameter_list|(
 name|MachineBasicBlock
 modifier|*
@@ -1817,8 +1866,15 @@ name|DebugLoc
 name|DL
 parameter_list|)
 function_decl|;
+comment|/// \brief Update the value map to include the new mapping for this
+comment|/// instruction, or insert an extra copy to get the result in a previous
+comment|/// determined register.
+comment|///
+comment|/// NOTE: This is only necessary because we might select a block that uses a
+comment|/// value before we select the block that defines the value. It might be
+comment|/// possible to fix this by selecting blocks in reverse postorder.
 name|void
-name|UpdateValueMap
+name|updateValueMap
 parameter_list|(
 specifier|const
 name|Value
@@ -1843,9 +1899,9 @@ modifier|*
 name|RC
 parameter_list|)
 function_decl|;
-comment|/// Try to constrain Op so that it is usable by argument OpNum of the provided
-comment|/// MCInstrDesc. If this fails, create a new virtual register in the correct
-comment|/// class and COPY the value there.
+comment|/// \brief Try to constrain Op so that it is usable by argument OpNum of the
+comment|/// provided MCInstrDesc. If this fails, create a new virtual register in the
+comment|/// correct class and COPY the value there.
 name|unsigned
 name|constrainOperandRegClass
 parameter_list|(
@@ -1861,11 +1917,11 @@ name|unsigned
 name|OpNum
 parameter_list|)
 function_decl|;
-comment|/// Emit a constant in a register using target-specific logic, such as
+comment|/// \brief Emit a constant in a register using target-specific logic, such as
 comment|/// constant pool loads.
 name|virtual
 name|unsigned
-name|TargetMaterializeConstant
+name|fastMaterializeConstant
 parameter_list|(
 specifier|const
 name|Constant
@@ -1877,10 +1933,10 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// Emit an alloca address in a register using target-specific logic.
+comment|/// \brief Emit an alloca address in a register using target-specific logic.
 name|virtual
 name|unsigned
-name|TargetMaterializeAlloca
+name|fastMaterializeAlloca
 parameter_list|(
 specifier|const
 name|AllocaInst
@@ -1892,9 +1948,11 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// \brief Emit the floating-point constant +0.0 in a register using target-
+comment|/// specific logic.
 name|virtual
 name|unsigned
-name|TargetMaterializeFloatZero
+name|fastMaterializeFloatZero
 parameter_list|(
 specifier|const
 name|ConstantFP
@@ -1927,17 +1985,16 @@ modifier|*
 name|Add
 parameter_list|)
 function_decl|;
-comment|/// Test whether the given value has exactly one use.
+comment|/// \brief Test whether the given value has exactly one use.
 name|bool
 name|hasTrivialKill
-argument_list|(
+parameter_list|(
 specifier|const
 name|Value
-operator|*
+modifier|*
 name|V
-argument_list|)
-decl|const
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Create a machine mem operand from the given instruction.
 name|MachineMemOperand
 modifier|*
@@ -1950,8 +2007,17 @@ name|I
 argument_list|)
 decl|const
 decl_stmt|;
+name|CmpInst
+operator|::
+name|Predicate
+name|optimizeCmpPredicate
+argument_list|(
+argument|const CmpInst *CI
+argument_list|)
+specifier|const
+expr_stmt|;
 name|bool
-name|LowerCallTo
+name|lowerCallTo
 parameter_list|(
 specifier|const
 name|CallInst
@@ -1968,17 +2034,72 @@ name|NumArgs
 parameter_list|)
 function_decl|;
 name|bool
-name|LowerCallTo
+name|lowerCallTo
 parameter_list|(
 name|CallLoweringInfo
 modifier|&
 name|CLI
 parameter_list|)
 function_decl|;
-name|private
-label|:
 name|bool
-name|SelectBinaryOp
+name|isCommutativeIntrinsic
+parameter_list|(
+name|IntrinsicInst
+specifier|const
+modifier|*
+name|II
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|II
+operator|->
+name|getIntrinsicID
+argument_list|()
+condition|)
+block|{
+case|case
+name|Intrinsic
+operator|::
+name|sadd_with_overflow
+case|:
+case|case
+name|Intrinsic
+operator|::
+name|uadd_with_overflow
+case|:
+case|case
+name|Intrinsic
+operator|::
+name|smul_with_overflow
+case|:
+case|case
+name|Intrinsic
+operator|::
+name|umul_with_overflow
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
+name|bool
+name|lowerCall
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|*
+name|I
+parameter_list|)
+function_decl|;
+comment|/// \brief Select and emit code for a binary operator instruction, which has
+comment|/// an opcode which directly corresponds to the given ISD opcode.
+name|bool
+name|selectBinaryOp
 parameter_list|(
 specifier|const
 name|User
@@ -1990,7 +2111,7 @@ name|ISDOpcode
 parameter_list|)
 function_decl|;
 name|bool
-name|SelectFNeg
+name|selectFNeg
 parameter_list|(
 specifier|const
 name|User
@@ -1999,7 +2120,7 @@ name|I
 parameter_list|)
 function_decl|;
 name|bool
-name|SelectGetElementPtr
+name|selectGetElementPtr
 parameter_list|(
 specifier|const
 name|User
@@ -2008,7 +2129,7 @@ name|I
 parameter_list|)
 function_decl|;
 name|bool
-name|SelectStackmap
+name|selectStackmap
 parameter_list|(
 specifier|const
 name|CallInst
@@ -2017,7 +2138,7 @@ name|I
 parameter_list|)
 function_decl|;
 name|bool
-name|SelectPatchpoint
+name|selectPatchpoint
 parameter_list|(
 specifier|const
 name|CallInst
@@ -2026,16 +2147,7 @@ name|I
 parameter_list|)
 function_decl|;
 name|bool
-name|LowerCall
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|*
-name|I
-parameter_list|)
-function_decl|;
-name|bool
-name|SelectCall
+name|selectCall
 parameter_list|(
 specifier|const
 name|User
@@ -2044,7 +2156,7 @@ name|Call
 parameter_list|)
 function_decl|;
 name|bool
-name|SelectIntrinsicCall
+name|selectIntrinsicCall
 parameter_list|(
 specifier|const
 name|IntrinsicInst
@@ -2053,7 +2165,7 @@ name|II
 parameter_list|)
 function_decl|;
 name|bool
-name|SelectBitCast
+name|selectBitCast
 parameter_list|(
 specifier|const
 name|User
@@ -2062,7 +2174,7 @@ name|I
 parameter_list|)
 function_decl|;
 name|bool
-name|SelectCast
+name|selectCast
 parameter_list|(
 specifier|const
 name|User
@@ -2074,7 +2186,7 @@ name|Opcode
 parameter_list|)
 function_decl|;
 name|bool
-name|SelectExtractValue
+name|selectExtractValue
 parameter_list|(
 specifier|const
 name|User
@@ -2083,7 +2195,7 @@ name|I
 parameter_list|)
 function_decl|;
 name|bool
-name|SelectInsertValue
+name|selectInsertValue
 parameter_list|(
 specifier|const
 name|User
@@ -2091,6 +2203,8 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
+name|private
+label|:
 comment|/// \brief Handle PHI nodes in successor blocks.
 comment|///
 comment|/// Emit code to ensure constants are copied into registers when needed.
@@ -2099,7 +2213,7 @@ comment|/// nodes as input.  We cannot just directly add them, because expansion
 comment|/// result in multiple MBB's for one BB.  As such, the start of the BB might
 comment|/// correspond to a different MBB than the end.
 name|bool
-name|HandlePHINodesInSuccessorBlocks
+name|handlePHINodesInSuccessorBlocks
 parameter_list|(
 specifier|const
 name|BasicBlock
@@ -2107,8 +2221,22 @@ modifier|*
 name|LLVMBB
 parameter_list|)
 function_decl|;
-comment|/// Helper for getRegForVale. This function is called when the value isn't
-comment|/// already available in a register and must be materialized with new
+comment|/// \brief Helper for materializeRegForValue to materialize a constant in a
+comment|/// target-independent way.
+name|unsigned
+name|materializeConstant
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|MVT
+name|VT
+parameter_list|)
+function_decl|;
+comment|/// \brief Helper for getRegForVale. This function is called when the value
+comment|/// isn't already available in a register and must be materialized with new
 comment|/// instructions.
 name|unsigned
 name|materializeRegForValue
@@ -2122,13 +2250,21 @@ name|MVT
 name|VT
 parameter_list|)
 function_decl|;
-comment|/// Clears LocalValueMap and moves the area for the new local variables to the
-comment|/// beginning of the block. It helps to avoid spilling cached variables across
-comment|/// heavy instructions like calls.
+comment|/// \brief Clears LocalValueMap and moves the area for the new local variables
+comment|/// to the beginning of the block. It helps to avoid spilling cached variables
+comment|/// across heavy instructions like calls.
 name|void
 name|flushLocalValueMap
 parameter_list|()
 function_decl|;
+comment|/// \brief Insertion point before trying to select the current instruction.
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|SavedInsertPt
+expr_stmt|;
+comment|/// \brief Add a stackmap or patchpoint intrinsic call's live variable
+comment|/// operands to a stackmap or patchpoint machine instruction.
 name|bool
 name|addStackMapLiveVars
 argument_list|(
@@ -2179,6 +2315,10 @@ block|}
 empty_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

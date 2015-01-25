@@ -130,14 +130,28 @@ enum|enum
 name|OperandType
 block|{
 name|OPERAND_UNKNOWN
+init|=
+literal|0
 block|,
 name|OPERAND_IMMEDIATE
+init|=
+literal|1
 block|,
 name|OPERAND_REGISTER
+init|=
+literal|2
 block|,
 name|OPERAND_MEMORY
+init|=
+literal|3
 block|,
 name|OPERAND_PCREL
+init|=
+literal|4
+block|,
+name|OPERAND_FIRST_TARGET
+init|=
+literal|5
 block|}
 enum|;
 block|}
@@ -298,6 +312,12 @@ block|,
 name|ExtraSrcRegAllocReq
 block|,
 name|ExtraDefRegAllocReq
+block|,
+name|RegSequence
+block|,
+name|ExtractSubreg
+block|,
+name|InsertSubreg
 block|}
 enum|;
 block|}
@@ -1073,6 +1093,88 @@ name|FoldableAsLoad
 operator|)
 return|;
 block|}
+comment|/// \brief Return true if this instruction behaves
+comment|/// the same way as the generic REG_SEQUENCE instructions.
+comment|/// E.g., on ARM,
+comment|/// dX VMOVDRR rY, rZ
+comment|/// is equivalent to
+comment|/// dX = REG_SEQUENCE rY, ssub_0, rZ, ssub_1.
+comment|///
+comment|/// Note that for the optimizers to be able to take advantage of
+comment|/// this property, TargetInstrInfo::getRegSequenceLikeInputs has to be
+comment|/// override accordingly.
+name|bool
+name|isRegSequenceLike
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|MCID
+operator|::
+name|RegSequence
+operator|)
+return|;
+block|}
+comment|/// \brief Return true if this instruction behaves
+comment|/// the same way as the generic EXTRACT_SUBREG instructions.
+comment|/// E.g., on ARM,
+comment|/// rX, rY VMOVRRD dZ
+comment|/// is equivalent to two EXTRACT_SUBREG:
+comment|/// rX = EXTRACT_SUBREG dZ, ssub_0
+comment|/// rY = EXTRACT_SUBREG dZ, ssub_1
+comment|///
+comment|/// Note that for the optimizers to be able to take advantage of
+comment|/// this property, TargetInstrInfo::getExtractSubregLikeInputs has to be
+comment|/// override accordingly.
+name|bool
+name|isExtractSubregLike
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|MCID
+operator|::
+name|ExtractSubreg
+operator|)
+return|;
+block|}
+comment|/// \brief Return true if this instruction behaves
+comment|/// the same way as the generic INSERT_SUBREG instructions.
+comment|/// E.g., on ARM,
+comment|/// dX = VSETLNi32 dY, rZ, Imm
+comment|/// is equivalent to a INSERT_SUBREG:
+comment|/// dX = INSERT_SUBREG dY, rZ, translateImmToSubIdx(Imm)
+comment|///
+comment|/// Note that for the optimizers to be able to take advantage of
+comment|/// this property, TargetInstrInfo::getInsertSubregLikeInputs has to be
+comment|/// override accordingly.
+name|bool
+name|isInsertSubregLike
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|MCID
+operator|::
+name|InsertSubreg
+operator|)
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Side Effect Analysis
 comment|//===--------------------------------------------------------------------===//
@@ -1255,9 +1357,12 @@ operator|)
 return|;
 block|}
 comment|/// isRematerializable - Returns true if this instruction is a candidate for
-comment|/// remat.  This flag is deprecated, please don't use it anymore.  If this
-comment|/// flag is set, the isReallyTriviallyReMaterializable() method is called to
-comment|/// verify the instruction is really rematable.
+comment|/// remat. This flag is only used in TargetInstrInfo method
+comment|/// isTriviallyRematerializable.
+comment|///
+comment|/// If this flag is set, the isReallyTriviallyReMaterializable()
+comment|/// or isReallyTriviallyReMaterializableGeneric methods are called to verify
+comment|/// the instruction is really rematable.
 name|bool
 name|isRematerializable
 argument_list|()
@@ -1281,6 +1386,9 @@ comment|/// optimizations (e.g., remat during two-address conversion or machine 
 comment|/// where we would like to remat or hoist the instruction, but not if it costs
 comment|/// more than moving the instruction into the appropriate register. Note, we
 comment|/// are not marking copies from and to the same register class with this flag.
+comment|///
+comment|/// This method could be called by interface TargetInstrInfo::isAsCheapAsAMove
+comment|/// for different subtargets.
 name|bool
 name|isAsCheapAsAMove
 argument_list|()

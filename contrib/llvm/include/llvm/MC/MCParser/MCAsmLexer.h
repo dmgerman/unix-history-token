@@ -77,7 +77,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// AsmToken - Target independent representation for an assembler token.
+comment|/// Target independent representation for an assembler token.
 name|class
 name|AsmToken
 block|{
@@ -301,7 +301,12 @@ name|getEndLoc
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getStringContents - Get the contents of a string token (without quotes).
+name|SMRange
+name|getLocRange
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Get the contents of a string token (without quotes).
 name|StringRef
 name|getStringContents
 argument_list|()
@@ -332,10 +337,10 @@ literal|1
 argument_list|)
 return|;
 block|}
-comment|/// getIdentifier - Get the identifier string for the current token, which
-comment|/// should be an identifier or a string. This gets the portion of the string
-comment|/// which should be used as the identifier, e.g., it does not include the
-comment|/// quotes on strings.
+comment|/// Get the identifier string for the current token, which should be an
+comment|/// identifier or a string. This gets the portion of the string which should
+comment|/// be used as the identifier, e.g., it does not include the quotes on
+comment|/// strings.
 name|StringRef
 name|getIdentifier
 argument_list|()
@@ -356,8 +361,8 @@ name|getStringContents
 argument_list|()
 return|;
 block|}
-comment|/// getString - Get the string for the current token, this includes all
-comment|/// characters (for example, the quotes on strings) in the token.
+comment|/// Get the string for the current token, this includes all characters (for
+comment|/// example, the quotes on strings) in the token.
 comment|///
 comment|/// The returned StringRef points into the source manager's memory buffer, and
 comment|/// is safe to store across calls to Lex().
@@ -426,11 +431,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// MCAsmLexer - Generic assembler lexer interface, for use by target specific
+comment|/// Generic assembler lexer interface, for use by target specific assembly
 end_comment
 
 begin_comment
-comment|/// assembly lexers.
+comment|/// lexers.
 end_comment
 
 begin_decl_stmt
@@ -522,7 +527,7 @@ operator|~
 name|MCAsmLexer
 argument_list|()
 expr_stmt|;
-comment|/// Lex - Consume the next token from the input stream and return it.
+comment|/// Consume the next token from the input stream and return it.
 comment|///
 comment|/// The lexer will continuosly return the end-of-file token once the end of
 comment|/// the main input file has been reached.
@@ -546,24 +551,25 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// getLoc - Get the current source location.
+comment|/// Get the current source location.
 name|SMLoc
 name|getLoc
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getTok - Get the current (last) lexed token.
+comment|/// Get the current (last) lexed token.
 specifier|const
 name|AsmToken
-modifier|&
+operator|&
 name|getTok
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|CurTok
 return|;
 block|}
-comment|/// peekTok - Look ahead at the next token to be lexed.
+comment|/// Look ahead at the next token to be lexed.
 name|virtual
 specifier|const
 name|AsmToken
@@ -577,7 +583,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// getErrLoc - Get the current error location
+comment|/// Get the current error location
 specifier|const
 name|SMLoc
 modifier|&
@@ -588,7 +594,7 @@ return|return
 name|ErrLoc
 return|;
 block|}
-comment|/// getErr - Get the current error string
+comment|/// Get the current error string
 specifier|const
 name|std
 operator|::
@@ -601,7 +607,7 @@ return|return
 name|Err
 return|;
 block|}
-comment|/// getKind - Get the kind of current token.
+comment|/// Get the kind of current token.
 name|AsmToken
 operator|::
 name|TokenKind
@@ -616,7 +622,7 @@ name|getKind
 argument_list|()
 return|;
 block|}
-comment|/// is - Check if the current token has kind \p K.
+comment|/// Check if the current token has kind \p K.
 name|bool
 name|is
 argument_list|(
@@ -636,7 +642,7 @@ name|K
 argument_list|)
 return|;
 block|}
-comment|/// isNot - Check if the current token has kind \p K.
+comment|/// Check if the current token has kind \p K.
 name|bool
 name|isNot
 argument_list|(
@@ -656,7 +662,7 @@ name|K
 argument_list|)
 return|;
 block|}
-comment|/// setSkipSpace - Set whether spaces should be ignored by the lexer
+comment|/// Set whether spaces should be ignored by the lexer
 name|void
 name|setSkipSpace
 parameter_list|(

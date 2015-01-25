@@ -376,6 +376,26 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// \brief Context in which macro name is used.
+enum|enum
+name|MacroUse
+block|{
+name|MU_Other
+init|=
+literal|0
+block|,
+comment|// other than #define or #undef
+name|MU_Define
+init|=
+literal|1
+block|,
+comment|// macro name specified in #define
+name|MU_Undef
+init|=
+literal|2
+comment|// macro name specified in #undef
+block|}
+enum|;
 comment|/// \brief Engages in a tight little dance with the lexer to efficiently
 comment|/// preprocess tokens.
 comment|///
@@ -418,8 +438,12 @@ name|SourceManager
 operator|&
 name|SourceMgr
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ScratchBuffer
-operator|*
+operator|>
 name|ScratchBuf
 block|;
 name|HeaderSearch
@@ -557,6 +581,16 @@ operator|*
 name|Ident__MODULE__
 block|;
 comment|// __MODULE__
+name|IdentifierInfo
+operator|*
+name|Ident__has_cpp_attribute
+block|;
+comment|// __has_cpp_attribute
+name|IdentifierInfo
+operator|*
+name|Ident__has_declspec
+block|;
+comment|// __has_declspec_attribute
 name|SourceLocation
 name|DATELoc
 block|,
@@ -672,9 +706,23 @@ name|BuiltinInfo
 block|;
 comment|/// \brief Tracks all of the pragmas that the client registered
 comment|/// with this preprocessor.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|PragmaNamespace
-operator|*
+operator|>
 name|PragmaHandlers
+block|;
+comment|/// \brief Pragma handlers of the original source is stored here during the
+comment|/// parsing of a model file.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaNamespace
+operator|>
+name|PragmaHandlersBackup
 block|;
 comment|/// \brief Tracks all of the comment handlers that the client registered
 comment|/// with this preprocessor.
@@ -763,6 +811,14 @@ comment|/// \brief True if we hit the code-completion point.
 name|bool
 name|CodeCompletionReached
 block|;
+comment|/// \brief The directory that the main file should be considered to occupy,
+comment|/// if it does not correspond to a real file (as happens when building a
+comment|/// module).
+specifier|const
+name|DirectoryEntry
+operator|*
+name|MainFileDir
+block|;
 comment|/// \brief The number of bytes that we will initially skip when entering the
 comment|/// main file, along with a flag that indicates whether skipping this number
 comment|/// of bytes will place the lexer at the start of a line.
@@ -772,7 +828,7 @@ name|std
 operator|::
 name|pair
 operator|<
-name|unsigned
+name|int
 block|,
 name|bool
 operator|>
@@ -1079,8 +1135,12 @@ name|IncludeMacroStack
 block|;
 comment|/// \brief Actions invoked when some preprocessor activity is
 comment|/// encountered (e.g. a file is \#included, etc).
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|PPCallbacks
-operator|*
+operator|>
 name|Callbacks
 block|;    struct
 name|MacroExpandsInfo
@@ -1263,13 +1323,17 @@ enum|;
 name|unsigned
 name|NumCachedTokenLexers
 decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|TokenLexer
-modifier|*
+operator|>
 name|TokenLexerCache
 index|[
 name|TokenLexerCacheSize
 index|]
-decl_stmt|;
+expr_stmt|;
 comment|/// \}
 comment|/// \brief Keeps macro expanded tokens for TokenLexers.
 comment|//
@@ -1361,10 +1425,6 @@ name|MacroInfoChain
 modifier|*
 name|Next
 decl_stmt|;
-name|MacroInfoChain
-modifier|*
-name|Prev
-decl_stmt|;
 block|}
 struct|;
 comment|/// MacroInfos are managed as a chain for easy disposal.  This is the head
@@ -1372,12 +1432,6 @@ comment|/// of that list.
 name|MacroInfoChain
 modifier|*
 name|MIChainHead
-decl_stmt|;
-comment|/// A "freelist" of MacroInfo objects that can be reused for quick
-comment|/// allocation.
-name|MacroInfoChain
-modifier|*
-name|MICache
 decl_stmt|;
 struct|struct
 name|DeserializedMacroInfoChain
@@ -1439,6 +1493,21 @@ name|TargetInfo
 modifier|&
 name|Target
 parameter_list|)
+function_decl|;
+comment|/// \brief Initialize the preprocessor to parse a model file
+comment|///
+comment|/// To parse model files the preprocessor of the original source is reused to
+comment|/// preserver the identifier table. However to avoid some duplicate
+comment|/// information in the preprocessor some cleanup is needed before it is used
+comment|/// to parse model files. This method does that cleanup.
+name|void
+name|InitializeForModelFile
+parameter_list|()
+function_decl|;
+comment|/// \brief Cleanup after model file parsing
+name|void
+name|FinalizeForModelFile
+parameter_list|()
 function_decl|;
 comment|/// \brief Retrieve the preprocessor options used to initialize this
 comment|/// preprocessor.
@@ -1788,6 +1857,17 @@ name|getCurrentFileLexer
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Return the submodule owning the file being lexed.
+name|Module
+operator|*
+name|getCurrentSubmodule
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurSubmodule
+return|;
+block|}
 comment|/// \brief Returns the FileID for the preprocessor predefines.
 name|FileID
 name|getPredefinesFileID
@@ -1811,15 +1891,22 @@ specifier|const
 block|{
 return|return
 name|Callbacks
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|void
 name|addPPCallbacks
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|PPCallbacks
-modifier|*
+operator|>
 name|C
-parameter_list|)
+argument_list|)
 block|{
 if|if
 condition|(
@@ -1827,17 +1914,36 @@ name|Callbacks
 condition|)
 name|C
 operator|=
-name|new
+name|llvm
+operator|::
+name|make_unique
+operator|<
 name|PPChainedCallbacks
+operator|>
+operator|(
+name|std
+operator|::
+name|move
 argument_list|(
 name|C
-argument_list|,
+argument_list|)
+operator|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|Callbacks
 argument_list|)
+operator|)
 expr_stmt|;
 name|Callbacks
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|C
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// \}
@@ -1976,21 +2082,27 @@ function_decl|;
 name|DefMacroDirective
 modifier|*
 name|appendDefMacroDirective
-parameter_list|(
+argument_list|(
 name|IdentifierInfo
-modifier|*
+operator|*
 name|II
-parameter_list|,
+argument_list|,
 name|MacroInfo
-modifier|*
+operator|*
 name|MI
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|Loc
-parameter_list|,
-name|bool
-name|isImported
-parameter_list|)
+argument_list|,
+name|unsigned
+name|ImportedFromModuleID
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Overrides
+argument_list|)
 block|{
 name|DefMacroDirective
 modifier|*
@@ -2002,7 +2114,9 @@ name|MI
 argument_list|,
 name|Loc
 argument_list|,
-name|isImported
+name|ImportedFromModuleID
+argument_list|,
+name|Overrides
 argument_list|)
 decl_stmt|;
 name|appendMacroDirective
@@ -2041,7 +2155,9 @@ operator|->
 name|getDefinitionLoc
 argument_list|()
 argument_list|,
-name|false
+literal|0
+argument_list|,
+name|None
 argument_list|)
 return|;
 block|}
@@ -3141,6 +3257,22 @@ operator|=
 name|Loc
 expr_stmt|;
 block|}
+comment|/// \brief Set the directory in which the main file should be considered
+comment|/// to have been found, if it is not a real file.
+name|void
+name|setMainFileDir
+parameter_list|(
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|Dir
+parameter_list|)
+block|{
+name|MainFileDir
+operator|=
+name|Dir
+expr_stmt|;
+block|}
 comment|/// \brief Instruct the preprocessor to skip part of the main source file.
 comment|///
 comment|/// \param Bytes The number of bytes in the preamble to skip.
@@ -4109,6 +4241,11 @@ operator|*
 name|FromDir
 argument_list|,
 specifier|const
+name|FileEntry
+operator|*
+name|FromFile
+argument_list|,
+specifier|const
 name|DirectoryLookup
 operator|*
 operator|&
@@ -4208,8 +4345,14 @@ name|Token
 modifier|&
 name|MacroNameTok
 parameter_list|,
-name|char
+name|MacroUse
 name|isDefineUndef
+parameter_list|,
+name|bool
+modifier|*
+name|ShadowFlag
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 name|private
@@ -4218,6 +4361,15 @@ name|void
 name|PushIncludeMacroStack
 parameter_list|()
 block|{
+name|assert
+argument_list|(
+name|CurLexerKind
+operator|!=
+name|CLK_CachingLexer
+operator|&&
+literal|"cannot push a caching lexer"
+argument_list|)
+expr_stmt|;
 name|IncludeMacroStack
 operator|.
 name|push_back
@@ -4365,26 +4517,49 @@ function_decl|;
 name|DefMacroDirective
 modifier|*
 name|AllocateDefMacroDirective
-parameter_list|(
+argument_list|(
 name|MacroInfo
-modifier|*
+operator|*
 name|MI
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|Loc
-parameter_list|,
-name|bool
-name|isImported
-parameter_list|)
-function_decl|;
+argument_list|,
+name|unsigned
+name|ImportedFromModuleID
+operator|=
+literal|0
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Overrides
+operator|=
+name|None
+argument_list|)
+decl_stmt|;
 name|UndefMacroDirective
 modifier|*
 name|AllocateUndefMacroDirective
-parameter_list|(
+argument_list|(
 name|SourceLocation
 name|UndefLoc
-parameter_list|)
-function_decl|;
+argument_list|,
+name|unsigned
+name|ImportedFromModuleID
+operator|=
+literal|0
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Overrides
+operator|=
+name|None
+argument_list|)
+decl_stmt|;
 name|VisibilityMacroDirective
 modifier|*
 name|AllocateVisibilityMacroDirective
@@ -4396,19 +4571,13 @@ name|bool
 name|isPublic
 parameter_list|)
 function_decl|;
-comment|/// \brief Release the specified MacroInfo for re-use.
-comment|///
-comment|/// This memory will  be reused for allocating new MacroInfo objects.
-name|void
-name|ReleaseMacroInfo
-parameter_list|(
-name|MacroInfo
-modifier|*
-name|MI
-parameter_list|)
-function_decl|;
 comment|/// \brief Lex and validate a macro name, which occurs after a
 comment|/// \#define or \#undef.
+comment|///
+comment|/// \param MacroNameTok Token that represents the name defined or undefined.
+comment|/// \param IsDefineUndef Kind if preprocessor directive.
+comment|/// \param ShadowFlag Points to flag that is set if macro name shadows
+comment|///                   a keyword.
 comment|///
 comment|/// This emits a diagnostic, sets the token kind to eod,
 comment|/// and discards the rest of the macro line if the macro name is invalid.
@@ -4419,10 +4588,16 @@ name|Token
 modifier|&
 name|MacroNameTok
 parameter_list|,
-name|char
-name|isDefineUndef
+name|MacroUse
+name|IsDefineUndef
 init|=
-literal|0
+name|MU_Other
+parameter_list|,
+name|bool
+modifier|*
+name|ShadowFlag
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// The ( starting an argument list of a macro definition has just been read.
@@ -4866,6 +5041,13 @@ specifier|const
 name|DirectoryLookup
 modifier|*
 name|LookupFrom
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|FileEntry
+modifier|*
+name|LookupFromFile
 init|=
 name|nullptr
 parameter_list|,

@@ -340,6 +340,20 @@ modifier|*
 name|D
 parameter_list|)
 block|{}
+comment|/// \brief A declaration is marked as OpenMP threadprivate which was not
+comment|/// previously marked as threadprivate.
+comment|///
+comment|/// \param D the declaration marked OpenMP threadprivate.
+name|virtual
+name|void
+name|DeclarationMarkedOpenMPThreadPrivate
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{}
 comment|// NOTE: If new methods are added they should also be added to
 comment|// MultiplexASTMutationListener.
 block|}

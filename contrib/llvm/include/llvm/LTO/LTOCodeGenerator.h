@@ -134,13 +134,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LTO_CODE_GENERATOR_H
+name|LLVM_LTO_LTOCODEGENERATOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LTO_CODE_GENERATOR_H
+name|LLVM_LTO_LTOCODEGENERATOR_H
 end_define
 
 begin_include
@@ -235,6 +235,17 @@ function_decl|;
 name|LTOCodeGenerator
 argument_list|()
 expr_stmt|;
+name|LTOCodeGenerator
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|LLVMContext
+operator|>
+name|Context
+argument_list|)
+expr_stmt|;
 operator|~
 name|LTOCodeGenerator
 argument_list|()
@@ -242,18 +253,12 @@ expr_stmt|;
 comment|// Merge given module, return true on success.
 name|bool
 name|addModule
-argument_list|(
-expr|struct
+parameter_list|(
+name|struct
 name|LTOModule
-operator|*
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|errMsg
-argument_list|)
-decl_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|void
 name|setTargetOptions
 parameter_list|(
@@ -380,6 +385,9 @@ argument_list|,
 name|bool
 name|disableGVNLoadPRE
 argument_list|,
+name|bool
+name|disableVectorization
+argument_list|,
 name|std
 operator|::
 name|string
@@ -410,6 +418,9 @@ argument_list|,
 name|bool
 name|disableGVNLoadPRE
 argument_list|,
+name|bool
+name|disableVectorization
+argument_list|,
 name|std
 operator|::
 name|string
@@ -426,6 +437,15 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+name|LLVMContext
+modifier|&
+name|getContext
+parameter_list|()
+block|{
+return|return
+name|Context
+return|;
+block|}
 name|private
 label|:
 name|void
@@ -448,6 +468,9 @@ argument_list|,
 name|bool
 name|disableGVNLoadPRE
 argument_list|,
+name|bool
+name|disableVectorization
+argument_list|,
 name|std
 operator|::
 name|string
@@ -466,12 +489,10 @@ name|GlobalValue
 operator|&
 name|GV
 argument_list|,
-specifier|const
 name|ArrayRef
 operator|<
 name|StringRef
 operator|>
-operator|&
 name|Libcalls
 argument_list|,
 name|std
@@ -485,12 +506,10 @@ operator|>
 operator|&
 name|MustPreserveList
 argument_list|,
-name|SmallPtrSet
+name|SmallPtrSetImpl
 operator|<
 name|GlobalValue
 operator|*
-argument_list|,
-literal|8
 operator|>
 operator|&
 name|AsmUsed
@@ -540,6 +559,18 @@ name|uint8_t
 operator|>
 name|StringSet
 expr_stmt|;
+name|void
+name|initialize
+parameter_list|()
+function_decl|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|LLVMContext
+operator|>
+name|OwnedContext
+expr_stmt|;
 name|LLVMContext
 modifier|&
 name|Context
@@ -566,10 +597,14 @@ decl_stmt|;
 name|StringSet
 name|AsmUndefinedRefs
 decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MemoryBuffer
-modifier|*
+operator|>
 name|NativeObjectFile
-decl_stmt|;
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -613,10 +648,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LTO_CODE_GENERATOR_H
-end_comment
 
 end_unit
 

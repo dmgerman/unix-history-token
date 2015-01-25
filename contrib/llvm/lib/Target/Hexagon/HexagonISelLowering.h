@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|Hexagon_ISELLOWERING_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|Hexagon_ISELLOWERING_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONISELLOWERING_H
 end_define
 
 begin_include
@@ -91,6 +91,15 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|// Return true when the given node fits in a positive half word.
+name|bool
+name|isPositiveHalfWord
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 name|namespace
 name|HexagonISD
 block|{
@@ -157,7 +166,11 @@ block|,
 comment|// Jump table.
 name|BARRIER
 block|,
-comment|// Memory barrier.
+comment|// Memory barrier
+name|POPCOUNT
+block|,
+name|COMBINE
+block|,
 name|WrapperJT
 block|,
 name|WrapperCP
@@ -187,6 +200,8 @@ block|,
 name|TC_RETURN
 block|,
 name|EH_RETURN
+block|,
+name|DCFETCH
 block|}
 enum|;
 block|}

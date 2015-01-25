@@ -38,13 +38,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPU_H
+name|LLVM_LIB_TARGET_R600_AMDGPU_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPU_H
+name|LLVM_LIB_TARGET_R600_AMDGPU_H
 end_define
 
 begin_include
@@ -161,6 +161,11 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createSIFoldOperandsPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createSILowerI1CopiesPass
 parameter_list|()
 function_decl|;
@@ -168,6 +173,15 @@ name|FunctionPass
 modifier|*
 name|createSIShrinkInstructionsPass
 parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createSILoadStoreOptimizerPass
+parameter_list|(
+name|TargetMachine
+modifier|&
+name|tm
+parameter_list|)
 function_decl|;
 name|FunctionPass
 modifier|*
@@ -210,6 +224,23 @@ modifier|&
 name|tm
 parameter_list|)
 function_decl|;
+name|FunctionPass
+modifier|*
+name|createSIPrepareScratchRegs
+parameter_list|()
+function_decl|;
+name|void
+name|initializeSIFoldOperandsPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+specifier|extern
+name|char
+modifier|&
+name|SIFoldOperandsID
+decl_stmt|;
 name|void
 name|initializeSILowerI1CopiesPass
 parameter_list|(
@@ -221,6 +252,18 @@ specifier|extern
 name|char
 modifier|&
 name|SILowerI1CopiesID
+decl_stmt|;
+name|void
+name|initializeSILoadStoreOptimizerPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+specifier|extern
+name|char
+modifier|&
+name|SILoadStoreOptimizerID
 decl_stmt|;
 comment|// Passes common to R600 and SI
 name|FunctionPass
@@ -246,6 +289,11 @@ name|TargetMachine
 modifier|&
 name|tm
 parameter_list|)
+function_decl|;
+name|ModulePass
+modifier|*
+name|createAMDGPUAlwaysInlinePass
+parameter_list|()
 function_decl|;
 comment|/// \brief Creates an AMDGPU-specific Target Transformation Info pass.
 name|ImmutablePass
@@ -273,6 +321,10 @@ decl_stmt|;
 specifier|extern
 name|Target
 name|TheAMDGPUTarget
+decl_stmt|;
+specifier|extern
+name|Target
+name|TheGCNTarget
 decl_stmt|;
 name|namespace
 name|AMDGPU
@@ -482,10 +534,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDGPU_H
-end_comment
 
 end_unit
 

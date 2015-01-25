@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|POWERPC32_REGISTERINFO_H
+name|LLVM_LIB_TARGET_POWERPC_PPCREGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|POWERPC32_REGISTERINFO_H
+name|LLVM_LIB_TARGET_POWERPC_PPCREGISTERINFO_H
 end_define
 
 begin_include
@@ -191,6 +191,14 @@ operator|*
 name|getNoPreservedMask
 argument_list|()
 specifier|const
+block|;
+name|void
+name|adjustStackMapLiveOutMask
+argument_list|(
+argument|uint32_t *Mask
+argument_list|)
+specifier|const
+name|override
 block|;
 name|BitVector
 name|getReservedRegs

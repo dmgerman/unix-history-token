@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_OBJECT_RECORD_STREAMER
+name|LLVM_LIB_OBJECT_RECORDSTREAMER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_OBJECT_RECORD_STREAMER
+name|LLVM_LIB_OBJECT_RECORDSTREAMER_H
 end_define
 
 begin_include

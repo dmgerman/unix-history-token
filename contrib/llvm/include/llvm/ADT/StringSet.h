@@ -105,19 +105,22 @@ name|base
 expr_stmt|;
 name|public
 operator|:
-comment|/// insert - Insert the specified key into the set.  If the key already
-comment|/// exists in the set, return false and ignore the request, otherwise insert
-comment|/// it and return true.
+name|std
+operator|::
+name|pair
+operator|<
+name|typename
+name|base
+operator|::
+name|iterator
+operator|,
 name|bool
+operator|>
 name|insert
 argument_list|(
 argument|StringRef Key
 argument_list|)
 block|{
-comment|// Get or create the map entry for the key; if it doesn't exist the value
-comment|// type will be default constructed which we use to detect insert.
-comment|//
-comment|// We use '+' as the sentinel value in the map.
 name|assert
 argument_list|(
 operator|!
@@ -127,47 +130,28 @@ name|empty
 argument_list|()
 argument_list|)
 block|;
-name|StringMapEntry
-operator|<
-name|char
-operator|>
-operator|&
-name|Entry
-operator|=
-name|this
-operator|->
-name|GetOrCreateValue
+return|return
+name|base
+operator|::
+name|insert
+argument_list|(
+name|std
+operator|::
+name|make_pair
 argument_list|(
 name|Key
+argument_list|,
+literal|'\0'
 argument_list|)
-block|;
-if|if
-condition|(
-name|Entry
-operator|.
-name|getValue
-argument_list|()
-operator|==
-literal|'+'
-condition|)
-return|return
-name|false
-return|;
-name|Entry
-operator|.
-name|setValue
-argument_list|(
-literal|'+'
 argument_list|)
-expr_stmt|;
-return|return
-name|true
 return|;
+block|}
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 
 begin_endif
-unit|}; }
 endif|#
 directive|endif
 end_endif

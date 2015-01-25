@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARMINSTPRINTER_H
+name|LLVM_LIB_TARGET_ARM_INSTPRINTER_ARMINSTPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARMINSTPRINTER_H
+name|LLVM_LIB_TARGET_ARM_INSTPRINTER_ARMINSTPRINTER_H
 end_define
 
 begin_include
@@ -264,16 +264,6 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
-name|printAM3PostIndexOp
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned Op
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -678,6 +668,16 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printBankedRegOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printPredicateOperand
 argument_list|(
 argument|const MCInst *MI
@@ -789,6 +789,16 @@ argument_list|)
 block|;
 name|void
 name|printRotImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printModImmOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

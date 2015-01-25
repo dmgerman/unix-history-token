@@ -169,6 +169,9 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|CXXRecordDecl
+decl_stmt|;
+name|class
 name|TypeLoc
 decl_stmt|;
 name|class
@@ -447,6 +450,37 @@ parameter_list|(
 name|ASTContext
 modifier|&
 name|Context
+parameter_list|,
+name|SourceLocation
+name|ColonColonLoc
+parameter_list|)
+function_decl|;
+comment|/// \brief Turns this (empty) nested-name-specifier into '__super'
+comment|/// nested-name-specifier.
+comment|///
+comment|/// \param Context The AST context in which this nested-name-specifier
+comment|/// resides.
+comment|///
+comment|/// \param RD The declaration of the class in which nested-name-specifier
+comment|/// appeared.
+comment|///
+comment|/// \param SuperLoc The location of the '__super' keyword.
+comment|/// name.
+comment|///
+comment|/// \param ColonColonLoc The location of the trailing '::'.
+name|void
+name|MakeSuper
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+name|SourceLocation
+name|SuperLoc
 parameter_list|,
 name|SourceLocation
 name|ColonColonLoc
@@ -4185,7 +4219,36 @@ comment|/// EndLoc - If valid, the place where this chunck ends.
 name|SourceLocation
 name|EndLoc
 decl_stmt|;
-struct|struct
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|EndLoc
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+return|return
+name|SourceRange
+argument_list|(
+name|Loc
+argument_list|,
+name|Loc
+argument_list|)
+return|;
+return|return
+name|SourceRange
+argument_list|(
+name|Loc
+argument_list|,
+name|EndLoc
+argument_list|)
+return|;
+block|}
+decl|struct
 name|TypeInfoCommon
 block|{
 name|AttributeList
@@ -4408,7 +4471,7 @@ comment|/// ExceptionSpecType - An ExceptionSpecificationType value.
 name|unsigned
 name|ExceptionSpecType
 operator|:
-literal|3
+literal|4
 block|;
 comment|/// DeleteParams - If this is true, we need to delete[] Params.
 name|unsigned
@@ -4463,6 +4526,12 @@ comment|/// If this is an invalid location, there is no volatile-qualifier.
 name|unsigned
 name|VolatileQualifierLoc
 block|;
+comment|/// \brief The location of the restrict-qualifier, if any.
+comment|///
+comment|/// If this is an invalid location, there is no restrict-qualifier.
+name|unsigned
+name|RestrictQualifierLoc
+block|;
 comment|/// \brief The location of the 'mutable' qualifer in a lambda-declarator, if
 comment|/// any.
 name|unsigned
@@ -4493,6 +4562,12 @@ comment|/// function, if it has one.
 name|Expr
 operator|*
 name|NoexceptExpr
+block|;
+comment|/// \brief Pointer to the cached tokens for an exception-specification
+comment|/// that has not yet been parsed.
+name|CachedTokens
+operator|*
+name|ExceptionSpecTokens
 block|;     }
 block|;
 comment|/// \brief If HasTrailingReturnType is true, this is the trailing return
@@ -4581,6 +4656,17 @@ condition|)
 name|delete
 index|[]
 name|Exceptions
+decl_stmt|;
+elseif|else
+if|if
+condition|(
+name|getExceptionSpecType
+argument_list|()
+operator|==
+name|EST_Unparsed
+condition|)
+name|delete
+name|ExceptionSpecTokens
 decl_stmt|;
 block|}
 comment|/// isKNRPrototype - Return true if this is a K&R style identifier list,
@@ -4671,7 +4757,7 @@ name|RefQualifierLoc
 argument_list|)
 return|;
 block|}
-comment|/// \brief Retrieve the location of the ref-qualifier, if any.
+comment|/// \brief Retrieve the location of the 'const' qualifier, if any.
 name|SourceLocation
 name|getConstQualifierLoc
 argument_list|()
@@ -4686,7 +4772,7 @@ name|ConstQualifierLoc
 argument_list|)
 return|;
 block|}
-comment|/// \brief Retrieve the location of the ref-qualifier, if any.
+comment|/// \brief Retrieve the location of the 'volatile' qualifier, if any.
 name|SourceLocation
 name|getVolatileQualifierLoc
 argument_list|()
@@ -4698,6 +4784,21 @@ operator|::
 name|getFromRawEncoding
 argument_list|(
 name|VolatileQualifierLoc
+argument_list|)
+return|;
+block|}
+comment|/// \brief Retrieve the location of the 'restrict' qualifier, if any.
+name|SourceLocation
+name|getRestrictQualifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|RestrictQualifierLoc
 argument_list|)
 return|;
 block|}
@@ -4784,7 +4885,13 @@ name|TrailingReturnType
 return|;
 block|}
 block|}
-struct|;
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|struct
 name|BlockPointerTypeInfo
 range|:
@@ -4803,6 +4910,9 @@ argument_list|()
 block|{     }
 block|}
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|MemberPointerTypeInfo
 range|:
@@ -5281,6 +5391,8 @@ argument|SourceLocation ConstQualifierLoc
 argument_list|,
 argument|SourceLocation VolatileQualifierLoc
 argument_list|,
+argument|SourceLocation RestrictQualifierLoc
+argument_list|,
 argument|SourceLocation MutableLoc
 argument_list|,
 argument|ExceptionSpecificationType ESpecType
@@ -5294,6 +5406,8 @@ argument_list|,
 argument|unsigned NumExceptions
 argument_list|,
 argument|Expr *NoexceptExpr
+argument_list|,
+argument|CachedTokens *ExceptionSpecTokens
 argument_list|,
 argument|SourceLocation LocalRangeBegin
 argument_list|,
@@ -5372,6 +5486,15 @@ block|;
 name|I
 operator|.
 name|Loc
+operator|=
+name|SS
+operator|.
+name|getBeginLoc
+argument_list|()
+block|;
+name|I
+operator|.
+name|EndLoc
 operator|=
 name|Loc
 block|;
@@ -6389,6 +6512,9 @@ condition|)
 return|return
 name|false
 return|;
+end_decl_stmt
+
+begin_if
 if|if
 condition|(
 name|getDeclSpec
@@ -6404,6 +6530,9 @@ condition|)
 return|return
 name|false
 return|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|getDeclSpec
@@ -6423,7 +6552,13 @@ condition|)
 return|return
 name|false
 return|;
+end_if
+
+begin_comment
 comment|// Special names can't have direct initializers.
+end_comment
+
+begin_if
 if|if
 condition|(
 name|Name
@@ -6438,6 +6573,9 @@ condition|)
 return|return
 name|false
 return|;
+end_if
+
+begin_switch
 switch|switch
 condition|(
 name|Context
@@ -6522,15 +6660,18 @@ return|return
 name|false
 return|;
 block|}
+end_switch
+
+begin_expr_stmt
 name|llvm_unreachable
 argument_list|(
 literal|"unknown context kind!"
 argument_list|)
 expr_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|/// isPastIdentifier - Return true if we have parsed beyond the point where
 end_comment
 
@@ -6538,10 +6679,13 @@ begin_comment
 comment|/// the
 end_comment
 
-begin_expr_stmt
-name|bool
+begin_macro
+unit|bool
 name|isPastIdentifier
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -6853,6 +6997,57 @@ index|]
 return|;
 block|}
 end_function
+
+begin_typedef
+typedef|typedef
+name|SmallVectorImpl
+operator|<
+name|DeclaratorChunk
+operator|>
+operator|::
+name|const_iterator
+name|type_object_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|type_object_iterator
+operator|>
+name|type_object_range
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// Returns the range of type objects, from the identifier outwards.
+end_comment
+
+begin_expr_stmt
+name|type_object_range
+name|type_objects
+argument_list|()
+specifier|const
+block|{
+return|return
+name|type_object_range
+argument_list|(
+name|DeclTypeInfo
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|DeclTypeInfo
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_function
 name|void

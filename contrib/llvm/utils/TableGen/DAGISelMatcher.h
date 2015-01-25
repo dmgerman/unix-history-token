@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- DAGISelMatcher.h - Representation of DAG pattern matcher -----------===//
+comment|//===- DAGISelMatcher.h - Representation of DAG pattern matcher -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TBLGEN_DAGISELMATCHER_H
+name|LLVM_UTILS_TABLEGEN_DAGISELMATCHER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TBLGEN_DAGISELMATCHER_H
+name|LLVM_UTILS_TABLEGEN_DAGISELMATCHER_H
 end_define
 
 begin_include
@@ -125,20 +125,24 @@ modifier|&
 name|CGP
 parameter_list|)
 function_decl|;
-name|Matcher
-modifier|*
+name|void
 name|OptimizeMatcher
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Matcher
-modifier|*
+operator|>
+operator|&
 name|Matcher
-parameter_list|,
+argument_list|,
 specifier|const
 name|CodeGenDAGPatterns
-modifier|&
+operator|&
 name|CGP
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|EmitMatcherTable
 parameter_list|(

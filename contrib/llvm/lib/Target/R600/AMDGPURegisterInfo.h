@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPUREGISTERINFO_H
+name|LLVM_LIB_TARGET_R600_AMDGPUREGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPUREGISTERINFO_H
+name|LLVM_LIB_TARGET_R600_AMDGPUREGISTERINFO_H
 end_define
 
 begin_include
@@ -207,7 +207,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|virtual
 name|void
 name|eliminateFrameIndex
 argument_list|(
@@ -249,10 +248,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDIDSAREGISTERINFO_H
-end_comment
 
 end_unit
 

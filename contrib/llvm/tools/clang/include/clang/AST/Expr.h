@@ -196,6 +196,9 @@ name|class
 name|ParmVarDecl
 decl_stmt|;
 name|class
+name|StringLiteral
+decl_stmt|;
+name|class
 name|TargetInfo
 decl_stmt|;
 name|class
@@ -467,8 +470,7 @@ argument|QualType t
 argument_list|)
 block|{
 comment|// In C++, the type of an expression is always adjusted so that it
-comment|// will not have reference type an expression will never have
-comment|// reference type (C++ [expr]p6). Use
+comment|// will not have reference type (C++ [expr]p6). Use
 comment|// QualType::getNonReferenceType() to retrieve the non-reference
 comment|// type. Additionally, inspect Expr::isLvalue to determine whether
 comment|// an expression that is adjusted in this manner should be
@@ -1729,7 +1731,11 @@ decl|const
 decl_stmt|;
 comment|/// HasSideEffects - This routine returns true for all those expressions
 comment|/// which have any effect other than producing a value. Example is a function
-comment|/// call, volatile variable read, or throwing an exception.
+comment|/// call, volatile variable read, or throwing an exception. If
+comment|/// IncludePossibleEffects is false, this call treats certain expressions with
+comment|/// potential side effects (such as function call-like expressions,
+comment|/// instantiation-dependent expressions, or invocations from a macro) as not
+comment|/// having side effects.
 name|bool
 name|HasSideEffects
 argument_list|(
@@ -1737,6 +1743,11 @@ specifier|const
 name|ASTContext
 operator|&
 name|Ctx
+argument_list|,
+name|bool
+name|IncludePossibleEffects
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2756,7 +2767,7 @@ comment|///       C++ template keyword and/or template argument list.
 end_comment
 
 begin_comment
-comment|///   DeclRefExprBits.RefersToEnclosingLocal
+comment|///   DeclRefExprBits.RefersToEnclosingVariableOrCapture
 end_comment
 
 begin_comment
@@ -2764,7 +2775,7 @@ comment|///       Specifies when this declaration reference expression (validly)
 end_comment
 
 begin_comment
-comment|///       refers to a local variable from a different function.
+comment|///       refers to an enclosed local or a captured variable.
 end_comment
 
 begin_decl_stmt
@@ -2943,7 +2954,7 @@ argument|SourceLocation TemplateKWLoc
 argument_list|,
 argument|ValueDecl *D
 argument_list|,
-argument|bool refersToEnclosingLocal
+argument|bool RefersToEnlosingVariableOrCapture
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
@@ -3020,7 +3031,7 @@ name|DeclRefExpr
 argument_list|(
 argument|ValueDecl *D
 argument_list|,
-argument|bool refersToEnclosingLocal
+argument|bool RefersToEnclosingVariableOrCapture
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -3094,9 +3105,9 @@ literal|0
 block|;
 name|DeclRefExprBits
 operator|.
-name|RefersToEnclosingLocal
+name|RefersToEnclosingVariableOrCapture
 operator|=
-name|refersToEnclosingLocal
+name|RefersToEnclosingVariableOrCapture
 block|;
 name|computeDependence
 argument_list|(
@@ -3119,7 +3130,7 @@ argument|SourceLocation TemplateKWLoc
 argument_list|,
 argument|ValueDecl *D
 argument_list|,
-argument|bool isEnclosingLocal
+argument|bool RefersToEnclosingVariableOrCapture
 argument_list|,
 argument|SourceLocation NameLoc
 argument_list|,
@@ -3156,7 +3167,7 @@ modifier|*
 name|D
 parameter_list|,
 name|bool
-name|isEnclosingLocal
+name|RefersToEnclosingVariableOrCapture
 parameter_list|,
 specifier|const
 name|DeclarationNameInfo
@@ -4035,23 +4046,23 @@ block|}
 end_function
 
 begin_comment
-comment|/// Does this DeclRefExpr refer to a local declaration from an
+comment|/// \brief Does this DeclRefExpr refer to an enclosing local or a captured
 end_comment
 
 begin_comment
-comment|/// enclosing function scope?
+comment|/// variable?
 end_comment
 
 begin_expr_stmt
 name|bool
-name|refersToEnclosingLocal
+name|refersToEnclosingVariableOrCapture
 argument_list|()
 specifier|const
 block|{
 return|return
 name|DeclRefExprBits
 operator|.
-name|RefersToEnclosingLocal
+name|RefersToEnclosingVariableOrCapture
 return|;
 block|}
 end_expr_stmt
@@ -4110,7 +4121,7 @@ end_decl_stmt
 
 begin_comment
 unit|};
-comment|/// PredefinedExpr - [C99 6.4.2.2] - A predefined identifier such as __func__.
+comment|/// \brief [C99 6.4.2.2] - A predefined identifier such as __func__.
 end_comment
 
 begin_decl_stmt
@@ -4138,7 +4149,7 @@ name|FuncSig
 block|,
 name|PrettyFunction
 block|,
-comment|/// PrettyFunctionNoVirtual - The same as PrettyFunction, except that the
+comment|/// \brief The same as PrettyFunction, except that the
 comment|/// 'virtual' keyword is omitted for virtual member functions.
 name|PrettyFunctionNoVirtual
 block|}
@@ -4151,56 +4162,23 @@ block|;
 name|IdentType
 name|Type
 block|;
+name|Stmt
+operator|*
+name|FnName
+block|;
 name|public
 operator|:
 name|PredefinedExpr
 argument_list|(
-argument|SourceLocation l
+argument|SourceLocation L
 argument_list|,
-argument|QualType type
+argument|QualType FNTy
 argument_list|,
 argument|IdentType IT
+argument_list|,
+argument|StringLiteral *SL
 argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|PredefinedExprClass
-argument_list|,
-name|type
-argument_list|,
-name|VK_LValue
-argument_list|,
-name|OK_Ordinary
-argument_list|,
-name|type
-operator|->
-name|isDependentType
-argument_list|()
-argument_list|,
-name|type
-operator|->
-name|isDependentType
-argument_list|()
-argument_list|,
-name|type
-operator|->
-name|isInstantiationDependentType
-argument_list|()
-argument_list|,
-comment|/*ContainsUnexpandedParameterPack=*/
-name|false
-argument_list|)
-block|,
-name|Loc
-argument_list|(
-name|l
-argument_list|)
-block|,
-name|Type
-argument_list|(
-argument|IT
-argument_list|)
-block|{}
+block|;
 comment|/// \brief Construct an empty predefined expression.
 name|explicit
 name|PredefinedExpr
@@ -4210,11 +4188,24 @@ argument_list|)
 operator|:
 name|Expr
 argument_list|(
-argument|PredefinedExprClass
+name|PredefinedExprClass
 argument_list|,
-argument|Empty
+name|Empty
 argument_list|)
-block|{ }
+block|,
+name|Loc
+argument_list|()
+block|,
+name|Type
+argument_list|(
+name|Func
+argument_list|)
+block|,
+name|FnName
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
 name|IdentType
 name|getIdentType
 argument_list|()
@@ -4224,16 +4215,6 @@ return|return
 name|Type
 return|;
 block|}
-name|void
-name|setIdentType
-argument_list|(
-argument|IdentType IT
-argument_list|)
-block|{
-name|Type
-operator|=
-name|IT
-block|; }
 name|SourceLocation
 name|getLocation
 argument_list|()
@@ -4253,6 +4234,39 @@ name|Loc
 operator|=
 name|L
 block|; }
+name|StringLiteral
+operator|*
+name|getFunctionName
+argument_list|()
+block|;
+specifier|const
+name|StringLiteral
+operator|*
+name|getFunctionName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|PredefinedExpr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getFunctionName
+argument_list|()
+return|;
+block|}
+specifier|static
+name|StringRef
+name|getIdentTypeName
+argument_list|(
+argument|IdentType IT
+argument_list|)
+block|;
 specifier|static
 name|std
 operator|::
@@ -4307,38 +4321,76 @@ argument_list|()
 block|{
 return|return
 name|child_range
-argument_list|()
+argument_list|(
+operator|&
+name|FnName
+argument_list|,
+operator|&
+name|FnName
+operator|+
+literal|1
+argument_list|)
 return|;
 block|}
-expr|}
-block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Used by IntegerLiteral/FloatingLiteral to store the numeric without
+end_comment
+
+begin_comment
 comment|/// leaking memory.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// For large floats/integers, APFloat/APInt will allocate memory from the heap
+end_comment
+
+begin_comment
 comment|/// to represent these numbers.  Unfortunately, when we use a BumpPtrAllocator
+end_comment
+
+begin_comment
 comment|/// to allocate IntegerLiteral/FloatingLiteral nodes the memory associated with
+end_comment
+
+begin_comment
 comment|/// the APFloat/APInt values will never get freed. APNumericStorage uses
+end_comment
+
+begin_comment
 comment|/// ASTContext's allocator for memory allocation.
+end_comment
+
+begin_decl_stmt
 name|class
 name|APNumericStorage
 block|{
-expr|union
+union|union
 block|{
 name|uint64_t
 name|VAL
-block|;
+decl_stmt|;
 comment|///< Used to store the<= 64 bits integer value.
 name|uint64_t
-operator|*
+modifier|*
 name|pVal
-block|;
+decl_stmt|;
 comment|///< Used to store the>64 bits integer value.
 block|}
-block|;
+union|;
 name|unsigned
 name|BitWidth
-block|;
+decl_stmt|;
 name|bool
 name|hasAllocation
 argument_list|()
@@ -4362,19 +4414,19 @@ argument_list|(
 argument|const APNumericStorage&
 argument_list|)
 name|LLVM_DELETED_FUNCTION
-block|;
+expr_stmt|;
 name|void
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|APNumericStorage
 operator|&
 operator|)
 name|LLVM_DELETED_FUNCTION
-block|;
+decl_stmt|;
 name|protected
-operator|:
+label|:
 name|APNumericStorage
 argument_list|()
 operator|:
@@ -4382,7 +4434,7 @@ name|VAL
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|BitWidth
 argument_list|(
 literal|0
@@ -4452,11 +4504,18 @@ name|APInt
 operator|&
 name|Val
 argument_list|)
-block|; }
-block|;
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|class
 name|APIntStorage
-operator|:
+range|:
 name|private
 name|APNumericStorage
 block|{
@@ -8807,7 +8866,7 @@ literal|"Arg access out of range!"
 argument_list|)
 block|;
 return|return
-name|cast
+name|cast_or_null
 operator|<
 name|Expr
 operator|>
@@ -8843,7 +8902,7 @@ literal|"Arg access out of range!"
 argument_list|)
 block|;
 return|return
-name|cast
+name|cast_or_null
 operator|<
 name|Expr
 operator|>
@@ -9031,14 +9090,12 @@ name|getRawSubExprs
 argument_list|()
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|Stmt
-operator|*
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|SubExprs
-expr|,
+argument_list|,
 name|getNumPreArgs
 argument_list|()
 operator|+
@@ -9046,7 +9103,7 @@ name|PREARGS_START
 operator|+
 name|getNumArgs
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// getNumCommas - Return the number of commas that must have been present in
@@ -9678,11 +9735,17 @@ operator|->
 name|QualifierLoc
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Return the optional template keyword and arguments info.
+end_comment
+
+begin_function
 name|ASTTemplateKWAndArgsInfo
-operator|*
+modifier|*
 name|getTemplateKWAndArgsInfo
-argument_list|()
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -9709,9 +9772,6 @@ operator|+
 literal|1
 operator|)
 return|;
-end_decl_stmt
-
-begin_return
 return|return
 name|reinterpret_cast
 operator|<
@@ -9725,15 +9785,15 @@ operator|+
 literal|1
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/// \brief Return the optional template keyword and arguments info.
 end_comment
 
 begin_expr_stmt
-unit|const
+specifier|const
 name|ASTTemplateKWAndArgsInfo
 operator|*
 name|getTemplateKWAndArgsInfo
@@ -10771,31 +10831,17 @@ range|:
 name|public
 name|Expr
 block|{
-name|public
-operator|:
-typedef|typedef
-name|clang
-operator|::
-name|CastKind
-name|CastKind
-expr_stmt|;
 name|private
 operator|:
 name|Stmt
 operator|*
 name|Op
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+block|;
 name|bool
 name|CastConsistency
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 specifier|const
 name|CXXBaseSpecifier
 operator|*
@@ -10819,31 +10865,24 @@ name|path_buffer
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function_decl
 name|CXXBaseSpecifier
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|path_buffer
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function
+argument_list|()
+block|;
 name|void
 name|setBasePathSize
-parameter_list|(
-name|unsigned
-name|basePathSize
-parameter_list|)
+argument_list|(
+argument|unsigned basePathSize
+argument_list|)
 block|{
 name|CastExprBits
 operator|.
 name|BasePathSize
 operator|=
 name|basePathSize
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|CastExprBits
@@ -10854,16 +10893,9 @@ name|basePathSize
 operator|&&
 literal|"basePathSize doesn't fit in bits of CastExprBits.BasePathSize!"
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_label
+block|;   }
 name|protected
-label|:
-end_label
-
-begin_macro
+operator|:
 name|CastExpr
 argument_list|(
 argument|StmtClass SC
@@ -10878,10 +10910,7 @@ argument|Expr *op
 argument_list|,
 argument|unsigned BasePathSize
 argument_list|)
-end_macro
-
-begin_expr_stmt
-unit|:
+operator|:
 name|Expr
 argument_list|(
 name|SC
@@ -10931,11 +10960,19 @@ argument_list|()
 operator|)
 operator|)
 argument_list|,
+comment|// An implicit cast expression doesn't (lexically) contain an
+comment|// unexpanded pack, even if its target type does.
 operator|(
+operator|(
+name|SC
+operator|!=
+name|ImplicitCastExprClass
+operator|&&
 name|ty
 operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
+operator|)
 operator|||
 operator|(
 name|op
@@ -10947,7 +10984,7 @@ argument_list|()
 operator|)
 operator|)
 argument_list|)
-operator|,
+block|,
 name|Op
 argument_list|(
 argument|op
@@ -11017,40 +11054,29 @@ operator|.
 name|Kind
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setCastKind
-parameter_list|(
-name|CastKind
-name|K
-parameter_list|)
+argument_list|(
+argument|CastKind K
+argument_list|)
 block|{
 name|CastExprBits
 operator|.
 name|Kind
 operator|=
 name|K
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
+block|; }
 specifier|const
 name|char
 operator|*
 name|getCastKindName
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_function
+block|;
 name|Expr
-modifier|*
+operator|*
 name|getSubExpr
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|cast
@@ -11062,9 +11088,6 @@ name|Op
 operator|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|Expr
 operator|*
@@ -11082,45 +11105,24 @@ name|Op
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setSubExpr
-parameter_list|(
-name|Expr
-modifier|*
-name|E
-parameter_list|)
+argument_list|(
+argument|Expr *E
+argument_list|)
 block|{
 name|Op
 operator|=
 name|E
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|; }
 comment|/// \brief Retrieve the cast subexpression as it was written in the source
-end_comment
-
-begin_comment
 comment|/// code, looking through any implicit casts or other intermediate nodes
-end_comment
-
-begin_comment
 comment|/// introduced by semantic analysis.
-end_comment
-
-begin_function_decl
 name|Expr
-modifier|*
+operator|*
 name|getSubExprAsWritten
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
+argument_list|()
+block|;
 specifier|const
 name|Expr
 operator|*
@@ -11142,16 +11144,13 @@ name|getSubExprAsWritten
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|CXXBaseSpecifier
 modifier|*
 modifier|*
 name|path_iterator
 typedef|;
-end_typedef
+end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -20593,7 +20592,97 @@ block|}
 end_function
 
 begin_comment
-unit|}; }
+unit|};
+comment|/// TypoExpr - Internal placeholder for expressions where typo correction
+end_comment
+
+begin_comment
+comment|/// still needs to be performed and/or an error diagnostic emitted.
+end_comment
+
+begin_decl_stmt
+name|class
+name|TypoExpr
+range|:
+name|public
+name|Expr
+block|{
+name|public
+operator|:
+name|TypoExpr
+argument_list|(
+argument|QualType T
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|TypoExprClass
+argument_list|,
+argument|T
+argument_list|,
+argument|VK_LValue
+argument_list|,
+argument|OK_Ordinary
+argument_list|,
+comment|/*isTypeDependent*/
+argument|true
+argument_list|,
+comment|/*isValueDependent*/
+argument|true
+argument_list|,
+comment|/*isInstantiationDependent*/
+argument|true
+argument_list|,
+comment|/*containsUnexpandedParameterPack*/
+argument|false
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|T
+operator|->
+name|isDependentType
+argument_list|()
+operator|&&
+literal|"TypoExpr given a non-dependent type"
+argument_list|)
+block|;   }
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceLocation
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceLocation
+argument_list|()
+return|;
+block|}
+expr|}
+block|; }
+end_decl_stmt
+
+begin_comment
 comment|// end namespace clang
 end_comment
 

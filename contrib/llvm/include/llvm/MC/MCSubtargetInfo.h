@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MC_MCSUBTARGET_H
+name|LLVM_MC_MCSUBTARGETINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MC_MCSUBTARGET_H
+name|LLVM_MC_MCSUBTARGETINFO_H
 end_define
 
 begin_include
@@ -132,9 +132,7 @@ name|MCReadAdvanceEntry
 modifier|*
 name|ReadAdvanceTable
 decl_stmt|;
-specifier|const
 name|MCSchedModel
-modifier|*
 name|CPUSchedModel
 decl_stmt|;
 specifier|const
@@ -242,6 +240,20 @@ return|return
 name|FeatureBits
 return|;
 block|}
+comment|/// setFeatureBits - Set the feature bits.
+comment|///
+name|void
+name|setFeatureBits
+parameter_list|(
+name|uint64_t
+name|FeatureBits_
+parameter_list|)
+block|{
+name|FeatureBits
+operator|=
+name|FeatureBits_
+expr_stmt|;
+block|}
 comment|/// InitMCProcessorInfo - Set or change the CPU (optionally supplemented with
 comment|/// feature string). Recompute feature bits and scheduling model.
 name|void
@@ -282,9 +294,7 @@ parameter_list|)
 function_decl|;
 comment|/// getSchedModelForCPU - Get the machine model of a CPU.
 comment|///
-specifier|const
 name|MCSchedModel
-modifier|*
 name|getSchedModelForCPU
 argument_list|(
 name|StringRef
@@ -296,7 +306,7 @@ comment|/// getSchedModel - Get the machine model for this subtarget's CPU.
 comment|///
 specifier|const
 name|MCSchedModel
-operator|*
+operator|&
 name|getSchedModel
 argument_list|()
 specifier|const

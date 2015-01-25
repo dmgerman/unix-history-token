@@ -50,14 +50,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPSSUBTARGET_H
+name|LLVM_LIB_TARGET_MIPS_MIPSSUBTARGET_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPSSUBTARGET_H
+name|LLVM_LIB_TARGET_MIPS_MIPSSUBTARGET_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"MCTargetDesc/MipsABIInfo.h"
+end_include
 
 begin_include
 include|#
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"MipsInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MipsJITInfo.h"
 end_include
 
 begin_include
@@ -111,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetSubtargetInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MipsABIInfo.h"
 end_include
 
 begin_include
@@ -160,6 +154,8 @@ argument_list|()
 block|;    enum
 name|MipsArchEnum
 block|{
+name|MipsDefault
+block|,
 name|Mips1
 block|,
 name|Mips2
@@ -314,8 +310,9 @@ name|NoMips16Override
 block|}
 name|OverrideMode
 block|;
+specifier|const
 name|MipsTargetMachine
-operator|*
+operator|&
 name|TM
 block|;
 name|Triple
@@ -329,9 +326,6 @@ comment|// Calculates type size& alignment
 specifier|const
 name|MipsSelectionDAGInfo
 name|TSInfo
-block|;
-name|MipsJITInfo
-name|JITInfo
 block|;
 name|std
 operator|::
@@ -469,7 +463,7 @@ argument|const std::string&FS
 argument_list|,
 argument|bool little
 argument_list|,
-argument|MipsTargetMachine *TM
+argument|const MipsTargetMachine&TM
 argument_list|)
 block|;
 comment|/// ParseSubtargetFeatures - Parses features string setting specified
@@ -849,15 +843,6 @@ name|HasMSA
 return|;
 block|}
 name|bool
-name|isLinux
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsLinux
-return|;
-block|}
-name|bool
 name|useSmallSection
 argument_list|()
 specifier|const
@@ -918,17 +903,6 @@ block|{
 return|return
 name|hasMips32r2
 argument_list|()
-return|;
-block|}
-specifier|const
-name|InstrItineraryData
-operator|&
-name|getInstrItineraryData
-argument_list|()
-specifier|const
-block|{
-return|return
-name|InstrItins
 return|;
 block|}
 name|bool
@@ -1002,7 +976,7 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
-argument|const TargetMachine *TM
+argument|const TargetMachine&TM
 argument_list|)
 block|;
 comment|/// Does the system support unaligned memory access.
@@ -1029,22 +1003,13 @@ name|void
 name|setHelperClassesMipsSE
 argument_list|()
 block|;
-name|MipsJITInfo
-operator|*
-name|getJITInfo
-argument_list|()
-block|{
-return|return
-operator|&
-name|JITInfo
-return|;
-block|}
 specifier|const
 name|MipsSelectionDAGInfo
 operator|*
 name|getSelectionDAGInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -1057,6 +1022,7 @@ operator|*
 name|getDataLayout
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -1069,6 +1035,7 @@ operator|*
 name|getInstrInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|InstrInfo
@@ -1083,6 +1050,7 @@ operator|*
 name|getFrameLowering
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|FrameLowering
@@ -1097,6 +1065,7 @@ operator|*
 name|getRegisterInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -1112,12 +1081,26 @@ operator|*
 name|getTargetLowering
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|TLInfo
 operator|.
 name|get
 argument_list|()
+return|;
+block|}
+specifier|const
+name|InstrItineraryData
+operator|*
+name|getInstrItineraryData
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|InstrItins
 return|;
 block|}
 expr|}

@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_ANALYSIS_PSEUDOCONSTANTANALYSIS
+name|LLVM_CLANG_ANALYSIS_ANALYSES_PSEUDOCONSTANTANALYSIS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_ANALYSIS_PSEUDOCONSTANTANALYSIS
+name|LLVM_CLANG_ANALYSIS_ANALYSES_PSEUDOCONSTANTANALYSIS_H
 end_define
 
 begin_include

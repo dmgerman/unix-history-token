@@ -50,19 +50,37 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86MACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_X86_X86MACHINEFUNCTIONINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86MACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_X86_X86MACHINEFUNCTIONINFO_H
 end_define
 
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/CallingConvLower.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineValueType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -88,6 +106,14 @@ comment|/// that FP eliminatation is turned off. For example, Cygwin main functi
 comment|/// contains stack pointer re-alignment code which requires FP.
 name|bool
 name|ForceFramePointer
+block|;
+comment|/// RestoreBasePointerOffset - Non-zero if the function has base pointer
+comment|/// and makes call to llvm.eh.sjlj.setjmp. When non-zero, the value is a
+comment|/// displacement from the frame pointer to a slot where the base pointer
+comment|/// is stashed.
+name|signed
+name|char
+name|RestoreBasePointerOffset
 block|;
 comment|/// CalleeSavedFrameSize - Size of the callee-saved register portion of the
 comment|/// stack frame in bytes.
@@ -146,6 +172,18 @@ comment|/// NumLocalDynamics - Number of local-dynamic TLS accesses.
 name|unsigned
 name|NumLocalDynamics
 block|;
+name|private
+operator|:
+comment|/// ForwardedMustTailRegParms - A list of virtual and physical registers
+comment|/// that must be forwarded to every musttail call.
+name|SmallVector
+operator|<
+name|ForwardedRegister
+block|,
+literal|1
+operator|>
+name|ForwardedMustTailRegParms
+block|;
 name|public
 operator|:
 name|X86MachineFunctionInfo
@@ -154,6 +192,11 @@ operator|:
 name|ForceFramePointer
 argument_list|(
 name|false
+argument_list|)
+block|,
+name|RestoreBasePointerOffset
+argument_list|(
+literal|0
 argument_list|)
 block|,
 name|CalleeSavedFrameSize
@@ -227,6 +270,11 @@ operator|:
 name|ForceFramePointer
 argument_list|(
 name|false
+argument_list|)
+block|,
+name|RestoreBasePointerOffset
+argument_list|(
+literal|0
 argument_list|)
 block|,
 name|CalleeSavedFrameSize
@@ -308,6 +356,35 @@ name|ForceFramePointer
 operator|=
 name|forceFP
 block|; }
+name|bool
+name|getRestoreBasePointer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RestoreBasePointerOffset
+operator|!=
+literal|0
+return|;
+block|}
+name|void
+name|setRestoreBasePointer
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+block|;
+name|int
+name|getRestoreBasePointerOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RestoreBasePointerOffset
+return|;
+block|}
 name|unsigned
 name|getCalleeSavedFrameSize
 argument_list|()
@@ -533,6 +610,18 @@ block|{
 operator|++
 name|NumLocalDynamics
 block|; }
+name|SmallVectorImpl
+operator|<
+name|ForwardedRegister
+operator|>
+operator|&
+name|getForwardedMustTailRegParms
+argument_list|()
+block|{
+return|return
+name|ForwardedMustTailRegParms
+return|;
+block|}
 expr|}
 block|;  }
 end_decl_stmt

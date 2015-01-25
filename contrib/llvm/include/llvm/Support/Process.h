@@ -155,196 +155,6 @@ decl_stmt|;
 name|namespace
 name|sys
 block|{
-name|class
-name|self_process
-decl_stmt|;
-comment|/// \brief Generic base class which exposes information about an operating
-comment|/// system process.
-comment|///
-comment|/// This base class is the core interface behind any OS process. It exposes
-comment|/// methods to query for generic information about a particular process.
-comment|///
-comment|/// Subclasses implement this interface based on the mechanisms available, and
-comment|/// can optionally expose more interfaces unique to certain process kinds.
-name|class
-name|process
-block|{
-name|protected
-label|:
-comment|/// \brief Only specific subclasses of process objects can be destroyed.
-name|virtual
-operator|~
-name|process
-argument_list|()
-expr_stmt|;
-name|public
-label|:
-comment|/// \brief Operating system specific type to identify a process.
-comment|///
-comment|/// Note that the windows one is defined to 'unsigned long' as this is the
-comment|/// documented type for DWORD on windows, and we don't want to pull in the
-comment|/// Windows headers here.
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LLVM_ON_UNIX
-argument_list|)
-typedef|typedef
-name|pid_t
-name|id_type
-typedef|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|LLVM_ON_WIN32
-argument_list|)
-typedef|typedef
-name|unsigned
-name|long
-name|id_type
-typedef|;
-comment|// Must match the type of DWORD.
-else|#
-directive|else
-error|#
-directive|error
-error|Unsupported operating system.
-endif|#
-directive|endif
-comment|/// \brief Get the operating system specific identifier for this process.
-name|virtual
-name|id_type
-name|get_id
-parameter_list|()
-init|=
-literal|0
-function_decl|;
-comment|/// \brief Get the user time consumed by this process.
-comment|///
-comment|/// Note that this is often an approximation and may be zero on platforms
-comment|/// where we don't have good support for the functionality.
-name|virtual
-name|TimeValue
-name|get_user_time
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
-comment|/// \brief Get the system time consumed by this process.
-comment|///
-comment|/// Note that this is often an approximation and may be zero on platforms
-comment|/// where we don't have good support for the functionality.
-name|virtual
-name|TimeValue
-name|get_system_time
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
-comment|/// \brief Get the wall time consumed by this process.
-comment|///
-comment|/// Note that this is often an approximation and may be zero on platforms
-comment|/// where we don't have good support for the functionality.
-name|virtual
-name|TimeValue
-name|get_wall_time
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
-comment|/// \name Static factory routines for processes.
-comment|/// @{
-comment|/// \brief Get the process object for the current process.
-specifier|static
-name|self_process
-modifier|*
-name|get_self
-parameter_list|()
-function_decl|;
-comment|/// @}
-block|}
-empty_stmt|;
-comment|/// \brief The specific class representing the current process.
-comment|///
-comment|/// The current process can both specialize the implementation of the routines
-comment|/// and can expose certain information not available for other OS processes.
-name|class
-name|self_process
-range|:
-name|public
-name|process
-block|{
-name|friend
-name|class
-name|process
-block|;
-comment|/// \brief Private destructor, as users shouldn't create objects of this
-comment|/// type.
-name|virtual
-operator|~
-name|self_process
-argument_list|()
-block|;
-name|public
-operator|:
-name|id_type
-name|get_id
-argument_list|()
-name|override
-block|;
-name|TimeValue
-name|get_user_time
-argument_list|()
-specifier|const
-name|override
-block|;
-name|TimeValue
-name|get_system_time
-argument_list|()
-specifier|const
-name|override
-block|;
-name|TimeValue
-name|get_wall_time
-argument_list|()
-specifier|const
-name|override
-block|;
-comment|/// \name Process configuration (sysconf on POSIX)
-comment|/// @{
-comment|/// \brief Get the virtual memory page size.
-comment|///
-comment|/// Query the operating system for this process's page size.
-name|size_t
-name|page_size
-argument_list|()
-specifier|const
-block|{
-return|return
-name|PageSize
-return|;
-block|}
-block|;
-comment|/// @}
-name|private
-operator|:
-comment|/// \name Cached process state.
-comment|/// @{
-comment|/// \brief Cached page size, this cannot vary during the life of the process.
-name|size_t
-name|PageSize
-block|;
-comment|/// @}
-comment|/// \brief Constructor, used by \c process::get_self() only.
-name|self_process
-argument_list|()
-block|; }
-decl_stmt|;
 comment|/// \brief A collection of legacy interfaces for querying information about the
 comment|/// current executing process.
 name|class
@@ -352,6 +162,11 @@ name|Process
 block|{
 name|public
 label|:
+specifier|static
+name|unsigned
+name|getPageSize
+parameter_list|()
+function_decl|;
 comment|/// \brief Return process memory usage.
 comment|/// This static function will return the total amount of memory allocated
 comment|/// by the process. This only counts the memory allocated via the malloc,
@@ -470,6 +285,33 @@ name|char
 operator|>
 operator|&
 name|ArgAllocator
+argument_list|)
+expr_stmt|;
+comment|// This functions ensures that the standard file descriptors (input, output,
+comment|// and error) are properly mapped to a file descriptor before we use any of
+comment|// them.  This should only be called by standalone programs, library
+comment|// components should not call this.
+specifier|static
+name|std
+operator|::
+name|error_code
+name|FixupStandardFileDescriptors
+argument_list|()
+expr_stmt|;
+comment|// This function safely closes a file descriptor.  It is not safe to retry
+comment|// close(2) when it returns with errno equivalent to EINTR; this is because
+comment|// *nixen cannot agree if the file descriptor is, in fact, closed when this
+comment|// occurs.
+comment|//
+comment|// N.B. Some operating systems, due to thread cancellation, cannot properly
+comment|// guarantee that it will or will not be closed one way or the other!
+specifier|static
+name|std
+operator|::
+name|error_code
+name|SafelyCloseFileDescriptor
+argument_list|(
+argument|int FD
 argument_list|)
 expr_stmt|;
 comment|/// This function determines if the standard input is connected directly

@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HEXAGONBASEINFO_H
+name|LLVM_LIB_TARGET_HEXAGON_MCTARGETDESC_HEXAGONBASEINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|HEXAGONBASEINFO_H
+name|LLVM_LIB_TARGET_HEXAGON_MCTARGETDESC_HEXAGONBASEINFO_H
 end_define
 
 begin_include
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_decl_stmt
@@ -531,6 +537,37 @@ comment|// Offset from the base of the SDA.
 name|MO_GPREL
 block|}
 enum|;
+name|enum
+name|class
+name|InstParseBits
+range|:
+name|uint32_t
+block|{
+name|INST_PARSE_MASK
+operator|=
+literal|0x0000c000
+block|,
+name|INST_PARSE_PACKET_END
+operator|=
+literal|0x0000c000
+block|,
+name|INST_PARSE_LOOP_END
+operator|=
+literal|0x00008000
+block|,
+name|INST_PARSE_NOT_END
+operator|=
+literal|0x00004000
+block|,
+name|INST_PARSE_DUPLEX
+operator|=
+literal|0x00000000
+block|,
+name|INST_PARSE_EXTENDER
+operator|=
+literal|0x00000000
+block|}
+decl_stmt|;
 block|}
 comment|// End namespace HexagonII.
 block|}

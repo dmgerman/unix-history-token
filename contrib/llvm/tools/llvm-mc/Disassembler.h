@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DISASSEMBLER_H
+name|LLVM_TOOLS_LLVM_MC_DISASSEMBLER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|DISASSEMBLER_H
+name|LLVM_TOOLS_LLVM_MC_DISASSEMBLER_H
 end_define
 
 begin_include

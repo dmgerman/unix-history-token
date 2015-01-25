@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_SPILLER_H
+name|LLVM_LIB_CODEGEN_SPILLER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_SPILLER_H
+name|LLVM_LIB_CODEGEN_SPILLER_H
 end_define
 
 begin_decl_stmt
@@ -94,24 +94,6 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// Create and return a spiller object, as specified on the command line.
-name|Spiller
-modifier|*
-name|createSpiller
-parameter_list|(
-name|MachineFunctionPass
-modifier|&
-name|pass
-parameter_list|,
-name|MachineFunction
-modifier|&
-name|mf
-parameter_list|,
-name|VirtRegMap
-modifier|&
-name|vrm
-parameter_list|)
-function_decl|;
 comment|/// Create and return a spiller that will insert spill code directly instead
 comment|/// of deferring though VirtRegMap.
 name|Spiller

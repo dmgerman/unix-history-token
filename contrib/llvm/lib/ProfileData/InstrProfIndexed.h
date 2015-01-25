@@ -50,14 +50,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_PROFILEDATA_INSTRPROF_INDEXED_H_
+name|LLVM_LIB_PROFILEDATA_INSTRPROFINDEXED_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_PROFILEDATA_INSTRPROF_INDEXED_H_
+name|LLVM_LIB_PROFILEDATA_INSTRPROFINDEXED_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Endian.h"
+end_include
 
 begin_include
 include|#
@@ -196,7 +202,7 @@ specifier|const
 name|uint64_t
 name|Version
 init|=
-literal|1
+literal|2
 decl_stmt|;
 specifier|const
 name|HashT
@@ -218,10 +224,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_PROFILEDATA_INSTRPROF_INDEXED_H_
-end_comment
 
 end_unit
 

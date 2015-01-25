@@ -324,18 +324,16 @@ name|asArray
 argument_list|()
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|NamedDecl
-operator|*
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|begin
 argument_list|()
-operator|,
-name|size
+argument_list|,
+name|end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|ArrayRef
@@ -349,19 +347,16 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-specifier|const
-name|NamedDecl
-operator|*
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|begin
 argument_list|()
-operator|,
+argument_list|,
 name|size
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|NamedDecl
@@ -746,17 +741,16 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|TemplateArgument
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|data
 argument_list|()
-operator|,
+argument_list|,
 name|size
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// \brief Retrieve the number of template arguments in this
@@ -842,7 +836,7 @@ argument|nullptr
 argument_list|)
 block|{}
 comment|// Construct a template decl with the given name and parameters.
-comment|// Used when there is not templated element (tt-params, alias?).
+comment|// Used when there is not templated element (tt-params).
 name|TemplateDecl
 argument_list|(
 argument|Kind DK

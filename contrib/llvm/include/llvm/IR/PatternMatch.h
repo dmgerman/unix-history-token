@@ -140,7 +140,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/IntrinsicInst.h"
+file|"llvm/IR/Intrinsics.h"
 end_include
 
 begin_include
@@ -289,7 +289,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_Value() - Match an arbitrary value and ignore it.
+comment|/// \brief Match an arbitrary value and ignore it.
 specifier|inline
 name|class_match
 operator|<
@@ -307,7 +307,43 @@ operator|(
 operator|)
 return|;
 block|}
-comment|/// m_ConstantInt() - Match an arbitrary ConstantInt and ignore it.
+comment|/// \brief Match an arbitrary binary operation and ignore it.
+specifier|inline
+name|class_match
+operator|<
+name|BinaryOperator
+operator|>
+name|m_BinOp
+argument_list|()
+block|{
+return|return
+name|class_match
+operator|<
+name|BinaryOperator
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|/// \brief Matches any compare instruction and ignore it.
+specifier|inline
+name|class_match
+operator|<
+name|CmpInst
+operator|>
+name|m_Cmp
+argument_list|()
+block|{
+return|return
+name|class_match
+operator|<
+name|CmpInst
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|/// \brief Match an arbitrary ConstantInt and ignore it.
 specifier|inline
 name|class_match
 operator|<
@@ -325,7 +361,7 @@ operator|(
 operator|)
 return|;
 block|}
-comment|/// m_Undef() - Match an arbitrary undef constant.
+comment|/// \brief Match an arbitrary undef constant.
 specifier|inline
 name|class_match
 operator|<
@@ -343,6 +379,7 @@ operator|(
 operator|)
 return|;
 block|}
+comment|/// \brief Match an arbitrary Constant and ignore it.
 specifier|inline
 name|class_match
 operator|<
@@ -400,7 +437,7 @@ name|R
 argument_list|(
 argument|Right
 argument_list|)
-block|{ }
+block|{}
 name|template
 operator|<
 name|typename
@@ -481,7 +518,7 @@ name|R
 argument_list|(
 argument|Right
 argument_list|)
-block|{ }
+block|{}
 name|template
 operator|<
 name|typename
@@ -611,7 +648,7 @@ block|{
 if|if
 condition|(
 specifier|const
-name|Constant
+specifier|auto
 modifier|*
 name|C
 init|=
@@ -635,7 +672,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_Zero() - Match an arbitrary zero/null constant.  This includes
+comment|/// \brief Match an arbitrary zero/null constant.  This includes
 comment|/// zero_initializer for vectors and ConstantPointerNull for pointers.
 specifier|inline
 name|match_zero
@@ -664,7 +701,7 @@ block|{
 if|if
 condition|(
 specifier|const
-name|Constant
+specifier|auto
 modifier|*
 name|C
 init|=
@@ -688,7 +725,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_NegZero() - Match an arbitrary zero/null constant.  This includes
+comment|/// \brief Match an arbitrary zero/null constant.  This includes
 comment|/// zero_initializer for vectors and ConstantPointerNull for pointers. For
 comment|/// floating point constants, this will match negative zero but not positive
 comment|/// zero
@@ -702,7 +739,7 @@ name|match_neg_zero
 argument_list|()
 return|;
 block|}
-comment|/// m_AnyZero() - Match an arbitrary zero/null constant.  This includes
+comment|/// \brief - Match an arbitrary zero/null constant.  This includes
 comment|/// zero_initializer for vectors and ConstantPointerNull for pointers. For
 comment|/// floating point constants, this will match negative zero and positive zero
 specifier|inline
@@ -762,10 +799,10 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|ConstantInt
-modifier|*
+name|auto
+operator|*
 name|CI
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|ConstantInt
@@ -800,7 +837,7 @@ condition|)
 if|if
 condition|(
 specifier|const
-name|Constant
+specifier|auto
 modifier|*
 name|C
 init|=
@@ -814,10 +851,10 @@ operator|)
 condition|)
 if|if
 condition|(
-name|ConstantInt
-modifier|*
+name|auto
+operator|*
 name|CI
-init|=
+operator|=
 name|dyn_cast_or_null
 operator|<
 name|ConstantInt
@@ -848,7 +885,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_APInt - Match a ConstantInt or splatted ConstantVector, binding the
+comment|/// \brief Match a ConstantInt or splatted ConstantVector, binding the
 comment|/// specified pointer to the contained APInt.
 specifier|inline
 name|apint_match
@@ -883,7 +920,7 @@ block|{
 if|if
 condition|(
 specifier|const
-name|ConstantInt
+specifier|auto
 modifier|*
 name|CI
 init|=
@@ -940,7 +977,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_ConstantInt<int64_t> - Match a ConstantInt with a specific value.
+comment|/// \brief Match a ConstantInt with a specific value.
 name|template
 operator|<
 name|int64_t
@@ -963,8 +1000,8 @@ operator|(
 operator|)
 return|;
 block|}
-comment|/// cst_pred_ty - This helper class is used to match scalar and vector constants
-comment|/// that satisfy a specified predicate.
+comment|/// \brief This helper class is used to match scalar and vector constants that
+comment|/// satisfy a specified predicate.
 name|template
 operator|<
 name|typename
@@ -990,7 +1027,7 @@ block|{
 if|if
 condition|(
 specifier|const
-name|ConstantInt
+specifier|auto
 modifier|*
 name|CI
 init|=
@@ -1026,7 +1063,7 @@ condition|)
 if|if
 condition|(
 specifier|const
-name|Constant
+specifier|auto
 modifier|*
 name|C
 init|=
@@ -1041,7 +1078,7 @@ condition|)
 if|if
 condition|(
 specifier|const
-name|ConstantInt
+specifier|auto
 modifier|*
 name|CI
 init|=
@@ -1073,8 +1110,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// api_pred_ty - This helper class is used to match scalar and vector constants
-comment|/// that satisfy a specified predicate, and bind them to an APInt.
+comment|/// \brief This helper class is used to match scalar and vector constants that
+comment|/// satisfy a specified predicate, and bind them to an APInt.
 name|template
 operator|<
 name|typename
@@ -1120,7 +1157,7 @@ block|{
 if|if
 condition|(
 specifier|const
-name|ConstantInt
+specifier|auto
 modifier|*
 name|CI
 init|=
@@ -1170,7 +1207,7 @@ condition|)
 if|if
 condition|(
 specifier|const
-name|Constant
+specifier|auto
 modifier|*
 name|C
 init|=
@@ -1184,10 +1221,10 @@ operator|)
 condition|)
 if|if
 condition|(
-name|ConstantInt
-modifier|*
+name|auto
+operator|*
 name|CI
-init|=
+operator|=
 name|dyn_cast_or_null
 operator|<
 name|ConstantInt
@@ -1229,7 +1266,7 @@ name|false
 return|;
 block|}
 expr|}
-block|;   struct
+block|;  struct
 name|is_one
 block|{
 name|bool
@@ -1246,7 +1283,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_One() - Match an integer 1 or a vector with all elements equal to 1.
+comment|/// \brief Match an integer 1 or a vector with all elements equal to 1.
 specifier|inline
 name|cst_pred_ty
 operator|<
@@ -1296,7 +1333,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_AllOnes() - Match an integer or vector with all bits set to true.
+comment|/// \brief Match an integer or vector with all bits set to true.
 specifier|inline
 name|cst_pred_ty
 operator|<
@@ -1346,7 +1383,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_SignBit() - Match an integer or vector with only the sign bit(s) set.
+comment|/// \brief Match an integer or vector with only the sign bit(s) set.
 specifier|inline
 name|cst_pred_ty
 operator|<
@@ -1396,7 +1433,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_Power2() - Match an integer or vector power of 2.
+comment|/// \brief Match an integer or vector power of 2.
 specifier|inline
 name|cst_pred_ty
 operator|<
@@ -1420,6 +1457,55 @@ operator|<
 name|is_power2
 operator|>
 name|m_Power2
+argument_list|(
+argument|const APInt *&V
+argument_list|)
+block|{
+return|return
+name|V
+return|;
+block|}
+expr|struct
+name|is_maxsignedvalue
+block|{
+name|bool
+name|isValue
+argument_list|(
+argument|const APInt&C
+argument_list|)
+block|{
+return|return
+name|C
+operator|.
+name|isMaxSignedValue
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+specifier|inline
+name|cst_pred_ty
+operator|<
+name|is_maxsignedvalue
+operator|>
+name|m_MaxSignedValue
+argument_list|()
+block|{
+return|return
+name|cst_pred_ty
+operator|<
+name|is_maxsignedvalue
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+specifier|inline
+name|api_pred_ty
+operator|<
+name|is_maxsignedvalue
+operator|>
+name|m_MaxSignedValue
 argument_list|(
 argument|const APInt *&V
 argument_list|)
@@ -1467,10 +1553,10 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|Class
-modifier|*
+name|auto
+operator|*
 name|CV
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|Class
@@ -1494,7 +1580,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_Value - Match a value, capturing it if we match.
+comment|/// \brief Match a value, capturing it if we match.
 specifier|inline
 name|bind_ty
 operator|<
@@ -1509,7 +1595,22 @@ return|return
 name|V
 return|;
 block|}
-comment|/// m_ConstantInt - Match a ConstantInt, capturing the value if we match.
+comment|/// \brief Match a binary operator, capturing it if we match.
+specifier|inline
+name|bind_ty
+operator|<
+name|BinaryOperator
+operator|>
+name|m_BinOp
+argument_list|(
+argument|BinaryOperator *&I
+argument_list|)
+block|{
+return|return
+name|I
+return|;
+block|}
+comment|/// \brief Match a ConstantInt, capturing the value if we match.
 specifier|inline
 name|bind_ty
 operator|<
@@ -1524,7 +1625,7 @@ return|return
 name|CI
 return|;
 block|}
-comment|/// m_Constant - Match a Constant, capturing the value if we match.
+comment|/// \brief Match a Constant, capturing the value if we match.
 specifier|inline
 name|bind_ty
 operator|<
@@ -1539,7 +1640,7 @@ return|return
 name|C
 return|;
 block|}
-comment|/// m_ConstantFP - Match a ConstantFP, capturing the value if we match.
+comment|/// \brief Match a ConstantFP, capturing the value if we match.
 specifier|inline
 name|bind_ty
 operator|<
@@ -1554,7 +1655,7 @@ return|return
 name|C
 return|;
 block|}
-comment|/// specificval_ty - Match a specified Value*.
+comment|/// \brief Match a specified Value*.
 expr|struct
 name|specificval_ty
 block|{
@@ -1595,7 +1696,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_Specific - Match if we have a specific specified value.
+comment|/// \brief Match if we have a specific specified value.
 specifier|inline
 name|specificval_ty
 name|m_Specific
@@ -1607,8 +1708,8 @@ return|return
 name|V
 return|;
 block|}
-comment|/// Match a specified floating point value or vector of all elements of that
-comment|/// value.
+comment|/// \brief Match a specified floating point value or vector of all elements of
+comment|/// that value.
 expr|struct
 name|specific_fpval
 block|{
@@ -1639,7 +1740,7 @@ block|{
 if|if
 condition|(
 specifier|const
-name|ConstantFP
+specifier|auto
 modifier|*
 name|CFP
 init|=
@@ -1672,7 +1773,7 @@ condition|)
 if|if
 condition|(
 specifier|const
-name|Constant
+specifier|auto
 modifier|*
 name|C
 init|=
@@ -1686,10 +1787,10 @@ operator|)
 condition|)
 if|if
 condition|(
-name|ConstantFP
-modifier|*
+name|auto
+operator|*
 name|CFP
-init|=
+operator|=
 name|dyn_cast_or_null
 operator|<
 name|ConstantFP
@@ -1715,8 +1816,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// Match a specific floating point value or vector with all elements equal to
-comment|/// the value.
+comment|/// \brief Match a specific floating point value or vector with all elements
+comment|/// equal to the value.
 specifier|inline
 name|specific_fpval
 name|m_SpecificFP
@@ -1731,7 +1832,7 @@ name|V
 argument_list|)
 return|;
 block|}
-comment|/// Match a float 1.0 or vector with all elements equal to 1.0.
+comment|/// \brief Match a float 1.0 or vector with all elements equal to 1.0.
 specifier|inline
 name|specific_fpval
 name|m_FPOne
@@ -1776,7 +1877,8 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|ConstantInt
+specifier|const
+specifier|auto
 modifier|*
 name|CV
 init|=
@@ -1815,8 +1917,132 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_ConstantInt - Match a ConstantInt and bind to its value.  This does not
-comment|/// match ConstantInts wider than 64-bits.
+comment|/// \brief Match a specified integer value or vector of all elements of that
+comment|// value.
+block|struct
+name|specific_intval
+block|{
+name|uint64_t
+name|Val
+block|;
+name|specific_intval
+argument_list|(
+argument|uint64_t V
+argument_list|)
+operator|:
+name|Val
+argument_list|(
+argument|V
+argument_list|)
+block|{}
+name|template
+operator|<
+name|typename
+name|ITy
+operator|>
+name|bool
+name|match
+argument_list|(
+argument|ITy *V
+argument_list|)
+block|{
+specifier|const
+name|auto
+operator|*
+name|CI
+operator|=
+name|dyn_cast
+operator|<
+name|ConstantInt
+operator|>
+operator|(
+name|V
+operator|)
+block|;
+if|if
+condition|(
+operator|!
+name|CI
+operator|&&
+name|V
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isVectorTy
+argument_list|()
+condition|)
+if|if
+condition|(
+specifier|const
+specifier|auto
+modifier|*
+name|C
+init|=
+name|dyn_cast
+operator|<
+name|Constant
+operator|>
+operator|(
+name|V
+operator|)
+condition|)
+name|CI
+operator|=
+name|dyn_cast_or_null
+operator|<
+name|ConstantInt
+operator|>
+operator|(
+name|C
+operator|->
+name|getSplatValue
+argument_list|()
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|CI
+operator|&&
+name|CI
+operator|->
+name|getBitWidth
+argument_list|()
+operator|<=
+literal|64
+condition|)
+return|return
+name|CI
+operator|->
+name|getZExtValue
+argument_list|()
+operator|==
+name|Val
+return|;
+return|return
+name|false
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Match a specific integer value or vector with all elements equal to
+comment|/// the value.
+specifier|inline
+name|specific_intval
+name|m_SpecificInt
+argument_list|(
+argument|uint64_t V
+argument_list|)
+block|{
+return|return
+name|specific_intval
+argument_list|(
+name|V
+argument_list|)
+return|;
+block|}
+comment|/// \brief Match a ConstantInt and bind to its value.  This does not match
+comment|/// ConstantInts wider than 64-bits.
 specifier|inline
 name|bind_const_intval_ty
 name|m_ConstantInt
@@ -1826,6 +2052,141 @@ argument_list|)
 block|{
 return|return
 name|V
+return|;
+block|}
+comment|//===----------------------------------------------------------------------===//
+comment|// Matcher for any binary operator.
+comment|//
+name|template
+operator|<
+name|typename
+name|LHS_t
+block|,
+name|typename
+name|RHS_t
+operator|>
+expr|struct
+name|AnyBinaryOp_match
+block|{
+name|LHS_t
+name|L
+block|;
+name|RHS_t
+name|R
+block|;
+name|AnyBinaryOp_match
+argument_list|(
+specifier|const
+name|LHS_t
+operator|&
+name|LHS
+argument_list|,
+specifier|const
+name|RHS_t
+operator|&
+name|RHS
+argument_list|)
+operator|:
+name|L
+argument_list|(
+name|LHS
+argument_list|)
+block|,
+name|R
+argument_list|(
+argument|RHS
+argument_list|)
+block|{}
+name|template
+operator|<
+name|typename
+name|OpTy
+operator|>
+name|bool
+name|match
+argument_list|(
+argument|OpTy *V
+argument_list|)
+block|{
+if|if
+condition|(
+name|auto
+operator|*
+name|I
+operator|=
+name|dyn_cast
+operator|<
+name|BinaryOperator
+operator|>
+operator|(
+name|V
+operator|)
+condition|)
+return|return
+name|L
+operator|.
+name|match
+argument_list|(
+name|I
+operator|->
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+operator|&&
+name|R
+operator|.
+name|match
+argument_list|(
+name|I
+operator|->
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+argument_list|)
+return|;
+return|return
+name|false
+return|;
+block|}
+expr|}
+block|;
+name|template
+operator|<
+name|typename
+name|LHS
+block|,
+name|typename
+name|RHS
+operator|>
+specifier|inline
+name|AnyBinaryOp_match
+operator|<
+name|LHS
+block|,
+name|RHS
+operator|>
+name|m_BinOp
+argument_list|(
+argument|const LHS&L
+argument_list|,
+argument|const RHS&R
+argument_list|)
+block|{
+return|return
+name|AnyBinaryOp_match
+operator|<
+name|LHS
+operator|,
+name|RHS
+operator|>
+operator|(
+name|L
+operator|,
+name|R
+operator|)
 return|;
 block|}
 comment|//===----------------------------------------------------------------------===//
@@ -1899,10 +2260,10 @@ operator|+
 name|Opcode
 condition|)
 block|{
-name|BinaryOperator
-modifier|*
+name|auto
+operator|*
 name|I
-init|=
+operator|=
 name|cast
 operator|<
 name|BinaryOperator
@@ -1910,7 +2271,7 @@ operator|>
 operator|(
 name|V
 operator|)
-decl_stmt|;
+expr_stmt|;
 return|return
 name|L
 operator|.
@@ -1939,10 +2300,10 @@ return|;
 block|}
 if|if
 condition|(
-name|ConstantExpr
-modifier|*
+name|auto
+operator|*
 name|CE
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|ConstantExpr
@@ -2842,10 +3203,10 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|OverflowingBinaryOperator
-modifier|*
+name|auto
+operator|*
 name|Op
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|OverflowingBinaryOperator
@@ -3434,10 +3795,10 @@ operator|+
 name|Opc2
 condition|)
 block|{
-name|BinaryOperator
-modifier|*
+name|auto
+operator|*
 name|I
-init|=
+operator|=
 name|cast
 operator|<
 name|BinaryOperator
@@ -3445,7 +3806,7 @@ operator|>
 operator|(
 name|V
 operator|)
-decl_stmt|;
+expr_stmt|;
 return|return
 name|L
 operator|.
@@ -3474,10 +3835,10 @@ return|;
 block|}
 if|if
 condition|(
-name|ConstantExpr
-modifier|*
+name|auto
+operator|*
 name|CE
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|ConstantExpr
@@ -3533,7 +3894,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_Shr - Matches LShr or AShr.
+comment|/// \brief Matches LShr or AShr.
 name|template
 operator|<
 name|typename
@@ -3586,7 +3947,7 @@ name|R
 operator|)
 return|;
 block|}
-comment|/// m_LogicalShift - Matches LShr or Shl.
+comment|/// \brief Matches LShr or Shl.
 name|template
 operator|<
 name|typename
@@ -3639,7 +4000,7 @@ name|R
 operator|)
 return|;
 block|}
-comment|/// m_IDiv - Matches UDiv and SDiv.
+comment|/// \brief Matches UDiv and SDiv.
 name|template
 operator|<
 name|typename
@@ -3928,6 +4289,58 @@ name|LHS
 block|,
 name|RHS
 block|,
+name|CmpInst
+block|,
+name|CmpInst
+operator|::
+name|Predicate
+operator|>
+name|m_Cmp
+argument_list|(
+argument|CmpInst::Predicate&Pred
+argument_list|,
+argument|const LHS&L
+argument_list|,
+argument|const RHS&R
+argument_list|)
+block|{
+return|return
+name|CmpClass_match
+operator|<
+name|LHS
+operator|,
+name|RHS
+operator|,
+name|CmpInst
+operator|,
+name|CmpInst
+operator|::
+name|Predicate
+operator|>
+operator|(
+name|Pred
+operator|,
+name|L
+operator|,
+name|R
+operator|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|LHS
+block|,
+name|typename
+name|RHS
+operator|>
+specifier|inline
+name|CmpClass_match
+operator|<
+name|LHS
+block|,
+name|RHS
+block|,
 name|ICmpInst
 block|,
 name|ICmpInst
@@ -4089,10 +4502,10 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|SelectInst
-modifier|*
+name|auto
+operator|*
 name|I
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|SelectInst
@@ -4191,8 +4604,8 @@ name|R
 operator|)
 return|;
 block|}
-comment|/// m_SelectCst - This matches a select of two constants, e.g.:
-comment|///    m_SelectCst<-1, 0>(m_Value(V))
+comment|/// \brief This matches a select of two constants, e.g.:
+comment|/// m_SelectCst<-1, 0>(m_Value(V))
 name|template
 operator|<
 name|int64_t
@@ -4217,8 +4630,7 @@ block|,
 name|constantint_match
 operator|<
 name|R
-operator|>
-expr|>
+operator|>>
 name|m_SelectCst
 argument_list|(
 argument|const Cond&C
@@ -4288,10 +4700,10 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|Operator
-modifier|*
+name|auto
+operator|*
 name|O
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|Operator
@@ -4326,7 +4738,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_BitCast
+comment|/// \brief Matches BitCast.
 name|template
 operator|<
 name|typename
@@ -4360,7 +4772,7 @@ name|Op
 operator|)
 return|;
 block|}
-comment|/// m_PtrToInt
+comment|/// \brief Matches PtrToInt.
 name|template
 operator|<
 name|typename
@@ -4394,7 +4806,7 @@ name|Op
 operator|)
 return|;
 block|}
-comment|/// m_Trunc
+comment|/// \brief Matches Trunc.
 name|template
 operator|<
 name|typename
@@ -4428,7 +4840,7 @@ name|Op
 operator|)
 return|;
 block|}
-comment|/// m_SExt
+comment|/// \brief Matches SExt.
 name|template
 operator|<
 name|typename
@@ -4462,7 +4874,7 @@ name|Op
 operator|)
 return|;
 block|}
-comment|/// m_ZExt
+comment|/// \brief Matches ZExt.
 name|template
 operator|<
 name|typename
@@ -4496,7 +4908,7 @@ name|Op
 operator|)
 return|;
 block|}
-comment|/// m_UIToFP
+comment|/// \brief Matches UIToFP.
 name|template
 operator|<
 name|typename
@@ -4530,7 +4942,7 @@ name|Op
 operator|)
 return|;
 block|}
-comment|/// m_SIToFP
+comment|/// \brief Matches SIToFP.
 name|template
 operator|<
 name|typename
@@ -4604,10 +5016,10 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|Operator
-modifier|*
+name|auto
+operator|*
 name|O
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|Operator
@@ -4764,10 +5176,10 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|Operator
-modifier|*
+name|auto
+operator|*
 name|O
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|Operator
@@ -4861,7 +5273,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_Neg - Match an integer negate.
+comment|/// \brief Match an integer negate.
 name|template
 operator|<
 name|typename
@@ -4918,10 +5330,10 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|Operator
-modifier|*
+name|auto
+operator|*
 name|O
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|Operator
@@ -4975,7 +5387,8 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|ConstantFP
+specifier|const
+specifier|auto
 modifier|*
 name|C
 init|=
@@ -5006,7 +5419,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// m_FNeg - Match a floating point negate.
+comment|/// \brief Match a floating point negate.
 name|template
 operator|<
 name|typename
@@ -5049,7 +5462,7 @@ name|Succ
 argument_list|(
 argument|Succ
 argument_list|)
-block|{   }
+block|{}
 name|template
 operator|<
 name|typename
@@ -5063,10 +5476,10 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|BranchInst
-modifier|*
+name|auto
+operator|*
 name|BI
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|BranchInst
@@ -5168,7 +5581,7 @@ name|F
 argument_list|(
 argument|f
 argument_list|)
-block|{   }
+block|{}
 name|template
 operator|<
 name|typename
@@ -5182,10 +5595,10 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|BranchInst
-modifier|*
+name|auto
+operator|*
 name|BI
-init|=
+operator|=
 name|dyn_cast
 operator|<
 name|BranchInst
@@ -5334,7 +5747,7 @@ argument|OpTy *V
 argument_list|)
 block|{
 comment|// Look for "(x pred y) ? x : y" or "(x pred y) ? y : x".
-name|SelectInst
+name|auto
 operator|*
 name|SI
 operator|=
@@ -5354,7 +5767,7 @@ condition|)
 return|return
 name|false
 return|;
-name|CmpInst_t
+name|auto
 operator|*
 name|Cmp
 operator|=
@@ -5497,7 +5910,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// smax_pred_ty - Helper class for identifying signed max predicates.
+comment|/// \brief Helper class for identifying signed max predicates.
 block|struct
 name|smax_pred_ty
 block|{
@@ -5524,7 +5937,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// smin_pred_ty - Helper class for identifying signed min predicates.
+comment|/// \brief Helper class for identifying signed min predicates.
 block|struct
 name|smin_pred_ty
 block|{
@@ -5551,7 +5964,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// umax_pred_ty - Helper class for identifying unsigned max predicates.
+comment|/// \brief Helper class for identifying unsigned max predicates.
 block|struct
 name|umax_pred_ty
 block|{
@@ -5578,7 +5991,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// umin_pred_ty - Helper class for identifying unsigned min predicates.
+comment|/// \brief Helper class for identifying unsigned min predicates.
 block|struct
 name|umin_pred_ty
 block|{
@@ -5605,7 +6018,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ofmax_pred_ty - Helper class for identifying ordered max predicates.
+comment|/// \brief Helper class for identifying ordered max predicates.
 block|struct
 name|ofmax_pred_ty
 block|{
@@ -5632,7 +6045,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ofmin_pred_ty - Helper class for identifying ordered min predicates.
+comment|/// \brief Helper class for identifying ordered min predicates.
 block|struct
 name|ofmin_pred_ty
 block|{
@@ -5659,7 +6072,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ufmax_pred_ty - Helper class for identifying unordered max predicates.
+comment|/// \brief Helper class for identifying unordered max predicates.
 block|struct
 name|ufmax_pred_ty
 block|{
@@ -5686,7 +6099,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ufmin_pred_ty - Helper class for identifying unordered min predicates.
+comment|/// \brief Helper class for identifying unordered min predicates.
 block|struct
 name|ufmin_pred_ty
 block|{
@@ -6131,7 +6544,7 @@ name|Val
 argument_list|(
 argument|V
 argument_list|)
-block|{ }
+block|{}
 name|template
 operator|<
 name|typename
@@ -6170,7 +6583,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// Match an argument
+comment|/// \brief Match an argument.
 name|template
 operator|<
 name|unsigned
@@ -6201,7 +6614,7 @@ name|Op
 operator|)
 return|;
 block|}
-comment|/// Intrinsic matchers.
+comment|/// \brief Intrinsic matchers.
 expr|struct
 name|IntrinsicID_match
 block|{
@@ -6217,7 +6630,7 @@ name|ID
 argument_list|(
 argument|IntrID
 argument_list|)
-block|{ }
+block|{}
 name|template
 operator|<
 name|typename
@@ -6229,27 +6642,43 @@ argument_list|(
 argument|OpTy *V
 argument_list|)
 block|{
-name|IntrinsicInst
-operator|*
-name|II
-operator|=
+if|if
+condition|(
+specifier|const
+specifier|auto
+modifier|*
+name|CI
+init|=
 name|dyn_cast
 operator|<
-name|IntrinsicInst
+name|CallInst
 operator|>
 operator|(
 name|V
 operator|)
-block|;
+condition|)
+if|if
+condition|(
+specifier|const
+specifier|auto
+modifier|*
+name|F
+init|=
+name|CI
+operator|->
+name|getCalledFunction
+argument_list|()
+condition|)
 return|return
-name|II
-operator|&&
-name|II
+name|F
 operator|->
 name|getIntrinsicID
 argument_list|()
 operator|==
 name|ID
+return|;
+return|return
+name|false
 return|;
 block|}
 expr|}
@@ -6337,8 +6766,7 @@ operator|,
 name|Argument_match
 operator|<
 name|T0
-operator|>
-expr|>
+operator|>>
 name|Ty
 expr_stmt|;
 block|}
@@ -6373,8 +6801,7 @@ operator|,
 name|Argument_match
 operator|<
 name|T1
-operator|>
-expr|>
+operator|>>
 name|Ty
 expr_stmt|;
 block|}
@@ -6416,8 +6843,7 @@ operator|,
 name|Argument_match
 operator|<
 name|T2
-operator|>
-expr|>
+operator|>>
 name|Ty
 expr_stmt|;
 block|}
@@ -6466,14 +6892,13 @@ operator|,
 name|Argument_match
 operator|<
 name|T3
-operator|>
-expr|>
+operator|>>
 name|Ty
 expr_stmt|;
 block|}
 block|;
-comment|/// Match intrinsic calls like this:
-comment|///   m_Intrinsic<Intrinsic::fabs>(m_Value(X))
+comment|/// \brief Match intrinsic calls like this:
+comment|/// m_Intrinsic<Intrinsic::fabs>(m_Value(X))
 name|template
 operator|<
 name|Intrinsic
@@ -6716,7 +7141,7 @@ operator|)
 argument_list|)
 return|;
 block|}
-comment|// Helper intrinsic matching specializations
+comment|// Helper intrinsic matching specializations.
 name|template
 operator|<
 name|typename
@@ -6744,6 +7169,84 @@ name|bswap
 operator|>
 operator|(
 name|Op0
+operator|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|Opnd0
+block|,
+name|typename
+name|Opnd1
+operator|>
+specifier|inline
+name|typename
+name|m_Intrinsic_Ty
+operator|<
+name|Opnd0
+block|,
+name|Opnd1
+operator|>
+operator|::
+name|Ty
+name|m_FMin
+argument_list|(
+argument|const Opnd0&Op0
+argument_list|,
+argument|const Opnd1&Op1
+argument_list|)
+block|{
+return|return
+name|m_Intrinsic
+operator|<
+name|Intrinsic
+operator|::
+name|minnum
+operator|>
+operator|(
+name|Op0
+operator|,
+name|Op1
+operator|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|Opnd0
+block|,
+name|typename
+name|Opnd1
+operator|>
+specifier|inline
+name|typename
+name|m_Intrinsic_Ty
+operator|<
+name|Opnd0
+block|,
+name|Opnd1
+operator|>
+operator|::
+name|Ty
+name|m_FMax
+argument_list|(
+argument|const Opnd0&Op0
+argument_list|,
+argument|const Opnd1&Op1
+argument_list|)
+block|{
+return|return
+name|m_Intrinsic
+operator|<
+name|Intrinsic
+operator|::
+name|maxnum
+operator|>
+operator|(
+name|Op0
+operator|,
+name|Op1
 operator|)
 return|;
 block|}

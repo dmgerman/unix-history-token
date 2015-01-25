@@ -54,20 +54,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TARGET_AArch64_H
+name|LLVM_LIB_TARGET_AARCH64_AARCH64_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TARGET_AArch64_H
+name|LLVM_LIB_TARGET_AARCH64_AARCH64_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"Utils/AArch64BaseInfo.h"
-end_include
 
 begin_include
 include|#
@@ -78,13 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"Utils/AArch64BaseInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetMachine.h"
 end_include
 
 begin_decl_stmt
@@ -156,7 +156,22 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createAArch64ConditionOptimizerPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createAArch64AddressTypePromotionPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createAArch64A57FPLoadBalancing
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createAArch64A53Fix835769
 parameter_list|()
 function_decl|;
 comment|/// \brief Creates an ARM-specific Target Transformation Info pass.

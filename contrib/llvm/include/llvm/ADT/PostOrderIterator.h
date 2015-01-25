@@ -158,6 +158,8 @@ name|insert
 argument_list|(
 name|To
 argument_list|)
+operator|.
+name|second
 return|;
 block|}
 comment|// Called after all children of BB have been visited.
@@ -242,6 +244,8 @@ name|insert
 argument_list|(
 name|To
 argument_list|)
+operator|.
+name|second
 return|;
 block|}
 comment|// Called after all children of BB have been visited.

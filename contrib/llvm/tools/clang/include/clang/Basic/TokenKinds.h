@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_TOKENKINDS_H
+name|LLVM_CLANG_BASIC_TOKENKINDS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_TOKENKINDS_H
+name|LLVM_CLANG_BASIC_TOKENKINDS_H
 end_define
 
 begin_include
@@ -290,6 +290,12 @@ operator|==
 name|tok
 operator|::
 name|wide_char_constant
+operator|||
+name|K
+operator|==
+name|tok
+operator|::
+name|utf8_char_constant
 operator|||
 name|K
 operator|==

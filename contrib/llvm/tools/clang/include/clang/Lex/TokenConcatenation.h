@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_LEX_TOKEN_CONCATENATION_H
+name|LLVM_CLANG_LEX_TOKENCONCATENATION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_LEX_TOKEN_CONCATENATION_H
+name|LLVM_CLANG_LEX_TOKENCONCATENATION_H
 end_define
 
 begin_include

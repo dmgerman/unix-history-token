@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ASMWRITER_INST_H
+name|LLVM_UTILS_TABLEGEN_ASMWRITERINST_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ASMWRITER_INST_H
+name|LLVM_UTILS_TABLEGEN_ASMWRITERINST_H
 end_define
 
 begin_include
@@ -313,8 +313,6 @@ argument_list|(
 argument|const CodeGenInstruction&CGI
 argument_list|,
 argument|unsigned Variant
-argument_list|,
-argument|int OperandSpacing
 argument_list|)
 empty_stmt|;
 comment|/// MatchesAllButOneOp - If this instruction is exactly identical to the

@@ -154,17 +154,21 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/// \macro __GNUC_PREREQ
+comment|/// \macro LLVM_GNUC_PREREQ
 end_comment
 
 begin_comment
-comment|/// \brief Defines __GNUC_PREREQ if glibc's features.h isn't available.
+comment|/// \brief Extend the default __GNUC_PREREQ even if glibc's features.h isn't
+end_comment
+
+begin_comment
+comment|/// available.
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 end_ifndef
 
 begin_if
@@ -179,19 +183,55 @@ name|defined
 argument_list|(
 name|__GNUC_MINOR__
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC_PATCHLEVEL__
+argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 parameter_list|(
 name|maj
 parameter_list|,
 name|min
+parameter_list|,
+name|patch
 parameter_list|)
 define|\
-value|((__GNUC__<< 16) + __GNUC_MINOR__>= ((maj)<< 16) + (min))
+value|((__GNUC__<< 20) + (__GNUC_MINOR__<< 10) + __GNUC_PATCHLEVEL__>= \      ((maj)<< 20) + ((min)<< 10) + (patch))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC_MINOR__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_GNUC_PREREQ
+parameter_list|(
+name|maj
+parameter_list|,
+name|min
+parameter_list|,
+name|patch
+parameter_list|)
+define|\
+value|((__GNUC__<< 20) + (__GNUC_MINOR__<< 10)>= ((maj)<< 20) + ((min)<< 10))
 end_define
 
 begin_else
@@ -202,11 +242,13 @@ end_else
 begin_define
 define|#
 directive|define
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 parameter_list|(
 name|maj
 parameter_list|,
 name|min
+parameter_list|,
+name|patch
 parameter_list|)
 value|0
 end_define
@@ -302,11 +344,25 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_MSC_VER
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|||
+name|LLVM_MSC_PREREQ
+argument_list|(
+literal|1900
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -344,15 +400,7 @@ comment|/// Sadly, this is separate from just r-value reference support because 
 end_comment
 
 begin_comment
-comment|/// implemented everything but this thus far. No release of GCC yet has support
-end_comment
-
-begin_comment
-comment|/// for this feature so it is enabled with Clang only.
-end_comment
-
-begin_comment
-comment|/// FIXME: This should change to a version check when GCC grows support for it.
+comment|/// implemented this later than everything else.
 end_comment
 
 begin_if
@@ -361,6 +409,15 @@ directive|if
 name|__has_feature
 argument_list|(
 name|cxx_rvalue_references
+argument_list|)
+operator|||
+name|LLVM_GNUC_PREREQ
+argument_list|(
+literal|4
+operator|,
+literal|8
+operator|,
+literal|1
 argument_list|)
 end_if
 
@@ -640,9 +697,11 @@ argument_list|(
 name|visibility
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -696,14 +755,57 @@ if|#
 directive|if
 name|__has_attribute
 argument_list|(
+name|sentinel
+argument_list|)
+operator|||
+name|LLVM_GNUC_PREREQ
+argument_list|(
+literal|3
+operator|,
+literal|0
+operator|,
+literal|0
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_END_WITH_NULL
+value|__attribute__((sentinel))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_END_WITH_NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__has_attribute
+argument_list|(
 name|used
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|3
 operator|,
 literal|1
+operator|,
+literal|0
 argument_list|)
 end_if
 
@@ -738,11 +840,13 @@ argument_list|(
 name|warn_unused_result
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|3
 operator|,
 literal|4
+operator|,
+literal|0
 argument_list|)
 end_if
 
@@ -809,11 +913,13 @@ argument_list|(
 name|unused
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|3
 operator|,
 literal|1
+operator|,
+literal|0
 argument_list|)
 end_if
 
@@ -853,9 +959,11 @@ argument_list|(
 name|weak
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -1004,9 +1112,11 @@ argument_list|(
 name|__builtin_expect
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -1152,11 +1262,13 @@ argument_list|(
 name|noinline
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|3
 operator|,
 literal|4
+operator|,
+literal|0
 argument_list|)
 end_if
 
@@ -1223,9 +1335,11 @@ argument_list|(
 name|always_inline
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -1308,6 +1422,47 @@ begin_define
 define|#
 directive|define
 name|LLVM_ATTRIBUTE_NORETURN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__has_attribute
+argument_list|(
+name|returns_nonnull
+argument_list|)
+operator|||
+name|LLVM_GNUC_PREREQ
+argument_list|(
+literal|4
+operator|,
+literal|9
+operator|,
+literal|0
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_RETURNS_NONNULL
+value|__attribute__((returns_nonnull))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_RETURNS_NONNULL
 end_define
 
 begin_endif
@@ -1465,11 +1620,13 @@ argument_list|(
 name|__builtin_unreachable
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
 operator|,
 literal|5
+operator|,
+literal|0
 argument_list|)
 end_if
 
@@ -1517,11 +1674,13 @@ argument_list|(
 name|__builtin_trap
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
 operator|,
 literal|3
+operator|,
+literal|0
 argument_list|)
 end_if
 
@@ -1564,12 +1723,14 @@ name|__has_builtin
 argument_list|(
 name|__builtin_assume_aligned
 argument_list|)
-operator|&&
-name|__GNUC_PREREQ
+operator|||
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
 operator|,
 literal|7
+operator|,
+literal|0
 argument_list|)
 end_if
 

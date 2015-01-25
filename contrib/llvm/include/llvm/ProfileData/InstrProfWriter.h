@@ -54,19 +54,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_PROFILEDATA_INSTRPROF_WRITER_H_
+name|LLVM_PROFILEDATA_INSTRPROFWRITER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_PROFILEDATA_INSTRPROF_WRITER_H_
+name|LLVM_PROFILEDATA_INSTRPROFWRITER_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -109,22 +115,22 @@ name|InstrProfWriter
 block|{
 name|public
 label|:
-struct|struct
-name|CounterData
-block|{
+typedef|typedef
+name|SmallDenseMap
+operator|<
 name|uint64_t
-name|Hash
-decl_stmt|;
+operator|,
 name|std
 operator|::
 name|vector
 operator|<
 name|uint64_t
 operator|>
-name|Counts
+operator|,
+literal|1
+operator|>
+name|CounterData
 expr_stmt|;
-block|}
-struct|;
 name|private
 label|:
 name|StringMap
@@ -133,8 +139,19 @@ name|CounterData
 operator|>
 name|FunctionData
 expr_stmt|;
+name|uint64_t
+name|MaxFunctionCount
+decl_stmt|;
 name|public
 label|:
+name|InstrProfWriter
+argument_list|()
+operator|:
+name|MaxFunctionCount
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 comment|/// Add function counts for the given function. If there are already counts
 comment|/// for this function and the hash and number of counts match, each counter is
 comment|/// summed.
@@ -172,10 +189,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_PROFILE_INSTRPROF_WRITER_H_
-end_comment
 
 end_unit
 

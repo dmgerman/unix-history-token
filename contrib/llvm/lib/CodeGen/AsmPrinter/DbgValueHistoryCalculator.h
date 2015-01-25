@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CODEGEN_ASMPRINTER_DBGVALUEHISTORYCALCULATOR_H_
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DBGVALUEHISTORYCALCULATOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CODEGEN_ASMPRINTER_DBGVALUEHISTORYCALCULATOR_H_
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DBGVALUEHISTORYCALCULATOR_H
 end_define
 
 begin_include
@@ -81,6 +81,8 @@ comment|// location of a variable, which is assumed to be valid until the end of
 comment|// range. If end is not specified, location is valid until the start
 comment|// instruction of the next instruction range, or until the end of the
 comment|// function.
+name|public
+label|:
 typedef|typedef
 name|std
 operator|::
@@ -116,6 +118,8 @@ name|InstrRanges
 operator|>
 name|InstrRangesMap
 expr_stmt|;
+name|private
+label|:
 name|InstrRangesMap
 name|VarInstrRanges
 decl_stmt|;

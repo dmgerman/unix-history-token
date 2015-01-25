@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FORMAT_BREAKABLETOKEN_H
+name|LLVM_CLANG_LIB_FORMAT_BREAKABLETOKEN_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FORMAT_BREAKABLETOKEN_H
+name|LLVM_CLANG_LIB_FORMAT_BREAKABLETOKEN_H
 end_define
 
 begin_include
@@ -685,6 +685,11 @@ block|;
 comment|// StartOfLineColumn[i] is the target column at which Line[i] should be.
 comment|// Note that this excludes a leading "* " or "*" in case all lines have
 comment|// a "*" prefix.
+comment|// The first line's target column is always positive. The remaining lines'
+comment|// target columns are relative to the first line to allow correct indentation
+comment|// of comments in \c WhitespaceManager. Thus they can be negative as well (in
+comment|// case the first line needs to be unindented more than there's actual
+comment|// whitespace in another line).
 name|SmallVector
 operator|<
 name|int
@@ -729,10 +734,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_FORMAT_BREAKABLETOKEN_H
-end_comment
 
 end_unit
 

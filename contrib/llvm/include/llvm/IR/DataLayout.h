@@ -120,7 +120,11 @@ file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_comment
-comment|// this needs to be outside of the namespace, to avoid conflict with llvm-c decl
+comment|// This needs to be outside of the namespace, to avoid conflict with llvm-c
+end_comment
+
+begin_comment
+comment|// decl.
 end_comment
 
 begin_typedef
@@ -176,63 +180,54 @@ name|INVALID_ALIGN
 init|=
 literal|0
 block|,
-comment|///< An invalid alignment
 name|INTEGER_ALIGN
 init|=
 literal|'i'
 block|,
-comment|///< Integer type alignment
 name|VECTOR_ALIGN
 init|=
 literal|'v'
 block|,
-comment|///< Vector type alignment
 name|FLOAT_ALIGN
 init|=
 literal|'f'
 block|,
-comment|///< Floating point type alignment
 name|AGGREGATE_ALIGN
 init|=
 literal|'a'
-comment|///< Aggregate alignment
 block|}
 enum|;
-comment|/// Layout alignment element.
+comment|/// \brief Layout alignment element.
 comment|///
 comment|/// Stores the alignment data associated with a given alignment type (integer,
 comment|/// vector, float) and type bit width.
 comment|///
-comment|/// @note The unusual order of elements in the structure attempts to reduce
+comment|/// \note The unusual order of elements in the structure attempts to reduce
 comment|/// padding and make the structure slightly more cache friendly.
 struct|struct
 name|LayoutAlignElem
 block|{
+comment|/// \brief Alignment type from \c AlignTypeEnum
 name|unsigned
 name|AlignType
 range|:
 literal|8
 decl_stmt|;
-comment|///< Alignment type (AlignTypeEnum)
 name|unsigned
 name|TypeBitWidth
 range|:
 literal|24
 decl_stmt|;
-comment|///< Type bit width
 name|unsigned
 name|ABIAlign
 range|:
 literal|16
 decl_stmt|;
-comment|///< ABI alignment for this type/bitw
 name|unsigned
 name|PrefAlign
 range|:
 literal|16
 decl_stmt|;
-comment|///< Pref. alignment for this type/bitw
-comment|/// Initializer
 specifier|static
 name|LayoutAlignElem
 name|get
@@ -250,7 +245,6 @@ name|uint32_t
 name|bit_width
 parameter_list|)
 function_decl|;
-comment|/// Equality predicate
 name|bool
 name|operator
 operator|==
@@ -264,11 +258,11 @@ specifier|const
 expr_stmt|;
 block|}
 struct|;
-comment|/// Layout pointer alignment element.
+comment|/// \brief Layout pointer alignment element.
 comment|///
 comment|/// Stores the alignment data associated with a given pointer and address space.
 comment|///
-comment|/// @note The unusual order of elements in the structure attempts to reduce
+comment|/// \note The unusual order of elements in the structure attempts to reduce
 comment|/// padding and make the structure slightly more cache friendly.
 struct|struct
 name|PointerAlignElem
@@ -276,19 +270,15 @@ block|{
 name|unsigned
 name|ABIAlign
 decl_stmt|;
-comment|///< ABI alignment for this type/bitw
 name|unsigned
 name|PrefAlign
 decl_stmt|;
-comment|///< Pref. alignment for this type/bitw
 name|uint32_t
 name|TypeByteWidth
 decl_stmt|;
-comment|///< Type byte width
 name|uint32_t
 name|AddressSpace
 decl_stmt|;
-comment|///< Address space for the pointer type
 comment|/// Initializer
 specifier|static
 name|PointerAlignElem
@@ -307,7 +297,6 @@ name|uint32_t
 name|TypeByteWidth
 parameter_list|)
 function_decl|;
-comment|/// Equality predicate
 name|bool
 name|operator
 operator|==
@@ -321,23 +310,24 @@ specifier|const
 expr_stmt|;
 block|}
 struct|;
-comment|/// This class holds a parsed version of the target data layout string in a
-comment|/// module and provides methods for querying it. The target data layout string
-comment|/// is specified *by the target* - a frontend generating LLVM IR is required to
-comment|/// generate the right target data for the target being codegen'd to.
+comment|/// \brief A parsed version of the target data layout string in and methods for
+comment|/// querying it.
+comment|///
+comment|/// The target data layout string is specified *by the target* - a frontend
+comment|/// generating LLVM IR is required to generate the right target data for the
+comment|/// target being codegen'd to.
 name|class
 name|DataLayout
 block|{
 name|private
 label|:
+comment|/// Defaults to false.
 name|bool
-name|LittleEndian
+name|BigEndian
 decl_stmt|;
-comment|///< Defaults to false
 name|unsigned
 name|StackNaturalAlign
 decl_stmt|;
-comment|///< Stack natural alignment
 enum|enum
 name|ManglingModeT
 block|{
@@ -364,13 +354,7 @@ literal|8
 operator|>
 name|LegalIntWidths
 expr_stmt|;
-comment|///< Legal Integers.
-comment|/// Alignments - Where the primitive type alignment data is stored.
-comment|///
-comment|/// @sa reset().
-comment|/// @note Could support multiple size pointer alignments, e.g., 32-bit
-comment|/// pointers vs. 64-bit pointers by extending LayoutAlignment, but for now,
-comment|/// we don't.
+comment|/// \brief Primitive type alignment data.
 name|SmallVector
 operator|<
 name|LayoutAlignElem
@@ -424,15 +408,15 @@ argument_list|(
 argument|uint32_t AddressSpace
 argument_list|)
 expr_stmt|;
-comment|/// InvalidAlignmentElem - This member is a signal that a requested alignment
-comment|/// type and bit width were not found in the SmallVector.
+comment|/// This member is a signal that a requested alignment type and bit width were
+comment|/// not found in the SmallVector.
 specifier|static
 specifier|const
 name|LayoutAlignElem
 name|InvalidAlignmentElem
 decl_stmt|;
-comment|/// InvalidPointerElem - This member is a signal that a requested pointer
-comment|/// type and bit width were not found in the DenseSet.
+comment|/// This member is a signal that a requested pointer type and bit width were
+comment|/// not found in the DenseSet.
 specifier|static
 specifier|const
 name|PointerAlignElem
@@ -444,7 +428,6 @@ name|void
 modifier|*
 name|LayoutMap
 decl_stmt|;
-comment|//! Set/initialize target alignments
 name|void
 name|setAlignment
 parameter_list|(
@@ -479,7 +462,6 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-comment|//! Set/initialize pointer alignments
 name|void
 name|setPointerAlignment
 parameter_list|(
@@ -496,7 +478,7 @@ name|uint32_t
 name|TypeByteWidth
 parameter_list|)
 function_decl|;
-comment|//! Internal helper method that returns requested alignment for type.
+comment|/// Internal helper method that returns requested alignment for type.
 name|unsigned
 name|getAlignment
 argument_list|(
@@ -509,7 +491,7 @@ name|abi_or_pref
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Valid alignment predicate.
+comment|/// \brief Valid alignment predicate.
 comment|///
 comment|/// Predicate that tests a LayoutAlignElem reference returned by get() against
 comment|/// InvalidAlignmentElem.
@@ -531,10 +513,10 @@ operator|&
 name|InvalidAlignmentElem
 return|;
 block|}
-comment|/// Valid pointer predicate.
+comment|/// \brief Valid pointer predicate.
 comment|///
-comment|/// Predicate that tests a PointerAlignElem reference returned by get() against
-comment|/// InvalidPointerElem.
+comment|/// Predicate that tests a PointerAlignElem reference returned by get()
+comment|/// against \c InvalidPointerElem.
 name|bool
 name|validPointer
 argument_list|(
@@ -597,6 +579,15 @@ modifier|*
 name|M
 parameter_list|)
 function_decl|;
+name|void
+name|init
+parameter_list|(
+specifier|const
+name|Module
+modifier|*
+name|M
+parameter_list|)
+function_decl|;
 name|DataLayout
 argument_list|(
 specifier|const
@@ -629,11 +620,11 @@ block|{
 name|clear
 argument_list|()
 block|;
-name|LittleEndian
+name|BigEndian
 operator|=
 name|DL
 operator|.
-name|isLittleEndian
+name|isBigEndian
 argument_list|()
 block|;
 name|StackNaturalAlign
@@ -723,7 +714,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|LittleEndian
+operator|!
+name|BigEndian
 return|;
 block|}
 name|bool
@@ -732,13 +724,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|LittleEndian
+name|BigEndian
 return|;
 block|}
-comment|/// getStringRepresentation - Return the string representation of the
-comment|/// DataLayout.  This representation is in the same format accepted by the
-comment|/// string constructor above.
+comment|/// \brief Returns the string representation of the DataLayout.
+comment|///
+comment|/// This representation is in the same format accepted by the string
+comment|/// constructor above.
 name|std
 operator|::
 name|string
@@ -746,13 +738,13 @@ name|getStringRepresentation
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// isLegalInteger - This function returns true if the specified type is
-comment|/// known to be a native integer type supported by the CPU.  For example,
-comment|/// i64 is not native on most 32-bit CPUs and i37 is not native on any known
-comment|/// one.  This returns false if the integer width is not legal.
+comment|/// \brief Returns true if the specified type is known to be a native integer
+comment|/// type supported by the CPU.
+comment|///
+comment|/// For example, i64 is not native on most 32-bit CPUs and i37 is not native
+comment|/// on any known one. This returns false if the integer width is not legal.
 comment|///
 comment|/// The width is specified in bits.
-comment|///
 name|bool
 name|isLegalInteger
 argument_list|(
@@ -818,6 +810,15 @@ name|Align
 operator|>
 name|StackNaturalAlign
 operator|)
+return|;
+block|}
+name|unsigned
+name|getStackAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StackNaturalAlign
 return|;
 block|}
 name|bool
@@ -959,10 +960,11 @@ operator|&
 name|T
 argument_list|)
 expr_stmt|;
-comment|/// fitsInLegalInteger - This function returns true if the specified type fits
-comment|/// in a native integer type supported by the CPU.  For example, if the CPU
-comment|/// only supports i32 as a native integer type, then i27 fits in a legal
-comment|/// integer type but i45 does not.
+comment|/// \brief Returns true if the specified type fits in a native integer type
+comment|/// supported by the CPU.
+comment|///
+comment|/// For example, if the CPU only supports i32 as a native integer type, then
+comment|/// i27 fits in a legal integer type but i45 does not.
 name|bool
 name|fitsInLegalInteger
 argument_list|(
@@ -1099,9 +1101,10 @@ comment|///  X86_FP80     80          80               96
 comment|///
 comment|/// [*] The alloc size depends on the alignment, and thus on the target.
 comment|///     These values are for x86-32 linux.
-comment|/// getTypeSizeInBits - Return the number of bits necessary to hold the
-comment|/// specified type.  For example, returns 36 for i36 and 80 for x86_fp80.
-comment|/// The type passed must have a size (Type::isSized() must return true).
+comment|/// \brief Returns the number of bits necessary to hold the specified type.
+comment|///
+comment|/// For example, returns 36 for i36 and 80 for x86_fp80. The type passed must
+comment|/// have a size (Type::isSized() must return true).
 name|uint64_t
 name|getTypeSizeInBits
 argument_list|(
@@ -1111,9 +1114,10 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getTypeStoreSize - Return the maximum number of bytes that may be
-comment|/// overwritten by storing the specified type.  For example, returns 5
-comment|/// for i36 and 10 for x86_fp80.
+comment|/// \brief Returns the maximum number of bytes that may be overwritten by
+comment|/// storing the specified type.
+comment|///
+comment|/// For example, returns 5 for i36 and 10 for x86_fp80.
 name|uint64_t
 name|getTypeStoreSize
 argument_list|(
@@ -1136,9 +1140,10 @@ operator|/
 literal|8
 return|;
 block|}
-comment|/// getTypeStoreSizeInBits - Return the maximum number of bits that may be
-comment|/// overwritten by storing the specified type; always a multiple of 8.  For
-comment|/// example, returns 40 for i36 and 80 for x86_fp80.
+comment|/// \brief Returns the maximum number of bits that may be overwritten by
+comment|/// storing the specified type; always a multiple of 8.
+comment|///
+comment|/// For example, returns 40 for i36 and 80 for x86_fp80.
 name|uint64_t
 name|getTypeStoreSizeInBits
 argument_list|(
@@ -1157,10 +1162,11 @@ name|Ty
 argument_list|)
 return|;
 block|}
-comment|/// getTypeAllocSize - Return the offset in bytes between successive objects
-comment|/// of the specified type, including alignment padding.  This is the amount
-comment|/// that alloca reserves for this type.  For example, returns 12 or 16 for
-comment|/// x86_fp80, depending on alignment.
+comment|/// \brief Returns the offset in bytes between successive objects of the
+comment|/// specified type, including alignment padding.
+comment|///
+comment|/// This is the amount that alloca reserves for this type. For example,
+comment|/// returns 12 or 16 for x86_fp80, depending on alignment.
 name|uint64_t
 name|getTypeAllocSize
 argument_list|(
@@ -1172,7 +1178,7 @@ decl|const
 block|{
 comment|// Round up to the next alignment boundary.
 return|return
-name|RoundUpAlignment
+name|RoundUpToAlignment
 argument_list|(
 name|getTypeStoreSize
 argument_list|(
@@ -1186,10 +1192,11 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// getTypeAllocSizeInBits - Return the offset in bits between successive
-comment|/// objects of the specified type, including alignment padding; always a
-comment|/// multiple of 8.  This is the amount that alloca reserves for this type.
-comment|/// For example, returns 96 or 128 for x86_fp80, depending on alignment.
+comment|/// \brief Returns the offset in bits between successive objects of the
+comment|/// specified type, including alignment padding; always a multiple of 8.
+comment|///
+comment|/// This is the amount that alloca reserves for this type. For example,
+comment|/// returns 96 or 128 for x86_fp80, depending on alignment.
 name|uint64_t
 name|getTypeAllocSizeInBits
 argument_list|(
@@ -1208,8 +1215,7 @@ name|Ty
 argument_list|)
 return|;
 block|}
-comment|/// getABITypeAlignment - Return the minimum ABI-required alignment for the
-comment|/// specified type.
+comment|/// \brief Returns the minimum ABI-required alignment for the specified type.
 name|unsigned
 name|getABITypeAlignment
 argument_list|(
@@ -1219,8 +1225,8 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getABIIntegerTypeAlignment - Return the minimum ABI-required alignment for
-comment|/// an integer type of the specified bitwidth.
+comment|/// \brief Returns the minimum ABI-required alignment for an integer type of
+comment|/// the specified bitwidth.
 name|unsigned
 name|getABIIntegerTypeAlignment
 argument_list|(
@@ -1229,8 +1235,10 @@ name|BitWidth
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getPrefTypeAlignment - Return the preferred stack/global alignment for
-comment|/// the specified type.  This is always at least as good as the ABI alignment.
+comment|/// \brief Returns the preferred stack/global alignment for the specified
+comment|/// type.
+comment|///
+comment|/// This is always at least as good as the ABI alignment.
 name|unsigned
 name|getPrefTypeAlignment
 argument_list|(
@@ -1240,8 +1248,8 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getPreferredTypeAlignmentShift - Return the preferred alignment for the
-comment|/// specified type, returned as log2 of the value (a shift amount).
+comment|/// \brief Returns the preferred alignment for the specified type, returned as
+comment|/// log2 of the value (a shift amount).
 name|unsigned
 name|getPreferredTypeAlignmentShift
 argument_list|(
@@ -1251,8 +1259,8 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getIntPtrType - Return an integer type with size at least as big as that
-comment|/// of a pointer in the given address space.
+comment|/// \brief Returns an integer type with size at least as big as that of a
+comment|/// pointer in the given address space.
 name|IntegerType
 modifier|*
 name|getIntPtrType
@@ -1268,9 +1276,8 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getIntPtrType - Return an integer (vector of integer) type with size at
-comment|/// least as big as that of a pointer of the given pointer (vector of pointer)
-comment|/// type.
+comment|/// \brief Returns an integer (vector of integer) type with size at least as
+comment|/// big as that of a pointer of the given pointer (vector of pointer) type.
 name|Type
 modifier|*
 name|getIntPtrType
@@ -1280,8 +1287,8 @@ operator|*
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getSmallestLegalIntType - Return the smallest integer type with size at
-comment|/// least as big as Width bits.
+comment|/// \brief Returns the smallest integer type with size at least as big as
+comment|/// Width bits.
 name|Type
 modifier|*
 name|getSmallestLegalIntType
@@ -1297,8 +1304,7 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getLargestLegalIntType - Return the largest legal integer type, or null if
-comment|/// none are set.
+comment|/// \brief Returns the largest legal integer type, or null if none are set.
 name|Type
 modifier|*
 name|getLargestLegalIntType
@@ -1334,15 +1340,17 @@ name|LargestSize
 argument_list|)
 return|;
 block|}
-comment|/// getLargestLegalIntTypeSize - Return the size of largest legal integer
-comment|/// type size, or 0 if none are set.
+comment|/// \brief Returns the size of largest legal integer type size, or 0 if none
+comment|/// are set.
 name|unsigned
 name|getLargestLegalIntTypeSize
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getIndexedOffset - return the offset from the beginning of the type for
-comment|/// the specified indices.  This is used to implement getelementptr.
+comment|/// \brief Returns the offset from the beginning of the type for the specified
+comment|/// indices.
+comment|///
+comment|/// This is used to implement getelementptr.
 name|uint64_t
 name|getIndexedOffset
 argument_list|(
@@ -1359,9 +1367,10 @@ name|Indices
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getStructLayout - Return a StructLayout object, indicating the alignment
-comment|/// of the struct, its size, and the offsets of its fields.  Note that this
-comment|/// information is lazily cached.
+comment|/// \brief Returns a StructLayout object, indicating the alignment of the
+comment|/// struct, its size, and the offsets of its fields.
+comment|///
+comment|/// Note that this information is lazily cached.
 specifier|const
 name|StructLayout
 modifier|*
@@ -1373,9 +1382,9 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getPreferredAlignment - Return the preferred alignment of the specified
-comment|/// global.  This includes an explicitly requested alignment (if the global
-comment|/// has one).
+comment|/// \brief Returns the preferred alignment of the specified global.
+comment|///
+comment|/// This includes an explicitly requested alignment (if the global has one).
 name|unsigned
 name|getPreferredAlignment
 argument_list|(
@@ -1386,9 +1395,10 @@ name|GV
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getPreferredAlignmentLog - Return the preferred alignment of the
-comment|/// specified global, returned in log form.  This includes an explicitly
-comment|/// requested alignment (if the global has one).
+comment|/// \brief Returns the preferred alignment of the specified global, returned
+comment|/// in log form.
+comment|///
+comment|/// This includes an explicitly requested alignment (if the global has one).
 name|unsigned
 name|getPreferredAlignmentLog
 argument_list|(
@@ -1399,61 +1409,6 @@ name|GV
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// RoundUpAlignment - Round the specified value up to the next alignment
-comment|/// boundary specified by Alignment.  For example, 7 rounded up to an
-comment|/// alignment boundary of 4 is 8.  8 rounded up to the alignment boundary of 4
-comment|/// is 8 because it is already aligned.
-name|template
-operator|<
-name|typename
-name|UIntTy
-operator|>
-specifier|static
-name|UIntTy
-name|RoundUpAlignment
-argument_list|(
-argument|UIntTy Val
-argument_list|,
-argument|unsigned Alignment
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-name|Alignment
-operator|&
-operator|(
-name|Alignment
-operator|-
-literal|1
-operator|)
-operator|)
-operator|==
-literal|0
-operator|&&
-literal|"Alignment must be power of 2!"
-argument_list|)
-block|;
-return|return
-operator|(
-name|Val
-operator|+
-operator|(
-name|Alignment
-operator|-
-literal|1
-operator|)
-operator|)
-operator|&
-operator|~
-name|UIntTy
-argument_list|(
-name|Alignment
-operator|-
-literal|1
-argument_list|)
-return|;
-block|}
 block|}
 end_decl_stmt
 
@@ -1545,45 +1500,34 @@ return|return
 name|DL
 return|;
 block|}
-comment|// For use with the C API. C++ code should always use the constructor that
-comment|// takes a module.
-name|explicit
-name|DataLayoutPass
-argument_list|(
-specifier|const
-name|DataLayout
-operator|&
-name|DL
-argument_list|)
-block|;
-name|explicit
-name|DataLayoutPass
-argument_list|(
-specifier|const
-name|Module
-operator|*
-name|M
-argument_list|)
-block|;
 specifier|static
 name|char
 name|ID
 block|;
 comment|// Pass identification, replacement for typeid
-block|}
+name|bool
+name|doFinalization
+argument_list|(
+argument|Module&M
+argument_list|)
+name|override
+block|;
+name|bool
+name|doInitialization
+argument_list|(
+argument|Module&M
+argument_list|)
+name|override
+block|; }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// StructLayout - used to lazily calculate structure layout information for a
+comment|/// Used to lazily calculate structure layout information for a target machine,
 end_comment
 
 begin_comment
-comment|/// target machine, based on the DataLayout structure.
-end_comment
-
-begin_comment
-comment|///
+comment|/// based on the DataLayout structure.
 end_comment
 
 begin_decl_stmt
@@ -1637,9 +1581,8 @@ return|return
 name|StructAlignment
 return|;
 block|}
-comment|/// getElementContainingOffset - Given a valid byte offset into the structure,
-comment|/// return the structure index that contains it.
-comment|///
+comment|/// \brief Given a valid byte offset into the structure, returns the structure
+comment|/// index that contains it.
 name|unsigned
 name|getElementContainingOffset
 argument_list|(

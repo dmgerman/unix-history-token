@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARMISELLOWERING_H
+name|LLVM_LIB_TARGET_ARM_ARMISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARMISELLOWERING_H
+name|LLVM_LIB_TARGET_ARM_ARMISELLOWERING_H
 end_define
 
 begin_include
@@ -502,6 +502,7 @@ operator|:
 name|explicit
 name|ARMTargetLowering
 argument_list|(
+specifier|const
 name|TargetMachine
 operator|&
 name|TM
@@ -626,15 +627,17 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// allowsUnalignedMemoryAccesses - Returns true if the target allows
+comment|/// allowsMisalignedMemoryAccesses - Returns true if the target allows
 comment|/// unaligned memory accesses of the specified type. Returns whether it
 comment|/// is "fast" by reference in the second argument.
 name|bool
-name|allowsUnalignedMemoryAccesses
+name|allowsMisalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
 argument_list|,
 argument|unsigned AddrSpace
+argument_list|,
+argument|unsigned Align
 argument_list|,
 argument|bool *Fast
 argument_list|)
@@ -991,6 +994,22 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|hasLoadLinkedStoreConditional
+argument_list|()
+specifier|const
+name|override
+block|;
+name|Instruction
+operator|*
+name|makeDMB
+argument_list|(
+argument|IRBuilder<>&Builder
+argument_list|,
+argument|ARM_MB::MemBOpt Domain
+argument_list|)
+specifier|const
+block|;
 name|Value
 operator|*
 name|emitLoadLinked
@@ -1019,10 +1038,74 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|bool
-name|shouldExpandAtomicInIR
+name|Instruction
+operator|*
+name|emitLeadingFence
 argument_list|(
-argument|Instruction *Inst
+argument|IRBuilder<>&Builder
+argument_list|,
+argument|AtomicOrdering Ord
+argument_list|,
+argument|bool IsStore
+argument_list|,
+argument|bool IsLoad
+argument_list|)
+specifier|const
+name|override
+block|;
+name|Instruction
+operator|*
+name|emitTrailingFence
+argument_list|(
+argument|IRBuilder<>&Builder
+argument_list|,
+argument|AtomicOrdering Ord
+argument_list|,
+argument|bool IsStore
+argument_list|,
+argument|bool IsLoad
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|shouldExpandAtomicLoadInIR
+argument_list|(
+argument|LoadInst *LI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|shouldExpandAtomicStoreInIR
+argument_list|(
+argument|StoreInst *SI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|shouldExpandAtomicRMWInIR
+argument_list|(
+argument|AtomicRMWInst *AI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|useLoadStackGuardNode
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|canCombineStoreAndExtract
+argument_list|(
+argument|Type *VectorTy
+argument_list|,
+argument|Value *Idx
+argument_list|,
+argument|unsigned&Cost
 argument_list|)
 specifier|const
 name|override
@@ -1580,6 +1663,54 @@ name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
+name|SDValue
+name|LowerFP_ROUND
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerFP_EXTEND
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerFP_TO_INT
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerINT_TO_FP
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
 name|unsigned
 name|getRegisterByName
 argument_list|(
@@ -2010,6 +2141,36 @@ name|CI
 argument_list|)
 decl|const
 name|override
+decl_stmt|;
+name|SDValue
+name|getCMOV
+argument_list|(
+name|SDLoc
+name|dl
+argument_list|,
+name|EVT
+name|VT
+argument_list|,
+name|SDValue
+name|FalseVal
+argument_list|,
+name|SDValue
+name|TrueVal
+argument_list|,
+name|SDValue
+name|ARMcc
+argument_list|,
+name|SDValue
+name|CCR
+argument_list|,
+name|SDValue
+name|Cmp
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
 decl_stmt|;
 name|SDValue
 name|getARMCmp

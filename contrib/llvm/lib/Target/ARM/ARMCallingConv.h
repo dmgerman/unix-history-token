@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARMCALLINGCONV_H
+name|LLVM_LIB_TARGET_ARM_ARMCALLINGCONV_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARMCALLINGCONV_H
+name|LLVM_LIB_TARGET_ARM_ARMCALLINGCONV_H
 end_define
 
 begin_include
@@ -1251,7 +1251,7 @@ operator|.
 name|size
 argument_list|()
 operator|<
-literal|8
+literal|4
 argument_list|)
 expr_stmt|;
 if|if
@@ -1318,21 +1318,19 @@ operator|.
 name|size
 argument_list|()
 operator|<=
-literal|8
+literal|4
 operator|&&
 literal|"Homogeneous aggregates must have between 1 and 4 members"
 argument_list|)
 expr_stmt|;
 comment|// Try to allocate a contiguous block of registers, each of the correct
 comment|// size to hold one member.
-specifier|const
+name|ArrayRef
+operator|<
 name|uint16_t
-modifier|*
+operator|>
 name|RegList
-decl_stmt|;
-name|unsigned
-name|NumRegs
-decl_stmt|;
+expr_stmt|;
 switch|switch
 condition|(
 name|LocVT
@@ -1343,20 +1341,11 @@ block|{
 case|case
 name|MVT
 operator|::
-name|i32
-case|:
-case|case
-name|MVT
-operator|::
 name|f32
 case|:
 name|RegList
 operator|=
 name|SRegList
-expr_stmt|;
-name|NumRegs
-operator|=
-literal|16
 expr_stmt|;
 break|break;
 case|case
@@ -1368,10 +1357,6 @@ name|RegList
 operator|=
 name|DRegList
 expr_stmt|;
-name|NumRegs
-operator|=
-literal|8
-expr_stmt|;
 break|break;
 case|case
 name|MVT
@@ -1381,10 +1366,6 @@ case|:
 name|RegList
 operator|=
 name|QRegList
-expr_stmt|;
-name|NumRegs
-operator|=
-literal|4
 expr_stmt|;
 break|break;
 default|default:
@@ -1403,8 +1384,6 @@ operator|.
 name|AllocateRegBlock
 argument_list|(
 name|RegList
-argument_list|,
-name|NumRegs
 argument_list|,
 name|PendingHAMembers
 operator|.
@@ -1510,34 +1489,15 @@ decl_stmt|;
 name|unsigned
 name|Align
 init|=
+name|std
+operator|::
+name|min
+argument_list|(
 name|Size
+argument_list|,
+literal|8U
+argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|LocVT
-operator|.
-name|SimpleTy
-operator|==
-name|MVT
-operator|::
-name|v2f64
-operator|||
-name|LocVT
-operator|.
-name|SimpleTy
-operator|==
-name|MVT
-operator|::
-name|i32
-condition|)
-block|{
-comment|// Vectors are always aligned to 8 bytes. If we've seen an i32 here
-comment|// it's because it's been split from a larger type, also with align 8.
-name|Align
-operator|=
-literal|8
-expr_stmt|;
-block|}
 for|for
 control|(
 name|auto
@@ -1566,11 +1526,6 @@ name|addLoc
 argument_list|(
 name|It
 argument_list|)
-expr_stmt|;
-comment|// Only the first member needs to be aligned.
-name|Align
-operator|=
-literal|1
 expr_stmt|;
 block|}
 comment|// All pending members have now been allocated

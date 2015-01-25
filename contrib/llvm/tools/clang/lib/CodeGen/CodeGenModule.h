@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_CODEGEN_CODEGENMODULE_H
+name|LLVM_CLANG_LIB_CODEGEN_CODEGENMODULE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_CODEGEN_CODEGENMODULE_H
+name|LLVM_CLANG_LIB_CODEGEN_CODEGENMODULE_H
 end_define
 
 begin_include
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"SanitizerBlacklist.h"
+file|"SanitizerMetadata.h"
 end_include
 
 begin_include
@@ -123,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/SanitizerBlacklist.h"
 end_include
 
 begin_include
@@ -283,6 +289,9 @@ decl_stmt|;
 name|class
 name|Module
 decl_stmt|;
+name|class
+name|CoverageSourceInfo
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -318,6 +327,9 @@ name|BlockFieldFlags
 decl_stmt|;
 name|class
 name|FunctionArgList
+decl_stmt|;
+name|class
+name|CoverageMappingModuleGen
 decl_stmt|;
 struct|struct
 name|OrderGlobalInits
@@ -551,6 +563,26 @@ specifier|const
 block|{
 return|return
 name|RuntimeCC
+return|;
+block|}
+name|llvm
+operator|::
+name|CallingConv
+operator|::
+name|ID
+name|BuiltinCC
+expr_stmt|;
+name|llvm
+operator|::
+name|CallingConv
+operator|::
+name|ID
+name|getBuiltinCC
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BuiltinCC
 return|;
 block|}
 block|}
@@ -887,7 +919,10 @@ name|CodeGenModule
 operator|&
 operator|)
 name|LLVM_DELETED_FUNCTION
-block|;    struct
+block|;
+name|public
+operator|:
+expr|struct
 name|Structor
 block|{
 name|Structor
@@ -957,6 +992,8 @@ name|Structor
 operator|>
 name|CtorList
 expr_stmt|;
+name|private
+operator|:
 name|ASTContext
 operator|&
 name|Context
@@ -1456,10 +1493,21 @@ name|vector
 operator|<
 name|llvm
 operator|::
-name|Constant
+name|Function
 operator|*
 operator|>
 name|CXXThreadLocalInits
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+operator|>
+name|CXXThreadLocalInitVars
 expr_stmt|;
 comment|/// Global variables with initializers that need to run before main.
 name|std
@@ -1468,7 +1516,7 @@ name|vector
 operator|<
 name|llvm
 operator|::
-name|Constant
+name|Function
 operator|*
 operator|>
 name|CXXGlobalInits
@@ -1586,7 +1634,7 @@ name|SmallVector
 operator|<
 name|llvm
 operator|::
-name|Value
+name|Metadata
 operator|*
 operator|,
 literal|16
@@ -1718,10 +1766,35 @@ expr_stmt|;
 name|GlobalDecl
 name|initializedGlobalDecl
 decl_stmt|;
-name|SanitizerBlacklist
-name|SanitizerBL
-decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SanitizerMetadata
+operator|>
+name|SanitizerMD
+expr_stmt|;
 comment|/// @}
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|bool
+operator|>
+name|DeferredEmptyCoverageMappingDecls
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|CoverageMappingModuleGen
+operator|>
+name|CoverageMapping
+expr_stmt|;
 name|public
 label|:
 name|CodeGenModule
@@ -1751,6 +1824,12 @@ argument_list|,
 name|DiagnosticsEngine
 operator|&
 name|Diags
+argument_list|,
+name|CoverageSourceInfo
+operator|*
+name|CoverageInfo
+operator|=
+name|nullptr
 argument_list|)
 expr_stmt|;
 operator|~
@@ -1915,6 +1994,19 @@ name|get
 argument_list|()
 return|;
 block|}
+name|CoverageMappingModuleGen
+operator|*
+name|getCoverageMapping
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CoverageMapping
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
 name|llvm
 operator|::
 name|Constant
@@ -1954,6 +2046,17 @@ operator|=
 name|C
 expr_stmt|;
 block|}
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getOrCreateStaticVarDecl
+argument_list|(
+argument|const VarDecl&D
+argument_list|,
+argument|llvm::GlobalValue::LinkageTypes Linkage
+argument_list|)
+expr_stmt|;
 name|llvm
 operator|::
 name|GlobalVariable
@@ -2148,17 +2251,7 @@ argument_list|(
 name|getLLVMContext
 argument_list|()
 argument_list|,
-name|SmallVector
-operator|<
-name|llvm
-operator|::
-name|Value
-operator|*
-argument_list|,
-literal|1
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 expr_stmt|;
 return|return
@@ -2267,6 +2360,26 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|getTriple
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|supportsCOMDAT
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|CGCXXABI
 operator|&
 name|getCXXABI
@@ -2367,6 +2480,30 @@ name|VTables
 operator|.
 name|getMicrosoftVTableContext
 argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|CtorList
+modifier|&
+name|getGlobalCtors
+parameter_list|()
+block|{
+return|return
+name|GlobalCtors
+return|;
+block|}
+end_function
+
+begin_function
+name|CtorList
+modifier|&
+name|getGlobalDtors
+parameter_list|()
+block|{
+return|return
+name|GlobalDtors
 return|;
 block|}
 end_function
@@ -2556,7 +2693,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Set the TLS mode for the given LLVM GlobalVariable for the thread-local
+comment|/// Set the TLS mode for the given LLVM GlobalValue for the thread-local
 end_comment
 
 begin_comment
@@ -2569,7 +2706,7 @@ name|setTLSMode
 argument_list|(
 name|llvm
 operator|::
-name|GlobalVariable
+name|GlobalValue
 operator|*
 name|GV
 argument_list|,
@@ -2661,7 +2798,7 @@ argument_list|()
 operator|)
 condition|)
 return|return
-name|GetAddrOfCXXConstructor
+name|getAddrOfCXXStructor
 argument_list|(
 name|cast
 operator|<
@@ -2674,10 +2811,13 @@ name|getDecl
 argument_list|()
 operator|)
 argument_list|,
+name|getFromCtorType
+argument_list|(
 name|GD
 operator|.
 name|getCtorType
 argument_list|()
+argument_list|)
 argument_list|)
 return|;
 elseif|else
@@ -2695,7 +2835,7 @@ argument_list|()
 operator|)
 condition|)
 return|return
-name|GetAddrOfCXXDestructor
+name|getAddrOfCXXStructor
 argument_list|(
 name|cast
 operator|<
@@ -2708,10 +2848,13 @@ name|getDecl
 argument_list|()
 operator|)
 argument_list|,
+name|getFromDtorType
+argument_list|(
 name|GD
 operator|.
 name|getDtorType
 argument_list|()
+argument_list|)
 argument_list|)
 return|;
 elseif|else
@@ -2781,6 +2924,24 @@ argument_list|,
 argument|llvm::Type *Ty
 argument_list|,
 argument|llvm::GlobalValue::LinkageTypes Linkage
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Function
+operator|*
+name|CreateGlobalInitOrDestructFunction
+argument_list|(
+argument|llvm::FunctionType *ty
+argument_list|,
+argument|const Twine&name
+argument_list|,
+argument|SourceLocation Loc = SourceLocation()
+argument_list|,
+argument|bool TLS = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3279,10 +3440,10 @@ name|GlobalVariable
 operator|*
 name|GetAddrOfConstantStringFromLiteral
 argument_list|(
-specifier|const
-name|StringLiteral
-operator|*
-name|S
+argument|const StringLiteral *S
+argument_list|,
+argument|StringRef Name =
+literal|".str"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3409,29 +3570,33 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Return the address of the constructor of the given type.
+comment|// Produce code for this constructor/destructor. This method doesn't try
+end_comment
+
+begin_comment
+comment|// to apply any ABI rules about which other constructors/destructors
+end_comment
+
+begin_comment
+comment|// are needed or if they are alias to each other.
 end_comment
 
 begin_expr_stmt
 name|llvm
 operator|::
-name|GlobalValue
+name|Function
 operator|*
-name|GetAddrOfCXXConstructor
+name|codegenCXXStructor
 argument_list|(
-argument|const CXXConstructorDecl *ctor
+argument|const CXXMethodDecl *MD
 argument_list|,
-argument|CXXCtorType ctorType
-argument_list|,
-argument|const CGFunctionInfo *fnInfo = nullptr
-argument_list|,
-argument|bool DontDefer = false
+argument|StructorType Type
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Return the address of the constructor of the given type.
+comment|/// Return the address of the constructor/destructor of the given type.
 end_comment
 
 begin_expr_stmt
@@ -3439,15 +3604,15 @@ name|llvm
 operator|::
 name|GlobalValue
 operator|*
-name|GetAddrOfCXXDestructor
+name|getAddrOfCXXStructor
 argument_list|(
-argument|const CXXDestructorDecl *dtor
+argument|const CXXMethodDecl *MD
 argument_list|,
-argument|CXXDtorType dtorType
+argument|StructorType Type
 argument_list|,
-argument|const CGFunctionInfo *fnInfo = nullptr
+argument|const CGFunctionInfo *FnInfo = nullptr
 argument_list|,
-argument|llvm::FunctionType *fnType = nullptr
+argument|llvm::FunctionType *FnType = nullptr
 argument_list|,
 argument|bool DontDefer = false
 argument_list|)
@@ -3502,6 +3667,60 @@ name|Decl
 modifier|*
 name|D
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Stored a deferred empty coverage mapping for an unused
+end_comment
+
+begin_comment
+comment|/// and thus uninstrumented top level declaration.
+end_comment
+
+begin_function_decl
+name|void
+name|AddDeferredUnusedCoverageMapping
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Remove the deferred empty coverage mapping as this
+end_comment
+
+begin_comment
+comment|/// declaration is actually instrumented.
+end_comment
+
+begin_function_decl
+name|void
+name|ClearUnusedCoverageMapping
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit all the deferred coverage mappings
+end_comment
+
+begin_comment
+comment|/// for the uninstrumented functions.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitDeferredUnusedCoverageMappings
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -3637,6 +3856,26 @@ operator|::
 name|Constant
 operator|*
 name|CreateRuntimeFunction
+argument_list|(
+argument|llvm::FunctionType *Ty
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|llvm::AttributeSet ExtraAttrs =                                           llvm::AttributeSet()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Create a new compiler builtin function with the specified type and name.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|CreateBuiltinFunction
 argument_list|(
 argument|llvm::FunctionType *Ty
 argument_list|,
@@ -4042,7 +4281,7 @@ comment|/// Set the LLVM function attributes which only apply to a function
 end_comment
 
 begin_comment
-comment|/// definintion.
+comment|/// definition.
 end_comment
 
 begin_decl_stmt
@@ -4549,46 +4788,26 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-specifier|const
-name|SanitizerBlacklist
-operator|&
-name|getSanitizerBlacklist
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SanitizerBL
-return|;
-block|}
-end_expr_stmt
-
 begin_decl_stmt
-name|void
-name|reportGlobalToASan
+name|bool
+name|isInSanitizerBlacklist
 argument_list|(
 name|llvm
 operator|::
-name|GlobalVariable
+name|Function
 operator|*
-name|GV
+name|Fn
 argument_list|,
-specifier|const
-name|VarDecl
-operator|&
-name|D
-argument_list|,
-name|bool
-name|IsDynInit
-operator|=
-name|false
+name|SourceLocation
+name|Loc
 argument_list|)
+decl|const
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|reportGlobalToASan
+name|bool
+name|isInSanitizerBlacklist
 argument_list|(
 name|llvm
 operator|::
@@ -4599,38 +4818,33 @@ argument_list|,
 name|SourceLocation
 name|Loc
 argument_list|,
+name|QualType
+name|Ty
+argument_list|,
 name|StringRef
-name|Name
-argument_list|,
-name|bool
-name|IsDynInit
+name|Category
 operator|=
-name|false
-argument_list|,
-name|bool
-name|IsBlacklisted
-operator|=
-name|false
+name|StringRef
+argument_list|()
 argument_list|)
+decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/// Disable sanitizer instrumentation for this global.
-end_comment
-
-begin_decl_stmt
-name|void
-name|disableSanitizerForGlobal
-argument_list|(
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|GV
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_function
+name|SanitizerMetadata
+modifier|*
+name|getSanitizerMetadata
+parameter_list|()
+block|{
+return|return
+name|SanitizerMD
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -4670,10 +4884,55 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_label
-name|private
-label|:
-end_label
+begin_function_decl
+name|bool
+name|TryEmitDefinitionAsAlias
+parameter_list|(
+name|GlobalDecl
+name|Alias
+parameter_list|,
+name|GlobalDecl
+name|Target
+parameter_list|,
+name|bool
+name|InEveryTU
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|TryEmitBaseDestructorAsAlias
+parameter_list|(
+specifier|const
+name|CXXDestructorDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Set attributes for a global definition.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setFunctionDefinitionAttributes
+argument_list|(
+specifier|const
+name|FunctionDecl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|F
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|llvm
@@ -4683,44 +4942,6 @@ operator|*
 name|GetGlobalValue
 argument_list|(
 argument|StringRef Ref
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|GetOrCreateLLVMFunction
-argument_list|(
-argument|StringRef MangledName
-argument_list|,
-argument|llvm::Type *Ty
-argument_list|,
-argument|GlobalDecl D
-argument_list|,
-argument|bool ForVTable
-argument_list|,
-argument|bool DontDefer = false
-argument_list|,
-argument|llvm::AttributeSet ExtraAttrs = llvm::AttributeSet()
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|GetOrCreateLLVMGlobal
-argument_list|(
-argument|StringRef MangledName
-argument_list|,
-argument|llvm::PointerType *PTy
-argument_list|,
-argument|const VarDecl *D
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4759,6 +4980,121 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// Set attributes which must be preserved by an alias. This includes common
+end_comment
+
+begin_comment
+comment|/// attributes (i.e. it includes a call to SetCommonAttributes).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// NOTE: This should only be called for definitions.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setAliasAttributes
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|addReplacement
+argument_list|(
+name|StringRef
+name|Name
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|C
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Emit a code for threadprivate directive.
+end_comment
+
+begin_comment
+comment|/// \param D Threadprivate declaration.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitOMPThreadPrivateDecl
+parameter_list|(
+specifier|const
+name|OMPThreadPrivateDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetOrCreateLLVMFunction
+argument_list|(
+argument|StringRef MangledName
+argument_list|,
+argument|llvm::Type *Ty
+argument_list|,
+argument|GlobalDecl D
+argument_list|,
+argument|bool ForVTable
+argument_list|,
+argument|bool DontDefer = false
+argument_list|,
+argument|bool IsThunk = false
+argument_list|,
+argument|llvm::AttributeSet ExtraAttrs = llvm::AttributeSet()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetOrCreateLLVMGlobal
+argument_list|(
+argument|StringRef MangledName
+argument_list|,
+argument|llvm::PointerType *PTy
+argument_list|,
+argument|const VarDecl *D
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|void
 name|setNonAliasAttributes
@@ -4773,28 +5109,6 @@ operator|::
 name|GlobalObject
 operator|*
 name|GO
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Set attributes for a global definition.
-end_comment
-
-begin_decl_stmt
-name|void
-name|setFunctionDefinitionAttributes
-argument_list|(
-specifier|const
-name|FunctionDecl
-operator|*
-name|D
-argument_list|,
-name|llvm
-operator|::
-name|Function
-operator|*
-name|F
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -4818,6 +5132,9 @@ name|F
 argument_list|,
 name|bool
 name|IsIncompleteFunction
+argument_list|,
+name|bool
+name|IsThunk
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -4906,34 +5223,6 @@ comment|// C++ related functions.
 end_comment
 
 begin_function_decl
-name|bool
-name|TryEmitDefinitionAsAlias
-parameter_list|(
-name|GlobalDecl
-name|Alias
-parameter_list|,
-name|GlobalDecl
-name|Target
-parameter_list|,
-name|bool
-name|InEveryTU
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|bool
-name|TryEmitBaseDestructorAsAlias
-parameter_list|(
-specifier|const
-name|CXXDestructorDecl
-modifier|*
-name|D
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|EmitNamespace
 parameter_list|(
@@ -4965,44 +5254,6 @@ specifier|const
 name|CXXMethodDecl
 modifier|*
 name|D
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Emit a single constructor with the given type from a C++ constructor Decl.
-end_comment
-
-begin_function_decl
-name|void
-name|EmitCXXConstructor
-parameter_list|(
-specifier|const
-name|CXXConstructorDecl
-modifier|*
-name|D
-parameter_list|,
-name|CXXCtorType
-name|Type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Emit a single destructor with the given type from a C++ destructor Decl.
-end_comment
-
-begin_function_decl
-name|void
-name|EmitCXXDestructor
-parameter_list|(
-specifier|const
-name|CXXDestructorDecl
-modifier|*
-name|D
-parameter_list|,
-name|CXXDtorType
-name|Type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5321,23 +5572,49 @@ operator|*
 name|EmitUuidofInitializer
 argument_list|(
 argument|StringRef uuidstr
-argument_list|,
-argument|QualType IIDType
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Determine if the given decl can be emitted lazily; this is only relevant
+comment|/// Determine whether the definition must be emitted; if this returns \c
 end_comment
 
 begin_comment
-comment|/// for definitions. The given decl must be either a function or var decl.
+comment|/// false, the definition can be emitted lazily if it's used.
 end_comment
 
 begin_function_decl
 name|bool
-name|MayDeferGeneration
+name|MustBeEmitted
+parameter_list|(
+specifier|const
+name|ValueDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Determine whether the definition can be emitted eagerly, or should be
+end_comment
+
+begin_comment
+comment|/// delayed until the end of the translation unit. This is relevant for
+end_comment
+
+begin_comment
+comment|/// definitions whose linkage can change, e.g. implicit function instantions
+end_comment
+
+begin_comment
+comment|/// which may later be explicitly instantiated.
+end_comment
+
+begin_function_decl
+name|bool
+name|MayBeEmittedEagerly
 parameter_list|(
 specifier|const
 name|ValueDecl

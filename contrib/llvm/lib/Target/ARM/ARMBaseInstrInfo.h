@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARMBASEINSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_ARM_ARMBASEINSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARMBASEINSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_ARM_ARMBASEINSTRINFO_H
 end_define
 
 begin_include
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineInstrBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_include
@@ -133,6 +139,92 @@ name|ARMSubtarget
 operator|&
 name|STI
 argument_list|)
+block|;
+name|void
+name|expandLoadStackGuardBase
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|unsigned LoadImmOpc
+argument_list|,
+argument|unsigned LoadOpc
+argument_list|,
+argument|Reloc::Model RM
+argument_list|)
+specifier|const
+block|;
+comment|/// Build the equivalent inputs of a REG_SEQUENCE for the given \p MI
+comment|/// and \p DefIdx.
+comment|/// \p [out] InputRegs of the equivalent REG_SEQUENCE. Each element of
+comment|/// the list is modeled as<Reg:SubReg, SubIdx>.
+comment|/// E.g., REG_SEQUENCE vreg1:sub1, sub0, vreg2, sub1 would produce
+comment|/// two elements:
+comment|/// - vreg1:sub1, sub0
+comment|/// - vreg2<:0>, sub1
+comment|///
+comment|/// \returns true if it is possible to build such an input sequence
+comment|/// with the pair \p MI, \p DefIdx. False otherwise.
+comment|///
+comment|/// \pre MI.isRegSequenceLike().
+name|bool
+name|getRegSequenceLikeInputs
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|SmallVectorImpl<RegSubRegPairAndIdx>&InputRegs
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Build the equivalent inputs of a EXTRACT_SUBREG for the given \p MI
+comment|/// and \p DefIdx.
+comment|/// \p [out] InputReg of the equivalent EXTRACT_SUBREG.
+comment|/// E.g., EXTRACT_SUBREG vreg1:sub1, sub0, sub1 would produce:
+comment|/// - vreg1:sub1, sub0
+comment|///
+comment|/// \returns true if it is possible to build such an input sequence
+comment|/// with the pair \p MI, \p DefIdx. False otherwise.
+comment|///
+comment|/// \pre MI.isExtractSubregLike().
+name|bool
+name|getExtractSubregLikeInputs
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|RegSubRegPairAndIdx&InputReg
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Build the equivalent inputs of a INSERT_SUBREG for the given \p MI
+comment|/// and \p DefIdx.
+comment|/// \p [out] BaseReg and \p [out] InsertedReg contain
+comment|/// the equivalent inputs of INSERT_SUBREG.
+comment|/// E.g., INSERT_SUBREG vreg0:sub0, vreg1:sub1, sub3 would produce:
+comment|/// - BaseReg: vreg0:sub0
+comment|/// - InsertedReg: vreg1:sub1, sub3
+comment|///
+comment|/// \returns true if it is possible to build such an input sequence
+comment|/// with the pair \p MI, \p DefIdx. False otherwise.
+comment|///
+comment|/// \pre MI.isInsertSubregLike().
+name|bool
+name|getInsertSubregLikeInputs
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|RegSubRegPair&BaseReg
+argument_list|,
+argument|RegSubRegPairAndIdx&InsertedReg
+argument_list|)
+specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -398,6 +490,36 @@ argument|int&FrameIndex
 argument_list|)
 specifier|const
 name|override
+block|;
+name|void
+name|copyToCPSR
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|bool KillSrc
+argument_list|,
+argument|const ARMSubtarget&Subtarget
+argument_list|)
+specifier|const
+block|;
+name|void
+name|copyFromCPSR
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|bool KillSrc
+argument_list|,
+argument|const ARMSubtarget&Subtarget
+argument_list|)
+specifier|const
 block|;
 name|void
 name|copyPhysReg
@@ -713,6 +835,8 @@ name|optimizeSelect
 argument_list|(
 argument|MachineInstr *MI
 argument_list|,
+argument|SmallPtrSetImpl<MachineInstr *>&SeenMIs
+argument_list|,
 argument|bool
 argument_list|)
 specifier|const
@@ -822,24 +946,6 @@ argument_list|,
 argument|unsigned
 argument_list|,
 argument|const TargetRegisterInfo *TRI
-argument_list|)
-specifier|const
-name|override
-block|;
-name|void
-name|getUnconditionalBranch
-argument_list|(
-argument|MCInst&Branch
-argument_list|,
-argument|const MCSymbolRefExpr *BranchTarget
-argument_list|)
-specifier|const
-name|override
-block|;
-name|void
-name|getTrap
-argument_list|(
-argument|MCInst&MI
 argument_list|)
 specifier|const
 name|override
@@ -1010,6 +1116,18 @@ argument|StringRef&ErrInfo
 argument_list|)
 specifier|const
 name|override
+block|;
+name|virtual
+name|void
+name|expandLoadStackGuard
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|Reloc::Model RM
+argument_list|)
+specifier|const
+operator|=
+literal|0
 block|;
 name|private
 operator|:

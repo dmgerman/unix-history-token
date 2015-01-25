@@ -304,6 +304,19 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
+comment|/// A DINameKind is passed to name search methods to specify a
+comment|/// preference regarding the type of name resolution the caller wants.
+name|enum
+name|class
+name|DINameKind
+block|{
+name|None
+operator|,
+name|ShortName
+operator|,
+name|LinkageName
+block|}
+empty_stmt|;
 comment|/// DILineInfoSpecifier - controls which fields of DILineInfo container
 comment|/// should be filled with data.
 struct|struct
@@ -320,17 +333,10 @@ operator|,
 name|AbsoluteFilePath
 block|}
 empty_stmt|;
-name|enum
-name|class
+typedef|typedef
+name|DINameKind
 name|FunctionNameKind
-block|{
-name|None
-operator|,
-name|ShortName
-operator|,
-name|LinkageName
-block|}
-empty_stmt|;
+typedef|;
 name|FileLineInfoKind
 name|FLIKind
 decl_stmt|;
@@ -403,6 +409,14 @@ block|,
 name|DIDT_StrDwo
 block|,
 name|DIDT_StrOffsetsDwo
+block|,
+name|DIDT_AppleNames
+block|,
+name|DIDT_AppleTypes
+block|,
+name|DIDT_AppleNamespaces
+block|,
+name|DIDT_AppleObjC
 block|}
 enum|;
 comment|// In place of applying the relocations to the data we've read from disk we use
@@ -467,10 +481,12 @@ name|DIContext
 modifier|*
 name|getDWARFContext
 argument_list|(
+specifier|const
 name|object
 operator|::
 name|ObjectFile
-operator|*
+operator|&
+name|Obj
 argument_list|)
 decl_stmt|;
 name|virtual

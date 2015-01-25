@@ -101,6 +101,8 @@ name|VersionTuple
 block|{
 name|unsigned
 name|Major
+range|:
+literal|31
 decl_stmt|;
 name|unsigned
 name|Minor
@@ -119,6 +121,11 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|HasSubminor
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|UsesUnderscores
 range|:
 literal|1
 decl_stmt|;
@@ -149,6 +156,11 @@ argument_list|)
 operator|,
 name|HasSubminor
 argument_list|(
+name|false
+argument_list|)
+operator|,
+name|UsesUnderscores
+argument_list|(
 argument|false
 argument_list|)
 block|{ }
@@ -180,6 +192,11 @@ argument_list|)
 operator|,
 name|HasSubminor
 argument_list|(
+name|false
+argument_list|)
+operator|,
+name|UsesUnderscores
+argument_list|(
 argument|false
 argument_list|)
 block|{ }
@@ -189,6 +206,8 @@ argument_list|(
 argument|unsigned Major
 argument_list|,
 argument|unsigned Minor
+argument_list|,
+argument|bool UsesUnderscores = false
 argument_list|)
 operator|:
 name|Major
@@ -213,7 +232,12 @@ argument_list|)
 operator|,
 name|HasSubminor
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|UsesUnderscores
+argument_list|(
+argument|UsesUnderscores
 argument_list|)
 block|{ }
 name|explicit
@@ -224,6 +248,8 @@ argument_list|,
 argument|unsigned Minor
 argument_list|,
 argument|unsigned Subminor
+argument_list|,
+argument|bool UsesUnderscores = false
 argument_list|)
 operator|:
 name|Major
@@ -248,7 +274,12 @@ argument_list|)
 operator|,
 name|HasSubminor
 argument_list|(
-argument|true
+name|true
+argument_list|)
+operator|,
+name|UsesUnderscores
+argument_list|(
+argument|UsesUnderscores
 argument_list|)
 block|{ }
 comment|/// \brief Determine whether this version information is empty
@@ -325,6 +356,30 @@ name|Subminor
 return|;
 block|}
 end_decl_stmt
+
+begin_expr_stmt
+name|bool
+name|usesUnderscores
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsesUnderscores
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|UseDotAsSeparator
+parameter_list|()
+block|{
+name|UsesUnderscores
+operator|=
+name|false
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// \brief Determine if two version numbers are equivalent. If not

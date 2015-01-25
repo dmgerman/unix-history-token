@@ -318,11 +318,6 @@ block|{
 name|protected
 label|:
 specifier|const
-name|TargetMachine
-modifier|&
-name|TM
-decl_stmt|;
-specifier|const
 name|MachineFunction
 modifier|&
 name|MF
@@ -372,8 +367,6 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|,
 argument|MachineLoopInfo&MLI
-argument_list|,
-argument|MachineDominatorTree&MDT
 argument_list|,
 argument|bool IsPostRA
 argument_list|)

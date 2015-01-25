@@ -70,13 +70,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_THREADSAFETY_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_THREADSAFETY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_THREADSAFETY_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_THREADSAFETY_H
 end_define
 
 begin_include
@@ -102,7 +102,7 @@ name|namespace
 name|clang
 block|{
 name|namespace
-name|thread_safety
+name|threadSafety
 block|{
 comment|/// This enum distinguishes between different kinds of operations that may
 comment|/// need to be protected by locks. We use this enum in error handling.
@@ -116,7 +116,14 @@ name|POK_VarAccess
 block|,
 comment|///< Reading or writing a variable (e.g. x in x = 5;)
 name|POK_FunctionCall
+block|,
 comment|///< Making a function call (e.g. fool())
+name|POK_PassByRef
+block|,
+comment|///< Passing a guarded variable by reference.
+name|POK_PtPassByRef
+block|,
+comment|///< Passing a pt-guarded variable by reference.
 block|}
 enum|;
 comment|/// This enum distinguishes between different kinds of lock actions. For
@@ -132,7 +139,7 @@ name|LK_Exclusive
 block|,
 comment|///< Exclusive/writer lock of a mutex.
 name|LK_Generic
-comment|///<  Can be either Shared or Exclusive
+comment|///< Can be either Shared or Exclusive
 block|}
 enum|;
 comment|/// This enum distinguishes between different ways to access (read or write) a
@@ -398,6 +405,30 @@ init|=
 name|nullptr
 parameter_list|)
 block|{}
+comment|/// Warn when acquiring a lock that the negative capability is not held.
+comment|/// \param Kind -- the capability's name parameter (role, mutex, etc).
+comment|/// \param LockName -- The name for the lock expression, to be printed in the
+comment|/// diagnostic.
+comment|/// \param Neg -- The name of the negative capability to be printed in the
+comment|/// diagnostic.
+comment|/// \param Loc -- The location of the protected operation.
+name|virtual
+name|void
+name|handleNegativeNotHeld
+parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
+name|Name
+name|LockName
+parameter_list|,
+name|Name
+name|Neg
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{}
 comment|/// Warn when a function is called while an excluded mutex is locked. For
 comment|/// example, the mutex may be locked inside the function.
 comment|/// \param Kind -- the capability's name parameter (role, mutex, etc).
@@ -420,6 +451,29 @@ name|LockName
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|)
+block|{}
+comment|/// Called by the analysis when starting analysis of a function.
+comment|/// Used to issue suggestions for changes to annotations.
+name|virtual
+name|void
+name|enterFunction
+parameter_list|(
+specifier|const
+name|FunctionDecl
+modifier|*
+name|FD
+parameter_list|)
+block|{}
+comment|/// Called by the analysis when finishing analysis of a function.
+name|virtual
+name|void
+name|leaveFunction
+parameter_list|(
+specifier|const
+name|FunctionDecl
+modifier|*
+name|FD
 parameter_list|)
 block|{}
 name|bool
@@ -480,7 +534,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace clang::thread_safety
+comment|// end namespace clang::threadSafety
 end_comment
 
 begin_endif

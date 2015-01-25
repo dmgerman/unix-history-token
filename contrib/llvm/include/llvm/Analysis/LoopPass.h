@@ -256,6 +256,16 @@ argument_list|,
 argument|Loop *L
 argument_list|)
 block|{}
+comment|/// Delete analysis info associated with Loop L.
+comment|/// Called to notify a Pass that a loop has been deleted and any
+comment|/// associated analysis values can be deleted.
+name|virtual
+name|void
+name|deleteAnalysisLoop
+argument_list|(
+argument|Loop *L
+argument_list|)
+block|{}
 name|protected
 operator|:
 comment|/// skipOptnoneFunction - Containing function has Attribute::OptimizeNone
@@ -479,6 +489,16 @@ name|Value
 modifier|*
 name|V
 parameter_list|,
+name|Loop
+modifier|*
+name|L
+parameter_list|)
+function_decl|;
+comment|/// Invoke deleteAnalysisLoop hook for all passes that implement simple
+comment|/// analysis interface.
+name|void
+name|deleteSimpleAnalysisLoop
+parameter_list|(
 name|Loop
 modifier|*
 name|L

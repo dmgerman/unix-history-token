@@ -50,31 +50,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CODEGEN_ASMPRINTER_DWARFDEBUG_H__
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DWARFDEBUG_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CODEGEN_ASMPRINTER_DWARFDEBUG_H__
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DWARFDEBUG_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"DwarfFile.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"AsmPrinterHandler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"DIE.h"
 end_include
 
 begin_include
@@ -104,7 +92,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"DwarfFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/FoldingSet.h"
 end_include
 
 begin_include
@@ -128,7 +128,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/FoldingSet.h"
+file|"llvm/CodeGen/DIE.h"
 end_include
 
 begin_include
@@ -158,13 +158,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MachineLocation.h"
+file|"llvm/MC/MCDwarf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCDwarf.h"
+file|"llvm/MC/MachineLocation.h"
 end_include
 
 begin_include
@@ -314,6 +314,10 @@ name|DIVariable
 name|Var
 decl_stmt|;
 comment|// Variable Descriptor.
+name|DIExpression
+name|Expr
+decl_stmt|;
+comment|// Complex address location expression.
 name|DIE
 modifier|*
 name|TheDIE
@@ -343,12 +347,19 @@ name|DbgVariable
 argument_list|(
 argument|DIVariable V
 argument_list|,
+argument|DIExpression E
+argument_list|,
 argument|DwarfDebug *DD
 argument_list|)
 block|:
 name|Var
 argument_list|(
 name|V
+argument_list|)
+operator|,
+name|Expr
+argument_list|(
+name|E
 argument_list|)
 operator|,
 name|TheDIE
@@ -377,7 +388,20 @@ name|DD
 argument_list|(
 argument|DD
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|Var
+operator|.
+name|Verify
+argument_list|()
+operator|&&
+name|Expr
+operator|.
+name|Verify
+argument_list|()
+argument_list|)
+block|;   }
 comment|/// Construct a DbgVariable from a DEBUG_VALUE.
 comment|/// AbstractVar may be NULL.
 name|DbgVariable
@@ -397,6 +421,14 @@ argument_list|(
 name|DbgValue
 operator|->
 name|getDebugVariable
+argument_list|()
+argument_list|)
+operator|,
+name|Expr
+argument_list|(
+name|DbgValue
+operator|->
+name|getDebugExpression
 argument_list|()
 argument_list|)
 operator|,
@@ -435,6 +467,15 @@ specifier|const
 block|{
 return|return
 name|Var
+return|;
+block|}
+name|DIExpression
+name|getExpression
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Expr
 return|;
 block|}
 name|void
@@ -647,10 +688,12 @@ literal|"Invalid complex DbgVariable!"
 argument_list|)
 block|;
 return|return
-name|Var
+name|Expr
 operator|.
-name|hasComplexAddress
+name|getNumElements
 argument_list|()
+operator|>
+literal|0
 return|;
 block|}
 end_expr_stmt
@@ -680,9 +723,9 @@ literal|"Invalid complex DbgVariable!"
 argument_list|)
 block|;
 return|return
-name|Var
+name|Expr
 operator|.
-name|getNumAddrElements
+name|getNumElements
 argument_list|()
 return|;
 block|}
@@ -698,9 +741,9 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|Var
+name|Expr
 operator|.
-name|getAddrElement
+name|getElement
 argument_list|(
 name|i
 argument_list|)
@@ -813,14 +856,6 @@ comment|// All DIEValues are allocated through this allocator.
 name|BumpPtrAllocator
 name|DIEValueAllocator
 block|;
-comment|// Handle to the compile unit used for the inline extension handling,
-comment|// this is just so that the DIEValue allocator has a place to store
-comment|// the particular elements.
-comment|// FIXME: Store these off of DwarfDebug instead?
-name|DwarfCompileUnit
-operator|*
-name|FirstCU
-block|;
 comment|// Maps MDNode with its corresponding DwarfCompileUnit.
 name|MapVector
 operator|<
@@ -834,7 +869,7 @@ operator|>
 name|CUMap
 block|;
 comment|// Maps subprogram MDNode with its corresponding DwarfCompileUnit.
-name|DenseMap
+name|MapVector
 operator|<
 specifier|const
 name|MDNode
@@ -856,20 +891,6 @@ name|DwarfCompileUnit
 operator|*
 operator|>
 name|CUDieMap
-block|;
-comment|/// Maps MDNodes for type system with the corresponding DIEs. These DIEs can
-comment|/// be shared across CUs, that is why we keep the map here instead
-comment|/// of in DwarfCompileUnit.
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
-operator|*
-block|,
-name|DIE
-operator|*
-operator|>
-name|MDTypeNodeToDieMap
 block|;
 comment|// List of all labels used in aranges generation.
 name|std
@@ -913,72 +934,9 @@ name|SectionMap
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|// List of arguments for current function.
-end_comment
-
-begin_expr_stmt
-name|SmallVector
-operator|<
-name|DbgVariable
-operator|*
-operator|,
-literal|8
-operator|>
-name|CurrentFnArguments
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|LexicalScopes
 name|LScopes
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Collection of abstract subprogram DIEs.
-end_comment
-
-begin_expr_stmt
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
-operator|*
-operator|,
-name|DIE
-operator|*
-operator|>
-name|AbstractSPDies
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// Collection of dbg variables of a scope.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|DenseMap
-operator|<
-name|LexicalScope
-operator|*
-operator|,
-name|SmallVector
-operator|<
-name|DbgVariable
-operator|*
-operator|,
-literal|8
-operator|>
-expr|>
-name|ScopeVariablesMap
-expr_stmt|;
-end_typedef
-
-begin_decl_stmt
-name|ScopeVariablesMap
-name|ScopeVariables
 decl_stmt|;
 end_decl_stmt
 
@@ -1035,26 +993,6 @@ operator|,
 literal|4
 operator|>
 name|DotDebugLocEntries
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// Collection of subprogram DIEs that are marked (at the end of the module)
-end_comment
-
-begin_comment
-comment|// as DW_AT_inline.
-end_comment
-
-begin_expr_stmt
-name|SmallPtrSet
-operator|<
-name|DIE
-operator|*
-operator|,
-literal|4
-operator|>
-name|InlinedSubprogramDIEs
 expr_stmt|;
 end_expr_stmt
 
@@ -1189,22 +1127,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// If nonnull, stores the section that the previous function was allocated to
-end_comment
-
-begin_comment
-comment|// emitting.
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|MCSection
-modifier|*
-name|PrevSection
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// If nonnull, stores the CU in which the previous subprogram was contained.
 end_comment
 
@@ -1281,6 +1203,13 @@ name|DwarfInfoDWOSectionSym
 decl_stmt|,
 modifier|*
 name|DwarfAbbrevDWOSectionSym
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|MCSymbol
+modifier|*
+name|DwarfTypesDWOSectionSym
 decl_stmt|;
 end_decl_stmt
 
@@ -1555,6 +1484,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|bool
+name|IsDarwin
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|AddressPool
 name|AddrPool
 decl_stmt|;
@@ -1584,6 +1519,19 @@ name|AccelTypes
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|DenseMap
+operator|<
+specifier|const
+name|Function
+operator|*
+operator|,
+name|DISubprogram
+operator|>
+name|FunctionDIs
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 name|MCDwarfDwoLineTable
 modifier|*
@@ -1592,21 +1540,6 @@ parameter_list|(
 specifier|const
 name|DwarfCompileUnit
 modifier|&
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|addScopeVariable
-parameter_list|(
-name|LexicalScope
-modifier|*
-name|LS
-parameter_list|,
-name|DbgVariable
-modifier|*
-name|Var
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1719,186 +1652,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Find DIE for the given subprogram and attach appropriate
-end_comment
-
-begin_comment
-comment|/// DW_AT_low_pc and DW_AT_high_pc attributes. If there are global
-end_comment
-
-begin_comment
-comment|/// variables in this scope then create and insert DIEs for these
-end_comment
-
-begin_comment
-comment|/// variables.
-end_comment
-
-begin_function_decl
-name|DIE
-modifier|&
-name|updateSubprogramScopeDIE
-parameter_list|(
-name|DwarfCompileUnit
-modifier|&
-name|SPCU
-parameter_list|,
-name|DISubprogram
-name|SP
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief A helper function to check whether the DIE for a given Scope is
-end_comment
-
-begin_comment
-comment|/// going to be null.
-end_comment
-
-begin_function_decl
-name|bool
-name|isLexicalScopeDIENull
-parameter_list|(
-name|LexicalScope
-modifier|*
-name|Scope
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief A helper function to construct a RangeSpanList for a given
-end_comment
-
-begin_comment
-comment|/// lexical scope.
-end_comment
-
-begin_decl_stmt
-name|void
-name|addScopeRangeList
-argument_list|(
-name|DwarfCompileUnit
-operator|&
-name|TheCU
-argument_list|,
-name|DIE
-operator|&
-name|ScopeDIE
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|InsnRange
-operator|>
-operator|&
-name|Range
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Construct new DW_TAG_lexical_block for this scope and
-end_comment
-
-begin_comment
-comment|/// attach DW_AT_low_pc/DW_AT_high_pc labels.
-end_comment
-
-begin_expr_stmt
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|DIE
-operator|>
-name|constructLexicalScopeDIE
-argument_list|(
-name|DwarfCompileUnit
-operator|&
-name|TheCU
-argument_list|,
-name|LexicalScope
-operator|*
-name|Scope
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// \brief This scope represents inlined body of a function. Construct
-end_comment
-
-begin_comment
-comment|/// DIE to represent this concrete inlined copy of the function.
-end_comment
-
-begin_expr_stmt
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|DIE
-operator|>
-name|constructInlinedScopeDIE
-argument_list|(
-name|DwarfCompileUnit
-operator|&
-name|TheCU
-argument_list|,
-name|LexicalScope
-operator|*
-name|Scope
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Construct a DIE for this scope.
-end_comment
-
-begin_expr_stmt
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|DIE
-operator|>
-name|constructScopeDIE
-argument_list|(
-name|DwarfCompileUnit
-operator|&
-name|TheCU
-argument_list|,
-name|LexicalScope
-operator|*
-name|Scope
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
-name|void
-name|createAndAddScopeChildren
-parameter_list|(
-name|DwarfCompileUnit
-modifier|&
-name|TheCU
-parameter_list|,
-name|LexicalScope
-modifier|*
-name|Scope
-parameter_list|,
-name|DIE
-modifier|&
-name|ScopeDIE
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Construct a DIE for this abstract scope.
 end_comment
 
@@ -1906,67 +1659,12 @@ begin_function_decl
 name|void
 name|constructAbstractSubprogramScopeDIE
 parameter_list|(
-name|DwarfCompileUnit
-modifier|&
-name|TheCU
-parameter_list|,
 name|LexicalScope
 modifier|*
 name|Scope
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/// \brief Construct a DIE for this subprogram scope.
-end_comment
-
-begin_function_decl
-name|DIE
-modifier|&
-name|constructSubprogramScopeDIE
-parameter_list|(
-name|DwarfCompileUnit
-modifier|&
-name|TheCU
-parameter_list|,
-name|LexicalScope
-modifier|*
-name|Scope
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// A helper function to create children of a Scope DIE.
-end_comment
-
-begin_decl_stmt
-name|DIE
-modifier|*
-name|createScopeChildrenDIE
-argument_list|(
-name|DwarfCompileUnit
-operator|&
-name|TheCU
-argument_list|,
-name|LexicalScope
-operator|*
-name|Scope
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|DIE
-operator|>>
-operator|&
-name|Children
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/// \brief Emit initial Dwarf sections with a label at the start of each one.
@@ -2104,6 +1802,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Emit a specified accelerator table.
+end_comment
+
+begin_function_decl
+name|void
+name|emitAccel
+parameter_list|(
+name|DwarfAccelTable
+modifier|&
+name|Accel
+parameter_list|,
+specifier|const
+name|MCSection
+modifier|*
+name|Section
+parameter_list|,
+name|StringRef
+name|TableName
+parameter_list|,
+name|StringRef
+name|SymName
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Emit visible names into a hashed accelerator table section.
 end_comment
 
@@ -2231,7 +1955,7 @@ operator|*
 operator|>
 operator|&
 operator|(
-name|DwarfUnit
+name|DwarfCompileUnit
 operator|::
 operator|*
 name|Accessor
@@ -2475,7 +2199,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|constructImportedEntityDIE
+name|constructAndAddImportedEntityDIE
 parameter_list|(
 name|DwarfCompileUnit
 modifier|&
@@ -2485,54 +2209,6 @@ specifier|const
 name|MDNode
 modifier|*
 name|N
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Construct import_module DIE.
-end_comment
-
-begin_function_decl
-name|void
-name|constructImportedEntityDIE
-parameter_list|(
-name|DwarfCompileUnit
-modifier|&
-name|TheCU
-parameter_list|,
-specifier|const
-name|MDNode
-modifier|*
-name|N
-parameter_list|,
-name|DIE
-modifier|&
-name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Construct import_module DIE.
-end_comment
-
-begin_function_decl
-name|void
-name|constructImportedEntityDIE
-parameter_list|(
-name|DwarfCompileUnit
-modifier|&
-name|TheCU
-parameter_list|,
-specifier|const
-name|DIImportedEntity
-modifier|&
-name|Module
-parameter_list|,
-name|DIE
-modifier|&
-name|Context
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2586,29 +2262,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief If Var is an current function argument that add it in
-end_comment
-
-begin_comment
-comment|/// CurrentFnArguments list.
-end_comment
-
-begin_function_decl
-name|bool
-name|addCurrentFnArgument
-parameter_list|(
-name|DbgVariable
-modifier|*
-name|Var
-parameter_list|,
-name|LexicalScope
-modifier|*
-name|Scope
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Populate LexicalScope entries with variables' info.
 end_comment
 
@@ -2616,16 +2269,50 @@ begin_decl_stmt
 name|void
 name|collectVariableInfo
 argument_list|(
-name|SmallPtrSet
+name|DwarfCompileUnit
+operator|&
+name|TheCU
+argument_list|,
+name|DISubprogram
+name|SP
+argument_list|,
+name|SmallPtrSetImpl
 operator|<
 specifier|const
 name|MDNode
 operator|*
-argument_list|,
-literal|16
 operator|>
 operator|&
 name|ProcessedVars
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Build the location list for all DBG_VALUEs in the
+end_comment
+
+begin_comment
+comment|/// function that describe the same variable.
+end_comment
+
+begin_decl_stmt
+name|void
+name|buildLocationList
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|DebugLocEntry
+operator|>
+operator|&
+name|DebugLoc
+argument_list|,
+specifier|const
+name|DbgValueHistoryMap
+operator|::
+name|InstrRanges
+operator|&
+name|Ranges
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2642,13 +2329,11 @@ begin_decl_stmt
 name|void
 name|collectVariableInfoFromMMITable
 argument_list|(
-name|SmallPtrSet
+name|SmallPtrSetImpl
 operator|<
 specifier|const
 name|MDNode
 operator|*
-argument_list|,
-literal|16
 operator|>
 operator|&
 name|P
@@ -2688,23 +2373,6 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Return Label preceding the instruction.
-end_comment
-
-begin_function_decl
-name|MCSymbol
-modifier|*
-name|getLabelBeforeInsn
-parameter_list|(
-specifier|const
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Ensure that a label will be emitted after MI.
 end_comment
 
@@ -2734,69 +2402,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/// \brief Return Label immediately following the instruction.
-end_comment
-
-begin_function_decl
-name|MCSymbol
-modifier|*
-name|getLabelAfterInsn
-parameter_list|(
-specifier|const
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|void
-name|attachRangesOrLowHighPC
-argument_list|(
-name|DwarfCompileUnit
-operator|&
-name|Unit
-argument_list|,
-name|DIE
-operator|&
-name|D
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|InsnRange
-operator|>
-operator|&
-name|Ranges
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-name|attachLowHighPC
-parameter_list|(
-name|DwarfCompileUnit
-modifier|&
-name|Unit
-parameter_list|,
-name|DIE
-modifier|&
-name|D
-parameter_list|,
-name|MCSymbol
-modifier|*
-name|Begin
-parameter_list|,
-name|MCSymbol
-modifier|*
-name|End
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_label
 name|public
@@ -2836,59 +2441,6 @@ argument_list|()
 name|override
 expr_stmt|;
 end_expr_stmt
-
-begin_function
-name|void
-name|insertDIE
-parameter_list|(
-specifier|const
-name|MDNode
-modifier|*
-name|TypeMD
-parameter_list|,
-name|DIE
-modifier|*
-name|Die
-parameter_list|)
-block|{
-name|MDTypeNodeToDieMap
-operator|.
-name|insert
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|TypeMD
-argument_list|,
-name|Die
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|DIE
-modifier|*
-name|getDIE
-parameter_list|(
-specifier|const
-name|MDNode
-modifier|*
-name|TypeMD
-parameter_list|)
-block|{
-return|return
-name|MDTypeNodeToDieMap
-operator|.
-name|lookup
-argument_list|(
-name|TypeMD
-argument_list|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/// \brief Emit all Dwarf sections that should come prior to the
@@ -3156,19 +2708,35 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Returns the previous section that was emitted into.
+comment|/// Returns the section symbol for the .debug_str section.
 end_comment
 
 begin_expr_stmt
-specifier|const
-name|MCSection
+name|MCSymbol
 operator|*
-name|getPrevSection
+name|getDebugStrSym
 argument_list|()
 specifier|const
 block|{
 return|return
-name|PrevSection
+name|DwarfStrSectionSym
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Returns the section symbol for the .debug_ranges section.
+end_comment
+
+begin_expr_stmt
+name|MCSymbol
+operator|*
+name|getRangeSectionSym
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfDebugRangeSectionSym
 return|;
 block|}
 end_expr_stmt
@@ -3190,6 +2758,25 @@ name|PrevCU
 return|;
 block|}
 end_expr_stmt
+
+begin_function
+name|void
+name|setPrevCU
+parameter_list|(
+specifier|const
+name|DwarfCompileUnit
+modifier|*
+name|PrevCU
+parameter_list|)
+block|{
+name|this
+operator|->
+name|PrevCU
+operator|=
+name|PrevCU
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// Returns the entries for the .debug_loc section.
@@ -3235,6 +2822,61 @@ name|Entry
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// \brief emit a single value for the debug loc section.
+end_comment
+
+begin_decl_stmt
+name|void
+name|emitDebugLocValue
+argument_list|(
+name|ByteStreamer
+operator|&
+name|Streamer
+argument_list|,
+specifier|const
+name|DebugLocEntry
+operator|::
+name|Value
+operator|&
+name|Value
+argument_list|,
+name|unsigned
+name|PieceOffsetInBits
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Emits an optimal (=sorted) sequence of DW_OP_pieces.
+end_comment
+
+begin_decl_stmt
+name|void
+name|emitLocPieces
+argument_list|(
+name|ByteStreamer
+operator|&
+name|Streamer
+argument_list|,
+specifier|const
+name|DITypeIdentifierMap
+operator|&
+name|Map
+argument_list|,
+name|ArrayRef
+operator|<
+name|DebugLocEntry
+operator|::
+name|Value
+operator|>
+name|Values
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Emit the location for a debug loc entry, including the size header.
@@ -3433,6 +3075,208 @@ name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+specifier|const
+name|MachineFunction
+operator|*
+name|getCurrentFunction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurFn
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|MCSymbol
+operator|*
+name|getFunctionBeginSym
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FunctionBeginSym
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|MCSymbol
+operator|*
+name|getFunctionEndSym
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FunctionEndSym
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|iterator_range
+operator|<
+name|ImportedEntityMap
+operator|::
+name|const_iterator
+operator|>
+name|findImportedEntitiesForScope
+argument_list|(
+argument|const MDNode *Scope
+argument_list|)
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|std
+operator|::
+name|equal_range
+argument_list|(
+name|ScopesWithImportedEntities
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|ScopesWithImportedEntities
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|MDNode
+operator|*
+argument_list|,
+specifier|const
+name|MDNode
+operator|*
+operator|>
+operator|(
+name|Scope
+operator|,
+name|nullptr
+operator|)
+argument_list|,
+name|less_first
+argument_list|()
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief A helper function to check whether the DIE for a given Scope is
+end_comment
+
+begin_comment
+comment|/// going to be null.
+end_comment
+
+begin_function_decl
+name|bool
+name|isLexicalScopeDIENull
+parameter_list|(
+name|LexicalScope
+modifier|*
+name|Scope
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Return Label preceding the instruction.
+end_comment
+
+begin_function_decl
+name|MCSymbol
+modifier|*
+name|getLabelBeforeInsn
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Return Label immediately following the instruction.
+end_comment
+
+begin_function_decl
+name|MCSymbol
+modifier|*
+name|getLabelAfterInsn
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// FIXME: Consider rolling ranges up into DwarfDebug since we use a single
+end_comment
+
+begin_comment
+comment|// range_base anyway, so there's no need to keep them as separate per-CU range
+end_comment
+
+begin_comment
+comment|// lists. (though one day we might end up with a range.dwo section, in which
+end_comment
+
+begin_comment
+comment|// case it'd go to DwarfFile)
+end_comment
+
+begin_function
+name|unsigned
+name|getNextRangeNumber
+parameter_list|()
+block|{
+return|return
+name|GlobalRangeCount
+operator|++
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// FIXME: Sink these functions down into DwarfFile/Dwarf*Unit.
+end_comment
+
+begin_expr_stmt
+name|SmallPtrSet
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+literal|16
+operator|>
+operator|&
+name|getProcessedSPNodes
+argument_list|()
+block|{
+return|return
+name|ProcessedSPNodes
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 unit|}; }

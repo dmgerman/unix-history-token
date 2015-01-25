@@ -74,10 +74,19 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AssumptionCache
+decl_stmt|;
+name|class
 name|Constant
 decl_stmt|;
 name|class
 name|DataLayout
+decl_stmt|;
+name|class
+name|DominatorTree
+decl_stmt|;
+name|class
+name|Instruction
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -85,14 +94,17 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-comment|/// LazyValueInfo - This pass computes, caches, and vends lazy value constraint
-comment|/// information.
+comment|/// This pass computes, caches, and vends lazy value constraint information.
 name|class
 name|LazyValueInfo
 range|:
 name|public
 name|FunctionPass
 block|{
+name|AssumptionCache
+operator|*
+name|AC
+block|;
 specifier|const
 name|DataLayout
 operator|*
@@ -102,6 +114,10 @@ name|class
 name|TargetLibraryInfo
 operator|*
 name|TLI
+block|;
+name|DominatorTree
+operator|*
+name|DT
 block|;
 name|void
 operator|*
@@ -163,7 +179,7 @@ operator|&&
 literal|"releaseMemory not called"
 argument_list|)
 block|; }
-comment|/// Tristate - This is used to return true/false/dunno results.
+comment|/// This is used to return true/false/dunno results.
 expr|enum
 name|Tristate
 block|{
@@ -182,8 +198,8 @@ literal|1
 block|}
 block|;
 comment|// Public query interface.
-comment|/// getPredicateOnEdge - Determine whether the specified value comparison
-comment|/// with a constant is known to be true or false on the specified CFG edge.
+comment|/// Determine whether the specified value comparison with a constant is known
+comment|/// to be true or false on the specified CFG edge.
 comment|/// Pred is a CmpInst predicate.
 name|Tristate
 name|getPredicateOnEdge
@@ -197,9 +213,26 @@ argument_list|,
 argument|BasicBlock *FromBB
 argument_list|,
 argument|BasicBlock *ToBB
+argument_list|,
+argument|Instruction *CxtI = nullptr
 argument_list|)
 block|;
-comment|/// getConstant - Determine whether the specified value is known to be a
+comment|/// Determine whether the specified value comparison with a constant is known
+comment|/// to be true or false at the specified instruction
+comment|/// (from an assume intrinsic). Pred is a CmpInst predicate.
+name|Tristate
+name|getPredicateAt
+argument_list|(
+argument|unsigned Pred
+argument_list|,
+argument|Value *V
+argument_list|,
+argument|Constant *C
+argument_list|,
+argument|Instruction *CxtI
+argument_list|)
+block|;
+comment|/// Determine whether the specified value is known to be a
 comment|/// constant at the end of the specified block.  Return null if not.
 name|Constant
 operator|*
@@ -212,9 +245,15 @@ argument_list|,
 name|BasicBlock
 operator|*
 name|BB
+argument_list|,
+name|Instruction
+operator|*
+name|CxtI
+operator|=
+name|nullptr
 argument_list|)
 block|;
-comment|/// getConstantOnEdge - Determine whether the specified value is known to be a
+comment|/// Determine whether the specified value is known to be a
 comment|/// constant on the specified edge.  Return null if not.
 name|Constant
 operator|*
@@ -231,9 +270,15 @@ argument_list|,
 name|BasicBlock
 operator|*
 name|ToBB
+argument_list|,
+name|Instruction
+operator|*
+name|CxtI
+operator|=
+name|nullptr
 argument_list|)
 block|;
-comment|/// threadEdge - Inform the analysis cache that we have threaded an edge from
+comment|/// Inform the analysis cache that we have threaded an edge from
 comment|/// PredBB to OldSucc to be from PredBB to NewSucc instead.
 name|void
 name|threadEdge
@@ -251,7 +296,7 @@ operator|*
 name|NewSucc
 argument_list|)
 block|;
-comment|/// eraseBlock - Inform the analysis cache that we have erased a block.
+comment|/// Inform the analysis cache that we have erased a block.
 name|void
 name|eraseBlock
 argument_list|(

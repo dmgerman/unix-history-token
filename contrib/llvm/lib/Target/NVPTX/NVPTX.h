@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_NVPTX_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTX_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_NVPTX_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTX_H
 end_define
 
 begin_include
@@ -220,6 +220,16 @@ literal|"Unknown condition code"
 argument_list|)
 expr_stmt|;
 block|}
+name|ImmutablePass
+modifier|*
+name|createNVPTXTargetTransformInfoPass
+parameter_list|(
+specifier|const
+name|NVPTXTargetMachine
+modifier|*
+name|TM
+parameter_list|)
+function_decl|;
 name|FunctionPass
 modifier|*
 name|createNVPTXISelDag
@@ -282,6 +292,11 @@ function_decl|;
 name|FunctionPass
 modifier|*
 name|createNVPTXImageOptimizerPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createNVPTXLowerStructArgsPass
 parameter_list|()
 function_decl|;
 name|bool

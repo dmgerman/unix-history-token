@@ -1048,7 +1048,7 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|RefersToEnclosingLocal
+name|RefersToEnclosingVariableOrCapture
 range|:
 literal|1
 decl_stmt|;
@@ -1651,6 +1651,18 @@ name|Stmt
 modifier|*
 name|IgnoreImplicit
 parameter_list|()
+function_decl|;
+comment|/// \brief Skip no-op (attributed, compound) container stmts and skip captured
+comment|/// stmt at the top, if \a IgnoreCaptured is true.
+name|Stmt
+modifier|*
+name|IgnoreContainers
+parameter_list|(
+name|bool
+name|IgnoreCaptured
+init|=
+name|false
+parameter_list|)
 function_decl|;
 specifier|const
 name|Stmt
@@ -2423,9 +2435,13 @@ operator|*
 name|Body
 block|;
 name|SourceLocation
-name|LBracLoc
+name|LBraceLoc
 block|,
-name|RBracLoc
+name|RBraceLoc
+block|;
+name|friend
+name|class
+name|ASTStmtReader
 block|;
 name|public
 operator|:
@@ -2457,12 +2473,12 @@ argument_list|(
 name|nullptr
 argument_list|)
 block|,
-name|LBracLoc
+name|LBraceLoc
 argument_list|(
 name|Loc
 argument_list|)
 block|,
-name|RBracLoc
+name|RBraceLoc
 argument_list|(
 argument|Loc
 argument_list|)
@@ -2838,7 +2854,7 @@ specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|LBracLoc
+name|LBraceLoc
 return|;
 block|}
 end_expr_stmt
@@ -2851,7 +2867,7 @@ specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|RBracLoc
+name|RBraceLoc
 return|;
 block|}
 end_expr_stmt
@@ -2863,25 +2879,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|LBracLoc
+name|LBraceLoc
 return|;
 block|}
 end_expr_stmt
-
-begin_function
-name|void
-name|setLBracLoc
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|)
-block|{
-name|LBracLoc
-operator|=
-name|L
-expr_stmt|;
-block|}
-end_function
 
 begin_expr_stmt
 name|SourceLocation
@@ -2890,25 +2891,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|RBracLoc
+name|RBraceLoc
 return|;
 block|}
 end_expr_stmt
-
-begin_function
-name|void
-name|setRBracLoc
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|)
-block|{
-name|RBracLoc
-operator|=
-name|L
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -4224,18 +4210,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-specifier|const
-name|Attr
-operator|*
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|getAttrArrayPtr
 argument_list|()
-expr|,
+argument_list|,
 name|NumAttrs
-operator|)
+argument_list|)
 return|;
 block|}
 name|Stmt
@@ -5058,6 +5041,19 @@ return|return
 name|SubExprs
 index|[
 name|BODY
+index|]
+operator|?
+name|SubExprs
+index|[
+name|BODY
+index|]
+operator|->
+name|getLocEnd
+argument_list|()
+operator|:
+name|SubExprs
+index|[
+name|COND
 index|]
 operator|->
 name|getLocEnd
@@ -6990,12 +6986,12 @@ name|LLVM_READONLY
 block|{
 return|return
 name|RetExpr
-operator|?
+condition|?
 name|RetExpr
 operator|->
 name|getLocEnd
 argument_list|()
-operator|:
+else|:
 name|RetLoc
 return|;
 block|}
@@ -7810,6 +7806,10 @@ block|;
 name|unsigned
 name|OperandNo
 block|;
+comment|// Source range for operand references.
+name|CharSourceRange
+name|Range
+block|;
 name|public
 operator|:
 name|AsmStringPiece
@@ -7836,7 +7836,11 @@ name|AsmStringPiece
 argument_list|(
 argument|unsigned OpNo
 argument_list|,
-argument|char Modifier
+argument|const std::string&S
+argument_list|,
+argument|SourceLocation Begin
+argument_list|,
+argument|SourceLocation End
 argument_list|)
 operator|:
 name|MyKind
@@ -7845,17 +7849,20 @@ name|Operand
 argument_list|)
 block|,
 name|Str
-argument_list|()
+argument_list|(
+name|S
+argument_list|)
 block|,
 name|OperandNo
 argument_list|(
-argument|OpNo
+name|OpNo
 argument_list|)
-block|{
-name|Str
-operator|+=
-name|Modifier
-block|;     }
+block|,
+name|Range
+argument_list|(
+argument|CharSourceRange::getCharRange(Begin, End)
+argument_list|)
+block|{     }
 name|bool
 name|isString
 argument_list|()
@@ -7887,12 +7894,6 @@ name|getString
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|isString
-argument_list|()
-argument_list|)
-block|;
 return|return
 name|Str
 return|;
@@ -7912,10 +7913,8 @@ return|return
 name|OperandNo
 return|;
 block|}
-comment|/// getModifier - Get the modifier for this operand, if present.  This
-comment|/// returns '\0' if there was no modifier.
-name|char
-name|getModifier
+name|CharSourceRange
+name|getRange
 argument_list|()
 specifier|const
 block|{
@@ -7923,16 +7922,21 @@ name|assert
 argument_list|(
 name|isOperand
 argument_list|()
+operator|&&
+literal|"Range is currently used only for Operands."
 argument_list|)
 block|;
 return|return
-name|Str
-index|[
-literal|0
-index|]
+name|Range
 return|;
 block|}
-expr|}
+comment|/// getModifier - Get the modifier for this operand, if present.  This
+comment|/// returns '\0' if there was no modifier.
+name|char
+name|getModifier
+argument_list|()
+specifier|const
+block|;   }
 block|;
 comment|/// AnalyzeAsmString - Analyze the asm string of the current asm, decomposing
 comment|/// it into pieces.  If the asm string is erroneous, emit errors and return
@@ -8627,17 +8631,16 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|StringRef
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|Constraints
-expr|,
+argument_list|,
 name|NumInputs
 operator|+
 name|NumOutputs
-operator|)
+argument_list|)
 return|;
 block|}
 name|ArrayRef
@@ -8649,15 +8652,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|StringRef
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|Clobbers
-expr|,
+argument_list|,
 name|NumClobbers
-operator|)
+argument_list|)
 return|;
 block|}
 name|ArrayRef
@@ -8670,12 +8672,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|reinterpret_cast
 operator|<
 name|Expr
@@ -8685,11 +8685,11 @@ operator|>
 operator|(
 name|Exprs
 operator|)
-expr|,
+argument_list|,
 name|NumInputs
 operator|+
 name|NumOutputs
-operator|)
+argument_list|)
 return|;
 block|}
 name|StringRef
@@ -9139,12 +9139,6 @@ name|Children
 index|[
 literal|2
 index|]
-block|;
-name|int
-name|HandlerIndex
-block|;
-name|int
-name|HandlerParentIndex
 block|;    enum
 block|{
 name|TRY
@@ -9166,10 +9160,6 @@ argument_list|,
 argument|Stmt *TryBlock
 argument_list|,
 argument|Stmt *Handler
-argument_list|,
-argument|int HandlerIndex
-argument_list|,
-argument|int HandlerParentIndex
 argument_list|)
 block|;
 name|friend
@@ -9209,10 +9199,6 @@ argument_list|,
 argument|Stmt *TryBlock
 argument_list|,
 argument|Stmt *Handler
-argument_list|,
-argument|int HandlerIndex
-argument_list|,
-argument|int HandlerParentIndex
 argument_list|)
 block|;
 name|SourceLocation
@@ -9346,24 +9332,6 @@ operator|==
 name|SEHTryStmtClass
 return|;
 block|}
-name|int
-name|getHandlerIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HandlerIndex
-return|;
-block|}
-name|int
-name|getHandlerParentIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HandlerParentIndex
-return|;
-block|}
 expr|}
 block|;
 comment|/// Represents a __leave statement.
@@ -9493,16 +9461,20 @@ name|Stmt
 block|{
 name|public
 operator|:
-comment|/// \brief The different capture forms: by 'this' or by reference, etc.
+comment|/// \brief The different capture forms: by 'this', by reference, capture for
+comment|/// variable-length array type etc.
 expr|enum
 name|VariableCaptureKind
 block|{
 name|VCK_This
 block|,
 name|VCK_ByRef
-block|}
+block|,
+name|VCK_VLAType
+block|,   }
 block|;
-comment|/// \brief Describes the capture of either a variable or 'this'.
+comment|/// \brief Describes the capture of either a variable, or 'this', or
+comment|/// variable-length array type.
 name|class
 name|Capture
 block|{
@@ -9513,7 +9485,7 @@ operator|<
 name|VarDecl
 operator|*
 block|,
-literal|1
+literal|2
 block|,
 name|VariableCaptureKind
 operator|>
@@ -9581,6 +9553,18 @@ literal|"capturing by reference must have a variable!"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|VCK_VLAType
+case|:
+name|assert
+argument_list|(
+operator|!
+name|Var
+operator|&&
+literal|"Variable-length array type capture cannot have a variable!"
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 comment|/// \brief Determine the kind of capture.
@@ -9629,13 +9613,27 @@ block|{
 return|return
 name|getCaptureKind
 argument_list|()
-operator|!=
-name|VCK_This
+operator|==
+name|VCK_ByRef
+return|;
+block|}
+comment|/// \brief Determine whether this capture handles a variable-length array
+comment|/// type.
+name|bool
+name|capturesVariableArrayType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCaptureKind
+argument_list|()
+operator|==
+name|VCK_VLAType
 return|;
 block|}
 comment|/// \brief Retrieve the declaration of the variable being captured.
 comment|///
-comment|/// This operation is only valid if this capture does not capture 'this'.
+comment|/// This operation is only valid if this capture captures a variable.
 name|VarDecl
 operator|*
 name|getCapturedVar
@@ -9644,11 +9642,10 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-operator|!
-name|capturesThis
+name|capturesVariable
 argument_list|()
 operator|&&
-literal|"No variable available for 'this' capture"
+literal|"No variable available for 'this' or VAT capture"
 argument_list|)
 block|;
 return|return

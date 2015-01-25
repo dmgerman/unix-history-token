@@ -38,13 +38,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPU_MCINSTLOWER_H
+name|LLVM_LIB_TARGET_R600_AMDGPUMCINSTLOWER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPU_MCINSTLOWER_H
+name|LLVM_LIB_TARGET_R600_AMDGPUMCINSTLOWER_H
 end_define
 
 begin_decl_stmt
@@ -73,6 +73,10 @@ block|{
 name|SI
 init|=
 literal|0
+block|,
+name|VI
+init|=
+literal|1
 block|}
 enum|;
 name|MCContext
@@ -146,10 +150,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|//AMDGPU_MCINSTLOWER_H
-end_comment
 
 end_unit
 

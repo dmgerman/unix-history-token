@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPUSUBTARGET_H
+name|LLVM_LIB_TARGET_R600_AMDGPUSUBTARGET_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPUSUBTARGET_H
+name|LLVM_LIB_TARGET_R600_AMDGPUSUBTARGET_H
 end_define
 
 begin_include
@@ -72,7 +72,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"AMDGPUFrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"AMDGPUInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"AMDGPUIntrinsicInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"AMDGPUSubtarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"R600ISelLowering.h"
 end_include
 
 begin_include
@@ -85,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -105,13 +135,6 @@ directive|include
 file|"AMDGPUGenSubtargetInfo.inc"
 end_include
 
-begin_define
-define|#
-directive|define
-name|MAX_CB_SIZE
-value|(1<< 16)
-end_define
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -122,14 +145,6 @@ range|:
 name|public
 name|AMDGPUGenSubtargetInfo
 block|{
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|AMDGPUInstrInfo
-operator|>
-name|InstrInfo
-block|;
 name|public
 operator|:
 expr|enum
@@ -148,7 +163,9 @@ block|,
 name|SOUTHERN_ISLANDS
 block|,
 name|SEA_ISLANDS
-block|}
+block|,
+name|VOLCANIC_ISLANDS
+block|,   }
 block|;
 name|private
 operator|:
@@ -188,6 +205,9 @@ name|bool
 name|CaymanISA
 block|;
 name|bool
+name|FlatAddressSpace
+block|;
+name|bool
 name|EnableIRStructurizer
 block|;
 name|bool
@@ -195,6 +215,9 @@ name|EnablePromoteAlloca
 block|;
 name|bool
 name|EnableIfCvt
+block|;
+name|bool
+name|EnableLoadStoreOpt
 block|;
 name|unsigned
 name|WavefrontSize
@@ -205,8 +228,34 @@ block|;
 name|int
 name|LocalMemorySize
 block|;
+specifier|const
+name|DataLayout
+name|DL
+block|;
+name|AMDGPUFrameLowering
+name|FrameLowering
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|AMDGPUTargetLowering
+operator|>
+name|TLInfo
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|AMDGPUInstrInfo
+operator|>
+name|InstrInfo
+block|;
 name|InstrItineraryData
 name|InstrItins
+block|;
+name|Triple
+name|TargetTriple
 block|;
 name|public
 operator|:
@@ -217,14 +266,39 @@ argument_list|,
 argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
+argument_list|,
+argument|TargetMachine&TM
 argument_list|)
 block|;
+name|AMDGPUSubtarget
+operator|&
+name|initializeSubtargetDependencies
+argument_list|(
+argument|StringRef GPU
+argument_list|,
+argument|StringRef FS
+argument_list|)
+block|;
+specifier|const
+name|AMDGPUFrameLowering
+operator|*
+name|getFrameLowering
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|FrameLowering
+return|;
+block|}
 specifier|const
 name|AMDGPUInstrInfo
 operator|*
 name|getInstrInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|InstrInfo
@@ -234,13 +308,58 @@ argument_list|()
 return|;
 block|}
 specifier|const
-name|InstrItineraryData
+name|AMDGPURegisterInfo
+operator|*
+name|getRegisterInfo
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
 operator|&
+name|InstrInfo
+operator|->
+name|getRegisterInfo
+argument_list|()
+return|;
+block|}
+name|AMDGPUTargetLowering
+operator|*
+name|getTargetLowering
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|TLInfo
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+specifier|const
+name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|DL
+return|;
+block|}
+specifier|const
+name|InstrItineraryData
+operator|*
 name|getInstrItineraryData
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
+operator|&
 name|InstrItins
 return|;
 block|}
@@ -322,6 +441,15 @@ specifier|const
 block|{
 return|return
 name|FP64Denormals
+return|;
+block|}
+name|bool
+name|hasFlatAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FlatAddressSpace
 return|;
 block|}
 name|bool
@@ -511,6 +639,18 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|bool
+name|loadStoreOptEnabled
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EnableLoadStoreOpt
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|getWavefrontSize
 argument_list|()
@@ -560,6 +700,14 @@ return|return
 name|LocalMemorySize
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|unsigned
+name|getAmdKernelCodeChipID
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
@@ -630,6 +778,25 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|bool
+name|isAmdHsaOS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|AMDHSA
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 unit|};  }
 comment|// End namespace llvm
@@ -639,10 +806,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDGPUSUBTARGET_H
-end_comment
 
 end_unit
 

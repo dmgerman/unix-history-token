@@ -142,6 +142,36 @@ comment|// Use one table per unique function type
 block|}
 enum|;
 block|}
+name|namespace
+name|ThreadModel
+block|{
+enum|enum
+name|Model
+block|{
+name|POSIX
+block|,
+comment|// POSIX Threads
+name|Single
+comment|// Single Threaded Environment
+block|}
+enum|;
+block|}
+name|enum
+name|class
+name|CFIntegrity
+block|{
+name|Sub
+operator|,
+comment|// Use subtraction-based checks.
+name|Ror
+operator|,
+comment|// Use rotation-based checks.
+name|Add
+comment|// Use addition-based checks. This depends on having
+comment|// sufficient alignment in the code and is usually not
+comment|// feasible.
+block|}
+empty_stmt|;
 name|class
 name|TargetOptions
 block|{
@@ -261,9 +291,7 @@ name|false
 argument_list|)
 operator|,
 name|TrapFuncName
-argument_list|(
-literal|""
-argument_list|)
+argument_list|()
 operator|,
 name|FloatABIType
 argument_list|(
@@ -281,8 +309,37 @@ argument_list|)
 operator|,
 name|JTType
 argument_list|(
-argument|JumpTable::Single
+name|JumpTable
+operator|::
+name|Single
 argument_list|)
+operator|,
+name|FCFI
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ThreadModel
+argument_list|(
+name|ThreadModel
+operator|::
+name|POSIX
+argument_list|)
+operator|,
+name|CFIType
+argument_list|(
+name|CFIntegrity
+operator|::
+name|Sub
+argument_list|)
+operator|,
+name|CFIEnforcing
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|CFIFuncName
+argument_list|()
 block|{}
 comment|/// PrintMachineCode - This flag is enabled when the -print-machineinstrs
 comment|/// option is specified on the command line, and should enable debugging
@@ -533,6 +590,41 @@ operator|::
 name|JumpTableType
 name|JTType
 expr_stmt|;
+comment|/// FCFI - This flags controls whether or not forward-edge control-flow
+comment|/// integrity is applied.
+name|bool
+name|FCFI
+decl_stmt|;
+comment|/// ThreadModel - This flag specifies the type of threading model to assume
+comment|/// for things like atomics
+name|ThreadModel
+operator|::
+name|Model
+name|ThreadModel
+expr_stmt|;
+comment|/// CFIType - This flag specifies the type of control-flow integrity check
+comment|/// to add as a preamble to indirect calls.
+name|CFIntegrity
+name|CFIType
+decl_stmt|;
+comment|/// CFIEnforcing - This flags controls whether or not CFI violations cause
+comment|/// the program to halt.
+name|bool
+name|CFIEnforcing
+decl_stmt|;
+comment|/// getCFIFuncName - If this returns a non-empty string, then this is the
+comment|/// name of the function that will be called for each CFI violation in
+comment|/// non-enforcing mode.
+name|std
+operator|::
+name|string
+name|CFIFuncName
+expr_stmt|;
+name|StringRef
+name|getCFIFuncName
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Machine level options.
 name|MCTargetOptions
 name|MCOptions
@@ -652,6 +744,36 @@ operator|&&
 name|ARE_EQUAL
 argument_list|(
 name|AllowFPOpFusion
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|JTType
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|FCFI
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|ThreadModel
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|CFIType
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|CFIEnforcing
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|CFIFuncName
 argument_list|)
 operator|&&
 name|ARE_EQUAL

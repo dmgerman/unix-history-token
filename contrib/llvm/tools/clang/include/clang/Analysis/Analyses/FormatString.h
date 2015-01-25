@@ -70,13 +70,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FORMAT_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_FORMATSTRING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FORMAT_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_FORMATSTRING_H
 end_define
 
 begin_include
@@ -298,6 +298,9 @@ comment|// for '%as', GNU extension to C90 scanf
 name|AsMAllocate
 block|,
 comment|// for '%ms', GNU extension to scanf
+name|AsWide
+block|,
+comment|// 'w' (MSVCRT, like l but only for c, C, s, S, or Z
 name|AsWideChar
 init|=
 name|AsLong
@@ -514,6 +517,9 @@ block|,
 name|SArg
 block|,
 comment|// ** Printf-specific **
+name|ZArg
+block|,
+comment|// MS extension
 comment|// Objective-C specific specifiers.
 name|ObjCObjArg
 block|,
@@ -526,12 +532,14 @@ name|ObjCEnd
 init|=
 name|ObjCObjArg
 block|,
-comment|// FreeBSD specific specifiers
+comment|// FreeBSD kernel specific specifiers.
 name|FreeBSDbArg
 block|,
 name|FreeBSDDArg
 block|,
 name|FreeBSDrArg
+block|,
+name|FreeBSDyArg
 block|,
 comment|// GlibC specific specifiers.
 name|PrintErrno
@@ -714,6 +722,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|kind
 operator|>=
 name|IntArgBeg
@@ -721,6 +730,15 @@ operator|&&
 name|kind
 operator|<=
 name|IntArgEnd
+operator|)
+operator|||
+name|kind
+operator|==
+name|FreeBSDrArg
+operator|||
+name|kind
+operator|==
+name|FreeBSDyArg
 return|;
 block|}
 name|bool
@@ -2423,10 +2441,22 @@ block|;
 name|bool
 name|ParsePrintfString
 argument_list|(
-name|FormatStringHandler
-operator|&
-name|H
+argument|FormatStringHandler&H
 argument_list|,
+argument|const char *beg
+argument_list|,
+argument|const char *end
+argument_list|,
+argument|const LangOptions&LO
+argument_list|,
+argument|const TargetInfo&Target
+argument_list|,
+argument|bool isFreeBSDKPrintf
+argument_list|)
+block|;
+name|bool
+name|ParseFormatStringHasSArg
+argument_list|(
 specifier|const
 name|char
 operator|*

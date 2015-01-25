@@ -86,13 +86,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TRANSFORMS_OBJCARC_OBJCARCALIASANALYSIS_H
+name|LLVM_LIB_TRANSFORMS_OBJCARC_OBJCARCALIASANALYSIS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TRANSFORMS_OBJCARC_OBJCARCALIASANALYSIS_H
+name|LLVM_LIB_TRANSFORMS_OBJCARC_OBJCARCALIASANALYSIS_H
 end_define
 
 begin_include
@@ -297,10 +297,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_TRANSFORMS_OBJCARC_OBJCARCALIASANALYSIS_H
-end_comment
 
 end_unit
 

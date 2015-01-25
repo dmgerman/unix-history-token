@@ -122,13 +122,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_CONSTANTRANGE_H
+name|LLVM_IR_CONSTANTRANGE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_CONSTANTRANGE_H
+name|LLVM_IR_CONSTANTRANGE_H
 end_define
 
 begin_include
@@ -147,7 +147,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// ConstantRange - This class represents an range of values.
+comment|/// This class represents a range of values.
 comment|///
 name|class
 name|ConstantRange
@@ -195,7 +195,7 @@ argument_list|,
 argument|APIntMoveTy Upper
 argument_list|)
 empty_stmt|;
-comment|/// makeICmpRegion - Produce the smallest range that contains all values that
+comment|/// Produce the smallest range that contains all values that
 comment|/// might satisfy the comparison specified by Pred when compared to any value
 comment|/// contained within Other.
 comment|///
@@ -215,7 +215,7 @@ modifier|&
 name|Other
 parameter_list|)
 function_decl|;
-comment|/// getLower - Return the lower value for this range...
+comment|/// Return the lower value for this range.
 comment|///
 specifier|const
 name|APInt
@@ -228,7 +228,7 @@ return|return
 name|Lower
 return|;
 block|}
-comment|/// getUpper - Return the upper value for this range...
+comment|/// Return the upper value for this range.
 comment|///
 specifier|const
 name|APInt
@@ -241,7 +241,7 @@ return|return
 name|Upper
 return|;
 block|}
-comment|/// getBitWidth - get the bit width of this ConstantRange
+comment|/// Get the bit width of this ConstantRange.
 comment|///
 name|uint32_t
 name|getBitWidth
@@ -255,38 +255,38 @@ name|getBitWidth
 argument_list|()
 return|;
 block|}
-comment|/// isFullSet - Return true if this set contains all of the elements possible
-comment|/// for this data-type
+comment|/// Return true if this set contains all of the elements possible
+comment|/// for this data-type.
 comment|///
 name|bool
 name|isFullSet
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// isEmptySet - Return true if this set contains no members.
+comment|/// Return true if this set contains no members.
 comment|///
 name|bool
 name|isEmptySet
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// isWrappedSet - Return true if this set wraps around the top of the range,
-comment|/// for example: [100, 8)
+comment|/// Return true if this set wraps around the top of the range.
+comment|/// For example: [100, 8).
 comment|///
 name|bool
 name|isWrappedSet
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// isSignWrappedSet - Return true if this set wraps around the INT_MIN of
-comment|/// its bitwidth, for example: i8 [120, 140).
+comment|/// Return true if this set wraps around the INT_MIN of
+comment|/// its bitwidth. For example: i8 [120, 140).
 comment|///
 name|bool
 name|isSignWrappedSet
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// contains - Return true if the specified value is in the set.
+comment|/// Return true if the specified value is in the set.
 comment|///
 name|bool
 name|contains
@@ -298,7 +298,7 @@ name|Val
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// contains - Return true if the other range is a subset of this one.
+comment|/// Return true if the other range is a subset of this one.
 comment|///
 name|bool
 name|contains
@@ -310,8 +310,7 @@ name|CR
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getSingleElement - If this set contains a single element, return it,
-comment|/// otherwise return null.
+comment|/// If this set contains a single element, return it, otherwise return null.
 comment|///
 specifier|const
 name|APInt
@@ -336,7 +335,7 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|/// isSingleElement - Return true if this set contains exactly one member.
+comment|/// Return true if this set contains exactly one member.
 comment|///
 name|bool
 name|isSingleElement
@@ -350,46 +349,42 @@ operator|!=
 name|nullptr
 return|;
 block|}
-comment|/// getSetSize - Return the number of elements in this set.
+comment|/// Return the number of elements in this set.
 comment|///
 name|APInt
 name|getSetSize
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getUnsignedMax - Return the largest unsigned value contained in the
-comment|/// ConstantRange.
+comment|/// Return the largest unsigned value contained in the ConstantRange.
 comment|///
 name|APInt
 name|getUnsignedMax
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getUnsignedMin - Return the smallest unsigned value contained in the
-comment|/// ConstantRange.
+comment|/// Return the smallest unsigned value contained in the ConstantRange.
 comment|///
 name|APInt
 name|getUnsignedMin
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getSignedMax - Return the largest signed value contained in the
-comment|/// ConstantRange.
+comment|/// Return the largest signed value contained in the ConstantRange.
 comment|///
 name|APInt
 name|getSignedMax
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getSignedMin - Return the smallest signed value contained in the
-comment|/// ConstantRange.
+comment|/// Return the smallest signed value contained in the ConstantRange.
 comment|///
 name|APInt
 name|getSignedMin
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// operator== - Return true if this range is equal to another range.
+comment|/// Return true if this range is equal to another range.
 comment|///
 name|bool
 name|operator
@@ -436,8 +431,7 @@ name|CR
 operator|)
 return|;
 block|}
-comment|/// subtract - Subtract the specified constant from the endpoints of this
-comment|/// constant range.
+comment|/// Subtract the specified constant from the endpoints of this constant range.
 name|ConstantRange
 name|subtract
 argument_list|(
@@ -460,7 +454,7 @@ name|CR
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// intersectWith - Return the range that results from the intersection of
+comment|/// Return the range that results from the intersection of
 comment|/// this range with another range.  The resultant range is guaranteed to
 comment|/// include all elements contained in both input ranges, and to have the
 comment|/// smallest possible set size that does so.  Because there may be two
@@ -477,7 +471,7 @@ name|CR
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// unionWith - Return the range that results from the union of this range
+comment|/// Return the range that results from the union of this range
 comment|/// with another range.  The resultant range is guaranteed to include the
 comment|/// elements of both sets, but may contain more.  For example, [3, 9) union
 comment|/// [12,15) is [3, 15), which includes 9, 10, and 11, which were not included
@@ -493,7 +487,7 @@ name|CR
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// zeroExtend - Return a new range in the specified integer type, which must
+comment|/// Return a new range in the specified integer type, which must
 comment|/// be strictly larger than the current type.  The returned range will
 comment|/// correspond to the possible range of values if the source range had been
 comment|/// zero extended to BitWidth.
@@ -505,7 +499,7 @@ name|BitWidth
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// signExtend - Return a new range in the specified integer type, which must
+comment|/// Return a new range in the specified integer type, which must
 comment|/// be strictly larger than the current type.  The returned range will
 comment|/// correspond to the possible range of values if the source range had been
 comment|/// sign extended to BitWidth.
@@ -517,7 +511,7 @@ name|BitWidth
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// truncate - Return a new range in the specified integer type, which must be
+comment|/// Return a new range in the specified integer type, which must be
 comment|/// strictly smaller than the current type.  The returned range will
 comment|/// correspond to the possible range of values if the source range had been
 comment|/// truncated to the specified type.
@@ -529,7 +523,7 @@ name|BitWidth
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// zextOrTrunc - make this range have the bit width given by \p BitWidth. The
+comment|/// Make this range have the bit width given by \p BitWidth. The
 comment|/// value is zero extended, truncated, or left alone to make it that width.
 name|ConstantRange
 name|zextOrTrunc
@@ -539,7 +533,7 @@ name|BitWidth
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// sextOrTrunc - make this range have the bit width given by \p BitWidth. The
+comment|/// Make this range have the bit width given by \p BitWidth. The
 comment|/// value is sign extended, truncated, or left alone to make it that width.
 name|ConstantRange
 name|sextOrTrunc
@@ -549,7 +543,7 @@ name|BitWidth
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// add - Return a new range representing the possible values resulting
+comment|/// Return a new range representing the possible values resulting
 comment|/// from an addition of a value in this range and a value in \p Other.
 name|ConstantRange
 name|add
@@ -561,7 +555,7 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// sub - Return a new range representing the possible values resulting
+comment|/// Return a new range representing the possible values resulting
 comment|/// from a subtraction of a value in this range and a value in \p Other.
 name|ConstantRange
 name|sub
@@ -573,7 +567,7 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// multiply - Return a new range representing the possible values resulting
+comment|/// Return a new range representing the possible values resulting
 comment|/// from a multiplication of a value in this range and a value in \p Other.
 comment|/// TODO: This isn't fully implemented yet.
 name|ConstantRange
@@ -586,7 +580,7 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// smax - Return a new range representing the possible values resulting
+comment|/// Return a new range representing the possible values resulting
 comment|/// from a signed maximum of a value in this range and a value in \p Other.
 name|ConstantRange
 name|smax
@@ -598,7 +592,7 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// umax - Return a new range representing the possible values resulting
+comment|/// Return a new range representing the possible values resulting
 comment|/// from an unsigned maximum of a value in this range and a value in \p Other.
 name|ConstantRange
 name|umax
@@ -610,7 +604,7 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// udiv - Return a new range representing the possible values resulting
+comment|/// Return a new range representing the possible values resulting
 comment|/// from an unsigned division of a value in this range and a value in
 comment|/// \p Other.
 name|ConstantRange
@@ -623,7 +617,7 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// binaryAnd - return a new range representing the possible values resulting
+comment|/// Return a new range representing the possible values resulting
 comment|/// from a binary-and of a value in this range by a value in \p Other.
 name|ConstantRange
 name|binaryAnd
@@ -635,7 +629,7 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// binaryOr - return a new range representing the possible values resulting
+comment|/// Return a new range representing the possible values resulting
 comment|/// from a binary-or of a value in this range by a value in \p Other.
 name|ConstantRange
 name|binaryOr
@@ -647,7 +641,7 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// shl - Return a new range representing the possible values resulting
+comment|/// Return a new range representing the possible values resulting
 comment|/// from a left shift of a value in this range by a value in \p Other.
 comment|/// TODO: This isn't fully implemented yet.
 name|ConstantRange
@@ -660,9 +654,8 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// lshr - Return a new range representing the possible values resulting
-comment|/// from a logical right shift of a value in this range and a value in
-comment|/// \p Other.
+comment|/// Return a new range representing the possible values resulting from a
+comment|/// logical right shift of a value in this range and a value in \p Other.
 name|ConstantRange
 name|lshr
 argument_list|(
@@ -673,14 +666,14 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// inverse - Return a new range that is the logical not of the current set.
+comment|/// Return a new range that is the logical not of the current set.
 comment|///
 name|ConstantRange
 name|inverse
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// print - Print out the bounds to a stream...
+comment|/// Print out the bounds to a stream.
 comment|///
 name|void
 name|print
@@ -691,7 +684,7 @@ name|OS
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// dump - Allow printing from a debugger easily...
+comment|/// Allow printing from a debugger easily.
 comment|///
 name|void
 name|dump

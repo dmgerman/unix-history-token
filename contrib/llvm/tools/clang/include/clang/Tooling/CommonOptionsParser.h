@@ -102,13 +102,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TOOLS_CLANG_INCLUDE_CLANG_TOOLING_COMMONOPTIONSPARSER_H
+name|LLVM_CLANG_TOOLING_COMMONOPTIONSPARSER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TOOLS_CLANG_INCLUDE_CLANG_TOOLING_COMMONOPTIONSPARSER_H
+name|LLVM_CLANG_TOOLING_COMMONOPTIONSPARSER_H
 end_define
 
 begin_include
@@ -252,6 +252,26 @@ operator|::
 name|string
 operator|>
 name|SourcePathList
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ExtraArgsBefore
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ExtraArgsAfter
 expr_stmt|;
 block|}
 empty_stmt|;

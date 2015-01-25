@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MC_STRINGTABLE_BUILDER_H
+name|LLVM_MC_STRINGTABLEBUILDER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MC_STRINGTABLE_BUILDER_H
+name|LLVM_MC_STRINGTABLEBUILDER_H
 end_define
 
 begin_include
@@ -102,22 +102,42 @@ expr_stmt|;
 return|return
 name|StringIndexMap
 operator|.
-name|GetOrCreateValue
+name|insert
+argument_list|(
+name|std
+operator|::
+name|make_pair
 argument_list|(
 name|s
 argument_list|,
 literal|0
 argument_list|)
+argument_list|)
 operator|.
-name|getKey
+name|first
+operator|->
+name|first
 argument_list|()
 return|;
 block|}
+enum|enum
+name|Kind
+block|{
+name|ELF
+block|,
+name|WinCOFF
+block|,
+name|MachO
+block|}
+enum|;
 comment|/// \brief Analyze the strings and build the final table. No more strings can
 comment|/// be added after this point.
 name|void
 name|finalize
-parameter_list|()
+parameter_list|(
+name|Kind
+name|kind
+parameter_list|)
 function_decl|;
 comment|/// \brief Retrieve the string table data. Can only be used after the table
 comment|/// is finalized.
@@ -169,6 +189,10 @@ name|s
 index|]
 return|;
 block|}
+name|void
+name|clear
+parameter_list|()
+function_decl|;
 name|private
 label|:
 name|bool

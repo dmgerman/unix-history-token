@@ -107,6 +107,14 @@ name|VisitedConstants
 expr_stmt|;
 name|DenseSet
 operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|>
+name|VisitedMetadata
+expr_stmt|;
+name|DenseSet
+operator|<
 name|Type
 operator|*
 operator|>

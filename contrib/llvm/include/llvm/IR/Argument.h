@@ -288,6 +288,20 @@ name|hasInAllocaAttr
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Return true if this argument has the zext attribute on it in its
+comment|/// containing function.
+name|bool
+name|hasZExtAttr
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Return true if this argument has the sext attribute on it in its
+comment|/// containing function.
+name|bool
+name|hasSExtAttr
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Add a Attribute to an argument.
 name|void
 name|addAttr

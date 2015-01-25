@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_DRIVER_DRIVER_H_
+name|LLVM_CLANG_DRIVER_DRIVER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_DRIVER_DRIVER_H_
+name|LLVM_CLANG_DRIVER_DRIVER_H
 end_define
 
 begin_include
@@ -175,6 +175,9 @@ name|class
 name|InputInfo
 decl_stmt|;
 name|class
+name|Job
+decl_stmt|;
+name|class
 name|JobAction
 decl_stmt|;
 name|class
@@ -306,12 +309,6 @@ name|std
 operator|::
 name|string
 name|DefaultTargetTriple
-expr_stmt|;
-comment|/// Default name for linked images (e.g., "a.out").
-name|std
-operator|::
-name|string
-name|DefaultImageName
 expr_stmt|;
 comment|/// Driver title to use with help.
 name|std
@@ -539,6 +536,43 @@ argument|llvm::opt::Arg **FinalPhaseArg = nullptr
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|// Before executing jobs, sets up response files for commands that need them.
+name|void
+name|setUpResponseFiles
+parameter_list|(
+name|Compilation
+modifier|&
+name|C
+parameter_list|,
+name|Job
+modifier|&
+name|J
+parameter_list|)
+function_decl|;
+name|void
+name|generatePrefixedToolNames
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Tool
+argument_list|,
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Names
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 name|Driver
@@ -869,12 +903,11 @@ comment|/// ExecuteCompilation - Execute the compilation according to the comman
 comment|/// arguments and return an appropriate exit code.
 comment|///
 comment|/// This routine handles additional processing that must be done in addition
-comment|/// to just running the subprocesses, for example reporting errors, removing
-comment|/// temporary files, etc.
+comment|/// to just running the subprocesses, for example reporting errors, setting
+comment|/// up response files, removing temporary files, etc.
 name|int
 name|ExecuteCompilation
 argument_list|(
-specifier|const
 name|Compilation
 operator|&
 name|C
@@ -895,7 +928,6 @@ expr|>
 operator|&
 name|FailingCommands
 argument_list|)
-decl|const
 decl_stmt|;
 comment|/// generateCompilationDiagnostics - Generate diagnostics information
 comment|/// including preprocessed source file(s).
@@ -909,7 +941,7 @@ name|C
 parameter_list|,
 specifier|const
 name|Command
-modifier|*
+modifier|&
 name|FailingCommand
 parameter_list|)
 function_decl|;
@@ -1004,30 +1036,22 @@ function_decl|;
 comment|/// ConstructAction - Construct the appropriate action to do for
 comment|/// \p Phase on the \p Input, taking in to account arguments
 comment|/// like -fsyntax-only or --analyze.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Action
-modifier|*
+operator|>
 name|ConstructPhaseAction
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|opt
-operator|::
-name|ArgList
-operator|&
-name|Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-name|phases
-operator|::
-name|ID
-name|Phase
+argument|phases::ID Phase
 argument_list|,
-name|Action
-operator|*
-name|Input
+argument|std::unique_ptr<Action> Input
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 comment|/// BuildJobsForAction - Construct the jobs to perform for the
 comment|/// action \p A.
 name|void
@@ -1069,6 +1093,14 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Returns the default name for linked images (e.g., "a.out").
+specifier|const
+name|char
+operator|*
+name|getDefaultImageName
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// GetNamedOutputPath - Return the name to use for the output of
 comment|/// the action \p JA. The result is appended to the compilation's
 comment|/// list of temporary or result files, as appropriate.

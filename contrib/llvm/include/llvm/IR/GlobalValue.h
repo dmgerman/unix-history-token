@@ -87,6 +87,12 @@ directive|include
 file|"llvm/IR/DerivedTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<system_error>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -296,6 +302,13 @@ literal|19
 block|;
 name|protected
 operator|:
+specifier|static
+specifier|const
+name|unsigned
+name|GlobalValueSubClassDataBits
+operator|=
+literal|19
+block|;
 name|unsigned
 name|getGlobalValueSubClassData
 argument_list|()
@@ -996,6 +1009,18 @@ argument_list|)
 return|;
 block|}
 name|bool
+name|hasLinkOnceODRLinkage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isLinkOnceODRLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+return|;
+block|}
+name|bool
 name|hasWeakLinkage
 argument_list|()
 specifier|const
@@ -1243,18 +1268,12 @@ expr_stmt|;
 comment|/// Make sure this GlobalValue is fully read. If the module is corrupt, this
 comment|/// returns true and fills in the optional string with information about the
 comment|/// problem.  If successful, this returns false.
-name|bool
-name|Materialize
-argument_list|(
 name|std
 operator|::
-name|string
-operator|*
-name|ErrInfo
-operator|=
-name|nullptr
-argument_list|)
-decl_stmt|;
+name|error_code
+name|materialize
+argument_list|()
+expr_stmt|;
 comment|/// If this GlobalValue is read in, and if the GVMaterializer supports it,
 comment|/// release the memory for the function, and set it up to be materialized
 comment|/// lazily. If !isDematerializable(), this method is a noop.
@@ -1276,8 +1295,35 @@ name|isDeclaration
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|isDeclarationForLinker
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|hasAvailableExternallyLinkage
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|isDeclaration
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// This method unlinks 'this' from the containing module, but does not delete
+end_comment
+
+begin_comment
 comment|/// it.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|removeFromParent
@@ -1285,7 +1331,13 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// This method unlinks 'this' from the containing module and deletes it.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|eraseFromParent
@@ -1293,7 +1345,13 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Get the module that this global value is contained inside of...
+end_comment
+
+begin_function
 specifier|inline
 name|Module
 modifier|*
@@ -1304,6 +1362,9 @@ return|return
 name|Parent
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|Module
@@ -1316,6 +1377,9 @@ return|return
 name|Parent
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|DataLayout
 operator|*
@@ -1323,7 +1387,13 @@ name|getDataLayout
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+end_comment
+
+begin_function
 specifier|static
 specifier|inline
 name|bool
@@ -1364,15 +1434,10 @@ operator|::
 name|GlobalAliasVal
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
-unit|}
+unit|};  }
 comment|// End llvm namespace
 end_comment
 

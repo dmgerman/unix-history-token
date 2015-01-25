@@ -69,11 +69,15 @@ comment|///
 name|namespace
 name|CallingConv
 block|{
+comment|/// LLVM IR allows to use arbitrary numbers as calling convention identifiers.
+typedef|typedef
+name|unsigned
+name|ID
+typedef|;
 comment|/// A set of enums which specify the assigned numeric values for known llvm
 comment|/// calling conventions.
 comment|/// @brief LLVM Calling Convention Representation
 enum|enum
-name|ID
 block|{
 comment|/// C - The default llvm calling convention, compatible with C.  This
 comment|/// convention is the only calling convention that supports varargs calls.
@@ -236,6 +240,12 @@ comment|/// arguments are shadowed by GPRs, and vice versa.
 name|X86_64_Win64
 init|=
 literal|79
+block|,
+comment|/// \brief MSVC calling convention that passes vectors and vector aggregates
+comment|/// in SSE registers.
+name|X86_VectorCall
+init|=
+literal|80
 block|}
 enum|;
 block|}

@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LIB_ASMPARSER_LLLEXER_H
+name|LLVM_LIB_ASMPARSER_LLLEXER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LIB_ASMPARSER_LLLEXER_H
+name|LLVM_LIB_ASMPARSER_LLLEXER_H
 end_define
 
 begin_include
@@ -113,8 +113,7 @@ name|char
 modifier|*
 name|CurPtr
 decl_stmt|;
-name|MemoryBuffer
-modifier|*
+name|StringRef
 name|CurBuf
 decl_stmt|;
 name|SMDiagnostic
@@ -163,8 +162,7 @@ label|:
 name|explicit
 name|LLLexer
 parameter_list|(
-name|MemoryBuffer
-modifier|*
+name|StringRef
 name|StartBuf
 parameter_list|,
 name|SourceMgr
@@ -345,13 +343,6 @@ name|Msg
 argument_list|)
 return|;
 block|}
-name|std
-operator|::
-name|string
-name|getFilename
-argument_list|()
-specifier|const
-expr_stmt|;
 name|private
 label|:
 name|lltok
@@ -421,6 +412,16 @@ operator|::
 name|Kind
 name|LexPercent
 argument_list|()
+expr_stmt|;
+name|lltok
+operator|::
+name|Kind
+name|LexVar
+argument_list|(
+argument|lltok::Kind Var
+argument_list|,
+argument|lltok::Kind VarID
+argument_list|)
 expr_stmt|;
 name|lltok
 operator|::

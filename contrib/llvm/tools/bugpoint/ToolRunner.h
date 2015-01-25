@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|BUGPOINT_TOOLRUNNER_H
+name|LLVM_TOOLS_BUGPOINT_TOOLRUNNER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|BUGPOINT_TOOLRUNNER_H
+name|LLVM_TOOLS_BUGPOINT_TOOLRUNNER_H
 end_define
 
 begin_include

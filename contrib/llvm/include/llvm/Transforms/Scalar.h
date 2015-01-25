@@ -108,6 +108,16 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// AlignmentFromAssumptions - Use assume intrinsics to set load/store
+comment|// alignments.
+comment|//
+name|FunctionPass
+modifier|*
+name|createAlignmentFromAssumptionsPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// SCCP - Sparse conditional constant propagation.
 comment|//
 name|FunctionPass
@@ -413,12 +423,19 @@ function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
 comment|// JumpThreading - Thread control through mult-pred/multi-succ blocks where some
-comment|// preds always go to some succ.
+comment|// preds always go to some succ. Thresholds other than minus one override the
+comment|// internal BB duplication default threshold.
 comment|//
 name|FunctionPass
 modifier|*
 name|createJumpThreadingPass
-parameter_list|()
+parameter_list|(
+name|int
+name|Threshold
+init|=
+operator|-
+literal|1
+parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -428,7 +445,13 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createCFGSimplificationPass
-parameter_list|()
+parameter_list|(
+name|int
+name|Threshold
+init|=
+operator|-
+literal|1
+parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -722,7 +745,19 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createSeparateConstOffsetFromGEPPass
-parameter_list|()
+parameter_list|(
+specifier|const
+name|TargetMachine
+modifier|*
+name|TM
+init|=
+name|nullptr
+parameter_list|,
+name|bool
+name|LowerGEP
+init|=
+name|false
+parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//

@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|POWERPC_INSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_POWERPC_PPCINSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|POWERPC_INSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_POWERPC_PPCINSTRINFO_H
 end_define
 
 begin_include
@@ -354,6 +354,25 @@ name|UseNode
 argument_list|,
 name|UseIdx
 argument_list|)
+return|;
+block|}
+name|bool
+name|hasLowDefLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// Machine LICM should hoist all instructions in low-register-pressure
+comment|// situations; none are sufficiently free to justify leaving in a loop
+comment|// body.
+return|return
+name|false
 return|;
 block|}
 name|bool
@@ -755,6 +774,14 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+block|;
+name|void
+name|getNoopForMachoTarget
+argument_list|(
+argument|MCInst&NopInst
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

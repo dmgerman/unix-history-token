@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_TOKEN_H
+name|LLVM_CLANG_LEX_TOKEN_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_TOKEN_H
+name|LLVM_CLANG_LEX_TOKEN_H
 end_define
 
 begin_include
@@ -138,6 +138,8 @@ comment|///    This is a pointer to the start of the token in a text buffer, whi
 comment|///    may be dirty (have trigraphs / escaped newlines).
 comment|///  Annotations (resolved type names, C++ scopes, etc): isAnnotation().
 comment|///    This is a pointer to sema-specific data for the annotation token.
+comment|///  Eof:
+comment|//     This is a pointer to a Decl.
 comment|///  Other:
 comment|///    This is null.
 name|void
@@ -152,7 +154,7 @@ name|Kind
 expr_stmt|;
 comment|/// Flags - Bits we track about this token, members of the TokenFlags enum.
 name|unsigned
-name|char
+name|short
 name|Flags
 decl_stmt|;
 name|public
@@ -201,7 +203,14 @@ comment|// This identifier contains a UCN.
 name|IgnoredComma
 init|=
 literal|0x80
+block|,
 comment|// This comma is not a macro argument separator (MS).
+name|StringifiedInMacro
+init|=
+literal|0x100
+block|,
+comment|// This string or character literal is formed by
+comment|// macro stringizing or charizing operator.
 block|}
 enum|;
 name|tok
@@ -558,6 +567,18 @@ condition|)
 return|return
 name|nullptr
 return|;
+if|if
+condition|(
+name|is
+argument_list|(
+name|tok
+operator|::
+name|eof
+argument_list|)
+condition|)
+return|return
+name|nullptr
+return|;
 return|return
 operator|(
 name|IdentifierInfo
@@ -581,6 +602,72 @@ name|void
 operator|*
 operator|)
 name|II
+expr_stmt|;
+block|}
+specifier|const
+name|void
+operator|*
+name|getEofData
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|is
+argument_list|(
+name|tok
+operator|::
+name|eof
+argument_list|)
+argument_list|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|void
+operator|*
+operator|>
+operator|(
+name|PtrData
+operator|)
+return|;
+block|}
+name|void
+name|setEofData
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|D
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|is
+argument_list|(
+name|tok
+operator|::
+name|eof
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|!
+name|PtrData
+argument_list|)
+expr_stmt|;
+name|PtrData
+operator|=
+name|const_cast
+operator|<
+name|void
+operator|*
+operator|>
+operator|(
+name|D
+operator|)
 expr_stmt|;
 block|}
 comment|/// getRawIdentifier - For a raw identifier token (i.e., an identifier
@@ -958,6 +1045,25 @@ operator|(
 name|Flags
 operator|&
 name|HasUCN
+operator|)
+operator|?
+name|true
+operator|:
+name|false
+return|;
+block|}
+comment|/// Returns true if this token is formed by macro by stringizing or charizing
+comment|/// operator.
+name|bool
+name|stringifiedInMacro
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|StringifiedInMacro
 operator|)
 operator|?
 name|true

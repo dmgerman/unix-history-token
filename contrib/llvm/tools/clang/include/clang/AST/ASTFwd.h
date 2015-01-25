@@ -51,6 +51,18 @@ begin_comment
 comment|//===-------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_CLANG_AST_ASTFWD_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_CLANG_AST_ASTFWD_H
+end_define
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -109,6 +121,11 @@ end_decl_stmt
 begin_comment
 comment|// end namespace clang
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

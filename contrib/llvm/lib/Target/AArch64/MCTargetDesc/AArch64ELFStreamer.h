@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_AARCH64_ELF_STREAMER_H
+name|LLVM_LIB_TARGET_AARCH64_MCTARGETDESC_AARCH64ELFSTREAMER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_AARCH64_ELF_STREAMER_H
+name|LLVM_LIB_TARGET_AARCH64_MCTARGETDESC_AARCH64ELFSTREAMER_H
 end_define
 
 begin_include
@@ -91,9 +91,6 @@ name|Emitter
 parameter_list|,
 name|bool
 name|RelaxAll
-parameter_list|,
-name|bool
-name|NoExecStack
 parameter_list|)
 function_decl|;
 block|}
@@ -103,10 +100,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AArch64_ELF_STREAMER_H
-end_comment
 
 end_unit
 

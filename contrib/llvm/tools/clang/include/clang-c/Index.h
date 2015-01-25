@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_C_INDEX_H
+name|LLVM_CLANG_C_INDEX_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_C_INDEX_H
+name|LLVM_CLANG_C_INDEX_H
 end_define
 
 begin_include
@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|CINDEX_VERSION_MINOR
-value|27
+value|29
 end_define
 
 begin_define
@@ -351,6 +351,18 @@ specifier|const
 name|char
 modifier|*
 name|file_name
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns non-zero if the \c file1 and \c file2 point to the same file,  * or they are both NULL.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_File_isEqual
+parameter_list|(
+name|CXFile
+name|file1
+parameter_list|,
+name|CXFile
+name|file2
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
@@ -2175,7 +2187,7 @@ name|CXCursor_MSAsmStmt
 init|=
 literal|229
 block|,
-comment|/** \brief The null satement ";": C99 6.8.3p3.    *    * This cursor kind is used to describe the null statement.    */
+comment|/** \brief The null statement ";": C99 6.8.3p3.    *    * This cursor kind is used to describe the null statement.    */
 name|CXCursor_NullStmt
 init|=
 literal|230
@@ -2190,7 +2202,7 @@ name|CXCursor_OMPParallelDirective
 init|=
 literal|232
 block|,
-comment|/** \brief OpenMP simd directive.    */
+comment|/** \brief OpenMP SIMD directive.    */
 name|CXCursor_OMPSimdDirective
 init|=
 literal|233
@@ -2265,9 +2277,39 @@ name|CXCursor_SEHLeaveStmt
 init|=
 literal|247
 block|,
+comment|/** \brief OpenMP ordered directive.    */
+name|CXCursor_OMPOrderedDirective
+init|=
+literal|248
+block|,
+comment|/** \brief OpenMP atomic directive.    */
+name|CXCursor_OMPAtomicDirective
+init|=
+literal|249
+block|,
+comment|/** \brief OpenMP for SIMD directive.    */
+name|CXCursor_OMPForSimdDirective
+init|=
+literal|250
+block|,
+comment|/** \brief OpenMP parallel for SIMD directive.    */
+name|CXCursor_OMPParallelForSimdDirective
+init|=
+literal|251
+block|,
+comment|/** \brief OpenMP target directive.    */
+name|CXCursor_OMPTargetDirective
+init|=
+literal|252
+block|,
+comment|/** \brief OpenMP teams directive.    */
+name|CXCursor_OMPTeamsDirective
+init|=
+literal|253
+block|,
 name|CXCursor_LastStmt
 init|=
-name|CXCursor_SEHLeaveStmt
+name|CXCursor_OMPTeamsDirective
 block|,
 comment|/**    * \brief Cursor that represents the translation unit itself.    *    * The translation unit cursor exists primarily to act as the root    * cursor for traversing the contents of a translation unit.    */
 name|CXCursor_TranslationUnit
@@ -2344,9 +2386,13 @@ name|CXCursor_CUDAHostAttr
 init|=
 literal|415
 block|,
+name|CXCursor_CUDASharedAttr
+init|=
+literal|416
+block|,
 name|CXCursor_LastAttr
 init|=
-name|CXCursor_CUDAHostAttr
+name|CXCursor_CUDASharedAttr
 block|,
 comment|/* Preprocessing */
 name|CXCursor_PreprocessingDirective
@@ -3088,6 +3134,10 @@ name|CXCallingConv_X86_64SysV
 init|=
 literal|11
 block|,
+name|CXCallingConv_X86VectorCall
+init|=
+literal|12
+block|,
 name|CXCallingConv_Invalid
 init|=
 literal|100
@@ -3200,6 +3250,93 @@ name|C
 parameter_list|,
 name|unsigned
 name|i
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Describes the kind of a template argument.  *  * See the definition of llvm::clang::TemplateArgument::ArgKind for full  * element descriptions.  */
+enum|enum
+name|CXTemplateArgumentKind
+block|{
+name|CXTemplateArgumentKind_Null
+block|,
+name|CXTemplateArgumentKind_Type
+block|,
+name|CXTemplateArgumentKind_Declaration
+block|,
+name|CXTemplateArgumentKind_NullPtr
+block|,
+name|CXTemplateArgumentKind_Integral
+block|,
+name|CXTemplateArgumentKind_Template
+block|,
+name|CXTemplateArgumentKind_TemplateExpansion
+block|,
+name|CXTemplateArgumentKind_Expression
+block|,
+name|CXTemplateArgumentKind_Pack
+block|,
+comment|/* Indicates an error case, preventing the kind from being deduced. */
+name|CXTemplateArgumentKind_Invalid
+block|}
+enum|;
+comment|/**  *\brief Returns the number of template args of a function decl representing a  * template specialization.  *  * If the argument cursor cannot be converted into a template function  * declaration, -1 is returned.  *  * For example, for the following declaration and specialization:  *   template<typename T, int kInt, bool kBool>  *   void foo() { ... }  *  *   template<>  *   void foo<float, -7, true>();  *  * The value 3 would be returned from this call.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_Cursor_getNumTemplateArguments
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the kind of the I'th template argument of the CXCursor C.  *  * If the argument CXCursor does not represent a FunctionDecl, an invalid  * template argument kind is returned.  *  * For example, for the following declaration and specialization:  *   template<typename T, int kInt, bool kBool>  *   void foo() { ... }  *  *   template<>  *   void foo<float, -7, true>();  *  * For I = 0, 1, and 2, Type, Integral, and Integral will be returned,  * respectively.  */
+name|CINDEX_LINKAGE
+name|enum
+name|CXTemplateArgumentKind
+name|clang_Cursor_getTemplateArgumentKind
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|,
+name|unsigned
+name|I
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve a CXType representing the type of a TemplateArgument of a  *  function decl representing a template specialization.  *  * If the argument CXCursor does not represent a FunctionDecl whose I'th  * template argument has a kind of CXTemplateArgKind_Integral, an invalid type  * is returned.  *  * For example, for the following declaration and specialization:  *   template<typename T, int kInt, bool kBool>  *   void foo() { ... }  *  *   template<>  *   void foo<float, -7, true>();  *  * If called with I = 0, "float", will be returned.  * Invalid types will be returned for I == 1 or 2.  */
+name|CINDEX_LINKAGE
+name|CXType
+name|clang_Cursor_getTemplateArgumentType
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|,
+name|unsigned
+name|I
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the value of an Integral TemplateArgument (of a function  *  decl representing a template specialization) as a signed long long.  *  * It is undefined to call this function on a CXCursor that does not represent a  * FunctionDecl or whose I'th template argument is not an integral value.  *  * For example, for the following declaration and specialization:  *   template<typename T, int kInt, bool kBool>  *   void foo() { ... }  *  *   template<>  *   void foo<float, -7, true>();  *  * If called with I = 1 or 2, -7 or true will be returned, respectively.  * For I == 0, this function's behavior is undefined.  */
+name|CINDEX_LINKAGE
+name|long
+name|long
+name|clang_Cursor_getTemplateArgumentValue
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|,
+name|unsigned
+name|I
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the value of an Integral TemplateArgument (of a function  *  decl representing a template specialization) as an unsigned long long.  *  * It is undefined to call this function on a CXCursor that does not represent a  * FunctionDecl or whose I'th template argument is not an integral value.  *  * For example, for the following declaration and specialization:  *   template<typename T, int kInt, bool kBool>  *   void foo() { ... }  *  *   template<>  *   void foo<float, 2147483649, true>();  *  * If called with I = 1 or 2, 2147483649 or true will be returned, respectively.  * For I == 0, this function's behavior is undefined.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|long
+name|long
+name|clang_Cursor_getTemplateArgumentUnsignedValue
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|,
+name|unsigned
+name|I
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Determine whether two CXTypes represent the same type.  *  * \returns non-zero if the CXTypes represent the same type and  *          zero otherwise.  */
@@ -3552,6 +3689,36 @@ name|CINDEX_LINKAGE
 name|enum
 name|CX_CXXAccessSpecifier
 name|clang_getCXXAccessSpecifier
+parameter_list|(
+name|CXCursor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Represents the storage classes as declared in the source. CX_SC_Invalid  * was added for the case that the passed cursor in not a declaration.  */
+enum|enum
+name|CX_StorageClass
+block|{
+name|CX_SC_Invalid
+block|,
+name|CX_SC_None
+block|,
+name|CX_SC_Extern
+block|,
+name|CX_SC_Static
+block|,
+name|CX_SC_PrivateExtern
+block|,
+name|CX_SC_OpenCLWorkGroupLocal
+block|,
+name|CX_SC_Auto
+block|,
+name|CX_SC_Register
+block|}
+enum|;
+comment|/**  * \brief Returns the storage class for a function or variable declaration.  *  * If the passed in Cursor is not a function or variable declaration,  * CX_SC_Invalid is returned else the storage class.  */
+name|CINDEX_LINKAGE
+name|enum
+name|CX_StorageClass
+name|clang_Cursor_getStorageClass
 parameter_list|(
 name|CXCursor
 parameter_list|)
@@ -4014,6 +4181,16 @@ name|clang_Cursor_getBriefCommentText
 parameter_list|(
 name|CXCursor
 name|C
+parameter_list|)
+function_decl|;
+comment|/**  * @}  */
+comment|/** \defgroup CINDEX_MANGLE Name Mangling API Functions  *  * @{  */
+comment|/**  * \brief Retrieve the CXString representing the mangled name of the cursor.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_Cursor_getMangling
+parameter_list|(
+name|CXCursor
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */

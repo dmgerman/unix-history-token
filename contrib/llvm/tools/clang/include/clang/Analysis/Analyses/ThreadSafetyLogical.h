@@ -46,13 +46,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_THREAD_SAFETY_LOGICAL_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_THREADSAFETYLOGICAL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_THREAD_SAFETY_LOGICAL_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_THREADSAFETYLOGICAL_H
 end_define
 
 begin_include
@@ -137,7 +137,8 @@ name|LExpr
 block|{
 name|til
 operator|::
-name|SExprRef
+name|SExpr
+operator|*
 name|Expr
 block|;
 name|public
@@ -174,9 +175,6 @@ specifier|const
 block|{
 return|return
 name|Expr
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|til
@@ -188,9 +186,6 @@ argument_list|()
 block|{
 return|return
 name|Expr
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|static
@@ -506,10 +501,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_THREAD_SAFETY_LOGICAL_H
-end_comment
 
 end_unit
 

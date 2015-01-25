@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MipsISELLOWERING_H
+name|LLVM_LIB_TARGET_MIPS_MIPSISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MipsISELLOWERING_H
+name|LLVM_LIB_TARGET_MIPS_MIPSISELLOWERING_H
 end_define
 
 begin_include
@@ -414,6 +414,7 @@ operator|:
 name|explicit
 name|MipsTargetLowering
 argument_list|(
+specifier|const
 name|MipsTargetMachine
 operator|&
 name|TM
@@ -430,6 +431,7 @@ name|MipsTargetLowering
 operator|*
 name|create
 argument_list|(
+specifier|const
 name|MipsTargetMachine
 operator|&
 name|TM
@@ -588,6 +590,16 @@ argument_list|,
 argument|unsigned&
 argument_list|,
 argument|unsigned
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|getRegisterByName
+argument_list|(
+argument|const char* RegName
+argument_list|,
+argument|EVT VT
 argument_list|)
 specifier|const
 name|override
@@ -1102,6 +1114,103 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+comment|// This method creates the following nodes, which are necessary for
+comment|// computing a symbol's address using gp-relative addressing:
+comment|//
+comment|// (add $gp, %gp_rel(sym))
+name|template
+operator|<
+name|class
+name|NodeTy
+operator|>
+name|SDValue
+name|getAddrGPRel
+argument_list|(
+argument|NodeTy *N
+argument_list|,
+argument|EVT Ty
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|{
+name|SDLoc
+name|DL
+argument_list|(
+name|N
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|Ty
+operator|==
+name|MVT
+operator|::
+name|i32
+argument_list|)
+block|;
+name|SDValue
+name|GPRel
+operator|=
+name|getTargetNode
+argument_list|(
+name|N
+argument_list|,
+name|Ty
+argument_list|,
+name|DAG
+argument_list|,
+name|MipsII
+operator|::
+name|MO_GPREL
+argument_list|)
+block|;
+return|return
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|ISD
+operator|::
+name|ADD
+argument_list|,
+name|DL
+argument_list|,
+name|Ty
+argument_list|,
+name|DAG
+operator|.
+name|getRegister
+argument_list|(
+name|Mips
+operator|::
+name|GP
+argument_list|,
+name|Ty
+argument_list|)
+argument_list|,
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|MipsISD
+operator|::
+name|GPRel
+argument_list|,
+name|DL
+argument_list|,
+name|DAG
+operator|.
+name|getVTList
+argument_list|(
+name|Ty
+argument_list|)
+argument_list|,
+name|GPRel
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|/// This function fills Ops, which is the list of operands that will later
 comment|/// be used when a function call node is created. It also generates
 comment|/// copyToReg nodes to set up argument registers.
@@ -1120,6 +1229,8 @@ argument_list|,
 argument|bool GlobalOrExternal
 argument_list|,
 argument|bool InternalLinkage
+argument_list|,
+argument|bool IsCallReloc
 argument_list|,
 argument|CallLoweringInfo&CLI
 argument_list|,
@@ -1670,7 +1781,7 @@ operator|*
 operator|>
 name|parseRegForInlineAsmConstraint
 argument_list|(
-argument|const StringRef&C
+argument|StringRef C
 argument_list|,
 argument|MVT VT
 argument_list|)
@@ -1852,6 +1963,20 @@ argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
 specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|emitPseudoSELECT
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|bool isFPCmp
+argument_list|,
+argument|unsigned Opc
+argument_list|)
+specifier|const
 block|;   }
 block|;
 comment|/// Create MipsTargetLowering objects.
@@ -1860,6 +1985,7 @@ name|MipsTargetLowering
 operator|*
 name|createMips16TargetLowering
 argument_list|(
+specifier|const
 name|MipsTargetMachine
 operator|&
 name|TM
@@ -1875,6 +2001,7 @@ name|MipsTargetLowering
 operator|*
 name|createMipsSETargetLowering
 argument_list|(
+specifier|const
 name|MipsTargetMachine
 operator|&
 name|TM
@@ -1909,10 +2036,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// MipsISELLOWERING_H
-end_comment
 
 end_unit
 

@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HexagonINSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONINSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|HexagonINSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONINSTRINFO_H
 end_define
 
 begin_include
@@ -743,14 +743,9 @@ modifier|*
 name|CreateTargetScheduleState
 argument_list|(
 specifier|const
-name|TargetMachine
-operator|*
-name|TM
-argument_list|,
-specifier|const
-name|ScheduleDAG
-operator|*
-name|DAG
+name|TargetSubtargetInfo
+operator|&
+name|STI
 argument_list|)
 decl|const
 name|override

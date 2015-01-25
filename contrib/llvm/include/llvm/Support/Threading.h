@@ -74,7 +74,8 @@ name|llvm_is_multithreaded
 parameter_list|()
 function_decl|;
 comment|/// llvm_execute_on_thread - Execute the given \p UserFn on a separate
-comment|/// thread, passing it the provided \p UserData.
+comment|/// thread, passing it the provided \p UserData and waits for thread
+comment|/// completion.
 comment|///
 comment|/// This function does not guarantee that the code will actually be executed
 comment|/// on a separate thread or honoring the requested stack size, but tries to do

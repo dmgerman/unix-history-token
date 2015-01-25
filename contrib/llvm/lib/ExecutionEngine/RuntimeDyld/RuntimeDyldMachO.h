@@ -50,20 +50,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_RUNTIME_DYLD_MACHO_H
+name|LLVM_LIB_EXECUTIONENGINE_RUNTIMEDYLD_RUNTIMEDYLDMACHO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_RUNTIME_DYLD_MACHO_H
+name|LLVM_LIB_EXECUTIONENGINE_RUNTIMEDYLD_RUNTIMEDYLDMACHO_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"ObjectImageCommon.h"
-end_include
 
 begin_include
 include|#
@@ -205,18 +199,128 @@ argument_list|(
 argument|mm
 argument_list|)
 block|{}
-comment|/// Extract the addend encoded in the instruction.
-name|uint64_t
-name|decodeAddend
+comment|/// This convenience method uses memcpy to extract a contiguous addend (the
+comment|/// addend size and offset are taken from the corresponding fields of the RE).
+name|int64_t
+name|memcpyAddend
 argument_list|(
-argument|uint8_t *LocalAddress
-argument_list|,
-argument|unsigned NumBytes
-argument_list|,
-argument|uint32_t RelType
+argument|const RelocationEntry&RE
 argument_list|)
 specifier|const
 block|;
+comment|/// Given a relocation_iterator for a non-scattered relocation, construct a
+comment|/// RelocationEntry and fill in the common fields. The 'Addend' field is *not*
+comment|/// filled in, since immediate encodings are highly target/opcode specific.
+comment|/// For targets/opcodes with simple, contiguous immediates (e.g. X86) the
+comment|/// memcpyAddend method can be used to read the immediate.
+name|RelocationEntry
+name|getRelocationEntry
+argument_list|(
+argument|unsigned SectionID
+argument_list|,
+argument|const ObjectFile&BaseTObj
+argument_list|,
+argument|const relocation_iterator&RI
+argument_list|)
+specifier|const
+block|{
+specifier|const
+name|MachOObjectFile
+operator|&
+name|Obj
+operator|=
+name|static_cast
+operator|<
+specifier|const
+name|MachOObjectFile
+operator|&
+operator|>
+operator|(
+name|BaseTObj
+operator|)
+block|;
+name|MachO
+operator|::
+name|any_relocation_info
+name|RelInfo
+operator|=
+name|Obj
+operator|.
+name|getRelocation
+argument_list|(
+name|RI
+operator|->
+name|getRawDataRefImpl
+argument_list|()
+argument_list|)
+block|;
+name|bool
+name|IsPCRel
+operator|=
+name|Obj
+operator|.
+name|getAnyRelocationPCRel
+argument_list|(
+name|RelInfo
+argument_list|)
+block|;
+name|unsigned
+name|Size
+operator|=
+name|Obj
+operator|.
+name|getAnyRelocationLength
+argument_list|(
+name|RelInfo
+argument_list|)
+block|;
+name|uint64_t
+name|Offset
+block|;
+name|RI
+operator|->
+name|getOffset
+argument_list|(
+name|Offset
+argument_list|)
+block|;
+name|MachO
+operator|::
+name|RelocationInfoType
+name|RelType
+operator|=
+name|static_cast
+operator|<
+name|MachO
+operator|::
+name|RelocationInfoType
+operator|>
+operator|(
+name|Obj
+operator|.
+name|getAnyRelocationType
+argument_list|(
+name|RelInfo
+argument_list|)
+operator|)
+block|;
+return|return
+name|RelocationEntry
+argument_list|(
+name|SectionID
+argument_list|,
+name|Offset
+argument_list|,
+name|RelType
+argument_list|,
+literal|0
+argument_list|,
+name|IsPCRel
+argument_list|,
+name|Size
+argument_list|)
+return|;
+block|}
 comment|/// Construct a RelocationValueRef representing the relocation target.
 comment|/// For Symbols in known sections, this will return a RelocationValueRef
 comment|/// representing a (SectionID, Offset) pair.
@@ -229,9 +333,10 @@ comment|/// the RelocationValueRef.
 name|RelocationValueRef
 name|getRelocationValueRef
 argument_list|(
-name|ObjectImage
+specifier|const
+name|ObjectFile
 operator|&
-name|ObjImg
+name|BaseTObj
 argument_list|,
 specifier|const
 name|relocation_iterator
@@ -246,29 +351,19 @@ argument_list|,
 name|ObjSectionToIDMap
 operator|&
 name|ObjSectionToID
-argument_list|,
-specifier|const
-name|SymbolTableMap
-operator|&
-name|Symbols
 argument_list|)
 block|;
 comment|/// Make the RelocationValueRef addend PC-relative.
 name|void
 name|makeValueAddendPCRel
 argument_list|(
-name|RelocationValueRef
-operator|&
-name|Value
+argument|RelocationValueRef&Value
 argument_list|,
-name|ObjectImage
-operator|&
-name|ObjImg
+argument|const ObjectFile&BaseTObj
 argument_list|,
-specifier|const
-name|relocation_iterator
-operator|&
-name|RI
+argument|const relocation_iterator&RI
+argument_list|,
+argument|unsigned OffsetToNextPC
 argument_list|)
 block|;
 comment|/// Dump information about the relocation entry (RE) and resolved value.
@@ -281,47 +376,29 @@ argument|uint64_t Value
 argument_list|)
 specifier|const
 block|;
+comment|// Return a section iterator for the section containing the given address.
+specifier|static
+name|section_iterator
+name|getSectionByAddress
+argument_list|(
+argument|const MachOObjectFile&Obj
+argument_list|,
+argument|uint64_t Addr
+argument_list|)
+block|;
+comment|// Populate __pointers section.
+name|void
+name|populateIndirectSymbolPointersSection
+argument_list|(
+argument|const MachOObjectFile&Obj
+argument_list|,
+argument|const SectionRef&PTSection
+argument_list|,
+argument|unsigned PTSectionID
+argument_list|)
+block|;
 name|public
 operator|:
-comment|/// Create an ObjectImage from the given ObjectBuffer.
-specifier|static
-name|ObjectImage
-operator|*
-name|createObjectImage
-argument_list|(
-argument|ObjectBuffer *InputBuffer
-argument_list|)
-block|{
-return|return
-name|new
-name|ObjectImageCommon
-argument_list|(
-name|InputBuffer
-argument_list|)
-return|;
-block|}
-comment|/// Create an ObjectImage from the given ObjectFile.
-specifier|static
-name|ObjectImage
-operator|*
-name|createObjectImageFromFile
-argument_list|(
-argument|std::unique_ptr<object::ObjectFile> InputObject
-argument_list|)
-block|{
-return|return
-name|new
-name|ObjectImageCommon
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|InputObject
-argument_list|)
-argument_list|)
-return|;
-block|}
 comment|/// Create a RuntimeDyldMachO instance for the given target architecture.
 specifier|static
 name|std
@@ -337,17 +414,19 @@ argument_list|,
 argument|RTDyldMemoryManager *mm
 argument_list|)
 block|;
-comment|/// Write the least significant 'Size' bytes in 'Value' out at the address
-comment|/// pointed to by Addr. Check for overflow.
-name|bool
-name|writeBytesUnaligned
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|RuntimeDyld
+operator|::
+name|LoadedObjectInfo
+operator|>
+name|loadObject
 argument_list|(
-argument|uint8_t *Addr
-argument_list|,
-argument|uint64_t Value
-argument_list|,
-argument|unsigned Size
+argument|const object::ObjectFile&O
 argument_list|)
+name|override
 block|;
 name|SectionEntry
 operator|&
@@ -364,24 +443,11 @@ index|]
 return|;
 block|}
 name|bool
-name|isCompatibleFormat
-argument_list|(
-argument|const ObjectBuffer *Buffer
-argument_list|)
-specifier|const
-name|override
-block|;
-name|bool
 name|isCompatibleFile
 argument_list|(
-argument|const object::ObjectFile *Obj
+argument|const object::ObjectFile&Obj
 argument_list|)
 specifier|const
-name|override
-block|;
-name|void
-name|registerEHFrames
-argument_list|()
 name|override
 block|; }
 decl_stmt|;
@@ -442,155 +508,18 @@ name|this
 operator|)
 return|;
 block|}
-name|protected
-operator|:
-comment|/// Parse the given relocation, which must be a non-scattered, and
-comment|/// return a RelocationEntry representing the information. The 'Addend' field
-comment|/// will contain the unmodified instruction immediate.
-name|RelocationEntry
-name|getBasicRelocationEntry
-argument_list|(
-argument|unsigned SectionID
-argument_list|,
-argument|ObjectImage&ObjImg
-argument_list|,
-argument|const relocation_iterator&RI
-argument_list|)
-specifier|const
-block|{
-specifier|const
-name|MachOObjectFile
-operator|&
-name|Obj
-operator|=
-name|static_cast
-operator|<
-specifier|const
-name|MachOObjectFile
-operator|&
-operator|>
-operator|(
-operator|*
-name|ObjImg
-operator|.
-name|getObjectFile
-argument_list|()
-operator|)
-block|;
-name|MachO
-operator|::
-name|any_relocation_info
-name|RelInfo
-operator|=
-name|Obj
-operator|.
-name|getRelocation
-argument_list|(
-name|RI
-operator|->
-name|getRawDataRefImpl
-argument_list|()
-argument_list|)
-block|;
-specifier|const
-name|SectionEntry
-operator|&
-name|Section
-operator|=
-name|Sections
-index|[
-name|SectionID
-index|]
-block|;
-name|bool
-name|IsPCRel
-operator|=
-name|Obj
-operator|.
-name|getAnyRelocationPCRel
-argument_list|(
-name|RelInfo
-argument_list|)
-block|;
 name|unsigned
-name|Size
-operator|=
-name|Obj
-operator|.
-name|getAnyRelocationLength
-argument_list|(
-name|RelInfo
-argument_list|)
-block|;
-name|uint64_t
-name|Offset
-block|;
-name|RI
-operator|->
-name|getOffset
-argument_list|(
-name|Offset
-argument_list|)
-block|;
-name|uint8_t
+name|char
 operator|*
-name|LocalAddress
-operator|=
-name|Section
-operator|.
-name|Address
-operator|+
-name|Offset
-block|;
-name|unsigned
-name|NumBytes
-operator|=
-literal|1
-operator|<<
-name|Size
-block|;
-name|uint32_t
-name|RelType
-operator|=
-name|Obj
-operator|.
-name|getAnyRelocationType
+name|processFDE
 argument_list|(
-name|RelInfo
+argument|unsigned char *P
+argument_list|,
+argument|int64_t DeltaForText
+argument_list|,
+argument|int64_t DeltaForEH
 argument_list|)
 block|;
-name|uint64_t
-name|Addend
-operator|=
-name|impl
-argument_list|()
-operator|.
-name|decodeAddend
-argument_list|(
-name|LocalAddress
-argument_list|,
-name|NumBytes
-argument_list|,
-name|RelType
-argument_list|)
-block|;
-return|return
-name|RelocationEntry
-argument_list|(
-name|SectionID
-argument_list|,
-name|Offset
-argument_list|,
-name|RelType
-argument_list|,
-name|Addend
-argument_list|,
-name|IsPCRel
-argument_list|,
-name|Size
-argument_list|)
-return|;
-block|}
 name|public
 operator|:
 name|RuntimeDyldMachOCRTPBase
@@ -608,147 +537,19 @@ block|{}
 name|void
 name|finalizeLoad
 argument_list|(
-argument|ObjectImage&ObjImg
+argument|const ObjectFile&Obj
 argument_list|,
 argument|ObjSectionToIDMap&SectionMap
 argument_list|)
-block|{
-name|unsigned
-name|EHFrameSID
-operator|=
-name|RTDYLD_INVALID_SECTION_ID
+name|override
 block|;
-name|unsigned
-name|TextSID
-operator|=
-name|RTDYLD_INVALID_SECTION_ID
-block|;
-name|unsigned
-name|ExceptTabSID
-operator|=
-name|RTDYLD_INVALID_SECTION_ID
-block|;
-name|ObjSectionToIDMap
-operator|::
-name|iterator
-name|i
-block|,
-name|e
-block|;
-for|for
-control|(
-name|i
-operator|=
-name|SectionMap
-operator|.
-name|begin
+name|void
+name|registerEHFrames
 argument_list|()
-operator|,
-name|e
-operator|=
-name|SectionMap
-operator|.
-name|end
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-block|{
-specifier|const
-name|SectionRef
-modifier|&
-name|Section
-init|=
-name|i
-operator|->
-name|first
-decl_stmt|;
-name|StringRef
-name|Name
-decl_stmt|;
-name|Section
-operator|.
-name|getName
-argument_list|(
-name|Name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Name
-operator|==
-literal|"__eh_frame"
-condition|)
-name|EHFrameSID
-operator|=
-name|i
-operator|->
-name|second
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|Name
-operator|==
-literal|"__text"
-condition|)
-name|TextSID
-operator|=
-name|i
-operator|->
-name|second
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|Name
-operator|==
-literal|"__gcc_except_tab"
-condition|)
-name|ExceptTabSID
-operator|=
-name|i
-operator|->
-name|second
-expr_stmt|;
-else|else
-name|impl
-argument_list|()
-operator|.
-name|finalizeSection
-argument_list|(
-name|ObjImg
-argument_list|,
-name|i
-operator|->
-name|second
-argument_list|,
-name|Section
-argument_list|)
+name|override
+block|; }
 expr_stmt|;
 block|}
-name|UnregisteredEHFrameSections
-operator|.
-name|push_back
-argument_list|(
-name|EHFrameRelatedSections
-argument_list|(
-name|EHFrameSID
-argument_list|,
-name|TextSID
-argument_list|,
-name|ExceptTabSID
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-expr|}
-block|;  }
 end_decl_stmt
 
 begin_comment

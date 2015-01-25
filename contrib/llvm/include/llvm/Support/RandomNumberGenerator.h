@@ -36,15 +36,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file defines an abstraction for random number generation (RNG).
+comment|// This file defines an abstraction for deterministic random number
 end_comment
 
 begin_comment
-comment|// Note that the current implementation is not cryptographically secure
+comment|// generation (RNG).  Note that the current implementation is not
 end_comment
 
 begin_comment
-comment|// as it uses the C++11<random> facilities.
+comment|// cryptographically secure as it uses the C++11<random> facilities.
 end_comment
 
 begin_comment
@@ -100,38 +100,37 @@ name|namespace
 name|llvm
 block|{
 comment|/// A random number generator.
-comment|/// Instances of this class should not be shared across threads.
+comment|///
+comment|/// Instances of this class should not be shared across threads. The
+comment|/// seed should be set by passing the -rng-seed=<uint64> option. Use
+comment|/// Module::createRNG to create a new RNG instance for use with that
+comment|/// module.
 name|class
 name|RandomNumberGenerator
 block|{
 name|public
 label|:
-comment|/// Seeds and salts the underlying RNG engine. The salt of type StringRef
-comment|/// is passed into the constructor. The seed can be set on the command
-comment|/// line via -rng-seed=<uint64>.
-comment|/// The reason for the salt is to ensure different random streams even if
-comment|/// the same seed is used for multiple invocations of the compiler.
-comment|/// A good salt value should add additional entropy and be constant across
-comment|/// different machines (i.e., no paths) to allow for reproducible builds.
-comment|/// An instance of this class can be retrieved from the current Module.
-comment|/// \see Module::getRNG
+comment|/// Returns a random number in the range [0, Max).
+name|uint_fast64_t
+name|operator
+argument_list|()
+argument_list|()
+expr_stmt|;
+name|private
+label|:
+comment|/// Seeds and salts the underlying RNG engine.
+comment|///
+comment|/// This constructor should not be used directly. Instead use
+comment|/// Module::createRNG to create a new RNG salted with the Module ID.
 name|RandomNumberGenerator
 argument_list|(
 argument|StringRef Salt
 argument_list|)
 empty_stmt|;
-comment|/// Returns a random number in the range [0, Max).
-name|uint64_t
-name|next
-parameter_list|(
-name|uint64_t
-name|Max
-parameter_list|)
-function_decl|;
-name|private
-label|:
 comment|// 64-bit Mersenne Twister by Matsumoto and Nishimura, 2000
 comment|// http://en.cppreference.com/w/cpp/numeric/random/mersenne_twister_engine
+comment|// This RNG is deterministically portable across C++11
+comment|// implementations.
 name|std
 operator|::
 name|mt19937_64
@@ -155,6 +154,10 @@ operator|&
 name|other
 operator|)
 name|LLVM_DELETED_FUNCTION
+decl_stmt|;
+name|friend
+name|class
+name|Module
 decl_stmt|;
 block|}
 empty_stmt|;

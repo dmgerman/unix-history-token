@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCWin64EH.h"
+file|"llvm/MC/MCWinEH.h"
 end_include
 
 begin_include
@@ -185,14 +185,14 @@ comment|/// implement support for target specific assembly directives.
 comment|///
 comment|/// If target foo wants to use this, it should implement 3 classes:
 comment|/// * FooTargetStreamer : public MCTargetStreamer
-comment|/// * FooTargetAsmSreamer : public FooTargetStreamer
+comment|/// * FooTargetAsmStreamer : public FooTargetStreamer
 comment|/// * FooTargetELFStreamer : public FooTargetStreamer
 comment|///
 comment|/// FooTargetStreamer should have a pure virtual method for each directive. For
 comment|/// example, for a ".bar symbol_name" directive, it should have
 comment|/// virtual emitBar(const MCSymbol&Symbol) = 0;
 comment|///
-comment|/// The FooTargetAsmSreamer and FooTargetELFStreamer classes implement the
+comment|/// The FooTargetAsmStreamer and FooTargetELFStreamer classes implement the
 comment|/// method. The assembly streamer just prints ".bar symbol_name". The object
 comment|/// streamer does whatever is needed to implement .bar in the object file.
 comment|///
@@ -202,8 +202,9 @@ comment|///
 comment|/// MCTargetStreamer&TS = OutStreamer.getTargetStreamer();
 comment|/// FooTargetStreamer&ATS = static_cast<FooTargetStreamer&>(TS);
 comment|///
-comment|/// The base classes FooTargetAsmSreamer and FooTargetELFStreamer should *never*
-comment|/// be treated differently. Callers should always talk to a FooTargetStreamer.
+comment|/// The base classes FooTargetAsmStreamer and FooTargetELFStreamer should
+comment|/// *never* be treated differently. Callers should always talk to a
+comment|/// FooTargetStreamer.
 name|class
 name|MCTargetStreamer
 block|{
@@ -311,6 +312,14 @@ comment|/// Emit contents of constant pool for the current section.
 name|void
 name|emitCurrentConstantPool
 argument_list|()
+block|;
+comment|/// Callback used to implement the .inst directive.
+name|virtual
+name|void
+name|emitInst
+argument_list|(
+argument|uint32_t Inst
+argument_list|)
 block|;
 name|private
 operator|:
@@ -627,15 +636,19 @@ name|std
 operator|::
 name|vector
 operator|<
-name|MCWinFrameInfo
+name|WinEH
+operator|::
+name|FrameInfo
 operator|*
 operator|>
 name|WinFrameInfos
 expr_stmt|;
-name|MCWinFrameInfo
-modifier|*
+name|WinEH
+operator|::
+name|FrameInfo
+operator|*
 name|CurrentWinFrameInfo
-decl_stmt|;
+expr_stmt|;
 name|void
 name|EnsureValidWinFrameInfo
 parameter_list|()
@@ -678,37 +691,6 @@ operator|&
 name|Ctx
 argument_list|)
 expr_stmt|;
-specifier|const
-name|MCExpr
-modifier|*
-name|BuildSymbolDiff
-parameter_list|(
-name|MCContext
-modifier|&
-name|Context
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|A
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|B
-parameter_list|)
-function_decl|;
-specifier|const
-name|MCExpr
-modifier|*
-name|ForceExpAbs
-parameter_list|(
-specifier|const
-name|MCExpr
-modifier|*
-name|Expr
-parameter_list|)
-function_decl|;
 name|virtual
 name|void
 name|EmitCFIStartProcImpl
@@ -727,15 +709,18 @@ modifier|&
 name|CurFrame
 parameter_list|)
 function_decl|;
-name|MCWinFrameInfo
-modifier|*
+name|WinEH
+operator|::
+name|FrameInfo
+operator|*
 name|getCurrentWinFrameInfo
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|CurrentWinFrameInfo
 return|;
 block|}
+name|virtual
 name|void
 name|EmitWindowsUnwindTables
 parameter_list|()
@@ -855,7 +840,9 @@ return|;
 block|}
 name|ArrayRef
 operator|<
-name|MCWinFrameInfo
+name|WinEH
+operator|::
+name|FrameInfo
 operator|*
 operator|>
 name|getWinFrameInfos
@@ -1251,6 +1238,7 @@ comment|/// This corresponds to assembler directives like .section, .text, etc.
 end_comment
 
 begin_function
+name|virtual
 name|void
 name|SwitchSection
 parameter_list|(
@@ -1421,7 +1409,10 @@ begin_function_decl
 name|virtual
 name|void
 name|InitSections
-parameter_list|()
+parameter_list|(
+name|bool
+name|NoExecStack
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2317,37 +2308,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/// EmitAbsValue - Emit the Value, but try to avoid relocations. On MachO
-end_comment
-
-begin_comment
-comment|/// this is done by producing
-end_comment
-
-begin_comment
-comment|/// foo = value
-end_comment
-
-begin_comment
-comment|/// .long foo
-end_comment
-
-begin_function_decl
-name|void
-name|EmitAbsValue
-parameter_list|(
-specifier|const
-name|MCExpr
-modifier|*
-name|Value
-parameter_list|,
-name|unsigned
-name|Size
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|virtual
 name|void
@@ -2880,35 +2840,6 @@ name|getDwarfLineTableSymbol
 parameter_list|(
 name|unsigned
 name|CUID
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|EmitDwarfSetLineAddr
-parameter_list|(
-name|int64_t
-name|LineDelta
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|Label
-parameter_list|,
-name|int
-name|PointerSize
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitCompactUnwindEncoding
-parameter_list|(
-name|uint32_t
-name|CompactUnwindEncoding
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3655,9 +3586,6 @@ name|CE
 parameter_list|,
 name|bool
 name|RelaxAll
-parameter_list|,
-name|bool
-name|NoExecStack
 parameter_list|)
 function_decl|;
 end_function_decl

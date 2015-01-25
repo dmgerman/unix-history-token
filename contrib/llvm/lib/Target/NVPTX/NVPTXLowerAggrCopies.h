@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NVPTX_LOWER_AGGR_COPIES_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXLOWERAGGRCOPIES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NVPTX_LOWER_AGGR_COPIES_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXLOWERAGGRCOPIES_H
 end_define
 
 begin_include

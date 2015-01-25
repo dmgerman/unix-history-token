@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_CODEGEN_CGVTABLE_H
+name|LLVM_CLANG_LIB_CODEGEN_CGVTABLES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_CODEGEN_CGVTABLE_H
+name|LLVM_CLANG_LIB_CODEGEN_CGVTABLES_H
 end_define
 
 begin_include

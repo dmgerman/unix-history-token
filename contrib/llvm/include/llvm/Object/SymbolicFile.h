@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_OBJECT_SYMBOLIC_FILE_H
+name|LLVM_OBJECT_SYMBOLICFILE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_OBJECT_SYMBOLIC_FILE_H
+name|LLVM_OBJECT_SYMBOLICFILE_H
 end_define
 
 begin_include
@@ -398,8 +398,15 @@ init|=
 literal|1U
 operator|<<
 literal|6
+block|,
 comment|// Specific to the object file format
 comment|// (e.g. section symbols)
+name|SF_Thumb
+init|=
+literal|1U
+operator|<<
+literal|7
+comment|// Thumb symbol in a 32-bit ARM binary
 block|}
 enum|;
 name|BasicSymbolRef
@@ -503,7 +510,7 @@ name|SymbolicFile
 argument_list|(
 argument|unsigned int Type
 argument_list|,
-argument|std::unique_ptr<MemoryBuffer> Source
+argument|MemoryBufferRef Source
 argument_list|)
 block|;
 comment|// virtual interface.
@@ -605,12 +612,15 @@ comment|// construction aux.
 specifier|static
 name|ErrorOr
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|SymbolicFile
-operator|*
-operator|>
+operator|>>
 name|createSymbolicFile
 argument_list|(
-argument|std::unique_ptr<MemoryBuffer>&Object
+argument|MemoryBufferRef Object
 argument_list|,
 argument|sys::fs::file_magic Type
 argument_list|,
@@ -620,12 +630,15 @@ decl_stmt|;
 specifier|static
 name|ErrorOr
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|SymbolicFile
-operator|*
-operator|>
+operator|>>
 name|createSymbolicFile
 argument_list|(
-argument|std::unique_ptr<MemoryBuffer>&Object
+argument|MemoryBufferRef Object
 argument_list|)
 block|{
 return|return
@@ -648,9 +661,10 @@ block|}
 specifier|static
 name|ErrorOr
 operator|<
+name|OwningBinary
+operator|<
 name|SymbolicFile
-operator|*
-operator|>
+operator|>>
 name|createSymbolicFile
 argument_list|(
 argument|StringRef ObjectPath

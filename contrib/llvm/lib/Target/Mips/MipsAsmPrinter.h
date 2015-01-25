@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPSASMPRINTER_H
+name|LLVM_LIB_TARGET_MIPS_MIPSASMPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPSASMPRINTER_H
+name|LLVM_LIB_TARGET_MIPS_MIPSASMPRINTER_H
 end_define
 
 begin_include
@@ -134,6 +134,7 @@ name|MipsTargetStreamer
 operator|&
 name|getTargetStreamer
 argument_list|()
+specifier|const
 block|;
 name|void
 name|EmitInstrWithMacroNoAT
@@ -219,6 +220,24 @@ name|FuncSignature
 operator|*
 operator|>
 name|StubsNeeded
+block|;
+name|void
+name|emitInlineAsmStart
+argument_list|(
+argument|const MCSubtargetInfo&StartInfo
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|emitInlineAsmEnd
+argument_list|(
+argument|const MCSubtargetInfo&StartInfo
+argument_list|,
+argument|const MCSubtargetInfo *EndInfo
+argument_list|)
+specifier|const
+name|override
 block|;
 name|void
 name|EmitJal
@@ -574,6 +593,16 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|,
 argument|const char *Modifier = nullptr
+argument_list|)
+block|;
+name|void
+name|printRegisterList
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int opNum
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|;
 name|void

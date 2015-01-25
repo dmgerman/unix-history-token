@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SOURCELOCATION_H
+name|LLVM_CLANG_BASIC_SOURCELOCATION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SOURCELOCATION_H
+name|LLVM_CLANG_BASIC_SOURCELOCATION_H
 end_define
 
 begin_include
@@ -1328,17 +1328,6 @@ specifier|const
 name|char
 operator|*
 name|getCharacterData
-argument_list|(
-argument|bool *Invalid = nullptr
-argument_list|)
-specifier|const
-block|;
-specifier|const
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|*
-name|getBuffer
 argument_list|(
 argument|bool *Invalid = nullptr
 argument_list|)

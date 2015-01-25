@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPS16ISELDAGTODAG_H
+name|LLVM_LIB_TARGET_MIPS_MIPS16ISELDAGTODAG_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPS16ISELDAGTODAG_H
+name|LLVM_LIB_TARGET_MIPS_MIPS16ISELDAGTODAG_H
 end_define
 
 begin_include

@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -2017,6 +2017,8 @@ name|insert
 argument_list|(
 name|S
 argument_list|)
+operator|.
+name|second
 operator|&&
 name|Visitor
 operator|.
@@ -2240,7 +2242,7 @@ block|}
 block|}
 expr|}   }
 block|;
-comment|/// Use SCEVTraversal to visit all nodes in the givien expression tree.
+comment|/// Use SCEVTraversal to visit all nodes in the given expression tree.
 name|template
 operator|<
 name|typename

@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_FRONTENDACTIONS_H
+name|LLVM_CLANG_STATICANALYZER_FRONTEND_FRONTENDACTIONS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_FRONTENDACTIONS_H
+name|LLVM_CLANG_STATICANALYZER_FRONTEND_FRONTENDACTIONS_H
 end_define
 
 begin_include
@@ -49,10 +49,25 @@ directive|include
 file|"clang/Frontend/FrontendAction.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|Stmt
+decl_stmt|;
 name|namespace
 name|ento
 block|{
@@ -67,8 +82,12 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
@@ -76,6 +95,74 @@ argument_list|,
 argument|StringRef InFile
 argument_list|)
 name|override
+block|; }
+decl_stmt|;
+comment|/// \brief Frontend action to parse model files.
+comment|///
+comment|/// This frontend action is responsible for parsing model files. Model files can
+comment|/// not be parsed on their own, they rely on type information that is available
+comment|/// in another translation unit. The parsing of model files is done by a
+comment|/// separate compiler instance that reuses the ASTContext and othen information
+comment|/// from the main translation unit that is being compiled. After a model file is
+comment|/// parsed, the function definitions will be collected into a StringMap.
+name|class
+name|ParseModelFileAction
+range|:
+name|public
+name|ASTFrontendAction
+block|{
+name|public
+operator|:
+name|ParseModelFileAction
+argument_list|(
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|&
+name|Bodies
+argument_list|)
+block|;
+name|bool
+name|isModelParsingAction
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|protected
+operator|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ASTConsumer
+operator|>
+name|CreateASTConsumer
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|)
+name|override
+block|;
+name|private
+operator|:
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|&
+name|Bodies
 block|; }
 decl_stmt|;
 name|void

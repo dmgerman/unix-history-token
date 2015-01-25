@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_REWRITE_FRONTENDACTIONS_H
+name|LLVM_CLANG_REWRITE_FRONTEND_FRONTENDACTIONS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_REWRITE_FRONTENDACTIONS_H
+name|LLVM_CLANG_REWRITE_FRONTEND_FRONTENDACTIONS_H
 end_define
 
 begin_include
@@ -70,8 +70,12 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
@@ -105,8 +109,12 @@ name|FixItOptions
 operator|>
 name|FixItOpts
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
@@ -189,8 +197,12 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI

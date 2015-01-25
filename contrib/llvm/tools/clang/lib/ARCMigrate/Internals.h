@@ -384,12 +384,7 @@ block|{
 return|return
 name|clearDiagnostic
 argument_list|(
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|,
 name|range
 argument_list|)

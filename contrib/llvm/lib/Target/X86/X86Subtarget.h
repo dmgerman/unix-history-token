@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86SUBTARGET_H
+name|LLVM_LIB_TARGET_X86_X86SUBTARGET_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86SUBTARGET_H
+name|LLVM_LIB_TARGET_X86_X86SUBTARGET_H
 end_define
 
 begin_include
@@ -75,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|"X86InstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"X86JITInfo.h"
 end_include
 
 begin_include
@@ -323,6 +317,10 @@ comment|/// HasSHA - Processor has SHA instructions.
 name|bool
 name|HasSHA
 block|;
+comment|/// HasSGX - Processor has SGX instructions.
+name|bool
+name|HasSGX
+block|;
 comment|/// HasPRFCHW - Processor has PRFCHW instructions.
 name|bool
 name|HasPRFCHW
@@ -330,6 +328,10 @@ block|;
 comment|/// HasRDSEED - Processor has RDSEED instructions.
 name|bool
 name|HasRDSEED
+block|;
+comment|/// HasSMAP - Processor has SMAP instructions.
+name|bool
+name|HasSMAP
 block|;
 comment|/// IsBTMemSlow - True if BT (bit test) of memory instructions are slow.
 name|bool
@@ -342,6 +344,10 @@ block|;
 comment|/// IsUAMemFast - True if unaligned memory access is fast.
 name|bool
 name|IsUAMemFast
+block|;
+comment|/// True if unaligned 32-byte memory accesses are slow.
+name|bool
+name|IsUAMem32Slow
 block|;
 comment|/// HasVectorUAMem - True if SIMD operations can have unaligned memory
 comment|/// operands. This may require setting a feature bit in the processor.
@@ -358,10 +364,15 @@ comment|/// the stack pointer. This is an optimization for Intel Atom processors
 name|bool
 name|UseLeaForSP
 block|;
-comment|/// HasSlowDivide - True if smaller divides are significantly faster than
-comment|/// full divides and should be used when possible.
+comment|/// HasSlowDivide32 - True if 8-bit divisions are significantly faster than
+comment|/// 32-bit divisions and should be used when possible.
 name|bool
-name|HasSlowDivide
+name|HasSlowDivide32
+block|;
+comment|/// HasSlowDivide64 - True if 16-bit divides are significantly faster than
+comment|/// 64-bit divisions and should be used when possible.
+name|bool
+name|HasSlowDivide64
 block|;
 comment|/// PadShortFunctions - True if the short functions should be padded to prevent
 comment|/// a stall when returning too early.
@@ -385,6 +396,18 @@ block|;
 comment|/// SlowIncDec - True if INC and DEC instructions are slow when writing to flags
 name|bool
 name|SlowIncDec
+block|;
+comment|/// Use the RSQRT* instructions to optimize square root calculations.
+comment|/// For this to be profitable, the cost of FSQRT and FDIV must be
+comment|/// substantially higher than normal FP ops like FADD and FMUL.
+name|bool
+name|UseSqrtEst
+block|;
+comment|/// Use the RCP* instructions to optimize FP division calculations.
+comment|/// For this to be profitable, the cost of FDIV must be
+comment|/// substantially higher than normal FP ops like FADD and FMUL.
+name|bool
+name|UseReciprocalEst
 block|;
 comment|/// Processor has AVX-512 PreFetch Instructions
 name|bool
@@ -430,6 +453,11 @@ name|InstrItins
 block|;
 name|private
 operator|:
+comment|// Calculates type size& alignment
+specifier|const
+name|DataLayout
+name|DL
+block|;
 comment|/// StackAlignOverride - Override the stack alignment.
 name|unsigned
 name|StackAlignOverride
@@ -446,11 +474,6 @@ comment|/// In16BitMode - True if compiling for 16-bit, false for 32-bit or 64-b
 name|bool
 name|In16BitMode
 block|;
-comment|// Calculates type size& alignment
-specifier|const
-name|DataLayout
-name|DL
-block|;
 name|X86SelectionDAGInfo
 name|TSInfo
 block|;
@@ -465,9 +488,6 @@ block|;
 name|X86FrameLowering
 name|FrameLowering
 block|;
-name|X86JITInfo
-name|JITInfo
-block|;
 name|public
 operator|:
 comment|/// This constructor initializes the data members to match that
@@ -481,7 +501,7 @@ argument|const std::string&CPU
 argument_list|,
 argument|const std::string&FS
 argument_list|,
-argument|X86TargetMachine&TM
+argument|const X86TargetMachine&TM
 argument_list|,
 argument|unsigned StackAlignOverride
 argument_list|)
@@ -492,6 +512,7 @@ operator|*
 name|getTargetLowering
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -504,6 +525,7 @@ operator|*
 name|getInstrInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -516,6 +538,7 @@ operator|*
 name|getDataLayout
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -528,6 +551,7 @@ operator|*
 name|getFrameLowering
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -540,20 +564,28 @@ operator|*
 name|getSelectionDAGInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
 name|TSInfo
 return|;
 block|}
-name|X86JITInfo
+specifier|const
+name|X86RegisterInfo
 operator|*
-name|getJITInfo
+name|getRegisterInfo
 argument_list|()
+specifier|const
+name|override
 block|{
 return|return
 operator|&
-name|JITInfo
+name|getInstrInfo
+argument_list|()
+operator|->
+name|getRegisterInfo
+argument_list|()
 return|;
 block|}
 comment|/// getStackAlignment - Returns the minimum alignment known to hold of the
@@ -589,14 +621,6 @@ argument_list|,
 argument|StringRef FS
 argument_list|)
 block|;
-comment|/// \brief Reset the features for the X86 target.
-name|void
-name|resetSubtargetFeatures
-argument_list|(
-argument|const MachineFunction *MF
-argument_list|)
-name|override
-block|;
 name|private
 operator|:
 comment|/// \brief Initialize the full set of dependencies so we can use an initializer
@@ -615,7 +639,7 @@ name|initializeEnvironment
 argument_list|()
 block|;
 name|void
-name|resetSubtargetFeatures
+name|initSubtargetFeatures
 argument_list|(
 argument|StringRef CPU
 argument_list|,
@@ -673,12 +697,8 @@ name|GNUX32
 operator|||
 name|TargetTriple
 operator|.
-name|getOS
+name|isOSNaCl
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|NaCl
 operator|)
 return|;
 block|}
@@ -700,6 +720,12 @@ operator|!=
 name|Triple
 operator|::
 name|GNUX32
+operator|&&
+operator|!
+name|TargetTriple
+operator|.
+name|isOSNaCl
+argument_list|()
 operator|)
 return|;
 block|}
@@ -1061,6 +1087,15 @@ name|HasSHA
 return|;
 block|}
 name|bool
+name|hasSGX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSGX
+return|;
+block|}
+name|bool
 name|hasPRFCHW
 argument_list|()
 specifier|const
@@ -1076,6 +1111,15 @@ specifier|const
 block|{
 return|return
 name|HasRDSEED
+return|;
+block|}
+name|bool
+name|hasSMAP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSMAP
 return|;
 block|}
 name|bool
@@ -1106,6 +1150,15 @@ name|IsUAMemFast
 return|;
 block|}
 name|bool
+name|isUnalignedMem32Slow
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsUAMem32Slow
+return|;
+block|}
+name|bool
 name|hasVectorUAMem
 argument_list|()
 specifier|const
@@ -1133,12 +1186,21 @@ name|UseLeaForSP
 return|;
 block|}
 name|bool
-name|hasSlowDivide
+name|hasSlowDivide32
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasSlowDivide
+name|HasSlowDivide32
+return|;
+block|}
+name|bool
+name|hasSlowDivide64
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSlowDivide64
 return|;
 block|}
 name|bool
@@ -1184,6 +1246,24 @@ specifier|const
 block|{
 return|return
 name|SlowIncDec
+return|;
+block|}
+name|bool
+name|useSqrtEst
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseSqrtEst
+return|;
+block|}
+name|bool
+name|useReciprocalEst
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseReciprocalEst
 return|;
 block|}
 name|bool
@@ -1293,12 +1373,20 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isOSFreeBSD
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|FreeBSD
+return|;
+block|}
+name|bool
+name|isTargetDragonFly
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSDragonFly
+argument_list|()
 return|;
 block|}
 name|bool
@@ -1309,12 +1397,8 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isOSSolaris
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|Solaris
 return|;
 block|}
 name|bool
@@ -1342,7 +1426,7 @@ argument_list|()
 return|;
 block|}
 name|bool
-name|isTargetMacho
+name|isTargetMachO
 argument_list|()
 specifier|const
 block|{
@@ -1449,6 +1533,18 @@ return|return
 name|TargetTriple
 operator|.
 name|isWindowsGNUEnvironment
+argument_list|()
+return|;
+block|}
+name|bool
+name|isTargetWindowsItanium
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isWindowsItaniumEnvironment
 argument_list|()
 return|;
 block|}
@@ -1689,12 +1785,14 @@ comment|/// getInstrItins = Return the instruction itineraries based on the
 comment|/// subtarget selection.
 specifier|const
 name|InstrItineraryData
-operator|&
+operator|*
 name|getInstrItineraryData
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
+operator|&
 name|InstrItins
 return|;
 block|}

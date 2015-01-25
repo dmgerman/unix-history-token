@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SEMA_ATTRLIST_H
+name|LLVM_CLANG_SEMA_ATTRIBUTELIST_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SEMA_ATTRLIST_H
+name|LLVM_CLANG_SEMA_ATTRIBUTELIST_H
 end_define
 
 begin_include
@@ -273,13 +273,13 @@ comment|/// The expressions themselves are stored after the object.
 name|unsigned
 name|NumArgs
 range|:
-literal|16
+literal|15
 decl_stmt|;
 comment|/// Corresponds to the Syntax enum.
 name|unsigned
 name|SyntaxUsed
 range|:
-literal|2
+literal|3
 decl_stmt|;
 comment|/// True if already diagnosed as invalid.
 name|mutable
@@ -2183,6 +2183,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|bool
+name|hasVariadicArg
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
 name|diagnoseAppertainsTo
 argument_list|(
 name|class
@@ -3895,6 +3900,8 @@ name|ExpectedFunctionMethodOrParameter
 block|,
 name|ExpectedClass
 block|,
+name|ExpectedEnum
+block|,
 name|ExpectedVariable
 block|,
 name|ExpectedMethod
@@ -3905,7 +3912,7 @@ name|ExpectedFieldOrGlobalVar
 block|,
 name|ExpectedStruct
 block|,
-name|ExpectedVariableFunctionOrTag
+name|ExpectedVariableOrTypedef
 block|,
 name|ExpectedTLSVar
 block|,
@@ -3938,6 +3945,8 @@ block|,
 name|ExpectedStructOrTypedef
 block|,
 name|ExpectedObjectiveCInterfaceOrProtocol
+block|,
+name|ExpectedKernelFunction
 block|}
 enum|;
 end_enum

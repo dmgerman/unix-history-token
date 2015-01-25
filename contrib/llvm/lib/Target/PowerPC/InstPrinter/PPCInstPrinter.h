@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|PPCINSTPRINTER_H
+name|LLVM_LIB_TARGET_POWERPC_INSTPRINTER_PPCINSTPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|PPCINSTPRINTER_H
+name|LLVM_LIB_TARGET_POWERPC_INSTPRINTER_PPCINSTPRINTER_H
 end_define
 
 begin_include
@@ -185,6 +185,16 @@ argument_list|)
 block|;
 name|void
 name|printU2ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printU4ImmOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

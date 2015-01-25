@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HexagonSELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONSELECTIONDAGINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|HexagonSELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONSELECTIONDAGINFO_H
 end_define
 
 begin_include

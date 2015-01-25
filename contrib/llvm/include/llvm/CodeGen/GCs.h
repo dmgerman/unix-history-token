@@ -97,6 +97,10 @@ name|void
 name|linkShadowStackGC
 parameter_list|()
 function_decl|;
+name|void
+name|linkStatepointExampleGC
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

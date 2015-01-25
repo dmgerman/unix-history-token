@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|POWERPCSUBTARGET_H
+name|LLVM_LIB_TARGET_POWERPC_PPCSUBTARGET_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|POWERPCSUBTARGET_H
+name|LLVM_LIB_TARGET_POWERPC_PPCSUBTARGET_H
 end_define
 
 begin_include
@@ -68,19 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"PPCInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"PPCISelLowering.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"PPCJITInfo.h"
+file|"PPCInstrInfo.h"
 end_include
 
 begin_include
@@ -212,6 +206,15 @@ name|PPCGenSubtargetInfo
 block|{
 name|protected
 operator|:
+comment|/// TargetTriple - What processor and OS we're targeting.
+name|Triple
+name|TargetTriple
+block|;
+comment|// Calculates type size& alignment
+specifier|const
+name|DataLayout
+name|DL
+block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
 name|unsigned
@@ -245,10 +248,16 @@ name|bool
 name|HasAltivec
 block|;
 name|bool
+name|HasSPE
+block|;
+name|bool
 name|HasQPX
 block|;
 name|bool
 name|HasVSX
+block|;
+name|bool
+name|HasP8Vector
 block|;
 name|bool
 name|HasFCPSGN
@@ -287,10 +296,25 @@ name|bool
 name|HasPOPCNTD
 block|;
 name|bool
+name|HasCMPB
+block|;
+name|bool
 name|HasLDBRX
 block|;
 name|bool
 name|IsBookE
+block|;
+name|bool
+name|HasOnlyMSYNC
+block|;
+name|bool
+name|IsE500
+block|;
+name|bool
+name|IsPPC4xx
+block|;
+name|bool
+name|IsPPC6xx
 block|;
 name|bool
 name|DeprecatedMFTB
@@ -302,33 +326,22 @@ name|bool
 name|HasLazyResolverStubs
 block|;
 name|bool
-name|IsJITCodeModel
-block|;
-name|bool
 name|IsLittleEndian
-block|;
-comment|/// TargetTriple - What processor and OS we're targeting.
-name|Triple
-name|TargetTriple
-block|;
-comment|/// OptLevel - What default optimization level we're emitting code for.
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
+block|;    enum
+block|{
+name|PPC_ABI_UNKNOWN
+block|,
+name|PPC_ABI_ELFv1
+block|,
+name|PPC_ABI_ELFv2
+block|}
+name|TargetABI
 block|;
 name|PPCFrameLowering
 name|FrameLowering
 block|;
-specifier|const
-name|DataLayout
-name|DL
-block|;
 name|PPCInstrInfo
 name|InstrInfo
-block|;
-name|PPCJITInfo
-name|JITInfo
 block|;
 name|PPCTargetLowering
 name|TLInfo
@@ -343,17 +356,31 @@ comment|/// of the specified triple.
 comment|///
 name|PPCSubtarget
 argument_list|(
-argument|const std::string&TT
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|TT
 argument_list|,
-argument|const std::string&CPU
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|CPU
 argument_list|,
-argument|const std::string&FS
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|FS
 argument_list|,
-argument|PPCTargetMachine&TM
-argument_list|,
-argument|bool is64Bit
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
+specifier|const
+name|PPCTargetMachine
+operator|&
+name|TM
 argument_list|)
 block|;
 comment|/// ParseSubtargetFeatures - Parses features string setting specified
@@ -365,12 +392,6 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|)
-block|;
-comment|/// SetJITMode - This is called to inform the subtarget info that we are
-comment|/// producing code for the JIT.
-name|void
-name|SetJITMode
-argument_list|()
 block|;
 comment|/// getStackAlignment - Returns the minimum alignment known to hold of the
 comment|/// stack frame on entry to the function and which must be maintained by every
@@ -399,12 +420,14 @@ comment|/// getInstrItins - Return the instruction itineraries based on subtarge
 comment|/// selection.
 specifier|const
 name|InstrItineraryData
-operator|&
+operator|*
 name|getInstrItineraryData
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
+operator|&
 name|InstrItins
 return|;
 block|}
@@ -414,6 +437,7 @@ operator|*
 name|getFrameLowering
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -426,6 +450,7 @@ operator|*
 name|getDataLayout
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -438,20 +463,11 @@ operator|*
 name|getInstrInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
 name|InstrInfo
-return|;
-block|}
-name|PPCJITInfo
-operator|*
-name|getJITInfo
-argument_list|()
-block|{
-return|return
-operator|&
-name|JITInfo
 return|;
 block|}
 specifier|const
@@ -460,6 +476,7 @@ operator|*
 name|getTargetLowering
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -472,10 +489,28 @@ operator|*
 name|getSelectionDAGInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
 name|TSInfo
+return|;
+block|}
+specifier|const
+name|PPCRegisterInfo
+operator|*
+name|getRegisterInfo
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|getInstrInfo
+argument_list|()
+operator|->
+name|getRegisterInfo
+argument_list|()
 return|;
 block|}
 comment|/// initializeSubtargetDependencies - Initializes using a CPU and feature string
@@ -489,14 +524,6 @@ argument_list|,
 argument|StringRef FS
 argument_list|)
 block|;
-comment|/// \brief Reset the features for the PowerPC target.
-name|void
-name|resetSubtargetFeatures
-argument_list|(
-argument|const MachineFunction *MF
-argument_list|)
-name|override
-block|;
 name|private
 operator|:
 name|void
@@ -504,7 +531,7 @@ name|initializeEnvironment
 argument_list|()
 block|;
 name|void
-name|resetSubtargetFeatures
+name|initSubtargetFeatures
 argument_list|(
 argument|StringRef CPU
 argument_list|,
@@ -570,16 +597,6 @@ argument|const TargetMachine&TM
 argument_list|)
 specifier|const
 block|;
-comment|// isJITCodeModel - True if we're generating code for the JIT
-name|bool
-name|isJITCodeModel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsJITCodeModel
-return|;
-block|}
 comment|// isLittleEndian - True if generating little-endian code
 name|bool
 name|isLittleEndian
@@ -700,6 +717,15 @@ name|HasAltivec
 return|;
 block|}
 name|bool
+name|hasSPE
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSPE
+return|;
+block|}
+name|bool
 name|hasQPX
 argument_list|()
 specifier|const
@@ -715,6 +741,15 @@ specifier|const
 block|{
 return|return
 name|HasVSX
+return|;
+block|}
+name|bool
+name|hasP8Vector
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasP8Vector
 return|;
 block|}
 name|bool
@@ -745,6 +780,15 @@ name|HasPOPCNTD
 return|;
 block|}
 name|bool
+name|hasCMPB
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCMPB
+return|;
+block|}
+name|bool
 name|hasLDBRX
 argument_list|()
 specifier|const
@@ -760,6 +804,42 @@ specifier|const
 block|{
 return|return
 name|IsBookE
+return|;
+block|}
+name|bool
+name|hasOnlyMSYNC
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasOnlyMSYNC
+return|;
+block|}
+name|bool
+name|isPPC4xx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsPPC4xx
+return|;
+block|}
+name|bool
+name|isPPC6xx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsPPC6xx
+return|;
+block|}
+name|bool
+name|isE500
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsE500
 return|;
 block|}
 name|bool
@@ -866,21 +946,15 @@ name|isDarwin
 argument_list|()
 return|;
 block|}
-comment|/// FIXME: Should use a command-line option.
 name|bool
 name|isELFv2ABI
 argument_list|()
 specifier|const
 block|{
 return|return
-name|isPPC64
-argument_list|()
-operator|&&
-name|isSVR4ABI
-argument_list|()
-operator|&&
-name|isLittleEndian
-argument_list|()
+name|TargetABI
+operator|==
+name|PPC_ABI_ELFv2
 return|;
 block|}
 name|bool
@@ -938,6 +1012,12 @@ name|override
 block|;
 name|bool
 name|useAA
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|enableSubRegLiveness
 argument_list|()
 specifier|const
 name|override

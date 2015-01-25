@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Path.h"
 end_include
 
@@ -168,27 +174,30 @@ argument_list|()
 expr_stmt|;
 block|}
 struct|;
-comment|/// This function attempts to locate a program in the operating
-comment|/// system's file system using some pre-determined set of locations to search
-comment|/// (e.g. the PATH on Unix). Paths with slashes are returned unmodified.
+comment|/// \brief Find the first executable file \p Name in \p Paths.
 comment|///
-comment|/// It does not perform hashing as a shell would but instead stats each PATH
+comment|/// This does not perform hashing as a shell would but instead stats each PATH
 comment|/// entry individually so should generally be avoided. Core LLVM library
 comment|/// functions and options should instead require fully specified paths.
 comment|///
-comment|/// @returns A string containing the path of the program or an empty string if
-comment|/// the program could not be found.
+comment|/// \param Name name of the executable to find. If it contains any system
+comment|///   slashes, it will be returned as is.
+comment|/// \param Paths optional list of paths to search for \p Name. If empty it
+comment|///   will use the system PATH environment instead.
+comment|///
+comment|/// \returns The fully qualified path to the first \p Name in \p Paths if it
+comment|///   exists. \p Name if \p Name has slashes in it. Otherwise an error.
+name|ErrorOr
+operator|<
 name|std
 operator|::
 name|string
-name|FindProgramByName
+operator|>
+name|findProgramByName
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|name
+argument|StringRef Name
+argument_list|,
+argument|ArrayRef<StringRef> Paths = ArrayRef<StringRef>()
 argument_list|)
 expr_stmt|;
 comment|// These functions change the specified standard stream (stdin or stdout) to
@@ -224,7 +233,7 @@ name|StringRef
 name|Program
 argument_list|,
 comment|///< Path of the program to be executed. It is
-comment|/// presumed this is the result of the FindProgramByName method.
+comment|/// presumed this is the result of the findProgramByName method.
 specifier|const
 name|char
 operator|*
@@ -366,6 +375,52 @@ operator|>
 name|Args
 argument_list|)
 decl_stmt|;
+comment|/// File encoding options when writing contents that a non-UTF8 tool will
+comment|/// read (on Windows systems). For UNIX, we always use UTF-8.
+enum|enum
+name|WindowsEncodingMethod
+block|{
+comment|/// UTF-8 is the LLVM native encoding, being the same as "do not perform
+comment|/// encoding conversion".
+name|WEM_UTF8
+block|,
+name|WEM_CurrentCodePage
+block|,
+name|WEM_UTF16
+block|}
+enum|;
+comment|/// Saves the UTF8-encoded \p contents string into the file \p FileName
+comment|/// using a specific encoding.
+comment|///
+comment|/// This write file function adds the possibility to choose which encoding
+comment|/// to use when writing a text file. On Windows, this is important when
+comment|/// writing files with internationalization support with an encoding that is
+comment|/// different from the one used in LLVM (UTF-8). We use this when writing
+comment|/// response files, since GCC tools on MinGW only understand legacy code
+comment|/// pages, and VisualStudio tools only understand UTF-16.
+comment|/// For UNIX, using different encodings is silently ignored, since all tools
+comment|/// work well with UTF-8.
+comment|/// This function assumes that you only use UTF-8 *text* data and will convert
+comment|/// it to your desired encoding before writing to the file.
+comment|///
+comment|/// FIXME: We use EM_CurrentCodePage to write response files for GNU tools in
+comment|/// a MinGW/MinGW-w64 environment, which has serious flaws but currently is
+comment|/// our best shot to make gcc/ld understand international characters. This
+comment|/// should be changed as soon as binutils fix this to support UTF16 on mingw.
+comment|///
+comment|/// \returns non-zero error_code if failed
+name|std
+operator|::
+name|error_code
+name|writeFileWithEncoding
+argument_list|(
+argument|StringRef FileName
+argument_list|,
+argument|StringRef Contents
+argument_list|,
+argument|WindowsEncodingMethod Encoding = WEM_UTF8
+argument_list|)
+expr_stmt|;
 comment|/// This function waits for the process specified by \p PI to finish.
 comment|/// \returns A \see ProcessInfo struct with Pid set to:
 comment|/// \li The process id of the child process if the child process has changed

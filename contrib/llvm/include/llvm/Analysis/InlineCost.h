@@ -82,6 +82,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AssumptionCacheTracker
+decl_stmt|;
+name|class
 name|CallSite
 decl_stmt|;
 name|class
@@ -359,6 +362,10 @@ specifier|const
 name|TargetTransformInfo
 operator|*
 name|TTI
+block|;
+name|AssumptionCacheTracker
+operator|*
+name|ACT
 block|;
 name|public
 operator|:

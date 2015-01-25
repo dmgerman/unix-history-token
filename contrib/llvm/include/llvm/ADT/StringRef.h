@@ -183,51 +183,6 @@ comment|/// The length of the string.
 name|size_t
 name|Length
 decl_stmt|;
-comment|// Workaround PR5482: nearly all gcc 4.x miscompile StringRef and std::min()
-comment|// Changing the arg of min to be an integer, instead of a reference to an
-comment|// integer works around this bug.
-specifier|static
-name|size_t
-name|min
-parameter_list|(
-name|size_t
-name|a
-parameter_list|,
-name|size_t
-name|b
-parameter_list|)
-block|{
-return|return
-name|a
-operator|<
-name|b
-condition|?
-name|a
-else|:
-name|b
-return|;
-block|}
-specifier|static
-name|size_t
-name|max
-parameter_list|(
-name|size_t
-name|a
-parameter_list|,
-name|size_t
-name|b
-parameter_list|)
-block|{
-return|return
-name|a
-operator|>
-name|b
-condition|?
-name|a
-else|:
-name|b
-return|;
-block|}
 comment|// Workaround memcmp issue with null pointers (undefined behavior)
 comment|// by providing a specialized version
 specifier|static
@@ -402,6 +357,50 @@ operator|+
 name|Length
 return|;
 block|}
+specifier|const
+name|unsigned
+name|char
+operator|*
+name|bytes_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|>
+operator|(
+name|begin
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|const
+name|unsigned
+name|char
+operator|*
+name|bytes_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|>
+operator|(
+name|end
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// @}
 comment|/// @name String Operations
 comment|/// @{
@@ -493,6 +492,7 @@ name|copy
 argument_list|(
 argument|Allocator&A
 argument_list|)
+specifier|const
 block|{
 name|char
 operator|*
@@ -614,6 +614,8 @@ name|RHS
 operator|.
 name|Data
 argument_list|,
+name|std
+operator|::
 name|min
 argument_list|(
 name|Length
@@ -902,6 +904,8 @@ control|(
 name|size_t
 name|i
 init|=
+name|std
+operator|::
 name|min
 argument_list|(
 name|From
@@ -972,6 +976,8 @@ decl|const
 block|{
 name|From
 operator|=
+name|std
+operator|::
 name|min
 argument_list|(
 name|From
@@ -1345,6 +1351,9 @@ name|long
 name|long
 name|ULLVal
 block|;
+comment|// The additional cast to unsigned long long is required to avoid the
+comment|// Visual C++ warning C4805: '!=' : unsafe mix of type 'bool' and type
+comment|// 'unsigned __int64' when instantiating getAsInteger with T = bool.
 if|if
 condition|(
 name|getAsUnsignedInteger
@@ -1359,10 +1368,18 @@ argument_list|)
 operator|||
 name|static_cast
 operator|<
+name|unsigned
+name|long
+name|long
+operator|>
+operator|(
+name|static_cast
+operator|<
 name|T
 operator|>
 operator|(
 name|ULLVal
+operator|)
 operator|)
 operator|!=
 name|ULLVal
@@ -1542,6 +1559,8 @@ decl|const
 block|{
 name|Start
 operator|=
+name|std
+operator|::
 name|min
 argument_list|(
 name|Start
@@ -1556,6 +1575,8 @@ name|Data
 operator|+
 name|Start
 argument_list|,
+name|std
+operator|::
 name|min
 argument_list|(
 name|N
@@ -1704,6 +1725,8 @@ decl|const
 block|{
 name|Start
 operator|=
+name|std
+operator|::
 name|min
 argument_list|(
 name|Start
@@ -1713,8 +1736,12 @@ argument_list|)
 expr_stmt|;
 name|End
 operator|=
+name|std
+operator|::
 name|min
 argument_list|(
+name|std
+operator|::
 name|max
 argument_list|(
 name|Start

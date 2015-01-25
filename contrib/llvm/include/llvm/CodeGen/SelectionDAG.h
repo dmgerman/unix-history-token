@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -85,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/DAGCombine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
 begin_include
@@ -790,7 +802,7 @@ name|TM
 decl_stmt|;
 specifier|const
 name|TargetSelectionDAGInfo
-modifier|&
+modifier|*
 name|TSI
 decl_stmt|;
 specifier|const
@@ -1068,11 +1080,6 @@ parameter_list|(
 name|MachineFunction
 modifier|&
 name|mf
-parameter_list|,
-specifier|const
-name|TargetLowering
-modifier|*
-name|TLI
 parameter_list|)
 function_decl|;
 comment|/// clear - Clear state and free memory necessary to make this
@@ -1105,6 +1112,20 @@ name|TM
 return|;
 block|}
 specifier|const
+name|TargetSubtargetInfo
+operator|&
+name|getSubtarget
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MF
+operator|->
+name|getSubtarget
+argument_list|()
+return|;
+block|}
+specifier|const
 name|TargetLowering
 operator|&
 name|getTargetLoweringInfo
@@ -1124,6 +1145,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|*
 name|TSI
 return|;
 block|}
@@ -1466,6 +1488,43 @@ name|void
 name|Legalize
 parameter_list|()
 function_decl|;
+comment|/// \brief Transforms a SelectionDAG node and any operands to it into a node
+comment|/// that is compatible with the target instruction selector, as indicated by
+comment|/// the TargetLowering object.
+comment|///
+comment|/// \returns true if \c N is a valid, legal node after calling this.
+comment|///
+comment|/// This essentially runs a single recursive walk of the \c Legalize process
+comment|/// over the given node (and its operands). This can be used to incrementally
+comment|/// legalize the DAG. All of the nodes which are directly replaced,
+comment|/// potentially including N, are added to the output parameter \c
+comment|/// UpdatedNodes so that the delta to the DAG can be understood by the
+comment|/// caller.
+comment|///
+comment|/// When this returns false, N has been legalized in a way that make the
+comment|/// pointer passed in no longer valid. It may have even been deleted from the
+comment|/// DAG, and so it shouldn't be used further. When this returns true, the
+comment|/// N passed in is a legal node, and can be immediately processed as such.
+comment|/// This may still have done some work on the DAG, and will still populate
+comment|/// UpdatedNodes with any new nodes replacing those originally in the DAG.
+name|bool
+name|LegalizeOp
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|,
+name|SmallSetVector
+operator|<
+name|SDNode
+operator|*
+argument_list|,
+literal|16
+operator|>
+operator|&
+name|UpdatedNodes
+argument_list|)
+decl_stmt|;
 comment|/// LegalizeVectors - This transforms the SelectionDAG into a SelectionDAG
 comment|/// that only uses vector math operations supported by the target.  This is
 comment|/// necessary as a separate step from Legalize because unrolling a vector
@@ -3894,7 +3953,7 @@ name|Align
 parameter_list|)
 function_decl|;
 comment|/// getAtomicCmpSwap - Gets a node for an atomic cmpxchg op. There are two
-comment|/// valid Opcodes. ISD::ATOMIC_CMO_SWAP produces a the value loaded and a
+comment|/// valid Opcodes. ISD::ATOMIC_CMO_SWAP produces the value loaded and a
 comment|/// chain result. ISD::ATOMIC_CMP_SWAP_WITH_SUCCESS produces the value loaded,
 comment|/// a success flag (initially i1), and a chain.
 name|SDValue
@@ -4201,6 +4260,11 @@ name|bool
 name|WriteMem
 operator|=
 name|true
+argument_list|,
+name|unsigned
+name|Size
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 name|SDValue
@@ -4277,11 +4341,12 @@ name|unsigned
 name|Alignment
 parameter_list|,
 specifier|const
-name|MDNode
-modifier|*
-name|TBAAInfo
+name|AAMDNodes
+modifier|&
+name|AAInfo
 init|=
-name|nullptr
+name|AAMDNodes
+argument_list|()
 parameter_list|,
 specifier|const
 name|MDNode
@@ -4343,15 +4408,19 @@ argument_list|,
 name|bool
 name|isNonTemporal
 argument_list|,
+name|bool
+name|isInvariant
+argument_list|,
 name|unsigned
 name|Alignment
 argument_list|,
 specifier|const
-name|MDNode
-operator|*
-name|TBAAInfo
+name|AAMDNodes
+operator|&
+name|AAInfo
 operator|=
-name|nullptr
+name|AAMDNodes
+argument_list|()
 argument_list|)
 decl_stmt|;
 name|SDValue
@@ -4450,11 +4519,12 @@ name|unsigned
 name|Alignment
 argument_list|,
 specifier|const
-name|MDNode
-operator|*
-name|TBAAInfo
+name|AAMDNodes
+operator|&
+name|AAInfo
 operator|=
-name|nullptr
+name|AAMDNodes
+argument_list|()
 argument_list|,
 specifier|const
 name|MDNode
@@ -4530,11 +4600,12 @@ name|unsigned
 name|Alignment
 parameter_list|,
 specifier|const
-name|MDNode
-modifier|*
-name|TBAAInfo
+name|AAMDNodes
+modifier|&
+name|AAInfo
 init|=
-name|nullptr
+name|AAMDNodes
+argument_list|()
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -4588,11 +4659,12 @@ name|unsigned
 name|Alignment
 parameter_list|,
 specifier|const
-name|MDNode
-modifier|*
-name|TBAAInfo
+name|AAMDNodes
+modifier|&
+name|AAInfo
 init|=
-name|nullptr
+name|AAMDNodes
+argument_list|()
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -4639,6 +4711,55 @@ name|MemIndexedMode
 name|AM
 argument_list|)
 decl_stmt|;
+name|SDValue
+name|getMaskedLoad
+parameter_list|(
+name|EVT
+name|VT
+parameter_list|,
+name|SDLoc
+name|dl
+parameter_list|,
+name|SDValue
+name|Chain
+parameter_list|,
+name|SDValue
+name|Ptr
+parameter_list|,
+name|SDValue
+name|Mask
+parameter_list|,
+name|SDValue
+name|Src0
+parameter_list|,
+name|MachineMemOperand
+modifier|*
+name|MMO
+parameter_list|)
+function_decl|;
+name|SDValue
+name|getMaskedStore
+parameter_list|(
+name|SDValue
+name|Chain
+parameter_list|,
+name|SDLoc
+name|dl
+parameter_list|,
+name|SDValue
+name|Val
+parameter_list|,
+name|SDValue
+name|Ptr
+parameter_list|,
+name|SDValue
+name|Mask
+parameter_list|,
+name|MachineMemOperand
+modifier|*
+name|MMO
+parameter_list|)
+function_decl|;
 comment|/// getSrcValue - Construct a node to track a Value* through the backend.
 name|SDValue
 name|getSrcValue
@@ -5587,13 +5708,18 @@ argument_list|)
 decl_stmt|;
 comment|/// getDbgValue - Creates a SDDbgValue node.
 comment|///
+comment|/// SDNode
 name|SDDbgValue
 modifier|*
 name|getDbgValue
 parameter_list|(
 name|MDNode
 modifier|*
-name|MDPtr
+name|Var
+parameter_list|,
+name|MDNode
+modifier|*
+name|Expr
 parameter_list|,
 name|SDNode
 modifier|*
@@ -5615,14 +5741,18 @@ name|unsigned
 name|O
 parameter_list|)
 function_decl|;
-comment|/// Constant.
+comment|/// Constant
 name|SDDbgValue
 modifier|*
 name|getConstantDbgValue
 parameter_list|(
 name|MDNode
 modifier|*
-name|MDPtr
+name|Var
+parameter_list|,
+name|MDNode
+modifier|*
+name|Expr
 parameter_list|,
 specifier|const
 name|Value
@@ -5639,14 +5769,18 @@ name|unsigned
 name|O
 parameter_list|)
 function_decl|;
-comment|/// Frame index.
+comment|/// FrameIndex
 name|SDDbgValue
 modifier|*
 name|getFrameIndexDbgValue
 parameter_list|(
 name|MDNode
 modifier|*
-name|MDPtr
+name|Var
+parameter_list|,
+name|MDNode
+modifier|*
+name|Expr
 parameter_list|,
 name|unsigned
 name|FI
@@ -5895,6 +6029,16 @@ case|case
 name|ISD
 operator|::
 name|ADDE
+case|:
+case|case
+name|ISD
+operator|::
+name|FMINNUM
+case|:
+case|case
+name|ISD
+operator|::
+name|FMAXNUM
 case|:
 return|return
 name|true
@@ -6536,6 +6680,14 @@ decl|const
 decl_stmt|;
 name|private
 label|:
+name|void
+name|InsertNode
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 name|bool
 name|RemoveNodeFromCSEMaps
 parameter_list|(

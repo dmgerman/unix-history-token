@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MSP430MACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_MSP430_MSP430MACHINEFUNCTIONINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MSP430MACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_MSP430_MSP430MACHINEFUNCTIONINFO_H
 end_define
 
 begin_include

@@ -81,6 +81,12 @@ directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Options.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -179,7 +185,32 @@ comment|// "tbaa.struct"
 name|MD_invariant_load
 init|=
 literal|6
+block|,
 comment|// "invariant.load"
+name|MD_alias_scope
+init|=
+literal|7
+block|,
+comment|// "alias.scope"
+name|MD_noalias
+init|=
+literal|8
+block|,
+comment|// "noalias",
+name|MD_nontemporal
+init|=
+literal|9
+block|,
+comment|// "nontemporal"
+name|MD_mem_parallel_loop_access
+init|=
+literal|10
+block|,
+comment|// "llvm.mem.parallel_loop_access"
+name|MD_nonnull
+init|=
+literal|11
+comment|// "nonnull"
 block|}
 enum|;
 comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.
@@ -301,7 +332,8 @@ expr_stmt|;
 comment|/// setDiagnosticHandler - This method sets a handler that is invoked
 comment|/// when the backend needs to report anything to the user.  The first
 comment|/// argument is a function pointer and the second is a context pointer that
-comment|/// gets passed into the DiagHandler.
+comment|/// gets passed into the DiagHandler.  The third argument should be set to
+comment|/// true if the handler only expects enabled diagnostics.
 comment|///
 comment|/// LLVMContext doesn't take ownership or interpret either of these
 comment|/// pointers.
@@ -316,6 +348,11 @@ modifier|*
 name|DiagContext
 init|=
 name|nullptr
+parameter_list|,
+name|bool
+name|RespectFilters
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// getDiagnosticHandler - Return the diagnostic handler set by
@@ -333,14 +370,16 @@ name|getDiagnosticContext
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// diagnose - Report a message to the currently installed diagnostic handler.
+comment|/// \brief Report a message to the currently installed diagnostic handler.
+comment|///
 comment|/// This function returns, in particular in the case of error reporting
-comment|/// (DI.Severity == RS_Error), so the caller should leave the compilation
+comment|/// (DI.Severity == \a DS_Error), so the caller should leave the compilation
 comment|/// process in a self-consistent state, even though the generated code
 comment|/// need not be correct.
-comment|/// The diagnostic message will be implicitly prefixed with a severity
-comment|/// keyword according to \p DI.getSeverity(), i.e., "error: "
-comment|/// for RS_Error, "warning: " for RS_Warning, and "note: " for RS_Note.
+comment|///
+comment|/// The diagnostic message will be implicitly prefixed with a severity keyword
+comment|/// according to \p DI.getSeverity(), i.e., "error: " for \a DS_Error,
+comment|/// "warning: " for \a DS_Warning, and "note: " for \a DS_Note.
 name|void
 name|diagnose
 parameter_list|(
@@ -427,6 +466,49 @@ modifier|&
 name|ErrorStr
 parameter_list|)
 function_decl|;
+comment|/// \brief Query for a debug option's value.
+comment|///
+comment|/// This function returns typed data populated from command line parsing.
+name|template
+operator|<
+name|typename
+name|ValT
+operator|,
+name|typename
+name|Base
+operator|,
+name|ValT
+argument_list|(
+name|Base
+operator|::
+operator|*
+name|Mem
+argument_list|)
+operator|>
+name|ValT
+name|getOption
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OptionRegistry
+operator|::
+name|instance
+argument_list|()
+operator|.
+name|template
+name|get
+operator|<
+name|ValT
+operator|,
+name|Base
+operator|,
+name|Mem
+operator|>
+operator|(
+operator|)
+return|;
+block|}
 name|private
 label|:
 name|LLVMContext

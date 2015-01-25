@@ -78,20 +78,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ANALYSIS_CGSCC_PASS_MANAGER_H
+name|LLVM_ANALYSIS_CGSCCPASSMANAGER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ANALYSIS_CGSCC_PASS_MANAGER_H
+name|LLVM_ANALYSIS_CGSCCPASSMANAGER_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/PassManager.h"
-end_include
 
 begin_include
 include|#
@@ -99,528 +93,45 @@ directive|include
 file|"llvm/Analysis/LazyCallGraph.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/PassManager.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|CGSCCAnalysisManager
-decl_stmt|;
-name|class
-name|CGSCCPassManager
-block|{
-name|public
-label|:
-comment|// We have to explicitly define all the special member functions because MSVC
-comment|// refuses to generate them.
-name|CGSCCPassManager
-argument_list|()
-block|{}
-name|CGSCCPassManager
-argument_list|(
-name|CGSCCPassManager
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|Passes
-argument_list|(
-argument|std::move(Arg.Passes)
-argument_list|)
-block|{}
-name|CGSCCPassManager
-operator|&
-name|operator
-operator|=
-operator|(
-name|CGSCCPassManager
-operator|&&
-name|RHS
-operator|)
-block|{
-name|Passes
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|Passes
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-comment|/// \brief Run all of the CGSCC passes in this pass manager over a SCC.
-name|PreservedAnalyses
-name|run
-argument_list|(
-name|LazyCallGraph
-operator|::
-name|SCC
-operator|*
-name|C
-argument_list|,
-name|CGSCCAnalysisManager
-operator|*
-name|AM
-operator|=
-name|nullptr
-argument_list|)
-decl_stmt|;
-name|template
-operator|<
-name|typename
-name|CGSCCPassT
-operator|>
-name|void
-name|addPass
-argument_list|(
-argument|CGSCCPassT Pass
-argument_list|)
-block|{
-name|Passes
-operator|.
-name|emplace_back
-argument_list|(
-argument|new CGSCCPassModel<CGSCCPassT>(std::move(Pass))
-argument_list|)
-block|;   }
-specifier|static
-name|StringRef
-name|name
-argument_list|()
-block|{
-return|return
-literal|"CGSCCPassManager"
-return|;
-block|}
-name|private
-label|:
-comment|// Pull in the concept type and model template specialized for SCCs.
-typedef|typedef
-name|detail
-operator|::
-name|PassConcept
-operator|<
-name|LazyCallGraph
-operator|::
-name|SCC
-operator|*
-operator|,
-name|CGSCCAnalysisManager
-operator|>
-name|CGSCCPassConcept
-expr_stmt|;
-name|template
-operator|<
-name|typename
-name|PassT
-operator|>
-expr|struct
-name|CGSCCPassModel
-operator|:
-name|detail
-operator|::
-name|PassModel
-operator|<
-name|LazyCallGraph
-operator|::
-name|SCC
-operator|*
-operator|,
-name|CGSCCAnalysisManager
-operator|,
-name|PassT
-operator|>
-block|{
-name|CGSCCPassModel
-argument_list|(
-argument|PassT Pass
-argument_list|)
-operator|:
-name|detail
-operator|::
-name|PassModel
-operator|<
-name|LazyCallGraph
-operator|::
-name|SCC
-operator|*
-block|,
-name|CGSCCAnalysisManager
-block|,
-name|PassT
-operator|>
-operator|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Pass
-argument_list|)
-operator|)
-block|{}
-block|}
-expr_stmt|;
-name|CGSCCPassManager
-argument_list|(
-argument|const CGSCCPassManager&
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-expr_stmt|;
-name|CGSCCPassManager
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|CGSCCPassManager
-operator|&
-operator|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|CGSCCPassConcept
-operator|>>
-name|Passes
-expr_stmt|;
-block|}
-empty_stmt|;
-comment|/// \brief A function analysis manager to coordinate and cache analyses run over
-comment|/// a module.
-name|class
-name|CGSCCAnalysisManager
-range|:
-name|public
-name|detail
-operator|::
-name|AnalysisManagerBase
-operator|<
-name|CGSCCAnalysisManager
-decl_stmt|,
-name|LazyCallGraph
-decl|::
-name|SCC
-modifier|*
-decl|>
-block|{
-name|friend
-name|class
-name|detail
-operator|::
-name|AnalysisManagerBase
-operator|<
-name|CGSCCAnalysisManager
-operator|,
-name|LazyCallGraph
-operator|::
-name|SCC
-operator|*
-operator|>
-expr_stmt|;
-typedef|typedef
-name|detail
-operator|::
-name|AnalysisManagerBase
-operator|<
-name|CGSCCAnalysisManager
-operator|,
-name|LazyCallGraph
-operator|::
-name|SCC
-operator|*
-operator|>
-name|BaseT
-expr_stmt|;
-typedef|typedef
-name|BaseT
-operator|::
-name|ResultConceptT
-name|ResultConceptT
-expr_stmt|;
-typedef|typedef
-name|BaseT
-operator|::
-name|PassConceptT
-name|PassConceptT
-expr_stmt|;
-name|public
-label|:
-comment|// Most public APIs are inherited from the CRTP base class.
-comment|// We have to explicitly define all the special member functions because MSVC
-comment|// refuses to generate them.
-name|CGSCCAnalysisManager
-argument_list|()
-block|{}
-name|CGSCCAnalysisManager
-argument_list|(
-name|CGSCCAnalysisManager
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|BaseT
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|static_cast
-operator|<
-name|BaseT
-operator|&
-operator|>
-operator|(
-name|Arg
-operator|)
-argument_list|)
-argument_list|)
-operator|,
-name|CGSCCAnalysisResults
-argument_list|(
-argument|std::move(Arg.CGSCCAnalysisResults)
-argument_list|)
-block|{}
-name|CGSCCAnalysisManager
-operator|&
-name|operator
-operator|=
-operator|(
-name|CGSCCAnalysisManager
-operator|&&
-name|RHS
-operator|)
-block|{
-name|BaseT
-operator|::
-name|operator
-operator|=
-operator|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|static_cast
-operator|<
-name|BaseT
-operator|&
-operator|>
-operator|(
-name|RHS
-operator|)
-argument_list|)
-operator|)
-block|;
-name|CGSCCAnalysisResults
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|CGSCCAnalysisResults
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-comment|/// \brief Returns true if the analysis manager has an empty results cache.
-name|bool
-name|empty
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// \brief Clear the function analysis result cache.
+comment|/// \brief The CGSCC pass manager.
 comment|///
-comment|/// This routine allows cleaning up when the set of functions itself has
-comment|/// potentially changed, and thus we can't even look up a a result and
-comment|/// invalidate it directly. Notably, this does *not* call invalidate
-comment|/// functions as there is nothing to be done for them.
-name|void
-name|clear
-parameter_list|()
-function_decl|;
-name|private
-label|:
-name|CGSCCAnalysisManager
-argument_list|(
-argument|const CGSCCAnalysisManager&
-argument_list|)
-name|LLVM_DELETED_FUNCTION
+comment|/// See the documentation for the PassManager template for details. It runs
+comment|/// a sequency of SCC passes over each SCC that the manager is run over. This
+comment|/// typedef serves as a convenient way to refer to this construct.
+typedef|typedef
+name|PassManager
+operator|<
+name|LazyCallGraph
+operator|::
+name|SCC
+operator|>
+name|CGSCCPassManager
 expr_stmt|;
-name|CGSCCAnalysisManager
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|CGSCCAnalysisManager
-operator|&
-operator|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
-comment|/// \brief Get a function pass result, running the pass if necessary.
-name|ResultConceptT
-modifier|&
-name|getResultImpl
-argument_list|(
-name|void
-operator|*
-name|PassID
-argument_list|,
-name|LazyCallGraph
-operator|::
-name|SCC
-operator|*
-name|C
-argument_list|)
-decl_stmt|;
-comment|/// \brief Get a cached function pass result or return null.
-name|ResultConceptT
-modifier|*
-name|getCachedResultImpl
-argument_list|(
-name|void
-operator|*
-name|PassID
-argument_list|,
-name|LazyCallGraph
-operator|::
-name|SCC
-operator|*
-name|C
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Invalidate a function pass result.
-name|void
-name|invalidateImpl
-argument_list|(
-name|void
-operator|*
-name|PassID
-argument_list|,
-name|LazyCallGraph
-operator|::
-name|SCC
-operator|*
-name|C
-argument_list|)
-decl_stmt|;
-comment|/// \brief Invalidate the results for a function..
-name|void
-name|invalidateImpl
-argument_list|(
-name|LazyCallGraph
-operator|::
-name|SCC
-operator|*
-name|C
-argument_list|,
-specifier|const
-name|PreservedAnalyses
-operator|&
-name|PA
-argument_list|)
-decl_stmt|;
-comment|/// \brief List of function analysis pass IDs and associated concept pointers.
+comment|/// \brief The CGSCC analysis manager.
 comment|///
-comment|/// Requires iterators to be valid across appending new entries and arbitrary
-comment|/// erases. Provides both the pass ID and concept pointer such that it is
-comment|/// half of a bijection and provides storage for the actual result concept.
+comment|/// See the documentation for the AnalysisManager template for detail
+comment|/// documentation. This typedef serves as a convenient way to refer to this
+comment|/// construct in the adaptors and proxies used to integrate this into the larger
+comment|/// pass manager infrastructure.
 typedef|typedef
-name|std
-operator|::
-name|list
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|void
-operator|*
-operator|,
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|detail
-operator|::
-name|AnalysisResultConcept
+name|AnalysisManager
 operator|<
 name|LazyCallGraph
 operator|::
 name|SCC
-operator|*
-operator|>>>
 operator|>
-name|CGSCCAnalysisResultListT
+name|CGSCCAnalysisManager
 expr_stmt|;
-comment|/// \brief Map type from function pointer to our custom list type.
-typedef|typedef
-name|DenseMap
-operator|<
-name|LazyCallGraph
-operator|::
-name|SCC
-operator|*
-operator|,
-name|CGSCCAnalysisResultListT
-operator|>
-name|CGSCCAnalysisResultListMapT
-expr_stmt|;
-comment|/// \brief Map from function to a list of function analysis results.
-comment|///
-comment|/// Provides linear time removal of all analysis results for a function and
-comment|/// the ultimate storage for a particular cached analysis result.
-name|CGSCCAnalysisResultListMapT
-name|CGSCCAnalysisResultLists
-decl_stmt|;
-comment|/// \brief Map type from a pair of analysis ID and function pointer to an
-comment|/// iterator into a particular result list.
-typedef|typedef
-name|DenseMap
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|void
-operator|*
-operator|,
-name|LazyCallGraph
-operator|::
-name|SCC
-operator|*
-operator|>
-operator|,
-name|CGSCCAnalysisResultListT
-operator|::
-name|iterator
-operator|>
-name|CGSCCAnalysisResultMapT
-expr_stmt|;
-comment|/// \brief Map from an analysis ID and function to a particular cached
-comment|/// analysis result.
-name|CGSCCAnalysisResultMapT
-name|CGSCCAnalysisResults
-decl_stmt|;
-block|}
-empty_stmt|;
 comment|/// \brief A module analysis which acts as a proxy for a CGSCC analysis
 comment|/// manager.
 comment|///
@@ -733,7 +244,7 @@ name|bool
 name|invalidate
 parameter_list|(
 name|Module
-modifier|*
+modifier|&
 name|M
 parameter_list|,
 specifier|const
@@ -763,6 +274,15 @@ operator|*
 operator|)
 operator|&
 name|PassID
+return|;
+block|}
+specifier|static
+name|StringRef
+name|name
+parameter_list|()
+block|{
+return|return
+literal|"CGSCCAnalysisManagerModuleProxy"
 return|;
 block|}
 name|explicit
@@ -843,7 +363,7 @@ name|Result
 name|run
 parameter_list|(
 name|Module
-modifier|*
+modifier|&
 name|M
 parameter_list|)
 function_decl|;
@@ -967,7 +487,7 @@ argument_list|(
 name|LazyCallGraph
 operator|::
 name|SCC
-operator|*
+operator|&
 argument_list|)
 block|{
 return|return
@@ -996,6 +516,15 @@ operator|*
 operator|)
 operator|&
 name|PassID
+return|;
+block|}
+specifier|static
+name|StringRef
+name|name
+parameter_list|()
+block|{
+return|return
+literal|"ModuleAnalysisManagerCGSCCProxy"
 return|;
 block|}
 name|ModuleAnalysisManagerCGSCCProxy
@@ -1072,7 +601,7 @@ argument_list|(
 name|LazyCallGraph
 operator|::
 name|SCC
-operator|*
+operator|&
 argument_list|)
 block|{
 return|return
@@ -1204,7 +733,7 @@ comment|/// \brief Runs the CGSCC pass across every SCC in the module.
 name|PreservedAnalyses
 name|run
 argument_list|(
-argument|Module *M
+argument|Module&M
 argument_list|,
 argument|ModuleAnalysisManager *AM
 argument_list|)
@@ -1278,7 +807,6 @@ name|Pass
 operator|.
 name|run
 argument_list|(
-operator|&
 name|C
 argument_list|,
 operator|&
@@ -1287,18 +815,26 @@ argument_list|)
 decl_stmt|;
 comment|// We know that the CGSCC pass couldn't have invalidated any other
 comment|// SCC's analyses (that's the contract of a CGSCC pass), so
-comment|// directly handle the CGSCC analysis manager's invalidation here.
+comment|// directly handle the CGSCC analysis manager's invalidation here. We
+comment|// also update the preserved set of analyses to reflect that invalidated
+comment|// analyses are now safe to preserve.
 comment|// FIXME: This isn't quite correct. We need to handle the case where the
 comment|// pass updated the CG, particularly some child of the current SCC, and
 comment|// invalidate its analyses.
+name|PassPA
+operator|=
 name|CGAM
 operator|.
 name|invalidate
 argument_list|(
-operator|&
 name|C
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|PassPA
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|// Then intersect the preserved set so that invalidation of module
@@ -1538,7 +1074,7 @@ argument_list|(
 name|LazyCallGraph
 operator|::
 name|SCC
-operator|*
+operator|&
 name|C
 argument_list|,
 specifier|const
@@ -1568,6 +1104,15 @@ operator|*
 operator|)
 operator|&
 name|PassID
+return|;
+block|}
+specifier|static
+name|StringRef
+name|name
+parameter_list|()
+block|{
+return|return
+literal|"FunctionAnalysisManagerCGSCCProxy"
 return|;
 block|}
 name|explicit
@@ -1650,7 +1195,7 @@ argument_list|(
 name|LazyCallGraph
 operator|::
 name|SCC
-operator|*
+operator|&
 name|C
 argument_list|)
 decl_stmt|;
@@ -1814,7 +1359,7 @@ name|bool
 name|invalidate
 parameter_list|(
 name|Function
-modifier|*
+modifier|&
 parameter_list|)
 block|{
 return|return
@@ -1843,6 +1388,15 @@ operator|*
 operator|)
 operator|&
 name|PassID
+return|;
+block|}
+specifier|static
+name|StringRef
+name|name
+parameter_list|()
+block|{
+return|return
+literal|"CGSCCAnalysisManagerFunctionProxy"
 return|;
 block|}
 name|CGSCCAnalysisManagerFunctionProxy
@@ -1917,7 +1471,7 @@ name|Result
 name|run
 parameter_list|(
 name|Function
-modifier|*
+modifier|&
 parameter_list|)
 block|{
 return|return
@@ -2078,7 +1632,7 @@ comment|/// \brief Runs the function pass across every function in the module.
 name|PreservedAnalyses
 name|run
 argument_list|(
-argument|LazyCallGraph::SCC *C
+argument|LazyCallGraph::SCC&C
 argument_list|,
 argument|CGSCCAnalysisManager *AM
 argument_list|)
@@ -2129,7 +1683,6 @@ name|Node
 operator|*
 name|N
 operator|:
-operator|*
 name|C
 control|)
 block|{
@@ -2140,7 +1693,6 @@ name|Pass
 operator|.
 name|run
 argument_list|(
-operator|&
 name|N
 operator|->
 name|getFunction
@@ -2152,21 +1704,29 @@ decl_stmt|;
 comment|// We know that the function pass couldn't have invalidated any other
 comment|// function's analyses (that's the contract of a function pass), so
 comment|// directly handle the function analysis manager's invalidation here.
+comment|// Also, update the preserved analyses to reflect that once invalidated
+comment|// these can again be preserved.
 if|if
 condition|(
 name|FAM
 condition|)
+name|PassPA
+operator|=
 name|FAM
 operator|->
 name|invalidate
 argument_list|(
-operator|&
 name|N
 operator|->
 name|getFunction
 argument_list|()
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|PassPA
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|// Then intersect the preserved set so that invalidation of module

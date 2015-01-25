@@ -290,13 +290,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86DISASSEMBLER_H
+name|LLVM_LIB_TARGET_X86_DISASSEMBLER_X86DISASSEMBLER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86DISASSEMBLER_H
+name|LLVM_LIB_TARGET_X86_DISASSEMBLER_X86DISASSEMBLER_H
 end_define
 
 begin_include
@@ -333,9 +333,9 @@ decl_stmt|;
 name|namespace
 name|X86Disassembler
 block|{
-comment|/// X86GenericDisassembler - Generic disassembler for all X86 platforms.
-comment|///   All each platform class should have to do is subclass the constructor, and
-comment|///   provide a different disassemblerMode value.
+comment|/// Generic disassembler for all X86 platforms. All each platform class should
+comment|/// have to do is subclass the constructor, and provide a different
+comment|/// disassemblerMode value.
 name|class
 name|X86GenericDisassembler
 range|:
@@ -353,8 +353,6 @@ name|MII
 block|;
 name|public
 operator|:
-comment|/// Constructor     - Initializes the disassembler.
-comment|///
 name|X86GenericDisassembler
 argument_list|(
 specifier|const
@@ -378,7 +376,6 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// getInstruction - See MCDisassembler.
 name|DecodeStatus
 name|getInstruction
 argument_list|(
@@ -386,9 +383,9 @@ argument|MCInst&instr
 argument_list|,
 argument|uint64_t&size
 argument_list|,
-argument|const MemoryObject&region
+argument|ArrayRef<uint8_t> Bytes
 argument_list|,
-argument|uint64_t address
+argument|uint64_t Address
 argument_list|,
 argument|raw_ostream&vStream
 argument_list|,

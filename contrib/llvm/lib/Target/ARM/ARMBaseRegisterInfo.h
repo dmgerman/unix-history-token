@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARMBASEREGISTERINFO_H
+name|LLVM_LIB_TARGET_ARM_ARMBASEREGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARMBASEREGISTERINFO_H
+name|LLVM_LIB_TARGET_ARM_ARMBASEREGISTERINFO_H
 end_define
 
 begin_include
@@ -655,12 +655,6 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Code Generation virtual methods...
-name|bool
-name|mayOverrideLocalAssignment
-argument_list|()
-specifier|const
-name|override
-block|;
 name|bool
 name|requiresRegisterScavenging
 argument_list|(

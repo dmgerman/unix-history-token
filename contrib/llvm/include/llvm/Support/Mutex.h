@@ -188,10 +188,10 @@ name|mt_only
 operator|>
 name|class
 name|SmartMutex
-operator|:
-name|public
-name|MutexImpl
 block|{
+name|MutexImpl
+name|impl
+block|;
 name|unsigned
 name|acquired
 block|;
@@ -206,7 +206,7 @@ argument_list|(
 argument|bool rec = true
 argument_list|)
 operator|:
-name|MutexImpl
+name|impl
 argument_list|(
 name|rec
 argument_list|)
@@ -222,7 +222,7 @@ argument|rec
 argument_list|)
 block|{ }
 name|bool
-name|acquire
+name|lock
 argument_list|()
 block|{
 if|if
@@ -235,8 +235,8 @@ argument_list|()
 condition|)
 block|{
 return|return
-name|MutexImpl
-operator|::
+name|impl
+operator|.
 name|acquire
 argument_list|()
 return|;
@@ -268,7 +268,7 @@ return|;
 block|}
 block|}
 name|bool
-name|release
+name|unlock
 argument_list|()
 block|{
 if|if
@@ -281,8 +281,8 @@ argument_list|()
 condition|)
 block|{
 return|return
-name|MutexImpl
-operator|::
+name|impl
+operator|.
 name|release
 argument_list|()
 return|;
@@ -320,7 +320,7 @@ return|;
 block|}
 block|}
 name|bool
-name|tryacquire
+name|try_lock
 argument_list|()
 block|{
 if|if
@@ -332,8 +332,8 @@ name|llvm_is_multithreaded
 argument_list|()
 condition|)
 return|return
-name|MutexImpl
-operator|::
+name|impl
+operator|.
 name|tryacquire
 argument_list|()
 return|;
@@ -410,7 +410,7 @@ argument_list|)
 block|{
 name|mtx
 operator|.
-name|acquire
+name|lock
 argument_list|()
 block|;       }
 operator|~
@@ -419,7 +419,7 @@ argument_list|()
 block|{
 name|mtx
 operator|.
-name|release
+name|unlock
 argument_list|()
 block|;       }
 block|}

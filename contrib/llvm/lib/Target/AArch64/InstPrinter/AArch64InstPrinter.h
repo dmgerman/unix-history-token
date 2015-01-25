@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AArch64INSTPRINTER_H
+name|LLVM_LIB_TARGET_AARCH64_INSTPRINTER_AARCH64INSTPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AArch64INSTPRINTER_H
+name|LLVM_LIB_TARGET_AARCH64_INSTPRINTER_AARCH64INSTPRINTER_H
 end_define
 
 begin_include
@@ -745,7 +745,6 @@ argument|raw_ostream&O
 argument_list|)
 name|override
 block|;
-name|virtual
 name|void
 name|printCustomAliasOperand
 argument_list|(
@@ -757,6 +756,7 @@ argument|unsigned PrintMethodIdx
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
+name|override
 block|;
 name|StringRef
 name|getRegName

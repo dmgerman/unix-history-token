@@ -182,32 +182,6 @@ expr_stmt|;
 name|StringMapType
 name|PassInfoStringMap
 decl_stmt|;
-comment|/// AnalysisGroupInfo - Keep track of information for each analysis group.
-struct|struct
-name|AnalysisGroupInfo
-block|{
-name|SmallPtrSet
-operator|<
-specifier|const
-name|PassInfo
-operator|*
-operator|,
-literal|8
-operator|>
-name|Implementations
-expr_stmt|;
-block|}
-struct|;
-name|DenseMap
-operator|<
-specifier|const
-name|PassInfo
-operator|*
-operator|,
-name|AnalysisGroupInfo
-operator|>
-name|AnalysisGroupInfoMap
-expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -234,7 +208,7 @@ name|public
 label|:
 name|PassRegistry
 argument_list|()
-block|{ }
+block|{}
 operator|~
 name|PassRegistry
 argument_list|()
@@ -288,17 +262,6 @@ name|bool
 name|ShouldFree
 init|=
 name|false
-parameter_list|)
-function_decl|;
-comment|/// registerPass - Unregister a pass (by means of its PassInfo) with the
-comment|/// registry.
-name|void
-name|unregisterPass
-parameter_list|(
-specifier|const
-name|PassInfo
-modifier|&
-name|PI
 parameter_list|)
 function_decl|;
 comment|/// registerAnalysisGroup - Register an analysis group (or a pass implementing

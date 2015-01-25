@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86_INST_COMMENTS_H
+name|LLVM_LIB_TARGET_X86_INSTPRINTER_X86INSTCOMMENTS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86_INST_COMMENTS_H
+name|LLVM_LIB_TARGET_X86_INSTPRINTER_X86INSTCOMMENTS_H
 end_define
 
 begin_decl_stmt
@@ -73,7 +73,7 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-name|void
+name|bool
 name|EmitAnyX86InstComments
 parameter_list|(
 specifier|const

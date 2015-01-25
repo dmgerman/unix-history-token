@@ -412,6 +412,9 @@ operator|.
 name|getTarget
 argument_list|()
 operator|.
+name|getSubtargetImpl
+argument_list|()
+operator|->
 name|getDataLayout
 argument_list|()
 operator|->
@@ -428,6 +431,9 @@ operator|.
 name|getTarget
 argument_list|()
 operator|.
+name|getSubtargetImpl
+argument_list|()
+operator|->
 name|getDataLayout
 argument_list|()
 operator|->
@@ -737,6 +743,9 @@ operator|.
 name|getTarget
 argument_list|()
 operator|.
+name|getSubtargetImpl
+argument_list|()
+operator|->
 name|getDataLayout
 argument_list|()
 operator|->
@@ -753,6 +762,9 @@ operator|.
 name|getTarget
 argument_list|()
 operator|.
+name|getSubtargetImpl
+argument_list|()
+operator|->
 name|getDataLayout
 argument_list|()
 operator|->

@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SYSTEM_MD5_H
+name|LLVM_SUPPORT_MD5_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SYSTEM_MD5_H
+name|LLVM_SUPPORT_MD5_H
 end_define
 
 begin_include
@@ -108,7 +108,7 @@ name|final
 parameter_list|(
 name|MD5Result
 modifier|&
-name|result
+name|Result
 parameter_list|)
 function_decl|;
 comment|/// \brief Translates the bytes in \p Res to a hex string that is
@@ -119,7 +119,7 @@ name|stringifyResult
 argument_list|(
 name|MD5Result
 operator|&
-name|Res
+name|Result
 argument_list|,
 name|SmallString
 operator|<

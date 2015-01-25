@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringSwitch.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/StringSwitch.h"
 end_include
 
 begin_include
@@ -175,7 +175,7 @@ specifier|inline
 name|bool
 name|isValidMCLOHType
 parameter_list|(
-name|MCLOHType
+name|unsigned
 name|Kind
 parameter_list|)
 block|{

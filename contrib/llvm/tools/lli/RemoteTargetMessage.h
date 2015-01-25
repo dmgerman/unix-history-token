@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLI_REMOTETARGETMESSAGE_H
+name|LLVM_TOOLS_LLI_REMOTETARGETMESSAGE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLI_REMOTETARGETMESSAGE_H
+name|LLVM_TOOLS_LLI_REMOTETARGETMESSAGE_H
 end_define
 
 begin_decl_stmt

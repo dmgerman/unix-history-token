@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|BUGPOINT_LIST_REDUCER_H
+name|LLVM_TOOLS_BUGPOINT_LISTREDUCER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|BUGPOINT_LIST_REDUCER_H
+name|LLVM_TOOLS_BUGPOINT_LISTREDUCER_H
 end_define
 
 begin_include

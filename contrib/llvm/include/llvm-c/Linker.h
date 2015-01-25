@@ -33,21 +33,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-typedef|typedef
-enum|enum
-block|{
-name|LLVMLinkerDestroySource
-init|=
-literal|0
-block|,
-comment|/* Allow source module to be destroyed. */
-name|LLVMLinkerPreserveSource
-init|=
-literal|1
-comment|/* Preserve the source module. */
-block|}
-name|LLVMLinkerMode
-typedef|;
 comment|/* Links the source module into the destination module, taking ownership  * of the source module away from the caller. Optionally returns a  * human-readable description of any errors that occurred in linking.  * OutMessage must be disposed with LLVMDisposeMessage. The return value  * is true if an error occurred, false otherwise. */
 name|LLVMBool
 name|LLVMLinkModules
@@ -58,8 +43,8 @@ parameter_list|,
 name|LLVMModuleRef
 name|Src
 parameter_list|,
-name|LLVMLinkerMode
-name|Mode
+name|unsigned
+name|Unused
 parameter_list|,
 name|char
 modifier|*

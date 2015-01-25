@@ -433,6 +433,26 @@ name|COPYSIGN_F128
 block|,
 name|COPYSIGN_PPCF128
 block|,
+name|FMIN_F32
+block|,
+name|FMIN_F64
+block|,
+name|FMIN_F80
+block|,
+name|FMIN_F128
+block|,
+name|FMIN_PPCF128
+block|,
+name|FMAX_F32
+block|,
+name|FMAX_F64
+block|,
+name|FMAX_F80
+block|,
+name|FMAX_F128
+block|,
+name|FMAX_PPCF128
+block|,
 comment|// CONVERSION
 name|FPEXT_F64_F128
 block|,

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_ATTRKINDS_H
+name|LLVM_CLANG_BASIC_ATTRKINDS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_ATTRKINDS_H
+name|LLVM_CLANG_BASIC_ATTRKINDS_H
 end_define
 
 begin_decl_stmt

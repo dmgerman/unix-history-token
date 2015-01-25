@@ -223,26 +223,28 @@ comment|/// Parses the special case list from a file. If Path is empty, returns
 comment|/// an empty special case list. On failure, returns 0 and writes an error
 comment|/// message to string.
 specifier|static
-name|SpecialCaseList
-modifier|*
-name|create
-argument_list|(
-specifier|const
-name|StringRef
-name|Path
-argument_list|,
 name|std
 operator|::
-name|string
-operator|&
-name|Error
+name|unique_ptr
+operator|<
+name|SpecialCaseList
+operator|>
+name|create
+argument_list|(
+argument|StringRef Path
+argument_list|,
+argument|std::string&Error
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// Parses the special case list from a memory buffer. On failure, returns
 comment|/// 0 and writes an error message to string.
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|SpecialCaseList
-modifier|*
+operator|>
 name|create
 argument_list|(
 specifier|const
@@ -256,19 +258,21 @@ name|string
 operator|&
 name|Error
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// Parses the special case list from a file. On failure, reports a fatal
 comment|/// error.
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|SpecialCaseList
-modifier|*
+operator|>
 name|createOrDie
-parameter_list|(
-specifier|const
-name|StringRef
-name|Path
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|StringRef Path
+argument_list|)
+expr_stmt|;
 operator|~
 name|SpecialCaseList
 argument_list|()
@@ -281,15 +285,12 @@ comment|/// and @Query satisfies a wildcard expression<E>.
 name|bool
 name|inSection
 argument_list|(
-specifier|const
 name|StringRef
 name|Section
 argument_list|,
-specifier|const
 name|StringRef
 name|Query
 argument_list|,
-specifier|const
 name|StringRef
 name|Category
 operator|=

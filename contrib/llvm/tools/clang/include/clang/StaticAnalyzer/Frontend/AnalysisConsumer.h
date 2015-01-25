@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_ANALYSISCONSUMER_H
+name|LLVM_CLANG_STATICANALYZER_FRONTEND_ANALYSISCONSUMER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_ANALYSISCONSUMER_H
+name|LLVM_CLANG_STATICANALYZER_FRONTEND_ANALYSISCONSUMER_H
 end_define
 
 begin_include
@@ -103,6 +103,12 @@ decl_stmt|;
 name|class
 name|DiagnosticsEngine
 decl_stmt|;
+name|class
+name|CodeInjector
+decl_stmt|;
+name|class
+name|CompilerInstance
+decl_stmt|;
 name|namespace
 name|ento
 block|{
@@ -132,34 +138,19 @@ decl_stmt|;
 comment|/// CreateAnalysisConsumer - Creates an ASTConsumer to run various code
 comment|/// analysis passes.  (The set of analyses run is controlled by command-line
 comment|/// options.)
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|AnalysisASTConsumer
-modifier|*
+operator|>
 name|CreateAnalysisConsumer
 argument_list|(
-specifier|const
-name|Preprocessor
+name|CompilerInstance
 operator|&
-name|pp
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|output
-argument_list|,
-name|AnalyzerOptionsRef
-name|opts
-argument_list|,
-name|ArrayRef
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|plugins
+name|CI
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
 comment|// end GR namespace
 block|}

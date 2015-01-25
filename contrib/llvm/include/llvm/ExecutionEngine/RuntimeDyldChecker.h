@@ -34,37 +34,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_RUNTIMEDYLDCHECKER_H
+name|LLVM_EXECUTIONENGINE_RUNTIMEDYLDCHECKER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_RUNTIMEDYLDCHECKER_H
+name|LLVM_EXECUTIONENGINE_RUNTIMEDYLDCHECKER_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"RuntimeDyld.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Debug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
@@ -75,7 +57,19 @@ name|class
 name|MCDisassembler
 decl_stmt|;
 name|class
+name|MemoryBuffer
+decl_stmt|;
+name|class
 name|MCInstPrinter
+decl_stmt|;
+name|class
+name|RuntimeDyld
+decl_stmt|;
+name|class
+name|RuntimeDyldCheckerImpl
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 comment|/// \brief RuntimeDyld invariant checker for verifying that RuntimeDyld has
 comment|///        correctly applied relocations.
@@ -120,10 +114,6 @@ comment|///
 name|class
 name|RuntimeDyldChecker
 block|{
-name|friend
-name|class
-name|RuntimeDyldCheckerExprEval
-decl_stmt|;
 name|public
 label|:
 name|RuntimeDyldChecker
@@ -140,45 +130,39 @@ name|MCInstPrinter
 operator|*
 name|InstPrinter
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|ErrStream
 argument_list|)
-operator|:
-name|RTDyld
-argument_list|(
-operator|*
-name|RTDyld
-operator|.
-name|Dyld
-argument_list|)
-operator|,
-name|Disassembler
-argument_list|(
-name|Disassembler
-argument_list|)
-operator|,
-name|InstPrinter
-argument_list|(
-name|InstPrinter
-argument_list|)
-operator|,
-name|ErrStream
-argument_list|(
-argument|ErrStream
-argument_list|)
-block|{}
+expr_stmt|;
+operator|~
+name|RuntimeDyldChecker
+argument_list|()
+expr_stmt|;
+comment|// \brief Get the associated RTDyld instance.
+name|RuntimeDyld
+modifier|&
+name|getRTDyld
+parameter_list|()
+function_decl|;
+comment|// \brief Get the associated RTDyld instance.
+specifier|const
+name|RuntimeDyld
+operator|&
+name|getRTDyld
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Check a single expression against the attached RuntimeDyld
 comment|///        instance.
 name|bool
 name|check
 argument_list|(
-argument|StringRef CheckExpr
+name|StringRef
+name|CheckExpr
 argument_list|)
-specifier|const
-expr_stmt|;
+decl|const
+decl_stmt|;
 comment|/// \brief Scan the given memory buffer for lines beginning with the string
 comment|///        in RulePrefix. The remainder of the line is passed to the check
 comment|///        method to be evaluated as an expression.
@@ -194,63 +178,40 @@ name|MemBuf
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Returns the address of the requested section (or an error message
+comment|///        in the second element of the pair if the address cannot be found).
+comment|///
+comment|/// if 'LinkerAddress' is true, this returns the address of the section
+comment|/// within the linker's memory. If 'LinkerAddress' is false it returns the
+comment|/// address within the target process (i.e. the load address).
+name|std
+operator|::
+name|pair
+operator|<
+name|uint64_t
+operator|,
+name|std
+operator|::
+name|string
+operator|>
+name|getSectionAddr
+argument_list|(
+argument|StringRef FileName
+argument_list|,
+argument|StringRef SectionName
+argument_list|,
+argument|bool LinkerAddress
+argument_list|)
+expr_stmt|;
 name|private
 label|:
-name|bool
-name|isSymbolValid
-argument_list|(
-name|StringRef
-name|Symbol
-argument_list|)
-decl|const
-decl_stmt|;
-name|uint64_t
-name|getSymbolAddress
-argument_list|(
-name|StringRef
-name|Symbol
-argument_list|)
-decl|const
-decl_stmt|;
-name|uint64_t
-name|readMemoryAtSymbol
-argument_list|(
-name|StringRef
-name|Symbol
-argument_list|,
-name|int64_t
-name|Offset
-argument_list|,
-name|unsigned
-name|Size
-argument_list|)
-decl|const
-decl_stmt|;
-name|StringRef
-name|getSubsectionStartingAt
-argument_list|(
-name|StringRef
-name|Name
-argument_list|)
-decl|const
-decl_stmt|;
-name|RuntimeDyldImpl
-modifier|&
-name|RTDyld
-decl_stmt|;
-name|MCDisassembler
-modifier|*
-name|Disassembler
-decl_stmt|;
-name|MCInstPrinter
-modifier|*
-name|InstPrinter
-decl_stmt|;
-name|llvm
+name|std
 operator|::
-name|raw_ostream
-operator|&
-name|ErrStream
+name|unique_ptr
+operator|<
+name|RuntimeDyldCheckerImpl
+operator|>
+name|Impl
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -265,10 +226,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_RUNTIMEDYLDCHECKER_H
-end_comment
 
 end_unit
 

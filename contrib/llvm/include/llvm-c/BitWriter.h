@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_C_BITCODEWRITER_H
+name|LLVM_C_BITWRITER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_C_BITCODEWRITER_H
+name|LLVM_C_BITWRITER_H
 end_define
 
 begin_include
@@ -74,6 +74,14 @@ name|M
 parameter_list|,
 name|int
 name|Handle
+parameter_list|)
+function_decl|;
+comment|/** Writes a module to a new memory buffer and returns it. */
+name|LLVMMemoryBufferRef
+name|LLVMWriteBitcodeToMemoryBuffer
+parameter_list|(
+name|LLVMModuleRef
+name|M
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */

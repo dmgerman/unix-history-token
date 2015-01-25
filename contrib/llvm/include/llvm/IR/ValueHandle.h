@@ -149,11 +149,11 @@ literal|2
 block|}
 block|; }
 expr_stmt|;
-comment|/// ValueHandleBase - This is the common base class of value handles.
+comment|/// \brief This is the common base class of value handles.
+comment|///
 comment|/// ValueHandle's are smart pointers to Value's that have special behavior when
 comment|/// the value is deleted or ReplaceAllUsesWith'd.  See the specific handles
 comment|/// below for details.
-comment|///
 name|class
 name|ValueHandleBase
 block|{
@@ -163,7 +163,8 @@ name|Value
 decl_stmt|;
 name|protected
 label|:
-comment|/// HandleBaseKind - This indicates what sub class the handle actually is.
+comment|/// \brief This indicates what sub class the handle actually is.
+comment|///
 comment|/// This is to avoid having a vtable for the light-weight handle pointers. The
 comment|/// fully general Callback version does have a vtable.
 enum|enum
@@ -196,19 +197,10 @@ name|ValueHandleBase
 modifier|*
 name|Next
 decl_stmt|;
-comment|// A subclass may want to store some information along with the value
-comment|// pointer. Allow them to do this by making the value pointer a pointer-int
-comment|// pair. The 'setValPtrInt' and 'getValPtrInt' methods below give them this
-comment|// access.
-name|PointerIntPair
-operator|<
 name|Value
-operator|*
-operator|,
-literal|2
-operator|>
-name|VP
-expr_stmt|;
+modifier|*
+name|V
+decl_stmt|;
 name|ValueHandleBase
 argument_list|(
 argument|const ValueHandleBase&
@@ -235,11 +227,9 @@ argument_list|(
 name|nullptr
 argument_list|)
 operator|,
-name|VP
+name|V
 argument_list|(
 argument|nullptr
-argument_list|,
-literal|0
 argument_list|)
 block|{}
 name|ValueHandleBase
@@ -261,21 +251,16 @@ argument_list|(
 name|nullptr
 argument_list|)
 operator|,
-name|VP
+name|V
 argument_list|(
 argument|V
-argument_list|,
-literal|0
 argument_list|)
 block|{
 if|if
 condition|(
 name|isValid
 argument_list|(
-name|VP
-operator|.
-name|getPointer
-argument_list|()
+name|V
 argument_list|)
 condition|)
 name|AddToUseList
@@ -301,19 +286,16 @@ argument_list|(
 name|nullptr
 argument_list|)
 operator|,
-name|VP
+name|V
 argument_list|(
-argument|RHS.VP
+argument|RHS.V
 argument_list|)
 block|{
 if|if
 condition|(
 name|isValid
 argument_list|(
-name|VP
-operator|.
-name|getPointer
-argument_list|()
+name|V
 argument_list|)
 condition|)
 name|AddToExistingUseList
@@ -333,10 +315,7 @@ if|if
 condition|(
 name|isValid
 argument_list|(
-name|VP
-operator|.
-name|getPointer
-argument_list|()
+name|V
 argument_list|)
 condition|)
 name|RemoveFromUseList
@@ -355,10 +334,7 @@ operator|)
 block|{
 if|if
 condition|(
-name|VP
-operator|.
-name|getPointer
-argument_list|()
+name|V
 operator|==
 name|RHS
 condition|)
@@ -369,30 +345,21 @@ if|if
 condition|(
 name|isValid
 argument_list|(
-name|VP
-operator|.
-name|getPointer
-argument_list|()
+name|V
 argument_list|)
 condition|)
 name|RemoveFromUseList
 argument_list|()
 expr_stmt|;
-name|VP
-operator|.
-name|setPointer
-argument_list|(
+name|V
+operator|=
 name|RHS
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|isValid
 argument_list|(
-name|VP
-operator|.
-name|getPointer
-argument_list|()
+name|V
 argument_list|)
 condition|)
 name|AddToUseList
@@ -415,59 +382,38 @@ operator|)
 block|{
 if|if
 condition|(
-name|VP
-operator|.
-name|getPointer
-argument_list|()
+name|V
 operator|==
 name|RHS
 operator|.
-name|VP
-operator|.
-name|getPointer
-argument_list|()
+name|V
 condition|)
 return|return
 name|RHS
 operator|.
-name|VP
-operator|.
-name|getPointer
-argument_list|()
+name|V
 return|;
 if|if
 condition|(
 name|isValid
 argument_list|(
-name|VP
-operator|.
-name|getPointer
-argument_list|()
+name|V
 argument_list|)
 condition|)
 name|RemoveFromUseList
 argument_list|()
 expr_stmt|;
-name|VP
-operator|.
-name|setPointer
-argument_list|(
+name|V
+operator|=
 name|RHS
 operator|.
-name|VP
-operator|.
-name|getPointer
-argument_list|()
-argument_list|)
+name|V
 expr_stmt|;
 if|if
 condition|(
 name|isValid
 argument_list|(
-name|VP
-operator|.
-name|getPointer
-argument_list|()
+name|V
 argument_list|)
 condition|)
 name|AddToExistingUseList
@@ -479,10 +425,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 return|return
-name|VP
-operator|.
-name|getPointer
-argument_list|()
+name|V
 return|;
 block|}
 end_decl_stmt
@@ -500,8 +443,7 @@ unit|)
 specifier|const
 block|{
 return|return
-name|getValPtr
-argument_list|()
+name|V
 return|;
 block|}
 end_expr_stmt
@@ -517,8 +459,7 @@ specifier|const
 block|{
 return|return
 operator|*
-name|getValPtr
-argument_list|()
+name|V
 return|;
 block|}
 end_expr_stmt
@@ -536,43 +477,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VP
-operator|.
-name|getPointer
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|void
-name|setValPtrInt
-parameter_list|(
-name|unsigned
-name|K
-parameter_list|)
-block|{
-name|VP
-operator|.
-name|setInt
-argument_list|(
-name|K
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|unsigned
-name|getValPtrInt
-argument_list|()
-specifier|const
-block|{
-return|return
-name|VP
-operator|.
-name|getInt
-argument_list|()
+name|V
 return|;
 block|}
 end_expr_stmt
@@ -714,7 +619,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// AddToExistingUseList - Add this ValueHandle to the use list for VP, where
+comment|/// \brief Add this ValueHandle to the use list for V.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -738,11 +647,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// AddToExistingUseListAfter - Add this ValueHandle to the use list after
-end_comment
-
-begin_comment
-comment|/// Node.
+comment|/// \brief Add this ValueHandle to the use list after Node.
 end_comment
 
 begin_function_decl
@@ -757,7 +662,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// AddToUseList - Add this ValueHandle to the use list for VP.
+comment|/// \brief Add this ValueHandle to the use list for V.
 end_comment
 
 begin_function_decl
@@ -768,7 +673,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// RemoveFromUseList - Remove this ValueHandle from its current use list.
+comment|/// \brief Remove this ValueHandle from its current use list.
 end_comment
 
 begin_function_decl
@@ -780,23 +685,31 @@ end_function_decl
 
 begin_comment
 unit|};
-comment|/// WeakVH - This is a value handle that tries hard to point to a Value, even
+comment|/// \brief Value handle that is nullable, but tries to track the Value.
 end_comment
 
 begin_comment
-comment|/// across RAUW operations, but will null itself out if the value is destroyed.
+comment|///
 end_comment
 
 begin_comment
-comment|/// this is useful for advisory sorts of information, but should not be used as
+comment|/// This is a value handle that tries hard to point to a Value, even across
 end_comment
 
 begin_comment
-comment|/// the key of a map (since the map would have to rearrange itself when the
+comment|/// RAUW operations, but will null itself out if the value is destroyed.  this
 end_comment
 
 begin_comment
-comment|/// pointer changes).
+comment|/// is useful for advisory sorts of information, but should not be used as the
+end_comment
+
+begin_comment
+comment|/// key of a map (since the map would have to rearrange itself when the pointer
+end_comment
+
+begin_comment
+comment|/// changes).
 end_comment
 
 begin_decl_stmt
@@ -929,14 +842,16 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// AssertingVH - This is a Value Handle that points to a value and asserts out
-comment|/// if the value is destroyed while the handle is still live.  This is very
-comment|/// useful for catching dangling pointer bugs and other things which can be
-comment|/// non-obvious.  One particularly useful place to use this is as the Key of a
-comment|/// map.  Dangling pointer bugs often lead to really subtle bugs that only occur
-comment|/// if another object happens to get allocated to the same address as the old
-comment|/// one.  Using an AssertingVH ensures that an assert is triggered as soon as
-comment|/// the bad delete occurs.
+comment|/// \brief Value handle that asserts if the Value is deleted.
+comment|///
+comment|/// This is a Value Handle that points to a value and asserts out if the value
+comment|/// is destroyed while the handle is still live.  This is very useful for
+comment|/// catching dangling pointer bugs and other things which can be non-obvious.
+comment|/// One particularly useful place to use this is as the Key of a map.  Dangling
+comment|/// pointer bugs often lead to really subtle bugs that only occur if another
+comment|/// object happens to get allocated to the same address as the old one.  Using
+comment|/// an AssertingVH ensures that an assert is triggered as soon as the bad
+comment|/// delete occurs.
 comment|///
 comment|/// Note that an AssertingVH handle does *not* follow values across RAUW
 comment|/// operations.  This means that RAUW's need to explicitly update the
@@ -958,33 +873,36 @@ name|ValueHandleBase
 endif|#
 directive|endif
 block|{
+name|friend
+expr|struct
+name|DenseMapInfo
+operator|<
+name|AssertingVH
+operator|<
+name|ValueTy
+operator|>
+expr|>
+block|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
-name|ValueTy
+name|Value
 operator|*
-name|getValPtr
+name|getRawValPtr
 argument_list|()
 specifier|const
 block|{
 return|return
-name|static_cast
-operator|<
-name|ValueTy
-operator|*
-operator|>
-operator|(
 name|ValueHandleBase
 operator|::
 name|getValPtr
 argument_list|()
-operator|)
 return|;
 block|}
 name|void
-name|setValPtr
+name|setRawValPtr
 argument_list|(
-argument|ValueTy *P
+argument|Value *P
 argument_list|)
 block|{
 name|ValueHandleBase
@@ -992,21 +910,18 @@ operator|::
 name|operator
 operator|=
 operator|(
-name|GetAsValue
-argument_list|(
 name|P
-argument_list|)
 operator|)
-block|;   }
+block|; }
 else|#
 directive|else
-name|ValueTy
+name|Value
 operator|*
 name|ThePtr
 block|;
-name|ValueTy
+name|Value
 operator|*
-name|getValPtr
+name|getRawValPtr
 argument_list|()
 specifier|const
 block|{
@@ -1015,9 +930,9 @@ name|ThePtr
 return|;
 block|}
 name|void
-name|setValPtr
+name|setRawValPtr
 argument_list|(
-argument|ValueTy *P
+argument|Value *P
 argument_list|)
 block|{
 name|ThePtr
@@ -1026,8 +941,7 @@ name|P
 block|; }
 endif|#
 directive|endif
-comment|// Convert a ValueTy*, which may be const, to the type the base
-comment|// class expects.
+comment|// Convert a ValueTy*, which may be const, to the raw Value*.
 specifier|static
 name|Value
 operator|*
@@ -1059,6 +973,38 @@ name|V
 operator|)
 return|;
 block|}
+name|ValueTy
+operator|*
+name|getValPtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|ValueTy
+operator|*
+operator|>
+operator|(
+name|getRawValPtr
+argument_list|()
+operator|)
+return|;
+block|}
+name|void
+name|setValPtr
+argument_list|(
+argument|ValueTy *P
+argument_list|)
+block|{
+name|setRawValPtr
+argument_list|(
+name|GetAsValue
+argument_list|(
+name|P
+argument_list|)
+argument_list|)
+block|; }
 name|public
 operator|:
 ifndef|#
@@ -1120,7 +1066,7 @@ argument_list|)
 operator|:
 name|ThePtr
 argument_list|(
-argument|P
+argument|GetAsValue(P)
 argument_list|)
 block|{}
 endif|#
@@ -1228,14 +1174,6 @@ name|T
 operator|>
 expr|>
 block|{
-typedef|typedef
-name|DenseMapInfo
-operator|<
-name|T
-operator|*
-operator|>
-name|PointerInfo
-expr_stmt|;
 specifier|static
 specifier|inline
 name|AssertingVH
@@ -1245,37 +1183,61 @@ operator|>
 name|getEmptyKey
 argument_list|()
 block|{
-return|return
 name|AssertingVH
 operator|<
 name|T
 operator|>
-operator|(
-name|PointerInfo
+name|Res
+block|;
+name|Res
+operator|.
+name|setRawValPtr
+argument_list|(
+name|DenseMapInfo
+operator|<
+name|Value
+operator|*
+operator|>
 operator|::
 name|getEmptyKey
 argument_list|()
-operator|)
+argument_list|)
+block|;
+return|return
+name|Res
 return|;
 block|}
 specifier|static
 specifier|inline
-name|T
-operator|*
-name|getTombstoneKey
-argument_list|()
-block|{
-return|return
 name|AssertingVH
 operator|<
 name|T
 operator|>
-operator|(
-name|PointerInfo
+name|getTombstoneKey
+argument_list|()
+block|{
+name|AssertingVH
+operator|<
+name|T
+operator|>
+name|Res
+block|;
+name|Res
+operator|.
+name|setRawValPtr
+argument_list|(
+name|DenseMapInfo
+operator|<
+name|Value
+operator|*
+operator|>
 operator|::
 name|getTombstoneKey
 argument_list|()
-operator|)
+argument_list|)
+block|;
+return|return
+name|Res
 return|;
 block|}
 specifier|static
@@ -1286,11 +1248,18 @@ argument|const AssertingVH<T>&Val
 argument_list|)
 block|{
 return|return
-name|PointerInfo
+name|DenseMapInfo
+operator|<
+name|Value
+operator|*
+operator|>
 operator|::
 name|getHashValue
 argument_list|(
 name|Val
+operator|.
+name|getRawValPtr
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -1304,9 +1273,24 @@ argument|const AssertingVH<T>&RHS
 argument_list|)
 block|{
 return|return
+name|DenseMapInfo
+operator|<
+name|Value
+operator|*
+operator|>
+operator|::
+name|isEqual
+argument_list|(
 name|LHS
-operator|==
+operator|.
+name|getRawValPtr
+argument_list|()
+argument_list|,
 name|RHS
+operator|.
+name|getRawValPtr
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -1348,8 +1332,7 @@ endif|#
 directive|endif
 block|}
 block|;
-comment|/// TrackingVH - This is a value handle that tracks a Value (or Value subclass),
-comment|/// even across RAUW operations.
+comment|/// \brief Value handle that tracks a Value across RAUW.
 comment|///
 comment|/// TrackingVH is designed for situations where a client needs to hold a handle
 comment|/// to a Value (or subclass) across some operations which may move that value,
@@ -1622,41 +1605,19 @@ name|getValPtr
 argument_list|()
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/// CallbackVH - This is a value handle that allows subclasses to define
-end_comment
-
-begin_comment
-comment|/// callbacks that run when the underlying Value has RAUW called on it or is
-end_comment
-
-begin_comment
-comment|/// destroyed.  This class can be used as the key of a map, as long as the user
-end_comment
-
-begin_comment
-comment|/// takes it out of the map before calling setValPtr() (since the map has to
-end_comment
-
-begin_comment
-comment|/// rearrange itself when the pointer changes).  Unlike ValueHandleBase, this
-end_comment
-
-begin_comment
-comment|/// class has a vtable and a virtual destructor.
-end_comment
-
-begin_decl_stmt
+expr|}
+block|;
+comment|/// \brief Value handle with callbacks on RAUW and destruction.
+comment|///
+comment|/// This is a value handle that allows subclasses to define callbacks that run
+comment|/// when the underlying Value has RAUW called on it or is destroyed.  This
+comment|/// class can be used as the key of a map, as long as the user takes it out of
+comment|/// the map before calling setValPtr() (since the map has to rearrange itself
+comment|/// when the pointer changes).  Unlike ValueHandleBase, this class has a vtable
+comment|/// and a virtual destructor.
 name|class
 name|CallbackVH
-range|:
+operator|:
 name|public
 name|ValueHandleBase
 block|{
@@ -1737,11 +1698,13 @@ name|getValPtr
 argument_list|()
 return|;
 block|}
-comment|/// Called when this->getValPtr() is destroyed, inside ~Value(), so you may
-comment|/// call any non-virtual Value method on getValPtr(), but no subclass methods.
-comment|/// If WeakVH were implemented as a CallbackVH, it would use this method to
-comment|/// call setValPtr(NULL).  AssertingVH would use this method to cause an
-comment|/// assertion failure.
+comment|/// \brief Callback for Value destruction.
+comment|///
+comment|/// Called when this->getValPtr() is destroyed, inside ~Value(), so you
+comment|/// may call any non-virtual Value method on getValPtr(), but no subclass
+comment|/// methods.  If WeakVH were implemented as a CallbackVH, it would use this
+comment|/// method to call setValPtr(NULL).  AssertingVH would use this method to
+comment|/// cause an assertion failure.
 comment|///
 comment|/// All implementations must remove the reference from this object to the
 comment|/// Value that's being destroyed.
@@ -1755,6 +1718,8 @@ argument_list|(
 name|nullptr
 argument_list|)
 block|; }
+comment|/// \brief Callback for Value RAUW.
+comment|///
 comment|/// Called when this->getValPtr()->replaceAllUsesWith(new_value) is called,
 comment|/// _before_ any of the uses have actually been replaced.  If WeakVH were
 comment|/// implemented as a CallbackVH, it would use this method to call

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_CODEGEN_CXXABI_H
+name|LLVM_CLANG_LIB_CODEGEN_CGCXXABI_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_CODEGEN_CXXABI_H
+name|LLVM_CLANG_LIB_CODEGEN_CGCXXABI_H
 end_define
 
 begin_include
@@ -329,6 +329,19 @@ return|return
 name|false
 return|;
 block|}
+name|virtual
+name|bool
+name|hasMostDerivedReturn
+argument_list|(
+name|GlobalDecl
+name|GD
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// If the C++ ABI requires the given type be returned in a particular way,
 comment|/// this method sets RetAI and returns true.
 name|virtual
@@ -546,6 +559,39 @@ modifier|*
 name|MPT
 parameter_list|)
 function_decl|;
+comment|/// Return whether or not a member pointers type is convertible to an IR type.
+name|virtual
+name|bool
+name|isMemberPointerConvertible
+argument_list|(
+specifier|const
+name|MemberPointerType
+operator|*
+name|MPT
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|isTypeInfoCalculable
+argument_list|(
+name|QualType
+name|Ty
+argument_list|)
+decl|const
+block|{
+return|return
+operator|!
+name|Ty
+operator|->
+name|isIncompleteType
+argument_list|()
+return|;
+block|}
 comment|/// Create a null member pointer of the given type.
 name|virtual
 name|llvm
@@ -677,27 +723,50 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
-comment|/// Adjust the given non-null pointer to an object of polymorphic
-comment|/// type to point to the complete object.
-comment|///
-comment|/// The IR type of the result should be a pointer but is otherwise
-comment|/// irrelevant.
 name|virtual
+name|void
+name|emitVirtualObjectDelete
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+specifier|const
+name|CXXDeleteExpr
+operator|*
+name|DE
+argument_list|,
 name|llvm
 operator|::
 name|Value
 operator|*
-name|adjustToCompleteObject
-argument_list|(
-argument|CodeGenFunction&CGF
+name|Ptr
 argument_list|,
-argument|llvm::Value *ptr
+name|QualType
+name|ElementType
 argument_list|,
-argument|QualType type
+specifier|const
+name|CXXDestructorDecl
+operator|*
+name|Dtor
 argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
+name|virtual
+name|void
+name|emitRethrow
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|bool
+name|isNoReturn
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 name|virtual
 name|llvm
 operator|::
@@ -846,41 +915,6 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-comment|/// Build the signature of the given constructor variant by adding
-comment|/// any required parameters.  For convenience, ArgTys has been initialized
-comment|/// with the type of 'this' and ResTy has been initialized with the type of
-comment|/// 'this' if HasThisReturn(GlobalDecl(Ctor, T)) is true or 'void' otherwise
-comment|/// (although both may be changed by the ABI).
-comment|///
-comment|/// If there are ever any ABIs where the implicit parameters are
-comment|/// intermixed with the formal parameters, we can address those
-comment|/// then.
-name|virtual
-name|void
-name|BuildConstructorSignature
-argument_list|(
-specifier|const
-name|CXXConstructorDecl
-operator|*
-name|Ctor
-argument_list|,
-name|CXXCtorType
-name|T
-argument_list|,
-name|CanQualType
-operator|&
-name|ResTy
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|CanQualType
-operator|>
-operator|&
-name|ArgTys
-argument_list|)
-init|=
-literal|0
-decl_stmt|;
 name|virtual
 name|llvm
 operator|::
@@ -927,26 +961,20 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Build the signature of the given destructor variant by adding
-comment|/// any required parameters.  For convenience, ArgTys has been initialized
-comment|/// with the type of 'this' and ResTy has been initialized with the type of
-comment|/// 'this' if HasThisReturn(GlobalDecl(Dtor, T)) is true or 'void' otherwise
-comment|/// (although both may be changed by the ABI).
+comment|/// Build the signature of the given constructor or destructor variant by
+comment|/// adding any required parameters.  For convenience, ArgTys has been
+comment|/// initialized with the type of 'this'.
 name|virtual
 name|void
-name|BuildDestructorSignature
+name|buildStructorSignature
 argument_list|(
 specifier|const
-name|CXXDestructorDecl
+name|CXXMethodDecl
 operator|*
-name|Dtor
+name|MD
 argument_list|,
-name|CXXDtorType
+name|StructorType
 name|T
-argument_list|,
-name|CanQualType
-operator|&
-name|ResTy
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -1266,33 +1294,25 @@ literal|0
 expr_stmt|;
 comment|/// Emit the ABI-specific virtual destructor call.
 name|virtual
-name|void
-name|EmitVirtualDestructorCall
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|,
-specifier|const
-name|CXXDestructorDecl
-operator|*
-name|Dtor
-argument_list|,
-name|CXXDtorType
-name|DtorType
-argument_list|,
-name|SourceLocation
-name|CallLoc
-argument_list|,
 name|llvm
 operator|::
 name|Value
 operator|*
-name|This
+name|EmitVirtualDestructorCall
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|const CXXDestructorDecl *Dtor
+argument_list|,
+argument|CXXDtorType DtorType
+argument_list|,
+argument|llvm::Value *This
+argument_list|,
+argument|const CXXMemberCallExpr *CE
 argument_list|)
-init|=
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 name|virtual
 name|void
 name|adjustCallArgsForDestructorThunk
@@ -1411,6 +1431,22 @@ name|QualType
 name|ResultType
 parameter_list|)
 function_decl|;
+name|virtual
+name|size_t
+name|getSrcArgforCopyCtor
+argument_list|(
+specifier|const
+name|CXXConstructorDecl
+operator|*
+argument_list|,
+name|FunctionArgList
+operator|&
+name|Args
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 comment|/// Gets the pure virtual member call function.
 name|virtual
 name|StringRef
@@ -1612,8 +1648,8 @@ decl_stmt|;
 comment|/// Emit code to force the execution of a destructor during global
 comment|/// teardown.  The default implementation of this uses atexit.
 comment|///
-comment|/// \param dtor - a function taking a single pointer argument
-comment|/// \param addr - a pointer to pass to the destructor function.
+comment|/// \param Dtor - a function taking a single pointer argument
+comment|/// \param Addr - a pointer to pass to the destructor function.
 name|virtual
 name|void
 name|registerGlobalDtor
@@ -1631,27 +1667,35 @@ name|llvm
 operator|::
 name|Constant
 operator|*
-name|dtor
+name|Dtor
 argument_list|,
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|addr
+name|Addr
 argument_list|)
+init|=
+literal|0
 decl_stmt|;
 comment|/*************************** thread_local initialization ********************/
 comment|/// Emits ABI-required functions necessary to initialize thread_local
 comment|/// variables in this translation unit.
 comment|///
-comment|/// \param Decls The thread_local declarations in this translation unit.
-comment|/// \param InitFunc If this translation unit contains any non-constant
-comment|///        initialization or non-trivial destruction for thread_local
-comment|///        variables, a function to perform the initialization. Otherwise, 0.
+comment|/// \param CXXThreadLocals - The thread_local declarations in this translation
+comment|///        unit.
+comment|/// \param CXXThreadLocalInits - If this translation unit contains any
+comment|///        non-constant initialization or non-trivial destruction for
+comment|///        thread_local variables, a list of functions to perform the
+comment|///        initialization.
 name|virtual
 name|void
 name|EmitThreadLocalInitFuncs
 argument_list|(
+name|CodeGenModule
+operator|&
+name|CGM
+argument_list|,
 name|ArrayRef
 operator|<
 name|std
@@ -1666,17 +1710,40 @@ name|llvm
 operator|::
 name|GlobalVariable
 operator|*
-operator|>
-expr|>
-name|Decls
+operator|>>
+name|CXXThreadLocals
 argument_list|,
+name|ArrayRef
+operator|<
 name|llvm
 operator|::
 name|Function
 operator|*
-name|InitFunc
+operator|>
+name|CXXThreadLocalInits
+argument_list|,
+name|ArrayRef
+operator|<
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+operator|>
+name|CXXThreadLocalInitVars
 argument_list|)
+init|=
+literal|0
 decl_stmt|;
+comment|// Determine if references to thread_local global variables can be made
+comment|// directly or require access through a thread wrapper function.
+name|virtual
+name|bool
+name|usesThreadWrapperFunction
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 comment|/// Emit a reference to a non-local thread_local variable (including
 comment|/// triggering the initialization of all thread_local variables in its
 comment|/// translation unit).
@@ -1696,6 +1763,25 @@ parameter_list|,
 name|QualType
 name|LValType
 parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// Emit a single constructor/destructor with the given type from a C++
+comment|/// constructor Decl.
+name|virtual
+name|void
+name|emitCXXStructor
+parameter_list|(
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|MD
+parameter_list|,
+name|StructorType
+name|Type
+parameter_list|)
+init|=
+literal|0
 function_decl|;
 block|}
 empty_stmt|;

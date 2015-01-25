@@ -647,6 +647,30 @@ literal|1
 argument_list|)
 return|;
 block|}
+comment|/// Test the availability of enough bytes of data for a pointer from
+comment|/// \a offset. The size of a pointer is \a getAddressSize().
+comment|///
+comment|/// @return
+comment|///     \b true if \a offset is a valid offset and there are enough
+comment|///     bytes for a pointer available at that offset, \b false
+comment|///     otherwise.
+name|bool
+name|isValidOffsetForAddress
+argument_list|(
+name|uint32_t
+name|offset
+argument_list|)
+decl|const
+block|{
+return|return
+name|isValidOffsetForDataOfSize
+argument_list|(
+name|offset
+argument_list|,
+name|AddressSize
+argument_list|)
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

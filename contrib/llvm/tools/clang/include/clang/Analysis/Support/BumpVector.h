@@ -66,13 +66,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_BUMP_VECTOR
+name|LLVM_CLANG_ANALYSIS_SUPPORT_BUMPVECTOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_BUMP_VECTOR
+name|LLVM_CLANG_ANALYSIS_SUPPORT_BUMPVECTOR_H
 end_define
 
 begin_include
@@ -1154,10 +1154,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// end: LLVM_CLANG_BUMP_VECTOR
-end_comment
 
 end_unit
 

@@ -1214,6 +1214,9 @@ comment|///< Bitcode file
 name|archive
 block|,
 comment|///< ar style archive file
+name|elf
+block|,
+comment|///< ELF Unknown type
 name|elf_relocatable
 block|,
 comment|///< ELF Relocatable object file
@@ -1346,25 +1349,6 @@ name|char
 operator|>
 operator|&
 name|path
-argument_list|)
-expr_stmt|;
-comment|/// @brief Normalize path separators in \a Path
-comment|///
-comment|/// If the path contains any '\' separators, they are transformed into '/'.
-comment|/// This is particularly useful when cross-compiling Windows on Linux, but is
-comment|/// safe to invoke on Windows, which accepts both characters as a path
-comment|/// separator.
-name|std
-operator|::
-name|error_code
-name|normalize_separators
-argument_list|(
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|Path
 argument_list|)
 expr_stmt|;
 comment|/// @brief Create all the non-existent directories in path.
@@ -1502,8 +1486,8 @@ argument_list|)
 expr_stmt|;
 comment|/// @brief Resize path to size. File is resized as if by POSIX truncate().
 comment|///
-comment|/// @param path Input path.
-comment|/// @param size Size to resize to.
+comment|/// @param FD Input file descriptor.
+comment|/// @param Size Size to resize to.
 comment|/// @returns errc::success if \a path has been resized to \a size, otherwise a
 comment|///          platform-specific error_code.
 name|std
@@ -1511,9 +1495,9 @@ operator|::
 name|error_code
 name|resize_file
 argument_list|(
-argument|const Twine&path
+argument|int FD
 argument_list|,
-argument|uint64_t size
+argument|uint64_t Size
 argument_list|)
 expr_stmt|;
 comment|/// @}
@@ -1531,30 +1515,36 @@ name|file_status
 name|status
 parameter_list|)
 function_decl|;
-comment|/// @brief Does file exist?
+name|enum
+name|class
+name|AccessMode
+block|{
+name|Exist
+operator|,
+name|Write
+operator|,
+name|Execute
+block|}
+empty_stmt|;
+comment|/// @brief Can the file be accessed?
 comment|///
-comment|/// @param path Input path.
-comment|/// @param result Set to true if the file represented by status exists, false if
-comment|///               it does not. Undefined otherwise.
-comment|/// @returns errc::success if result has been successfully set, otherwise a
+comment|/// @param Path Input path.
+comment|/// @returns errc::success if the path can be accessed, otherwise a
 comment|///          platform-specific error_code.
 name|std
 operator|::
 name|error_code
-name|exists
+name|access
 argument_list|(
-specifier|const
-name|Twine
-operator|&
-name|path
+argument|const Twine&Path
 argument_list|,
-name|bool
-operator|&
-name|result
+argument|AccessMode Mode
 argument_list|)
 expr_stmt|;
-comment|/// @brief Simpler version of exists for clients that don't need to
-comment|///        differentiate between an error and false.
+comment|/// @brief Does file exist?
+comment|///
+comment|/// @param Path Input path.
+comment|/// @returns True if it exists, false otherwise.
 specifier|inline
 name|bool
 name|exists
@@ -1562,28 +1552,26 @@ parameter_list|(
 specifier|const
 name|Twine
 modifier|&
-name|path
+name|Path
 parameter_list|)
 block|{
-name|bool
-name|result
-decl_stmt|;
 return|return
 operator|!
-name|exists
+name|access
 argument_list|(
-name|path
+name|Path
 argument_list|,
-name|result
+name|AccessMode
+operator|::
+name|Exist
 argument_list|)
-operator|&&
-name|result
 return|;
 block|}
 comment|/// @brief Can we execute this file?
 comment|///
 comment|/// @param Path Input path.
 comment|/// @returns True if we can execute it, false otherwise.
+specifier|inline
 name|bool
 name|can_execute
 parameter_list|(
@@ -1592,11 +1580,24 @@ name|Twine
 modifier|&
 name|Path
 parameter_list|)
-function_decl|;
+block|{
+return|return
+operator|!
+name|access
+argument_list|(
+name|Path
+argument_list|,
+name|AccessMode
+operator|::
+name|Execute
+argument_list|)
+return|;
+block|}
 comment|/// @brief Can we write this file?
 comment|///
 comment|/// @param Path Input path.
 comment|/// @returns True if we can write to it, false otherwise.
+specifier|inline
 name|bool
 name|can_write
 parameter_list|(
@@ -1605,7 +1606,19 @@ name|Twine
 modifier|&
 name|Path
 parameter_list|)
-function_decl|;
+block|{
+return|return
+operator|!
+name|access
+argument_list|(
+name|Path
+argument_list|,
+name|AccessMode
+operator|::
+name|Write
+argument_list|)
+return|;
+block|}
 comment|/// @brief Do file_status's represent the same thing?
 comment|///
 comment|/// @param A Input file_status.
@@ -2284,9 +2297,6 @@ enum|;
 name|private
 label|:
 comment|/// Platform-specific mapping state.
-name|mapmode
-name|Mode
-decl_stmt|;
 name|uint64_t
 name|Size
 decl_stmt|;
@@ -2294,22 +2304,6 @@ name|void
 modifier|*
 name|Mapping
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|LLVM_ON_WIN32
-name|int
-name|FileDescriptor
-decl_stmt|;
-name|void
-modifier|*
-name|FileHandle
-decl_stmt|;
-name|void
-modifier|*
-name|FileMappingHandle
-decl_stmt|;
-endif|#
-directive|endif
 name|std
 operator|::
 name|error_code
@@ -2317,67 +2311,19 @@ name|init
 argument_list|(
 argument|int FD
 argument_list|,
-argument|bool CloseFD
-argument_list|,
 argument|uint64_t Offset
+argument_list|,
+argument|mapmode Mode
 argument_list|)
 expr_stmt|;
 name|public
 label|:
-typedef|typedef
-name|char
-name|char_type
-typedef|;
-name|mapped_file_region
-argument_list|(
-name|mapped_file_region
-operator|&&
-argument_list|)
-expr_stmt|;
-name|mapped_file_region
-modifier|&
-name|operator
-init|=
-operator|(
-name|mapped_file_region
-operator|&&
-operator|)
-decl_stmt|;
-comment|/// Construct a mapped_file_region at \a path starting at \a offset of length
-comment|/// \a length and with access \a mode.
-comment|///
-comment|/// \param path Path to the file to map. If it does not exist it will be
-comment|///             created.
-comment|/// \param mode How to map the memory.
-comment|/// \param length Number of bytes to map in starting at \a offset. If the file
-comment|///               is shorter than this, it will be extended. If \a length is
-comment|///               0, the entire file will be mapped.
-comment|/// \param offset Byte offset from the beginning of the file where the map
-comment|///               should begin. Must be a multiple of
-comment|///               mapped_file_region::alignment().
-comment|/// \param ec This is set to errc::success if the map was constructed
-comment|///           successfully. Otherwise it is set to a platform dependent error.
-name|mapped_file_region
-argument_list|(
-argument|const Twine&path
-argument_list|,
-argument|mapmode mode
-argument_list|,
-argument|uint64_t length
-argument_list|,
-argument|uint64_t offset
-argument_list|,
-argument|std::error_code&ec
-argument_list|)
-empty_stmt|;
 comment|/// \param fd An open file descriptor to map. mapped_file_region takes
 comment|///   ownership if closefd is true. It must have been opended in the correct
 comment|///   mode.
 name|mapped_file_region
 argument_list|(
 argument|int fd
-argument_list|,
-argument|bool closefd
 argument_list|,
 argument|mapmode mode
 argument_list|,
@@ -2391,11 +2337,6 @@ empty_stmt|;
 operator|~
 name|mapped_file_region
 argument_list|()
-expr_stmt|;
-name|mapmode
-name|flags
-argument_list|()
-specifier|const
 expr_stmt|;
 name|uint64_t
 name|size

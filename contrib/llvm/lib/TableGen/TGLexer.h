@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TGLEXER_H
+name|LLVM_LIB_TABLEGEN_TGLEXER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TGLEXER_H
+name|LLVM_LIB_TABLEGEN_TGLEXER_H
 end_define
 
 begin_include
@@ -199,6 +199,8 @@ name|XConcat
 block|,
 name|XADD
 block|,
+name|XAND
+block|,
 name|XSRA
 block|,
 name|XSRL
@@ -227,6 +229,10 @@ name|XEq
 block|,
 comment|// Integer value.
 name|IntVal
+block|,
+comment|// Binary constant.  Note that these are sized according to the number of
+comment|// bits given.
+name|BinaryIntVal
 block|,
 comment|// String valued tokens.
 name|Id
@@ -412,6 +418,46 @@ argument_list|)
 block|;
 return|return
 name|CurIntVal
+return|;
+block|}
+name|std
+operator|::
+name|pair
+operator|<
+name|int64_t
+operator|,
+name|unsigned
+operator|>
+name|getCurBinaryIntVal
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|CurCode
+operator|==
+name|tgtok
+operator|::
+name|BinaryIntVal
+operator|&&
+literal|"This token isn't a binary integer"
+argument_list|)
+block|;
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|CurIntVal
+argument_list|,
+operator|(
+name|CurPtr
+operator|-
+name|TokStart
+operator|)
+operator|-
+literal|2
+argument_list|)
 return|;
 block|}
 name|SMLoc

@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -148,27 +154,387 @@ range|:
 name|public
 name|MachineFunctionPass
 block|{
-name|public
+comment|/// \brief Helper structure used to hold all the basic blocks
+comment|/// involved in the split of a critical edge.
+block|struct
+name|CriticalEdge
+block|{
+name|MachineBasicBlock
+operator|*
+name|FromBB
+block|;
+name|MachineBasicBlock
+operator|*
+name|ToBB
+block|;
+name|MachineBasicBlock
+operator|*
+name|NewBB
+block|;
+name|CriticalEdge
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|FromBB
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|ToBB
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|NewBB
+argument_list|)
 operator|:
+name|FromBB
+argument_list|(
+name|FromBB
+argument_list|)
+block|,
+name|ToBB
+argument_list|(
+name|ToBB
+argument_list|)
+block|,
+name|NewBB
+argument_list|(
+argument|NewBB
+argument_list|)
+block|{}
+block|}
+block|;
+comment|/// \brief Pile up all the critical edges to be split.
+comment|/// The splitting of a critical edge is local and thus, it is possible
+comment|/// to apply several of those changes at the same time.
+name|mutable
+name|SmallVector
+operator|<
+name|CriticalEdge
+block|,
+literal|32
+operator|>
+name|CriticalEdgesToSplit
+block|;
+comment|/// \brief Remember all the basic blocks that are inserted during
+comment|/// edge splitting.
+comment|/// Invariant: NewBBs == all the basic blocks contained in the NewBB
+comment|/// field of all the elements of CriticalEdgesToSplit.
+comment|/// I.e., forall elt in CriticalEdgesToSplit, it exists BB in NewBBs
+comment|/// such as BB == elt.NewBB.
+name|mutable
+name|SmallSet
+operator|<
+name|MachineBasicBlock
+operator|*
+block|,
+literal|32
+operator|>
+name|NewBBs
+block|;
+comment|/// \brief Apply all the recorded critical edges to the DT.
+comment|/// This updates the underlying DT information in a way that uses
+comment|/// the fast query path of DT as much as possible.
+comment|///
+comment|/// \post CriticalEdgesToSplit.empty().
+name|void
+name|applySplitCriticalEdges
+argument_list|()
+specifier|const
+block|{
+comment|// Bail out early if there is nothing to do.
+if|if
+condition|(
+name|CriticalEdgesToSplit
+operator|.
+name|empty
+argument_list|()
+condition|)
+return|return;
+comment|// For each element in CriticalEdgesToSplit, remember whether or
+comment|// not element is the new immediate domminator of its successor.
+comment|// The mapping is done by index, i.e., the information for the ith
+comment|// element of CriticalEdgesToSplit is the ith element of IsNewIDom.
+name|SmallVector
+operator|<
+name|bool
+block|,
+literal|32
+operator|>
+name|IsNewIDom
+block|;
+name|IsNewIDom
+operator|.
+name|resize
+argument_list|(
+name|CriticalEdgesToSplit
+operator|.
+name|size
+argument_list|()
+argument_list|)
+block|;
+name|size_t
+name|Idx
+operator|=
+literal|0
+block|;
+comment|// Collect all the dominance properties info, before invalidating
+comment|// the underlying DT.
+for|for
+control|(
+name|CriticalEdge
+modifier|&
+name|Edge
+range|:
+name|CriticalEdgesToSplit
+control|)
+block|{
+comment|// Update dominator information.
+name|MachineBasicBlock
+modifier|*
+name|Succ
+init|=
+name|Edge
+operator|.
+name|ToBB
+decl_stmt|;
+name|MachineDomTreeNode
+modifier|*
+name|SucccDTNode
+init|=
+name|DT
+operator|->
+name|getNode
+argument_list|(
+name|Succ
+argument_list|)
+decl_stmt|;
+name|IsNewIDom
+index|[
+name|Idx
+index|]
+operator|=
+name|true
+expr_stmt|;
+for|for
+control|(
+name|MachineBasicBlock
+modifier|*
+name|PredBB
+range|:
+name|Succ
+operator|->
+name|predecessors
+argument_list|()
+control|)
+block|{
+if|if
+condition|(
+name|PredBB
+operator|==
+name|Edge
+operator|.
+name|NewBB
+condition|)
+continue|continue;
+comment|// If we are in this situation:
+comment|// FromBB1        FromBB2
+comment|//    +              +
+comment|//   + +            + +
+comment|//  +   +          +   +
+comment|// ...  Split1  Split2 ...
+comment|//           +   +
+comment|//            + +
+comment|//             +
+comment|//            Succ
+comment|// Instead of checking the domiance property with Split2, we
+comment|// check it with FromBB2 since Split2 is still unknown of the
+comment|// underlying DT structure.
+if|if
+condition|(
+name|NewBBs
+operator|.
+name|count
+argument_list|(
+name|PredBB
+argument_list|)
+condition|)
+block|{
+name|assert
+argument_list|(
+name|PredBB
+operator|->
+name|pred_size
+argument_list|()
+operator|==
+literal|1
+operator|&&
+literal|"A basic block resulting from a "
+literal|"critical edge split has more "
+literal|"than one predecessor!"
+argument_list|)
+expr_stmt|;
+name|PredBB
+operator|=
+operator|*
+name|PredBB
+operator|->
+name|pred_begin
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|DT
+operator|->
+name|dominates
+argument_list|(
+name|SucccDTNode
+argument_list|,
+name|DT
+operator|->
+name|getNode
+argument_list|(
+name|PredBB
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|IsNewIDom
+index|[
+name|Idx
+index|]
+operator|=
+name|false
+expr_stmt|;
+break|break;
+block|}
+block|}
+operator|++
+name|Idx
+expr_stmt|;
+block|}
+comment|// Now, update DT with the collected dominance properties info.
+name|Idx
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|CriticalEdge
+modifier|&
+name|Edge
+range|:
+name|CriticalEdgesToSplit
+control|)
+block|{
+comment|// We know FromBB dominates NewBB.
+name|MachineDomTreeNode
+modifier|*
+name|NewDTNode
+init|=
+name|DT
+operator|->
+name|addNewBlock
+argument_list|(
+name|Edge
+operator|.
+name|NewBB
+argument_list|,
+name|Edge
+operator|.
+name|FromBB
+argument_list|)
+decl_stmt|;
+name|MachineDomTreeNode
+modifier|*
+name|SucccDTNode
+init|=
+name|DT
+operator|->
+name|getNode
+argument_list|(
+name|Edge
+operator|.
+name|ToBB
+argument_list|)
+decl_stmt|;
+comment|// If all the other predecessors of "Succ" are dominated by "Succ" itself
+comment|// then the new block is the new immediate dominator of "Succ". Otherwise,
+comment|// the new block doesn't dominate anything.
+if|if
+condition|(
+name|IsNewIDom
+index|[
+name|Idx
+index|]
+condition|)
+name|DT
+operator|->
+name|changeImmediateDominator
+argument_list|(
+name|SucccDTNode
+argument_list|,
+name|NewDTNode
+argument_list|)
+expr_stmt|;
+operator|++
+name|Idx
+expr_stmt|;
+block|}
+name|NewBBs
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|CriticalEdgesToSplit
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_decl_stmt
 specifier|static
 name|char
 name|ID
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Pass ID, replacement for typeid
+end_comment
+
+begin_expr_stmt
 name|DominatorTreeBase
 operator|<
 name|MachineBasicBlock
 operator|>
 operator|*
 name|DT
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MachineDominatorTree
 argument_list|()
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|~
 name|MachineDominatorTree
 argument_list|()
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|DominatorTreeBase
 operator|<
 name|MachineBasicBlock
@@ -177,23 +543,46 @@ operator|&
 name|getBase
 argument_list|()
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+block|;
 return|return
 operator|*
 name|DT
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|getAnalysisUsage
 argument_list|(
-argument|AnalysisUsage&AU
+name|AnalysisUsage
+operator|&
+name|AU
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getRoots -  Return the root blocks of the current CFG.  This may include
+end_comment
+
+begin_comment
 comment|/// multiple blocks if we are computing post dominators.  For forward
+end_comment
+
+begin_comment
 comment|/// dominators, this will always be a single block (the entry node).
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|std
@@ -208,6 +597,9 @@ name|getRoots
 argument_list|()
 specifier|const
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+block|;
 return|return
 name|DT
 operator|->
@@ -215,6 +607,9 @@ name|getRoots
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|MachineBasicBlock
 operator|*
@@ -222,6 +617,9 @@ name|getRoot
 argument_list|()
 specifier|const
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+block|;
 return|return
 name|DT
 operator|->
@@ -229,6 +627,9 @@ name|getRoot
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|MachineDomTreeNode
 operator|*
@@ -236,6 +637,9 @@ name|getRootNode
 argument_list|()
 specifier|const
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+block|;
 return|return
 name|DT
 operator|->
@@ -243,23 +647,40 @@ name|getRootNode
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|bool
 name|runOnMachineFunction
 argument_list|(
-argument|MachineFunction&F
+name|MachineFunction
+operator|&
+name|F
 argument_list|)
 name|override
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|inline
 name|bool
 name|dominates
 argument_list|(
-argument|const MachineDomTreeNode* A
-argument_list|,
-argument|const MachineDomTreeNode* B
-argument_list|)
 specifier|const
+name|MachineDomTreeNode
+operator|*
+name|A
+argument_list|,
+specifier|const
+name|MachineDomTreeNode
+operator|*
+name|B
+argument_list|)
+decl|const
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
 return|return
 name|DT
 operator|->
@@ -271,56 +692,86 @@ name|B
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 specifier|inline
 name|bool
 name|dominates
 argument_list|(
-argument|const MachineBasicBlock* A
-argument_list|,
-argument|const MachineBasicBlock* B
-argument_list|)
-specifier|const
-block|{
-return|return
-name|DT
-operator|->
-name|dominates
-argument_list|(
-name|A
-argument_list|,
-name|B
-argument_list|)
-return|;
-block|}
-comment|// dominates - Return true if A dominates B. This performs the
-comment|// special checks necessary if A and B are in the same basic block.
-name|bool
-name|dominates
-argument_list|(
-argument|const MachineInstr *A
-argument_list|,
-argument|const MachineInstr *B
-argument_list|)
-specifier|const
-block|{
 specifier|const
 name|MachineBasicBlock
 operator|*
+name|A
+argument_list|,
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|B
+argument_list|)
+decl|const
+block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
+return|return
+name|DT
+operator|->
+name|dominates
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// dominates - Return true if A dominates B. This performs the
+end_comment
+
+begin_comment
+comment|// special checks necessary if A and B are in the same basic block.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|dominates
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|A
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|B
+argument_list|)
+decl|const
+block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
+specifier|const
+name|MachineBasicBlock
+modifier|*
 name|BBA
-operator|=
+init|=
 name|A
 operator|->
 name|getParent
 argument_list|()
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|BBB
-operator|=
+init|=
 name|B
 operator|->
 name|getParent
 argument_list|()
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|BBA
@@ -347,7 +798,7 @@ name|BBA
 operator|->
 name|begin
 argument_list|()
-block|;
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -401,6 +852,9 @@ name|B
 argument_list|)
 decl|const
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
 return|return
 name|DT
 operator|->
@@ -431,6 +885,9 @@ name|B
 argument_list|)
 decl|const
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
 return|return
 name|DT
 operator|->
@@ -467,6 +924,9 @@ modifier|*
 name|B
 parameter_list|)
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
 return|return
 name|DT
 operator|->
@@ -493,6 +953,9 @@ name|BB
 argument_list|)
 decl|const
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
 return|return
 name|DT
 operator|->
@@ -528,6 +991,9 @@ name|BB
 argument_list|)
 decl|const
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
 return|return
 name|DT
 operator|->
@@ -566,6 +1032,9 @@ modifier|*
 name|DomBB
 parameter_list|)
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
 return|return
 name|DT
 operator|->
@@ -605,6 +1074,9 @@ modifier|*
 name|NewIDom
 parameter_list|)
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
 name|DT
 operator|->
 name|changeImmediateDominator
@@ -631,6 +1103,9 @@ modifier|*
 name|NewIDom
 parameter_list|)
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
 name|DT
 operator|->
 name|changeImmediateDominator
@@ -665,6 +1140,9 @@ modifier|*
 name|BB
 parameter_list|)
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
 name|DT
 operator|->
 name|eraseNode
@@ -693,6 +1171,9 @@ modifier|*
 name|NewBB
 parameter_list|)
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
 name|DT
 operator|->
 name|splitBlock
@@ -721,6 +1202,9 @@ modifier|*
 name|A
 parameter_list|)
 block|{
+name|applySplitCriticalEdges
+argument_list|()
+expr_stmt|;
 return|return
 name|DT
 operator|->
@@ -756,6 +1240,112 @@ decl|const
 name|override
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Record that the critical edge (FromBB, ToBB) has been
+end_comment
+
+begin_comment
+comment|/// split with NewBB.
+end_comment
+
+begin_comment
+comment|/// This is best to use this method instead of directly update the
+end_comment
+
+begin_comment
+comment|/// underlying information, because this helps mitigating the
+end_comment
+
+begin_comment
+comment|/// number of time the DT information is invalidated.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \note Do not use this method with regular edges.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \note To benefit from the compile time improvement incurred by this
+end_comment
+
+begin_comment
+comment|/// method, the users of this method have to limit the queries to the DT
+end_comment
+
+begin_comment
+comment|/// interface between two edges splitting. In other words, they have to
+end_comment
+
+begin_comment
+comment|/// pack the splitting of critical edges as much as possible.
+end_comment
+
+begin_function
+name|void
+name|recordSplitCriticalEdge
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|FromBB
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|ToBB
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|NewBB
+parameter_list|)
+block|{
+name|bool
+name|Inserted
+init|=
+name|NewBBs
+operator|.
+name|insert
+argument_list|(
+name|NewBB
+argument_list|)
+operator|.
+name|second
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|Inserted
+expr_stmt|;
+name|assert
+argument_list|(
+name|Inserted
+operator|&&
+literal|"A basic block inserted via edge splitting cannot appear twice"
+argument_list|)
+expr_stmt|;
+name|CriticalEdgesToSplit
+operator|.
+name|push_back
+argument_list|(
+name|CriticalEdge
+argument_list|(
+name|FromBB
+argument_list|,
+name|ToBB
+argument_list|,
+name|NewBB
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 unit|};

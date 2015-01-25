@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_LEXER_H
+name|LLVM_CLANG_LEX_LEXER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_LEXER_H
+name|LLVM_CLANG_LEX_LEXER_H
 end_define
 
 begin_include
@@ -930,7 +930,7 @@ name|bool
 operator|>
 name|ComputePreamble
 argument_list|(
-argument|const llvm::MemoryBuffer *Buffer
+argument|StringRef Buffer
 argument_list|,
 argument|const LangOptions&LangOpts
 argument_list|,

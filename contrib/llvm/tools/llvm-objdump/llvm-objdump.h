@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_OBJDUMP_H
+name|LLVM_TOOLS_LLVM_OBJDUMP_LLVM_OBJDUMP_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_OBJDUMP_H
+name|LLVM_TOOLS_LLVM_OBJDUMP_LLVM_OBJDUMP_H
 end_define
 
 begin_include
@@ -61,12 +61,6 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/StringRefMemoryObject.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -78,6 +72,9 @@ name|class
 name|COFFObjectFile
 decl_stmt|;
 name|class
+name|MachOObjectFile
+decl_stmt|;
+name|class
 name|ObjectFile
 decl_stmt|;
 name|class
@@ -86,6 +83,17 @@ decl_stmt|;
 block|}
 extern|extern cl::opt<std::string> TripleName;
 extern|extern cl::opt<std::string> ArchName;
+extern|extern cl::opt<std::string> MCPU;
+extern|extern cl::list<std::string> MAttrs;
+extern|extern cl::opt<bool> Disassemble;
+extern|extern cl::opt<bool> NoShowRawInsn;
+extern|extern cl::opt<bool> PrivateHeaders;
+extern|extern cl::opt<bool> ExportsTrie;
+extern|extern cl::opt<bool> Rebase;
+extern|extern cl::opt<bool> Bind;
+extern|extern cl::opt<bool> LazyBind;
+extern|extern cl::opt<bool> WeakBind;
+extern|extern cl::opt<bool> UniversalHeaders;
 comment|// Various helper functions.
 name|bool
 name|error
@@ -118,7 +126,7 @@ name|bytes
 parameter_list|)
 function_decl|;
 name|void
-name|DisassembleInputMachO
+name|ParseInputMachO
 parameter_list|(
 name|StringRef
 name|Filename
@@ -136,6 +144,72 @@ name|o
 argument_list|)
 decl_stmt|;
 name|void
+name|printMachOUnwindInfo
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|MachOObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printMachOExportsTrie
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|MachOObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printMachORebaseTable
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|MachOObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printMachOBindTable
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|MachOObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printMachOLazyBindTable
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|MachOObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printMachOWeakBindTable
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|MachOObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
 name|printELFFileHeader
 argument_list|(
 specifier|const
@@ -148,6 +222,72 @@ argument_list|)
 decl_stmt|;
 name|void
 name|printCOFFFileHeader
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printMachOFileHeader
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printExportsTrie
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printRebaseTable
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printBindTable
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printLazyBindTable
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printWeakBindTable
 argument_list|(
 specifier|const
 name|object

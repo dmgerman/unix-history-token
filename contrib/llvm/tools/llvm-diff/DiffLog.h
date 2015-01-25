@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LLVM_DIFFLOG_H_
+name|LLVM_TOOLS_LLVM_DIFF_DIFFLOG_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LLVM_DIFFLOG_H_
+name|LLVM_TOOLS_LLVM_DIFF_DIFFLOG_H
 end_define
 
 begin_include

@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_PASSMANAGERS_H
+name|LLVM_IR_LEGACYPASSMANAGERS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_PASSMANAGERS_H
+name|LLVM_IR_LEGACYPASSMANAGERS_H
 end_define
 
 begin_include
@@ -258,7 +258,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This is a external interface used by JIT to manage FunctionPasses. This
+comment|// This is a external interface used to manage FunctionPasses. This
 end_comment
 
 begin_comment
@@ -916,7 +916,7 @@ operator|<
 name|ImmutablePass
 operator|*
 operator|,
-literal|8
+literal|16
 operator|>
 name|ImmutablePasses
 expr_stmt|;
@@ -1455,7 +1455,7 @@ operator|<
 name|Pass
 operator|*
 operator|,
-literal|8
+literal|16
 operator|>
 name|HigherLevelAnalysis
 expr_stmt|;

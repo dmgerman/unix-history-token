@@ -50,19 +50,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DRIVER_ASTCONSUMERS_H
+name|LLVM_CLANG_FRONTEND_ASTCONSUMERS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|DRIVER_ASTCONSUMERS_H
+name|LLVM_CLANG_FRONTEND_ASTCONSUMERS_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -94,55 +100,70 @@ comment|// AST pretty-printer: prints out the AST in a format that is close to t
 comment|// original C code.  The output is intended to be in a format such that
 comment|// clang could re-parse the output back into the same AST, but the
 comment|// implementation is still incomplete.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-modifier|*
+operator|>
 name|CreateASTPrinter
-parameter_list|(
-name|raw_ostream
-modifier|*
-name|OS
-parameter_list|,
-name|StringRef
-name|FilterString
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|raw_ostream *OS
+argument_list|,
+argument|StringRef FilterString
+argument_list|)
+expr_stmt|;
 comment|// AST dumper: dumps the raw AST in human-readable form to stderr; this is
 comment|// intended for debugging.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-modifier|*
+operator|>
 name|CreateASTDumper
-parameter_list|(
-name|StringRef
-name|FilterString
-parameter_list|,
-name|bool
-name|DumpLookups
-init|=
-name|false
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|StringRef FilterString
+argument_list|,
+argument|bool DumpDecls
+argument_list|,
+argument|bool DumpLookups
+argument_list|)
+expr_stmt|;
 comment|// AST Decl node lister: prints qualified names of all filterable AST Decl
 comment|// nodes.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-modifier|*
+operator|>
 name|CreateASTDeclNodeLister
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|// Graphical AST viewer: for each function definition, creates a graph of
 comment|// the AST and displays it with the graph viewer "dotty".  Also outputs
 comment|// function declarations to stderr.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-modifier|*
+operator|>
 name|CreateASTViewer
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|// DeclContext printer: prints out the DeclContext tree in human-readable form
 comment|// to stderr; this is intended for debugging.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-modifier|*
+operator|>
 name|CreateDeclContextPrinter
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 block|}
 end_decl_stmt
 

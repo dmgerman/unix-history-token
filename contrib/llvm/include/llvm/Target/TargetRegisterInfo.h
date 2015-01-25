@@ -82,7 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
 begin_include
@@ -190,6 +190,10 @@ modifier|*
 name|SuperRegIndices
 decl_stmt|;
 specifier|const
+name|unsigned
+name|LaneMask
+decl_stmt|;
+specifier|const
 name|sc_iterator
 name|SuperClasses
 decl_stmt|;
@@ -218,22 +222,6 @@ return|return
 name|MC
 operator|->
 name|getID
-argument_list|()
-return|;
-block|}
-comment|/// getName() - Return the register class name for debugging.
-comment|///
-specifier|const
-name|char
-operator|*
-name|getName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MC
-operator|->
-name|getName
 argument_list|()
 return|;
 block|}
@@ -400,7 +388,7 @@ comment|///
 name|bool
 name|hasType
 argument_list|(
-name|EVT
+name|MVT
 name|vt
 argument_list|)
 decl|const
@@ -426,7 +414,7 @@ name|i
 control|)
 if|if
 condition|(
-name|EVT
+name|MVT
 argument_list|(
 name|VTs
 index|[
@@ -685,6 +673,18 @@ argument_list|,
 name|getNumRegs
 argument_list|()
 argument_list|)
+return|;
+block|}
+comment|/// Returns the combination of all lane masks of register in this class.
+comment|/// The lane masks of the registers are the combination of all lane masks
+comment|/// of their subregisters.
+name|unsigned
+name|getLaneMask
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LaneMask
 return|;
 block|}
 block|}
@@ -1221,7 +1221,7 @@ argument_list|(
 name|unsigned
 name|Reg
 argument_list|,
-name|EVT
+name|MVT
 name|VT
 operator|=
 name|MVT
@@ -1918,6 +1918,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Prior to adding the live-out mask to a stackmap or patchpoint
+end_comment
+
+begin_comment
+comment|/// instruction, provide the target the opportunity to adjust it (mainly to
+end_comment
+
+begin_comment
+comment|/// remove pseudo-registers that should be ignored).
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|void
+name|adjustStackMapLiveOutMask
+argument_list|(
+name|uint32_t
+operator|*
+name|Mask
+argument_list|)
+decl|const
+block|{ }
+end_decl_stmt
+
+begin_comment
 comment|/// getMatchingSuperReg - Return a super-register of the specified register
 end_comment
 
@@ -2178,6 +2203,76 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// Transforms a LaneMask computed for one subregister to the lanemask that
+end_comment
+
+begin_comment
+comment|/// would have been computed when composing the subsubregisters with IdxA
+end_comment
+
+begin_comment
+comment|/// first. @sa composeSubRegIndices()
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|composeSubRegIndexLaneMask
+argument_list|(
+name|unsigned
+name|IdxA
+argument_list|,
+name|unsigned
+name|LaneMask
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|IdxA
+condition|)
+return|return
+name|LaneMask
+return|;
+return|return
+name|composeSubRegIndexLaneMaskImpl
+argument_list|(
+name|IdxA
+argument_list|,
+name|LaneMask
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Debugging helper: dump register in human readable form to dbgs() stream.
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|dumpReg
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+name|unsigned
+name|SubRegIndex
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetRegisterInfo
+modifier|*
+name|TRI
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|protected
 label|:
@@ -2191,6 +2286,29 @@ begin_decl_stmt
 name|virtual
 name|unsigned
 name|composeSubRegIndicesImpl
+argument_list|(
+name|unsigned
+argument_list|,
+name|unsigned
+argument_list|)
+decl|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target has no sub-registers"
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Overridden by TableGen in targets that have sub-registers.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|unsigned
+name|composeSubRegIndexLaneMaskImpl
 argument_list|(
 name|unsigned
 argument_list|,
@@ -2436,6 +2554,36 @@ name|RegClassBegin
 index|[
 name|i
 index|]
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// getRegClassName - Returns the name of the register class.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|getRegClassName
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|Class
+argument_list|)
+decl|const
+block|{
+return|return
+name|MCRegisterInfo
+operator|::
+name|getRegClassName
+argument_list|(
+name|Class
+operator|->
+name|MC
+argument_list|)
 return|;
 block|}
 end_decl_stmt
@@ -2995,35 +3143,6 @@ specifier|const
 block|{
 return|return
 name|false
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Allow the target to override register assignment heuristics based on the
-end_comment
-
-begin_comment
-comment|/// live range size. If this returns false, then local live ranges are always
-end_comment
-
-begin_comment
-comment|/// assigned in order regardless of their size. This is a temporary hook for
-end_comment
-
-begin_comment
-comment|/// debugging downstream codegen failures exposed by regalloc.
-end_comment
-
-begin_expr_stmt
-name|virtual
-name|bool
-name|mayOverrideLocalAssignment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
 return|;
 block|}
 end_expr_stmt

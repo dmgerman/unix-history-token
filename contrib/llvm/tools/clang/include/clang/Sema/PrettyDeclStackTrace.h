@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SEMA_PRETTY_DECL_STACK_TRACE_H
+name|LLVM_CLANG_SEMA_PRETTYDECLSTACKTRACE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SEMA_PRETTY_DECL_STACK_TRACE_H
+name|LLVM_CLANG_SEMA_PRETTYDECLSTACKTRACE_H
 end_define
 
 begin_include

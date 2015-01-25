@@ -153,6 +153,9 @@ block|{
 comment|/// NodeKind - Represent the type of an argument.
 enum|enum
 name|NodeKind
+enum|:
+name|unsigned
+name|char
 block|{
 comment|/// An empty string; the result of concatenating anything with it is also
 comment|/// empty.
@@ -281,16 +284,12 @@ comment|/// Null or Empty kinds.
 name|Child
 name|RHS
 decl_stmt|;
-comment|// enums stored as unsigned chars to save on space while some compilers
-comment|// don't support specifying the backing type for an enum
 comment|/// LHSKind - The NodeKind of the left hand side, \see getLHSKind().
-name|unsigned
-name|char
+name|NodeKind
 name|LHSKind
 decl_stmt|;
-comment|/// RHSKind - The NodeKind of the left hand side, \see getLHSKind().
-name|unsigned
-name|char
+comment|/// RHSKind - The NodeKind of the right hand side, \see getRHSKind().
+name|NodeKind
 name|RHSKind
 decl_stmt|;
 name|private
@@ -593,9 +592,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|NodeKind
-operator|)
 name|LHSKind
 return|;
 block|}
@@ -606,9 +602,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|NodeKind
-operator|)
 name|RHSKind
 return|;
 block|}

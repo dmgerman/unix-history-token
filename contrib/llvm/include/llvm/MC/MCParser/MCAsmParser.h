@@ -156,7 +156,7 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-comment|/// MCAsmParserSemaCallback - Generic Sema callback for assembly parser.
+comment|/// Generic Sema callback for assembly parser.
 name|class
 name|MCAsmParserSemaCallback
 block|{
@@ -187,6 +187,26 @@ init|=
 literal|0
 function_decl|;
 name|virtual
+name|StringRef
+name|LookupInlineAsmLabel
+parameter_list|(
+name|StringRef
+name|Identifier
+parameter_list|,
+name|SourceMgr
+modifier|&
+name|SM
+parameter_list|,
+name|SMLoc
+name|Location
+parameter_list|,
+name|bool
+name|Create
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
 name|bool
 name|LookupInlineAsmField
 parameter_list|(
@@ -205,8 +225,8 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// MCAsmParser - Generic assembler parser interface, for use by target specific
-comment|/// assembly parsers.
+comment|/// Generic assembler parser interface, for use by target specific assembly
+comment|/// parsers.
 name|class
 name|MCAsmParser
 block|{
@@ -308,6 +328,27 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+specifier|const
+name|MCAsmLexer
+operator|&
+name|getLexer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|MCAsmParser
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getLexer
+argument_list|()
+return|;
+block|}
 name|virtual
 name|MCContext
 modifier|&
@@ -316,7 +357,7 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// getStreamer - Return the output streamer for the assembler.
+comment|/// Return the output streamer for the assembler.
 name|virtual
 name|MCStreamer
 modifier|&
@@ -382,7 +423,7 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
-comment|/// Run - Run the parser on the input source buffer.
+comment|/// Run the parser on the input source buffer.
 name|virtual
 name|bool
 name|Run
@@ -415,7 +456,7 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// parseMSInlineAsm - Parse ms-style inline assembly.
+comment|/// Parse ms-style inline assembly.
 name|virtual
 name|bool
 name|parseMSInlineAsm
@@ -448,8 +489,7 @@ name|void
 operator|*
 argument_list|,
 name|bool
-operator|>
-expr|>
+operator|>>
 operator|&
 name|OpDecls
 argument_list|,
@@ -488,7 +528,7 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// Note - Emit a note at the location \p L, with the message \p Msg.
+comment|/// Emit a note at the location \p L, with the message \p Msg.
 name|virtual
 name|void
 name|Note
@@ -512,7 +552,7 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// Warning - Emit a warning at the location \p L, with the message \p Msg.
+comment|/// Emit a warning at the location \p L, with the message \p Msg.
 comment|///
 comment|/// \return The return value is true, if warnings are fatal.
 name|virtual
@@ -538,7 +578,7 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// Error - Emit an error at the location \p L, with the message \p Msg.
+comment|/// Emit an error at the location \p L, with the message \p Msg.
 comment|///
 comment|/// \return The return value is always true, as an idiomatic convenience to
 comment|/// clients.
@@ -565,8 +605,8 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// Lex - Get the next AsmToken in the stream, possibly handling file
-comment|/// inclusion first.
+comment|/// Get the next AsmToken in the stream, possibly handling file inclusion
+comment|/// first.
 name|virtual
 specifier|const
 name|AsmToken
@@ -576,13 +616,14 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// getTok - Get the current AsmToken from the stream.
+comment|/// Get the current AsmToken from the stream.
 specifier|const
 name|AsmToken
-modifier|&
+operator|&
 name|getTok
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Report an error at the current lexer location.
 name|bool
 name|TokError
@@ -601,8 +642,8 @@ operator|=
 name|None
 argument_list|)
 decl_stmt|;
-comment|/// parseIdentifier - Parse an identifier or string (as a quoted identifier)
-comment|/// and set \p Res to the identifier contents.
+comment|/// Parse an identifier or string (as a quoted identifier) and set \p Res to
+comment|/// the identifier contents.
 name|virtual
 name|bool
 name|parseIdentifier
@@ -624,8 +665,8 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// parseEscapedString - Parse the current token as a string which may include
-comment|/// escaped characters and return the string contents.
+comment|/// Parse the current token as a string which may include escaped characters
+comment|/// and return the string contents.
 name|virtual
 name|bool
 name|parseEscapedString
@@ -639,8 +680,7 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// eatToEndOfStatement - Skip to the end of the current statement, for error
-comment|/// recovery.
+comment|/// Skip to the end of the current statement, for error recovery.
 name|virtual
 name|void
 name|eatToEndOfStatement
@@ -648,7 +688,7 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// parseExpression - Parse an arbitrary expression.
+comment|/// Parse an arbitrary expression.
 comment|///
 comment|/// @param Res - The value of the expression. The result is undefined
 comment|/// on error.
@@ -680,7 +720,7 @@ modifier|&
 name|Res
 parameter_list|)
 function_decl|;
-comment|/// parsePrimaryExpr - Parse a primary expression.
+comment|/// Parse a primary expression.
 comment|///
 comment|/// @param Res - The value of the expression. The result is undefined
 comment|/// on error.
@@ -702,8 +742,8 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// parseParenExpression - Parse an arbitrary expression, assuming that an
-comment|/// initial '(' has already been consumed.
+comment|/// Parse an arbitrary expression, assuming that an initial '(' has already
+comment|/// been consumed.
 comment|///
 comment|/// @param Res - The value of the expression. The result is undefined
 comment|/// on error.
@@ -725,8 +765,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// parseAbsoluteExpression - Parse an expression which must evaluate to an
-comment|/// absolute value.
+comment|/// Parse an expression which must evaluate to an absolute value.
 comment|///
 comment|/// @param Res - The value of the absolute expression. The result is undefined
 comment|/// on error.
@@ -742,8 +781,8 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// checkForValidSection - Ensure that we have a valid section set in the
-comment|/// streamer. Otherwise, report an error and switch to .text.
+comment|/// Ensure that we have a valid section set in the streamer. Otherwise, report
+comment|/// an error and switch to .text.
 name|virtual
 name|void
 name|checkForValidSection
