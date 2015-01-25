@@ -2093,7 +2093,15 @@ name|p2
 operator|->
 name|p_flag2
 operator|=
-literal|0
+name|p1
+operator|->
+name|p_flag2
+operator|&
+operator|(
+name|P2_NOTRACE
+operator||
+name|P2_NOTRACE_EXEC
+operator|)
 expr_stmt|;
 name|p2
 operator|->
