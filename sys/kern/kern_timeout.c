@@ -5068,6 +5068,25 @@ name|sq_locked
 decl_stmt|,
 name|use_lock
 decl_stmt|;
+if|if
+condition|(
+name|safe
+condition|)
+name|WITNESS_WARN
+argument_list|(
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
+argument_list|,
+name|c
+operator|->
+name|c_lock
+argument_list|,
+literal|"calling %s"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Some old subsystems don't hold Giant while running a callout_stop(), 	 * so just discard this check for the moment. 	 */
 if|if
 condition|(
