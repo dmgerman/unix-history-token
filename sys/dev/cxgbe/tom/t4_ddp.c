@@ -5630,6 +5630,11 @@ name|flags
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|SOCKBUF_LOCK
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -5637,11 +5642,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|SOCKBUF_LOCK
-argument_list|(
-name|sb
-argument_list|)
-expr_stmt|;
 comment|/* Easy one, no space to copyout anything. */
 if|if
 condition|(
