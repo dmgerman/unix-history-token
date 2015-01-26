@@ -4093,14 +4093,6 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|xsoftc
-operator|.
-name|xpt_lock
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"xpt_init: xpt_create_path failed with status %#x,"
