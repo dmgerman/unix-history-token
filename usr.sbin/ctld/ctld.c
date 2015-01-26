@@ -8167,11 +8167,31 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|error
+operator|=
 name|kernel_port_remove
 argument_list|(
 name|oldtarg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|log_warnx
+argument_list|(
+literal|"failed to remove target %s"
+argument_list|,
+name|oldtarg
+operator|->
+name|t_name
+argument_list|)
+expr_stmt|;
+comment|/* 				 * XXX: Uncomment after fixing the root cause. 				 * 				 * cumulated_error++; 				 */
+block|}
 continue|continue;
 block|}
 comment|/* 		 * Second, remove any LUNs present in the old target 		 * and missing in the new one. 		 */
@@ -8765,11 +8785,33 @@ name|oldtarg
 operator|==
 name|NULL
 condition|)
+block|{
+name|error
+operator|=
 name|kernel_port_add
 argument_list|(
 name|newtarg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|log_warnx
+argument_list|(
+literal|"failed to add target %s"
+argument_list|,
+name|newtarg
+operator|->
+name|t_name
+argument_list|)
+expr_stmt|;
+comment|/* 				 * XXX: Uncomment after fixing the root cause. 				 * 				 * cumulated_error++; 				 */
+block|}
+block|}
 block|}
 comment|/* 	 * Go through the new portals, opening the sockets as neccessary. 	 */
 name|TAILQ_FOREACH
