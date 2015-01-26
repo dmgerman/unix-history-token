@@ -4652,7 +4652,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (sb->sb_cc + sc->tt.ddp_thres> uio->uio_resid) { 		CTR4(KTR_CXGBE, "%s: sb_cc %d, threshold %d, resid %d", 		    __func__, sb->sb_cc, sc->tt.ddp_thres, uio->uio_resid); 	}
+block|if (sbused(sb) + sc->tt.ddp_thres> uio->uio_resid) { 		CTR4(KTR_CXGBE, "%s: sb_cc %d, threshold %d, resid %d", 		    __func__, sbused(sb), sc->tt.ddp_thres, uio->uio_resid); 	}
 endif|#
 directive|endif
 comment|/* XXX: too eager to disable DDP, could handle NBIO better than this. */
@@ -5723,7 +5723,7 @@ operator|->
 name|uio_resid
 argument_list|,
 operator|(
-literal|"%s: oresid = %d, uio_resid = %zd, sbused = %d"
+literal|"%s: oresid = %d, uio_resid = %zd, sbavail = %d"
 operator|,
 name|__func__
 operator|,
@@ -5733,7 +5733,7 @@ name|uio
 operator|->
 name|uio_resid
 operator|,
-name|sbused
+name|sbavail
 argument_list|(
 name|sb
 argument_list|)
@@ -5775,7 +5775,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|sbused
+name|sbavail
 argument_list|(
 name|sb
 argument_list|)
@@ -5831,7 +5831,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|sbused
+name|sbavail
 argument_list|(
 name|sb
 argument_list|)
@@ -5847,7 +5847,7 @@ block|}
 comment|/* Socket buffer is empty and we shall not block. */
 if|if
 condition|(
-name|sbused
+name|sbavail
 argument_list|(
 name|sb
 argument_list|)
@@ -5886,10 +5886,12 @@ block|}
 comment|/* Socket buffer got some data that we shall deliver now. */
 if|if
 condition|(
-name|sbused
+name|sbavail
 argument_list|(
 name|sb
 argument_list|)
+operator|>
+literal|0
 operator|&&
 operator|!
 operator|(
@@ -5917,7 +5919,7 @@ name|MSG_NBIO
 operator|)
 operator|)
 operator|||
-name|sbused
+name|sbavail
 argument_list|(
 name|sb
 argument_list|)
@@ -5926,7 +5928,7 @@ name|sb
 operator|->
 name|sb_lowat
 operator|||
-name|sbused
+name|sbavail
 argument_list|(
 name|sb
 argument_list|)
@@ -5935,7 +5937,7 @@ name|uio
 operator|->
 name|uio_resid
 operator|||
-name|sbused
+name|sbavail
 argument_list|(
 name|sb
 argument_list|)
@@ -5960,7 +5962,7 @@ name|MSG_WAITALL
 operator|)
 operator|&&
 operator|(
-name|sbused
+name|sbavail
 argument_list|(
 name|sb
 argument_list|)
@@ -5969,7 +5971,7 @@ name|uio
 operator|->
 name|uio_resid
 operator|||
-name|sbused
+name|sbavail
 argument_list|(
 name|sb
 argument_list|)
@@ -6045,7 +6047,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|sbused
+name|sbavail
 argument_list|(
 name|sb
 argument_list|)
@@ -6113,7 +6115,7 @@ name|uio
 operator|->
 name|uio_resid
 argument_list|,
-name|sbused
+name|sbavail
 argument_list|(
 name|sb
 argument_list|)
