@@ -46,6 +46,17 @@ value|"https://bugs.freebsd.org/submit/"
 end_define
 
 begin_comment
+comment|/* Multilib suffix for libdir. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLANG_LIBDIR_SUFFIX
+value|""
+end_define
+
+begin_comment
 comment|/* Relative directory for resource files */
 end_comment
 
@@ -66,14 +77,6 @@ directive|define
 name|C_INCLUDE_DIRS
 value|""
 end_define
-
-begin_comment
-comment|/* Linker version detected at compile time. */
-end_comment
-
-begin_comment
-comment|/* #undef HOST_LINK_VERSION */
-end_comment
 
 begin_comment
 comment|/* Default<path> to all compiler invocations for --sysroot=<path>. */
@@ -106,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.5.1"
+value|"LLVM 3.6.0"
 end_define
 
 begin_comment
@@ -119,6 +122,14 @@ directive|define
 name|BACKEND_PACKAGE_STRING
 value|PACKAGE_STRING
 end_define
+
+begin_comment
+comment|/* Linker version detected at compile time. */
+end_comment
+
+begin_comment
+comment|/* #undef HOST_LINK_VERSION */
+end_comment
 
 begin_endif
 endif|#

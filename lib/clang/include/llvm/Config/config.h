@@ -1808,7 +1808,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|5
+value|6
 end_define
 
 begin_comment
@@ -1820,6 +1820,17 @@ define|#
 directive|define
 name|LLVM_VERSION_PATCH
 value|0
+end_define
+
+begin_comment
+comment|/* LLVM version string */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_VERSION_STRING
+value|"3.6.0"
 end_define
 
 begin_comment
@@ -1871,7 +1882,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.5.1"
+value|"LLVM 3.6.0"
 end_define
 
 begin_comment
@@ -1893,7 +1904,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.5.1"
+value|"3.6.0"
 end_define
 
 begin_comment
