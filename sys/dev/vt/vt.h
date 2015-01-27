@@ -335,24 +335,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|vt_resume
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vt_suspend
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -619,6 +601,30 @@ name|vd
 parameter_list|)
 value|((vd)->vd_pastebuf.vpb_len)
 end_define
+
+begin_function_decl
+name|void
+name|vt_resume
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vt_suspend
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Per-window terminal screen buffer.  *  * Because redrawing is performed asynchronously, the buffer keeps track  * of a rectangle that needs to be redrawn (vb_dirtyrect).  Because this  * approach seemed to cause suboptimal performance (when the top left  * and the bottom right of the screen are modified), it also uses a set  * of bitmasks to keep track of the rows and columns (mod 64) that have  * been modified.  */
@@ -1661,6 +1667,30 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+name|vd_suspend_t
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|vd_resume_t
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|vt_driver
@@ -1715,6 +1745,15 @@ comment|/* Update display setting on vt switch. */
 name|vd_postswitch_t
 modifier|*
 name|vd_postswitch
+decl_stmt|;
+comment|/* Suspend/resume handlers. */
+name|vd_suspend_t
+modifier|*
+name|vd_suspend
+decl_stmt|;
+name|vd_resume_t
+modifier|*
+name|vd_resume
 decl_stmt|;
 comment|/* Priority to know which one can override */
 name|int
