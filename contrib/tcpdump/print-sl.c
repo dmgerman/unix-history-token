@@ -239,6 +239,10 @@ condition|(
 name|caplen
 operator|<
 name|SLIP_HDRLEN
+operator|||
+name|length
+operator|<
+name|SLIP_HDRLEN
 condition|)
 block|{
 name|ND_PRINT

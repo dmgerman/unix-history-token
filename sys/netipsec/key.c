@@ -11633,9 +11633,6 @@ name|struct
 name|seclifetime
 name|lt
 decl_stmt|;
-name|SPTREE_RLOCK_ASSERT
-argument_list|()
-expr_stmt|;
 name|m
 operator|=
 name|key_setsadbmsg
