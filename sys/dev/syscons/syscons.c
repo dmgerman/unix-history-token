@@ -3344,7 +3344,7 @@ condition|)
 block|{
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|power_suspend
+name|power_suspend_early
 argument_list|,
 name|scsuspend
 argument_list|,

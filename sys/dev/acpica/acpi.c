@@ -12266,6 +12266,14 @@ expr_stmt|;
 block|}
 name|EVENTHANDLER_INVOKE
 argument_list|(
+name|power_suspend_early
+argument_list|)
+expr_stmt|;
+name|stop_all_proc
+argument_list|()
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
 name|power_suspend
 argument_list|)
 expr_stmt|;
@@ -12693,6 +12701,9 @@ name|curthread
 argument_list|)
 expr_stmt|;
 block|}
+name|resume_all_proc
+argument_list|()
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|power_resume

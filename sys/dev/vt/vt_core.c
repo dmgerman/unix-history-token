@@ -12465,7 +12465,7 @@ expr_stmt|;
 comment|/* Register suspend/resume handlers. */
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|power_suspend
+name|power_suspend_early
 argument_list|,
 name|vt_suspend_handler
 argument_list|,
