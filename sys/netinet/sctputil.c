@@ -34994,6 +34994,18 @@ name|struct
 name|inpcb
 modifier|*
 name|ignored
+parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+name|SCTP_UNUSED
+parameter_list|,
+name|void
+modifier|*
+name|ctx
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|struct
@@ -35567,6 +35579,8 @@ name|udp4_tun_socket
 argument_list|)
 argument_list|,
 name|sctp_recv_udp_tunneled_packet
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 condition|)
@@ -35710,6 +35724,8 @@ name|udp6_tun_socket
 argument_list|)
 argument_list|,
 name|sctp_recv_udp_tunneled_packet
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 condition|)
