@@ -1999,8 +1999,6 @@ name|cg
 decl_stmt|,
 name|prefcg
 decl_stmt|,
-name|dirsize
-decl_stmt|,
 name|cgsize
 decl_stmt|;
 name|u_int
@@ -2025,6 +2023,8 @@ decl_stmt|,
 name|minndir
 decl_stmt|;
 name|u_int
+name|dirsize
+decl_stmt|,
 name|maxcontigdirs
 decl_stmt|;
 name|mtx_assert
@@ -2355,18 +2355,6 @@ name|dirsize
 operator|=
 name|curdirsize
 expr_stmt|;
-if|if
-condition|(
-name|dirsize
-operator|<=
-literal|0
-condition|)
-name|maxcontigdirs
-operator|=
-literal|0
-expr_stmt|;
-comment|/* dirsize overflowed */
-else|else
 name|maxcontigdirs
 operator|=
 name|min

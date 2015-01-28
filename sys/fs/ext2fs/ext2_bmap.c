@@ -300,6 +300,13 @@ decl_stmt|;
 name|struct
 name|ext4_extent_path
 name|path
+init|=
+block|{
+operator|.
+name|ep_bp
+operator|=
+name|NULL
+block|}
 decl_stmt|;
 name|daddr_t
 name|lbn
