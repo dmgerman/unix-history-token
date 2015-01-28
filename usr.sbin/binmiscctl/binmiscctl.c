@@ -1581,9 +1581,14 @@ block|}
 if|if
 condition|(
 operator|!
+name|strnlen
+argument_list|(
 name|xbe
 operator|->
 name|xbe_interpreter
+argument_list|,
+name|IBE_INTERP_LEN_MAX
+argument_list|)
 condition|)
 block|{
 name|usage
