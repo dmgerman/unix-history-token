@@ -344,6 +344,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OBJ_TMPFS_DIRTY
+value|0x0400
+end_define
+
+begin_comment
+comment|/* dirty tmpfs obj */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OBJ_COLORED
 value|0x1000
 end_define
