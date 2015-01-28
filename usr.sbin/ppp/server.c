@@ -1275,6 +1275,11 @@ operator|.
 name|cfg
 operator|.
 name|sockname
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
 operator|&&
 operator|!
 name|strcmp

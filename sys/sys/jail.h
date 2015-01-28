@@ -945,8 +945,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|PR_ALLOW_MOUNT_FDESCFS
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|PR_ALLOW_ALL
-value|0x0fff
+value|0x1fff
 end_define
 
 begin_comment

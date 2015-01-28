@@ -1047,16 +1047,10 @@ argument_list|(
 literal|"%s%d@pci%d:%d:%d:%d:\tclass=0x%06x card=0x%08x "
 literal|"chip=0x%08x rev=0x%02x hdr=0x%02x\n"
 argument_list|,
-operator|(
-name|p
-operator|->
-name|pd_name
-operator|&&
 operator|*
 name|p
 operator|->
 name|pd_name
-operator|)
 condition|?
 name|p
 operator|->
@@ -1064,16 +1058,10 @@ name|pd_name
 else|:
 literal|"none"
 argument_list|,
-operator|(
-name|p
-operator|->
-name|pd_name
-operator|&&
 operator|*
 name|p
 operator|->
 name|pd_name
-operator|)
 condition|?
 operator|(
 name|int
