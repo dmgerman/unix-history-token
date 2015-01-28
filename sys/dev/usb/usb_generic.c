@@ -8681,6 +8681,13 @@ condition|)
 goto|goto
 name|error
 goto|;
+comment|/* store total level of ports */
+name|dpp
+operator|->
+name|udp_port_level
+operator|=
+name|nlevel
+expr_stmt|;
 comment|/* store port index array */
 name|next
 operator|=
@@ -8695,25 +8702,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|nlevel
-operator|--
-expr_stmt|;
 name|dpp
 operator|->
 name|udp_port_no
 index|[
+operator|--
 name|nlevel
 index|]
 operator|=
 name|next
 operator|->
 name|port_no
-expr_stmt|;
-name|dpp
-operator|->
-name|udp_port_level
-operator|=
-name|nlevel
 expr_stmt|;
 name|next
 operator|=
