@@ -562,6 +562,33 @@ value|PMC_EV_XSCALE_DATA_BUS_TRANS
 end_define
 
 begin_comment
+comment|/*  * ARMv7 Events  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PMC_EV_ARMV7
+parameter_list|()
+define|\
+value|__PMC_EV(ARMV7, PMNC_SW_INCR)			\ 	__PMC_EV(ARMV7, L1_ICACHE_REFILL)		\ 	__PMC_EV(ARMV7, ITLB_REFILL)			\ 	__PMC_EV(ARMV7, L1_DCACHE_REFILL)		\ 	__PMC_EV(ARMV7, L1_DCACHE_ACCESS)		\ 	__PMC_EV(ARMV7, DTLB_REFILL)			\ 	__PMC_EV(ARMV7, MEM_READ)			\ 	__PMC_EV(ARMV7, MEM_WRITE)			\ 	__PMC_EV(ARMV7, INSTR_EXECUTED)			\ 	__PMC_EV(ARMV7, EXC_TAKEN)			\ 	__PMC_EV(ARMV7, EXC_EXECUTED)			\ 	__PMC_EV(ARMV7, CID_WRITE)			\ 	__PMC_EV(ARMV7, PC_WRITE)			\ 	__PMC_EV(ARMV7, PC_IMM_BRANCH)			\ 	__PMC_EV(ARMV7, PC_PROC_RETURN)			\ 	__PMC_EV(ARMV7, MEM_UNALIGNED_ACCESS)		\ 	__PMC_EV(ARMV7, PC_BRANCH_MIS_PRED)		\ 	__PMC_EV(ARMV7, CLOCK_CYCLES)			\ 	__PMC_EV(ARMV7, PC_BRANCH_PRED)			\ 	__PMC_EV(ARMV7, MEM_ACCESS)			\ 	__PMC_EV(ARMV7, L1_ICACHE_ACCESS)		\ 	__PMC_EV(ARMV7, L1_DCACHE_WB)			\ 	__PMC_EV(ARMV7, L2_CACHE_ACCESS)		\ 	__PMC_EV(ARMV7, L2_CACHE_REFILL)		\ 	__PMC_EV(ARMV7, L2_CACHE_WB)			\ 	__PMC_EV(ARMV7, BUS_ACCESS)			\ 	__PMC_EV(ARMV7, MEM_ERROR)			\ 	__PMC_EV(ARMV7, INSTR_SPEC)			\ 	__PMC_EV(ARMV7, TTBR_WRITE)			\ 	__PMC_EV(ARMV7, BUS_CYCLES)			\ 	__PMC_EV(ARMV7, CPU_CYCLES)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_EV_ARMV7_FIRST
+value|PMC_EV_ARMV7_PMNC_SW_INCR
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_EV_ARMV7_LAST
+value|PMC_EV_ARMV7_CPU_CYCLES
+end_define
+
+begin_comment
 comment|/*  * MIPS Events from "Programming the MIPS32 24K Core Family",  * Document Number: MD00355 Revision 04.63 December 19, 2008  * These events are kept in the order found in Table 7.4.  * For counters which are different between the left hand  * column (0/2) and the right hand column (1/3) the left  * hand is given first, e.g. BRANCH_COMPLETED and BRANCH_MISPRED  * in the definition below.  */
 end_comment
 
@@ -662,7 +689,7 @@ value|PMC_EV_PPC970_ADDER
 end_define
 
 begin_comment
-comment|/*  * All known PMC events.  *  * PMC event numbers are allocated sparsely to allow new PMC events to  * be added to a PMC class without breaking ABI compatibility.  The  * current allocation scheme is:  *  * START	#EVENTS		DESCRIPTION  * 0		0x1000		Reserved  * 0x1000	0x0001		TSC  * 0x2000	0x0080		AMD K7 events  * 0x2080	0x0100		AMD K8 events  * 0x10000	0x0080		INTEL architectural fixed-function events  * 0x10080	0x0F80		INTEL architectural programmable events  * 0x11000	0x0080		INTEL Pentium 4 events  * 0x11080	0x0080		INTEL Pentium MMX events  * 0x11100	0x0100		INTEL Pentium Pro/P-II/P-III/Pentium-M events  * 0x11200	0x00FF		INTEL XScale events  * 0x11300      0x00FF          MIPS 24K events  * 0x20000	0x1000		Software events  */
+comment|/*  * All known PMC events.  *  * PMC event numbers are allocated sparsely to allow new PMC events to  * be added to a PMC class without breaking ABI compatibility.  The  * current allocation scheme is:  *  * START	#EVENTS		DESCRIPTION  * 0		0x1000		Reserved  * 0x1000	0x0001		TSC  * 0x2000	0x0080		AMD K7 events  * 0x2080	0x0100		AMD K8 events  * 0x10000	0x0080		INTEL architectural fixed-function events  * 0x10080	0x0F80		INTEL architectural programmable events  * 0x11000	0x0080		INTEL Pentium 4 events  * 0x11080	0x0080		INTEL Pentium MMX events  * 0x11100	0x0100		INTEL Pentium Pro/P-II/P-III/Pentium-M events  * 0x11200	0x00FF		INTEL XScale events  * 0x11300	0x00FF		MIPS 24K events  * 0x14000	0x0100		ARMv7 events  * 0x20000	0x1000		Software events  */
 end_comment
 
 begin_define
@@ -671,7 +698,7 @@ directive|define
 name|__PMC_EVENTS
 parameter_list|()
 define|\
-value|__PMC_EV_BLOCK(TSC,	0x01000)	\ 	__PMC_EV_TSC()				\ 	__PMC_EV_BLOCK(K7,	0x2000)		\ 	__PMC_EV_K7()				\ 	__PMC_EV_BLOCK(K8,	0x2080)		\ 	__PMC_EV_K8()				\ 	__PMC_EV_BLOCK(IAF,	0x10000)	\ 	__PMC_EV_IAF()				\ 	__PMC_EV_BLOCK(IAP,	0x10080)	\ 	__PMC_EV_IAP()				\ 	__PMC_EV_BLOCK(P4,	0x11000)	\ 	__PMC_EV_P4()				\ 	__PMC_EV_BLOCK(P5,	0x11080)	\ 	__PMC_EV_P5()				\ 	__PMC_EV_BLOCK(P6,	0x11100)	\ 	__PMC_EV_P6()				\ 	__PMC_EV_BLOCK(XSCALE,	0x11200)	\ 	__PMC_EV_XSCALE()                       \ 	__PMC_EV_BLOCK(MIPS24K,	0x11300)	\ 	__PMC_EV_MIPS24K()			\ 	__PMC_EV_BLOCK(OCTEON,	0x11400)	\ 	__PMC_EV_OCTEON()			\ 	__PMC_EV_BLOCK(UCF,	0x12000)	\ 	__PMC_EV_UCF()				\ 	__PMC_EV_BLOCK(UCP,	0x12080)	\ 	__PMC_EV_UCP()				\ 	__PMC_EV_BLOCK(PPC7450,	0x13000)	\ 	__PMC_EV_PPC7450()			\ 	__PMC_EV_BLOCK(PPC970,	0x13100)	\ 	__PMC_EV_PPC970()			\  #define	PMC_EVENT_FIRST	PMC_EV_TSC_TSC
+value|__PMC_EV_BLOCK(TSC,	0x01000)	\ 	__PMC_EV_TSC()				\ 	__PMC_EV_BLOCK(K7,	0x2000)		\ 	__PMC_EV_K7()				\ 	__PMC_EV_BLOCK(K8,	0x2080)		\ 	__PMC_EV_K8()				\ 	__PMC_EV_BLOCK(IAF,	0x10000)	\ 	__PMC_EV_IAF()				\ 	__PMC_EV_BLOCK(IAP,	0x10080)	\ 	__PMC_EV_IAP()				\ 	__PMC_EV_BLOCK(P4,	0x11000)	\ 	__PMC_EV_P4()				\ 	__PMC_EV_BLOCK(P5,	0x11080)	\ 	__PMC_EV_P5()				\ 	__PMC_EV_BLOCK(P6,	0x11100)	\ 	__PMC_EV_P6()				\ 	__PMC_EV_BLOCK(XSCALE,	0x11200)	\ 	__PMC_EV_XSCALE()                       \ 	__PMC_EV_BLOCK(MIPS24K,	0x11300)	\ 	__PMC_EV_MIPS24K()			\ 	__PMC_EV_BLOCK(OCTEON,	0x11400)	\ 	__PMC_EV_OCTEON()			\ 	__PMC_EV_BLOCK(UCF,	0x12000)	\ 	__PMC_EV_UCF()				\ 	__PMC_EV_BLOCK(UCP,	0x12080)	\ 	__PMC_EV_UCP()				\ 	__PMC_EV_BLOCK(PPC7450,	0x13000)	\ 	__PMC_EV_PPC7450()			\ 	__PMC_EV_BLOCK(PPC970,	0x13100)	\ 	__PMC_EV_PPC970()			\ 	__PMC_EV_BLOCK(ARMV7,	0x14000)	\ 	__PMC_EV_ARMV7()			\  #define	PMC_EVENT_FIRST	PMC_EV_TSC_TSC
 end_define
 
 begin_define
