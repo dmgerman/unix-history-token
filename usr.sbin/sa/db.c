@@ -93,12 +93,15 @@ begin_comment
 comment|/* Key used to store the version of the database data elements. */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+specifier|static
+name|char
 name|VERSION_KEY
-value|"\0VERSION"
-end_define
+index|[]
+init|=
+literal|"\0VERSION"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Create the in-memory database, *mdb.  * If iflag is not set, fill-in mdb with the records of the disk-based  * database dbname.  * Upgrade old-version records by calling v1_to_v2.  * Return 0 if OK, -1 on error.  */
