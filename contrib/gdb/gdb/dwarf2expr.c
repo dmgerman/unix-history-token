@@ -2142,6 +2142,7 @@ name|binop
 operator|=
 name|BINOP_DIV
 expr_stmt|;
+break|break;
 case|case
 name|DW_OP_minus
 case|:
@@ -2197,6 +2198,7 @@ name|binop
 operator|=
 name|BINOP_RSH
 expr_stmt|;
+break|break;
 case|case
 name|DW_OP_shra
 case|:
