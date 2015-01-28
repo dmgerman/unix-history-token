@@ -335,6 +335,14 @@ block|,
 name|LIBUSB_REQUEST_SYNCH_FRAME
 init|=
 literal|0x0C
+block|,
+name|LIBUSB_REQUEST_SET_SEL
+init|=
+literal|0x30
+block|,
+name|LIBUSB_REQUEST_SET_ISOCH_DELAY
+init|=
+literal|0x31
 block|, }
 enum|;
 enum|enum
