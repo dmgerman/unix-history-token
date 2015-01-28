@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -191,10 +197,34 @@ modifier|*
 name|fmp
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+name|struct
 name|vnode
 modifier|*
 name|rvp
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|prison_allow
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|PR_ALLOW_MOUNT_FDESCFS
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 comment|/* 	 * Update is a no-op 	 */
 if|if
 condition|(
@@ -833,6 +863,8 @@ argument_list|,
 name|fdescfs
 argument_list|,
 name|VFCF_SYNTHETIC
+operator||
+name|VFCF_JAIL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
