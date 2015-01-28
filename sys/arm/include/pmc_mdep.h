@@ -22,14 +22,27 @@ name|PMC_MDEP_CLASS_INDEX_XSCALE
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|PMC_MDEP_CLASS_INDEX_ARMV7
+value|1
+end_define
+
 begin_comment
-comment|/*  * On the ARM platform we support the following PMCs.  *  * XSCALE	Intel XScale processors  */
+comment|/*  * On the ARM platform we support the following PMCs.  *  * XSCALE	Intel XScale processors  * ARMV7	ARM Cortex-A processors  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<dev/hwpmc/hwpmc_xscale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hwpmc/hwpmc_armv7.h>
 end_include
 
 begin_union
@@ -77,6 +90,10 @@ block|{
 name|struct
 name|pmc_md_xscale_pmc
 name|pm_xscale
+decl_stmt|;
+name|struct
+name|pmc_md_armv7_pmc
+name|pm_armv7
 decl_stmt|;
 block|}
 union|;
@@ -190,6 +207,29 @@ end_function_decl
 begin_function_decl
 name|void
 name|pmc_xscale_finalize
+parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|_md
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|pmc_mdep
+modifier|*
+name|pmc_armv7_initialize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmc_armv7_finalize
 parameter_list|(
 name|struct
 name|pmc_mdep

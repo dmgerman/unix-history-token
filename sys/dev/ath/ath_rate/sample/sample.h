@@ -307,7 +307,7 @@ name|sn
 parameter_list|,
 name|rix
 parameter_list|)
-value|(((sn)->ratemask& (1<<(rix))) != 0)
+value|(((uint64_t) (sn)->ratemask& (1ULL<<((uint64_t) rix))) != 0)
 end_define
 
 begin_ifndef

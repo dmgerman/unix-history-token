@@ -4480,7 +4480,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: ts_rate=%d ts_finaltsi=%d\n"
+literal|"%s: ts_rate=%d ts_finaltsi=%d, final_rix=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4491,6 +4491,8 @@ argument_list|,
 name|ts
 operator|->
 name|ts_finaltsi
+argument_list|,
+name|final_rix
 argument_list|)
 expr_stmt|;
 name|badrate
