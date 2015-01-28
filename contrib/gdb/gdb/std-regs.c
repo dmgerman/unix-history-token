@@ -150,6 +150,8 @@ name|memset
 argument_list|(
 name|buf
 argument_list|,
+literal|0
+argument_list|,
 name|TYPE_LENGTH
 argument_list|(
 name|VALUE_TYPE
@@ -157,8 +159,6 @@ argument_list|(
 name|val
 argument_list|)
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* frame.base.  */
@@ -253,6 +253,8 @@ name|memset
 argument_list|(
 name|buf
 argument_list|,
+literal|0
+argument_list|,
 name|TYPE_LENGTH
 argument_list|(
 name|VALUE_TYPE
@@ -260,8 +262,6 @@ argument_list|(
 name|val
 argument_list|)
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -342,6 +342,8 @@ name|memset
 argument_list|(
 name|buf
 argument_list|,
+literal|0
+argument_list|,
 name|TYPE_LENGTH
 argument_list|(
 name|VALUE_TYPE
@@ -349,8 +351,6 @@ argument_list|(
 name|val
 argument_list|)
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 else|else
