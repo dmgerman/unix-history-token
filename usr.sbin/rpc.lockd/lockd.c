@@ -2203,12 +2203,6 @@ argument_list|)
 expr_stmt|;
 name|hints
 operator|.
-name|ai_flags
-operator|=
-name|AI_PASSIVE
-expr_stmt|;
-name|hints
-operator|.
 name|ai_family
 operator|=
 name|si
@@ -2286,6 +2280,12 @@ comment|/* Set invalid for now. */
 name|mallocd_res
 operator|=
 literal|0
+expr_stmt|;
+name|hints
+operator|.
+name|ai_flags
+operator|=
+name|AI_PASSIVE
 expr_stmt|;
 comment|/*	 		 * XXX - using RPC library internal functions. 		 */
 if|if
