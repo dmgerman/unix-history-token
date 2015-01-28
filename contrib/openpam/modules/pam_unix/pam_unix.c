@@ -180,6 +180,7 @@ name|char
 modifier|*
 name|user
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|crypt_password
@@ -321,12 +322,6 @@ name|pamh
 argument_list|,
 name|PAM_AUTHTOK
 argument_list|,
-operator|(
-specifier|const
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|password
 argument_list|,
