@@ -2208,7 +2208,7 @@ goto|goto
 name|init
 goto|;
 block|}
-comment|/* 	 * We cannot use the TSC if it stops incrementing while idle. 	 * Intel CPUs without a C-state invariant TSC can stop the TSC 	 * in either C2 or C3. 	 */
+comment|/* 	 * Intel CPUs without a C-state invariant TSC can stop the TSC 	 * in either C2 or C3.  Disable use of C2 and C3 while using 	 * the TSC as the timecounter.  The timecounter can be changed 	 * to enable C2 and C3. 	 * 	 * Note that the TSC is used as the cputicker for computing 	 * thread runtime regardless of the timecounter setting, so 	 * using an alternate timecounter and enabling C2 or C3 can 	 * result incorrect runtimes for kernel idle threads (but not 	 * for any non-idle threads). 	 */
 if|if
 condition|(
 name|cpu_deepest_sleep
@@ -2230,13 +2230,6 @@ condition|)
 block|{
 name|tsc_timecounter
 operator|.
-name|tc_quality
-operator|=
-operator|-
-literal|1000
-expr_stmt|;
-name|tsc_timecounter
-operator|.
 name|tc_flags
 operator||=
 name|TC_FLAGS_C2STOP
@@ -2247,12 +2240,9 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"TSC timecounter disabled: C2/C3 may halt it.\n"
+literal|"TSC timecounter disables C2 and C3.\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|init
-goto|;
 block|}
 comment|/* 	 * We can not use the TSC in SMP mode unless the TSCs on all CPUs 	 * are synchronized.  If the user is sure that the system has 	 * synchronized TSCs, set kern.timecounter.smp_tsc tunable to a 	 * non-zero value.  The TSC seems unreliable in virtualized SMP 	 * environments, so it is set to a negative quality in those cases. 	 */
 if|if
