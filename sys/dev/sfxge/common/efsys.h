@@ -1186,9 +1186,6 @@ decl_stmt|;
 name|efsys_dma_addr_t
 name|esm_addr
 decl_stmt|;
-name|size_t
-name|esm_size
-decl_stmt|;
 block|}
 name|efsys_mem_t
 typedef|;
