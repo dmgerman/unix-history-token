@@ -1717,6 +1717,12 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_QSTATS
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -2021,6 +2027,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EFSYS_OPT_QSTATS */
+end_comment
 
 begin_function
 specifier|static
@@ -2724,6 +2739,9 @@ name|exception
 operator|=
 name|B_FALSE
 expr_stmt|;
+if|#
+directive|if
+name|EFSYS_OPT_QSTATS
 comment|/* Add event counts before discarding the common evq state */
 name|efx_ev_qstats_update
 argument_list|(
@@ -2736,6 +2754,8 @@ operator|->
 name|ev_stats
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|efx_ev_qdestroy
 argument_list|(
 name|evq
@@ -3816,11 +3836,16 @@ goto|goto
 name|fail
 goto|;
 block|}
+if|#
+directive|if
+name|EFSYS_OPT_QSTATS
 name|sfxge_ev_stat_init
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0

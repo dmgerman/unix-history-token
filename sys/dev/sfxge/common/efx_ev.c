@@ -4131,6 +4131,12 @@ end_function
 begin_if
 if|#
 directive|if
+name|EFSYS_OPT_QSTATS
+end_if
+
+begin_if
+if|#
+directive|if
 name|EFSYS_OPT_NAMES
 end_if
 
@@ -4292,6 +4298,15 @@ end_endif
 
 begin_comment
 comment|/* EFSYS_OPT_NAMES */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EFSYS_OPT_QSTATS */
 end_comment
 
 begin_if
