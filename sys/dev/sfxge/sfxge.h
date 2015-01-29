@@ -736,6 +736,10 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+name|unsigned
+name|int
+name|max_rss_channels
+decl_stmt|;
 name|uma_zone_t
 name|rxq_cache
 decl_stmt|;
