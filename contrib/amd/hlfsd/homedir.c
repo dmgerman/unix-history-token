@@ -1886,6 +1886,8 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|buf
@@ -1894,7 +1896,12 @@ literal|256
 argument_list|,
 name|passwd_fp
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 name|passwd_line
 operator|++
 expr_stmt|;

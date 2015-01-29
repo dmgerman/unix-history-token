@@ -3135,18 +3135,18 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/*  	 * For now set frequency to  5xSYSFREQ  	 * More flexible control might be required 	 */
+comment|/*  	 * For now set frequency to  99*SYSFREQ/8 which is twice as 	 * HDMI 1080p pixel clock (minimum LCDC freq divisor is 2) 	 */
 name|prcm_write_4
 argument_list|(
 name|CM_WKUP_CM_CLKSEL_DPLL_DISP
 argument_list|,
 operator|(
-literal|5
+literal|99
 operator|<<
 literal|8
 operator|)
 operator||
-literal|0
+literal|8
 argument_list|)
 expr_stmt|;
 comment|/* Locked mode */

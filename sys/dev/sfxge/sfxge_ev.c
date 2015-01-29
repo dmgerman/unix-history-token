@@ -200,6 +200,8 @@ condition|)
 name|sfxge_tx_qcomplete
 argument_list|(
 name|txq
+argument_list|,
+name|evq
 argument_list|)
 expr_stmt|;
 name|txq
@@ -1147,6 +1149,8 @@ condition|)
 name|sfxge_tx_qcomplete
 argument_list|(
 name|txq
+argument_list|,
+name|evq
 argument_list|)
 expr_stmt|;
 name|done
@@ -1717,6 +1721,12 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_QSTATS
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -2021,6 +2031,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EFSYS_OPT_QSTATS */
+end_comment
 
 begin_function
 specifier|static
@@ -2450,32 +2469,14 @@ name|int
 name|sfxge_ev_qpoll
 parameter_list|(
 name|struct
-name|sfxge_softc
-modifier|*
-name|sc
-parameter_list|,
-name|unsigned
-name|int
-name|index
-parameter_list|)
-block|{
-name|struct
 name|sfxge_evq
 modifier|*
 name|evq
-decl_stmt|;
+parameter_list|)
+block|{
 name|int
 name|rc
 decl_stmt|;
-name|evq
-operator|=
-name|sc
-operator|->
-name|evq
-index|[
-name|index
-index|]
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2742,6 +2743,9 @@ name|exception
 operator|=
 name|B_FALSE
 expr_stmt|;
+if|#
+directive|if
+name|EFSYS_OPT_QSTATS
 comment|/* Add event counts before discarding the common evq state */
 name|efx_ev_qstats_update
 argument_list|(
@@ -2754,6 +2758,8 @@ operator|->
 name|ev_stats
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|efx_ev_qdestroy
 argument_list|(
 name|evq
@@ -3768,7 +3774,7 @@ name|sc
 operator|->
 name|ev_moderation
 operator|=
-literal|30
+name|SFXGE_MODERATION
 expr_stmt|;
 name|SYSCTL_ADD_PROC
 argument_list|(
@@ -3834,11 +3840,16 @@ goto|goto
 name|fail
 goto|;
 block|}
+if|#
+directive|if
+name|EFSYS_OPT_QSTATS
 name|sfxge_ev_stat_init
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
