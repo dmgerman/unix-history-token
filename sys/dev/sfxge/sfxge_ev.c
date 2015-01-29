@@ -200,6 +200,8 @@ condition|)
 name|sfxge_tx_qcomplete
 argument_list|(
 name|txq
+argument_list|,
+name|evq
 argument_list|)
 expr_stmt|;
 name|txq
@@ -1147,6 +1149,8 @@ condition|)
 name|sfxge_tx_qcomplete
 argument_list|(
 name|txq
+argument_list|,
+name|evq
 argument_list|)
 expr_stmt|;
 name|done
