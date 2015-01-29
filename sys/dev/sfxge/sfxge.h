@@ -1036,13 +1036,9 @@ name|int
 name|sfxge_ev_qpoll
 parameter_list|(
 name|struct
-name|sfxge_softc
+name|sfxge_evq
 modifier|*
-name|sc
-parameter_list|,
-name|unsigned
-name|int
-name|index
+name|evq
 parameter_list|)
 function_decl|;
 end_function_decl
