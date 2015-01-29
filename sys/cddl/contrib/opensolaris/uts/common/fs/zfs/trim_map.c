@@ -2461,6 +2461,9 @@ operator|=
 name|gethrtime
 argument_list|()
 operator|-
+operator|(
+name|hrtime_t
+operator|)
 name|trim_timeout
 operator|*
 name|NANOSEC
