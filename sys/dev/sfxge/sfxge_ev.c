@@ -3774,7 +3774,7 @@ name|sc
 operator|->
 name|ev_moderation
 operator|=
-literal|30
+name|SFXGE_MODERATION
 expr_stmt|;
 name|SYSCTL_ADD_PROC
 argument_list|(
