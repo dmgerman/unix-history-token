@@ -9242,6 +9242,8 @@ argument_list|,
 name|dest
 argument_list|,
 name|name
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -9747,6 +9749,8 @@ argument_list|,
 name|var
 argument_list|,
 name|value
+argument_list|,
+name|NULL
 argument_list|)
 operator|==
 operator|-
@@ -10122,6 +10126,8 @@ argument_list|,
 literal|"li"
 argument_list|,
 name|rows
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -10137,6 +10143,8 @@ argument_list|,
 literal|"co"
 argument_list|,
 name|cols
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -10185,6 +10193,8 @@ argument_list|,
 literal|"li"
 argument_list|,
 name|buf
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|(
@@ -10213,6 +10223,8 @@ argument_list|,
 literal|"co"
 argument_list|,
 name|buf
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

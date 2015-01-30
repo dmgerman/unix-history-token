@@ -6262,7 +6262,7 @@ name|void
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|nf
 init|=
 name|el

@@ -2368,15 +2368,10 @@ block|}
 if|if
 condition|(
 operator|(
-name|unsigned
-name|int
+name|size_t
 operator|)
 name|cmdnum
 operator|>=
-operator|(
-name|unsigned
-name|int
-operator|)
 name|el
 operator|->
 name|el_map

@@ -98,7 +98,7 @@ modifier|*
 name|func
 decl_stmt|;
 comment|/* List of available functions	*/
-name|int
+name|size_t
 name|nfunc
 decl_stmt|;
 comment|/* The number of functions/help items */
