@@ -1091,7 +1091,10 @@ name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
-literal|"FAULTED"
+name|zpool_pool_state_to_name
+argument_list|(
+name|POOL_STATE_UNAVAIL
+argument_list|)
 argument_list|,
 name|len
 argument_list|)
