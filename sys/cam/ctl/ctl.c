@@ -51272,7 +51272,11 @@ name|io_hdr
 operator|.
 name|flags
 operator|&
+operator|(
 name|CTL_FLAG_ABORT
+operator||
+name|CTL_FLAG_STATUS_SENT
+operator|)
 operator|)
 operator|==
 literal|0
@@ -51370,7 +51374,11 @@ name|io_hdr
 operator|.
 name|flags
 operator|&
+operator|(
 name|CTL_FLAG_ABORT
+operator||
+name|CTL_FLAG_STATUS_SENT
+operator|)
 operator|)
 operator|==
 literal|0
