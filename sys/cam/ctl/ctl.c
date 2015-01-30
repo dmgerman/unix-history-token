@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2009 Silicon Graphics International Corp.  * Copyright (c) 2012 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by Edward Tomasz Napierala  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl.c#8 $  */
+comment|/*-  * Copyright (c) 2003-2009 Silicon Graphics International Corp.  * Copyright (c) 2012 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by Edward Tomasz Napierala  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id$  */
 end_comment
 
 begin_comment
@@ -2579,6 +2579,25 @@ name|void
 name|ctl_failover
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ctl_clear_ua
+parameter_list|(
+name|struct
+name|ctl_softc
+modifier|*
+name|ctl_softc
+parameter_list|,
+name|uint32_t
+name|initidx
+parameter_list|,
+name|ctl_ua_type
+name|ua_type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -44489,6 +44508,11 @@ modifier|*
 name|sense_ptr
 decl_stmt|;
 name|struct
+name|ctl_softc
+modifier|*
+name|ctl_softc
+decl_stmt|;
+name|struct
 name|ctl_lun
 modifier|*
 name|lun
@@ -44515,6 +44539,10 @@ operator|)
 name|ctsio
 operator|->
 name|cdb
+expr_stmt|;
+name|ctl_softc
+operator|=
+name|control_softc
 expr_stmt|;
 name|lun
 operator|=
@@ -44851,6 +44879,55 @@ name|have_error
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|ua_type
+operator|==
+name|CTL_UA_LUN_CHANGE
+condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|lun
+operator|->
+name|lun_lock
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|ctl_softc
+operator|->
+name|ctl_lock
+argument_list|)
+expr_stmt|;
+name|ctl_clear_ua
+argument_list|(
+name|ctl_softc
+argument_list|,
+name|initidx
+argument_list|,
+name|ua_type
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ctl_softc
+operator|->
+name|ctl_lock
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|lun
+operator|->
+name|lun_lock
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|mtx_unlock
 argument_list|(
@@ -45031,6 +45108,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * SCSI VPD page 0x00, the Supported VPD Pages page.  */
+end_comment
 
 begin_function
 specifier|static
@@ -45398,6 +45479,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * SCSI VPD page 0x80, the Unit Serial Number page.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -45671,6 +45756,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * SCSI VPD page 0x86, the Extended INQUIRY Data page.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -45865,14 +45954,18 @@ name|page_code
 operator|=
 name|SVPD_EXTENDED_INQUIRY_DATA
 expr_stmt|;
-name|eid_ptr
-operator|->
-name|page_length
-operator|=
+name|scsi_ulto2b
+argument_list|(
 name|data_len
 operator|-
 literal|4
+argument_list|,
+name|eid_ptr
+operator|->
+name|page_length
+argument_list|)
 expr_stmt|;
+comment|/* 	 * We support head of queue, ordered and simple tags. 	 */
 name|eid_ptr
 operator|->
 name|flags2
@@ -45883,11 +45976,26 @@ name|SVPD_EID_ORDSUP
 operator||
 name|SVPD_EID_SIMPSUP
 expr_stmt|;
+comment|/* 	 * Volatile cache supported. 	 */
 name|eid_ptr
 operator|->
 name|flags3
 operator|=
 name|SVPD_EID_V_SUP
+expr_stmt|;
+comment|/* 	 * This means that we clear the REPORTED LUNS DATA HAS CHANGED unit 	 * attention for a particular IT nexus on all LUNs once we report 	 * it to that nexus once.  This bit is required as of SPC-4. 	 */
+name|eid_ptr
+operator|->
+name|flags4
+operator|=
+name|SVPD_EID_LUICLT
+expr_stmt|;
+comment|/* 	 * XXX KDM in order to correctly answer this, we would need 	 * information from the SIM to determine how much sense data it 	 * can send.  So this would really be a path inquiry field, most 	 * likely.  This can be set to a maximum of 252 according to SPC-4, 	 * but the hardware may or may not be able to support that much. 	 * 0 just means that the maximum sense data length is not reported. 	 */
+name|eid_ptr
+operator|->
+name|max_sense_length
+operator|=
+literal|0
 expr_stmt|;
 name|ctl_set_success
 argument_list|(
@@ -46206,6 +46314,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * SCSI VPD page 0x83, the Device Identification page.  */
+end_comment
 
 begin_function
 specifier|static
@@ -48628,6 +48740,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * INQUIRY with the EVPD bit set.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -48926,6 +49042,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Standard INQUIRY data.  */
+end_comment
 
 begin_function
 specifier|static
@@ -53616,6 +53736,92 @@ operator|->
 name|ctl_lock
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ctl_clear_ua
+parameter_list|(
+name|struct
+name|ctl_softc
+modifier|*
+name|ctl_softc
+parameter_list|,
+name|uint32_t
+name|initidx
+parameter_list|,
+name|ctl_ua_type
+name|ua_type
+parameter_list|)
+block|{
+name|struct
+name|ctl_lun
+modifier|*
+name|lun
+decl_stmt|;
+name|ctl_ua_type
+modifier|*
+name|pu
+decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|ctl_softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|STAILQ_FOREACH
+argument_list|(
+argument|lun
+argument_list|,
+argument|&ctl_softc->lun_list
+argument_list|,
+argument|links
+argument_list|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|lun
+operator|->
+name|lun_lock
+argument_list|)
+expr_stmt|;
+name|pu
+operator|=
+name|lun
+operator|->
+name|pending_ua
+index|[
+name|initidx
+operator|/
+name|CTL_MAX_INIT_PER_PORT
+index|]
+expr_stmt|;
+name|pu
+index|[
+name|initidx
+operator|%
+name|CTL_MAX_INIT_PER_PORT
+index|]
+operator|&=
+operator|~
+name|ua_type
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|lun
+operator|->
+name|lun_lock
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
