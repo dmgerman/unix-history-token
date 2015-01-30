@@ -359,6 +359,11 @@ specifier|const
 name|nvlist_t
 modifier|*
 name|nvl
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|cookiep
 parameter_list|)
 function_decl|;
 end_function_decl
