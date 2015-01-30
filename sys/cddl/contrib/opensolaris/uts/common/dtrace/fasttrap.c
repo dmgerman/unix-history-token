@@ -983,8 +983,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|tdksignal
+name|tdsendsignal
 argument_list|(
+name|p
+argument_list|,
 name|t
 argument_list|,
 name|SIGTRAP
