@@ -1484,6 +1484,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|cp
+operator|->
+name|a1
+operator|&&
 name|MATCH
 argument_list|(
 name|cp
