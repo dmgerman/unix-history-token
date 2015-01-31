@@ -1040,6 +1040,8 @@ block|,
 literal|"allow.mount.procfs"
 block|,
 literal|"allow.mount.tmpfs"
+block|,
+literal|"allow.mount.fdescfs"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1087,6 +1089,8 @@ block|,
 literal|"allow.mount.noprocfs"
 block|,
 literal|"allow.mount.notmpfs"
+block|,
+literal|"allow.mount.nofdescfs"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -20137,6 +20141,34 @@ name|_security_jail
 argument_list|,
 name|OID_AUTO
 argument_list|,
+name|mount_fdescfs_allowed
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
+argument_list|,
+name|NULL
+argument_list|,
+name|PR_ALLOW_MOUNT_FDESCFS
+argument_list|,
+name|sysctl_jail_default_allow
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Processes in jail can mount the fdescfs file system"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_security_jail
+argument_list|,
+name|OID_AUTO
+argument_list|,
 name|mount_nullfs_allowed
 argument_list|,
 name|CTLTYPE_INT
@@ -21216,6 +21248,24 @@ argument_list|,
 literal|"B"
 argument_list|,
 literal|"Jail may mount the devfs file system"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_JAIL_PARAM
+argument_list|(
+name|_allow_mount
+argument_list|,
+name|fdescfs
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+literal|"B"
+argument_list|,
+literal|"Jail may mount the fdescfs file system"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
