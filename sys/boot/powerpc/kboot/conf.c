@@ -291,17 +291,5 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * reloc - our load address  */
-end_comment
-
-begin_decl_stmt
-name|vm_offset_t
-name|reloc
-init|=
-name|RELOC
-decl_stmt|;
-end_decl_stmt
-
 end_unit
 
