@@ -1985,11 +1985,9 @@ argument_list|,
 literal|"cannot allocate memory window\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|sc
 operator|->
@@ -2041,19 +2039,6 @@ operator|->
 name|sc_irq_res
 condition|)
 block|{
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_MEMORY
-argument_list|,
-literal|0
-argument_list|,
-name|sc
-operator|->
-name|sc_mem_res
-argument_list|)
-expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -2061,11 +2046,9 @@ argument_list|,
 literal|"cannot allocate interrupt\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* Find our node. */
 name|gpio
@@ -2246,6 +2229,14 @@ argument_list|,
 name|sc
 operator|->
 name|sc_mem_res
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return

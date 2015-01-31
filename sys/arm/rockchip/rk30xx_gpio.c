@@ -1791,6 +1791,20 @@ name|sc_dev
 operator|=
 name|dev
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|,
+literal|"rk30 gpio"
+argument_list|,
+literal|"gpio"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|rid
 operator|=
 literal|0
@@ -1826,11 +1840,9 @@ argument_list|,
 literal|"cannot allocate memory window\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|sc
 operator|->
@@ -1924,24 +1936,9 @@ argument_list|,
 literal|"unsupported device unit (only GPIO0..3 are supported)\n"
 argument_list|)
 expr_stmt|;
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_MEMORY
-argument_list|,
-literal|0
-argument_list|,
-name|sc
-operator|->
-name|sc_mem_res
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|rid
 operator|=
@@ -1971,19 +1968,6 @@ operator|->
 name|sc_irq_res
 condition|)
 block|{
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_MEMORY
-argument_list|,
-literal|0
-argument_list|,
-name|sc
-operator|->
-name|sc_mem_res
-argument_list|)
-expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -1991,11 +1975,9 @@ argument_list|,
 literal|"cannot allocate interrupt\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* Find our node. */
 name|gpio
@@ -2021,20 +2003,6 @@ comment|/* Node is not a GPIO controller. */
 goto|goto
 name|fail
 goto|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|,
-literal|"rk30 gpio"
-argument_list|,
-literal|"gpio"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 comment|/* Initialize the software controlled pins. */
 for|for
 control|(
@@ -2186,6 +2154,14 @@ argument_list|,
 name|sc
 operator|->
 name|sc_mem_res
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return

@@ -33575,12 +33575,6 @@ argument_list|(
 name|BLC_PWM_PCH_CTL1
 argument_list|,
 name|PWM_ENABLE
-operator||
-operator|(
-literal|1
-operator|<<
-literal|30
-operator|)
 argument_list|)
 expr_stmt|;
 block|}

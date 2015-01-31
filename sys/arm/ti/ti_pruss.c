@@ -1301,6 +1301,11 @@ argument_list|)
 operator|+
 name|offset
 expr_stmt|;
+operator|*
+name|memattr
+operator|=
+name|VM_MEMATTR_UNCACHEABLE
+expr_stmt|;
 return|return
 operator|(
 literal|0

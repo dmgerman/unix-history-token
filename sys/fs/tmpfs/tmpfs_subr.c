@@ -6446,6 +6446,8 @@ operator|->
 name|tn_status
 operator||=
 name|TMPFS_NODE_MODIFIED
+operator||
+name|TMPFS_NODE_CHANGED
 expr_stmt|;
 block|}
 name|VM_OBJECT_WUNLOCK

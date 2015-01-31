@@ -204,6 +204,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/iscsi/icl_wrappers.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/iscsi/iscsi_proto.h>
 end_include
 
@@ -5464,8 +5470,10 @@ name|cs
 operator|->
 name|cs_conn
 operator|=
-name|icl_conn_new
+name|icl_new_conn
 argument_list|(
+name|NULL
+argument_list|,
 literal|"cfiscsi"
 argument_list|,
 operator|&
@@ -9484,6 +9492,7 @@ name|ct
 operator|->
 name|ct_port
 expr_stmt|;
+comment|// WAT
 if|if
 condition|(
 name|ct
