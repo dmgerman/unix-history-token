@@ -182,6 +182,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/iscsi/icl_wrappers.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/iscsi/iscsi_ioctl.h>
 end_include
 
@@ -7884,8 +7890,10 @@ name|is
 operator|->
 name|is_conn
 operator|=
-name|icl_conn_new
+name|icl_new_conn
 argument_list|(
+name|NULL
+argument_list|,
 literal|"iscsi"
 argument_list|,
 operator|&
