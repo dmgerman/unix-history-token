@@ -1001,6 +1001,13 @@ decl_stmt|;
 name|struct
 name|winsize
 name|ws
+init|=
+block|{
+operator|.
+name|ws_row
+operator|=
+literal|0
+block|}
 decl_stmt|;
 specifier|const
 name|char
