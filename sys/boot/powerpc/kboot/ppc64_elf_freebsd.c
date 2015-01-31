@@ -76,17 +76,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
-name|reloc
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* From<arch>/conf.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|void
 modifier|*
 name|kerneltramp
@@ -200,16 +189,12 @@ name|uint32_t
 modifier|*
 name|trampoline
 decl_stmt|;
+name|uint64_t
+name|entry
+decl_stmt|;
 name|vm_offset_t
 name|trampolinebase
-init|=
-literal|96
-operator|*
-literal|1024
-operator|*
-literal|1024
 decl_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 operator|(
@@ -243,7 +228,21 @@ name|fmp
 operator|->
 name|md_data
 expr_stmt|;
-comment|/* Handle function descriptor */
+comment|/* Figure out where to put it */
+name|trampolinebase
+operator|=
+name|archsw
+operator|.
+name|arch_loadaddr
+argument_list|(
+name|LOAD_RAW
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Set up interesting values in function descriptor */
 name|trampoline
 operator|=
 name|malloc
@@ -261,14 +260,30 @@ argument_list|,
 name|szkerneltramp
 argument_list|)
 expr_stmt|;
+name|archsw
+operator|.
+name|arch_copyout
+argument_list|(
+name|e
+operator|->
+name|e_entry
+operator|+
+name|elf64_relocation_offset
+argument_list|,
+operator|&
+name|entry
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
 name|trampoline
 index|[
 literal|2
 index|]
 operator|=
-name|e
-operator|->
-name|e_entry
+name|entry
+operator|+
+name|elf64_relocation_offset
 expr_stmt|;
 name|trampoline
 index|[
@@ -338,11 +353,25 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Kernel entry at %#jx ...\n"
+literal|"Kernel entry at %#jx (%#x) ...\n"
 argument_list|,
 name|e
 operator|->
 name|e_entry
+argument_list|,
+name|trampoline
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"DTB at %#x, mdp at %#x\n"
+argument_list|,
+name|dtb
+argument_list|,
+name|mdp
 argument_list|)
 expr_stmt|;
 name|dev_cleanup
