@@ -352,6 +352,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|device_t
+name|gpiobus_attach_bus
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|gpiobus_detach_bus
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|gpiobus_init_softc
 parameter_list|(

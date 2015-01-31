@@ -48,6 +48,9 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
+name|device_t
+name|sc_busdev
+decl_stmt|;
 comment|/* Interrupt trigger type and level. */
 name|enum
 name|intr_trigger

@@ -133,6 +133,9 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
+name|device_t
+name|busdev
+decl_stmt|;
 name|struct
 name|mtx
 name|gpio_mtx
