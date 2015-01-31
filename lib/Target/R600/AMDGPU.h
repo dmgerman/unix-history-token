@@ -333,6 +333,14 @@ enum|enum
 name|TargetIndex
 block|{
 name|TI_CONSTDATA_START
+block|,
+name|TI_SCRATCH_RSRC_DWORD0
+block|,
+name|TI_SCRATCH_RSRC_DWORD1
+block|,
+name|TI_SCRATCH_RSRC_DWORD2
+block|,
+name|TI_SCRATCH_RSRC_DWORD3
 block|}
 enum|;
 block|}

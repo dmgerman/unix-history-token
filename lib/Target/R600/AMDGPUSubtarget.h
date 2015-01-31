@@ -140,6 +140,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|SIMachineFunctionInfo
+decl_stmt|;
+name|class
 name|AMDGPUSubtarget
 range|:
 name|public
@@ -227,6 +230,9 @@ name|CFALUBug
 block|;
 name|int
 name|LocalMemorySize
+block|;
+name|bool
+name|EnableVGPRSpilling
 block|;
 specifier|const
 name|DataLayout
@@ -726,6 +732,30 @@ return|;
 block|}
 end_expr_stmt
 
+begin_decl_stmt
+name|void
+name|overrideSchedPolicy
+argument_list|(
+name|MachineSchedPolicy
+operator|&
+name|Policy
+argument_list|,
+name|MachineInstr
+operator|*
+name|begin
+argument_list|,
+name|MachineInstr
+operator|*
+name|end
+argument_list|,
+name|unsigned
+name|NumRegionInstrs
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|// Helper functions to simplify if statements
 end_comment
@@ -797,8 +827,52 @@ return|;
 block|}
 end_expr_stmt
 
+begin_decl_stmt
+name|bool
+name|isVGPRSpillingEnabled
+argument_list|(
+specifier|const
+name|SIMachineFunctionInfo
+operator|*
+name|MFI
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|unsigned
+name|getMaxWavesPerCU
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getGeneration
+argument_list|()
+operator|>=
+name|AMDGPUSubtarget
+operator|::
+name|SOUTHERN_ISLANDS
+condition|)
+return|return
+literal|10
+return|;
+comment|// FIXME: Not sure what this is for other subtagets.
+name|llvm_unreachable
+argument_list|(
+literal|"do not know max waves per CU for this subtarget."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};  }
+unit|}
 comment|// End namespace llvm
 end_comment
 

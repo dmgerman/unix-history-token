@@ -629,6 +629,8 @@ name|getAddrLocal
 argument_list|(
 argument|NodeTy *N
 argument_list|,
+argument|SDLoc DL
+argument_list|,
 argument|EVT Ty
 argument_list|,
 argument|SelectionDAG&DAG
@@ -637,21 +639,15 @@ argument|bool IsN32OrN64
 argument_list|)
 specifier|const
 block|{
-name|SDLoc
-name|DL
-argument_list|(
-name|N
-argument_list|)
-block|;
 name|unsigned
 name|GOTFlag
 operator|=
 name|IsN32OrN64
-condition|?
+operator|?
 name|MipsII
 operator|::
 name|MO_GOT_PAGE
-else|:
+operator|:
 name|MipsII
 operator|::
 name|MO_GOT
@@ -795,6 +791,8 @@ name|getAddrGlobal
 argument_list|(
 argument|NodeTy *N
 argument_list|,
+argument|SDLoc DL
+argument_list|,
 argument|EVT Ty
 argument_list|,
 argument|SelectionDAG&DAG
@@ -807,12 +805,6 @@ argument|const MachinePointerInfo&PtrInfo
 argument_list|)
 specifier|const
 block|{
-name|SDLoc
-name|DL
-argument_list|(
-name|N
-argument_list|)
-block|;
 name|SDValue
 name|Tgt
 operator|=
@@ -886,6 +878,8 @@ name|getAddrGlobalLargeGOT
 argument_list|(
 argument|NodeTy *N
 argument_list|,
+argument|SDLoc DL
+argument_list|,
 argument|EVT Ty
 argument_list|,
 argument|SelectionDAG&DAG
@@ -900,12 +894,6 @@ argument|const MachinePointerInfo&PtrInfo
 argument_list|)
 specifier|const
 block|{
-name|SDLoc
-name|DL
-argument_list|(
-name|N
-argument_list|)
-block|;
 name|SDValue
 name|Hi
 operator|=
@@ -1025,18 +1013,14 @@ name|getAddrNonPIC
 argument_list|(
 argument|NodeTy *N
 argument_list|,
+argument|SDLoc DL
+argument_list|,
 argument|EVT Ty
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|{
-name|SDLoc
-name|DL
-argument_list|(
-name|N
-argument_list|)
-block|;
 name|SDValue
 name|Hi
 operator|=
@@ -1128,18 +1112,14 @@ name|getAddrGPRel
 argument_list|(
 argument|NodeTy *N
 argument_list|,
+argument|SDLoc DL
+argument_list|,
 argument|EVT Ty
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|{
-name|SDLoc
-name|DL
-argument_list|(
-name|N
-argument_list|)
-block|;
 name|assert
 argument_list|(
 name|Ty

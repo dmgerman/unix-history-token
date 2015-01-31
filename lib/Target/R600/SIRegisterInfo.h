@@ -69,6 +69,12 @@ directive|include
 file|"AMDGPURegisterInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Debug.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -96,11 +102,9 @@ specifier|const
 name|override
 block|;
 name|unsigned
-name|getRegPressureLimit
+name|getRegPressureSetLimit
 argument_list|(
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|MachineFunction&MF
+argument|unsigned Idx
 argument_list|)
 specifier|const
 name|override
@@ -336,6 +340,26 @@ name|Value
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Give the maximum number of VGPRs that can be used by \p WaveCount
+comment|///        concurrent waves.
+name|unsigned
+name|getNumVGPRsAllowed
+argument_list|(
+name|unsigned
+name|WaveCount
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Give the maximum number of SGPRs that can be used by \p WaveCount
+comment|///        concurrent waves.
+name|unsigned
+name|getNumSGPRsAllowed
+argument_list|(
+name|unsigned
+name|WaveCount
+argument_list|)
+decl|const
+decl_stmt|;
 name|unsigned
 name|findUnusedRegister
 argument_list|(
@@ -368,7 +392,7 @@ name|unsigned
 name|Value
 argument_list|,
 name|unsigned
-name|ScratchPtr
+name|ScratchRsrcReg
 argument_list|,
 name|unsigned
 name|ScratchOffset

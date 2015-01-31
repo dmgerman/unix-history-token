@@ -753,6 +753,17 @@ name|AnalysisID
 name|AID
 parameter_list|)
 function_decl|;
+comment|/// Retrieve the PassInfo for an analysis.
+specifier|const
+name|PassInfo
+modifier|*
+name|findAnalysisPassInfo
+argument_list|(
+name|AnalysisID
+name|AID
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Find analysis usage information for the pass P.
 name|AnalysisUsage
 modifier|*
@@ -929,6 +940,21 @@ name|AnalysisUsage
 operator|*
 operator|>
 name|AnUsageMap
+expr_stmt|;
+comment|/// Collection of PassInfo objects found via analysis IDs and in this top
+comment|/// level manager. This is used to memoize queries to the pass registry.
+comment|/// FIXME: This is an egregious hack because querying the pass registry is
+comment|/// either slow or racy.
+name|mutable
+name|DenseMap
+operator|<
+name|AnalysisID
+operator|,
+specifier|const
+name|PassInfo
+operator|*
+operator|>
+name|AnalysisPassInfos
 expr_stmt|;
 block|}
 empty_stmt|;

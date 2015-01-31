@@ -99,6 +99,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|// metadata.c
+end_comment
+
+begin_function_decl
+name|int
+name|add_named_metadata_operand
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|set_metadata
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|// object.c
 end_comment
 
