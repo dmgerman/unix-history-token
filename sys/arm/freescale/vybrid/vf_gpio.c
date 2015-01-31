@@ -540,6 +540,14 @@ argument_list|,
 literal|"could not allocate resources\n"
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
