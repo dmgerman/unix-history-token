@@ -3900,8 +3900,6 @@ name|ExpectedFunctionMethodOrParameter
 block|,
 name|ExpectedClass
 block|,
-name|ExpectedEnum
-block|,
 name|ExpectedVariable
 block|,
 name|ExpectedMethod

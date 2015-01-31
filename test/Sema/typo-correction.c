@@ -71,6 +71,38 @@ begin_comment
 comment|// expected-error {{use of undeclared identifier 'b'}}
 end_comment
 
+begin_decl_stmt
+name|int
+name|foobar
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-note {{'foobar' declared here}}
+end_comment
+
+begin_expr_stmt
+name|a
+operator|=
+name|goobar
+condition|?
+else|:
+literal|4
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// expected-warning {{type specifier missing, defaults to 'int'}} \
+end_comment
+
+begin_comment
+comment|// expected-error {{use of undeclared identifier 'goobar'; did you mean 'foobar'?}} \
+end_comment
+
+begin_comment
+comment|// expected-error {{initializer element is not a compile-time constant}}
+end_comment
+
 begin_struct
 struct|struct
 name|ContainerStuct

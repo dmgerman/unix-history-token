@@ -551,6 +551,10 @@ name|incomplete
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-note {{forward declaration of 'struct Incomplete'}}
+end_comment
+
 begin_assert
 assert|_Static_assert
 argument_list|(
@@ -2607,6 +2611,26 @@ name|__c11_atomic_fetch_add
 argument_list|(
 name|Ap
 argument_list|,
+literal|1
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|__c11_atomic_fetch_add
+argument_list|(
+operator|(
+expr|struct
+name|Incomplete
+operator|*
+expr|_Atomic
+operator|*
+operator|)
+literal|0
+argument_list|,
+comment|// expected-error {{incomplete type 'struct Incomplete'}}
 literal|1
 argument_list|,
 name|memory_order_seq_cst

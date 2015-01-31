@@ -5587,5 +5587,69 @@ begin_comment
 comment|// CHECK-u: "-u" "asdf"
 end_comment
 
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=armeb-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ARMEB %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARMEB: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-ARMEB-NOT: "--be8"
+end_comment
+
+begin_comment
+comment|// CHECK-ARMEB: "-m" "armebelf_linux_eabi"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=armebv7-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ARMV7EB %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARMV7EB: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-ARMV7EB: "--be8"
+end_comment
+
+begin_comment
+comment|// CHECK-ARMV7EB: "-m" "armebelf_linux_eabi"
+end_comment
+
 end_unit
 

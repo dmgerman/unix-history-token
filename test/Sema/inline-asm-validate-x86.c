@@ -34,7 +34,7 @@ init|=
 literal|32
 decl_stmt|;
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "I"(j));
-comment|// expected-error{{invalid type 'int' in asm input for constraint 'I'}}
+comment|// expected-error{{constraint 'I' expects an integer constant expression}}
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "I"(BelowMin));
 comment|// expected-error{{value '-1' out of range for constraint 'I'}}
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "I"(AboveMax));
@@ -71,7 +71,7 @@ init|=
 literal|64
 decl_stmt|;
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "J"(j));
-comment|// expected-error{{invalid type 'int' in asm input for constraint 'J'}}
+comment|// expected-error{{constraint 'J' expects an integer constant expression}}
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "J"(BelowMin));
 comment|// expected-error{{value '-1' out of range for constraint 'J'}}
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "J"(AboveMax));
@@ -108,7 +108,7 @@ init|=
 literal|128
 decl_stmt|;
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "K"(j));
-comment|// expected-error{{invalid type 'int' in asm input for constraint 'K'}}
+comment|// expected-error{{constraint 'K' expects an integer constant expression}}
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "K"(BelowMin));
 comment|// expected-error{{value '-129' out of range for constraint 'K'}}
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "K"(AboveMax));
@@ -145,7 +145,7 @@ init|=
 literal|4
 decl_stmt|;
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "M"(j));
-comment|// expected-error{{invalid type 'int' in asm input for constraint 'M'}}
+comment|// expected-error{{constraint 'M' expects an integer constant expression}}
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "M"(BelowMin));
 comment|// expected-error{{value '-1' out of range for constraint 'M'}}
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "M"(AboveMax));
@@ -182,7 +182,7 @@ init|=
 literal|256
 decl_stmt|;
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "N"(j));
-comment|// expected-error{{invalid type 'int' in asm input for constraint 'N'}}
+comment|// expected-error{{constraint 'N' expects an integer constant expression}}
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "N"(BelowMin));
 comment|// expected-error{{value '-1' out of range for constraint 'N'}}
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "N"(AboveMax));
@@ -219,7 +219,7 @@ init|=
 literal|128
 decl_stmt|;
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "O"(j));
-comment|// expected-error{{invalid type 'int' in asm input for constraint 'O'}}
+comment|// expected-error{{constraint 'O' expects an integer constant expression}}
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "O"(BelowMin));
 comment|// expected-error{{value '-1' out of range for constraint 'O'}}
 asm|__asm__("xorl %0,%2"           : "=r"(i)           : "0"(i), "O"(AboveMax));

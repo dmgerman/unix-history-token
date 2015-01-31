@@ -11900,6 +11900,2462 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding \
+end_comment
+
+begin_comment
+comment|// RUN:            -triple=mips64-none-none -target-abi n32< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPSN32BE %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define MIPSEB 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define _ABIN32 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define _ILP32 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define _MIPSEB 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define _MIPS_ARCH "mips64r2"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define _MIPS_ARCH_MIPS64R2 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define _MIPS_FPSET 32
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define _MIPS_ISA _MIPS_ISA_MIPS64
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define _MIPS_SIM _ABIN32
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define _MIPS_SZINT 32
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define _MIPS_SZLONG 32
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define _MIPS_SZPTR 32
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __ATOMIC_ACQUIRE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __ATOMIC_ACQ_REL 4
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __ATOMIC_CONSUME 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __ATOMIC_RELAXED 0
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __ATOMIC_RELEASE 3
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __ATOMIC_SEQ_CST 5
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __BIG_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __BYTE_ORDER__ __ORDER_BIG_ENDIAN__
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __CONSTANT_CFSTRINGS__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __DECIMAL_DIG__ 36
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FINITE_MATH_ONLY__ 0
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GCC_ATOMIC_BOOL_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GCC_ATOMIC_CHAR16_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GCC_ATOMIC_CHAR32_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GCC_ATOMIC_CHAR_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GCC_ATOMIC_INT_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GCC_ATOMIC_LLONG_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GCC_ATOMIC_LONG_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GCC_ATOMIC_POINTER_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GCC_ATOMIC_SHORT_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GCC_ATOMIC_TEST_AND_SET_TRUEVAL 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GCC_ATOMIC_WCHAR_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GNUC_MINOR__ 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GNUC_PATCHLEVEL__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GNUC_STDC_INLINE__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GNUC__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GXX_ABI_VERSION 1002
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __GXX_RTTI 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __ILP32__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT16_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT32_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT8_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INTMAX_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INTMAX_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_LEAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LDBL_DENORM_MIN__ 6.47517511943802511092443895822764655e-4966L
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LDBL_DIG__ 33
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LDBL_EPSILON__ 1.92592994438723585305597794258492732e-34L
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LDBL_MANT_DIG__ 113
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LDBL_MAX_10_EXP__ 4932
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LDBL_MAX_EXP__ 16384
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LDBL_MAX__ 1.18973149535723176508575932662800702e+4932L
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LDBL_MIN_10_EXP__ (-4931)
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LDBL_MIN_EXP__ (-16381)
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LDBL_MIN__ 3.36210314311209350626267781732175260e-4932L
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __LONG_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __MIPSEB 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __MIPSEB__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __NO_INLINE__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __ORDER_BIG_ENDIAN__ 4321
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __ORDER_LITTLE_ENDIAN__ 1234
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __ORDER_PDP_ENDIAN__ 3412
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __POINTER_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __PRAGMA_REDEFINE_EXTNAME 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __PTRDIFF_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __PTRDIFF_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __PTRDIFF_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __PTRDIFF_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __REGISTER_PREFIX__
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZEOF_LONG_DOUBLE__ 16
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZE_FMTX__ "X"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZE_FMTo__ "o"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZE_FMTu__ "u"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZE_FMTx__ "x"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZE_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZE_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __STDC_HOSTED__ 0
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __STDC_UTF_16__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __STDC_UTF_32__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __STDC_VERSION__ 201112L
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __STDC__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT16_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT16_FMTX__ "hX"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT16_FMTo__ "ho"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT16_FMTu__ "hu"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT16_FMTx__ "hx"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT32_FMTX__ "X"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT32_FMTo__ "o"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT32_FMTu__ "u"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT32_FMTx__ "x"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT64_FMTX__ "llX"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT64_FMTo__ "llo"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT64_FMTu__ "llu"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT64_FMTx__ "llx"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT8_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT8_FMTX__ "hhX"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT8_FMTo__ "hho"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT8_FMTu__ "hhu"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT8_FMTx__ "hhx"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTMAX_FMTX__ "llX"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTMAX_FMTo__ "llo"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTMAX_FMTu__ "llu"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTMAX_FMTx__ "llx"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTPTR_FMTX__ "lX"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTPTR_FMTo__ "lo"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTPTR_FMTu__ "lu"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTPTR_FMTx__ "lx"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTPTR_MAX__ 4294967295UL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST16_FMTX__ "hX"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST16_FMTo__ "ho"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST16_FMTu__ "hu"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST16_FMTx__ "hx"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST32_FMTX__ "X"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST32_FMTo__ "o"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST32_FMTu__ "u"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST32_FMTx__ "x"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST64_FMTX__ "llX"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST64_FMTo__ "llo"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST64_FMTu__ "llu"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST64_FMTx__ "llx"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST8_FMTX__ "hhX"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST8_FMTo__ "hho"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST8_FMTu__ "hhu"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST8_FMTx__ "hhx"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST16_FMTX__ "hX"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST16_FMTo__ "ho"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST16_FMTu__ "hu"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST16_FMTx__ "hx"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST32_FMTX__ "X"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST32_FMTo__ "o"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST32_FMTu__ "u"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST32_FMTx__ "x"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST64_FMTX__ "llX"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST64_FMTo__ "llo"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST64_FMTu__ "llu"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST64_FMTx__ "llx"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST8_FMTX__ "hhX"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST8_FMTo__ "hho"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST8_FMTu__ "hhu"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST8_FMTx__ "hhx"
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __UINT_LEAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __USER_LABEL_PREFIX__ _
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __WCHAR_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __WCHAR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __clang__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __llvm__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __mips 64
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __mips64 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __mips64__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __mips__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __mips_fpr 64
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __mips_hard_float 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __mips_isa_rev 2
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define __mips_n32 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define _mips 1
+end_comment
+
+begin_comment
+comment|// MIPSN32BE: #define mips 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding \
+end_comment
+
+begin_comment
+comment|// RUN:            -triple=mips64el-none-none -target-abi n32< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPSN32EL %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define MIPSEL 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define _ABIN32 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define _ILP32 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define _MIPSEL 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define _MIPS_ARCH "mips64r2"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define _MIPS_ARCH_MIPS64R2 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define _MIPS_FPSET 32
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define _MIPS_ISA _MIPS_ISA_MIPS64
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define _MIPS_SIM _ABIN32
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define _MIPS_SZINT 32
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define _MIPS_SZLONG 32
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define _MIPS_SZPTR 32
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __ATOMIC_ACQUIRE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __ATOMIC_ACQ_REL 4
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __ATOMIC_CONSUME 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __ATOMIC_RELAXED 0
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __ATOMIC_RELEASE 3
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __ATOMIC_SEQ_CST 5
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __CONSTANT_CFSTRINGS__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __DECIMAL_DIG__ 36
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FINITE_MATH_ONLY__ 0
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GCC_ATOMIC_BOOL_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GCC_ATOMIC_CHAR16_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GCC_ATOMIC_CHAR32_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GCC_ATOMIC_CHAR_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GCC_ATOMIC_INT_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GCC_ATOMIC_LLONG_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GCC_ATOMIC_LONG_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GCC_ATOMIC_POINTER_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GCC_ATOMIC_SHORT_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GCC_ATOMIC_TEST_AND_SET_TRUEVAL 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GCC_ATOMIC_WCHAR_T_LOCK_FREE 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GNUC_MINOR__ 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GNUC_PATCHLEVEL__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GNUC_STDC_INLINE__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GNUC__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GXX_ABI_VERSION 1002
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __GXX_RTTI 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __ILP32__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT16_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT32_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT8_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INTMAX_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INTMAX_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_LEAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LDBL_DENORM_MIN__ 6.47517511943802511092443895822764655e-4966L
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LDBL_DIG__ 33
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LDBL_EPSILON__ 1.92592994438723585305597794258492732e-34L
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LDBL_MANT_DIG__ 113
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LDBL_MAX_10_EXP__ 4932
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LDBL_MAX_EXP__ 16384
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LDBL_MAX__ 1.18973149535723176508575932662800702e+4932L
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LDBL_MIN_10_EXP__ (-4931)
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LDBL_MIN_EXP__ (-16381)
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LDBL_MIN__ 3.36210314311209350626267781732175260e-4932L
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __LONG_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __MIPSEL 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __MIPSEL__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __NO_INLINE__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __ORDER_BIG_ENDIAN__ 4321
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __ORDER_LITTLE_ENDIAN__ 1234
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __ORDER_PDP_ENDIAN__ 3412
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __POINTER_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __PRAGMA_REDEFINE_EXTNAME 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __PTRDIFF_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __PTRDIFF_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __PTRDIFF_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __PTRDIFF_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __REGISTER_PREFIX__
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZEOF_LONG_DOUBLE__ 16
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZE_FMTX__ "X"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZE_FMTo__ "o"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZE_FMTu__ "u"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZE_FMTx__ "x"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZE_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZE_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __STDC_HOSTED__ 0
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __STDC_UTF_16__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __STDC_UTF_32__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __STDC_VERSION__ 201112L
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __STDC__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT16_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT16_FMTX__ "hX"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT16_FMTo__ "ho"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT16_FMTu__ "hu"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT16_FMTx__ "hx"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT32_FMTX__ "X"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT32_FMTo__ "o"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT32_FMTu__ "u"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT32_FMTx__ "x"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT64_FMTX__ "llX"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT64_FMTo__ "llo"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT64_FMTu__ "llu"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT64_FMTx__ "llx"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT8_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT8_FMTX__ "hhX"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT8_FMTo__ "hho"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT8_FMTu__ "hhu"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT8_FMTx__ "hhx"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTMAX_FMTX__ "llX"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTMAX_FMTo__ "llo"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTMAX_FMTu__ "llu"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTMAX_FMTx__ "llx"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTPTR_FMTX__ "lX"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTPTR_FMTo__ "lo"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTPTR_FMTu__ "lu"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTPTR_FMTx__ "lx"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTPTR_MAX__ 4294967295UL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST16_FMTX__ "hX"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST16_FMTo__ "ho"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST16_FMTu__ "hu"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST16_FMTx__ "hx"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST32_FMTX__ "X"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST32_FMTo__ "o"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST32_FMTu__ "u"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST32_FMTx__ "x"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST64_FMTX__ "llX"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST64_FMTo__ "llo"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST64_FMTu__ "llu"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST64_FMTx__ "llx"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST8_FMTX__ "hhX"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST8_FMTo__ "hho"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST8_FMTu__ "hhu"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST8_FMTx__ "hhx"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST16_FMTX__ "hX"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST16_FMTo__ "ho"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST16_FMTu__ "hu"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST16_FMTx__ "hx"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST32_FMTX__ "X"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST32_FMTo__ "o"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST32_FMTu__ "u"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST32_FMTx__ "x"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST64_FMTX__ "llX"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST64_FMTo__ "llo"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST64_FMTu__ "llu"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST64_FMTx__ "llx"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST8_FMTX__ "hhX"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST8_FMTo__ "hho"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST8_FMTu__ "hhu"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST8_FMTx__ "hhx"
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __UINT_LEAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __USER_LABEL_PREFIX__ _
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __WCHAR_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __WCHAR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __clang__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __llvm__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __mips 64
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __mips64 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __mips64__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __mips__ 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __mips_fpr 64
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __mips_hard_float 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __mips_isa_rev 2
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define __mips_n32 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define _mips 1
+end_comment
+
+begin_comment
+comment|// MIPSN32EL: #define mips 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips64-none-none< /dev/null | FileCheck -check-prefix MIPS64BE %s
 end_comment
 
@@ -12132,15 +14588,15 @@ comment|// MIPS64BE:#define __INT32_TYPE__ int
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __INT64_C_SUFFIX__ LL
+comment|// MIPS64BE:#define __INT64_C_SUFFIX__ L
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __INT64_FMTd__ "lld"
+comment|// MIPS64BE:#define __INT64_FMTd__ "ld"
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __INT64_FMTi__ "lli"
+comment|// MIPS64BE:#define __INT64_FMTi__ "li"
 end_comment
 
 begin_comment
@@ -12148,7 +14604,7 @@ comment|// MIPS64BE:#define __INT64_MAX__ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __INT64_TYPE__ long long int
+comment|// MIPS64BE:#define __INT64_TYPE__ long int
 end_comment
 
 begin_comment
@@ -12172,23 +14628,23 @@ comment|// MIPS64BE:#define __INT8_TYPE__ signed char
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __INTMAX_C_SUFFIX__ LL
+comment|// MIPS64BE:#define __INTMAX_C_SUFFIX__ L
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __INTMAX_FMTd__ "lld"
+comment|// MIPS64BE:#define __INTMAX_FMTd__ "ld"
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __INTMAX_FMTi__ "lli"
+comment|// MIPS64BE:#define __INTMAX_FMTi__ "li"
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __INTMAX_MAX__ 9223372036854775807LL
+comment|// MIPS64BE:#define __INTMAX_MAX__ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __INTMAX_TYPE__ long long int
+comment|// MIPS64BE:#define __INTMAX_TYPE__ long int
 end_comment
 
 begin_comment
@@ -12544,15 +15000,15 @@ comment|// MIPS64BE:#define __UINT32_TYPE__ unsigned int
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __UINT64_C_SUFFIX__ ULL
+comment|// MIPS64BE:#define __UINT64_C_SUFFIX__ UL
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __UINT64_MAX__ 18446744073709551615ULL
+comment|// MIPS64BE:#define __UINT64_MAX__ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __UINT64_TYPE__ long long unsigned int
+comment|// MIPS64BE:#define __UINT64_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -12568,15 +15024,15 @@ comment|// MIPS64BE:#define __UINT8_TYPE__ unsigned char
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __UINTMAX_C_SUFFIX__ ULL
+comment|// MIPS64BE:#define __UINTMAX_C_SUFFIX__ UL
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __UINTMAX_MAX__ 18446744073709551615ULL
+comment|// MIPS64BE:#define __UINTMAX_MAX__ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __UINTMAX_TYPE__ long long unsigned int
+comment|// MIPS64BE:#define __UINTMAX_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -12960,15 +15416,15 @@ comment|// MIPS64EL:#define __INT32_TYPE__ int
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __INT64_C_SUFFIX__ LL
+comment|// MIPS64EL:#define __INT64_C_SUFFIX__ L
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __INT64_FMTd__ "lld"
+comment|// MIPS64EL:#define __INT64_FMTd__ "ld"
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __INT64_FMTi__ "lli"
+comment|// MIPS64EL:#define __INT64_FMTi__ "li"
 end_comment
 
 begin_comment
@@ -12976,7 +15432,7 @@ comment|// MIPS64EL:#define __INT64_MAX__ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __INT64_TYPE__ long long int
+comment|// MIPS64EL:#define __INT64_TYPE__ long int
 end_comment
 
 begin_comment
@@ -13000,23 +15456,23 @@ comment|// MIPS64EL:#define __INT8_TYPE__ signed char
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __INTMAX_C_SUFFIX__ LL
+comment|// MIPS64EL:#define __INTMAX_C_SUFFIX__ L
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __INTMAX_FMTd__ "lld"
+comment|// MIPS64EL:#define __INTMAX_FMTd__ "ld"
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __INTMAX_FMTi__ "lli"
+comment|// MIPS64EL:#define __INTMAX_FMTi__ "li"
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __INTMAX_MAX__ 9223372036854775807LL
+comment|// MIPS64EL:#define __INTMAX_MAX__ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __INTMAX_TYPE__ long long int
+comment|// MIPS64EL:#define __INTMAX_TYPE__ long int
 end_comment
 
 begin_comment
@@ -13376,15 +15832,15 @@ comment|// MIPS64EL:#define __UINT32_TYPE__ unsigned int
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __UINT64_C_SUFFIX__ ULL
+comment|// MIPS64EL:#define __UINT64_C_SUFFIX__ UL
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __UINT64_MAX__ 18446744073709551615ULL
+comment|// MIPS64EL:#define __UINT64_MAX__ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __UINT64_TYPE__ long long unsigned int
+comment|// MIPS64EL:#define __UINT64_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -13400,15 +15856,15 @@ comment|// MIPS64EL:#define __UINT8_TYPE__ unsigned char
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __UINTMAX_C_SUFFIX__ ULL
+comment|// MIPS64EL:#define __UINTMAX_C_SUFFIX__ UL
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __UINTMAX_MAX__ 18446744073709551615ULL
+comment|// MIPS64EL:#define __UINTMAX_MAX__ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __UINTMAX_TYPE__ long long unsigned int
+comment|// MIPS64EL:#define __UINTMAX_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -13680,6 +16136,42 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips-none-none \
+end_comment
+
+begin_comment
+comment|// RUN:            -target-cpu mips32r6< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPS-ARCH-32R6 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-32R6:#define _MIPS_ARCH "mips32r6"
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-32R6:#define _MIPS_ARCH_MIPS32R6 1
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-32R6:#define _MIPS_ISA _MIPS_ISA_MIPS32
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-32R6:#define __mips_isa_rev 6
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips64-none-none \
 end_comment
 
@@ -13781,6 +16273,42 @@ end_comment
 
 begin_comment
 comment|// MIPS-ARCH-64R2:#define __mips_isa_rev 2
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips64-none-none \
+end_comment
+
+begin_comment
+comment|// RUN:            -target-cpu mips64r6< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPS-ARCH-64R6 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-64R6:#define _MIPS_ARCH "mips64r6"
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-64R6:#define _MIPS_ARCH_MIPS64R6 1
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-64R6:#define _MIPS_ISA _MIPS_ISA_MIPS64
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-64R6:#define __mips_isa_rev 6
 end_comment
 
 begin_comment

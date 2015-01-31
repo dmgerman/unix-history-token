@@ -1296,11 +1296,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS64:typedef long long int int64_t;
+comment|// MIPS64:typedef long int int64_t;
 end_comment
 
 begin_comment
-comment|// MIPS64:typedef long long unsigned int uint64_t;
+comment|// MIPS64:typedef long unsigned int uint64_t;
 end_comment
 
 begin_comment
@@ -1420,11 +1420,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS64:typedef long long int intmax_t;
+comment|// MIPS64:typedef long int intmax_t;
 end_comment
 
 begin_comment
-comment|// MIPS64:typedef long long unsigned int uintmax_t;
+comment|// MIPS64:typedef long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -1552,67 +1552,39 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS64:INT64_MAX_ 9223372036854775807LL
+comment|// MIPS64:INT64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// MIPS64:INT64_MIN_ (-9223372036854775807LL -1)
+comment|// MIPS64:INT64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// MIPS64:UINT64_MAX_ 18446744073709551615ULL
+comment|// MIPS64:UINT64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// MIPS64:INT_LEAST64_MIN_ (-9223372036854775807LL -1)
+comment|// MIPS64:INT_LEAST64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// MIPS64:INT_LEAST64_MAX_ 9223372036854775807LL
+comment|// MIPS64:INT_LEAST64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// MIPS64:UINT_LEAST64_MAX_ 18446744073709551615ULL
+comment|// MIPS64:UINT_LEAST64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// MIPS64:INT_FAST64_MIN_ (-9223372036854775807LL -1)
+comment|// MIPS64:INT_FAST64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// MIPS64:INT_FAST64_MAX_ 9223372036854775807LL
+comment|// MIPS64:INT_FAST64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// MIPS64:UINT_FAST64_MAX_ 18446744073709551615ULL
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// MIPS64:INTPTR_MIN_ (-9223372036854775807LL -1)
-end_comment
-
-begin_comment
-comment|// MIPS64:INTPTR_MAX_ 9223372036854775807LL
-end_comment
-
-begin_comment
-comment|// MIPS64:UINTPTR_MAX_ 18446744073709551615ULL
-end_comment
-
-begin_comment
-comment|// MIPS64:PTRDIFF_MIN_ (-9223372036854775807LL -1)
-end_comment
-
-begin_comment
-comment|// MIPS64:PTRDIFF_MAX_ 9223372036854775807LL
-end_comment
-
-begin_comment
-comment|// MIPS64:SIZE_MAX_ 18446744073709551615ULL
+comment|// MIPS64:UINT_FAST64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -1620,15 +1592,43 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS64:INTMAX_MIN_ (-9223372036854775807LL -1)
+comment|// MIPS64:INTPTR_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// MIPS64:INTMAX_MAX_ 9223372036854775807LL
+comment|// MIPS64:INTPTR_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// MIPS64:UINTMAX_MAX_ 18446744073709551615ULL
+comment|// MIPS64:UINTPTR_MAX_ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// MIPS64:PTRDIFF_MIN_ (-9223372036854775807L -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:PTRDIFF_MAX_ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// MIPS64:SIZE_MAX_ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS64:INTMAX_MIN_ (-9223372036854775807L -1)
+end_comment
+
+begin_comment
+comment|// MIPS64:INTMAX_MAX_ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// MIPS64:UINTMAX_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -1692,11 +1692,11 @@ comment|// MIPS64:UINT32_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// MIPS64:INT64_C_(0) 0LL
+comment|// MIPS64:INT64_C_(0) 0L
 end_comment
 
 begin_comment
-comment|// MIPS64:UINT64_C_(0) 0ULL
+comment|// MIPS64:UINT64_C_(0) 0UL
 end_comment
 
 begin_comment
@@ -1704,11 +1704,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS64:INTMAX_C_(0) 0LL
+comment|// MIPS64:INTMAX_C_(0) 0L
 end_comment
 
 begin_comment
-comment|// MIPS64:UINTMAX_C_(0) 0ULL
+comment|// MIPS64:UINTMAX_C_(0) 0UL
 end_comment
 
 begin_comment
