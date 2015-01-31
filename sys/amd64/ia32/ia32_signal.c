@@ -478,7 +478,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|const
 name|struct
 name|ia32_mcontext
 modifier|*
@@ -925,7 +924,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|const
 name|struct
 name|ia32_mcontext
 modifier|*
