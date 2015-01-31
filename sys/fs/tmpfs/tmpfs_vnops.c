@@ -2332,13 +2332,7 @@ name|TMPFS_NODE_ACCESSED
 operator||
 name|TMPFS_NODE_MODIFIED
 operator||
-operator|(
-name|extended
-condition|?
 name|TMPFS_NODE_CHANGED
-else|:
-literal|0
-operator|)
 expr_stmt|;
 if|if
 condition|(
