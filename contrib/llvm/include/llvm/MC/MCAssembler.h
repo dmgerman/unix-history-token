@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
@@ -3255,17 +3249,6 @@ name|Symbols
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|DenseSet
-operator|<
-specifier|const
-name|MCSymbol
-operator|*
-operator|>
-name|LocalsUsedInReloc
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/// The map of sections to their associated assembler backend data.
 end_comment
@@ -3784,31 +3767,6 @@ begin_label
 name|public
 label|:
 end_label
-
-begin_function_decl
-name|void
-name|addLocalUsedInReloc
-parameter_list|(
-specifier|const
-name|MCSymbol
-modifier|&
-name|Sym
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|bool
-name|isLocalUsedInReloc
-argument_list|(
-specifier|const
-name|MCSymbol
-operator|&
-name|Sym
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/// Compute the effective fragment size assuming it is laid out at the given

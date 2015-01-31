@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/StackProtector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/DataLayout.h"
 end_include
 
@@ -124,15 +130,17 @@ block|;
 name|AU
 operator|.
 name|addPreserved
-argument_list|(
-literal|"stack-protector"
-argument_list|)
+operator|<
+name|MachineFunctionAnalysis
+operator|>
+operator|(
+operator|)
 block|;
 name|AU
 operator|.
 name|addPreserved
 operator|<
-name|MachineFunctionAnalysis
+name|StackProtector
 operator|>
 operator|(
 operator|)

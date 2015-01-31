@@ -223,6 +223,7 @@ name|virtual
 name|void
 name|RecordRelocation
 parameter_list|(
+specifier|const
 name|MCAssembler
 modifier|&
 name|Asm

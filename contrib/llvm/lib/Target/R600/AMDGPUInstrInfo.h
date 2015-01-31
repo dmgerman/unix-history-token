@@ -537,6 +537,16 @@ argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Return a target-specific opcode if Opcode is a pseudo instruction.
+comment|/// Return -1 if the target-specific opcode for the pseudo instruction does
+comment|/// not exist. If Opcode is not a pseudo instruction, this is identity.
+name|int
+name|pseudoToMCOpcode
+argument_list|(
+argument|int Opcode
+argument_list|)
+specifier|const
+block|;
 comment|//===---------------------------------------------------------------------===//
 comment|// Pure virtual funtions to be implemented by sub-classes.
 comment|//===---------------------------------------------------------------------===//

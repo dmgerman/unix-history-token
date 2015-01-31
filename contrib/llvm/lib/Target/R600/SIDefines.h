@@ -862,6 +862,23 @@ parameter_list|)
 value|(((x)& 0x1FFF)<< 12)
 end_define
 
+begin_define
+define|#
+directive|define
+name|R_0286E8_SPI_TMPRING_SIZE
+value|0x0286E8
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_0286E8_WAVESIZE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x1FFF)<< 12)
+end_define
+
 begin_endif
 endif|#
 directive|endif

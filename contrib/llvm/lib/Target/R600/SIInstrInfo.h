@@ -1168,16 +1168,6 @@ name|Opcode
 parameter_list|)
 function_decl|;
 name|int
-name|getMCOpcode
-parameter_list|(
-name|uint16_t
-name|Opcode
-parameter_list|,
-name|unsigned
-name|Gen
-parameter_list|)
-function_decl|;
-name|int
 name|getAddr64Inst
 parameter_list|(
 name|uint16_t

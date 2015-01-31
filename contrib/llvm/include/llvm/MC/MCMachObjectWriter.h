@@ -228,6 +228,7 @@ name|MachObjectWriter
 modifier|*
 name|Writer
 parameter_list|,
+specifier|const
 name|MCAssembler
 modifier|&
 name|Asm
@@ -305,46 +306,6 @@ name|TargetObjectWriter
 block|;
 comment|/// @name Relocation Data
 comment|/// @{
-block|struct
-name|RelAndSymbol
-block|{
-specifier|const
-name|MCSymbolData
-operator|*
-name|Sym
-block|;
-name|MachO
-operator|::
-name|any_relocation_info
-name|MRE
-block|;
-name|RelAndSymbol
-argument_list|(
-specifier|const
-name|MCSymbolData
-operator|*
-name|Sym
-argument_list|,
-specifier|const
-name|MachO
-operator|::
-name|any_relocation_info
-operator|&
-name|MRE
-argument_list|)
-operator|:
-name|Sym
-argument_list|(
-name|Sym
-argument_list|)
-block|,
-name|MRE
-argument_list|(
-argument|MRE
-argument_list|)
-block|{}
-block|}
-block|;
 name|llvm
 operator|::
 name|DenseMap
@@ -357,8 +318,11 @@ name|std
 operator|::
 name|vector
 operator|<
-name|RelAndSymbol
-operator|>>
+name|MachO
+operator|::
+name|any_relocation_info
+operator|>
+expr|>
 name|Relocations
 block|;
 name|llvm
@@ -682,29 +646,14 @@ comment|//  - Relaxation issues, where we forget to relax something.
 comment|//
 comment|//  - Input errors, where something cannot be correctly encoded. 'as' allows
 comment|//    these through in many cases.
-comment|// Add a relocation to be output in the object file. At the time this is
-comment|// called, the symbol indexes are not know, so if the relocation refers
-comment|// to a symbol it should be passed as \p RelSymbol so that it can be updated
-comment|// afterwards. If the relocation doesn't refer to a symbol, nullptr should be
-comment|// used.
 name|void
 name|addRelocation
 argument_list|(
-argument|const MCSymbolData *RelSymbol
-argument_list|,
 argument|const MCSectionData *SD
 argument_list|,
 argument|MachO::any_relocation_info&MRE
 argument_list|)
 block|{
-name|RelAndSymbol
-name|P
-argument_list|(
-name|RelSymbol
-argument_list|,
-name|MRE
-argument_list|)
-block|;
 name|Relocations
 index|[
 name|SD
@@ -712,7 +661,7 @@ index|]
 operator|.
 name|push_back
 argument_list|(
-name|P
+name|MRE
 argument_list|)
 block|;   }
 name|void
@@ -752,7 +701,7 @@ block|;
 name|void
 name|RecordRelocation
 argument_list|(
-argument|MCAssembler&Asm
+argument|const MCAssembler&Asm
 argument_list|,
 argument|const MCAsmLayout&Layout
 argument_list|,

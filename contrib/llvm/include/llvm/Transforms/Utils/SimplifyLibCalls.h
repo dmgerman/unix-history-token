@@ -75,6 +75,12 @@ directive|include
 file|"llvm/IR/IRBuilder.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetLibraryInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -195,9 +201,10 @@ operator|&
 name|B
 argument_list|)
 decl_stmt|;
+comment|// Str/Stp cpy are similar enough to be handled in the same functions.
 name|Value
 modifier|*
-name|optimizeStrCpyChk
+name|optimizeStrpCpyChk
 argument_list|(
 name|CallInst
 operator|*
@@ -208,11 +215,16 @@ operator|<
 operator|>
 operator|&
 name|B
+argument_list|,
+name|LibFunc
+operator|::
+name|Func
+name|Func
 argument_list|)
 decl_stmt|;
 name|Value
 modifier|*
-name|optimizeStrNCpyChk
+name|optimizeStrpNCpyChk
 argument_list|(
 name|CallInst
 operator|*
@@ -223,6 +235,11 @@ operator|<
 operator|>
 operator|&
 name|B
+argument_list|,
+name|LibFunc
+operator|::
+name|Func
+name|Func
 argument_list|)
 decl_stmt|;
 comment|/// \brief Checks whether the call \p CI to a fortified libcall is foldable

@@ -37205,41 +37205,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// IsValueInFlagEnum - Determine if a value is allowed as part of a flag
-end_comment
-
-begin_comment
-comment|/// enum. If AllowMask is true, then we also allow the complement of a valid
-end_comment
-
-begin_comment
-comment|/// value, to be used as a mask.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|IsValueInFlagEnum
-argument_list|(
-specifier|const
-name|EnumDecl
-operator|*
-name|ED
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|APInt
-operator|&
-name|Val
-argument_list|,
-name|bool
-name|AllowMask
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// DiagnoseAssignmentEnum - Warn if assignment to enum is a constant
 end_comment
 

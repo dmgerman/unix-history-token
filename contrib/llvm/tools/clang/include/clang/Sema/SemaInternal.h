@@ -537,6 +537,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|SavedTCIndex
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|SemaRef
 argument_list|(
 name|SemaRef
@@ -895,6 +900,27 @@ name|size
 argument_list|()
 return|;
 block|}
+comment|/// \brief Save the current position in the correction stream (overwriting any
+comment|/// previously saved position).
+name|void
+name|saveCurrentPosition
+parameter_list|()
+block|{
+name|SavedTCIndex
+operator|=
+name|CurrentTCIndex
+expr_stmt|;
+block|}
+comment|/// \brief Restore the saved position in the correction stream.
+name|void
+name|restoreSavedPosition
+parameter_list|()
+block|{
+name|CurrentTCIndex
+operator|=
+name|SavedTCIndex
+expr_stmt|;
+block|}
 name|ASTContext
 operator|&
 name|getContext
@@ -1208,6 +1234,9 @@ name|ValidatedCorrections
 expr_stmt|;
 name|size_t
 name|CurrentTCIndex
+decl_stmt|;
+name|size_t
+name|SavedTCIndex
 decl_stmt|;
 name|Sema
 modifier|&

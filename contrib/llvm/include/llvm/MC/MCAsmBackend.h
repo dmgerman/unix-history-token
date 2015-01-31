@@ -201,6 +201,23 @@ return|return
 name|HasDataInCodeSupport
 return|;
 block|}
+comment|/// doesSectionRequireSymbols - Check whether the given section requires that
+comment|/// all symbols (even temporaries) have symbol table entries.
+name|virtual
+name|bool
+name|doesSectionRequireSymbols
+argument_list|(
+specifier|const
+name|MCSection
+operator|&
+name|Section
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// @name Target Fixup Interfaces
 comment|/// @{
 comment|/// getNumFixupKinds - Get the number of target specific fixup kinds.

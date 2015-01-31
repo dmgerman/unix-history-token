@@ -196,6 +196,9 @@ block|;
 name|unsigned
 name|LDSWaveSpillSize
 block|;
+name|unsigned
+name|ScratchOffsetReg
+block|;
 name|bool
 name|hasCalculatedTID
 argument_list|()
