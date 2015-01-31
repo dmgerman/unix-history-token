@@ -2135,9 +2135,6 @@ name|error
 decl_stmt|,
 name|ioflag
 decl_stmt|;
-name|boolean_t
-name|extended
-decl_stmt|;
 name|vp
 operator|=
 name|v
@@ -2261,8 +2258,8 @@ operator|(
 name|EFBIG
 operator|)
 return|;
-name|extended
-operator|=
+if|if
+condition|(
 name|uio
 operator|->
 name|uio_offset
@@ -2274,10 +2271,6 @@ operator|>
 name|node
 operator|->
 name|tn_size
-expr_stmt|;
-if|if
-condition|(
-name|extended
 condition|)
 block|{
 name|error
