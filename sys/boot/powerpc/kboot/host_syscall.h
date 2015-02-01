@@ -63,7 +63,7 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
-name|int
+name|int64_t
 name|offset
 parameter_list|,
 name|int
