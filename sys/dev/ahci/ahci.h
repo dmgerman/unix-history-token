@@ -3013,112 +3013,112 @@ begin_define
 define|#
 directive|define
 name|AHCI_Q_NOFORCE
-value|1
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_NOPMP
-value|2
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_NONCQ
-value|4
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_1CH
-value|8
+value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_2CH
-value|0x10
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_4CH
-value|0x20
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_EDGEIS
-value|0x40
+value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_SATA2
-value|0x80
+value|0x00000080
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_NOBSYRES
-value|0x100
+value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_NOAA
-value|0x200
+value|0x00000200
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_NOCOUNT
-value|0x400
+value|0x00000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_ALTSIG
-value|0x800
+value|0x00000800
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_NOMSI
-value|0x1000
+value|0x00001000
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_ATI_PMP_BUG
-value|0x2000
+value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_MAXIO_64K
-value|0x4000
+value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHCI_Q_SATA1_UNIT0
-value|0x8000
+value|0x00008000
 end_define
 
 begin_comment
@@ -3129,7 +3129,14 @@ begin_define
 define|#
 directive|define
 name|AHCI_Q_ABAR0
-value|0x10000
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_Q_1MSI
+value|0x00020000
 end_define
 
 begin_define
@@ -3137,7 +3144,7 @@ define|#
 directive|define
 name|AHCI_Q_BIT_STRING
 define|\
-value|"\020"			\ 	"\001NOFORCE"		\ 	"\002NOPMP"		\ 	"\003NONCQ"		\ 	"\0041CH"		\ 	"\0052CH"		\ 	"\0064CH"		\ 	"\007EDGEIS"		\ 	"\010SATA2"		\ 	"\011NOBSYRES"		\ 	"\012NOAA"		\ 	"\013NOCOUNT"		\ 	"\014ALTSIG"		\ 	"\015NOMSI"		\ 	"\016ATI_PMP_BUG"	\ 	"\017MAXIO_64K"		\ 	"\020SATA1_UNIT0"	\ 	"\021ABAR0"
+value|"\021"			\ 	"\001NOFORCE"		\ 	"\002NOPMP"		\ 	"\003NONCQ"		\ 	"\0041CH"		\ 	"\0052CH"		\ 	"\0064CH"		\ 	"\007EDGEIS"		\ 	"\010SATA2"		\ 	"\011NOBSYRES"		\ 	"\012NOAA"		\ 	"\013NOCOUNT"		\ 	"\014ALTSIG"		\ 	"\015NOMSI"		\ 	"\016ATI_PMP_BUG"	\ 	"\017MAXIO_64K"		\ 	"\020SATA1_UNIT0"	\ 	"\021ABAR0"		\ 	"\0221MSI"
 end_define
 
 begin_function_decl
