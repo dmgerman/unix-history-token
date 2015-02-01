@@ -215,7 +215,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|ENOTTY
+name|errno
 operator|)
 return|;
 comment|/* Must have enough room */
@@ -266,7 +266,13 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|ENOTTY
+name|errno
+operator|==
+name|EINVAL
+condition|?
+name|ERANGE
+else|:
+name|errno
 operator|)
 return|;
 return|return
