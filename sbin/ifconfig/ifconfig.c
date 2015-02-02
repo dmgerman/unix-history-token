@@ -1089,14 +1089,14 @@ name|e1
 operator|->
 name|af_orders
 index|[
-name|af2
+name|af1
 index|]
 operator|-
 name|e1
 operator|->
 name|af_orders
 index|[
-name|af1
+name|af2
 index|]
 operator|)
 return|;
