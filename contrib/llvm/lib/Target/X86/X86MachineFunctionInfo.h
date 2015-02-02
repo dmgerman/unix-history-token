@@ -172,6 +172,11 @@ comment|/// NumLocalDynamics - Number of local-dynamic TLS accesses.
 name|unsigned
 name|NumLocalDynamics
 block|;
+comment|/// HasPushSequences - Keeps track of whether this function uses sequences
+comment|/// of pushes to pass function parameters.
+name|bool
+name|HasPushSequences
+block|;
 name|private
 operator|:
 comment|/// ForwardedMustTailRegParms - A list of virtual and physical registers
@@ -258,6 +263,11 @@ name|NumLocalDynamics
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|HasPushSequences
+argument_list|(
+argument|false
+argument_list|)
 block|{}
 name|explicit
 name|X86MachineFunctionInfo
@@ -336,6 +346,11 @@ name|NumLocalDynamics
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|HasPushSequences
+argument_list|(
+argument|false
+argument_list|)
 block|{}
 name|bool
 name|getForceFramePointer
@@ -355,6 +370,25 @@ block|{
 name|ForceFramePointer
 operator|=
 name|forceFP
+block|; }
+name|bool
+name|getHasPushSequences
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasPushSequences
+return|;
+block|}
+name|void
+name|setHasPushSequences
+argument_list|(
+argument|bool HasPush
+argument_list|)
+block|{
+name|HasPushSequences
+operator|=
+name|HasPush
 block|; }
 name|bool
 name|getRestoreBasePointer

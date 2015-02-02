@@ -754,6 +754,20 @@ return|return
 name|RI
 return|;
 block|}
+comment|/// getSPAdjust - This returns the stack pointer adjustment made by
+comment|/// this instruction. For x86, we need to handle more complex call
+comment|/// sequences involving PUSHes.
+name|int
+name|getSPAdjust
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 comment|/// isCoalescableExtInstr - Return true if the instruction is a "coalescable"
 comment|/// extension instruction. That is, it's like a copy where it's legal for the
 comment|/// source to overlap the destination. e.g. X86::MOVSX64rr32. If this returns

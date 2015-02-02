@@ -551,6 +551,20 @@ name|MF
 argument_list|)
 return|;
 block|}
+comment|// needsFrameIndexResolution - Do we need to perform FI resolution for
+comment|// this function. Normally, this is required only when the function
+comment|// has any stack objects. However, targets may want to override this.
+name|virtual
+name|bool
+name|needsFrameIndexResolution
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getFrameIndexOffset - Returns the displacement from the frame register to
 comment|/// the stack frame of the specified index.
 name|virtual

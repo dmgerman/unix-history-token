@@ -238,6 +238,22 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|canSimplifyCallFramePseudos
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|needsFrameIndexResolution
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
 name|int
 name|getFrameIndexOffset
 argument_list|(

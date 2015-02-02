@@ -167,6 +167,14 @@ modifier|*
 name|createX86FixupLEAs
 parameter_list|()
 function_decl|;
+comment|/// createX86CallFrameOptimization - Return a pass that optimizes
+comment|/// the code-size of x86 call sequences. This is done by replacing
+comment|/// esp-relative movs with pushes.
+name|FunctionPass
+modifier|*
+name|createX86CallFrameOptimization
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 
