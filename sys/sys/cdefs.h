@@ -1164,6 +1164,12 @@ operator|&&
 name|__STDC_VERSION__
 operator|>=
 literal|201112L
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
 end_elif
 
 begin_comment
