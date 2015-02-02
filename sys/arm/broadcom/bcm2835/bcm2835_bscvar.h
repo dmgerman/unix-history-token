@@ -135,7 +135,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|bus_space_write_4(_sc->sc_bst, _sc->sc_bsh, _off, _val)
+value|bus_space_write_4((_sc)->sc_bst, (_sc)->sc_bsh, _off, _val)
 end_define
 
 begin_define
@@ -148,7 +148,7 @@ parameter_list|,
 name|_off
 parameter_list|)
 define|\
-value|bus_space_read_4(_sc->sc_bst, _sc->sc_bsh, _off)
+value|bus_space_read_4((_sc)->sc_bst, (_sc)->sc_bsh, _off)
 end_define
 
 begin_define
