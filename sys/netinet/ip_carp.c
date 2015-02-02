@@ -8536,15 +8536,6 @@ condition|(
 name|carpr
 operator|.
 name|carpr_advskew
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|carpr
-operator|.
-name|carpr_advskew
 operator|>=
 literal|255
 condition|)
@@ -8563,7 +8554,6 @@ name|carpr
 operator|.
 name|carpr_advskew
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|carpr
