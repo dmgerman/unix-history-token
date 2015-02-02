@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lzma.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stddef.h>
 end_include
 
@@ -118,6 +112,23 @@ include|#
 directive|include
 file|<zlib.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WITHOUT_LZMA
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<lzma.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -163,6 +174,12 @@ name|gzbufdesc
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WITHOUT_LZMA
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|lzma_stream
@@ -171,6 +188,11 @@ init|=
 name|LZMA_STREAM_INIT
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -399,6 +421,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|WITHOUT_LZMA
 block|}
 elseif|else
 if|if
@@ -567,6 +592,9 @@ operator|(
 literal|0
 operator|)
 return|;
+endif|#
+directive|endif
+comment|/* WIHTOUT_LZMA */
 block|}
 else|else
 name|nr
