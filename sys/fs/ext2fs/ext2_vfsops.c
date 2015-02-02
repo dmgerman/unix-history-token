@@ -4717,11 +4717,6 @@ modifier|*
 name|vp
 decl_stmt|;
 name|struct
-name|cdev
-modifier|*
-name|dev
-decl_stmt|;
-name|struct
 name|thread
 modifier|*
 name|td
@@ -4777,12 +4772,6 @@ name|VFSTOEXT2
 argument_list|(
 name|mp
 argument_list|)
-expr_stmt|;
-name|dev
-operator|=
-name|ump
-operator|->
-name|um_dev
 expr_stmt|;
 name|ip
 operator|=
