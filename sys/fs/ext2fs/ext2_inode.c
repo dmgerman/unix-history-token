@@ -449,11 +449,6 @@ name|NIADDR
 index|]
 decl_stmt|;
 name|struct
-name|bufobj
-modifier|*
-name|bo
-decl_stmt|;
-name|struct
 name|m_ext2fs
 modifier|*
 name|fs
@@ -489,6 +484,16 @@ decl_stmt|;
 name|off_t
 name|osize
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|struct
+name|bufobj
+modifier|*
+name|bo
+decl_stmt|;
+endif|#
+directive|endif
 name|oip
 operator|=
 name|VTOI
@@ -496,6 +501,9 @@ argument_list|(
 name|ovp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|bo
 operator|=
 operator|&
@@ -503,6 +511,8 @@ name|ovp
 operator|->
 name|v_bufobj
 expr_stmt|;
+endif|#
+directive|endif
 name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp

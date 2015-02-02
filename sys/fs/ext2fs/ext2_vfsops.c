@@ -4719,11 +4719,6 @@ modifier|*
 name|vp
 decl_stmt|;
 name|struct
-name|cdev
-modifier|*
-name|dev
-decl_stmt|;
-name|struct
 name|thread
 modifier|*
 name|td
@@ -4779,12 +4774,6 @@ name|VFSTOEXT2
 argument_list|(
 name|mp
 argument_list|)
-expr_stmt|;
-name|dev
-operator|=
-name|ump
-operator|->
-name|um_dev
 expr_stmt|;
 comment|/* 	 * If this malloc() is performed after the getnewvnode() 	 * it might block, leaving a vnode with a NULL v_data to be 	 * found by ext2_sync() if a sync happens to fire right then, 	 * which will cause a panic because ext2_sync() blindly 	 * dereferences vp->v_data (as well it should). 	 */
 name|ip

@@ -1423,10 +1423,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* 	 * We now have a segment name to search for, and a directory to search. 	 * 	 * Suppress search for slots unless creating 	 * file and at end of pathname, in which case 	 * we watch for a place to put the new file in 	 * case it doesn't already exist. 	 */
-name|ino
-operator|=
-literal|0
-expr_stmt|;
 name|i_diroff
 operator|=
 name|dp
