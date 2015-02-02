@@ -283,7 +283,12 @@ comment|/* Don't do active error recovery. */
 name|SF_NO_RETRY
 init|=
 literal|0x20
+block|,
 comment|/* Don't do any retries. */
+name|SF_RETRY_BUSY
+init|=
+literal|0x40
+comment|/* Retry BUSY status. */
 block|}
 enum|;
 end_enum
