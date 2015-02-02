@@ -6879,10 +6879,7 @@ name|DA_DELETE_WS16
 case|:
 name|sectors
 operator|=
-operator|(
-name|off_t
-operator|)
-name|min
+name|omin
 argument_list|(
 name|softc
 operator|->
@@ -6900,10 +6897,7 @@ name|DA_DELETE_WS10
 case|:
 name|sectors
 operator|=
-operator|(
-name|off_t
-operator|)
-name|min
+name|omin
 argument_list|(
 name|softc
 operator|->
@@ -6928,13 +6922,10 @@ name|params
 operator|.
 name|secsize
 operator|*
-name|min
+name|omin
 argument_list|(
 name|sectors
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|softc
 operator|->
 name|params
@@ -10534,7 +10525,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|min
+name|omin
 argument_list|(
 name|count
 argument_list|,
@@ -10601,7 +10592,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|min
+name|omin
 argument_list|(
 name|count
 argument_list|,
@@ -11056,7 +11047,7 @@ argument_list|)
 expr_stmt|;
 name|count
 operator|=
-name|min
+name|omin
 argument_list|(
 name|count
 argument_list|,
