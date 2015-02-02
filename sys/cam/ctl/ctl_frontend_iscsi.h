@@ -46,12 +46,6 @@ argument|cfiscsi_target
 argument_list|)
 name|ct_next
 expr_stmt|;
-name|uint32_t
-name|ct_luns
-index|[
-name|CTL_MAX_LUNS
-index|]
-decl_stmt|;
 name|struct
 name|cfiscsi_softc
 modifier|*

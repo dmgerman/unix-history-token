@@ -12174,8 +12174,8 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
 name|__noinline
+name|void
 name|arc_kmem_reap_now
 parameter_list|(
 name|arc_reclaim_strategy_t

@@ -185,6 +185,8 @@ block|,
 literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 name|AHCI_Q_ATI_PMP_BUG
+operator||
+name|AHCI_Q_1MSI
 block|}
 block|,
 block|{
@@ -195,6 +197,8 @@ block|,
 literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 name|AHCI_Q_ATI_PMP_BUG
+operator||
+name|AHCI_Q_1MSI
 block|}
 block|,
 block|{
@@ -205,6 +209,8 @@ block|,
 literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 name|AHCI_Q_ATI_PMP_BUG
+operator||
+name|AHCI_Q_1MSI
 block|}
 block|,
 block|{
@@ -215,6 +221,8 @@ block|,
 literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 name|AHCI_Q_ATI_PMP_BUG
+operator||
+name|AHCI_Q_1MSI
 block|}
 block|,
 block|{
@@ -225,6 +233,8 @@ block|,
 literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 name|AHCI_Q_ATI_PMP_BUG
+operator||
+name|AHCI_Q_1MSI
 block|}
 block|,
 comment|/* Not sure SB8x0/SB9x0 needs this quirk. Be conservative though */
@@ -3179,12 +3189,6 @@ block|}
 empty_stmt|;
 comment|/* Setup interrupts. */
 comment|/* Setup MSI register parameters */
-name|ctlr
-operator|->
-name|msi
-operator|=
-literal|2
-expr_stmt|;
 comment|/* Process hints. */
 if|if
 condition|(
@@ -3199,6 +3203,28 @@ operator|->
 name|msi
 operator|=
 literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ctlr
+operator|->
+name|quirks
+operator|&
+name|AHCI_Q_1MSI
+condition|)
+name|ctlr
+operator|->
+name|msi
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|ctlr
+operator|->
+name|msi
+operator|=
+literal|2
 expr_stmt|;
 name|resource_int_value
 argument_list|(

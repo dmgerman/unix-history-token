@@ -170,6 +170,11 @@ name|nc_sperror
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|endnetconfig
+argument_list|(
+name|localhandle
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|DESERR_HWERROR

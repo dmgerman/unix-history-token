@@ -849,6 +849,15 @@ block|}
 else|else
 block|{
 comment|/* compute number of objects per page */
+ifdef|#
+directive|ifdef
+name|USB_DMA_SINGLE_ALLOC
+name|n_obj
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
 name|n_obj
 operator|=
 operator|(
@@ -857,6 +866,8 @@ operator|/
 name|size
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * Compute number of DMA chunks, rounded up 		 * to nearest one: 		 */
 name|n_dma_pc
 operator|=
@@ -994,14 +1005,30 @@ block|}
 if|if
 condition|(
 name|ppc
+operator|!=
+name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|n_obj
+operator|!=
+literal|1
+condition|)
 operator|*
 name|ppc
 operator|=
 name|parm
 operator|->
 name|xfer_page_cache_ptr
+expr_stmt|;
+else|else
+operator|*
+name|ppc
+operator|=
+name|parm
+operator|->
+name|dma_page_cache_ptr
 expr_stmt|;
 block|}
 name|r
@@ -1028,6 +1055,65 @@ name|parm
 operator|->
 name|dma_page_ptr
 expr_stmt|;
+if|if
+condition|(
+name|n_obj
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* 	     * Avoid mapping memory twice if only a single object 	     * should be allocated per page cache: 	     */
+for|for
+control|(
+name|x
+operator|=
+literal|0
+init|;
+name|x
+operator|!=
+name|n_dma_pc
+condition|;
+name|x
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|usb_pc_alloc_mem
+argument_list|(
+name|parm
+operator|->
+name|dma_page_cache_ptr
+argument_list|,
+name|pg
+argument_list|,
+name|z
+argument_list|,
+name|align
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* failure */
+block|}
+comment|/* Make room for one DMA page cache and "n_dma_pg" pages */
+name|parm
+operator|->
+name|dma_page_cache_ptr
+operator|++
+expr_stmt|;
+name|pg
+operator|+=
+name|n_dma_pg
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 for|for
 control|(
 name|x
@@ -1093,7 +1179,7 @@ name|dma_page_cache_ptr
 operator|->
 name|buffer
 expr_stmt|;
-comment|/* Make room for one DMA page cache and one page */
+comment|/* Make room for one DMA page cache and "n_dma_pg" pages */
 name|parm
 operator|->
 name|dma_page_cache_ptr
@@ -1213,6 +1299,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|parm
@@ -5374,6 +5461,79 @@ block|}
 end_function
 
 begin_comment
+comment|/*------------------------------------------------------------------------*  *	usbd_control_transfer_did_data  *  * This function returns non-zero if a control endpoint has  * transferred the first DATA packet after the SETUP packet.  * Else it returns zero.  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+specifier|static
+name|uint8_t
+name|usbd_control_transfer_did_data
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+name|struct
+name|usb_device_request
+name|req
+decl_stmt|;
+comment|/* SETUP packet is not yet sent */
+if|if
+condition|(
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_hdr
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* copy out the USB request header */
+name|usbd_copy_out
+argument_list|(
+name|xfer
+operator|->
+name|frbuffers
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|req
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|req
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* compare remainder to the initial value */
+return|return
+operator|(
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_rem
+operator|!=
+name|UGETW
+argument_list|(
+name|req
+operator|.
+name|wLength
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*------------------------------------------------------------------------*  *	usbd_setup_ctrl_transfer  *  * This function handles initialisation of control transfers. Control  * transfers are special in that regard that they can both transmit  * and receive data.  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
@@ -5641,6 +5801,18 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
+comment|/* update did data flag */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_did_data
+operator|=
+name|usbd_control_transfer_did_data
+argument_list|(
+name|xfer
+argument_list|)
+expr_stmt|;
 comment|/* check if there is a length mismatch */
 if|if
 condition|(

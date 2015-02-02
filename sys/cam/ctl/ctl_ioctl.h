@@ -1763,6 +1763,23 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ctl_lun_map
+block|{
+name|uint32_t
+name|port
+decl_stmt|;
+name|uint32_t
+name|plun
+decl_stmt|;
+name|uint32_t
+name|lun
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -1936,6 +1953,13 @@ define|#
 directive|define
 name|CTL_PORT_LIST
 value|_IOWR(CTL_MINOR, 0x27, struct ctl_lun_list)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTL_LUN_MAP
+value|_IOW(CTL_MINOR, 0x28, struct ctl_lun_map)
 end_define
 
 begin_endif
