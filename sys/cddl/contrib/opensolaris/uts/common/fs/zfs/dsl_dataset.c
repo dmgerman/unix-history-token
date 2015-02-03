@@ -494,7 +494,7 @@ name|DD_USED_REFRSRV
 argument_list|,
 name|DD_USED_HEAD
 argument_list|,
-name|tx
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -782,7 +782,7 @@ name|DD_USED_REFRSRV
 argument_list|,
 name|DD_USED_HEAD
 argument_list|,
-name|tx
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -14055,7 +14055,7 @@ name|DD_USED_HEAD
 argument_list|,
 name|DD_USED_SNAP
 argument_list|,
-name|tx
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
