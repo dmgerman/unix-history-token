@@ -6367,13 +6367,6 @@ operator|!=
 name|VREG
 condition|)
 return|return;
-name|node
-operator|=
-name|VP_TO_TMPFS_NODE
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|obj
 operator|=
 name|vp
