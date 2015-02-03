@@ -714,6 +714,11 @@ name|u8
 name|gen
 decl_stmt|;
 name|u8
+name|not_supported
+range|:
+literal|1
+decl_stmt|;
+name|u8
 name|is_mobile
 range|:
 literal|1
