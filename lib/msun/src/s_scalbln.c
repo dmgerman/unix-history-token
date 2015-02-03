@@ -162,7 +162,6 @@ name|in
 operator|!=
 name|n
 condition|)
-block|{
 name|in
 operator|=
 operator|(
@@ -175,7 +174,6 @@ name|INT_MAX
 else|:
 name|INT_MIN
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|scalbnl
