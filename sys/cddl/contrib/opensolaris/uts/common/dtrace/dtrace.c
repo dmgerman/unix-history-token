@@ -69570,18 +69570,11 @@ expr_stmt|;
 if|if
 condition|(
 name|state
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|state
 operator|->
 name|dts_anon
 condition|)
 block|{
-comment|/* 			 * There is anonymous state. Destroy that first. 			 */
+comment|/* 		 * There is anonymous state. Destroy that first. 		 */
 name|ASSERT
 argument_list|(
 name|dtrace_anon
@@ -69616,7 +69609,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 name|ASSERT
 argument_list|(
 name|dtrace_opens
