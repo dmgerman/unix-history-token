@@ -2312,12 +2312,19 @@ argument_list|)
 argument_list|,
 literal|"gmbus %s"
 argument_list|,
+name|intel_gmbus_is_port_valid
+argument_list|(
+name|port
+argument_list|)
+condition|?
 name|gmbus_ports
 index|[
 name|pin
 index|]
 operator|.
 name|name
+else|:
+literal|"reserved"
 argument_list|)
 expr_stmt|;
 name|device_set_desc
@@ -2525,6 +2532,8 @@ name|dev_priv
 decl_stmt|;
 name|int
 name|pin
+decl_stmt|,
+name|port
 decl_stmt|;
 name|sc
 operator|=
@@ -2560,6 +2569,12 @@ argument_list|(
 name|idev
 argument_list|)
 expr_stmt|;
+name|port
+operator|=
+name|pin
+operator|+
+literal|1
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|sc
@@ -2575,12 +2590,19 @@ argument_list|)
 argument_list|,
 literal|"i915 iicbb %s"
 argument_list|,
+name|intel_gmbus_is_port_valid
+argument_list|(
+name|port
+argument_list|)
+condition|?
 name|gmbus_ports
 index|[
 name|pin
 index|]
 operator|.
 name|name
+else|:
+literal|"reserved"
 argument_list|)
 expr_stmt|;
 name|device_set_desc
@@ -2592,6 +2614,19 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|intel_gmbus_is_port_valid
+argument_list|(
+name|port
+argument_list|)
+condition|)
+name|pin
+operator|=
+literal|1
+expr_stmt|;
+comment|/* GPIOA, VGA */
 name|sc
 operator|->
 name|reg0
