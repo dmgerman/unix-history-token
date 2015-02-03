@@ -5389,7 +5389,7 @@ end_ifdef
 begin_function
 specifier|static
 name|isc_boolean_t
-name|is_anycast
+name|is_not_bindable
 parameter_list|(
 name|struct
 name|sockaddr
@@ -5408,10 +5408,18 @@ argument_list|(
 name|SIOCGIFAFLAG_IN6
 argument_list|)
 operator|&&
+expr|\
+operator|(
 name|defined
 argument_list|(
 name|IN6_IFF_ANYCAST
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IN6_IFF_NOTREADY
+argument_list|)
+operator|)
 name|struct
 name|in6_ifreq
 name|ifr6
@@ -5421,6 +5429,10 @@ name|fd
 decl_stmt|;
 name|u_int32_t
 name|flags6
+decl_stmt|,
+name|exclude
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -5535,12 +5547,38 @@ name|ifr_ifru
 operator|.
 name|ifru_flags6
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IN6_IFF_ANYCAST
+argument_list|)
+name|exclude
+operator||=
+name|IN6_IFF_ANYCAST
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !IN6_IFF_ANYCAST */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IN6_IFF_NOTREADY
+argument_list|)
+name|exclude
+operator||=
+name|IN6_IFF_NOTREADY
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !IN6_IFF_NOTREADY */
 if|if
 condition|(
 operator|(
 name|flags6
 operator|&
-name|IN6_IFF_ANYCAST
+name|exclude
 operator|)
 operator|!=
 literal|0
@@ -5550,7 +5588,7 @@ name|ISC_TRUE
 return|;
 endif|#
 directive|endif
-comment|/* !SIOCGIFAFLAG_IN6 || !IN6_IFF_ANYCAST */
+comment|/* !SIOCGIFAFLAG_IN6 || !(IN6_IFF_ANYCAST&& IN6_IFF_NOTREADY) */
 return|return
 name|ISC_FALSE
 return|;
@@ -5970,7 +6008,7 @@ directive|ifdef
 name|INCLUDE_IPV6_SUPPORT
 if|if
 condition|(
-name|is_anycast
+name|is_not_bindable
 argument_list|(
 operator|(
 expr|struct
