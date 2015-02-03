@@ -5776,19 +5776,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|bool
-name|intel_fbc_enabled
-parameter_list|(
-name|struct
-name|drm_device
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|intel_disable_fbc
 parameter_list|(
