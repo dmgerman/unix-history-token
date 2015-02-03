@@ -1900,9 +1900,6 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|buf
-operator|||
 name|buf
 index|[
 literal|0
