@@ -1646,11 +1646,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|fingerprints
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 while|while
 condition|(
 operator|(
@@ -3722,6 +3729,14 @@ name|tmpsig
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fd_pkg
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 name|close
 argument_list|(
 name|fd_pkg
@@ -3732,6 +3747,7 @@ argument_list|(
 name|tmppkg
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ret
@@ -3916,12 +3932,9 @@ argument_list|(
 literal|"Error looking up SIGNATURE_TYPE"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+goto|goto
+name|cleanup
+goto|;
 block|}
 if|if
 condition|(
