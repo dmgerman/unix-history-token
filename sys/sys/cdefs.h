@@ -1492,7 +1492,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|typedef char __assert_ ## y[(x) ? 1 : -1]
+value|typedef char __assert_ ## y[(x) ? 1 : -1] \ 				__unused
 end_define
 
 begin_else
