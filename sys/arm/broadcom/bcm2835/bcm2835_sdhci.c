@@ -211,19 +211,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*   * Arasan HC seems to have problem with Data CRC on lower frequencies.  * Use this tunable to cap initialization sequence frequency at higher  * value.  Default is standard 400kHz.  * HS mode brings too many problems for most of cards, so disable HS mode  * until a better fix comes up.  * HS mode still can be enabled with the tunable.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|bcm2835_sdhci_min_freq
-init|=
-literal|400000
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -241,17 +228,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bcm2835.sdhci.min_freq"
-argument_list|,
-operator|&
-name|bcm2835_sdhci_min_freq
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|TUNABLE_INT
@@ -1951,26 +1927,6 @@ end_function
 
 begin_function
 specifier|static
-name|uint32_t
-name|bcm_sdhci_min_freq
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|struct
-name|sdhci_slot
-modifier|*
-name|slot
-parameter_list|)
-block|{
-return|return
-name|bcm2835_sdhci_min_freq
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|void
 name|bcm_sdhci_start_dma_seg
 parameter_list|(
@@ -3135,13 +3091,6 @@ argument_list|(
 name|mmcbr_release_host
 argument_list|,
 name|sdhci_generic_release_host
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|sdhci_min_freq
-argument_list|,
-name|bcm_sdhci_min_freq
 argument_list|)
 block|,
 comment|/* Platform transfer methods */
