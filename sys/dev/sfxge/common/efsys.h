@@ -1399,11 +1399,11 @@ directive|define
 name|EFSYS_SLEEP
 value|EFSYS_SPIN
 comment|/* BARRIERS */
-comment|/* Strict ordering guaranteed by devacc.devacc_attr_dataorder */
 define|#
 directive|define
 name|EFSYS_MEM_READ_BARRIER
 parameter_list|()
+value|rmb()
 define|#
 directive|define
 name|EFSYS_PIO_WRITE_BARRIER
