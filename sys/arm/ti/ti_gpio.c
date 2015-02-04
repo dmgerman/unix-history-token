@@ -3830,6 +3830,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|reg
+operator|!=
+name|oldreg
+operator|&&
 name|oldreg
 operator|!=
 literal|0
