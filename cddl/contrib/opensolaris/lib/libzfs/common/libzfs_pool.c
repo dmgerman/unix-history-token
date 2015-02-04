@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -7879,6 +7879,8 @@ block|}
 if|if
 condition|(
 name|props
+operator|!=
+name|NULL
 condition|)
 block|{
 name|uint64_t
@@ -7937,15 +7939,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
-elseif|else
 if|if
 condition|(
 name|zcmd_write_src_nvlist
@@ -7973,6 +7972,11 @@ literal|1
 operator|)
 return|;
 block|}
+name|nvlist_free
+argument_list|(
+name|props
+argument_list|)
+expr_stmt|;
 block|}
 operator|(
 name|void
@@ -8025,9 +8029,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|nvlist_free
+name|zcmd_free_nvlists
 argument_list|(
-name|props
+operator|&
+name|zc
 argument_list|)
 expr_stmt|;
 return|return
@@ -8056,9 +8061,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|nvlist_free
+name|zcmd_free_nvlists
 argument_list|(
-name|props
+operator|&
+name|zc
 argument_list|)
 expr_stmt|;
 return|return
@@ -8146,6 +8152,12 @@ name|zc
 argument_list|,
 operator|&
 name|nv
+argument_list|)
+expr_stmt|;
+name|zcmd_free_nvlists
+argument_list|(
+operator|&
+name|zc
 argument_list|)
 expr_stmt|;
 name|zpool_get_rewind_policy
@@ -8622,17 +8634,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|zcmd_free_nvlists
-argument_list|(
-operator|&
-name|zc
-argument_list|)
-expr_stmt|;
-name|nvlist_free
-argument_list|(
-name|props
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -15817,9 +15818,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-if|if
-condition|(
-operator|(
+comment|/* 	 * In a case the strdup() fails, we will just return NULL below. 	 */
 name|path
 operator|=
 name|strdup
@@ -15831,15 +15830,7 @@ index|]
 operator|.
 name|devname
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+expr_stmt|;
 name|devid_free_nmlist
 argument_list|(
 name|list
