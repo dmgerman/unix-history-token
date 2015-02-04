@@ -16993,6 +16993,19 @@ name|strcmp
 argument_list|(
 name|name
 argument_list|,
+literal|"target_portal_group_tag"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{ 	}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
 literal|"header_digest"
 argument_list|)
 operator|==

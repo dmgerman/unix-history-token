@@ -5020,13 +5020,6 @@ operator|->
 name|t_name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|targ
-operator|->
-name|t_portal_group
-condition|)
-block|{
 name|snprintf
 argument_list|(
 name|tagstr
@@ -5059,13 +5052,6 @@ literal|"cfiscsi_portal_group_tag"
 argument_list|,
 name|tagstr
 argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|req
-operator|.
-name|num_args
-operator|--
 expr_stmt|;
 name|error
 operator|=

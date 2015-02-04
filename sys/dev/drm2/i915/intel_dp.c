@@ -2418,7 +2418,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
 name|ret
 operator|)
 return|;
@@ -2448,6 +2447,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 name|EREMOTEIO
 operator|)
 return|;
@@ -2473,6 +2473,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 name|EREMOTEIO
 operator|)
 return|;
@@ -2522,6 +2523,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 name|EREMOTEIO
 operator|)
 return|;
@@ -2552,6 +2554,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 name|EREMOTEIO
 operator|)
 return|;
@@ -2564,6 +2567,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 name|EREMOTEIO
 operator|)
 return|;

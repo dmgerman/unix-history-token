@@ -1552,6 +1552,20 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|data
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * The standard approximation for standard deviation is 	 * sqrt(average(x**2) - average(x)**2), i.e. the square root 	 * of the average of the squares minus the square of the average. 	 */
 name|dt_divide_128
 argument_list|(

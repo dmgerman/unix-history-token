@@ -178,6 +178,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|uint16_t
+name|last_portal_group_tag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -3039,19 +3048,13 @@ name|pg_conf
 operator|=
 name|conf
 expr_stmt|;
-name|conf
-operator|->
-name|conf_last_portal_group_tag
-operator|++
-expr_stmt|;
 name|pg
 operator|->
 name|pg_tag
 operator|=
-name|conf
-operator|->
-name|conf_last_portal_group_tag
+literal|0
 expr_stmt|;
+comment|/* Assigned later in conf_apply(). */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -8080,6 +8083,50 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Go through the new portal groups, assigning tags or preserving old. 	 */
+name|TAILQ_FOREACH
+argument_list|(
+argument|newpg
+argument_list|,
+argument|&newconf->conf_portal_groups
+argument_list|,
+argument|pg_next
+argument_list|)
+block|{
+name|oldpg
+operator|=
+name|portal_group_find
+argument_list|(
+name|oldconf
+argument_list|,
+name|newpg
+operator|->
+name|pg_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|oldpg
+operator|!=
+name|NULL
+condition|)
+name|newpg
+operator|->
+name|pg_tag
+operator|=
+name|oldpg
+operator|->
+name|pg_tag
+expr_stmt|;
+else|else
+name|newpg
+operator|->
+name|pg_tag
+operator|=
+operator|++
+name|last_portal_group_tag
+expr_stmt|;
+block|}
 comment|/* Deregister on removed iSNS servers. */
 name|TAILQ_FOREACH
 argument_list|(
@@ -11180,7 +11227,7 @@ argument_list|)
 expr_stmt|;
 name|log_debugx
 argument_list|(
-literal|"disabling CTL iSCSI port "
+literal|"removing CTL iSCSI ports "
 literal|"and terminating all connections"
 argument_list|)
 expr_stmt|;
