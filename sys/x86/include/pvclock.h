@@ -101,6 +101,18 @@ end_function_decl
 
 begin_function_decl
 name|uint64_t
+name|pvclock_tsc_freq
+parameter_list|(
+name|struct
+name|pvclock_vcpu_time_info
+modifier|*
+name|ti
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
 name|pvclock_get_timecount
 parameter_list|(
 name|struct
