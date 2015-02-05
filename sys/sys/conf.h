@@ -1072,6 +1072,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|delist_dev
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|_dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|destroy_dev
 parameter_list|(
 name|struct
