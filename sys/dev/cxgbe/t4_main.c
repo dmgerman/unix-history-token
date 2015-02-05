@@ -3043,6 +3043,13 @@ literal|"Chelsio T580-LP-SO-CR"
 block|}
 block|,
 comment|/* 2 x 40G, nomem */
+block|{
+literal|0x5415
+block|,
+literal|"Chelsio T502-BT"
+block|}
+block|,
+comment|/* 2 x 1G */
 ifdef|#
 directive|ifdef
 name|notyet
