@@ -1369,13 +1369,19 @@ operator|->
 name|is_uref
 condition|)
 block|{
+if|if
+condition|(
+operator|--
+operator|(
 name|cpd
 operator|->
 name|udev
 operator|->
 name|refcount
-operator|--
-expr_stmt|;
+operator|)
+operator|==
+literal|0
+condition|)
 name|cv_broadcast
 argument_list|(
 operator|&
@@ -1622,13 +1628,19 @@ name|is_uref
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|--
+operator|(
 name|cpd
 operator|->
 name|udev
 operator|->
 name|refcount
-operator|--
-expr_stmt|;
+operator|)
+operator|==
+literal|0
+condition|)
 name|cv_broadcast
 argument_list|(
 operator|&
@@ -2718,13 +2730,6 @@ operator|->
 name|refcount
 operator|--
 expr_stmt|;
-comment|/* prevent any write flush */
-name|f
-operator|->
-name|flag_iserror
-operator|=
-literal|1
-expr_stmt|;
 comment|/* need to wait until all callers have exited */
 while|while
 condition|(
@@ -2748,6 +2753,13 @@ name|f
 operator|->
 name|priv_mtx
 argument_list|)
+expr_stmt|;
+comment|/* prevent write flush, if any */
+name|f
+operator|->
+name|flag_iserror
+operator|=
+literal|1
 expr_stmt|;
 comment|/* get I/O thread out of any sleep state */
 if|if
