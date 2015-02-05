@@ -334,6 +334,10 @@ block|,
 name|ULD_IWARP
 init|=
 literal|2
+block|,
+name|ULD_ISCSI
+init|=
+literal|3
 block|, }
 enum|;
 end_enum
