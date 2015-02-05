@@ -631,6 +631,36 @@ operator|->
 name|dd_location
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|dev
+operator|->
+name|dd_flags
+operator|&
+name|DF_ENABLED
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|" (disabled)"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dev
+operator|->
+name|dd_flags
+operator|&
+name|DF_SUSPENDED
+condition|)
+name|printf
+argument_list|(
+literal|" (suspended)"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"

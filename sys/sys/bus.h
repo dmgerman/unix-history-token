@@ -149,7 +149,7 @@ comment|/**< @brief API Flags for device */
 name|uint16_t
 name|dv_flags
 decl_stmt|;
-comment|/**< @brief flags for dev date */
+comment|/**< @brief flags for dev state */
 name|device_state_t
 name|dv_state
 decl_stmt|;
@@ -158,6 +158,109 @@ comment|/* XXX more driver info? */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Flags exported via dv_flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_ENABLED
+value|0x01
+end_define
+
+begin_comment
+comment|/* device should be probed/attached */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_FIXEDCLASS
+value|0x02
+end_define
+
+begin_comment
+comment|/* devclass specified at create time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_WILDCARD
+value|0x04
+end_define
+
+begin_comment
+comment|/* unit was originally wildcard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_DESCMALLOCED
+value|0x08
+end_define
+
+begin_comment
+comment|/* description was malloced */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_QUIET
+value|0x10
+end_define
+
+begin_comment
+comment|/* don't print verbose attach message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_DONENOMATCH
+value|0x20
+end_define
+
+begin_comment
+comment|/* don't execute DEVICE_NOMATCH again */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_EXTERNALSOFTC
+value|0x40
+end_define
+
+begin_comment
+comment|/* softc not allocated by us */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_REBID
+value|0x80
+end_define
+
+begin_comment
+comment|/* Can rebid after attach */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_SUSPENDED
+value|0x100
+end_define
+
+begin_comment
+comment|/* Device is suspended. */
+end_comment
 
 begin_ifdef
 ifdef|#
