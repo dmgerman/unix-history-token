@@ -148,7 +148,7 @@ block|{
 if|#
 directive|if
 name|USB_HAVE_BUSDMA
-name|bus_size_t
+name|bus_addr_t
 name|physaddr
 decl_stmt|;
 name|void
@@ -177,7 +177,7 @@ decl_stmt|;
 if|#
 directive|if
 name|USB_HAVE_BUSDMA
-name|bus_size_t
+name|bus_addr_t
 name|physaddr
 decl_stmt|;
 endif|#

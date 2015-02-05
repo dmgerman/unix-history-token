@@ -244,6 +244,10 @@ name|uint8_t
 name|no_explore
 decl_stmt|;
 comment|/* don't explore USB ports */
+name|uint8_t
+name|dma_bits
+decl_stmt|;
+comment|/* number of DMA address lines */
 block|}
 struct|;
 end_struct
