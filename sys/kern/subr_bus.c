@@ -12959,7 +12959,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|dev
+name|child
 operator|->
 name|flags
 operator||=
@@ -12993,7 +12993,7 @@ argument_list|(
 name|child
 argument_list|)
 expr_stmt|;
-name|dev
+name|child
 operator|->
 name|flags
 operator|&=
