@@ -8419,7 +8419,7 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
-while|while
+if|if
 condition|(
 operator|(
 name|ump
@@ -8591,7 +8591,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|ump
 operator|->
 name|softdep_flags
@@ -8606,7 +8605,6 @@ operator|->
 name|softdep_flushtd
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -8791,7 +8789,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|altump
 operator|->
 name|softdep_flags
@@ -8813,7 +8810,6 @@ operator|->
 name|softdep_flushtd
 argument_list|)
 expr_stmt|;
-block|}
 name|FREE_LOCK
 argument_list|(
 name|altump
