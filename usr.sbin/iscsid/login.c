@@ -2037,6 +2037,23 @@ operator|=
 name|keys_new
 argument_list|()
 expr_stmt|;
+name|log_debugx
+argument_list|(
+literal|"offload \"%s\" limits MaxRecvDataSegmentLength to %zd"
+argument_list|,
+name|conn
+operator|->
+name|conn_conf
+operator|.
+name|isc_offload
+argument_list|,
+name|conn
+operator|->
+name|conn_limits
+operator|.
+name|isl_max_data_segment_length
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The following keys are irrelevant for discovery sessions. 	 */
 if|if
 condition|(
@@ -2124,7 +2141,11 @@ literal|"MaxBurstLength"
 argument_list|,
 literal|2
 operator|*
-name|ISCSI_MAX_DATA_SEGMENT_LENGTH
+name|conn
+operator|->
+name|conn_limits
+operator|.
+name|isl_max_data_segment_length
 argument_list|)
 expr_stmt|;
 name|keys_add_int
@@ -2133,7 +2154,11 @@ name|request_keys
 argument_list|,
 literal|"FirstBurstLength"
 argument_list|,
-name|ISCSI_MAX_DATA_SEGMENT_LENGTH
+name|conn
+operator|->
+name|conn_limits
+operator|.
+name|isl_max_data_segment_length
 argument_list|)
 expr_stmt|;
 name|keys_add
@@ -2182,7 +2207,11 @@ name|request_keys
 argument_list|,
 literal|"MaxRecvDataSegmentLength"
 argument_list|,
-name|ISCSI_MAX_DATA_SEGMENT_LENGTH
+name|conn
+operator|->
+name|conn_limits
+operator|.
+name|isl_max_data_segment_length
 argument_list|)
 expr_stmt|;
 name|keys_add

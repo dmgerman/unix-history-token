@@ -93,6 +93,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISCSI_OFFLOAD_LEN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISCSI_REASON_LEN
 value|64
 end_define
@@ -185,11 +192,32 @@ decl_stmt|;
 name|int
 name|isc_iser
 decl_stmt|;
+name|char
+name|isc_offload
+index|[
+name|ISCSI_OFFLOAD_LEN
+index|]
+decl_stmt|;
 name|int
 name|isc_spare
 index|[
-literal|4
+literal|2
 index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Additional constraints imposed by chosen ICL offload module;  * iscsid(8) must obey those when negotiating operational parameters.  */
+end_comment
+
+begin_struct
+struct|struct
+name|iscsi_session_limits
+block|{
+name|size_t
+name|isl_max_data_segment_length
 decl_stmt|;
 block|}
 struct|;
@@ -238,10 +266,16 @@ index|[
 name|ISCSI_REASON_LEN
 index|]
 decl_stmt|;
+name|char
+name|iss_offload
+index|[
+name|ISCSI_OFFLOAD_LEN
+index|]
+decl_stmt|;
 name|int
 name|iss_spare
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
 block|}
@@ -249,7 +283,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * For use with iscsid(8).  */
+comment|/*  * The following ioctls are used by iscsid(8).  */
 end_comment
 
 begin_struct
@@ -276,10 +310,14 @@ decl_stmt|;
 name|uint16_t
 name|idr_spare_cid
 decl_stmt|;
+name|struct
+name|iscsi_session_limits
+name|idr_limits
+decl_stmt|;
 name|int
 name|idr_spare
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
 block|}
@@ -550,7 +588,7 @@ comment|/* ICL_KERNEL_PROXY */
 end_comment
 
 begin_comment
-comment|/*  * For use with iscsictl(8).  */
+comment|/*  * The following ioctls are used by iscsictl(8).  */
 end_comment
 
 begin_struct

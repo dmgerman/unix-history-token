@@ -92,6 +92,10 @@ name|struct
 name|iscsi_session_conf
 name|conn_conf
 decl_stmt|;
+name|struct
+name|iscsi_session_limits
+name|conn_limits
+decl_stmt|;
 name|char
 name|conn_target_alias
 index|[

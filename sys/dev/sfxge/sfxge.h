@@ -402,6 +402,12 @@ name|unsigned
 name|int
 name|entries
 decl_stmt|;
+name|char
+name|lock_name
+index|[
+name|SFXGE_LOCK_NAME_MAX
+index|]
+decl_stmt|;
 block|}
 name|__aligned
 argument_list|(
@@ -531,6 +537,13 @@ decl_stmt|;
 name|efx_mcdi_transport_t
 name|transport
 decl_stmt|;
+comment|/* Only used in debugging output */
+name|char
+name|lock_name
+index|[
+name|SFXGE_LOCK_NAME_MAX
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -605,6 +618,13 @@ decl_stmt|;
 name|efx_link_mode_t
 name|link_mode
 decl_stmt|;
+comment|/* Only used in debugging output */
+name|char
+name|lock_name
+index|[
+name|SFXGE_LOCK_NAME_MAX
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -636,6 +656,12 @@ decl_stmt|;
 name|struct
 name|sx
 name|softc_lock
+decl_stmt|;
+name|char
+name|softc_lock_name
+index|[
+name|SFXGE_LOCK_NAME_MAX
+index|]
 decl_stmt|;
 name|enum
 name|sfxge_softc_state
@@ -677,8 +703,7 @@ name|efx_nic_t
 modifier|*
 name|enp
 decl_stmt|;
-name|struct
-name|mtx
+name|efsys_lock_t
 name|enp_lock
 decl_stmt|;
 name|unsigned
@@ -807,6 +832,12 @@ parameter_list|(
 name|CACHE_LINE_SIZE
 parameter_list|)
 function_decl|;
+name|char
+name|tx_lock_name
+index|[
+name|SFXGE_LOCK_NAME_MAX
+index|]
+decl_stmt|;
 endif|#
 directive|endif
 block|}
@@ -1248,10 +1279,10 @@ name|SFXGE_ADAPTER_LOCK_INIT
 parameter_list|(
 name|_sc
 parameter_list|,
-name|_name
+name|_ifname
 parameter_list|)
 define|\
-value|sx_init(&(_sc)->softc_lock, (_name))
+value|do {								\ 		struct sfxge_softc *__sc = (_sc);			\ 									\ 		snprintf((__sc)->softc_lock_name,			\ 			 sizeof((__sc)->softc_lock_name),		\ 			 "%s:softc", (_ifname));			\ 		sx_init(&(__sc)->softc_lock, (__sc)->softc_lock_name);	\ 	} while (B_FALSE)
 end_define
 
 begin_define
@@ -1305,10 +1336,10 @@ name|SFXGE_PORT_LOCK_INIT
 parameter_list|(
 name|_port
 parameter_list|,
-name|_name
+name|_ifname
 parameter_list|)
 define|\
-value|mtx_init(&(_port)->lock, (_name), NULL, MTX_DEF)
+value|do {								\ 		struct sfxge_port *__port = (_port);			\ 									\ 		snprintf((__port)->lock_name,				\ 			 sizeof((__port)->lock_name),			\ 			 "%s:port", (_ifname));				\ 		mtx_init(&(__port)->lock, (__port)->lock_name,		\ 			 NULL, MTX_DEF);				\ 	} while (B_FALSE)
 end_define
 
 begin_define
@@ -1362,10 +1393,10 @@ name|SFXGE_MCDI_LOCK_INIT
 parameter_list|(
 name|_mcdi
 parameter_list|,
-name|_name
+name|_ifname
 parameter_list|)
 define|\
-value|mtx_init(&(_mcdi)->lock, (_name), NULL, MTX_DEF)
+value|do {								\ 		struct sfxge_mcdi  *__mcdi = (_mcdi);			\ 									\ 		snprintf((__mcdi)->lock_name,				\ 			 sizeof((__mcdi)->lock_name),			\ 			 "%s:mcdi", (_ifname));				\ 		mtx_init(&(__mcdi)->lock, (__mcdi)->lock_name,		\ 			 NULL, MTX_DEF);				\ 	} while (B_FALSE)
 end_define
 
 begin_define
@@ -1419,10 +1450,12 @@ name|SFXGE_EVQ_LOCK_INIT
 parameter_list|(
 name|_evq
 parameter_list|,
-name|_name
+name|_ifname
+parameter_list|,
+name|_evq_index
 parameter_list|)
 define|\
-value|mtx_init(&(_evq)->lock, (_name), NULL, MTX_DEF)
+value|do {								\ 		struct sfxge_evq  *__evq = (_evq);			\ 									\ 		snprintf((__evq)->lock_name,				\ 			 sizeof((__evq)->lock_name),			\ 			 "%s:evq%u", (_ifname), (_evq_index));		\ 		mtx_init(&(__evq)->lock, (__evq)->lock_name,		\ 			 NULL, MTX_DEF);				\ 	} while (B_FALSE)
 end_define
 
 begin_define

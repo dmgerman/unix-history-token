@@ -4747,6 +4747,12 @@ name|ic_name
 operator|=
 name|name
 expr_stmt|;
+name|ic
+operator|->
+name|ic_offload
+operator|=
+literal|"none"
+expr_stmt|;
 return|return
 operator|(
 name|ic
