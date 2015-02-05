@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_verbose_sysinit.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
