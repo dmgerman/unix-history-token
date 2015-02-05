@@ -67,10 +67,24 @@ define|#
 directive|define
 name|EFSYS_HAS_UINT64
 value|1
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+define|#
+directive|define
+name|EFSYS_USE_UINT64
+value|1
+else|#
+directive|else
 define|#
 directive|define
 name|EFSYS_USE_UINT64
 value|0
+endif|#
+directive|endif
 if|#
 directive|if
 name|_BYTE_ORDER
@@ -1211,6 +1225,26 @@ name|_edp
 parameter_list|)
 define|\
 value|do {								\ 		uint32_t *addr;						\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_dword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		addr = (void *)((_esmp)->esm_base + (_offset));		\ 									\ 		(_edp)->ed_u32[0] = *addr;				\ 									\ 		EFSYS_PROBE2(mem_readd, unsigned int, (_offset),	\ 		    uint32_t, (_edp)->ed_u32[0]);			\ 									\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+define|#
+directive|define
+name|EFSYS_MEM_READQ
+parameter_list|(
+name|_esmp
+parameter_list|,
+name|_offset
+parameter_list|,
+name|_eqp
+parameter_list|)
+define|\
+value|do {								\ 		uint64_t *addr;						\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		addr = (void *)((_esmp)->esm_base + (_offset));		\ 									\ 		(_eqp)->eq_u64[0] = *addr;				\ 									\ 		EFSYS_PROBE3(mem_readq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+else|#
+directive|else
 define|#
 directive|define
 name|EFSYS_MEM_READQ
@@ -1223,6 +1257,28 @@ name|_eqp
 parameter_list|)
 define|\
 value|do {								\ 		uint32_t *addr;						\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		addr = (void *)((_esmp)->esm_base + (_offset));		\ 									\ 		(_eqp)->eq_u32[0] = *addr++;				\ 		(_eqp)->eq_u32[1] = *addr;				\ 									\ 		EFSYS_PROBE3(mem_readq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+define|#
+directive|define
+name|EFSYS_MEM_READO
+parameter_list|(
+name|_esmp
+parameter_list|,
+name|_offset
+parameter_list|,
+name|_eop
+parameter_list|)
+define|\
+value|do {								\ 		uint64_t *addr;						\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		addr = (void *)((_esmp)->esm_base + (_offset));		\ 									\ 		(_eop)->eo_u64[0] = *addr++;				\ 		(_eop)->eo_u64[1] = *addr;				\ 									\ 		EFSYS_PROBE5(mem_reado, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+else|#
+directive|else
 define|#
 directive|define
 name|EFSYS_MEM_READO
@@ -1235,6 +1291,8 @@ name|_eop
 parameter_list|)
 define|\
 value|do {								\ 		uint32_t *addr;						\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		addr = (void *)((_esmp)->esm_base + (_offset));		\ 									\ 		(_eop)->eo_u32[0] = *addr++;				\ 		(_eop)->eo_u32[1] = *addr++;				\ 		(_eop)->eo_u32[2] = *addr++;				\ 		(_eop)->eo_u32[3] = *addr;				\ 									\ 		EFSYS_PROBE5(mem_reado, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+endif|#
+directive|endif
 define|#
 directive|define
 name|EFSYS_MEM_WRITED
@@ -1247,6 +1305,26 @@ name|_edp
 parameter_list|)
 define|\
 value|do {								\ 		uint32_t *addr;						\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_dword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		EFSYS_PROBE2(mem_writed, unsigned int, (_offset),	\ 		    uint32_t, (_edp)->ed_u32[0]);			\ 									\ 		addr = (void *)((_esmp)->esm_base + (_offset));		\ 									\ 		*addr = (_edp)->ed_u32[0];				\ 									\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+define|#
+directive|define
+name|EFSYS_MEM_WRITEQ
+parameter_list|(
+name|_esmp
+parameter_list|,
+name|_offset
+parameter_list|,
+name|_eqp
+parameter_list|)
+define|\
+value|do {								\ 		uint64_t *addr;						\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		EFSYS_PROBE3(mem_writeq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		addr = (void *)((_esmp)->esm_base + (_offset));		\ 									\ 		*addr   = (_eqp)->eq_u64[0];				\ 									\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+else|#
+directive|else
 define|#
 directive|define
 name|EFSYS_MEM_WRITEQ
@@ -1259,6 +1337,28 @@ name|_eqp
 parameter_list|)
 define|\
 value|do {								\ 		uint32_t *addr;						\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		EFSYS_PROBE3(mem_writeq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		addr = (void *)((_esmp)->esm_base + (_offset));		\ 									\ 		*addr++ = (_eqp)->eq_u32[0];				\ 		*addr   = (_eqp)->eq_u32[1];				\ 									\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+define|#
+directive|define
+name|EFSYS_MEM_WRITEO
+parameter_list|(
+name|_esmp
+parameter_list|,
+name|_offset
+parameter_list|,
+name|_eop
+parameter_list|)
+define|\
+value|do {								\ 		uint64_t *addr;						\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		EFSYS_PROBE5(mem_writeo, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 		addr = (void *)((_esmp)->esm_base + (_offset));		\ 									\ 		*addr++ = (_eop)->eo_u64[0];				\ 		*addr   = (_eop)->eo_u64[1];				\ 									\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+else|#
+directive|else
 define|#
 directive|define
 name|EFSYS_MEM_WRITEO
@@ -1271,6 +1371,8 @@ name|_eop
 parameter_list|)
 define|\
 value|do {								\ 		uint32_t *addr;						\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		EFSYS_PROBE5(mem_writeo, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 		addr = (void *)((_esmp)->esm_base + (_offset));		\ 									\ 		*addr++ = (_eop)->eo_u32[0];				\ 		*addr++ = (_eop)->eo_u32[1];				\ 		*addr++ = (_eop)->eo_u32[2];				\ 		*addr   = (_eop)->eo_u32[3];				\ 									\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+endif|#
+directive|endif
 define|#
 directive|define
 name|EFSYS_MEM_ADDR
@@ -1363,6 +1465,12 @@ name|_lock
 parameter_list|)
 define|\
 value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_dword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);				\ 									\ 		(_edp)->ed_u32[0] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset));			\ 									\ 		EFSYS_PROBE2(bar_readd, unsigned int, (_offset),	\ 		    uint32_t, (_edp)->ed_u32[0]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
 define|#
 directive|define
 name|EFSYS_BAR_READQ
@@ -1374,7 +1482,35 @@ parameter_list|,
 name|_eqp
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		SFXGE_BAR_LOCK(_esbp);					\ 									\ 		(_eqp)->eq_u32[0] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset));			\ 		(_eqp)->eq_u32[1] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset+4));			\ 									\ 		EFSYS_PROBE3(bar_readq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		SFXGE_BAR_UNLOCK(_esbp);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		SFXGE_BAR_LOCK(_esbp);					\ 									\ 		(_eqp)->eq_u64[0] = bus_space_read_8((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset));			\ 									\ 		EFSYS_PROBE3(bar_readq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		mtx_unlock(&((_esbp)->esb_lock));			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+define|#
+directive|define
+name|EFSYS_BAR_READO
+parameter_list|(
+name|_esbp
+parameter_list|,
+name|_offset
+parameter_list|,
+name|_eop
+parameter_list|,
+name|_lock
+parameter_list|)
+define|\
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			mtx_lock(&((_esbp)->esb_lock));			\ 									\ 		(_eop)->eo_u64[0] = bus_space_read_8((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset));			\ 		(_eop)->eo_u64[1] = bus_space_read_8((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset+8));			\ 									\ 		EFSYS_PROBE5(bar_reado, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			mtx_unlock(&((_esbp)->esb_lock));		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+else|#
+directive|else
+define|#
+directive|define
+name|EFSYS_BAR_READQ
+parameter_list|(
+name|_esbp
+parameter_list|,
+name|_offset
+parameter_list|,
+name|_eqp
+parameter_list|)
+define|\
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		mtx_lock(&((_esbp)->esb_lock));				\ 									\ 		(_eqp)->eq_u32[0] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset));			\ 		(_eqp)->eq_u32[1] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset+4));			\ 									\ 		EFSYS_PROBE3(bar_readq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		SFXGE_BAR_UNLOCK(_esbp);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFSYS_BAR_READO
@@ -1389,6 +1525,8 @@ name|_lock
 parameter_list|)
 define|\
 value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);				\ 									\ 		(_eop)->eo_u32[0] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset));			\ 		(_eop)->eo_u32[1] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset+4));			\ 		(_eop)->eo_u32[2] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset+8));			\ 		(_eop)->eo_u32[3] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset+12));			\ 									\ 		EFSYS_PROBE5(bar_reado, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+endif|#
+directive|endif
 define|#
 directive|define
 name|EFSYS_BAR_WRITED
@@ -1403,6 +1541,12 @@ name|_lock
 parameter_list|)
 define|\
 value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_dword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);			\ 									\ 		EFSYS_PROBE2(bar_writed, unsigned int, (_offset),	\ 		    uint32_t, (_edp)->ed_u32[0]);			\ 									\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), (_edp)->ed_u32[0]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
 define|#
 directive|define
 name|EFSYS_BAR_WRITEQ
@@ -1414,7 +1558,29 @@ parameter_list|,
 name|_eqp
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		SFXGE_BAR_LOCK(_esbp);					\ 									\ 		EFSYS_PROBE3(bar_writeq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), (_eqp)->eq_u32[0]);			\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+4), (_eqp)->eq_u32[1]);			\ 									\ 		SFXGE_BAR_UNLOCK(_esbp);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		SFXGE_BAR_LOCK(_esbp);					\ 									\ 		EFSYS_PROBE3(bar_writeq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		bus_space_write_8((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), (_eqp)->eq_u64[0]);			\ 									\ 		mtx_unlock(&((_esbp)->esb_lock));			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+else|#
+directive|else
+define|#
+directive|define
+name|EFSYS_BAR_WRITEQ
+parameter_list|(
+name|_esbp
+parameter_list|,
+name|_offset
+parameter_list|,
+name|_eqp
+parameter_list|)
+define|\
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		mtx_lock(&((_esbp)->esb_lock));				\ 									\ 		EFSYS_PROBE3(bar_writeq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), (_eqp)->eq_u32[0]);			\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+4), (_eqp)->eq_u32[1]);			\ 									\ 		SFXGE_BAR_UNLOCK(_esbp);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
 define|#
 directive|define
 name|EFSYS_BAR_WRITEO
@@ -1428,7 +1594,25 @@ parameter_list|,
 name|_lock
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);				\ 									\ 		EFSYS_PROBE5(bar_writeo, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), (_eop)->eo_u32[0]);			\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+4), (_eop)->eo_u32[1]);			\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+8), (_eop)->eo_u32[2]);			\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+12), (_eop)->eo_u32[3]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);				\ 									\ 		EFSYS_PROBE5(bar_writeo, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 		bus_space_write_8((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), (_eop)->eo_u64[0]);			\ 		bus_space_write_8((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+8), (_eop)->eo_u64[1]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			mtx_unlock(&((_esbp)->esb_lock));		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+else|#
+directive|else
+define|#
+directive|define
+name|EFSYS_BAR_WRITEO
+parameter_list|(
+name|_esbp
+parameter_list|,
+name|_offset
+parameter_list|,
+name|_eop
+parameter_list|,
+name|_lock
+parameter_list|)
+define|\
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			mtx_lock(&((_esbp)->esb_lock));			\ 									\ 		EFSYS_PROBE5(bar_writeo, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), (_eop)->eo_u32[0]);			\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+4), (_eop)->eo_u32[1]);			\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+8), (_eop)->eo_u32[2]);			\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+12), (_eop)->eo_u32[3]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+endif|#
+directive|endif
 comment|/* SPIN */
 define|#
 directive|define
