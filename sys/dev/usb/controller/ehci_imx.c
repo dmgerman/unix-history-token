@@ -635,6 +635,15 @@ name|devices_max
 operator|=
 name|EHCI_MAX_DEVICES
 expr_stmt|;
+name|esc
+operator|->
+name|sc_bus
+operator|.
+name|dma_bits
+operator|=
+literal|32
+expr_stmt|;
+comment|/* allocate all DMA memory */
 if|if
 condition|(
 name|usb_bus_mem_alloc_all

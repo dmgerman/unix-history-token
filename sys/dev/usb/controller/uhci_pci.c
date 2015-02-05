@@ -839,6 +839,14 @@ name|devices_max
 operator|=
 name|UHCI_MAX_DEVICES
 expr_stmt|;
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|dma_bits
+operator|=
+literal|32
+expr_stmt|;
 comment|/* get all DMA memory */
 if|if
 condition|(
