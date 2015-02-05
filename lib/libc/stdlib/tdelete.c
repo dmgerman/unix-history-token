@@ -341,6 +341,13 @@ name|rlink
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|p
+operator|!=
+operator|*
+name|rootp
+condition|)
 name|free
 argument_list|(
 operator|*
