@@ -5081,6 +5081,8 @@ name|ts
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|need_gc
 decl_stmt|;
 name|uint16_t
 name|kidx
@@ -5128,6 +5130,27 @@ name|ESRCH
 operator|)
 return|;
 block|}
+name|need_gc
+operator|=
+literal|0
+expr_stmt|;
+name|astate_new
+operator|=
+name|NULL
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|ti_new
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ti_new
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|restart
 label|:
 comment|/* Set up swap handler */
@@ -5262,6 +5285,29 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Stage 1.5: if this is not the first attempt, destroy previous state 	 */
+if|if
+condition|(
+name|need_gc
+operator|!=
+literal|0
+condition|)
+block|{
+name|ta
+operator|->
+name|destroy
+argument_list|(
+name|astate_new
+argument_list|,
+operator|&
+name|ti_new
+argument_list|)
+expr_stmt|;
+name|need_gc
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 	 * Stage 2: allocate new table instance using same algo. 	 */
 name|memset
 argument_list|(
@@ -5345,15 +5391,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ta
-operator|->
-name|destroy
-argument_list|(
-name|astate_new
-argument_list|,
-operator|&
-name|ti_new
-argument_list|)
+comment|/* Delay destroying data since we're holding UH lock */
+name|need_gc
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|restart
@@ -13113,6 +13154,7 @@ literal|"free() on linked config"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* UH lock MUST NOT be held */
 comment|/* 	 * We're using ta without any locking/referencing. 	 * TODO: fix this if we're going to use unloadable algos. 	 */
 name|tc
 operator|->

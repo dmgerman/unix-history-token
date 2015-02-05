@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
-literal|"$FreeBSD: projects/ipfw/sys/netpfil/ipfw/ip_fw_iface.c 267384 2014-06-12 09:59:11Z melifaro $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1406,7 +1406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unreference interface specified by @ic.  * Must be called without holding any locks.  */
+comment|/*  * Unreference interface specified by @ic.  * Must be called while holding UH lock.  */
 end_comment
 
 begin_function
@@ -1429,6 +1429,11 @@ name|ipfw_iface
 modifier|*
 name|iif
 decl_stmt|;
+name|IPFW_UH_WLOCK_ASSERT
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 name|iif
 operator|=
 name|ic
@@ -1441,11 +1446,6 @@ name|iface
 operator|=
 name|NULL
 expr_stmt|;
-name|IPFW_UH_WLOCK
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
 name|iif
 operator|->
 name|no
@@ -1454,11 +1454,6 @@ name|refcnt
 operator|--
 expr_stmt|;
 comment|/* TODO: check for references& delete */
-name|IPFW_UH_WUNLOCK
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

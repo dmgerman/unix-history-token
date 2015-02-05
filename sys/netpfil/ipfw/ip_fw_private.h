@@ -1697,6 +1697,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPFW_UH_UNLOCK_ASSERT
+parameter_list|(
+name|_chain
+parameter_list|)
+value|rw_assert(&(_chain)->uh_lock, RA_UNLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPFW_UH_RLOCK
 parameter_list|(
 name|p
