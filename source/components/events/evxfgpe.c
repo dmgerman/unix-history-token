@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -216,13 +216,12 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
+name|ACPI_GPE_DISPATCH_TYPE
+argument_list|(
 name|GpeEventInfo
 operator|->
 name|Flags
-operator|&
-name|ACPI_GPE_DISPATCH_MASK
-operator|)
+argument_list|)
 operator|!=
 name|ACPI_GPE_DISPATCH_NONE
 condition|)
@@ -350,7 +349,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetGpe  *  * PARAMETERS:  GpeDevice           - Parent GPE Device. NULL for GPE0/GPE1  *              GpeNumber           - GPE level within the GPE block  *              Action              - ACPI_GPE_ENABLE or ACPI_GPE_DISABLE  *  * RETURN:      Status  *  * DESCRIPTION: Enable or disable an individual GPE. This function bypasses  *              the reference count mechanism used in the AcpiEnableGpe and  *              AcpiDisableGpe interfaces -- and should be used with care.  *  * Note: Typically used to disable a runtime GPE for short period of time,  * then re-enable it, without disturbing the existing reference counts. This  * is useful, for example, in the Embedded Controller (EC) driver.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetGpe  *  * PARAMETERS:  GpeDevice           - Parent GPE Device. NULL for GPE0/GPE1  *              GpeNumber           - GPE level within the GPE block  *              Action              - ACPI_GPE_ENABLE or ACPI_GPE_DISABLE  *  * RETURN:      Status  *  * DESCRIPTION: Enable or disable an individual GPE. This function bypasses  *              the reference count mechanism used in the AcpiEnableGpe(),  *              AcpiDisableGpe() interfaces.  *              This API is typically used by the GPE raw handler mode driver  *              to switch between the polling mode and the interrupt mode after  *              the driver has enabled the GPE.  *              The APIs should be invoked in this order:  *               AcpiEnableGpe()<- Ensure the reference count> 0  *               AcpiSetGpe(ACPI_GPE_DISABLE)<- Enter polling mode  *               AcpiSetGpe(ACPI_GPE_ENABLE)<- Leave polling mode  *               AcpiDisableGpe()<- Decrease the reference count  *  * Note: If a GPE is shared by 2 silicon components, then both the drivers  *       should support GPE polling mode or disabling the GPE for long period  *       for one driver may break the other. So use it with care since all  *       firmware _Lxx/_Exx handlers currently rely on the GPE interrupt mode.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -424,9 +423,11 @@ name|ACPI_GPE_ENABLE
 case|:
 name|Status
 operator|=
-name|AcpiEvEnableGpe
+name|AcpiHwLowSetGpe
 argument_list|(
 name|GpeEventInfo
+argument_list|,
+name|ACPI_GPE_ENABLE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -719,13 +720,12 @@ block|}
 comment|/*      * If there is no method or handler for this GPE, then the      * WakeDevice will be notified whenever this GPE fires. This is      * known as an "implicit notify". Note: The GPE is assumed to be      * level-triggered (for windows compatibility).      */
 if|if
 condition|(
-operator|(
+name|ACPI_GPE_DISPATCH_TYPE
+argument_list|(
 name|GpeEventInfo
 operator|->
 name|Flags
-operator|&
-name|ACPI_GPE_DISPATCH_MASK
-operator|)
+argument_list|)
 operator|==
 name|ACPI_GPE_DISPATCH_NONE
 condition|)
@@ -745,13 +745,12 @@ block|}
 comment|/*      * If we already have an implicit notify on this GPE, add      * this device to the notify list.      */
 if|if
 condition|(
-operator|(
+name|ACPI_GPE_DISPATCH_TYPE
+argument_list|(
 name|GpeEventInfo
 operator|->
 name|Flags
-operator|&
-name|ACPI_GPE_DISPATCH_MASK
-operator|)
+argument_list|)
 operator|==
 name|ACPI_GPE_DISPATCH_NOTIFY
 condition|)
@@ -1491,6 +1490,74 @@ begin_macro
 name|ACPI_EXPORT_SYMBOL
 argument_list|(
 argument|AcpiEnableAllRuntimeGpes
+argument_list|)
+end_macro
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiEnableAllWakeupGpes  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Enable all "wakeup" GPEs and disable all of the other GPEs, in  *              all GPE blocks.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiEnableAllWakeupGpes
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|AcpiEnableAllWakeupGpes
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiUtAcquireMutex
+argument_list|(
+name|ACPI_MTX_EVENTS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
+name|AcpiHwEnableAllWakeupGpes
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_EVENTS
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiEnableAllWakeupGpes
 argument_list|)
 end_macro
 
