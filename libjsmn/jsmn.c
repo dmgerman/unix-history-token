@@ -45,6 +45,9 @@ name|tok
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|parser
 operator|->
 name|toknext
@@ -514,6 +517,11 @@ operator|==
 literal|'\\'
 condition|)
 block|{
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
 name|parser
 operator|->
 name|pos
@@ -564,11 +572,6 @@ operator|->
 name|pos
 operator|++
 expr_stmt|;
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
 for|for
 control|(
 init|;

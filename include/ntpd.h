@@ -347,6 +347,7 @@ decl_stmt|;
 name|u_short
 name|flags
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|text
@@ -1622,6 +1623,7 @@ name|struct
 name|peer
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -2296,7 +2298,7 @@ name|int
 name|stratum
 parameter_list|,
 name|int
-name|poll
+name|ppoll
 parameter_list|,
 name|int
 name|precision

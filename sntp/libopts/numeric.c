@@ -23,6 +23,7 @@ name|tOptDesc
 modifier|*
 name|pOD
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|rng_table

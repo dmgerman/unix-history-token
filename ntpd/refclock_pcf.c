@@ -519,6 +519,9 @@ name|buf
 argument_list|)
 argument_list|)
 operator|<
+operator|(
+name|ssize_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|buf

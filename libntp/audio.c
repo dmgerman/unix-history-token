@@ -410,10 +410,12 @@ name|audio_config_read
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -515,12 +517,14 @@ parameter_list|(
 name|int
 name|unit
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|c_dev
 parameter_list|,
 comment|/* Control device */
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -736,7 +740,8 @@ operator|&&
 name|isascii
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|line
 index|[
@@ -749,7 +754,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|line
 index|[
@@ -781,7 +787,8 @@ operator|&&
 name|isascii
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|cc
@@ -790,7 +797,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|cc
@@ -827,7 +835,8 @@ condition|(
 name|isascii
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|ca
@@ -839,7 +848,8 @@ condition|(
 name|islower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|ca
@@ -851,6 +861,10 @@ name|ca
 operator|=
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ca
 argument_list|)
@@ -862,7 +876,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|ca
@@ -888,7 +903,8 @@ operator|&&
 name|isascii
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|ca
@@ -898,7 +914,8 @@ operator|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|ca
@@ -1132,6 +1149,7 @@ begin_function
 name|int
 name|audio_init
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|dname
@@ -1184,6 +1202,7 @@ decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|actl

@@ -1102,6 +1102,7 @@ name|params
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|params
 argument_list|)
 argument_list|)

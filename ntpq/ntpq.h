@@ -289,7 +289,7 @@ index|[
 name|MAXARGS
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|nargs
 decl_stmt|;
 block|}

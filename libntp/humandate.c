@@ -48,6 +48,7 @@ comment|/* This is used in msyslog.c; we don't want to clutter up the log with  
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|humanlogtime
@@ -138,6 +139,7 @@ comment|/*  * humantime() -- like humanlogtime() but without date, and with the 
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|humantime

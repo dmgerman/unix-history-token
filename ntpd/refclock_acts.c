@@ -1124,6 +1124,10 @@ condition|(
 operator|!
 name|iscntrl
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tptr
 argument_list|)
@@ -1763,7 +1767,7 @@ expr_stmt|;
 if|if
 condition|(
 name|fd
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{

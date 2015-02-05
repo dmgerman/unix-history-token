@@ -251,6 +251,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|NULL
 block|}
 block|}
 decl_stmt|;
@@ -1929,7 +1931,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|numrequests
@@ -2784,6 +2786,9 @@ name|rbufp
 operator|->
 name|recv_length
 operator|<
+operator|(
+name|int
+operator|)
 name|REQ_LEN_HDR
 operator|)
 condition|)
@@ -3367,11 +3372,8 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"bad pkt length %lu\n"
+literal|"bad pkt length %zu\n"
 operator|,
-operator|(
-name|u_long
-operator|)
 name|recv_len
 operator|)
 argument_list|)
@@ -3380,11 +3382,8 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"process_private: bad pkt length %lu"
+literal|"process_private: bad pkt length %zu"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|recv_len
 argument_list|)
 expr_stmt|;
@@ -10793,7 +10792,7 @@ name|ctl_trap
 modifier|*
 name|tr
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if

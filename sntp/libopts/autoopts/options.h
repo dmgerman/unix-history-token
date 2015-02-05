@@ -1997,19 +1997,43 @@ name|pzCurOpt
 decl_stmt|;
 comment|///< current option text
 comment|/// Public, the full path of the program
+if|#
+directive|if
+name|AUTOOPTS_INTERNAL
+name|char
+specifier|const
+modifier|*
+name|pzProgPath
+decl_stmt|;
+else|#
+directive|else
 name|char
 specifier|const
 modifier|*
 specifier|const
 name|pzProgPath
 decl_stmt|;
+endif|#
+directive|endif
 comment|/// Public, the name of the executable, without any path
+if|#
+directive|if
+name|AUTOOPTS_INTERNAL
+name|char
+specifier|const
+modifier|*
+name|pzProgName
+decl_stmt|;
+else|#
+directive|else
 name|char
 specifier|const
 modifier|*
 specifier|const
 name|pzProgName
 decl_stmt|;
+endif|#
+directive|endif
 comment|/// Public, the upper-cased, shell variable syntax-ed program name
 name|char
 specifier|const
@@ -3184,6 +3208,7 @@ parameter_list|,
 name|tOptDesc
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntpq-opts.c)  *  *  It has been AutoGen-ed  December 19, 2014 at 07:49:47 AM by AutoGen 5.18.5pre4  *  From the definitions    ntpq-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpq author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntpq program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1970-2014 The University of Delaware, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
+comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntpq-opts.c)  *  *  It has been AutoGen-ed  February  4, 2015 at 02:42:46 AM by AutoGen 5.18.5pre4  *  From the definitions    ntpq-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpq author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntpq program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware and Network Time Foundation makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -70,7 +70,7 @@ value|(ntpq_opt_strs+0)
 define|#
 directive|define
 name|zLicenseDescrip
-value|(ntpq_opt_strs+310)
+value|(ntpq_opt_strs+340)
 comment|/*  *  global included definitions  */
 ifdef|#
 directive|ifdef
@@ -106,143 +106,144 @@ name|char
 specifier|const
 name|ntpq_opt_strs
 index|[
-literal|1863
+literal|1925
 index|]
 init|=
 comment|/*     0 */
-literal|"ntpq 4.2.8\n"
-literal|"Copyright (C) 1970-2014 The University of Delaware, all rights reserved.\n"
+literal|"ntpq 4.2.8p1\n"
+literal|"Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.\n"
 literal|"This is free software. It is licensed for use, modification and\n"
 literal|"redistribution under the terms of the NTP License, copies of which\n"
 literal|"can be seen at:\n"
 literal|"<http://ntp.org/license>\n"
 literal|"<http://opensource.org/licenses/ntp-license.php>\n\0"
-comment|/*   310 */
+comment|/*   340 */
 literal|"Permission to use, copy, modify, and distribute this software and its\n"
 literal|"documentation for any purpose with or without fee is hereby granted,\n"
 literal|"provided that the above copyright notice appears in all copies and that\n"
 literal|"both the copyright notice and this permission notice appear in supporting\n"
 literal|"documentation, and that the name The University of Delaware not be used in\n"
 literal|"advertising or publicity pertaining to distribution of the software without\n"
-literal|"specific, written prior permission.  The University of Delaware makes no\n"
-literal|"representations about the suitability this software for any purpose.  It is\n"
-literal|"provided \"as is\" without express or implied warranty.\n\0"
-comment|/*   950 */
+literal|"specific, written prior permission.  The University of Delaware and Network\n"
+literal|"Time Foundation makes no representations about the suitability this\n"
+literal|"software for any purpose.  It is provided \"as is\" without express or\n"
+literal|"implied warranty.\n\0"
+comment|/*  1008 */
 literal|"Force IPv4 DNS name resolution\0"
-comment|/*   981 */
+comment|/*  1039 */
 literal|"IPV4\0"
-comment|/*   986 */
+comment|/*  1044 */
 literal|"ipv4\0"
-comment|/*   991 */
+comment|/*  1049 */
 literal|"Force IPv6 DNS name resolution\0"
-comment|/*  1022 */
+comment|/*  1080 */
 literal|"IPV6\0"
-comment|/*  1027 */
+comment|/*  1085 */
 literal|"ipv6\0"
-comment|/*  1032 */
+comment|/*  1090 */
 literal|"run a command and exit\0"
-comment|/*  1055 */
+comment|/*  1113 */
 literal|"COMMAND\0"
-comment|/*  1063 */
+comment|/*  1121 */
 literal|"command\0"
-comment|/*  1071 */
+comment|/*  1129 */
 literal|"Increase debug verbosity level\0"
-comment|/*  1102 */
+comment|/*  1160 */
 literal|"DEBUG_LEVEL\0"
-comment|/*  1114 */
-literal|"debug-level\0"
-comment|/*  1126 */
-literal|"Set the debug verbosity level\0"
-comment|/*  1156 */
-literal|"SET_DEBUG_LEVEL\0"
 comment|/*  1172 */
-literal|"set-debug-level\0"
-comment|/*  1188 */
-literal|"Force ntpq to operate in interactive mode\0"
+literal|"debug-level\0"
+comment|/*  1184 */
+literal|"Set the debug verbosity level\0"
+comment|/*  1214 */
+literal|"SET_DEBUG_LEVEL\0"
 comment|/*  1230 */
+literal|"set-debug-level\0"
+comment|/*  1246 */
+literal|"Force ntpq to operate in interactive mode\0"
+comment|/*  1288 */
 literal|"INTERACTIVE\0"
-comment|/*  1242 */
+comment|/*  1300 */
 literal|"interactive\0"
-comment|/*  1254 */
+comment|/*  1312 */
 literal|"numeric host addresses\0"
-comment|/*  1277 */
+comment|/*  1335 */
 literal|"NUMERIC\0"
-comment|/*  1285 */
+comment|/*  1343 */
 literal|"numeric\0"
-comment|/*  1293 */
+comment|/*  1351 */
 literal|"Always output status line with readvar\0"
-comment|/*  1332 */
+comment|/*  1390 */
 literal|"OLD_RV\0"
-comment|/*  1339 */
+comment|/*  1397 */
 literal|"old-rv\0"
-comment|/*  1346 */
+comment|/*  1404 */
 literal|"Print a list of the peers\0"
-comment|/*  1372 */
+comment|/*  1430 */
 literal|"PEERS\0"
-comment|/*  1378 */
+comment|/*  1436 */
 literal|"peers\0"
-comment|/*  1384 */
+comment|/*  1442 */
 literal|"Display the full 'remote' value\0"
-comment|/*  1416 */
+comment|/*  1474 */
 literal|"WIDE\0"
-comment|/*  1421 */
+comment|/*  1479 */
 literal|"wide\0"
-comment|/*  1426 */
+comment|/*  1484 */
 literal|"display extended usage information and exit\0"
-comment|/*  1470 */
+comment|/*  1528 */
 literal|"help\0"
-comment|/*  1475 */
+comment|/*  1533 */
 literal|"extended usage information passed thru pager\0"
-comment|/*  1520 */
+comment|/*  1578 */
 literal|"more-help\0"
-comment|/*  1530 */
+comment|/*  1588 */
 literal|"output version information and exit\0"
-comment|/*  1566 */
+comment|/*  1624 */
 literal|"version\0"
-comment|/*  1574 */
+comment|/*  1632 */
 literal|"save the option state to a config file\0"
-comment|/*  1613 */
+comment|/*  1671 */
 literal|"save-opts\0"
-comment|/*  1623 */
-literal|"load options from a config file\0"
-comment|/*  1655 */
-literal|"LOAD_OPTS\0"
-comment|/*  1665 */
-literal|"no-load-opts\0"
-comment|/*  1678 */
-literal|"no\0"
 comment|/*  1681 */
+literal|"load options from a config file\0"
+comment|/*  1713 */
+literal|"LOAD_OPTS\0"
+comment|/*  1723 */
+literal|"no-load-opts\0"
+comment|/*  1736 */
+literal|"no\0"
+comment|/*  1739 */
 literal|"NTPQ\0"
-comment|/*  1686 */
-literal|"ntpq - standard NTP query program - Ver. 4.2.8\n"
+comment|/*  1744 */
+literal|"ntpq - standard NTP query program - Ver. 4.2.8p1\n"
 literal|"Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... [ host ...]\n\0"
-comment|/*  1803 */
+comment|/*  1863 */
 literal|"$HOME\0"
-comment|/*  1809 */
+comment|/*  1869 */
 literal|".\0"
-comment|/*  1811 */
+comment|/*  1871 */
 literal|".ntprc\0"
-comment|/*  1818 */
+comment|/*  1878 */
 literal|"http://bugs.ntp.org, bugs@ntp.org\0"
-comment|/*  1852 */
-literal|"ntpq 4.2.8"
+comment|/*  1912 */
+literal|"ntpq 4.2.8p1"
 decl_stmt|;
 comment|/**  *  ipv4 option description with  *  "Must also have options" and "Incompatible options":  */
 comment|/** Descriptive text for the ipv4 option */
 define|#
 directive|define
 name|IPV4_DESC
-value|(ntpq_opt_strs+950)
+value|(ntpq_opt_strs+1008)
 comment|/** Upper-cased name for the ipv4 option */
 define|#
 directive|define
 name|IPV4_NAME
-value|(ntpq_opt_strs+981)
+value|(ntpq_opt_strs+1039)
 comment|/** Name string for the ipv4 option */
 define|#
 directive|define
 name|IPV4_name
-value|(ntpq_opt_strs+986)
+value|(ntpq_opt_strs+1044)
 comment|/** Other options that appear in conjunction with the ipv4 option */
 specifier|static
 name|int
@@ -266,17 +267,17 @@ comment|/** Descriptive text for the ipv6 option */
 define|#
 directive|define
 name|IPV6_DESC
-value|(ntpq_opt_strs+991)
+value|(ntpq_opt_strs+1049)
 comment|/** Upper-cased name for the ipv6 option */
 define|#
 directive|define
 name|IPV6_NAME
-value|(ntpq_opt_strs+1022)
+value|(ntpq_opt_strs+1080)
 comment|/** Name string for the ipv6 option */
 define|#
 directive|define
 name|IPV6_name
-value|(ntpq_opt_strs+1027)
+value|(ntpq_opt_strs+1085)
 comment|/** Other options that appear in conjunction with the ipv6 option */
 specifier|static
 name|int
@@ -300,17 +301,17 @@ comment|/** Descriptive text for the command option */
 define|#
 directive|define
 name|COMMAND_DESC
-value|(ntpq_opt_strs+1032)
+value|(ntpq_opt_strs+1090)
 comment|/** Upper-cased name for the command option */
 define|#
 directive|define
 name|COMMAND_NAME
-value|(ntpq_opt_strs+1055)
+value|(ntpq_opt_strs+1113)
 comment|/** Name string for the command option */
 define|#
 directive|define
 name|COMMAND_name
-value|(ntpq_opt_strs+1063)
+value|(ntpq_opt_strs+1121)
 comment|/** Compiled in flag settings for the command option */
 define|#
 directive|define
@@ -321,17 +322,17 @@ comment|/** Descriptive text for the debug-level option */
 define|#
 directive|define
 name|DEBUG_LEVEL_DESC
-value|(ntpq_opt_strs+1071)
+value|(ntpq_opt_strs+1129)
 comment|/** Upper-cased name for the debug-level option */
 define|#
 directive|define
 name|DEBUG_LEVEL_NAME
-value|(ntpq_opt_strs+1102)
+value|(ntpq_opt_strs+1160)
 comment|/** Name string for the debug-level option */
 define|#
 directive|define
 name|DEBUG_LEVEL_name
-value|(ntpq_opt_strs+1114)
+value|(ntpq_opt_strs+1172)
 comment|/** Compiled in flag settings for the debug-level option */
 define|#
 directive|define
@@ -342,17 +343,17 @@ comment|/** Descriptive text for the set-debug-level option */
 define|#
 directive|define
 name|SET_DEBUG_LEVEL_DESC
-value|(ntpq_opt_strs+1126)
+value|(ntpq_opt_strs+1184)
 comment|/** Upper-cased name for the set-debug-level option */
 define|#
 directive|define
 name|SET_DEBUG_LEVEL_NAME
-value|(ntpq_opt_strs+1156)
+value|(ntpq_opt_strs+1214)
 comment|/** Name string for the set-debug-level option */
 define|#
 directive|define
 name|SET_DEBUG_LEVEL_name
-value|(ntpq_opt_strs+1172)
+value|(ntpq_opt_strs+1230)
 comment|/** Compiled in flag settings for the set-debug-level option */
 define|#
 directive|define
@@ -363,17 +364,17 @@ comment|/** Descriptive text for the interactive option */
 define|#
 directive|define
 name|INTERACTIVE_DESC
-value|(ntpq_opt_strs+1188)
+value|(ntpq_opt_strs+1246)
 comment|/** Upper-cased name for the interactive option */
 define|#
 directive|define
 name|INTERACTIVE_NAME
-value|(ntpq_opt_strs+1230)
+value|(ntpq_opt_strs+1288)
 comment|/** Name string for the interactive option */
 define|#
 directive|define
 name|INTERACTIVE_name
-value|(ntpq_opt_strs+1242)
+value|(ntpq_opt_strs+1300)
 comment|/** Other options that appear in conjunction with the interactive option */
 specifier|static
 name|int
@@ -399,17 +400,17 @@ comment|/** Descriptive text for the numeric option */
 define|#
 directive|define
 name|NUMERIC_DESC
-value|(ntpq_opt_strs+1254)
+value|(ntpq_opt_strs+1312)
 comment|/** Upper-cased name for the numeric option */
 define|#
 directive|define
 name|NUMERIC_NAME
-value|(ntpq_opt_strs+1277)
+value|(ntpq_opt_strs+1335)
 comment|/** Name string for the numeric option */
 define|#
 directive|define
 name|NUMERIC_name
-value|(ntpq_opt_strs+1285)
+value|(ntpq_opt_strs+1343)
 comment|/** Compiled in flag settings for the numeric option */
 define|#
 directive|define
@@ -420,17 +421,17 @@ comment|/** Descriptive text for the old-rv option */
 define|#
 directive|define
 name|OLD_RV_DESC
-value|(ntpq_opt_strs+1293)
+value|(ntpq_opt_strs+1351)
 comment|/** Upper-cased name for the old-rv option */
 define|#
 directive|define
 name|OLD_RV_NAME
-value|(ntpq_opt_strs+1332)
+value|(ntpq_opt_strs+1390)
 comment|/** Name string for the old-rv option */
 define|#
 directive|define
 name|OLD_RV_name
-value|(ntpq_opt_strs+1339)
+value|(ntpq_opt_strs+1397)
 comment|/** Compiled in flag settings for the old-rv option */
 define|#
 directive|define
@@ -441,17 +442,17 @@ comment|/** Descriptive text for the peers option */
 define|#
 directive|define
 name|PEERS_DESC
-value|(ntpq_opt_strs+1346)
+value|(ntpq_opt_strs+1404)
 comment|/** Upper-cased name for the peers option */
 define|#
 directive|define
 name|PEERS_NAME
-value|(ntpq_opt_strs+1372)
+value|(ntpq_opt_strs+1430)
 comment|/** Name string for the peers option */
 define|#
 directive|define
 name|PEERS_name
-value|(ntpq_opt_strs+1378)
+value|(ntpq_opt_strs+1436)
 comment|/** Other options that appear in conjunction with the peers option */
 specifier|static
 name|int
@@ -475,17 +476,17 @@ comment|/** Descriptive text for the wide option */
 define|#
 directive|define
 name|WIDE_DESC
-value|(ntpq_opt_strs+1384)
+value|(ntpq_opt_strs+1442)
 comment|/** Upper-cased name for the wide option */
 define|#
 directive|define
 name|WIDE_NAME
-value|(ntpq_opt_strs+1416)
+value|(ntpq_opt_strs+1474)
 comment|/** Name string for the wide option */
 define|#
 directive|define
 name|WIDE_name
-value|(ntpq_opt_strs+1421)
+value|(ntpq_opt_strs+1479)
 comment|/** Compiled in flag settings for the wide option */
 define|#
 directive|define
@@ -495,22 +496,22 @@ comment|/*  *  Help/More_Help/Version option descriptions:  */
 define|#
 directive|define
 name|HELP_DESC
-value|(ntpq_opt_strs+1426)
+value|(ntpq_opt_strs+1484)
 define|#
 directive|define
 name|HELP_name
-value|(ntpq_opt_strs+1470)
+value|(ntpq_opt_strs+1528)
 ifdef|#
 directive|ifdef
 name|HAVE_WORKING_FORK
 define|#
 directive|define
 name|MORE_HELP_DESC
-value|(ntpq_opt_strs+1475)
+value|(ntpq_opt_strs+1533)
 define|#
 directive|define
 name|MORE_HELP_name
-value|(ntpq_opt_strs+1520)
+value|(ntpq_opt_strs+1578)
 define|#
 directive|define
 name|MORE_HELP_FLAGS
@@ -549,35 +550,35 @@ directive|endif
 define|#
 directive|define
 name|VER_DESC
-value|(ntpq_opt_strs+1530)
+value|(ntpq_opt_strs+1588)
 define|#
 directive|define
 name|VER_name
-value|(ntpq_opt_strs+1566)
+value|(ntpq_opt_strs+1624)
 define|#
 directive|define
 name|SAVE_OPTS_DESC
-value|(ntpq_opt_strs+1574)
+value|(ntpq_opt_strs+1632)
 define|#
 directive|define
 name|SAVE_OPTS_name
-value|(ntpq_opt_strs+1613)
+value|(ntpq_opt_strs+1671)
 define|#
 directive|define
 name|LOAD_OPTS_DESC
-value|(ntpq_opt_strs+1623)
+value|(ntpq_opt_strs+1681)
 define|#
 directive|define
 name|LOAD_OPTS_NAME
-value|(ntpq_opt_strs+1655)
+value|(ntpq_opt_strs+1713)
 define|#
 directive|define
 name|NO_LOAD_OPTS_name
-value|(ntpq_opt_strs+1665)
+value|(ntpq_opt_strs+1723)
 define|#
 directive|define
 name|LOAD_OPTS_pfx
-value|(ntpq_opt_strs+1678)
+value|(ntpq_opt_strs+1736)
 define|#
 directive|define
 name|LOAD_OPTS_name
@@ -1484,17 +1485,17 @@ comment|/** Reference to the upper cased version of ntpq. */
 define|#
 directive|define
 name|zPROGNAME
-value|(ntpq_opt_strs+1681)
+value|(ntpq_opt_strs+1739)
 comment|/** Reference to the title line for ntpq usage. */
 define|#
 directive|define
 name|zUsageTitle
-value|(ntpq_opt_strs+1686)
+value|(ntpq_opt_strs+1744)
 comment|/** ntpq configuration file name. */
 define|#
 directive|define
 name|zRcName
-value|(ntpq_opt_strs+1811)
+value|(ntpq_opt_strs+1871)
 comment|/** Directories to search for ntpq config files. */
 specifier|static
 name|char
@@ -1509,11 +1510,11 @@ init|=
 block|{
 name|ntpq_opt_strs
 operator|+
-literal|1803
+literal|1863
 block|,
 name|ntpq_opt_strs
 operator|+
-literal|1809
+literal|1869
 block|,
 name|NULL
 block|}
@@ -1522,7 +1523,7 @@ comment|/** The ntpq program bug email address. */
 define|#
 directive|define
 name|zBugsAddr
-value|(ntpq_opt_strs+1818)
+value|(ntpq_opt_strs+1878)
 comment|/** Clarification/explanation of what ntpq does. */
 define|#
 directive|define
@@ -1537,7 +1538,7 @@ comment|/** The full version string for ntpq. */
 define|#
 directive|define
 name|zFullVersion
-value|(ntpq_opt_strs+1852)
+value|(ntpq_opt_strs+1912)
 comment|/* extracted from optcode.tlib near line 364 */
 if|#
 directive|if
@@ -2263,7 +2264,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpq 4.2.8\n\ Copyright (C) 1970-2014 The University of Delaware, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
+literal|"ntpq 4.2.8p1\n\ Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2280,7 +2281,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"Permission to use, copy, modify, and distribute this software and its\n\ documentation for any purpose with or without fee is hereby granted,\n\ provided that the above copyright notice appears in all copies and that\n\ both the copyright notice and this permission notice appear in supporting\n\ documentation, and that the name The University of Delaware not be used in\n\ advertising or publicity pertaining to distribution of the software without\n\ specific, written prior permission.  The University of Delaware makes no\n\ representations about the suitability this software for any purpose.  It is\n\ provided \"as is\" without express or implied warranty.\n"
+literal|"Permission to use, copy, modify, and distribute this software and its\n\ documentation for any purpose with or without fee is hereby granted,\n\ provided that the above copyright notice appears in all copies and that\n\ both the copyright notice and this permission notice appear in supporting\n\ documentation, and that the name The University of Delaware not be used in\n\ advertising or publicity pertaining to distribution of the software without\n\ specific, written prior permission.  The University of Delaware and Network\n\ Time Foundation makes no representations about the suitability this\n\ software for any purpose.  It is provided \"as is\" without express or\n\ implied warranty.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2424,7 +2425,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpq - standard NTP query program - Ver. 4.2.8\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... [ host ...]\n"
+literal|"ntpq - standard NTP query program - Ver. 4.2.8p1\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... [ host ...]\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2433,7 +2434,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpq 4.2.8"
+literal|"ntpq 4.2.8p1"
 argument_list|)
 argument_list|)
 expr_stmt|;

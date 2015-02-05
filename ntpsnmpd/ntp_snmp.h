@@ -92,6 +92,23 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|PACKAGE_URL
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|PACKAGE_URL
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|PACKAGE_VERSION
 end_ifdef
 

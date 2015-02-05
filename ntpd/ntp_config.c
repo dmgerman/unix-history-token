@@ -619,6 +619,16 @@ parameter_list|)
 value|((c) == ' ' || (c) == '\t')
 end_define
 
+begin_define
+define|#
+directive|define
+name|_UC
+parameter_list|(
+name|str
+parameter_list|)
+value|((char *)(intptr_t)(str))
+end_define
+
 begin_comment
 comment|/*  * Definitions of things either imported from or exported to outside  */
 end_comment
@@ -1740,6 +1750,17 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|config_mdnstries
+parameter_list|(
+name|config_tree
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|config_phone
 parameter_list|(
 name|config_tree
@@ -2225,6 +2246,12 @@ operator|*
 name|ptree
 argument_list|)
 expr_stmt|;
+name|ptree
+operator|->
+name|mdnstries
+operator|=
+literal|5
+expr_stmt|;
 block|}
 end_function
 
@@ -2622,6 +2649,8 @@ specifier|const
 name|char
 modifier|*
 name|s
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -5717,6 +5746,7 @@ parameter_list|(
 name|int
 name|attr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s
@@ -5763,7 +5793,10 @@ name|value
 operator|.
 name|s
 operator|=
+name|_UC
+argument_list|(
 name|s
+argument_list|)
 expr_stmt|;
 name|my_val
 operator|->
@@ -6477,6 +6510,10 @@ name|pch
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|pch
 argument_list|)
@@ -10453,6 +10490,7 @@ name|flags
 operator|)
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|kod_where
@@ -10479,6 +10517,7 @@ literal|"source"
 else|:
 literal|"default"
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|kod_warn
@@ -12479,7 +12518,7 @@ modifier|*
 name|ptree
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|string_node
@@ -12553,19 +12592,16 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"phone: Number of phone entries exceeds %lu. Ignoring phone %s..."
+literal|"phone: Number of phone entries exceeds %zu. Ignoring phone %s..."
 argument_list|,
-call|(
-name|u_long
-call|)
-argument_list|(
+operator|(
 name|COUNTOF
 argument_list|(
 name|sys_phone
 argument_list|)
 operator|-
 literal|1
-argument_list|)
+operator|)
 argument_list|,
 name|sn
 operator|->
@@ -12585,6 +12621,35 @@ end_endif
 begin_comment
 comment|/* !SIM */
 end_comment
+
+begin_function
+specifier|static
+name|void
+name|config_mdnstries
+parameter_list|(
+name|config_tree
+modifier|*
+name|ptree
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|HAVE_DNSREGISTRATION
+specifier|extern
+name|int
+name|mdnstries
+decl_stmt|;
+name|mdnstries
+operator|=
+name|ptree
+operator|->
+name|mdnstries
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_DNSREGISTRATION */
+block|}
+end_function
 
 begin_ifdef
 ifdef|#
@@ -12825,7 +12890,7 @@ modifier|*
 name|ptree
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 init|=
 literal|0
@@ -12884,11 +12949,8 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"ttl: Number of TTL entries exceeds %lu. Ignoring TTL %d..."
+literal|"ttl: Number of TTL entries exceeds %zu. Ignoring TTL %d..."
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|COUNTOF
 argument_list|(
 name|sys_ttl
@@ -17452,6 +17514,11 @@ argument_list|(
 name|ptree
 argument_list|)
 expr_stmt|;
+name|config_mdnstries
+argument_list|(
+name|ptree
+argument_list|)
+expr_stmt|;
 name|config_setvar
 argument_list|(
 name|ptree
@@ -18011,7 +18078,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"getconfig: Couldn't open<%s>"
+literal|"getconfig: Couldn't open<%s>: %m"
 argument_list|,
 name|FindConfig
 argument_list|(
@@ -18056,7 +18123,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"getconfig: Couldn't open<%s>"
+literal|"getconfig: Couldn't open<%s>: %m"
 argument_list|,
 name|FindConfig
 argument_list|(
@@ -19698,6 +19765,7 @@ parameter_list|,
 name|int
 name|rl_scale
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|rl_sstr

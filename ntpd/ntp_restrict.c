@@ -82,7 +82,7 @@ parameter_list|,
 name|msk
 parameter_list|)
 define|\
-value|do {								\ 		int idx;						\ 		for (idx = 0; idx< COUNTOF((dst)->s6_addr); idx++) {	\ 			(dst)->s6_addr[idx] = (src)->s6_addr[idx]	\& (msk)->s6_addr[idx];	\ 		}							\ 	} while (0)
+value|do {								\ 		int idx;						\ 		for (idx = 0; idx< (int)COUNTOF((dst)->s6_addr); idx++) { \ 			(dst)->s6_addr[idx] = (src)->s6_addr[idx]	\& (msk)->s6_addr[idx];	\ 		}							\ 	} while (0)
 end_define
 
 begin_comment
@@ -1082,6 +1082,9 @@ operator|)
 operator|||
 name|NTP_PORT
 operator|==
+operator|(
+name|int
+operator|)
 name|port
 operator|)
 condition|)

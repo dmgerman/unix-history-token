@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  EDIT THIS FILE WITH CAUTION  (sntp-opts.c)  *  *  It has been AutoGen-ed  December 19, 2014 at 07:51:01 AM by AutoGen 5.18.5pre4  *  From the definitions    sntp-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the sntp author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The sntp program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1970-2014 The University of Delaware, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
+comment|/*  *  EDIT THIS FILE WITH CAUTION  (sntp-opts.c)  *  *  It has been AutoGen-ed  February  4, 2015 at 02:33:35 AM by AutoGen 5.18.5pre4  *  From the definitions    sntp-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the sntp author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The sntp program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware and Network Time Foundation makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -76,7 +76,7 @@ value|(sntp_opt_strs+0)
 define|#
 directive|define
 name|zLicenseDescrip
-value|(sntp_opt_strs+310)
+value|(sntp_opt_strs+340)
 comment|/*  *  global included definitions  */
 ifdef|#
 directive|ifdef
@@ -112,196 +112,197 @@ name|char
 specifier|const
 name|sntp_opt_strs
 index|[
-literal|2487
+literal|2549
 index|]
 init|=
 comment|/*     0 */
-literal|"sntp 4.2.8\n"
-literal|"Copyright (C) 1970-2014 The University of Delaware, all rights reserved.\n"
+literal|"sntp 4.2.8p1\n"
+literal|"Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.\n"
 literal|"This is free software. It is licensed for use, modification and\n"
 literal|"redistribution under the terms of the NTP License, copies of which\n"
 literal|"can be seen at:\n"
 literal|"<http://ntp.org/license>\n"
 literal|"<http://opensource.org/licenses/ntp-license.php>\n\0"
-comment|/*   310 */
+comment|/*   340 */
 literal|"Permission to use, copy, modify, and distribute this software and its\n"
 literal|"documentation for any purpose with or without fee is hereby granted,\n"
 literal|"provided that the above copyright notice appears in all copies and that\n"
 literal|"both the copyright notice and this permission notice appear in supporting\n"
 literal|"documentation, and that the name The University of Delaware not be used in\n"
 literal|"advertising or publicity pertaining to distribution of the software without\n"
-literal|"specific, written prior permission.  The University of Delaware makes no\n"
-literal|"representations about the suitability this software for any purpose.  It is\n"
-literal|"provided \"as is\" without express or implied warranty.\n\0"
-comment|/*   950 */
+literal|"specific, written prior permission.  The University of Delaware and Network\n"
+literal|"Time Foundation makes no representations about the suitability this\n"
+literal|"software for any purpose.  It is provided \"as is\" without express or\n"
+literal|"implied warranty.\n\0"
+comment|/*  1008 */
 literal|"Force IPv4 DNS name resolution\0"
-comment|/*   981 */
+comment|/*  1039 */
 literal|"IPV4\0"
-comment|/*   986 */
+comment|/*  1044 */
 literal|"ipv4\0"
-comment|/*   991 */
+comment|/*  1049 */
 literal|"Force IPv6 DNS name resolution\0"
-comment|/*  1022 */
+comment|/*  1080 */
 literal|"IPV6\0"
-comment|/*  1027 */
+comment|/*  1085 */
 literal|"ipv6\0"
-comment|/*  1032 */
+comment|/*  1090 */
 literal|"Enable authentication with the key auth-keynumber\0"
-comment|/*  1082 */
+comment|/*  1140 */
 literal|"AUTHENTICATION\0"
-comment|/*  1097 */
+comment|/*  1155 */
 literal|"authentication\0"
-comment|/*  1112 */
+comment|/*  1170 */
 literal|"Listen to the address specified for broadcast time sync\0"
-comment|/*  1168 */
+comment|/*  1226 */
 literal|"BROADCAST\0"
-comment|/*  1178 */
+comment|/*  1236 */
 literal|"broadcast\0"
-comment|/*  1188 */
+comment|/*  1246 */
 literal|"Concurrently query all IPs returned for host-name\0"
-comment|/*  1238 */
+comment|/*  1296 */
 literal|"CONCURRENT\0"
-comment|/*  1249 */
+comment|/*  1307 */
 literal|"concurrent\0"
-comment|/*  1260 */
+comment|/*  1318 */
 literal|"Increase debug verbosity level\0"
-comment|/*  1291 */
+comment|/*  1349 */
 literal|"DEBUG_LEVEL\0"
-comment|/*  1303 */
-literal|"debug-level\0"
-comment|/*  1315 */
-literal|"Set the debug verbosity level\0"
-comment|/*  1345 */
-literal|"SET_DEBUG_LEVEL\0"
 comment|/*  1361 */
+literal|"debug-level\0"
+comment|/*  1373 */
+literal|"Set the debug verbosity level\0"
+comment|/*  1403 */
+literal|"SET_DEBUG_LEVEL\0"
+comment|/*  1419 */
 literal|"set-debug-level\0"
-comment|/*  1377 */
+comment|/*  1435 */
 literal|"The gap (in milliseconds) between time requests\0"
-comment|/*  1425 */
+comment|/*  1483 */
 literal|"GAP\0"
-comment|/*  1429 */
+comment|/*  1487 */
 literal|"gap\0"
-comment|/*  1433 */
+comment|/*  1491 */
 literal|"KoD history filename\0"
-comment|/*  1454 */
+comment|/*  1512 */
 literal|"KOD\0"
-comment|/*  1458 */
+comment|/*  1516 */
 literal|"kod\0"
-comment|/*  1462 */
+comment|/*  1520 */
 literal|"/var/db/ntp-kod\0"
-comment|/*  1478 */
+comment|/*  1536 */
 literal|"Look in this file for the key specified with -a\0"
-comment|/*  1526 */
+comment|/*  1584 */
 literal|"KEYFILE\0"
-comment|/*  1534 */
+comment|/*  1592 */
 literal|"keyfile\0"
-comment|/*  1542 */
+comment|/*  1600 */
 literal|"Log to specified logfile\0"
-comment|/*  1567 */
+comment|/*  1625 */
 literal|"LOGFILE\0"
-comment|/*  1575 */
+comment|/*  1633 */
 literal|"logfile\0"
-comment|/*  1583 */
+comment|/*  1641 */
 literal|"Adjustments less than steplimit msec will be slewed\0"
-comment|/*  1635 */
+comment|/*  1693 */
 literal|"STEPLIMIT\0"
-comment|/*  1645 */
-literal|"steplimit\0"
-comment|/*  1655 */
-literal|"Send int as our NTP protocol version\0"
-comment|/*  1692 */
-literal|"NTPVERSION\0"
 comment|/*  1703 */
+literal|"steplimit\0"
+comment|/*  1713 */
+literal|"Send int as our NTP protocol version\0"
+comment|/*  1750 */
+literal|"NTPVERSION\0"
+comment|/*  1761 */
 literal|"ntpversion\0"
-comment|/*  1714 */
+comment|/*  1772 */
 literal|"Use the NTP Reserved Port (port 123)\0"
-comment|/*  1751 */
+comment|/*  1809 */
 literal|"USERESERVEDPORT\0"
-comment|/*  1767 */
+comment|/*  1825 */
 literal|"usereservedport\0"
-comment|/*  1783 */
+comment|/*  1841 */
 literal|"OK to 'step' the time with settimeofday(2)\0"
-comment|/*  1826 */
-literal|"STEP\0"
-comment|/*  1831 */
-literal|"step\0"
-comment|/*  1836 */
-literal|"OK to 'slew' the time with adjtime(2)\0"
-comment|/*  1874 */
-literal|"SLEW\0"
-comment|/*  1879 */
-literal|"slew\0"
 comment|/*  1884 */
+literal|"STEP\0"
+comment|/*  1889 */
+literal|"step\0"
+comment|/*  1894 */
+literal|"OK to 'slew' the time with adjtime(2)\0"
+comment|/*  1932 */
+literal|"SLEW\0"
+comment|/*  1937 */
+literal|"slew\0"
+comment|/*  1942 */
 literal|"The number of seconds to wait for responses\0"
-comment|/*  1928 */
+comment|/*  1986 */
 literal|"TIMEOUT\0"
-comment|/*  1936 */
+comment|/*  1994 */
 literal|"timeout\0"
-comment|/*  1944 */
+comment|/*  2002 */
 literal|"Wait for pending replies (if not setting the time)\0"
-comment|/*  1995 */
+comment|/*  2053 */
 literal|"WAIT\0"
-comment|/*  2000 */
+comment|/*  2058 */
 literal|"no-wait\0"
-comment|/*  2008 */
+comment|/*  2066 */
 literal|"no\0"
-comment|/*  2011 */
+comment|/*  2069 */
 literal|"display extended usage information and exit\0"
-comment|/*  2055 */
+comment|/*  2113 */
 literal|"help\0"
-comment|/*  2060 */
+comment|/*  2118 */
 literal|"extended usage information passed thru pager\0"
-comment|/*  2105 */
+comment|/*  2163 */
 literal|"more-help\0"
-comment|/*  2115 */
+comment|/*  2173 */
 literal|"output version information and exit\0"
-comment|/*  2151 */
+comment|/*  2209 */
 literal|"version\0"
-comment|/*  2159 */
+comment|/*  2217 */
 literal|"save the option state to a config file\0"
-comment|/*  2198 */
+comment|/*  2256 */
 literal|"save-opts\0"
-comment|/*  2208 */
+comment|/*  2266 */
 literal|"load options from a config file\0"
-comment|/*  2240 */
+comment|/*  2298 */
 literal|"LOAD_OPTS\0"
-comment|/*  2250 */
+comment|/*  2308 */
 literal|"no-load-opts\0"
-comment|/*  2263 */
+comment|/*  2321 */
 literal|"SNTP\0"
-comment|/*  2268 */
-literal|"sntp - standard Simple Network Time Protocol client program - Ver. 4.2.8\n"
+comment|/*  2326 */
+literal|"sntp - standard Simple Network Time Protocol client program - Ver. 4.2.8p1\n"
 literal|"Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... \\\n"
 literal|"\t\t[ hostname-or-IP ...]\n\0"
-comment|/*  2425 */
+comment|/*  2485 */
 literal|"$HOME\0"
-comment|/*  2431 */
+comment|/*  2491 */
 literal|".\0"
-comment|/*  2433 */
+comment|/*  2493 */
 literal|".ntprc\0"
-comment|/*  2440 */
+comment|/*  2500 */
 literal|"http://bugs.ntp.org, bugs@ntp.org\0"
-comment|/*  2474 */
+comment|/*  2534 */
 literal|"\n\0"
-comment|/*  2476 */
-literal|"sntp 4.2.8"
+comment|/*  2536 */
+literal|"sntp 4.2.8p1"
 decl_stmt|;
 comment|/**  *  ipv4 option description with  *  "Must also have options" and "Incompatible options":  */
 comment|/** Descriptive text for the ipv4 option */
 define|#
 directive|define
 name|IPV4_DESC
-value|(sntp_opt_strs+950)
+value|(sntp_opt_strs+1008)
 comment|/** Upper-cased name for the ipv4 option */
 define|#
 directive|define
 name|IPV4_NAME
-value|(sntp_opt_strs+981)
+value|(sntp_opt_strs+1039)
 comment|/** Name string for the ipv4 option */
 define|#
 directive|define
 name|IPV4_name
-value|(sntp_opt_strs+986)
+value|(sntp_opt_strs+1044)
 comment|/** Other options that appear in conjunction with the ipv4 option */
 specifier|static
 name|int
@@ -325,17 +326,17 @@ comment|/** Descriptive text for the ipv6 option */
 define|#
 directive|define
 name|IPV6_DESC
-value|(sntp_opt_strs+991)
+value|(sntp_opt_strs+1049)
 comment|/** Upper-cased name for the ipv6 option */
 define|#
 directive|define
 name|IPV6_NAME
-value|(sntp_opt_strs+1022)
+value|(sntp_opt_strs+1080)
 comment|/** Name string for the ipv6 option */
 define|#
 directive|define
 name|IPV6_name
-value|(sntp_opt_strs+1027)
+value|(sntp_opt_strs+1085)
 comment|/** Other options that appear in conjunction with the ipv6 option */
 specifier|static
 name|int
@@ -359,17 +360,17 @@ comment|/** Descriptive text for the authentication option */
 define|#
 directive|define
 name|AUTHENTICATION_DESC
-value|(sntp_opt_strs+1032)
+value|(sntp_opt_strs+1090)
 comment|/** Upper-cased name for the authentication option */
 define|#
 directive|define
 name|AUTHENTICATION_NAME
-value|(sntp_opt_strs+1082)
+value|(sntp_opt_strs+1140)
 comment|/** Name string for the authentication option */
 define|#
 directive|define
 name|AUTHENTICATION_name
-value|(sntp_opt_strs+1097)
+value|(sntp_opt_strs+1155)
 comment|/** Compiled in flag settings for the authentication option */
 define|#
 directive|define
@@ -380,17 +381,17 @@ comment|/** Descriptive text for the broadcast option */
 define|#
 directive|define
 name|BROADCAST_DESC
-value|(sntp_opt_strs+1112)
+value|(sntp_opt_strs+1170)
 comment|/** Upper-cased name for the broadcast option */
 define|#
 directive|define
 name|BROADCAST_NAME
-value|(sntp_opt_strs+1168)
+value|(sntp_opt_strs+1226)
 comment|/** Name string for the broadcast option */
 define|#
 directive|define
 name|BROADCAST_name
-value|(sntp_opt_strs+1178)
+value|(sntp_opt_strs+1236)
 comment|/** Compiled in flag settings for the broadcast option */
 define|#
 directive|define
@@ -401,17 +402,17 @@ comment|/** Descriptive text for the concurrent option */
 define|#
 directive|define
 name|CONCURRENT_DESC
-value|(sntp_opt_strs+1188)
+value|(sntp_opt_strs+1246)
 comment|/** Upper-cased name for the concurrent option */
 define|#
 directive|define
 name|CONCURRENT_NAME
-value|(sntp_opt_strs+1238)
+value|(sntp_opt_strs+1296)
 comment|/** Name string for the concurrent option */
 define|#
 directive|define
 name|CONCURRENT_name
-value|(sntp_opt_strs+1249)
+value|(sntp_opt_strs+1307)
 comment|/** Compiled in flag settings for the concurrent option */
 define|#
 directive|define
@@ -422,17 +423,17 @@ comment|/** Descriptive text for the debug-level option */
 define|#
 directive|define
 name|DEBUG_LEVEL_DESC
-value|(sntp_opt_strs+1260)
+value|(sntp_opt_strs+1318)
 comment|/** Upper-cased name for the debug-level option */
 define|#
 directive|define
 name|DEBUG_LEVEL_NAME
-value|(sntp_opt_strs+1291)
+value|(sntp_opt_strs+1349)
 comment|/** Name string for the debug-level option */
 define|#
 directive|define
 name|DEBUG_LEVEL_name
-value|(sntp_opt_strs+1303)
+value|(sntp_opt_strs+1361)
 comment|/** Compiled in flag settings for the debug-level option */
 define|#
 directive|define
@@ -443,17 +444,17 @@ comment|/** Descriptive text for the set-debug-level option */
 define|#
 directive|define
 name|SET_DEBUG_LEVEL_DESC
-value|(sntp_opt_strs+1315)
+value|(sntp_opt_strs+1373)
 comment|/** Upper-cased name for the set-debug-level option */
 define|#
 directive|define
 name|SET_DEBUG_LEVEL_NAME
-value|(sntp_opt_strs+1345)
+value|(sntp_opt_strs+1403)
 comment|/** Name string for the set-debug-level option */
 define|#
 directive|define
 name|SET_DEBUG_LEVEL_name
-value|(sntp_opt_strs+1361)
+value|(sntp_opt_strs+1419)
 comment|/** Compiled in flag settings for the set-debug-level option */
 define|#
 directive|define
@@ -464,17 +465,17 @@ comment|/** Descriptive text for the gap option */
 define|#
 directive|define
 name|GAP_DESC
-value|(sntp_opt_strs+1377)
+value|(sntp_opt_strs+1435)
 comment|/** Upper-cased name for the gap option */
 define|#
 directive|define
 name|GAP_NAME
-value|(sntp_opt_strs+1425)
+value|(sntp_opt_strs+1483)
 comment|/** Name string for the gap option */
 define|#
 directive|define
 name|GAP_name
-value|(sntp_opt_strs+1429)
+value|(sntp_opt_strs+1487)
 comment|/** The compiled in default value for the gap option argument */
 define|#
 directive|define
@@ -490,22 +491,22 @@ comment|/** Descriptive text for the kod option */
 define|#
 directive|define
 name|KOD_DESC
-value|(sntp_opt_strs+1433)
+value|(sntp_opt_strs+1491)
 comment|/** Upper-cased name for the kod option */
 define|#
 directive|define
 name|KOD_NAME
-value|(sntp_opt_strs+1454)
+value|(sntp_opt_strs+1512)
 comment|/** Name string for the kod option */
 define|#
 directive|define
 name|KOD_name
-value|(sntp_opt_strs+1458)
+value|(sntp_opt_strs+1516)
 comment|/** The compiled in default value for the kod option argument */
 define|#
 directive|define
 name|KOD_DFT_ARG
-value|(sntp_opt_strs+1462)
+value|(sntp_opt_strs+1520)
 comment|/** Compiled in flag settings for the kod option */
 define|#
 directive|define
@@ -516,17 +517,17 @@ comment|/** Descriptive text for the keyfile option */
 define|#
 directive|define
 name|KEYFILE_DESC
-value|(sntp_opt_strs+1478)
+value|(sntp_opt_strs+1536)
 comment|/** Upper-cased name for the keyfile option */
 define|#
 directive|define
 name|KEYFILE_NAME
-value|(sntp_opt_strs+1526)
+value|(sntp_opt_strs+1584)
 comment|/** Name string for the keyfile option */
 define|#
 directive|define
 name|KEYFILE_name
-value|(sntp_opt_strs+1534)
+value|(sntp_opt_strs+1592)
 comment|/** Compiled in flag settings for the keyfile option */
 define|#
 directive|define
@@ -537,17 +538,17 @@ comment|/** Descriptive text for the logfile option */
 define|#
 directive|define
 name|LOGFILE_DESC
-value|(sntp_opt_strs+1542)
+value|(sntp_opt_strs+1600)
 comment|/** Upper-cased name for the logfile option */
 define|#
 directive|define
 name|LOGFILE_NAME
-value|(sntp_opt_strs+1567)
+value|(sntp_opt_strs+1625)
 comment|/** Name string for the logfile option */
 define|#
 directive|define
 name|LOGFILE_name
-value|(sntp_opt_strs+1575)
+value|(sntp_opt_strs+1633)
 comment|/** Compiled in flag settings for the logfile option */
 define|#
 directive|define
@@ -558,17 +559,17 @@ comment|/** Descriptive text for the steplimit option */
 define|#
 directive|define
 name|STEPLIMIT_DESC
-value|(sntp_opt_strs+1583)
+value|(sntp_opt_strs+1641)
 comment|/** Upper-cased name for the steplimit option */
 define|#
 directive|define
 name|STEPLIMIT_NAME
-value|(sntp_opt_strs+1635)
+value|(sntp_opt_strs+1693)
 comment|/** Name string for the steplimit option */
 define|#
 directive|define
 name|STEPLIMIT_name
-value|(sntp_opt_strs+1645)
+value|(sntp_opt_strs+1703)
 comment|/** Compiled in flag settings for the steplimit option */
 define|#
 directive|define
@@ -579,17 +580,17 @@ comment|/** Descriptive text for the ntpversion option */
 define|#
 directive|define
 name|NTPVERSION_DESC
-value|(sntp_opt_strs+1655)
+value|(sntp_opt_strs+1713)
 comment|/** Upper-cased name for the ntpversion option */
 define|#
 directive|define
 name|NTPVERSION_NAME
-value|(sntp_opt_strs+1692)
+value|(sntp_opt_strs+1750)
 comment|/** Name string for the ntpversion option */
 define|#
 directive|define
 name|NTPVERSION_name
-value|(sntp_opt_strs+1703)
+value|(sntp_opt_strs+1761)
 comment|/** The compiled in default value for the ntpversion option argument */
 define|#
 directive|define
@@ -605,17 +606,17 @@ comment|/** Descriptive text for the usereservedport option */
 define|#
 directive|define
 name|USERESERVEDPORT_DESC
-value|(sntp_opt_strs+1714)
+value|(sntp_opt_strs+1772)
 comment|/** Upper-cased name for the usereservedport option */
 define|#
 directive|define
 name|USERESERVEDPORT_NAME
-value|(sntp_opt_strs+1751)
+value|(sntp_opt_strs+1809)
 comment|/** Name string for the usereservedport option */
 define|#
 directive|define
 name|USERESERVEDPORT_name
-value|(sntp_opt_strs+1767)
+value|(sntp_opt_strs+1825)
 comment|/** Compiled in flag settings for the usereservedport option */
 define|#
 directive|define
@@ -626,17 +627,17 @@ comment|/** Descriptive text for the step option */
 define|#
 directive|define
 name|STEP_DESC
-value|(sntp_opt_strs+1783)
+value|(sntp_opt_strs+1841)
 comment|/** Upper-cased name for the step option */
 define|#
 directive|define
 name|STEP_NAME
-value|(sntp_opt_strs+1826)
+value|(sntp_opt_strs+1884)
 comment|/** Name string for the step option */
 define|#
 directive|define
 name|STEP_name
-value|(sntp_opt_strs+1831)
+value|(sntp_opt_strs+1889)
 comment|/** Compiled in flag settings for the step option */
 define|#
 directive|define
@@ -647,17 +648,17 @@ comment|/** Descriptive text for the slew option */
 define|#
 directive|define
 name|SLEW_DESC
-value|(sntp_opt_strs+1836)
+value|(sntp_opt_strs+1894)
 comment|/** Upper-cased name for the slew option */
 define|#
 directive|define
 name|SLEW_NAME
-value|(sntp_opt_strs+1874)
+value|(sntp_opt_strs+1932)
 comment|/** Name string for the slew option */
 define|#
 directive|define
 name|SLEW_name
-value|(sntp_opt_strs+1879)
+value|(sntp_opt_strs+1937)
 comment|/** Compiled in flag settings for the slew option */
 define|#
 directive|define
@@ -668,17 +669,17 @@ comment|/** Descriptive text for the timeout option */
 define|#
 directive|define
 name|TIMEOUT_DESC
-value|(sntp_opt_strs+1884)
+value|(sntp_opt_strs+1942)
 comment|/** Upper-cased name for the timeout option */
 define|#
 directive|define
 name|TIMEOUT_NAME
-value|(sntp_opt_strs+1928)
+value|(sntp_opt_strs+1986)
 comment|/** Name string for the timeout option */
 define|#
 directive|define
 name|TIMEOUT_name
-value|(sntp_opt_strs+1936)
+value|(sntp_opt_strs+1994)
 comment|/** The compiled in default value for the timeout option argument */
 define|#
 directive|define
@@ -694,22 +695,22 @@ comment|/** Descriptive text for the wait option */
 define|#
 directive|define
 name|WAIT_DESC
-value|(sntp_opt_strs+1944)
+value|(sntp_opt_strs+2002)
 comment|/** Upper-cased name for the wait option */
 define|#
 directive|define
 name|WAIT_NAME
-value|(sntp_opt_strs+1995)
+value|(sntp_opt_strs+2053)
 comment|/** disablement name for the wait option */
 define|#
 directive|define
 name|NOT_WAIT_name
-value|(sntp_opt_strs+2000)
+value|(sntp_opt_strs+2058)
 comment|/** disablement prefix for the wait option */
 define|#
 directive|define
 name|NOT_WAIT_PFX
-value|(sntp_opt_strs+2008)
+value|(sntp_opt_strs+2066)
 comment|/** Name string for the wait option */
 define|#
 directive|define
@@ -724,22 +725,22 @@ comment|/*  *  Help/More_Help/Version option descriptions:  */
 define|#
 directive|define
 name|HELP_DESC
-value|(sntp_opt_strs+2011)
+value|(sntp_opt_strs+2069)
 define|#
 directive|define
 name|HELP_name
-value|(sntp_opt_strs+2055)
+value|(sntp_opt_strs+2113)
 ifdef|#
 directive|ifdef
 name|HAVE_WORKING_FORK
 define|#
 directive|define
 name|MORE_HELP_DESC
-value|(sntp_opt_strs+2060)
+value|(sntp_opt_strs+2118)
 define|#
 directive|define
 name|MORE_HELP_name
-value|(sntp_opt_strs+2105)
+value|(sntp_opt_strs+2163)
 define|#
 directive|define
 name|MORE_HELP_FLAGS
@@ -778,35 +779,35 @@ directive|endif
 define|#
 directive|define
 name|VER_DESC
-value|(sntp_opt_strs+2115)
+value|(sntp_opt_strs+2173)
 define|#
 directive|define
 name|VER_name
-value|(sntp_opt_strs+2151)
+value|(sntp_opt_strs+2209)
 define|#
 directive|define
 name|SAVE_OPTS_DESC
-value|(sntp_opt_strs+2159)
+value|(sntp_opt_strs+2217)
 define|#
 directive|define
 name|SAVE_OPTS_name
-value|(sntp_opt_strs+2198)
+value|(sntp_opt_strs+2256)
 define|#
 directive|define
 name|LOAD_OPTS_DESC
-value|(sntp_opt_strs+2208)
+value|(sntp_opt_strs+2266)
 define|#
 directive|define
 name|LOAD_OPTS_NAME
-value|(sntp_opt_strs+2240)
+value|(sntp_opt_strs+2298)
 define|#
 directive|define
 name|NO_LOAD_OPTS_name
-value|(sntp_opt_strs+2250)
+value|(sntp_opt_strs+2308)
 define|#
 directive|define
 name|LOAD_OPTS_pfx
-value|(sntp_opt_strs+2008)
+value|(sntp_opt_strs+2066)
 define|#
 directive|define
 name|LOAD_OPTS_name
@@ -2165,17 +2166,17 @@ comment|/** Reference to the upper cased version of sntp. */
 define|#
 directive|define
 name|zPROGNAME
-value|(sntp_opt_strs+2263)
+value|(sntp_opt_strs+2321)
 comment|/** Reference to the title line for sntp usage. */
 define|#
 directive|define
 name|zUsageTitle
-value|(sntp_opt_strs+2268)
+value|(sntp_opt_strs+2326)
 comment|/** sntp configuration file name. */
 define|#
 directive|define
 name|zRcName
-value|(sntp_opt_strs+2433)
+value|(sntp_opt_strs+2493)
 comment|/** Directories to search for sntp config files. */
 specifier|static
 name|char
@@ -2190,11 +2191,11 @@ init|=
 block|{
 name|sntp_opt_strs
 operator|+
-literal|2425
+literal|2485
 block|,
 name|sntp_opt_strs
 operator|+
-literal|2431
+literal|2491
 block|,
 name|NULL
 block|}
@@ -2203,12 +2204,12 @@ comment|/** The sntp program bug email address. */
 define|#
 directive|define
 name|zBugsAddr
-value|(sntp_opt_strs+2440)
+value|(sntp_opt_strs+2500)
 comment|/** Clarification/explanation of what sntp does. */
 define|#
 directive|define
 name|zExplain
-value|(sntp_opt_strs+2474)
+value|(sntp_opt_strs+2534)
 comment|/** Extra detail explaining what sntp does. */
 define|#
 directive|define
@@ -2218,7 +2219,7 @@ comment|/** The full version string for sntp. */
 define|#
 directive|define
 name|zFullVersion
-value|(sntp_opt_strs+2476)
+value|(sntp_opt_strs+2536)
 comment|/* extracted from optcode.tlib near line 364 */
 if|#
 directive|if
@@ -2505,7 +2506,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-comment|/**  * Code to handle the steplimit option.  * If the time adjustment is less than @file{steplimit} milliseconds,  * slew the amount using @command{adjtime(2)}.  Otherwise, step the  * correction using @command{settimeofday(2)}.  * @param[in] pOptions the sntp options data structure  * @param[in,out] pOptDesc the option descriptor for this option.  */
+comment|/**  * Code to handle the steplimit option.  * If the time adjustment is less than @file{steplimit} milliseconds,  * slew the amount using @command{adjtime(2)}.  Otherwise, step the  * correction using @command{settimeofday(2)}.  The default value is 0,  * which means all adjustments will be stepped.  This is a feature, as  * different situations demand different values.  * @param[in] pOptions the sntp options data structure  * @param[in,out] pOptDesc the option descriptor for this option.  */
 specifier|static
 name|void
 name|doOptSteplimit
@@ -3424,7 +3425,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"sntp 4.2.8\n\ Copyright (C) 1970-2014 The University of Delaware, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
+literal|"sntp 4.2.8p1\n\ Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3441,7 +3442,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"Permission to use, copy, modify, and distribute this software and its\n\ documentation for any purpose with or without fee is hereby granted,\n\ provided that the above copyright notice appears in all copies and that\n\ both the copyright notice and this permission notice appear in supporting\n\ documentation, and that the name The University of Delaware not be used in\n\ advertising or publicity pertaining to distribution of the software without\n\ specific, written prior permission.  The University of Delaware makes no\n\ representations about the suitability this software for any purpose.  It is\n\ provided \"as is\" without express or implied warranty.\n"
+literal|"Permission to use, copy, modify, and distribute this software and its\n\ documentation for any purpose with or without fee is hereby granted,\n\ provided that the above copyright notice appears in all copies and that\n\ both the copyright notice and this permission notice appear in supporting\n\ documentation, and that the name The University of Delaware not be used in\n\ advertising or publicity pertaining to distribution of the software without\n\ specific, written prior permission.  The University of Delaware and Network\n\ Time Foundation makes no representations about the suitability this\n\ software for any purpose.  It is provided \"as is\" without express or\n\ implied warranty.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3657,7 +3658,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"sntp - standard Simple Network Time Protocol client program - Ver. 4.2.8\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... \\\n\ \t\t[ hostname-or-IP ...]\n"
+literal|"sntp - standard Simple Network Time Protocol client program - Ver. 4.2.8p1\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... \\\n\ \t\t[ hostname-or-IP ...]\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3675,7 +3676,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"sntp 4.2.8"
+literal|"sntp 4.2.8p1"
 argument_list|)
 argument_list|)
 expr_stmt|;

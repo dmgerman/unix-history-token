@@ -706,10 +706,6 @@ name|free_dir_name
 condition|)
 name|AGFREE
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|pzDir
 argument_list|)
 expr_stmt|;
@@ -910,10 +906,6 @@ name|free_dir_name
 condition|)
 name|AGFREE
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|pzDir
 argument_list|)
 expr_stmt|;
@@ -976,10 +968,6 @@ argument_list|)
 expr_stmt|;
 name|AGFREE
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|pzDir
 argument_list|)
 expr_stmt|;
@@ -1027,10 +1015,6 @@ name|free_dir_name
 condition|)
 name|AGFREE
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|pzDir
 argument_list|)
 expr_stmt|;
@@ -1485,10 +1469,6 @@ block|{
 comment|/*                      *  set membership strings get allocated                      */
 name|AGFREE
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|pOD
 operator|->
 name|optArg
@@ -1843,6 +1823,9 @@ name|void
 operator|*
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|al
 operator|->
 name|apzArgs
@@ -2002,6 +1985,9 @@ operator|(
 name|void
 operator|*
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|al
 operator|->
@@ -2207,10 +2193,6 @@ name|free_name
 condition|)
 name|AGFREE
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|pzFName
 argument_list|)
 expr_stmt|;
@@ -2224,10 +2206,6 @@ name|free_name
 condition|)
 name|AGFREE
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|pzFName
 argument_list|)
 expr_stmt|;
@@ -2559,13 +2537,16 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|(
+call|(
+name|intptr_t
+call|)
+argument_list|(
 name|od
 operator|->
 name|optArg
 operator|.
 name|argString
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|od

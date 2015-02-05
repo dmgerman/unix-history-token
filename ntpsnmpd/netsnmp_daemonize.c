@@ -52,6 +52,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|PACKAGE_URL
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|PACKAGE_VERSION
 end_undef
 

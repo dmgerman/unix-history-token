@@ -454,6 +454,9 @@ if|if
 condition|(
 name|ts
 operator|>=
+operator|(
+name|time_t
+operator|)
 name|SOLAR_CYCLE_SECS
 condition|)
 block|{
@@ -542,17 +545,18 @@ block|{
 specifier|static
 specifier|const
 name|char
-modifier|*
-name|pfmt
-index|[
-literal|2
-index|]
+name|pfmt0
+index|[]
 init|=
-block|{
 literal|"%08lx.%08lx  %s, %s %2d %4d %2d:%02d:%02d.%03u"
-block|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+name|pfmt1
+index|[]
+init|=
 literal|"%08lx.%08lx [%s, %s %2d %4d %2d:%02d:%02d.%03u UTC]"
-block|}
 decl_stmt|;
 name|char
 modifier|*
@@ -653,12 +657,11 @@ name|bp
 argument_list|,
 name|LIB_BUFLENGTH
 argument_list|,
-name|pfmt
-index|[
 name|local
-operator|!=
-literal|0
-index|]
+condition|?
+name|pfmt1
+else|:
+name|pfmt0
 argument_list|,
 operator|(
 name|u_long
@@ -721,10 +724,7 @@ name|bp
 argument_list|,
 name|LIB_BUFLENGTH
 argument_list|,
-name|pfmt
-index|[
-literal|0
-index|]
+name|pfmt0
 argument_list|,
 operator|(
 name|u_long

@@ -862,7 +862,7 @@ function_decl|)
 parameter_list|(
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 parameter_list|,
 name|isc_socket_t
 modifier|*
@@ -1076,7 +1076,7 @@ function_decl|)
 parameter_list|(
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 parameter_list|,
 name|isc_socket_t
 modifier|*
@@ -1092,7 +1092,7 @@ function_decl|)
 parameter_list|(
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 parameter_list|)
 function_decl|;
 block|}
@@ -2069,7 +2069,7 @@ name|isc_socket_setname
 parameter_list|(
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 parameter_list|,
 specifier|const
 name|char
@@ -2095,7 +2095,7 @@ name|isc_socket_getname
 parameter_list|(
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2111,7 +2111,7 @@ name|isc_socket_gettag
 parameter_list|(
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2126,7 +2126,7 @@ name|isc_socket_getfd
 parameter_list|(
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 parameter_list|)
 function_decl|;
 end_function_decl

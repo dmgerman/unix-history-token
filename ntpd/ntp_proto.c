@@ -2037,6 +2037,9 @@ literal|0
 operator|||
 name|has_mac
 operator|<
+operator|(
+name|int
+operator|)
 name|MIN_MAC_LEN
 condition|)
 block|{
@@ -2050,6 +2053,9 @@ if|if
 condition|(
 name|has_mac
 operator|<=
+operator|(
+name|int
+operator|)
 name|MAX_MAC_LEN
 condition|)
 block|{
@@ -2645,6 +2651,9 @@ if|if
 condition|(
 name|has_mac
 operator|<
+operator|(
+name|int
+operator|)
 name|MAX_MD5_LEN
 condition|)
 block|{
@@ -2752,6 +2761,9 @@ if|if
 condition|(
 name|authlen
 operator|>
+operator|(
+name|int
+operator|)
 name|LEN_PKT_NOMAC
 operator|&&
 name|pkeyid
@@ -7136,6 +7148,7 @@ modifier|*
 name|peer
 parameter_list|,
 comment|/* peer structure */
+specifier|const
 name|char
 modifier|*
 name|ident
@@ -8351,8 +8364,6 @@ name|nl2
 decl_stmt|;
 name|int
 name|allow
-decl_stmt|,
-name|osurv
 decl_stmt|;
 name|int
 name|speer
@@ -8487,10 +8498,6 @@ comment|/* 	 * Initialize and create endpoint, index and peer lists big 	 * enou
 name|osys_peer
 operator|=
 name|sys_peer
-expr_stmt|;
-name|osurv
-operator|=
-name|sys_survivors
 expr_stmt|;
 name|sys_survivors
 operator|=
@@ -10633,7 +10640,7 @@ name|pkt
 name|xpkt
 decl_stmt|;
 comment|/* transmit packet */
-name|int
+name|size_t
 name|sendlen
 decl_stmt|,
 name|authlen
@@ -11066,7 +11073,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"transmit: at %ld %s->%s mode %d len %d\n"
+literal|"transmit: at %ld %s->%s mode %d len %zu\n"
 argument_list|,
 name|current_time
 argument_list|,
@@ -11816,6 +11823,9 @@ if|if
 condition|(
 name|sendlen
 operator|>
+operator|(
+name|int
+operator|)
 name|LEN_PKT_NOMAC
 condition|)
 block|{
@@ -12069,7 +12079,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"proto: buffer overflow %u"
+literal|"proto: buffer overflow %zu"
 argument_list|,
 name|sendlen
 argument_list|)
@@ -12209,7 +12219,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"transmit: at %ld %s->%s mode %d keyid %08x len %d index %d\n"
+literal|"transmit: at %ld %s->%s mode %d keyid %08x len %zu index %d\n"
 argument_list|,
 name|current_time
 argument_list|,
@@ -13124,7 +13134,7 @@ name|void
 operator|*
 operator|)
 operator|(
-name|u_int
+name|intptr_t
 operator|)
 name|pool
 operator|->
@@ -13613,7 +13623,7 @@ operator|(
 name|associd_t
 operator|)
 operator|(
-name|u_int
+name|intptr_t
 operator|)
 name|context
 expr_stmt|;

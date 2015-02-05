@@ -105,7 +105,7 @@ name|isc_result_t
 name|isc_backtrace_getsymbolfromindex
 parameter_list|(
 name|int
-name|index
+name|idx
 parameter_list|,
 specifier|const
 name|void
@@ -123,7 +123,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Returns the content of the internal symbol table of the given index.  * On success, *addrsp and *symbolp point to the address and the symbol of  * the 'index'th entry of the table, respectively.  If 'index' is not in the  * range of the symbol table, ISC_R_RANGE will be returned.  *  * Requires  *  *\li	'addrp' must be non NULL&& '*addrp' == NULL.  *  *\li	'symbolp' must be non NULL&& '*symbolp' == NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_RANGE  */
+comment|/*%<  * Returns the content of the internal symbol table of the given index.  * On success, *addrsp and *symbolp point to the address and the symbol of  * the 'index'th entry of the table, respectively.  If 'idx' is not in the  * range of the symbol table, ISC_R_RANGE will be returned.  *  * Requires  *  *\li	'addrp' must be non NULL&& '*addrp' == NULL.  *  *\li	'symbolp' must be non NULL&& '*symbolp' == NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_RANGE  */
 end_comment
 
 begin_function_decl

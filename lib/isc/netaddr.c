@@ -1002,6 +1002,8 @@ name|array
 argument_list|,
 name|size
 argument_list|,
+literal|"<%s %u>"
+argument_list|,
 name|isc_msgcat_get
 argument_list|(
 name|isc_msgcat
@@ -1010,7 +1012,7 @@ name|ISC_MSGSET_NETADDR
 argument_list|,
 name|ISC_MSG_UNKNOWNADDR
 argument_list|,
-literal|"<unknown address, family %u>"
+literal|"unknown address, family"
 argument_list|)
 argument_list|,
 name|na

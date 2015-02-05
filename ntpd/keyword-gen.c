@@ -549,6 +549,14 @@ name|FOLLBY_TOKEN
 block|}
 block|,
 block|{
+literal|"mdnstries"
+block|,
+name|T_Mdnstries
+block|,
+name|FOLLBY_TOKEN
+block|}
+block|,
+block|{
 literal|"minpoll"
 block|,
 name|T_Minpoll
@@ -2033,6 +2041,9 @@ argument_list|,
 literal|"keyword-gen sst[%u] too small "
 literal|"for keyword '%s' id %d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|COUNTOF
 argument_list|(
 name|sst

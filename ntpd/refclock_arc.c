@@ -2498,7 +2498,8 @@ operator|!
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|p
 index|[
@@ -2510,7 +2511,8 @@ operator|!
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|p
 index|[
@@ -2568,7 +2570,8 @@ operator|!
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|p
 index|[
@@ -2856,7 +2859,8 @@ operator|(
 name|isgraph
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|c
 argument_list|)

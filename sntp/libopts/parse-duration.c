@@ -198,6 +198,9 @@ name|char
 operator|*
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|ppz
 argument_list|,
 name|base
@@ -237,6 +240,9 @@ operator|(
 name|char
 operator|*
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|ppz
 argument_list|,

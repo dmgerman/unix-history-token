@@ -102,11 +102,6 @@ name|int
 name|notneg
 decl_stmt|;
 comment|/* flag for non-negative value	*/
-specifier|const
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
 name|ldiv_t
 name|qr
 decl_stmt|;
@@ -128,12 +123,6 @@ operator|(
 name|u_time
 operator|)
 name|secs
-expr_stmt|;
-name|fmt
-operator|=
-literal|"-%"
-name|UTIME_FORMAT
-literal|".%0*ld"
 expr_stmt|;
 comment|/* check if we need signed or unsigned mode */
 name|notneg
@@ -258,15 +247,9 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|notneg
 condition|)
-block|{
-name|fmt
-operator|++
-expr_stmt|;
-comment|/* skip '-' */
-block|}
-else|else
 block|{
 name|secs_u
 operator|=
@@ -297,7 +280,15 @@ name|cp
 argument_list|,
 name|LIB_BUFLENGTH
 argument_list|,
-name|fmt
+literal|"%s%"
+name|UTIME_FORMAT
+literal|".%0*ld"
+argument_list|,
+name|notneg
+condition|?
+literal|""
+else|:
+literal|"-"
 argument_list|,
 name|secs_u
 argument_list|,

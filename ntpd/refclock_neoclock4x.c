@@ -702,7 +702,7 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4059,7 +4059,8 @@ init|;
 name|isxdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|str
 index|[
@@ -4080,7 +4081,8 @@ operator|=
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|str
 index|[
@@ -4090,6 +4092,10 @@ argument_list|)
 condition|?
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|str
 index|[
 name|i
@@ -4100,6 +4106,10 @@ literal|'0'
 else|:
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|str
 index|[
 name|i
@@ -4170,7 +4180,8 @@ init|;
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|str
 index|[
@@ -4612,7 +4623,7 @@ name|char
 modifier|*
 name|firmware
 parameter_list|,
-name|int
+name|size_t
 name|maxlen
 parameter_list|)
 block|{
@@ -4622,7 +4633,7 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|int

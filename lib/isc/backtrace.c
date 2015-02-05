@@ -804,7 +804,7 @@ name|isc_result_t
 name|isc_backtrace_getsymbolfromindex
 parameter_list|(
 name|int
-name|index
+name|idx
 parameter_list|,
 specifier|const
 name|void
@@ -845,11 +845,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|idx
 operator|<
 literal|0
 operator|||
-name|index
+name|idx
 operator|>=
 name|isc__backtrace_nsymbols
 condition|)
@@ -863,7 +863,7 @@ name|addrp
 operator|=
 name|isc__backtrace_symtable
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|addr
@@ -873,7 +873,7 @@ name|symbolp
 operator|=
 name|isc__backtrace_symtable
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|symbol

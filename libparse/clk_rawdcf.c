@@ -215,11 +215,13 @@ specifier|static
 struct|struct
 name|dcfparam
 block|{
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|onebits
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -230,6 +232,7 @@ name|dcfparameter
 init|=
 block|{
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -238,6 +241,7 @@ literal|"###############RADMLS1248124P124812P1248121241248112481248P??"
 block|,
 comment|/* 'ONE' representation */
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -570,6 +574,7 @@ parameter_list|,
 name|int
 name|idx
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -656,6 +661,7 @@ parameter_list|,
 name|int
 name|idx
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -751,6 +757,7 @@ name|s
 init|=
 name|buffer
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -760,6 +767,7 @@ name|dcfprm
 operator|->
 name|onebits
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1418,6 +1426,7 @@ name|s
 operator|+
 name|size
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1427,6 +1436,7 @@ name|dcfparameter
 operator|.
 name|onebits
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*

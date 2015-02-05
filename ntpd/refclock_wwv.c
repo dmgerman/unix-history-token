@@ -6178,7 +6178,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|abs
+name|labs
 argument_list|(
 name|epoch
 argument_list|)
@@ -6953,7 +6953,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|abs
+name|fabs
 argument_list|(
 name|dtemp
 argument_list|)
@@ -7016,7 +7016,7 @@ name|MAXFREQ
 expr_stmt|;
 if|if
 condition|(
-name|abs
+name|fabs
 argument_list|(
 name|dtemp
 argument_list|)

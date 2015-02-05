@@ -310,6 +310,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|p
 expr_stmt|;
 return|return
@@ -2472,6 +2475,9 @@ operator|=
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 operator|&
 operator|(

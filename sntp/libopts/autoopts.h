@@ -808,9 +808,9 @@ define|#
 directive|define
 name|AGFREE
 parameter_list|(
-name|_p
+name|p
 parameter_list|)
-value|free((void *)_p)
+value|free((void *)(intptr_t)p)
 end_define
 
 begin_define
@@ -1352,7 +1352,7 @@ name|arg_types_t
 name|argTypes
 init|=
 block|{
-name|NULL
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

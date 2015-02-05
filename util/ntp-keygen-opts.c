@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntp-keygen-opts.c)  *  *  It has been AutoGen-ed  December 19, 2014 at 07:50:39 AM by AutoGen 5.18.5pre4  *  From the definitions    ntp-keygen-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntp-keygen author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntp-keygen program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1970-2014 The University of Delaware, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
+comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntp-keygen-opts.c)  *  *  It has been AutoGen-ed  February  4, 2015 at 02:43:42 AM by AutoGen 5.18.5pre4  *  From the definitions    ntp-keygen-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntp-keygen author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntp-keygen program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware and Network Time Foundation makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -76,7 +76,7 @@ value|(ntp_keygen_opt_strs+0)
 define|#
 directive|define
 name|zLicenseDescrip
-value|(ntp_keygen_opt_strs+322)
+value|(ntp_keygen_opt_strs+352)
 comment|/*  *  global included definitions  */
 include|#
 directive|include
@@ -115,192 +115,193 @@ name|char
 specifier|const
 name|ntp_keygen_opt_strs
 index|[
-literal|2357
+literal|2419
 index|]
 init|=
 comment|/*     0 */
-literal|"ntp-keygen (ntp) 4.2.8\n"
-literal|"Copyright (C) 1970-2014 The University of Delaware, all rights reserved.\n"
+literal|"ntp-keygen (ntp) 4.2.8p1\n"
+literal|"Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.\n"
 literal|"This is free software. It is licensed for use, modification and\n"
 literal|"redistribution under the terms of the NTP License, copies of which\n"
 literal|"can be seen at:\n"
 literal|"<http://ntp.org/license>\n"
 literal|"<http://opensource.org/licenses/ntp-license.php>\n\0"
-comment|/*   322 */
+comment|/*   352 */
 literal|"Permission to use, copy, modify, and distribute this software and its\n"
 literal|"documentation for any purpose with or without fee is hereby granted,\n"
 literal|"provided that the above copyright notice appears in all copies and that\n"
 literal|"both the copyright notice and this permission notice appear in supporting\n"
 literal|"documentation, and that the name The University of Delaware not be used in\n"
 literal|"advertising or publicity pertaining to distribution of the software without\n"
-literal|"specific, written prior permission.  The University of Delaware makes no\n"
-literal|"representations about the suitability this software for any purpose.  It is\n"
-literal|"provided \"as is\" without express or implied warranty.\n\0"
-comment|/*   962 */
+literal|"specific, written prior permission.  The University of Delaware and Network\n"
+literal|"Time Foundation makes no representations about the suitability this\n"
+literal|"software for any purpose.  It is provided \"as is\" without express or\n"
+literal|"implied warranty.\n\0"
+comment|/*  1020 */
 literal|"identity modulus bits\0"
-comment|/*   984 */
+comment|/*  1042 */
 literal|"IMBITS\0"
-comment|/*   991 */
+comment|/*  1049 */
 literal|"imbits\0"
-comment|/*   998 */
+comment|/*  1056 */
 literal|"certificate scheme\0"
-comment|/*  1017 */
+comment|/*  1075 */
 literal|"CERTIFICATE\0"
-comment|/*  1029 */
+comment|/*  1087 */
 literal|"certificate\0"
-comment|/*  1041 */
+comment|/*  1099 */
 literal|"privatekey cipher\0"
-comment|/*  1059 */
+comment|/*  1117 */
 literal|"CIPHER\0"
-comment|/*  1066 */
+comment|/*  1124 */
 literal|"cipher\0"
-comment|/*  1073 */
+comment|/*  1131 */
 literal|"Increase debug verbosity level\0"
-comment|/*  1104 */
+comment|/*  1162 */
 literal|"DEBUG_LEVEL\0"
-comment|/*  1116 */
-literal|"debug-level\0"
-comment|/*  1128 */
-literal|"Set the debug verbosity level\0"
-comment|/*  1158 */
-literal|"SET_DEBUG_LEVEL\0"
 comment|/*  1174 */
+literal|"debug-level\0"
+comment|/*  1186 */
+literal|"Set the debug verbosity level\0"
+comment|/*  1216 */
+literal|"SET_DEBUG_LEVEL\0"
+comment|/*  1232 */
 literal|"set-debug-level\0"
-comment|/*  1190 */
+comment|/*  1248 */
 literal|"Write IFF or GQ identity keys\0"
-comment|/*  1220 */
+comment|/*  1278 */
 literal|"ID_KEY\0"
-comment|/*  1227 */
+comment|/*  1285 */
 literal|"id-key\0"
-comment|/*  1234 */
+comment|/*  1292 */
 literal|"Generate GQ parameters and keys\0"
-comment|/*  1266 */
+comment|/*  1324 */
 literal|"GQ_PARAMS\0"
-comment|/*  1276 */
+comment|/*  1334 */
 literal|"gq-params\0"
-comment|/*  1286 */
+comment|/*  1344 */
 literal|"generate RSA host key\0"
-comment|/*  1308 */
+comment|/*  1366 */
 literal|"HOST_KEY\0"
-comment|/*  1317 */
+comment|/*  1375 */
 literal|"host-key\0"
-comment|/*  1326 */
+comment|/*  1384 */
 literal|"generate IFF parameters\0"
-comment|/*  1350 */
+comment|/*  1408 */
 literal|"IFFKEY\0"
-comment|/*  1357 */
+comment|/*  1415 */
 literal|"iffkey\0"
-comment|/*  1364 */
+comment|/*  1422 */
 literal|"set Autokey group name\0"
-comment|/*  1387 */
+comment|/*  1445 */
 literal|"IDENT\0"
-comment|/*  1393 */
+comment|/*  1451 */
 literal|"ident\0"
-comment|/*  1399 */
+comment|/*  1457 */
 literal|"set certificate lifetime\0"
-comment|/*  1424 */
-literal|"LIFETIME\0"
-comment|/*  1433 */
-literal|"lifetime\0"
-comment|/*  1442 */
-literal|"generate MD5 keys\0"
-comment|/*  1460 */
-literal|"MD5KEY\0"
-comment|/*  1467 */
-literal|"md5key\0"
-comment|/*  1474 */
-literal|"modulus\0"
 comment|/*  1482 */
-literal|"MODULUS\0"
-comment|/*  1490 */
-literal|"generate PC private certificate\0"
-comment|/*  1522 */
-literal|"PVT_CERT\0"
-comment|/*  1531 */
-literal|"pvt-cert\0"
+literal|"LIFETIME\0"
+comment|/*  1491 */
+literal|"lifetime\0"
+comment|/*  1500 */
+literal|"generate MD5 keys\0"
+comment|/*  1518 */
+literal|"MD5KEY\0"
+comment|/*  1525 */
+literal|"md5key\0"
+comment|/*  1532 */
+literal|"modulus\0"
 comment|/*  1540 */
+literal|"MODULUS\0"
+comment|/*  1548 */
+literal|"generate PC private certificate\0"
+comment|/*  1580 */
+literal|"PVT_CERT\0"
+comment|/*  1589 */
+literal|"pvt-cert\0"
+comment|/*  1598 */
 literal|"local private password\0"
-comment|/*  1563 */
+comment|/*  1621 */
 literal|"PASSWORD\0"
-comment|/*  1572 */
+comment|/*  1630 */
 literal|"password\0"
-comment|/*  1581 */
+comment|/*  1639 */
 literal|"export IFF or GQ group keys with password\0"
-comment|/*  1623 */
+comment|/*  1681 */
 literal|"EXPORT_PASSWD\0"
-comment|/*  1637 */
+comment|/*  1695 */
 literal|"export-passwd\0"
-comment|/*  1651 */
+comment|/*  1709 */
 literal|"generate sign key (RSA or DSA)\0"
-comment|/*  1682 */
+comment|/*  1740 */
 literal|"SIGN_KEY\0"
-comment|/*  1691 */
+comment|/*  1749 */
 literal|"sign-key\0"
-comment|/*  1700 */
+comment|/*  1758 */
 literal|"set host and optionally group name\0"
-comment|/*  1735 */
-literal|"SUBJECT_NAME\0"
-comment|/*  1748 */
-literal|"subject-name\0"
-comment|/*  1761 */
-literal|"trusted certificate (TC scheme)\0"
 comment|/*  1793 */
-literal|"TRUSTED_CERT\0"
+literal|"SUBJECT_NAME\0"
 comment|/*  1806 */
-literal|"trusted-cert\0"
+literal|"subject-name\0"
 comment|/*  1819 */
+literal|"trusted certificate (TC scheme)\0"
+comment|/*  1851 */
+literal|"TRUSTED_CERT\0"
+comment|/*  1864 */
+literal|"trusted-cert\0"
+comment|/*  1877 */
 literal|"generate<num> MV parameters\0"
-comment|/*  1848 */
+comment|/*  1906 */
 literal|"MV_PARAMS\0"
-comment|/*  1858 */
+comment|/*  1916 */
 literal|"mv-params\0"
-comment|/*  1868 */
+comment|/*  1926 */
 literal|"update<num> MV keys\0"
-comment|/*  1889 */
+comment|/*  1947 */
 literal|"MV_KEYS\0"
-comment|/*  1897 */
+comment|/*  1955 */
 literal|"mv-keys\0"
-comment|/*  1905 */
+comment|/*  1963 */
 literal|"display extended usage information and exit\0"
-comment|/*  1949 */
+comment|/*  2007 */
 literal|"help\0"
-comment|/*  1954 */
+comment|/*  2012 */
 literal|"extended usage information passed thru pager\0"
-comment|/*  1999 */
+comment|/*  2057 */
 literal|"more-help\0"
-comment|/*  2009 */
+comment|/*  2067 */
 literal|"output version information and exit\0"
-comment|/*  2045 */
+comment|/*  2103 */
 literal|"version\0"
-comment|/*  2053 */
+comment|/*  2111 */
 literal|"save the option state to a config file\0"
-comment|/*  2092 */
+comment|/*  2150 */
 literal|"save-opts\0"
-comment|/*  2102 */
-literal|"load options from a config file\0"
-comment|/*  2134 */
-literal|"LOAD_OPTS\0"
-comment|/*  2144 */
-literal|"no-load-opts\0"
-comment|/*  2157 */
-literal|"no\0"
 comment|/*  2160 */
+literal|"load options from a config file\0"
+comment|/*  2192 */
+literal|"LOAD_OPTS\0"
+comment|/*  2202 */
+literal|"no-load-opts\0"
+comment|/*  2215 */
+literal|"no\0"
+comment|/*  2218 */
 literal|"NTP_KEYGEN\0"
-comment|/*  2171 */
-literal|"ntp-keygen (ntp) - Create a NTP host key - Ver. 4.2.8\n"
+comment|/*  2229 */
+literal|"ntp-keygen (ntp) - Create a NTP host key - Ver. 4.2.8p1\n"
 literal|"Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]...\n\0"
-comment|/*  2283 */
+comment|/*  2343 */
 literal|"$HOME\0"
-comment|/*  2289 */
+comment|/*  2349 */
 literal|".\0"
-comment|/*  2291 */
+comment|/*  2351 */
 literal|".ntprc\0"
-comment|/*  2298 */
+comment|/*  2358 */
 literal|"http://bugs.ntp.org, bugs@ntp.org\0"
-comment|/*  2332 */
+comment|/*  2392 */
 literal|"\n\0"
-comment|/*  2334 */
-literal|"ntp-keygen (ntp) 4.2.8"
+comment|/*  2394 */
+literal|"ntp-keygen (ntp) 4.2.8p1"
 decl_stmt|;
 comment|/**  *  imbits option description:  */
 ifdef|#
@@ -310,17 +311,17 @@ comment|/** Descriptive text for the imbits option */
 define|#
 directive|define
 name|IMBITS_DESC
-value|(ntp_keygen_opt_strs+962)
+value|(ntp_keygen_opt_strs+1020)
 comment|/** Upper-cased name for the imbits option */
 define|#
 directive|define
 name|IMBITS_NAME
-value|(ntp_keygen_opt_strs+984)
+value|(ntp_keygen_opt_strs+1042)
 comment|/** Name string for the imbits option */
 define|#
 directive|define
 name|IMBITS_name
-value|(ntp_keygen_opt_strs+991)
+value|(ntp_keygen_opt_strs+1049)
 comment|/** Compiled in flag settings for the imbits option */
 define|#
 directive|define
@@ -356,17 +357,17 @@ comment|/** Descriptive text for the certificate option */
 define|#
 directive|define
 name|CERTIFICATE_DESC
-value|(ntp_keygen_opt_strs+998)
+value|(ntp_keygen_opt_strs+1056)
 comment|/** Upper-cased name for the certificate option */
 define|#
 directive|define
 name|CERTIFICATE_NAME
-value|(ntp_keygen_opt_strs+1017)
+value|(ntp_keygen_opt_strs+1075)
 comment|/** Name string for the certificate option */
 define|#
 directive|define
 name|CERTIFICATE_name
-value|(ntp_keygen_opt_strs+1029)
+value|(ntp_keygen_opt_strs+1087)
 comment|/** Compiled in flag settings for the certificate option */
 define|#
 directive|define
@@ -402,17 +403,17 @@ comment|/** Descriptive text for the cipher option */
 define|#
 directive|define
 name|CIPHER_DESC
-value|(ntp_keygen_opt_strs+1041)
+value|(ntp_keygen_opt_strs+1099)
 comment|/** Upper-cased name for the cipher option */
 define|#
 directive|define
 name|CIPHER_NAME
-value|(ntp_keygen_opt_strs+1059)
+value|(ntp_keygen_opt_strs+1117)
 comment|/** Name string for the cipher option */
 define|#
 directive|define
 name|CIPHER_name
-value|(ntp_keygen_opt_strs+1066)
+value|(ntp_keygen_opt_strs+1124)
 comment|/** Compiled in flag settings for the cipher option */
 define|#
 directive|define
@@ -445,17 +446,17 @@ comment|/** Descriptive text for the debug-level option */
 define|#
 directive|define
 name|DEBUG_LEVEL_DESC
-value|(ntp_keygen_opt_strs+1073)
+value|(ntp_keygen_opt_strs+1131)
 comment|/** Upper-cased name for the debug-level option */
 define|#
 directive|define
 name|DEBUG_LEVEL_NAME
-value|(ntp_keygen_opt_strs+1104)
+value|(ntp_keygen_opt_strs+1162)
 comment|/** Name string for the debug-level option */
 define|#
 directive|define
 name|DEBUG_LEVEL_name
-value|(ntp_keygen_opt_strs+1116)
+value|(ntp_keygen_opt_strs+1174)
 comment|/** Compiled in flag settings for the debug-level option */
 define|#
 directive|define
@@ -466,17 +467,17 @@ comment|/** Descriptive text for the set-debug-level option */
 define|#
 directive|define
 name|SET_DEBUG_LEVEL_DESC
-value|(ntp_keygen_opt_strs+1128)
+value|(ntp_keygen_opt_strs+1186)
 comment|/** Upper-cased name for the set-debug-level option */
 define|#
 directive|define
 name|SET_DEBUG_LEVEL_NAME
-value|(ntp_keygen_opt_strs+1158)
+value|(ntp_keygen_opt_strs+1216)
 comment|/** Name string for the set-debug-level option */
 define|#
 directive|define
 name|SET_DEBUG_LEVEL_name
-value|(ntp_keygen_opt_strs+1174)
+value|(ntp_keygen_opt_strs+1232)
 comment|/** Compiled in flag settings for the set-debug-level option */
 define|#
 directive|define
@@ -490,17 +491,17 @@ comment|/** Descriptive text for the id-key option */
 define|#
 directive|define
 name|ID_KEY_DESC
-value|(ntp_keygen_opt_strs+1190)
+value|(ntp_keygen_opt_strs+1248)
 comment|/** Upper-cased name for the id-key option */
 define|#
 directive|define
 name|ID_KEY_NAME
-value|(ntp_keygen_opt_strs+1220)
+value|(ntp_keygen_opt_strs+1278)
 comment|/** Name string for the id-key option */
 define|#
 directive|define
 name|ID_KEY_name
-value|(ntp_keygen_opt_strs+1227)
+value|(ntp_keygen_opt_strs+1285)
 comment|/** Compiled in flag settings for the id-key option */
 define|#
 directive|define
@@ -536,17 +537,17 @@ comment|/** Descriptive text for the gq-params option */
 define|#
 directive|define
 name|GQ_PARAMS_DESC
-value|(ntp_keygen_opt_strs+1234)
+value|(ntp_keygen_opt_strs+1292)
 comment|/** Upper-cased name for the gq-params option */
 define|#
 directive|define
 name|GQ_PARAMS_NAME
-value|(ntp_keygen_opt_strs+1266)
+value|(ntp_keygen_opt_strs+1324)
 comment|/** Name string for the gq-params option */
 define|#
 directive|define
 name|GQ_PARAMS_name
-value|(ntp_keygen_opt_strs+1276)
+value|(ntp_keygen_opt_strs+1334)
 comment|/** Compiled in flag settings for the gq-params option */
 define|#
 directive|define
@@ -582,17 +583,17 @@ comment|/** Descriptive text for the host-key option */
 define|#
 directive|define
 name|HOST_KEY_DESC
-value|(ntp_keygen_opt_strs+1286)
+value|(ntp_keygen_opt_strs+1344)
 comment|/** Upper-cased name for the host-key option */
 define|#
 directive|define
 name|HOST_KEY_NAME
-value|(ntp_keygen_opt_strs+1308)
+value|(ntp_keygen_opt_strs+1366)
 comment|/** Name string for the host-key option */
 define|#
 directive|define
 name|HOST_KEY_name
-value|(ntp_keygen_opt_strs+1317)
+value|(ntp_keygen_opt_strs+1375)
 comment|/** Compiled in flag settings for the host-key option */
 define|#
 directive|define
@@ -628,17 +629,17 @@ comment|/** Descriptive text for the iffkey option */
 define|#
 directive|define
 name|IFFKEY_DESC
-value|(ntp_keygen_opt_strs+1326)
+value|(ntp_keygen_opt_strs+1384)
 comment|/** Upper-cased name for the iffkey option */
 define|#
 directive|define
 name|IFFKEY_NAME
-value|(ntp_keygen_opt_strs+1350)
+value|(ntp_keygen_opt_strs+1408)
 comment|/** Name string for the iffkey option */
 define|#
 directive|define
 name|IFFKEY_name
-value|(ntp_keygen_opt_strs+1357)
+value|(ntp_keygen_opt_strs+1415)
 comment|/** Compiled in flag settings for the iffkey option */
 define|#
 directive|define
@@ -674,17 +675,17 @@ comment|/** Descriptive text for the ident option */
 define|#
 directive|define
 name|IDENT_DESC
-value|(ntp_keygen_opt_strs+1364)
+value|(ntp_keygen_opt_strs+1422)
 comment|/** Upper-cased name for the ident option */
 define|#
 directive|define
 name|IDENT_NAME
-value|(ntp_keygen_opt_strs+1387)
+value|(ntp_keygen_opt_strs+1445)
 comment|/** Name string for the ident option */
 define|#
 directive|define
 name|IDENT_name
-value|(ntp_keygen_opt_strs+1393)
+value|(ntp_keygen_opt_strs+1451)
 comment|/** Compiled in flag settings for the ident option */
 define|#
 directive|define
@@ -720,17 +721,17 @@ comment|/** Descriptive text for the lifetime option */
 define|#
 directive|define
 name|LIFETIME_DESC
-value|(ntp_keygen_opt_strs+1399)
+value|(ntp_keygen_opt_strs+1457)
 comment|/** Upper-cased name for the lifetime option */
 define|#
 directive|define
 name|LIFETIME_NAME
-value|(ntp_keygen_opt_strs+1424)
+value|(ntp_keygen_opt_strs+1482)
 comment|/** Name string for the lifetime option */
 define|#
 directive|define
 name|LIFETIME_name
-value|(ntp_keygen_opt_strs+1433)
+value|(ntp_keygen_opt_strs+1491)
 comment|/** Compiled in flag settings for the lifetime option */
 define|#
 directive|define
@@ -763,17 +764,17 @@ comment|/** Descriptive text for the md5key option */
 define|#
 directive|define
 name|MD5KEY_DESC
-value|(ntp_keygen_opt_strs+1442)
+value|(ntp_keygen_opt_strs+1500)
 comment|/** Upper-cased name for the md5key option */
 define|#
 directive|define
 name|MD5KEY_NAME
-value|(ntp_keygen_opt_strs+1460)
+value|(ntp_keygen_opt_strs+1518)
 comment|/** Name string for the md5key option */
 define|#
 directive|define
 name|MD5KEY_name
-value|(ntp_keygen_opt_strs+1467)
+value|(ntp_keygen_opt_strs+1525)
 comment|/** Compiled in flag settings for the md5key option */
 define|#
 directive|define
@@ -787,17 +788,17 @@ comment|/** Descriptive text for the modulus option */
 define|#
 directive|define
 name|MODULUS_DESC
-value|(ntp_keygen_opt_strs+1474)
+value|(ntp_keygen_opt_strs+1532)
 comment|/** Upper-cased name for the modulus option */
 define|#
 directive|define
 name|MODULUS_NAME
-value|(ntp_keygen_opt_strs+1482)
+value|(ntp_keygen_opt_strs+1540)
 comment|/** Name string for the modulus option */
 define|#
 directive|define
 name|MODULUS_name
-value|(ntp_keygen_opt_strs+1474)
+value|(ntp_keygen_opt_strs+1532)
 comment|/** Compiled in flag settings for the modulus option */
 define|#
 directive|define
@@ -833,17 +834,17 @@ comment|/** Descriptive text for the pvt-cert option */
 define|#
 directive|define
 name|PVT_CERT_DESC
-value|(ntp_keygen_opt_strs+1490)
+value|(ntp_keygen_opt_strs+1548)
 comment|/** Upper-cased name for the pvt-cert option */
 define|#
 directive|define
 name|PVT_CERT_NAME
-value|(ntp_keygen_opt_strs+1522)
+value|(ntp_keygen_opt_strs+1580)
 comment|/** Name string for the pvt-cert option */
 define|#
 directive|define
 name|PVT_CERT_name
-value|(ntp_keygen_opt_strs+1531)
+value|(ntp_keygen_opt_strs+1589)
 comment|/** Compiled in flag settings for the pvt-cert option */
 define|#
 directive|define
@@ -879,17 +880,17 @@ comment|/** Descriptive text for the password option */
 define|#
 directive|define
 name|PASSWORD_DESC
-value|(ntp_keygen_opt_strs+1540)
+value|(ntp_keygen_opt_strs+1598)
 comment|/** Upper-cased name for the password option */
 define|#
 directive|define
 name|PASSWORD_NAME
-value|(ntp_keygen_opt_strs+1563)
+value|(ntp_keygen_opt_strs+1621)
 comment|/** Name string for the password option */
 define|#
 directive|define
 name|PASSWORD_name
-value|(ntp_keygen_opt_strs+1572)
+value|(ntp_keygen_opt_strs+1630)
 comment|/** Compiled in flag settings for the password option */
 define|#
 directive|define
@@ -925,17 +926,17 @@ comment|/** Descriptive text for the export-passwd option */
 define|#
 directive|define
 name|EXPORT_PASSWD_DESC
-value|(ntp_keygen_opt_strs+1581)
+value|(ntp_keygen_opt_strs+1639)
 comment|/** Upper-cased name for the export-passwd option */
 define|#
 directive|define
 name|EXPORT_PASSWD_NAME
-value|(ntp_keygen_opt_strs+1623)
+value|(ntp_keygen_opt_strs+1681)
 comment|/** Name string for the export-passwd option */
 define|#
 directive|define
 name|EXPORT_PASSWD_name
-value|(ntp_keygen_opt_strs+1637)
+value|(ntp_keygen_opt_strs+1695)
 comment|/** Compiled in flag settings for the export-passwd option */
 define|#
 directive|define
@@ -971,17 +972,17 @@ comment|/** Descriptive text for the sign-key option */
 define|#
 directive|define
 name|SIGN_KEY_DESC
-value|(ntp_keygen_opt_strs+1651)
+value|(ntp_keygen_opt_strs+1709)
 comment|/** Upper-cased name for the sign-key option */
 define|#
 directive|define
 name|SIGN_KEY_NAME
-value|(ntp_keygen_opt_strs+1682)
+value|(ntp_keygen_opt_strs+1740)
 comment|/** Name string for the sign-key option */
 define|#
 directive|define
 name|SIGN_KEY_name
-value|(ntp_keygen_opt_strs+1691)
+value|(ntp_keygen_opt_strs+1749)
 comment|/** Compiled in flag settings for the sign-key option */
 define|#
 directive|define
@@ -1017,17 +1018,17 @@ comment|/** Descriptive text for the subject-name option */
 define|#
 directive|define
 name|SUBJECT_NAME_DESC
-value|(ntp_keygen_opt_strs+1700)
+value|(ntp_keygen_opt_strs+1758)
 comment|/** Upper-cased name for the subject-name option */
 define|#
 directive|define
 name|SUBJECT_NAME_NAME
-value|(ntp_keygen_opt_strs+1735)
+value|(ntp_keygen_opt_strs+1793)
 comment|/** Name string for the subject-name option */
 define|#
 directive|define
 name|SUBJECT_NAME_name
-value|(ntp_keygen_opt_strs+1748)
+value|(ntp_keygen_opt_strs+1806)
 comment|/** Compiled in flag settings for the subject-name option */
 define|#
 directive|define
@@ -1063,17 +1064,17 @@ comment|/** Descriptive text for the trusted-cert option */
 define|#
 directive|define
 name|TRUSTED_CERT_DESC
-value|(ntp_keygen_opt_strs+1761)
+value|(ntp_keygen_opt_strs+1819)
 comment|/** Upper-cased name for the trusted-cert option */
 define|#
 directive|define
 name|TRUSTED_CERT_NAME
-value|(ntp_keygen_opt_strs+1793)
+value|(ntp_keygen_opt_strs+1851)
 comment|/** Name string for the trusted-cert option */
 define|#
 directive|define
 name|TRUSTED_CERT_name
-value|(ntp_keygen_opt_strs+1806)
+value|(ntp_keygen_opt_strs+1864)
 comment|/** Compiled in flag settings for the trusted-cert option */
 define|#
 directive|define
@@ -1109,17 +1110,17 @@ comment|/** Descriptive text for the mv-params option */
 define|#
 directive|define
 name|MV_PARAMS_DESC
-value|(ntp_keygen_opt_strs+1819)
+value|(ntp_keygen_opt_strs+1877)
 comment|/** Upper-cased name for the mv-params option */
 define|#
 directive|define
 name|MV_PARAMS_NAME
-value|(ntp_keygen_opt_strs+1848)
+value|(ntp_keygen_opt_strs+1906)
 comment|/** Name string for the mv-params option */
 define|#
 directive|define
 name|MV_PARAMS_name
-value|(ntp_keygen_opt_strs+1858)
+value|(ntp_keygen_opt_strs+1916)
 comment|/** Compiled in flag settings for the mv-params option */
 define|#
 directive|define
@@ -1155,17 +1156,17 @@ comment|/** Descriptive text for the mv-keys option */
 define|#
 directive|define
 name|MV_KEYS_DESC
-value|(ntp_keygen_opt_strs+1868)
+value|(ntp_keygen_opt_strs+1926)
 comment|/** Upper-cased name for the mv-keys option */
 define|#
 directive|define
 name|MV_KEYS_NAME
-value|(ntp_keygen_opt_strs+1889)
+value|(ntp_keygen_opt_strs+1947)
 comment|/** Name string for the mv-keys option */
 define|#
 directive|define
 name|MV_KEYS_name
-value|(ntp_keygen_opt_strs+1897)
+value|(ntp_keygen_opt_strs+1955)
 comment|/** Compiled in flag settings for the mv-keys option */
 define|#
 directive|define
@@ -1197,22 +1198,22 @@ comment|/*  *  Help/More_Help/Version option descriptions:  */
 define|#
 directive|define
 name|HELP_DESC
-value|(ntp_keygen_opt_strs+1905)
+value|(ntp_keygen_opt_strs+1963)
 define|#
 directive|define
 name|HELP_name
-value|(ntp_keygen_opt_strs+1949)
+value|(ntp_keygen_opt_strs+2007)
 ifdef|#
 directive|ifdef
 name|HAVE_WORKING_FORK
 define|#
 directive|define
 name|MORE_HELP_DESC
-value|(ntp_keygen_opt_strs+1954)
+value|(ntp_keygen_opt_strs+2012)
 define|#
 directive|define
 name|MORE_HELP_name
-value|(ntp_keygen_opt_strs+1999)
+value|(ntp_keygen_opt_strs+2057)
 define|#
 directive|define
 name|MORE_HELP_FLAGS
@@ -1251,35 +1252,35 @@ directive|endif
 define|#
 directive|define
 name|VER_DESC
-value|(ntp_keygen_opt_strs+2009)
+value|(ntp_keygen_opt_strs+2067)
 define|#
 directive|define
 name|VER_name
-value|(ntp_keygen_opt_strs+2045)
+value|(ntp_keygen_opt_strs+2103)
 define|#
 directive|define
 name|SAVE_OPTS_DESC
-value|(ntp_keygen_opt_strs+2053)
+value|(ntp_keygen_opt_strs+2111)
 define|#
 directive|define
 name|SAVE_OPTS_name
-value|(ntp_keygen_opt_strs+2092)
+value|(ntp_keygen_opt_strs+2150)
 define|#
 directive|define
 name|LOAD_OPTS_DESC
-value|(ntp_keygen_opt_strs+2102)
+value|(ntp_keygen_opt_strs+2160)
 define|#
 directive|define
 name|LOAD_OPTS_NAME
-value|(ntp_keygen_opt_strs+2134)
+value|(ntp_keygen_opt_strs+2192)
 define|#
 directive|define
 name|NO_LOAD_OPTS_name
-value|(ntp_keygen_opt_strs+2144)
+value|(ntp_keygen_opt_strs+2202)
 define|#
 directive|define
 name|LOAD_OPTS_pfx
-value|(ntp_keygen_opt_strs+2157)
+value|(ntp_keygen_opt_strs+2215)
 define|#
 directive|define
 name|LOAD_OPTS_name
@@ -2834,17 +2835,17 @@ comment|/** Reference to the upper cased version of ntp-keygen. */
 define|#
 directive|define
 name|zPROGNAME
-value|(ntp_keygen_opt_strs+2160)
+value|(ntp_keygen_opt_strs+2218)
 comment|/** Reference to the title line for ntp-keygen usage. */
 define|#
 directive|define
 name|zUsageTitle
-value|(ntp_keygen_opt_strs+2171)
+value|(ntp_keygen_opt_strs+2229)
 comment|/** ntp-keygen configuration file name. */
 define|#
 directive|define
 name|zRcName
-value|(ntp_keygen_opt_strs+2291)
+value|(ntp_keygen_opt_strs+2351)
 comment|/** Directories to search for ntp-keygen config files. */
 specifier|static
 name|char
@@ -2859,11 +2860,11 @@ init|=
 block|{
 name|ntp_keygen_opt_strs
 operator|+
-literal|2283
+literal|2343
 block|,
 name|ntp_keygen_opt_strs
 operator|+
-literal|2289
+literal|2349
 block|,
 name|NULL
 block|}
@@ -2872,12 +2873,12 @@ comment|/** The ntp-keygen program bug email address. */
 define|#
 directive|define
 name|zBugsAddr
-value|(ntp_keygen_opt_strs+2298)
+value|(ntp_keygen_opt_strs+2358)
 comment|/** Clarification/explanation of what ntp-keygen does. */
 define|#
 directive|define
 name|zExplain
-value|(ntp_keygen_opt_strs+2332)
+value|(ntp_keygen_opt_strs+2392)
 comment|/** Extra detail explaining what ntp-keygen does. */
 define|#
 directive|define
@@ -2887,7 +2888,7 @@ comment|/** The full version string for ntp-keygen. */
 define|#
 directive|define
 name|zFullVersion
-value|(ntp_keygen_opt_strs+2334)
+value|(ntp_keygen_opt_strs+2394)
 comment|/* extracted from optcode.tlib near line 364 */
 if|#
 directive|if
@@ -3937,7 +3938,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntp-keygen (ntp) 4.2.8\n\ Copyright (C) 1970-2014 The University of Delaware, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
+literal|"ntp-keygen (ntp) 4.2.8p1\n\ Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3954,7 +3955,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"Permission to use, copy, modify, and distribute this software and its\n\ documentation for any purpose with or without fee is hereby granted,\n\ provided that the above copyright notice appears in all copies and that\n\ both the copyright notice and this permission notice appear in supporting\n\ documentation, and that the name The University of Delaware not be used in\n\ advertising or publicity pertaining to distribution of the software without\n\ specific, written prior permission.  The University of Delaware makes no\n\ representations about the suitability this software for any purpose.  It is\n\ provided \"as is\" without express or implied warranty.\n"
+literal|"Permission to use, copy, modify, and distribute this software and its\n\ documentation for any purpose with or without fee is hereby granted,\n\ provided that the above copyright notice appears in all copies and that\n\ both the copyright notice and this permission notice appear in supporting\n\ documentation, and that the name The University of Delaware not be used in\n\ advertising or publicity pertaining to distribution of the software without\n\ specific, written prior permission.  The University of Delaware and Network\n\ Time Foundation makes no representations about the suitability this\n\ software for any purpose.  It is provided \"as is\" without express or\n\ implied warranty.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4197,7 +4198,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntp-keygen (ntp) - Create a NTP host key - Ver. 4.2.8\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]...\n"
+literal|"ntp-keygen (ntp) - Create a NTP host key - Ver. 4.2.8p1\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]...\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4215,7 +4216,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntp-keygen (ntp) 4.2.8"
+literal|"ntp-keygen (ntp) 4.2.8p1"
 argument_list|)
 argument_list|)
 expr_stmt|;

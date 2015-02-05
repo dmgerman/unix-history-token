@@ -1569,10 +1569,6 @@ argument_list|)
 expr_stmt|;
 name|AGFREE
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|t
 argument_list|)
 expr_stmt|;
@@ -1872,10 +1868,6 @@ block|}
 block|}
 name|AGFREE
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|text
 argument_list|)
 expr_stmt|;

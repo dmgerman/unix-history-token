@@ -2235,6 +2235,7 @@ begin_function
 name|void
 name|filegen_unregister
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

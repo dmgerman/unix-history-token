@@ -922,6 +922,9 @@ name|sim_fifo
 modifier|*
 name|sim_details
 decl_stmt|;
+name|int
+name|mdnstries
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1192,6 +1195,7 @@ parameter_list|(
 name|int
 name|attr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1443,6 +1447,7 @@ name|rlim_t
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)

@@ -370,6 +370,8 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
+literal|"getting interface addresses: %s: %s"
+argument_list|,
 name|isc_msgcat_get
 argument_list|(
 name|isc_msgcat
@@ -378,7 +380,7 @@ name|ISC_MSGSET_IFITERGETIFADDRS
 argument_list|,
 name|ISC_MSG_GETIFADDRS
 argument_list|,
-literal|"getting interface addresses: getifaddrs: %s"
+literal|"getifaddrs"
 argument_list|)
 argument_list|,
 name|strbuf

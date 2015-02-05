@@ -7987,6 +7987,9 @@ name|pcmd
 operator|->
 name|nargs
 operator|>
+operator|(
+name|size_t
+operator|)
 name|items
 condition|)
 block|{
@@ -9076,6 +9079,9 @@ name|items
 operator|=
 literal|0
 init|;
+operator|(
+name|size_t
+operator|)
 name|items
 operator|<
 name|pcmd
@@ -10335,7 +10341,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|int
+name|size_t
 name|res
 decl_stmt|;
 name|int
@@ -11768,7 +11774,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|int
+name|size_t
 name|res
 decl_stmt|;
 name|int
@@ -12500,7 +12506,7 @@ index|[
 name|MAXARGS
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|int
@@ -16869,6 +16875,7 @@ name|res
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|actions

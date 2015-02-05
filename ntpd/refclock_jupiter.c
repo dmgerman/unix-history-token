@@ -474,6 +474,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|jupiter_parse_t
@@ -490,6 +491,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|jupiter_parse_gpos
@@ -1164,7 +1166,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_config"
+name|__func__
 argument_list|,
 literal|"init receiver"
 argument_list|)
@@ -1208,7 +1210,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_config"
+name|__func__
 argument_list|,
 literal|"mobile platform"
 argument_list|)
@@ -1587,7 +1589,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"refclock_jupiter"
+name|__func__
 argument_list|,
 literal|"pps capability 0x%x version %d mode 0x%x kern %d"
 argument_list|,
@@ -2128,7 +2130,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_control"
+name|__func__
 argument_list|,
 literal|"mode switch: reset receiver"
 argument_list|)
@@ -2158,9 +2160,10 @@ modifier|*
 name|rbufp
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|bpcnt
-decl_stmt|,
+decl_stmt|;
+name|int
 name|cc
 decl_stmt|,
 name|size
@@ -2173,6 +2176,7 @@ decl_stmt|;
 name|u_int32
 name|laststime
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -2253,9 +2257,6 @@ if|if
 condition|(
 name|bpcnt
 operator|>
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|instance
@@ -2313,6 +2314,9 @@ name|instance
 operator|->
 name|ssize
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2404,7 +2408,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"pulse: len %d != %u"
 argument_list|,
@@ -2473,7 +2477,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"avoided firmware bug (stime %.2f, laststime %.2f)"
 argument_list|,
@@ -2564,7 +2568,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"pulse: %s"
 argument_list|,
@@ -2683,7 +2687,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"gpos: len %d != %u"
 argument_list|,
@@ -2728,7 +2732,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"gpos: %s"
 argument_list|,
@@ -2756,7 +2760,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"id: len %d != %u"
 argument_list|,
@@ -2795,7 +2799,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"%s chan ver %s, %s (%s)"
 argument_list|,
@@ -2857,7 +2861,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"reset receiver"
 argument_list|)
@@ -2881,7 +2885,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"unknown message id %d"
 argument_list|,
@@ -2957,6 +2961,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|jupiter_parse_t
@@ -3127,7 +3132,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_parse_t"
+name|__func__
 argument_list|,
 literal|"NEW gps week %u"
 argument_list|,
@@ -3152,7 +3157,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_parse_t"
+name|__func__
 argument_list|,
 literal|"gps sweek not incrementing (%d)"
 argument_list|,
@@ -3199,7 +3204,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_parse_t"
+name|__func__
 argument_list|,
 literal|"gps sweek jumped (was %d, now %d)"
 argument_list|,
@@ -3252,7 +3257,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_parse_t"
+name|__func__
 argument_list|,
 literal|"UTC<none> (gweek/sweek %u/%u)"
 argument_list|,
@@ -3287,7 +3292,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_parse_t"
+name|__func__
 argument_list|,
 literal|"UTC %.24s (gweek/sweek %u/%u)"
 argument_list|,
@@ -3439,6 +3444,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|jupiter_parse_gpos
@@ -3590,7 +3596,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_parse_g"
+name|__func__
 argument_list|,
 literal|"GPS %.24s (gweek/sweek %u/%u)"
 argument_list|,
@@ -3740,7 +3746,7 @@ name|len
 decl_stmt|,
 name|size
 decl_stmt|;
-name|int
+name|ssize_t
 name|cc
 decl_stmt|;
 name|u_short
@@ -3914,7 +3920,7 @@ argument_list|(
 name|errstr
 argument_list|)
 argument_list|,
-literal|"short write (%d != %u)"
+literal|"short write (%zd != %u)"
 argument_list|,
 name|cc
 argument_list|,
@@ -4106,7 +4112,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_reqmsg"
+name|__func__
 argument_list|,
 literal|"%u: %s"
 argument_list|,
@@ -4209,7 +4215,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_canmsg"
+name|__func__
 argument_list|,
 literal|"%u: %s"
 argument_list|,
@@ -4312,7 +4318,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_reqonemsg"
+name|__func__
 argument_list|,
 literal|"%u: %s"
 argument_list|,
@@ -4465,7 +4471,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_platform"
+name|__func__
 argument_list|,
 literal|"%u: %s"
 argument_list|,
@@ -4634,7 +4640,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_recv"
+name|__func__
 argument_list|,
 literal|"syncing"
 argument_list|)
@@ -4672,7 +4678,7 @@ literal|0xff
 operator|)
 condition|)
 block|{
-comment|/* 				jupiter_debug(instance->peer, "{0x%x}", bp[0]); 				*/
+comment|/* 				jupiter_debug(instance->peer, __func__, 				    "{0x%x}", bp[0]); 				*/
 operator|++
 name|bp
 expr_stmt|;
@@ -4699,7 +4705,7 @@ literal|0xff
 operator|)
 condition|)
 break|break;
-comment|/* 			jupiter_debug(instance->peer, "{0x%x 0x%x}", bp[0], bp[1]); 			*/
+comment|/* 			jupiter_debug(instance->peer, __func__, 			    "{0x%x 0x%x}", bp[0], bp[1]); 			*/
 name|bp
 operator|+=
 literal|2
@@ -4709,7 +4715,7 @@ operator|-=
 literal|2
 expr_stmt|;
 block|}
-comment|/* 		jupiter_debug(instance->peer, "\n"); 		*/
+comment|/* 		jupiter_debug(instance->peer, __func__, "\n"); 		*/
 comment|/* Shuffle data to front of input buffer */
 if|if
 condition|(
@@ -4786,7 +4792,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_recv"
+name|__func__
 argument_list|,
 literal|"bad header checksum!"
 argument_list|)
@@ -4885,7 +4891,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_recv"
+name|__func__
 argument_list|,
 literal|"bad payload checksum!"
 argument_list|)

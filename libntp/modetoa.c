@@ -33,7 +33,7 @@ name|char
 modifier|*
 name|modetoa
 parameter_list|(
-name|int
+name|size_t
 name|mode
 parameter_list|)
 block|{
@@ -72,10 +72,6 @@ decl_stmt|;
 if|if
 condition|(
 name|mode
-operator|<
-literal|0
-operator|||
-name|mode
 operator|>=
 name|COUNTOF
 argument_list|(
@@ -94,7 +90,7 @@ name|bp
 argument_list|,
 name|LIB_BUFLENGTH
 argument_list|,
-literal|"mode#%d"
+literal|"mode#%zu"
 argument_list|,
 name|mode
 argument_list|)

@@ -673,6 +673,7 @@ init|=
 name|strlen
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -702,6 +703,9 @@ operator|)
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|name
 decl_stmt|;
@@ -863,6 +867,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|paz_names
 index|[
 name|idx
@@ -871,6 +878,9 @@ argument_list|,
 operator|(
 name|char
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|name
 argument_list|,
@@ -1945,6 +1955,9 @@ operator|=
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|od
 operator|->

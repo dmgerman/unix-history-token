@@ -26,7 +26,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|size_t
 name|key_cnt
 init|=
 literal|0
@@ -217,6 +217,9 @@ if|if
 condition|(
 name|mac_size
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|digest

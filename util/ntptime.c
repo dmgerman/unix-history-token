@@ -418,8 +418,11 @@ init|=
 literal|6
 decl_stmt|;
 comment|/* fractional digits for us */
-name|int
+name|size_t
 name|c
+decl_stmt|;
+name|int
+name|ch
 decl_stmt|;
 name|int
 name|errflg
@@ -452,7 +455,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|c
+name|ch
 operator|=
 name|ntp_getopt
 argument_list|(
@@ -469,7 +472,7 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|c
+name|ch
 condition|)
 block|{
 ifdef|#
@@ -2091,10 +2094,9 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|s
-operator|>=
-literal|0
-operator|&&
+operator|(
+name|size_t
+operator|)
 name|s
 operator|<
 name|COUNTOF

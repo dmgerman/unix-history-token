@@ -251,6 +251,7 @@ specifier|extern
 name|void
 name|filegen_unregister
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

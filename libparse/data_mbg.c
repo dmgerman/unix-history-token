@@ -1151,6 +1151,9 @@ literal|'+'
 argument_list|,
 name|abs
 argument_list|(
+operator|(
+name|int
+operator|)
 name|tmp
 operator|->
 name|offs_from_utc
@@ -1161,6 +1164,9 @@ argument_list|,
 operator|(
 name|abs
 argument_list|(
+operator|(
+name|int
+operator|)
 name|tmp
 operator|->
 name|offs_from_utc
@@ -1721,7 +1727,7 @@ modifier|*
 name|comparamp
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|comparamp

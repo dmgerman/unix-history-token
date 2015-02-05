@@ -134,7 +134,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|HAVE_SYS_SLECET_H
+name|HAVE_SYS_SELECT_H
 argument_list|)
 end_elif
 
@@ -828,16 +828,13 @@ begin_comment
 comment|/* The logon string is actually the ?WATCH command of GPSD, using JSON  * data and selecting the GPS device name we created from our unit  * number. [Note: This is a format string!]  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
+begin_define
+define|#
+directive|define
 name|s_logon
-init|=
-literal|"?WATCH={\"enable\":true,\"json\":true,\"device\":\"%s\"};\r\n"
-decl_stmt|;
-end_decl_stmt
+define|\
+value|"?WATCH={\"enable\":true,\"json\":true,\"device\":\"%s\"};\r\n"
+end_define
 
 begin_comment
 comment|/* We keep a static list of network addresses for 'localhost:gpsd', and  * we try to connect to them in round-robin fashion.  */
@@ -3607,7 +3604,7 @@ decl_stmt|,
 name|epv
 decl_stmt|;
 name|int
-name|log2
+name|xlog2
 decl_stmt|;
 name|gps_mode
 operator|=
@@ -3915,14 +3912,14 @@ argument_list|(
 name|ept
 argument_list|,
 operator|&
-name|log2
+name|xlog2
 argument_list|)
 expr_stmt|;
 name|peer
 operator|->
 name|precision
 operator|=
-name|log2
+name|xlog2
 expr_stmt|;
 block|}
 end_function
@@ -5631,6 +5628,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|ep

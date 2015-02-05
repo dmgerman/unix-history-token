@@ -593,6 +593,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|prg_path
 argument_list|,
 literal|"rx"

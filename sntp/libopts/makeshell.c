@@ -1428,6 +1428,10 @@ name|char
 operator|)
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|pz
 operator|++
@@ -1448,6 +1452,9 @@ operator|)
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 operator|&
 operator|(
@@ -1471,6 +1478,9 @@ operator|)
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 operator|&
 operator|(
@@ -2556,6 +2566,10 @@ while|while
 condition|(
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|od
 operator|->
 name|pz_Name
@@ -2566,6 +2580,10 @@ argument_list|)
 operator|==
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|name
 index|[
 name|match_ct
@@ -2603,6 +2621,10 @@ while|while
 condition|(
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|od
 operator|->
 name|pz_DisableName
@@ -2613,6 +2635,10 @@ argument_list|)
 operator|==
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|name
 index|[
 name|match_ct
@@ -3327,6 +3353,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 operator|&
 operator|(
 name|optionParseShellOptions
@@ -3366,6 +3395,10 @@ name|char
 operator|)
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|pz
 argument_list|)

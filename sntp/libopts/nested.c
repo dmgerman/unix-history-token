@@ -2549,6 +2549,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 operator|*
 operator|(
 name|pnew_val
@@ -2641,6 +2644,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|opt_val
 argument_list|)
 expr_stmt|;
@@ -2701,6 +2707,9 @@ argument_list|(
 name|tOptionValue
 operator|*
 argument_list|,
+operator|(
+name|intptr_t
+operator|)
 name|arg_list
 operator|->
 name|apzArgs
@@ -2718,6 +2727,9 @@ argument_list|(
 name|tOptionValue
 operator|*
 argument_list|,
+operator|(
+name|intptr_t
+operator|)
 name|arg_list
 operator|->
 name|apzArgs
@@ -2768,7 +2780,10 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|(
+call|(
+name|intptr_t
+call|)
+argument_list|(
 name|arg_list
 operator|->
 name|apzArgs
@@ -2776,7 +2791,7 @@ index|[
 operator|--
 name|iy
 index|]
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3220,6 +3235,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 operator|*
 operator|(
 name|av
@@ -3383,6 +3401,9 @@ operator|(
 name|char
 operator|*
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 operator|&
 name|pz

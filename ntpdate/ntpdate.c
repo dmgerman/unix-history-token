@@ -2976,6 +2976,9 @@ name|rbufp
 operator|->
 name|recv_length
 operator|>=
+operator|(
+name|int
+operator|)
 name|LEN_PKT_NOMAC
 condition|)
 name|has_mac

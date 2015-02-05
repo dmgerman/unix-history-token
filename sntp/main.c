@@ -2967,7 +2967,7 @@ name|struct
 name|pkt
 name|x_pkt
 decl_stmt|;
-name|int
+name|size_t
 name|pkt_len
 decl_stmt|;
 name|int
@@ -5190,6 +5190,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|cnt
 operator|>=
 sizeof|sizeof
@@ -5783,10 +5786,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|version
-operator|<
-literal|0
-operator|||
+operator|(
+name|unsigned
+name|char
+operator|)
 name|version
 operator|>
 literal|7
@@ -6232,6 +6235,9 @@ name|diff
 operator|.
 name|tv_sec
 argument_list|,
+operator|(
+name|long
+operator|)
 name|diff
 operator|.
 name|tv_usec
@@ -6304,6 +6310,9 @@ name|diff
 operator|.
 name|tv_sec
 argument_list|,
+operator|(
+name|long
+operator|)
 name|diff
 operator|.
 name|tv_usec
@@ -6350,6 +6359,9 @@ name|offset
 operator|.
 name|tv_sec
 operator|,
+operator|(
+name|long
+operator|)
 name|offset
 operator|.
 name|tv_usec

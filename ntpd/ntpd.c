@@ -889,13 +889,13 @@ comment|/* directory to chroot to */
 end_comment
 
 begin_decl_stmt
-name|int
+name|uid_t
 name|sw_uid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|gid_t
 name|sw_gid
 decl_stmt|;
 end_decl_stmt
@@ -4118,6 +4118,30 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|group
+condition|)
+name|setgroups
+argument_list|(
+literal|1
+argument_list|,
+operator|&
+name|sw_gid
+argument_list|)
+expr_stmt|;
+else|else
+name|initgroups
+argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|pw
+operator|->
+name|pw_gid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|user

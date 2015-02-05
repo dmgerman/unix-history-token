@@ -2450,7 +2450,7 @@ name|int
 name|stratum
 parameter_list|,
 name|int
-name|poll
+name|ppoll
 parameter_list|,
 name|int
 name|precision
@@ -2588,7 +2588,7 @@ name|mode
 argument_list|,
 name|stratum
 argument_list|,
-name|poll
+name|ppoll
 argument_list|,
 name|precision
 argument_list|,

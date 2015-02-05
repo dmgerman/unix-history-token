@@ -6253,6 +6253,8 @@ argument_list|(
 name|level_string
 argument_list|)
 argument_list|,
+literal|"%s %d: "
+argument_list|,
 name|isc_msgcat_get
 argument_list|(
 name|isc_msgcat
@@ -6261,7 +6263,7 @@ name|ISC_MSGSET_LOG
 argument_list|,
 name|ISC_MSG_LEVEL
 argument_list|,
-literal|"level %d: "
+literal|"level"
 argument_list|)
 argument_list|,
 name|level

@@ -259,35 +259,23 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|EREALLOC_CALLSITE
 end_ifndef
 
-begin_function
-name|void
-modifier|*
-name|emalloc
-parameter_list|(
-name|size_t
-name|newsz
-parameter_list|)
-block|{
-return|return
-name|ereallocz
-argument_list|(
-name|NULL
-argument_list|,
-name|newsz
-argument_list|,
-literal|0
-argument_list|,
-name|FALSE
-argument_list|)
-return|;
-block|}
-end_function
+begin_endif
+unit|void * emalloc(size_t newsz) { 	return ereallocz(NULL, newsz, 0, FALSE); }
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

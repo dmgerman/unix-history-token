@@ -461,7 +461,7 @@ name|x_i
 parameter_list|,
 name|x_f
 parameter_list|)
-value|(((x_i)>= 0x00010000) ? 0x7fffffff : \ 				(((x_i)<= -0x00010000) ? 0x80000000 : \ 				(((x_i)<<16) | (((x_f)>>16)&0xffff))))
+value|(((int)(x_i)>= 0x00010000) ? 0x7fffffff : \ 				(((int)(x_i)<= -0x00010000) ? 0x80000000 : \ 				(u_int)(((x_i)<<16) | (((x_f)>>16)&0xffff))))
 end_define
 
 begin_define

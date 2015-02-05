@@ -374,6 +374,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|pzArg
 argument_list|,
 operator|&

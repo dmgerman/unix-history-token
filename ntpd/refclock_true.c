@@ -707,6 +707,15 @@ else|#
 directive|else
 end_else
 
+begin_macro
+name|NTP_PRINTF
+argument_list|(
+literal|2
+argument_list|,
+literal|3
+argument_list|)
+end_macro
+
 begin_function
 specifier|static
 name|void

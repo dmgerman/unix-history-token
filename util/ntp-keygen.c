@@ -167,6 +167,16 @@ directive|include
 file|<ssl_applink.c>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_UC
+parameter_list|(
+name|str
+parameter_list|)
+value|((char *)(intptr_t)(str))
+end_define
+
 begin_comment
 comment|/*  * Cryptodefines  */
 end_comment
@@ -301,6 +311,7 @@ begin_function_decl
 name|int
 name|gen_md5
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -330,6 +341,7 @@ name|EVP_PKEY
 modifier|*
 name|gen_rsa
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -341,6 +353,7 @@ name|EVP_PKEY
 modifier|*
 name|gen_dsa
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -352,6 +365,7 @@ name|EVP_PKEY
 modifier|*
 name|gen_iffkey
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -363,6 +377,7 @@ name|EVP_PKEY
 modifier|*
 name|gen_gqkey
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -374,6 +389,7 @@ name|EVP_PKEY
 modifier|*
 name|gen_mvkey
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -412,6 +428,7 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -440,9 +457,11 @@ name|EVP_PKEY
 modifier|*
 name|genkey
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1250,6 +1269,7 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* to encrypt priv. key */
+specifier|const
 name|char
 modifier|*
 name|exten
@@ -3428,6 +3448,7 @@ begin_function
 name|int
 name|gen_md5
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|id
@@ -4112,6 +4133,7 @@ modifier|*
 comment|/* public/private key pair */
 name|gen_rsa
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|id
@@ -4151,7 +4173,10 @@ literal|65537
 argument_list|,
 name|cb
 argument_list|,
+name|_UC
+argument_list|(
 literal|"RSA"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -4325,6 +4350,7 @@ modifier|*
 comment|/* public/private key pair */
 name|gen_dsa
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|id
@@ -4391,7 +4417,10 @@ name|NULL
 argument_list|,
 name|cb
 argument_list|,
+name|_UC
+argument_list|(
 literal|"DSA"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -4555,6 +4584,7 @@ modifier|*
 comment|/* DSA cuckoo nest */
 name|gen_iffkey
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|id
@@ -4649,7 +4679,10 @@ name|NULL
 argument_list|,
 name|cb
 argument_list|,
+name|_UC
+argument_list|(
 literal|"IFF"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5240,6 +5273,7 @@ modifier|*
 comment|/* RSA cuckoo nest */
 name|gen_gqkey
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|id
@@ -5308,7 +5342,10 @@ literal|65537
 argument_list|,
 name|cb
 argument_list|,
+name|_UC
+argument_list|(
 literal|"GQ"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5987,6 +6024,7 @@ modifier|*
 comment|/* DSA cuckoo nest */
 name|gen_mvkey
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|id
@@ -8100,6 +8138,7 @@ modifier|*
 name|gqpub
 parameter_list|,
 comment|/* identity extension (hex string) */
+specifier|const
 name|char
 modifier|*
 name|exten
@@ -8364,7 +8403,10 @@ name|NULL
 argument_list|,
 name|NID_basic_constraints
 argument_list|,
+name|_UC
+argument_list|(
 name|BASIC_CONSTRAINTS
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8429,7 +8471,10 @@ name|NULL
 argument_list|,
 name|NID_key_usage
 argument_list|,
+name|_UC
+argument_list|(
 name|KEY_USAGE
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8572,7 +8617,10 @@ name|NULL
 argument_list|,
 name|NID_ext_key_usage
 argument_list|,
+name|_UC
+argument_list|(
 name|exten
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8912,11 +8960,13 @@ modifier|*
 comment|/* public/private key pair */
 name|genkey
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|type
 parameter_list|,
 comment|/* key type (RSA or DSA) */
+specifier|const
 name|char
 modifier|*
 name|id

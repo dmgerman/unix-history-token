@@ -39,6 +39,7 @@ begin_function_decl
 name|int
 name|audio_init
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

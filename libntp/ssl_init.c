@@ -298,6 +298,10 @@ name|char
 operator|)
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|pch
 argument_list|)
@@ -326,6 +330,10 @@ literal|'m'
 operator|==
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|text
 index|[
 literal|0

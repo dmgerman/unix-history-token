@@ -1940,7 +1940,7 @@ name|u_char
 modifier|*
 name|key
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 block|{
@@ -1974,15 +1974,6 @@ operator|<
 literal|4
 operator|*
 literal|1024
-argument_list|)
-expr_stmt|;
-name|len
-operator|=
-name|max
-argument_list|(
-literal|0
-argument_list|,
-name|len
 argument_list|)
 expr_stmt|;
 comment|/* 	 * See if we already have the key.  If so just stick in the 	 * new value. 	 */

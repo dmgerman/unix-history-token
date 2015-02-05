@@ -323,11 +323,14 @@ if|if
 condition|(
 name|nlen
 operator|>
-operator|(
+call|(
+name|u_int
+call|)
+argument_list|(
 name|tail
 operator|-
 name|head
-operator|)
+argument_list|)
 operator|||
 name|nlen
 operator|<
@@ -440,6 +443,9 @@ if|if
 condition|(
 name|pkt_len
 operator|<
+operator|(
+name|int
+operator|)
 name|LEN_PKT_NOMAC
 operator|||
 operator|(
@@ -451,8 +457,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|unusable
-label|:
 name|msyslog
 argument_list|(
 name|LOG_ERR
@@ -502,9 +506,20 @@ name|NULL
 operator|==
 name|exten_end
 condition|)
-goto|goto
-name|unusable
-goto|;
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: Missing extension field.  Discarding."
+argument_list|,
+name|func_name
+argument_list|)
+expr_stmt|;
+return|return
+name|PACKET_UNUSEABLE
+return|;
+block|}
 comment|/* get size of MAC in cells; can be zero */
 name|exten_len
 operator|=
@@ -552,9 +567,18 @@ case|case
 literal|3
 case|:
 comment|/* key ID + 3DES MAC -- unsupported! */
-goto|goto
-name|unusable
-goto|;
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: Key ID + 3DES MAC is unsupported.  Discarding."
+argument_list|,
+name|func_name
+argument_list|)
+expr_stmt|;
+return|return
+name|PACKET_UNUSEABLE
+return|;
 case|case
 literal|5
 case|:
@@ -656,9 +680,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-goto|goto
-name|unusable
-goto|;
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: Unexpected extension length: %d.  Discarding."
+argument_list|,
+name|func_name
+argument_list|,
+name|exten_len
+argument_list|)
+expr_stmt|;
+return|return
+name|PACKET_UNUSEABLE
+return|;
 block|}
 switch|switch
 condition|(

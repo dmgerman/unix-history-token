@@ -897,7 +897,8 @@ operator|!
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|dsec
 argument_list|)

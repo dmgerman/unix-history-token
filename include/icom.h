@@ -612,6 +612,7 @@ begin_function_decl
 name|int
 name|icom_init
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

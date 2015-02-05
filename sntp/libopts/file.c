@@ -341,6 +341,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|pOD
 operator|->
 name|optArg
@@ -460,6 +463,9 @@ operator|=
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|pOD
 operator|->

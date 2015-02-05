@@ -261,10 +261,10 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* Bug 2537 */
-name|int
+name|size_t
 name|len
 decl_stmt|;
-name|int
+name|size_t
 name|j
 decl_stmt|;
 comment|/* 	 * Open file.  Complain and return if it can't be opened. 	 */
@@ -577,7 +577,7 @@ name|char
 modifier|*
 name|ptr
 decl_stmt|;
-name|int
+name|size_t
 name|jlim
 decl_stmt|;
 name|jlim
@@ -616,6 +616,10 @@ name|hex
 argument_list|,
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|token
 index|[
 name|j

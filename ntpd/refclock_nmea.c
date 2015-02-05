@@ -69,6 +69,23 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SOCKET_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -1119,7 +1136,7 @@ parameter_list|,
 specifier|const
 name|l_fp
 modifier|*
-name|recv
+name|xrecv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1426,6 +1443,7 @@ decl_stmt|;
 name|int
 name|baudrate
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|baudtext
@@ -4316,6 +4334,7 @@ name|NMEA_EXTLOG_MASK
 condition|)
 block|{
 comment|/* Log& reset counters with extended logging */
+specifier|const
 name|char
 modifier|*
 name|nmea
@@ -6418,7 +6437,7 @@ comment|/* GPS frac second& offset */
 specifier|const
 name|l_fp
 modifier|*
-name|recv
+name|xrecv
 comment|/* receive time stamp */
 parameter_list|)
 block|{
@@ -6574,7 +6593,7 @@ name|vi64
 operator|=
 name|ntpcal_ntp_to_ntp
 argument_list|(
-name|recv
+name|xrecv
 operator|->
 name|l_ui
 argument_list|,
@@ -6621,7 +6640,7 @@ name|retv
 operator|.
 name|l_uf
 operator|<
-name|recv
+name|xrecv
 operator|->
 name|l_uf
 operator|)

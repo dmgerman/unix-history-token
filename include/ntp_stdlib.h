@@ -773,7 +773,7 @@ specifier|const
 name|u_char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -841,16 +841,15 @@ parameter_list|)
 value|ereallocz(p, n, o, (z))
 end_define
 
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
+begin_define
+define|#
+directive|define
 name|emalloc
 parameter_list|(
-name|size_t
+name|n
 parameter_list|)
-function_decl|;
-end_function_decl
+value|ereallocz(NULL, n, 0, FALSE)
+end_define
 
 begin_define
 define|#
@@ -1074,6 +1073,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|humanlogtime
@@ -1085,6 +1085,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|humantime
@@ -1131,7 +1132,7 @@ name|char
 modifier|*
 name|modetoa
 parameter_list|(
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -266,6 +266,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|fname
 argument_list|)
 expr_stmt|;

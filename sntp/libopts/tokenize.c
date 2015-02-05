@@ -184,11 +184,17 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|pSrc
 argument_list|,
 operator|(
 name|char
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 operator|&
 name|ch

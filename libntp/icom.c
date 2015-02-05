@@ -398,6 +398,7 @@ begin_function
 name|int
 name|icom_init
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|device
@@ -419,18 +420,11 @@ name|int
 name|fd
 decl_stmt|;
 name|int
-name|flags
-decl_stmt|;
-name|int
 name|rc
 decl_stmt|;
 name|int
 name|saved_errno
 decl_stmt|;
-name|flags
-operator|=
-name|trace
-expr_stmt|;
 name|fd
 operator|=
 name|tty_open

@@ -1380,13 +1380,16 @@ begin_struct
 specifier|static
 struct|struct
 block|{
+specifier|const
 name|char
 name|commandNumber
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|commandLog
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|command
@@ -1564,10 +1567,12 @@ block|{
 name|char
 name|commandNumber
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|commandLog
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|command
@@ -3365,6 +3370,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sFunctionName
@@ -3414,6 +3420,7 @@ index|[
 name|MAX_LOGTEXT
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pCmd
@@ -4038,6 +4045,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sFunctionName
@@ -4374,6 +4382,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sFunctionName
@@ -4553,7 +4562,7 @@ name|printf
 argument_list|(
 literal|"%s (refclock_jjy.c) : send '#'\n"
 argument_list|,
-name|sFunctionName
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -5103,6 +5112,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sFunctionName
@@ -5490,6 +5500,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sFunctionName
@@ -5539,6 +5550,7 @@ index|[
 name|MAX_LOGTEXT
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pCmd
@@ -6472,6 +6484,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sFunctionName
@@ -6490,6 +6503,7 @@ name|refclockproc
 modifier|*
 name|pp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pCmd
@@ -6886,6 +6900,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sFunctionName
@@ -6904,6 +6919,7 @@ name|refclockproc
 modifier|*
 name|pp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pCmd
@@ -7074,6 +7090,7 @@ name|int
 name|iInputLen
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|printableControlChar
@@ -7148,19 +7165,17 @@ literal|" "
 block|}
 decl_stmt|;
 name|size_t
+name|i
+decl_stmt|,
+name|j
+decl_stmt|,
+name|n
+decl_stmt|;
+name|size_t
 name|InputLen
 decl_stmt|;
 name|size_t
 name|OutputLen
-decl_stmt|;
-name|size_t
-name|i
-decl_stmt|;
-name|size_t
-name|j
-decl_stmt|;
-name|size_t
-name|n
 decl_stmt|;
 name|InputLen
 operator|=
@@ -7200,6 +7215,10 @@ if|if
 condition|(
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|sInput
 index|[
 name|i
@@ -7346,6 +7365,9 @@ name|min
 argument_list|(
 name|j
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|iOutputLen
 operator|-
 literal|1

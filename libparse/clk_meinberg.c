@@ -200,7 +200,8 @@ name|sum
 init|=
 literal|0
 decl_stmt|;
-name|short
+name|unsigned
+name|int
 name|i
 decl_stmt|;
 for|for
