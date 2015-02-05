@@ -540,6 +540,14 @@ name|unsigned
 name|long
 name|netdown_drops
 decl_stmt|;
+name|unsigned
+name|long
+name|tso_pdrop_too_many
+decl_stmt|;
+name|unsigned
+name|long
+name|tso_pdrop_no_rsrc
+decl_stmt|;
 comment|/* The following fields change more often, and are used mostly 	 * on the completion path 	 */
 name|unsigned
 name|int
