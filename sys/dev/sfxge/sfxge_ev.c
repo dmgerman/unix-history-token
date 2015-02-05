@@ -3562,7 +3562,14 @@ name|SFXGE_EVQ_LOCK_INIT
 argument_list|(
 name|evq
 argument_list|,
-literal|"evq"
+name|device_get_nameunit
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+name|index
 argument_list|)
 expr_stmt|;
 name|evq

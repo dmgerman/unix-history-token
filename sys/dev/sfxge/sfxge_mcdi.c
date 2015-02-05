@@ -734,7 +734,12 @@ name|SFXGE_MCDI_LOCK_INIT
 argument_list|(
 name|mcdi
 argument_list|,
-literal|"sfxge_mcdi"
+name|device_get_nameunit
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mcdi

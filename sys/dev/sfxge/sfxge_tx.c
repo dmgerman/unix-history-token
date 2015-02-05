@@ -6577,7 +6577,14 @@ name|SFXGE_TXQ_LOCK_INIT
 argument_list|(
 name|txq
 argument_list|,
-literal|"txq"
+name|device_get_nameunit
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+name|txq_index
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_UINT

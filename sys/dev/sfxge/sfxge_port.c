@@ -2489,7 +2489,12 @@ name|SFXGE_PORT_LOCK_INIT
 argument_list|(
 name|port
 argument_list|,
-literal|"sfxge_port"
+name|device_get_nameunit
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|port

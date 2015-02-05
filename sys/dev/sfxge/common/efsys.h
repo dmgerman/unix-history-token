@@ -1280,6 +1280,10 @@ parameter_list|)
 define|\
 value|((_esmp)->esm_addr)
 comment|/* BAR */
+define|#
+directive|define
+name|SFXGE_LOCK_NAME_MAX
+value|16
 typedef|typedef
 struct|struct
 name|efsys_bar_s
@@ -1287,6 +1291,12 @@ block|{
 name|struct
 name|mtx
 name|esb_lock
+decl_stmt|;
+name|char
+name|esb_lock_name
+index|[
+name|SFXGE_LOCK_NAME_MAX
+index|]
 decl_stmt|;
 name|bus_space_tag_t
 name|esb_tag
@@ -1311,10 +1321,10 @@ name|SFXGE_BAR_LOCK_INIT
 parameter_list|(
 name|_esbp
 parameter_list|,
-name|_name
+name|_ifname
 parameter_list|)
 define|\
-value|mtx_init(&(_esbp)->esb_lock, (_name), NULL, MTX_DEF)
+value|do {								\ 		snprintf((_esbp)->esb_lock_name,			\ 			 sizeof((_esbp)->esb_lock_name),		\ 			 "%s:bar", (_ifname));				\ 		mtx_init(&(_esbp)->esb_lock, (_esbp)->esb_lock_name,	\ 			 NULL, MTX_DEF);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|SFXGE_BAR_LOCK_DESTROY
@@ -1482,10 +1492,66 @@ define|\
 value|do {								\ 		(void) (_esip);						\ 		(void) (_size);						\ 		free((_p), M_SFXGE);					\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 comment|/* LOCK */
 typedef|typedef
+struct|struct
+name|efsys_lock_s
+block|{
 name|struct
 name|mtx
+name|lock
+decl_stmt|;
+name|char
+name|lock_name
+index|[
+name|SFXGE_LOCK_NAME_MAX
+index|]
+decl_stmt|;
+block|}
 name|efsys_lock_t
 typedef|;
+define|#
+directive|define
+name|SFXGE_EFSYS_LOCK_INIT
+parameter_list|(
+name|_eslp
+parameter_list|,
+name|_ifname
+parameter_list|,
+name|_label
+parameter_list|)
+define|\
+value|do {								\ 		efsys_lock_t *__eslp = (_eslp);				\ 									\ 		snprintf((__eslp)->lock_name,				\ 			 sizeof((__eslp)->lock_name),			\ 			 "%s:%s", (_ifname), (_label));			\ 		mtx_init(&(__eslp)->lock, (__eslp)->lock_name,		\ 			 NULL, MTX_DEF);				\ 	} while (B_FALSE)
+define|#
+directive|define
+name|SFXGE_EFSYS_LOCK_DESTROY
+parameter_list|(
+name|_eslp
+parameter_list|)
+define|\
+value|mtx_destroy(&(_eslp)->lock)
+define|#
+directive|define
+name|SFXGE_EFSYS_LOCK
+parameter_list|(
+name|_eslp
+parameter_list|)
+define|\
+value|mtx_lock(&(_eslp)->lock)
+define|#
+directive|define
+name|SFXGE_EFSYS_UNLOCK
+parameter_list|(
+name|_eslp
+parameter_list|)
+define|\
+value|mtx_unlock(&(_eslp)->lock)
+define|#
+directive|define
+name|SFXGE_EFSYS_LOCK_ASSERT_OWNED
+parameter_list|(
+name|_eslp
+parameter_list|)
+define|\
+value|mtx_assert(&(_eslp)->lock, MA_OWNED)
 define|#
 directive|define
 name|EFSYS_LOCK_MAGIC
@@ -1499,7 +1565,7 @@ parameter_list|,
 name|_state
 parameter_list|)
 define|\
-value|do {								\ 		mtx_lock(_lockp);					\ 		(_state) = EFSYS_LOCK_MAGIC;				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		SFXGE_EFSYS_LOCK(_lockp);				\ 		(_state) = EFSYS_LOCK_MAGIC;				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFSYS_UNLOCK
@@ -1509,7 +1575,7 @@ parameter_list|,
 name|_state
 parameter_list|)
 define|\
-value|do {								\ 		if ((_state) != EFSYS_LOCK_MAGIC)			\ 			KASSERT(B_FALSE, ("not locked"));		\ 		mtx_unlock(_lockp);					\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		if ((_state) != EFSYS_LOCK_MAGIC)			\ 			KASSERT(B_FALSE, ("not locked"));		\ 		SFXGE_EFSYS_UNLOCK(_lockp);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 comment|/* PREEMPT */
 define|#
 directive|define
