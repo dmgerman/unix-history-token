@@ -233,6 +233,10 @@ decl_stmt|;
 name|int
 name|show_counters
 decl_stmt|;
+name|int
+name|show_time
+decl_stmt|;
+comment|/* show timestamp */
 name|uint32_t
 name|set_mask
 decl_stmt|;
@@ -12470,9 +12474,15 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|fo
 operator|->
 name|show_counters
+operator||
+name|fo
+operator|->
+name|show_time
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -13051,6 +13061,14 @@ name|show_counters
 expr_stmt|;
 name|sfo
 operator|.
+name|show_time
+operator|=
+name|co
+operator|.
+name|do_time
+expr_stmt|;
+name|sfo
+operator|.
 name|flags
 operator|=
 name|IPFW_CFG_GET_STATIC
@@ -13071,9 +13089,15 @@ name|IPFW_CFG_GET_STATES
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sfo
 operator|.
 name|show_counters
+operator||
+name|sfo
+operator|.
+name|show_time
+operator|)
 operator|!=
 literal|0
 condition|)
