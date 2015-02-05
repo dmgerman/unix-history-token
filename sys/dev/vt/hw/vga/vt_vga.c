@@ -6889,7 +6889,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"vt_vga driver"
+literal|"VT VGA driver"
 argument_list|)
 expr_stmt|;
 return|return
