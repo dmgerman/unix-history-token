@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdMgrSetCmdDeleteCallback.h
+comment|// File:        MICmdMgrSetCmdDeleteCallback.h
 end_comment
 
 begin_comment
@@ -44,27 +44,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	ICallback	interface.
+comment|// Overview:    ICallback   interface.
 end_comment
 
 begin_comment
-comment|//				CSetClients interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              CSetClients interface.
 end_comment
 
 begin_comment
@@ -72,7 +56,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Environment: Compilers:  Visual C++ 12.
+end_comment
+
+begin_comment
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+end_comment
+
+begin_comment
+comment|//              Libraries:  See MIReadmetxt.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -120,14 +120,14 @@ name|namespace
 name|CMICmdMgrSetCmdDeleteCallback
 block|{
 comment|//++ ============================================================================
-comment|// Details:	MI Command Manager interface for client call back.
-comment|//			Objects that want to be notified of a command being deleted
-comment|//			inherit this interface and register interest in command object
-comment|//			deletion. An object deleting a command must not do it itself but call
-comment|//			the Command Manager CmdDelete() function to delete a command object.
-comment|// Gotchas:	None.
-comment|// Authors:	Illya Rudkin 21/02/2014.
-comment|// Changes:	None.
+comment|// Details: MI Command Manager interface for client call back.
+comment|//          Objects that want to be notified of a command being deleted
+comment|//          inherit this interface and register interest in command object
+comment|//          deletion. An object deleting a command must not do it itself but call
+comment|//          the Command Manager CmdDelete() function to delete a command object.
+comment|// Gotchas: None.
+comment|// Authors: Illya Rudkin 21/02/2014.
+comment|// Changes: None.
 comment|//--
 name|class
 name|ICallback
@@ -157,15 +157,15 @@ expr_stmt|;
 block|}
 empty_stmt|;
 comment|//++ ============================================================================
-comment|// Details:	MI Command Manager container for clients registered interest in command
-comment|//			objects being deleted. Objects register an interest so when a command
-comment|//			is to be deleted that object wanting the delete calls the Command
-comment|//			Manager to delete the command object. In so do all other registered
-comment|//			objects get called to about the deletion including the object wanting
-comment|//			to do the delete in the first place.
-comment|// Gotchas:	None.
-comment|// Authors:	Illya Rudkin 21/02/2014.
-comment|// Changes:	None.
+comment|// Details: MI Command Manager container for clients registered interest in command
+comment|//          objects being deleted. Objects register an interest so when a command
+comment|//          is to be deleted that object wanting the delete calls the Command
+comment|//          Manager to delete the command object. In so do all other registered
+comment|//          objects get called to about the deletion including the object wanting
+comment|//          to do the delete in the first place.
+comment|// Gotchas: None.
+comment|// Authors: Illya Rudkin 21/02/2014.
+comment|// Changes: None.
 comment|//--
 name|class
 name|CSetClients

@@ -49,6 +49,12 @@ directive|include
 file|"lldb/lldb-public.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_utility
@@ -111,15 +117,17 @@ name|T
 name|value_type
 typedef|;
 typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
 name|R
-function_decl|(
-modifier|*
-name|CallbackType
-function_decl|)
-parameter_list|(
+argument_list|(
 name|value_type
-parameter_list|)
-function_decl|;
+argument_list|)
+operator|>
+name|CallbackType
+expr_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Constructor that sets the current value only. No values are
 comment|// considered to be invalid and the cleanup function will be called
@@ -447,17 +455,19 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
 name|R
-function_decl|(
-modifier|*
-name|CallbackType
-function_decl|)
-parameter_list|(
+argument_list|(
 name|value_type
-parameter_list|,
+argument_list|,
 name|A0
-parameter_list|)
-function_decl|;
+argument_list|)
+operator|>
+name|CallbackType
+expr_stmt|;
 end_typedef
 
 begin_comment

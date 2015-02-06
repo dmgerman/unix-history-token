@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MIUtilStreamStdin.h
+comment|// File:        MIUtilStreamStdin.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmnStreamStdinWindows interface.
+comment|// Overview:    CMICmnStreamStdinWindows interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -108,35 +108,35 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code class. Specific OS stdin handling implementation.
+comment|// Details: MI common code class. Specific OS stdin handling implementation.
 end_comment
 
 begin_comment
-comment|//			CMICmnStreamStdin instance is set with stdin handler before using the
+comment|//          CMICmnStreamStdin instance is set with stdin handler before using the
 end_comment
 
 begin_comment
-comment|//			the stream. An instance of this class must be set up and ready to give
+comment|//          the stream. An instance of this class must be set up and ready to give
 end_comment
 
 begin_comment
-comment|//			to the CMICmnStreamStdin before it initialises other CMICmnStreamStdin
+comment|//          to the CMICmnStreamStdin before it initialises other CMICmnStreamStdin
 end_comment
 
 begin_comment
-comment|//			will give an error.
+comment|//          will give an error.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 16/06/2014.
+comment|// Authors: Illya Rudkin 16/06/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment

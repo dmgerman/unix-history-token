@@ -316,10 +316,18 @@ name|class
 name|ThreadPlan
 range|:
 name|public
+name|std
+operator|::
+name|enable_shared_from_this
+operator|<
+name|ThreadPlan
+operator|>
+decl_stmt|,
+name|public
 name|UserID
 block|{
 name|public
-operator|:
+label|:
 typedef|typedef
 enum|enum
 block|{
@@ -328,9 +336,9 @@ block|,
 name|eSomeThreads
 block|,
 name|eThisThread
-decl|}
+block|}
 name|ThreadScope
-empty_stmt|;
+typedef|;
 comment|// We use these enums so that we can cast a base thread plan to it's real type without having to resort
 comment|// to dynamic casting.
 typedef|typedef
@@ -343,6 +351,8 @@ block|,
 name|eKindBase
 block|,
 name|eKindCallFunction
+block|,
+name|eKindPython
 block|,
 name|eKindStepInstruction
 block|,
@@ -361,9 +371,9 @@ block|,
 name|eKindStepUntil
 block|,
 name|eKindTestCondition
-decl|}
+block|}
 name|ThreadPlanKind
-empty_stmt|;
+typedef|;
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
@@ -381,10 +391,10 @@ argument|Vote run_vote
 argument_list|)
 empty_stmt|;
 name|virtual
-decl|~
+operator|~
 name|ThreadPlan
 argument_list|()
-empty_stmt|;
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Returns the name of this thread plan.
 comment|///
@@ -412,9 +422,9 @@ comment|/// @return
 comment|///   A  pointer to the thread plan's owning thread.
 comment|//------------------------------------------------------------------
 name|Thread
-operator|&
+modifier|&
 name|GetThread
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|m_thread
@@ -432,9 +442,9 @@ name|m_thread
 return|;
 block|}
 name|Target
-operator|&
+modifier|&
 name|GetTarget
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|m_thread
@@ -478,13 +488,18 @@ name|virtual
 name|void
 name|GetDescription
 argument_list|(
-argument|Stream *s
+name|Stream
+operator|*
+name|s
 argument_list|,
-argument|lldb::DescriptionLevel level
+name|lldb
+operator|::
+name|DescriptionLevel
+name|level
 argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Returns whether this plan could be successfully created.
 comment|///
@@ -526,9 +541,12 @@ name|TracerExplainsStop
 argument_list|()
 return|;
 block|}
-function|lldb::StateType     RunState
-parameter_list|()
-function|;
+name|lldb
+operator|::
+name|StateType
+name|RunState
+argument_list|()
+expr_stmt|;
 name|bool
 name|PlanExplainsStop
 parameter_list|(
@@ -563,13 +581,15 @@ return|;
 block|}
 comment|// Whether a "stop class" event should be reported to the "outside world".  In general
 comment|// if a thread plan is active, events should not be reported.
-function|virtual Vote     ShouldReportStop
+name|virtual
+name|Vote
+name|ShouldReportStop
 parameter_list|(
 name|Event
 modifier|*
 name|event_ptr
 parameter_list|)
-function|;
+function_decl|;
 name|virtual
 name|Vote
 name|ShouldReportRun
@@ -605,7 +625,7 @@ argument_list|,
 name|bool
 name|current_plan
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|bool
 name|WillStop
@@ -621,7 +641,8 @@ return|return
 name|m_is_master_plan
 return|;
 block|}
-function|bool     SetIsMasterPlan
+name|bool
+name|SetIsMasterPlan
 parameter_list|(
 name|bool
 name|value
@@ -631,7 +652,7 @@ name|bool
 name|old_value
 init|=
 name|m_is_master_plan
-block|;
+decl_stmt|;
 name|m_is_master_plan
 operator|=
 name|value
@@ -640,9 +661,11 @@ return|return
 name|old_value
 return|;
 block|}
-function|virtual bool     OkayToDiscard
+name|virtual
+name|bool
+name|OkayToDiscard
 parameter_list|()
-function|;
+function_decl|;
 name|void
 name|SetOkayToDiscard
 parameter_list|(
@@ -657,9 +680,11 @@ expr_stmt|;
 block|}
 comment|// The base class MischiefManaged does some cleanup - so you have to call it
 comment|// in your MischiefManaged derived class.
-function|virtual bool     MischiefManaged
+name|virtual
+name|bool
+name|MischiefManaged
 parameter_list|()
-function|;
+function_decl|;
 name|virtual
 name|void
 name|ThreadDestroyed
@@ -668,14 +693,16 @@ block|{
 comment|// Any cleanup that a plan might want to do in case the thread goes away
 comment|// in the middle of the plan being queued on a thread can be done here.
 block|}
-function|bool     GetPrivate
+name|bool
+name|GetPrivate
 parameter_list|()
 block|{
 return|return
 name|m_plan_private
 return|;
 block|}
-function|void     SetPrivate
+name|void
+name|SetPrivate
 parameter_list|(
 name|bool
 name|input
@@ -686,9 +713,11 @@ operator|=
 name|input
 expr_stmt|;
 block|}
-function|virtual void     DidPush
+name|virtual
+name|void
+name|DidPush
 parameter_list|()
-function|;
+function_decl|;
 name|virtual
 name|void
 name|WillPop
@@ -716,7 +745,7 @@ block|}
 name|ThreadPlanKind
 name|GetKind
 argument_list|()
-block|const
+specifier|const
 block|{
 return|return
 name|m_kind
@@ -724,8 +753,8 @@ return|;
 block|}
 name|bool
 name|IsPlanComplete
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|void
 name|SetPlanComplete
 parameter_list|(
@@ -744,22 +773,29 @@ return|return
 name|false
 return|;
 block|}
-function|bool     PlanSucceeded
+name|bool
+name|PlanSucceeded
 parameter_list|()
 block|{
 return|return
 name|m_plan_succeeded
 return|;
 block|}
-function|virtual bool     IsBasePlan
+name|virtual
+name|bool
+name|IsBasePlan
 parameter_list|()
 block|{
 return|return
 name|false
 return|;
 block|}
-function|lldb::ThreadPlanTracerSP&     GetThreadPlanTracer
-parameter_list|()
+name|lldb
+operator|::
+name|ThreadPlanTracerSP
+operator|&
+name|GetThreadPlanTracer
+argument_list|()
 block|{
 return|return
 name|m_tracer_sp
@@ -767,13 +803,17 @@ return|;
 block|}
 name|void
 name|SetThreadPlanTracer
-function|(lldb::ThreadPlanTracerSP new_tracer_sp
-block|)
+argument_list|(
+name|lldb
+operator|::
+name|ThreadPlanTracerSP
+name|new_tracer_sp
+argument_list|)
 block|{
 name|m_tracer_sp
-init|=
+operator|=
 name|new_tracer_sp
-empty_stmt|;
+expr_stmt|;
 block|}
 name|void
 name|DoTraceLog
@@ -798,8 +838,12 @@ comment|// Some thread plans hide away the actual stop info which caused any par
 comment|// instance the ThreadPlanCallFunction restores the original stop reason so that stopping and
 comment|// calling a few functions won't lose the history of the run.
 comment|// This call can be implemented to get you back to the real stop info.
-function|virtual lldb::StopInfoSP     GetRealStopInfo
-parameter_list|()
+name|virtual
+name|lldb
+operator|::
+name|StopInfoSP
+name|GetRealStopInfo
+argument_list|()
 block|{
 return|return
 name|m_thread
@@ -811,8 +855,12 @@ block|}
 comment|// If the completion of the thread plan stepped out of a function, the return value of the function
 comment|// might have been captured by the thread plan (currently only ThreadPlanStepOut does this.)
 comment|// If so, the ReturnValueObject can be retrieved from here.
-function|virtual lldb::ValueObjectSP     GetReturnValueObject
-parameter_list|()
+name|virtual
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GetReturnValueObject
+argument_list|()
 block|{
 return|return
 name|lldb
@@ -825,8 +873,12 @@ comment|// If the thread plan managing the evaluation of a user expression lives
 comment|// that instigated the expression (generally because the expression evaluation hit a breakpoint, and
 comment|// the user regained control at that point) a subsequent process control command step/continue/etc. might
 comment|// complete the expression evaluations.  If so, the result of the expression evaluation will show up here.
-function|virtual lldb::ClangExpressionVariableSP     GetExpressionVariable
-parameter_list|()
+name|virtual
+name|lldb
+operator|::
+name|ClangExpressionVariableSP
+name|GetExpressionVariable
+argument_list|()
 block|{
 return|return
 name|lldb
@@ -838,7 +890,9 @@ block|}
 comment|// If a thread plan stores the state before it was run, then you might
 comment|// want to restore the state when it is done.  This will do that job.
 comment|// This is mostly useful for artificial plans like CallFunction plans.
-function|virtual bool     RestoreThreadState
+name|virtual
+name|bool
+name|RestoreThreadState
 parameter_list|()
 block|{
 comment|// Nothing to do in general.
@@ -846,14 +900,18 @@ return|return
 name|true
 return|;
 block|}
-function|virtual bool     IsVirtualStep
+name|virtual
+name|bool
+name|IsVirtualStep
 parameter_list|()
 block|{
 return|return
 name|false
 return|;
 block|}
-function|virtual bool     SetIterationCount
+name|virtual
+name|bool
+name|SetIterationCount
 parameter_list|(
 name|size_t
 name|count
@@ -883,7 +941,9 @@ return|return
 name|m_takes_iteration_count
 return|;
 block|}
-function|virtual size_t     GetIterationCount
+name|virtual
+name|size_t
+name|GetIterationCount
 parameter_list|()
 block|{
 if|if
@@ -899,23 +959,29 @@ return|return
 name|m_iteration_count
 return|;
 block|}
-function|protected:
+name|protected
+label|:
 comment|//------------------------------------------------------------------
 comment|// Classes that inherit from ThreadPlan can see and modify these
 comment|//------------------------------------------------------------------
 name|virtual
 name|bool
 name|DoWillResume
-function|(lldb::StateType resume_state
-operator|,
-function|bool current_plan
-typedef|)
+argument_list|(
+name|lldb
+operator|::
+name|StateType
+name|resume_state
+argument_list|,
+name|bool
+name|current_plan
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-typedef|;
+empty_stmt|;
 name|virtual
 name|bool
 name|DoPlanExplainsStop
@@ -946,8 +1012,11 @@ return|;
 block|}
 comment|// This forwards the private Thread::GetPrivateStopInfo which is generally what
 comment|// ThreadPlan's need to know.
-function|lldb::StopInfoSP      GetPrivateStopInfo
-parameter_list|()
+name|lldb
+operator|::
+name|StopInfoSP
+name|GetPrivateStopInfo
+argument_list|()
 block|{
 return|return
 name|m_thread
@@ -958,8 +1027,12 @@ return|;
 block|}
 name|void
 name|SetStopInfo
-function|(lldb::StopInfoSP stop_reason_sp
-block|)
+argument_list|(
+name|lldb
+operator|::
+name|StopInfoSP
+name|stop_reason_sp
+argument_list|)
 block|{
 name|m_thread
 operator|.
@@ -967,7 +1040,7 @@ name|SetStopInfo
 argument_list|(
 name|stop_reason_sp
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 block|}
 name|void
 name|CachePlanExplainsStop
@@ -985,21 +1058,26 @@ else|:
 name|eLazyBoolNo
 expr_stmt|;
 block|}
-function|LazyBool     GetCachedPlanExplainsStop
-parameter_list|()
-function|const
+name|LazyBool
+name|GetCachedPlanExplainsStop
+argument_list|()
+specifier|const
 block|{
 return|return
 name|m_cached_plan_explains_stop
 return|;
 block|}
-function|virtual lldb::StateType     GetPlanRunState
-parameter_list|()
-init|=
+name|virtual
+name|lldb
+operator|::
+name|StateType
+name|GetPlanRunState
+argument_list|()
+operator|=
 literal|0
-function|;
+expr_stmt|;
 name|Thread
-operator|&
+modifier|&
 name|m_thread
 decl_stmt|;
 name|Vote
@@ -1072,41 +1150,14 @@ name|ThreadPlan
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|//----------------------------------------------------------------------
-end_comment
-
-begin_comment
 comment|// ThreadPlanNull:
-end_comment
-
-begin_comment
 comment|// Threads are assumed to always have at least one plan on the plan stack.
-end_comment
-
-begin_comment
 comment|// This is put on the plan stack when a thread is destroyed so that if you
-end_comment
-
-begin_comment
 comment|// accidentally access a thread after it is destroyed you won't crash.
-end_comment
-
-begin_comment
 comment|// But asking questions of the ThreadPlanNull is definitely an error.
-end_comment
-
-begin_comment
 comment|//----------------------------------------------------------------------
-end_comment
-
-begin_decl_stmt
 name|class
 name|ThreadPlanNull
 range|:
@@ -1199,12 +1250,17 @@ operator|::
 name|StateType
 name|GetPlanRunState
 argument_list|()
-block|;      }
+block|;
+name|DISALLOW_COPY_AND_ASSIGN
+argument_list|(
+name|ThreadPlanNull
+argument_list|)
+block|; }
 decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// namespace lldb_private
 end_comment
 

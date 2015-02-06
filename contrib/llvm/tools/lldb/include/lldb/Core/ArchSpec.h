@@ -219,8 +219,6 @@ name|eCore_uknownMach32
 block|,
 name|eCore_uknownMach64
 block|,
-name|eCore_kalimba
-block|,
 name|eCore_kalimba3
 block|,
 name|eCore_kalimba4
@@ -304,13 +302,27 @@ name|eCore_hexagon_hexagonv5
 block|,
 name|kCore_kalimba_first
 init|=
-name|eCore_kalimba
+name|eCore_kalimba3
 block|,
 name|kCore_kalimba_last
 init|=
 name|eCore_kalimba5
 block|}
 enum|;
+typedef|typedef
+name|void
+argument_list|(
+operator|*
+name|StopInfoOverrideCallbackType
+argument_list|)
+argument_list|(
+name|lldb_private
+operator|::
+name|Thread
+operator|&
+name|thread
+argument_list|)
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Default constructor.
 comment|///
@@ -820,6 +832,32 @@ name|rhs
 argument_list|)
 decl|const
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Get a stop info override callback for the current architecture.
+comment|///
+comment|/// Most platform specific code should go in lldb_private::Platform,
+comment|/// but there are cases where no matter which platform you are on
+comment|/// certain things hold true.
+comment|///
+comment|/// This callback is currently intended to handle cases where a
+comment|/// program stops at an instruction that won't get executed and it
+comment|/// allows the stop reasonm, like "breakpoint hit", to be replaced
+comment|/// with a different stop reason like "no stop reason".
+comment|///
+comment|/// This is specifically used for ARM in Thumb code when we stop in
+comment|/// an IT instruction (if/then/else) where the instruction won't get
+comment|/// executed and therefore it wouldn't be correct to show the program
+comment|/// stopped at the current PC. The code is generic and applies to all
+comment|/// ARM CPUs.
+comment|///
+comment|/// @return NULL or a valid stop info override callback for the
+comment|///     current architecture.
+comment|//------------------------------------------------------------------
+name|StopInfoOverrideCallbackType
+name|GetStopInfoOverrideCallback
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 name|bool

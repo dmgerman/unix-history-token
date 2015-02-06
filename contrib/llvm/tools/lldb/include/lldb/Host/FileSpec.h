@@ -430,6 +430,11 @@ name|b
 parameter_list|,
 name|bool
 name|full
+parameter_list|,
+name|bool
+name|remove_backups
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -949,6 +954,31 @@ operator|=
 name|ePathSyntaxHostNative
 argument_list|)
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Run through the input string, replaying the effect of any ".." and produce
+comment|/// the resultant path.  The input path is not required to be in the host file system
+comment|/// format, but it is required to be normalized to that system.
+comment|///
+comment|/// @param[in] input
+comment|///     The input path to analyze.
+comment|///
+comment|/// @param[out] result
+comment|///     The backup-resolved path will be written here.
+comment|//------------------------------------------------------------------
+specifier|static
+name|void
+name|RemoveBackupDots
+parameter_list|(
+specifier|const
+name|ConstString
+modifier|&
+name|input_const_str
+parameter_list|,
+name|ConstString
+modifier|&
+name|result_const_str
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Change the file specified with a new path.
 comment|///

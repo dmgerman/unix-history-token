@@ -43,6 +43,12 @@ directive|define
 name|LLDB_lldb_python_h_
 end_define
 
+begin_define
+define|#
+directive|define
+name|LLDB_DISABLE_PYTHON
+end_define
+
 begin_comment
 comment|// Python.h needs to be included before any system headers in order to avoid redefinition of macros
 end_comment

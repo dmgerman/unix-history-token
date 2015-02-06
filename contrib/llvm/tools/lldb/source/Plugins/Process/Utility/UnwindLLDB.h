@@ -155,7 +155,10 @@ name|eRegisterSavedAtHostMemoryLocation
 block|,
 comment|// register is saved at a word in lldb's address space
 name|eRegisterValueInferred
+block|,
 comment|// register val was computed (and is in inferred_value)
+name|eRegisterInLiveRegisterContext
+comment|// register value is in a live (stack frame #0) register
 block|}
 block|;
 name|int

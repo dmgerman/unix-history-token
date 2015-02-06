@@ -168,6 +168,12 @@ name|SBBlock
 name|GetBlock
 argument_list|()
 expr_stmt|;
+name|lldb
+operator|::
+name|LanguageType
+name|GetLanguage
+argument_list|()
+expr_stmt|;
 name|bool
 name|operator
 operator|==

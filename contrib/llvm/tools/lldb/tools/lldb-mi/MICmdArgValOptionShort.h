@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdArgValOptionShort.h
+comment|// File:        MICmdArgValOptionShort.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdArgValOptionShort interface.
+comment|// Overview:    CMICmdArgValOptionShort interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -112,51 +112,51 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code class. Command argument class. Arguments object
+comment|// Details: MI common code class. Command argument class. Arguments object
 end_comment
 
 begin_comment
-comment|//			needing specialization derived from the CMICmdArgValOptionLong class.
+comment|//          needing specialization derived from the CMICmdArgValOptionLong class.
 end_comment
 
 begin_comment
-comment|//			An argument knows what type of argument it is and how it is to
+comment|//          An argument knows what type of argument it is and how it is to
 end_comment
 
 begin_comment
-comment|//			interpret the options (context) string to find and validate a matching
+comment|//          interpret the options (context) string to find and validate a matching
 end_comment
 
 begin_comment
-comment|//			argument and so extract a value from it.
+comment|//          argument and so extract a value from it.
 end_comment
 
 begin_comment
-comment|//			If *this argument has expected options following it the option objects
+comment|//          If *this argument has expected options following it the option objects
 end_comment
 
 begin_comment
-comment|//			created to hold each of those option's values belong to *this argument
+comment|//          created to hold each of those option's values belong to *this argument
 end_comment
 
 begin_comment
-comment|//			object and so are deleted when *this object goes out of scope.
+comment|//          object and so are deleted when *this object goes out of scope.
 end_comment
 
 begin_comment
-comment|//			Based on the Interpreter pattern.
+comment|//          Based on the Interpreter pattern.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 16/04/2014.
+comment|// Authors: Illya Rudkin 16/04/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -182,7 +182,7 @@ block|;
 comment|/* ctor */
 name|CMICmdArgValOptionShort
 argument_list|(
-argument|const CMIUtilString& vrArgName
+argument|const CMIUtilString&vrArgName
 argument_list|,
 argument|const bool vbMandatory
 argument_list|,
@@ -192,7 +192,7 @@ block|;
 comment|/* ctor */
 name|CMICmdArgValOptionShort
 argument_list|(
-argument|const CMIUtilString& vrArgName
+argument|const CMIUtilString&vrArgName
 argument_list|,
 argument|const bool vbMandatory
 argument_list|,
@@ -207,7 +207,7 @@ comment|//
 name|bool
 name|IsArgShortOption
 argument_list|(
-argument|const CMIUtilString& vrTxt
+argument|const CMIUtilString&vrTxt
 argument_list|)
 specifier|const
 block|;
@@ -231,7 +231,7 @@ name|virtual
 name|bool
 name|IsArgOptionCorrect
 argument_list|(
-argument|const CMIUtilString& vrTxt
+argument|const CMIUtilString&vrTxt
 argument_list|)
 specifier|const
 block|;
@@ -239,7 +239,7 @@ name|virtual
 name|bool
 name|ArgNameMatch
 argument_list|(
-argument|const CMIUtilString& vrTxt
+argument|const CMIUtilString&vrTxt
 argument_list|)
 specifier|const
 block|; }

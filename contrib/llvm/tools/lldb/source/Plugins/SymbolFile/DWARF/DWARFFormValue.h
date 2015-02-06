@@ -131,11 +131,40 @@ name|eValueTypeBlock
 block|}
 enum|;
 name|DWARFFormValue
+argument_list|()
+expr_stmt|;
+name|DWARFFormValue
 argument_list|(
-argument|dw_form_t form =
-literal|0
+argument|const DWARFCompileUnit* cu
+argument_list|,
+argument|dw_form_t form
 argument_list|)
 empty_stmt|;
+specifier|const
+name|DWARFCompileUnit
+operator|*
+name|GetCompileUnit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_cu
+return|;
+block|}
+name|void
+name|SetCompileUnit
+parameter_list|(
+specifier|const
+name|DWARFCompileUnit
+modifier|*
+name|cu
+parameter_list|)
+block|{
+name|m_cu
+operator|=
+name|cu
+expr_stmt|;
+block|}
 name|dw_form_t
 name|Form
 argument_list|()
@@ -183,11 +212,6 @@ operator|::
 name|DWARFDataExtractor
 operator|*
 name|debug_str_data
-argument_list|,
-specifier|const
-name|DWARFCompileUnit
-operator|*
-name|cu
 argument_list|)
 decl|const
 decl_stmt|;
@@ -206,11 +230,6 @@ operator|::
 name|offset_t
 operator|*
 name|offset_ptr
-argument_list|,
-specifier|const
-name|DWARFCompileUnit
-operator|*
-name|cu
 argument_list|)
 decl_stmt|;
 name|bool
@@ -252,14 +271,9 @@ specifier|const
 expr_stmt|;
 name|uint64_t
 name|Reference
-argument_list|(
+argument_list|()
 specifier|const
-name|DWARFCompileUnit
-operator|*
-name|cu
-argument_list|)
-decl|const
-decl_stmt|;
+expr_stmt|;
 name|uint64_t
 name|Reference
 argument_list|(
@@ -268,15 +282,6 @@ name|offset
 argument_list|)
 decl|const
 decl_stmt|;
-name|bool
-name|ResolveCompileUnitReferences
-parameter_list|(
-specifier|const
-name|DWARFCompileUnit
-modifier|*
-name|cu
-parameter_list|)
-function_decl|;
 name|bool
 name|Boolean
 argument_list|()
@@ -379,11 +384,6 @@ operator|::
 name|offset_t
 operator|*
 name|offset_ptr
-argument_list|,
-specifier|const
-name|DWARFCompileUnit
-operator|*
-name|cu
 argument_list|)
 decl|const
 decl_stmt|;
@@ -414,9 +414,6 @@ operator|*
 name|cu
 argument_list|)
 decl_stmt|;
-comment|//  static bool         TransferValue(dw_form_t form, const lldb_private::DWARFDataExtractor& debug_info_data, lldb::offset_t *offset_ptr, const DWARFCompileUnit* cu, BinaryStreamBuf& out_buff);
-comment|//  static bool         TransferValue(const DWARFFormValue& formValue, const DWARFCompileUnit* cu, BinaryStreamBuf& out_buff);
-comment|//  static bool         PutUnsigned(dw_form_t form, dw_offset_t offset, uint64_t value, BinaryStreamBuf& out_buff, const DWARFCompileUnit* cu, bool fixup_cu_relative_refs);
 specifier|static
 name|bool
 name|IsBlockForm
@@ -443,6 +440,9 @@ name|GetFixedFormSizesForAddressSize
 parameter_list|(
 name|uint8_t
 name|addr_size
+parameter_list|,
+name|bool
+name|is_dwarf64
 parameter_list|)
 function_decl|;
 specifier|static
@@ -460,16 +460,6 @@ operator|&
 name|b
 argument_list|,
 specifier|const
-name|DWARFCompileUnit
-operator|*
-name|a_cu
-argument_list|,
-specifier|const
-name|DWARFCompileUnit
-operator|*
-name|b_cu
-argument_list|,
-specifier|const
 name|lldb_private
 operator|::
 name|DWARFDataExtractor
@@ -479,6 +469,12 @@ argument_list|)
 decl_stmt|;
 name|protected
 label|:
+specifier|const
+name|DWARFCompileUnit
+modifier|*
+name|m_cu
+decl_stmt|;
+comment|// Compile unit for this form
 name|dw_form_t
 name|m_form
 decl_stmt|;

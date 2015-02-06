@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MIDriverBase.h
+comment|// File:        MIDriverBase.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMIDriverBase interface.
+comment|// Overview:    CMIDriverBase interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -126,47 +126,47 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI driver base implementation class. This class has been created so
+comment|// Details: MI driver base implementation class. This class has been created so
 end_comment
 
 begin_comment
-comment|//			not have to edit the lldb::SBBroadcaster class code. Functionality
+comment|//          not have to edit the lldb::SBBroadcaster class code. Functionality
 end_comment
 
 begin_comment
-comment|//			and attributes need to be common to the LLDB Driver class and the
+comment|//          and attributes need to be common to the LLDB Driver class and the
 end_comment
 
 begin_comment
-comment|//			MI Driver class (derived from lldb::SBBroadcaster) so they can call
+comment|//          MI Driver class (derived from lldb::SBBroadcaster) so they can call
 end_comment
 
 begin_comment
-comment|//			upon each other for functionality fall through and allow the
+comment|//          upon each other for functionality fall through and allow the
 end_comment
 
 begin_comment
-comment|//			CDriverMgr to manage either (any) driver to be operated on.
+comment|//          CDriverMgr to manage either (any) driver to be operated on.
 end_comment
 
 begin_comment
-comment|//			Each driver instance (the CMIDriver, LLDB::Driver) has its own
+comment|//          Each driver instance (the CMIDriver, LLDB::Driver) has its own
 end_comment
 
 begin_comment
-comment|//			LLDB::SBDebugger object.
+comment|//          LLDB::SBDebugger object.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 30/01/2014.
+comment|// Authors: Illya Rudkin 30/01/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment

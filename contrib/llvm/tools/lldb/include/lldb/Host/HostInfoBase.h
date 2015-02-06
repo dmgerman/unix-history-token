@@ -119,6 +119,17 @@ name|GetNumberCPUS
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|/// Returns the maximum length of a thread name on this platform.
+comment|///
+comment|/// @return
+comment|///     Maximum length of a thread name on this platform.
+comment|//------------------------------------------------------------------
+specifier|static
+name|uint32_t
+name|GetMaxThreadNameLength
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
 comment|/// Gets the host vendor string.
 comment|///
 comment|/// @return
@@ -262,6 +273,15 @@ function_decl|;
 specifier|static
 name|bool
 name|ComputeSystemPluginsDirectory
+parameter_list|(
+name|FileSpec
+modifier|&
+name|file_spec
+parameter_list|)
+function_decl|;
+specifier|static
+name|bool
+name|ComputeClangDirectory
 parameter_list|(
 name|FileSpec
 modifier|&

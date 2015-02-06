@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<unordered_set>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -58,6 +64,12 @@ end_comment
 begin_comment
 comment|// Project includes
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Breakpoint/BreakpointID.h"
+end_include
 
 begin_include
 include|#
@@ -400,15 +412,45 @@ comment|//------------------------------------------------------------------
 comment|/// Tell this breakpoint to scan a given module list and resolve any
 comment|/// new locations that match the breakpoint's specifications.
 comment|///
-comment|/// @param[in] changed_modules
+comment|/// @param[in] module_list
 comment|///    The list of modules to look in for new locations.
+comment|///
+comment|/// @param[in]  send_event
+comment|///     If \b true, send a breakpoint location added event for non-internal breakpoints.
 comment|//------------------------------------------------------------------
 name|void
 name|ResolveBreakpointInModules
 parameter_list|(
 name|ModuleList
 modifier|&
-name|changed_modules
+name|module_list
+parameter_list|,
+name|bool
+name|send_event
+init|=
+name|true
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Tell this breakpoint to scan a given module list and resolve any
+comment|/// new locations that match the breakpoint's specifications.
+comment|///
+comment|/// @param[in] changed_modules
+comment|///    The list of modules to look in for new locations.
+comment|///
+comment|/// @param[in]  new_locations
+comment|///     Fills new_locations with the new locations that were made.
+comment|//------------------------------------------------------------------
+name|void
+name|ResolveBreakpointInModules
+parameter_list|(
+name|ModuleList
+modifier|&
+name|module_list
+parameter_list|,
+name|BreakpointLocationCollection
+modifier|&
+name|new_locations
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -936,13 +978,28 @@ name|Target
 modifier|&
 name|GetTarget
 parameter_list|()
-function_decl|;
+block|{
+return|return
+name|m_target
+return|;
+block|}
 specifier|const
 name|Target
 operator|&
 name|GetTarget
 argument_list|()
 specifier|const
+block|{
+return|return
+name|m_target
+return|;
+block|}
+specifier|const
+name|lldb
+operator|::
+name|TargetSP
+name|GetTargetSP
+argument_list|()
 expr_stmt|;
 name|void
 name|GetResolverDescription
@@ -1037,6 +1094,120 @@ return|return
 name|m_hardware
 return|;
 block|}
+name|lldb
+operator|::
+name|BreakpointResolverSP
+name|GetResolver
+argument_list|()
+block|{
+return|return
+name|m_resolver_sp
+return|;
+block|}
+name|lldb
+operator|::
+name|SearchFilterSP
+name|GetSearchFilter
+argument_list|()
+block|{
+return|return
+name|m_filter_sp
+return|;
+block|}
+name|bool
+name|AddName
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|new_name
+parameter_list|,
+name|Error
+modifier|&
+name|error
+parameter_list|)
+function_decl|;
+name|void
+name|RemoveName
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name_to_remove
+parameter_list|)
+block|{
+if|if
+condition|(
+name|name_to_remove
+condition|)
+name|m_name_list
+operator|.
+name|erase
+argument_list|(
+name|name_to_remove
+argument_list|)
+expr_stmt|;
+block|}
+name|bool
+name|MatchesName
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+return|return
+name|m_name_list
+operator|.
+name|find
+argument_list|(
+name|name
+argument_list|)
+operator|!=
+name|m_name_list
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|void
+name|GetNames
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|names
+argument_list|)
+block|{
+name|names
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|auto
+name|name
+range|:
+name|m_name_list
+control|)
+block|{
+name|names
+operator|.
+name|push_back
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|protected
 label|:
 name|friend
@@ -1101,6 +1272,19 @@ parameter_list|()
 function_decl|;
 name|private
 label|:
+comment|// This one should only be used by Target to copy breakpoints from target to target - primarily from the dummy
+comment|// target to prime new targets.
+name|Breakpoint
+argument_list|(
+name|Target
+operator|&
+name|new_target
+argument_list|,
+name|Breakpoint
+operator|&
+name|bp_to_copy_from
+argument_list|)
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// For Breakpoint only
 comment|//------------------------------------------------------------------
@@ -1116,6 +1300,17 @@ modifier|&
 name|m_target
 decl_stmt|;
 comment|// The target that holds this breakpoint.
+name|std
+operator|::
+name|unordered_set
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|m_name_list
+expr_stmt|;
+comment|// If not empty, this is the name of this breakpoint (many breakpoints can share the same name.)
 name|lldb
 operator|::
 name|SearchFilterSP

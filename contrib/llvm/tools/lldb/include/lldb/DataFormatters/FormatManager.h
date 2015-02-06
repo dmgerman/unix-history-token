@@ -306,6 +306,26 @@ name|category
 argument_list|)
 expr_stmt|;
 block|}
+name|void
+name|EnableAllCategories
+parameter_list|()
+block|{
+name|m_categories_map
+operator|.
+name|EnableAllCategories
+argument_list|()
+expr_stmt|;
+block|}
+name|void
+name|DisableAllCategories
+parameter_list|()
+block|{
+name|m_categories_map
+operator|.
+name|DisableAllCategories
+argument_list|()
+expr_stmt|;
+block|}
 name|bool
 name|DeleteCategory
 parameter_list|(
@@ -510,6 +530,17 @@ end_endif
 begin_expr_stmt
 name|lldb
 operator|::
+name|TypeValidatorImplSP
+name|GetValidatorForType
+argument_list|(
+argument|lldb::TypeNameSpecifierImplSP type_sp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|lldb
+operator|::
 name|TypeFormatImplSP
 name|GetFormat
 argument_list|(
@@ -556,6 +587,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|TypeValidatorImplSP
+name|GetValidator
+argument_list|(
+argument|ValueObject& valobj
+argument_list|,
+argument|lldb::DynamicValueType use_dynamic
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|bool
@@ -979,6 +1023,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|HardcodedFormatterFinders
+operator|<
+name|TypeValidatorImpl
+operator|>
+name|m_hardcoded_validators
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|TypeFormatImplSP
@@ -1015,6 +1068,22 @@ name|lldb
 operator|::
 name|SyntheticChildrenSP
 name|GetHardcodedSyntheticChildren
+argument_list|(
+name|ValueObject
+operator|&
+argument_list|,
+name|lldb
+operator|::
+name|DynamicValueType
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|TypeValidatorImplSP
+name|GetHardcodedValidator
 argument_list|(
 name|ValueObject
 operator|&

@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmnThreadMgrStd.h
+comment|// File:        MICmnThreadMgrStd.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmnThreadMgr interface.
+comment|// Overview:    CMICmnThreadMgr interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -124,39 +124,39 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI's worker thread (active thread) manager.
+comment|// Details: MI's worker thread (active thread) manager.
 end_comment
 
 begin_comment
-comment|//			The manager creates threads and behalf of clients. Client are
+comment|//          The manager creates threads and behalf of clients. Client are
 end_comment
 
 begin_comment
-comment|//			responsible for their threads and can delete them when necessary.
+comment|//          responsible for their threads and can delete them when necessary.
 end_comment
 
 begin_comment
-comment|//			This manager will stop and delete all threads on *this manager's
+comment|//          This manager will stop and delete all threads on *this manager's
 end_comment
 
 begin_comment
-comment|//			shutdown.
+comment|//          shutdown.
 end_comment
 
 begin_comment
-comment|//			Singleton class.
+comment|//          Singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Aidan Dodds 12/03/2014.
+comment|// Authors: Aidan Dodds 12/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -305,31 +305,31 @@ comment|//++ -------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Details:	Given a thread object start its (worker) thread to do work. The object is
+comment|// Details: Given a thread object start its (worker) thread to do work. The object is
 end_comment
 
 begin_comment
-comment|//			added to the *this manager for housekeeping and deletion of all thread objects.
+comment|//          added to the *this manager for housekeeping and deletion of all thread objects.
 end_comment
 
 begin_comment
-comment|// Type:	Template method.
+comment|// Type:    Template method.
 end_comment
 
 begin_comment
-comment|// Args:	vrwThreadObj	- (RW) A CMIUtilThreadActiveObjBase derived object.
+comment|// Args:    vrwThreadObj      - (RW) A CMIUtilThreadActiveObjBase derived object.
 end_comment
 
 begin_comment
-comment|// Return:	MIstatus::success - Functional succeeded.
+comment|// Return:  MIstatus::success - Functional succeeded.
 end_comment
 
 begin_comment
-comment|//			MIstatus::failure - Functional failed.
+comment|//          MIstatus::failure - Functional failed.
 end_comment
 
 begin_comment
-comment|// Throws:	None.
+comment|// Throws:  None.
 end_comment
 
 begin_comment
@@ -347,7 +347,7 @@ name|CMICmnThreadMgrStd
 operator|::
 name|ThreadStart
 argument_list|(
-argument|T& vrwThreadObj
+argument|T&vrwThreadObj
 argument_list|)
 block|{
 name|bool

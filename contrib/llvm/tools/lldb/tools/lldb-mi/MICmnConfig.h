@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmnConfig.h
+comment|// File:        MICmnConfig.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	Common defines to guide feature inclusion at compile time.
+comment|// Overview:    Common defines to guide feature inclusion at compile time.
 end_comment
 
 begin_comment
@@ -56,15 +56,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment

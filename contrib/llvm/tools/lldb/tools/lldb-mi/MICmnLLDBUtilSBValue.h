@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmnLLDBUtilSBValue.h
+comment|// File:        MICmnLLDBUtilSBValue.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmnLLDBUtilSBValue interface.
+comment|// Overview:    CMICmnLLDBUtilSBValue interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -116,23 +116,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	Utility helper class to lldb::SBValue. Using a lldb::SBValue extract
+comment|// Details: Utility helper class to lldb::SBValue. Using a lldb::SBValue extract
 end_comment
 
 begin_comment
-comment|//			value object information to help form verbose debug information.
+comment|//          value object information to help form verbose debug information.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 08/07/2014.
+comment|// Authors: Illya Rudkin 08/07/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -149,7 +149,7 @@ label|:
 comment|/* ctor */
 name|CMICmnLLDBUtilSBValue
 argument_list|(
-argument|const lldb::SBValue& vrValue
+argument|const lldb::SBValue&vrValue
 argument_list|,
 argument|const bool vbHandleCharType = false
 argument_list|)

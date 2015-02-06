@@ -176,6 +176,12 @@ specifier|const
 name|ConstString
 operator|&
 name|name
+argument_list|,
+name|Module
+operator|*
+name|module
+operator|=
+name|nullptr
 argument_list|)
 block|;
 comment|// When an expression fails to evaluate, we return an error
@@ -351,6 +357,13 @@ argument_list|(
 argument|lldb::DynamicValueType valueType
 argument_list|)
 block|;
+name|virtual
+name|lldb
+operator|::
+name|LanguageType
+name|GetPreferredDisplayLanguage
+argument_list|()
+block|;
 name|protected
 operator|:
 name|virtual
@@ -449,6 +462,12 @@ specifier|const
 name|ConstString
 operator|&
 name|name
+argument_list|,
+name|Module
+operator|*
+name|module
+operator|=
+name|nullptr
 argument_list|)
 block|;
 name|ValueObjectConstResult

@@ -504,7 +504,6 @@ operator|~
 name|ClangExternalASTSourceCommon
 argument_list|()
 block|;
-name|virtual
 name|ClangASTMetadata
 operator|*
 name|GetMetadata
@@ -515,7 +514,6 @@ operator|*
 name|object
 argument_list|)
 block|;
-name|virtual
 name|void
 name|SetMetadata
 argument_list|(
@@ -529,7 +527,6 @@ operator|&
 name|metadata
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|HasMetadata
 argument_list|(
@@ -537,6 +534,18 @@ specifier|const
 name|void
 operator|*
 name|object
+argument_list|)
+block|;
+specifier|static
+name|ClangExternalASTSourceCommon
+operator|*
+name|Lookup
+argument_list|(
+name|clang
+operator|::
+name|ExternalASTSource
+operator|*
+name|source
 argument_list|)
 block|;
 name|private
@@ -557,14 +566,6 @@ expr_stmt|;
 name|MetadataMap
 name|m_metadata
 decl_stmt|;
-name|uint64_t
-name|m_magic
-decl_stmt|;
-comment|///< Because we don't have RTTI, we must take it
-comment|///< on faith that any valid ExternalASTSource that
-comment|///< we try to use the *Metadata APIs on inherits
-comment|///< from ClangExternalASTSourceCommon.  This magic
-comment|///< number exists to enforce that.
 block|}
 end_decl_stmt
 

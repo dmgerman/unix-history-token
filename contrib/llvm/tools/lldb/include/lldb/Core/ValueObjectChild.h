@@ -227,6 +227,10 @@ name|friend
 name|class
 name|ValueObjectConstResult
 block|;
+name|friend
+name|class
+name|ValueObjectConstResultImpl
+block|;
 name|ValueObjectChild
 argument_list|(
 argument|ValueObject&parent

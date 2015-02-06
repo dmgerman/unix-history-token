@@ -464,6 +464,16 @@ name|friend
 name|class
 name|BreakpointLocation
 decl_stmt|;
+comment|// The StopInfoBreakpoint knows when it is processing a hit for a thread for a site, so let it be the
+comment|// one to manage setting the location hit count once and only once.
+name|friend
+name|class
+name|StopInfoBreakpoint
+decl_stmt|;
+name|void
+name|BumpHitCounts
+parameter_list|()
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// The method removes the owner at \a break_loc_id from this breakpoint list.
 comment|///

@@ -247,6 +247,16 @@ comment|// length of CIE instructions in mCFIData
 name|uint8_t
 name|ptr_encoding
 decl_stmt|;
+name|uint8_t
+name|lsda_addr_encoding
+decl_stmt|;
+comment|// The encoding of the LSDA address in the FDE augmentation data
+name|lldb
+operator|::
+name|addr_t
+name|personality_loc
+expr_stmt|;
+comment|// (file) address of the pointer to the personality routine
 name|lldb_private
 operator|::
 name|UnwindPlan
@@ -300,9 +310,19 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|lsda_addr_encoding
+argument_list|(
+name|DW_EH_PE_omit
+argument_list|)
+operator|,
+name|personality_loc
+argument_list|(
+name|LLDB_INVALID_ADDRESS
+argument_list|)
+operator|,
 name|initial_row
 argument_list|()
-block|{}
+block|{          }
 block|}
 struct|;
 typedef|typedef

@@ -254,6 +254,50 @@ operator|=
 name|addr
 expr_stmt|;
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Dump the text representation of this Instruction to a Stream
+comment|///
+comment|/// Print the (optional) address, (optional) bytes, opcode,
+comment|/// operands, and instruction comments to a stream.
+comment|///
+comment|/// @param[in] s
+comment|///     The Stream to add the text to.
+comment|///
+comment|/// @param[in] show_address
+comment|///     Whether the address (using disassembly_addr_format_spec formatting)
+comment|///     should be printed.
+comment|///
+comment|/// @param[in] show_bytes
+comment|///     Whether the bytes of the assembly instruction should be printed.
+comment|///
+comment|/// @param[in] max_opcode_byte_size
+comment|///     The size (in bytes) of the largest instruction in the list that
+comment|///     we are printing (for text justification/alignment purposes)
+comment|///     Only needed if show_bytes is true.
+comment|///
+comment|/// @param[in] exe_ctx
+comment|///     The current execution context, if available.  May be used in
+comment|///     the assembling of the operands+comments for this instruction.
+comment|///     Pass NULL if not applicable.
+comment|///
+comment|/// @param[in] sym_ctx
+comment|///     The SymbolContext for this instruction.
+comment|///     Pass NULL if not available/computed.
+comment|///     Only needed if show_address is true.
+comment|///
+comment|/// @param[in] prev_sym_ctx
+comment|///     The SymbolContext for the previous instruction.  Depending on
+comment|///     the disassembly address format specification, a change in
+comment|///     Symbol / Function may mean that a line is printed with the new
+comment|///     symbol/function name.
+comment|///     Pass NULL if unavailable, or if this is the first instruction of
+comment|///     the InstructionList.
+comment|///     Only needed if show_address is true.
+comment|///
+comment|/// @param[in] disassembly_addr_format_spec
+comment|///     The format specification for how addresses are printed.
+comment|///     Only needed if show_address is true.
+comment|//------------------------------------------------------------------
 name|virtual
 name|void
 name|Dump
@@ -275,6 +319,21 @@ specifier|const
 name|ExecutionContext
 modifier|*
 name|exe_ctx
+parameter_list|,
+specifier|const
+name|SymbolContext
+modifier|*
+name|sym_ctx
+parameter_list|,
+specifier|const
+name|SymbolContext
+modifier|*
+name|prev_sym_ctx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|disassembly_addr_format_spec
 parameter_list|)
 function_decl|;
 name|virtual

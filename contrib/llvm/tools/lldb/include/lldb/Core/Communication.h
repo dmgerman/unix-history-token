@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<atomic>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -81,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/HostThread.h"
 end_include
 
 begin_include
@@ -663,15 +675,18 @@ name|ConnectionSP
 name|m_connection_sp
 expr_stmt|;
 comment|///< The connection that is current in use by this communications class.
-name|lldb
-operator|::
-name|thread_t
+name|HostThread
 name|m_read_thread
-expr_stmt|;
-comment|///< The read thread handle in case we need to cancel the thread.
-name|bool
-name|m_read_thread_enabled
 decl_stmt|;
+comment|///< The read thread handle in case we need to cancel the thread.
+name|std
+operator|::
+name|atomic
+operator|<
+name|bool
+operator|>
+name|m_read_thread_enabled
+expr_stmt|;
 name|std
 operator|::
 name|string

@@ -119,6 +119,11 @@ name|GetSize
 argument_list|()
 specifier|const
 block|;
+name|size_t
+name|GetSizeOfLastLine
+argument_list|()
+specifier|const
+block|;
 name|std
 operator|::
 name|string

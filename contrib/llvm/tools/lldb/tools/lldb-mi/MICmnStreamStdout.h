@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmnStreamStdout.h
+comment|// File:        MICmnStreamStdout.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmnStreamStdout interface.
+comment|// Overview:    CMICmnStreamStdout interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -114,11 +114,11 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code class. The MI driver requires this object.
+comment|// Details: MI common code class. The MI driver requires this object.
 end_comment
 
 begin_comment
-comment|//			CMICmnStreamStdout sets up and tears downs stdout for the driver.
+comment|//          CMICmnStreamStdout sets up and tears downs stdout for the driver.
 end_comment
 
 begin_comment
@@ -126,19 +126,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|//			Singleton class.
+comment|//          Singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 12/02/2014.
+comment|// Authors: Illya Rudkin 12/02/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment

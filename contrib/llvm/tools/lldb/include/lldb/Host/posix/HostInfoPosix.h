@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/HostInfoBase.h"
 end_include
 
@@ -121,6 +127,11 @@ block|;
 specifier|static
 name|uint32_t
 name|GetEffectiveGroupID
+argument_list|()
+block|;
+specifier|static
+name|FileSpec
+name|GetDefaultShell
 argument_list|()
 block|;
 name|protected

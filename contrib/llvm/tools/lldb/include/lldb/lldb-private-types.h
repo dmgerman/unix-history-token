@@ -95,7 +95,9 @@ comment|// Size in bytes of the register
 name|uint32_t
 name|byte_offset
 decl_stmt|;
-comment|// The byte offset in the register context data where this register's value is found
+comment|// The byte offset in the register context data where this register's value is found.
+comment|// This is optional, and can be 0 if a particular RegisterContext does not need to
+comment|// address its registers by byte offset.
 name|lldb
 operator|::
 name|Encoding
@@ -121,12 +123,18 @@ name|uint32_t
 modifier|*
 name|value_regs
 decl_stmt|;
-comment|// List of registers that must be terminated with LLDB_INVALID_REGNUM
+comment|// List of registers (terminated with LLDB_INVALID_REGNUM).  If this value is not
+comment|// null, all registers in this list will be read first, at which point the value
+comment|// for this register will be valid.  For example, the value list for ah
+comment|// would be eax (x86) or rax (x64).
 name|uint32_t
 modifier|*
 name|invalidate_regs
 decl_stmt|;
-comment|// List of registers that must be invalidated when this register is modified, list must be terminated with LLDB_INVALID_REGNUM
+comment|// List of registers (terminated with LLDB_INVALID_REGNUM).  If this value is not
+comment|// null, all registers in this list will be invalidateed when the value of this
+comment|// register changes.  For example, the invalidate list for eax would be rax
+comment|// ax, ah, and al.
 block|}
 name|RegisterInfo
 typedef|;
@@ -157,7 +165,11 @@ name|uint32_t
 modifier|*
 name|registers
 decl_stmt|;
-comment|// An array of register numbers in this set
+comment|// An array of register indices in this set.  The values in this array are
+comment|// *indices* (not register numbers) into a particular RegisterContext's
+comment|// register array.  For example, if eax is defined at index 4 for a
+comment|// particular RegisterContext, eax would be included in this RegisterSet
+comment|// by adding the value 4.  Not by adding the value lldb_eax_i386.
 block|}
 name|RegisterSet
 typedef|;

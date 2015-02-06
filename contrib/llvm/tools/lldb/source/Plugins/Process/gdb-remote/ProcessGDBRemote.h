@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/HostThread.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-private-forward.h"
 end_include
 
@@ -266,6 +272,7 @@ argument|lldb_private::Target&target
 argument_list|,
 argument|bool plugin_specified_by_name
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -274,6 +281,7 @@ name|CommandObject
 operator|*
 name|GetPluginCommandObject
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Creating a new process, or attaching to an existing one
@@ -284,12 +292,9 @@ operator|::
 name|Error
 name|WillLaunch
 argument_list|(
-name|lldb_private
-operator|::
-name|Module
-operator|*
-name|module
+argument|lldb_private::Module* module
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -297,23 +302,17 @@ operator|::
 name|Error
 name|DoLaunch
 argument_list|(
-name|lldb_private
-operator|::
-name|Module
-operator|*
-name|exe_module
+argument|lldb_private::Module *exe_module
 argument_list|,
-name|lldb_private
-operator|::
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
+argument|lldb_private::ProcessLaunchInfo&launch_info
 argument_list|)
+name|override
 block|;
 name|virtual
 name|void
 name|DidLaunch
 argument_list|()
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -323,6 +322,7 @@ name|WillAttachToProcessWithID
 argument_list|(
 argument|lldb::pid_t pid
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -334,6 +334,7 @@ argument|const char *process_name
 argument_list|,
 argument|bool wait_for_launch
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -341,17 +342,11 @@ operator|::
 name|Error
 name|DoConnectRemote
 argument_list|(
-name|lldb_private
-operator|::
-name|Stream
-operator|*
-name|strm
+argument|lldb_private::Stream *strm
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|remote_url
+argument|const char *remote_url
 argument_list|)
+name|override
 block|;
 name|lldb_private
 operator|::
@@ -367,6 +362,7 @@ name|DoAttachToProcessWithID
 argument_list|(
 argument|lldb::pid_t pid
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -378,6 +374,7 @@ argument|lldb::pid_t pid
 argument_list|,
 argument|const lldb_private::ProcessAttachInfo&attach_info
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -385,29 +382,19 @@ operator|::
 name|Error
 name|DoAttachToProcessWithName
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|process_name
+argument|const char *process_name
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|ProcessAttachInfo
-operator|&
-name|attach_info
+argument|const lldb_private::ProcessAttachInfo&attach_info
 argument_list|)
+name|override
 block|;
 name|virtual
 name|void
 name|DidAttach
 argument_list|(
-name|lldb_private
-operator|::
-name|ArchSpec
-operator|&
-name|process_arch
+argument|lldb_private::ArchSpec&process_arch
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
@@ -418,11 +405,13 @@ operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
 name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Process Control
@@ -433,6 +422,7 @@ operator|::
 name|Error
 name|WillResume
 argument_list|()
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -440,6 +430,7 @@ operator|::
 name|Error
 name|DoResume
 argument_list|()
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -447,10 +438,9 @@ operator|::
 name|Error
 name|DoHalt
 argument_list|(
-name|bool
-operator|&
-name|caused_stop
+argument|bool&caused_stop
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -460,11 +450,13 @@ name|DoDetach
 argument_list|(
 argument|bool keep_stopped
 argument_list|)
+name|override
 block|;
 name|virtual
 name|bool
 name|DetachRequiresHalt
 argument_list|()
+name|override
 block|{
 return|return
 name|true
@@ -478,6 +470,7 @@ name|DoSignal
 argument_list|(
 argument|int signal
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -485,11 +478,13 @@ operator|::
 name|Error
 name|DoDestroy
 argument_list|()
+name|override
 block|;
 name|virtual
 name|void
 name|RefreshStateAfterStop
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Process Queries
@@ -498,6 +493,7 @@ name|virtual
 name|bool
 name|IsAlive
 argument_list|()
+name|override
 block|;
 name|virtual
 name|lldb
@@ -505,6 +501,7 @@ operator|::
 name|addr_t
 name|GetImageInfoAddress
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Process Memory
@@ -521,6 +518,7 @@ argument|size_t size
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 name|virtual
 name|size_t
@@ -534,6 +532,7 @@ argument|size_t size
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb
@@ -547,6 +546,7 @@ argument|uint32_t permissions
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -558,6 +558,7 @@ argument|lldb::addr_t load_addr
 argument_list|,
 argument|lldb_private::MemoryRegionInfo&region_info
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -567,6 +568,7 @@ name|DoDeallocateMemory
 argument_list|(
 argument|lldb::addr_t ptr
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Process STDIO
@@ -581,6 +583,7 @@ argument|size_t buf_size
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 comment|//----------------------------------------------------------------------
 comment|// Process Breakpoints
@@ -591,12 +594,9 @@ operator|::
 name|Error
 name|EnableBreakpointSite
 argument_list|(
-name|lldb_private
-operator|::
-name|BreakpointSite
-operator|*
-name|bp_site
+argument|lldb_private::BreakpointSite *bp_site
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -604,12 +604,9 @@ operator|::
 name|Error
 name|DisableBreakpointSite
 argument_list|(
-name|lldb_private
-operator|::
-name|BreakpointSite
-operator|*
-name|bp_site
+argument|lldb_private::BreakpointSite *bp_site
 argument_list|)
+name|override
 block|;
 comment|//----------------------------------------------------------------------
 comment|// Process Watchpoints
@@ -624,6 +621,7 @@ argument|lldb_private::Watchpoint *wp
 argument_list|,
 argument|bool notify = true
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -635,6 +633,7 @@ argument|lldb_private::Watchpoint *wp
 argument_list|,
 argument|bool notify = true
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -642,10 +641,9 @@ operator|::
 name|Error
 name|GetWatchpointSupportInfo
 argument_list|(
-name|uint32_t
-operator|&
-name|num
+argument|uint32_t&num
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -653,24 +651,23 @@ operator|::
 name|Error
 name|GetWatchpointSupportInfo
 argument_list|(
-name|uint32_t
-operator|&
-name|num
+argument|uint32_t&num
 argument_list|,
-name|bool
-operator|&
-name|after
+argument|bool& after
 argument_list|)
+name|override
 block|;
 name|virtual
 name|bool
 name|StartNoticingNewThreads
 argument_list|()
+name|override
 block|;
 name|virtual
 name|bool
 name|StopNoticingNewThreads
 argument_list|()
+name|override
 block|;
 name|GDBRemoteCommunicationClient
 operator|&
@@ -687,11 +684,9 @@ operator|::
 name|Error
 name|SendEventData
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|data
+argument|const char *data
 argument_list|)
+name|override
 block|;
 comment|//----------------------------------------------------------------------
 comment|// Override SetExitStatus so we can disconnect from the remote GDB server
@@ -704,6 +699,7 @@ argument|int exit_status
 argument_list|,
 argument|const char *cstr
 argument_list|)
+name|override
 block|;
 name|void
 name|SetUserSpecifiedMaxMemoryTransferSize
@@ -826,18 +822,11 @@ name|virtual
 name|bool
 name|UpdateThreadList
 argument_list|(
-name|lldb_private
-operator|::
-name|ThreadList
-operator|&
-name|old_thread_list
+argument|lldb_private::ThreadList&old_thread_list
 argument_list|,
-name|lldb_private
-operator|::
-name|ThreadList
-operator|&
-name|new_thread_list
+argument|lldb_private::ThreadList&new_thread_list
 argument_list|)
+name|override
 block|;
 name|lldb_private
 operator|::
@@ -944,61 +933,51 @@ literal|2
 operator|)
 block|}
 block|;
-typedef|typedef
-enum|enum
-name|AsyncThreadState
-block|{
-name|eAsyncThreadNotStarted
-block|,
-name|eAsyncThreadRunning
-block|,
-name|eAsyncThreadDone
-decl|}
-name|AsyncThreadState
-empty_stmt|;
 name|lldb_private
-decl|::
+operator|::
 name|Flags
 name|m_flags
-empty_stmt|;
+block|;
 comment|// Process specific flags (see eFlags enums)
 name|GDBRemoteCommunicationClient
 name|m_gdb_comm
 block|;
+name|std
+operator|::
+name|atomic
+operator|<
 name|lldb
-decl|::
+operator|::
 name|pid_t
+operator|>
 name|m_debugserver_pid
-empty_stmt|;
+block|;
 name|StringExtractorGDBRemote
 name|m_last_stop_packet
 block|;
 name|lldb_private
-decl|::
+operator|::
 name|Mutex
 name|m_last_stop_packet_mutex
-empty_stmt|;
+block|;
 name|GDBRemoteDynamicRegisterInfo
 name|m_register_info
 block|;
 name|lldb_private
-decl|::
+operator|::
 name|Broadcaster
 name|m_async_broadcaster
-empty_stmt|;
-name|lldb
-decl|::
-name|thread_t
-name|m_async_thread
-empty_stmt|;
-name|AsyncThreadState
-name|m_async_thread_state
 block|;
 name|lldb_private
-decl|::
+operator|::
+name|HostThread
+name|m_async_thread
+block|;
+name|lldb_private
+operator|::
 name|Mutex
 name|m_async_thread_state_mutex
-empty_stmt|;
+block|;
 typedef|typedef
 name|std
 operator|::
@@ -1010,6 +989,9 @@ name|tid_t
 operator|>
 name|tid_collection
 expr_stmt|;
+end_decl_stmt
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1028,6 +1010,9 @@ operator|>
 expr|>
 name|tid_sig_collection
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1043,64 +1028,133 @@ name|addr_t
 operator|>
 name|MMapMap
 expr_stmt|;
+end_typedef
+
+begin_decl_stmt
 name|tid_collection
 name|m_thread_ids
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Thread IDs for all threads. This list gets updated after stopping
+end_comment
+
+begin_decl_stmt
 name|tid_collection
 name|m_continue_c_tids
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// 'c' for continue
+end_comment
+
+begin_decl_stmt
 name|tid_sig_collection
 name|m_continue_C_tids
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// 'C' for continue with signal
+end_comment
+
+begin_decl_stmt
 name|tid_collection
 name|m_continue_s_tids
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// 's' for step
+end_comment
+
+begin_decl_stmt
 name|tid_sig_collection
 name|m_continue_S_tids
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// 'S' for step with signal
+end_comment
+
+begin_decl_stmt
 name|uint64_t
 name|m_max_memory_size
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// The maximum number of bytes to read/write when reading and writing memory
+end_comment
+
+begin_decl_stmt
 name|uint64_t
 name|m_remote_stub_max_memory_size
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// The maximum memory size the remote gdb stub can handle
+end_comment
+
+begin_decl_stmt
 name|MMapMap
 name|m_addr_to_mmap_size
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|lldb
-decl|::
+operator|::
 name|BreakpointSP
 name|m_thread_create_bp_sp
-empty_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|bool
 name|m_waiting_for_attach
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|m_destroy_tried_resuming
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|lldb
-decl|::
+operator|::
 name|CommandObjectSP
 name|m_command_sp
-empty_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|int64_t
 name|m_breakpoint_pc_offset
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|bool
 name|StartAsyncThread
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|StopAsyncThread
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 specifier|static
 name|lldb
 operator|::
@@ -1112,6 +1166,9 @@ operator|*
 name|arg
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|static
 name|bool
 name|MonitorDebugserverProcess
@@ -1134,9 +1191,12 @@ argument_list|,
 name|int
 name|exit_status
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|lldb
-decl|::
+operator|::
 name|StateType
 name|SetThreadStopInfo
 argument_list|(
@@ -1144,15 +1204,24 @@ name|StringExtractor
 operator|&
 name|stop_packet
 argument_list|)
-empty_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
 name|void
 name|ClearThreadIDList
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|UpdateThreadIDList
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|void
 name|DidLaunchOrAttach
 argument_list|(
@@ -1162,9 +1231,12 @@ name|ArchSpec
 operator|&
 name|process_arch
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|lldb_private
-decl|::
+operator|::
 name|Error
 name|ConnectToDebugserver
 argument_list|(
@@ -1173,36 +1245,58 @@ name|char
 operator|*
 name|host_port
 argument_list|)
-empty_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|char
 modifier|*
 name|GetDispatchQueueNameForThread
-block|(
+argument_list|(
 name|lldb
-block|::
+operator|::
 name|addr_t
 name|thread_dispatch_qaddr
-block|,
+argument_list|,
 name|std
-decl|::
+operator|::
 name|string
-modifier|&
+operator|&
 name|dispatch_queue_name
-block|)
-empty_stmt|;
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|lldb_private
-decl|::
+operator|::
 name|DynamicLoader
-modifier|*
+operator|*
 name|GetDynamicLoader
 argument_list|()
-empty_stmt|;
+name|override
+expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|// For ProcessGDBRemote only
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|bool
 name|NewThreadNotifyBreakpointHit
@@ -1227,17 +1321,19 @@ operator|::
 name|user_id_t
 name|break_loc_id
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ProcessGDBRemote
 argument_list|)
-empty_stmt|;
-block|}
-enum|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
+unit|};
 endif|#
 directive|endif
 end_endif

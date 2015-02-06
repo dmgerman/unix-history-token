@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdCommands.h
+comment|// File:        MICmdCommands.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdCommands instantiated.
+comment|// Overview:    CMICmdCommands instantiated.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -86,11 +86,11 @@ name|namespace
 name|MICmnCommands
 block|{
 comment|//++ ============================================================================
-comment|// Details:	MI Command are instantiated and registered automatically with the
-comment|//			Command Factory
-comment|// Gotchas:	None.
-comment|// Authors:	Illya Rudkin 18/02/2014.
-comment|// Changes:	None.
+comment|// Details: MI Command are instantiated and registered automatically with the
+comment|//          Command Factory
+comment|// Gotchas: None.
+comment|// Authors: Illya Rudkin 18/02/2014.
+comment|// Changes: None.
 comment|//--
 name|bool
 name|RegisterAll

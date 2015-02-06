@@ -312,6 +312,10 @@ name|SBThread
 decl_stmt|;
 name|friend
 name|class
+name|SBThreadPlan
+decl_stmt|;
+name|friend
+name|class
 name|SBValue
 decl_stmt|;
 name|friend

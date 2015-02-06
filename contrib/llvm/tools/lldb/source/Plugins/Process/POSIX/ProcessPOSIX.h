@@ -138,6 +138,7 @@ name|virtual
 name|void
 name|Finalize
 argument_list|()
+name|override
 block|;
 name|virtual
 name|bool
@@ -147,6 +148,7 @@ argument|lldb_private::Target&target
 argument_list|,
 argument|bool plugin_specified_by_name
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -154,12 +156,9 @@ operator|::
 name|Error
 name|WillLaunch
 argument_list|(
-name|lldb_private
-operator|::
-name|Module
-operator|*
-name|module
+argument|lldb_private::Module *module
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -169,6 +168,7 @@ name|DoAttachToProcessWithID
 argument_list|(
 argument|lldb::pid_t pid
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -180,6 +180,7 @@ argument|lldb::pid_t pid
 argument_list|,
 argument|const lldb_private::ProcessAttachInfo&attach_info
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -187,23 +188,17 @@ operator|::
 name|Error
 name|DoLaunch
 argument_list|(
-name|lldb_private
-operator|::
-name|Module
-operator|*
-name|exe_module
+argument|lldb_private::Module *exe_module
 argument_list|,
-name|lldb_private
-operator|::
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
+argument|lldb_private::ProcessLaunchInfo&launch_info
 argument_list|)
+name|override
 block|;
 name|virtual
 name|void
 name|DidLaunch
 argument_list|()
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -211,6 +206,7 @@ operator|::
 name|Error
 name|DoResume
 argument_list|()
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -218,10 +214,9 @@ operator|::
 name|Error
 name|DoHalt
 argument_list|(
-name|bool
-operator|&
-name|caused_stop
+argument|bool&caused_stop
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -231,6 +226,7 @@ name|DoDetach
 argument_list|(
 argument|bool keep_stopped
 argument_list|)
+name|override
 operator|=
 literal|0
 block|;
@@ -242,6 +238,7 @@ name|DoSignal
 argument_list|(
 argument|int signal
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -249,21 +246,25 @@ operator|::
 name|Error
 name|DoDestroy
 argument_list|()
+name|override
 block|;
 name|virtual
 name|void
 name|DoDidExec
 argument_list|()
+name|override
 block|;
 name|virtual
 name|void
 name|RefreshStateAfterStop
 argument_list|()
+name|override
 block|;
 name|virtual
 name|bool
 name|IsAlive
 argument_list|()
+name|override
 block|;
 name|virtual
 name|size_t
@@ -277,6 +278,7 @@ argument|size_t size
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 name|virtual
 name|size_t
@@ -290,6 +292,7 @@ argument|size_t size
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb
@@ -303,6 +306,7 @@ argument|uint32_t permissions
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -312,6 +316,7 @@ name|DoDeallocateMemory
 argument_list|(
 argument|lldb::addr_t ptr
 argument_list|)
+name|override
 block|;
 name|virtual
 name|size_t
@@ -330,12 +335,9 @@ operator|::
 name|Error
 name|EnableBreakpointSite
 argument_list|(
-name|lldb_private
-operator|::
-name|BreakpointSite
-operator|*
-name|bp_site
+argument|lldb_private::BreakpointSite *bp_site
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -343,12 +345,9 @@ operator|::
 name|Error
 name|DisableBreakpointSite
 argument_list|(
-name|lldb_private
-operator|::
-name|BreakpointSite
-operator|*
-name|bp_site
+argument|lldb_private::BreakpointSite *bp_site
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -360,6 +359,7 @@ argument|lldb_private::Watchpoint *wp
 argument_list|,
 argument|bool notify = true
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -371,6 +371,7 @@ argument|lldb_private::Watchpoint *wp
 argument_list|,
 argument|bool notify = true
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -378,10 +379,9 @@ operator|::
 name|Error
 name|GetWatchpointSupportInfo
 argument_list|(
-name|uint32_t
-operator|&
-name|num
+argument|uint32_t&num
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -389,14 +389,11 @@ operator|::
 name|Error
 name|GetWatchpointSupportInfo
 argument_list|(
-name|uint32_t
-operator|&
-name|num
+argument|uint32_t&num
 argument_list|,
-name|bool
-operator|&
-name|after
+argument|bool&after
 argument_list|)
+name|override
 block|;
 name|virtual
 name|uint32_t
@@ -407,18 +404,11 @@ name|virtual
 name|bool
 name|UpdateThreadList
 argument_list|(
-name|lldb_private
-operator|::
-name|ThreadList
-operator|&
-name|old_thread_list
+argument|lldb_private::ThreadList&old_thread_list
 argument_list|,
-name|lldb_private
-operator|::
-name|ThreadList
-operator|&
-name|new_thread_list
+argument|lldb_private::ThreadList&new_thread_list
 argument_list|)
+name|override
 operator|=
 literal|0
 block|;
@@ -436,6 +426,7 @@ operator|::
 name|addr_t
 name|GetImageInfoAddress
 argument_list|()
+name|override
 block|;
 name|virtual
 name|size_t
@@ -447,6 +438,7 @@ argument|size_t len
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 specifier|const
 name|lldb
@@ -500,6 +492,11 @@ specifier|const
 name|char
 operator|*
 name|default_path
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|dbg_pts_path
 argument_list|)
 block|;
 comment|/// Stops all threads in the process.

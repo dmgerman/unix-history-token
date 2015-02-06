@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MIDriverMgr.h
+comment|// File:        MIDriverMgr.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMIImplCmn interface.
+comment|// Overview:    CMIImplCmn interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadme.txt.
+comment|//              Libraries:  See MIReadme.txt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -130,91 +130,91 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI Driver Manager. Register lldb::SBBroadcaster derived Driver type
+comment|// Details: MI Driver Manager. Register lldb::SBBroadcaster derived Driver type
 end_comment
 
 begin_comment
-comment|//			objects with *this manager. The manager does not own driver objects
+comment|//          objects with *this manager. The manager does not own driver objects
 end_comment
 
 begin_comment
-comment|//			registered with it and so will not delete when this manager is
+comment|//          registered with it and so will not delete when this manager is
 end_comment
 
 begin_comment
-comment|//			shutdown. The Driver flagged as "use this one" will be set as current
+comment|//          shutdown. The Driver flagged as "use this one" will be set as current
 end_comment
 
 begin_comment
-comment|//			driver and will be the one that is used. Other drivers are not
+comment|//          driver and will be the one that is used. Other drivers are not
 end_comment
 
 begin_comment
-comment|//			operated. A Driver can call another Driver should it not handle a
+comment|//          operated. A Driver can call another Driver should it not handle a
 end_comment
 
 begin_comment
-comment|//			command.
+comment|//          command.
 end_comment
 
 begin_comment
-comment|//			It also initializes other resources as part it's setup such as the
+comment|//          It also initializes other resources as part it's setup such as the
 end_comment
 
 begin_comment
-comment|//			Logger and Resources objects (explicit indicate *this object requires
+comment|//          Logger and Resources objects (explicit indicate *this object requires
 end_comment
 
 begin_comment
-comment|//			those objects (modules/components) to support it's own functionality).
+comment|//          those objects (modules/components) to support it's own functionality).
 end_comment
 
 begin_comment
-comment|//			The Driver manager is the first object instantiated as part of the
+comment|//          The Driver manager is the first object instantiated as part of the
 end_comment
 
 begin_comment
-comment|//			MI code base. It is also the first thing to interpret the command
+comment|//          MI code base. It is also the first thing to interpret the command
 end_comment
 
 begin_comment
-comment|//			line arguments passed to the executeable. Bases on options it
+comment|//          line arguments passed to the executeable. Bases on options it
 end_comment
 
 begin_comment
-comment|//			understands the manage will set up the appropriate driver or give
+comment|//          understands the manage will set up the appropriate driver or give
 end_comment
 
 begin_comment
-comment|//			help information. Other options are passed on to the driver chosen
+comment|//          help information. Other options are passed on to the driver chosen
 end_comment
 
 begin_comment
-comment|//			to do work.
+comment|//          to do work.
 end_comment
 
 begin_comment
-comment|//			Each driver instance (the CMIDriver, LLDB::Driver) has its own
+comment|//          Each driver instance (the CMIDriver, LLDB::Driver) has its own
 end_comment
 
 begin_comment
-comment|//			LLDB::SBDebugger.
+comment|//          LLDB::SBDebugger.
 end_comment
 
 begin_comment
-comment|//			Singleton class.
+comment|//          Singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 28/02/2014.
+comment|// Authors: Illya Rudkin 28/02/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -249,7 +249,7 @@ name|public
 label|:
 comment|//++
 comment|// Description: Driver deriver objects need this interface to work with
-comment|//				*this manager.
+comment|//              *this manager.
 comment|//--
 name|class
 name|IDriver
@@ -302,11 +302,11 @@ name|DoParseArgs
 argument_list|(
 argument|const int argc
 argument_list|,
-argument|const char * argv[]
+argument|const char *argv[]
 argument_list|,
-argument|FILE * vpStdOut
+argument|FILE *vpStdOut
 argument_list|,
-argument|bool& vwbExiting
+argument|bool&vwbExiting
 argument_list|)
 operator|=
 literal|0

@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmnMIOutOfBandRecord.h
+comment|// File:        MICmnMIOutOfBandRecord.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmnMIOutOfBandRecord interface.
+comment|// Overview:    CMICmnMIOutOfBandRecord interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -118,63 +118,39 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code MI Out-of-band (Async) Record class. A class that encapsulates
+comment|// Details: MI common code MI Out-of-band (Async) Record class. A class that encapsulates
 end_comment
 
 begin_comment
-comment|//			MI result record data and the forming/format of data added to it.
+comment|//          MI result record data and the forming/format of data added to it.
 end_comment
 
 begin_comment
-comment|//			Out-of-band records are used to notify the GDB/MI client of additional
+comment|//          Out-of-band records are used to notify the GDB/MI client of additional
 end_comment
 
 begin_comment
-comment|//			changes that have occurred. Those changes can either be a consequence
+comment|//          changes that have occurred. Those changes can either be a consequence
 end_comment
 
 begin_comment
-comment|//			of GDB/MI (e.g., a breakpoint modified) or a result of target activity
+comment|//          of GDB/MI (e.g., a breakpoint modified) or a result of target activity
 end_comment
 
 begin_comment
-comment|//			(e.g., target stopped).
+comment|//          (e.g., target stopped).
 end_comment
 
 begin_comment
-comment|//			The syntax is as follows:
+comment|//          The syntax is as follows:
 end_comment
 
 begin_comment
-comment|//			"*" type ( "," result )*
+comment|//          "*" type ( "," result )*
 end_comment
 
 begin_comment
-comment|//			type ==> running | stopped
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//			The Out-of-band record can be retrieve at any time *this object is
-end_comment
-
-begin_comment
-comment|//			instantiated so unless work is done on *this Out-of-band record then it is
-end_comment
-
-begin_comment
-comment|//			possible to return a malformed Out-of-band record. If nothing has been set
-end_comment
-
-begin_comment
-comment|//			or added to *this MI Out-of-band record object then text "<Invalid>" will
-end_comment
-
-begin_comment
-comment|//			be returned.
+comment|//          type ==> running | stopped
 end_comment
 
 begin_comment
@@ -182,23 +158,47 @@ comment|//
 end_comment
 
 begin_comment
-comment|//			More information see:
+comment|//          The Out-of-band record can be retrieve at any time *this object is
 end_comment
 
 begin_comment
-comment|//			http://ftp.gnu.org/old-gnu/Manuals/gdb-5.1.1/html_chapter/gdb_22.html//
+comment|//          instantiated so unless work is done on *this Out-of-band record then it is
 end_comment
 
 begin_comment
-comment|//			Gotchas:	None.
+comment|//          possible to return a malformed Out-of-band record. If nothing has been set
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 24/02/2014.
+comment|//          or added to *this MI Out-of-band record object then text "<Invalid>" will
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|//          be returned.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//          More information see:
+end_comment
+
+begin_comment
+comment|//          http://ftp.gnu.org/old-gnu/Manuals/gdb-5.1.1/html_chapter/gdb_22.html//
+end_comment
+
+begin_comment
+comment|//          Gotchas: None.
+end_comment
+
+begin_comment
+comment|// Authors: Illya Rudkin 24/02/2014.
+end_comment
+
+begin_comment
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -216,7 +216,7 @@ comment|// Enumerations:
 name|public
 operator|:
 comment|//++
-comment|// Details:	Enumeration of the type of Out-of-band for *this Out-of-band record
+comment|// Details: Enumeration of the type of Out-of-band for *this Out-of-band record
 comment|//--
 expr|enum
 name|OutOfBand_e
@@ -326,7 +326,7 @@ name|CMICmnMIOutOfBandRecord
 argument_list|(
 argument|const OutOfBand_e veType
 argument_list|,
-argument|const CMICmnMIValueResult& vValue
+argument|const CMICmnMIValueResult&vValue
 argument_list|)
 end_macro
 

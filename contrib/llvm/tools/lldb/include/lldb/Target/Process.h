@@ -188,6 +188,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/HostThread.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/ProcessRunLock.h"
 end_include
 
@@ -263,6 +269,12 @@ directive|include
 file|"lldb/Utility/PseudoTerminal.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Target/InstrumentationRuntime.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -278,9 +290,14 @@ name|Properties
 block|{
 name|public
 operator|:
+comment|// Pass NULL for "process" if the ProcessProperties are to be the global copy
 name|ProcessProperties
 argument_list|(
-argument|bool is_global
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
 argument_list|)
 block|;
 name|virtual
@@ -290,6 +307,11 @@ argument_list|()
 block|;
 name|bool
 name|GetDisableMemoryCache
+argument_list|()
+specifier|const
+block|;
+name|uint64_t
+name|GetMemoryCacheLineSize
 argument_list|()
 specifier|const
 block|;
@@ -364,7 +386,28 @@ name|SetDetachKeepsStopped
 argument_list|(
 argument|bool keep_stopped
 argument_list|)
-block|; }
+block|;
+name|protected
+operator|:
+specifier|static
+name|void
+name|OptionValueChangedCallback
+argument_list|(
+name|void
+operator|*
+name|baton
+argument_list|,
+name|OptionValue
+operator|*
+name|option_value
+argument_list|)
+block|;
+name|Process
+operator|*
+name|m_process
+block|;
+comment|// Can be NULL for global ProcessProperties
+block|}
 decl_stmt|;
 typedef|typedef
 name|std
@@ -624,6 +667,12 @@ operator|:
 name|ProcessInstanceInfo
 argument_list|()
 block|,
+name|m_listener_sp
+argument_list|()
+block|,
+name|m_hijack_listener_sp
+argument_list|()
+block|,
 name|m_plugin_name
 argument_list|()
 block|,
@@ -661,6 +710,12 @@ name|launch_info
 argument_list|)
 operator|:
 name|ProcessInstanceInfo
+argument_list|()
+block|,
+name|m_listener_sp
+argument_list|()
+block|,
+name|m_hijack_listener_sp
 argument_list|()
 block|,
 name|m_plugin_name
@@ -712,6 +767,14 @@ argument_list|(
 name|launch_info
 operator|.
 name|GetResumeCount
+argument_list|()
+argument_list|)
+block|;
+name|SetListener
+argument_list|(
+name|launch_info
+operator|.
+name|GetListener
 argument_list|()
 argument_list|)
 block|;
@@ -992,10 +1055,67 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// Get and set the actual listener that will be used for the process events
+end_comment
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|ListenerSP
+name|GetListener
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_listener_sp
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|SetListener
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|ListenerSP
+operator|&
+name|listener_sp
+argument_list|)
+block|{
+name|m_listener_sp
+operator|=
+name|listener_sp
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_function_decl
+name|Listener
+modifier|&
+name|GetListenerForProcess
+parameter_list|(
+name|Debugger
+modifier|&
+name|debugger
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|protected
 label|:
 end_label
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|ListenerSP
+name|m_listener_sp
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|lldb
@@ -3159,6 +3279,14 @@ name|Error
 name|Resume
 parameter_list|()
 function_decl|;
+name|Error
+name|ResumeSynchronous
+parameter_list|(
+name|Stream
+modifier|*
+name|stream
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Halts a running process.
 comment|///
@@ -5240,17 +5368,26 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Get any available STDOUT.
 comment|///
-comment|/// If the process was launched without supplying valid file paths
-comment|/// for stdin, stdout, and stderr, then the Process class might
-comment|/// try to cache the STDOUT for the process if it is able. Events
-comment|/// will be queued indicating that there is STDOUT available that
-comment|/// can be retrieved using this function.
+comment|/// Calling this method is a valid operation only if all of the
+comment|/// following conditions are true:
+comment|/// 1) The process was launched, and not attached to.
+comment|/// 2) The process was not launched with eLaunchFlagDisableSTDIO.
+comment|/// 3) The process was launched without supplying a valid file path
+comment|///    for STDOUT.
+comment|///
+comment|/// Note that the implementation will probably need to start a read
+comment|/// thread in the background to make sure that the pipe is drained
+comment|/// and the STDOUT buffered appropriately, to prevent the process
+comment|/// from deadlocking trying to write to a full buffer.
+comment|///
+comment|/// Events will be queued indicating that there is STDOUT available
+comment|/// that can be retrieved using this function.
 comment|///
 comment|/// @param[out] buf
 comment|///     A buffer that will receive any STDOUT bytes that are
 comment|///     currently available.
 comment|///
-comment|/// @param[out] buf_size
+comment|/// @param[in] buf_size
 comment|///     The size in bytes for the buffer \a buf.
 comment|///
 comment|/// @return
@@ -5277,13 +5414,22 @@ function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Get any available STDERR.
 comment|///
-comment|/// If the process was launched without supplying valid file paths
-comment|/// for stdin, stdout, and stderr, then the Process class might
-comment|/// try to cache the STDERR for the process if it is able. Events
-comment|/// will be queued indicating that there is STDERR available that
-comment|/// can be retrieved using this function.
+comment|/// Calling this method is a valid operation only if all of the
+comment|/// following conditions are true:
+comment|/// 1) The process was launched, and not attached to.
+comment|/// 2) The process was not launched with eLaunchFlagDisableSTDIO.
+comment|/// 3) The process was launched without supplying a valid file path
+comment|///    for STDERR.
 comment|///
-comment|/// @param[out] buf
+comment|/// Note that the implementation will probably need to start a read
+comment|/// thread in the background to make sure that the pipe is drained
+comment|/// and the STDERR buffered appropriately, to prevent the process
+comment|/// from deadlocking trying to write to a full buffer.
+comment|///
+comment|/// Events will be queued indicating that there is STDERR available
+comment|/// that can be retrieved using this function.
+comment|///
+comment|/// @param[in] buf
 comment|///     A buffer that will receive any STDERR bytes that are
 comment|///     currently available.
 comment|///
@@ -5311,6 +5457,27 @@ modifier|&
 name|error
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Puts data into this process's STDIN.
+comment|///
+comment|/// Calling this method is a valid operation only if all of the
+comment|/// following conditions are true:
+comment|/// 1) The process was launched, and not attached to.
+comment|/// 2) The process was not launched with eLaunchFlagDisableSTDIO.
+comment|/// 3) The process was launched without supplying a valid file path
+comment|///    for STDIN.
+comment|///
+comment|/// @param[in] buf
+comment|///     A buffer that contains the data to write to the process's STDIN.
+comment|///
+comment|/// @param[in] buf_size
+comment|///     The size in bytes for the buffer \a buf.
+comment|///
+comment|/// @return
+comment|///     The number of bytes written into \a buf. If this value is
+comment|///     less than \a buf_size, another call to this function should
+comment|///     be made to write the rest of the data.
+comment|//------------------------------------------------------------------
 name|virtual
 name|size_t
 name|PutSTDIN
@@ -5728,6 +5895,8 @@ argument_list|,
 argument|bool wait_always = true
 argument_list|,
 argument|Listener *hijack_listener = NULL
+argument_list|,
+argument|Stream *stream = NULL
 argument_list|)
 expr_stmt|;
 comment|//--------------------------------------------------------------------------------------
@@ -5773,6 +5942,43 @@ name|hijack_listener
 argument_list|)
 expr_stmt|;
 comment|// Pass NULL to use builtin listener
+comment|//--------------------------------------------------------------------------------------
+comment|/// Centralize the code that handles and prints descriptions for process state changes.
+comment|///
+comment|/// @param[in] event_sp
+comment|///     The process state changed event
+comment|///
+comment|/// @param[in] stream
+comment|///     The output stream to get the state change description
+comment|///
+comment|/// @param[inout] pop_process_io_handler
+comment|///     If this value comes in set to \b true, then pop the Process IOHandler if needed.
+comment|///     Else this variable will be set to \b true or \b false to indicate if the process
+comment|///     needs to have its process IOHandler popped.
+comment|///
+comment|/// @return
+comment|///     \b true if the event describes a process state changed event, \b false otherwise.
+comment|//--------------------------------------------------------------------------------------
+specifier|static
+name|bool
+name|HandleProcessStateChangedEvent
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|EventSP
+operator|&
+name|event_sp
+argument_list|,
+name|Stream
+operator|*
+name|stream
+argument_list|,
+name|bool
+operator|&
+name|pop_process_io_handler
+argument_list|)
+decl_stmt|;
 name|Event
 modifier|*
 name|PeekAtStateChangedEvents
@@ -5826,6 +6032,10 @@ empty_stmt|;
 name|friend
 name|class
 name|ProcessEventHijacker
+decl_stmt|;
+name|friend
+name|class
+name|ProcessProperties
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// If you need to ensure that you and only you will hear about some public
@@ -5903,6 +6113,17 @@ name|m_os_ap
 operator|.
 name|get
 argument_list|()
+return|;
+block|}
+name|ArchSpec
+operator|::
+name|StopInfoOverrideCallbackType
+name|GetStopInfoOverrideCallback
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_stop_info_override_callback
 return|;
 block|}
 name|virtual
@@ -6166,12 +6387,15 @@ parameter_list|()
 block|{
 if|if
 condition|(
+name|m_private_state_thread
+operator|.
+name|EqualsThread
+argument_list|(
 name|Host
 operator|::
 name|GetCurrentThread
 argument_list|()
-operator|==
-name|m_private_state_thread
+argument_list|)
 condition|)
 return|return
 name|m_private_run_lock
@@ -6203,6 +6427,22 @@ return|return
 name|return_error
 return|;
 block|}
+name|lldb
+operator|::
+name|ThreadCollectionSP
+name|GetHistoryThreads
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|InstrumentationRuntimeSP
+name|GetInstrumentationRuntime
+argument_list|(
+argument|lldb::InstrumentationRuntimeType type
+argument_list|)
+expr_stmt|;
 name|protected
 label|:
 comment|//------------------------------------------------------------------
@@ -6406,10 +6646,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IS_VALID_LLDB_HOST_THREAD
-argument_list|(
 name|m_private_state_thread
-argument_list|)
+operator|.
+name|IsJoinable
+argument_list|()
 return|;
 block|}
 name|void
@@ -6519,11 +6759,9 @@ operator|>
 name|m_private_state_control_wait
 expr_stmt|;
 comment|/// This Predicate is used to signal that a control operation is complete.
-name|lldb
-operator|::
-name|thread_t
+name|HostThread
 name|m_private_state_thread
-expr_stmt|;
+decl_stmt|;
 comment|// Thread ID for the thread that watches internal state events
 name|ProcessModID
 name|m_mod_id
@@ -6557,6 +6795,10 @@ name|string
 name|m_exit_string
 expr_stmt|;
 comment|///< A textual description of why a process exited.
+name|Mutex
+name|m_exit_status_mutex
+decl_stmt|;
+comment|///< Mutex so m_exit_status m_exit_string can be safely accessed from multiple threads
 name|Mutex
 name|m_thread_mutex
 decl_stmt|;
@@ -6715,6 +6957,9 @@ comment|/// Should we detach if the process object goes away with an explicit ca
 name|LanguageRuntimeCollection
 name|m_language_runtimes
 decl_stmt|;
+name|InstrumentationRuntimeCollection
+name|m_instrumentation_runtimes
+decl_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -6744,6 +6989,11 @@ operator|>
 name|m_currently_handling_event
 expr_stmt|;
 comment|// This predicate is set in HandlePrivateEvent while all its business is being done.
+name|ArchSpec
+operator|::
+name|StopInfoOverrideCallbackType
+name|m_stop_info_override_callback
+expr_stmt|;
 name|bool
 name|m_currently_handling_do_on_removals
 decl_stmt|;
@@ -7051,6 +7301,17 @@ operator|&
 name|exit_event_sp
 argument_list|)
 decl_stmt|;
+name|bool
+name|StateChangedIsExternallyHijacked
+parameter_list|()
+function_decl|;
+name|void
+name|LoadOperatingSystemPlugin
+parameter_list|(
+name|bool
+name|flush
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|//------------------------------------------------------------------

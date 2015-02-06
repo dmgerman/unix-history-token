@@ -330,16 +330,6 @@ argument_list|)
 operator|=
 literal|0
 block|;
-comment|// Should return true if your ABI uses frames when doing stack backtraces. This
-comment|// means a frame pointer is used that points to the previous stack frame in some
-comment|// way or another.
-name|virtual
-name|bool
-name|StackUsesFrames
-argument_list|()
-operator|=
-literal|0
-block|;
 comment|// Should take a look at a call frame address (CFA) which is just the stack
 comment|// pointer value upon entry to a function. ABIs usually impose alignment
 comment|// restrictions (4, 8 or 16 byte aligned), and zero is usually not allowed.
@@ -391,19 +381,6 @@ name|uint32_t
 operator|&
 name|count
 argument_list|)
-operator|=
-literal|0
-block|;
-comment|// Some architectures (e.g. x86) will push the return address on the stack and decrement
-comment|// the stack pointer when making a function call.  This means that every stack frame will
-comment|// have a unique CFA.
-comment|// Other architectures (e.g. arm) pass the return address in a register so it is possible
-comment|// to have a frame on a backtrace that does not push anything on the stack or change the
-comment|// CFA.
-name|virtual
-name|bool
-name|FunctionCallsChangeCFA
-argument_list|()
 operator|=
 literal|0
 block|;

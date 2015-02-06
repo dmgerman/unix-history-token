@@ -381,6 +381,13 @@ end_decl_stmt
 begin_decl_stmt
 name|friend
 name|class
+name|SBThreadPlan
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
 name|SBType
 decl_stmt|;
 end_decl_stmt
@@ -389,6 +396,13 @@ begin_decl_stmt
 name|friend
 name|class
 name|SBTypeEnumMember
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|SBTypeMemberFunction
 decl_stmt|;
 end_decl_stmt
 

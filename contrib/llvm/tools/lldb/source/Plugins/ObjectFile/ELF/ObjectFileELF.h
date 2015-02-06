@@ -352,6 +352,15 @@ argument_list|()
 specifier|const
 block|;
 name|virtual
+name|lldb
+operator|::
+name|AddressClass
+name|GetAddressClass
+argument_list|(
+argument|lldb::addr_t file_addr
+argument_list|)
+block|;
+name|virtual
 name|lldb_private
 operator|::
 name|Symtab

@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdData.h
+comment|// File:        MICmdData.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	SMICmdData interface.
+comment|// Overview:    SMICmdData interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -96,23 +96,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command metadata. Holds the command's name, MI number and options
+comment|// Details: MI command metadata. Holds the command's name, MI number and options
 end_comment
 
 begin_comment
-comment|//			as found on stdin. Holds the command's MI output (written to stdout).
+comment|//          as found on stdin. Holds the command's MI output (written to stdout).
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 18/02/2014.
+comment|// Authors: Illya Rudkin 18/02/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -152,7 +152,7 @@ name|bHasResultRecordExtra
 argument_list|(
 argument|false
 argument_list|)
-block|{ 	}
+block|{}
 expr_stmt|;
 name|MIuint
 name|id

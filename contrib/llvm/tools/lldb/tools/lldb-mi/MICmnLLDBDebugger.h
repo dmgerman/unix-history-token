@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmnLLDBDebugger.h
+comment|// File:        MICmnLLDBDebugger.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmnLLDBDebugger interface.
+comment|// Overview:    CMICmnLLDBDebugger interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -158,35 +158,35 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI proxy/adapter for the LLDB public SBDebugger API. The CMIDriver
+comment|// Details: MI proxy/adapter for the LLDB public SBDebugger API. The CMIDriver
 end_comment
 
 begin_comment
-comment|//			requires *this object. Command classes make calls on *this object
+comment|//          requires *this object. Command classes make calls on *this object
 end_comment
 
 begin_comment
-comment|//			to facilitate their work effort. The instance runs in its own worker
+comment|//          to facilitate their work effort. The instance runs in its own worker
 end_comment
 
 begin_comment
-comment|//			thread.
+comment|//          thread.
 end_comment
 
 begin_comment
-comment|//			A singleton class.
+comment|//          A singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 26/02/2014.
+comment|// Authors: Illya Rudkin 26/02/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment

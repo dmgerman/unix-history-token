@@ -217,6 +217,9 @@ name|Target
 modifier|*
 name|target
 parameter_list|,
+name|bool
+name|allow_locations
+parameter_list|,
 name|CommandReturnObject
 modifier|&
 name|result

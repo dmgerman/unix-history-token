@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmnMIValueConst.h
+comment|// File:        MICmnMIValueConst.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmnMIValueConst interface.
+comment|// Overview:    CMICmnMIValueConst interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -96,71 +96,63 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code MI Result class. Part of the CMICmnMIValueConstRecord
+comment|// Details: MI common code MI Result class. Part of the CMICmnMIValueConstRecord
 end_comment
 
 begin_comment
-comment|//			set of objects.
+comment|//          set of objects.
 end_comment
 
 begin_comment
-comment|//			The syntax is as follows:
+comment|//          The syntax is as follows:
 end_comment
 
 begin_comment
-comment|//			result-record ==>  [ token ] "^" result-class ( "," result )* nl
+comment|//          result-record ==>  [ token ] "^" result-class ( "," result )* nl
 end_comment
 
 begin_comment
-comment|//			token = any sequence of digits
+comment|//          token = any sequence of digits
 end_comment
 
 begin_comment
-comment|//			* = 0 to many
+comment|//          * = 0 to many
 end_comment
 
 begin_comment
-comment|//			nl = CR | CR_LF
+comment|//          nl = CR | CR_LF
 end_comment
 
 begin_comment
-comment|//			result-class ==> "done" | "running" | "connected" | "error" | "exit"
+comment|//          result-class ==> "done" | "running" | "connected" | "error" | "exit"
 end_comment
 
 begin_comment
-comment|//			result ==> variable "=" value
+comment|//          result ==> variable "=" value
 end_comment
 
 begin_comment
-comment|//			value ==> const | tuple | list
+comment|//          value ==> const | tuple | list
 end_comment
 
 begin_comment
-comment|//			const ==> c-string (7 bit iso c string content)
+comment|//          const ==> c-string (7 bit iso c string content)
 end_comment
 
 begin_comment
-comment|//			tuple ==>  "{}" | "{" result ( "," result )* "}"
+comment|//          tuple ==>  "{}" | "{" result ( "," result )* "}"
 end_comment
 
 begin_comment
-comment|//			list ==>  "[]" | "[" value ( "," value )* "]" | "[" result ( "," result )* "]"
+comment|//          list ==>  "[]" | "[" value ( "," value )* "]" | "[" result ( "," result )* "]"
 end_comment
 
 begin_comment
-comment|//			More information see:
+comment|//          More information see:
 end_comment
 
 begin_comment
-comment|//			http://ftp.gnu.org/old-gnu/Manuals/gdb-5.1.1/html_chapter/gdb_22.html
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//			The text formed in *this Result class is stripped of any '\n' characters.
+comment|//          http://ftp.gnu.org/old-gnu/Manuals/gdb-5.1.1/html_chapter/gdb_22.html
 end_comment
 
 begin_comment
@@ -168,15 +160,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|//          The text formed in *this Result class is stripped of any '\n' characters.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 24/02/2014.
+comment|//
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Gotchas: None.
+end_comment
+
+begin_comment
+comment|// Authors: Illya Rudkin 24/02/2014.
+end_comment
+
+begin_comment
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -205,7 +205,7 @@ block|;
 comment|/* ctor */
 name|CMICmnMIValueConst
 argument_list|(
-argument|const CMIUtilString& vString
+argument|const CMIUtilString&vString
 argument_list|,
 argument|const bool vbNoQuotes
 argument_list|)

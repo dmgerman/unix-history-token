@@ -167,7 +167,7 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((GPR*)NULL)->reg), GPR_OFFSET(reg), eEncodingUint, \       eFormatHex, { kind1, kind2, kind3, kind4, gpr_##reg##_x86_64 }, NULL, NULL }
+value|{ #reg, alt, sizeof(((GPR*)NULL)->reg), GPR_OFFSET(reg), eEncodingUint, \       eFormatHex, { kind1, kind2, kind3, kind4, lldb_##reg##_x86_64 }, NULL, NULL }
 end_define
 
 begin_define
@@ -188,7 +188,7 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #name, NULL, FPR_SIZE(reg), FPR_OFFSET(reg), eEncodingUint,   \       eFormatHex, { kind1, kind2, kind3, kind4, fpu_##name##_x86_64 }, NULL, NULL }
+value|{ #name, NULL, FPR_SIZE(reg), FPR_OFFSET(reg), eEncodingUint,   \       eFormatHex, { kind1, kind2, kind3, kind4, lldb_##name##_x86_64 }, NULL, NULL }
 end_define
 
 begin_define
@@ -201,7 +201,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ #reg#i, NULL, FP_SIZE, LLVM_EXTENSION FPR_OFFSET(stmm[i]),   \       eEncodingVector, eFormatVectorOfUInt8,                       \       { gcc_dwarf_st##i##_x86_64, gcc_dwarf_st##i##_x86_64, LLDB_INVALID_REGNUM, gdb_st##i##_x86_64, fpu_st##i##_x86_64 }, \       NULL, NULL }
+value|{ #reg#i, NULL, FP_SIZE, LLVM_EXTENSION FPR_OFFSET(stmm[i]),   \       eEncodingVector, eFormatVectorOfUInt8,                       \       { gcc_dwarf_st##i##_x86_64, gcc_dwarf_st##i##_x86_64, LLDB_INVALID_REGNUM, gdb_st##i##_x86_64, lldb_st##i##_x86_64 }, \       NULL, NULL }
 end_define
 
 begin_define
@@ -214,7 +214,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ #reg#i, NULL, sizeof(uint64_t), LLVM_EXTENSION FPR_OFFSET(stmm[i]),   \       eEncodingUint, eFormatHex,                                            \       { gcc_dwarf_mm##i##_x86_64, gcc_dwarf_mm##i##_x86_64, LLDB_INVALID_REGNUM, gdb_st##i##_x86_64, fpu_mm##i##_x86_64 }, \       NULL, NULL }
+value|{ #reg#i, NULL, sizeof(uint64_t), LLVM_EXTENSION FPR_OFFSET(stmm[i]),   \       eEncodingUint, eFormatHex,                                            \       { gcc_dwarf_mm##i##_x86_64, gcc_dwarf_mm##i##_x86_64, LLDB_INVALID_REGNUM, gdb_st##i##_x86_64, lldb_mm##i##_x86_64 }, \       NULL, NULL }
 end_define
 
 begin_define
@@ -227,7 +227,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ #reg#i, NULL, XMM_SIZE, LLVM_EXTENSION FPR_OFFSET(reg[i]),   \       eEncodingVector, eFormatVectorOfUInt8,                       \       { gcc_dwarf_##reg##i##_x86_64, gcc_dwarf_##reg##i##_x86_64, LLDB_INVALID_REGNUM, gdb_##reg##i##_x86_64, fpu_##reg##i##_x86_64}, \       NULL, NULL }
+value|{ #reg#i, NULL, XMM_SIZE, LLVM_EXTENSION FPR_OFFSET(reg[i]),   \       eEncodingVector, eFormatVectorOfUInt8,                       \       { gcc_dwarf_##reg##i##_x86_64, gcc_dwarf_##reg##i##_x86_64, LLDB_INVALID_REGNUM, gdb_##reg##i##_x86_64, lldb_##reg##i##_x86_64}, \       NULL, NULL }
 end_define
 
 begin_define
@@ -240,7 +240,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ #reg#i, NULL, YMM_SIZE, LLVM_EXTENSION YMM_OFFSET(reg[i]),                    \       eEncodingVector, eFormatVectorOfUInt8,                                        \       { gcc_dwarf_##reg##i##h_x86_64, gcc_dwarf_##reg##i##h_x86_64, LLDB_INVALID_REGNUM, gdb_##reg##i##h_x86_64, fpu_##reg##i##_x86_64 }, \       NULL, NULL }
+value|{ #reg#i, NULL, YMM_SIZE, LLVM_EXTENSION YMM_OFFSET(reg[i]),                    \       eEncodingVector, eFormatVectorOfUInt8,                                        \       { gcc_dwarf_##reg##i##h_x86_64, gcc_dwarf_##reg##i##h_x86_64, LLDB_INVALID_REGNUM, gdb_##reg##i##h_x86_64, lldb_##reg##i##_x86_64 }, \       NULL, NULL }
 end_define
 
 begin_define
@@ -266,7 +266,7 @@ parameter_list|,
 name|reg64
 parameter_list|)
 define|\
-value|{ #reg32, NULL, 4, GPR_OFFSET(reg64), eEncodingUint,   \       eFormatHex, { LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, gpr_##reg32##_x86_64 }, RegisterContextPOSIX_x86::g_contained_##reg64, RegisterContextPOSIX_x86::g_invalidate_##reg64 }
+value|{ #reg32, NULL, 4, GPR_OFFSET(reg64), eEncodingUint,   \       eFormatHex, { LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, lldb_##reg32##_x86_64 }, RegisterContextPOSIX_x86::g_contained_##reg64, RegisterContextPOSIX_x86::g_invalidate_##reg64 }
 end_define
 
 begin_define
@@ -279,7 +279,7 @@ parameter_list|,
 name|reg64
 parameter_list|)
 define|\
-value|{ #reg16, NULL, 2, GPR_OFFSET(reg64), eEncodingUint,   \       eFormatHex, { LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, gpr_##reg16##_x86_64 }, RegisterContextPOSIX_x86::g_contained_##reg64, RegisterContextPOSIX_x86::g_invalidate_##reg64 }
+value|{ #reg16, NULL, 2, GPR_OFFSET(reg64), eEncodingUint,   \       eFormatHex, { LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, lldb_##reg16##_x86_64 }, RegisterContextPOSIX_x86::g_contained_##reg64, RegisterContextPOSIX_x86::g_invalidate_##reg64 }
 end_define
 
 begin_define
@@ -292,7 +292,7 @@ parameter_list|,
 name|reg64
 parameter_list|)
 define|\
-value|{ #reg8, NULL, 1, GPR_OFFSET(reg64)+1, eEncodingUint,  \       eFormatHex, { LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, gpr_##reg8##_x86_64 }, RegisterContextPOSIX_x86::g_contained_##reg64, RegisterContextPOSIX_x86::g_invalidate_##reg64 }
+value|{ #reg8, NULL, 1, GPR_OFFSET(reg64)+1, eEncodingUint,  \       eFormatHex, { LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, lldb_##reg8##_x86_64 }, RegisterContextPOSIX_x86::g_contained_##reg64, RegisterContextPOSIX_x86::g_invalidate_##reg64 }
 end_define
 
 begin_define
@@ -305,7 +305,7 @@ parameter_list|,
 name|reg64
 parameter_list|)
 define|\
-value|{ #reg8, NULL, 1, GPR_OFFSET(reg64), eEncodingUint,    \       eFormatHex, { LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, gpr_##reg8##_x86_64 }, RegisterContextPOSIX_x86::g_contained_##reg64, RegisterContextPOSIX_x86::g_invalidate_##reg64 }
+value|{ #reg8, NULL, 1, GPR_OFFSET(reg64), eEncodingUint,    \       eFormatHex, { LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, lldb_##reg8##_x86_64 }, RegisterContextPOSIX_x86::g_contained_##reg64, RegisterContextPOSIX_x86::g_invalidate_##reg64 }
 end_define
 
 begin_decl_stmt
@@ -1740,7 +1740,7 @@ parameter_list|,
 name|reg64
 parameter_list|)
 define|\
-value|do {                                                                            \     g_register_infos[gpr_##reg##_i386].byte_offset = GPR_OFFSET(reg64);         \ } while(false);
+value|do {                                                                            \     g_register_infos[lldb_##reg##_i386].byte_offset = GPR_OFFSET(reg64);         \ } while(false);
 end_define
 
 begin_define
@@ -1753,7 +1753,7 @@ parameter_list|,
 name|reg64
 parameter_list|)
 define|\
-value|do {                                                                            \     g_register_infos[gpr_##reg##_i386].byte_offset = GPR_OFFSET(reg64) + 1;     \ } while(false);
+value|do {                                                                            \     g_register_infos[lldb_##reg##_i386].byte_offset = GPR_OFFSET(reg64) + 1;     \ } while(false);
 end_define
 
 begin_define
@@ -1766,7 +1766,7 @@ parameter_list|,
 name|reg64
 parameter_list|)
 define|\
-value|do {                                                                            \     g_register_infos[fpu_##reg##_i386].byte_offset = FPR_OFFSET(reg64);         \ } while(false);
+value|do {                                                                            \     g_register_infos[lldb_##reg##_i386].byte_offset = FPR_OFFSET(reg64);         \ } while(false);
 end_define
 
 begin_define
@@ -1779,7 +1779,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|do {                                                                            \     g_register_infos[fpu_##reg##i##_i386].byte_offset = FPR_OFFSET(stmm[i]);    \ } while(false);
+value|do {                                                                            \     g_register_infos[lldb_##reg##i##_i386].byte_offset = FPR_OFFSET(stmm[i]);    \ } while(false);
 end_define
 
 begin_define
@@ -1792,7 +1792,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|do {                                                                            \     g_register_infos[fpu_##reg##i##_i386].byte_offset = FPR_OFFSET(reg[i]);     \ } while(false);
+value|do {                                                                            \     g_register_infos[lldb_##reg##i##_i386].byte_offset = FPR_OFFSET(reg[i]);     \ } while(false);
 end_define
 
 begin_define
@@ -1805,7 +1805,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|do {                                                                            \     g_register_infos[fpu_##reg##i##_i386].byte_offset = YMM_OFFSET(reg[i]);     \ } while(false);
+value|do {                                                                            \     g_register_infos[lldb_##reg##i##_i386].byte_offset = YMM_OFFSET(reg[i]);     \ } while(false);
 end_define
 
 begin_define
@@ -1816,7 +1816,7 @@ parameter_list|(
 name|reg_index
 parameter_list|)
 define|\
-value|do {                                                                            \     g_register_infos[dr##reg_index##_i386].byte_offset = DR_OFFSET(reg_index);  \ } while(false);
+value|do {                                                                            \     g_register_infos[lldb_dr##reg_index##_i386].byte_offset = DR_OFFSET(reg_index);  \ } while(false);
 end_define
 
 begin_comment

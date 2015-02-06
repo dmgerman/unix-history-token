@@ -257,6 +257,31 @@ name|m_thread_name
 operator|=
 name|name
 block|;     }
+name|virtual
+specifier|const
+name|char
+operator|*
+name|GetName
+argument_list|()
+block|{
+return|return
+name|m_thread_name
+operator|.
+name|c_str
+argument_list|()
+return|;
+block|}
+name|virtual
+name|void
+name|SetName
+argument_list|(
+argument|const char *name
+argument_list|)
+block|{
+name|m_thread_name
+operator|=
+name|name
+block|;     }
 name|protected
 operator|:
 name|virtual

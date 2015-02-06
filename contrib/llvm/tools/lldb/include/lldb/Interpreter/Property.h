@@ -111,6 +111,7 @@ expr_stmt|;
 name|bool
 name|global
 decl_stmt|;
+comment|// false == this setting is a global setting by default
 name|uintptr_t
 name|default_uint_value
 decl_stmt|;
@@ -274,6 +275,17 @@ name|display_qualified_name
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|SetValueChangedCallback
+parameter_list|(
+name|OptionValueChangedCallback
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|baton
+parameter_list|)
+function_decl|;
 name|protected
 label|:
 name|ConstString

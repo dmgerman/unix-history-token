@@ -203,6 +203,10 @@ name|SBBlock
 decl_stmt|;
 name|friend
 name|class
+name|SBCommandInterpreter
+decl_stmt|;
+name|friend
+name|class
 name|SBCompileUnit
 decl_stmt|;
 name|friend

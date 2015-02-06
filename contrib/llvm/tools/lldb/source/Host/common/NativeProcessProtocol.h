@@ -162,11 +162,6 @@ block|;
 comment|//------------------------------------------------------------------
 comment|/// Sends a process a UNIX signal \a signal.
 comment|///
-comment|/// Implementer note: the WillSignal ()/DidSignal () calls
-comment|/// from the Process class are not replicated here since no
-comment|/// concrete classes implemented any behavior for those and
-comment|/// put all the work in DoSignal (...).
-comment|///
 comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
@@ -178,6 +173,21 @@ argument|int signo
 argument_list|)
 operator|=
 literal|0
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Tells a process to interrupt all operations as if by a Ctrl-C.
+comment|///
+comment|/// The default implementation will send a local host's equivalent of
+comment|/// a SIGSTOP to the process via the NativeProcessProtocol::Signal()
+comment|/// operation.
+comment|///
+comment|/// @return
+comment|///     Returns an error object.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|Interrupt
+argument_list|()
 block|;
 name|virtual
 name|Error
@@ -692,7 +702,7 @@ argument_list|,
 argument|bool notify_delegates = true
 argument_list|)
 block|;
-comment|// Derived classes need not impelment this.  It can be used as a
+comment|// Derived classes need not implement this.  It can be used as a
 comment|// hook to clear internal caches that should be invalidated when
 comment|// stop ids change.
 comment|//
@@ -738,6 +748,12 @@ comment|// -----------------------------------------------------------
 name|void
 name|NotifyDidExec
 argument_list|()
+block|;
+name|NativeThreadProtocolSP
+name|GetThreadByIDUnlocked
+argument_list|(
+argument|lldb::tid_t tid
+argument_list|)
 block|;
 name|private
 operator|:

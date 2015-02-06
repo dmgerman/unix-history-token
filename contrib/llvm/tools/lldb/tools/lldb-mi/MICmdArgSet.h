@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdArgSet.h
+comment|// File:        MICmdArgSet.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdArgSet interface.
+comment|// Overview:    CMICmdArgSet interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -122,55 +122,55 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code class. Command arguments container class.
+comment|// Details: MI common code class. Command arguments container class.
 end_comment
 
 begin_comment
-comment|//			A command may have one or more arguments of which some may be optional.
+comment|//          A command may have one or more arguments of which some may be optional.
 end_comment
 
 begin_comment
-comment|//			*this class contains a list of the command's arguments which are
+comment|//          *this class contains a list of the command's arguments which are
 end_comment
 
 begin_comment
-comment|//			validates against the commands argument options string (context string).
+comment|//          validates against the commands argument options string (context string).
 end_comment
 
 begin_comment
-comment|//			Each argument tries to extract the value it is looking for.
+comment|//          Each argument tries to extract the value it is looking for.
 end_comment
 
 begin_comment
-comment|//			Argument objects added to *this container are owned by this container
+comment|//          Argument objects added to *this container are owned by this container
 end_comment
 
 begin_comment
-comment|//			and are deleted when this container goes out of scope. Allocate argument
+comment|//          and are deleted when this container goes out of scope. Allocate argument
 end_comment
 
 begin_comment
-comment|//			objects on the heap.
+comment|//          objects on the heap.
 end_comment
 
 begin_comment
-comment|//			It is assummed the arguments to be parsed are read from left to right in
+comment|//          It is assummed the arguments to be parsed are read from left to right in
 end_comment
 
 begin_comment
-comment|//			order. The order added to *this container is the order they will parsed.
+comment|//          order. The order added to *this container is the order they will parsed.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 14/04/2014.
+comment|// Authors: Illya Rudkin 14/04/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -276,7 +276,7 @@ argument_list|(
 argument|void
 argument_list|)
 block|{}
-block|; 	}
+block|;     }
 block|;
 comment|// Typedefs:
 name|public
@@ -499,7 +499,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// True = The driver's client presented the command with options recognised but not handled by a command, false = all args handled
+comment|// True = The driver's client presented the command with options recognised but not handled by
+end_comment
+
+begin_comment
+comment|// a command, false = all args handled
 end_comment
 
 begin_decl_stmt
@@ -549,7 +553,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// The set of arguments that were present but were found to be missing additional information i.e. --thread 3 but 3 is missing
+comment|// The set of arguments that were present but were found to be missing additional information i.e.
+end_comment
+
+begin_comment
+comment|// --thread 3 but 3 is missing
 end_comment
 
 begin_decl_stmt

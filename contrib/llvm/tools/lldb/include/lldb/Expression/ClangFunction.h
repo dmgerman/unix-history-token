@@ -499,10 +499,11 @@ comment|/// @param[in] unwind_on_error
 comment|///     True if the thread plan may simply be discarded if an error occurs.
 comment|///
 comment|/// @return
-comment|///     A ThreadPlan for executing the function.
+comment|///     A ThreadPlan shared pointer for executing the function.
 comment|//------------------------------------------------------------------
-name|ThreadPlan
-operator|*
+name|lldb
+operator|::
+name|ThreadPlanSP
 name|GetThreadPlanToCallFunction
 argument_list|(
 argument|ExecutionContext&exe_ctx
@@ -680,6 +681,16 @@ operator|:
 comment|//------------------------------------------------------------------
 comment|// For ClangFunction only
 comment|//------------------------------------------------------------------
+comment|// Note: the parser needs to be destructed before the execution unit, so
+comment|// declare the the execution unit first.
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|IRExecutionUnit
+operator|>
+name|m_execution_unit_sp
+block|;
 name|std
 operator|::
 name|unique_ptr
@@ -689,14 +700,6 @@ operator|>
 name|m_parser
 block|;
 comment|///< The parser responsible for compiling the function.
-name|std
-operator|::
-name|shared_ptr
-operator|<
-name|IRExecutionUnit
-operator|>
-name|m_execution_unit_sp
-block|;
 name|lldb
 operator|::
 name|ModuleWP

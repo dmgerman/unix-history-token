@@ -61,6 +61,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -74,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -186,6 +198,9 @@ comment|///     A byte order of the data that we are extracting from.
 comment|///
 comment|/// @param[in] addr_size
 comment|///     A new address byte size value.
+comment|///
+comment|/// @param[in] target_byte_size
+comment|///     A size of a target byte in 8-bit host bytes
 comment|//------------------------------------------------------------------
 name|DataExtractor
 argument_list|(
@@ -196,6 +211,9 @@ argument_list|,
 argument|lldb::ByteOrder byte_order
 argument_list|,
 argument|uint32_t addr_size
+argument_list|,
+argument|uint32_t target_byte_size =
+literal|1
 argument_list|)
 empty_stmt|;
 comment|//------------------------------------------------------------------
@@ -214,6 +232,9 @@ comment|///     A byte order of the data that we are extracting from.
 comment|///
 comment|/// @param[in] addr_size
 comment|///     A new address byte size value.
+comment|///
+comment|/// @param[in] target_byte_size
+comment|///     A size of a target byte in 8-bit host bytes
 comment|//------------------------------------------------------------------
 name|DataExtractor
 argument_list|(
@@ -222,6 +243,9 @@ argument_list|,
 argument|lldb::ByteOrder byte_order
 argument_list|,
 argument|uint32_t addr_size
+argument_list|,
+argument|uint32_t target_byte_size =
+literal|1
 argument_list|)
 empty_stmt|;
 comment|//------------------------------------------------------------------
@@ -246,6 +270,9 @@ comment|///     The offset into \a data at which the subset starts.
 comment|///
 comment|/// @param[in] length
 comment|///     The length in bytes of the subset of data.
+comment|///
+comment|/// @param[in] target_byte_size
+comment|///     A size of a target byte in 8-bit host bytes
 comment|//------------------------------------------------------------------
 name|DataExtractor
 argument_list|(
@@ -254,6 +281,9 @@ argument_list|,
 argument|lldb::offset_t offset
 argument_list|,
 argument|lldb::offset_t length
+argument_list|,
+argument|uint32_t target_byte_size =
+literal|1
 argument_list|)
 empty_stmt|;
 name|DataExtractor
@@ -2074,6 +2104,24 @@ return|return
 literal|0
 return|;
 block|}
+name|void
+name|Checksum
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|uint8_t
+operator|>
+operator|&
+name|dest
+argument_list|,
+name|uint64_t
+name|max_data
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
 comment|//------------------------------------------------------------------
@@ -2108,6 +2156,10 @@ name|DataBufferSP
 name|m_data_sp
 expr_stmt|;
 comment|///< The shared pointer to data that can be shared among multilple instances
+specifier|const
+name|uint32_t
+name|m_target_byte_size
+decl_stmt|;
 block|}
 end_decl_stmt
 

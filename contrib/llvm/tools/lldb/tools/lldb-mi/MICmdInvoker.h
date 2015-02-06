@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdInvoker.h
+comment|// File:        MICmdInvoker.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdInvoker interface.
+comment|// Overview:    CMICmdInvoker interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -140,67 +140,67 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI Command Invoker. The Invoker works on the command pattern design.
+comment|// Details: MI Command Invoker. The Invoker works on the command pattern design.
 end_comment
 
 begin_comment
-comment|//			There two main jobs; action command Execute() function, followed by
+comment|//          There two main jobs; action command Execute() function, followed by
 end_comment
 
 begin_comment
-comment|//			the command's Acknowledge() function. When a command has finished its
+comment|//          the command's Acknowledge() function. When a command has finished its
 end_comment
 
 begin_comment
-comment|//			execute function it returns to the invoker. The invoker then calls the
+comment|//          execute function it returns to the invoker. The invoker then calls the
 end_comment
 
 begin_comment
-comment|//			command's Acknowledge() function to do more work, form and give
+comment|//          command's Acknowledge() function to do more work, form and give
 end_comment
 
 begin_comment
-comment|//			back a MI result. In the meantime the Command Monitor is monitoring
+comment|//          back a MI result. In the meantime the Command Monitor is monitoring
 end_comment
 
 begin_comment
-comment|//			the each command doing their Execute() function work so they do not
+comment|//          the each command doing their Execute() function work so they do not
 end_comment
 
 begin_comment
-comment|//			exceed a time limit which if it	exceeds informs the command(s) to
+comment|//          exceed a time limit which if it exceeds informs the command(s) to
 end_comment
 
 begin_comment
-comment|//			stop work.
+comment|//          stop work.
 end_comment
 
 begin_comment
-comment|//			The work by the Invoker is carried out in the main thread.
+comment|//          The work by the Invoker is carried out in the main thread.
 end_comment
 
 begin_comment
-comment|//			The Invoker takes ownersip of any commands created which means it
+comment|//          The Invoker takes ownersip of any commands created which means it
 end_comment
 
 begin_comment
-comment|//			is the only object to delete them when a command is finished working.
+comment|//          is the only object to delete them when a command is finished working.
 end_comment
 
 begin_comment
-comment|//			A singleton class.
+comment|//          A singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 19/02/2014.
+comment|// Authors: Illya Rudkin 19/02/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
