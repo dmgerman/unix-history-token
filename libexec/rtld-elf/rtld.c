@@ -5071,9 +5071,6 @@ decl_stmt|;
 name|int
 name|bloom_size32
 decl_stmt|;
-name|bool
-name|nmw_power2
-decl_stmt|;
 name|int
 name|plttype
 init|=
@@ -5633,23 +5630,6 @@ operator|)
 operator|*
 name|nmaskwords
 expr_stmt|;
-comment|/* Number of bitmask words is required to be power of 2 */
-name|nmw_power2
-operator|=
-operator|(
-operator|(
-name|nmaskwords
-operator|&
-operator|(
-name|nmaskwords
-operator|-
-literal|1
-operator|)
-operator|)
-operator|==
-literal|0
-operator|)
-expr_stmt|;
 name|obj
 operator|->
 name|maskwords_bm_gnu
@@ -5707,11 +5687,15 @@ name|obj
 operator|->
 name|symndx_gnu
 expr_stmt|;
+comment|/* Number of bitmask words is required to be power of 2 */
 name|obj
 operator|->
 name|valid_hash_gnu
 operator|=
-name|nmw_power2
+name|powerof2
+argument_list|(
+name|nmaskwords
+argument_list|)
 operator|&&
 name|obj
 operator|->
