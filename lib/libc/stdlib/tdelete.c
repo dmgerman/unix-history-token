@@ -35,7 +35,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|__RCSID("$NetBSD: tdelete.c,v 1.2 1999/09/16 11:45:37 lukem Exp $");
+unit|__RCSID("$NetBSD: tdelete.c,v 1.6 2012/06/25 22:32:45 abs Exp $");
 endif|#
 directive|endif
 end_endif
@@ -76,7 +76,7 @@ file|<stdlib.h>
 end_include
 
 begin_comment
-comment|/*  * delete node with given key  *  * vkey:   key to be deleted  * vrootp: address of the root of the tree  * compar: function to carry out node comparisons  */
+comment|/*  * find a node with given key  *  * vkey:   key to be found  * vrootp: address of the root of the tree  * compar: function to carry out node comparisons  */
 end_comment
 
 begin_function
