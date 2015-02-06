@@ -17149,17 +17149,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{ 	}
+block|{
+comment|/* Nothing. */
+block|}
 else|else
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"unknown element %s"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+block|{
+comment|/* 		 * Unknown element; ignore it for forward compatiblity. 		 */
+block|}
 name|free
 argument_list|(
 name|str
