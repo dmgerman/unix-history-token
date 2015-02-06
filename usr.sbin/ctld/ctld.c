@@ -6454,6 +6454,65 @@ block|}
 end_function
 
 begin_function
+name|int
+name|target_set_offload
+parameter_list|(
+name|struct
+name|target
+modifier|*
+name|target
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|offload
+parameter_list|)
+block|{
+if|if
+condition|(
+name|target
+operator|->
+name|t_offload
+operator|!=
+name|NULL
+condition|)
+block|{
+name|log_warnx
+argument_list|(
+literal|"cannot set offload to \"%s\" for "
+literal|"target \"%s\"; already defined"
+argument_list|,
+name|offload
+argument_list|,
+name|target
+operator|->
+name|t_name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+name|target
+operator|->
+name|t_offload
+operator|=
+name|checked_strdup
+argument_list|(
+name|offload
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|struct
 name|lun
 modifier|*
@@ -7414,7 +7473,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void conf_print(struct conf *conf) { 	struct auth_group *ag; 	struct auth *auth; 	struct auth_name *auth_name; 	struct auth_portal *auth_portal; 	struct portal_group *pg; 	struct portal *portal; 	struct target *targ; 	struct lun *lun; 	struct lun_option *lo;  	TAILQ_FOREACH(ag,&conf->conf_auth_groups, ag_next) { 		fprintf(stderr, "auth-group %s {\n", ag->ag_name); 		TAILQ_FOREACH(auth,&ag->ag_auths, a_next) 			fprintf(stderr, "\t chap-mutual %s %s %s %s\n", 			    auth->a_user, auth->a_secret, 			    auth->a_mutual_user, auth->a_mutual_secret); 		TAILQ_FOREACH(auth_name,&ag->ag_names, an_next) 			fprintf(stderr, "\t initiator-name %s\n", 			    auth_name->an_initator_name); 		TAILQ_FOREACH(auth_portal,&ag->ag_portals, an_next) 			fprintf(stderr, "\t initiator-portal %s\n", 			    auth_portal->an_initator_portal); 		fprintf(stderr, "}\n"); 	} 	TAILQ_FOREACH(pg,&conf->conf_portal_groups, pg_next) { 		fprintf(stderr, "portal-group %s {\n", pg->pg_name); 		TAILQ_FOREACH(portal,&pg->pg_portals, p_next) 			fprintf(stderr, "\t listen %s\n", portal->p_listen); 		fprintf(stderr, "}\n"); 	} 	TAILQ_FOREACH(lun,&conf->conf_luns, l_next) { 		fprintf(stderr, "\tlun %s {\n", lun->l_name); 		fprintf(stderr, "\t\tpath %s\n", lun->l_path); 		TAILQ_FOREACH(lo,&lun->l_options, lo_next) 			fprintf(stderr, "\t\toption %s %s\n", 			    lo->lo_name, lo->lo_value); 		fprintf(stderr, "\t}\n"); 	} 	TAILQ_FOREACH(targ,&conf->conf_targets, t_next) { 		fprintf(stderr, "target %s {\n", targ->t_name); 		if (targ->t_alias != NULL) 			fprintf(stderr, "\t alias %s\n", targ->t_alias); 		fprintf(stderr, "}\n"); 	} }
+unit|static void conf_print(struct conf *conf) { 	struct auth_group *ag; 	struct auth *auth; 	struct auth_name *auth_name; 	struct auth_portal *auth_portal; 	struct portal_group *pg; 	struct portal *portal; 	struct target *targ; 	struct lun *lun; 	struct lun_option *lo;  	TAILQ_FOREACH(ag,&conf->conf_auth_groups, ag_next) { 		fprintf(stderr, "auth-group %s {\n", ag->ag_name); 		TAILQ_FOREACH(auth,&ag->ag_auths, a_next) 			fprintf(stderr, "\t chap-mutual %s %s %s %s\n", 			    auth->a_user, auth->a_secret, 			    auth->a_mutual_user, auth->a_mutual_secret); 		TAILQ_FOREACH(auth_name,&ag->ag_names, an_next) 			fprintf(stderr, "\t initiator-name %s\n", 			    auth_name->an_initator_name); 		TAILQ_FOREACH(auth_portal,&ag->ag_portals, an_next) 			fprintf(stderr, "\t initiator-portal %s\n", 			    auth_portal->an_initator_portal); 		fprintf(stderr, "}\n"); 	} 	TAILQ_FOREACH(pg,&conf->conf_portal_groups, pg_next) { 		fprintf(stderr, "portal-group %s {\n", pg->pg_name); 		TAILQ_FOREACH(portal,&pg->pg_portals, p_next) 			fprintf(stderr, "\t listen %s\n", portal->p_listen); 		fprintf(stderr, "}\n"); 	} 	TAILQ_FOREACH(lun,&conf->conf_luns, l_next) { 		fprintf(stderr, "\tlun %s {\n", lun->l_name); 		fprintf(stderr, "\t\tpath %s\n", lun->l_path); 		TAILQ_FOREACH(lo,&lun->l_options, lo_next) 			fprintf(stderr, "\t\toption %s %s\n", 			    lo->lo_name, lo->lo_value); 		fprintf(stderr, "\t}\n"); 	} 	TAILQ_FOREACH(targ,&conf->conf_targets, t_next) { 		fprintf(stderr, "target %s {\n", targ->t_name); 		if (targ->t_alias != NULL) 			fprintf(stderr, "\t alias %s\n", targ->t_alias); 		if (targ->t_offload != NULL) 			fprintf(stderr, "\t offload %s\n", targ->t_offload); 		fprintf(stderr, "}\n"); 	} }
 endif|#
 directive|endif
 end_endif
