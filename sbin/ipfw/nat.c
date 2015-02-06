@@ -698,15 +698,18 @@ name|sin
 operator|==
 name|NULL
 condition|)
-name|errx
+name|n
+operator|->
+name|ip
+operator|.
+name|s_addr
+operator|=
+name|htonl
 argument_list|(
-literal|1
-argument_list|,
-literal|"%s: cannot get interface address"
-argument_list|,
-name|ifn
+name|INADDR_ANY
 argument_list|)
 expr_stmt|;
+else|else
 name|n
 operator|->
 name|ip
