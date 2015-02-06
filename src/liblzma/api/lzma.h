@@ -806,7 +806,7 @@ directive|include
 file|"lzma/delta.h"
 include|#
 directive|include
-file|"lzma/lzma.h"
+file|"lzma/lzma12.h"
 comment|/* Container formats */
 include|#
 directive|include

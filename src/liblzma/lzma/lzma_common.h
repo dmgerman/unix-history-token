@@ -638,7 +638,7 @@ comment|////////////////////
 end_comment
 
 begin_comment
-comment|// Different set of probabilities is used for match distances that have very
+comment|// Different sets of probabilities are used for match distances that have very
 end_comment
 
 begin_comment
@@ -656,7 +656,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LEN_TO_POS_STATES
+name|DIST_STATES
 value|4
 end_define
 
@@ -667,34 +667,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|get_len_to_pos_state
+name|get_dist_state
 parameter_list|(
 name|len
 parameter_list|)
 define|\
-value|((len)< LEN_TO_POS_STATES + MATCH_LEN_MIN \ 		? (len) - MATCH_LEN_MIN \ 		: LEN_TO_POS_STATES - 1)
+value|((len)< DIST_STATES + MATCH_LEN_MIN \ 		? (len) - MATCH_LEN_MIN \ 		: DIST_STATES - 1)
 end_define
 
 begin_comment
-comment|// The highest two bits of a match distance (pos slot) are encoded using six
+comment|// The highest two bits of a match distance (distance slot) are encoded
 end_comment
 
 begin_comment
-comment|// bits. See fastpos.h for more explanation.
+comment|// using six bits. See fastpos.h for more explanation.
 end_comment
 
 begin_define
 define|#
 directive|define
-name|POS_SLOT_BITS
+name|DIST_SLOT_BITS
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|POS_SLOTS
-value|(1<< POS_SLOT_BITS)
+name|DIST_SLOTS
+value|(1<< DIST_SLOT_BITS)
 end_define
 
 begin_comment
@@ -702,25 +702,29 @@ comment|// Match distances up to 127 are fully encoded using probabilities. Sinc
 end_comment
 
 begin_comment
-comment|// the highest two bits (pos slot) are always encoded using six bits, the
+comment|// the highest two bits (distance slot) are always encoded using six bits,
 end_comment
 
 begin_comment
-comment|// distances 0-3 don't need any additional bits to encode, since the pos
+comment|// the distances 0-3 don't need any additional bits to encode, since the
 end_comment
 
 begin_comment
-comment|// slot itself is the same as the actual distance. START_POS_MODEL_INDEX
+comment|// distance slot itself is the same as the actual distance. DIST_MODEL_START
 end_comment
 
 begin_comment
-comment|// indicates the first pos slot where at least one additional bit is needed.
+comment|// indicates the first distance slot where at least one additional bit is
+end_comment
+
+begin_comment
+comment|// needed.
 end_comment
 
 begin_define
 define|#
 directive|define
-name|START_POS_MODEL_INDEX
+name|DIST_MODEL_START
 value|4
 end_define
 
@@ -729,7 +733,7 @@ comment|// Match distances greater than 127 are encoded in three pieces:
 end_comment
 
 begin_comment
-comment|//   - pos slot: the highest two bits
+comment|//   - distance slot: the highest two bits
 end_comment
 
 begin_comment
@@ -753,7 +757,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// The pos slot value of 14 is for distances 128-191 (see the table in
+comment|// The distance slot value of 14 is for distances 128-191 (see the table in
 end_comment
 
 begin_comment
@@ -763,19 +767,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|END_POS_MODEL_INDEX
+name|DIST_MODEL_END
 value|14
 end_define
 
 begin_comment
-comment|// Pos slots that indicate a distance<= 127.
+comment|// Distance slots that indicate a distance<= 127.
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FULL_DISTANCES_BITS
-value|(END_POS_MODEL_INDEX / 2)
+value|(DIST_MODEL_END / 2)
 end_define
 
 begin_define
@@ -803,7 +807,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ALIGN_TABLE_SIZE
+name|ALIGN_SIZE
 value|(1<< ALIGN_BITS)
 end_define
 
@@ -811,7 +815,7 @@ begin_define
 define|#
 directive|define
 name|ALIGN_MASK
-value|(ALIGN_TABLE_SIZE - 1)
+value|(ALIGN_SIZE - 1)
 end_define
 
 begin_comment
@@ -825,7 +829,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|REP_DISTANCES
+name|REPS
 value|4
 end_define
 

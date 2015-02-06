@@ -72,6 +72,12 @@ else|#
 directive|else
 end_else
 
+begin_include
+include|#
+directive|include
+file|<poll.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|bool
@@ -171,6 +177,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|IO_WAIT_MORE
+block|,
+comment|// Reading or writing is possible.
+name|IO_WAIT_ERROR
+block|,
+comment|// Error or user_abort
+name|IO_WAIT_TIMEOUT
+block|,
+comment|// poll() timed out
+block|}
+name|io_wait_ret
+typedef|;
+end_typedef
+
 begin_comment
 comment|/// If true, try to create sparse files when decompressing.
 end_comment
@@ -189,6 +213,30 @@ ifndef|#
 directive|ifndef
 name|TUKLIB_DOSLIKE
 end_ifndef
+
+begin_comment
+comment|/// File status flags of standard input. This is used by io_open_src()
+end_comment
+
+begin_comment
+comment|/// and io_close_src().
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|stdin_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|restore_stdin_flags
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Original file status flags of standard output. This is used by
@@ -211,6 +259,24 @@ name|bool
 name|restore_stdout_flags
 init|=
 name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Self-pipe used together with the user_abort variable to avoid
+end_comment
+
+begin_comment
+comment|/// race conditions with signal handling.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|user_abort_pipe
+index|[
+literal|2
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -268,6 +334,56 @@ argument_list|()
 operator|==
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|pipe
+argument_list|(
+name|user_abort_pipe
+argument_list|)
+operator|||
+name|fcntl
+argument_list|(
+name|user_abort_pipe
+index|[
+literal|0
+index|]
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|O_NONBLOCK
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|||
+name|fcntl
+argument_list|(
+name|user_abort_pipe
+index|[
+literal|1
+index|]
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|O_NONBLOCK
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|message_fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"Error creating a pipe: %s"
+argument_list|)
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 ifdef|#
@@ -277,8 +393,6 @@ comment|// Avoid doing useless things when statting files.
 comment|// This isn't important but doesn't hurt.
 name|_djstat_flags
 operator|=
-name|_STAT_INODE
-operator||
 name|_STAT_EXEC_EXT
 operator||
 name|_STAT_EXEC_MAGIC
@@ -290,6 +404,61 @@ directive|endif
 return|return;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TUKLIB_DOSLIKE
+end_ifndef
+
+begin_function
+specifier|extern
+name|void
+name|io_write_to_user_abort_pipe
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|// If the write() fails, it's probably due to the pipe being full.
+comment|// Failing in that case is fine. If the reason is something else,
+comment|// there's not much we can do since this is called in a signal
+comment|// handler. So ignore the errors and try to avoid warnings with
+comment|// GCC and glibc when _FORTIFY_SOURCE=2 is used.
+name|uint8_t
+name|b
+init|=
+literal|'\0'
+decl_stmt|;
+specifier|const
+name|int
+name|ret
+init|=
+name|write
+argument_list|(
+name|user_abort_pipe
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|b
+argument_list|,
+literal|1
+argument_list|)
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|ret
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|extern
@@ -306,6 +475,261 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TUKLIB_DOSLIKE
+end_ifndef
+
+begin_comment
+comment|/// \brief      Waits for input or output to become available or for a signal
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This uses the self-pipe trick to avoid a race condition that can occur
+end_comment
+
+begin_comment
+comment|/// if a signal is caught after user_abort has been checked but before e.g.
+end_comment
+
+begin_comment
+comment|/// read() has been called. In that situation read() could block unless
+end_comment
+
+begin_comment
+comment|/// non-blocking I/O is used. With non-blocking I/O something like select()
+end_comment
+
+begin_comment
+comment|/// or poll() is needed to avoid a busy-wait loop, and the same race condition
+end_comment
+
+begin_comment
+comment|/// pops up again. There are pselect() (POSIX-1.2001) and ppoll() (not in
+end_comment
+
+begin_comment
+comment|/// POSIX) but neither is portable enough in 2013. The self-pipe trick is
+end_comment
+
+begin_comment
+comment|/// old and very portable.
+end_comment
+
+begin_function
+specifier|static
+name|io_wait_ret
+name|io_wait
+parameter_list|(
+name|file_pair
+modifier|*
+name|pair
+parameter_list|,
+name|int
+name|timeout
+parameter_list|,
+name|bool
+name|is_reading
+parameter_list|)
+block|{
+name|struct
+name|pollfd
+name|pfd
+index|[
+literal|2
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|is_reading
+condition|)
+block|{
+name|pfd
+index|[
+literal|0
+index|]
+operator|.
+name|fd
+operator|=
+name|pair
+operator|->
+name|src_fd
+expr_stmt|;
+name|pfd
+index|[
+literal|0
+index|]
+operator|.
+name|events
+operator|=
+name|POLLIN
+expr_stmt|;
+block|}
+else|else
+block|{
+name|pfd
+index|[
+literal|0
+index|]
+operator|.
+name|fd
+operator|=
+name|pair
+operator|->
+name|dest_fd
+expr_stmt|;
+name|pfd
+index|[
+literal|0
+index|]
+operator|.
+name|events
+operator|=
+name|POLLOUT
+expr_stmt|;
+block|}
+name|pfd
+index|[
+literal|1
+index|]
+operator|.
+name|fd
+operator|=
+name|user_abort_pipe
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|pfd
+index|[
+literal|1
+index|]
+operator|.
+name|events
+operator|=
+name|POLLIN
+expr_stmt|;
+while|while
+condition|(
+name|true
+condition|)
+block|{
+specifier|const
+name|int
+name|ret
+init|=
+name|poll
+argument_list|(
+name|pfd
+argument_list|,
+literal|2
+argument_list|,
+name|timeout
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|user_abort
+condition|)
+return|return
+name|IO_WAIT_ERROR
+return|;
+if|if
+condition|(
+name|ret
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+operator|||
+name|errno
+operator|==
+name|EAGAIN
+condition|)
+continue|continue;
+name|message_error
+argument_list|(
+name|_
+argument_list|(
+literal|"%s: poll() failed: %s"
+argument_list|)
+argument_list|,
+name|is_reading
+condition|?
+name|pair
+operator|->
+name|src_name
+else|:
+name|pair
+operator|->
+name|dest_name
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|IO_WAIT_ERROR
+return|;
+block|}
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+block|{
+name|assert
+argument_list|(
+name|opt_flush_timeout
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+name|flush_needed
+operator|=
+name|true
+expr_stmt|;
+return|return
+name|IO_WAIT_TIMEOUT
+return|;
+block|}
+if|if
+condition|(
+name|pfd
+index|[
+literal|0
+index|]
+operator|.
+name|revents
+operator|!=
+literal|0
+condition|)
+return|return
+name|IO_WAIT_MORE
+return|;
+block|}
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/// \brief      Unlink a file
@@ -1177,6 +1601,115 @@ argument_list|,
 name|O_BINARY
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|// Enable O_NONBLOCK for stdin.
+name|stdin_flags
+operator|=
+name|fcntl
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+name|F_GETFL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stdin_flags
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|message_error
+argument_list|(
+name|_
+argument_list|(
+literal|"Error getting the file status flags "
+literal|"from standard input: %s"
+argument_list|)
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|stdin_flags
+operator|&
+name|O_NONBLOCK
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|stdin_flags
+operator||
+name|O_NONBLOCK
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|message_error
+argument_list|(
+name|_
+argument_list|(
+literal|"Error setting O_NONBLOCK "
+literal|"on standard input: %s"
+argument_list|)
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+name|restore_stdin_flags
+operator|=
+name|true
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_POSIX_FADVISE
+comment|// It will fail if stdin is a pipe and that's fine.
+operator|(
+name|void
+operator|)
+name|posix_fadvise
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|POSIX_FADV_SEQUENTIAL
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 return|return
@@ -1216,15 +1749,11 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|TUKLIB_DOSLIKE
-comment|// If we accept only regular files, we need to be careful to avoid
-comment|// problems with special files like devices and FIFOs. O_NONBLOCK
-comment|// prevents blocking when opening such files. When we want to accept
-comment|// special files, we must not use O_NONBLOCK, or otherwise we won't
-comment|// block waiting e.g. FIFOs to become readable.
-if|if
-condition|(
-name|reg_files_only
-condition|)
+comment|// Use non-blocking I/O:
+comment|//   - It prevents blocking when opening FIFOs and some other
+comment|//     special files, which is good if we want to accept only
+comment|//     regular files.
+comment|//   - It can help avoiding some race conditions with signal handling.
 name|flags
 operator||=
 name|O_NONBLOCK
@@ -1336,22 +1865,8 @@ name|follow_symlinks
 expr_stmt|;
 endif|#
 directive|endif
-comment|// Try to open the file. If we are accepting non-regular files,
-comment|// unblock the caught signals so that open() can be interrupted
-comment|// if it blocks e.g. due to a FIFO file.
-if|if
-condition|(
-operator|!
-name|reg_files_only
-condition|)
-name|signals_unblock
-argument_list|()
-expr_stmt|;
-comment|// Maybe this wouldn't need a loop, since all the signal handlers for
-comment|// which we don't use SA_RESTART set user_abort to true. But it
-comment|// doesn't hurt to have it just in case.
-do|do
-block|{
+comment|// Try to open the file. Signals have been blocked so EINTR shouldn't
+comment|// be possible.
 name|pair
 operator|->
 name|src_fd
@@ -1365,32 +1880,6 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-block|}
-do|while
-condition|(
-name|pair
-operator|->
-name|src_fd
-operator|==
-operator|-
-literal|1
-operator|&&
-name|errno
-operator|==
-name|EINTR
-operator|&&
-operator|!
-name|user_abort
-condition|)
-do|;
-if|if
-condition|(
-operator|!
-name|reg_files_only
-condition|)
-name|signals_block
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|pair
@@ -1401,25 +1890,14 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|// If we were interrupted, don't display any error message.
-if|if
-condition|(
-name|errno
-operator|==
-name|EINTR
-condition|)
-block|{
-comment|// All the signals that don't have SA_RESTART
-comment|// set user_abort.
+comment|// Signals (that have a signal handler) have been blocked.
 name|assert
 argument_list|(
-name|user_abort
+name|errno
+operator|!=
+name|EINTR
 argument_list|)
 expr_stmt|;
-return|return
-name|true
-return|;
-block|}
 ifdef|#
 directive|ifdef
 name|O_NOFOLLOW
@@ -1597,67 +2075,35 @@ return|return
 name|true
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|TUKLIB_DOSLIKE
-comment|// Drop O_NONBLOCK, which is used only when we are accepting only
-comment|// regular files. After the open() call, we want things to block
-comment|// instead of giving EAGAIN.
-if|if
-condition|(
-name|reg_files_only
-condition|)
-block|{
-name|flags
-operator|=
-name|fcntl
-argument_list|(
-name|pair
-operator|->
-name|src_fd
-argument_list|,
-name|F_GETFL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|==
-operator|-
-literal|1
-condition|)
-goto|goto
-name|error_msg
-goto|;
-name|flags
-operator|&=
-operator|~
-name|O_NONBLOCK
-expr_stmt|;
-if|if
-condition|(
-name|fcntl
-argument_list|(
-name|pair
-operator|->
-name|src_fd
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|flags
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-goto|goto
-name|error_msg
-goto|;
-block|}
-endif|#
-directive|endif
 comment|// Stat the source file. We need the result also when we copy
 comment|// the permissions, and when unlinking.
+comment|//
+comment|// NOTE: Use stat() instead of fstat() with DJGPP, because
+comment|// then we have a better chance to get st_ino value that can
+comment|// be used in io_open_dest_real() to prevent overwriting the
+comment|// source file.
+ifdef|#
+directive|ifdef
+name|__DJGPP__
+if|if
+condition|(
+name|stat
+argument_list|(
+name|pair
+operator|->
+name|src_name
+argument_list|,
+operator|&
+name|pair
+operator|->
+name|src_st
+argument_list|)
+condition|)
+goto|goto
+name|error_msg
+goto|;
+else|#
+directive|else
 if|if
 condition|(
 name|fstat
@@ -1675,6 +2121,8 @@ condition|)
 goto|goto
 name|error_msg
 goto|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|S_ISDIR
@@ -1844,6 +2292,74 @@ name|error
 goto|;
 block|}
 block|}
+comment|// If it is something else than a regular file, wait until
+comment|// there is input available. This way reading from FIFOs
+comment|// will work when open() is used with O_NONBLOCK.
+if|if
+condition|(
+operator|!
+name|S_ISREG
+argument_list|(
+name|pair
+operator|->
+name|src_st
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+name|signals_unblock
+argument_list|()
+expr_stmt|;
+specifier|const
+name|io_wait_ret
+name|ret
+init|=
+name|io_wait
+argument_list|(
+name|pair
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|true
+argument_list|)
+decl_stmt|;
+name|signals_block
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+name|IO_WAIT_MORE
+condition|)
+goto|goto
+name|error
+goto|;
+block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_POSIX_FADVISE
+comment|// It will fail with some special files like FIFOs but that is fine.
+operator|(
+name|void
+operator|)
+name|posix_fadvise
+argument_list|(
+name|pair
+operator|->
+name|src_fd
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|POSIX_FADV_SEQUENTIAL
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 return|return
@@ -2017,6 +2533,58 @@ name|bool
 name|success
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|TUKLIB_DOSLIKE
+if|if
+condition|(
+name|restore_stdin_flags
+condition|)
+block|{
+name|assert
+argument_list|(
+name|pair
+operator|->
+name|src_fd
+operator|==
+name|STDIN_FILENO
+argument_list|)
+expr_stmt|;
+name|restore_stdin_flags
+operator|=
+name|false
+expr_stmt|;
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|stdin_flags
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|message_error
+argument_list|(
+name|_
+argument_list|(
+literal|"Error restoring the status flags "
+literal|"to standard input: %s"
+argument_list|)
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|pair
@@ -2142,6 +2710,98 @@ argument_list|,
 name|O_BINARY
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|// Set O_NONBLOCK if it isn't already set.
+comment|//
+comment|// NOTE: O_APPEND may be unset later in this function
+comment|// and it relies on stdout_flags being set here.
+name|stdout_flags
+operator|=
+name|fcntl
+argument_list|(
+name|STDOUT_FILENO
+argument_list|,
+name|F_GETFL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stdout_flags
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|message_error
+argument_list|(
+name|_
+argument_list|(
+literal|"Error getting the file status flags "
+literal|"from standard output: %s"
+argument_list|)
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|stdout_flags
+operator|&
+name|O_NONBLOCK
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|STDOUT_FILENO
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|stdout_flags
+operator||
+name|O_NONBLOCK
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|message_error
+argument_list|(
+name|_
+argument_list|(
+literal|"Error setting O_NONBLOCK "
+literal|"on standard output: %s"
+argument_list|)
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+name|restore_stdout_flags
+operator|=
+name|true
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -2169,6 +2829,94 @@ condition|)
 return|return
 name|true
 return|;
+ifdef|#
+directive|ifdef
+name|__DJGPP__
+name|struct
+name|stat
+name|st
+decl_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|pair
+operator|->
+name|dest_name
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|// Check that it isn't a special file like "prn".
+if|if
+condition|(
+name|st
+operator|.
+name|st_dev
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|message_error
+argument_list|(
+literal|"%s: Refusing to write to "
+literal|"a DOS special file"
+argument_list|,
+name|pair
+operator|->
+name|dest_name
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+comment|// Check that we aren't overwriting the source file.
+if|if
+condition|(
+name|st
+operator|.
+name|st_dev
+operator|==
+name|pair
+operator|->
+name|src_st
+operator|.
+name|st_dev
+operator|&&
+name|st
+operator|.
+name|st_ino
+operator|==
+name|pair
+operator|->
+name|src_st
+operator|.
+name|st_ino
+condition|)
+block|{
+name|message_error
+argument_list|(
+literal|"%s: Output file is the same "
+literal|"as the input file"
+argument_list|,
+name|pair
+operator|->
+name|dest_name
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+block|}
+endif|#
+directive|endif
 comment|// If --force was used, unlink the target file first.
 if|if
 condition|(
@@ -2215,7 +2963,6 @@ name|true
 return|;
 block|}
 comment|// Open the file.
-specifier|const
 name|int
 name|flags
 init|=
@@ -2229,6 +2976,15 @@ name|O_CREAT
 operator||
 name|O_EXCL
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|TUKLIB_DOSLIKE
+name|flags
+operator||=
+name|O_NONBLOCK
+expr_stmt|;
+endif|#
+directive|endif
 specifier|const
 name|mode_t
 name|mode
@@ -2288,7 +3044,11 @@ name|true
 return|;
 block|}
 block|}
-comment|// If this really fails... well, we have a safe fallback.
+ifndef|#
+directive|ifndef
+name|TUKLIB_DOSLIKE
+comment|// dest_st isn't used on DOS-like systems except as a dummy
+comment|// argument to io_unlink(), so don't fstat() on such systems.
 if|if
 condition|(
 name|fstat
@@ -2304,6 +3064,7 @@ name|dest_st
 argument_list|)
 condition|)
 block|{
+comment|// If fstat() really fails, we have a safe fallback here.
 if|#
 directive|if
 name|defined
@@ -2343,13 +3104,8 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-elif|#
-directive|elif
-operator|!
-name|defined
-argument_list|(
-name|TUKLIB_DOSLIKE
-argument_list|)
+else|#
+directive|else
 name|pair
 operator|->
 name|dest_st
@@ -2368,9 +3124,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|TUKLIB_DOSLIKE
 block|}
 elseif|else
 if|if
@@ -2418,25 +3171,6 @@ condition|)
 return|return
 name|false
 return|;
-name|stdout_flags
-operator|=
-name|fcntl
-argument_list|(
-name|STDOUT_FILENO
-argument_list|,
-name|F_GETFL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stdout_flags
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-name|false
-return|;
 if|if
 condition|(
 name|stdout_flags
@@ -2475,6 +3209,12 @@ condition|)
 return|return
 name|false
 return|;
+comment|// O_NONBLOCK was set earlier in this function
+comment|// so it must be kept here too. If this
+comment|// fcntl() call fails, we continue but won't
+comment|// try to create sparse output. The original
+comment|// flags will still be restored if needed (to
+comment|// unset O_NONBLOCK) when the file is finished.
 if|if
 condition|(
 name|fcntl
@@ -2483,7 +3223,11 @@ name|STDOUT_FILENO
 argument_list|,
 name|F_SETFL
 argument_list|,
+operator|(
 name|stdout_flags
+operator||
+name|O_NONBLOCK
+operator|)
 operator|&
 operator|~
 name|O_APPEND
@@ -2497,7 +3241,10 @@ name|false
 return|;
 comment|// Disabling O_APPEND succeeded. Mark
 comment|// that the flags should be restored
-comment|// in io_close_dest().
+comment|// in io_close_dest(). This quite likely was
+comment|// already set when enabling O_NONBLOCK but
+comment|// just in case O_NONBLOCK was already set,
+comment|// set this again here.
 name|restore_stdout_flags
 operator|=
 name|true
@@ -2536,9 +3283,9 @@ name|dest_try_sparse
 operator|=
 name|true
 expr_stmt|;
+block|}
 endif|#
 directive|endif
-block|}
 return|return
 name|false
 return|;
@@ -2948,6 +3695,60 @@ end_function
 
 begin_function
 specifier|extern
+name|void
+name|io_fix_src_pos
+parameter_list|(
+name|file_pair
+modifier|*
+name|pair
+parameter_list|,
+name|size_t
+name|rewind_size
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|rewind_size
+operator|<=
+name|IO_BUFFER_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rewind_size
+operator|>
+literal|0
+condition|)
+block|{
+comment|// This doesn't need to work on unseekable file descriptors,
+comment|// so just ignore possible errors.
+operator|(
+name|void
+operator|)
+name|lseek
+argument_list|(
+name|pair
+operator|->
+name|src_fd
+argument_list|,
+operator|-
+call|(
+name|off_t
+call|)
+argument_list|(
+name|rewind_size
+argument_list|)
+argument_list|,
+name|SEEK_CUR
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+end_function
+
+begin_function
+specifier|extern
 name|size_t
 name|io_read
 parameter_list|(
@@ -3045,6 +3846,65 @@ name|SIZE_MAX
 return|;
 continue|continue;
 block|}
+ifndef|#
+directive|ifndef
+name|TUKLIB_DOSLIKE
+if|if
+condition|(
+name|errno
+operator|==
+name|EAGAIN
+operator|||
+name|errno
+operator|==
+name|EWOULDBLOCK
+condition|)
+block|{
+specifier|const
+name|io_wait_ret
+name|ret
+init|=
+name|io_wait
+argument_list|(
+name|pair
+argument_list|,
+name|mytime_get_flush_timeout
+argument_list|()
+argument_list|,
+name|true
+argument_list|)
+decl_stmt|;
+switch|switch
+condition|(
+name|ret
+condition|)
+block|{
+case|case
+name|IO_WAIT_MORE
+case|:
+continue|continue;
+case|case
+name|IO_WAIT_ERROR
+case|:
+return|return
+name|SIZE_MAX
+return|;
+case|case
+name|IO_WAIT_TIMEOUT
+case|:
+return|return
+name|size
+operator|-
+name|left
+return|;
+default|default:
+name|message_bug
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
 name|message_error
 argument_list|(
 name|_
@@ -3061,13 +3921,6 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
-expr_stmt|;
-comment|// FIXME Is this needed?
-name|pair
-operator|->
-name|src_eof
-operator|=
-name|true
 expr_stmt|;
 return|return
 name|SIZE_MAX
@@ -3343,6 +4196,41 @@ name|true
 return|;
 continue|continue;
 block|}
+ifndef|#
+directive|ifndef
+name|TUKLIB_DOSLIKE
+if|if
+condition|(
+name|errno
+operator|==
+name|EAGAIN
+operator|||
+name|errno
+operator|==
+name|EWOULDBLOCK
+condition|)
+block|{
+if|if
+condition|(
+name|io_wait
+argument_list|(
+name|pair
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|false
+argument_list|)
+operator|==
+name|IO_WAIT_MORE
+condition|)
+continue|continue;
+return|return
+name|true
+return|;
+block|}
+endif|#
+directive|endif
 comment|// Handle broken pipe specially. gzip and bzip2
 comment|// don't print anything on SIGPIPE. In addition,
 comment|// gzip --quiet uses exit status 2 (warning) on

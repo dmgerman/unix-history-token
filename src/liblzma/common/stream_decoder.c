@@ -118,6 +118,11 @@ comment|/// If true, LZMA_GET_CHECK is returned after decoding Stream Header.
 name|bool
 name|tell_any_check
 decl_stmt|;
+comment|/// If true, we will tell the Block decoder to skip calculating
+comment|/// and verifying the integrity check.
+name|bool
+name|ignore_check
+decl_stmt|;
 comment|/// If true, we will decode concatenated Streams that possibly have
 comment|/// Stream Padding between or after them. LZMA_STREAM_END is returned
 comment|/// once the application isn't giving us any new input, and we aren't
@@ -158,6 +163,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -216,6 +222,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -533,14 +540,14 @@ name|pos
 operator|=
 literal|0
 expr_stmt|;
-comment|// Version 0 is currently the only possible version.
+comment|// Version 1 is needed to support the .ignore_check option.
 name|coder
 operator|->
 name|block_options
 operator|.
 name|version
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 comment|// Set up a buffer to hold the filter chain. Block Header
 comment|// decoder will initialize all members of this array so
@@ -578,6 +585,19 @@ operator|->
 name|buffer
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|// If LZMA_IGNORE_CHECK was used, this flag needs to be set.
+comment|// It has to be set after lzma_block_header_decode() because
+comment|// it always resets this to false.
+name|coder
+operator|->
+name|block_options
+operator|.
+name|ignore_check
+operator|=
+name|coder
+operator|->
+name|ignore_check
 expr_stmt|;
 comment|// Check the memory usage limit.
 specifier|const
@@ -1108,6 +1128,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -1239,6 +1260,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -1412,6 +1434,20 @@ operator|(
 name|flags
 operator|&
 name|LZMA_TELL_ANY_CHECK
+operator|)
+operator|!=
+literal|0
+expr_stmt|;
+name|next
+operator|->
+name|coder
+operator|->
+name|ignore_check
+operator|=
+operator|(
+name|flags
+operator|&
+name|LZMA_IGNORE_CHECK
 operator|)
 operator|!=
 literal|0

@@ -8,11 +8,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|/// \file       filter_decoder.c
+comment|/// \file       block_buffer_encoder.h
 end_comment
 
 begin_comment
-comment|/// \brief      Filter ID mapping to filter-specific functions
+comment|/// \brief      Single-call .xz Block encoder
 end_comment
 
 begin_comment
@@ -46,13 +46,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LZMA_FILTER_DECODER_H
+name|LZMA_BLOCK_BUFFER_ENCODER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LZMA_FILTER_DECODER_H
+name|LZMA_BLOCK_BUFFER_ENCODER_H
 end_define
 
 begin_include
@@ -61,24 +61,25 @@ directive|include
 file|"common.h"
 end_include
 
+begin_comment
+comment|/// uint64_t version of lzma_block_buffer_bound(). It is used by
+end_comment
+
+begin_comment
+comment|/// stream_encoder_mt.c. Probably the original lzma_block_buffer_bound()
+end_comment
+
+begin_comment
+comment|/// should have been 64-bit, but fixing it would break the ABI.
+end_comment
+
 begin_function_decl
 specifier|extern
-name|lzma_ret
-name|lzma_raw_decoder_init
+name|uint64_t
+name|lzma_block_buffer_bound64
 parameter_list|(
-name|lzma_next_coder
-modifier|*
-name|next
-parameter_list|,
-specifier|const
-name|lzma_allocator
-modifier|*
-name|allocator
-parameter_list|,
-specifier|const
-name|lzma_filter
-modifier|*
-name|options
+name|uint64_t
+name|uncompressed_size
 parameter_list|)
 function_decl|;
 end_function_decl
