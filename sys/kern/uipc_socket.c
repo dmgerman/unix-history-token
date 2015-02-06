@@ -9342,9 +9342,9 @@ operator|)
 operator|&&
 operator|(
 operator|(
-name|sb
+name|so
 operator|->
-name|sb_flags
+name|so_state
 operator|&
 name|SS_NBIO
 operator|)
