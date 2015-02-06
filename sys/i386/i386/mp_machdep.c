@@ -4853,12 +4853,13 @@ name|int
 name|vector
 parameter_list|)
 block|{
+comment|/* 	 * This attempts to follow the algorithm described in the 	 * Intel Multiprocessor Specification v1.4 in section B.4. 	 * For each IPI, we allow the local APIC ~20us to deliver the 	 * IPI.  If that times out, we panic. 	 */
 comment|/* 	 * first we do an INIT IPI: this INIT IPI might be run, resetting 	 * and running the target CPU. OR this INIT IPI might be latched (P5 	 * bug), CPU waiting for STARTUP IPI. OR this INIT IPI might be 	 * ignored. 	 */
 name|lapic_ipi_raw
 argument_list|(
 name|APIC_DEST_DESTFLD
 operator||
-name|APIC_TRIGMOD_EDGE
+name|APIC_TRIGMOD_LEVEL
 operator||
 name|APIC_LEVEL_ASSERT
 operator||
@@ -4871,8 +4872,23 @@ argument_list|)
 expr_stmt|;
 name|lapic_ipi_wait
 argument_list|(
-operator|-
-literal|1
+literal|20
+argument_list|)
+expr_stmt|;
+comment|/* Explicitly deassert the INIT IPI. */
+name|lapic_ipi_raw
+argument_list|(
+name|APIC_DEST_DESTFLD
+operator||
+name|APIC_TRIGMOD_LEVEL
+operator||
+name|APIC_LEVEL_DEASSERT
+operator||
+name|APIC_DESTMODE_PHY
+operator||
+name|APIC_DELMODE_INIT
+argument_list|,
+name|apic_id
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -4888,7 +4904,7 @@ name|APIC_DEST_DESTFLD
 operator||
 name|APIC_TRIGMOD_EDGE
 operator||
-name|APIC_LEVEL_DEASSERT
+name|APIC_LEVEL_ASSERT
 operator||
 name|APIC_DESTMODE_PHY
 operator||
@@ -4899,10 +4915,19 @@ argument_list|,
 name|apic_id
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|lapic_ipi_wait
 argument_list|(
-operator|-
-literal|1
+literal|20
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"Failed to deliver first STARTUP IPI to APIC %d"
+argument_list|,
+name|apic_id
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -4918,7 +4943,7 @@ name|APIC_DEST_DESTFLD
 operator||
 name|APIC_TRIGMOD_EDGE
 operator||
-name|APIC_LEVEL_DEASSERT
+name|APIC_LEVEL_ASSERT
 operator||
 name|APIC_DESTMODE_PHY
 operator||
@@ -4929,10 +4954,19 @@ argument_list|,
 name|apic_id
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|lapic_ipi_wait
 argument_list|(
-operator|-
-literal|1
+literal|20
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"Failed to deliver second STARTUP IPI to APIC %d"
+argument_list|,
+name|apic_id
 argument_list|)
 expr_stmt|;
 name|DELAY
