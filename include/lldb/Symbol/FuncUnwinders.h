@@ -14,6 +14,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/AddressRange.h"
 end_include
 
@@ -49,7 +55,8 @@ name|public
 label|:
 comment|// FuncUnwinders objects are used to track UnwindPlans for a function
 comment|// (named or not - really just an address range)
-comment|// We'll record three different UnwindPlans for each address range:
+comment|// We'll record four different UnwindPlans for each address range:
+comment|//
 comment|//   1. Unwinding from a call site (a valid exception throw location)
 comment|//      This is often sourced from the eh_frame exception handling info
 comment|//   2. Unwinding from a non-call site (any location in the function)
@@ -83,6 +90,8 @@ operator|::
 name|UnwindPlanSP
 name|GetUnwindPlanAtCallSite
 argument_list|(
+argument|Target&target
+argument_list|,
 argument|int current_offset
 argument_list|)
 expr_stmt|;
@@ -169,21 +178,97 @@ name|addr
 argument_list|)
 return|;
 block|}
-comment|// When we're doing an unwind using the UnwindPlanAtNonCallSite and we find an
-comment|// impossible unwind condition, we know that the UnwindPlan is invalid.  Calling
-comment|// this method on the FuncUnwinder will tell it to replace that UnwindPlan with
-comment|// the architectural default UnwindPlan so hopefully our stack walk will get past
-comment|// this frame.
-name|void
-name|InvalidateNonCallSiteUnwindPlan
-argument_list|(
-name|lldb_private
+comment|// A function may have a Language Specific Data Area specified -- a block of data in
+comment|// the object file which is used in the processing of an exception throw / catch.
+comment|// If any of the UnwindPlans have the address of the LSDA region for this function,
+comment|// this will return it.
+name|Address
+name|GetLSDAAddress
+parameter_list|(
+name|Target
+modifier|&
+name|target
+parameter_list|)
+function_decl|;
+comment|// A function may have a Personality Routine associated with it -- used in the
+comment|// processing of throwing an exception.  If any of the UnwindPlans have the
+comment|// address of the personality routine, this will return it.  Read the target-pointer
+comment|// at this address to get the personality function address.
+name|Address
+name|GetPersonalityRoutinePtrAddress
+parameter_list|(
+name|Target
+modifier|&
+name|target
+parameter_list|)
+function_decl|;
+comment|// The following methods to retrieve specific unwind plans should rarely be used.
+comment|// Instead, clients should ask for the *behavior* they are looking for, using one
+comment|// of the above UnwindPlan retrieval methods.
+name|lldb
 operator|::
+name|UnwindPlanSP
+name|GetAssemblyUnwindPlan
+argument_list|(
+argument|Target&target
+argument_list|,
+argument|Thread&thread
+argument_list|,
+argument|int current_offset
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|UnwindPlanSP
+name|GetEHFrameUnwindPlan
+argument_list|(
+argument|Target&target
+argument_list|,
+argument|int current_offset
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|UnwindPlanSP
+name|GetEHFrameAugmentedUnwindPlan
+argument_list|(
+argument|Target&target
+argument_list|,
+argument|Thread&thread
+argument_list|,
+argument|int current_offset
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|UnwindPlanSP
+name|GetCompactUnwindUnwindPlan
+argument_list|(
+argument|Target&target
+argument_list|,
+argument|int current_offset
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|UnwindPlanSP
+name|GetArchDefaultUnwindPlan
+argument_list|(
 name|Thread
 operator|&
-name|Thread
+name|thread
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+name|lldb
+operator|::
+name|UnwindPlanSP
+name|GetArchDefaultAtFuncEntryUnwindPlan
+argument_list|(
+name|Thread
+operator|&
+name|thread
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 name|lldb
@@ -205,12 +290,28 @@ decl_stmt|;
 name|lldb
 operator|::
 name|UnwindPlanSP
-name|m_unwind_plan_call_site_sp
+name|m_unwind_plan_assembly_sp
 expr_stmt|;
 name|lldb
 operator|::
 name|UnwindPlanSP
-name|m_unwind_plan_non_call_site_sp
+name|m_unwind_plan_eh_frame_sp
+expr_stmt|;
+name|lldb
+operator|::
+name|UnwindPlanSP
+name|m_unwind_plan_eh_frame_augmented_sp
+expr_stmt|;
+comment|// augmented by assembly inspection so it's valid everywhere
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb
+operator|::
+name|UnwindPlanSP
+operator|>
+name|m_unwind_plan_compact_unwind
 expr_stmt|;
 name|lldb
 operator|::
@@ -227,12 +328,22 @@ operator|::
 name|UnwindPlanSP
 name|m_unwind_plan_arch_default_at_func_entry_sp
 expr_stmt|;
+comment|// Fetching the UnwindPlans can be expensive - if we've already attempted
+comment|// to get one& failed, don't try again.
 name|bool
-name|m_tried_unwind_at_call_site
+name|m_tried_unwind_plan_assembly
 range|:
 literal|1
 decl_stmt|,
-name|m_tried_unwind_at_non_call_site
+name|m_tried_unwind_plan_eh_frame
+range|:
+literal|1
+decl_stmt|,
+name|m_tried_unwind_plan_eh_frame_augmented
+range|:
+literal|1
+decl_stmt|,
+name|m_tried_unwind_plan_compact_unwind
 range|:
 literal|1
 decl_stmt|,

@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MIUtilStreamStdin.h
+comment|// File:        MIUtilStreamStdin.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmnStreamStdin interface.
+comment|// Overview:    CMICmnStreamStdin interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -114,35 +114,35 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code class. Used to handle stream data from Stdin.
+comment|// Details: MI common code class. Used to handle stream data from Stdin.
 end_comment
 
 begin_comment
-comment|//			Singleton class using the Visitor pattern. A driver using the interface
+comment|//          Singleton class using the Visitor pattern. A driver using the interface
 end_comment
 
 begin_comment
-comment|//			provide can receive callbacks when a new line of data is received.
+comment|//          provide can receive callbacks when a new line of data is received.
 end_comment
 
 begin_comment
-comment|//			Each line is determined by a carriage return.
+comment|//          Each line is determined by a carriage return.
 end_comment
 
 begin_comment
-comment|//			A singleton class.
+comment|//          A singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 10/02/2014.
+comment|// Authors: Illya Rudkin 10/02/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	Factored out OS specific handling of reading stdin	- IOR 16/06/2014.
+comment|// Changes: Factored out OS specific handling of reading stdin  - IOR 16/06/2014.
 end_comment
 
 begin_comment
@@ -181,7 +181,7 @@ name|public
 label|:
 comment|//++
 comment|// Description: Visitor pattern. Driver(s) use this interface to get a callback
-comment|//				on each new line of data received from stdin.
+comment|//              on each new line of data received from stdin.
 comment|//--
 name|class
 name|IStreamStdin
@@ -217,8 +217,8 @@ block|}
 empty_stmt|;
 comment|//++
 comment|// Description: Specific OS stdin handling implementations are created and used by *this
-comment|//				class. Seperates out functionality and enables handler to be set
-comment|//				dynamically depended on the OS detected.
+comment|//              class. Seperates out functionality and enables handler to be set
+comment|//              dynamically depended on the OS detected.
 comment|//--
 name|class
 name|IOSStdinHandler
@@ -249,6 +249,14 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|void
+name|InterruptReadLine
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
+empty_stmt|;
 comment|/* dtor */
 name|virtual
 operator|~
@@ -329,6 +337,12 @@ parameter_list|(
 name|IOSStdinHandler
 modifier|&
 name|vrHandler
+parameter_list|)
+function_decl|;
+name|void
+name|OnExitHandler
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 comment|// Overridden:

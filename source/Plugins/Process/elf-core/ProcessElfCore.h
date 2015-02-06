@@ -226,6 +226,7 @@ argument|lldb_private::Target&target
 argument_list|,
 argument|bool plugin_specified_by_name
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Creating a new process, or attaching to an existing one
@@ -236,6 +237,7 @@ operator|::
 name|Error
 name|DoLoadCore
 argument_list|()
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -244,6 +246,7 @@ name|DynamicLoader
 operator|*
 name|GetDynamicLoader
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
@@ -254,11 +257,13 @@ operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
 name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Process Control
@@ -269,11 +274,13 @@ operator|::
 name|Error
 name|DoDestroy
 argument_list|()
+name|override
 block|;
 name|virtual
 name|void
 name|RefreshStateAfterStop
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Process Queries
@@ -282,6 +289,7 @@ name|virtual
 name|bool
 name|IsAlive
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Process Memory
@@ -298,6 +306,7 @@ argument|size_t size
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 name|virtual
 name|size_t
@@ -311,6 +320,7 @@ argument|size_t size
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb
@@ -318,6 +328,7 @@ operator|::
 name|addr_t
 name|GetImageInfoAddress
 argument_list|()
+name|override
 block|;
 name|lldb_private
 operator|::
@@ -344,18 +355,11 @@ name|virtual
 name|bool
 name|UpdateThreadList
 argument_list|(
-name|lldb_private
-operator|::
-name|ThreadList
-operator|&
-name|old_thread_list
+argument|lldb_private::ThreadList&old_thread_list
 argument_list|,
-name|lldb_private
-operator|::
-name|ThreadList
-operator|&
-name|new_thread_list
+argument|lldb_private::ThreadList&new_thread_list
 argument_list|)
+name|override
 block|;
 name|private
 operator|:

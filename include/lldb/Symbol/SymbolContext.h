@@ -361,6 +361,9 @@ name|show_module
 argument_list|,
 name|bool
 name|show_inlined_frames
+argument_list|,
+name|bool
+name|show_function_arguments
 argument_list|)
 decl|const
 decl_stmt|;

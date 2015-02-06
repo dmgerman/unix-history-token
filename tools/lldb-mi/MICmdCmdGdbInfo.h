@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdCmdGdbInfo.h
+comment|// File:        MICmdCmdGdbInfo.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdCmdGdbInfo	interface.
+comment|// Overview:    CMICmdCmdGdbInfo    interface.
 end_comment
 
 begin_comment
@@ -52,51 +52,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|//				To implement new MI commands derive a new command class from the command base
+comment|//              To implement new MI commands derive a new command class from the command base
 end_comment
 
 begin_comment
-comment|//				class. To enable the new command for interpretation add the new command class
+comment|//              class. To enable the new command for interpretation add the new command class
 end_comment
 
 begin_comment
-comment|//				to the command factory. The files of relevance are:
+comment|//              to the command factory. The files of relevance are:
 end_comment
 
 begin_comment
-comment|//					MICmdCommands.cpp
+comment|//                  MICmdCommands.cpp
 end_comment
 
 begin_comment
-comment|//					MICmdBase.h / .cpp
+comment|//                  MICmdBase.h / .cpp
 end_comment
 
 begin_comment
-comment|//					MICmdCmd.h / .cpp
+comment|//                  MICmdCmd.h / .cpp
 end_comment
 
 begin_comment
-comment|//				For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
+comment|//              For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
 end_comment
 
 begin_comment
-comment|//				command class as an example.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              command class as an example.
 end_comment
 
 begin_comment
@@ -104,7 +88,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Environment: Compilers:  Visual C++ 12.
+end_comment
+
+begin_comment
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+end_comment
+
+begin_comment
+comment|//              Libraries:  See MIReadmetxt.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -142,55 +142,55 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements GDB command "info".
+comment|//          *this class implements GDB command "info".
 end_comment
 
 begin_comment
-comment|//			The design of matching the info request to a request action (or
+comment|//          The design of matching the info request to a request action (or
 end_comment
 
 begin_comment
-comment|//			command) is very simple. The request function which carries out
+comment|//          command) is very simple. The request function which carries out
 end_comment
 
 begin_comment
-comment|//			the task of information gathering and printing to stdout is part of
+comment|//          the task of information gathering and printing to stdout is part of
 end_comment
 
 begin_comment
-comment|//			*this class. Should the request function become more complicated then
+comment|//          *this class. Should the request function become more complicated then
 end_comment
 
 begin_comment
-comment|//			that request should really reside in a command type class. Then this
+comment|//          that request should really reside in a command type class. Then this
 end_comment
 
 begin_comment
-comment|//			class instantiates a request info command for a matching request. The
+comment|//          class instantiates a request info command for a matching request. The
 end_comment
 
 begin_comment
-comment|//			design/code of *this class then does not then become bloated. Use a
+comment|//          design/code of *this class then does not then become bloated. Use a
 end_comment
 
 begin_comment
-comment|//			lightweight version of the current MI command system.
+comment|//          lightweight version of the current MI command system.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 05/06/2014.
+comment|// Authors: Illya Rudkin 05/06/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment

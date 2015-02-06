@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ConnectionFileDescriptor.h ------------------------------*- C++ -*-===//
+comment|//===-- ConnectionFileDescriptorPosix.h -------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,18 +34,24 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|liblldb_ConnectionFileDescriptor_h_
+name|liblldb_Host_posix_ConnectionFileDescriptorPosix_h_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|liblldb_ConnectionFileDescriptor_h_
+name|liblldb_Host_posix_ConnectionFileDescriptorPosix_h_
 end_define
 
 begin_comment
 comment|// C++ Includes
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<atomic>
+end_include
 
 begin_include
 include|#
@@ -119,7 +125,9 @@ block|{
 name|public
 operator|:
 name|ConnectionFileDescriptor
-argument_list|()
+argument_list|(
+argument|bool child_processes_inherit = false
+argument_list|)
 block|;
 name|ConnectionFileDescriptor
 argument_list|(
@@ -236,6 +244,17 @@ argument_list|(
 argument|uint32_t timeout_sec
 argument_list|)
 block|;
+name|bool
+name|GetChildProcessesInherit
+argument_list|()
+specifier|const
+block|;
+name|void
+name|SetChildProcessesInherit
+argument_list|(
+argument|bool child_processes_inherit
+argument_list|)
+block|;
 name|protected
 operator|:
 name|void
@@ -346,13 +365,21 @@ block|;
 name|Mutex
 name|m_mutex
 block|;
+name|std
+operator|::
+name|atomic
+operator|<
 name|bool
+operator|>
 name|m_shutting_down
 block|;
 comment|// This marks that we are shutting down so if we get woken up from
 comment|// BytesAvailable to disconnect, we won't try to read again.
 name|bool
 name|m_waiting_for_accept
+block|;
+name|bool
+name|m_child_processes_inherit
 block|;
 name|private
 operator|:

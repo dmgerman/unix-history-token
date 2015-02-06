@@ -100,6 +100,12 @@ directive|include
 file|"lldb/Host/FileSpec.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/HostThread.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -122,12 +128,6 @@ name|Host
 block|{
 name|public
 label|:
-comment|/// A value of std::numeric_limits<uint32_t>::max() is used if there is no practical limit.
-specifier|static
-specifier|const
-name|uint32_t
-name|MAX_THREAD_NAME_LENGTH
-decl_stmt|;
 typedef|typedef
 name|bool
 argument_list|(
@@ -195,20 +195,25 @@ comment|///
 comment|/// @see static void Host::StopMonitoringChildProcess (uint32_t)
 comment|//------------------------------------------------------------------
 specifier|static
-name|lldb
-operator|::
-name|thread_t
+name|HostThread
 name|StartMonitoringChildProcess
 argument_list|(
-argument|MonitorChildProcessCallback callback
+name|MonitorChildProcessCallback
+name|callback
 argument_list|,
-argument|void *callback_baton
+name|void
+operator|*
+name|callback_baton
 argument_list|,
-argument|lldb::pid_t pid
+name|lldb
+operator|::
+name|pid_t
+name|pid
 argument_list|,
-argument|bool monitor_signals
+name|bool
+name|monitor_signals
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 enum|enum
 name|SystemLogType
 block|{
@@ -408,134 +413,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|/// Host specific thread created function call.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This function call lets the current host OS do any thread
-end_comment
-
-begin_comment
-comment|/// specific initialization that it needs, including naming the
-end_comment
-
-begin_comment
-comment|/// thread. No cleanup routine is expected to be called
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param[in] name
-end_comment
-
-begin_comment
-comment|///     The current thread's name in the current process.
-end_comment
-
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|ThreadCreated
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|thread_t
-name|ThreadCreate
-argument_list|(
-argument|const char *name
-argument_list|,
-argument|lldb::thread_func_t function
-argument_list|,
-argument|lldb::thread_arg_t thread_arg
-argument_list|,
-argument|Error *err
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|bool
-name|ThreadCancel
-argument_list|(
-name|lldb
-operator|::
-name|thread_t
-name|thread
-argument_list|,
-name|Error
-operator|*
-name|error
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bool
-name|ThreadDetach
-argument_list|(
-name|lldb
-operator|::
-name|thread_t
-name|thread
-argument_list|,
-name|Error
-operator|*
-name|error
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bool
-name|ThreadJoin
-argument_list|(
-name|lldb
-operator|::
-name|thread_t
-name|thread
-argument_list|,
-name|lldb
-operator|::
-name|thread_result_t
-operator|*
-name|thread_result_ptr
-argument_list|,
-name|Error
-operator|*
-name|error
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_typedef
 typedef|typedef
 name|void
@@ -590,273 +467,6 @@ argument_list|,
 name|void
 operator|*
 name|value
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|/// Gets the name of a thread in a process.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This function will name a thread in a process using it's own
-end_comment
-
-begin_comment
-comment|/// thread name pool, and also will attempt to set a thread name
-end_comment
-
-begin_comment
-comment|/// using any supported host OS APIs.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param[in] pid
-end_comment
-
-begin_comment
-comment|///     The process ID in which we are trying to get the name of
-end_comment
-
-begin_comment
-comment|///     a thread.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param[in] tid
-end_comment
-
-begin_comment
-comment|///     The thread ID for which we are trying retrieve the name of.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @return
-end_comment
-
-begin_comment
-comment|///     A std::string containing the thread name.
-end_comment
-
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|std
-operator|::
-name|string
-name|GetThreadName
-argument_list|(
-argument|lldb::pid_t pid
-argument_list|,
-argument|lldb::tid_t tid
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|/// Sets the name of a thread in the current process.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param[in] pid
-end_comment
-
-begin_comment
-comment|///     The process ID in which we are trying to name a thread.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param[in] tid
-end_comment
-
-begin_comment
-comment|///     The thread ID which we are trying to name.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param[in] name
-end_comment
-
-begin_comment
-comment|///     The current thread's name in the current process to \a name.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @return
-end_comment
-
-begin_comment
-comment|///     \b true if the thread name was able to be set, \b false
-end_comment
-
-begin_comment
-comment|///     otherwise.
-end_comment
-
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|bool
-name|SetThreadName
-argument_list|(
-name|lldb
-operator|::
-name|pid_t
-name|pid
-argument_list|,
-name|lldb
-operator|::
-name|tid_t
-name|tid
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|name
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|/// Sets a shortened name of a thread in the current process.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param[in] pid
-end_comment
-
-begin_comment
-comment|///     The process ID in which we are trying to name a thread.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param[in] tid
-end_comment
-
-begin_comment
-comment|///     The thread ID which we are trying to name.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param[in] name
-end_comment
-
-begin_comment
-comment|///     The current thread's name in the current process to \a name.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param[in] len
-end_comment
-
-begin_comment
-comment|///     The maximum length for the thread's shortened name.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @return
-end_comment
-
-begin_comment
-comment|///     \b true if the thread name was able to be set, \b false
-end_comment
-
-begin_comment
-comment|///     otherwise.
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|bool
-name|SetShortThreadName
-argument_list|(
-name|lldb
-operator|::
-name|pid_t
-name|pid
-argument_list|,
-name|lldb
-operator|::
-name|tid_t
-name|tid
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|name
-argument_list|,
-name|size_t
-name|len
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -1302,6 +912,7 @@ specifier|static
 name|short
 name|GetPosixspawnFlags
 parameter_list|(
+specifier|const
 name|ProcessLaunchInfo
 modifier|&
 name|launch_info
@@ -1319,10 +930,12 @@ name|char
 operator|*
 name|exe_path
 argument_list|,
+specifier|const
 name|ProcessLaunchInfo
 operator|&
 name|launch_info
 argument_list|,
+name|lldb
 operator|::
 name|pid_t
 operator|&
@@ -1437,12 +1050,10 @@ comment|// Pass NULL if you don't want the command output
 name|uint32_t
 name|timeout_sec
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|shell
+name|bool
+name|run_in_default_shell
 operator|=
-name|LLDB_DEFAULT_SHELL
+name|true
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -1471,20 +1082,6 @@ name|DataBufferSP
 name|GetAuxvData
 argument_list|(
 argument|lldb::pid_t pid
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|TargetSP
-name|GetDummyTarget
-argument_list|(
-name|Debugger
-operator|&
-name|debugger
 argument_list|)
 expr_stmt|;
 end_expr_stmt

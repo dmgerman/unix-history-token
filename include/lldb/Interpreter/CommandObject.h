@@ -1232,6 +1232,23 @@ return|return
 literal|"invalid frame, no registers"
 return|;
 block|}
+comment|// This is for use in the command interpreter, when you either want the selected target, or if no target
+comment|// is present you want to prime the dummy target with entities that will be copied over to new targets.
+name|Target
+modifier|*
+name|GetSelectedOrDummyTarget
+parameter_list|(
+name|bool
+name|prefer_dummy
+init|=
+name|false
+parameter_list|)
+function_decl|;
+name|Target
+modifier|*
+name|GetDummyTarget
+parameter_list|()
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Check the command to make sure anything required by this
 comment|/// command is available.

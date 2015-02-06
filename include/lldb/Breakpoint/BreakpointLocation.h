@@ -632,8 +632,31 @@ operator|=
 name|is_reexported
 expr_stmt|;
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Returns whether the two breakpoint locations might represent "equivalent locations".
+comment|/// This is used when modules changed to determine if a Location in the old module might
+comment|/// be the "same as" the input location.
+comment|///
+comment|/// @param[in] location
+comment|///    The location to compare against.
+comment|///
+comment|/// @return
+comment|///     \b true or \b false as given in the description above.
+comment|//------------------------------------------------------------------
+name|bool
+name|EquivalentToLocation
+parameter_list|(
+name|BreakpointLocation
+modifier|&
+name|location
+parameter_list|)
+function_decl|;
 name|protected
 label|:
+name|friend
+name|class
+name|BreakpointSite
+decl_stmt|;
 name|friend
 name|class
 name|BreakpointLocationList
@@ -672,6 +695,19 @@ parameter_list|()
 function_decl|;
 name|private
 label|:
+name|void
+name|SwapLocation
+argument_list|(
+name|lldb
+operator|::
+name|BreakpointLocationSP
+name|swap_from
+argument_list|)
+decl_stmt|;
+name|void
+name|BumpHitCount
+parameter_list|()
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//

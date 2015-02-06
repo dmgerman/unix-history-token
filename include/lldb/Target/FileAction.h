@@ -146,6 +146,15 @@ name|GetPath
 argument_list|()
 specifier|const
 expr_stmt|;
+name|void
+name|Dump
+argument_list|(
+name|Stream
+operator|&
+name|stream
+argument_list|)
+decl|const
+decl_stmt|;
 name|protected
 label|:
 name|Action

@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Expression/ClangModulesDeclVendor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Expression/ClangPersistentVariables.h"
 end_include
 
@@ -1347,28 +1353,41 @@ comment|/// @see TargetList::CreateTarget(const FileSpec*, const ArchSpec*)
 comment|//------------------------------------------------------------------
 name|Target
 argument_list|(
-name|Debugger
-operator|&
-name|debugger
+argument|Debugger&debugger
 argument_list|,
-specifier|const
-name|ArchSpec
-operator|&
-name|target_arch
+argument|const ArchSpec&target_arch
 argument_list|,
-specifier|const
-name|lldb
-operator|::
-name|PlatformSP
-operator|&
-name|platform_sp
+argument|const lldb::PlatformSP&platform_sp
+argument_list|,
+argument|bool is_dummy_target
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 comment|// Helper function.
 name|bool
 name|ProcessIsValid
 parameter_list|()
 function_decl|;
+comment|// Copy breakpoints, stop hooks and so forth from the dummy target:
+name|void
+name|PrimeFromDummyTarget
+parameter_list|(
+name|Target
+modifier|*
+name|dummy_target
+parameter_list|)
+function_decl|;
+name|void
+name|AddBreakpoint
+argument_list|(
+name|lldb
+operator|::
+name|BreakpointSP
+name|breakpoint_sp
+argument_list|,
+name|bool
+name|internal
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 operator|~
@@ -1463,15 +1482,16 @@ function_decl|;
 name|Error
 name|Launch
 parameter_list|(
-name|Listener
-modifier|&
-name|listener
-parameter_list|,
 name|ProcessLaunchInfo
 modifier|&
 name|launch_info
+parameter_list|,
+name|Stream
+modifier|*
+name|stream
 parameter_list|)
 function_decl|;
+comment|// Optional stream to receive first stop info
 comment|//------------------------------------------------------------------
 comment|// This part handles the breakpoints.
 comment|//------------------------------------------------------------------
@@ -2186,9 +2206,9 @@ block|}
 comment|//------------------------------------------------------------------
 comment|/// Return whether this FileSpec corresponds to a module that should be considered for general searches.
 comment|///
-comment|/// This API will be consulted by the SearchFilterForNonModuleSpecificSearches
+comment|/// This API will be consulted by the SearchFilterForUnconstrainedSearches
 comment|/// and any module that returns \b true will not be searched.  Note the
-comment|/// SearchFilterForNonModuleSpecificSearches is the search filter that
+comment|/// SearchFilterForUnconstrainedSearches is the search filter that
 comment|/// gets used in the CreateBreakpoint calls when no modules is provided.
 comment|///
 comment|/// The target call at present just consults the Platform's call of the
@@ -2200,7 +2220,7 @@ comment|///
 comment|/// @return \b true if the module should be excluded, \b false otherwise.
 comment|//------------------------------------------------------------------
 name|bool
-name|ModuleIsExcludedForNonModuleSpecificSearches
+name|ModuleIsExcludedForUnconstrainedSearches
 parameter_list|(
 specifier|const
 name|FileSpec
@@ -2211,9 +2231,9 @@ function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Return whether this module should be considered for general searches.
 comment|///
-comment|/// This API will be consulted by the SearchFilterForNonModuleSpecificSearches
+comment|/// This API will be consulted by the SearchFilterForUnconstrainedSearches
 comment|/// and any module that returns \b true will not be searched.  Note the
-comment|/// SearchFilterForNonModuleSpecificSearches is the search filter that
+comment|/// SearchFilterForUnconstrainedSearches is the search filter that
 comment|/// gets used in the CreateBreakpoint calls when no modules is provided.
 comment|///
 comment|/// The target call at present just consults the Platform's call of the
@@ -2228,7 +2248,7 @@ comment|///
 comment|/// @return \b true if the module should be excluded, \b false otherwise.
 comment|//------------------------------------------------------------------
 name|bool
-name|ModuleIsExcludedForNonModuleSpecificSearches
+name|ModuleIsExcludedForUnconstrainedSearches
 argument_list|(
 specifier|const
 name|lldb
@@ -2568,6 +2588,19 @@ name|launch_info
 parameter_list|)
 function_decl|;
 name|bool
+name|ResolveFileAddress
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+name|load_addr
+argument_list|,
+name|Address
+operator|&
+name|so_addr
+argument_list|)
+decl_stmt|;
+name|bool
 name|ResolveLoadAddress
 argument_list|(
 name|lldb
@@ -2608,6 +2641,26 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+name|size_t
+name|UnloadModuleSections
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|ModuleSP
+operator|&
+name|module_sp
+argument_list|)
+decl_stmt|;
+name|size_t
+name|UnloadModuleSections
+parameter_list|(
+specifier|const
+name|ModuleList
+modifier|&
+name|module_list
+parameter_list|)
+function_decl|;
 name|bool
 name|SetSectionUnloaded
 argument_list|(
@@ -3049,6 +3102,11 @@ modifier|&
 name|GetSourceManager
 parameter_list|()
 function_decl|;
+name|ClangModulesDeclVendor
+modifier|*
+name|GetClangModulesDeclVendor
+parameter_list|()
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|// Methods.
 comment|//------------------------------------------------------------------
@@ -3178,6 +3236,14 @@ name|ClangASTImporter
 operator|>
 name|m_ast_importer_ap
 expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ClangModulesDeclVendor
+operator|>
+name|m_clang_modules_decl_vendor_ap
+expr_stmt|;
 name|ClangPersistentVariables
 name|m_persistent_variables
 decl_stmt|;
@@ -3216,6 +3282,9 @@ name|m_valid
 decl_stmt|;
 name|bool
 name|m_suppress_stop_hooks
+decl_stmt|;
+name|bool
+name|m_is_dummy_target
 decl_stmt|;
 specifier|static
 name|void

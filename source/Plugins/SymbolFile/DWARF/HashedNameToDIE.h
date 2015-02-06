@@ -1521,6 +1521,8 @@ block|{
 name|DWARFFormValue
 name|form_value
 argument_list|(
+name|NULL
+argument_list|,
 name|header_data
 operator|.
 name|atoms
@@ -1541,8 +1543,6 @@ argument_list|(
 name|data
 argument_list|,
 name|offset_ptr
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 return|return
@@ -1698,6 +1698,8 @@ expr_stmt|;
 name|DWARFFormValue
 name|form_value
 argument_list|(
+name|NULL
+argument_list|,
 name|header_data
 operator|.
 name|atoms

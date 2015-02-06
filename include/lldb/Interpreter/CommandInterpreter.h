@@ -130,6 +130,381 @@ name|namespace
 name|lldb_private
 block|{
 name|class
+name|CommandInterpreterRunOptions
+block|{
+name|public
+label|:
+comment|//------------------------------------------------------------------
+comment|/// Construct a CommandInterpreterRunOptions object.
+comment|/// This class is used to control all the instances where we run multiple commands, e.g.
+comment|/// HandleCommands, HandleCommandsFromFile, RunCommandInterpreter.
+comment|/// The meanings of the options in this object are:
+comment|///
+comment|/// @param[in] stop_on_continue
+comment|///    If \b true execution will end on the first command that causes the process in the
+comment|///    execution context to continue.  If \false, we won't check the execution status.
+comment|/// @param[in] stop_on_error
+comment|///    If \b true execution will end on the first command that causes an error.
+comment|/// @param[in] stop_on_crash
+comment|///    If \b true when a command causes the target to run, and the end of the run is a
+comment|///    signal or exception, stop executing the commands.
+comment|/// @param[in] echo_commands
+comment|///    If \b true echo the command before executing it.  If \false, execute silently.
+comment|/// @param[in] print_results
+comment|///    If \b true print the results of the command after executing it.  If \false, execute silently.
+comment|/// @param[in] add_to_history
+comment|///    If \b true add the commands to the command history.  If \false, don't add them.
+comment|//------------------------------------------------------------------
+name|CommandInterpreterRunOptions
+argument_list|(
+argument|LazyBool stop_on_continue
+argument_list|,
+argument|LazyBool stop_on_error
+argument_list|,
+argument|LazyBool stop_on_crash
+argument_list|,
+argument|LazyBool echo_commands
+argument_list|,
+argument|LazyBool print_results
+argument_list|,
+argument|LazyBool add_to_history
+argument_list|)
+block|:
+name|m_stop_on_continue
+argument_list|(
+name|stop_on_continue
+argument_list|)
+operator|,
+name|m_stop_on_error
+argument_list|(
+name|stop_on_error
+argument_list|)
+operator|,
+name|m_stop_on_crash
+argument_list|(
+name|stop_on_crash
+argument_list|)
+operator|,
+name|m_echo_commands
+argument_list|(
+name|echo_commands
+argument_list|)
+operator|,
+name|m_print_results
+argument_list|(
+name|print_results
+argument_list|)
+operator|,
+name|m_add_to_history
+argument_list|(
+argument|add_to_history
+argument_list|)
+block|{}
+name|CommandInterpreterRunOptions
+argument_list|()
+operator|:
+name|m_stop_on_continue
+argument_list|(
+name|eLazyBoolCalculate
+argument_list|)
+operator|,
+name|m_stop_on_error
+argument_list|(
+name|eLazyBoolCalculate
+argument_list|)
+operator|,
+name|m_stop_on_crash
+argument_list|(
+name|eLazyBoolCalculate
+argument_list|)
+operator|,
+name|m_echo_commands
+argument_list|(
+name|eLazyBoolCalculate
+argument_list|)
+operator|,
+name|m_print_results
+argument_list|(
+name|eLazyBoolCalculate
+argument_list|)
+operator|,
+name|m_add_to_history
+argument_list|(
+argument|eLazyBoolCalculate
+argument_list|)
+block|{}
+name|void
+name|SetSilent
+argument_list|(
+argument|bool silent
+argument_list|)
+block|{
+name|LazyBool
+name|value
+operator|=
+name|silent
+operator|?
+name|eLazyBoolNo
+operator|:
+name|eLazyBoolYes
+block|;
+name|m_echo_commands
+operator|=
+name|value
+block|;
+name|m_print_results
+operator|=
+name|value
+block|;
+name|m_add_to_history
+operator|=
+name|value
+block|;     }
+comment|// These return the default behaviors if the behavior is not eLazyBoolCalculate.
+comment|// But I've also left the ivars public since for different ways of running the
+comment|// interpreter you might want to force different defaults...  In that case, just grab
+comment|// the LazyBool ivars directly and do what you want with eLazyBoolCalculate.
+name|bool
+name|GetStopOnContinue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DefaultToNo
+argument_list|(
+name|m_stop_on_continue
+argument_list|)
+return|;
+block|}
+name|void
+name|SetStopOnContinue
+parameter_list|(
+name|bool
+name|stop_on_continue
+parameter_list|)
+block|{
+name|m_stop_on_continue
+operator|=
+name|stop_on_continue
+condition|?
+name|eLazyBoolYes
+else|:
+name|eLazyBoolNo
+expr_stmt|;
+block|}
+name|bool
+name|GetStopOnError
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DefaultToNo
+argument_list|(
+name|m_stop_on_continue
+argument_list|)
+return|;
+block|}
+name|void
+name|SetStopOnError
+parameter_list|(
+name|bool
+name|stop_on_error
+parameter_list|)
+block|{
+name|m_stop_on_error
+operator|=
+name|stop_on_error
+condition|?
+name|eLazyBoolYes
+else|:
+name|eLazyBoolNo
+expr_stmt|;
+block|}
+name|bool
+name|GetStopOnCrash
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DefaultToNo
+argument_list|(
+name|m_stop_on_crash
+argument_list|)
+return|;
+block|}
+name|void
+name|SetStopOnCrash
+parameter_list|(
+name|bool
+name|stop_on_crash
+parameter_list|)
+block|{
+name|m_stop_on_crash
+operator|=
+name|stop_on_crash
+condition|?
+name|eLazyBoolYes
+else|:
+name|eLazyBoolNo
+expr_stmt|;
+block|}
+name|bool
+name|GetEchoCommands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DefaultToYes
+argument_list|(
+name|m_echo_commands
+argument_list|)
+return|;
+block|}
+name|void
+name|SetEchoCommands
+parameter_list|(
+name|bool
+name|echo_commands
+parameter_list|)
+block|{
+name|m_echo_commands
+operator|=
+name|echo_commands
+condition|?
+name|eLazyBoolYes
+else|:
+name|eLazyBoolNo
+expr_stmt|;
+block|}
+name|bool
+name|GetPrintResults
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DefaultToYes
+argument_list|(
+name|m_print_results
+argument_list|)
+return|;
+block|}
+name|void
+name|SetPrintResults
+parameter_list|(
+name|bool
+name|print_results
+parameter_list|)
+block|{
+name|m_print_results
+operator|=
+name|print_results
+condition|?
+name|eLazyBoolYes
+else|:
+name|eLazyBoolNo
+expr_stmt|;
+block|}
+name|bool
+name|GetAddToHistory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DefaultToYes
+argument_list|(
+name|m_add_to_history
+argument_list|)
+return|;
+block|}
+name|void
+name|SetAddToHistory
+parameter_list|(
+name|bool
+name|add_to_history
+parameter_list|)
+block|{
+name|m_add_to_history
+operator|=
+name|add_to_history
+condition|?
+name|eLazyBoolYes
+else|:
+name|eLazyBoolNo
+expr_stmt|;
+block|}
+name|LazyBool
+name|m_stop_on_continue
+decl_stmt|;
+name|LazyBool
+name|m_stop_on_error
+decl_stmt|;
+name|LazyBool
+name|m_stop_on_crash
+decl_stmt|;
+name|LazyBool
+name|m_echo_commands
+decl_stmt|;
+name|LazyBool
+name|m_print_results
+decl_stmt|;
+name|LazyBool
+name|m_add_to_history
+decl_stmt|;
+name|private
+label|:
+specifier|static
+name|bool
+name|DefaultToYes
+parameter_list|(
+name|LazyBool
+name|flag
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|flag
+condition|)
+block|{
+case|case
+name|eLazyBoolNo
+case|:
+return|return
+name|false
+return|;
+default|default:
+return|return
+name|true
+return|;
+block|}
+block|}
+specifier|static
+name|bool
+name|DefaultToNo
+parameter_list|(
+name|LazyBool
+name|flag
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|flag
+condition|)
+block|{
+case|case
+name|eLazyBoolYes
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
+block|}
+empty_stmt|;
+name|class
 name|CommandInterpreter
 range|:
 name|public
@@ -407,6 +782,16 @@ operator|&
 name|command_obj_sp
 argument_list|)
 decl_stmt|;
+comment|// Remove a command if it is removable (python or regex command)
+name|bool
+name|RemoveCommand
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|cmd
+parameter_list|)
+function_decl|;
 name|bool
 name|RemoveAlias
 parameter_list|(
@@ -566,15 +951,9 @@ comment|///    The list of commands to execute.
 comment|/// @param[in/out] context
 comment|///    The execution context in which to run the commands.  Can be NULL in which case the default
 comment|///    context will be used.
-comment|/// @param[in] stop_on_continue
-comment|///    If \b true execution will end on the first command that causes the process in the
-comment|///    execution context to continue.  If \false, we won't check the execution status.
-comment|/// @param[in] stop_on_error
-comment|///    If \b true execution will end on the first command that causes an error.
-comment|/// @param[in] echo_commands
-comment|///    If \b true echo the command before executing it.  If \false, execute silently.
-comment|/// @param[in] print_results
-comment|///    If \b true print the results of the command after executing it.  If \false, execute silently.
+comment|/// @param[in] options
+comment|///    This object holds the options used to control when to stop, whether to execute commands,
+comment|///    etc.
 comment|/// @param[out] result
 comment|///    This is marked as succeeding with no output if all commands execute safely,
 comment|///    and failed with some explanation if we aborted executing the commands at some point.
@@ -591,20 +970,9 @@ name|ExecutionContext
 modifier|*
 name|context
 parameter_list|,
-name|bool
-name|stop_on_continue
-parameter_list|,
-name|bool
-name|stop_on_error
-parameter_list|,
-name|bool
-name|echo_commands
-parameter_list|,
-name|bool
-name|print_results
-parameter_list|,
-name|LazyBool
-name|add_to_history
+name|CommandInterpreterRunOptions
+modifier|&
+name|options
 parameter_list|,
 name|CommandReturnObject
 modifier|&
@@ -619,15 +987,9 @@ comment|///    The file from which to read in commands.
 comment|/// @param[in/out] context
 comment|///    The execution context in which to run the commands.  Can be NULL in which case the default
 comment|///    context will be used.
-comment|/// @param[in] stop_on_continue
-comment|///    If \b true execution will end on the first command that causes the process in the
-comment|///    execution context to continue.  If \false, we won't check the execution status.
-comment|/// @param[in] stop_on_error
-comment|///    If \b true execution will end on the first command that causes an error.
-comment|/// @param[in] echo_commands
-comment|///    If \b true echo the command before executing it.  If \false, execute silently.
-comment|/// @param[in] print_results
-comment|///    If \b true print the results of the command after executing it.  If \false, execute silently.
+comment|/// @param[in] options
+comment|///    This object holds the options used to control when to stop, whether to execute commands,
+comment|///    etc.
 comment|/// @param[out] result
 comment|///    This is marked as succeeding with no output if all commands execute safely,
 comment|///    and failed with some explanation if we aborted executing the commands at some point.
@@ -643,20 +1005,9 @@ name|ExecutionContext
 modifier|*
 name|context
 parameter_list|,
-name|LazyBool
-name|stop_on_continue
-parameter_list|,
-name|LazyBool
-name|stop_on_error
-parameter_list|,
-name|LazyBool
-name|echo_commands
-parameter_list|,
-name|LazyBool
-name|print_results
-parameter_list|,
-name|LazyBool
-name|add_to_history
+name|CommandInterpreterRunOptions
+modifier|&
+name|options
 parameter_list|,
 name|CommandReturnObject
 modifier|&
@@ -1183,6 +1534,10 @@ name|auto_handle_events
 parameter_list|,
 name|bool
 name|spawn_thread
+parameter_list|,
+name|CommandInterpreterRunOptions
+modifier|&
+name|options
 parameter_list|)
 function_decl|;
 name|void
@@ -1243,6 +1598,43 @@ name|GetStopCmdSourceOnError
 argument_list|()
 specifier|const
 expr_stmt|;
+name|uint32_t
+name|GetNumErrors
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_num_errors
+return|;
+block|}
+name|bool
+name|GetQuitRequested
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_quit_requested
+return|;
+block|}
+name|lldb
+operator|::
+name|IOHandlerSP
+name|GetIOHandler
+argument_list|(
+argument|bool force_create = false
+argument_list|,
+argument|CommandInterpreterRunOptions *options = NULL
+argument_list|)
+expr_stmt|;
+name|bool
+name|GetStoppedForCrash
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_stopped_for_crash
+return|;
+block|}
 name|protected
 label|:
 name|friend
@@ -1421,6 +1813,15 @@ name|uint32_t
 operator|>
 name|m_command_source_flags
 expr_stmt|;
+name|uint32_t
+name|m_num_errors
+decl_stmt|;
+name|bool
+name|m_quit_requested
+decl_stmt|;
+name|bool
+name|m_stopped_for_crash
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

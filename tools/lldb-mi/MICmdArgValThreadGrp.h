@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdArgValThreadGrp.h
+comment|// File:        MICmdArgValThreadGrp.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdArgValThreadGrp interface.
+comment|// Overview:    CMICmdArgValThreadGrp interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -106,43 +106,43 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code class. Command argument class. Arguments object
+comment|// Details: MI common code class. Command argument class. Arguments object
 end_comment
 
 begin_comment
-comment|//			needing specialization derived from the CMICmdArgValBase class.
+comment|//          needing specialization derived from the CMICmdArgValBase class.
 end_comment
 
 begin_comment
-comment|//			An argument knows what type of argument it is and how it is to
+comment|//          An argument knows what type of argument it is and how it is to
 end_comment
 
 begin_comment
-comment|//			interpret the options (context) string to find and validate a matching
+comment|//          interpret the options (context) string to find and validate a matching
 end_comment
 
 begin_comment
-comment|//			argument and so extract a value from it. Thread group looks like
+comment|//          argument and so extract a value from it. Thread group looks like
 end_comment
 
 begin_comment
-comment|//			"i1" in the options text.
+comment|//          "i1" in the options text.
 end_comment
 
 begin_comment
-comment|//			Based on the Interpreter pattern.
+comment|//          Based on the Interpreter pattern.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 15/04/2014.
+comment|// Authors: Illya Rudkin 15/04/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -171,7 +171,7 @@ block|;
 comment|/* ctor */
 name|CMICmdArgValThreadGrp
 argument_list|(
-argument|const CMIUtilString& vrArgName
+argument|const CMIUtilString&vrArgName
 argument_list|,
 argument|const bool vbMandatory
 argument_list|,
@@ -182,7 +182,7 @@ comment|//
 name|bool
 name|IsArgThreadGrp
 argument_list|(
-argument|const CMIUtilString& vrTxt
+argument|const CMIUtilString&vrTxt
 argument_list|)
 specifier|const
 block|;

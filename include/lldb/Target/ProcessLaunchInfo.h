@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/Host.h"
 end_include
 
@@ -273,8 +279,8 @@ name|plugin
 argument_list|)
 block|;
 specifier|const
-name|char
-operator|*
+name|FileSpec
+operator|&
 name|GetShell
 argument_list|()
 specifier|const
@@ -283,9 +289,9 @@ name|void
 name|SetShell
 argument_list|(
 specifier|const
-name|char
-operator|*
-name|path
+name|FileSpec
+operator|&
+name|shell
 argument_list|)
 block|;
 name|uint32_t
@@ -310,6 +316,7 @@ block|;         }
 name|bool
 name|GetLaunchInSeparateProcessGroup
 argument_list|()
+specifier|const
 block|{
 return|return
 name|m_flags
@@ -361,12 +368,12 @@ operator|::
 name|MonitorChildProcessCallback
 name|GetMonitorProcessCallback
 argument_list|()
+specifier|const
 block|{
 return|return
 name|m_monitor_callback
 return|;
 block|}
-specifier|const
 name|void
 operator|*
 name|GetMonitorProcessBaton
@@ -375,6 +382,15 @@ specifier|const
 block|{
 return|return
 name|m_monitor_callback_baton
+return|;
+block|}
+name|bool
+name|GetMonitorSignals
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_monitor_signals
 return|;
 block|}
 comment|// If the LaunchInfo has a monitor callback, then arrange to monitor the process.
@@ -393,9 +409,41 @@ name|GetPTY
 argument_list|()
 block|{
 return|return
+operator|*
 name|m_pty
 return|;
 block|}
+comment|// Get and set the actual listener that will be used for the process events
+name|lldb
+operator|::
+name|ListenerSP
+name|GetListener
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_listener_sp
+return|;
+block|}
+name|void
+name|SetListener
+argument_list|(
+argument|const lldb::ListenerSP&listener_sp
+argument_list|)
+block|{
+name|m_listener_sp
+operator|=
+name|listener_sp
+block|;         }
+name|Listener
+operator|&
+name|GetListenerForProcess
+argument_list|(
+name|Debugger
+operator|&
+name|debugger
+argument_list|)
+block|;
 name|lldb
 operator|::
 name|ListenerSP
@@ -478,9 +526,7 @@ operator|::
 name|string
 name|m_plugin_name
 block|;
-name|std
-operator|::
-name|string
+name|FileSpec
 name|m_shell
 block|;
 name|Flags
@@ -496,9 +542,14 @@ operator|>
 name|m_file_actions
 block|;
 comment|// File actions for any other files
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|lldb_utility
 operator|::
 name|PseudoTerminal
+operator|>
 name|m_pty
 block|;
 name|uint32_t
@@ -523,6 +574,11 @@ name|string
 name|m_event_data
 block|;
 comment|// A string passed to the plugin launch, having no meaning to the upper levels of lldb.
+name|lldb
+operator|::
+name|ListenerSP
+name|m_listener_sp
+block|;
 name|lldb
 operator|::
 name|ListenerSP

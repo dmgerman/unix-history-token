@@ -626,6 +626,10 @@ name|SBSection
 decl_stmt|;
 name|friend
 name|class
+name|SBTarget
+decl_stmt|;
+name|friend
+name|class
 name|SBValue
 decl_stmt|;
 name|lldb

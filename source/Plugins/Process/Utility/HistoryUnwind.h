@@ -87,8 +87,6 @@ argument|Thread&thread
 argument_list|,
 argument|std::vector<lldb::addr_t> pcs
 argument_list|,
-argument|uint32_t stop_id
-argument_list|,
 argument|bool stop_id_is_valid
 argument_list|)
 block|;
@@ -138,9 +136,6 @@ operator|::
 name|addr_t
 operator|>
 name|m_pcs
-block|;
-name|uint32_t
-name|m_stop_id
 block|;
 name|bool
 name|m_stop_id_is_valid

@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MIUtilMapIdToVariant.h
+comment|// File:        MIUtilMapIdToVariant.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMIUtilMapIdToVariant interface.
+comment|// Overview:    CMIUtilMapIdToVariant interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -124,27 +124,27 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code utility class. Map type container that hold general
+comment|// Details: MI common code utility class. Map type container that hold general
 end_comment
 
 begin_comment
-comment|//			object types (by being wrappin an variant wrapper)
+comment|//          object types (by being wrappin an variant wrapper)
 end_comment
 
 begin_comment
-comment|//			objects by ID.
+comment|//          objects by ID.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 19/06/2014.
+comment|// Authors: Illya Rudkin 19/06/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -200,18 +200,18 @@ operator|>
 name|bool
 name|Get
 argument_list|(
-argument|const CMIUtilString& vId
+argument|const CMIUtilString&vId
 argument_list|,
-argument|T& vrwData
+argument|T&vrwData
 argument_list|,
-argument|bool& vrwbFound
+argument|bool&vrwbFound
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|HaveAlready
 argument_list|(
-argument|const CMIUtilString& vId
+argument|const CMIUtilString&vId
 argument_list|)
 specifier|const
 block|;
@@ -311,43 +311,43 @@ comment|//++ -------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Details:	Add to *this container a data object of general type identified by an ID.
+comment|// Details: Add to *this container a data object of general type identified by an ID.
 end_comment
 
 begin_comment
-comment|//			If the data with that ID already exists in the container it is replace with
+comment|//          If the data with that ID already exists in the container it is replace with
 end_comment
 
 begin_comment
-comment|//			the new data specified.
+comment|//          the new data specified.
 end_comment
 
 begin_comment
-comment|// Type:	Method.
+comment|// Type:    Method.
 end_comment
 
 begin_comment
-comment|// Args:	T		- The data object's variable type.
+comment|// Args:    T       - The data object's variable type.
 end_comment
 
 begin_comment
-comment|//			vId		- (R) Unique ID i.e. GUID.
+comment|//          vId     - (R) Unique ID i.e. GUID.
 end_comment
 
 begin_comment
-comment|//			vData	- (R) The general data object to be stored of some type.
+comment|//          vData   - (R) The general data object to be stored of some type.
 end_comment
 
 begin_comment
-comment|// Return:	MIstatus::success - Functional succeeded.
+comment|// Return:  MIstatus::success - Functional succeeded.
 end_comment
 
 begin_comment
-comment|//			MIstatus::failure - Functional failed.
+comment|//          MIstatus::failure - Functional failed.
 end_comment
 
 begin_comment
-comment|// Throws:	None.
+comment|// Throws:  None.
 end_comment
 
 begin_comment
@@ -365,9 +365,9 @@ name|CMIUtilMapIdToVariant
 operator|::
 name|Add
 argument_list|(
-argument|const CMIUtilString& vId
+argument|const CMIUtilString&vId
 argument_list|,
-argument|const T& vData
+argument|const T&vData
 argument_list|)
 block|{
 if|if
@@ -472,39 +472,39 @@ comment|//++ -------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Details:	Retrieve a data object from *this container identified by the specified ID.
+comment|// Details: Retrieve a data object from *this container identified by the specified ID.
 end_comment
 
 begin_comment
-comment|// Type:	Method.
+comment|// Type:    Method.
 end_comment
 
 begin_comment
-comment|// Args:	T			- The data object's variable type.
+comment|// Args:    T           - The data object's variable type.
 end_comment
 
 begin_comment
-comment|//			vId			- (R) Unique ID i.e. GUID.
+comment|//          vId         - (R) Unique ID i.e. GUID.
 end_comment
 
 begin_comment
-comment|//			vrwData		- (W) Copy of the data object held.
+comment|//          vrwData     - (W) Copy of the data object held.
 end_comment
 
 begin_comment
-comment|//			vrwbFound	- (W) True = data found, false = data not found.
+comment|//          vrwbFound   - (W) True = data found, false = data not found.
 end_comment
 
 begin_comment
-comment|// Return:	MIstatus::success - Functional succeeded.
+comment|// Return:  MIstatus::success - Functional succeeded.
 end_comment
 
 begin_comment
-comment|//			MIstatus::failure - Functional failed.
+comment|//          MIstatus::failure - Functional failed.
 end_comment
 
 begin_comment
-comment|// Throws:	None.
+comment|// Throws:  None.
 end_comment
 
 begin_comment
@@ -522,11 +522,11 @@ name|CMIUtilMapIdToVariant
 operator|::
 name|Get
 argument_list|(
-argument|const CMIUtilString& vId
+argument|const CMIUtilString&vId
 argument_list|,
-argument|T& vrwData
+argument|T&vrwData
 argument_list|,
-argument|bool& vrwbFound
+argument|bool&vrwbFound
 argument_list|)
 specifier|const
 block|{

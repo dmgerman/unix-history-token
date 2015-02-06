@@ -100,7 +100,6 @@ operator|~
 name|BreakpointResolverFileLine
 argument_list|()
 block|;
-name|virtual
 name|Searcher
 operator|::
 name|CallbackReturn
@@ -114,30 +113,29 @@ argument|Address *addr
 argument_list|,
 argument|bool containing
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Searcher
 operator|::
 name|Depth
 name|GetDepth
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|GetDescription
 argument_list|(
-name|Stream
-operator|*
-name|s
+argument|Stream *s
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|Dump
 argument_list|(
 argument|Stream *s
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -171,6 +169,15 @@ operator|::
 name|FileLineResolver
 return|;
 block|}
+name|lldb
+operator|::
+name|BreakpointResolverSP
+name|CopyForBreakpoint
+argument_list|(
+argument|Breakpoint&breakpoint
+argument_list|)
+name|override
+block|;
 name|protected
 operator|:
 name|friend

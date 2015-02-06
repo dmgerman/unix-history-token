@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/HostThread.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/Mutex.h"
 end_include
 
@@ -714,9 +720,9 @@ argument_list|)
 block|;
 name|private
 operator|:
-name|lldb
+name|lldb_private
 operator|::
-name|thread_t
+name|HostThread
 name|m_listen_thread
 block|;
 name|std

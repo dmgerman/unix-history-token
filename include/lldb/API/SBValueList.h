@@ -129,6 +129,15 @@ expr_stmt|;
 name|lldb
 operator|::
 name|SBValue
+name|GetFirstValueByName
+argument_list|(
+argument|const char* name
+argument_list|)
+specifier|const
+expr_stmt|;
+name|lldb
+operator|::
+name|SBValue
 name|FindValueObjectByUID
 argument_list|(
 argument|lldb::user_id_t uid

@@ -189,6 +189,9 @@ operator|::
 name|StringRef
 name|host_and_port
 argument_list|,
+name|bool
+name|child_processes_inherit
+argument_list|,
 name|Socket
 operator|*
 operator|&
@@ -211,6 +214,9 @@ operator|::
 name|StringRef
 name|host_and_port
 argument_list|,
+name|bool
+name|child_processes_inherit
+argument_list|,
 name|Socket
 operator|*
 operator|&
@@ -225,6 +231,9 @@ name|llvm
 operator|::
 name|StringRef
 name|host_and_port
+argument_list|,
+name|bool
+name|child_processes_inherit
 argument_list|,
 name|Socket
 operator|*
@@ -246,6 +255,9 @@ operator|::
 name|StringRef
 name|host_and_port
 argument_list|,
+name|bool
+name|child_processes_inherit
+argument_list|,
 name|Socket
 operator|*
 operator|&
@@ -260,6 +272,9 @@ name|llvm
 operator|::
 name|StringRef
 name|host_and_port
+argument_list|,
+name|bool
+name|child_processes_inherit
 argument_list|,
 name|Socket
 operator|*
@@ -277,6 +292,9 @@ name|llvm
 operator|::
 name|StringRef
 name|host_and_port
+argument_list|,
+name|bool
+name|child_processes_inherit
 argument_list|,
 name|Socket
 operator|*

@@ -108,12 +108,9 @@ name|OptionGroupOptions
 operator|*
 name|GetConnectionOptions
 argument_list|(
-name|lldb_private
-operator|::
-name|CommandInterpreter
-operator|&
-name|interpreter
+argument|lldb_private::CommandInterpreter&interpreter
 argument_list|)
+name|override
 block|;
 specifier|const
 name|char
@@ -154,6 +151,7 @@ argument|uint32_t uid = UINT32_MAX
 argument_list|,
 argument|uint32_t gid = UINT32_MAX
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb
@@ -169,6 +167,7 @@ argument|uint32_t mode
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 name|virtual
 name|bool
@@ -178,6 +177,7 @@ argument|lldb::user_id_t fd
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 name|virtual
 name|uint64_t
@@ -193,6 +193,7 @@ argument|uint64_t dst_len
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 name|virtual
 name|uint64_t
@@ -208,6 +209,7 @@ argument|uint64_t src_len
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb
@@ -215,13 +217,9 @@ operator|::
 name|user_id_t
 name|GetFileSize
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|file_spec
+argument|const lldb_private::FileSpec& file_spec
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -229,16 +227,11 @@ operator|::
 name|Error
 name|CreateSymlink
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|src
+argument|const char *src
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|dst
+argument|const char *dst
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -246,20 +239,11 @@ operator|::
 name|Error
 name|GetFile
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|source
+argument|const lldb_private::FileSpec& source
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|destination
+argument|const lldb_private::FileSpec& destination
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -267,18 +251,15 @@ operator|::
 name|ConstString
 name|GetRemoteWorkingDirectory
 argument_list|()
+name|override
 block|;
 name|virtual
 name|bool
 name|SetRemoteWorkingDirectory
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|ConstString
-operator|&
-name|path
+argument|const lldb_private::ConstString&path
 argument_list|)
+name|override
 block|;
 name|bool
 name|GetRemoteOSVersion
@@ -304,6 +285,13 @@ operator|::
 name|ArchSpec
 name|GetRemoteSystemArchitecture
 argument_list|()
+name|override
+block|;
+name|size_t
+name|GetEnvironment
+argument_list|(
+argument|lldb_private::StringList&environment
+argument_list|)
 name|override
 block|;
 name|bool
@@ -335,6 +323,7 @@ argument_list|,
 comment|// Pass NULL if you don't want the command output
 argument|uint32_t timeout_sec
 argument_list|)
+name|override
 block|;
 comment|// Timeout in seconds to wait for shell program to finish
 name|virtual
@@ -347,6 +336,7 @@ argument|const char *path
 argument_list|,
 argument|uint32_t mode
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -354,15 +344,11 @@ operator|::
 name|Error
 name|GetFilePermissions
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|path
+argument|const char *path
 argument_list|,
-name|uint32_t
-operator|&
-name|file_permissions
+argument|uint32_t&file_permissions
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -374,18 +360,15 @@ argument|const char *path
 argument_list|,
 argument|uint32_t file_permissions
 argument_list|)
+name|override
 block|;
 name|virtual
 name|bool
 name|GetFileExists
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|file_spec
+argument|const lldb_private::FileSpec& file_spec
 argument_list|)
+name|override
 block|;
 name|virtual
 name|lldb_private
@@ -393,11 +376,34 @@ operator|::
 name|Error
 name|Unlink
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|path
+argument|const char *path
 argument_list|)
+name|override
+block|;
+name|lldb_private
+operator|::
+name|Error
+name|LaunchProcess
+argument_list|(
+argument|lldb_private::ProcessLaunchInfo&launch_info
+argument_list|)
+name|override
+block|;
+name|lldb
+operator|::
+name|ProcessSP
+name|Attach
+argument_list|(
+argument|lldb_private::ProcessAttachInfo&attach_info
+argument_list|,
+argument|lldb_private::Debugger&debugger
+argument_list|,
+argument|lldb_private::Target *target
+argument_list|,
+comment|// Can be NULL, if NULL create a new target, else use existing one
+argument|lldb_private::Error&error
+argument_list|)
+name|override
 block|;
 name|lldb
 operator|::
@@ -411,8 +417,6 @@ argument_list|,
 argument|lldb_private::Target *target
 argument_list|,
 comment|// Can be NULL, if NULL create a new target, else use existing one
-argument|lldb_private::Listener&listener
-argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
 name|override
@@ -423,31 +427,25 @@ operator|::
 name|string
 name|GetPlatformSpecificConnectionInformation
 argument_list|()
+name|override
 block|;
 name|virtual
 name|bool
 name|CalculateMD5
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|file_spec
+argument|const lldb_private::FileSpec& file_spec
 argument_list|,
-name|uint64_t
-operator|&
-name|low
+argument|uint64_t&low
 argument_list|,
-name|uint64_t
-operator|&
-name|high
+argument|uint64_t&high
 argument_list|)
+name|override
 block|;
 name|virtual
 name|void
 name|CalculateTrapHandlerSymbolNames
 argument_list|()
+name|override
 block|;
 name|lldb_private
 operator|::

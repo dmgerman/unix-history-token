@@ -137,12 +137,6 @@ directive|include
 file|"lldb/Target/ExecutionContext.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ExecutionEngine/JITMemoryManager.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|lldb_private

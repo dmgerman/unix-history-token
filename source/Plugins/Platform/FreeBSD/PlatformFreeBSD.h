@@ -81,10 +81,9 @@ comment|//------------------------------------------------------------
 comment|// Class functions
 comment|//------------------------------------------------------------
 specifier|static
-name|lldb_private
+name|lldb
 operator|::
-name|Platform
-operator|*
+name|PlatformSP
 name|CreateInstance
 argument_list|(
 argument|bool force
@@ -206,16 +205,9 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|FileSpec
+name|ModuleSpec
 operator|&
-name|exe_file
-argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|ArchSpec
-operator|&
-name|arch
+name|module_spec
 argument_list|,
 name|lldb
 operator|::
@@ -397,12 +389,6 @@ operator|::
 name|Target
 operator|*
 name|target
-argument_list|,
-name|lldb_private
-operator|::
-name|Listener
-operator|&
-name|listener
 argument_list|,
 name|lldb_private
 operator|::

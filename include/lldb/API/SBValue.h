@@ -248,7 +248,31 @@ function_decl|;
 specifier|const
 name|char
 modifier|*
+name|GetSummary
+argument_list|(
+name|lldb
+operator|::
+name|SBStream
+operator|&
+name|stream
+argument_list|,
+name|lldb
+operator|::
+name|SBTypeSummaryOptions
+operator|&
+name|options
+argument_list|)
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 name|GetObjectDescription
+parameter_list|()
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|GetTypeValidatorResult
 parameter_list|()
 function_decl|;
 name|lldb
@@ -390,6 +414,7 @@ argument_list|,
 argument|lldb::SBType type
 argument_list|)
 expr_stmt|;
+comment|// Deprecated - use the expression evaluator to perform type casting
 name|lldb
 operator|::
 name|SBValue
@@ -726,6 +751,12 @@ name|lldb
 operator|::
 name|SBType
 name|GetType
+argument_list|()
+expr_stmt|;
+name|lldb
+operator|::
+name|SBValue
+name|Persist
 argument_list|()
 expr_stmt|;
 name|bool

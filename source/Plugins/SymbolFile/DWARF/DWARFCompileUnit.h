@@ -191,6 +191,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|m_is_dwarf64
+operator|?
+literal|23
+operator|:
 literal|11
 return|;
 comment|/* Size in bytes of the compile unit header */
@@ -237,7 +241,13 @@ name|m_offset
 operator|+
 name|m_length
 operator|+
+operator|(
+name|m_is_dwarf64
+operator|?
+literal|12
+operator|:
 literal|4
+operator|)
 return|;
 block|}
 name|size_t
@@ -248,7 +258,13 @@ block|{
 return|return
 name|m_length
 operator|+
+operator|(
+name|m_is_dwarf64
+operator|?
+literal|12
+operator|:
 literal|4
+operator|)
 operator|-
 name|Size
 argument_list|()
@@ -495,6 +511,16 @@ name|cu
 parameter_list|)
 function_decl|;
 specifier|static
+name|bool
+name|IsDWARF64
+parameter_list|(
+specifier|const
+name|DWARFCompileUnit
+modifier|*
+name|cu
+parameter_list|)
+function_decl|;
+specifier|static
 name|uint8_t
 name|GetDefaultAddressSize
 parameter_list|()
@@ -620,6 +646,11 @@ name|uint32_t
 name|GetProducerVersionUpdate
 parameter_list|()
 function_decl|;
+name|bool
+name|IsDWARF64
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 name|SymbolFileDWARF
@@ -656,7 +687,7 @@ decl_stmt|;
 name|dw_offset_t
 name|m_offset
 decl_stmt|;
-name|uint32_t
+name|dw_offset_t
 name|m_length
 decl_stmt|;
 name|uint16_t
@@ -676,6 +707,9 @@ name|m_producer_version_minor
 decl_stmt|;
 name|uint32_t
 name|m_producer_version_update
+decl_stmt|;
+name|bool
+name|m_is_dwarf64
 decl_stmt|;
 name|void
 name|ParseProducerInfo

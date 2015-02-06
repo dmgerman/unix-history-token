@@ -480,41 +480,6 @@ argument_list|,
 argument|lldb::DynamicValueType use_dynamic
 argument_list|)
 expr_stmt|;
-comment|/// Find and watch a variable using the frame as the scope.
-comment|/// It returns an SBValue, similar to FindValue() method, if find-and-watch
-comment|/// operation succeeds.  Otherwise, an invalid SBValue is returned.
-comment|/// You can use LLDB_WATCH_TYPE_READ | LLDB_WATCH_TYPE_WRITE for 'rw' watch.
-name|lldb
-operator|::
-name|SBValue
-name|WatchValue
-argument_list|(
-argument|const char *name
-argument_list|,
-argument|ValueType value_type
-argument_list|,
-argument|uint32_t watch_type
-argument_list|)
-expr_stmt|;
-comment|/// Find and watch the location pointed to by a variable using the frame as
-comment|/// the scope.
-comment|/// It returns an SBValue, similar to FindValue() method, if find-and-watch
-comment|/// operation succeeds.  Otherwise, an invalid SBValue is returned.
-comment|/// You can use LLDB_WATCH_TYPE_READ | LLDB_WATCH_TYPE_WRITE for 'rw' watch.
-name|lldb
-operator|::
-name|SBValue
-name|WatchLocation
-argument_list|(
-argument|const char *name
-argument_list|,
-argument|ValueType value_type
-argument_list|,
-argument|uint32_t watch_type
-argument_list|,
-argument|size_t size
-argument_list|)
-expr_stmt|;
 name|bool
 name|GetDescription
 argument_list|(
@@ -540,6 +505,10 @@ label|:
 name|friend
 name|class
 name|SBBlock
+decl_stmt|;
+name|friend
+name|class
+name|SBExecutionContext
 decl_stmt|;
 name|friend
 name|class

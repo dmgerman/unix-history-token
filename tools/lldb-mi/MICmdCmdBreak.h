@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdCmdBreak.h
+comment|// File:        MICmdCmdBreak.h
 end_comment
 
 begin_comment
@@ -44,63 +44,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdCmdBreakInsert			interface.
+comment|// Overview:    CMICmdCmdBreakInsert            interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdBreakDelete			interface.
+comment|//              CMICmdCmdBreakDelete            interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdBreakDisable			interface.
+comment|//              CMICmdCmdBreakDisable           interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdBreakEnable			interface.
+comment|//              CMICmdCmdBreakEnable            interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdBreakAfter				interface.
+comment|//              CMICmdCmdBreakAfter             interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdBreakCondition			interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//				To implement new MI commands derive a new command class from the command base
-end_comment
-
-begin_comment
-comment|//				class. To enable the new command for interpretation add the new command class
-end_comment
-
-begin_comment
-comment|//				to the command factory. The files of relevance are:
-end_comment
-
-begin_comment
-comment|//					MICmdCommands.cpp
-end_comment
-
-begin_comment
-comment|//					MICmdBase.h / .cpp
-end_comment
-
-begin_comment
-comment|//					MICmdCmd.h / .cpp
-end_comment
-
-begin_comment
-comment|//				For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
-end_comment
-
-begin_comment
-comment|//				command class as an example.
+comment|//              CMICmdCmdBreakCondition         interface.
 end_comment
 
 begin_comment
@@ -108,15 +72,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|//              To implement new MI commands derive a new command class from the command base
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//              class. To enable the new command for interpretation add the new command class
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              to the command factory. The files of relevance are:
+end_comment
+
+begin_comment
+comment|//                  MICmdCommands.cpp
+end_comment
+
+begin_comment
+comment|//                  MICmdBase.h / .cpp
+end_comment
+
+begin_comment
+comment|//                  MICmdCmd.h / .cpp
+end_comment
+
+begin_comment
+comment|//              For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
+end_comment
+
+begin_comment
+comment|//              command class as an example.
 end_comment
 
 begin_comment
@@ -124,7 +108,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Environment: Compilers:  Visual C++ 12.
+end_comment
+
+begin_comment
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+end_comment
+
+begin_comment
+comment|//              Libraries:  See MIReadmetxt.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -162,27 +162,27 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "break-insert".
+comment|//          *this class implements MI command "break-insert".
 end_comment
 
 begin_comment
-comment|//			This command does not follow the MI documentation exactly.
+comment|//          This command does not follow the MI documentation exactly.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 11/03/2014.
+comment|// Authors: Illya Rudkin 11/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -255,7 +255,7 @@ comment|// Enumerations:
 name|private
 operator|:
 comment|//++ ===================================================================
-comment|// Details:	The type of break point give in the MI command text.
+comment|// Details: The type of break point give in the MI command text.
 comment|//--
 expr|enum
 name|BreakPoint_e
@@ -370,23 +370,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "break-delete".
+comment|//          *this class implements MI command "break-delete".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 11/03/2014.
+comment|// Authors: Illya Rudkin 11/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -476,23 +476,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "break-disable".
+comment|//          *this class implements MI command "break-disable".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 19/05/2014.
+comment|// Authors: Illya Rudkin 19/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -587,23 +587,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "break-enable".
+comment|//          *this class implements MI command "break-enable".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 19/05/2014.
+comment|// Authors: Illya Rudkin 19/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -698,23 +698,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "break-after".
+comment|//          *this class implements MI command "break-after".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 29/05/2014.
+comment|// Authors: Illya Rudkin 29/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -813,23 +813,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "break-condition".
+comment|//          *this class implements MI command "break-condition".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 29/05/2014.
+comment|// Authors: Illya Rudkin 29/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment

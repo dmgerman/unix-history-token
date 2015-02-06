@@ -64,6 +64,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private

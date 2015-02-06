@@ -236,6 +236,10 @@ name|min_inst_length
 decl_stmt|;
 comment|// The size in bytes of the smallest target machine instruction. Statement program opcodes that alter the address register first multiply their operands by this value.
 name|uint8_t
+name|maximum_operations_per_instruction
+decl_stmt|;
+comment|// New in DWARF4. The maximum number of individual operations that may be encoded in an instruction.
+name|uint8_t
 name|default_is_stmt
 decl_stmt|;
 comment|// The initial value of theis_stmtregister.

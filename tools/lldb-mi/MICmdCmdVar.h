@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdCmdVar.h
+comment|// File:        MICmdCmdVar.h
 end_comment
 
 begin_comment
@@ -44,75 +44,39 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdCmdVarCreate				interface.
+comment|// Overview:    CMICmdCmdVarCreate              interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdVarUpdate				interface.
+comment|//              CMICmdCmdVarUpdate              interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdVarDelete				interface.
+comment|//              CMICmdCmdVarDelete              interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdVarAssign				interface.
+comment|//              CMICmdCmdVarAssign              interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdVarSetFormat			interface.
+comment|//              CMICmdCmdVarSetFormat           interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdVarListChildren		interface.
+comment|//              CMICmdCmdVarListChildren        interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdVarEvaluateExpression	interface.
+comment|//              CMICmdCmdVarEvaluateExpression  interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdVarInfoPathExpression	interface.
+comment|//              CMICmdCmdVarInfoPathExpression  interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdVarShowAttributes		interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//				To implement new MI commands derive a new command class from the command base
-end_comment
-
-begin_comment
-comment|//				class. To enable the new command for interpretation add the new command class
-end_comment
-
-begin_comment
-comment|//				to the command factory. The files of relevance are:
-end_comment
-
-begin_comment
-comment|//					MICmdCommands.cpp
-end_comment
-
-begin_comment
-comment|//					MICmdBase.h / .cpp
-end_comment
-
-begin_comment
-comment|//					MICmdCmd.h / .cpp
-end_comment
-
-begin_comment
-comment|//				For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
-end_comment
-
-begin_comment
-comment|//				command class as an example.
+comment|//              CMICmdCmdVarShowAttributes      interface.
 end_comment
 
 begin_comment
@@ -120,15 +84,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|//              To implement new MI commands derive a new command class from the command base
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//              class. To enable the new command for interpretation add the new command class
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              to the command factory. The files of relevance are:
+end_comment
+
+begin_comment
+comment|//                  MICmdCommands.cpp
+end_comment
+
+begin_comment
+comment|//                  MICmdBase.h / .cpp
+end_comment
+
+begin_comment
+comment|//                  MICmdCmd.h / .cpp
+end_comment
+
+begin_comment
+comment|//              For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
+end_comment
+
+begin_comment
+comment|//              command class as an example.
 end_comment
 
 begin_comment
@@ -136,7 +120,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Environment: Compilers:  Visual C++ 12.
+end_comment
+
+begin_comment
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+end_comment
+
+begin_comment
+comment|//              Libraries:  See MIReadmetxt.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -192,23 +192,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "var-create".
+comment|//          *this class implements MI command "var-create".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 24/03/2014.
+comment|// Authors: Illya Rudkin 24/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -286,9 +286,6 @@ block|;
 name|MIuint
 name|m_nChildren
 block|;
-name|MIuint
-name|m_nMore
-block|;
 name|MIuint64
 name|m_nThreadId
 block|;
@@ -331,7 +328,7 @@ block|;
 specifier|const
 name|CMIUtilString
 name|m_constStrArgExpression
-block|;	 }
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -340,23 +337,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "var-update".
+comment|//          *this class implements MI command "var-update".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 25/03/2014.
+comment|// Authors: Illya Rudkin 25/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -434,11 +431,11 @@ operator|:
 name|bool
 name|ExamineSBValueForChange
 argument_list|(
-argument|const CMICmnLLDBDebugSessionInfoVarObj& vrVarObj
+argument|const CMICmnLLDBDebugSessionInfoVarObj&vrVarObj
 argument_list|,
 argument|const bool vbIgnoreVarType
 argument_list|,
-argument|bool& vrwbChanged
+argument|bool&vrwbChanged
 argument_list|)
 block|;
 name|bool
@@ -498,23 +495,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "var-delete".
+comment|//          *this class implements MI command "var-delete".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 25/03/2014.
+comment|// Authors: Illya Rudkin 25/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -598,23 +595,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "var-assign".
+comment|//          *this class implements MI command "var-assign".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 25/03/2014.
+comment|// Authors: Illya Rudkin 25/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -700,7 +697,7 @@ block|;
 specifier|const
 name|CMIUtilString
 name|m_constStrArgExpression
-block|;	 }
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -709,23 +706,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "var-set-format".
+comment|//          *this class implements MI command "var-set-format".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 26/03/2014.
+comment|// Authors: Illya Rudkin 26/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -807,7 +804,7 @@ block|;
 specifier|const
 name|CMIUtilString
 name|m_constStrArgFormatSpec
-block|;	 }
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -816,23 +813,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "var-list-children".
+comment|//          *this class implements MI command "var-list-children".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 26/03/2014.
+comment|// Authors: Illya Rudkin 26/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -961,23 +958,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "var-evaluate-expression".
+comment|//          *this class implements MI command "var-evaluate-expression".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 26/03/2014.
+comment|// Authors: Illya Rudkin 26/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -1073,23 +1070,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "var-info-path-expression".
+comment|//          *this class implements MI command "var-info-path-expression".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 26/03/2014.
+comment|// Authors: Illya Rudkin 26/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -1180,23 +1177,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "var-show-attributes".
+comment|//          *this class implements MI command "var-show-attributes".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 19/05/2014.
+comment|// Authors: Illya Rudkin 19/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment

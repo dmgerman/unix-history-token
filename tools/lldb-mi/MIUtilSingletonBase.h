@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MIUtilSingletonBase.h
+comment|// File:        MIUtilSingletonBase.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	MI::ISingleton interface.
+comment|// Overview:    MI::ISingleton interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -85,24 +85,24 @@ begin_decl_stmt
 name|namespace
 name|MI
 block|{
-comment|//	MI::ISingleton base class usage:
+comment|//   MI::ISingleton base class usage:
 comment|//
-comment|//	class CMIDerivedClass
-comment|//		: public MI::ISingleton< CMIDerivedClass>
-comment|//	{
-comment|//		friend MI::ISingleton< CMIDerivedClass>;
+comment|//   class CMIDerivedClass
+comment|//       : public MI::ISingleton< CMIDerivedClass>
+comment|//   {
+comment|//       friend MI::ISingleton< CMIDerivedClass>;
 comment|//
-comment|//	// Overridden:
-comment|//	public:
-comment|//		// From MI::ISingleton
-comment|//		virtual bool Initialize( void );
-comment|//		virtual bool Shutdown( void );
-comment|//	};
+comment|//   // Overridden:
+comment|//   public:
+comment|//       // From MI::ISingleton
+comment|//       virtual bool Initialize( void );
+comment|//       virtual bool Shutdown( void );
+comment|//   };
 comment|//++ ============================================================================
-comment|// Details:	Base class for the singleton pattern.
-comment|// Gotchas:	Derived class must specify MI::ISingleton<> as a friend class.
-comment|// Authors:	Aidan Dodds 17/03/2014.
-comment|// Changes:	None.
+comment|// Details: Base class for the singleton pattern.
+comment|// Gotchas: Derived class must specify MI::ISingleton<> as a friend class.
+comment|// Authors: Aidan Dodds 17/03/2014.
+comment|// Changes: None.
 comment|//--
 name|template
 operator|<
@@ -163,7 +163,7 @@ name|ISingleton
 argument_list|(
 argument|void
 argument_list|)
-block|{ }
+block|{}
 block|; }
 expr_stmt|;
 block|}

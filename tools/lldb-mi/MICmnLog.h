@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmnLog.h
+comment|// File:        MICmnLog.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmnLog interface.
+comment|// Overview:    CMICmnLog interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -118,47 +118,47 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code implementation class. Handle application trace
+comment|// Details: MI common code implementation class. Handle application trace
 end_comment
 
 begin_comment
-comment|//			activity logging. Medium objects derived from the Medium abstract
+comment|//          activity logging. Medium objects derived from the Medium abstract
 end_comment
 
 begin_comment
-comment|///			class are registered with this loggor. The function Write is called
+comment|///          class are registered with this loggor. The function Write is called
 end_comment
 
 begin_comment
-comment|//			by a client callee to log information. That information is given to
+comment|//          by a client callee to log information. That information is given to
 end_comment
 
 begin_comment
-comment|//			registered relevant mediums. The medium file is registered during
+comment|//          registered relevant mediums. The medium file is registered during
 end_comment
 
 begin_comment
-comment|//			*this logs initialization so it will always have a file log for the
+comment|//          *this logs initialization so it will always have a file log for the
 end_comment
 
 begin_comment
-comment|//			application.
+comment|//          application.
 end_comment
 
 begin_comment
-comment|//			Singleton class.
+comment|//          Singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 01/02/2012.
+comment|// Authors: Illya Rudkin 01/02/2012.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -190,8 +190,8 @@ name|public
 operator|:
 comment|//++
 comment|// Description: Data given to the Logger can be of serveral types. The Logger can be
-comment|//				set at levels of verbosity. Can determine how data is sent to one or
-comment|//				mediums.
+comment|//              set at levels of verbosity. Can determine how data is sent to one or
+comment|//              mediums.
 comment|//--
 expr|enum
 name|ELogVerbosity
@@ -223,8 +223,8 @@ name|public
 operator|:
 comment|//++
 comment|// Description: Register a medium derived from this interface which will be
-comment|//				called writing log trace data i.e. a file or a console.
-comment|//				Medium objects registered are not owned by *this logger.
+comment|//              called writing log trace data i.e. a file or a console.
+comment|//              Medium objects registered are not owned by *this logger.
 comment|//--
 name|class
 name|IMedium
@@ -256,7 +256,7 @@ name|virtual
 name|bool
 name|Write
 argument_list|(
-argument|const CMIUtilString& vData
+argument|const CMIUtilString&vData
 argument_list|,
 argument|const ELogVerbosity veType
 argument_list|)
@@ -285,9 +285,9 @@ operator|=
 literal|0
 block|;
 comment|// Not part of the interface, ignore
-comment|//AD:	This virtual destructor seems to hit a bug in the stdlib
-comment|//		where vector delete is incorrectly called.  Workaround is
-comment|//		to comment this out while I investigate.
+comment|// AD:  This virtual destructor seems to hit a bug in the stdlib
+comment|//      where vector delete is incorrectly called.  Workaround is
+comment|//      to comment this out while I investigate.
 comment|/* dtor */
 name|virtual
 operator|~
@@ -335,7 +335,7 @@ block|;
 name|bool
 name|Write
 argument_list|(
-argument|const CMIUtilString& vData
+argument|const CMIUtilString&vData
 argument_list|,
 argument|const ELogVerbosity veType
 argument_list|)
@@ -367,7 +367,7 @@ block|;
 name|void
 name|SetErrorDescription
 argument_list|(
-argument|const CMIUtilString& vrTxt
+argument|const CMIUtilString&vrTxt
 argument_list|)
 specifier|const
 block|;

@@ -69,7 +69,10 @@ name|eStepTypeOver
 block|,
 comment|///< Single step over a specified context.
 name|eStepTypeOut
+block|,
 comment|///< Single step out a specified context.
+name|eStepTypeScripted
+comment|///< A step type implemented by the script interpreter.
 block|}
 name|StepType
 typedef|;
@@ -342,6 +345,14 @@ block|,
 name|eFormatCategoryItemRegexValue
 init|=
 literal|0x0080
+block|,
+name|eFormatCategoryItemValidator
+init|=
+literal|0x0100
+block|,
+name|eFormatCategoryItemRegexValidator
+init|=
+literal|0x0200
 block|}
 name|FormatCategoryItem
 typedef|;
@@ -489,6 +500,24 @@ comment|// The exit status represents the stop signal that caused the program to
 block|}
 name|ExitType
 typedef|;
+comment|//----------------------------------------------------------------------
+comment|// Boolean result of running a Type Validator
+comment|//----------------------------------------------------------------------
+name|enum
+name|class
+name|TypeValidatorResult
+range|:
+name|bool
+block|{
+name|Success
+operator|=
+name|true
+block|,
+name|Failure
+operator|=
+name|false
+block|}
+decl_stmt|;
 block|}
 end_decl_stmt
 

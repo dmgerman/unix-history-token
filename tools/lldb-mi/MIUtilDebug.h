@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MIUtilDebug.h
+comment|// File:        MIUtilDebug.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMIUtilDebug interface.
+comment|// Overview:    CMIUtilDebug interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -116,11 +116,11 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI debugging aid utility class.
+comment|// Details: MI debugging aid utility class.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
@@ -128,7 +128,7 @@ comment|// Authors:
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -189,43 +189,43 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI debug utility class. Used to indicate the current function
+comment|// Details: MI debug utility class. Used to indicate the current function
 end_comment
 
 begin_comment
-comment|//			depth in the call stack. It uses the CMIlCmnLog logger to output
+comment|//          depth in the call stack. It uses the CMIlCmnLog logger to output
 end_comment
 
 begin_comment
-comment|//			the current fn trace information.
+comment|//          the current fn trace information.
 end_comment
 
 begin_comment
-comment|//			Use macro MI_TRACEFN( "Some fn name" ) and implement the scope of
+comment|//          Use macro MI_TRACEFN( "Some fn name" ) and implement the scope of
 end_comment
 
 begin_comment
-comment|//			the functions you wish to build up a trace off.
+comment|//          the functions you wish to build up a trace off.
 end_comment
 
 begin_comment
-comment|//			Use preprocessor definition MI_USE_DEBUG_TRACE_FN to turn off or on
+comment|//          Use preprocessor definition MI_USE_DEBUG_TRACE_FN to turn off or on
 end_comment
 
 begin_comment
-comment|//			tracing code.
+comment|//          tracing code.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 07/03/2014.
+comment|// Authors: Illya Rudkin 07/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -289,19 +289,19 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	Take the given text and send it to the server's Logger to output to the
+comment|// Details: Take the given text and send it to the server's Logger to output to the
 end_comment
 
 begin_comment
-comment|//			trace file.
+comment|//          trace file.
 end_comment
 
 begin_comment
-comment|// Type:	Compile preprocess.
+comment|// Type:    Compile preprocess.
 end_comment
 
 begin_comment
-comment|// Args:	x	- (R) Message (may be seen by user).
+comment|// Args:    x   - (R) Message (may be seen by user).
 end_comment
 
 begin_comment
@@ -321,7 +321,7 @@ name|MI_TRACEFN
 parameter_list|(
 name|x
 parameter_list|)
-value|CMIUtilDebugFnTrace __MITrace( x )
+value|CMIUtilDebugFnTrace __MITrace(x)
 end_define
 
 begin_else

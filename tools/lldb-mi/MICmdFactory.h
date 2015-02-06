@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdFactory.h
+comment|// File:        MICmdFactory.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdFactory interface.
+comment|// Overview:    CMICmdFactory interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -128,31 +128,31 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI Command Factory. Holds a list of registered MI commands that
+comment|// Details: MI Command Factory. Holds a list of registered MI commands that
 end_comment
 
 begin_comment
-comment|//			MI application understands to interpret. Creates commands objects.
+comment|//          MI application understands to interpret. Creates commands objects.
 end_comment
 
 begin_comment
-comment|//			The Command Factory is carried out in the main thread.
+comment|//          The Command Factory is carried out in the main thread.
 end_comment
 
 begin_comment
-comment|//			A singleton class.
+comment|//          A singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 19/02/2014.
+comment|// Authors: Illya Rudkin 19/02/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -230,7 +230,8 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|//virtual CMICmdBase *			CreateSelf( void ) = 0;				// Not possible as require a static creator function in the command class, here for awareness
+comment|// virtual CMICmdBase *         CreateSelf( void ) = 0;             // Not possible as require a static creator
+comment|// function in the command class, here for awareness
 comment|/* dtor */
 name|virtual
 operator|~

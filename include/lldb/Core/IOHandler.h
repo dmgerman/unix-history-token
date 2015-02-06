@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/Stream.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/StringList.h"
 end_include
 
@@ -101,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/Mutex.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/Predicate.h"
 end_include
 
 begin_decl_stmt
@@ -131,16 +143,41 @@ name|IOHandler
 block|{
 name|public
 label|:
-name|IOHandler
-argument_list|(
-name|Debugger
-operator|&
-name|debugger
-argument_list|)
-expr_stmt|;
+name|enum
+name|class
+name|Type
+block|{
+name|CommandInterpreter
+operator|,
+name|CommandList
+operator|,
+name|Confirm
+operator|,
+name|Curses
+operator|,
+name|Expression
+operator|,
+name|ProcessIO
+operator|,
+name|PythonInterpreter
+operator|,
+name|PythonCode
+operator|,
+name|Other
+block|}
+empty_stmt|;
 name|IOHandler
 argument_list|(
 argument|Debugger&debugger
+argument_list|,
+argument|IOHandler::Type type
+argument_list|)
+empty_stmt|;
+name|IOHandler
+argument_list|(
+argument|Debugger&debugger
+argument_list|,
+argument|IOHandler::Type type
 argument_list|,
 argument|const lldb::StreamFileSP&input_sp
 argument_list|,
@@ -246,6 +283,15 @@ return|return
 name|m_done
 return|;
 block|}
+name|Type
+name|GetType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_type
+return|;
+block|}
 name|virtual
 name|void
 name|Activate
@@ -304,6 +350,28 @@ block|{
 return|return
 name|ConstString
 argument_list|()
+return|;
+block|}
+name|virtual
+specifier|const
+name|char
+modifier|*
+name|GetCommandPrefix
+parameter_list|()
+block|{
+return|return
+name|NULL
+return|;
+block|}
+name|virtual
+specifier|const
+name|char
+modifier|*
+name|GetHelpPrologue
+parameter_list|()
+block|{
+return|return
+name|NULL
 return|;
 block|}
 name|int
@@ -428,6 +496,17 @@ name|bool
 name|GetIsRealTerminal
 parameter_list|()
 function_decl|;
+name|void
+name|SetPopped
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+function_decl|;
+name|void
+name|WaitForPop
+parameter_list|()
+function_decl|;
 name|protected
 label|:
 name|Debugger
@@ -449,8 +528,17 @@ operator|::
 name|StreamFileSP
 name|m_error_sp
 expr_stmt|;
+name|Predicate
+operator|<
+name|bool
+operator|>
+name|m_popped
+expr_stmt|;
 name|Flags
 name|m_flags
+decl_stmt|;
+name|Type
+name|m_type
 decl_stmt|;
 name|void
 modifier|*
@@ -523,6 +611,13 @@ argument|IOHandler&io_handler
 argument_list|)
 block|{         }
 name|virtual
+name|void
+name|IOHandlerDeactivated
+argument_list|(
+argument|IOHandler&io_handler
+argument_list|)
+block|{         }
+name|virtual
 name|int
 name|IOHandlerComplete
 argument_list|(
@@ -541,6 +636,62 @@ argument_list|,
 argument|StringList&matches
 argument_list|)
 expr_stmt|;
+name|virtual
+specifier|const
+name|char
+modifier|*
+name|IOHandlerGetFixIndentationCharacters
+parameter_list|()
+block|{
+return|return
+name|NULL
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Called when a new line is created or one of an identifed set of
+comment|/// indentation characters is typed.
+comment|///
+comment|/// This function determines how much indentation should be added
+comment|/// or removed to match the recommended amount for the final line.
+comment|///
+comment|/// @param[in] io_handler
+comment|///     The IOHandler that responsible for input.
+comment|///
+comment|/// @param[in] lines
+comment|///     The current input up to the line to be corrected.  Lines
+comment|///     following the line containing the cursor are not included.
+comment|///
+comment|/// @param[in] cursor_position
+comment|///     The number of characters preceeding the cursor on the final
+comment|///     line at the time.
+comment|///
+comment|/// @return
+comment|///     Returns an integer describing the number of spaces needed
+comment|///     to correct the indentation level.  Positive values indicate
+comment|///     that spaces should be added, while negative values represent
+comment|///     spaces that should be removed.
+comment|//------------------------------------------------------------------
+name|virtual
+name|int
+name|IOHandlerFixIndentation
+parameter_list|(
+name|IOHandler
+modifier|&
+name|io_handler
+parameter_list|,
+specifier|const
+name|StringList
+modifier|&
+name|lines
+parameter_list|,
+name|int
+name|cursor_position
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|//------------------------------------------------------------------
 comment|/// Called when a line or lines have been retrieved.
 comment|///
@@ -567,23 +718,40 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+name|virtual
+name|void
+name|IOHandlerInputInterrupted
+argument_list|(
+name|IOHandler
+operator|&
+name|io_handler
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|data
+argument_list|)
+block|{         }
 comment|//------------------------------------------------------------------
-comment|/// Called when a line in \a lines has been updated when doing
-comment|/// multi-line input.
+comment|/// Called to determine whether typing enter after the last line in
+comment|/// \a lines should end input.  This function will not be called on
+comment|/// IOHandler objects that are getting single lines.
+comment|/// @param[in] io_handler
+comment|///     The IOHandler that responsible for updating the lines.
+comment|///
+comment|/// @param[in] lines
+comment|///     The current multi-line content.  May be altered to provide
+comment|///     alternative input when complete.
 comment|///
 comment|/// @return
-comment|///     Return an enumeration to indicate the status of the current
-comment|///     line:
-comment|///         Success - The line is good and should be added to the
-comment|///                   multiple lines
-comment|///         Error - There is an error with the current line and it
-comment|///                 need to be re-edited before it is acceptable
-comment|///         Done - The lines collection is complete and ready to be
-comment|///                returned.
+comment|///     Return an boolean to indicate whether input is complete,
+comment|///     true indicates that no additional input is necessary, while
+comment|///     false indicates that more input is required.
 comment|//------------------------------------------------------------------
 name|virtual
-name|LineStatus
-name|IOHandlerLinesUpdated
+name|bool
+name|IOHandlerIsInputComplete
 parameter_list|(
 name|IOHandler
 modifier|&
@@ -592,24 +760,13 @@ parameter_list|,
 name|StringList
 modifier|&
 name|lines
-parameter_list|,
-name|uint32_t
-name|line_idx
-parameter_list|,
-name|Error
-modifier|&
-name|error
 parameter_list|)
 block|{
+comment|// Impose no requirements for input to be considered
+comment|// complete.  subclasses should do something more intelligent.
 return|return
-name|LineStatus
-operator|::
-name|Done
+name|true
 return|;
-comment|// Stop getting lines on the first line that is updated
-comment|// subclasses should do something more intelligent here.
-comment|// This function will not be called on IOHandler objects
-comment|// that are getting single lines.
 block|}
 name|virtual
 name|ConstString
@@ -622,6 +779,28 @@ block|{
 return|return
 name|ConstString
 argument_list|()
+return|;
+block|}
+name|virtual
+specifier|const
+name|char
+modifier|*
+name|IOHandlerGetCommandPrefix
+parameter_list|()
+block|{
+return|return
+name|NULL
+return|;
+block|}
+name|virtual
+specifier|const
+name|char
+modifier|*
+name|IOHandlerGetHelpPrologue
+parameter_list|()
+block|{
+return|return
+name|NULL
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -721,8 +900,8 @@ argument_list|()
 return|;
 block|}
 name|virtual
-name|LineStatus
-name|IOHandlerLinesUpdated
+name|bool
+name|IOHandlerIsInputComplete
 parameter_list|(
 name|IOHandler
 modifier|&
@@ -731,24 +910,36 @@ parameter_list|,
 name|StringList
 modifier|&
 name|lines
-parameter_list|,
-name|uint32_t
-name|line_idx
-parameter_list|,
-name|Error
-modifier|&
-name|error
 parameter_list|)
 block|{
+comment|// Determine whether the end of input signal has been entered
+specifier|const
+name|size_t
+name|num_lines
+init|=
+name|lines
+operator|.
+name|GetSize
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
-name|line_idx
+name|num_lines
+operator|>
+literal|0
+operator|&&
+name|lines
+index|[
+name|num_lines
+operator|-
+literal|1
+index|]
 operator|==
-name|UINT32_MAX
+name|m_end_line
 condition|)
 block|{
-comment|// Remove the last empty line from "lines" so it doesn't appear
-comment|// in our final expression and return true to indicate we are done
+comment|// Remove the terminal line from "lines" so it doesn't appear in
+comment|// the resulting input and return true to indicate we are done
 comment|// getting lines
 name|lines
 operator|.
@@ -756,47 +947,11 @@ name|PopBack
 argument_list|()
 expr_stmt|;
 return|return
-name|LineStatus
-operator|::
-name|Done
+name|true
 return|;
 block|}
-elseif|else
-if|if
-condition|(
-name|line_idx
-operator|+
-literal|1
-operator|==
-name|lines
-operator|.
-name|GetSize
-argument_list|()
-condition|)
-block|{
-comment|// The last line was edited, if this line is empty, then we are done
-comment|// getting our multiple lines.
-if|if
-condition|(
-name|lines
-index|[
-name|line_idx
-index|]
-operator|==
-name|m_end_line
-condition|)
-block|{
 return|return
-name|LineStatus
-operator|::
-name|Done
-return|;
-block|}
-block|}
-return|return
-name|LineStatus
-operator|::
-name|Success
+name|false
 return|;
 block|}
 name|protected
@@ -827,12 +982,18 @@ name|IOHandlerEditline
 argument_list|(
 argument|Debugger&debugger
 argument_list|,
+argument|IOHandler::Type type
+argument_list|,
 argument|const char *editline_name
 argument_list|,
 comment|// Used for saving history files
 argument|const char *prompt
 argument_list|,
+argument|const char *continuation_prompt
+argument_list|,
 argument|bool multi_line
+argument_list|,
+argument|bool color_prompts
 argument_list|,
 argument|uint32_t line_number_start
 argument_list|,
@@ -843,6 +1004,8 @@ block|;
 name|IOHandlerEditline
 argument_list|(
 argument|Debugger&debugger
+argument_list|,
+argument|IOHandler::Type type
 argument_list|,
 argument|const lldb::StreamFileSP&input_sp
 argument_list|,
@@ -857,7 +1020,11 @@ argument_list|,
 comment|// Used for saving history files
 argument|const char *prompt
 argument_list|,
+argument|const char *continuation_prompt
+argument_list|,
 argument|bool multi_line
+argument_list|,
+argument|bool color_prompts
 argument_list|,
 argument|uint32_t line_number_start
 argument_list|,
@@ -904,20 +1071,12 @@ name|virtual
 name|void
 name|Activate
 argument_list|()
-block|{
-name|IOHandler
-operator|::
-name|Activate
+block|;
+name|virtual
+name|void
+name|Deactivate
 argument_list|()
 block|;
-name|m_delegate
-operator|.
-name|IOHandlerActivated
-argument_list|(
-operator|*
-name|this
-argument_list|)
-block|;         }
 name|virtual
 name|ConstString
 name|GetControlSequence
@@ -938,12 +1097,55 @@ name|virtual
 specifier|const
 name|char
 operator|*
+name|GetCommandPrefix
+argument_list|()
+block|{
+return|return
+name|m_delegate
+operator|.
+name|IOHandlerGetCommandPrefix
+argument_list|()
+return|;
+block|}
+name|virtual
+specifier|const
+name|char
+operator|*
+name|GetHelpPrologue
+argument_list|()
+block|{
+return|return
+name|m_delegate
+operator|.
+name|IOHandlerGetHelpPrologue
+argument_list|()
+return|;
+block|}
+name|virtual
+specifier|const
+name|char
+operator|*
 name|GetPrompt
 argument_list|()
 block|;
 name|virtual
 name|bool
 name|SetPrompt
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|prompt
+argument_list|)
+block|;
+specifier|const
+name|char
+operator|*
+name|GetContinuationPrompt
+argument_list|()
+block|;
+name|void
+name|SetContinuationPrompt
 argument_list|(
 specifier|const
 name|char
@@ -983,19 +1185,71 @@ argument_list|(
 argument|uint32_t line
 argument_list|)
 block|;
+name|bool
+name|GetInterruptExits
+argument_list|()
+block|{
+return|return
+name|m_interrupt_exits
+return|;
+block|}
+name|void
+name|SetInterruptExits
+argument_list|(
+argument|bool b
+argument_list|)
+block|{
+name|m_interrupt_exits
+operator|=
+name|b
+block|;         }
+specifier|const
+name|StringList
+operator|*
+name|GetCurrentLines
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_current_lines_ptr
+return|;
+block|}
+name|uint32_t
+name|GetCurrentLineIndex
+argument_list|()
+specifier|const
+block|;
 name|private
 operator|:
+ifndef|#
+directive|ifndef
+name|LLDB_DISABLE_LIBEDIT
 specifier|static
-name|LineStatus
-name|LineCompletedCallback
+name|bool
+name|IsInputCompleteCallback
+argument_list|(
+name|Editline
+operator|*
+name|editline
+argument_list|,
+name|StringList
+operator|&
+name|lines
+argument_list|,
+name|void
+operator|*
+name|baton
+argument_list|)
+block|;
+specifier|static
+name|int
+name|FixIndentationCallback
 argument_list|(
 argument|Editline *editline
 argument_list|,
-argument|StringList&lines
+argument|const StringList&lines
 argument_list|,
-argument|uint32_t line_idx
-argument_list|,
-argument|Error&error
+argument|int cursor_position
 argument_list|,
 argument|void *baton
 argument_list|)
@@ -1019,8 +1273,13 @@ argument_list|,
 argument|void *baton
 argument_list|)
 block|;
+endif|#
+directive|endif
 name|protected
 operator|:
+ifndef|#
+directive|ifndef
+name|LLDB_DISABLE_LIBEDIT
 name|std
 operator|::
 name|unique_ptr
@@ -1029,6 +1288,8 @@ name|Editline
 operator|>
 name|m_editline_ap
 block|;
+endif|#
+directive|endif
 name|IOHandlerDelegate
 operator|&
 name|m_delegate
@@ -1038,25 +1299,51 @@ operator|::
 name|string
 name|m_prompt
 block|;
+name|std
+operator|::
+name|string
+name|m_continuation_prompt
+block|;
+name|StringList
+operator|*
+name|m_current_lines_ptr
+block|;
 name|uint32_t
 name|m_base_line_number
 block|;
 comment|// If non-zero, then show line numbers in prompt
+name|uint32_t
+name|m_curr_line_idx
+block|;
 name|bool
 name|m_multi_line
-block|;             }
+block|;
+name|bool
+name|m_color_prompts
+block|;
+name|bool
+name|m_interrupt_exits
+block|;     }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// The order of base classes is important. Look at the constructor of IOHandlerConfirm
+end_comment
+
+begin_comment
+comment|// to see how.
+end_comment
 
 begin_decl_stmt
 name|class
 name|IOHandlerConfirm
 range|:
 name|public
-name|IOHandlerEditline
+name|IOHandlerDelegate
 decl_stmt|,
 name|public
-name|IOHandlerDelegate
+name|IOHandlerEditline
 block|{
 name|public
 label|:
@@ -1349,9 +1636,16 @@ argument_list|(
 name|m_mutex
 argument_list|)
 expr_stmt|;
+name|sp
+operator|->
+name|SetPopped
+argument_list|(
+name|false
+argument_list|)
+expr_stmt|;
 name|m_stack
 operator|.
-name|push
+name|push_back
 argument_list|(
 name|sp
 argument_list|)
@@ -1418,7 +1712,7 @@ name|sp
 operator|=
 name|m_stack
 operator|.
-name|top
+name|back
 argument_list|()
 expr_stmt|;
 block|}
@@ -1446,11 +1740,31 @@ operator|.
 name|empty
 argument_list|()
 condition|)
+block|{
+name|lldb
+operator|::
+name|IOHandlerSP
+name|sp
+argument_list|(
 name|m_stack
 operator|.
-name|pop
+name|back
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|m_stack
+operator|.
+name|pop_back
 argument_list|()
 expr_stmt|;
+name|sp
+operator|->
+name|SetPopped
+argument_list|(
+name|true
+argument_list|)
+expr_stmt|;
+block|}
 comment|// Set m_top the non-locking IsTop() call
 if|if
 condition|(
@@ -1468,7 +1782,7 @@ name|m_top
 operator|=
 name|m_stack
 operator|.
-name|top
+name|back
 argument_list|()
 operator|.
 name|get
@@ -1505,6 +1819,76 @@ name|get
 argument_list|()
 return|;
 block|}
+name|bool
+name|CheckTopIOHandlerTypes
+argument_list|(
+name|IOHandler
+operator|::
+name|Type
+name|top_type
+argument_list|,
+name|IOHandler
+operator|::
+name|Type
+name|second_top_type
+argument_list|)
+block|{
+name|Mutex
+operator|::
+name|Locker
+name|locker
+argument_list|(
+name|m_mutex
+argument_list|)
+expr_stmt|;
+specifier|const
+name|size_t
+name|num_io_handlers
+init|=
+name|m_stack
+operator|.
+name|size
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|num_io_handlers
+operator|>=
+literal|2
+operator|&&
+name|m_stack
+index|[
+name|num_io_handlers
+operator|-
+literal|1
+index|]
+operator|->
+name|GetType
+argument_list|()
+operator|==
+name|top_type
+operator|&&
+name|m_stack
+index|[
+name|num_io_handlers
+operator|-
+literal|2
+index|]
+operator|->
+name|GetType
+argument_list|()
+operator|==
+name|second_top_type
+condition|)
+block|{
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
 name|ConstString
 name|GetTopIOHandlerControlSequence
 parameter_list|(
@@ -1529,18 +1913,62 @@ name|ConstString
 argument_list|()
 return|;
 block|}
+specifier|const
+name|char
+modifier|*
+name|GetTopIOHandlerCommandPrefix
+parameter_list|()
+block|{
+if|if
+condition|(
+name|m_top
+condition|)
+return|return
+name|m_top
+operator|->
+name|GetCommandPrefix
+argument_list|()
+return|;
+return|return
+name|NULL
+return|;
+block|}
+specifier|const
+name|char
+modifier|*
+name|GetTopIOHandlerHelpPrologue
+parameter_list|()
+block|{
+if|if
+condition|(
+name|m_top
+condition|)
+return|return
+name|m_top
+operator|->
+name|GetHelpPrologue
+argument_list|()
+return|;
+return|return
+name|NULL
+return|;
+block|}
 name|protected
 label|:
+typedef|typedef
 name|std
 operator|::
-name|stack
+name|vector
 operator|<
 name|lldb
 operator|::
 name|IOHandlerSP
 operator|>
-name|m_stack
+name|collection
 expr_stmt|;
+name|collection
+name|m_stack
+decl_stmt|;
 name|mutable
 name|Mutex
 name|m_mutex
