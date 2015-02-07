@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2012 The FreeBSD Foundation  * All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * iSCSI Common Layer.  It's used by both the initiator and target to send  * and receive iSCSI PDUs.  */
+comment|/*  * Software implementation of iSCSI Common Layer kobj(9) interface.  */
 end_comment
 
 begin_include
@@ -537,19 +537,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_function_decl
-specifier|static
-name|void
-name|icl_conn_close
-parameter_list|(
-name|struct
-name|icl_conn
-modifier|*
-name|ic
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -2805,7 +2792,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Don't free the PDU; it's pointed to by ic->ic_receive_pdu 		 * and will get freed in icl_conn_close(). 		 */
+comment|/* 		 * Don't free the PDU; it's pointed to by ic->ic_receive_pdu 		 * and will get freed in icl_soft_conn_close(). 		 */
 name|icl_conn_fail
 argument_list|(
 name|ic
@@ -4970,7 +4957,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|icl_conn_close
+name|icl_soft_conn_close
 argument_list|(
 name|ic
 argument_list|)
@@ -5073,7 +5060,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|icl_conn_close
+name|icl_soft_conn_close
 argument_list|(
 name|ic
 argument_list|)
@@ -5122,7 +5109,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|icl_conn_close
+name|icl_soft_conn_close
 argument_list|(
 name|ic
 argument_list|)
@@ -5170,7 +5157,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|icl_conn_close
+name|icl_soft_conn_close
 argument_list|(
 name|ic
 argument_list|)
@@ -5454,7 +5441,7 @@ end_function
 
 begin_function
 name|void
-name|icl_conn_close
+name|icl_soft_conn_close
 parameter_list|(
 name|struct
 name|icl_conn
@@ -5759,24 +5746,6 @@ expr_stmt|;
 endif|#
 directive|endif
 name|ICL_CONN_UNLOCK
-argument_list|(
-name|ic
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|icl_soft_conn_close
-parameter_list|(
-name|struct
-name|icl_conn
-modifier|*
-name|ic
-parameter_list|)
-block|{
-name|icl_conn_close
 argument_list|(
 name|ic
 argument_list|)
