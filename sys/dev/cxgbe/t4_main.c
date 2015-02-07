@@ -46036,15 +46036,16 @@ condition|(
 name|enable
 condition|)
 block|{
+comment|/* 		 * We need the port's queues around so that we're able to send 		 * and receive CPLs to/from the TOE even if the ifnet for this 		 * port has never been UP'd administratively. 		 */
 if|if
 condition|(
 operator|!
 operator|(
-name|sc
+name|pi
 operator|->
 name|flags
 operator|&
-name|FULL_INIT_DONE
+name|PORT_INIT_DONE
 operator|)
 condition|)
 block|{
