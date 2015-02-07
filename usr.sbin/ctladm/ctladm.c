@@ -16324,6 +16324,11 @@ modifier|*
 name|max_data_segment_length
 decl_stmt|;
 empty_stmt|;
+name|char
+modifier|*
+name|offload
+decl_stmt|;
+empty_stmt|;
 name|int
 name|immediate_data
 decl_stmt|;
@@ -17078,6 +17083,30 @@ name|strcmp
 argument_list|(
 name|name
 argument_list|,
+literal|"offload"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|cur_conn
+operator|->
+name|offload
+operator|=
+name|str
+expr_stmt|;
+name|str
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
 literal|"immediate_data"
 argument_list|)
 operator|==
@@ -17149,17 +17178,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{ 	}
+block|{
+comment|/* Nothing. */
+block|}
 else|else
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"unknown element %s"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+block|{
+comment|/* 		 * Unknown element; ignore it for forward compatiblity. 		 */
+block|}
 name|free
 argument_list|(
 name|str
@@ -17711,6 +17736,15 @@ condition|?
 literal|"Yes"
 else|:
 literal|"No"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Offload driver:   %s\n"
+argument_list|,
+name|conn
+operator|->
+name|offload
 argument_list|)
 expr_stmt|;
 name|printf
