@@ -4414,6 +4414,11 @@ operator||
 expr|\
 name|TMPFS_NODE_MODIFIED
 expr_stmt|;
+name|tmpfs_update
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4654,6 +4659,11 @@ name|TMPFS_NODE_CHANGED
 operator||
 expr|\
 name|TMPFS_NODE_MODIFIED
+expr_stmt|;
+name|tmpfs_update
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 block|}
 end_function
