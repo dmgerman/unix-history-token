@@ -4711,14 +4711,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|stayopen
-operator|&&
 name|st
 operator|->
 name|fp
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|stayopen
 condition|)
 block|{
 name|fclose
