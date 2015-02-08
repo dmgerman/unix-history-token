@@ -4738,7 +4738,7 @@ name|ic
 operator|->
 name|ic_offload
 operator|=
-literal|"none"
+literal|"None"
 expr_stmt|;
 return|return
 operator|(
