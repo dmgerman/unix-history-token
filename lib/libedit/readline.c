@@ -1795,6 +1795,15 @@ name|used_event_hook
 decl_stmt|;
 if|if
 condition|(
+name|line
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|e
 operator|==
 name|NULL
