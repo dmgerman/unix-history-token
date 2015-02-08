@@ -764,14 +764,7 @@ operator|<<
 literal|4
 operator|)
 block|,
-name|TOM_INIT_DONE
-init|=
-operator|(
-literal|1
-operator|<<
-literal|5
-operator|)
-block|,
+comment|/* TOM_INIT_DONE= (1<< 5),	No longer used */
 name|BUF_PACKING_OK
 init|=
 operator|(
@@ -2804,6 +2797,11 @@ name|TCP_OFFLOAD
 name|int
 name|offload_map
 decl_stmt|;
+comment|/* ports with IFCAP_TOE enabled */
+name|int
+name|active_ulds
+decl_stmt|;
+comment|/* ULDs activated on this adapter */
 endif|#
 directive|endif
 name|int
