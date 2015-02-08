@@ -354,16 +354,6 @@ name|ERANGE
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|atf_tc_expect_fail
-argument_list|(
-literal|"FreeBSD returns ENOTTY instead of EBADF; see bin/191936"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|rv
 operator|=
 name|ttyname_r
