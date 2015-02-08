@@ -1057,6 +1057,17 @@ begin_comment
 comment|/* , const char *, histdata_t);	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|H_SAVE_FP
+value|26
+end_define
+
+begin_comment
+comment|/* , FILE*);	*/
+end_comment
+
 begin_comment
 comment|/*  * ==== Tokenization ====  */
 end_comment
