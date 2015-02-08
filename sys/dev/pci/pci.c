@@ -1425,7 +1425,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 	 * Atheros AR8161/AR8162/E2200 ethernet controller has a bug that 	 * MSI interrupt does not assert if PCIM_CMD_INTxDIS bit of the 	 * command register is set. 	 */
+comment|/* 	 * Atheros AR8161/AR8162/E2200 Ethernet controllers have a bug that 	 * MSI interrupt does not assert if PCIM_CMD_INTxDIS bit of the 	 * command register is set. 	 */
 block|{
 literal|0x10911969
 block|,
@@ -1456,6 +1456,73 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* 	 * Broadcom BCM5714(S)/BCM5715(S)/BCM5780(S) Ethernet MACs don't 	 * issue MSI interrupts with PCIM_CMD_INTxDIS set either. 	 */
+block|{
+literal|0x166814e4
+block|,
+name|PCI_QUIRK_MSI_INTX_BUG
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* BCM5714 */
+block|{
+literal|0x166914e4
+block|,
+name|PCI_QUIRK_MSI_INTX_BUG
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* BCM5714S */
+block|{
+literal|0x166a14e4
+block|,
+name|PCI_QUIRK_MSI_INTX_BUG
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* BCM5780 */
+block|{
+literal|0x166b14e4
+block|,
+name|PCI_QUIRK_MSI_INTX_BUG
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* BCM5780S */
+block|{
+literal|0x167814e4
+block|,
+name|PCI_QUIRK_MSI_INTX_BUG
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* BCM5715 */
+block|{
+literal|0x167914e4
+block|,
+name|PCI_QUIRK_MSI_INTX_BUG
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* BCM5715S */
 block|{
 literal|0
 block|}
@@ -17921,6 +17988,7 @@ name|mte_handlers
 operator|++
 expr_stmt|;
 block|}
+comment|/* 		 * Make sure that INTx is disabled if we are using MSI/MSI-X, 		 * unless the device is affected by PCI_QUIRK_MSI_INTX_BUG, 		 * in which case we "enable" INTx so MSI/MSI-X actually works. 		 */
 if|if
 condition|(
 operator|!
@@ -17928,14 +17996,12 @@ name|pci_has_quirk
 argument_list|(
 name|pci_get_devid
 argument_list|(
-name|dev
+name|child
 argument_list|)
 argument_list|,
 name|PCI_QUIRK_MSI_INTX_BUG
 argument_list|)
 condition|)
-block|{
-comment|/* 			 * Make sure that INTx is disabled if we are 			 * using MSI/MSIX 			 */
 name|pci_set_command_bit
 argument_list|(
 name|dev
@@ -17945,7 +18011,16 @@ argument_list|,
 name|PCIM_CMD_INTxDIS
 argument_list|)
 expr_stmt|;
-block|}
+else|else
+name|pci_clear_command_bit
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|,
+name|PCIM_CMD_INTxDIS
+argument_list|)
+expr_stmt|;
 name|bad
 label|:
 if|if
