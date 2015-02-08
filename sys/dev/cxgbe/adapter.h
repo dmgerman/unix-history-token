@@ -3002,10 +3002,6 @@ parameter_list|)
 value|mtx_assert(&(sc)->sc_lock, MA_NOTOWNED)
 end_define
 
-begin_comment
-comment|/* XXX: not bulletproof, but much better than nothing */
-end_comment
-
 begin_define
 define|#
 directive|define
