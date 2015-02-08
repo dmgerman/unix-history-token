@@ -69678,7 +69678,7 @@ directive|else
 if|if
 condition|(
 name|state
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
