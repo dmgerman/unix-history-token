@@ -2342,7 +2342,9 @@ endif|#
 directive|endif
 comment|/* set up FPU state on the AP */
 name|npxinit
-argument_list|()
+argument_list|(
+name|false
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
