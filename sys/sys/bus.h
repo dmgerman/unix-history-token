@@ -27,6 +27,12 @@ directive|include
 file|<sys/_bus_dma.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
 begin_comment
 comment|/**  * @defgroup NEWBUS newbus - a generic framework for managing devices  * @{  */
 end_comment
@@ -149,7 +155,7 @@ comment|/**< @brief API Flags for device */
 name|uint16_t
 name|dv_flags
 decl_stmt|;
-comment|/**< @brief flags for dev date */
+comment|/**< @brief flags for dev state */
 name|device_state_t
 name|dv_state
 decl_stmt|;
@@ -158,6 +164,244 @@ comment|/* XXX more driver info? */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Flags exported via dv_flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_ENABLED
+value|0x01
+end_define
+
+begin_comment
+comment|/* device should be probed/attached */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_FIXEDCLASS
+value|0x02
+end_define
+
+begin_comment
+comment|/* devclass specified at create time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_WILDCARD
+value|0x04
+end_define
+
+begin_comment
+comment|/* unit was originally wildcard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_DESCMALLOCED
+value|0x08
+end_define
+
+begin_comment
+comment|/* description was malloced */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_QUIET
+value|0x10
+end_define
+
+begin_comment
+comment|/* don't print verbose attach message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_DONENOMATCH
+value|0x20
+end_define
+
+begin_comment
+comment|/* don't execute DEVICE_NOMATCH again */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_EXTERNALSOFTC
+value|0x40
+end_define
+
+begin_comment
+comment|/* softc not allocated by us */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_REBID
+value|0x80
+end_define
+
+begin_comment
+comment|/* Can rebid after attach */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_SUSPENDED
+value|0x100
+end_define
+
+begin_comment
+comment|/* Device is suspended. */
+end_comment
+
+begin_comment
+comment|/**  * @brief Device request structure used for ioctl's.  *  * Used for ioctl's on /dev/devctl2.  All device ioctl's  * must have parameter definitions which begin with dr_name.  */
+end_comment
+
+begin_struct
+struct|struct
+name|devreq_buffer
+block|{
+name|void
+modifier|*
+name|buffer
+decl_stmt|;
+name|size_t
+name|length
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|devreq
+block|{
+name|char
+name|dr_name
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|int
+name|dr_flags
+decl_stmt|;
+comment|/* request-specific flags */
+union|union
+block|{
+name|struct
+name|devreq_buffer
+name|dru_buffer
+decl_stmt|;
+name|void
+modifier|*
+name|dru_data
+decl_stmt|;
+block|}
+name|dr_dru
+union|;
+define|#
+directive|define
+name|dr_buffer
+value|dr_dru.dru_buffer
+comment|/* variable-sized buffer */
+define|#
+directive|define
+name|dr_data
+value|dr_dru.dru_data
+comment|/* fixed-size buffer */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|DEV_ATTACH
+value|_IOW('D', 1, struct devreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_DETACH
+value|_IOW('D', 2, struct devreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_ENABLE
+value|_IOW('D', 3, struct devreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_DISABLE
+value|_IOW('D', 4, struct devreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_SUSPEND
+value|_IOW('D', 5, struct devreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_RESUME
+value|_IOW('D', 6, struct devreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_SET_DRIVER
+value|_IOW('D', 7, struct devreq)
+end_define
+
+begin_comment
+comment|/* Flags for DEV_DETACH and DEV_DISABLE. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVF_FORCE_DETACH
+value|0x0000001
+end_define
+
+begin_comment
+comment|/* Flags for DEV_SET_DRIVER. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVF_SET_DRIVER_DETACH
+value|0x0000001
+end_define
+
+begin_comment
+comment|/* Detach existing driver. */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -168,7 +412,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<sys/eventhandler.h>
 end_include
 
 begin_include
@@ -271,6 +515,44 @@ name|__data
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/**  * Device name parsers.  Hook to allow device enumerators to map  * scheme-specific names to a device.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|dev_lookup_fn
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|device_t
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+name|EVENTHANDLER_DECLARE
+argument_list|(
+name|dev_lookup
+argument_list|,
+name|dev_lookup_fn
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/**  * @brief A device driver (included mainly for compatibility with  * FreeBSD 4.x).  */
@@ -2465,6 +2747,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|device_is_suspended
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|device_is_quiet
 parameter_list|(
 name|device_t
@@ -3157,6 +3449,26 @@ specifier|const
 name|char
 modifier|*
 name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|resource_unset_value
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|unit
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|resname
 parameter_list|)
 function_decl|;
 end_function_decl

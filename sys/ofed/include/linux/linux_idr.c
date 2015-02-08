@@ -978,7 +978,7 @@ expr_stmt|;
 if|if
 condition|(
 name|need
-operator|==
+operator|<=
 literal|0
 condition|)
 break|break;

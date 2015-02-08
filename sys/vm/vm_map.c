@@ -1282,6 +1282,17 @@ modifier|*
 name|vm
 parameter_list|)
 block|{
+name|WITNESS_WARN
+argument_list|(
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
+argument_list|,
+name|NULL
+argument_list|,
+literal|"vmspace_free() called with non-sleepable lock held"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vm

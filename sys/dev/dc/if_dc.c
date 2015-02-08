@@ -3309,7 +3309,6 @@ operator|(
 name|BMSR_MEDIAMASK
 operator|)
 return|;
-break|break;
 case|case
 name|MII_PHYIDR1
 case|:
@@ -3330,7 +3329,6 @@ operator|(
 name|DC_VENDORID_DEC
 operator|)
 return|;
-break|break;
 case|case
 name|MII_PHYIDR2
 case|:
@@ -3351,14 +3349,12 @@ operator|(
 name|DC_DEVICEID_21143
 operator|)
 return|;
-break|break;
 default|default:
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-break|break;
 block|}
 block|}
 else|else
@@ -3647,7 +3643,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 block|}
 name|rval
 operator|=

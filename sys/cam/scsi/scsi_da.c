@@ -337,6 +337,10 @@ block|,
 name|DA_Q_NO_UNMAP
 init|=
 literal|0x20
+block|,
+name|DA_Q_RETRY_BUSY
+init|=
+literal|0x40
 block|}
 name|da_quirks
 typedef|;
@@ -347,7 +351,7 @@ define|#
 directive|define
 name|DA_Q_BIT_STRING
 define|\
-value|"\020"			\ 	"\001NO_SYNC_CACHE"	\ 	"\002NO_6_BYTE"		\ 	"\003NO_PREVENT"	\ 	"\0044K"		\ 	"\005NO_RC16"
+value|"\020"			\ 	"\001NO_SYNC_CACHE"	\ 	"\002NO_6_BYTE"		\ 	"\003NO_PREVENT"	\ 	"\0044K"		\ 	"\005NO_RC16"		\ 	"\006NO_UNMAP"		\ 	"\007RETRY_BUSY"
 end_define
 
 begin_typedef
@@ -1112,6 +1116,24 @@ block|}
 block|,
 comment|/*quirks*/
 name|DA_Q_NO_UNMAP
+block|}
+block|,
+block|{
+comment|/* 		 * VMware returns BUSY status when storage has transient 		 * connectivity problems, so better wait. 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"VMware"
+block|,
+literal|"Virtual disk"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_RETRY_BUSY
 block|}
 block|,
 comment|/* USB mass storage devices supported by umass(4) */
@@ -6835,10 +6857,7 @@ name|DA_DELETE_WS16
 case|:
 name|sectors
 operator|=
-operator|(
-name|off_t
-operator|)
-name|min
+name|omin
 argument_list|(
 name|softc
 operator|->
@@ -6856,10 +6875,7 @@ name|DA_DELETE_WS10
 case|:
 name|sectors
 operator|=
-operator|(
-name|off_t
-operator|)
-name|min
+name|omin
 argument_list|(
 name|softc
 operator|->
@@ -6884,13 +6900,10 @@ name|params
 operator|.
 name|secsize
 operator|*
-name|min
+name|omin
 argument_list|(
 name|sectors
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|softc
 operator|->
 name|params
@@ -10490,7 +10503,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|min
+name|omin
 argument_list|(
 name|count
 argument_list|,
@@ -10557,7 +10570,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|min
+name|omin
 argument_list|(
 name|count
 argument_list|,
@@ -11012,7 +11025,7 @@ argument_list|)
 expr_stmt|;
 name|count
 operator|=
-name|min
+name|omin
 argument_list|(
 name|count
 argument_list|,
@@ -14749,6 +14762,18 @@ comment|/* 	 * XXX 	 * Until we have a better way of doing pack validation, 	 * 
 name|sense_flags
 operator||=
 name|SF_RETRY_UA
+expr_stmt|;
+if|if
+condition|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|DA_Q_RETRY_BUSY
+condition|)
+name|sense_flags
+operator||=
+name|SF_RETRY_BUSY
 expr_stmt|;
 return|return
 operator|(

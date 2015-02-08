@@ -1555,7 +1555,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-literal|"zfs"
+literal|"zfs_gfs"
 argument_list|,
 name|vfsp
 argument_list|,

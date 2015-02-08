@@ -3135,18 +3135,18 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/*  	 * For now set frequency to  5xSYSFREQ  	 * More flexible control might be required 	 */
+comment|/* 	 * For now set frequency to  99*SYSFREQ/8 which is twice as 	 * HDMI 1080p pixel clock (minimum LCDC freq divisor is 2) 	 */
 name|prcm_write_4
 argument_list|(
 name|CM_WKUP_CM_CLKSEL_DPLL_DISP
 argument_list|,
 operator|(
-literal|5
+literal|99
 operator|<<
 literal|8
 operator|)
 operator||
-literal|0
+literal|8
 argument_list|)
 expr_stmt|;
 comment|/* Locked mode */
@@ -3375,12 +3375,12 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Select DISP DPLL as OCP clock */
+comment|/* Select L3F as OCP clock */
 name|prcm_write_4
 argument_list|(
 name|CLKSEL_PRUSS_OCP_CLK
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 while|while
@@ -3394,7 +3394,7 @@ operator|&
 literal|0x3
 operator|)
 operator|!=
-literal|1
+literal|0
 condition|)
 name|DELAY
 argument_list|(

@@ -890,6 +890,7 @@ name|blackout
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|u32
 modifier|*
 name|io_mc_regs
@@ -925,6 +926,7 @@ case|:
 name|io_mc_regs
 operator|=
 operator|(
+specifier|const
 name|u32
 operator|*
 operator|)
@@ -946,6 +948,7 @@ case|:
 name|io_mc_regs
 operator|=
 operator|(
+specifier|const
 name|u32
 operator|*
 operator|)
@@ -968,6 +971,7 @@ default|default:
 name|io_mc_regs
 operator|=
 operator|(
+specifier|const
 name|u32
 operator|*
 operator|)

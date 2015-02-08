@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/file.h>
 end_include
 
@@ -143,6 +149,27 @@ end_else
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|nitems
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|nitems
+parameter_list|(
+name|x
+parameter_list|)
+value|(sizeof((x)) / sizeof((x)[0]))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__unused
 end_ifndef
 
@@ -186,6 +213,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 init|=
@@ -5955,6 +5983,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|test
 name|tests
@@ -6092,25 +6121,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|test_count
-init|=
-sizeof|sizeof
-argument_list|(
-name|tests
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|tests
-index|[
-literal|0
-index|]
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
@@ -6134,7 +6144,7 @@ decl_stmt|;
 name|int
 name|nointr
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 name|struct
@@ -6307,7 +6317,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|test_count
+name|nitems
+argument_list|(
+name|tests
+argument_list|)
 condition|;
 name|i
 operator|++

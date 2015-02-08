@@ -1059,6 +1059,10 @@ decl_stmt|,
 name|halRxDoMyBeacon
 range|:
 literal|1
+decl_stmt|,
+name|halHwUapsdTrig
+range|:
+literal|1
 decl_stmt|;
 name|uint32_t
 name|halWirelessModes

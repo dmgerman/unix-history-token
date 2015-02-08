@@ -121,8 +121,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|bus_space
+name|bus_space_tag_t
 name|s3c2xx0_bs_tag
 decl_stmt|;
 end_decl_stmt

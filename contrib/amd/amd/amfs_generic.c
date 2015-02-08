@@ -3842,6 +3842,10 @@ if|if
 condition|(
 name|error
 operator|&&
+name|new_mp
+operator|->
+name|am_mnt
+operator|&&
 operator|(
 name|new_mp
 operator|->

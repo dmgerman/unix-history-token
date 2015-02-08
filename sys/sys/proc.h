@@ -921,11 +921,6 @@ name|td_slpcallout
 decl_stmt|;
 comment|/* (h) Callout for sleep. */
 name|struct
-name|mtx
-name|td_slpmutex
-decl_stmt|;
-comment|/* (h) Mutex for sleep callout */
-name|struct
 name|trapframe
 modifier|*
 name|td_frame
@@ -1259,12 +1254,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED12
+name|TDF_TIMOFAIL
 value|0x00001000
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* Timeout from sleep after we were awake. */
 end_comment
 
 begin_define
@@ -3581,12 +3576,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SWT_UNUSED5
+name|SWT_SLEEPQTIMO
 value|5
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* Sleepq timeout wait. */
 end_comment
 
 begin_define
@@ -3869,7 +3864,7 @@ name|e
 parameter_list|,
 name|v
 parameter_list|)
-value|do {						\ 	if ((p)->p_stops& (e))	{					\ 		PROC_LOCK(p);						\ 		stopevent((p), (e), (v));				\ 		PROC_UNLOCK(p);						\ 	}								\ } while (0)
+value|do {						\ 	WITNESS_WARN(WARN_GIANTOK | WARN_SLEEPOK, NULL,			\  	    "checking stopevent %d", (e));				\ 	if ((p)->p_stops& (e))	{					\ 		PROC_LOCK(p);						\ 		stopevent((p), (e), (v));				\ 		PROC_UNLOCK(p);						\ 	}								\ } while (0)
 end_define
 
 begin_define

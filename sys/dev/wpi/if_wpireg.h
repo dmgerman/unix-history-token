@@ -17,15 +17,54 @@ end_define
 begin_define
 define|#
 directive|define
-name|WPI_CMD_RING_COUNT
-value|256
+name|WPI_TX_RING_LOMARK
+value|192
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_TX_RING_HIMARK
+value|224
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_RX_RING_COUNT_LOG
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|WPI_RX_RING_COUNT
-value|64
+value|(1<< WPI_RX_RING_COUNT_LOG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_NTXQUEUES
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_NDMACHNLS
+value|6
+end_define
+
+begin_comment
+comment|/* Maximum scatter/gather. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_MAX_SCATTER
+value|4
 end_define
 
 begin_comment
@@ -40,18 +79,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* maximum scatter/gather */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WPI_MAX_SCATTER
-value|4
-end_define
-
-begin_comment
-comment|/* maximum Rx buffer size */
+comment|/* Maximum Rx buffer size. */
 end_comment
 
 begin_define
@@ -72,35 +100,35 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WPI_HWCONFIG
+name|WPI_HW_IF_CONFIG
 value|0x000
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_INTR
+name|WPI_INT
 value|0x008
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MASK
+name|WPI_INT_MASK
 value|0x00c
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_INTR_STATUS
+name|WPI_FH_INT
 value|0x010
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_GPIO_STATUS
+name|WPI_GPIO_IN
 value|0x018
 end_define
 
@@ -114,98 +142,151 @@ end_define
 begin_define
 define|#
 directive|define
-name|WPI_GPIO_CTL
+name|WPI_GP_CNTRL
 value|0x024
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_EEPROM_CTL
+name|WPI_EEPROM
 value|0x02c
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_EEPROM_STATUS
+name|WPI_EEPROM_GP
 value|0x030
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_UCODE_SET
+name|WPI_GIO
+value|0x03c
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_UCODE_GP1
+value|0x054
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_UCODE_GP1_SET
 value|0x058
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_UCODE_CLR
+name|WPI_UCODE_GP1_CLR
 value|0x05c
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_TEMPERATURE
+name|WPI_UCODE_GP2
 value|0x060
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_CHICKEN
+name|WPI_GIO_CHICKEN
 value|0x100
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_PLL_CTL
+name|WPI_ANA_PLL
 value|0x20c
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_WRITE_MEM_ADDR
+name|WPI_DBG_HPET_MEM
+value|0x240
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_MEM_RADDR
+value|0x40c
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_MEM_WADDR
+value|0x410
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_MEM_WDATA
+value|0x418
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_MEM_RDATA
+value|0x41c
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_PRPH_WADDR
 value|0x444
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_READ_MEM_ADDR
+name|WPI_PRPH_RADDR
 value|0x448
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_WRITE_MEM_DATA
+name|WPI_PRPH_WDATA
 value|0x44c
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_READ_MEM_DATA
+name|WPI_PRPH_RDATA
 value|0x450
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_TX_WIDX
+name|WPI_HBUS_TARG_WRPTR
 value|0x460
 end_define
+
+begin_comment
+comment|/*  * Flow-Handler registers.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|WPI_TX_CTL
+name|WPI_FH_CBBC_CTRL
 parameter_list|(
 name|qid
 parameter_list|)
@@ -215,7 +296,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|WPI_TX_BASE
+name|WPI_FH_CBBC_BASE
 parameter_list|(
 name|qid
 parameter_list|)
@@ -225,59 +306,49 @@ end_define
 begin_define
 define|#
 directive|define
-name|WPI_TX_DESC
-parameter_list|(
-name|qid
-parameter_list|)
-value|(0x980 + (qid) * 80)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_RX_CONFIG
+name|WPI_FH_RX_CONFIG
 value|0xc00
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_RX_BASE
+name|WPI_FH_RX_BASE
 value|0xc04
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_RX_WIDX
+name|WPI_FH_RX_WPTR
 value|0xc20
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_RX_RIDX_PTR
+name|WPI_FH_RX_RPTR_ADDR
 value|0xc24
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_RX_CTL
+name|WPI_FH_RSSR_TBL
 value|0xcc0
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_RX_STATUS
+name|WPI_FH_RX_STATUS
 value|0xcc4
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_TX_CONFIG
+name|WPI_FH_TX_CONFIG
 parameter_list|(
 name|qid
 parameter_list|)
@@ -287,41 +358,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|WPI_TX_CREDIT
-parameter_list|(
-name|qid
-parameter_list|)
-value|(0xd04 + (qid) * 32)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_TX_STATE
-parameter_list|(
-name|qid
-parameter_list|)
-value|(0xd08 + (qid) * 32)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_TX_BASE_PTR
+name|WPI_FH_TX_BASE
 value|0xe80
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MSG_CONFIG
+name|WPI_FH_MSG_CONFIG
 value|0xe88
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_TX_STATUS
+name|WPI_FH_TX_STATUS
 value|0xe90
 end_define
 
@@ -332,450 +383,600 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WPI_MEM_MODE
+name|WPI_ALM_SCHED_MODE
 value|0x2e00
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_RA
+name|WPI_ALM_SCHED_ARASTAT
 value|0x2e04
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_TXCFG
+name|WPI_ALM_SCHED_TXFACT
 value|0x2e10
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_MAGIC4
+name|WPI_ALM_SCHED_TXF4MF
 value|0x2e14
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_MAGIC5
+name|WPI_ALM_SCHED_TXF5MF
 value|0x2e20
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_BYPASS1
+name|WPI_ALM_SCHED_SBYPASS_MODE1
 value|0x2e2c
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_BYPASS2
+name|WPI_ALM_SCHED_SBYPASS_MODE2
 value|0x2e30
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_CLOCK1
+name|WPI_APMG_CLK_EN
 value|0x3004
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_CLOCK2
+name|WPI_APMG_CLK_DIS
 value|0x3008
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_POWER
+name|WPI_APMG_PS
 value|0x300c
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_PCIDEV
+name|WPI_APMG_PCI_STT
 value|0x3010
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_HW_RADIO_OFF
+name|WPI_APMG_RFKILL
 value|0x3014
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_UCODE_CTL
+name|WPI_BSM_WR_CTRL
 value|0x3400
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_UCODE_SRC
+name|WPI_BSM_WR_MEM_SRC
 value|0x3404
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_UCODE_DST
+name|WPI_BSM_WR_MEM_DST
 value|0x3408
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_UCODE_SIZE
+name|WPI_BSM_WR_DWCOUNT
 value|0x340c
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_UCODE_BASE
-value|0x3800
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_MEM_TEXT_BASE
+name|WPI_BSM_DRAM_TEXT_ADDR
 value|0x3490
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_TEXT_SIZE
+name|WPI_BSM_DRAM_TEXT_SIZE
 value|0x3494
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_DATA_BASE
+name|WPI_BSM_DRAM_DATA_ADDR
 value|0x3498
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_DATA_SIZE
+name|WPI_BSM_DRAM_DATA_SIZE
 value|0x349c
 end_define
 
+begin_define
+define|#
+directive|define
+name|WPI_BSM_SRAM_BASE
+value|0x3800
+end_define
+
 begin_comment
-comment|/* possible flags for register WPI_HWCONFIG */
+comment|/* Possible flags for register WPI_HW_IF_CONFIG. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WPI_HW_ALM_MB
+name|WPI_HW_IF_CONFIG_ALM_MB
 value|(1<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_HW_ALM_MM
+name|WPI_HW_IF_CONFIG_ALM_MM
 value|(1<< 9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_HW_SKU_MRC
+name|WPI_HW_IF_CONFIG_SKU_MRC
 value|(1<< 10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_HW_REV_D
+name|WPI_HW_IF_CONFIG_REV_D
 value|(1<< 11)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_HW_TYPE_B
+name|WPI_HW_IF_CONFIG_TYPE_B
 value|(1<< 12)
 end_define
 
 begin_comment
-comment|/* possible flags for registers WPI_READ_MEM_ADDR/WPI_WRITE_MEM_ADDR */
+comment|/* Possible flags for registers WPI_PRPH_RADDR/WPI_PRPH_WADDR. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WPI_MEM_4
+name|WPI_PRPH_DWORD
 value|((sizeof (uint32_t) - 1)<< 24)
 end_define
 
 begin_comment
-comment|/* possible values for WPI_MEM_UCODE_DST */
+comment|/* Possible values for WPI_BSM_WR_MEM_DST. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WPI_FW_TEXT
+name|WPI_FW_TEXT_BASE
 value|0x00000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|WPI_FW_DATA_BASE
+value|0x00800000
+end_define
+
 begin_comment
-comment|/* possible flags for WPI_GPIO_STATUS */
+comment|/* Possible flags for WPI_GPIO_IN. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WPI_POWERED
+name|WPI_GPIO_IN_VMAIN
 value|(1<< 9)
 end_define
 
 begin_comment
-comment|/* possible flags for register WPI_RESET */
+comment|/* Possible flags for register WPI_RESET. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WPI_NEVO_RESET
+name|WPI_RESET_NEVO
 value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_SW_RESET
+name|WPI_RESET_SW
 value|(1<< 7)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_MASTER_DISABLED
+name|WPI_RESET_MASTER_DISABLED
 value|(1<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_STOP_MASTER
+name|WPI_RESET_STOP_MASTER
 value|(1<< 9)
 end_define
 
 begin_comment
-comment|/* possible flags for register WPI_GPIO_CTL */
+comment|/* Possible flags for register WPI_GP_CNTRL. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WPI_GPIO_CLOCK
-value|(1<< 0)
+name|WPI_GP_CNTRL_MAC_ACCESS_ENA
+value|(1<<  0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_GPIO_INIT
-value|(1<< 2)
+name|WPI_GP_CNTRL_MAC_CLOCK_READY
+value|(1<<  0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_GPIO_MAC
-value|(1<< 3)
+name|WPI_GP_CNTRL_INIT_DONE
+value|(1<<  2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_GPIO_SLEEP
-value|(1<< 4)
+name|WPI_GP_CNTRL_MAC_ACCESS_REQ
+value|(1<<  3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_GPIO_PWR_STATUS
-value|0x07000000
+name|WPI_GP_CNTRL_SLEEP
+value|(1<<  4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_GPIO_PWR_SLEEP
+name|WPI_GP_CNTRL_PS_MASK
+value|(7<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_GP_CNTRL_MAC_PS
 value|(4<< 24)
 end_define
 
-begin_comment
-comment|/* possible flags for register WPI_CHICKEN */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|WPI_CHICKEN_RXNOLOS
-value|(1<< 23)
-end_define
-
-begin_comment
-comment|/* possible flags for register WPI_PLL_CTL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WPI_PLL_INIT
-value|(1<< 24)
-end_define
-
-begin_comment
-comment|/* possible flags for register WPI_UCODE_CLR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WPI_RADIO_OFF
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_DISABLE_CMD
-value|(1<< 2)
-end_define
-
-begin_comment
-comment|/* possible flags for WPI_RX_STATUS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WPI_RX_IDLE
-value|(1<< 24)
-end_define
-
-begin_comment
-comment|/* possible flags for register WPI_UC_CTL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WPI_UC_ENABLE
-value|(1<< 30)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_UC_RUN
-value|(1U<< 31)
-end_define
-
-begin_comment
-comment|/* possible flags for register WPI_INTR_CSR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WPI_ALIVE_INTR
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_WAKEUP_INTR
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_SW_ERROR
-value|(1<< 25)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_TX_INTR
+name|WPI_GP_CNTRL_RFKILL
 value|(1<< 27)
 end_define
 
+begin_comment
+comment|/* Possible flags for register WPI_GIO_CHICKEN. */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|WPI_HW_ERROR
+name|WPI_GIO_CHICKEN_L1A_NO_L0S_RX
+value|(1<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_GIO_CHICKEN_DIS_L0S_TIMER
+value|(1<< 29)
+end_define
+
+begin_comment
+comment|/* Possible flags for register WPI_GIO. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_GIO_L0S_ENA
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Possible flags for register WPI_FH_RX_CONFIG. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_FH_RX_CONFIG_DMA_ENA
+value|(1U<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_FH_RX_CONFIG_RDRBD_ENA
 value|(1<< 29)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_RX_INTR
-value|(1U<< 31)
+name|WPI_FH_RX_CONFIG_WRSTATUS_ENA
+value|(1<< 27)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WPI_INTR_MASK
-define|\
-value|(WPI_SW_ERROR | WPI_HW_ERROR | WPI_TX_INTR | WPI_RX_INTR |	\ 	 WPI_ALIVE_INTR | WPI_WAKEUP_INTR)
+name|WPI_FH_RX_CONFIG_MAXFRAG
+value|(1<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_FH_RX_CONFIG_NRBD
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_FH_RX_CONFIG_IRQ_DST_HOST
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_FH_RX_CONFIG_IRQ_TIMEOUT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<<  4)
 end_define
 
 begin_comment
-comment|/* possible flags for register WPI_TX_STATUS */
+comment|/* Possible flags for register WPI_ANA_PLL. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WPI_TX_IDLE
+name|WPI_ANA_PLL_INIT
+value|(1<< 24)
+end_define
+
+begin_comment
+comment|/* Possible flags for register WPI_UCODE_GP1*. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_UCODE_GP1_MAC_SLEEP
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_UCODE_GP1_RFKILL
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_UCODE_GP1_CMD_BLOCKED
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* Possible flags for register WPI_FH_RX_STATUS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_FH_RX_STATUS_IDLE
+value|(1<< 24)
+end_define
+
+begin_comment
+comment|/* Possible flags for register WPI_BSM_WR_CTRL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_BSM_WR_CTRL_START_EN
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_BSM_WR_CTRL_START
+value|(1U<< 31)
+end_define
+
+begin_comment
+comment|/* Possible flags for register WPI_INT. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_INT_ALIVE
+value|(1<<  0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_INT_WAKEUP
+value|(1<<  1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_INT_SW_RX
+value|(1<<  3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_INT_SW_ERR
+value|(1<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_INT_FH_TX
+value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_INT_HW_ERR
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_INT_FH_RX
+value|(1U<< 31)
+end_define
+
+begin_comment
+comment|/* Shortcut. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_INT_MASK_DEF
+define|\
+value|(WPI_INT_SW_ERR | WPI_INT_HW_ERR | WPI_INT_FH_TX  |	\ 	 WPI_INT_FH_RX  | WPI_INT_ALIVE  | WPI_INT_WAKEUP |	\ 	 WPI_INT_SW_RX)
+end_define
+
+begin_comment
+comment|/* Possible flags for register WPI_FH_INT. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_FH_INT_RX_CHNL
+parameter_list|(
+name|x
+parameter_list|)
+value|(1<< ((x) + 16))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_FH_INT_HI_PRIOR
+value|(1<< 30)
+end_define
+
+begin_comment
+comment|/* Shortcuts for the above. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_FH_INT_RX
+define|\
+value|(WPI_FH_INT_RX_CHNL(0) |	\ 	 WPI_FH_INT_RX_CHNL(1) |	\ 	 WPI_FH_INT_RX_CHNL(2) |	\ 	 WPI_FH_INT_HI_PRIOR)
+end_define
+
+begin_comment
+comment|/* Possible flags for register WPI_FH_TX_STATUS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_FH_TX_STATUS_IDLE
 parameter_list|(
 name|qid
 parameter_list|)
+define|\
 value|(1<< ((qid) + 24) | 1<< ((qid) + 16))
 end_define
 
 begin_comment
-comment|/* possible flags for register WPI_EEPROM_CTL */
+comment|/* Possible flags for register WPI_EEPROM. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WPI_EEPROM_READY
+name|WPI_EEPROM_READ_VALID
 value|(1<< 0)
 end_define
 
 begin_comment
-comment|/* possible flags for register WPI_EEPROM_STATUS */
+comment|/* Possible flags for register WPI_EEPROM_GP. */
 end_comment
 
 begin_define
@@ -788,8 +989,48 @@ end_define
 begin_define
 define|#
 directive|define
-name|WPI_EEPROM_LOCKED
+name|WPI_EEPROM_GP_IF_OWNER
 value|0x00000180
+end_define
+
+begin_comment
+comment|/* Possible flags for register WPI_APMG_PS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_APMG_PS_PWR_SRC_MASK
+value|(3<< 24)
+end_define
+
+begin_comment
+comment|/* Possible flags for registers WPI_APMG_CLK_*. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_APMG_CLK_CTRL_DMA_CLK_RQT
+value|(1<<  9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_APMG_CLK_CTRL_BSM_CLK_RQT
+value|(1<< 11)
+end_define
+
+begin_comment
+comment|/* Possible flags for register WPI_APMG_PCI_STT. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_APMG_PCI_STT_L1A_DIS
+value|(1<< 11)
 end_define
 
 begin_struct
@@ -827,8 +1068,14 @@ begin_struct
 struct|struct
 name|wpi_tx_desc
 block|{
-name|uint32_t
-name|flags
+name|uint8_t
+name|reserved1
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint8_t
+name|nsegs
 decl_stmt|;
 define|#
 directive|define
@@ -846,19 +1093,14 @@ name|uint32_t
 name|len
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 name|segs
 index|[
 name|WPI_MAX_SCATTER
 index|]
 struct|;
 name|uint8_t
-name|reserved
+name|reserved2
 index|[
 literal|28
 index|]
@@ -873,13 +1115,13 @@ struct|struct
 name|wpi_tx_stat
 block|{
 name|uint8_t
-name|nrts
+name|rtsfailcnt
 decl_stmt|;
 name|uint8_t
-name|ntries
+name|ackfailcnt
 decl_stmt|;
 name|uint8_t
-name|nkill
+name|btkillcnt
 decl_stmt|;
 name|uint8_t
 name|rate
@@ -931,11 +1173,23 @@ name|WPI_STOP_SCAN
 value|132
 define|#
 directive|define
+name|WPI_BEACON_SENT
+value|144
+define|#
+directive|define
+name|WPI_RX_STATISTICS
+value|156
+define|#
+directive|define
+name|WPI_BEACON_STATISTICS
+value|157
+define|#
+directive|define
 name|WPI_STATE_CHANGED
 value|161
 define|#
 directive|define
-name|WPI_MISSED_BEACON
+name|WPI_BEACON_MISSED
 value|162
 name|uint8_t
 name|flags
@@ -998,11 +1252,15 @@ decl_stmt|;
 name|uint16_t
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|WPI_STAT_FLAG_SHPREAMBLE
+value|(1<< 2)
 name|uint8_t
 name|reserved
 decl_stmt|;
 name|uint8_t
-name|rate
+name|plcp
 decl_stmt|;
 name|uint16_t
 name|len
@@ -1032,6 +1290,22 @@ define|#
 directive|define
 name|WPI_RX_NOERROR
 value|(WPI_RX_NO_CRC_ERR | WPI_RX_NO_OVFL_ERR)
+define|#
+directive|define
+name|WPI_RX_CIPHER_MASK
+value|(7<<  8)
+define|#
+directive|define
+name|WPI_RX_CIPHER_CCMP
+value|(2<<  8)
+define|#
+directive|define
+name|WPI_RX_DECRYPT_MASK
+value|(3<< 11)
+define|#
+directive|define
+name|WPI_RX_DECRYPT_OK
+value|(3<< 11)
 name|uint64_t
 name|tstamp
 decl_stmt|;
@@ -1052,24 +1326,28 @@ name|code
 decl_stmt|;
 define|#
 directive|define
-name|WPI_CMD_CONFIGURE
+name|WPI_CMD_RXON
 value|16
 define|#
 directive|define
-name|WPI_CMD_ASSOCIATE
+name|WPI_CMD_RXON_ASSOC
 value|17
 define|#
 directive|define
-name|WPI_CMD_SET_WME
+name|WPI_CMD_EDCA_PARAMS
 value|19
 define|#
 directive|define
-name|WPI_CMD_TSF
+name|WPI_CMD_TIMING
 value|20
 define|#
 directive|define
 name|WPI_CMD_ADD_NODE
 value|24
+define|#
+directive|define
+name|WPI_CMD_DEL_NODE
+value|25
 define|#
 directive|define
 name|WPI_CMD_TX_DATA
@@ -1100,8 +1378,12 @@ name|WPI_CMD_TXPOWER
 value|151
 define|#
 directive|define
-name|WPI_CMD_BLUETOOTH
+name|WPI_CMD_BT_COEX
 value|155
+define|#
+directive|define
+name|WPI_CMD_GET_STATISTICS
+value|156
 name|uint8_t
 name|flags
 decl_stmt|;
@@ -1114,7 +1396,7 @@ decl_stmt|;
 name|uint8_t
 name|data
 index|[
-literal|360
+literal|124
 index|]
 decl_stmt|;
 block|}
@@ -1123,12 +1405,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for WPI_CMD_CONFIGURE */
+comment|/* Structure for command WPI_CMD_RXON. */
 end_comment
 
 begin_struct
 struct|struct
-name|wpi_config
+name|wpi_rxon
 block|{
 name|uint8_t
 name|myaddr
@@ -1149,9 +1431,9 @@ name|uint16_t
 name|reserved2
 decl_stmt|;
 name|uint8_t
-name|wlap_bssid_addr
+name|wlap
 index|[
-literal|6
+name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
 name|uint16_t
@@ -1177,7 +1459,7 @@ directive|define
 name|WPI_MODE_MONITOR
 value|6
 name|uint8_t
-name|air_propogation
+name|air
 decl_stmt|;
 name|uint16_t
 name|reserved4
@@ -1196,40 +1478,44 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|WPI_CONFIG_24GHZ
-value|(1<< 0)
+name|WPI_RXON_24GHZ
+value|(1<<  0)
 define|#
 directive|define
-name|WPI_CONFIG_CCK
-value|(1<< 1)
+name|WPI_RXON_CCK
+value|(1<<  1)
 define|#
 directive|define
-name|WPI_CONFIG_AUTO
-value|(1<< 2)
+name|WPI_RXON_AUTO
+value|(1<<  2)
 define|#
 directive|define
-name|WPI_CONFIG_SHSLOT
-value|(1<< 4)
+name|WPI_RXON_SHSLOT
+value|(1<<  4)
 define|#
 directive|define
-name|WPI_CONFIG_SHPREAMBLE
-value|(1<< 5)
+name|WPI_RXON_SHPREAMBLE
+value|(1<<  5)
 define|#
 directive|define
-name|WPI_CONFIG_NODIVERSITY
-value|(1<< 7)
+name|WPI_RXON_NODIVERSITY
+value|(1<<  7)
 define|#
 directive|define
-name|WPI_CONFIG_ANTENNA_A
-value|(1<< 8)
+name|WPI_RXON_ANTENNA_A
+value|(1<<  8)
 define|#
 directive|define
-name|WPI_CONFIG_ANTENNA_B
-value|(1<< 9)
+name|WPI_RXON_ANTENNA_B
+value|(1<<  9)
 define|#
 directive|define
-name|WPI_CONFIG_TSF
+name|WPI_RXON_TSF
 value|(1<< 15)
+define|#
+directive|define
+name|WPI_RXON_CTS_TO_SELF
+value|(1<< 30)
 name|uint32_t
 name|filter
 decl_stmt|;
@@ -1261,7 +1547,7 @@ name|uint8_t
 name|chan
 decl_stmt|;
 name|uint16_t
-name|reserved6
+name|reserved5
 decl_stmt|;
 block|}
 name|__packed
@@ -1269,7 +1555,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command WPI_CMD_ASSOCIATE */
+comment|/* Structure for command WPI_CMD_RXON_ASSOC. */
 end_comment
 
 begin_struct
@@ -1297,16 +1583,20 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command WPI_CMD_SET_WME */
+comment|/* Structure for command WPI_CMD_EDCA_PARAMS. */
 end_comment
 
 begin_struct
 struct|struct
-name|wpi_wme_setup
+name|wpi_edca_params
 block|{
 name|uint32_t
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|WPI_EDCA_UPDATE
+value|(1<< 0)
 struct|struct
 block|{
 name|uint16_t
@@ -1322,7 +1612,7 @@ name|uint8_t
 name|reserved
 decl_stmt|;
 name|uint16_t
-name|txop
+name|txoplimit
 decl_stmt|;
 block|}
 name|__packed
@@ -1337,12 +1627,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command WPI_CMD_TSF */
+comment|/* Structure for command WPI_CMD_TIMING. */
 end_comment
 
 begin_struct
 struct|struct
-name|wpi_cmd_tsf
+name|wpi_cmd_timing
 block|{
 name|uint64_t
 name|tstamp
@@ -1368,7 +1658,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for WPI_CMD_ADD_NODE */
+comment|/* Structure for command WPI_CMD_ADD_NODE. */
 end_comment
 
 begin_struct
@@ -1389,7 +1679,7 @@ literal|3
 index|]
 decl_stmt|;
 name|uint8_t
-name|bssid
+name|macaddr
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
@@ -1406,19 +1696,50 @@ name|WPI_ID_BSS
 value|0
 define|#
 directive|define
+name|WPI_ID_IBSS_MIN
+value|2
+define|#
+directive|define
+name|WPI_ID_IBSS_MAX
+value|23
+define|#
+directive|define
 name|WPI_ID_BROADCAST
 value|24
+define|#
+directive|define
+name|WPI_ID_UNDEFINED
+value|(uint8_t)-1
 name|uint8_t
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|WPI_FLAG_KEY_SET
+value|(1<< 0)
 name|uint16_t
 name|reserved3
 decl_stmt|;
 name|uint16_t
-name|key_flags
+name|kflags
 decl_stmt|;
+define|#
+directive|define
+name|WPI_KFLAG_CCMP
+value|(1<<  1)
+define|#
+directive|define
+name|WPI_KFLAG_KID
+parameter_list|(
+name|kid
+parameter_list|)
+value|((kid)<< 8)
+define|#
+directive|define
+name|WPI_KFLAG_MULTICAST
+value|(1<< 14)
 name|uint8_t
-name|tkip
+name|tsc2
 decl_stmt|;
 name|uint8_t
 name|reserved4
@@ -1444,7 +1765,7 @@ decl_stmt|;
 define|#
 directive|define
 name|WPI_ACTION_SET_RATE
-value|4
+value|(1<< 2)
 name|uint32_t
 name|mask
 decl_stmt|;
@@ -1452,7 +1773,7 @@ name|uint16_t
 name|tid
 decl_stmt|;
 name|uint8_t
-name|rate
+name|plcp
 decl_stmt|;
 name|uint8_t
 name|antenna
@@ -1460,15 +1781,15 @@ decl_stmt|;
 define|#
 directive|define
 name|WPI_ANTENNA_A
-value|(1<<6)
+value|(1<< 6)
 define|#
 directive|define
 name|WPI_ANTENNA_B
-value|(1<<7)
+value|(1<< 7)
 define|#
 directive|define
 name|WPI_ANTENNA_BOTH
-value|(WPI_ANTENNA_A|WPI_ANTENNA_B)
+value|(WPI_ANTENNA_A | WPI_ANTENNA_B)
 name|uint8_t
 name|add_imm
 decl_stmt|;
@@ -1484,7 +1805,38 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command WPI_CMD_TX_DATA */
+comment|/* Structure for command WPI_CMD_DEL_NODE. */
+end_comment
+
+begin_struct
+struct|struct
+name|wpi_cmd_del_node
+block|{
+name|uint8_t
+name|count
+decl_stmt|;
+name|uint8_t
+name|reserved1
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint16_t
+name|reserved2
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* Structure for command WPI_CMD_TX_DATA. */
 end_comment
 
 begin_struct
@@ -1530,7 +1882,7 @@ directive|define
 name|WPI_TX_INSERT_TSTAMP
 value|(1<< 16)
 name|uint8_t
-name|rate
+name|plcp
 decl_stmt|;
 name|uint8_t
 name|id
@@ -1541,6 +1893,22 @@ decl_stmt|;
 name|uint8_t
 name|security
 decl_stmt|;
+define|#
+directive|define
+name|WPI_CIPHER_WEP
+value|1
+define|#
+directive|define
+name|WPI_CIPHER_CCMP
+value|2
+define|#
+directive|define
+name|WPI_CIPHER_TKIP
+value|3
+define|#
+directive|define
+name|WPI_CIPHER_WEP104
+value|9
 name|uint8_t
 name|key
 index|[
@@ -1581,17 +1949,13 @@ decl_stmt|;
 name|uint16_t
 name|txop
 decl_stmt|;
-name|struct
-name|ieee80211_frame
-name|wh
-decl_stmt|;
 block|}
 name|__packed
 struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command WPI_CMD_SET_BEACON */
+comment|/* Structure for command WPI_CMD_SET_BEACON. */
 end_comment
 
 begin_struct
@@ -1609,7 +1973,7 @@ name|flags
 decl_stmt|;
 comment|/* same as wpi_cmd_data */
 name|uint8_t
-name|rate
+name|plcp
 decl_stmt|;
 name|uint8_t
 name|id
@@ -1644,22 +2008,18 @@ decl_stmt|;
 name|uint8_t
 name|reserved4
 decl_stmt|;
-name|struct
-name|ieee80211_frame
-name|wh
-decl_stmt|;
 block|}
 name|__packed
 struct|;
 end_struct
 
 begin_comment
-comment|/* structure for notification WPI_MISSED_BEACON */
+comment|/* Structure for notification WPI_BEACON_MISSED. */
 end_comment
 
 begin_struct
 struct|struct
-name|wpi_missed_beacon
+name|wpi_beacon_missed
 block|{
 name|uint32_t
 name|consecutive
@@ -1679,14 +2039,21 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for WPI_CMD_MRR_SETUP */
+comment|/* Structure for command WPI_CMD_MRR_SETUP. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_RIDX_MAX
+value|11
+end_define
 
 begin_struct
 struct|struct
 name|wpi_mrr_setup
 block|{
-name|uint8_t
+name|uint32_t
 name|which
 decl_stmt|;
 define|#
@@ -1697,16 +2064,10 @@ define|#
 directive|define
 name|WPI_MRR_DATA
 value|1
-name|uint8_t
-name|reserved
-index|[
-literal|3
-index|]
-decl_stmt|;
 struct|struct
 block|{
 name|uint8_t
-name|signal
+name|plcp
 decl_stmt|;
 name|uint8_t
 name|flags
@@ -1717,36 +2078,11 @@ decl_stmt|;
 name|uint8_t
 name|next
 decl_stmt|;
-define|#
-directive|define
-name|WPI_OFDM6
-value|0
-define|#
-directive|define
-name|WPI_OFDM54
-value|7
-define|#
-directive|define
-name|WPI_CCK1
-value|8
-define|#
-directive|define
-name|WPI_CCK2
-value|9
-define|#
-directive|define
-name|WPI_CCK11
-value|11
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 name|rates
 index|[
-name|WPI_CCK11
+name|WPI_RIDX_MAX
 operator|+
 literal|1
 index|]
@@ -1757,7 +2093,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for WPI_CMD_SET_LED */
+comment|/* Structure for command WPI_CMD_SET_LED. */
 end_comment
 
 begin_struct
@@ -1794,29 +2130,46 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for WPI_CMD_SET_POWER_MODE */
+comment|/* Structure for command WPI_CMD_SET_POWER_MODE. */
 end_comment
 
 begin_struct
 struct|struct
-name|wpi_power
+name|wpi_pmgt_cmd
 block|{
-name|uint32_t
+name|uint16_t
 name|flags
 decl_stmt|;
 define|#
 directive|define
-name|WPI_POWER_CAM
-value|0
-comment|/* constantly awake mode */
-name|uint32_t
-name|rx_timeout
+name|WPI_PS_ALLOW_SLEEP
+value|(1<< 0)
+define|#
+directive|define
+name|WPI_PS_NOTIFY
+value|(1<< 1)
+define|#
+directive|define
+name|WPI_PS_SLEEP_OVER_DTIM
+value|(1<< 2)
+define|#
+directive|define
+name|WPI_PS_PCI_PMGT
+value|(1<< 3)
+name|uint8_t
+name|reserved
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|uint32_t
-name|tx_timeout
+name|rxtimeout
 decl_stmt|;
 name|uint32_t
-name|sleep
+name|txtimeout
+decl_stmt|;
+name|uint32_t
+name|intval
 index|[
 literal|5
 index|]
@@ -1827,8 +2180,36 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command WPI_CMD_SCAN */
+comment|/* Structures for command WPI_CMD_SCAN. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_SCAN_MAX_ESSIDS
+value|4
+end_define
+
+begin_struct
+struct|struct
+name|wpi_scan_essid
+block|{
+name|uint8_t
+name|id
+decl_stmt|;
+name|uint8_t
+name|len
+decl_stmt|;
+name|uint8_t
+name|data
+index|[
+name|IEEE80211_NWID_LEN
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -1844,123 +2225,35 @@ name|uint8_t
 name|nchan
 decl_stmt|;
 name|uint16_t
-name|quiet
+name|quiet_time
 decl_stmt|;
 name|uint16_t
-name|threshold
+name|quiet_threshold
 decl_stmt|;
 name|uint16_t
-name|promotion
+name|crc_threshold
 decl_stmt|;
 name|uint16_t
 name|reserved2
 decl_stmt|;
 name|uint32_t
-name|maxtimeout
+name|max_svc
 decl_stmt|;
+comment|/* background scans */
 name|uint32_t
-name|suspend
+name|pause_svc
 decl_stmt|;
+comment|/* background scans */
 name|uint32_t
 name|flags
 decl_stmt|;
 name|uint32_t
 name|filter
 decl_stmt|;
-struct|struct
-block|{
-name|uint16_t
-name|len
-decl_stmt|;
-name|uint16_t
-name|lnext
-decl_stmt|;
-name|uint32_t
-name|flags
-decl_stmt|;
-name|uint8_t
-name|rate
-decl_stmt|;
-name|uint8_t
-name|id
-decl_stmt|;
-name|uint8_t
-name|tid
-decl_stmt|;
-name|uint8_t
-name|security
-decl_stmt|;
-name|uint8_t
-name|key
-index|[
-name|IEEE80211_KEYBUF_SIZE
-index|]
-decl_stmt|;
-name|uint8_t
-name|tkip
-index|[
-name|IEEE80211_WEP_MICLEN
-index|]
-decl_stmt|;
-name|uint32_t
-name|fnext
-decl_stmt|;
-name|uint32_t
-name|lifetime
-decl_stmt|;
-name|uint8_t
-name|ofdm_mask
-decl_stmt|;
-name|uint8_t
-name|cck_mask
-decl_stmt|;
-name|uint8_t
-name|rts_ntries
-decl_stmt|;
-name|uint8_t
-name|data_ntries
-decl_stmt|;
-name|uint16_t
-name|timeout
-decl_stmt|;
-name|uint16_t
-name|txop
-decl_stmt|;
-block|}
-name|tx
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
-struct|;
-define|#
-directive|define
-name|WPI_SCAN_MAX_ESSIDS
-value|4
-struct|struct
-block|{
-name|uint8_t
-name|id
-decl_stmt|;
-name|uint8_t
-name|esslen
-decl_stmt|;
-name|uint8_t
-name|essid
-index|[
-name|IEEE80211_NWID_LEN
-index|]
-decl_stmt|;
-block|}
-name|scan_essids
-index|[
-name|WPI_SCAN_MAX_ESSIDS
-index|]
-struct|;
-comment|/* followed by probe request body */
-comment|/* followed by nchan x wpi_scan_chan */
+comment|/* Followed by a struct wpi_cmd_data. */
+comment|/* Followed by an array of 4 structs wpi_scan_essid. */
+comment|/* Followed by probe request body. */
+comment|/* Followed by an array of ``nchan'' structs wpi_scan_chan. */
 block|}
 name|__packed
 struct|;
@@ -1973,22 +2266,25 @@ block|{
 name|uint8_t
 name|flags
 decl_stmt|;
-name|uint8_t
-name|chan
-decl_stmt|;
 define|#
 directive|define
 name|WPI_CHAN_ACTIVE
 value|(1<< 0)
 define|#
 directive|define
-name|WPI_CHAN_DIRECT
-value|(1<< 1)
+name|WPI_CHAN_NPBREQS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((1<< (x)) - 1)<< 1)
 name|uint8_t
-name|gain_radio
+name|chan
 decl_stmt|;
 name|uint8_t
-name|gain_dsp
+name|rf_gain
+decl_stmt|;
+name|uint8_t
+name|dsp_gain
 decl_stmt|;
 name|uint16_t
 name|active
@@ -2003,39 +2299,86 @@ name|__packed
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|WPI_SCAN_CRC_TH_DEFAULT
+value|htole16(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_SCAN_CRC_TH_NEVER
+value|htole16(0xffff)
+end_define
+
 begin_comment
-comment|/* structure for WPI_CMD_BLUETOOTH */
+comment|/* Maximum size of a scan command. */
 end_comment
 
-begin_struct
-struct|struct
-name|wpi_bluetooth
-block|{
-name|uint8_t
-name|flags
-decl_stmt|;
-name|uint8_t
-name|lead
-decl_stmt|;
-name|uint8_t
-name|kill
-decl_stmt|;
-name|uint8_t
-name|reserved
-decl_stmt|;
-name|uint32_t
-name|ack
-decl_stmt|;
-name|uint32_t
-name|cts
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|WPI_SCAN_MAXSZ
+value|(MCLBYTES - 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_ACTIVE_DWELL_TIME_2GHZ
+value|(30)
+end_define
 
 begin_comment
-comment|/* structure for command WPI_CMD_TXPOWER */
+comment|/* all times in msec */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_ACTIVE_DWELL_TIME_5GHZ
+value|(20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_ACTIVE_DWELL_FACTOR_2GHZ
+value|( 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_ACTIVE_DWELL_FACTOR_5GHZ
+value|( 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_PASSIVE_DWELL_TIME_2GHZ
+value|( 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_PASSIVE_DWELL_TIME_5GHZ
+value|( 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_PASSIVE_DWELL_BASE
+value|(100)
+end_define
+
+begin_comment
+comment|/* Structure for command WPI_CMD_TXPOWER. */
 end_comment
 
 begin_struct
@@ -2047,32 +2390,28 @@ name|band
 decl_stmt|;
 define|#
 directive|define
-name|WPI_RATE_5GHZ
+name|WPI_BAND_5GHZ
 value|0
 define|#
 directive|define
-name|WPI_RATE_2GHZ
+name|WPI_BAND_2GHZ
 value|1
 name|uint8_t
 name|reserved
 decl_stmt|;
 name|uint16_t
-name|channel
+name|chan
 decl_stmt|;
-define|#
-directive|define
-name|WPI_RATE_MAPPING_COUNT
-value|12
 struct|struct
 block|{
 name|uint8_t
-name|rate
+name|plcp
 decl_stmt|;
 name|uint8_t
-name|gain_radio
+name|rf_gain
 decl_stmt|;
 name|uint8_t
-name|gain_dsp
+name|dsp_gain
 decl_stmt|;
 name|uint8_t
 name|reserved
@@ -2081,7 +2420,9 @@ block|}
 name|__packed
 name|rates
 index|[
-name|WPI_RATE_MAPPING_COUNT
+name|WPI_RIDX_MAX
+operator|+
+literal|1
 index|]
 struct|;
 block|}
@@ -2089,77 +2430,55 @@ name|__packed
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|WPI_FW_MAIN_TEXT_MAXSZ
-value|(80 * 1024 )
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_FW_MAIN_DATA_MAXSZ
-value|(32 * 1024 )
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_FW_INIT_TEXT_MAXSZ
-value|(80 * 1024 )
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_FW_INIT_DATA_MAXSZ
-value|(32 * 1024 )
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_FW_BOOT_TEXT_MAXSZ
-value|1024
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_FW_UPDATED
-value|(1<< 31 )
-end_define
-
 begin_comment
-comment|/* firmware image header */
+comment|/* Structure for command WPI_CMD_BT_COEX. */
 end_comment
 
 begin_struct
 struct|struct
-name|wpi_firmware_hdr
+name|wpi_bluetooth
 block|{
+name|uint8_t
+name|flags
+decl_stmt|;
 define|#
 directive|define
-name|WPI_FW_MINVERSION
-value|2144
-name|uint32_t
-name|version
+name|WPI_BT_COEX_DISABLE
+value|0
+define|#
+directive|define
+name|WPI_BT_COEX_MODE_2WIRE
+value|1
+define|#
+directive|define
+name|WPI_BT_COEX_MODE_3WIRE
+value|2
+define|#
+directive|define
+name|WPI_BT_COEX_MODE_4WIRE
+value|3
+name|uint8_t
+name|lead_time
+decl_stmt|;
+define|#
+directive|define
+name|WPI_BT_LEAD_TIME_DEF
+value|30
+name|uint8_t
+name|max_kill
+decl_stmt|;
+define|#
+directive|define
+name|WPI_BT_MAX_KILL_DEF
+value|5
+name|uint8_t
+name|reserved
 decl_stmt|;
 name|uint32_t
-name|rtextsz
+name|kill_ack
 decl_stmt|;
 name|uint32_t
-name|rdatasz
-decl_stmt|;
-name|uint32_t
-name|itextsz
-decl_stmt|;
-name|uint32_t
-name|idatasz
-decl_stmt|;
-name|uint32_t
-name|btextsz
+name|kill_cts
 decl_stmt|;
 block|}
 name|__packed
@@ -2167,15 +2486,21 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for WPI_UC_READY notification */
+comment|/* Structure for WPI_UC_READY notification. */
 end_comment
 
 begin_struct
 struct|struct
 name|wpi_ucode_info
 block|{
-name|uint32_t
-name|version
+name|uint8_t
+name|minor
+decl_stmt|;
+name|uint8_t
+name|major
+decl_stmt|;
+name|uint16_t
+name|reserved1
 decl_stmt|;
 name|uint8_t
 name|revision
@@ -2190,16 +2515,16 @@ name|uint8_t
 name|subtype
 decl_stmt|;
 name|uint16_t
-name|reserved
+name|reserved2
 decl_stmt|;
 name|uint32_t
 name|logptr
 decl_stmt|;
 name|uint32_t
-name|errorptr
+name|errptr
 decl_stmt|;
 name|uint32_t
-name|timestamp
+name|tstamp
 decl_stmt|;
 name|uint32_t
 name|valid
@@ -2210,7 +2535,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for WPI_START_SCAN notification */
+comment|/* Structure for WPI_START_SCAN notification. */
 end_comment
 
 begin_struct
@@ -2241,7 +2566,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for WPI_STOP_SCAN notification */
+comment|/* Structure for WPI_STOP_SCAN notification. */
 end_comment
 
 begin_struct
@@ -2268,6 +2593,339 @@ name|__packed
 struct|;
 end_struct
 
+begin_comment
+comment|/* Structures for WPI_{RX,BEACON}_STATISTICS notification. */
+end_comment
+
+begin_struct
+struct|struct
+name|wpi_rx_phy_stats
+block|{
+name|uint32_t
+name|ina
+decl_stmt|;
+name|uint32_t
+name|fina
+decl_stmt|;
+name|uint32_t
+name|bad_plcp
+decl_stmt|;
+name|uint32_t
+name|bad_crc32
+decl_stmt|;
+name|uint32_t
+name|overrun
+decl_stmt|;
+name|uint32_t
+name|eoverrun
+decl_stmt|;
+name|uint32_t
+name|good_crc32
+decl_stmt|;
+name|uint32_t
+name|fa
+decl_stmt|;
+name|uint32_t
+name|bad_fina_sync
+decl_stmt|;
+name|uint32_t
+name|sfd_timeout
+decl_stmt|;
+name|uint32_t
+name|fina_timeout
+decl_stmt|;
+name|uint32_t
+name|no_rts_ack
+decl_stmt|;
+name|uint32_t
+name|rxe_limit
+decl_stmt|;
+name|uint32_t
+name|ack
+decl_stmt|;
+name|uint32_t
+name|cts
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wpi_rx_general_stats
+block|{
+name|uint32_t
+name|bad_cts
+decl_stmt|;
+name|uint32_t
+name|bad_ack
+decl_stmt|;
+name|uint32_t
+name|not_bss
+decl_stmt|;
+name|uint32_t
+name|filtered
+decl_stmt|;
+name|uint32_t
+name|bad_chan
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wpi_rx_stats
+block|{
+name|struct
+name|wpi_rx_phy_stats
+name|ofdm
+decl_stmt|;
+name|struct
+name|wpi_rx_phy_stats
+name|cck
+decl_stmt|;
+name|struct
+name|wpi_rx_general_stats
+name|general
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wpi_tx_stats
+block|{
+name|uint32_t
+name|preamble
+decl_stmt|;
+name|uint32_t
+name|rx_detected
+decl_stmt|;
+name|uint32_t
+name|bt_defer
+decl_stmt|;
+name|uint32_t
+name|bt_kill
+decl_stmt|;
+name|uint32_t
+name|short_len
+decl_stmt|;
+name|uint32_t
+name|cts_timeout
+decl_stmt|;
+name|uint32_t
+name|ack_timeout
+decl_stmt|;
+name|uint32_t
+name|exp_ack
+decl_stmt|;
+name|uint32_t
+name|ack
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wpi_general_stats
+block|{
+name|uint32_t
+name|temp
+decl_stmt|;
+name|uint32_t
+name|burst_check
+decl_stmt|;
+name|uint32_t
+name|burst
+decl_stmt|;
+name|uint32_t
+name|reserved
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint32_t
+name|sleep
+decl_stmt|;
+name|uint32_t
+name|slot_out
+decl_stmt|;
+name|uint32_t
+name|slot_idle
+decl_stmt|;
+name|uint32_t
+name|ttl_tstamp
+decl_stmt|;
+name|uint32_t
+name|tx_ant_a
+decl_stmt|;
+name|uint32_t
+name|tx_ant_b
+decl_stmt|;
+name|uint32_t
+name|exec
+decl_stmt|;
+name|uint32_t
+name|probe
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wpi_stats
+block|{
+name|uint32_t
+name|flags
+decl_stmt|;
+name|struct
+name|wpi_rx_stats
+name|rx
+decl_stmt|;
+name|struct
+name|wpi_tx_stats
+name|tx
+decl_stmt|;
+name|struct
+name|wpi_general_stats
+name|general
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* Possible flags for command WPI_CMD_GET_STATISTICS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_STATISTICS_BEACON_DISABLE
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Firmware error dump entry. */
+end_comment
+
+begin_struct
+struct|struct
+name|wpi_fw_dump
+block|{
+name|uint32_t
+name|desc
+decl_stmt|;
+name|uint32_t
+name|time
+decl_stmt|;
+name|uint32_t
+name|blink
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint32_t
+name|ilink
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint32_t
+name|data
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* Firmware image file header. */
+end_comment
+
+begin_struct
+struct|struct
+name|wpi_firmware_hdr
+block|{
+define|#
+directive|define
+name|WPI_FW_MINVERSION
+value|2144
+define|#
+directive|define
+name|WPI_FW_NAME
+value|"wpifw"
+name|uint16_t
+name|driver
+decl_stmt|;
+name|uint8_t
+name|minor
+decl_stmt|;
+name|uint8_t
+name|major
+decl_stmt|;
+name|uint32_t
+name|rtextsz
+decl_stmt|;
+name|uint32_t
+name|rdatasz
+decl_stmt|;
+name|uint32_t
+name|itextsz
+decl_stmt|;
+name|uint32_t
+name|idatasz
+decl_stmt|;
+name|uint32_t
+name|btextsz
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|WPI_FW_TEXT_MAXSZ
+value|( 80 * 1024 )
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_FW_DATA_MAXSZ
+value|( 32 * 1024 )
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_FW_BOOT_TEXT_MAXSZ
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_FW_UPDATED
+value|(1U<< 31 )
+end_define
+
+begin_comment
+comment|/*  * Offsets into EEPROM.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2285,7 +2943,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|WPI_EEPROM_CAPABILITIES
+name|WPI_EEPROM_SKU_CAP
 value|0x045
 end_define
 
@@ -2355,19 +3013,19 @@ decl_stmt|;
 define|#
 directive|define
 name|WPI_EEPROM_CHAN_VALID
-value|(1<<0)
+value|(1<< 0)
 define|#
 directive|define
 name|WPI_EEPROM_CHAN_IBSS
-value|(1<<1)
+value|(1<< 1)
 define|#
 directive|define
 name|WPI_EEPROM_CHAN_ACTIVE
-value|(1<<3)
+value|(1<< 3)
 define|#
 directive|define
 name|WPI_EEPROM_CHAN_RADAR
-value|(1<<4)
+value|(1<< 4)
 name|int8_t
 name|maxpwr
 decl_stmt|;
@@ -2390,6 +3048,7 @@ name|uint16_t
 name|volt
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -2472,11 +3131,10 @@ index|]
 decl_stmt|;
 block|}
 name|wpi_bands
-index|[
-literal|5
-index|]
+index|[]
 init|=
 block|{
+comment|/* 20MHz channels, 2GHz band. */
 block|{
 name|WPI_EEPROM_BAND1
 block|,
@@ -2513,6 +3171,7 @@ literal|14
 block|}
 block|}
 block|,
+comment|/* 20MHz channels, 5GHz band. */
 block|{
 name|WPI_EEPROM_BAND2
 block|,
@@ -2631,6 +3290,97 @@ block|}
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* HW rate indices. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_RIDX_OFDM6
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_RIDX_OFDM36
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_RIDX_OFDM48
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_RIDX_OFDM54
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_RIDX_CCK1
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_RIDX_CCK2
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_RIDX_CCK11
+value|11
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uint8_t
+name|wpi_ridx_to_plcp
+index|[]
+init|=
+block|{
+comment|/* OFDM: IEEE Std 802.11a-1999, pp. 14 Table 80 */
+comment|/* R1-R4 (ral/ural is R4-R1) */
+literal|0xd
+block|,
+literal|0xf
+block|,
+literal|0x5
+block|,
+literal|0x7
+block|,
+literal|0x9
+block|,
+literal|0xb
+block|,
+literal|0x1
+block|,
+literal|0x3
+block|,
+comment|/* CCK: device-dependent */
+literal|10
+block|,
+literal|20
+block|,
+literal|55
+block|,
+literal|110
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -3331,6 +4081,368 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Power saving settings (values obtained from the reference driver.)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPI_NDTIMRANGES
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_NPOWERLEVELS
+value|6
+end_define
+
+begin_struct
+specifier|static
+specifier|const
+struct|struct
+name|wpi_pmgt
+block|{
+name|uint32_t
+name|rxtimeout
+decl_stmt|;
+name|uint32_t
+name|txtimeout
+decl_stmt|;
+name|uint32_t
+name|intval
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|int
+name|skip_dtim
+decl_stmt|;
+block|}
+name|wpi_pmgt
+index|[
+name|WPI_NDTIMRANGES
+index|]
+index|[
+name|WPI_NPOWERLEVELS
+index|]
+init|=
+block|{
+comment|/* DTIM<= 10 */
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* CAM */
+block|{
+literal|200
+block|,
+literal|500
+block|,
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|4
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 1 */
+block|{
+literal|200
+block|,
+literal|300
+block|,
+block|{
+literal|2
+block|,
+literal|4
+block|,
+literal|6
+block|,
+literal|7
+block|,
+literal|7
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 2 */
+block|{
+literal|50
+block|,
+literal|100
+block|,
+block|{
+literal|2
+block|,
+literal|6
+block|,
+literal|9
+block|,
+literal|9
+block|,
+literal|10
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 3 */
+block|{
+literal|50
+block|,
+literal|25
+block|,
+block|{
+literal|2
+block|,
+literal|7
+block|,
+literal|9
+block|,
+literal|9
+block|,
+literal|10
+block|}
+block|,
+literal|1
+block|}
+block|,
+comment|/* PS level 4 */
+block|{
+literal|25
+block|,
+literal|25
+block|,
+block|{
+literal|4
+block|,
+literal|7
+block|,
+literal|10
+block|,
+literal|10
+block|,
+literal|10
+block|}
+block|,
+literal|1
+block|}
+comment|/* PS level 5 */
+block|}
+block|,
+comment|/* DTIM>= 11 */
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* CAM */
+block|{
+literal|200
+block|,
+literal|500
+block|,
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 1 */
+block|{
+literal|200
+block|,
+literal|300
+block|,
+block|{
+literal|2
+block|,
+literal|4
+block|,
+literal|6
+block|,
+literal|7
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 2 */
+block|{
+literal|50
+block|,
+literal|100
+block|,
+block|{
+literal|2
+block|,
+literal|6
+block|,
+literal|9
+block|,
+literal|9
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 3 */
+block|{
+literal|50
+block|,
+literal|25
+block|,
+block|{
+literal|2
+block|,
+literal|7
+block|,
+literal|9
+block|,
+literal|9
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 4 */
+block|{
+literal|25
+block|,
+literal|25
+block|,
+block|{
+literal|4
+block|,
+literal|7
+block|,
+literal|10
+block|,
+literal|10
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|0
+block|}
+comment|/* PS level 5 */
+block|}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Firmware errors. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|wpi_fw_errmsg
+index|[]
+init|=
+block|{
+literal|"OK"
+block|,
+literal|"FAIL"
+block|,
+literal|"BAD_PARAM"
+block|,
+literal|"BAD_CHECKSUM"
+block|,
+literal|"NMI_INTERRUPT"
+block|,
+literal|"SYSASSERT"
+block|,
+literal|"FATAL_ERROR"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX description for some error codes (error data). */
+end_comment
+
+begin_comment
+comment|/* 0x00000074 - wrong totlen field */
+end_comment
+
+begin_comment
+comment|/* 0x000003B3 - powersave error */
+end_comment
+
+begin_comment
+comment|/* 0x00000447 - wrong channel selected */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3373,7 +4485,59 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_region_4((sc)->sc_st, (sc)->sc_sh, (offset),	\ 			     (datap), (count))
+value|bus_space_write_region_4((sc)->sc_st, (sc)->sc_sh, (offset),	\ 	    (datap), (count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_SETBITS
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|mask
+parameter_list|)
+define|\
+value|WPI_WRITE(sc, reg, WPI_READ(sc, reg) | (mask))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_CLRBITS
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|mask
+parameter_list|)
+define|\
+value|WPI_WRITE(sc, reg, WPI_READ(sc, reg)& ~(mask))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_BARRIER_WRITE
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|bus_space_barrier((sc)->sc_st, (sc)->sc_sh, 0, (sc)->sc_sz,	\ 	    BUS_SPACE_BARRIER_WRITE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_BARRIER_READ_WRITE
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|bus_space_barrier((sc)->sc_st, (sc)->sc_sh, 0, (sc)->sc_sz,	\ 	    BUS_SPACE_BARRIER_READ | BUS_SPACE_BARRIER_WRITE)
 end_define
 
 end_unit

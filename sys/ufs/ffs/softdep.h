@@ -3119,6 +3119,17 @@ begin_comment
 comment|/* need to clear out softdep structures */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FLUSH_STARTING
+value|0x0004
+end_define
+
+begin_comment
+comment|/* flush thread not yet started */
+end_comment
+
 begin_comment
 comment|/*  * Keep the old names from when these were in the ufsmount structure.  */
 end_comment

@@ -243,6 +243,10 @@ define|\
 value|ARGE_WRITE(sc, reg, ARGE_READ(sc, (reg))& ~(bits))
 end_define
 
+begin_comment
+comment|/*  * The linux driver code for the MDIO bus does a read-after-write  * which seems to be required on MIPS74k platforms for correct  * behaviour.  *  * So, ARGE_WRITE() does the write + barrier, and the following  * ARGE_READ() seems to flush the thing all the way through the device  * FIFO(s) before we continue issuing MDIO bus updates.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -255,7 +259,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|ARGE_WRITE((_sc), (_reg), (_val))
+value|do { \ 		ARGE_WRITE((_sc), (_reg), (_val)); \ 		ARGE_READ((_sc), (_reg)); \ 	} while (0)
 end_define
 
 begin_define

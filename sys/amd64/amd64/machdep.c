@@ -690,7 +690,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|const
 name|mcontext_t
 modifier|*
 name|mcp
@@ -6324,12 +6323,10 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* 	 * Find insertion point while checking for overlap.  Start off by 	 * assuming the new entry will be added to the end. 	 */
+comment|/* 	 * Find insertion point while checking for overlap.  Start off by 	 * assuming the new entry will be added to the end. 	 * 	 * NB: physmap_idx points to the next free slot. 	 */
 name|insert_idx
 operator|=
 name|physmap_idx
-operator|+
-literal|2
 expr_stmt|;
 for|for
 control|(
@@ -6488,7 +6485,11 @@ for|for
 control|(
 name|i
 operator|=
+operator|(
 name|physmap_idx
+operator|-
+literal|2
+operator|)
 init|;
 name|i
 operator|>
@@ -7265,6 +7266,13 @@ block|}
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|PAGES_PER_GB
+value|(1024 * 1024 * 1024 / PAGE_SIZE)
+end_define
+
 begin_comment
 comment|/*  * Populate the (physmap) array with base/bound pairs describing the  * available physical memory in the system, then test this memory and  * build the phys_avail array describing the actually-available memory.  *  * Total memory size may be set by the kernel environment variable  * hw.physmem or the compile-time define MAXMEM.  *  * XXX first should be vm_paddr_t.  */
 end_comment
@@ -7314,6 +7322,9 @@ name|dcons_addr
 decl_stmt|,
 name|dcons_size
 decl_stmt|;
+name|int
+name|page_counter
+decl_stmt|;
 name|bzero
 argument_list|(
 name|physmap
@@ -7323,10 +7334,6 @@ argument_list|(
 name|physmap
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|basemem
-operator|=
-literal|0
 expr_stmt|;
 name|physmap_idx
 operator|=
@@ -7343,6 +7350,10 @@ argument_list|,
 operator|&
 name|physmap_idx
 argument_list|)
+expr_stmt|;
+name|physmap_idx
+operator|-=
+literal|2
 expr_stmt|;
 comment|/* 	 * Find the 'base memory' segment for SMP 	 */
 name|basemem
@@ -7370,8 +7381,8 @@ name|physmap
 index|[
 name|i
 index|]
-operator|==
-literal|0x00000000
+operator|<=
+literal|0xA0000
 condition|)
 block|{
 name|basemem
@@ -7393,12 +7404,26 @@ condition|(
 name|basemem
 operator|==
 literal|0
+operator|||
+name|basemem
+operator|>
+literal|640
 condition|)
-name|panic
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
 argument_list|(
-literal|"BIOS smap did not include a basemem segment!"
+literal|"Memory map doesn't contain a basemem segment, faking it"
 argument_list|)
 expr_stmt|;
+name|basemem
+operator|=
+literal|640
+expr_stmt|;
+block|}
 comment|/* 	 * Make hole for "AP -> long mode" bootstrap code.  The 	 * mp_bootaddress vector is only available when the kernel 	 * is configured to support APs and APs for the system start 	 * in 32bit mode (e.g. SMP bare metal). 	 */
 if|if
 condition|(
@@ -7406,6 +7431,21 @@ name|init_ops
 operator|.
 name|mp_bootaddress
 condition|)
+block|{
+if|if
+condition|(
+name|physmap
+index|[
+literal|1
+index|]
+operator|>=
+literal|0x100000000
+condition|)
+name|panic
+argument_list|(
+literal|"Basemem segment is not suitable for AP bootstrap code!"
+argument_list|)
+expr_stmt|;
 name|physmap
 index|[
 literal|1
@@ -7423,6 +7463,7 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Maxmem isn't the "maximum memory", it's one larger than the 	 * highest page of the physical address space.  It should be 	 * called something like "Maxphyspage".  We may adjust this 	 * based on ``hw.physmem'' and the results of the memory test. 	 */
 name|Maxmem
 operator|=
@@ -7565,6 +7606,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|physmap
+index|[
+literal|0
+index|]
+operator|<
+name|physmem_start
+condition|)
+block|{
+if|if
+condition|(
 name|physmem_start
 operator|<
 name|PAGE_SIZE
@@ -7612,6 +7663,7 @@ argument_list|(
 name|physmem_start
 argument_list|)
 expr_stmt|;
+block|}
 name|pa_indx
 operator|=
 literal|0
@@ -7683,6 +7735,21 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * physmap is in bytes, so when converting to page boundaries, 	 * round up the start address and round down the end address. 	 */
+name|page_counter
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|memtest
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Testing system memory"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -7829,6 +7896,25 @@ condition|)
 goto|goto
 name|skip_memtest
 goto|;
+comment|/* 			 * Print a "." every GB to show we're making 			 * progress. 			 */
+name|page_counter
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|page_counter
+operator|%
+name|PAGES_PER_GB
+operator|)
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"."
+argument_list|)
+expr_stmt|;
 comment|/* 			 * map page into kernel: valid, read/write,non-cacheable 			 */
 operator|*
 name|pte
@@ -8128,6 +8214,17 @@ literal|0
 expr_stmt|;
 name|invltlb
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|memtest
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX 	 * The last chunk must contain at least one page plus the message 	 * buffer to avoid complicating other code (message buffer address 	 * calculation, etc.). 	 */
 while|while
@@ -11907,7 +12004,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|const
 name|mcontext_t
 modifier|*
 name|mcp
@@ -12484,7 +12580,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|const
 name|mcontext_t
 modifier|*
 name|mcp

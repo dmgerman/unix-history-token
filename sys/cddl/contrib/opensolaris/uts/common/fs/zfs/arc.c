@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 by Saso Kiselkov. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 by Saso Kiselkov. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -11737,6 +11737,12 @@ block|{
 name|uint64_t
 name|to_free
 decl_stmt|;
+name|to_free
+operator|=
+name|arc_c
+operator|>>
+name|arc_shrink_shift
+expr_stmt|;
 name|DTRACE_PROBE4
 argument_list|(
 name|arc__shrink
@@ -11758,25 +11764,6 @@ argument_list|,
 name|to_free
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_KERNEL
-name|to_free
-operator|=
-name|arc_c
-operator|>>
-name|arc_shrink_shift
-expr_stmt|;
-else|#
-directive|else
-name|to_free
-operator|=
-name|arc_c
-operator|>>
-name|arc_shrink_shift
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|arc_c
@@ -12187,8 +12174,8 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
 name|__noinline
+name|void
 name|arc_kmem_reap_now
 parameter_list|(
 name|arc_reclaim_strategy_t

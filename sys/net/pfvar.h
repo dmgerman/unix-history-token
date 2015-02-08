@@ -3156,6 +3156,13 @@ name|pflog_packet_ptr
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|V_pf_end_threads
+value|VNET(pf_end_threads)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -6025,7 +6032,7 @@ end_define
 
 begin_function_decl
 name|void
-name|pf_vnet_initialize
+name|pf_initialize
 parameter_list|(
 name|void
 parameter_list|)
@@ -6756,7 +6763,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pf_vnet_normalize_init
+name|pf_normalize_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -7564,7 +7571,7 @@ end_define
 
 begin_function_decl
 name|void
-name|pfi_vnet_initialize
+name|pfi_initialize
 parameter_list|(
 name|void
 parameter_list|)

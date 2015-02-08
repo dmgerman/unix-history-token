@@ -882,13 +882,17 @@ name|max_rom
 operator|=
 name|MAXROM_4
 expr_stmt|;
+define|#
+directive|define
+name|FW_GENERATION_CHANGEABLE
+value|2
 name|src
 operator|->
 name|businfo
 operator|.
 name|generation
 operator|=
-literal|1
+name|FW_GENERATION_CHANGEABLE
 expr_stmt|;
 name|src
 operator|->
@@ -1363,7 +1367,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* bump generation and reload */
+comment|/* Bump generation and reload. */
 name|src
 operator|->
 name|businfo
@@ -1371,7 +1375,7 @@ operator|.
 name|generation
 operator|++
 expr_stmt|;
-comment|/* generation must be between 0x2 and 0xF */
+comment|/* Handle generation count wraps. */
 if|if
 condition|(
 name|src
@@ -1387,8 +1391,10 @@ operator|->
 name|businfo
 operator|.
 name|generation
-operator|++
+operator|=
+literal|2
 expr_stmt|;
+comment|/* Recalculate CRC to account for generation change. */
 name|crom_load
 argument_list|(
 name|src

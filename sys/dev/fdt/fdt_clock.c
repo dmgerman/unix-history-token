@@ -527,9 +527,12 @@ parameter_list|)
 block|{
 name|OF_device_register_xref
 argument_list|(
-name|OF_xref_from_device
+name|OF_xref_from_node
+argument_list|(
+name|ofw_bus_get_node
 argument_list|(
 name|provider
+argument_list|)
 argument_list|)
 argument_list|,
 name|provider

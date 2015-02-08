@@ -224,9 +224,6 @@ decl_stmt|;
 name|vm_offset_t
 name|addr
 decl_stmt|;
-comment|/* XXX UPS Why ? */
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|dev2unit

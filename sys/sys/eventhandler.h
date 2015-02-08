@@ -552,6 +552,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|EVENTHANDLER_DECLARE
+argument_list|(
+name|power_suspend_early
+argument_list|,
+name|power_change_fn
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Low memory event */
 end_comment

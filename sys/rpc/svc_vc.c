@@ -691,6 +691,8 @@ block|{
 name|SVCXPRT
 modifier|*
 name|xprt
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|sockaddr

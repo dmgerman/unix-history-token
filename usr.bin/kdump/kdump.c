@@ -3686,6 +3686,9 @@ case|:
 case|case
 name|SYS_unlinkat
 case|:
+case|case
+name|SYS_utimensat
+case|:
 name|putchar
 argument_list|(
 literal|'('
@@ -7541,6 +7544,20 @@ name|UTRACE_FINI_CALL
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|UTRACE_DLSYM_START
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|UTRACE_DLSYM_STOP
+value|12
+end_define
+
 begin_struct
 struct|struct
 name|utrace_rtld
@@ -7918,6 +7935,44 @@ case|:
 name|printf
 argument_list|(
 literal|"RTLD: fini %p for %p (%s)\n"
+argument_list|,
+name|ut
+operator|->
+name|mapbase
+argument_list|,
+name|ut
+operator|->
+name|handle
+argument_list|,
+name|ut
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|UTRACE_DLSYM_START
+case|:
+name|printf
+argument_list|(
+literal|"RTLD: dlsym(%p, %s)\n"
+argument_list|,
+name|ut
+operator|->
+name|handle
+argument_list|,
+name|ut
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|UTRACE_DLSYM_STOP
+case|:
+name|printf
+argument_list|(
+literal|"RTLD: %p = dlsym(%p, %s)\n"
 argument_list|,
 name|ut
 operator|->

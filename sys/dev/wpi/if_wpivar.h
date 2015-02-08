@@ -7,12 +7,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2006,2007  *	Damien Bergamini<damien.bergamini@free.fr>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<net80211/ieee80211_amrr.h>
-end_include
-
 begin_struct
 struct|struct
 name|wpi_rx_radiotap_header
@@ -46,6 +40,7 @@ name|uint8_t
 name|wr_antenna
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -77,10 +72,8 @@ decl_stmt|;
 name|uint16_t
 name|wt_chan_flags
 decl_stmt|;
-name|uint8_t
-name|wt_hwqueue
-decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -105,19 +98,9 @@ decl_stmt|;
 name|bus_addr_t
 name|paddr
 decl_stmt|;
-comment|/* aligned p address */
-name|bus_addr_t
-name|paddr_start
-decl_stmt|;
-comment|/* possibly unaligned p start*/
 name|caddr_t
 name|vaddr
 decl_stmt|;
-comment|/* aligned v address */
-name|caddr_t
-name|vaddr_start
-decl_stmt|;
-comment|/* possibly unaligned v start */
 name|bus_size_t
 name|size
 decl_stmt|;
@@ -131,6 +114,9 @@ name|wpi_tx_data
 block|{
 name|bus_dmamap_t
 name|map
+decl_stmt|;
+name|bus_addr_t
+name|cmd_paddr
 decl_stmt|;
 name|struct
 name|mbuf
@@ -170,8 +156,10 @@ name|cmd
 decl_stmt|;
 name|struct
 name|wpi_tx_data
-modifier|*
 name|data
+index|[
+name|WPI_TX_RING_COUNT
+index|]
 decl_stmt|;
 name|bus_dma_tag_t
 name|data_dmat
@@ -180,36 +168,29 @@ name|int
 name|qid
 decl_stmt|;
 name|int
-name|count
-decl_stmt|;
-name|int
 name|queued
 decl_stmt|;
 name|int
 name|cur
 decl_stmt|;
+name|int
+name|update
+decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|WPI_RBUF_COUNT
-value|( WPI_RX_RING_COUNT + 16 )
-end_define
 
 begin_struct
 struct|struct
 name|wpi_rx_data
 block|{
-name|bus_dmamap_t
-name|map
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|m
+decl_stmt|;
+name|bus_dmamap_t
+name|map
 decl_stmt|;
 block|}
 struct|;
@@ -240,33 +221,24 @@ decl_stmt|;
 name|int
 name|cur
 decl_stmt|;
+name|int
+name|update
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|wpi_amrr
+name|wpi_node
 block|{
 name|struct
 name|ieee80211_node
 name|ni
 decl_stmt|;
 comment|/* must be the first */
-name|int
-name|txcnt
-decl_stmt|;
-name|int
-name|retrycnt
-decl_stmt|;
-name|int
-name|success
-decl_stmt|;
-name|int
-name|success_threshold
-decl_stmt|;
-name|int
-name|recovery
+name|uint8_t
+name|id
 decl_stmt|;
 block|}
 struct|;
@@ -316,11 +288,46 @@ end_struct
 
 begin_struct
 struct|struct
+name|wpi_buf
+block|{
+name|void
+modifier|*
+name|data
+decl_stmt|;
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
+name|int
+name|code
+decl_stmt|;
+name|int
+name|ac
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|wpi_vap
 block|{
 name|struct
 name|ieee80211vap
 name|vap
+decl_stmt|;
+name|struct
+name|wpi_buf
+name|wv_bcbuf
 decl_stmt|;
 name|int
 function_decl|(
@@ -354,6 +361,58 @@ end_define
 
 begin_struct
 struct|struct
+name|wpi_fw_part
+block|{
+specifier|const
+name|uint8_t
+modifier|*
+name|text
+decl_stmt|;
+name|uint32_t
+name|textsz
+decl_stmt|;
+specifier|const
+name|uint8_t
+modifier|*
+name|data
+decl_stmt|;
+name|uint32_t
+name|datasz
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wpi_fw_info
+block|{
+specifier|const
+name|uint8_t
+modifier|*
+name|data
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
+name|struct
+name|wpi_fw_part
+name|init
+decl_stmt|;
+name|struct
+name|wpi_fw_part
+decl|main
+decl_stmt|;
+name|struct
+name|wpi_fw_part
+name|boot
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|wpi_softc
 block|{
 name|device_t
@@ -364,9 +423,17 @@ name|ifnet
 modifier|*
 name|sc_ifp
 decl_stmt|;
+name|int
+name|sc_debug
+decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
+decl_stmt|;
+name|struct
+name|unrhdr
+modifier|*
+name|sc_unr
 decl_stmt|;
 comment|/* Flags indicating the current state the driver 	 * expects the hardware to be in 	 */
 name|uint32_t
@@ -374,17 +441,9 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|WPI_FLAG_HW_RADIO_OFF
-value|(1<< 0)
-define|#
-directive|define
 name|WPI_FLAG_BUSY
-value|(1<< 1)
-define|#
-directive|define
-name|WPI_FLAG_AUTH
-value|(1<< 2)
-comment|/* shared area */
+value|(1<< 0)
+comment|/* Shared area. */
 name|struct
 name|wpi_dma_info
 name|shared_dma
@@ -398,18 +457,14 @@ name|struct
 name|wpi_tx_ring
 name|txq
 index|[
-name|WME_NUM_AC
+name|WPI_NTXQUEUES
 index|]
-decl_stmt|;
-name|struct
-name|wpi_tx_ring
-name|cmdq
 decl_stmt|;
 name|struct
 name|wpi_rx_ring
 name|rxq
 decl_stmt|;
-comment|/* TX Thermal Callibration */
+comment|/* TX Thermal Callibration. */
 name|struct
 name|callout
 name|calib_to
@@ -417,15 +472,22 @@ decl_stmt|;
 name|int
 name|calib_cnt
 decl_stmt|;
-comment|/* Watch dog timer */
+comment|/* Watch dog timers. */
 name|struct
 name|callout
 name|watchdog_to
 decl_stmt|;
-comment|/* Hardware switch polling timer */
 name|struct
 name|callout
-name|hwswitch_to
+name|watchdog_rfkill
+decl_stmt|;
+comment|/* Firmware image. */
+name|struct
+name|wpi_fw_info
+name|fw
+decl_stmt|;
+name|uint32_t
+name|errptr
 decl_stmt|;
 name|struct
 name|resource
@@ -447,12 +509,22 @@ name|void
 modifier|*
 name|sc_ih
 decl_stmt|;
+name|bus_size_t
+name|sc_sz
+decl_stmt|;
+name|int
+name|sc_cap_off
+decl_stmt|;
+comment|/* PCIe Capabilities. */
 name|struct
-name|wpi_config
-name|config
+name|wpi_rxon
+name|rxon
 decl_stmt|;
 name|int
 name|temp
+decl_stmt|;
+name|uint32_t
+name|qfullmsk
 decl_stmt|;
 name|int
 name|sc_tx_timer
@@ -460,11 +532,31 @@ decl_stmt|;
 name|int
 name|sc_scan_timer
 decl_stmt|;
-name|struct
-name|bpf_if
+name|void
+function_decl|(
 modifier|*
-name|sc_drvbpf
-decl_stmt|;
+name|sc_node_free
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|sc_scan_curchan
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_scan_state
+modifier|*
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|)
+function_decl|;
 name|struct
 name|wpi_rx_radiotap_header
 name|sc_rxtap
@@ -473,30 +565,32 @@ name|struct
 name|wpi_tx_radiotap_header
 name|sc_txtap
 decl_stmt|;
-comment|/* firmware image */
+comment|/* Firmware image. */
 specifier|const
 name|struct
 name|firmware
 modifier|*
 name|fw_fp
 decl_stmt|;
-comment|/* firmware DMA transfer */
+comment|/* Firmware DMA transfer. */
 name|struct
 name|wpi_dma_info
 name|fw_dma
 decl_stmt|;
-comment|/* Tasks used by the driver */
+comment|/* Tasks used by the driver. */
 name|struct
 name|task
-name|sc_restarttask
+name|sc_reinittask
 decl_stmt|;
-comment|/* reset firmware task */
 name|struct
 name|task
-name|sc_radiotask
+name|sc_radiooff_task
 decl_stmt|;
-comment|/* reset rf task */
-comment|/* Eeprom info */
+name|struct
+name|task
+name|sc_radioon_task
+decl_stmt|;
+comment|/* Eeprom info. */
 name|uint8_t
 name|cap
 decl_stmt|;
@@ -505,6 +599,16 @@ name|rev
 decl_stmt|;
 name|uint8_t
 name|type
+decl_stmt|;
+name|struct
+name|wpi_eeprom_chan
+name|eeprom_channels
+index|[
+name|WPI_CHAN_BANDS_COUNT
+index|]
+index|[
+name|WPI_MAX_CHAN_PER_BAND
+index|]
 decl_stmt|;
 name|struct
 name|wpi_power_group
@@ -525,7 +629,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/*reglatory domain XXX */
+comment|/* Regulatory domain. */
 block|}
 struct|;
 end_struct

@@ -1157,18 +1157,6 @@ begin_comment
 comment|/* TCP_OFFLOAD */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|MODULE_VERSION
-end_undef
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
-
 begin_function
 specifier|static
 name|int
@@ -1366,6 +1354,22 @@ argument_list|(
 name|iw_cxgb
 argument_list|,
 name|ibcore
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|iw_cxgb
+argument_list|,
+name|linuxapi
 argument_list|,
 literal|1
 argument_list|,

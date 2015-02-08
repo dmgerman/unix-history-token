@@ -37,6 +37,12 @@ directive|include
 file|<sys/_umtx.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/_limits.h>
+end_include
+
 begin_struct
 struct|struct
 name|_sem

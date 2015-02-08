@@ -75,6 +75,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
+
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
@@ -85,6 +91,11 @@ literal|")"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1473,18 +1484,6 @@ name|mlx4_en_cleanup
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_undef
-undef|#
-directive|undef
-name|MODULE_VERSION
-end_undef
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
 
 begin_function
 specifier|static

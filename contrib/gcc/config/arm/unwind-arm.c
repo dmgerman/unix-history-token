@@ -3,6 +3,12 @@ begin_comment
 comment|/* ARM EABI compliant unwinding routines.    Copyright (C) 2004, 2005 Free Software Foundation, Inc.    Contributed by Paul Brook     This file is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     In addition to the permissions in the GNU General Public License, the    Free Software Foundation gives you unlimited permission to link the    compiled version of this file into combinations with other programs,    and to distribute those combinations without any restriction coming    from the use of this file.  (The General Public License restrictions    do apply in other respects; for example, they cover modification of    the file, and distribution when not linked into a combine    executable.)     This file is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street, Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|__ARM_STATIC_INLINE
+end_define
+
 begin_include
 include|#
 directive|include
@@ -4145,6 +4151,42 @@ name|_Unwind_Word
 operator|)
 literal|1
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|_Unwind_SetIP
+parameter_list|(
+name|struct
+name|_Unwind_Context
+modifier|*
+name|context
+parameter_list|,
+name|_Unwind_Ptr
+name|val
+parameter_list|)
+block|{
+name|_Unwind_SetGR
+argument_list|(
+name|context
+argument_list|,
+literal|15
+argument_list|,
+name|val
+operator||
+operator|(
+name|_Unwind_GetGR
+argument_list|(
+name|context
+argument_list|,
+literal|15
+argument_list|)
+operator|&
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -14,11 +14,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__DragonFly__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|_BOOT
 argument_list|)
 end_if
@@ -29,25 +24,11 @@ directive|include
 file|"dcons.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_BOOT
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|"stand.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#

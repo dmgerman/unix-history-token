@@ -2885,6 +2885,20 @@ name|DRM_CAP_TIMESTAMP_MONOTONIC
 value|0x6
 end_define
 
+begin_define
+define|#
+directive|define
+name|DRM_PRIME_CAP_IMPORT
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_PRIME_CAP_EXPORT
+value|0x2
+end_define
+
 begin_include
 include|#
 directive|include
@@ -3510,6 +3524,20 @@ define|#
 directive|define
 name|DRM_IOCTL_MODE_ADDFB2
 value|DRM_IOWR(0xB8, struct drm_mode_fb_cmd2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MODE_OBJ_GETPROPERTIES
+value|DRM_IOWR(0xB9, struct drm_mode_obj_get_properties)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MODE_OBJ_SETPROPERTY
+value|DRM_IOWR(0xBA, struct drm_mode_obj_set_property)
 end_define
 
 begin_define

@@ -3623,7 +3623,6 @@ name|ba
 operator|=
 name|standard_allocator
 expr_stmt|;
-comment|/* Be careful not to access map from here on. */
 name|bufzone
 operator|=
 name|busdma_bufalloc_findzone

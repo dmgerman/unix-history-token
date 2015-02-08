@@ -352,6 +352,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AMD_CPUID_SVM_AVIC
+value|BIT(13)
+end_define
+
+begin_comment
+comment|/* AVIC present */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VMCB_CACHE_DEFAULT
 value|(VMCB_CACHE_ASID 	|	\ 				VMCB_CACHE_IOPM		|	\ 				VMCB_CACHE_I		|	\ 				VMCB_CACHE_TPR		|	\ 				VMCB_CACHE_CR2		|	\ 				VMCB_CACHE_CR		|	\ 				VMCB_CACHE_DT		|	\ 				VMCB_CACHE_SEG		|	\ 				VMCB_CACHE_NP)
 end_define

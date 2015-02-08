@@ -1637,6 +1637,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Arrange for ticks to wrap 10 minutes after boot to help catch 	 * sign problems sooner. 	 */
+name|ticks
+operator|=
+name|INT_MAX
+operator|-
+operator|(
+name|hz
+operator|*
+literal|10
+operator|*
+literal|60
+operator|)
+expr_stmt|;
 block|}
 end_function
 

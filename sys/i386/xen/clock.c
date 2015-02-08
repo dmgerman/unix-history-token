@@ -163,6 +163,12 @@ directive|include
 file|<machine/psl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/pvclock.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -462,14 +468,6 @@ begin_comment
 comment|/* stime (ns) at last processing. */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|uint64_t
-name|xen_timer_last_time
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -548,7 +546,8 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|xen_timer_last_time
+name|pvclock_get_last_cycles
+argument_list|()
 operator|)
 return|;
 block|}

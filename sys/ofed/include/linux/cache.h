@@ -23,6 +23,13 @@ parameter_list|()
 value|CACHE_LINE_SIZE
 end_define
 
+begin_define
+define|#
+directive|define
+name|L1_CACHE_BYTES
+value|CACHE_LINE_SIZE
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -740,13 +740,10 @@ name|fw_device
 modifier|*
 name|fwdev
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splfw
-argument_list|()
+name|FW_GLOCK
+argument_list|(
+name|fc
+argument_list|)
 expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
@@ -771,9 +768,9 @@ operator|!=
 name|FWDEVINVAL
 condition|)
 break|break;
-name|splx
+name|FW_GUNLOCK
 argument_list|(
-name|s
+name|fc
 argument_list|)
 expr_stmt|;
 return|return
@@ -808,14 +805,6 @@ name|fw_device
 modifier|*
 name|fwdev
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splfw
-argument_list|()
-expr_stmt|;
 name|FW_GLOCK
 argument_list|(
 name|fc
@@ -845,11 +834,6 @@ break|break;
 name|FW_GUNLOCK
 argument_list|(
 name|fc
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -1465,14 +1449,6 @@ name|xfer
 operator|->
 name|fc
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splfw
-argument_list|()
-expr_stmt|;
 comment|/* Protect from interrupt/timeout */
 name|FW_GLOCK
 argument_list|(
@@ -1508,11 +1484,6 @@ directive|endif
 name|FW_GUNLOCK
 argument_list|(
 name|fc
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 comment|/* XXX just queue for mbuf */
@@ -1589,6 +1560,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Just use a per-packet callout? */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1639,8 +1614,6 @@ name|xfer_timeout
 expr_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|s
 decl_stmt|;
 name|split_timeout
 operator|.
@@ -1678,11 +1651,6 @@ operator|&
 name|xfer_timeout
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splfw
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1699,7 +1667,12 @@ literal|0
 init|;
 name|i
 operator|<
-literal|0x40
+name|nitems
+argument_list|(
+name|fc
+operator|->
+name|tlabels
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -1827,11 +1800,6 @@ operator|&
 name|fc
 operator|->
 name|tlabel_lock
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|fc
@@ -3948,6 +3916,15 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* Bump generation and reload. */
+name|src
+operator|->
+name|businfo
+operator|.
+name|generation
+operator|++
+expr_stmt|;
+comment|/* Handle generation count wraps. */
 if|if
 condition|(
 name|src
@@ -3955,9 +3932,8 @@ operator|->
 name|businfo
 operator|.
 name|generation
-operator|++
-operator|>
-name|FW_MAX_GENERATION
+operator|<
+name|FW_GENERATION_CHANGEABLE
 condition|)
 name|src
 operator|->
@@ -3966,6 +3942,16 @@ operator|.
 name|generation
 operator|=
 name|FW_GENERATION_CHANGEABLE
+expr_stmt|;
+comment|/* Recalculate CRC to account for generation change. */
+name|crom_load
+argument_list|(
+name|src
+argument_list|,
+name|newrom
+argument_list|,
+name|CROMSIZE
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -5228,14 +5214,6 @@ name|fw_xfer
 modifier|*
 name|txfer
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splfw
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -5337,11 +5315,6 @@ operator|->
 name|tlabel_lock
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|STAILQ_REMOVE
@@ -5376,11 +5349,6 @@ operator|&
 name|fc
 operator|->
 name|tlabel_lock
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5903,9 +5871,6 @@ modifier|*
 name|xfer
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 name|xfer
@@ -5917,21 +5882,11 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|flag
-operator|&
-name|FWXF_INQ
+name|fc
+operator|!=
+name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"fw_xfer_free FWXF_INQ\n"
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splfw
-argument_list|()
-expr_stmt|;
 name|FW_GLOCK
 argument_list|(
 name|xfer
@@ -5939,6 +5894,15 @@ operator|->
 name|fc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|xfer
+operator|->
+name|flag
+operator|&
+name|FWXF_INQ
+condition|)
+block|{
 name|STAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5955,12 +5919,20 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+name|xfer
+operator|->
+name|flag
+operator|&=
+operator|~
+name|FWXF_INQ
+expr_stmt|;
 if|#
 directive|if
 literal|0
 block|xfer->q->queued--;
 endif|#
 directive|endif
+block|}
 name|FW_GUNLOCK
 argument_list|(
 name|xfer
@@ -5968,21 +5940,6 @@ operator|->
 name|fc
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|xfer
-operator|->
-name|fc
-operator|!=
-name|NULL
-condition|)
-block|{
 comment|/* 		 * Ensure that any tlabel owner can't access this 		 * xfer after it's freed. 		 */
 name|fw_tl_free
 argument_list|(
@@ -10905,6 +10862,7 @@ operator|->
 name|xfer
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 name|len
 operator|=

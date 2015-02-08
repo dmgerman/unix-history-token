@@ -198,12 +198,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_CNMIPS
-end_ifdef
-
 begin_function_decl
 name|void
 name|mipsNN_icache_sync_all_128
@@ -287,11 +281,6 @@ name|vm_size_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void

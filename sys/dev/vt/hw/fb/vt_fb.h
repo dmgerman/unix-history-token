@@ -35,7 +35,10 @@ begin_function_decl
 name|void
 name|vt_fb_resume
 parameter_list|(
-name|void
+name|struct
+name|vt_device
+modifier|*
+name|vd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -44,7 +47,10 @@ begin_function_decl
 name|void
 name|vt_fb_suspend
 parameter_list|(
-name|void
+name|struct
+name|vt_device
+modifier|*
+name|vd
 parameter_list|)
 function_decl|;
 end_function_decl

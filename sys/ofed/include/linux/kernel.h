@@ -18,6 +18,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -177,6 +189,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|BUILD_BUG_ON
+parameter_list|(
+name|x
+parameter_list|)
+value|CTASSERT(x)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BUG
 parameter_list|()
 value|panic("BUG")
@@ -315,6 +337,18 @@ parameter_list|(
 name|t
 parameter_list|)
 value|DELAY(t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|usleep_range
+parameter_list|(
+name|min
+parameter_list|,
+name|max
+parameter_list|)
+value|DELAY(min)
 end_define
 
 begin_ifndef

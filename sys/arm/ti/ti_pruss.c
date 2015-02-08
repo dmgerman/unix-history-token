@@ -149,12 +149,6 @@ directive|include
 file|<arm/ti/ti_pruss.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1306,6 +1300,11 @@ name|sc_mem_res
 argument_list|)
 operator|+
 name|offset
+expr_stmt|;
+operator|*
+name|memattr
+operator|=
+name|VM_MEMATTR_UNCACHEABLE
 expr_stmt|;
 return|return
 operator|(

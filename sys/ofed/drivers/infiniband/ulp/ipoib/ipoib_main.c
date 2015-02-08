@@ -7248,18 +7248,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_undef
-undef|#
-directive|undef
-name|MODULE_VERSION
-end_undef
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
-
 begin_function
 specifier|static
 name|int

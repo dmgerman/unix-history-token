@@ -105,14 +105,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|bs_protos
-argument_list|(
-name|generic_armv4
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|struct
 name|bus_space
@@ -121,7 +113,7 @@ init|=
 block|{
 comment|/* cookie */
 operator|.
-name|bs_cookie
+name|bs_privdata
 operator|=
 operator|(
 name|void

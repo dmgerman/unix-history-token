@@ -1255,6 +1255,11 @@ name|carp_softc
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|reason
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1304,6 +1309,11 @@ parameter_list|(
 name|struct
 name|carp_softc
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|reason
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3294,27 +3304,13 @@ operator|->
 name|sc_ad_tmo
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
-argument_list|(
-literal|"VHID %u@%s: MASTER -> BACKUP "
-literal|"(more frequent advertisement received)\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_vhid
-argument_list|,
-name|sc
-operator|->
-name|sc_carpdev
-operator|->
-name|if_xname
-argument_list|)
-expr_stmt|;
 name|carp_set_state
 argument_list|(
 name|sc
 argument_list|,
 name|BACKUP
+argument_list|,
+literal|"more frequent advertisement received"
 argument_list|)
 expr_stmt|;
 name|carp_setrun
@@ -3351,25 +3347,11 @@ operator|<
 argument_list|)
 condition|)
 block|{
-name|CARP_LOG
-argument_list|(
-literal|"VHID %u@%s: BACKUP -> MASTER "
-literal|"(preempting a slower master)\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_vhid
-argument_list|,
-name|sc
-operator|->
-name|sc_carpdev
-operator|->
-name|if_xname
-argument_list|)
-expr_stmt|;
 name|carp_master_down_locked
 argument_list|(
 name|sc
+argument_list|,
+literal|"preempting a slower master"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3399,25 +3381,11 @@ operator|<
 argument_list|)
 condition|)
 block|{
-name|CARP_LOG
-argument_list|(
-literal|"VHID %u@%s: BACKUP -> MASTER "
-literal|"(master timed out)\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_vhid
-argument_list|,
-name|sc
-operator|->
-name|sc_carpdev
-operator|->
-name|if_xname
-argument_list|)
-expr_stmt|;
 name|carp_master_down_locked
 argument_list|(
 name|sc
+argument_list|,
+literal|"master will time out"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5789,24 +5757,11 @@ operator|==
 name|BACKUP
 condition|)
 block|{
-name|CARP_LOG
-argument_list|(
-literal|"VHID %u@%s: BACKUP -> MASTER (master down)\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_vhid
-argument_list|,
-name|sc
-operator|->
-name|sc_carpdev
-operator|->
-name|if_xname
-argument_list|)
-expr_stmt|;
 name|carp_master_down_locked
 argument_list|(
 name|sc
+argument_list|,
+literal|"master timed out"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5830,6 +5785,11 @@ name|struct
 name|carp_softc
 modifier|*
 name|sc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|reason
 parameter_list|)
 block|{
 name|CARP_LOCK_ASSERT
@@ -5852,6 +5812,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|MASTER
+argument_list|,
+name|reason
 argument_list|)
 expr_stmt|;
 name|carp_send_ad_locked
@@ -6005,26 +5967,13 @@ block|{
 case|case
 name|INIT
 case|:
-name|CARP_LOG
-argument_list|(
-literal|"VHID %u@%s: INIT -> BACKUP\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_vhid
-argument_list|,
-name|sc
-operator|->
-name|sc_carpdev
-operator|->
-name|if_xname
-argument_list|)
-expr_stmt|;
 name|carp_set_state
 argument_list|(
 name|sc
 argument_list|,
 name|BACKUP
+argument_list|,
+literal|"initialization complete"
 argument_list|)
 expr_stmt|;
 name|carp_setrun
@@ -8702,6 +8651,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|BACKUP
+argument_list|,
+literal|"user requested via ifconfig"
 argument_list|)
 expr_stmt|;
 name|carp_setrun
@@ -8723,6 +8674,8 @@ case|:
 name|carp_master_down_locked
 argument_list|(
 name|sc
+argument_list|,
+literal|"user requested via ifconfig"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9780,6 +9733,11 @@ name|sc
 parameter_list|,
 name|int
 name|state
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|reason
 parameter_list|)
 block|{
 name|CARP_LOCK_ASSERT
@@ -9814,12 +9772,6 @@ operator|+
 literal|5
 index|]
 decl_stmt|;
-name|sc
-operator|->
-name|sc_state
-operator|=
-name|state
-expr_stmt|;
 name|snprintf
 argument_list|(
 name|subsys
@@ -9840,6 +9792,33 @@ name|sc_carpdev
 operator|->
 name|if_xname
 argument_list|)
+expr_stmt|;
+name|CARP_LOG
+argument_list|(
+literal|"%s: %s -> %s (%s)\n"
+argument_list|,
+name|subsys
+argument_list|,
+name|carp_states
+index|[
+name|sc
+operator|->
+name|sc_state
+index|]
+argument_list|,
+name|carp_states
+index|[
+name|state
+index|]
+argument_list|,
+name|reason
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_state
+operator|=
+name|state
 expr_stmt|;
 name|devctl_notify
 argument_list|(
@@ -9992,6 +9971,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|INIT
+argument_list|,
+literal|"hardware interface down"
 argument_list|)
 expr_stmt|;
 name|carp_setrun
@@ -10029,6 +10010,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|INIT
+argument_list|,
+literal|"hardware interface up"
 argument_list|)
 expr_stmt|;
 name|carp_setrun

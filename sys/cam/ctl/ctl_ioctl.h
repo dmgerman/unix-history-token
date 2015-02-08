@@ -1277,6 +1277,8 @@ name|CTL_ISCSI_LOGOUT
 block|,
 name|CTL_ISCSI_TERMINATE
 block|,
+name|CTL_ISCSI_LIMITS
+block|,
 if|#
 directive|if
 name|defined
@@ -1340,6 +1342,17 @@ define|#
 directive|define
 name|CTL_ISCSI_ALIAS_LEN
 value|128
+end_define
+
+begin_comment
+comment|/* Arbitrary. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_ISCSI_OFFLOAD_LEN
+value|8
 end_define
 
 begin_comment
@@ -1411,6 +1424,12 @@ decl_stmt|;
 name|uint32_t
 name|immediate_data
 decl_stmt|;
+name|char
+name|offload
+index|[
+name|CTL_ISCSI_OFFLOAD_LEN
+index|]
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ICL_KERNEL_PROXY
@@ -1420,7 +1439,7 @@ decl_stmt|;
 name|int
 name|spare
 index|[
-literal|3
+literal|1
 index|]
 decl_stmt|;
 else|#
@@ -1428,7 +1447,7 @@ directive|else
 name|int
 name|spare
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
 endif|#
@@ -1526,6 +1545,31 @@ name|int
 name|all
 decl_stmt|;
 comment|/* passed to kernel */
+name|int
+name|spare
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ctl_iscsi_limits_params
+block|{
+name|char
+name|offload
+index|[
+name|CTL_ISCSI_OFFLOAD_LEN
+index|]
+decl_stmt|;
+comment|/* passed to kernel */
+name|size_t
+name|data_segment_limit
+decl_stmt|;
+comment|/* passed to userland */
 name|int
 name|spare
 index|[
@@ -1706,6 +1750,10 @@ name|struct
 name|ctl_iscsi_terminate_params
 name|terminate
 decl_stmt|;
+name|struct
+name|ctl_iscsi_limits_params
+name|limits
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ICL_KERNEL_PROXY
@@ -1759,6 +1807,23 @@ name|CTL_ERROR_STR_LEN
 index|]
 decl_stmt|;
 comment|/* passed to userland */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ctl_lun_map
+block|{
+name|uint32_t
+name|port
+decl_stmt|;
+name|uint32_t
+name|plun
+decl_stmt|;
+name|uint32_t
+name|lun
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1936,6 +2001,13 @@ define|#
 directive|define
 name|CTL_PORT_LIST
 value|_IOWR(CTL_MINOR, 0x27, struct ctl_lun_list)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTL_LUN_MAP
+value|_IOW(CTL_MINOR, 0x28, struct ctl_lun_map)
 end_define
 
 begin_endif

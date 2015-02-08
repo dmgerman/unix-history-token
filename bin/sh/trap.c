@@ -248,7 +248,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* indicates SIGINT/SIGQUIT received */
+comment|/* indicates wait builtin should be interrupted */
 end_comment
 
 begin_decl_stmt
@@ -1604,6 +1604,10 @@ operator|=
 literal|1
 expr_stmt|;
 name|pendingsig
+operator|=
+name|signo
+expr_stmt|;
+name|pendingsig_waitcmd
 operator|=
 name|signo
 expr_stmt|;

@@ -110,6 +110,13 @@ begin_define
 define|#
 directive|define
 name|SFXGE_TX_DPL_GET_PKT_LIMIT_DEFAULT
+value|(64 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TX_DPL_GET_NON_TCP_PKT_LIMIT_DEFAULT
 value|1024
 end_define
 
@@ -132,7 +139,12 @@ name|unsigned
 name|int
 name|std_get_max
 decl_stmt|;
-comment|/* Maximum number of packets 						 * in get list */
+comment|/* Maximum number  of packets 						 * in get list */
+name|unsigned
+name|int
+name|std_get_non_tcp_max
+decl_stmt|;
+comment|/* Maximum number 						 * of non-TCP packets 						 * in get list */
 name|unsigned
 name|int
 name|std_put_max
@@ -160,6 +172,16 @@ name|int
 name|std_get_count
 decl_stmt|;
 comment|/* Packets in get list. */
+name|unsigned
+name|int
+name|std_get_non_tcp_count
+decl_stmt|;
+comment|/* Non-TCP packets 						 * in get list */
+name|unsigned
+name|int
+name|std_get_hiwat
+decl_stmt|;
+comment|/* Packets in get list 						 * high watermark */
 block|}
 struct|;
 end_struct
@@ -243,7 +265,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|SFXGE_TXQ_LOCK
+name|SFXGE_TX_LOCK
 parameter_list|(
 name|txq
 parameter_list|)
@@ -268,7 +290,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|SFXGE_TXQ_LOCK
+name|SFXGE_TX_LOCK
 parameter_list|(
 name|txq
 parameter_list|)
@@ -289,6 +311,76 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TXQ_LOCK_INIT
+parameter_list|(
+name|_txq
+parameter_list|,
+name|_ifname
+parameter_list|,
+name|_txq_index
+parameter_list|)
+define|\
+value|do {								\ 		struct sfxge_txq  *__txq = (_txq);			\ 									\ 		snprintf((__txq)->lock_name,				\ 			 sizeof((__txq)->lock_name),			\ 			 "%s:txq%u", (_ifname), (_txq_index));		\ 		mtx_init(&(__txq)->lock, (__txq)->lock_name,		\ 			 NULL, MTX_DEF);				\ 	} while (B_FALSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TXQ_LOCK_DESTROY
+parameter_list|(
+name|_txq
+parameter_list|)
+define|\
+value|mtx_destroy(&(_txq)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TXQ_LOCK
+parameter_list|(
+name|_txq
+parameter_list|)
+define|\
+value|mtx_lock(SFXGE_TX_LOCK(_txq))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TXQ_TRYLOCK
+parameter_list|(
+name|_txq
+parameter_list|)
+define|\
+value|mtx_trylock(SFXGE_TX_LOCK(_txq))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TXQ_UNLOCK
+parameter_list|(
+name|_txq
+parameter_list|)
+define|\
+value|mtx_unlock(SFXGE_TX_LOCK(_txq))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TXQ_LOCK_ASSERT_OWNED
+parameter_list|(
+name|_txq
+parameter_list|)
+define|\
+value|mtx_assert(SFXGE_TX_LOCK(_txq), MA_OWNED)
+end_define
 
 begin_struct
 struct|struct
@@ -352,14 +444,15 @@ name|efx_txq_t
 modifier|*
 name|common
 decl_stmt|;
-name|struct
-name|sfxge_txq
-modifier|*
-name|next
-decl_stmt|;
 name|efsys_mem_t
 modifier|*
 name|tsoh_buffer
+decl_stmt|;
+name|char
+name|lock_name
+index|[
+name|SFXGE_LOCK_NAME_MAX
+index|]
 decl_stmt|;
 comment|/* This field changes more often and is read regularly on both 	 * the initiation and completion paths 	 */
 name|int
@@ -433,7 +526,27 @@ name|drops
 decl_stmt|;
 name|unsigned
 name|long
-name|early_drops
+name|get_overflow
+decl_stmt|;
+name|unsigned
+name|long
+name|get_non_tcp_overflow
+decl_stmt|;
+name|unsigned
+name|long
+name|put_overflow
+decl_stmt|;
+name|unsigned
+name|long
+name|netdown_drops
+decl_stmt|;
+name|unsigned
+name|long
+name|tso_pdrop_too_many
+decl_stmt|;
+name|unsigned
+name|long
+name|tso_pdrop_no_rsrc
 decl_stmt|;
 comment|/* The following fields change more often, and are used mostly 	 * on the completion path 	 */
 name|unsigned
@@ -448,9 +561,20 @@ name|unsigned
 name|int
 name|completed
 decl_stmt|;
+name|struct
+name|sfxge_txq
+modifier|*
+name|next
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_struct_decl
+struct_decl|struct
+name|sfxge_evq
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 specifier|extern
@@ -529,6 +653,11 @@ name|struct
 name|sfxge_txq
 modifier|*
 name|txq
+parameter_list|,
+name|struct
+name|sfxge_evq
+modifier|*
+name|evq
 parameter_list|)
 function_decl|;
 end_function_decl

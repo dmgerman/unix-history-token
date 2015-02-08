@@ -57,47 +57,6 @@ directive|include
 file|<machine/bus.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__DragonFly__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<bus/firewire/firewire.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<bus/firewire/firewirereg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<bus/firewire/iec13213.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dcons.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dcons_os.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -128,23 +87,11 @@ directive|include
 file|<dev/dcons/dcons_os.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<sys/cons.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|EXPOSE_IDT_ADDR
-value|1
-end_define
 
 begin_if
 if|#
@@ -160,11 +107,6 @@ argument_list|(
 name|__amd64__
 argument_list|)
 operator|)
-operator|&&
-name|defined
-argument_list|(
-name|EXPOSE_IDT_ADDR
-argument_list|)
 end_if
 
 begin_include
@@ -207,14 +149,6 @@ name|dcons_paddr
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-end_if
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -234,28 +168,6 @@ name|force_console
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CSRVAL_VENDOR_PRIVATE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NEED_NEW_DRIVER
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -396,12 +308,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NEED_NEW_DRIVER
-end_ifndef
-
 begin_if
 if|#
 directive|if
@@ -416,11 +322,6 @@ argument_list|(
 name|__amd64__
 argument_list|)
 operator|)
-operator|&&
-name|defined
-argument_list|(
-name|EXPOSE_IDT_ADDR
-argument_list|)
 end_if
 
 begin_function
@@ -674,11 +575,6 @@ argument_list|(
 name|__amd64__
 argument_list|)
 operator|)
-operator|&&
-name|defined
-argument_list|(
-name|EXPOSE_IDT_ADDR
-argument_list|)
 name|dcons_crom_expose_idt
 argument_list|(
 name|sc
@@ -688,11 +584,6 @@ endif|#
 directive|endif
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -771,38 +662,16 @@ name|fd
 operator|.
 name|dev
 argument_list|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-literal|"bus_addr 0x%x\n"
-argument_list|,
-name|sc
-operator|->
-name|bus_addr
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 literal|"bus_addr 0x%jx\n"
-operator|,
+argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|sc
 operator|->
 name|bus_addr
-block|)
-function|;
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dcons_paddr
@@ -824,9 +693,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_if
-
-begin_expr_stmt
 name|dcons_conf
 operator|->
 name|dma_tag
@@ -835,9 +701,6 @@ name|sc
 operator|->
 name|dma_tag
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|dcons_conf
 operator|->
 name|dma_map
@@ -846,30 +709,13 @@ name|sc
 operator|->
 name|dma_map
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|dcons_paddr
 operator|=
 name|sc
 operator|->
 name|bus_addr
 expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-end_if
-
-begin_comment
 comment|/* Force to be the high-level console */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|force_console
@@ -881,15 +727,11 @@ operator|->
 name|cdev
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|void
 name|dcons_crom_poll
 parameter_list|(
@@ -946,22 +788,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|NEED_NEW_DRIVER
-name|printf
-argument_list|(
-literal|"dcons_crom: you need newer firewire driver\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-else|#
-directive|else
 name|struct
 name|dcons_crom_softc
 modifier|*
@@ -1083,11 +909,6 @@ argument_list|,
 comment|/*flags*/
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|501102
 comment|/*lockfunc*/
 name|busdma_lock_mutex
 argument_list|,
@@ -1095,8 +916,6 @@ comment|/*lockarg*/
 operator|&
 name|Giant
 argument_list|,
-endif|#
-directive|endif
 operator|&
 name|sc
 operator|->
@@ -1207,8 +1026,6 @@ operator|(
 literal|0
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
