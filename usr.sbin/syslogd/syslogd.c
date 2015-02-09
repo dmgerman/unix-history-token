@@ -5391,10 +5391,6 @@ name|f
 operator|->
 name|f_prevlen
 operator|&&
-name|f
-operator|->
-name|f_prevline
-operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -6297,13 +6293,7 @@ name|f_prevcount
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|f
-operator|->
-name|f_prevline
-condition|)
+else|else
 block|{
 name|v
 operator|->
@@ -6321,10 +6311,6 @@ name|f
 operator|->
 name|f_prevlen
 expr_stmt|;
-block|}
-else|else
-block|{
-return|return;
 block|}
 name|v
 operator|++
