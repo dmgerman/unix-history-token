@@ -92,6 +92,31 @@ name|true
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|bool
+name|opt_single_stream
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint64_t
+name|opt_block_size
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint64_t
+modifier|*
+name|opt_block_list
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/// Stream used to communicate with liblzma
 end_comment
@@ -188,6 +213,41 @@ init|=
 name|true
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MYTHREAD_ENABLED
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|lzma_mt
+name|mt_options
+init|=
+block|{
+operator|.
+name|flags
+operator|=
+literal|0
+block|,
+operator|.
+name|timeout
+operator|=
+literal|300
+block|,
+operator|.
+name|filters
+operator|=
+name|filters
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|extern
@@ -411,6 +471,31 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|// The default check type is CRC64, but fallback to CRC32
+comment|// if CRC64 isn't supported by the copy of liblzma we are
+comment|// using. CRC32 is always supported.
+if|if
+condition|(
+name|check_default
+condition|)
+block|{
+name|check
+operator|=
+name|LZMA_CHECK_CRC64
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|lzma_check_is_supported
+argument_list|(
+name|check
+argument_list|)
+condition|)
+name|check
+operator|=
+name|LZMA_CHECK_CRC32
+expr_stmt|;
+block|}
 comment|// Options for LZMA1 or LZMA2 in case we are using a preset.
 specifier|static
 name|lzma_options_lzma
@@ -597,9 +682,92 @@ argument_list|,
 name|filters
 argument_list|)
 expr_stmt|;
-comment|// If using --format=raw, we can be decoding. The memusage function
-comment|// also validates the filter chain and the options used for the
-comment|// filters.
+comment|// The --flush-timeout option requires LZMA_SYNC_FLUSH support
+comment|// from the filter chain. Currently threaded encoder doesn't support
+comment|// LZMA_SYNC_FLUSH so single-threaded mode must be used.
+if|if
+condition|(
+name|opt_mode
+operator|==
+name|MODE_COMPRESS
+operator|&&
+name|opt_flush_timeout
+operator|!=
+literal|0
+condition|)
+block|{
+for|for
+control|(
+name|size_t
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|filters_count
+condition|;
+operator|++
+name|i
+control|)
+block|{
+switch|switch
+condition|(
+name|filters
+index|[
+name|i
+index|]
+operator|.
+name|id
+condition|)
+block|{
+case|case
+name|LZMA_FILTER_LZMA2
+case|:
+case|case
+name|LZMA_FILTER_DELTA
+case|:
+break|break;
+default|default:
+name|message_fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"The filter chain is "
+literal|"incompatible with --flush-timeout"
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|hardware_threads_get
+argument_list|()
+operator|>
+literal|1
+condition|)
+block|{
+name|message
+argument_list|(
+name|V_WARNING
+argument_list|,
+name|_
+argument_list|(
+literal|"Switching to single-threaded "
+literal|"mode due to --flush-timeout"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|hardware_threads_set
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|// Get the memory usage. Note that if --format=raw was used,
+comment|// we can be decompressing.
 specifier|const
 name|uint64_t
 name|memory_limit
@@ -618,6 +786,76 @@ name|opt_mode
 operator|==
 name|MODE_COMPRESS
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|MYTHREAD_ENABLED
+if|if
+condition|(
+name|opt_format
+operator|==
+name|FORMAT_XZ
+operator|&&
+name|hardware_threads_get
+argument_list|()
+operator|>
+literal|1
+condition|)
+block|{
+name|mt_options
+operator|.
+name|threads
+operator|=
+name|hardware_threads_get
+argument_list|()
+expr_stmt|;
+name|mt_options
+operator|.
+name|block_size
+operator|=
+name|opt_block_size
+expr_stmt|;
+name|mt_options
+operator|.
+name|check
+operator|=
+name|check
+expr_stmt|;
+name|memory_usage
+operator|=
+name|lzma_stream_encoder_mt_memusage
+argument_list|(
+operator|&
+name|mt_options
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|memory_usage
+operator|!=
+name|UINT64_MAX
+condition|)
+name|message
+argument_list|(
+name|V_DEBUG
+argument_list|,
+name|_
+argument_list|(
+literal|"Using up to %"
+name|PRIu32
+literal|" threads."
+argument_list|)
+argument_list|,
+name|mt_options
+operator|.
+name|threads
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+block|{
 name|memory_usage
 operator|=
 name|lzma_raw_encoder_memusage
@@ -625,7 +863,10 @@ argument_list|(
 name|filters
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 else|else
+block|{
 name|memory_usage
 operator|=
 name|lzma_raw_decoder_memusage
@@ -633,6 +874,7 @@ argument_list|(
 name|filters
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|memory_usage
@@ -703,10 +945,10 @@ block|}
 if|if
 condition|(
 name|memory_usage
-operator|>
+operator|<=
 name|memory_limit
 condition|)
-block|{
+return|return;
 comment|// If --no-adjust was used or we didn't find LZMA1 or
 comment|// LZMA2 as the last filter, give an error immediately.
 comment|// --format=raw implies --no-adjust.
@@ -731,9 +973,120 @@ operator|==
 name|MODE_COMPRESS
 argument_list|)
 expr_stmt|;
-comment|// Look for the last filter if it is LZMA2 or LZMA1, so
-comment|// we can make it use less RAM. With other filters we don't
-comment|// know what to do.
+ifdef|#
+directive|ifdef
+name|MYTHREAD_ENABLED
+if|if
+condition|(
+name|opt_format
+operator|==
+name|FORMAT_XZ
+operator|&&
+name|mt_options
+operator|.
+name|threads
+operator|>
+literal|1
+condition|)
+block|{
+comment|// Try to reduce the number of threads before
+comment|// adjusting the compression settings down.
+do|do
+block|{
+comment|// FIXME? The real single-threaded mode has
+comment|// lower memory usage, but it's not comparable
+comment|// because it doesn't write the size info
+comment|// into Block Headers.
+if|if
+condition|(
+operator|--
+name|mt_options
+operator|.
+name|threads
+operator|==
+literal|0
+condition|)
+name|memlimit_too_small
+argument_list|(
+name|memory_usage
+argument_list|)
+expr_stmt|;
+name|memory_usage
+operator|=
+name|lzma_stream_encoder_mt_memusage
+argument_list|(
+operator|&
+name|mt_options
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|memory_usage
+operator|==
+name|UINT64_MAX
+condition|)
+name|message_bug
+argument_list|()
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|memory_usage
+operator|>
+name|memory_limit
+condition|)
+do|;
+name|message
+argument_list|(
+name|V_WARNING
+argument_list|,
+name|_
+argument_list|(
+literal|"Adjusted the number of threads "
+literal|"from %s to %s to not exceed "
+literal|"the memory usage limit of %s MiB"
+argument_list|)
+argument_list|,
+name|uint64_to_str
+argument_list|(
+name|hardware_threads_get
+argument_list|()
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+name|uint64_to_str
+argument_list|(
+name|mt_options
+operator|.
+name|threads
+argument_list|,
+literal|1
+argument_list|)
+argument_list|,
+name|uint64_to_str
+argument_list|(
+name|round_up_to_mib
+argument_list|(
+name|memory_limit
+argument_list|)
+argument_list|,
+literal|2
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|memory_usage
+operator|<=
+name|memory_limit
+condition|)
+return|return;
+comment|// Look for the last filter if it is LZMA2 or LZMA1, so we can make
+comment|// it use less RAM. With other filters we don't know what to do.
 name|size_t
 name|i
 init|=
@@ -824,10 +1177,9 @@ condition|(
 name|true
 condition|)
 block|{
-comment|// If it is below 1 MiB, auto-adjusting failed. We
-comment|// could be more sophisticated and scale it down even
-comment|// more, but let's see if many complain about this
-comment|// version.
+comment|// If it is below 1 MiB, auto-adjusting failed. We could be
+comment|// more sophisticated and scale it down even more, but let's
+comment|// see if many complain about this version.
 comment|//
 comment|// FIXME: Displays the scaled memory usage instead
 comment|// of the original.
@@ -946,33 +1298,6 @@ literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 	// Limit the number of worker threads so that memory usage 	// limit isn't exceeded. 	assert(memory_usage> 0); 	size_t thread_limit = memory_limit / memory_usage; 	if (thread_limit == 0) 		thread_limit = 1;  	if (opt_threads> thread_limit) 		opt_threads = thread_limit; */
-if|if
-condition|(
-name|check_default
-condition|)
-block|{
-comment|// The default check type is CRC64, but fallback to CRC32
-comment|// if CRC64 isn't supported by the copy of liblzma we are
-comment|// using. CRC32 is always supported.
-name|check
-operator|=
-name|LZMA_CHECK_CRC64
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|lzma_check_is_supported
-argument_list|(
-name|check
-argument_list|)
-condition|)
-name|check
-operator|=
-name|LZMA_CHECK_CRC32
-expr_stmt|;
-block|}
 return|return;
 block|}
 end_function
@@ -1314,6 +1639,30 @@ break|break;
 case|case
 name|FORMAT_XZ
 case|:
+ifdef|#
+directive|ifdef
+name|MYTHREAD_ENABLED
+if|if
+condition|(
+name|hardware_threads_get
+argument_list|()
+operator|>
+literal|1
+condition|)
+name|ret
+operator|=
+name|lzma_stream_encoder_mt
+argument_list|(
+operator|&
+name|strm
+argument_list|,
+operator|&
+name|mt_options
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|ret
 operator|=
 name|lzma_stream_encoder
@@ -1364,14 +1713,35 @@ block|}
 block|}
 else|else
 block|{
-specifier|const
 name|uint32_t
 name|flags
 init|=
-name|LZMA_TELL_UNSUPPORTED_CHECK
-operator||
-name|LZMA_CONCATENATED
+literal|0
 decl_stmt|;
+comment|// It seems silly to warn about unsupported check if the
+comment|// check won't be verified anyway due to --ignore-check.
+if|if
+condition|(
+name|opt_ignore_check
+condition|)
+name|flags
+operator||=
+name|LZMA_IGNORE_CHECK
+expr_stmt|;
+else|else
+name|flags
+operator||=
+name|LZMA_TELL_UNSUPPORTED_CHECK
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|opt_single_stream
+condition|)
+name|flags
+operator||=
+name|LZMA_CONCATENATED
+expr_stmt|;
 comment|// We abuse FORMAT_AUTO to indicate unknown file format,
 comment|// for which we may consider passthru mode.
 name|enum
@@ -1451,7 +1821,7 @@ block|{
 case|case
 name|FORMAT_AUTO
 case|:
-comment|// Uknown file format. If --decompress --stdout
+comment|// Unknown file format. If --decompress --stdout
 comment|// --force have been given, then we copy the input
 comment|// as is to stdout. Checking for MODE_DECOMPRESS
 comment|// is needed, because we don't want to do use
@@ -1615,6 +1985,177 @@ block|}
 end_function
 
 begin_comment
+comment|/// Resolve conflicts between opt_block_size and opt_block_list in single
+end_comment
+
+begin_comment
+comment|/// threaded mode. We want to default to opt_block_list, except when it is
+end_comment
+
+begin_comment
+comment|/// larger than opt_block_size. If this is the case for the current Block
+end_comment
+
+begin_comment
+comment|/// at *list_pos, then we break into smaller Blocks. Otherwise advance
+end_comment
+
+begin_comment
+comment|/// to the next Block in opt_block_list, and break apart if needed.
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|split_block
+parameter_list|(
+name|uint64_t
+modifier|*
+name|block_remaining
+parameter_list|,
+name|uint64_t
+modifier|*
+name|next_block_remaining
+parameter_list|,
+name|size_t
+modifier|*
+name|list_pos
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|*
+name|next_block_remaining
+operator|>
+literal|0
+condition|)
+block|{
+comment|// The Block at *list_pos has previously been split up.
+name|assert
+argument_list|(
+name|hardware_threads_get
+argument_list|()
+operator|==
+literal|1
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|opt_block_size
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|opt_block_list
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|next_block_remaining
+operator|>
+name|opt_block_size
+condition|)
+block|{
+comment|// We have to split the current Block at *list_pos
+comment|// into another opt_block_size length Block.
+operator|*
+name|block_remaining
+operator|=
+name|opt_block_size
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|// This is the last remaining split Block for the
+comment|// Block at *list_pos.
+operator|*
+name|block_remaining
+operator|=
+operator|*
+name|next_block_remaining
+expr_stmt|;
+block|}
+operator|*
+name|next_block_remaining
+operator|-=
+operator|*
+name|block_remaining
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|// The Block at *list_pos has been finished. Go to the next
+comment|// entry in the list. If the end of the list has been reached,
+comment|// reuse the size of the last Block.
+if|if
+condition|(
+name|opt_block_list
+index|[
+operator|*
+name|list_pos
+operator|+
+literal|1
+index|]
+operator|!=
+literal|0
+condition|)
+operator|++
+operator|*
+name|list_pos
+expr_stmt|;
+operator|*
+name|block_remaining
+operator|=
+name|opt_block_list
+index|[
+operator|*
+name|list_pos
+index|]
+expr_stmt|;
+comment|// If in single-threaded mode, split up the Block if needed.
+comment|// This is not needed in multi-threaded mode because liblzma
+comment|// will do this due to how threaded encoding works.
+if|if
+condition|(
+name|hardware_threads_get
+argument_list|()
+operator|==
+literal|1
+operator|&&
+name|opt_block_size
+operator|>
+literal|0
+operator|&&
+operator|*
+name|block_remaining
+operator|>
+name|opt_block_size
+condition|)
+block|{
+operator|*
+name|next_block_remaining
+operator|=
+operator|*
+name|block_remaining
+operator|-
+name|opt_block_size
+expr_stmt|;
+operator|*
+name|block_remaining
+operator|=
+name|opt_block_size
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/// Compress or decompress using liblzma.
 end_comment
 
@@ -1631,8 +2172,8 @@ block|{
 comment|// Encoder needs to know when we have given all the input to it.
 comment|// The decoders need to know it too when we are using
 comment|// LZMA_CONCATENATED. We need to check for src_eof here, because
-comment|// the first input chunk has been already read, and that may
-comment|// have been the only chunk we will read.
+comment|// the first input chunk has been already read if decompressing,
+comment|// and that may have been the only chunk we will read.
 name|lzma_action
 name|action
 init|=
@@ -1653,6 +2194,116 @@ name|success
 init|=
 name|false
 decl_stmt|;
+comment|// block_remaining indicates how many input bytes to encode before
+comment|// finishing the current .xz Block. The Block size is set with
+comment|// --block-size=SIZE and --block-list. They have an effect only when
+comment|// compressing to the .xz format. If block_remaining == UINT64_MAX,
+comment|// only a single block is created.
+name|uint64_t
+name|block_remaining
+init|=
+name|UINT64_MAX
+decl_stmt|;
+comment|// next_block_remining for when we are in single-threaded mode and
+comment|// the Block in --block-list is larger than the --block-size=SIZE.
+name|uint64_t
+name|next_block_remaining
+init|=
+literal|0
+decl_stmt|;
+comment|// Position in opt_block_list. Unused if --block-list wasn't used.
+name|size_t
+name|list_pos
+init|=
+literal|0
+decl_stmt|;
+comment|// Handle --block-size for single-threaded mode and the first step
+comment|// of --block-list.
+if|if
+condition|(
+name|opt_mode
+operator|==
+name|MODE_COMPRESS
+operator|&&
+name|opt_format
+operator|==
+name|FORMAT_XZ
+condition|)
+block|{
+comment|// --block-size doesn't do anything here in threaded mode,
+comment|// because the threaded encoder will take care of splitting
+comment|// to fixed-sized Blocks.
+if|if
+condition|(
+name|hardware_threads_get
+argument_list|()
+operator|==
+literal|1
+operator|&&
+name|opt_block_size
+operator|>
+literal|0
+condition|)
+name|block_remaining
+operator|=
+name|opt_block_size
+expr_stmt|;
+comment|// If --block-list was used, start with the first size.
+comment|//
+comment|// For threaded case, --block-size specifies how big Blocks
+comment|// the encoder needs to be prepared to create at maximum
+comment|// and --block-list will simultaneously cause new Blocks
+comment|// to be started at specified intervals. To keep things
+comment|// logical, the same is done in single-threaded mode. The
+comment|// output is still not identical because in single-threaded
+comment|// mode the size info isn't written into Block Headers.
+if|if
+condition|(
+name|opt_block_list
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|block_remaining
+operator|<
+name|opt_block_list
+index|[
+name|list_pos
+index|]
+condition|)
+block|{
+name|assert
+argument_list|(
+name|hardware_threads_get
+argument_list|()
+operator|==
+literal|1
+argument_list|)
+expr_stmt|;
+name|next_block_remaining
+operator|=
+name|opt_block_list
+index|[
+name|list_pos
+index|]
+operator|-
+name|block_remaining
+expr_stmt|;
+block|}
+else|else
+block|{
+name|block_remaining
+operator|=
+name|opt_block_list
+index|[
+name|list_pos
+index|]
+expr_stmt|;
+block|}
+block|}
+block|}
 name|strm
 operator|.
 name|next_out
@@ -1673,8 +2324,8 @@ operator|!
 name|user_abort
 condition|)
 block|{
-comment|// Fill the input buffer if it is empty and we haven't reached
-comment|// end of file yet.
+comment|// Fill the input buffer if it is empty and we aren't
+comment|// flushing or finishing.
 if|if
 condition|(
 name|strm
@@ -1683,10 +2334,9 @@ name|avail_in
 operator|==
 literal|0
 operator|&&
-operator|!
-name|pair
-operator|->
-name|src_eof
+name|action
+operator|==
+name|LZMA_RUN
 condition|)
 block|{
 name|strm
@@ -1708,7 +2358,12 @@ argument_list|,
 operator|&
 name|in_buf
 argument_list|,
+name|my_min
+argument_list|(
+name|block_remaining
+argument_list|,
 name|IO_BUFFER_SIZE
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1726,9 +2381,50 @@ name|pair
 operator|->
 name|src_eof
 condition|)
+block|{
 name|action
 operator|=
 name|LZMA_FINISH
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|block_remaining
+operator|!=
+name|UINT64_MAX
+condition|)
+block|{
+comment|// Start a new Block after every
+comment|// opt_block_size bytes of input.
+name|block_remaining
+operator|-=
+name|strm
+operator|.
+name|avail_in
+expr_stmt|;
+if|if
+condition|(
+name|block_remaining
+operator|==
+literal|0
+condition|)
+name|action
+operator|=
+name|LZMA_FULL_BARRIER
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|action
+operator|==
+name|LZMA_RUN
+operator|&&
+name|flush_needed
+condition|)
+name|action
+operator|=
+name|LZMA_SYNC_FLUSH
 expr_stmt|;
 block|}
 comment|// Let liblzma do the actual work.
@@ -1791,6 +2487,123 @@ block|}
 if|if
 condition|(
 name|ret
+operator|==
+name|LZMA_STREAM_END
+operator|&&
+operator|(
+name|action
+operator|==
+name|LZMA_SYNC_FLUSH
+operator|||
+name|action
+operator|==
+name|LZMA_FULL_BARRIER
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|action
+operator|==
+name|LZMA_SYNC_FLUSH
+condition|)
+block|{
+comment|// Flushing completed. Write the pending data
+comment|// out immediatelly so that the reading side
+comment|// can decompress everything compressed so far.
+if|if
+condition|(
+name|io_write
+argument_list|(
+name|pair
+argument_list|,
+operator|&
+name|out_buf
+argument_list|,
+name|IO_BUFFER_SIZE
+operator|-
+name|strm
+operator|.
+name|avail_out
+argument_list|)
+condition|)
+break|break;
+name|strm
+operator|.
+name|next_out
+operator|=
+name|out_buf
+operator|.
+name|u8
+expr_stmt|;
+name|strm
+operator|.
+name|avail_out
+operator|=
+name|IO_BUFFER_SIZE
+expr_stmt|;
+comment|// Set the time of the most recent flushing.
+name|mytime_set_flush_time
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|// Start a new Block after LZMA_FULL_BARRIER.
+if|if
+condition|(
+name|opt_block_list
+operator|==
+name|NULL
+condition|)
+block|{
+name|assert
+argument_list|(
+name|hardware_threads_get
+argument_list|()
+operator|==
+literal|1
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|opt_block_size
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+name|block_remaining
+operator|=
+name|opt_block_size
+expr_stmt|;
+block|}
+else|else
+block|{
+name|split_block
+argument_list|(
+operator|&
+name|block_remaining
+argument_list|,
+operator|&
+name|next_block_remaining
+argument_list|,
+operator|&
+name|list_pos
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|// Start a new Block after LZMA_FULL_FLUSH or continue
+comment|// the same block after LZMA_SYNC_FLUSH.
+name|action
+operator|=
+name|LZMA_RUN
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ret
 operator|!=
 name|LZMA_OK
 condition|)
@@ -1848,6 +2661,26 @@ operator|==
 name|LZMA_STREAM_END
 condition|)
 block|{
+if|if
+condition|(
+name|opt_single_stream
+condition|)
+block|{
+name|io_fix_src_pos
+argument_list|(
+name|pair
+argument_list|,
+name|strm
+operator|.
+name|avail_in
+argument_list|)
+expr_stmt|;
+name|success
+operator|=
+name|true
+expr_stmt|;
+break|break;
+block|}
 comment|// Check that there is no trailing garbage.
 comment|// This is needed for LZMA_Alone and raw
 comment|// streams.
@@ -2174,8 +3007,30 @@ name|success
 init|=
 name|false
 decl_stmt|;
-comment|// Read the first chunk of input data. This is needed to detect
-comment|// the input file type (for now, only for decompression).
+if|if
+condition|(
+name|opt_mode
+operator|==
+name|MODE_COMPRESS
+condition|)
+block|{
+name|strm
+operator|.
+name|next_in
+operator|=
+name|NULL
+expr_stmt|;
+name|strm
+operator|.
+name|avail_in
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|// Read the first chunk of input data. This is needed
+comment|// to detect the input file type.
 name|strm
 operator|.
 name|next_in
@@ -2198,6 +3053,7 @@ argument_list|,
 name|IO_BUFFER_SIZE
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|strm
@@ -2248,6 +3104,12 @@ name|pair
 argument_list|)
 condition|)
 block|{
+comment|// Remember the current time. It is needed
+comment|// for progress indicator and for timed
+comment|// flushing.
+name|mytime_set_start_time
+argument_list|()
+expr_stmt|;
 comment|// Initialize the progress indicator.
 specifier|const
 name|uint64_t
@@ -2319,6 +3181,35 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NDEBUG
+end_ifndef
+
+begin_function
+specifier|extern
+name|void
+name|coder_free
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|lzma_end
+argument_list|(
+operator|&
+name|strm
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

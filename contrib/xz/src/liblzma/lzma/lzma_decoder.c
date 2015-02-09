@@ -337,12 +337,12 @@ comment|/// Probability tree for the highest two bits of the match distance.
 comment|/// There is a separate probability tree for match lengths of
 comment|/// 2 (i.e. MATCH_LEN_MIN), 3, 4, and [5, 273].
 name|probability
-name|pos_slot
+name|dist_slot
 index|[
-name|LEN_TO_POS_STATES
+name|DIST_STATES
 index|]
 index|[
-name|POS_SLOTS
+name|DIST_SLOTS
 index|]
 decl_stmt|;
 comment|/// Probability trees for additional bits for match distance when the
@@ -352,7 +352,7 @@ name|pos_special
 index|[
 name|FULL_DISTANCES
 operator|-
-name|END_POS_MODEL_INDEX
+name|DIST_MODEL_END
 index|]
 decl_stmt|;
 comment|/// Probability tree for the lowest four bits of a match distance
@@ -360,7 +360,7 @@ comment|/// that is equal to or greater than 128.
 name|probability
 name|pos_align
 index|[
-name|ALIGN_TABLE_SIZE
+name|ALIGN_SIZE
 index|]
 decl_stmt|;
 comment|/// Length of a normal match
@@ -444,10 +444,10 @@ argument_list|)
 block|,
 name|seq_6
 argument_list|(
-name|SEQ_POS_SLOT
+name|SEQ_DIST_SLOT
 argument_list|)
 block|,
-name|SEQ_POS_MODEL
+name|SEQ_DIST_MODEL
 block|,
 name|SEQ_DIRECT
 block|,
@@ -539,9 +539,11 @@ block|{
 comment|////////////////////
 comment|// Initialization //
 comment|////////////////////
-if|if
-condition|(
-operator|!
+block|{
+specifier|const
+name|lzma_ret
+name|ret
+init|=
 name|rc_read_init
 argument_list|(
 operator|&
@@ -555,10 +557,17 @@ name|in_pos
 argument_list|,
 name|in_size
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+name|LZMA_STREAM_END
 condition|)
 return|return
-name|LZMA_OK
+name|ret
 return|;
+block|}
 comment|///////////////
 comment|// Variables //
 comment|///////////////
@@ -1300,9 +1309,9 @@ name|probs
 operator|=
 name|coder
 operator|->
-name|pos_slot
+name|dist_slot
 index|[
-name|get_len_to_pos_state
+name|get_dist_state
 argument_list|(
 name|len
 argument_list|)
@@ -1316,7 +1325,7 @@ ifdef|#
 directive|ifdef
 name|HAVE_SMALL
 case|case
-name|SEQ_POS_SLOT
+name|SEQ_DIST_SLOT
 case|:
 do|do
 block|{
@@ -1327,7 +1336,7 @@ index|[
 name|symbol
 index|]
 argument_list|, , ,
-name|SEQ_POS_SLOT
+name|SEQ_DIST_SLOT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1335,7 +1344,7 @@ do|while
 condition|(
 name|symbol
 operator|<
-name|POS_SLOTS
+name|DIST_SLOTS
 condition|)
 do|;
 else|#
@@ -1347,7 +1356,7 @@ index|[
 name|symbol
 index|]
 argument_list|, , ,
-name|SEQ_POS_SLOT0
+name|SEQ_DIST_SLOT0
 argument_list|)
 expr_stmt|;
 name|rc_bit_case
@@ -1357,7 +1366,7 @@ index|[
 name|symbol
 index|]
 argument_list|, , ,
-name|SEQ_POS_SLOT1
+name|SEQ_DIST_SLOT1
 argument_list|)
 expr_stmt|;
 name|rc_bit_case
@@ -1367,7 +1376,7 @@ index|[
 name|symbol
 index|]
 argument_list|, , ,
-name|SEQ_POS_SLOT2
+name|SEQ_DIST_SLOT2
 argument_list|)
 expr_stmt|;
 name|rc_bit_case
@@ -1377,7 +1386,7 @@ index|[
 name|symbol
 index|]
 argument_list|, , ,
-name|SEQ_POS_SLOT3
+name|SEQ_DIST_SLOT3
 argument_list|)
 expr_stmt|;
 name|rc_bit_case
@@ -1387,7 +1396,7 @@ index|[
 name|symbol
 index|]
 argument_list|, , ,
-name|SEQ_POS_SLOT4
+name|SEQ_DIST_SLOT4
 argument_list|)
 expr_stmt|;
 name|rc_bit_case
@@ -1397,7 +1406,7 @@ index|[
 name|symbol
 index|]
 argument_list|, , ,
-name|SEQ_POS_SLOT5
+name|SEQ_DIST_SLOT5
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1406,7 +1415,7 @@ comment|// Get rid of the highest bit that was needed for
 comment|// indexing of the probability array.
 name|symbol
 operator|-=
-name|POS_SLOTS
+name|DIST_SLOTS
 expr_stmt|;
 name|assert
 argument_list|(
@@ -1419,7 +1428,7 @@ if|if
 condition|(
 name|symbol
 operator|<
-name|START_POS_MODEL_INDEX
+name|DIST_MODEL_START
 condition|)
 block|{
 comment|// Match distances [0, 3] have only two bits.
@@ -1467,7 +1476,7 @@ if|if
 condition|(
 name|symbol
 operator|<
-name|END_POS_MODEL_INDEX
+name|DIST_MODEL_END
 condition|)
 block|{
 comment|// Prepare to decode the low bits for
@@ -1550,7 +1559,7 @@ operator|=
 literal|0
 expr_stmt|;
 case|case
-name|SEQ_POS_MODEL
+name|SEQ_DIST_MODEL
 case|:
 ifdef|#
 directive|ifdef
@@ -1570,7 +1579,7 @@ literal|1
 operator|<<
 name|offset
 argument_list|,
-name|SEQ_POS_MODEL
+name|SEQ_DIST_MODEL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1610,7 +1619,7 @@ name|rep0
 operator|+=
 literal|1
 argument_list|,
-name|SEQ_POS_MODEL
+name|SEQ_DIST_MODEL
 argument_list|)
 expr_stmt|;
 operator|++
@@ -1635,7 +1644,7 @@ literal|1
 operator|<<
 name|offset
 argument_list|,
-name|SEQ_POS_MODEL
+name|SEQ_DIST_MODEL
 argument_list|)
 expr_stmt|;
 operator|++
@@ -1660,7 +1669,7 @@ literal|1
 operator|<<
 name|offset
 argument_list|,
-name|SEQ_POS_MODEL
+name|SEQ_DIST_MODEL
 argument_list|)
 expr_stmt|;
 operator|++
@@ -1685,7 +1694,7 @@ literal|1
 operator|<<
 name|offset
 argument_list|,
-name|SEQ_POS_MODEL
+name|SEQ_DIST_MODEL
 argument_list|)
 expr_stmt|;
 operator|++
@@ -1716,7 +1725,7 @@ literal|1
 operator|<<
 name|offset
 argument_list|,
-name|SEQ_POS_MODEL
+name|SEQ_DIST_MODEL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1886,7 +1895,7 @@ expr_stmt|;
 case|case
 name|SEQ_ALIGN3
 case|:
-comment|// Like in SEQ_POS_MODEL, we don't
+comment|// Like in SEQ_DIST_MODEL, we don't
 comment|// need "symbol" for anything else
 comment|// than indexing the probability array.
 name|rc_bit_last
@@ -2795,7 +2804,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|LEN_TO_POS_STATES
+name|DIST_STATES
 condition|;
 operator|++
 name|i
@@ -2804,12 +2813,12 @@ name|bittree_reset
 argument_list|(
 name|coder
 operator|->
-name|pos_slot
+name|dist_slot
 index|[
 name|i
 index|]
 argument_list|,
-name|POS_SLOT_BITS
+name|DIST_SLOT_BITS
 argument_list|)
 expr_stmt|;
 for|for
@@ -2823,7 +2832,7 @@ name|i
 operator|<
 name|FULL_DISTANCES
 operator|-
-name|END_POS_MODEL_INDEX
+name|DIST_MODEL_END
 condition|;
 operator|++
 name|i
@@ -3037,6 +3046,7 @@ name|lzma_lz_decoder
 modifier|*
 name|lz
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -3167,6 +3177,7 @@ name|lzma_lz_decoder
 modifier|*
 name|lz
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -3239,6 +3250,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -3444,6 +3456,7 @@ modifier|*
 modifier|*
 name|options
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator

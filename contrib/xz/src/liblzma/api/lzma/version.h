@@ -39,14 +39,14 @@ begin_define
 define|#
 directive|define
 name|LZMA_VERSION_MINOR
-value|0
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|LZMA_VERSION_PATCH
-value|7
+value|0
 end_define
 
 begin_define
