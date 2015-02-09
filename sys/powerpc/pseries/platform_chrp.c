@@ -173,14 +173,21 @@ specifier|static
 name|uint8_t
 name|splpar_vpa
 index|[
+name|MAXCPU
+index|]
+index|[
 literal|640
 index|]
 name|__aligned
 argument_list|(
-literal|64
+literal|128
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX: dpcpu */
+end_comment
 
 begin_endif
 endif|#
@@ -577,6 +584,9 @@ name|platform_t
 name|plat
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__powerpc64__
@@ -641,9 +651,26 @@ operator|=
 name|phyp_cpu_idle
 expr_stmt|;
 comment|/* Set up important VPA fields */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXCPU
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|bzero
 argument_list|(
 name|splpar_vpa
+index|[
+name|i
+index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -651,7 +678,11 @@ name|splpar_vpa
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* First two: VPA size */
 name|splpar_vpa
+index|[
+name|i
+index|]
 index|[
 literal|4
 index|]
@@ -664,6 +695,9 @@ operator|(
 sizeof|sizeof
 argument_list|(
 name|splpar_vpa
+index|[
+name|i
+index|]
 argument_list|)
 operator|>>
 literal|8
@@ -673,6 +707,9 @@ literal|0xff
 argument_list|)
 expr_stmt|;
 name|splpar_vpa
+index|[
+name|i
+index|]
 index|[
 literal|5
 index|]
@@ -684,12 +721,18 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 name|splpar_vpa
+index|[
+name|i
+index|]
 argument_list|)
 operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
 name|splpar_vpa
+index|[
+name|i
+index|]
 index|[
 literal|0xba
 index|]
@@ -699,6 +742,9 @@ expr_stmt|;
 comment|/* Maintain FPRs */
 name|splpar_vpa
 index|[
+name|i
+index|]
+index|[
 literal|0xbb
 index|]
 operator|=
@@ -706,6 +752,9 @@ literal|1
 expr_stmt|;
 comment|/* Maintain PMCs */
 name|splpar_vpa
+index|[
+name|i
+index|]
 index|[
 literal|0xfc
 index|]
@@ -715,6 +764,9 @@ expr_stmt|;
 comment|/* Maintain full SLB */
 name|splpar_vpa
 index|[
+name|i
+index|]
+index|[
 literal|0xfd
 index|]
 operator|=
@@ -722,12 +774,16 @@ literal|0xff
 expr_stmt|;
 name|splpar_vpa
 index|[
+name|i
+index|]
+index|[
 literal|0xff
 index|]
 operator|=
 literal|1
 expr_stmt|;
 comment|/* Maintain Altivec */
+block|}
 name|mb
 argument_list|()
 expr_stmt|;
@@ -2370,14 +2426,6 @@ name|PSL_HV
 operator|)
 condition|)
 block|{
-comment|/* Set interrupt priority */
-name|phyp_hcall
-argument_list|(
-name|H_CPPR
-argument_list|,
-literal|0xff
-argument_list|)
-expr_stmt|;
 comment|/* Register VPA */
 name|phyp_hcall
 argument_list|(
@@ -2391,6 +2439,20 @@ name|cpuid
 argument_list|)
 argument_list|,
 name|splpar_vpa
+index|[
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* Set interrupt priority */
+name|phyp_hcall
+argument_list|(
+name|H_CPPR
+argument_list|,
+literal|0xff
 argument_list|)
 expr_stmt|;
 block|}
