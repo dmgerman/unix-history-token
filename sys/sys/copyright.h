@@ -8,6 +8,18 @@ comment|/* Copyrights macros  */
 end_comment
 
 begin_comment
+comment|/* Add a FreeBSD vendor copyright here */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COPYRIGHT_Vendor
+define|\
+value|""
+end_define
+
+begin_comment
 comment|/* FreeBSD */
 end_comment
 
@@ -85,8 +97,10 @@ name|char
 name|copyright
 index|[]
 init|=
+name|COPYRIGHT_Vendor
 name|COPYRIGHT_FreeBSD
 name|COPYRIGHT_PC98
+expr|\
 name|COPYRIGHT_UCB
 decl_stmt|;
 end_decl_stmt
