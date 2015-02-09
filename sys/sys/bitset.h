@@ -352,7 +352,7 @@ name|_s
 parameter_list|,
 name|p
 parameter_list|)
-value|__extension__ ({				\ 	__size_t __i;							\ 	int __count;							\ 									\ 	__count = 0;							\ 	for (__i = 0; __i< __bitset_words((_s)); __i++)		\ 		__count += __builtin_popcount((p)->__bits[__i]);	\ 	__count;							\ })
+value|__extension__ ({				\ 	__size_t __i;							\ 	int __count;							\ 									\ 	__count = 0;							\ 	for (__i = 0; __i< __bitset_words((_s)); __i++)		\ 		__count += __builtin_popcountl((p)->__bits[__i]);	\ 	__count;							\ })
 end_define
 
 begin_endif
