@@ -1220,14 +1220,9 @@ name|short
 name|release_count
 decl_stmt|;
 block|}
-name|__packed
 name|VCHIQ_SLOT_INFO_T
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* XXXGONZO: check it */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -1459,7 +1454,6 @@ name|DEBUG_MAX
 index|]
 decl_stmt|;
 block|}
-name|__packed
 name|VCHIQ_SHARED_STATE_T
 typedef|;
 end_typedef
@@ -1509,7 +1503,6 @@ name|VCHIQ_MAX_SLOTS
 index|]
 decl_stmt|;
 block|}
-name|__packed
 name|VCHIQ_SLOT_ZERO_T
 typedef|;
 end_typedef
