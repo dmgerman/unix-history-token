@@ -260,6 +260,15 @@ name|launch_info
 argument_list|)
 block|;
 name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|KillProcess
+argument_list|(
+argument|const lldb::pid_t pid
+argument_list|)
+block|;
+name|virtual
 name|lldb
 operator|::
 name|ProcessSP
@@ -659,6 +668,11 @@ name|string
 name|m_platform_description
 block|;
 comment|// After we connect we can get a more complete description of what we are connected to
+name|std
+operator|::
+name|string
+name|m_platform_hostname
+block|;
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN

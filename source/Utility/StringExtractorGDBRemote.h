@@ -295,6 +295,9 @@ name|eServerPacketType_G
 block|,
 name|eServerPacketType_H
 block|,
+name|eServerPacketType_I
+block|,
+comment|// stdin notification
 name|eServerPacketType_k
 block|,
 name|eServerPacketType_m

@@ -2483,6 +2483,13 @@ literal|"large stack "
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mode
+operator|==
+name|UNWIND_X86_64_MODE_STACK_IND
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"frameless function: stack size %d, register count %d "
@@ -2494,6 +2501,19 @@ argument_list|,
 name|register_count
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"frameless function: stack size %d, register count %d "
+argument_list|,
+name|stack_size
+argument_list|,
+name|register_count
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|register_count
@@ -2995,6 +3015,23 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|mode
+operator|==
+name|UNWIND_X86_64_MODE_STACK_IND
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" CFA is rsp+%d "
+argument_list|,
+name|stack_size
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|" CFA is rsp+%d "
@@ -3004,6 +3041,7 @@ operator|*
 literal|8
 argument_list|)
 expr_stmt|;
+block|}
 name|uint32_t
 name|saved_registers_offset
 init|=
@@ -3072,6 +3110,9 @@ operator|*
 literal|8
 argument_list|)
 expr_stmt|;
+name|saved_registers_offset
+operator|++
+expr_stmt|;
 break|break;
 case|case
 name|UNWIND_X86_64_REG_R12
@@ -3084,6 +3125,9 @@ name|saved_registers_offset
 operator|*
 literal|8
 argument_list|)
+expr_stmt|;
+name|saved_registers_offset
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -3098,6 +3142,9 @@ operator|*
 literal|8
 argument_list|)
 expr_stmt|;
+name|saved_registers_offset
+operator|++
+expr_stmt|;
 break|break;
 case|case
 name|UNWIND_X86_64_REG_R14
@@ -3110,6 +3157,9 @@ name|saved_registers_offset
 operator|*
 literal|8
 argument_list|)
+expr_stmt|;
+name|saved_registers_offset
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -3124,6 +3174,9 @@ operator|*
 literal|8
 argument_list|)
 expr_stmt|;
+name|saved_registers_offset
+operator|++
+expr_stmt|;
 break|break;
 case|case
 name|UNWIND_X86_64_REG_RBP
@@ -3137,11 +3190,11 @@ operator|*
 literal|8
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 name|saved_registers_offset
 operator|++
 expr_stmt|;
+break|break;
+block|}
 block|}
 block|}
 block|}
@@ -3453,6 +3506,25 @@ literal|"large stack "
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mode
+operator|==
+name|UNWIND_X86_MODE_STACK_IND
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"frameless function: stack size %d, register count %d "
+argument_list|,
+name|stack_size
+argument_list|,
+name|register_count
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"frameless function: stack size %d, register count %d "
@@ -3464,6 +3536,7 @@ argument_list|,
 name|register_count
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|register_count
@@ -3965,6 +4038,23 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|mode
+operator|==
+name|UNWIND_X86_MODE_STACK_IND
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" CFA is esp+%d "
+argument_list|,
+name|stack_size
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|" CFA is esp+%d "
@@ -3974,6 +4064,7 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
+block|}
 name|uint32_t
 name|saved_registers_offset
 init|=
@@ -4042,6 +4133,9 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
+name|saved_registers_offset
+operator|++
+expr_stmt|;
 break|break;
 case|case
 name|UNWIND_X86_REG_ECX
@@ -4054,6 +4148,9 @@ name|saved_registers_offset
 operator|*
 literal|4
 argument_list|)
+expr_stmt|;
+name|saved_registers_offset
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -4068,6 +4165,9 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
+name|saved_registers_offset
+operator|++
+expr_stmt|;
 break|break;
 case|case
 name|UNWIND_X86_REG_EDI
@@ -4080,6 +4180,9 @@ name|saved_registers_offset
 operator|*
 literal|4
 argument_list|)
+expr_stmt|;
+name|saved_registers_offset
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -4094,6 +4197,9 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
+name|saved_registers_offset
+operator|++
+expr_stmt|;
 break|break;
 case|case
 name|UNWIND_X86_REG_EBP
@@ -4107,11 +4213,11 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 name|saved_registers_offset
 operator|++
 expr_stmt|;
+break|break;
+block|}
 block|}
 block|}
 block|}

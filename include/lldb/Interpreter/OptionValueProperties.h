@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/FormatEntity.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/UniqueCStringMap.h"
 end_include
 
@@ -599,6 +605,18 @@ name|int64_t
 name|new_value
 parameter_list|)
 function_decl|;
+specifier|const
+name|FormatEntity
+operator|::
+name|Entry
+operator|*
+name|GetPropertyAtIndexAsFormatEntity
+argument_list|(
+argument|const ExecutionContext *exe_ctx
+argument_list|,
+argument|uint32_t idx
+argument_list|)
+expr_stmt|;
 specifier|const
 name|RegularExpression
 modifier|*

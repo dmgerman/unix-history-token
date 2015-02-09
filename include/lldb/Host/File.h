@@ -182,6 +182,15 @@ literal|1u
 operator|<<
 literal|7
 operator|)
+block|,
+name|eOpenOptionCloseOnExec
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|8
+operator|)
+comment|// Close the file when executing a new process
 block|}
 block|;
 specifier|static

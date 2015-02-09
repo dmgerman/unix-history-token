@@ -144,7 +144,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBBreakpoint.h>
+file|"lldb/API/SBBreakpoint.h"
 end_include
 
 begin_comment

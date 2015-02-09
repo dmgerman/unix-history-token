@@ -65,6 +65,12 @@ directive|include
 file|"lldb/lldb-private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/common/NativeWatchpointList.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -110,6 +116,14 @@ comment|// InvalidateAllRegisters () = 0;
 name|virtual
 name|uint32_t
 name|GetRegisterCount
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|uint32_t
+name|GetUserRegisterCount
 argument_list|()
 specifier|const
 operator|=
@@ -271,6 +285,11 @@ name|ClearHardwareWatchpoint
 argument_list|(
 argument|uint32_t hw_index
 argument_list|)
+block|;
+name|virtual
+name|Error
+name|ClearAllHardwareWatchpoints
+argument_list|()
 block|;
 name|virtual
 name|bool

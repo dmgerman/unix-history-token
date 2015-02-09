@@ -1270,6 +1270,29 @@ name|bool
 name|IgnoreCountShouldStop
 parameter_list|()
 function_decl|;
+name|void
+name|IncrementHitCount
+parameter_list|()
+block|{
+name|m_hit_count
+operator|++
+expr_stmt|;
+block|}
+name|void
+name|DecrementHitCount
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|m_hit_count
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+name|m_hit_count
+operator|--
+expr_stmt|;
+block|}
 name|private
 label|:
 comment|// This one should only be used by Target to copy breakpoints from target to target - primarily from the dummy
@@ -1339,6 +1362,12 @@ expr_stmt|;
 name|bool
 name|m_resolve_indirect_symbols
 decl_stmt|;
+name|uint32_t
+name|m_hit_count
+decl_stmt|;
+comment|// Number of times this breakpoint/watchpoint has been hit.  This is kept
+comment|// separately from the locations hit counts, since locations can go away when
+comment|// their backing library gets unloaded, and we would lose hit counts.
 name|void
 name|SendBreakpointChangedEvent
 argument_list|(

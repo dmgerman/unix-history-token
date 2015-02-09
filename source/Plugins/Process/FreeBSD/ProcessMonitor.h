@@ -273,7 +273,8 @@ comment|///
 comment|/// Reads from this file descriptor yield both the standard output and
 comment|/// standard error of this debugee.  Even if stderr and stdout were
 comment|/// redirected on launch it may still happen that data is available on this
-comment|/// descriptor (if the inferior process opens /dev/tty, for example).
+comment|/// descriptor (if the inferior process opens /dev/tty, for example). This descriptor is
+comment|/// closed after a call to StopMonitor().
 comment|///
 comment|/// If this monitor was attached to an existing process this method returns
 comment|/// -1.
@@ -1059,54 +1060,6 @@ name|pid_t
 name|pid
 argument_list|)
 decl_stmt|;
-specifier|static
-name|ProcessMessage
-operator|::
-name|CrashReason
-name|GetCrashReasonForSIGSEGV
-argument_list|(
-specifier|const
-name|siginfo_t
-operator|*
-name|info
-argument_list|)
-expr_stmt|;
-specifier|static
-name|ProcessMessage
-operator|::
-name|CrashReason
-name|GetCrashReasonForSIGILL
-argument_list|(
-specifier|const
-name|siginfo_t
-operator|*
-name|info
-argument_list|)
-expr_stmt|;
-specifier|static
-name|ProcessMessage
-operator|::
-name|CrashReason
-name|GetCrashReasonForSIGFPE
-argument_list|(
-specifier|const
-name|siginfo_t
-operator|*
-name|info
-argument_list|)
-expr_stmt|;
-specifier|static
-name|ProcessMessage
-operator|::
-name|CrashReason
-name|GetCrashReasonForSIGBUS
-argument_list|(
-specifier|const
-name|siginfo_t
-operator|*
-name|info
-argument_list|)
-expr_stmt|;
 name|void
 name|DoOperation
 parameter_list|(

@@ -100,25 +100,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBDebugger.h>
+file|"lldb/API/SBDebugger.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBListener.h>
+file|"lldb/API/SBListener.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBProcess.h>
+file|"lldb/API/SBProcess.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBTarget.h>
+file|"lldb/API/SBTarget.h"
 end_include
 
 begin_comment
@@ -153,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|"MIUtilMapIdToVariant.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MIUtilThreadBaseStd.h"
 end_include
 
 begin_comment
@@ -449,6 +455,21 @@ operator|<<
 literal|3
 operator|)
 comment|// Arguments.
+block|}
+enum|;
+comment|//++ ===================================================================
+comment|// Details: Determine the information that should be shown by using MIResponseFormVariableInfo family functions.
+comment|//--
+enum|enum
+name|VariableInfoFormat_e
+block|{
+name|eVariableInfoFormat_NoValues
+block|,
+name|eVariableInfoFormat_AllValues
+block|,
+name|eVariableInfoFormat_SimpleValues
+block|,
+name|kNumVariableInfoFormats
 block|}
 enum|;
 comment|// Typedefs:
@@ -798,6 +819,10 @@ specifier|const
 name|MIuint
 name|vMaskVarTypes
 argument_list|,
+specifier|const
+name|VariableInfoFormat_e
+name|veVarInfoFormat
+argument_list|,
 name|CMICmnMIValueList
 operator|&
 name|vwrMiValueList
@@ -817,6 +842,10 @@ specifier|const
 name|MIuint
 name|vMaskVarTypes
 argument_list|,
+specifier|const
+name|VariableInfoFormat_e
+name|veVarInfoFormat
+argument_list|,
 name|CMICmnMIValueList
 operator|&
 name|vwrMiValueList
@@ -835,6 +864,10 @@ argument_list|,
 specifier|const
 name|MIuint
 name|vMaskVarTypes
+argument_list|,
+specifier|const
+name|VariableInfoFormat_e
+name|veVarInfoFormat
 argument_list|,
 name|CMICmnMIValueList
 operator|&
@@ -917,32 +950,49 @@ name|MIuint
 name|vnBrkPtId
 parameter_list|)
 function_decl|;
-comment|// Attributes:
-name|public
-label|:
-comment|// The following are available to all command instances
+name|CMIUtilThreadMutex
+modifier|&
+name|GetSessionMutex
+parameter_list|()
+block|{
+return|return
+name|m_sessionMutex
+return|;
+block|}
 name|lldb
 operator|::
 name|SBDebugger
 operator|&
-name|m_rLldbDebugger
+name|GetDebugger
+argument_list|()
+specifier|const
 expr_stmt|;
 name|lldb
 operator|::
 name|SBListener
 operator|&
-name|m_rLlldbListener
+name|GetListener
+argument_list|()
+specifier|const
 expr_stmt|;
 name|lldb
 operator|::
 name|SBTarget
-name|m_lldbTarget
+name|GetTarget
+argument_list|()
+specifier|const
 expr_stmt|;
 name|lldb
 operator|::
 name|SBProcess
-name|m_lldbProcess
+name|GetProcess
+argument_list|()
+specifier|const
 expr_stmt|;
+comment|// Attributes:
+name|public
+label|:
+comment|// The following are available to all command instances
 specifier|const
 name|MIuint
 name|m_nBrkPointCntMax
@@ -1044,6 +1094,10 @@ specifier|const
 name|bool
 name|vbIsChildValue
 argument_list|,
+specifier|const
+name|VariableInfoFormat_e
+name|veVarInfoFormat
+argument_list|,
 name|CMICmnMIValueList
 operator|&
 name|vwrMiValueList
@@ -1070,6 +1124,10 @@ argument_list|,
 specifier|const
 name|bool
 name|vbIsChildValue
+argument_list|,
+specifier|const
+name|VariableInfoFormat_e
+name|veVarInfoFormat
 argument_list|,
 name|CMICmnMIValueList
 operator|&
@@ -1105,6 +1163,9 @@ decl_stmt|;
 comment|// Vector of session variable objects
 name|MapBrkPtIdToBrkPtInfo_t
 name|m_mapBrkPtIdToBrkPtInfo
+decl_stmt|;
+name|CMIUtilThreadMutex
+name|m_sessionMutex
 decl_stmt|;
 block|}
 end_decl_stmt

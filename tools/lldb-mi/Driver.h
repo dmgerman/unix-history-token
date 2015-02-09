@@ -66,7 +66,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<lldb/Utility/PseudoTerminal.h>
+file|"lldb/Utility/PseudoTerminal.h"
 end_include
 
 begin_include
@@ -96,25 +96,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBDefines.h>
+file|"lldb/API/SBDefines.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBBroadcaster.h>
+file|"lldb/API/SBBroadcaster.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBDebugger.h>
+file|"lldb/API/SBDebugger.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBError.h>
+file|"lldb/API/SBError.h"
 end_include
 
 begin_include

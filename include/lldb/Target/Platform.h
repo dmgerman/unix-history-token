@@ -130,7 +130,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../../../source/Host/common/NativeProcessProtocol.h"
+file|"lldb/Host/common/NativeProcessProtocol.h"
 end_include
 
 begin_decl_stmt
@@ -784,6 +784,16 @@ name|launch_info
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
+comment|/// Kill process on a platform.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|KillProcess
+argument_list|(
+argument|const lldb::pid_t pid
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
 comment|/// Lets a platform answer if it is compatible with a given
 comment|/// architecture and the target triple contained within.
 comment|//------------------------------------------------------------------
@@ -1125,6 +1135,10 @@ name|virtual
 name|void
 name|AddClangModuleCompilationOptions
 argument_list|(
+name|Target
+operator|*
+name|target
+argument_list|,
 name|std
 operator|::
 name|vector
@@ -1908,11 +1922,9 @@ operator|>
 name|IDToNameMap
 expr_stmt|;
 name|Mutex
-name|m_uid_map_mutex
+name|m_mutex
 decl_stmt|;
-name|Mutex
-name|m_gid_map_mutex
-decl_stmt|;
+comment|// Mutex for modifying Platform data structures that should only be used for non-reentrant code
 name|IDToNameMap
 name|m_uid_map
 decl_stmt|;
@@ -1965,9 +1977,6 @@ expr_stmt|;
 name|bool
 name|m_calculated_trap_handlers
 decl_stmt|;
-name|Mutex
-name|m_trap_handler_mutex
-decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Ask the Platform subclass to fill in the list of trap handler names
 comment|///
@@ -2002,7 +2011,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_uid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|IDToNameMap
@@ -2068,7 +2077,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_uid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|ConstString
@@ -2114,7 +2123,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_uid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|m_uid_map
@@ -2135,7 +2144,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_uid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|m_uid_map
@@ -2158,7 +2167,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_gid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|IDToNameMap
@@ -2224,7 +2233,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_gid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|ConstString
@@ -2270,7 +2279,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_gid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|m_gid_map
@@ -2291,7 +2300,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_gid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|m_gid_map

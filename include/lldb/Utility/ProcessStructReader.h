@@ -254,7 +254,9 @@ init|=
 name|field_type
 operator|.
 name|GetByteSize
-argument_list|()
+argument_list|(
+name|nullptr
+argument_list|)
 decl_stmt|;
 comment|// no support for things larger than a uint64_t (yet)
 if|if
@@ -315,7 +317,9 @@ init|=
 name|struct_type
 operator|.
 name|GetByteSize
-argument_list|()
+argument_list|(
+name|nullptr
+argument_list|)
 decl_stmt|;
 name|lldb
 operator|::

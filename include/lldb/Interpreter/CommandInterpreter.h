@@ -613,6 +613,11 @@ init|=
 literal|0x0004
 block|,
 comment|// aliases such as "po"
+name|eCommandTypesHidden
+init|=
+literal|0x0008
+block|,
+comment|// commands prefixed with an underscore
 name|eCommandTypesAllThem
 init|=
 literal|0xFFFF
@@ -1156,6 +1161,24 @@ name|OutputFormattedHelpText
 parameter_list|(
 name|Stream
 modifier|&
+name|strm
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|prefix
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|help_text
+parameter_list|)
+function_decl|;
+name|void
+name|OutputFormattedHelpText
+parameter_list|(
+name|Stream
+modifier|&
 name|stream
 parameter_list|,
 specifier|const
@@ -1579,6 +1602,12 @@ name|void
 modifier|*
 name|baton
 parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|GetCommandPrefix
+parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|// Properties

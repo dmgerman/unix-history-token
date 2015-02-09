@@ -174,6 +174,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MICmnLLDBDebugSessionInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"MICmnLLDBDebugSessionInfoVarObj.h"
 end_include
 
@@ -462,6 +468,11 @@ name|private
 operator|:
 name|CMIUtilString
 name|m_strValueName
+block|;
+name|CMICmnLLDBDebugSessionInfo
+operator|::
+name|VariableInfoFormat_e
+name|m_eVarInfoFormat
 block|;
 specifier|const
 name|CMIUtilString
@@ -941,14 +952,31 @@ name|m_constStrArgPrintValues
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|// Not handled by *this command
-end_comment
-
 begin_decl_stmt
 specifier|const
 name|CMIUtilString
 name|m_constStrArgName
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|CMIUtilString
+name|m_constStrArgNoValues
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|CMIUtilString
+name|m_constStrArgAllValues
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|CMIUtilString
+name|m_constStrArgSimpleValues
 decl_stmt|;
 end_decl_stmt
 

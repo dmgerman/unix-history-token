@@ -506,8 +506,18 @@ specifier|const
 name|CMIUtilString
 name|m_constStrArgPrintValues
 block|;
-comment|// Not handled by *this command
-block|}
+specifier|const
+name|CMIUtilString
+name|m_constStrArgNoValues
+block|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgAllValues
+block|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgSimpleValues
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -625,8 +635,18 @@ specifier|const
 name|CMIUtilString
 name|m_constStrArgPrintValues
 block|;
-comment|// Not handled by *this command
-block|}
+specifier|const
+name|CMIUtilString
+name|m_constStrArgNoValues
+block|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgAllValues
+block|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgSimpleValues
+block|; }
 decl_stmt|;
 end_decl_stmt
 

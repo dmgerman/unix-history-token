@@ -136,7 +136,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBCommandReturnObject.h>
+file|"lldb/API/SBCommandReturnObject.h"
 end_include
 
 begin_comment

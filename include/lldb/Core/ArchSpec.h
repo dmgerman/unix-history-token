@@ -562,6 +562,27 @@ argument_list|()
 return|;
 block|}
 comment|//------------------------------------------------------------------
+comment|/// Merges fields from another ArchSpec into this ArchSpec.
+comment|///
+comment|/// This will use the supplied ArchSpec to fill in any fields of
+comment|/// the triple in this ArchSpec which were unspecified.  This can
+comment|/// be used to refine a generic ArchSpec with a more specific one.
+comment|/// For example, if this ArchSpec's triple is something like
+comment|/// i386-unknown-unknown-unknown, and we have a triple which is
+comment|/// x64-pc-windows-msvc, then merging that triple into this one
+comment|/// will result in the triple i386-pc-windows-msvc.
+comment|///
+comment|//------------------------------------------------------------------
+name|void
+name|MergeFrom
+parameter_list|(
+specifier|const
+name|ArchSpec
+modifier|&
+name|other
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
 comment|/// Sets this ArchSpec according to the given architecture name.
 comment|///
 comment|/// The architecture name can be one of the generic system default

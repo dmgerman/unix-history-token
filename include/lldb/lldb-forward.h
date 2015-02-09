@@ -456,6 +456,9 @@ name|class
 name|OptionValueFormat
 decl_stmt|;
 name|class
+name|OptionValueFormatEntity
+decl_stmt|;
+name|class
 name|OptionValuePathMappings
 decl_stmt|;
 name|class

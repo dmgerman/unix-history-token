@@ -636,6 +636,11 @@ modifier|*
 name|symbol
 decl_stmt|;
 comment|///< The Symbol for a given query
+name|Variable
+modifier|*
+name|variable
+decl_stmt|;
+comment|///< The global variable matching the given query
 block|}
 empty_stmt|;
 name|class

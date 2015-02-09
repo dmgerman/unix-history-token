@@ -68,13 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"CrashReason.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"POSIXThread.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ProcessMessage.h"
+file|<string>
 end_include
 
 begin_comment
@@ -232,28 +238,11 @@ argument|POSIXThread&thread
 argument_list|,
 argument|uint32_t status
 argument_list|,
-argument|ProcessMessage::CrashReason reason
+argument|CrashReason reason
 argument_list|,
 argument|lldb::addr_t fault_addr
 argument_list|)
-operator|:
-name|POSIXStopInfo
-argument_list|(
-name|thread
-argument_list|,
-name|status
-argument_list|)
-block|,
-name|m_crash_reason
-argument_list|(
-name|reason
-argument_list|)
-block|,
-name|m_fault_addr
-argument_list|(
-argument|fault_addr
-argument_list|)
-block|{ }
+block|;
 operator|~
 name|POSIXCrashStopInfo
 argument_list|()
@@ -264,24 +253,6 @@ name|StopReason
 name|GetStopReason
 argument_list|()
 specifier|const
-block|;
-specifier|const
-name|char
-operator|*
-name|GetDescription
-argument_list|()
-block|;
-name|private
-operator|:
-name|ProcessMessage
-operator|::
-name|CrashReason
-name|m_crash_reason
-block|;
-name|lldb
-operator|::
-name|addr_t
-name|m_fault_addr
 block|; }
 decl_stmt|;
 end_decl_stmt

@@ -274,7 +274,15 @@ operator|-
 name|k_first_avx_i386
 operator|+
 literal|1
-block|}
+block|,
+name|k_num_user_registers_i386
+init|=
+name|k_num_gpr_registers_i386
+operator|+
+name|k_num_fpr_registers_i386
+operator|+
+name|k_num_avx_registers_i386
+block|,     }
 enum|;
 comment|//---------------------------------------------------------------------------
 comment|// Internal codes for all x86_64 registers.
@@ -646,7 +654,15 @@ operator|-
 name|k_first_avx_x86_64
 operator|+
 literal|1
-block|}
+block|,
+name|k_num_user_registers_x86_64
+init|=
+name|k_num_gpr_registers_x86_64
+operator|+
+name|k_num_fpr_registers_x86_64
+operator|+
+name|k_num_avx_registers_x86_64
+block|,     }
 enum|;
 block|}
 end_decl_stmt

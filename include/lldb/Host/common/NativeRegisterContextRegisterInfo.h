@@ -92,6 +92,12 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|uint32_t
+name|GetUserRegisterCount
+argument_list|()
+specifier|const
+name|override
+block|;
 specifier|const
 name|RegisterInfo
 operator|*

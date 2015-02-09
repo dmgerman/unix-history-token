@@ -986,21 +986,6 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|pid_t
-name|LaunchApplication
-argument_list|(
-specifier|const
-name|FileSpec
-operator|&
-name|app_file_spec
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|Error

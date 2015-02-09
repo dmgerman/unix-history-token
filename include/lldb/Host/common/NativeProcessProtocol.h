@@ -79,6 +79,12 @@ directive|include
 file|"NativeBreakpointList.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"NativeWatchpointList.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -332,6 +338,16 @@ block|;
 comment|//----------------------------------------------------------------------
 comment|// Watchpoint functions
 comment|//----------------------------------------------------------------------
+name|virtual
+specifier|const
+name|NativeWatchpointList
+operator|::
+name|WatchpointMap
+operator|&
+name|GetWatchpointMap
+argument_list|()
+specifier|const
+block|;
 name|virtual
 name|uint32_t
 name|GetMaxWatchpoints
@@ -684,6 +700,9 @@ name|m_delegates
 block|;
 name|NativeBreakpointList
 name|m_breakpoint_list
+block|;
+name|NativeWatchpointList
+name|m_watchpoint_list
 block|;
 name|int
 name|m_terminal_fd

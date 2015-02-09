@@ -92,6 +92,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/FormatEntity.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/ValueObject.h"
 end_include
 
@@ -1093,7 +1105,15 @@ block|{
 name|std
 operator|::
 name|string
+name|m_format_str
+block|;
+name|FormatEntity
+operator|::
+name|Entry
 name|m_format
+block|;
+name|Error
+name|m_error
 block|;
 name|StringSummaryFormat
 argument_list|(
@@ -1110,6 +1130,11 @@ operator|*
 name|f
 argument_list|)
 block|;
+name|virtual
+operator|~
+name|StringSummaryFormat
+argument_list|()
+block|{         }
 specifier|const
 name|char
 operator|*
@@ -1118,7 +1143,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|m_format
+name|m_format_str
 operator|.
 name|c_str
 argument_list|()
@@ -1127,32 +1152,12 @@ block|}
 name|void
 name|SetSummaryString
 argument_list|(
-argument|const char* data
+specifier|const
+name|char
+operator|*
+name|f
 argument_list|)
-block|{
-if|if
-condition|(
-name|data
-condition|)
-name|m_format
-operator|.
-name|assign
-argument_list|(
-name|data
-argument_list|)
-expr_stmt|;
-else|else
-name|m_format
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-block|}
-name|virtual
-operator|~
-name|StringSummaryFormat
-argument_list|()
-block|{         }
+block|;
 name|virtual
 name|bool
 name|FormatObject

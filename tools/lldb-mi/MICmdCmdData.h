@@ -171,6 +171,12 @@ directive|include
 file|"MICmnMIValueList.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"MICmnLLDBDebugSessionInfoVarObj.h"
+end_include
+
 begin_comment
 comment|//++ ============================================================================
 end_comment
@@ -746,6 +752,18 @@ argument_list|(
 name|void
 argument_list|)
 block|;
+comment|// Methods:
+name|private
+operator|:
+name|lldb
+operator|::
+name|SBValue
+name|GetRegister
+argument_list|(
+argument|const MIuint vRegisterIndex
+argument_list|)
+specifier|const
+block|;
 comment|// Attributes:
 name|private
 operator|:
@@ -867,6 +885,16 @@ argument|const MIuint vRegisterIndex
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|AddToOutput
+argument_list|(
+argument|const MIuint vnIndex
+argument_list|,
+argument|const lldb::SBValue&vrValue
+argument_list|,
+argument|CMICmnLLDBDebugSessionInfoVarObj::varFormat_e veVarFormat
+argument_list|)
+block|;
 comment|// Attributes:
 name|private
 operator|:
@@ -890,12 +918,6 @@ name|m_constStrArgRegNo
 block|;
 name|CMICmnMIValueList
 name|m_miValueList
-block|;
-name|lldb
-operator|::
-name|SBProcess
-operator|*
-name|m_pProcess
 block|; }
 decl_stmt|;
 end_decl_stmt

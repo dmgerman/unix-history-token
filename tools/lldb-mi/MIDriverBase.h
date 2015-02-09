@@ -88,13 +88,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBDebugger.h>
+file|"lldb/API/SBDebugger.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBBroadcaster.h>
+file|"lldb/API/SBBroadcaster.h"
 end_include
 
 begin_comment

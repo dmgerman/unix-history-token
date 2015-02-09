@@ -202,6 +202,13 @@ argument_list|,
 argument|Error *error_ptr
 argument_list|)
 block|;
+name|virtual
+name|std
+operator|::
+name|string
+name|GetURI
+argument_list|()
+block|;
 name|lldb
 operator|::
 name|ConnectionStatus
@@ -268,7 +275,7 @@ block|;
 name|lldb
 operator|::
 name|ConnectionStatus
-name|SocketListen
+name|SocketListenAndAccept
 argument_list|(
 specifier|const
 name|char
@@ -380,6 +387,11 @@ name|m_waiting_for_accept
 block|;
 name|bool
 name|m_child_processes_inherit
+block|;
+name|std
+operator|::
+name|string
+name|m_uri
 block|;
 name|private
 operator|:

@@ -83,26 +83,6 @@ directive|include
 file|"GDBRemoteCommunication.h"
 end_include
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|eBreakpointSoftware
-init|=
-literal|0
-block|,
-name|eBreakpointHardware
-block|,
-name|eWatchpointWrite
-block|,
-name|eWatchpointRead
-block|,
-name|eWatchpointReadWrite
-block|}
-name|GDBStoppointType
-typedef|;
-end_typedef
-
 begin_decl_stmt
 name|class
 name|GDBRemoteCommunicationClient
@@ -244,7 +224,9 @@ name|lldb
 operator|::
 name|pid_t
 name|GetCurrentProcessID
-argument_list|()
+argument_list|(
+argument|bool allow_lazy = true
+argument_list|)
 block|;
 name|bool
 name|GetLaunchSuccess
@@ -373,6 +355,28 @@ argument_list|(
 argument|lldb::pid_t pid
 argument_list|,
 argument|StringExtractorGDBRemote& response
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Sends a GDB remote protocol 'I' packet that delivers stdin
+comment|/// data to the remote process.
+comment|///
+comment|/// @param[in] data
+comment|///     A pointer to stdin data.
+comment|///
+comment|/// @param[in] data_len
+comment|///     The number of bytes available at \a data.
+comment|///
+comment|/// @return
+comment|///     Zero if the attach was successful, or an error indicating
+comment|///     an error code.
+comment|//------------------------------------------------------------------
+name|int
+name|SendStdinNotification
+argument_list|(
+argument|const char* data
+argument_list|,
+argument|size_t data_len
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -793,10 +797,13 @@ case|:
 return|return
 name|m_supports_z4
 return|;
-block|}
+case|case
+name|eStoppointInvalid
+case|:
 return|return
 name|false
 return|;
+block|}
 block|}
 name|uint8_t
 name|SendGDBStoppointTypePacket
@@ -1169,7 +1176,9 @@ argument_list|)
 block|;
 name|bool
 name|GetCurrentProcessInfo
-argument_list|()
+argument_list|(
+argument|bool allow_lazy_pid = true
+argument_list|)
 block|;
 name|bool
 name|GetGDBServerVersion

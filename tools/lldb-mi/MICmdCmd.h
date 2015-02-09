@@ -138,13 +138,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBBreakpoint.h>
+file|"lldb/API/SBBreakpoint.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBCommandReturnObject.h>
+file|"lldb/API/SBCommandReturnObject.h"
 end_include
 
 begin_comment

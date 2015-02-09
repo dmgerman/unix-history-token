@@ -73,6 +73,10 @@ empty_stmt|;
 name|protected
 label|:
 name|bool
+name|IsVMX
+parameter_list|()
+function_decl|;
+name|bool
 name|ReadGPR
 parameter_list|()
 function_decl|;
@@ -81,11 +85,19 @@ name|ReadFPR
 parameter_list|()
 function_decl|;
 name|bool
+name|ReadVMX
+parameter_list|()
+function_decl|;
+name|bool
 name|WriteGPR
 parameter_list|()
 function_decl|;
 name|bool
 name|WriteFPR
+parameter_list|()
+function_decl|;
+name|bool
+name|WriteVMX
 parameter_list|()
 function_decl|;
 comment|// lldb_private::RegisterContext

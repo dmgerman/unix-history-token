@@ -665,6 +665,10 @@ name|friend
 name|class
 name|Process
 decl_stmt|;
+name|friend
+name|class
+name|StopInfoBreakpoint
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Set the breakpoint site for this location to \a bp_site_sp.
 comment|///
@@ -706,6 +710,10 @@ argument_list|)
 decl_stmt|;
 name|void
 name|BumpHitCount
+parameter_list|()
+function_decl|;
+name|void
+name|UndoBumpHitCount
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------

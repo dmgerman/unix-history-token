@@ -94,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBValue.h>
+file|"lldb/API/SBValue.h"
 end_include
 
 begin_comment

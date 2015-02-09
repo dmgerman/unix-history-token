@@ -110,7 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../../Host/common/NativeProcessProtocol.h"
+file|"lldb/Host/common/NativeProcessProtocol.h"
 end_include
 
 begin_decl_stmt
@@ -1172,6 +1172,14 @@ name|packet
 parameter_list|)
 function_decl|;
 name|PacketResult
+name|Handle_I
+parameter_list|(
+name|StringExtractorGDBRemote
+modifier|&
+name|packet
+parameter_list|)
+function_decl|;
+name|PacketResult
 name|Handle_interrupt
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -1301,6 +1309,14 @@ parameter_list|)
 function_decl|;
 name|PacketResult
 name|Handle_qThreadStopInfo
+parameter_list|(
+name|StringExtractorGDBRemote
+modifier|&
+name|packet
+parameter_list|)
+function_decl|;
+name|PacketResult
+name|Handle_qWatchpointSupportInfo
 parameter_list|(
 name|StringExtractorGDBRemote
 modifier|&

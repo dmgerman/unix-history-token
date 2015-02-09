@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -248,13 +254,13 @@ comment|/// communications protocol.
 comment|///
 comment|/// Subclasses must override this function.
 comment|///
-comment|/// @param[in] src
-comment|///     A source buffer that must be at least \a src_len bytes
+comment|/// @param[in] dst
+comment|///     A desination buffer that must be at least \a dst_len bytes
 comment|///     long.
 comment|///
-comment|/// @param[in] src_len
+comment|/// @param[in] dst_len
 comment|///     The number of bytes to attempt to write, and also the
-comment|///     number of bytes are currently available in \a src.
+comment|///     number of bytes are currently available in \a dst.
 comment|///
 comment|/// @param[out] error_ptr
 comment|///     A pointer to an error object that should be given an
@@ -271,10 +277,10 @@ argument_list|(
 specifier|const
 name|void
 operator|*
-name|buffer
+name|dst
 argument_list|,
 name|size_t
-name|length
+name|dst_len
 argument_list|,
 name|lldb
 operator|::
@@ -289,6 +295,23 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Returns a URI that describes this connection object
+comment|///
+comment|/// Subclasses may override this function.
+comment|///
+comment|/// @return
+comment|///     Returns URI or an empty string if disconnecteds
+comment|//------------------------------------------------------------------
+name|virtual
+name|std
+operator|::
+name|string
+name|GetURI
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
 name|private
 label|:
 comment|//------------------------------------------------------------------

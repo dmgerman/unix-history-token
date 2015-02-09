@@ -736,7 +736,19 @@ operator|)
 operator|-
 literal|1u
 operator|)
-comment|///< Indicates to try and lookup everything up during a query.
+block|,
+comment|///< Indicates to try and lookup everything up during a routine symbol context query.
+name|eSymbolContextVariable
+init|=
+operator|(
+literal|1u
+operator|<<
+literal|7
+operator|)
+comment|///< Set when \a global or static variable is requested from a query, or was located in query results.
+comment|///< eSymbolContextVariable is potentially expensive to lookup so it isn't included in
+comment|///< eSymbolContextEverything which stops it from being used during frame PC lookups and
+comment|///< many other potential address to symbol context lookups.
 block|}
 name|SymbolContextItem
 typedef|;
@@ -1106,6 +1118,8 @@ init|=
 literal|0x0014
 block|,
 comment|///< Python.
+comment|// NOTE: The below are DWARF5 constants, subject to change upon
+comment|// completion of the DWARF5 specification
 name|eLanguageTypeOpenCL
 init|=
 literal|0x0015
@@ -1166,6 +1180,21 @@ init|=
 literal|0x0020
 block|,
 comment|///< Dylan.
+name|eLanguageTypeC_plus_plus_14
+init|=
+literal|0x0021
+block|,
+comment|///< ISO C++:2014.
+name|eLanguageTypeFortran03
+init|=
+literal|0x0022
+block|,
+comment|///< ISO Fortran 2003.
+name|eLanguageTypeFortran08
+init|=
+literal|0x0023
+block|,
+comment|///< ISO Fortran 2008.
 name|eNumLanguageTypes
 block|}
 name|LanguageType

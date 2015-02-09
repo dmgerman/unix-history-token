@@ -100,19 +100,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBDebugger.h>
+file|"lldb/API/SBDebugger.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBListener.h>
+file|"lldb/API/SBListener.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBEvent.h>
+file|"lldb/API/SBEvent.h"
 end_include
 
 begin_comment

@@ -706,6 +706,15 @@ name|bool
 name|UpdateSOEntriesForDeletion
 parameter_list|()
 function_decl|;
+name|bool
+name|SOEntryIsMainExecutable
+parameter_list|(
+specifier|const
+name|SOEntry
+modifier|&
+name|entry
+parameter_list|)
+function_decl|;
 comment|/// Reads the current list of shared objects according to the link map
 comment|/// supplied by the runtime linker.
 name|bool

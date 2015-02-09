@@ -187,6 +187,13 @@ argument_list|,
 argument|lldb_private::Error *error_ptr
 argument_list|)
 block|;
+name|virtual
+name|std
+operator|::
+name|string
+name|GetURI
+argument_list|()
+block|;
 name|lldb
 operator|::
 name|ConnectionStatus
@@ -263,6 +270,11 @@ name|m_port
 block|;
 name|private
 operator|:
+name|std
+operator|::
+name|string
+name|m_uri
+block|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ConnectionMachPort

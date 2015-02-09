@@ -1234,11 +1234,28 @@ name|ModuleSP
 name|GetModule
 argument_list|()
 block|;
-name|virtual
 name|ValueObject
 operator|*
 name|GetRoot
 argument_list|()
+block|;
+comment|// Given a ValueObject, loop over itself and its parent, and its parent's parent, ..
+comment|// until either the given callback returns false, or you end up at a null pointer
+name|ValueObject
+operator|*
+name|FollowParentChain
+argument_list|(
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+name|ValueObject
+operator|*
+argument_list|)
+operator|>
+argument_list|)
 block|;
 name|virtual
 name|bool
@@ -2267,6 +2284,14 @@ name|LanguageType
 name|GetPreferredDisplayLanguage
 argument_list|()
 block|;
+name|void
+name|SetPreferredDisplayLanguage
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+argument_list|)
+block|;
 name|lldb
 operator|::
 name|TypeSummaryImplSP
@@ -2886,6 +2911,11 @@ operator|,
 literal|16
 operator|>
 name|m_value_checksum
+expr_stmt|;
+name|lldb
+operator|::
+name|LanguageType
+name|m_preferred_display_language
 expr_stmt|;
 name|bool
 name|m_value_is_valid

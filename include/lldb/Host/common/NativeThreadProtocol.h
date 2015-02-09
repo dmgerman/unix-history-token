@@ -171,17 +171,15 @@ argument_list|(
 name|ThreadStopInfo
 operator|&
 name|stop_info
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|description
 argument_list|)
 operator|=
 literal|0
-block|;
-name|virtual
-name|uint32_t
-name|TranslateStopInfoToGdbSignal
-argument_list|(
-argument|const ThreadStopInfo&stop_info
-argument_list|)
-specifier|const
 block|;
 name|lldb
 operator|::

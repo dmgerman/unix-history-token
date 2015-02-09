@@ -77,6 +77,12 @@ directive|include
 file|"lldb/Core/Error.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Core/FormatEntity.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -129,6 +135,8 @@ block|,
 name|eTypeUInt64
 block|,
 name|eTypeUUID
+block|,
+name|eTypeFormatEntity
 block|}
 name|Type
 typedef|;
@@ -884,6 +892,18 @@ name|GetAsUUID
 argument_list|()
 specifier|const
 expr_stmt|;
+name|OptionValueFormatEntity
+modifier|*
+name|GetAsFormatEntity
+parameter_list|()
+function_decl|;
+specifier|const
+name|OptionValueFormatEntity
+operator|*
+name|GetAsFormatEntity
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|GetBooleanValue
 argument_list|(
@@ -971,6 +991,15 @@ name|Format
 name|new_value
 argument_list|)
 decl_stmt|;
+specifier|const
+name|FormatEntity
+operator|::
+name|Entry
+operator|*
+name|GetFormatEntity
+argument_list|()
+specifier|const
+expr_stmt|;
 specifier|const
 name|RegularExpression
 operator|*

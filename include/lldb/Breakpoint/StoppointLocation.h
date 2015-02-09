@@ -284,6 +284,10 @@ operator|++
 name|m_hit_count
 expr_stmt|;
 block|}
+name|void
+name|DecrementHitCount
+parameter_list|()
+function_decl|;
 name|private
 label|:
 comment|//------------------------------------------------------------------

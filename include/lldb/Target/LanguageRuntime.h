@@ -306,6 +306,19 @@ name|SearchFilterSP
 name|CreateExceptionSearchFilter
 argument_list|()
 block|;
+name|virtual
+name|bool
+name|GetTypeBitSize
+argument_list|(
+argument|const ClangASTType& clang_type
+argument_list|,
+argument|uint64_t&size
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 name|protected
 operator|:
 comment|//------------------------------------------------------------------
