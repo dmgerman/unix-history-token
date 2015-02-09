@@ -209,6 +209,10 @@ block|,
 name|CD_Q_10_BYTE_ONLY
 init|=
 literal|0x10
+block|,
+name|CD_Q_RETRY_BUSY
+init|=
+literal|0x40
 block|}
 name|cd_quirks
 typedef|;
@@ -219,7 +223,7 @@ define|#
 directive|define
 name|CD_Q_BIT_STRING
 define|\
-value|"\020"			\ 	"\001NO_TOUCH"		\ 	"\002BCD_TRACKS"	\ 	"\00510_BYTE_ONLY"
+value|"\020"			\ 	"\001NO_TOUCH"		\ 	"\002BCD_TRACKS"	\ 	"\00510_BYTE_ONLY"	\ 	"\007RETRY_BUSY"
 end_define
 
 begin_typedef
@@ -527,6 +531,24 @@ block|}
 block|,
 comment|/* quirks */
 name|CD_Q_BCD_TRACKS
+block|}
+block|,
+block|{
+comment|/* 		 * VMware returns BUSY status when storage has transient 		 * connectivity problems, so better wait. 		 */
+block|{
+name|T_CDROM
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"NECVMWar"
+block|,
+literal|"VMware IDE CDR10"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|CD_Q_RETRY_BUSY
 block|}
 block|}
 decl_stmt|;
@@ -11798,6 +11820,18 @@ comment|/* 	 * XXX 	 * Until we have a better way of doing pack validation, 	 * 
 name|sense_flags
 operator||=
 name|SF_RETRY_UA
+expr_stmt|;
+if|if
+condition|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|CD_Q_RETRY_BUSY
+condition|)
+name|sense_flags
+operator||=
+name|SF_RETRY_BUSY
 expr_stmt|;
 return|return
 operator|(
