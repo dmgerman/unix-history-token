@@ -1125,6 +1125,13 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|pvo_pt
+operator|->
+name|pte_hi
+operator|&=
+operator|~
+name|LPTE_VALID
+expr_stmt|;
 name|err
 operator|=
 name|phyp_pft_hcall
@@ -1249,6 +1256,12 @@ name|pvo_pt
 argument_list|,
 name|vpn
 argument_list|)
+expr_stmt|;
+name|pvo_pt
+operator|->
+name|pte_hi
+operator||=
+name|LPTE_VALID
 expr_stmt|;
 name|result
 operator|=
@@ -1402,7 +1415,7 @@ name|pt
 operator|.
 name|pte_hi
 operator|&
-name|LPTE_SWBITS
+name|LPTE_WIRED
 condition|)
 continue|continue;
 comment|/* This is a candidate, so remember it */
@@ -1874,6 +1887,7 @@ block|}
 block|}
 name|KASSERT
 argument_list|(
+operator|(
 name|pvo
 operator|->
 name|pvo_pte
@@ -1881,6 +1895,9 @@ operator|.
 name|lpte
 operator|.
 name|pte_hi
+operator||
+name|LPTE_VALID
+operator|)
 operator|==
 name|evicted
 operator|.
