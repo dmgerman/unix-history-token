@@ -584,12 +584,12 @@ name|platform_t
 name|plat
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__powerpc64__
+name|int
+name|i
+decl_stmt|;
 comment|/* XXX: check for /rtas/ibm,hypertas-functions? */
 if|if
 condition|(
