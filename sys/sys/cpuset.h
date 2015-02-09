@@ -288,6 +288,16 @@ parameter_list|)
 value|BIT_FFS(CPU_SETSIZE, p)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_COUNT
+parameter_list|(
+name|p
+parameter_list|)
+value|BIT_COUNT(CPU_SETSIZE, p)
+end_define
+
 begin_comment
 comment|/*  * Valid cpulevel_t values.  */
 end_comment
