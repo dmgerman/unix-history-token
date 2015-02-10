@@ -2851,33 +2851,8 @@ name|isync
 argument_list|()
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|WII
-comment|/* 	 * Special case for the Wii: don't install the PCI BAT. 	 */
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|installed_platform
-argument_list|()
-argument_list|,
-literal|"wii"
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-endif|#
-directive|endif
 asm|__asm __volatile("mtdbatu 1,%0" :: "r"(battable[8].batu));
 asm|__asm __volatile("mtdbatl 1,%0" :: "r"(battable[8].batl));
-ifdef|#
-directive|ifdef
-name|WII
-block|}
-endif|#
-directive|endif
 name|isync
 argument_list|()
 expr_stmt|;
@@ -3247,41 +3222,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WII
-end_ifdef
-
-begin_if
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|installed_platform
-argument_list|()
-argument_list|,
-literal|"wii"
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-endif|#
-directive|endif
+begin_comment
 comment|/* map pci space */
-asm|__asm __volatile("mtdbatu 1,%0" :: "r"(battable[8].batu));
-asm|__asm __volatile("mtdbatl 1,%0" :: "r"(battable[8].batl));
-ifdef|#
-directive|ifdef
-name|WII
-block|}
-end_if
+end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_asm
+asm|__asm __volatile("mtdbatu 1,%0" :: "r"(battable[8].batu));
+end_asm
+
+begin_asm
+asm|__asm __volatile("mtdbatl 1,%0" :: "r"(battable[8].batl));
+end_asm
 
 begin_expr_stmt
 name|isync
@@ -10866,7 +10817,7 @@ return|;
 end_if
 
 begin_expr_stmt
-unit|} 	 	return
+unit|}  	return
 operator|(
 name|pvo
 operator|)
@@ -11697,7 +11648,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * This currently does not work for entries that  	 * overlap 256M BAT segments. 	 */
+comment|/* 	 * This currently does not work for entries that 	 * overlap 256M BAT segments. 	 */
 for|for
 control|(
 name|i

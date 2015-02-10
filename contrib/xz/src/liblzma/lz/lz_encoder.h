@@ -243,7 +243,7 @@ name|action
 decl_stmt|;
 comment|/// Number of elements in hash[]
 name|uint32_t
-name|hash_size_sum
+name|hash_count
 decl_stmt|;
 comment|/// Number of elements in son[]
 name|uint32_t
@@ -459,6 +459,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -845,6 +846,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -864,6 +866,7 @@ name|lzma_lz_encoder
 modifier|*
 name|lz
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator

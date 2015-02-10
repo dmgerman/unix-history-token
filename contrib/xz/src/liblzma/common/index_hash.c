@@ -155,7 +155,7 @@ name|lzma_index_hash_init
 argument_list|(
 argument|lzma_index_hash *index_hash
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|)
 end_macro
 
@@ -331,7 +331,7 @@ name|lzma_index_hash_end
 argument_list|(
 argument|lzma_index_hash *index_hash
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|)
 end_macro
 

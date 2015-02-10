@@ -329,16 +329,16 @@ enum|enum
 block|{
 name|ULD_TOM
 init|=
-literal|1
+literal|0
 block|,
 name|ULD_IWARP
-init|=
-literal|2
 block|,
 name|ULD_ISCSI
+block|,
+name|ULD_MAX
 init|=
-literal|3
-block|, }
+name|ULD_ISCSI
+block|}
 enum|;
 end_enum
 
@@ -485,6 +485,19 @@ specifier|const
 name|unsigned
 name|int
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|uld_active
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

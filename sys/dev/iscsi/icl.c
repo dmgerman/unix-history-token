@@ -341,7 +341,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|im
 operator|->

@@ -9435,11 +9435,6 @@ name|int
 modifier|*
 name|entity_uc
 decl_stmt|;
-name|int
-name|local_uc
-decl_stmt|,
-name|local_entity_uc
-decl_stmt|;
 if|if
 condition|(
 operator|!

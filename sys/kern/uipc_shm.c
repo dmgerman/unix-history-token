@@ -2625,6 +2625,14 @@ literal|"shm_create: vm_pager_allocate"
 operator|)
 argument_list|)
 expr_stmt|;
+name|shmfd
+operator|->
+name|shm_object
+operator|->
+name|pg_color
+operator|=
+literal|0
+expr_stmt|;
 name|VM_OBJECT_WLOCK
 argument_list|(
 name|shmfd
@@ -2647,6 +2655,8 @@ name|shmfd
 operator|->
 name|shm_object
 argument_list|,
+name|OBJ_COLORED
+operator||
 name|OBJ_NOSPLIT
 argument_list|)
 expr_stmt|;

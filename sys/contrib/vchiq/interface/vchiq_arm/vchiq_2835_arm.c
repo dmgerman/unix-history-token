@@ -1038,10 +1038,6 @@ name|int
 name|dir
 parameter_list|)
 block|{
-name|PAGELIST_T
-modifier|*
-name|pagelist
-decl_stmt|;
 name|BULKINFO_T
 modifier|*
 name|bi
@@ -2128,10 +2124,6 @@ name|int
 name|num_pages
 decl_stmt|,
 name|i
-decl_stmt|;
-name|void
-modifier|*
-name|page_address
 decl_stmt|;
 name|PAGELIST_T
 modifier|*

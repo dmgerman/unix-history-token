@@ -1215,6 +1215,11 @@ operator|=
 name|xen_pv_lapic_init
 block|,
 operator|.
+name|xapic_mode
+operator|=
+name|xen_pv_lapic_disable
+block|,
+operator|.
 name|setup
 operator|=
 name|xen_pv_lapic_setup
