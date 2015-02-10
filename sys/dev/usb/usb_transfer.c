@@ -5136,6 +5136,79 @@ block|}
 end_function
 
 begin_comment
+comment|/*------------------------------------------------------------------------*  *	usbd_control_transfer_did_data  *  * This function returns non-zero if a control endpoint has  * transferred the first DATA packet after the SETUP packet.  * Else it returns zero.  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+specifier|static
+name|uint8_t
+name|usbd_control_transfer_did_data
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+name|struct
+name|usb_device_request
+name|req
+decl_stmt|;
+comment|/* SETUP packet is not yet sent */
+if|if
+condition|(
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_hdr
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* copy out the USB request header */
+name|usbd_copy_out
+argument_list|(
+name|xfer
+operator|->
+name|frbuffers
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|req
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|req
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* compare remainder to the initial value */
+return|return
+operator|(
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_rem
+operator|!=
+name|UGETW
+argument_list|(
+name|req
+operator|.
+name|wLength
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*------------------------------------------------------------------------*  *	usbd_setup_ctrl_transfer  *  * This function handles initialisation of control transfers. Control  * transfers are special in that regard that they can both transmit  * and receive data.  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
@@ -5403,6 +5476,18 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
+comment|/* update did data flag */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_did_data
+operator|=
+name|usbd_control_transfer_did_data
+argument_list|(
+name|xfer
+argument_list|)
+expr_stmt|;
 comment|/* check if there is a length mismatch */
 if|if
 condition|(
