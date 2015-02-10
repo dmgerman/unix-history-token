@@ -822,14 +822,7 @@ argument|endkernel; 	void		*generictrap; 	size_t		trap_offset
 argument_list|,
 argument|trapsize; 	vm_offset_t	trap; 	void		*kmdp;         char		*env; 	register_t	msr
 argument_list|,
-argument|scratch;
-ifdef|#
-directive|ifdef
-name|WII
-argument|register_t 	vers;
-endif|#
-directive|endif
-argument|uint8_t		*cache_check; 	int		cacheline_warn;
+argument|scratch; 	uint8_t		*cache_check; 	int		cacheline_warn;
 ifndef|#
 directive|ifndef
 name|__powerpc64__
@@ -849,17 +842,6 @@ literal|0
 argument|;
 comment|/* First guess at start/end kernel positions */
 argument|startkernel = __startkernel; 	endkernel = __endkernel;
-ifdef|#
-directive|ifdef
-name|WII
-comment|/* 	 * The Wii loader doesn't pass us any environment so, mdp 	 * points to garbage at this point. The Wii CPU is a 750CL. 	 */
-argument|vers = mfpvr(); 	if ((vers&
-literal|0xfffff0e0
-argument|) == (MPC750<<
-literal|16
-argument|| MPC750CL))  		mdp = NULL;
-endif|#
-directive|endif
 comment|/* Check for ePAPR loader, which puts a magic value into r6 */
 argument|if (mdp == (void *)
 literal|0x65504150
