@@ -242,6 +242,21 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
+name|u_int
+name|hv_high
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|hv_vendor
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 name|kstack
 index|[]
