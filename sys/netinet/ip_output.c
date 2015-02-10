@@ -3363,6 +3363,30 @@ goto|goto
 name|done
 goto|;
 block|}
+comment|/* make sure the flowid is the same for the fragmented mbufs */
+name|M_HASHTYPE_SET
+argument_list|(
+name|m
+argument_list|,
+name|M_HASHTYPE_GET
+argument_list|(
+name|m0
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|flowid
+operator|=
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|flowid
+expr_stmt|;
+comment|/* copy multicast flag, if any */
 name|m
 operator|->
 name|m_flags
