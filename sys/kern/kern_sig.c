@@ -15531,27 +15531,19 @@ name|path
 parameter_list|)
 block|{
 name|size_t
-name|len
-decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* 	 * Only send a subset of ASCII to devd(8) because it 	 * might pass these strings to sh -c. 	 */
-name|len
-operator|=
-name|strlen
-argument_list|(
-name|path
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
 literal|0
 init|;
+name|path
+index|[
 name|i
-operator|<
-name|len
+index|]
 condition|;
 name|i
 operator|++
@@ -16250,16 +16242,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"could not find coredump\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
 if|if
 condition|(
 operator|!
