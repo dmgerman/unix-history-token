@@ -426,6 +426,8 @@ name|IP_MOUNT_DEVFS
 block|,
 name|IP_MOUNT_FDESCFS
 block|,
+name|IP_MOUNT_PROCFS
+block|,
 name|IP_EXEC_PRESTART
 block|,
 name|IP__OP
@@ -463,6 +465,8 @@ block|,
 name|IP__OP
 block|,
 name|IP_EXEC_POSTSTOP
+block|,
+name|IP_MOUNT_PROCFS
 block|,
 name|IP_MOUNT_FDESCFS
 block|,
