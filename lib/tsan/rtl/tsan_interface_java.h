@@ -277,6 +277,34 @@ name|addr
 argument_list|)
 name|INTERFACE_ATTRIBUTE
 decl_stmt|;
+comment|// Raw acquire/release primitives.
+comment|// Can be used to establish happens-before edges on volatile/final fields,
+comment|// in atomic operations, etc. release_store is the same as release, but it
+comment|// breaks release sequence on addr (see C++ standard 1.10/7 for details).
+name|void
+name|__tsan_java_acquire
+argument_list|(
+name|jptr
+name|addr
+argument_list|)
+name|INTERFACE_ATTRIBUTE
+decl_stmt|;
+name|void
+name|__tsan_java_release
+argument_list|(
+name|jptr
+name|addr
+argument_list|)
+name|INTERFACE_ATTRIBUTE
+decl_stmt|;
+name|void
+name|__tsan_java_release_store
+argument_list|(
+name|jptr
+name|addr
+argument_list|)
+name|INTERFACE_ATTRIBUTE
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

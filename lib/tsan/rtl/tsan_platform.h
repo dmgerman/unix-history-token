@@ -1055,33 +1055,6 @@ name|uptr
 name|nlive
 parameter_list|)
 function_decl|;
-name|void
-modifier|*
-name|internal_start_thread
-parameter_list|(
-name|void
-function_decl|(
-modifier|*
-name|func
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-name|void
-name|internal_join_thread
-parameter_list|(
-name|void
-modifier|*
-name|th
-parameter_list|)
-function_decl|;
 comment|// Says whether the addr relates to a global var.
 comment|// Guesses with high probability, may yield both false positives and negatives.
 name|bool

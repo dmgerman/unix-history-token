@@ -6,13 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|"test.h"
 end_include
 
 begin_function
@@ -25,6 +19,12 @@ modifier|*
 name|x
 parameter_list|)
 block|{
+name|barrier_wait
+argument_list|(
+operator|&
+name|barrier
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -43,6 +43,16 @@ init|=
 literal|5
 decl_stmt|;
 comment|// prevent loop unrolling
+name|barrier_init
+argument_list|(
+operator|&
+name|barrier
+argument_list|,
+name|N
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|int
@@ -74,11 +84,18 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|barrier_wait
+argument_list|(
+operator|&
+name|barrier
+argument_list|)
+expr_stmt|;
 name|sleep
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|// wait for the threads to finish and exit
 return|return
 literal|0
 return|;

@@ -130,11 +130,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: ![[PD1]] = metadata !{metadata !"branch_weights", i32 1, i32 2}
+comment|// CHECK: ![[PD1]] = !{!"branch_weights", i32 1, i32 2}
 end_comment
 
 begin_comment
-comment|// CHECK2: ![[PD2]] = metadata !{metadata !"branch_weights", i32 2, i32 1}
+comment|// CHECK2: ![[PD2]] = !{!"branch_weights", i32 2, i32 1}
 end_comment
 
 end_unit

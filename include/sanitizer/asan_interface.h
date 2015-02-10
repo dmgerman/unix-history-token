@@ -389,8 +389,7 @@ name|int
 name|exit_code
 parameter_list|)
 function_decl|;
-comment|// Sets the callback to be called right before death on error.
-comment|// Passing 0 will unset the callback.
+comment|// Deprecated. Call __sanitizer_set_death_callback instead.
 name|void
 name|__asan_set_death_callback
 parameter_list|(

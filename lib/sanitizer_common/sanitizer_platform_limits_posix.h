@@ -75,6 +75,55 @@ directive|include
 file|"sanitizer_platform.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|SANITIZER_FREEBSD
+end_if
+
+begin_comment
+comment|// FreeBSD's dlopen() returns a pointer to an Obj_Entry structure that
+end_comment
+
+begin_comment
+comment|// incroporates the map structure.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_LINK_MAP_BY_DLOPEN_HANDLE
+parameter_list|(
+name|handle
+parameter_list|)
+define|\
+value|((link_map*)((handle) == nullptr ? nullptr : ((char*)(handle) + 544)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GET_LINK_MAP_BY_DLOPEN_HANDLE
+parameter_list|(
+name|handle
+parameter_list|)
+value|((link_map*)(handle))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !SANITIZER_FREEBSD
+end_comment
+
 begin_decl_stmt
 name|namespace
 name|__sanitizer
@@ -640,6 +689,11 @@ directive|elif
 name|defined
 argument_list|(
 name|__mips__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__aarch64__
 argument_list|)
 name|unsigned
 name|int

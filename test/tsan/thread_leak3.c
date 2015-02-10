@@ -6,13 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|"test.h"
 end_include
 
 begin_function
@@ -25,6 +19,12 @@ modifier|*
 name|x
 parameter_list|)
 block|{
+name|barrier_wait
+argument_list|(
+operator|&
+name|barrier
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -36,6 +36,14 @@ name|int
 name|main
 parameter_list|()
 block|{
+name|barrier_init
+argument_list|(
+operator|&
+name|barrier
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|pthread_t
 name|t
 decl_stmt|;
@@ -51,11 +59,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|barrier_wait
+argument_list|(
+operator|&
+name|barrier
+argument_list|)
+expr_stmt|;
 name|sleep
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|// wait for the thread to finish and exit
 return|return
 literal|0
 return|;

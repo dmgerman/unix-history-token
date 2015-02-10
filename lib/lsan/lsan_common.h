@@ -163,6 +163,29 @@ enum|;
 struct|struct
 name|Flags
 block|{
+define|#
+directive|define
+name|LSAN_FLAG
+parameter_list|(
+name|Type
+parameter_list|,
+name|Name
+parameter_list|,
+name|DefaultValue
+parameter_list|,
+name|Description
+parameter_list|)
+value|Type Name;
+include|#
+directive|include
+file|"lsan_flags.inc"
+undef|#
+directive|undef
+name|LSAN_FLAG
+name|void
+name|SetDefaults
+parameter_list|()
+function_decl|;
 name|uptr
 name|pointer_alignment
 argument_list|()
@@ -179,59 +202,6 @@ name|uptr
 argument_list|)
 return|;
 block|}
-comment|// Print addresses of leaked objects after main leak report.
-name|bool
-name|report_objects
-decl_stmt|;
-comment|// Aggregate two objects into one leak if this many stack frames match. If
-comment|// zero, the entire stack trace must match.
-name|int
-name|resolution
-decl_stmt|;
-comment|// The number of leaks reported.
-name|int
-name|max_leaks
-decl_stmt|;
-comment|// If nonzero kill the process with this exit code upon finding leaks.
-name|int
-name|exitcode
-decl_stmt|;
-comment|// Flags controlling the root set of reachable memory.
-comment|// Global variables (.data and .bss).
-name|bool
-name|use_globals
-decl_stmt|;
-comment|// Thread stacks.
-name|bool
-name|use_stacks
-decl_stmt|;
-comment|// Thread registers.
-name|bool
-name|use_registers
-decl_stmt|;
-comment|// TLS and thread-specific storage.
-name|bool
-name|use_tls
-decl_stmt|;
-comment|// Regions added via __lsan_register_root_region().
-name|bool
-name|use_root_regions
-decl_stmt|;
-comment|// Consider unaligned pointers valid.
-name|bool
-name|use_unaligned
-decl_stmt|;
-comment|// Consider pointers found in poisoned memory to be valid.
-name|bool
-name|use_poisoned
-decl_stmt|;
-comment|// Debug logging.
-name|bool
-name|log_pointers
-decl_stmt|;
-name|bool
-name|log_threads
-decl_stmt|;
 block|}
 struct|;
 specifier|extern

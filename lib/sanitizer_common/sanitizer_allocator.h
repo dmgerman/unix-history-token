@@ -99,10 +99,10 @@ begin_decl_stmt
 name|namespace
 name|__sanitizer
 block|{
-comment|// Depending on allocator_may_return_null either return 0 or crash.
+comment|// Prints error message and kills the program.
 name|void
-modifier|*
-name|AllocatorReturnNull
+name|NORETURN
+name|ReportAllocatorCannotReturnNull
 parameter_list|()
 function_decl|;
 comment|// SizeClassMap maps allocation sizes into size classes and back.
@@ -998,6 +998,10 @@ argument_list|)
 expr_stmt|;
 block|}
 name|void
+name|InitLinkerInitialized
+parameter_list|()
+block|{}
+name|void
 name|Add
 parameter_list|(
 name|AllocatorStat
@@ -1159,6 +1163,18 @@ block|{
 name|public
 operator|:
 name|void
+name|InitLinkerInitialized
+argument_list|()
+block|{
+name|next_
+operator|=
+name|this
+block|;
+name|prev_
+operator|=
+name|this
+block|;   }
+name|void
 name|Init
 argument_list|()
 block|{
@@ -1175,13 +1191,8 @@ name|this
 argument_list|)
 argument_list|)
 block|;
-name|next_
-operator|=
-name|this
-block|;
-name|prev_
-operator|=
-name|this
+name|InitLinkerInitialized
+argument_list|()
 block|;   }
 name|void
 name|Register
@@ -6198,8 +6209,31 @@ block|{
 name|public
 operator|:
 name|void
-name|Init
+name|InitLinkerInitialized
+argument_list|(
+argument|bool may_return_null
+argument_list|)
+block|{
+name|page_size_
+operator|=
+name|GetPageSizeCached
 argument_list|()
+block|;
+name|atomic_store
+argument_list|(
+operator|&
+name|may_return_null_
+argument_list|,
+name|may_return_null
+argument_list|,
+name|memory_order_relaxed
+argument_list|)
+block|;   }
+name|void
+name|Init
+argument_list|(
+argument|bool may_return_null
+argument_list|)
 block|{
 name|internal_memset
 argument_list|(
@@ -6214,10 +6248,10 @@ name|this
 argument_list|)
 argument_list|)
 block|;
-name|page_size_
-operator|=
-name|GetPageSizeCached
-argument_list|()
+name|InitLinkerInitialized
+argument_list|(
+name|may_return_null
+argument_list|)
 block|;   }
 name|void
 operator|*
@@ -6256,6 +6290,7 @@ name|map_size
 operator|+=
 name|alignment
 expr_stmt|;
+comment|// Overflow.
 if|if
 condition|(
 name|map_size
@@ -6263,10 +6298,9 @@ operator|<
 name|size
 condition|)
 return|return
-name|AllocatorReturnNull
+name|ReturnNullOrDie
 argument_list|()
 return|;
-comment|// Overflow.
 name|uptr
 name|map_beg
 operator|=
@@ -6581,17 +6615,65 @@ operator|)
 return|;
 end_return
 
+begin_expr_stmt
+unit|}    void
+operator|*
+name|ReturnNullOrDie
+argument_list|()
+block|{
+if|if
+condition|(
+name|atomic_load
+argument_list|(
+operator|&
+name|may_return_null_
+argument_list|,
+name|memory_order_acquire
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+name|ReportAllocatorCannotReturnNull
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_macro
 unit|}    void
-name|Deallocate
+name|SetMayReturnNull
 argument_list|(
-argument|AllocatorStats *stat
-argument_list|,
-argument|void *p
+argument|bool may_return_null
 argument_list|)
 end_macro
 
 begin_block
+block|{
+name|atomic_store
+argument_list|(
+operator|&
+name|may_return_null_
+argument_list|,
+name|may_return_null
+argument_list|,
+name|memory_order_release
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_function
+name|void
+name|Deallocate
+parameter_list|(
+name|AllocatorStats
+modifier|*
+name|stat
+parameter_list|,
+name|void
+modifier|*
+name|p
+parameter_list|)
 block|{
 name|Header
 modifier|*
@@ -6731,7 +6813,7 @@ name|map_size
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|uptr
@@ -7767,6 +7849,12 @@ struct|;
 end_struct
 
 begin_decl_stmt
+name|atomic_uint8_t
+name|may_return_null_
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|SpinMutex
 name|mutex_
 decl_stmt|;
@@ -7816,23 +7904,71 @@ block|{
 name|public
 operator|:
 name|void
-name|Init
-argument_list|()
+name|InitCommon
+argument_list|(
+argument|bool may_return_null
+argument_list|)
 block|{
 name|primary_
 operator|.
 name|Init
 argument_list|()
 block|;
+name|atomic_store
+argument_list|(
+operator|&
+name|may_return_null_
+argument_list|,
+name|may_return_null
+argument_list|,
+name|memory_order_relaxed
+argument_list|)
+block|;   }
+name|void
+name|InitLinkerInitialized
+argument_list|(
+argument|bool may_return_null
+argument_list|)
+block|{
+name|secondary_
+operator|.
+name|InitLinkerInitialized
+argument_list|(
+name|may_return_null
+argument_list|)
+block|;
+name|stats_
+operator|.
+name|InitLinkerInitialized
+argument_list|()
+block|;
+name|InitCommon
+argument_list|(
+name|may_return_null
+argument_list|)
+block|;   }
+name|void
+name|Init
+argument_list|(
+argument|bool may_return_null
+argument_list|)
+block|{
 name|secondary_
 operator|.
 name|Init
-argument_list|()
+argument_list|(
+name|may_return_null
+argument_list|)
 block|;
 name|stats_
 operator|.
 name|Init
 argument_list|()
+block|;
+name|InitCommon
+argument_list|(
+name|may_return_null
+argument_list|)
 block|;   }
 name|void
 operator|*
@@ -7845,6 +7981,8 @@ argument_list|,
 argument|uptr alignment
 argument_list|,
 argument|bool cleared = false
+argument_list|,
+argument|bool check_rss_limit = false
 argument_list|)
 block|{
 comment|// Returning 0 on malloc(0) may break a lot of code.
@@ -7867,10 +8005,24 @@ operator|<
 name|size
 condition|)
 return|return
-name|AllocatorReturnNull
+name|ReturnNullOrDie
 argument_list|()
 return|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|check_rss_limit
+operator|&&
+name|RssLimitIsExceeded
+argument_list|()
+condition|)
+return|return
+name|ReturnNullOrDie
+argument_list|()
+return|;
+end_if
 
 begin_if
 if|if
@@ -8009,16 +8161,124 @@ return|;
 end_return
 
 begin_macro
-unit|}    void
-name|Deallocate
-argument_list|(
-argument|AllocatorCache *cache
-argument_list|,
-argument|void *p
-argument_list|)
+unit|}    bool
+name|MayReturnNull
+argument_list|()
 end_macro
 
-begin_block
+begin_expr_stmt
+specifier|const
+block|{
+return|return
+name|atomic_load
+argument_list|(
+operator|&
+name|may_return_null_
+argument_list|,
+name|memory_order_acquire
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+modifier|*
+name|ReturnNullOrDie
+parameter_list|()
+block|{
+if|if
+condition|(
+name|MayReturnNull
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+name|ReportAllocatorCannotReturnNull
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|SetMayReturnNull
+parameter_list|(
+name|bool
+name|may_return_null
+parameter_list|)
+block|{
+name|secondary_
+operator|.
+name|SetMayReturnNull
+argument_list|(
+name|may_return_null
+argument_list|)
+expr_stmt|;
+name|atomic_store
+argument_list|(
+operator|&
+name|may_return_null_
+argument_list|,
+name|may_return_null
+argument_list|,
+name|memory_order_release
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|bool
+name|RssLimitIsExceeded
+parameter_list|()
+block|{
+return|return
+name|atomic_load
+argument_list|(
+operator|&
+name|rss_limit_is_exceeded_
+argument_list|,
+name|memory_order_acquire
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|SetRssLimitIsExceeded
+parameter_list|(
+name|bool
+name|rss_limit_is_exceeded
+parameter_list|)
+block|{
+name|atomic_store
+argument_list|(
+operator|&
+name|rss_limit_is_exceeded_
+argument_list|,
+name|rss_limit_is_exceeded
+argument_list|,
+name|memory_order_release
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|Deallocate
+parameter_list|(
+name|AllocatorCache
+modifier|*
+name|cache
+parameter_list|,
+name|void
+modifier|*
+name|p
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -8064,7 +8324,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -8633,6 +8893,18 @@ end_decl_stmt
 begin_decl_stmt
 name|AllocatorGlobalStats
 name|stats_
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|atomic_uint8_t
+name|may_return_null_
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|atomic_uint8_t
+name|rss_limit_is_exceeded_
 decl_stmt|;
 end_decl_stmt
 

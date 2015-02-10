@@ -68,7 +68,7 @@ name|namespace
 name|__asan
 block|{
 name|void
-name|AsanStartDeactivated
+name|AsanDeactivate
 parameter_list|()
 function_decl|;
 name|void

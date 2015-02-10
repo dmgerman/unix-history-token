@@ -120,6 +120,38 @@ comment|// RUN: echo __asan_addr_is_in_fake_stack>> %t.interface
 end_comment
 
 begin_comment
+comment|// RUN: echo __asan_mz_calloc>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_mz_destroy>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_mz_free>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_mz_malloc>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_mz_memalign>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_mz_realloc>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_mz_size>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_mz_valloc>> %t.interface
+end_comment
+
+begin_comment
 comment|// RUN: for i in `jot - 0 10`; do echo __asan_stack_malloc_$i>> %t.interface; done
 end_comment
 

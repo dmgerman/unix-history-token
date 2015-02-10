@@ -44,10 +44,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MemorySanitizer allocator.
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -67,54 +63,32 @@ begin_decl_stmt
 name|namespace
 name|__msan
 block|{
-comment|// Flags.
 struct|struct
 name|Flags
 block|{
-name|int
-name|exit_code
-decl_stmt|;
-name|int
-name|origin_history_size
-decl_stmt|;
-name|int
-name|origin_history_per_stack_limit
-decl_stmt|;
-name|bool
-name|poison_heap_with_zeroes
-decl_stmt|;
-comment|// default: false
-name|bool
-name|poison_stack_with_zeroes
-decl_stmt|;
-comment|// default: false
-name|bool
-name|poison_in_malloc
-decl_stmt|;
-comment|// default: true
-name|bool
-name|poison_in_free
-decl_stmt|;
-comment|// default: true
-name|bool
-name|report_umrs
-decl_stmt|;
-name|bool
-name|wrap_signals
-decl_stmt|;
-name|bool
-name|print_stats
-decl_stmt|;
-name|bool
-name|halt_on_error
-decl_stmt|;
-name|bool
-name|atexit
-decl_stmt|;
-name|int
-name|store_context_size
-decl_stmt|;
-comment|// like malloc_context_size, but for uninit stores
+define|#
+directive|define
+name|MSAN_FLAG
+parameter_list|(
+name|Type
+parameter_list|,
+name|Name
+parameter_list|,
+name|DefaultValue
+parameter_list|,
+name|Description
+parameter_list|)
+value|Type Name;
+include|#
+directive|include
+file|"msan_flags.inc"
+undef|#
+directive|undef
+name|MSAN_FLAG
+name|void
+name|SetDefaults
+parameter_list|()
+function_decl|;
 block|}
 struct|;
 name|Flags

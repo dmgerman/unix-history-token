@@ -144,7 +144,7 @@ modifier|*
 name|a
 parameter_list|)
 function_decl|;
-comment|/* Make memory region fully uninitialized (without changing its contents). */
+comment|/* Make memory region fully uninitialized (without changing its contents).      This is a legacy interface that does not update origin information. Use      __msan_allocated_memory() instead. */
 name|void
 name|__msan_poison
 parameter_list|(

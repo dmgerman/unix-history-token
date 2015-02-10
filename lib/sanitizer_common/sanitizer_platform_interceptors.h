@@ -291,7 +291,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_MEMRCHR
-value|SI_LINUX
+value|SI_FREEBSD || SI_LINUX
 end_define
 
 begin_define
@@ -354,7 +354,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_PREADV
-value|SI_LINUX_NOT_ANDROID
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -429,6 +429,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SANITIZER_INTERCEPT_PRINTF_L
+value|SI_FREEBSD
+end_define
+
+begin_define
+define|#
+directive|define
 name|SANITIZER_INTERCEPT_ISOC99_PRINTF
 value|SI_LINUX_NOT_ANDROID
 end_define
@@ -464,14 +471,15 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETPWNAM_R_AND_FRIENDS
 define|\
-value|SI_MAC || SI_LINUX_NOT_ANDROID
+value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETPWENT
-value|SI_MAC || SI_LINUX_NOT_ANDROID
+define|\
+value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -485,7 +493,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETPWENT_R
-value|SI_LINUX_NOT_ANDROID
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -499,7 +507,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_CLOCK_GETTIME
-value|SI_LINUX
+value|SI_FREEBSD || SI_LINUX
 end_define
 
 begin_define
@@ -576,28 +584,28 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETHOSTBYNAME_R
-value|SI_LINUX
+value|SI_FREEBSD || SI_LINUX
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETHOSTBYNAME2_R
-value|SI_LINUX_NOT_ANDROID
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETHOSTBYADDR_R
-value|SI_LINUX_NOT_ANDROID
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETHOSTENT_R
-value|SI_LINUX_NOT_ANDROID
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -741,7 +749,8 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_WCSNRTOMBS
-value|SI_MAC || SI_LINUX_NOT_ANDROID
+define|\
+value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -769,13 +778,21 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_CONFSTR
-value|SI_MAC || SI_LINUX_NOT_ANDROID
+define|\
+value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_SCHED_GETAFFINITY
+value|SI_LINUX_NOT_ANDROID
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_SCHED_GETPARAM
 value|SI_LINUX_NOT_ANDROID
 end_define
 
@@ -839,7 +856,8 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_WORDEXP
-value|(SI_MAC&& !SI_IOS) || SI_LINUX_NOT_ANDROID
+define|\
+value|SI_FREEBSD || (SI_MAC&& !SI_IOS) || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -910,7 +928,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_STATFS
-value|SI_MAC || SI_LINUX_NOT_ANDROID
+value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -925,7 +943,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_STATVFS
-value|SI_LINUX_NOT_ANDROID
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -953,14 +971,15 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_ETHER_HOST
-value|SI_MAC || SI_LINUX_NOT_ANDROID
+define|\
+value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_ETHER_R
-value|SI_LINUX_NOT_ANDROID
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -990,7 +1009,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_PTHREAD_ATTR_GETINHERITSCHED
 define|\
-value|SI_MAC || SI_LINUX_NOT_ANDROID
+value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -1125,7 +1144,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_LGAMMA_R
-value|SI_LINUX
+value|SI_FREEBSD || SI_LINUX
 end_define
 
 begin_define

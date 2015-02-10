@@ -6,19 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
+file|"test.h"
 end_include
 
 begin_function
@@ -33,9 +21,10 @@ parameter_list|)
 block|{
 name|sleep
 argument_list|(
-literal|10
+literal|100
 argument_list|)
 expr_stmt|;
+comment|// leave the thread "running"
 return|return
 literal|0
 return|;
@@ -64,7 +53,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"OK\n"
+literal|"DONE\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -72,6 +61,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: DONE
+end_comment
 
 begin_comment
 comment|// CHECK-NOT: WARNING: ThreadSanitizer: thread leak

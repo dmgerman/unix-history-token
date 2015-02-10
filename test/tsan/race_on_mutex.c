@@ -6,25 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|"test.h"
 end_include
 
 begin_decl_stmt
@@ -73,6 +55,12 @@ operator|&
 name|Mtx
 argument_list|)
 expr_stmt|;
+name|barrier_wait
+argument_list|(
+operator|&
+name|barrier
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -89,9 +77,10 @@ modifier|*
 name|x
 parameter_list|)
 block|{
-name|sleep
+name|barrier_wait
 argument_list|(
-literal|1
+operator|&
+name|barrier
 argument_list|)
 expr_stmt|;
 name|pthread_mutex_lock
@@ -121,6 +110,14 @@ name|int
 name|main
 parameter_list|()
 block|{
+name|barrier_init
+argument_list|(
+operator|&
+name|barrier
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|pthread_t
 name|t
 index|[
@@ -202,7 +199,7 @@ comment|// CHECK-NEXT:     #0 pthread_mutex_lock
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     #1 Thread2{{.*}} {{.*}}race_on_mutex.c:20{{(:3)?}} ({{.*}})
+comment|// CHECK-NEXT:     #1 Thread2{{.*}} {{.*}}race_on_mutex.c:18{{(:3)?}} ({{.*}})
 end_comment
 
 begin_comment
@@ -214,7 +211,7 @@ comment|// CHECK-NEXT:     #0 pthread_mutex_init {{.*}} ({{.*}})
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     #1 Thread1{{.*}} {{.*}}race_on_mutex.c:11{{(:3)?}} ({{.*}})
+comment|// CHECK-NEXT:     #1 Thread1{{.*}} {{.*}}race_on_mutex.c:8{{(:3)?}} ({{.*}})
 end_comment
 
 end_unit

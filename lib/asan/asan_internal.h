@@ -338,12 +338,6 @@ name|void
 name|MaybeReexec
 argument_list|()
 block|;
-name|bool
-name|AsanInterceptsSignal
-argument_list|(
-argument|int signum
-argument_list|)
-block|;
 name|void
 name|ReadContextStack
 argument_list|(
@@ -415,10 +409,6 @@ name|buffer
 argument_list|)
 block|;
 name|void
-name|ParseExtraActivationFlags
-argument_list|()
-block|;
-name|void
 operator|*
 name|AsanDlSymNext
 argument_list|(
@@ -426,6 +416,14 @@ specifier|const
 name|char
 operator|*
 name|sym
+argument_list|)
+block|;
+name|void
+name|ReserveShadowMemoryRange
+argument_list|(
+argument|uptr beg
+argument_list|,
+argument|uptr end
 argument_list|)
 block|;
 comment|// Platform-specific options.

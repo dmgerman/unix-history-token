@@ -8,37 +8,13 @@ comment|// RUN: %deflake %run %t | FileCheck %s --check-prefix=CHECK-NOZUPP
 end_comment
 
 begin_comment
-comment|// RUN: TSAN_OPTIONS="suppressions=%s.supp print_suppressions=1" %run %t 2>&1 | FileCheck %s --check-prefix=CHECK-SUPP
+comment|// RUN: TSAN_OPTIONS="suppressions='%s.supp' print_suppressions=1" %run %t 2>&1 | FileCheck %s --check-prefix=CHECK-SUPP
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<pthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|"test.h"
 end_include
 
 begin_decl_stmt
@@ -81,6 +57,12 @@ operator|&
 name|mtx
 argument_list|)
 expr_stmt|;
+name|barrier_wait
+argument_list|(
+operator|&
+name|barrier
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -97,9 +79,10 @@ modifier|*
 name|x
 parameter_list|)
 block|{
-name|sleep
+name|barrier_wait
 argument_list|(
-literal|1
+operator|&
+name|barrier
 argument_list|)
 expr_stmt|;
 name|pthread_mutex_lock
@@ -132,6 +115,14 @@ name|int
 name|main
 parameter_list|()
 block|{
+name|barrier_init
+argument_list|(
+operator|&
+name|barrier
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|mem
 operator|=
 operator|(

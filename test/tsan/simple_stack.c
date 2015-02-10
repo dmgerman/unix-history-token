@@ -6,19 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|"test.h"
 end_include
 
 begin_decl_stmt
@@ -136,9 +124,10 @@ modifier|*
 name|x
 parameter_list|)
 block|{
-name|sleep
+name|barrier_wait
 argument_list|(
-literal|1
+operator|&
+name|barrier
 argument_list|)
 expr_stmt|;
 name|bar1
@@ -162,6 +151,12 @@ parameter_list|)
 block|{
 name|bar2
 argument_list|()
+expr_stmt|;
+name|barrier_wait
+argument_list|(
+operator|&
+name|barrier
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -208,6 +203,14 @@ name|int
 name|main
 parameter_list|()
 block|{
+name|barrier_init
+argument_list|(
+operator|&
+name|barrier
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|pthread_t
 name|t
 index|[
@@ -271,15 +274,15 @@ comment|// CHECK-NEXT:   Write of size 4 at {{.*}} by thread T1:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     #0 foo1{{.*}} {{.*}}simple_stack.c:9{{(:3)?}} ({{.*}})
+comment|// CHECK-NEXT:     #0 foo1{{.*}} {{.*}}simple_stack.c:7{{(:10)?}} ({{.*}})
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     #1 bar1{{.*}} {{.*}}simple_stack.c:14{{(:3)?}} ({{.*}})
+comment|// CHECK-NEXT:     #1 bar1{{.*}} {{.*}}simple_stack.c:12{{(:3)?}} ({{.*}})
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     #2 Thread1{{.*}} {{.*}}simple_stack.c:28{{(:3)?}} ({{.*}})
+comment|// CHECK-NEXT:     #2 Thread1{{.*}} {{.*}}simple_stack.c:26{{(:3)?}} ({{.*}})
 end_comment
 
 begin_comment
@@ -287,15 +290,15 @@ comment|// CHECK:        Previous read of size 4 at {{.*}} by thread T2:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     #0 foo2{{.*}} {{.*}}simple_stack.c:18{{(:3)?}} ({{.*}})
+comment|// CHECK-NEXT:     #0 foo2{{.*}} {{.*}}simple_stack.c:16{{(:20)?}} ({{.*}})
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     #1 bar2{{.*}} {{.*}}simple_stack.c:23{{(:3)?}} ({{.*}})
+comment|// CHECK-NEXT:     #1 bar2{{.*}} {{.*}}simple_stack.c:21{{(:3)?}} ({{.*}})
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     #2 Thread2{{.*}} {{.*}}simple_stack.c:33{{(:3)?}} ({{.*}})
+comment|// CHECK-NEXT:     #2 Thread2{{.*}} {{.*}}simple_stack.c:31{{(:3)?}} ({{.*}})
 end_comment
 
 begin_comment
@@ -307,7 +310,7 @@ comment|// CHECK-NEXT:     #0 pthread_create {{.*}} ({{.*}})
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     #1 StartThread{{.*}} {{.*}}simple_stack.c:38{{(:3)?}} ({{.*}})
+comment|// CHECK-NEXT:     #1 StartThread{{.*}} {{.*}}simple_stack.c:37{{(:3)?}} ({{.*}})
 end_comment
 
 begin_comment
@@ -323,7 +326,7 @@ comment|// CHECK-NEXT:     #0 pthread_create {{.*}} ({{.*}})
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:     #1 StartThread{{.*}} {{.*}}simple_stack.c:38{{(:3)?}} ({{.*}})
+comment|// CHECK-NEXT:     #1 StartThread{{.*}} {{.*}}simple_stack.c:37{{(:3)?}} ({{.*}})
 end_comment
 
 begin_comment

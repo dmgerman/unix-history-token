@@ -65,6 +65,24 @@ directive|include
 file|"sanitizer_platform.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SANITIZER_DEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_DEBUG
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|// Only use SANITIZER_*ATTRIBUTE* before the function return type!
 end_comment
@@ -384,11 +402,14 @@ typedef|;
 comment|// WARNING: OFF_T may be different from OS type off_t, depending on the value of
 comment|// _FILE_OFFSET_BITS. This definition of OFF_T matches the ABI of system calls
 comment|// like pread and mmap, as opposed to pread64 and mmap64.
-comment|// Mac and Linux/x86-64 are special.
+comment|// FreeBSD, Mac and Linux/x86-64 are special.
 if|#
 directive|if
+name|SANITIZER_FREEBSD
+operator|||
 name|SANITIZER_MAC
 operator|||
+expr|\
 operator|(
 name|SANITIZER_LINUX
 operator|&&
@@ -516,7 +537,7 @@ name|__sanitizer_cov
 argument_list|(
 name|__sanitizer
 operator|::
-name|u8
+name|u32
 operator|*
 name|guard
 argument_list|)
@@ -1270,7 +1291,7 @@ end_define
 begin_if
 if|#
 directive|if
-name|TSAN_DEBUG
+name|SANITIZER_DEBUG
 end_if
 
 begin_define
@@ -1775,6 +1796,18 @@ name|f
 parameter_list|)
 define|\
 value|{                                                                \     int rverrno;                                                   \     do {                                                           \       res = (f);                                                   \     } while (internal_iserror(res,&rverrno)&& rverrno == EINTR); \   }
+end_define
+
+begin_comment
+comment|// Forces the compiler to generate a frame pointer in the function.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_FRAME_POINTER
+define|\
+value|do {                                                             \     volatile uptr enable_fp;                                       \     enable_fp = GET_CURRENT_FRAME();                               \   } while (0)
 end_define
 
 begin_endif

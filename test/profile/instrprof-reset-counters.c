@@ -78,7 +78,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: ![[FOO]] = metadata !{metadata !"branch_weights", i32 2, i32 1}
+comment|// CHECK: ![[FOO]] = !{!"branch_weights", i32 2, i32 1}
 end_comment
 
 end_unit
