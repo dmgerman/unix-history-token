@@ -8437,6 +8437,13 @@ name|XHCI_TRB_3_DIR_IN
 operator||
 name|XHCI_TRB_3_ISP_BIT
 expr_stmt|;
+comment|/* 				 * Section 3.2.9 in the XHCI 				 * specification about control 				 * transfers says that we should use a 				 * normal-TRB if there are more TRBs 				 * extending the data-stage 				 * TRB. Update the "trb_type". 				 */
+name|temp
+operator|->
+name|trb_type
+operator|=
+name|XHCI_TRB_TYPE_NORMAL
+expr_stmt|;
 break|break;
 case|case
 name|XHCI_TRB_TYPE_STATUS_STAGE
@@ -9539,6 +9546,14 @@ name|temp
 operator|.
 name|trb_type
 operator|=
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_did_data
+condition|?
+name|XHCI_TRB_TYPE_NORMAL
+else|:
 name|XHCI_TRB_TYPE_DATA_STAGE
 expr_stmt|;
 block|}
