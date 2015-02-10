@@ -2233,6 +2233,8 @@ operator|==
 literal|0
 condition|)
 block|{
+asm|__asm __volatile("or 2,2,2");
+comment|/* Set high thread priority */
 name|msr
 operator|=
 name|intr_disable
@@ -2313,11 +2315,15 @@ name|md_spinlock_count
 operator|==
 literal|0
 condition|)
+block|{
 name|intr_restore
 argument_list|(
 name|msr
 argument_list|)
 expr_stmt|;
+asm|__asm __volatile("or 6,6,6");
+comment|/* Set normal thread priority */
+block|}
 block|}
 name|int
 name|db_trap_glue
