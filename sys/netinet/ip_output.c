@@ -3386,7 +3386,7 @@ name|m_pkthdr
 operator|.
 name|flowid
 expr_stmt|;
-comment|/* copy multicast flag, if any */
+comment|/* copy multicast and flowid flags, if any */
 name|m
 operator|->
 name|m_flags
@@ -3396,7 +3396,11 @@ name|m0
 operator|->
 name|m_flags
 operator|&
+operator|(
 name|M_MCAST
+operator||
+name|M_FLOWID
+operator|)
 operator|)
 expr_stmt|;
 comment|/* 		 * In the first mbuf, leave room for the link header, then 		 * copy the original IP header including options. The payload 		 * goes into an additional mbuf chain returned by m_copym(). 		 */
