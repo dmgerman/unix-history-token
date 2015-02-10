@@ -854,8 +854,14 @@ name|int
 name|ncpus
 decl_stmt|,
 name|i
+decl_stmt|,
+name|error
 decl_stmt|;
 comment|/* 	 * This doesn't appear to actually support affinity groups, so pick a 	 * random CPU. 	 */
+name|ncpus
+operator|=
+literal|0
+expr_stmt|;
 name|CPU_FOREACH
 argument_list|(
 argument|cpu
@@ -912,6 +918,8 @@ name|ncpus
 operator|++
 expr_stmt|;
 block|}
+name|error
+operator|=
 name|rtas_call_method
 argument_list|(
 name|sc
@@ -930,6 +938,21 @@ name|XICP_PRIORITY
 argument_list|,
 operator|&
 name|status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|<
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"Cannot bind interrupt %d to CPU %d"
+argument_list|,
+name|irq
+argument_list|,
+name|cpu
 argument_list|)
 expr_stmt|;
 block|}
