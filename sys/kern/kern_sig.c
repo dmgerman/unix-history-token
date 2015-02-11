@@ -16216,15 +16216,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|data
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|out
-goto|;
-if|if
-condition|(
 name|vn_fullpath_global
 argument_list|(
 name|td
