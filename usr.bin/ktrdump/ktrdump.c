@@ -113,7 +113,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: ktrdump [-cfqrtH] [-e execfile] [-i ktrfile] [-m corefile] [-o outfile]\n"
+value|"usage: ktrdump [-cfqrtH] [-i ktrfile] [-M core] [-N system] [-o outfile]\n"
 end_define
 
 begin_function_decl
@@ -167,13 +167,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|eflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|fflag
 decl_stmt|;
 end_decl_stmt
@@ -181,7 +174,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mflag
+name|Mflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|Nflag
 decl_stmt|;
 end_decl_stmt
 
@@ -387,7 +387,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"cfqrtHe:i:m:o:"
+literal|"cfqrtHe:i:m:M:N:o:"
 argument_list|)
 operator|)
 operator|!=
@@ -407,6 +407,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'N'
+case|:
 case|case
 literal|'e'
 case|:
@@ -438,7 +441,7 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|eflag
+name|Nflag
 operator|=
 literal|1
 expr_stmt|;
@@ -485,6 +488,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'M'
+case|:
+case|case
 literal|'m'
 case|:
 if|if
@@ -515,7 +521,7 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|mflag
+name|Mflag
 operator|=
 literal|1
 expr_stmt|;
@@ -612,13 +618,13 @@ name|kd
 operator|=
 name|kvm_openfiles
 argument_list|(
-name|eflag
+name|Nflag
 condition|?
 name|execfile
 else|:
 name|NULL
 argument_list|,
-name|mflag
+name|Mflag
 condition|?
 name|corefile
 else|:

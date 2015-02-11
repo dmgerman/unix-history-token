@@ -543,6 +543,11 @@ name|argv
 condition|)
 do|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"file"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|total
@@ -574,11 +579,6 @@ literal|"total"
 argument_list|)
 expr_stmt|;
 block|}
-name|xo_close_list
-argument_list|(
-literal|"file"
-argument_list|)
-expr_stmt|;
 name|xo_close_container
 argument_list|(
 literal|"wc"

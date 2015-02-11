@@ -286,6 +286,11 @@ name|char
 modifier|*
 name|ic_name
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ic_offload
+decl_stmt|;
 name|void
 function_decl|(
 modifier|*

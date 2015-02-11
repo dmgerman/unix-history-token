@@ -3227,6 +3227,11 @@ name|sz
 operator|=
 sizeof|sizeof
 argument_list|(
+name|ipfw_obj_header
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
 expr|struct
 name|nat44_cfg_nat
 argument_list|)
@@ -3278,12 +3283,6 @@ operator|->
 name|valsize
 operator|<
 name|sz
-operator|+
-sizeof|sizeof
-argument_list|(
-operator|*
-name|oh
-argument_list|)
 condition|)
 block|{
 comment|/* 		 * Submitted buffer size is not enough. 		 * WE've already filled in @ucfg structure with 		 * relevant info including size, so we 		 * can return. Buffer will be flushed automatically. 		 */

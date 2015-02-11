@@ -1154,6 +1154,7 @@ begin_struct
 struct|struct
 name|ar9300_ini_array
 block|{
+specifier|const
 name|u_int32_t
 modifier|*
 name|ia_array
@@ -1181,7 +1182,7 @@ name|rows
 parameter_list|,
 name|columns
 parameter_list|)
-value|do {             \     (iniarray)->ia_array = (u_int32_t *)(array);    \     (iniarray)->ia_rows = (rows);       \     (iniarray)->ia_columns = (columns); \ } while (0)
+value|do {             \     (iniarray)->ia_array = (const u_int32_t *)(array);    \     (iniarray)->ia_rows = (rows);       \     (iniarray)->ia_columns = (columns); \ } while (0)
 end_define
 
 begin_define

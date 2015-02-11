@@ -231,10 +231,11 @@ define|#
 directive|define
 name|cpu_spinwait
 parameter_list|()
+value|__asm __volatile("or 27,27,27")
 end_define
 
 begin_comment
-comment|/* nothing */
+comment|/* yield */
 end_comment
 
 begin_decl_stmt

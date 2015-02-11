@@ -910,7 +910,7 @@ argument_list|,
 name|__func__
 argument_list|,
 operator|(
-name|intmax_t
+name|uintmax_t
 operator|)
 name|off
 argument_list|,
@@ -2548,7 +2548,7 @@ name|sc
 argument_list|,
 name|MALO_DEBUG_RESET
 argument_list|,
-literal|"%s: %s DMA map: %p (%lu) -> %p (%lu)\n"
+literal|"%s: %s DMA map: %p (%lu) -> 0x%jx (%lu)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2566,7 +2566,7 @@ operator|->
 name|dd_desc_len
 argument_list|,
 operator|(
-name|caddr_t
+name|uintmax_t
 operator|)
 name|dd
 operator|->
@@ -4453,7 +4453,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"R[%2u] (DS.V:%p DS.P:%p) NEXT:%08x DATA:%08x RC:%02x%s\n"
+literal|"R[%2u] (DS.V:%p DS.P:0x%jx) NEXT:%08x DATA:%08x RC:%02x%s\n"
 literal|"      STAT:%02x LEN:%04x SNR:%02x NF:%02x CHAN:%02x"
 literal|" RATE:%02x QOS:%04x\n"
 argument_list|,
@@ -4462,10 +4462,7 @@ argument_list|,
 name|ds
 argument_list|,
 operator|(
-specifier|const
-expr|struct
-name|malo_desc
-operator|*
+name|uintmax_t
 operator|)
 name|bf
 operator|->
@@ -4594,15 +4591,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" (DS.V:%p DS.P:%p)\n"
+literal|" (DS.V:%p DS.P:0x%jx)\n"
 argument_list|,
 name|ds
 argument_list|,
 operator|(
-specifier|const
-expr|struct
-name|malo_txdesc
-operator|*
+name|uintmax_t
 operator|)
 name|bf
 operator|->

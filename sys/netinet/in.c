@@ -4407,7 +4407,7 @@ operator|->
 name|base
 argument_list|)
 expr_stmt|;
-name|callout_init_rw
+name|callout_init
 argument_list|(
 operator|&
 name|lle
@@ -4416,14 +4416,7 @@ name|base
 operator|.
 name|la_timer
 argument_list|,
-operator|&
-name|lle
-operator|->
-name|base
-operator|.
-name|lle_lock
-argument_list|,
-name|CALLOUT_RETURNUNLOCKED
+literal|1
 argument_list|)
 expr_stmt|;
 return|return

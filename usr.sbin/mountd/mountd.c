@@ -8827,6 +8827,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* 		 * EXDEV is returned when path exists but is not a 		 * mount point.  May happens if raced with unmount. 		 */
 if|if
 condition|(
 name|nmount
@@ -8849,6 +8850,10 @@ operator|&&
 name|errno
 operator|!=
 name|ENOTSUP
+operator|&&
+name|errno
+operator|!=
+name|EXDEV
 condition|)
 block|{
 name|syslog

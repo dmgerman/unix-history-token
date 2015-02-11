@@ -2544,6 +2544,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MSR_APIC_000
+value|0x800
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSR_APIC_ID
 value|0x802
 end_define

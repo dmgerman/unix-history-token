@@ -378,6 +378,7 @@ name|index_tree_node
 modifier|*
 name|node
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -392,6 +393,7 @@ name|void
 modifier|*
 name|node
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -487,6 +489,7 @@ name|index_tree
 modifier|*
 name|tree
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -501,6 +504,7 @@ name|void
 modifier|*
 name|node
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -1032,6 +1036,7 @@ parameter_list|,
 name|lzma_vli
 name|block_number_base
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -1165,6 +1170,7 @@ name|void
 modifier|*
 name|node
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -1198,6 +1204,7 @@ name|lzma_index
 modifier|*
 name|index_init_plain
 parameter_list|(
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -1283,7 +1290,7 @@ begin_macro
 unit|)
 name|lzma_index_init
 argument_list|(
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|)
 end_macro
 
@@ -1371,7 +1378,7 @@ name|lzma_index_end
 argument_list|(
 argument|lzma_index *i
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|)
 end_macro
 
@@ -2265,7 +2272,7 @@ name|lzma_index_append
 argument_list|(
 argument|lzma_index *i
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|,
 argument|lzma_vli unpadded_size
 argument_list|,
@@ -2830,7 +2837,7 @@ argument|lzma_index *restrict dest
 argument_list|,
 argument|lzma_index *restrict src
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|)
 end_macro
 
@@ -3348,6 +3355,7 @@ name|index_stream
 modifier|*
 name|src
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -3649,7 +3657,7 @@ name|lzma_index_dup
 argument_list|(
 argument|const lzma_index *src
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|)
 end_macro
 

@@ -74,6 +74,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -109,6 +110,7 @@ modifier|*
 modifier|*
 name|options
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator

@@ -197,6 +197,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TUKLIB_DOSLIKE
+end_ifndef
+
+begin_comment
+comment|/// \brief      Write a byte to user_abort_pipe[1]
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is called from a signal handler.
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|io_write_to_user_abort_pipe
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/// \brief      Disable creation of sparse files when decompressing
 end_comment
@@ -339,6 +372,61 @@ name|buf
 parameter_list|,
 name|size_t
 name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief      Fix the position in src_fd
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is used when --single-thream has been specified and decompression
+end_comment
+
+begin_comment
+comment|/// is successful. If the input file descriptor supports seeking, this
+end_comment
+
+begin_comment
+comment|/// function fixes the input position to point to the next byte after the
+end_comment
+
+begin_comment
+comment|/// decompressed stream.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param      pair        File pair having the source file open for reading
+end_comment
+
+begin_comment
+comment|/// \param      rewind_size How many bytes of extra have been read i.e.
+end_comment
+
+begin_comment
+comment|///                         how much to seek backwards.
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|io_fix_src_pos
+parameter_list|(
+name|file_pair
+modifier|*
+name|pair
+parameter_list|,
+name|size_t
+name|rewind_size
 parameter_list|)
 function_decl|;
 end_function_decl
