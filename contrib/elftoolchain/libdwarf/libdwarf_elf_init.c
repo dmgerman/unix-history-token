@@ -179,6 +179,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|size
+operator|==
+literal|0
+condition|)
+continue|continue;
+comment|/* Unknown or non-absolute relocation. */
+if|if
+condition|(
 name|endian
 operator|==
 name|ELFDATA2MSB
@@ -190,6 +198,10 @@ argument_list|,
 operator|&
 name|offset
 argument_list|,
+name|sym
+operator|.
+name|st_value
+operator|+
 name|rela
 operator|.
 name|r_addend
@@ -205,6 +217,10 @@ argument_list|,
 operator|&
 name|offset
 argument_list|,
+name|sym
+operator|.
+name|st_value
+operator|+
 name|rela
 operator|.
 name|r_addend
