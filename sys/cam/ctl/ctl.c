@@ -54975,6 +54975,12 @@ operator|/
 name|CTL_MAX_INIT_PER_PORT
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|pu
+operator|!=
+name|NULL
+condition|)
 name|pu
 index|[
 name|initidx
