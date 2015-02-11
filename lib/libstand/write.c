@@ -108,7 +108,9 @@ name|F_RAW
 condition|)
 block|{
 name|twiddle
-argument_list|()
+argument_list|(
+literal|4
+argument_list|)
 expr_stmt|;
 name|errno
 operator|=

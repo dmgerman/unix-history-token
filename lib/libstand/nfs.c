@@ -2915,7 +2915,9 @@ literal|0
 condition|)
 block|{
 name|twiddle
-argument_list|()
+argument_list|(
+literal|16
+argument_list|)
 expr_stmt|;
 name|cc
 operator|=
@@ -6295,7 +6297,9 @@ literal|0
 condition|)
 block|{
 name|twiddle
-argument_list|()
+argument_list|(
+literal|16
+argument_list|)
 expr_stmt|;
 name|cc
 operator|=
