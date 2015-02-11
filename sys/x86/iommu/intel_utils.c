@@ -1980,8 +1980,7 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* VM_OBJECT_RLOCK(unit->ctx_obj); */
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|unit
 operator|->
@@ -1999,8 +1998,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* VM_OBJECT_RUNLOCK(unit->ctx_obj); */
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|unit
 operator|->
