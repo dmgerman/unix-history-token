@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2013 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by Konstantin Belousov<kib@FreeBSD.org>  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2013-2015 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by Konstantin Belousov<kib@FreeBSD.org>  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -336,6 +336,276 @@ begin_comment
 comment|/* Transient Mapping */
 end_comment
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|dmar_irte
+block|{
+name|uint64_t
+name|irte1
+decl_stmt|;
+name|uint64_t
+name|irte2
+decl_stmt|;
+block|}
+name|dmar_irte_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Source Validation Type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE2_SVT_NONE
+value|(0ULL<< (82 - 64))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE2_SVT_RID
+value|(1ULL<< (82 - 64))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE2_SVT_BUS
+value|(2ULL<< (82 - 64))
+end_define
+
+begin_comment
+comment|/* Source-id Qualifier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE2_SQ_RID
+value|(0ULL<< (80 - 64))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE2_SQ_RID_N2
+value|(1ULL<< (80 - 64))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE2_SQ_RID_N21
+value|(2ULL<< (80 - 64))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE2_SQ_RID_N210
+value|(3ULL<< (80 - 64))
+end_define
+
+begin_comment
+comment|/* Source Identifier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE2_SID_RID
+parameter_list|(
+name|x
+parameter_list|)
+value|((uint64_t)(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE2_SID_BUS
+parameter_list|(
+name|start
+parameter_list|,
+name|end
+parameter_list|)
+value|((((uint64_t)(start))<< 8) | (end))
+end_define
+
+begin_comment
+comment|/* Destination Id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_DST_xAPIC
+parameter_list|(
+name|x
+parameter_list|)
+value|(((uint64_t)(x))<< 40)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_DST_x2APIC
+parameter_list|(
+name|x
+parameter_list|)
+value|(((uint64_t)(x))<< 32)
+end_define
+
+begin_comment
+comment|/* Vector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_V
+parameter_list|(
+name|x
+parameter_list|)
+value|(((uint64_t)x)<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_IM_POSTED
+value|(1ULL<< 15)
+end_define
+
+begin_comment
+comment|/* Posted */
+end_comment
+
+begin_comment
+comment|/* Delivery Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_DLM_FM
+value|(0ULL<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_DLM_LP
+value|(1ULL<< 5
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_DLM_SMI
+value|(2ULL<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_DLM_NMI
+value|(4ULL<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_DLM_INIT
+value|(5ULL<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_DLM_ExtINT
+value|(7ULL<< 5)
+end_define
+
+begin_comment
+comment|/* Trigger Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_TM_EDGE
+value|(0ULL<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_TM_LEVEL
+value|(1ULL<< 4)
+end_define
+
+begin_comment
+comment|/* Redirection Hint */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_RH_DIRECT
+value|(0ULL<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_RH_SELECT
+value|(1ULL<< 3)
+end_define
+
+begin_comment
+comment|/* Destination Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_DM_PHYSICAL
+value|(0ULL<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_DM_LOGICAL
+value|(1ULL<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_FPD
+value|(1ULL<< 1)
+end_define
+
+begin_comment
+comment|/* Fault Processing Disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTE1_P
+value|(1ULL)
+end_define
+
+begin_comment
+comment|/* Present */
+end_comment
+
 begin_comment
 comment|/* Version register */
 end_comment
@@ -377,6 +647,28 @@ directive|define
 name|DMAR_CAP_REG
 value|0x8
 end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_CAP_PI
+value|(1ULL<< 59)
+end_define
+
+begin_comment
+comment|/* Posted Interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_CAP_FL1GP
+value|(1ULL<< 56)
+end_define
+
+begin_comment
+comment|/* First Level 1GByte Page */
+end_comment
 
 begin_define
 define|#
@@ -659,6 +951,130 @@ directive|define
 name|DMAR_ECAP_REG
 value|0x10
 end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_ECAP_PSS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 35)& 0xf)
+end_define
+
+begin_comment
+comment|/* PASID Size Supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_ECAP_EAFS
+value|(1ULL<< 34)
+end_define
+
+begin_comment
+comment|/* Extended Accessed Flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_ECAP_NWFS
+value|(1ULL<< 33)
+end_define
+
+begin_comment
+comment|/* No Write Flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_ECAP_SRS
+value|(1ULL<< 31)
+end_define
+
+begin_comment
+comment|/* Supervisor Request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_ECAP_ERS
+value|(1ULL<< 30)
+end_define
+
+begin_comment
+comment|/* Execute Request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_ECAP_PRS
+value|(1ULL<< 29)
+end_define
+
+begin_comment
+comment|/* Page Request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_ECAP_PASID
+value|(1ULL<< 28)
+end_define
+
+begin_comment
+comment|/* Process Address Space Id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_ECAP_DIS
+value|(1ULL<< 27)
+end_define
+
+begin_comment
+comment|/* Deferred Invalidate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_ECAP_NEST
+value|(1ULL<< 26)
+end_define
+
+begin_comment
+comment|/* Nested Translation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_ECAP_MTS
+value|(1ULL<< 25)
+end_define
+
+begin_comment
+comment|/* Memory Type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_ECAP_ECS
+value|(1ULL<< 24)
+end_define
+
+begin_comment
+comment|/* Extended Context */
+end_comment
 
 begin_define
 define|#
@@ -1931,6 +2347,56 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DMAR_IQ_DESCR_IEC_INV
+value|0x4
+end_define
+
+begin_comment
+comment|/* Invalidate Interrupt Entry Cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_IEC_IDX
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* Index-Selective Invalidation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_IEC_IIDX
+parameter_list|(
+name|x
+parameter_list|)
+value|(((uint64_t)x)<< 32)
+end_define
+
+begin_comment
+comment|/* Interrupt Index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_IEC_IM
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 27)
+end_define
+
+begin_comment
+comment|/* Index Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DMAR_IQ_DESCR_WAIT_ID
 value|0x5
 end_define
@@ -2175,6 +2641,28 @@ directive|define
 name|DMAR_IRTA_REG
 value|0xb8
 end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTA_EIME
+value|(1<< 11)
+end_define
+
+begin_comment
+comment|/* Extended Interrupt Mode 						   Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IRTA_S_MASK
+value|0xf
+end_define
+
+begin_comment
+comment|/* Size Mask */
+end_comment
 
 begin_endif
 endif|#

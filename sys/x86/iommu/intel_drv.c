@@ -1946,7 +1946,7 @@ literal|"%b, "
 argument_list|,
 name|caphi
 argument_list|,
-literal|"\020\010PSI\027DWD\030DRD"
+literal|"\020\010PSI\027DWD\030DRD\031FL1GP\034PSI"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2046,7 +2046,8 @@ name|unit
 operator|->
 name|hw_ecap
 argument_list|,
-literal|"\020\001C\002QI\003DI\004IR\005EIM\007PT\010SC"
+literal|"\020\001C\002QI\003DI\004IR\005EIM\007PT\010SC\031ECS\032MTS"
+literal|"\033NEST\034DIS\035PASID\036PRS\037ERS\040SRS"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2055,7 +2056,7 @@ literal|"%b, "
 argument_list|,
 name|ecaphi
 argument_list|,
-literal|"\020"
+literal|"\020\002NWFS\003EAFS"
 argument_list|)
 expr_stmt|;
 name|printf
