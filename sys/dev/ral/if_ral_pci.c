@@ -488,9 +488,33 @@ block|,
 block|{
 literal|0x1814
 block|,
+literal|0x5360
+block|,
+literal|"Ralink Technology RT5390"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x5362
+block|,
+literal|"Ralink Technology RT5392"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
 literal|0x5390
 block|,
 literal|"Ralink Technology RT5390"
+block|}
+block|,
+block|{
+literal|0x1814
+block|,
+literal|0x5392
+block|,
+literal|"Ralink Technology RT5392"
 block|}
 block|,
 block|{
