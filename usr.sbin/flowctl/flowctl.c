@@ -1023,8 +1023,10 @@ parameter_list|)
 block|{
 name|struct
 name|ng_mesg
-modifier|*
 name|ng_mesg
+index|[
+name|SORCVBUF_SIZE
+index|]
 decl_stmt|;
 name|struct
 name|ngnf_show_header
@@ -1038,13 +1040,6 @@ name|token
 decl_stmt|,
 name|nread
 decl_stmt|;
-name|ng_mesg
-operator|=
-name|alloca
-argument_list|(
-name|SORCVBUF_SIZE
-argument_list|)
-expr_stmt|;
 name|req
 operator|.
 name|version
