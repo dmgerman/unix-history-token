@@ -25,6 +25,12 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/sysreg.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1106,6 +1112,103 @@ name|c
 parameter_list|)
 value|mov##c	pc, lr
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|7
+end_if
+
+begin_define
+define|#
+directive|define
+name|ISB
+value|isb
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSB
+value|dsb
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMB
+value|dmb
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__ARM_ARCH
+operator|==
+literal|6
+end_elif
+
+begin_define
+define|#
+directive|define
+name|ISB
+value|mcr CP15_CP15ISB
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSB
+value|mcr CP15_CP15DSB
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMB
+value|mcr CP15_CP15DMB
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISB
+value|mcr CP15_CP15ISB
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSB
+value|mcr CP15_CP15DSB
+end_define
+
+begin_comment
+comment|/* DSB and DMB are the */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMB
+value|mcr CP15_CP15DSB
+end_define
+
+begin_comment
+comment|/* same prior to v6.*/
+end_comment
 
 begin_endif
 endif|#
