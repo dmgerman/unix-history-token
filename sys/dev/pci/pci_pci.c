@@ -4781,6 +4781,9 @@ block|{
 name|device_t
 name|pcib
 decl_stmt|;
+name|int
+name|dstate
+decl_stmt|;
 if|if
 condition|(
 name|pci_do_power_resume
@@ -4796,6 +4799,10 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|dstate
+operator|=
+name|PCI_POWERSTATE_D0
+expr_stmt|;
 if|if
 condition|(
 name|PCIB_POWER_FOR_SLEEP
@@ -4804,7 +4811,8 @@ name|pcib
 argument_list|,
 name|dev
 argument_list|,
-name|NULL
+operator|&
+name|dstate
 argument_list|)
 operator|==
 literal|0
@@ -4813,7 +4821,7 @@ name|pci_set_powerstate
 argument_list|(
 name|dev
 argument_list|,
-name|PCI_POWERSTATE_D0
+name|dstate
 argument_list|)
 expr_stmt|;
 block|}
