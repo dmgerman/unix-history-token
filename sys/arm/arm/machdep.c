@@ -276,6 +276,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpuinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/devmap.h>
 end_include
 
@@ -4986,6 +4992,9 @@ expr_stmt|;
 name|memsize
 operator|=
 literal|0
+expr_stmt|;
+name|cpuinfo_init
+argument_list|()
 expr_stmt|;
 name|set_cpufuncs
 argument_list|()
