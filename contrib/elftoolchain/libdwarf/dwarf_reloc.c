@@ -32,11 +32,11 @@ name|oldapply
 operator|=
 name|_libdwarf
 operator|.
-name|applyrela
+name|applyreloc
 expr_stmt|;
 name|_libdwarf
 operator|.
-name|applyrela
+name|applyreloc
 operator|=
 name|apply
 expr_stmt|;
