@@ -128,34 +128,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * EENTRY()/EEND() mark "extra" entry/exit points from a function.  * The unwind info cannot handle the concept of a nested function, or a function  * with multiple .fnstart directives, but some of our assembler code is written  * with multiple labels to allow entry at several points.  The EENTRY() macro  * defines such an extra entry point without a new .fnstart, so that it's  * basically just a label that you can jump to.  The EEND() macro does nothing  * at all, except document the exit point associated with the same-named entry.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_EENTRY
-parameter_list|(
-name|x
-parameter_list|)
-value|.globl x; .type x,_ASM_TYPE_FUNCTION; x:
-end_define
-
-begin_define
-define|#
-directive|define
-name|_EEND
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* nothing */
-end_comment
-
-begin_comment
-comment|/*  * gas/arm uses @ as a single comment character and thus cannot be used here  * Instead it recognised the # instead of an @ symbols in .type directives  * We define a couple of macros so that assembly code will not be dependent  * on one or the other.  */
+comment|/*  * gas/arm uses @ as a single comment character and thus cannot be used here.  * It recognises the # instead of an @ symbol in .type directives.  */
 end_comment
 
 begin_define
@@ -172,36 +145,9 @@ name|_ASM_TYPE_OBJECT
 value|#object
 end_define
 
-begin_define
-define|#
-directive|define
-name|GLOBAL
-parameter_list|(
-name|X
-parameter_list|)
-value|.globl x
-end_define
-
-begin_define
-define|#
-directive|define
-name|_ENTRY
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|.text; _ALIGN_TEXT; _EENTRY(x) _FNSTART
-end_define
-
-begin_define
-define|#
-directive|define
-name|_END
-parameter_list|(
-name|x
-parameter_list|)
-value|.size x, . - x; _FNEND
-end_define
+begin_comment
+comment|/* XXX Is this still the right prologue for profiling? */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -214,7 +160,7 @@ define|#
 directive|define
 name|_PROF_PROLOGUE
 define|\
-value|mov ip, lr; bl __mcount
+value|mov ip, lr;	\ 	bl __mcount
 end_define
 
 begin_else
@@ -233,6 +179,103 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * EENTRY()/EEND() mark "extra" entry/exit points from a function.  * LEENTRY()/LEEND() are the the same for local symbols.  * The unwind info cannot handle the concept of a nested function, or a function  * with multiple .fnstart directives, but some of our assembler code is written  * with multiple labels to allow entry at several points.  The EENTRY() macro  * defines such an extra entry point without a new .fnstart, so that it's  * basically just a label that you can jump to.  The EEND() macro does nothing  * at all, except document the exit point associated with the same-named entry.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOBAL
+parameter_list|(
+name|x
+parameter_list|)
+value|.global x
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LEENTRY
+parameter_list|(
+name|x
+parameter_list|)
+value|.type x,_ASM_TYPE_FUNCTION; x:
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LEEND
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_EENTRY
+parameter_list|(
+name|x
+parameter_list|)
+value|GLOBAL(x); _LEENTRY(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_EEND
+parameter_list|(
+name|x
+parameter_list|)
+value|_LEEND(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LENTRY
+parameter_list|(
+name|x
+parameter_list|)
+value|.text; _ALIGN_TEXT; _LEENTRY(x); _FNSTART
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LEND
+parameter_list|(
+name|x
+parameter_list|)
+value|.size x, . - x; _FNEND
+end_define
+
+begin_define
+define|#
+directive|define
+name|_ENTRY
+parameter_list|(
+name|x
+parameter_list|)
+value|.text; _ALIGN_TEXT; _EENTRY(x); _FNSTART
+end_define
+
+begin_define
+define|#
+directive|define
+name|_END
+parameter_list|(
+name|x
+parameter_list|)
+value|_LEND(x)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -250,7 +293,7 @@ name|EENTRY
 parameter_list|(
 name|y
 parameter_list|)
-value|_EENTRY(_C_LABEL(y)); _PROF_PROLOGUE
+value|_EENTRY(_C_LABEL(y));
 end_define
 
 begin_define
@@ -290,6 +333,7 @@ name|EEND
 parameter_list|(
 name|y
 parameter_list|)
+value|_EEND(_C_LABEL(y))
 end_define
 
 begin_define
@@ -305,11 +349,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASLENTRY
+parameter_list|(
+name|y
+parameter_list|)
+value|_LENTRY(_ASM_LABEL(y)); _PROF_PROLOGUE
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASEENTRY
 parameter_list|(
 name|y
 parameter_list|)
-value|_EENTRY(_ASM_LABEL(y)); _PROF_PROLOGUE
+value|_EENTRY(_ASM_LABEL(y));
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASLEENTRY
+parameter_list|(
+name|y
+parameter_list|)
+value|_LEENTRY(_ASM_LABEL(y));
 end_define
 
 begin_define
@@ -325,11 +389,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASLENTRY_NP
+parameter_list|(
+name|y
+parameter_list|)
+value|_LENTRY(_ASM_LABEL(y))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASEENTRY_NP
 parameter_list|(
 name|y
 parameter_list|)
 value|_EENTRY(_ASM_LABEL(y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASLEENTRY_NP
+parameter_list|(
+name|y
+parameter_list|)
+value|_LEENTRY(_ASM_LABEL(y))
 end_define
 
 begin_define
@@ -345,10 +429,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASLEND
+parameter_list|(
+name|y
+parameter_list|)
+value|_LEND(_ASM_LABEL(y))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASEEND
 parameter_list|(
 name|y
 parameter_list|)
+value|_EEND(_ASM_LABEL(y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASLEEND
+parameter_list|(
+name|y
+parameter_list|)
+value|_LEEND(_ASM_LABEL(y))
 end_define
 
 begin_define
