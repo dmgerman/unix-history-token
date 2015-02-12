@@ -6824,6 +6824,12 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|char
+name|ip6buf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
@@ -6898,9 +6904,17 @@ operator|(
 name|LOG_NOTICE
 operator|,
 literal|"in6_unlink_ifa: autoconf'ed address "
-literal|"%p has no prefix\n"
+literal|"%s has no prefix\n"
 operator|,
+name|ip6_sprintf
+argument_list|(
+name|ip6buf
+argument_list|,
+name|IA6_IN6
+argument_list|(
 name|ia
+argument_list|)
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
