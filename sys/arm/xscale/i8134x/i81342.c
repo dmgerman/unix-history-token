@@ -56,6 +56,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<machine/armreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -694,7 +700,7 @@ begin_block
 block|{
 name|disable_interrupts
 argument_list|(
-name|I32_bit
+name|PSR_I
 argument_list|)
 expr_stmt|;
 comment|/* XXX: Use the watchdog to reset for now */

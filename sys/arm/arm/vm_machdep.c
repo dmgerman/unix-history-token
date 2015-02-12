@@ -696,7 +696,7 @@ operator|->
 name|tf_spsr
 operator|&=
 operator|~
-name|PSR_C_bit
+name|PSR_C
 expr_stmt|;
 name|tf
 operator|->
@@ -1514,7 +1514,7 @@ operator|->
 name|tf_spsr
 operator|&=
 operator|~
-name|PSR_C_bit
+name|PSR_C
 expr_stmt|;
 comment|/* carry bit */
 break|break;
@@ -1545,7 +1545,7 @@ name|frame
 operator|->
 name|tf_spsr
 operator||=
-name|PSR_C_bit
+name|PSR_C
 expr_stmt|;
 comment|/* carry bit */
 break|break;
@@ -1665,7 +1665,7 @@ operator|->
 name|tf_spsr
 operator|&=
 operator|~
-name|PSR_C_bit
+name|PSR_C
 expr_stmt|;
 name|tf
 operator|->
