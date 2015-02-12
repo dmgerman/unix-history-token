@@ -1928,6 +1928,8 @@ operator|+
 literal|1
 argument_list|,
 name|arm_cache_loc
+operator|+
+literal|1
 argument_list|,
 name|CPU_CLIDR_LOUIS
 argument_list|(
