@@ -929,7 +929,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|pmap_kenter_temp
+name|pmap_kenter_temporary
 parameter_list|(
 name|vm_paddr_t
 name|pa

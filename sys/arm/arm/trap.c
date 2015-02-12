@@ -1980,9 +1980,9 @@ operator|*
 operator|)
 name|pcb
 operator|->
-name|un_32
+name|pcb_regs
 operator|.
-name|pcb32_sp
+name|sf_sp
 operator|)
 operator|-
 literal|1
