@@ -258,7 +258,7 @@ name|pbp
 decl_stmt|;
 name|cputype
 operator|=
-name|cpu_id
+name|cpu_ident
 argument_list|()
 operator|&
 name|CPU_ID_CPU_MASK

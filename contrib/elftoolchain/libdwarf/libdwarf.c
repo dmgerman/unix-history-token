@@ -34,7 +34,7 @@ operator|=
 name|NULL
 block|,
 operator|.
-name|applyrela
+name|applyreloc
 operator|=
 literal|1
 block|}

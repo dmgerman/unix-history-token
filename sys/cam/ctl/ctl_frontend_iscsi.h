@@ -124,6 +124,10 @@ decl_stmt|;
 name|uint32_t
 name|cdw_datasn
 decl_stmt|;
+name|void
+modifier|*
+name|cdw_icl_prv
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -93,6 +93,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"memcmplen.h"
+end_include
+
 begin_struct
 struct|struct
 name|lzma_coder_s
@@ -300,6 +306,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -661,6 +668,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -823,6 +831,7 @@ name|lzma_mf
 modifier|*
 name|mf
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -1356,34 +1365,25 @@ operator|+=
 name|HASH_3_SIZE
 expr_stmt|;
 comment|/* 	No match finder uses this at the moment. 	if (mf->hash_bytes> 4) 		hs += HASH_4_SIZE; */
-comment|// If the above code calculating hs is modified, make sure that
-comment|// this assertion stays valid (UINT32_MAX / 5 is not strictly the
-comment|// exact limit). If it doesn't, you need to calculate that
-comment|// hash_size_sum + sons_count cannot overflow.
-name|assert
-argument_list|(
-name|hs
-operator|<
-name|UINT32_MAX
-operator|/
-literal|5
-argument_list|)
-expr_stmt|;
 specifier|const
 name|uint32_t
-name|old_count
+name|old_hash_count
 init|=
 name|mf
 operator|->
-name|hash_size_sum
-operator|+
+name|hash_count
+decl_stmt|;
+specifier|const
+name|uint32_t
+name|old_sons_count
+init|=
 name|mf
 operator|->
 name|sons_count
 decl_stmt|;
 name|mf
 operator|->
-name|hash_size_sum
+name|hash_count
 operator|=
 name|hs
 expr_stmt|;
@@ -1405,25 +1405,21 @@ name|sons_count
 operator|*=
 literal|2
 expr_stmt|;
-specifier|const
-name|uint32_t
-name|new_count
-init|=
-name|mf
-operator|->
-name|hash_size_sum
-operator|+
-name|mf
-operator|->
-name|sons_count
-decl_stmt|;
 comment|// Deallocate the old hash array if it exists and has different size
 comment|// than what is needed now.
 if|if
 condition|(
-name|old_count
+name|old_hash_count
 operator|!=
-name|new_count
+name|mf
+operator|->
+name|hash_count
+operator|||
+name|old_sons_count
+operator|!=
+name|mf
+operator|->
+name|sons_count
 condition|)
 block|{
 name|lzma_free
@@ -1438,6 +1434,21 @@ expr_stmt|;
 name|mf
 operator|->
 name|hash
+operator|=
+name|NULL
+expr_stmt|;
+name|lzma_free
+argument_list|(
+name|mf
+operator|->
+name|son
+argument_list|,
+name|allocator
+argument_list|)
+expr_stmt|;
+name|mf
+operator|->
+name|son
 operator|=
 name|NULL
 expr_stmt|;
@@ -1505,6 +1516,7 @@ name|lzma_mf
 modifier|*
 name|mf
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -1525,6 +1537,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|// lzma_memcmplen() is used for the dictionary buffer
+comment|// so we need to allocate a few extra bytes to prevent
+comment|// it from reading past the end of the buffer.
 name|mf
 operator|->
 name|buffer
@@ -1534,6 +1549,8 @@ argument_list|(
 name|mf
 operator|->
 name|size
+operator|+
+name|LZMA_MEMCMPLEN_EXTRA
 argument_list|,
 name|allocator
 argument_list|)
@@ -1549,6 +1566,22 @@ condition|)
 return|return
 name|true
 return|;
+comment|// Keep Valgrind happy with lzma_memcmplen() and initialize
+comment|// the extra bytes whose value may get read but which will
+comment|// effectively get ignored.
+name|memzero
+argument_list|(
+name|mf
+operator|->
+name|buffer
+operator|+
+name|mf
+operator|->
+name|size
+argument_list|,
+name|LZMA_MEMCMPLEN_EXTRA
+argument_list|)
+expr_stmt|;
 block|}
 comment|// Use cyclic_size as initial mf->offset. This allows
 comment|// avoiding a few branches in the match finders. The downside is
@@ -1592,19 +1625,6 @@ name|pending
 operator|=
 literal|0
 expr_stmt|;
-comment|// Allocate match finder's hash array.
-specifier|const
-name|size_t
-name|alloc_count
-init|=
-name|mf
-operator|->
-name|hash_size_sum
-operator|+
-name|mf
-operator|->
-name|sons_count
-decl_stmt|;
 if|#
 directive|if
 name|UINT32_MAX
@@ -1616,7 +1636,20 @@ comment|// Check for integer overflow. (Huge dictionaries are not
 comment|// possible on 32-bit CPU.)
 if|if
 condition|(
-name|alloc_count
+name|mf
+operator|->
+name|hash_count
+operator|>
+name|SIZE_MAX
+operator|/
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+operator|||
+name|mf
+operator|->
+name|sons_count
 operator|>
 name|SIZE_MAX
 operator|/
@@ -1630,6 +1663,16 @@ name|true
 return|;
 endif|#
 directive|endif
+comment|// Allocate and initialize the hash table. Since EMPTY_HASH_VALUE
+comment|// is zero, we can use lzma_alloc_zero() or memzero() for mf->hash.
+comment|//
+comment|// We don't need to initialize mf->son, but not doing that may
+comment|// make Valgrind complain in normalization (see normalize() in
+comment|// lz_encoder_mf.c). Skipping the initialization is *very* good
+comment|// when big dictionary is used but only small amount of data gets
+comment|// actually compressed: most of the mf->son won't get actually
+comment|// allocated by the kernel, so we avoid wasting RAM and improve
+comment|// initialization speed a lot.
 if|if
 condition|(
 name|mf
@@ -1643,9 +1686,29 @@ name|mf
 operator|->
 name|hash
 operator|=
+name|lzma_alloc_zero
+argument_list|(
+name|mf
+operator|->
+name|hash_count
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+argument_list|,
+name|allocator
+argument_list|)
+expr_stmt|;
+name|mf
+operator|->
+name|son
+operator|=
 name|lzma_alloc
 argument_list|(
-name|alloc_count
+name|mf
+operator|->
+name|sons_count
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1662,46 +1725,61 @@ operator|->
 name|hash
 operator|==
 name|NULL
+operator|||
+name|mf
+operator|->
+name|son
+operator|==
+name|NULL
 condition|)
-return|return
-name|true
-return|;
-block|}
+block|{
+name|lzma_free
+argument_list|(
+name|mf
+operator|->
+name|hash
+argument_list|,
+name|allocator
+argument_list|)
+expr_stmt|;
+name|mf
+operator|->
+name|hash
+operator|=
+name|NULL
+expr_stmt|;
+name|lzma_free
+argument_list|(
+name|mf
+operator|->
+name|son
+argument_list|,
+name|allocator
+argument_list|)
+expr_stmt|;
 name|mf
 operator|->
 name|son
 operator|=
-name|mf
-operator|->
-name|hash
-operator|+
-name|mf
-operator|->
-name|hash_size_sum
+name|NULL
 expr_stmt|;
-name|mf
-operator|->
-name|cyclic_pos
-operator|=
-literal|0
-expr_stmt|;
-comment|// Initialize the hash table. Since EMPTY_HASH_VALUE is zero, we
-comment|// can use memset().
-comment|/* 	for (uint32_t i = 0; i< hash_size_sum; ++i) 		mf->hash[i] = EMPTY_HASH_VALUE; */
+return|return
+name|true
+return|;
+block|}
+block|}
+else|else
+block|{
+comment|/* 		for (uint32_t i = 0; i< mf->hash_count; ++i) 			mf->hash[i] = EMPTY_HASH_VALUE; */
 name|memzero
 argument_list|(
 name|mf
 operator|->
 name|hash
 argument_list|,
-call|(
-name|size_t
-call|)
-argument_list|(
 name|mf
 operator|->
-name|hash_size_sum
-argument_list|)
+name|hash_count
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1709,15 +1787,13 @@ name|uint32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// We don't need to initialize mf->son, but not doing that will
-comment|// make Valgrind complain in normalization (see normalize() in
-comment|// lz_encoder_mf.c).
-comment|//
-comment|// Skipping this initialization is *very* good when big dictionary is
-comment|// used but only small amount of data gets actually compressed: most
-comment|// of the mf->hash won't get actually allocated by the kernel, so
-comment|// we avoid wasting RAM and improve initialization speed a lot.
-comment|//memzero(mf->son, (size_t)(mf->sons_count) * sizeof(uint32_t));
+block|}
+name|mf
+operator|->
+name|cyclic_pos
+operator|=
+literal|0
+expr_stmt|;
 comment|// Handle preset dictionary.
 if|if
 condition|(
@@ -1831,7 +1907,12 @@ operator|=
 name|NULL
 block|,
 operator|.
-name|hash_size_sum
+name|son
+operator|=
+name|NULL
+block|,
+operator|.
+name|hash_count
 operator|=
 literal|0
 block|,
@@ -1859,32 +1940,29 @@ name|UINT64_MAX
 return|;
 comment|// Calculate the memory usage.
 return|return
+operator|(
 call|(
 name|uint64_t
 call|)
 argument_list|(
 name|mf
 operator|.
-name|hash_size_sum
+name|hash_count
+argument_list|)
 operator|+
 name|mf
 operator|.
 name|sons_count
-argument_list|)
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
 name|uint32_t
 argument_list|)
 operator|+
-call|(
-name|uint64_t
-call|)
-argument_list|(
 name|mf
 operator|.
 name|size
-argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -1903,6 +1981,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -1914,6 +1993,17 @@ operator|&
 name|coder
 operator|->
 name|next
+argument_list|,
+name|allocator
+argument_list|)
+expr_stmt|;
+name|lzma_free
+argument_list|(
+name|coder
+operator|->
+name|mf
+operator|.
+name|son
 argument_list|,
 name|allocator
 argument_list|)
@@ -1997,6 +2087,7 @@ name|lzma_coder
 operator|*
 name|coder
 argument_list|,
+specifier|const
 name|lzma_allocator
 operator|*
 name|allocator
@@ -2076,6 +2167,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -2095,6 +2187,7 @@ name|lzma_lz_encoder
 modifier|*
 name|lz
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -2231,7 +2324,17 @@ name|coder
 operator|->
 name|mf
 operator|.
-name|hash_size_sum
+name|son
+operator|=
+name|NULL
+expr_stmt|;
+name|next
+operator|->
+name|coder
+operator|->
+name|mf
+operator|.
+name|hash_count
 operator|=
 literal|0
 expr_stmt|;

@@ -201,7 +201,7 @@ name|l
 parameter_list|,
 name|e
 parameter_list|)
-value|{ WLOCK(NLERR);					\ 				  np = malloc(sizeof(struct catentry));		\ 				  if (np != NULL) {				\ 				  	np->name = strdup(n);			\ 					np->path = NULL;			\ 					np->catd = NLERR;			\ 					np->lang = (l == NULL) ? NULL :		\ 					    strdup(l);				\ 					np->caterrno = e;			\ 				  	SLIST_INSERT_HEAD(&cache, np, list);	\ 				  }						\ 				  UNLOCK;					\ 				  errno = e;					\ 				}
+value|{ WLOCK(NLERR);					\ 				  np = malloc(sizeof(struct catentry));		\ 				  if (np != NULL) {				\ 				  	np->name = strdup(n);			\ 					np->path = NULL;			\ 					np->catd = NLERR;			\ 					np->refcount = 0;			\ 					np->lang = (l == NULL) ? NULL :		\ 					    strdup(l);				\ 					np->caterrno = e;			\ 				  	SLIST_INSERT_HEAD(&cache, np, list);	\ 				  }						\ 				  UNLOCK;					\ 				  errno = e;					\ 				}
 end_define
 
 begin_function_decl

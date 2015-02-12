@@ -46,12 +46,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"stream_encoder.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"block_encoder.h"
 end_include
 
@@ -82,7 +76,7 @@ block|, 	}
 name|sequence
 enum|;
 comment|/// True if Block encoder has been initialized by
-comment|/// lzma_stream_encoder_init() or stream_encoder_update()
+comment|/// stream_encoder_init() or stream_encoder_update()
 comment|/// and thus doesn't need to be initialized in stream_encode().
 name|bool
 name|block_encoder_is_initialized
@@ -144,6 +138,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -210,6 +205,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -390,7 +386,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|// Initialize the Block encoder unless it was already
-comment|// initialized by lzma_stream_encoder_init() or
+comment|// initialized by stream_encoder_init() or
 comment|// stream_encoder_update().
 if|if
 condition|(
@@ -465,13 +461,17 @@ specifier|const
 name|lzma_action
 name|convert
 index|[
-literal|4
+name|LZMA_ACTION_MAX
+operator|+
+literal|1
 index|]
 init|=
 block|{
 name|LZMA_RUN
 block|,
 name|LZMA_SYNC_FLUSH
+block|,
+name|LZMA_FINISH
 block|,
 name|LZMA_FINISH
 block|,
@@ -710,6 +710,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -799,6 +800,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -979,14 +981,15 @@ block|}
 end_function
 
 begin_function
-specifier|extern
+specifier|static
 name|lzma_ret
-name|lzma_stream_encoder_init
+name|stream_encoder_init
 parameter_list|(
 name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -1003,7 +1006,7 @@ block|{
 name|lzma_next_coder_init
 argument_list|(
 operator|&
-name|lzma_stream_encoder_init
+name|stream_encoder_init
 argument_list|,
 name|next
 argument_list|,
@@ -1264,7 +1267,7 @@ begin_block
 block|{
 name|lzma_next_strm_init
 argument_list|(
-name|lzma_stream_encoder_init
+name|stream_encoder_init
 argument_list|,
 name|strm
 argument_list|,
@@ -1302,6 +1305,17 @@ operator|->
 name|supported_actions
 index|[
 name|LZMA_FULL_FLUSH
+index|]
+operator|=
+name|true
+expr_stmt|;
+name|strm
+operator|->
+name|internal
+operator|->
+name|supported_actions
+index|[
+name|LZMA_FULL_BARRIER
 index|]
 operator|=
 name|true

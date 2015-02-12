@@ -1116,6 +1116,13 @@ name|ACPI_DMAR_INTR_REMAP
 value|(1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_DMAR_X2APIC_OPT_OUT
+value|(2)
+end_define
+
 begin_comment
 comment|/* DMAR subtable header */
 end_comment

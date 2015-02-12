@@ -130,6 +130,48 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// If true, stop after decoding the first stream.
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|opt_single_stream
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// If non-zero, start a new .xz Block after every opt_block_size bytes
+end_comment
+
+begin_comment
+comment|/// of input. This has an effect only when compressing to the .xz format.
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uint64_t
+name|opt_block_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// This is non-NULL if --block-list was used. This contains the Block sizes
+end_comment
+
+begin_comment
+comment|/// as an array that is terminated with 0.
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uint64_t
+modifier|*
+name|opt_block_list
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Set the integrity check type used when compressing
 end_comment
 
@@ -222,6 +264,31 @@ name|filename
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NDEBUG
+end_ifndef
+
+begin_comment
+comment|/// Free the memory allocated for the coder and kill the worker threads.
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|coder_free
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

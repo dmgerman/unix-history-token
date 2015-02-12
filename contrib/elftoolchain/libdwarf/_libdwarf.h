@@ -105,7 +105,7 @@ name|Dwarf_Ptr
 name|errarg
 decl_stmt|;
 name|int
-name|applyrela
+name|applyreloc
 decl_stmt|;
 block|}
 struct|;

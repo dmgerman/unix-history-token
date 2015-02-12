@@ -1887,6 +1887,38 @@ parameter_list|)
 value|((x)>> 29)
 end_define
 
+begin_comment
+comment|/* Cache type register definitions for ARM v7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_CT_IMINLINE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xf)
+end_define
+
+begin_comment
+comment|/* I$ min line size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_CT_DMINLINE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 16)& 0xf)
+end_define
+
+begin_comment
+comment|/* D$ min line size */
+end_comment
+
 begin_define
 define|#
 directive|define

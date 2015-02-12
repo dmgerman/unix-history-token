@@ -3055,8 +3055,8 @@ operator||
 name|PSL_D
 argument_list|)
 expr_stmt|;
-comment|/* Disable local APIC just to be sure. */
-name|lapic_disable
+comment|/* 	 * On real hardware, switch to x2apic mode if possible. 	 * Disable local APIC until BSP directed APs to run. 	 */
+name|lapic_xapic_mode
 argument_list|()
 expr_stmt|;
 comment|/* signal our startup to the BSP. */

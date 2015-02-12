@@ -219,6 +219,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|callout_migrating
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->c_flags& CALLOUT_DFRMIGRATION)
+end_define
+
+begin_define
+define|#
+directive|define
 name|callout_deactivate
 parameter_list|(
 name|c

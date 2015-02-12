@@ -104,11 +104,11 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/// Parses option=value pairs that are separated with colons, semicolons,
+comment|/// Parses option=value pairs that are separated with commas:
 end_comment
 
 begin_comment
-comment|/// or commas: opt=val:opt=val;opt=val,opt=val
+comment|/// opt=val,opt=val,opt=val
 end_comment
 
 begin_comment

@@ -99,6 +99,7 @@ name|lzma_coder
 operator|*
 name|coder
 argument_list|,
+specifier|const
 name|lzma_allocator
 operator|*
 name|allocator
@@ -253,6 +254,7 @@ name|lzma_coder
 modifier|*
 name|coder
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -292,6 +294,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -554,7 +557,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* extern lzma_ret lzma_alone_encoder_init(lzma_next_coder *next, lzma_allocator *allocator, 		const lzma_options_alone *options) { 	lzma_next_coder_init(&alone_encoder_init, next, allocator, options); } */
+comment|/* extern lzma_ret lzma_alone_encoder_init(lzma_next_coder *next, const lzma_allocator *allocator, 		const lzma_options_alone *options) { 	lzma_next_coder_init(&alone_encoder_init, next, allocator, options); } */
 end_comment
 
 begin_extern

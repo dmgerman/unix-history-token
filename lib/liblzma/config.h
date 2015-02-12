@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// $FreeBSD$
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_define
@@ -28,6 +28,20 @@ begin_define
 define|#
 directive|define
 name|HAVE_CHECK_SHA256
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_CLOCK_GETTIME
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_CLOCK_MONOTONIC
 value|1
 end_define
 
@@ -272,7 +286,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_PTHREAD
+name|HAVE_POSIX_FADVISE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_CONDATTR_SETCLOCK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_PRIO_INHERIT
 value|1
 end_define
 
@@ -315,6 +343,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRUCT_STAT_ST_ATIMESPEC_TV_NSEC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_STAT_ST_ATIM_TV_NSEC
 value|1
 end_define
 
@@ -388,11 +423,37 @@ name|HAVE__BOOL
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
-name|LT_OBJDIR
-value|".libs/"
+name|HAVE__MM_MOVEMASK_EPI8
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MYTHREAD_POSIX
+value|1
 end_define
 
 begin_define
@@ -427,7 +488,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"XZ Utils 5.0.3"
+value|"XZ Utils 5.2.0"
 end_define
 
 begin_define
@@ -448,7 +509,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"5.0.3"
+value|"5.2.0"
 end_define
 
 begin_define
@@ -472,13 +533,6 @@ name|TUKLIB_CPUCORES_SYSCTL
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|TUKLIB_PHYSMEM_SYSCONF
-value|1
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -568,13 +622,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|VERSION
-value|"5.0.3"
-end_define
 
 begin_if
 if|#
@@ -638,66 +685,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|defined
-name|AC_APPLE_UNIVERSAL_BUILD
-end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-name|__BIG_ENDIAN__
-end_if
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
-name|WORDS_BIGENDIAN
+name|TUKLIB_PHYSMEM_SYSCONF
 value|1
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WORDS_BIGENDIAN
-end_ifndef
-
-begin_comment
-comment|/* #  undef WORDS_BIGENDIAN */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|VERSION
+value|"5.2.0"
+end_define
 
 end_unit
 
