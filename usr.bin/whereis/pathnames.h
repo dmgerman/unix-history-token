@@ -4,7 +4,7 @@ comment|/*  * Copyright Â© 2002, JÃ¶rg Wunsch  *  * Redistribution and use i
 end_comment
 
 begin_comment
-comment|/* Where to look for libexec and games */
+comment|/* Where to look for libexec */
 end_comment
 
 begin_define
@@ -12,13 +12,6 @@ define|#
 directive|define
 name|PATH_LIBEXEC
 value|"/usr/libexec"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PATH_GAMES
-value|"/usr/games"
 end_define
 
 begin_comment
