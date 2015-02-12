@@ -413,6 +413,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|prefetch_abort_handler
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -624,12 +636,15 @@ end_function
 
 begin_function
 name|void
-name|data_abort_handler
+name|abort_handler
 parameter_list|(
 name|struct
 name|trapframe
 modifier|*
 name|tf
+parameter_list|,
+name|int
+name|type
 parameter_list|)
 block|{
 name|struct
@@ -678,6 +693,20 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+literal|1
+condition|)
+return|return
+operator|(
+name|prefetch_abort_handler
+argument_list|(
+name|tf
+argument_list|)
+operator|)
+return|;
 comment|/* Grab FAR/FSR before enabling interrupts */
 name|far
 operator|=
@@ -2133,6 +2162,7 @@ comment|/*  * void prefetch_abort_handler(struct trapframe *tf)  *  * Abort hand
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|prefetch_abort_handler
 parameter_list|(
