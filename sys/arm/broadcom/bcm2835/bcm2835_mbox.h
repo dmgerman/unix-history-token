@@ -67,8 +67,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCM2835_MBOX_CHAN_PROP
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCM2835_MBOX_CHANS
-value|7
+value|9
 end_define
 
 begin_endif
