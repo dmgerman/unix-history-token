@@ -84,6 +84,20 @@ name|ZYNQ7_CPU1_ENTRY
 value|0xfffffff0
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCU_CONTROL_REG
+value|0xf8f00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCU_CONTROL_ENABLE
+value|(1<< 0)
+end_define
+
 begin_function
 name|void
 name|platform_mp_init_secondary
@@ -138,8 +152,74 @@ name|void
 parameter_list|)
 block|{
 name|bus_space_handle_t
+name|scu_handle
+decl_stmt|;
+name|bus_space_handle_t
 name|ocm_handle
 decl_stmt|;
+name|uint32_t
+name|scu_ctrl
+decl_stmt|;
+comment|/* Map in SCU control register. */
+if|if
+condition|(
+name|bus_space_map
+argument_list|(
+name|fdtbus_bs_tag
+argument_list|,
+name|SCU_CONTROL_REG
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|scu_handle
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"platform_mp_start_ap: Couldn't map SCU config reg\n"
+argument_list|)
+expr_stmt|;
+comment|/* Set SCU enable bit. */
+name|scu_ctrl
+operator|=
+name|bus_space_read_4
+argument_list|(
+name|fdtbus_bs_tag
+argument_list|,
+name|scu_handle
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|scu_ctrl
+operator||=
+name|SCU_CONTROL_ENABLE
+expr_stmt|;
+name|bus_space_write_4
+argument_list|(
+name|fdtbus_bs_tag
+argument_list|,
+name|scu_handle
+argument_list|,
+literal|0
+argument_list|,
+name|scu_ctrl
+argument_list|)
+expr_stmt|;
+name|bus_space_unmap
+argument_list|(
+name|fdtbus_bs_tag
+argument_list|,
+name|scu_handle
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 comment|/* Map in magic location to give entry address to CPU1. */
 if|if
 condition|(
@@ -182,7 +262,16 @@ name|mpentry
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The SCU is enabled by the BOOTROM but I think the second CPU doesn't 	 * turn on filtering until after the wake-up below. I think that's why 	 * things don't work if I don't put these cache ops here.  Also, the 	 * magic location, 0xfffffff0, isn't in the SCU's filtering range so it 	 * needs a write-back too. 	 */
+name|bus_space_unmap
+argument_list|(
+name|fdtbus_bs_tag
+argument_list|,
+name|ocm_handle
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+comment|/* 	 * The SCU is enabled above but I think the second CPU doesn't 	 * turn on filtering until after the wake-up below. I think that's why 	 * things don't work if I don't put these cache ops here.  Also, the 	 * magic location, 0xfffffff0, isn't in the SCU's filtering range so it 	 * needs a write-back too. 	 */
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
@@ -192,15 +281,6 @@ expr_stmt|;
 comment|/* Wake up CPU1. */
 name|armv7_sev
 argument_list|()
-expr_stmt|;
-name|bus_space_unmap
-argument_list|(
-name|fdtbus_bs_tag
-argument_list|,
-name|ocm_handle
-argument_list|,
-literal|4
-argument_list|)
 expr_stmt|;
 block|}
 end_function
