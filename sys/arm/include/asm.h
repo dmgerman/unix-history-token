@@ -67,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|_ALIGN_TEXT
-value|.align 0
+value|.align 2
 end_define
 
 begin_endif
@@ -550,7 +550,7 @@ parameter_list|,
 name|pclabel
 parameter_list|)
 define|\
-value|.align 0;		\ 	gotsym: .word _C_LABEL(_GLOBAL_OFFSET_TABLE_) - (pclabel+4)
+value|.align 2;		\ 	gotsym: .word _C_LABEL(_GLOBAL_OFFSET_TABLE_) - (pclabel+4)
 end_define
 
 begin_else
@@ -568,7 +568,7 @@ parameter_list|,
 name|pclabel
 parameter_list|)
 define|\
-value|.align 0;		\ 	gotsym: .word _C_LABEL(_GLOBAL_OFFSET_TABLE_) - (pclabel+8)
+value|.align 2;		\ 	gotsym: .word _C_LABEL(_GLOBAL_OFFSET_TABLE_) - (pclabel+8)
 end_define
 
 begin_endif
