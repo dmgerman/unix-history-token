@@ -1069,6 +1069,17 @@ begin_comment
 comment|/* DMB */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CP15_CP15WFI
+value|p15, 0, r0, c7, c0,  4
+end_define
+
+begin_comment
+comment|/* WFI */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

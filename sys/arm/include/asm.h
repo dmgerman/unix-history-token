@@ -1153,6 +1153,13 @@ name|DMB
 value|dmb
 end_define
 
+begin_define
+define|#
+directive|define
+name|WFI
+value|wfi
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -1180,6 +1187,13 @@ define|#
 directive|define
 name|DMB
 value|mcr CP15_CP15DMB
+end_define
+
+begin_define
+define|#
+directive|define
+name|WFI
+value|mcr CP15_CP15WFI
 end_define
 
 begin_else
@@ -1214,6 +1228,10 @@ end_define
 
 begin_comment
 comment|/* same prior to v6.*/
+end_comment
+
+begin_comment
+comment|/* No form of WFI available on v4, define nothing to get an error on use. */
 end_comment
 
 begin_endif
