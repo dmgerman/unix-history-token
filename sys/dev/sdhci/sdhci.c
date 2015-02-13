@@ -3367,6 +3367,15 @@ operator|->
 name|timing
 operator|==
 name|bus_timing_hs
+operator|&&
+operator|!
+operator|(
+name|slot
+operator|->
+name|quirks
+operator|&
+name|SDHCI_QUIRK_DONT_SET_HISPD_BIT
+operator|)
 condition|)
 name|slot
 operator|->

@@ -1064,6 +1064,8 @@ name|SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK
 operator||
 name|SDHCI_QUIRK_BROKEN_TIMEOUT_VAL
 operator||
+name|SDHCI_QUIRK_DONT_SET_HISPD_BIT
+operator||
 name|SDHCI_QUIRK_MISSING_CAPS
 expr_stmt|;
 name|sdhci_init_slot
@@ -1985,6 +1987,7 @@ operator|=
 name|val32
 expr_stmt|;
 else|else
+block|{
 name|WR4
 argument_list|(
 name|sc
@@ -1997,6 +2000,19 @@ argument_list|,
 name|val32
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|off
+operator|==
+name|SDHCI_COMMAND_FLAGS
+condition|)
+name|sc
+operator|->
+name|cmd_and_mode
+operator|=
+name|val32
+expr_stmt|;
+block|}
 block|}
 end_function
 
