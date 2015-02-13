@@ -136,6 +136,12 @@ name|S3C2XX0_XTAL_CLK
 value|12000000
 end_define
 
+begin_decl_stmt
+name|bus_space_tag_t
+name|s3c2xx0_bs_tag
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -1744,7 +1750,6 @@ name|rman_set_bustag
 argument_list|(
 name|res
 argument_list|,
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|)
 expr_stmt|;
@@ -2158,6 +2163,10 @@ decl_stmt|;
 name|u_long
 name|irqmax
 decl_stmt|;
+name|s3c2xx0_bs_tag
+operator|=
+name|arm_base_bs_tag
+expr_stmt|;
 name|s3c2xx0_softc
 operator|=
 operator|&
@@ -2175,7 +2184,6 @@ name|sc_iot
 operator|=
 name|iot
 operator|=
-operator|&
 name|s3c2xx0_bs_tag
 expr_stmt|;
 name|s3c2xx0_softc
@@ -3243,7 +3251,6 @@ argument_list|)
 expr_stmt|;
 name|bus_space_write_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3284,7 +3291,6 @@ name|reg
 operator|=
 name|bus_space_read_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3296,7 +3302,6 @@ argument_list|)
 expr_stmt|;
 name|bus_space_write_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3337,7 +3342,6 @@ name|irq
 operator|=
 name|bus_space_read_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3356,7 +3360,6 @@ name|intpnd
 operator|=
 name|bus_space_read_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3368,7 +3371,6 @@ argument_list|)
 expr_stmt|;
 name|bus_space_write_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3382,7 +3384,6 @@ argument_list|)
 expr_stmt|;
 name|bus_space_write_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3420,7 +3421,6 @@ name|subirq
 operator|&=
 name|bus_space_read_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3436,7 +3436,6 @@ operator|~
 operator|(
 name|bus_space_read_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3470,7 +3469,6 @@ expr_stmt|;
 comment|/* Clear the sub irq pending bit */
 name|bus_space_write_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3539,7 +3537,6 @@ name|subirq
 operator|&=
 name|bus_space_read_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3554,7 +3551,6 @@ operator|&=
 operator|~
 name|bus_space_read_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3587,7 +3583,6 @@ expr_stmt|;
 comment|/* Clear the external irq pending bit */
 name|bus_space_write_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3670,7 +3665,6 @@ name|mask
 operator|=
 name|bus_space_read_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3690,7 +3684,6 @@ operator|)
 expr_stmt|;
 name|bus_space_write_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3715,7 +3708,6 @@ name|mask
 operator|=
 name|bus_space_read_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3739,7 +3731,6 @@ operator|)
 expr_stmt|;
 name|bus_space_write_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3758,7 +3749,6 @@ name|mask
 operator|=
 name|bus_space_read_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3782,7 +3772,6 @@ operator|)
 expr_stmt|;
 name|bus_space_write_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3843,7 +3832,6 @@ name|mask
 operator|=
 name|bus_space_read_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3864,7 +3852,6 @@ operator|)
 expr_stmt|;
 name|bus_space_write_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3889,7 +3876,6 @@ name|mask
 operator|=
 name|bus_space_read_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3914,7 +3900,6 @@ operator|)
 expr_stmt|;
 name|bus_space_write_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3933,7 +3918,6 @@ name|mask
 operator|=
 name|bus_space_read_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc
@@ -3958,7 +3942,6 @@ operator|)
 expr_stmt|;
 name|bus_space_write_4
 argument_list|(
-operator|&
 name|s3c2xx0_bs_tag
 argument_list|,
 name|s3c2xx0_softc

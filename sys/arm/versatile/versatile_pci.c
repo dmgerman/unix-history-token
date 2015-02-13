@@ -143,12 +143,6 @@ directive|include
 file|<machine/fdt.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<arm/versatile/versatile_pci_bus_space.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -1656,7 +1650,7 @@ name|rman_set_bustag
 argument_list|(
 name|r
 argument_list|,
-name|versatile_bus_space_pcimem
+name|arm_base_bs_tag
 argument_list|)
 expr_stmt|;
 name|res
