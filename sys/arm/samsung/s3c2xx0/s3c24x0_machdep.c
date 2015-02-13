@@ -260,19 +260,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/s3c24x0var.h>
+file|<arm/samsung/s3c2xx0/s3c24x0var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/s3c2410reg.h>
+file|<arm/samsung/s3c2xx0/s3c2410reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/s3c2xx0board.h>
+file|<arm/samsung/s3c2xx0/s3c2xx0board.h>
 end_include
 
 begin_comment
@@ -1386,7 +1386,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross reloations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
+comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;

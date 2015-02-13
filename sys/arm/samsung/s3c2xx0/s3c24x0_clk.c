@@ -114,13 +114,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/s3c24x0reg.h>
+file|<arm/samsung/s3c2xx0/s3c24x0reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/s3c24x0var.h>
+file|<arm/samsung/s3c2xx0/s3c24x0var.h>
 end_include
 
 begin_struct

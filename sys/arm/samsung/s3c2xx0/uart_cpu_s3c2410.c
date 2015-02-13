@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/s3c2xx0var.h>
+file|<arm/samsung/s3c2xx0/s3c2xx0var.h>
 end_include
 
 begin_decl_stmt
