@@ -2757,7 +2757,7 @@ name|softc
 expr_stmt|;
 name|unmap
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|value
 operator|=
@@ -2790,7 +2790,16 @@ literal|0
 condition|)
 name|unmap
 operator|=
-literal|1
+operator|(
+name|strcmp
+argument_list|(
+name|value
+argument_list|,
+literal|"on"
+argument_list|)
+operator|==
+literal|0
+operator|)
 expr_stmt|;
 name|be_lun
 operator|->
