@@ -771,11 +771,22 @@ operator|!
 name|debug_level
 condition|)
 block|{
+if|if
+condition|(
 name|daemon
 argument_list|(
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Can't daemonize"
 argument_list|)
 expr_stmt|;
 name|signal
@@ -861,8 +872,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|fd
+operator|<
+literal|0
 condition|)
 block|{
 if|if
