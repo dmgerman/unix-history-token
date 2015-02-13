@@ -2924,9 +2924,6 @@ argument_list|)
 expr_stmt|;
 name|addr
 operator|=
-operator|(
-name|uint64_t
-operator|)
 name|buf_res
 operator|.
 name|physaddr
@@ -5404,9 +5401,6 @@ expr_stmt|;
 comment|/* 	 * NOTE: The Event Ring Dequeue Pointer Register is 64-bit 	 * latched. That means to activate the register we need to 	 * write both the low and high double word of the 64-bit 	 * register. 	 */
 name|addr
 operator|=
-operator|(
-name|uint32_t
-operator|)
 name|buf_res
 operator|.
 name|physaddr
