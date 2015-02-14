@@ -341,17 +341,6 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|void
-name|gpiobus_print_pins
-parameter_list|(
-name|struct
-name|gpiobus_ivar
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|gpiobus_init_softc
 parameter_list|(
