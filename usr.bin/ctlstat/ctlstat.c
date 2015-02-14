@@ -2372,8 +2372,6 @@ name|F_CPU
 argument_list|(
 name|ctx
 argument_list|)
-operator|==
-literal|0
 operator|)
 condition|?
 literal|"    CPU"
@@ -2459,11 +2457,24 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%15.6s%d "
+literal|"%15.6s%d %s"
 argument_list|,
 literal|"lun"
 argument_list|,
 name|lun
+argument_list|,
+operator|(
+name|F_LUNVAL
+argument_list|(
+name|ctx
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|?
+literal|"     "
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|hdr_devs
