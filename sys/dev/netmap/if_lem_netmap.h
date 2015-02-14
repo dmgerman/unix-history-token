@@ -1880,7 +1880,7 @@ name|next_rx_desc_to_check
 operator|=
 name|nic_i
 expr_stmt|;
-comment|// ifp->if_ipackets += n;
+comment|// if_inc_counter(ifp, IFCOUNTER_IPACKETS, n);
 name|kring
 operator|->
 name|nr_hwtail

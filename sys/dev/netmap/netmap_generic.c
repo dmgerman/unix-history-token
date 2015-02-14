@@ -3382,6 +3382,7 @@ operator|&
 name|num_rx_desc
 argument_list|)
 expr_stmt|;
+comment|/* ignore errors */
 name|ND
 argument_list|(
 literal|"Netmap ring size: TX = %d, RX = %d"

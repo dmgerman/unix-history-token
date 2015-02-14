@@ -206,6 +206,10 @@ begin_comment
 comment|// linux API, use for the knlist in FreeBSD
 end_comment
 
+begin_comment
+comment|/* use a private mutex for the knlist */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -213,23 +217,20 @@ name|init_waitqueue_head
 parameter_list|(
 name|x
 parameter_list|)
-value|knlist_init_mtx(&(x)->si_note, NULL)
+value|do {			\ 	struct mtx *m =&(x)->m;			\ 	mtx_init(m, "nm_kn_lock", NULL, MTX_DEF);	\ 	knlist_init_mtx(&(x)->si.si_note, m);		\     } while (0)
 end_define
 
-begin_function_decl
-name|void
-name|freebsd_selwakeup
+begin_define
+define|#
+directive|define
+name|OS_selrecord
 parameter_list|(
-name|struct
-name|selinfo
-modifier|*
-name|si
+name|a
 parameter_list|,
-name|int
-name|pri
+name|b
 parameter_list|)
-function_decl|;
-end_function_decl
+value|selrecord(a,&((b)->si))
+end_define
 
 begin_define
 define|#
@@ -1634,8 +1635,9 @@ condition|(
 name|na
 operator|->
 name|nm_config
-condition|)
-block|{
+operator|==
+name|NULL
+operator|||
 name|na
 operator|->
 name|nm_config
@@ -1654,9 +1656,7 @@ argument_list|,
 operator|&
 name|rxd
 argument_list|)
-expr_stmt|;
-block|}
-else|else
+condition|)
 block|{
 comment|/* take whatever we had at init time */
 name|txr
@@ -2426,6 +2426,69 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|netmap_knlist_destroy
+parameter_list|(
+name|NM_SELINFO_T
+modifier|*
+name|si
+parameter_list|)
+block|{
+comment|/* XXX kqueue(9) needed; these will mirror knlist_init. */
+name|knlist_delete
+argument_list|(
+operator|&
+name|si
+operator|->
+name|si
+operator|.
+name|si_note
+argument_list|,
+name|curthread
+argument_list|,
+literal|0
+comment|/* not locked */
+argument_list|)
+expr_stmt|;
+name|knlist_destroy
+argument_list|(
+operator|&
+name|si
+operator|->
+name|si
+operator|.
+name|si_note
+argument_list|)
+expr_stmt|;
+comment|/* now we don't need the mutex anymore */
+name|mtx_destroy
+argument_list|(
+operator|&
+name|si
+operator|->
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
+
 begin_comment
 comment|/* undo the actions performed by netmap_krings_create */
 end_comment
@@ -2473,6 +2536,14 @@ operator|&
 name|kring
 operator|->
 name|q_lock
+argument_list|)
+expr_stmt|;
+name|netmap_knlist_destroy
+argument_list|(
+operator|&
+name|kring
+operator|->
+name|si
 argument_list|)
 expr_stmt|;
 block|}
@@ -2991,9 +3062,22 @@ argument_list|)
 expr_stmt|;
 comment|/* off, clear flags */
 comment|/* Wake up any sleeping threads. netmap_poll will 		 * then return POLLERR 		 * XXX The wake up now must happen during *_down(), when 		 * we order all activities to stop. -gl 		 */
-comment|/* XXX kqueue(9) needed; these will mirror knlist_init. */
-comment|/* knlist_destroy(&na->tx_si.si_note); */
-comment|/* knlist_destroy(&na->rx_si.si_note); */
+name|netmap_knlist_destroy
+argument_list|(
+operator|&
+name|na
+operator|->
+name|tx_si
+argument_list|)
+expr_stmt|;
+name|netmap_knlist_destroy
+argument_list|(
+operator|&
+name|na
+operator|->
+name|rx_si
+argument_list|)
+expr_stmt|;
 comment|/* delete rings and buffers */
 name|netmap_mem_rings_delete
 argument_list|(
@@ -4293,7 +4377,7 @@ operator|&&
 name|td
 condition|)
 comment|/* no bufs available */
-name|selrecord
+name|OS_selrecord
 argument_list|(
 name|td
 argument_list|,
@@ -7315,7 +7399,7 @@ name|ENXIO
 expr_stmt|;
 break|break;
 block|}
-name|rmb
+name|mb
 argument_list|()
 expr_stmt|;
 comment|/* make sure following reads are not from cache */
@@ -8230,7 +8314,7 @@ operator|!
 name|is_kevent
 condition|)
 block|{
-name|selrecord
+name|OS_selrecord
 argument_list|(
 name|td
 argument_list|,
@@ -8546,7 +8630,7 @@ operator|&&
 operator|!
 name|is_kevent
 condition|)
-name|selrecord
+name|OS_selrecord
 argument_list|(
 name|td
 argument_list|,
@@ -10531,21 +10615,25 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* XXX could use make_dev_credv() to get error number */
+comment|/* 	 * MAKEDEV_ETERNAL_KLD avoids an expensive check on syscalls 	 * when the module is compiled in. 	 * XXX could use make_dev_credv() to get error number 	 */
 name|netmap_dev
 operator|=
-name|make_dev
+name|make_dev_credf
 argument_list|(
+name|MAKEDEV_ETERNAL_KLD
+argument_list|,
 operator|&
 name|netmap_cdevsw
 argument_list|,
 literal|0
 argument_list|,
+name|NULL
+argument_list|,
 name|UID_ROOT
 argument_list|,
 name|GID_WHEEL
 argument_list|,
-literal|0660
+literal|0600
 argument_list|,
 literal|"netmap"
 argument_list|)
