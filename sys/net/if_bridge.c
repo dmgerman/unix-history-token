@@ -712,10 +712,9 @@ value|VNET(bridge_list_mtx)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|eventhandler_tag
 name|bridge_detach_cookie
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -3075,6 +3074,10 @@ name|if_clone_detach
 argument_list|(
 name|V_bridge_cloner
 argument_list|)
+expr_stmt|;
+name|V_bridge_cloner
+operator|=
+name|NULL
 expr_stmt|;
 name|BRIDGE_LIST_LOCK_DESTROY
 argument_list|()
@@ -8933,6 +8936,16 @@ operator|&
 name|IFF_RENAMING
 condition|)
 return|return;
+if|if
+condition|(
+name|V_bridge_cloner
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 * This detach handler can be called after 		 * vnet_bridge_uninit().  Just return in that case. 		 */
+return|return;
+block|}
 comment|/* Check if the interface is a bridge member */
 if|if
 condition|(
