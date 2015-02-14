@@ -162,6 +162,20 @@ parameter_list|)
 value|mtx_assert(&_sc->sc_mtx, MA_NOTOWNED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|GPIOBUS_WAIT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPIOBUS_DONTWAIT
+value|2
+end_define
+
 begin_struct
 struct|struct
 name|gpiobus_softc
