@@ -1165,7 +1165,7 @@ argument_list|)
 block|{}
 name|llvm
 operator|::
-name|AssertingVH
+name|TrackingVH
 operator|<
 name|llvm
 operator|::

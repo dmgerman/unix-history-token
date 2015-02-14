@@ -53,6 +53,14 @@ comment|/* #undef CLANG_HAVE_LIBXML */
 end_comment
 
 begin_comment
+comment|/* Multilib suffix for libdir. */
+end_comment
+
+begin_comment
+comment|/* #undef CLANG_LIBDIR_SUFFIX */
+end_comment
+
+begin_comment
 comment|/* Relative directory for resource files */
 end_comment
 
