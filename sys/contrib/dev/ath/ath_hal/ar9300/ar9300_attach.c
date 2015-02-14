@@ -1250,6 +1250,11 @@ comment|/* ah_ant_ctrl_common_get */
 end_comment
 
 begin_comment
+unit|ar9300_ant_swcom_sel,
+comment|/* ah_ant_swcom_sel */
+end_comment
+
+begin_comment
 unit|ar9300_enable_tpc,
 comment|/* ah_enable_tpc */
 end_comment
@@ -1328,6 +1333,22 @@ begin_comment
 unit|ar9300_print_keycache,
 comment|/* ah_print_key_cache */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|ATH_SUPPORT_KEYPLUMB_WAR
+end_if
+
+begin_comment
+unit|ar9300_check_key_cache_entry,
+comment|/* ah_check_key_cache_entry */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Power Management Functions */
@@ -1436,6 +1457,16 @@ end_comment
 begin_comment
 unit|ar9300_chain_noise_floor,
 comment|/* ah_get_chain_noise_floor */
+end_comment
+
+begin_comment
+unit|ar9300_get_nf_from_reg,
+comment|/* ah_get_nf_from_reg */
+end_comment
+
+begin_comment
+unit|ar9300_get_rx_nf_offset,
+comment|/* ah_get_rx_nf_offset */
 end_comment
 
 begin_comment
@@ -2086,27 +2117,27 @@ directive|else
 end_else
 
 begin_comment
-unit|AH_NULL,         AH_NULL,         ar9300TX99TgtChannelPwrUpdate,
+unit|AH_NULL,         AH_NULL,         ar9300_tx99_channel_pwr_update,
 comment|/* ah_tx99channelpwrupdate */
 end_comment
 
 begin_comment
-unit|ar9300TX99TgtStart,
+unit|ar9300_tx99_start,
 comment|/* ah_tx99start */
 end_comment
 
 begin_comment
-unit|ar9300TX99TgtStop,
+unit|ar9300_tx99_stop,
 comment|/* ah_tx99stop */
 end_comment
 
 begin_comment
-unit|ar9300TX99TgtChainmskSetup,
+unit|ar9300_tx99_chainmsk_setup,
 comment|/* ah_tx99_chainmsk_setup */
 end_comment
 
 begin_comment
-unit|ar9300TX99SetSingleCarrier,
+unit|ar9300_tx99_set_single_carrier,
 comment|/* ah_tx99_set_single_carrier */
 end_comment
 
@@ -2208,6 +2239,16 @@ end_comment
 begin_comment
 unit|ar9300_set_hw_beacon_proc,
 comment|/* ah_set_hw_beacon_proc */
+end_comment
+
+begin_comment
+unit|ar9300_set_ctl_pwr,
+comment|/* ah_set_ctl_pwr */
+end_comment
+
+begin_comment
+unit|ar9300_set_txchainmaskopt,
+comment|/* ah_set_txchainmaskopt */
 end_comment
 
 begin_comment
@@ -3493,6 +3534,44 @@ operator|->
 name|ah_rifs_enabled
 operator|=
 name|AH_TRUE
+expr_stmt|;
+comment|/* by default, stop RX also in abort txdma, due to        "Unable to stop TxDMA" msg observed */
+name|ahp
+operator|->
+name|ah_abort_txdma_norx
+operator|=
+name|AH_TRUE
+expr_stmt|;
+comment|/* do not use optional tx chainmask by default */
+name|ahp
+operator|->
+name|ah_tx_chainmaskopt
+operator|=
+literal|0
+expr_stmt|;
+name|ahp
+operator|->
+name|ah_skip_rx_iq_cal
+operator|=
+name|AH_FALSE
+expr_stmt|;
+name|ahp
+operator|->
+name|ah_rx_cal_complete
+operator|=
+name|AH_FALSE
+expr_stmt|;
+name|ahp
+operator|->
+name|ah_rx_cal_chan
+operator|=
+literal|0
+expr_stmt|;
+name|ahp
+operator|->
+name|ah_rx_cal_chan_flag
+operator|=
+literal|0
 expr_stmt|;
 name|HALDEBUG
 argument_list|(

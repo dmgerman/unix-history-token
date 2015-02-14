@@ -3629,6 +3629,12 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+name|shm_object
+operator|->
+name|pg_color
+operator|=
+literal|0
+expr_stmt|;
 name|VM_OBJECT_WLOCK
 argument_list|(
 name|shm_object
@@ -3645,6 +3651,8 @@ name|vm_object_set_flag
 argument_list|(
 name|shm_object
 argument_list|,
+name|OBJ_COLORED
+operator||
 name|OBJ_NOSPLIT
 argument_list|)
 expr_stmt|;

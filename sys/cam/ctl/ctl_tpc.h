@@ -48,6 +48,14 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|ss
+parameter_list|,
+name|uint32_t
+modifier|*
+name|ps
+parameter_list|,
+name|uint32_t
+modifier|*
+name|pso
 parameter_list|)
 function_decl|;
 end_function_decl

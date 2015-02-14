@@ -1590,7 +1590,7 @@ name|i
 decl_stmt|;
 name|cpuid
 operator|=
-name|cpu_id
+name|cpu_ident
 argument_list|()
 expr_stmt|;
 if|if

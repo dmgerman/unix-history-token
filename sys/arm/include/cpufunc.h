@@ -449,7 +449,7 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|cpu_id
+name|cpu_ident
 parameter_list|()
 value|cpufuncs.cf_id()
 end_define

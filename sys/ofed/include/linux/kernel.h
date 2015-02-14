@@ -249,6 +249,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|FIELD_SIZEOF
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|)
+value|sizeof(((t *)0)->f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|printk
 parameter_list|(
 name|X
@@ -699,6 +711,14 @@ begin_define
 define|#
 directive|define
 name|num_possible_cpus
+parameter_list|()
+value|mp_ncpus
+end_define
+
+begin_define
+define|#
+directive|define
+name|num_online_cpus
 parameter_list|()
 value|mp_ncpus
 end_define

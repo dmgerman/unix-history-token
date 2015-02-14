@@ -288,6 +288,9 @@ decl_stmt|;
 name|off_t
 name|off
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 block|}
 name|value
 union|;

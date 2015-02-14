@@ -43,6 +43,27 @@ name|VMW_HVCMD_GETHZ
 value|45
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMW_HVCMD_GETVCPU_INFO
+value|68
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMW_VCPUINFO_LEGACY_X2APIC
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMW_VCPUINFO_VCPU_RESERVED
+value|(1<< 31)
+end_define
+
 begin_function
 specifier|static
 name|__inline

@@ -1273,6 +1273,9 @@ argument_list|(
 literal|"uptime-information"
 argument_list|)
 expr_stmt|;
+name|xo_finish
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
