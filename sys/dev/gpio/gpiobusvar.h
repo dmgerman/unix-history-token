@@ -56,6 +56,27 @@ directive|include
 file|"gpio_if.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|GPIOBUS_IVAR
+parameter_list|(
+name|d
+parameter_list|)
+value|(struct gpiobus_ivar *)				\&((struct ofw_gpiobus_devinfo *)device_get_ivars(d))->opd_dinfo
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -65,6 +86,11 @@ name|d
 parameter_list|)
 value|(struct gpiobus_ivar *) device_get_ivars(d)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -291,6 +317,15 @@ parameter_list|(
 name|struct
 name|gpiobus_ivar
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|gpiobus_init_softc
+parameter_list|(
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
