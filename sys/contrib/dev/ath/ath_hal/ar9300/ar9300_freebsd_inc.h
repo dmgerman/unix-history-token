@@ -309,6 +309,13 @@ name|AH_PRIVATE_DIAG
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATH_SUPPORT_KEYPLUMB_WAR
+value|0
+end_define
+
 begin_comment
 comment|/* XXX need to reverify these; they came in with qcamain */
 end_comment

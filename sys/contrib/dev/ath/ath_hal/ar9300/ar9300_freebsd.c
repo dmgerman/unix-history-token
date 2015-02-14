@@ -2418,6 +2418,8 @@ name|next_beacon
 argument_list|,
 name|beacon_period
 argument_list|,
+literal|0
+argument_list|,
 name|AH_PRIVATE
 argument_list|(
 name|ah

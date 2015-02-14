@@ -88,6 +88,9 @@ parameter_list|,
 name|u_int32_t
 name|beacon_period
 parameter_list|,
+name|u_int32_t
+name|beacon_period_fraction
+parameter_list|,
 name|HAL_OPMODE
 name|opmode
 parameter_list|)
@@ -183,6 +186,11 @@ name|beacon_period
 operator|&
 name|HAL_BEACON_PERIOD_TU8
 argument_list|)
+expr_stmt|;
+comment|/* Add the fraction adjustment lost due to unit conversions. */
+name|beacon_period_usec
+operator|+=
+name|beacon_period_fraction
 expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
