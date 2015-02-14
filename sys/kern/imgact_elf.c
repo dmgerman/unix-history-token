@@ -7325,6 +7325,12 @@ operator|->
 name|type
 operator|!=
 name|OBJT_VNODE
+operator|&&
+name|object
+operator|->
+name|type
+operator|!=
+name|OBJT_PHYS
 expr_stmt|;
 name|VM_OBJECT_RUNLOCK
 argument_list|(
