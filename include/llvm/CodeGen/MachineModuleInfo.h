@@ -264,16 +264,6 @@ operator|>
 name|EndLabels
 expr_stmt|;
 comment|// Labels after invoke.
-name|SmallVector
-operator|<
-name|MCSymbol
-operator|*
-operator|,
-literal|1
-operator|>
-name|ClauseLabels
-expr_stmt|;
-comment|// Labels for each clause.
 name|MCSymbol
 modifier|*
 name|LandingPadLabel
@@ -1337,30 +1327,6 @@ end_comment
 begin_function_decl
 name|void
 name|addCleanup
-parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|LandingPad
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Add a clause for a landing pad. Returns a new label for the clause. This
-end_comment
-
-begin_comment
-comment|/// is used by EH schemes that have more than one landing pad. In this case,
-end_comment
-
-begin_comment
-comment|/// each clause gets its own basic block.
-end_comment
-
-begin_function_decl
-name|MCSymbol
-modifier|*
-name|addClauseForLandingPad
 parameter_list|(
 name|MachineBasicBlock
 modifier|*

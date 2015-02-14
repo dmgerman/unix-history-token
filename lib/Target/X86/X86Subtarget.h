@@ -349,10 +349,10 @@ comment|/// True if unaligned 32-byte memory accesses are slow.
 name|bool
 name|IsUAMem32Slow
 block|;
-comment|/// HasVectorUAMem - True if SIMD operations can have unaligned memory
-comment|/// operands. This may require setting a feature bit in the processor.
+comment|/// True if SSE operations can have unaligned memory operands.
+comment|/// This may require setting a configuration bit in the processor.
 name|bool
-name|HasVectorUAMem
+name|HasSSEUnalignedMem
 block|;
 comment|/// HasCmpxchg16b - True if this processor has the CMPXCHG16B instruction;
 comment|/// this is true for most x86-64 chips, but not the first AMD chips.
@@ -1159,12 +1159,12 @@ name|IsUAMem32Slow
 return|;
 block|}
 name|bool
-name|hasVectorUAMem
+name|hasSSEUnalignedMem
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasVectorUAMem
+name|HasSSEUnalignedMem
 return|;
 block|}
 name|bool

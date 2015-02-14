@@ -3282,6 +3282,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|MDNode
+modifier|*
+name|getMostGenericAliasScope
+parameter_list|(
+name|MDNode
+modifier|*
+name|A
+parameter_list|,
+name|MDNode
+modifier|*
+name|B
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 unit|};
 comment|/// \brief Uniquable metadata node.
