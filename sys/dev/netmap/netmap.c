@@ -1635,8 +1635,9 @@ condition|(
 name|na
 operator|->
 name|nm_config
-condition|)
-block|{
+operator|==
+name|NULL
+operator|||
 name|na
 operator|->
 name|nm_config
@@ -1655,9 +1656,7 @@ argument_list|,
 operator|&
 name|rxd
 argument_list|)
-expr_stmt|;
-block|}
-else|else
+condition|)
 block|{
 comment|/* take whatever we had at init time */
 name|txr
@@ -7400,7 +7399,7 @@ name|ENXIO
 expr_stmt|;
 break|break;
 block|}
-name|rmb
+name|mb
 argument_list|()
 expr_stmt|;
 comment|/* make sure following reads are not from cache */
