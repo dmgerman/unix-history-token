@@ -1244,11 +1244,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|gpio
 operator|==
 name|AR9382_GPIO_PIN_8_RESERVED
-operator|)
 condition|)
 block|{
 return|return
