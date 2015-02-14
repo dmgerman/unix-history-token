@@ -811,10 +811,8 @@ name|dev
 argument_list|,
 literal|"gpioc"
 argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|device_add_child
@@ -823,10 +821,8 @@ name|dev
 argument_list|,
 literal|"gpiobus"
 argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
