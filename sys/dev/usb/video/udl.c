@@ -1990,12 +1990,7 @@ name|sc_fb_info
 operator|.
 name|fb_pbase
 operator|=
-operator|(
-name|uintptr_t
-operator|)
-name|sc
-operator|->
-name|sc_fb_addr
+literal|0
 expr_stmt|;
 name|sc
 operator|->
@@ -2477,6 +2472,26 @@ argument_list|(
 name|sc
 argument_list|)
 decl_stmt|;
+comment|/* check if framebuffer is not ready */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_fb_addr
+operator|==
+name|NULL
+operator|||
+name|sc
+operator|->
+name|sc_fb_copy
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 while|while
 condition|(
 name|sc
@@ -2776,6 +2791,8 @@ name|NULL
 condition|)
 break|break;
 block|}
+else|else
+block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2788,6 +2805,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
+block|}
 name|TAILQ_INSERT_TAIL
 argument_list|(
 name|phead
@@ -5391,8 +5409,6 @@ name|udl_cmd_insert_int_3
 argument_list|(
 name|cb
 argument_list|,
-literal|2
-operator|*
 name|dst
 argument_list|)
 expr_stmt|;
@@ -5407,8 +5423,6 @@ name|udl_cmd_insert_int_3
 argument_list|(
 name|cb
 argument_list|,
-literal|2
-operator|*
 name|src
 argument_list|)
 expr_stmt|;
