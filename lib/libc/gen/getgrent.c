@@ -6772,6 +6772,8 @@ name|int
 name|rv
 decl_stmt|,
 name|stayopen
+init|=
+literal|0
 decl_stmt|,
 modifier|*
 name|errnop
@@ -7528,14 +7530,14 @@ name|fin
 label|:
 if|if
 condition|(
-operator|!
-name|stayopen
-operator|&&
 name|st
 operator|->
 name|fp
 operator|!=
 name|NULL
+operator|||
+operator|!
+name|stayopen
 condition|)
 block|{
 name|fclose
