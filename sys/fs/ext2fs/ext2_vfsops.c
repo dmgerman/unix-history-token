@@ -1846,8 +1846,6 @@ argument_list|,
 name|M_EXT2MNT
 argument_list|,
 name|M_WAITOK
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|fs
@@ -1934,6 +1932,15 @@ condition|(
 name|error
 condition|)
 block|{
+name|free
+argument_list|(
+name|fs
+operator|->
+name|e2fs_contigdirs
+argument_list|,
+name|M_EXT2MNT
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|fs
