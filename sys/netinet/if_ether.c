@@ -833,6 +833,25 @@ operator|&
 name|LLE_STATIC
 condition|)
 block|{
+return|return;
+block|}
+name|LLE_WLOCK
+argument_list|(
+name|lle
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|callout_pending
+argument_list|(
+operator|&
+name|lle
+operator|->
+name|la_timer
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * Here we are a bit odd here in the treatment of  		 * active/pending. If the pending bit is set, it got 		 * rescheduled before I ran. The active 		 * bit we ignore, since if it was stopped 		 * in ll_tablefree() and was currently running 		 * it would have return 0 so the code would 		 * not have deleted it since the callout could 		 * not be stopped so we want to go through 		 * with the delete here now. If the callout 		 * was restarted, the pending bit will be back on and 		 * we just want to bail since the callout_reset would 		 * return 1 and our reference would have been removed 		 * by arpresolve() below. 		 */
 name|LLE_WUNLOCK
 argument_list|(
 name|lle
