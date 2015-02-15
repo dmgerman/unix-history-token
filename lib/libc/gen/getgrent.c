@@ -6772,8 +6772,6 @@ name|int
 name|rv
 decl_stmt|,
 name|stayopen
-init|=
-literal|0
 decl_stmt|,
 modifier|*
 name|errnop
