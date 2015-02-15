@@ -17841,14 +17841,16 @@ operator|)
 name|printf
 argument_list|(
 literal|"hwpmc: tunable \"callchaindepth\"=%d out of "
-literal|"range.\n"
+literal|"range - using %d.\n"
 argument_list|,
 name|pmc_callchaindepth
+argument_list|,
+name|PMC_CALLCHAIN_DEPTH_MAX
 argument_list|)
 expr_stmt|;
 name|pmc_callchaindepth
 operator|=
-name|PMC_CALLCHAIN_DEPTH
+name|PMC_CALLCHAIN_DEPTH_MAX
 expr_stmt|;
 block|}
 name|md
