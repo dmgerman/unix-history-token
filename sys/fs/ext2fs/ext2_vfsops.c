@@ -1846,6 +1846,8 @@ argument_list|,
 name|M_EXT2MNT
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|fs
@@ -1869,6 +1871,8 @@ argument_list|,
 name|M_EXT2MNT
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Adjust logic_sb_block. 	 * Godmar thinks: if the blocksize is greater than 1024, then 	 * the superblock is logically part of block zero. 	 */
@@ -1994,6 +1998,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* Initialization for the ext2 Orlov allocator variant. */
 name|fs
 operator|->
 name|e2fs_total_dir
@@ -2015,7 +2020,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|fs
 operator|->
 name|e2fs_total_dir
@@ -2029,16 +2033,6 @@ index|]
 operator|.
 name|ext2bgd_ndirs
 expr_stmt|;
-name|fs
-operator|->
-name|e2fs_contigdirs
-index|[
-name|i
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|es
