@@ -192,6 +192,25 @@ name|beacon_period_usec
 operator|+=
 name|beacon_period_fraction
 expr_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_BEACON
+argument_list|,
+literal|"%s: next_beacon=0x%08x, beacon_period=%d, opmode=%d, beacon_period_usec=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|next_beacon
+argument_list|,
+name|beacon_period
+argument_list|,
+name|opmode
+argument_list|,
+name|beacon_period_usec
+argument_list|)
+expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
 name|ah
