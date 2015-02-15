@@ -985,6 +985,17 @@ name|USB_VPI
 argument_list|(
 argument|USB_VENDOR_DISPLAYLINK
 argument_list|,
+argument|USB_PRODUCT_DISPLAYLINK_PLUGABLE
+argument_list|,
+argument|DL160
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_DISPLAYLINK
+argument_list|,
 argument|USB_PRODUCT_DISPLAYLINK_LUM70
 argument_list|,
 argument|DL125
