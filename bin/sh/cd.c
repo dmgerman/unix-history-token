@@ -587,7 +587,7 @@ name|NULL
 condition|)
 name|path
 operator|=
-name|nullstr
+literal|""
 expr_stmt|;
 while|while
 condition|(

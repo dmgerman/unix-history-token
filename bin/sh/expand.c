@@ -2646,7 +2646,7 @@ operator|)
 condition|?
 literal|"null or "
 else|:
-name|nullstr
+literal|""
 argument_list|)
 expr_stmt|;
 return|return

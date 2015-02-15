@@ -2250,7 +2250,7 @@ name|nhere
 operator|.
 name|expdoc
 operator|=
-name|nullstr
+literal|""
 expr_stmt|;
 name|savelocalvars
 operator|=
