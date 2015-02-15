@@ -7535,7 +7535,7 @@ operator|->
 name|fp
 operator|!=
 name|NULL
-operator|||
+operator|&&
 operator|!
 name|stayopen
 condition|)
