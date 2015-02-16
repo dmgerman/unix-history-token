@@ -1091,7 +1091,7 @@ index|[
 name|i
 index|]
 operator|.
-name|vdisplay
+name|hdisplay
 operator|)
 return|;
 block|}
@@ -1122,7 +1122,7 @@ index|[
 name|i
 index|]
 operator|.
-name|hdisplay
+name|vdisplay
 operator|)
 return|;
 block|}
