@@ -2840,6 +2840,15 @@ name|U3G_DEV
 argument_list|(
 name|QUALCOMM2
 argument_list|,
+name|WM620
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|QUALCOMM2
+argument_list|,
 name|VW110L
 argument_list|,
 name|U3GINIT_SCSIEJECT
