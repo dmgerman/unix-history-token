@@ -6794,6 +6794,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|pf_refragment6
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|m_tag
+modifier|*
+name|mtag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pf_normalize_cleanup
 parameter_list|(
