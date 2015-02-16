@@ -486,6 +486,21 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+name|fb_setblankmode_t
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|fb_info
@@ -527,6 +542,10 @@ decl_stmt|;
 name|fb_leave_t
 modifier|*
 name|leave
+decl_stmt|;
+name|fb_setblankmode_t
+modifier|*
+name|setblankmode
 decl_stmt|;
 name|intptr_t
 name|fb_pbase
