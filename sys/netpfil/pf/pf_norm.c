@@ -578,10 +578,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* Private prototypes */
-end_comment
-
 begin_function_decl
 specifier|static
 name|void
@@ -630,37 +626,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_function_decl
-specifier|static
-name|void
-name|pf_scrub_ip
-parameter_list|(
 name|struct
-name|mbuf
+name|pf_frent
 modifier|*
-modifier|*
-parameter_list|,
-name|u_int32_t
-parameter_list|,
-name|u_int8_t
-parameter_list|,
-name|u_int8_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|pf_flush_fragments
+name|pf_create_fragment
 parameter_list|(
-name|void
+name|u_short
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -686,13 +659,82 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|struct
+name|pf_fragment
+modifier|*
+name|pf_fillup_fragment
+parameter_list|(
+name|struct
+name|pf_fragment_cmp
+modifier|*
+parameter_list|,
 name|struct
 name|pf_frent
 modifier|*
-name|pf_create_fragment
-parameter_list|(
+parameter_list|,
 name|u_short
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|pf_isfull_fragment
+parameter_list|(
+name|struct
+name|pf_fragment
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|pf_join_fragment
+parameter_list|(
+name|struct
+name|pf_fragment
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|void
+name|pf_scrub_ip
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint8_t
+parameter_list|,
+name|uint8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pf_flush_fragments
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -750,51 +792,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|struct
-name|pf_fragment
-modifier|*
-name|pf_fillup_fragment
-parameter_list|(
-name|struct
-name|pf_fragment_cmp
-modifier|*
-parameter_list|,
-name|struct
-name|pf_frent
-modifier|*
-parameter_list|,
-name|u_short
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pf_isfull_fragment
-parameter_list|(
-name|struct
-name|pf_fragment
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|pf_join_fragment
-parameter_list|(
-name|struct
-name|pf_fragment
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
@@ -811,6 +808,7 @@ name|INET6
 end_ifdef
 
 begin_function_decl
+specifier|static
 name|int
 name|pf_reassemble6
 parameter_list|(
@@ -849,7 +847,7 @@ name|mbuf
 modifier|*
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -858,6 +856,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* INET6 */
+end_comment
 
 begin_define
 define|#
@@ -868,6 +870,12 @@ name|x
 parameter_list|)
 value|do {				\ 	if (V_pf_status.debug>= PF_DEBUG_MISC) {	\ 		printf("%s: ", __func__);		\ 		printf x ;				\ 	}						\ } while(0)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 specifier|static
@@ -938,6 +946,15 @@ name|dir
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_function
 name|void
@@ -1962,12 +1979,6 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_function
 name|struct
 name|pf_frent
@@ -2803,6 +2814,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pf_isfull_fragment
 parameter_list|(
@@ -3149,15 +3161,11 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|FR_IP_OFF
-parameter_list|(
-name|fr
-parameter_list|)
-value|((ntohs((fr)->fr_ip->ip_off)& IP_OFFMASK)<< 3)
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 specifier|static
@@ -3574,6 +3582,7 @@ name|INET6
 end_ifdef
 
 begin_function
+specifier|static
 name|int
 name|pf_reassemble6
 parameter_list|(
@@ -4287,6 +4296,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* INET6 */
+end_comment
 
 begin_function
 specifier|static
