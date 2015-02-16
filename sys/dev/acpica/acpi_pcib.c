@@ -321,12 +321,6 @@ condition|(
 name|entry
 operator|->
 name|Source
-operator|==
-name|NULL
-operator|||
-name|entry
-operator|->
-name|Source
 index|[
 literal|0
 index|]
@@ -814,12 +808,6 @@ condition|(
 name|prt
 operator|->
 name|Source
-operator|!=
-name|NULL
-operator|&&
-name|prt
-operator|->
-name|Source
 index|[
 literal|0
 index|]
@@ -848,12 +836,6 @@ block|}
 comment|/*      * If source is empty/NULL, the source index is a global IRQ number      * and it's hard-wired so we're done.      *      * XXX: If the source index is non-zero, ignore the source device and      * assume that this is a hard-wired entry.      */
 if|if
 condition|(
-name|prt
-operator|->
-name|Source
-operator|==
-name|NULL
-operator|||
 name|prt
 operator|->
 name|Source
