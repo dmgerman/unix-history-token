@@ -3196,10 +3196,6 @@ name|packet_space
 decl_stmt|;
 comment|/* Remaining space in current packet */
 comment|/* Input position */
-name|unsigned
-name|dma_seg_i
-decl_stmt|;
-comment|/* Current DMA segment number */
 name|uint64_t
 name|dma_addr
 decl_stmt|;
