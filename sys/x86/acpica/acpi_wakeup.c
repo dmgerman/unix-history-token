@@ -1220,6 +1220,9 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
+name|lapic_xapic_mode
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP

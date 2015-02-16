@@ -2712,9 +2712,6 @@ condition|)
 name|native_lapic_enable_x2apic
 argument_list|()
 expr_stmt|;
-name|native_lapic_disable
-argument_list|()
-expr_stmt|;
 name|intr_restore
 argument_list|(
 name|saveintr
