@@ -3231,10 +3231,6 @@ name|unsigned
 name|header_len
 decl_stmt|;
 comment|/* Number of bytes of header */
-name|int
-name|full_packet_size
-decl_stmt|;
-comment|/* Number of bytes to put in each outgoing 				 * segment */
 block|}
 struct|;
 end_struct
@@ -3862,20 +3858,6 @@ name|th_off
 expr_stmt|;
 name|tso
 operator|->
-name|full_packet_size
-operator|=
-name|tso
-operator|->
-name|header_len
-operator|+
-name|mbuf
-operator|->
-name|m_pkthdr
-operator|.
-name|tso_segsz
-expr_stmt|;
-name|tso
-operator|->
 name|seqnum
 operator|=
 name|ntohl
@@ -4492,11 +4474,19 @@ name|ip_length
 operator|=
 name|tso
 operator|->
-name|full_packet_size
+name|header_len
 operator|-
 name|tso
 operator|->
 name|nh_off
+operator|+
+name|tso
+operator|->
+name|mbuf
+operator|->
+name|m_pkthdr
+operator|.
+name|tso_segsz
 expr_stmt|;
 name|tsoh_th
 operator|->
