@@ -5658,11 +5658,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-specifier|const
-name|efx_nic_cfg_t
-modifier|*
-name|encp
-decl_stmt|;
 name|int
 name|index
 decl_stmt|;
@@ -5694,15 +5689,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|SFXGE_TXQ_IP_CKSUM
-argument_list|)
-expr_stmt|;
-name|encp
-operator|=
-name|efx_nic_cfg_get
-argument_list|(
-name|sc
-operator|->
-name|enp
 argument_list|)
 expr_stmt|;
 name|sfxge_tx_qstop
