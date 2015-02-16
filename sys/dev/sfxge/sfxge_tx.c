@@ -306,7 +306,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|sfxge_tx_qdpl_service
 parameter_list|(
@@ -574,7 +573,6 @@ end_ifdef
 
 begin_function
 specifier|static
-specifier|inline
 name|unsigned
 name|int
 name|sfxge_is_mbuf_non_tcp
@@ -1947,7 +1945,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|sfxge_tx_qdpl_service
 parameter_list|(
@@ -2016,7 +2013,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|int
 name|sfxge_tx_qdpl_put
 parameter_list|(
@@ -3119,7 +3115,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|sfxge_tx_qdpl_service
 parameter_list|(
@@ -3233,7 +3228,6 @@ end_struct
 
 begin_function
 specifier|static
-specifier|inline
 specifier|const
 name|struct
 name|ip
@@ -3285,21 +3279,17 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_expr_stmt
 specifier|static
-specifier|inline
+name|__unused
 specifier|const
-name|struct
+expr|struct
 name|ip6_hdr
-modifier|*
+operator|*
 name|tso_ip6h
-parameter_list|(
-specifier|const
-name|struct
-name|sfxge_tso_state
-modifier|*
-name|tso
-parameter_list|)
+argument_list|(
+argument|const struct sfxge_tso_state *tso
+argument_list|)
 block|{
 name|KASSERT
 argument_list|(
@@ -3316,7 +3306,7 @@ operator|(
 literal|"tso_ip6h() in non-IPv6 state"
 operator|)
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 operator|(
 specifier|const
@@ -3337,11 +3327,10 @@ name|nh_off
 operator|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_function
 specifier|static
-specifier|inline
 specifier|const
 name|struct
 name|tcphdr
