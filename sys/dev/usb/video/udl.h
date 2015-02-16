@@ -83,12 +83,8 @@ begin_define
 define|#
 directive|define
 name|UDL_CMD_MAX_BUFFERS
-value|2048
+value|(3 * UDL_CMD_MAX_FRAMES)
 end_define
-
-begin_comment
-comment|/* units */
-end_comment
 
 begin_define
 define|#
