@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: dwarf_attrval.c 2977 2014-01-21 20:13:31Z kaiwang27 $"
+literal|"$Id: dwarf_attrval.c 3159 2015-02-15 21:43:27Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -499,6 +499,7 @@ index|]
 operator|.
 name|s64
 expr_stmt|;
+break|break;
 case|case
 name|DW_FORM_data8
 case|:

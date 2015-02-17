@@ -60,7 +60,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: sections.c 3134 2014-12-23 10:43:59Z kaiwang27 $"
+literal|"$Id: sections.c 3150 2015-02-15 19:07:46Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3897,6 +3897,20 @@ literal|0
 condition|)
 continue|continue;
 comment|/* Align section offset. */
+if|if
+condition|(
+name|s
+operator|->
+name|align
+operator|==
+literal|0
+condition|)
+name|s
+operator|->
+name|align
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|off

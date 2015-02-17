@@ -131,7 +131,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elfdump.c 2728 2012-12-09 16:54:28Z kaiwang27 $"
+literal|"$Id: elfdump.c 3146 2015-02-15 18:20:03Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5293,11 +5293,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|archive_read_support_compression_none
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
 name|archive_read_support_format_ar
 argument_list|(
 name|a
@@ -5331,7 +5326,7 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -5450,11 +5445,6 @@ name|archive_error_string
 argument_list|(
 name|a
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|archive_read_support_compression_none
-argument_list|(
-name|a
 argument_list|)
 expr_stmt|;
 name|archive_read_support_format_ar
@@ -5936,7 +5926,7 @@ argument_list|)
 expr_stmt|;
 name|AC
 argument_list|(
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -6035,7 +6025,7 @@ argument_list|)
 expr_stmt|;
 name|AC
 argument_list|(
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)

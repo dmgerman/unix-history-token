@@ -72,7 +72,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: read.c 3102 2014-10-29 21:09:01Z jkoshy $"
+literal|"$Id: read.c 3163 2015-02-15 21:43:51Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -319,13 +319,20 @@ operator|&=
 operator|~
 name|AR_BSD
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|name
 operator|=
 name|archive_entry_pathname
 argument_list|(
 name|entry
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+break|break;
 comment|/* Skip pseudo members. */
 if|if
 condition|(

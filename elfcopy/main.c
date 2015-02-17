@@ -84,7 +84,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: main.c 3111 2014-12-20 08:33:01Z kaiwang27 $"
+literal|"$Id: main.c 3156 2015-02-15 21:40:01Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1188,6 +1188,9 @@ parameter_list|,
 name|int
 modifier|*
 name|outfd
+parameter_list|,
+name|int
+name|in_place
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2610,6 +2613,10 @@ name|_TEMPFILEPATH
 block|}
 end_function
 
+begin_comment
+comment|/*  * Copy temporary file with path src and file descriptor infd to path dst.  * If in_place is set act as if editing the file in place, avoiding rename()  * to preserve hard and symbolic links. Output file remains open, with file  * descriptor returned in outfd.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2631,12 +2638,22 @@ parameter_list|,
 name|int
 modifier|*
 name|outfd
+parameter_list|,
+name|int
+name|in_place
 parameter_list|)
 block|{
 name|int
 name|tmpfd
 decl_stmt|;
 comment|/* 	 * First, check if we can use rename(). 	 */
+if|if
+condition|(
+name|in_place
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|rename
@@ -2673,7 +2690,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* 	 * If the rename() failed due to 'src' and 'dst' residing in 	 * two different file systems, invoke a helper function in 	 * libelftc to do the copy. 	 */
+comment|/* 		 * If the rename() failed due to 'src' and 'dst' residing in 		 * two different file systems, invoke a helper function in 		 * libelftc to do the copy. 		 */
 if|if
 condition|(
 name|unlink
@@ -2689,6 +2706,7 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -2700,30 +2718,13 @@ name|dst
 argument_list|,
 name|O_CREAT
 operator||
+name|O_TRUNC
+operator||
 name|O_WRONLY
 argument_list|,
 literal|0755
 argument_list|)
 operator|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-if|if
-condition|(
-name|lseek
-argument_list|(
-name|infd
-argument_list|,
-literal|0
-argument_list|,
-name|SEEK_SET
-argument_list|)
 operator|<
 literal|0
 condition|)
@@ -2830,6 +2831,9 @@ decl_stmt|,
 name|ofd0
 decl_stmt|,
 name|tfd
+decl_stmt|;
+name|int
+name|in_place
 decl_stmt|;
 name|tempfile
 operator|=
@@ -3450,16 +3454,54 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|in_place
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|dst
 operator|==
 name|NULL
 condition|)
+block|{
 name|dst
 operator|=
 name|src
 expr_stmt|;
+if|if
+condition|(
+name|lstat
+argument_list|(
+name|dst
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|!=
+operator|-
+literal|1
+operator|&&
+operator|(
+name|sb
+operator|.
+name|st_nlink
+operator|>
+literal|1
+operator|||
+name|S_ISLNK
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|)
+condition|)
+name|in_place
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|copy_from_tempfile
@@ -3472,6 +3514,8 @@ name|ofd
 argument_list|,
 operator|&
 name|tfd
+argument_list|,
+name|in_place
 argument_list|)
 operator|<
 literal|0

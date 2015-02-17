@@ -138,7 +138,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: nm.c 3124 2014-12-21 05:46:28Z kaiwang27 $"
+literal|"$Id: nm.c 3145 2015-02-15 18:04:37Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1419,6 +1419,16 @@ block|,
 name|NULL
 block|,
 literal|'D'
+block|}
+block|,
+block|{
+literal|"extern-only"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'g'
 block|}
 block|,
 block|{
@@ -10166,7 +10176,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ \n  -f                        Produce full output (default).\ \n      --format=format       Display output in specific format.  Allowed\ \n                            formats are: \"bsd\", \"posix\" and \"sysv\".\ \n  -g                        Display only global symbol information.\ \n  -h, --help                Show this help message.\ \n  -l, --line-numbers        Display filename and linenumber using\ \n                            debugging information.\ \n  -n, --numeric-sort        Sort symbols numerically by value."
+literal|"\ \n  -f                        Produce full output (default).\ \n      --format=format       Display output in specific format.  Allowed\ \n                            formats are: \"bsd\", \"posix\" and \"sysv\".\ \n  -g, --extern-only         Display only global symbol information.\ \n  -h, --help                Show this help message.\ \n  -l, --line-numbers        Display filename and linenumber using\ \n                            debugging information.\ \n  -n, --numeric-sort        Sort symbols numerically by value."
 argument_list|)
 expr_stmt|;
 name|printf

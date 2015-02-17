@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: dwarf_reloc.c 2075 2011-10-27 03:47:28Z jkoshy $"
+literal|"$Id: dwarf_reloc.c 3161 2015-02-15 21:43:36Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -32,11 +32,11 @@ name|oldapply
 operator|=
 name|_libdwarf
 operator|.
-name|applyrela
+name|applyreloc
 expr_stmt|;
 name|_libdwarf
 operator|.
-name|applyrela
+name|applyreloc
 operator|=
 name|apply
 expr_stmt|;

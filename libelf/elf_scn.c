@@ -60,7 +60,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elf_scn.c 3013 2014-03-23 06:16:59Z jkoshy $"
+literal|"$Id: elf_scn.c 3147 2015-02-15 18:45:23Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -175,7 +175,7 @@ name|E
 parameter_list|,
 name|EH
 parameter_list|)
-value|do {				\ 		if (fsz != (EH)->e_shentsize ||			\ 		    shoff + fsz * shnum> e->e_rawsize) {	\ 			LIBELF_SET_ERROR(HEADER, 0);		\ 			return (0);				\ 		}						\ 	} while (0)
+value|do {				\ 		if (shoff> e->e_rawsize ||			\ 		    fsz != (EH)->e_shentsize ||			\ 		    shnum> SIZE_MAX / fsz ||			\ 		    fsz * shnum> e->e_rawsize - shoff) {	\ 			LIBELF_SET_ERROR(HEADER, 0);		\ 			return (0);				\ 		}						\ 	} while (0)
 name|ec
 operator|=
 name|e
