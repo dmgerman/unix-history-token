@@ -1475,6 +1475,23 @@ operator|->
 name|ctr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+name|db_printf
+argument_list|(
+literal|" r2=%#zx"
+argument_list|,
+name|tf
+operator|->
+name|fixreg
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|tf
