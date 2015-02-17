@@ -581,6 +581,16 @@ end_expr_stmt
 begin_function_decl
 specifier|static
 name|void
+name|pf_flush_fragments
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|pf_free_fragment
 parameter_list|(
 name|struct
@@ -627,6 +637,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|pf_frent
 modifier|*
@@ -692,6 +703,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|mbuf
 modifier|*
@@ -725,16 +737,6 @@ parameter_list|,
 name|uint8_t
 parameter_list|,
 name|uint8_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|pf_flush_fragments
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1461,12 +1463,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_comment
 comment|/*  * Try to flush old fragments to make space for new ones  */
 end_comment
@@ -1575,15 +1571,6 @@ break|break;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET */
-end_comment
 
 begin_comment
 comment|/* Frees the fragments and all associated entries */
@@ -1760,12 +1747,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_function
 specifier|static
 name|struct
@@ -1883,15 +1864,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET */
-end_comment
-
 begin_comment
 comment|/* Removes a fragment from the fragment queue and frees the fragment */
 end_comment
@@ -1980,6 +1952,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|pf_frent
 modifier|*
@@ -3013,6 +2986,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|mbuf
 modifier|*
@@ -3574,6 +3548,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -4300,6 +4283,12 @@ end_endif
 begin_comment
 comment|/* INET6 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 specifier|static
@@ -5900,6 +5889,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -6272,6 +6270,12 @@ end_endif
 begin_comment
 comment|/* INET6 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function
 name|int
