@@ -48,7 +48,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelf_ar_util.c 3013 2014-03-23 06:16:59Z jkoshy $"
+literal|"$Id: libelf_ar_util.c 3157 2015-02-15 21:42:02Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -3939,7 +3939,7 @@ name|setvar
 argument_list|(
 name|s
 argument_list|,
-name|nullstr
+literal|""
 argument_list|,
 literal|0
 argument_list|)

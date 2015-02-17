@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/slab.h>
 end_include
 

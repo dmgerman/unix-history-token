@@ -496,11 +496,32 @@ case|case
 name|FBIO_BLANK
 case|:
 comment|/* blank display */
+if|if
+condition|(
+name|info
+operator|->
+name|setblankmode
+operator|!=
+name|NULL
+condition|)
 name|error
 operator|=
-literal|0
+name|info
+operator|->
+name|setblankmode
+argument_list|(
+name|info
+operator|->
+name|fb_priv
+argument_list|,
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+argument_list|)
 expr_stmt|;
-comment|/* TODO */
 break|break;
 default|default:
 name|error

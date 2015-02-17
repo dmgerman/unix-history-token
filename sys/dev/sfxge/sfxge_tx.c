@@ -306,7 +306,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|sfxge_tx_qdpl_service
 parameter_list|(
@@ -574,7 +573,6 @@ end_ifdef
 
 begin_function
 specifier|static
-specifier|inline
 name|unsigned
 name|int
 name|sfxge_is_mbuf_non_tcp
@@ -1947,7 +1945,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|sfxge_tx_qdpl_service
 parameter_list|(
@@ -2016,7 +2013,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|int
 name|sfxge_tx_qdpl_put
 parameter_list|(
@@ -2569,6 +2565,8 @@ literal|0
 init|;
 name|i
 operator|<
+name|SFXGE_TXQ_IP_TCP_UDP_CKSUM
+operator|+
 name|SFXGE_TX_SCALE
 argument_list|(
 name|sc
@@ -3119,7 +3117,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|sfxge_tx_qdpl_service
 parameter_list|(
@@ -3196,10 +3193,6 @@ name|packet_space
 decl_stmt|;
 comment|/* Remaining space in current packet */
 comment|/* Input position */
-name|unsigned
-name|dma_seg_i
-decl_stmt|;
-comment|/* Current DMA segment number */
 name|uint64_t
 name|dma_addr
 decl_stmt|;
@@ -3231,17 +3224,12 @@ name|unsigned
 name|header_len
 decl_stmt|;
 comment|/* Number of bytes of header */
-name|int
-name|full_packet_size
-decl_stmt|;
-comment|/* Number of bytes to put in each outgoing 				 * segment */
 block|}
 struct|;
 end_struct
 
 begin_function
 specifier|static
-specifier|inline
 specifier|const
 name|struct
 name|ip
@@ -3293,21 +3281,17 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_expr_stmt
 specifier|static
-specifier|inline
+name|__unused
 specifier|const
-name|struct
+expr|struct
 name|ip6_hdr
-modifier|*
+operator|*
 name|tso_ip6h
-parameter_list|(
-specifier|const
-name|struct
-name|sfxge_tso_state
-modifier|*
-name|tso
-parameter_list|)
+argument_list|(
+argument|const struct sfxge_tso_state *tso
+argument_list|)
 block|{
 name|KASSERT
 argument_list|(
@@ -3324,7 +3308,7 @@ operator|(
 literal|"tso_ip6h() in non-IPv6 state"
 operator|)
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 operator|(
 specifier|const
@@ -3345,11 +3329,10 @@ name|nh_off
 operator|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_function
 specifier|static
-specifier|inline
 specifier|const
 name|struct
 name|tcphdr
@@ -3859,20 +3842,6 @@ name|tso
 argument_list|)
 operator|->
 name|th_off
-expr_stmt|;
-name|tso
-operator|->
-name|full_packet_size
-operator|=
-name|tso
-operator|->
-name|header_len
-operator|+
-name|mbuf
-operator|->
-name|m_pkthdr
-operator|.
-name|tso_segsz
 expr_stmt|;
 name|tso
 operator|->
@@ -4492,11 +4461,19 @@ name|ip_length
 operator|=
 name|tso
 operator|->
-name|full_packet_size
+name|header_len
 operator|-
 name|tso
 operator|->
 name|nh_off
+operator|+
+name|tso
+operator|->
+name|mbuf
+operator|->
+name|m_pkthdr
+operator|.
+name|tso_segsz
 expr_stmt|;
 name|tsoh_th
 operator|->
@@ -5658,11 +5635,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-specifier|const
-name|efx_nic_cfg_t
-modifier|*
-name|encp
-decl_stmt|;
 name|int
 name|index
 decl_stmt|;
@@ -5694,15 +5666,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|SFXGE_TXQ_IP_CKSUM
-argument_list|)
-expr_stmt|;
-name|encp
-operator|=
-name|efx_nic_cfg_get
-argument_list|(
-name|sc
-operator|->
-name|enp
 argument_list|)
 expr_stmt|;
 name|sfxge_tx_qstop

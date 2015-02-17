@@ -240,7 +240,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|unsigned
 name|long
 name|ipv6_addr_cmp
@@ -678,7 +677,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|struct
 name|mbuf
 modifier|*

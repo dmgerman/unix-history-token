@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<linux/slab.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mad_priv.h"
 end_include
 

@@ -1635,8 +1635,9 @@ condition|(
 name|na
 operator|->
 name|nm_config
-condition|)
-block|{
+operator|==
+name|NULL
+operator|||
 name|na
 operator|->
 name|nm_config
@@ -1655,9 +1656,7 @@ argument_list|,
 operator|&
 name|rxd
 argument_list|)
-expr_stmt|;
-block|}
-else|else
+condition|)
 block|{
 comment|/* take whatever we had at init time */
 name|txr
@@ -7400,7 +7399,7 @@ name|ENXIO
 expr_stmt|;
 break|break;
 block|}
-name|rmb
+name|mb
 argument_list|()
 expr_stmt|;
 comment|/* make sure following reads are not from cache */
@@ -10616,11 +10615,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* XXX could use make_dev_credv() to get error number */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-comment|/* support for the 'eternal' flag */
+comment|/* 	 * MAKEDEV_ETERNAL_KLD avoids an expensive check on syscalls 	 * when the module is compiled in. 	 * XXX could use make_dev_credv() to get error number 	 */
 name|netmap_dev
 operator|=
 name|make_dev_credf
@@ -10643,28 +10638,6 @@ argument_list|,
 literal|"netmap"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|netmap_dev
-operator|=
-name|make_dev
-argument_list|(
-operator|&
-name|netmap_cdevsw
-argument_list|,
-literal|0
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"netmap"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!

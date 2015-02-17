@@ -485,18 +485,50 @@ struct|struct
 name|mbuf
 block|{
 comment|/* 	 * Header present at the beginning of every mbuf. 	 * Size ILP32: 24 	 *      LP64: 32 	 * Compile-time assertions in uipc_mbuf.c test these values to ensure 	 * that they are correct. 	 */
+union|union
+block|{
+comment|/* next buffer in chain */
 name|struct
 name|mbuf
 modifier|*
 name|m_next
 decl_stmt|;
-comment|/* next buffer in chain */
+name|SLIST_ENTRY
+argument_list|(
+argument|mbuf
+argument_list|)
+name|m_slist
+expr_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|mbuf
+argument_list|)
+name|m_stailq
+expr_stmt|;
+block|}
+union|;
+union|union
+block|{
+comment|/* next chain in queue/record */
 name|struct
 name|mbuf
 modifier|*
 name|m_nextpkt
 decl_stmt|;
-comment|/* next chain in queue/record */
+name|SLIST_ENTRY
+argument_list|(
+argument|mbuf
+argument_list|)
+name|m_slistpkt
+expr_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|mbuf
+argument_list|)
+name|m_stailqpkt
+expr_stmt|;
+block|}
+union|;
 name|caddr_t
 name|m_data
 decl_stmt|;

@@ -157,10 +157,42 @@ operator|&
 literal|0x7F
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* ARM new id scheme */
+name|cpuinfo
+operator|.
+name|architecture
+operator|=
+operator|(
+name|cpuinfo
+operator|.
+name|midr
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0x0F
+expr_stmt|;
+name|cpuinfo
+operator|.
+name|revision
+operator|=
+operator|(
+name|cpuinfo
+operator|.
+name|midr
+operator|>>
+literal|20
+operator|)
+operator|&
+literal|0x0F
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
-comment|/* must be new id scheme */
+comment|/* non ARM -> must be new id scheme */
 name|cpuinfo
 operator|.
 name|architecture

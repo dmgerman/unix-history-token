@@ -1879,6 +1879,10 @@ name|WPI_TX_AUTO_SEQ
 value|(1<< 13)
 define|#
 directive|define
+name|WPI_TX_MORE_FRAG
+value|(1<< 14)
+define|#
+directive|define
 name|WPI_TX_INSERT_TSTAMP
 value|(1<< 16)
 name|uint8_t
@@ -4426,22 +4430,6 @@ literal|"FATAL_ERROR"
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX description for some error codes (error data). */
-end_comment
-
-begin_comment
-comment|/* 0x00000074 - wrong totlen field */
-end_comment
-
-begin_comment
-comment|/* 0x000003B3 - powersave error */
-end_comment
-
-begin_comment
-comment|/* 0x00000447 - wrong channel selected */
-end_comment
 
 begin_define
 define|#

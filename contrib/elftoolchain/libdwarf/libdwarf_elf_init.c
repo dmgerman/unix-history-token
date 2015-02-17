@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libdwarf_elf_init.c 2972 2013-12-23 06:46:04Z kaiwang27 $"
+literal|"$Id: libdwarf_elf_init.c 3161 2015-02-15 21:43:36Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

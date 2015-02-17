@@ -274,7 +274,7 @@ argument_list|(
 name|tobe_disc
 argument_list|)
 expr_stmt|;
-comment|/* Assume this is a unicast address mismatch, unless below 		 * we find either FSF_AZ_RX_EV_ETH_CRC_ERR or 		 * EV_RX_PAUSE_FRM_ERR is set. 		 */
+comment|/* 		 * Assume this is a unicast address mismatch, unless below 		 * we find either FSF_AZ_RX_EV_ETH_CRC_ERR or 		 * EV_RX_PAUSE_FRM_ERR is set. 		 */
 operator|(
 operator|*
 name|flagsp
@@ -330,7 +330,7 @@ name|EFSYS_OPT_RX_HDR_SPLIT
 operator|||
 name|EFSYS_OPT_RX_SCATTER
 operator|)
-comment|/* Lookout for payload queue ran dry errors and ignore them. 		 * 		 * Sadly for the header/data split cases, the descriptor 		 * pointer in this event refers to the header queue and 		 * therefore cannot be easily detected as duplicate. 		 * So we drop these and rely on the receive processing seeing 		 * a subsequent packet with FSF_AZ_RX_EV_SOP set to discard 		 * the partially received packet. 		 */
+comment|/* 		 * Lookout for payload queue ran dry errors and ignore them. 		 * 		 * Sadly for the header/data split cases, the descriptor 		 * pointer in this event refers to the header queue and 		 * therefore cannot be easily detected as duplicate. 		 * So we drop these and rely on the receive processing seeing 		 * a subsequent packet with FSF_AZ_RX_EV_SOP set to discard 		 * the partially received packet. 		 */
 if|if
 condition|(
 operator|(

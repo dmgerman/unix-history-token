@@ -239,6 +239,9 @@ name|enum
 name|intr_polarity
 name|pol
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 if|if
 condition|(
 name|acpi_quirks
@@ -314,6 +317,8 @@ name|GlobalIrq
 argument_list|)
 expr_stmt|;
 comment|/* Register the IRQ with the polarity and trigger mode found. */
+name|ret
+operator|=
 name|xen_register_pirq
 argument_list|(
 name|intr
@@ -323,6 +328,17 @@ argument_list|,
 name|trig
 argument_list|,
 name|pol
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"Unable to register interrupt override"
 argument_list|)
 expr_stmt|;
 block|}
@@ -564,6 +580,8 @@ condition|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|ret
 decl_stmt|;
 comment|/* Map MADT */
 name|madt_physaddr
@@ -645,6 +663,8 @@ argument_list|(
 literal|"MADT: Forcing active-low polarity and level trigger for SCI\n"
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|xen_register_pirq
 argument_list|(
 name|AcpiGbl_FADT
@@ -654,6 +674,71 @@ argument_list|,
 name|INTR_TRIGGER_LEVEL
 argument_list|,
 name|INTR_POLARITY_LOW
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"Unable to register SCI IRQ"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Register legacy ISA IRQs */
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+literal|16
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|intr_lookup_source
+argument_list|(
+name|i
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+continue|continue;
+name|ret
+operator|=
+name|xen_register_pirq
+argument_list|(
+name|i
+argument_list|,
+name|INTR_TRIGGER_EDGE
+argument_list|,
+name|INTR_POLARITY_LOW
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+operator|&&
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Unable to register legacy IRQ#%d: %d\n"
+argument_list|,
+name|i
+argument_list|,
+name|ret
 argument_list|)
 expr_stmt|;
 block|}

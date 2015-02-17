@@ -54,6 +54,16 @@ operator|->
 name|hop_cnt
 expr_stmt|;
 comment|/* See section 14.2.2.2, Vol 1 IB spec */
+comment|/* C14-6 -- valid hop_cnt values are from 0 to 63 */
+if|if
+condition|(
+name|hop_cnt
+operator|>=
+name|IB_SMP_MAX_PATH_HOPS
+condition|)
+return|return
+name|IB_SMI_DISCARD
+return|;
 if|if
 condition|(
 operator|!
@@ -364,6 +374,16 @@ operator|->
 name|hop_cnt
 expr_stmt|;
 comment|/* See section 14.2.2.2, Vol 1 IB spec */
+comment|/* C14-6 -- valid hop_cnt values are from 0 to 63 */
+if|if
+condition|(
+name|hop_cnt
+operator|>=
+name|IB_SMP_MAX_PATH_HOPS
+condition|)
+return|return
+name|IB_SMI_DISCARD
+return|;
 if|if
 condition|(
 operator|!

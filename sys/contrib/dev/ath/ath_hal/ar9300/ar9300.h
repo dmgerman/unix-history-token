@@ -4427,21 +4427,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|u_int32_t
-name|ar9300_ant_ctrl_common_get
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-name|HAL_BOOL
-name|is_2ghz
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|extern  u_int32_t ar9300_ant_ctrl_common_get(struct ath_hal *ah, HAL_BOOL is_2ghz);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern

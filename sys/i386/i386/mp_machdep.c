@@ -6323,6 +6323,9 @@ name|cpu_resume
 argument_list|()
 expr_stmt|;
 comment|/* Resume MCA and local APIC */
+name|lapic_xapic_mode
+argument_list|()
+expr_stmt|;
 name|mca_resume
 argument_list|()
 expr_stmt|;
