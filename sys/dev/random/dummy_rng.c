@@ -152,7 +152,7 @@ comment|/* This is used only by the internal read_random(9) call, and then only 
 end_comment
 
 begin_function
-name|u_int
+name|void
 name|dummy_random_read_phony
 parameter_list|(
 name|uint8_t
@@ -164,12 +164,6 @@ name|count
 parameter_list|)
 block|{
 comment|/* If no entropy device is loaded, don't spam the console with warnings */
-specifier|static
-name|int
-name|warned
-init|=
-literal|0
-decl_stmt|;
 name|u_long
 name|randval
 decl_stmt|;
@@ -178,24 +172,6 @@ name|size
 decl_stmt|,
 name|i
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|warned
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"random device not loaded/active; using insecure pseudo-random number generator\n"
-argument_list|)
-expr_stmt|;
-name|warned
-operator|=
-literal|1
-expr_stmt|;
-block|}
 comment|/* srandom() is called in kern/init_main.c:proc0_post() */
 comment|/* Fill buf[] with random(9) output */
 for|for
@@ -251,11 +227,6 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|count
-operator|)
-return|;
 block|}
 end_function
 

@@ -509,6 +509,10 @@ name|random_adaptor_previous
 operator|!=
 name|NULL
 condition|)
+block|{
+name|randomdev_deinit_reader
+argument_list|()
+expr_stmt|;
 call|(
 name|random_adaptor_previous
 operator|->
@@ -516,6 +520,7 @@ name|ra_deinit
 call|)
 argument_list|()
 expr_stmt|;
+block|}
 call|(
 name|random_adaptor
 operator|->
@@ -524,6 +529,13 @@ call|)
 argument_list|()
 expr_stmt|;
 block|}
+name|randomdev_init_reader
+argument_list|(
+name|random_adaptor
+operator|->
+name|ra_read
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
