@@ -2387,6 +2387,8 @@ name|cb
 operator|->
 name|bind_attr
 operator|.
+name|bind_info
+operator|.
 name|length
 operator|=
 name|cb
@@ -3006,6 +3008,8 @@ argument_list|(
 name|cb
 operator|->
 name|pd
+argument_list|,
+name|IB_MW_TYPE_1
 argument_list|)
 expr_stmt|;
 if|if
@@ -4658,6 +4662,8 @@ name|cb
 operator|->
 name|bind_attr
 operator|.
+name|bind_info
+operator|.
 name|mw_access_flags
 operator|=
 name|IB_ACCESS_REMOTE_READ
@@ -4665,6 +4671,8 @@ expr_stmt|;
 name|cb
 operator|->
 name|bind_attr
+operator|.
+name|bind_info
 operator|.
 name|mr
 operator|=
@@ -4679,6 +4687,8 @@ name|cb
 operator|->
 name|bind_attr
 operator|.
+name|bind_info
+operator|.
 name|mw_access_flags
 operator|=
 name|IB_ACCESS_REMOTE_WRITE
@@ -4686,6 +4696,8 @@ expr_stmt|;
 name|cb
 operator|->
 name|bind_attr
+operator|.
+name|bind_info
 operator|.
 name|mr
 operator|=
@@ -4697,6 +4709,8 @@ block|}
 name|cb
 operator|->
 name|bind_attr
+operator|.
+name|bind_info
 operator|.
 name|addr
 operator|=
@@ -4719,6 +4733,8 @@ argument_list|,
 name|cb
 operator|->
 name|bind_attr
+operator|.
+name|bind_info
 operator|.
 name|mr
 operator|->
@@ -11768,6 +11784,8 @@ argument_list|,
 name|cb
 argument_list|,
 name|RDMA_PS_TCP
+argument_list|,
+name|IB_QPT_RC
 argument_list|)
 expr_stmt|;
 if|if

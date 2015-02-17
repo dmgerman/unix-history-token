@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/slab.h>
 end_include
 
@@ -396,7 +402,7 @@ block|{
 name|printk
 argument_list|(
 argument|KERN_WARNING PFX
-literal|"Unmapping FMR %p with ref count %d\n"
+literal|"Unmapping FMR 0x%08x with ref count %d\n"
 argument_list|,
 argument|fmr
 argument_list|,

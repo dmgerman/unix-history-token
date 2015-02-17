@@ -1283,7 +1283,7 @@ comment|/* Send MRA only after a duplicate msg */
 end_comment
 
 begin_comment
-comment|/**  * ib_send_cm_mra - Sends a message receipt acknowledgement to a connection  *   message.  * @cm_id: Connection identifier associated with the connection message.  * @service_timeout: The lower 5-bits specify the maximum time required for  *   the sender to reply to to the connection message.  The upper 3-bits  *   specify additional control flags.  * @private_data: Optional user-defined private data sent with the  *   message receipt acknowledgement.  * @private_data_len: Size of the private data buffer, in bytes.  */
+comment|/**  * ib_send_cm_mra - Sends a message receipt acknowledgement to a connection  *   message.  * @cm_id: Connection identifier associated with the connection message.  * @service_timeout: The lower 5-bits specify the maximum time required for  *   the sender to reply to the connection message.  The upper 3-bits  *   specify additional control flags.  * @private_data: Optional user-defined private data sent with the  *   message receipt acknowledgement.  * @private_data_len: Size of the private data buffer, in bytes.  */
 end_comment
 
 begin_function_decl
@@ -1500,6 +1500,28 @@ name|struct
 name|ib_cm_sidr_rep_param
 modifier|*
 name|param
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ib_update_cm_av
+parameter_list|(
+name|struct
+name|ib_cm_id
+modifier|*
+name|id
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|smac
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|alt_smac
 parameter_list|)
 function_decl|;
 end_function_decl

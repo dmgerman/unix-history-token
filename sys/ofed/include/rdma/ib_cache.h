@@ -130,6 +130,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * ib_find_exact_cached_pkey - Returns the PKey table index where a specified  *   PKey value occurs. Comparison uses the FULL 16 bits (incl membership bit)  * @device: The device to query.  * @port_num: The port number of the device to search for the PKey.  * @pkey: The PKey value to search for.  * @index: The index into the cached PKey table where the PKey was found.  *  * ib_find_exact_cached_pkey() searches the specified PKey table in  * the local software cache.  */
+end_comment
+
+begin_function_decl
+name|int
+name|ib_find_exact_cached_pkey
+parameter_list|(
+name|struct
+name|ib_device
+modifier|*
+name|device
+parameter_list|,
+name|u8
+name|port_num
+parameter_list|,
+name|u16
+name|pkey
+parameter_list|,
+name|u16
+modifier|*
+name|index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * ib_get_cached_lmc - Returns a cached lmc table entry  * @device: The device to query.  * @port_num: The port number of the device to query.  * @lmc: The lmc value for the specified port for that device.  *  * ib_get_cached_lmc() fetches the specified lmc table entry stored in  * the local software cache.  */
 end_comment
 

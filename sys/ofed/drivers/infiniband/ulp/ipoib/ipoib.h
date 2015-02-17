@@ -258,6 +258,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/rbtree.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<asm/atomic.h>
 end_include
 
@@ -1007,6 +1013,9 @@ name|ipoib_dev_priv
 block|{
 name|spinlock_t
 name|lock
+decl_stmt|;
+name|spinlock_t
+name|drain_lock
 decl_stmt|;
 name|struct
 name|ifnet
