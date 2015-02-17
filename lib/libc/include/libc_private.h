@@ -665,14 +665,12 @@ begin_comment
 comment|/*  * Function to clean up streams, called from abort() and exit().  */
 end_comment
 
-begin_macro
-name|void
-argument_list|(
-argument|*__cleanup
-argument_list|)
-end_macro
+begin_extern
+extern|extern void (*__cleanup
+end_extern
 
 begin_expr_stmt
+unit|)
 operator|(
 name|void
 operator|)
