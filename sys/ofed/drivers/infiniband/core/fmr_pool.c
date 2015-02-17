@@ -402,7 +402,7 @@ block|{
 name|printk
 argument_list|(
 argument|KERN_WARNING PFX
-literal|"Unmapping FMR 0x%08x with ref count %d\n"
+literal|"Unmapping FMR %p with ref count %d\n"
 argument_list|,
 argument|fmr
 argument_list|,
