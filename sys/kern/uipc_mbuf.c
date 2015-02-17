@@ -499,7 +499,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|struct_m_ext
+name|m_ext
 argument_list|)
 operator|==
 literal|48
@@ -548,7 +548,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|struct_m_ext
+name|m_ext
 argument_list|)
 operator|==
 literal|28
