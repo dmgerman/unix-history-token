@@ -63,12 +63,6 @@ directive|include
 file|<netinet/in_pcb.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_function
 specifier|static
 specifier|inline
@@ -84,6 +78,9 @@ modifier|*
 name|high
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|CURVNET_SET_QUIET
 argument_list|(
 name|TD_TO_VNET
@@ -105,6 +102,22 @@ expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+operator|*
+name|low
+operator|=
+name|IPPORT_EPHEMERALFIRST
+expr_stmt|;
+comment|/* 10000 */
+operator|*
+name|high
+operator|=
+name|IPPORT_EPHEMERALLAST
+expr_stmt|;
+comment|/* 65535 */
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -318,11 +331,6 @@ literal|0xff
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
