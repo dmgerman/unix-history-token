@@ -14444,6 +14444,15 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
+literal|"    mnt_lockref = %d\n"
+argument_list|,
+name|mp
+operator|->
+name|mnt_lockref
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
 literal|"    mnt_secondary_writes = %d\n"
 argument_list|,
 name|mp
