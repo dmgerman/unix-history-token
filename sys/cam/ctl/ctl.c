@@ -56594,7 +56594,7 @@ operator|.
 name|nexus
 operator|.
 name|targ_port
-operator|==
+operator|!=
 name|io
 operator|->
 name|io_hdr
@@ -56603,7 +56603,7 @@ name|nexus
 operator|.
 name|targ_port
 operator|)
-operator|&&
+operator|||
 operator|(
 name|xio
 operator|->
@@ -56614,7 +56614,7 @@ operator|.
 name|initid
 operator|.
 name|id
-operator|==
+operator|!=
 name|io
 operator|->
 name|io_hdr
@@ -56625,16 +56625,26 @@ name|initid
 operator|.
 name|id
 operator|)
+operator|||
+operator|(
+name|xio
+operator|->
+name|io_hdr
+operator|.
+name|flags
+operator|&
+name|CTL_FLAG_ABORT
+operator|)
 condition|)
-block|{
-comment|/* 			 * If the abort says that the task is untagged, the 			 * task in the queue must be untagged.  Otherwise, 			 * we just check to see whether the tag numbers 			 * match.  This is because the QLogic firmware 			 * doesn't pass back the tag type in an abort 			 * request. 			 */
+continue|continue;
+comment|/* 		 * If the abort says that the task is untagged, the 		 * task in the queue must be untagged.  Otherwise, 		 * we just check to see whether the tag numbers 		 * match.  This is because the QLogic firmware 		 * doesn't pass back the tag type in an abort 		 * request. 		 */
 if|#
 directive|if
 literal|0
-block|if (((xio->scsiio.tag_type == CTL_TAG_UNTAGGED)&& (io->taskio.tag_type == CTL_TAG_UNTAGGED)) 			 || (xio->scsiio.tag_num == io->taskio.tag_num)) {
+block|if (((xio->scsiio.tag_type == CTL_TAG_UNTAGGED)&& (io->taskio.tag_type == CTL_TAG_UNTAGGED)) 		 || (xio->scsiio.tag_num == io->taskio.tag_num)) {
 endif|#
 directive|endif
-comment|/* 			 * XXX KDM we've got problems with FC, because it 			 * doesn't send down a tag type with aborts.  So we 			 * can only really go by the tag number... 			 * This may cause problems with parallel SCSI. 			 * Need to figure that out!! 			 */
+comment|/* 		 * XXX KDM we've got problems with FC, because it 		 * doesn't send down a tag type with aborts.  So we 		 * can only really go by the tag number... 		 * This may cause problems with parallel SCSI. 		 * Need to figure that out!! 		 */
 if|if
 condition|(
 name|xio
@@ -56774,8 +56784,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|CTL_HA_STATUS_SUCCESS
-operator|!=
 name|ctl_ha_msg_send
 argument_list|(
 name|CTL_HA_CHAN_CTL
@@ -56794,8 +56802,10 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+name|CTL_HA_STATUS_SUCCESS
 condition|)
-block|{ 					}
+block|{ 				}
 block|}
 if|#
 directive|if
@@ -56803,8 +56813,6 @@ literal|0
 block|printf("ctl_abort_task: found I/O to abort\n");
 endif|#
 directive|endif
-break|break;
-block|}
 block|}
 block|}
 name|mtx_unlock
