@@ -1604,7 +1604,6 @@ begin_function
 name|int
 name|name_cmd
 parameter_list|(
-name|__unused
 name|int
 name|argc
 parameter_list|,
@@ -1618,6 +1617,17 @@ modifier|*
 name|xbe
 parameter_list|)
 block|{
+if|if
+condition|(
+name|argc
+operator|==
+literal|0
+condition|)
+name|usage
+argument_list|(
+literal|"Required argument missing\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strlen
