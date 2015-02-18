@@ -216,6 +216,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|AeDoObjectOverrides
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AeTableOverride
 parameter_list|(
 name|ACPI_TABLE_HEADER
@@ -349,6 +358,15 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
+name|void
+name|AeDoObjectOverrides
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
 end_function
 
 begin_function
