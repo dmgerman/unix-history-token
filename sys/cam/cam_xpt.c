@@ -22505,6 +22505,15 @@ name|free
 argument_list|(
 name|device
 operator|->
+name|ext_inq
+argument_list|,
+name|M_CAMXPT
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|device
+operator|->
 name|physpath
 argument_list|,
 name|M_CAMXPT

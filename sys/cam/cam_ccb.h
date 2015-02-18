@@ -3849,6 +3849,10 @@ define|#
 directive|define
 name|CDAI_TYPE_RCAPLONG
 value|4
+define|#
+directive|define
+name|CDAI_TYPE_EXT_INQ
+value|5
 name|off_t
 name|bufsiz
 decl_stmt|;
