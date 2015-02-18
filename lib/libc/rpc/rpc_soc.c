@@ -1994,11 +1994,6 @@ name|netbuf
 modifier|*
 name|svcaddr
 decl_stmt|;
-name|struct
-name|netconfig
-modifier|*
-name|nconf
-decl_stmt|;
 name|CLIENT
 modifier|*
 name|cl
@@ -2007,10 +2002,6 @@ name|int
 name|len
 decl_stmt|;
 name|cl
-operator|=
-name|NULL
-expr_stmt|;
-name|nconf
 operator|=
 name|NULL
 expr_stmt|;
