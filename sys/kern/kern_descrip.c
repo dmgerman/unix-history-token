@@ -10642,7 +10642,6 @@ name|seq_t
 name|seq
 decl_stmt|;
 name|cap_rights_t
-modifier|*
 name|haverights
 decl_stmt|;
 name|int
@@ -10707,6 +10706,7 @@ index|]
 expr_stmt|;
 name|haverights
 operator|=
+operator|*
 name|cap_rights_fde
 argument_list|(
 name|fde
@@ -10779,6 +10779,7 @@ name|error
 operator|=
 name|cap_check
 argument_list|(
+operator|&
 name|haverights
 argument_list|,
 name|needrightsp
@@ -11377,11 +11378,7 @@ condition|(
 operator|!
 name|fd_modified
 argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
+name|fdp
 argument_list|,
 name|fd
 argument_list|,
