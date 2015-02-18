@@ -985,7 +985,7 @@ name|outbuf
 index|[
 name|MAX
 argument_list|(
-name|MC_CMD_GET_BOARD_CFG_OUT_LEN
+name|MC_CMD_GET_BOARD_CFG_OUT_LENMIN
 argument_list|,
 name|MC_CMD_GET_RESOURCE_LIMITS_OUT_LEN
 argument_list|)
@@ -1037,7 +1037,7 @@ name|req
 operator|.
 name|emr_out_length
 operator|=
-name|MC_CMD_GET_BOARD_CFG_OUT_LEN
+name|MC_CMD_GET_BOARD_CFG_OUT_LENMIN
 expr_stmt|;
 name|efx_mcdi_execute
 argument_list|(
@@ -1072,7 +1072,7 @@ name|req
 operator|.
 name|emr_out_length_used
 operator|<
-name|MC_CMD_GET_BOARD_CFG_OUT_LEN
+name|MC_CMD_GET_BOARD_CFG_OUT_LENMIN
 condition|)
 block|{
 name|rc
