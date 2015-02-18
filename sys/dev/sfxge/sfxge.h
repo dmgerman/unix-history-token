@@ -842,6 +842,10 @@ endif|#
 directive|endif
 name|unsigned
 name|int
+name|rxq_count
+decl_stmt|;
+name|unsigned
+name|int
 name|txq_count
 decl_stmt|;
 block|}
