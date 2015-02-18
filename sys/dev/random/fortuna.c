@@ -1173,13 +1173,7 @@ expr_stmt|;
 comment|/* F&S - r = first-n-bytes(GenerateBlocks(ceil(n/16))) */
 name|blockcount
 operator|=
-operator|(
 name|bytecount
-operator|+
-name|BLOCKSIZE
-operator|-
-literal|1
-operator|)
 operator|/
 name|BLOCKSIZE
 expr_stmt|;
@@ -1190,6 +1184,41 @@ argument_list|,
 name|blockcount
 argument_list|)
 expr_stmt|;
+comment|/* TODO: FIX! remove memcpy()! */
+if|if
+condition|(
+name|bytecount
+operator|%
+name|BLOCKSIZE
+operator|>
+literal|0
+condition|)
+block|{
+name|random_fortuna_genblocks
+argument_list|(
+name|temp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|buf
+operator|+
+operator|(
+name|blockcount
+operator|*
+name|BLOCKSIZE
+operator|)
+argument_list|,
+name|temp
+argument_list|,
+name|bytecount
+operator|%
+name|BLOCKSIZE
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* F&S - K = GenerateBlocks(2) */
 name|random_fortuna_genblocks
 argument_list|(

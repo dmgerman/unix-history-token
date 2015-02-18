@@ -2319,6 +2319,7 @@ operator|>
 name|bytecount
 condition|)
 block|{
+comment|/* TODO: FIX! remove memcpy()! */
 name|randomdev_encrypt
 argument_list|(
 operator|&
