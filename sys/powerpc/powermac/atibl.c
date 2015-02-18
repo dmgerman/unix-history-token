@@ -749,13 +749,9 @@ argument_list|,
 name|RADEON_CLOCK_CNTL_INDEX
 argument_list|,
 operator|(
-operator|(
 name|reg
 operator|&
 literal|0x3f
-operator|)
-operator||
-name|RADEON_PLL_WR_EN
 operator|)
 argument_list|)
 expr_stmt|;
@@ -794,7 +790,7 @@ argument_list|,
 name|RADEON_CLOCK_CNTL_DATA
 argument_list|)
 expr_stmt|;
-comment|/* Only necessary on R300, bt won't hurt others. */
+comment|/* Only necessary on R300, but won't hurt others. */
 name|save
 operator|=
 name|bus_read_4
@@ -938,7 +934,7 @@ argument_list|(
 literal|5000
 argument_list|)
 expr_stmt|;
-comment|/* Only necessary on R300, bt won't hurt others. */
+comment|/* Only necessary on R300, but won't hurt others. */
 name|save
 operator|=
 name|bus_read_4
