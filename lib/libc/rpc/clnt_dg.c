@@ -1546,8 +1546,6 @@ name|sigset_t
 name|newmask
 decl_stmt|;
 name|socklen_t
-name|inlen
-decl_stmt|,
 name|salen
 decl_stmt|;
 name|ssize_t
@@ -2663,13 +2661,6 @@ name|call_again_same_xid
 goto|;
 block|}
 block|}
-name|inlen
-operator|=
-operator|(
-name|socklen_t
-operator|)
-name|recvlen
-expr_stmt|;
 comment|/* 	 * now decode and validate the response 	 */
 name|xdrmem_create
 argument_list|(

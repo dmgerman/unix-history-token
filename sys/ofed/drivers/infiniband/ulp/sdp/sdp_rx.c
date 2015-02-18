@@ -3534,7 +3534,7 @@ name|socket
 argument_list|,
 name|SDP_RX_SIZE
 argument_list|,
-name|IB_CQ_VECTOR_LEAST_ATTACHED
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

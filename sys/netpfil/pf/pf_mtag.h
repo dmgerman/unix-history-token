@@ -60,6 +60,13 @@ name|PF_FASTFWD_OURS_PRESENT
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|PF_REASSEMBLED
+value|0x20
+end_define
+
 begin_struct
 struct|struct
 name|pf_mtag

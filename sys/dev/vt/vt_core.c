@@ -12256,6 +12256,9 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|int
+name|register_handlers
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -12405,6 +12408,10 @@ index|[
 name|VT_CONSWINDOW
 index|]
 expr_stmt|;
+name|register_handlers
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -12468,6 +12475,27 @@ name|vd_timer_armed
 operator|=
 literal|1
 expr_stmt|;
+name|register_handlers
+operator|=
+literal|1
+expr_stmt|;
+block|}
+name|VT_UNLOCK
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|/* Refill settings with new sizes. */
+name|vt_resize
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|register_handlers
+condition|)
+block|{
 comment|/* Register suspend/resume handlers. */
 name|EVENTHANDLER_REGISTER
 argument_list|(
@@ -12492,17 +12520,6 @@ name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
 block|}
-name|VT_UNLOCK
-argument_list|(
-name|vd
-argument_list|)
-expr_stmt|;
-comment|/* Refill settings with new sizes. */
-name|vt_resize
-argument_list|(
-name|vd
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

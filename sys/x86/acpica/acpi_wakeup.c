@@ -142,17 +142,23 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<x86/apicreg.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<x86/apicvar.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_include
 include|#
@@ -1219,6 +1225,9 @@ name|switchticks
 argument_list|,
 name|ticks
 argument_list|)
+expr_stmt|;
+name|lapic_xapic_mode
+argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef

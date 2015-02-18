@@ -483,23 +483,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|keys_find_int
-parameter_list|(
-name|struct
-name|keys
-modifier|*
-name|keys
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|keys_add
 parameter_list|(

@@ -3568,6 +3568,8 @@ name|addr
 operator|=
 name|mw_bind
 operator|->
+name|bind_info
+operator|.
 name|addr
 expr_stmt|;
 name|sgl
@@ -3576,6 +3578,8 @@ name|lkey
 operator|=
 name|mw_bind
 operator|->
+name|bind_info
+operator|.
 name|mr
 operator|->
 name|lkey
@@ -3586,6 +3590,8 @@ name|length
 operator|=
 name|mw_bind
 operator|->
+name|bind_info
+operator|.
 name|length
 expr_stmt|;
 name|wqe
@@ -3615,6 +3621,8 @@ name|iwch_ib_to_mwbind_access
 argument_list|(
 name|mw_bind
 operator|->
+name|bind_info
+operator|.
 name|mw_access_flags
 argument_list|)
 expr_stmt|;
@@ -3628,6 +3636,8 @@ name|htobe32
 argument_list|(
 name|mw_bind
 operator|->
+name|bind_info
+operator|.
 name|mr
 operator|->
 name|lkey
@@ -3656,6 +3666,8 @@ name|htobe32
 argument_list|(
 name|mw_bind
 operator|->
+name|bind_info
+operator|.
 name|length
 argument_list|)
 expr_stmt|;
@@ -3669,6 +3681,8 @@ name|htobe64
 argument_list|(
 name|mw_bind
 operator|->
+name|bind_info
+operator|.
 name|addr
 argument_list|)
 expr_stmt|;

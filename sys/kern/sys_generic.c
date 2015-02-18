@@ -5812,8 +5812,6 @@ argument_list|,
 operator|&
 name|rights
 argument_list|,
-literal|0
-argument_list|,
 name|fpp
 argument_list|,
 name|NULL

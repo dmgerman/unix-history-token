@@ -41,43 +41,84 @@ operator|=
 block|{
 literal|0x00
 block|,
-comment|/* "__      " */
-literal|0x40
-block|,
-comment|/* "_*_     " */
-literal|0x60
-block|,
-comment|/* "_**_    " */
-literal|0x70
-block|,
-comment|/* "_***_   " */
-literal|0x78
-block|,
-comment|/* "_****_  " */
-literal|0x7c
-block|,
-comment|/* "_*****_ " */
-literal|0x7e
-block|,
-comment|/* "_******_" */
-literal|0x68
-block|,
-comment|/* "_**_****" */
-literal|0x4c
-block|,
-comment|/* "_*__**_ " */
-literal|0x0c
-block|,
-comment|/* " _ _**_ " */
-literal|0x06
-block|,
-comment|/* "    _**_" */
-literal|0x06
-block|,
-comment|/* "    _**_" */
 literal|0x00
 block|,
-comment|/* "    ____" */
+comment|/* "__        " */
+literal|0x40
+block|,
+literal|0x00
+block|,
+comment|/* "_*_       " */
+literal|0x60
+block|,
+literal|0x00
+block|,
+comment|/* "_**_      " */
+literal|0x70
+block|,
+literal|0x00
+block|,
+comment|/* "_***_     " */
+literal|0x78
+block|,
+literal|0x00
+block|,
+comment|/* "_****_    " */
+literal|0x7c
+block|,
+literal|0x00
+block|,
+comment|/* "_*****_   " */
+literal|0x7e
+block|,
+literal|0x00
+block|,
+comment|/* "_******_  " */
+literal|0x7f
+block|,
+literal|0x00
+block|,
+comment|/* "_*******_ " */
+literal|0x7f
+block|,
+literal|0x80
+block|,
+comment|/* "_********_" */
+literal|0x7c
+block|,
+literal|0x00
+block|,
+comment|/* "_*****____" */
+literal|0x6c
+block|,
+literal|0x00
+block|,
+comment|/* "_**_**_   " */
+literal|0x46
+block|,
+literal|0x00
+block|,
+comment|/* "_*_ _**_  " */
+literal|0x06
+block|,
+literal|0x00
+block|,
+comment|/* "__  _**_  " */
+literal|0x03
+block|,
+literal|0x00
+block|,
+comment|/* "     _**_ " */
+literal|0x03
+block|,
+literal|0x00
+block|,
+comment|/* "     _**_ " */
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* "      __  " */
 block|}
 block|,
 operator|.
@@ -86,54 +127,95 @@ operator|=
 block|{
 literal|0xc0
 block|,
-comment|/* "__      " */
+literal|0x00
+block|,
+comment|/* "__        " */
 literal|0xe0
 block|,
-comment|/* "___     " */
+literal|0x00
+block|,
+comment|/* "___       " */
 literal|0xf0
 block|,
-comment|/* "____    " */
+literal|0x00
+block|,
+comment|/* "____      " */
 literal|0xf8
 block|,
-comment|/* "_____   " */
+literal|0x00
+block|,
+comment|/* "_____     " */
 literal|0xfc
 block|,
-comment|/* "______  " */
+literal|0x00
+block|,
+comment|/* "______    " */
 literal|0xfe
 block|,
-comment|/* "_______ " */
+literal|0x00
+block|,
+comment|/* "_______   " */
 literal|0xff
 block|,
-comment|/* "________" */
+literal|0x00
+block|,
+comment|/* "________  " */
 literal|0xff
 block|,
-comment|/* "________" */
+literal|0x80
+block|,
+comment|/* "_________ " */
+literal|0xff
+block|,
+literal|0xc0
+block|,
+comment|/* "__________" */
+literal|0xff
+block|,
+literal|0xc0
+block|,
+comment|/* "__________" */
 literal|0xfe
 block|,
-comment|/* "_______ " */
-literal|0x5e
+literal|0x00
 block|,
-comment|/* " _ ____ " */
-literal|0x0f
+comment|/* "_______   " */
+literal|0xef
 block|,
-comment|/* "    ____" */
-literal|0x0f
+literal|0x00
 block|,
-comment|/* "    ____" */
-literal|0x0f
+comment|/* "___ ____  " */
+literal|0xcf
 block|,
-comment|/* "    ____" */
+literal|0x00
+block|,
+comment|/* "__  ____  " */
+literal|0x07
+block|,
+literal|0x80
+block|,
+comment|/* "     ____ " */
+literal|0x07
+block|,
+literal|0x80
+block|,
+comment|/* "     ____ " */
+literal|0x03
+block|,
+literal|0x00
+block|,
+comment|/* "      __  " */
 block|}
 block|,
 operator|.
 name|width
 operator|=
-literal|8
+literal|10
 block|,
 operator|.
 name|height
 operator|=
-literal|13
+literal|16
 block|, }
 decl_stmt|;
 end_decl_stmt

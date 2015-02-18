@@ -67,7 +67,7 @@ begin_function_decl
 name|void
 name|randomdev_init_reader
 parameter_list|(
-name|u_int
+name|void
 function_decl|(
 modifier|*
 function_decl|)
@@ -105,7 +105,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|u_int
+name|void
 name|dummy_random_read_phony
 parameter_list|(
 name|uint8_t

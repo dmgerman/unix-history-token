@@ -11591,7 +11591,7 @@ specifier|static
 name|int
 name|maxdata
 init|=
-literal|512
+literal|4096
 decl_stmt|;
 end_decl_stmt
 

@@ -183,6 +183,28 @@ define|\
 value|do {							\ 	if (__isthreaded)				\ 		_SPINUNLOCK(&__stdio_thread_lock);	\ } while (0)
 end_define
 
+begin_function_decl
+name|void
+name|__libc_spinlock_stub
+parameter_list|(
+name|struct
+name|_spinlock
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__libc_spinunlock_stub
+parameter_list|(
+name|struct
+name|_spinlock
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Indexes into the pthread jump table.  *  * Warning! If you change this type, you must also change the threads  * libraries that reference it (libc_r, libpthread).  */
 end_comment
@@ -497,6 +519,10 @@ name|INTERPOS_writev
 block|,
 name|INTERPOS__pthread_mutex_init_calloc_cb
 block|,
+name|INTERPOS_spinlock
+block|,
+name|INTERPOS_spinunlock
+block|,
 name|INTERPOS_MAX
 block|}
 enum|;
@@ -639,14 +665,12 @@ begin_comment
 comment|/*  * Function to clean up streams, called from abort() and exit().  */
 end_comment
 
-begin_macro
-name|void
-argument_list|(
-argument|*__cleanup
-argument_list|)
-end_macro
+begin_extern
+extern|extern void (*__cleanup
+end_extern
 
 begin_expr_stmt
+unit|)
 operator|(
 name|void
 operator|)

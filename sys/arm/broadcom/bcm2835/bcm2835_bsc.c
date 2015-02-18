@@ -1118,7 +1118,11 @@ index|]
 operator|.
 name|start
 operator|==
+operator|(
 name|start
+operator|&
+name|BCM_BSC_BASE_MASK
+operator|)
 condition|)
 break|break;
 block|}

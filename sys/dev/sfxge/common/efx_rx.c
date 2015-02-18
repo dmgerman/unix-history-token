@@ -2012,6 +2012,7 @@ operator|->
 name|er_index
 expr_stmt|;
 return|return
+operator|(
 name|efx_filter_insert_filter
 argument_list|(
 name|erp
@@ -2022,6 +2023,7 @@ name|spec
 argument_list|,
 name|B_FALSE
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2086,6 +2088,7 @@ operator|->
 name|er_index
 expr_stmt|;
 return|return
+operator|(
 name|efx_filter_remove_filter
 argument_list|(
 name|erp
@@ -2094,6 +2097,7 @@ name|er_enp
 argument_list|,
 name|spec
 argument_list|)
+operator|)
 return|;
 block|}
 end_function

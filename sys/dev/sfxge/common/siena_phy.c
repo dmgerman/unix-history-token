@@ -510,7 +510,6 @@ switch|switch
 condition|(
 name|MCDI_EV_FIELD
 argument_list|(
-operator|*
 name|eqp
 argument_list|,
 name|LINKCHANGE_SPEED
@@ -552,7 +551,6 @@ name|link_flags
 operator|=
 name|MCDI_EV_FIELD
 argument_list|(
-operator|*
 name|eqp
 argument_list|,
 name|LINKCHANGE_LINK_FLAGS
@@ -568,7 +566,6 @@ name|speed
 argument_list|,
 name|MCDI_EV_FIELD
 argument_list|(
-operator|*
 name|eqp
 argument_list|,
 name|LINKCHANGE_FCNTL
@@ -585,7 +582,6 @@ name|siena_phy_decode_cap
 argument_list|(
 name|MCDI_EV_FIELD
 argument_list|(
-operator|*
 name|eqp
 argument_list|,
 name|LINKCHANGE_LP_CAP

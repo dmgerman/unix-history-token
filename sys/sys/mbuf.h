@@ -79,14 +79,14 @@ begin_define
 define|#
 directive|define
 name|MHSIZE
-value|offsetof(struct mbuf, M_dat.M_databuf)
+value|offsetof(struct mbuf, m_dat)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MPKTHSIZE
-value|offsetof(struct mbuf, M_dat.MH.MH_dat.MH_databuf)
+value|offsetof(struct mbuf, m_pktdat)
 end_define
 
 begin_define
@@ -417,7 +417,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|struct_m_ext
+name|m_ext
 block|{
 specifier|volatile
 name|u_int
@@ -485,18 +485,50 @@ struct|struct
 name|mbuf
 block|{
 comment|/* 	 * Header present at the beginning of every mbuf. 	 * Size ILP32: 24 	 *      LP64: 32 	 * Compile-time assertions in uipc_mbuf.c test these values to ensure 	 * that they are correct. 	 */
+union|union
+block|{
+comment|/* next buffer in chain */
 name|struct
 name|mbuf
 modifier|*
 name|m_next
 decl_stmt|;
-comment|/* next buffer in chain */
+name|SLIST_ENTRY
+argument_list|(
+argument|mbuf
+argument_list|)
+name|m_slist
+expr_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|mbuf
+argument_list|)
+name|m_stailq
+expr_stmt|;
+block|}
+union|;
+union|union
+block|{
+comment|/* next chain in queue/record */
 name|struct
 name|mbuf
 modifier|*
 name|m_nextpkt
 decl_stmt|;
-comment|/* next chain in queue/record */
+name|SLIST_ENTRY
+argument_list|(
+argument|mbuf
+argument_list|)
+name|m_slistpkt
+expr_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|mbuf
+argument_list|)
+name|m_stailqpkt
+expr_stmt|;
+block|}
+union|;
 name|caddr_t
 name|m_data
 decl_stmt|;
@@ -536,69 +568,38 @@ struct|struct
 block|{
 name|struct
 name|pkthdr
-name|MH_pkthdr
+name|m_pkthdr
 decl_stmt|;
 comment|/* M_PKTHDR set */
 union|union
 block|{
 name|struct
-name|struct_m_ext
-name|MH_ext
+name|m_ext
+name|m_ext
 decl_stmt|;
 comment|/* M_EXT set */
 name|char
-name|MH_databuf
+name|m_pktdat
 index|[
 literal|0
 index|]
 decl_stmt|;
 block|}
-name|MH_dat
 union|;
 block|}
-name|MH
 struct|;
 name|char
-name|M_databuf
+name|m_dat
 index|[
 literal|0
 index|]
 decl_stmt|;
 comment|/* !M_PKTHDR, !M_EXT */
 block|}
-name|M_dat
 union|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|m_pkthdr
-value|M_dat.MH.MH_pkthdr
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_ext
-value|M_dat.MH.MH_dat.MH_ext
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_pktdat
-value|M_dat.MH.MH_dat.MH_databuf
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_dat
-value|M_dat.M_databuf
-end_define
 
 begin_comment
 comment|/*  * mbuf flags of global significance and layer crossing.  * Those of only protocol/layer specific significance are to be mapped  * to M_PROTO[1-12] and cleared at layer handoff boundaries.  * NB: Limited to the lower 24 bits.  */

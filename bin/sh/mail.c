@@ -233,7 +233,7 @@ argument_list|(
 operator|&
 name|mpath
 argument_list|,
-name|nullstr
+literal|""
 argument_list|)
 expr_stmt|;
 if|if

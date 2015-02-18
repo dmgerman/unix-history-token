@@ -71,6 +71,30 @@ directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PCI_VENDOR_ID_ATI
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCI_VENDOR_ID_ATI
+value|0x1002
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* From the xf86-video-ati driver's radeon_reg.h */
 end_comment
@@ -568,6 +592,27 @@ literal|"ati"
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+operator|(
+name|strcmp
+argument_list|(
+name|control
+argument_list|,
+literal|"mnca"
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|pci_get_vendor
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+operator|!=
+literal|0x1002
+operator|)
 condition|)
 return|return
 operator|(
@@ -749,13 +794,9 @@ argument_list|,
 name|RADEON_CLOCK_CNTL_INDEX
 argument_list|,
 operator|(
-operator|(
 name|reg
 operator|&
 literal|0x3f
-operator|)
-operator||
-name|RADEON_PLL_WR_EN
 operator|)
 argument_list|)
 expr_stmt|;
@@ -794,7 +835,7 @@ argument_list|,
 name|RADEON_CLOCK_CNTL_DATA
 argument_list|)
 expr_stmt|;
-comment|/* Only necessary on R300, bt won't hurt others. */
+comment|/* Only necessary on R300, but won't hurt others. */
 name|save
 operator|=
 name|bus_read_4
@@ -938,7 +979,7 @@ argument_list|(
 literal|5000
 argument_list|)
 expr_stmt|;
-comment|/* Only necessary on R300, bt won't hurt others. */
+comment|/* Only necessary on R300, but won't hurt others. */
 name|save
 operator|=
 name|bus_read_4

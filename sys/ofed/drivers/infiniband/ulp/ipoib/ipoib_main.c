@@ -3968,6 +3968,14 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+name|spin_lock_init
+argument_list|(
+operator|&
+name|priv
+operator|->
+name|drain_lock
+argument_list|)
+expr_stmt|;
 name|mutex_init
 argument_list|(
 operator|&
