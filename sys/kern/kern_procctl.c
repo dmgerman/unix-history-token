@@ -1162,11 +1162,6 @@ argument_list|,
 name|SX_LOCKED
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|IN_CAPABILITY_MODE
@@ -1216,6 +1211,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|reap
 operator|=
 operator|(
