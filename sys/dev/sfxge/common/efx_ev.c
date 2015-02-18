@@ -2297,7 +2297,6 @@ name|enp
 argument_list|,
 name|MCDI_EV_FIELD
 argument_list|(
-operator|*
 name|eqp
 argument_list|,
 name|CMDDONE_SEQ
@@ -2305,7 +2304,6 @@ argument_list|)
 argument_list|,
 name|MCDI_EV_FIELD
 argument_list|(
-operator|*
 name|eqp
 argument_list|,
 name|CMDDONE_DATALEN
@@ -2313,7 +2311,6 @@ argument_list|)
 argument_list|,
 name|MCDI_EV_FIELD
 argument_list|(
-operator|*
 name|eqp
 argument_list|,
 name|CMDDONE_ERRNO

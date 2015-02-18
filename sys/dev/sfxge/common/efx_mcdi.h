@@ -653,7 +653,7 @@ parameter_list|,
 name|_field
 parameter_list|)
 define|\
-value|EFX_QWORD_FIELD(*eqp, MCDI_EVENT_ ## _field)
+value|EFX_QWORD_FIELD(*_eqp, MCDI_EVENT_ ## _field)
 ifdef|#
 directive|ifdef
 name|__cplusplus
