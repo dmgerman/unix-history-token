@@ -272,16 +272,6 @@ parameter_list|)
 value|(&(txq)->lock)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SFXGE_TX_SCALE
-parameter_list|(
-name|sc
-parameter_list|)
-value|((sc)->intr.n_alloc)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -295,16 +285,6 @@ parameter_list|(
 name|txq
 parameter_list|)
 value|(&(txq)->sc->tx_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SFXGE_TX_SCALE
-parameter_list|(
-name|sc
-parameter_list|)
-value|1
 end_define
 
 begin_endif
