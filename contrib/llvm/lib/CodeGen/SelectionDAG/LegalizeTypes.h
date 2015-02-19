@@ -4528,6 +4528,17 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|WidenVecOp_MSTORE
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|unsigned
+name|OpNo
+parameter_list|)
+function_decl|;
+name|SDValue
 name|WidenVecOp_SETCC
 parameter_list|(
 name|SDNode

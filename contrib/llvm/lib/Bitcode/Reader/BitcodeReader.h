@@ -429,6 +429,12 @@ decl_stmt|;
 name|bool
 name|AnyFwdRefs
 decl_stmt|;
+name|unsigned
+name|MinFwdRef
+decl_stmt|;
+name|unsigned
+name|MaxFwdRef
+decl_stmt|;
 name|std
 operator|::
 name|vector
