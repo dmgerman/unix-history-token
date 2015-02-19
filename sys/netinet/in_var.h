@@ -15,6 +15,50 @@ directive|define
 name|_NETINET_IN_VAR_H_
 end_define
 
+begin_comment
+comment|/*  * Argument structure for SIOCAIFADDR.  */
+end_comment
+
+begin_struct
+struct|struct
+name|in_aliasreq
+block|{
+name|char
+name|ifra_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* if name, e.g. "en0" */
+name|struct
+name|sockaddr_in
+name|ifra_addr
+decl_stmt|;
+name|struct
+name|sockaddr_in
+name|ifra_broadaddr
+decl_stmt|;
+define|#
+directive|define
+name|ifra_dstaddr
+value|ifra_broadaddr
+name|struct
+name|sockaddr_in
+name|ifra_mask
+decl_stmt|;
+name|int
+name|ifra_vhid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -80,12 +124,6 @@ comment|/* 224.0.0.1 membership */
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_comment
 comment|/*  * Interface address, Internet version.  One of these structures  * is allocated for each Internet address on an interface.  * The ifaddr structure contains the protocol-independent part  * of the structure and is assumed to be first.  */
@@ -154,49 +192,6 @@ block|}
 struct|;
 end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_struct
-struct|struct
-name|in_aliasreq
-block|{
-name|char
-name|ifra_name
-index|[
-name|IFNAMSIZ
-index|]
-decl_stmt|;
-comment|/* if name, e.g. "en0" */
-name|struct
-name|sockaddr_in
-name|ifra_addr
-decl_stmt|;
-name|struct
-name|sockaddr_in
-name|ifra_broadaddr
-decl_stmt|;
-define|#
-directive|define
-name|ifra_dstaddr
-value|ifra_broadaddr
-name|struct
-name|sockaddr_in
-name|ifra_mask
-decl_stmt|;
-name|int
-name|ifra_vhid
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * Given a pointer to an in_ifaddr (ifaddr),  * return a pointer to the addr as a sockaddr_in.  */
 end_comment
@@ -243,12 +238,6 @@ parameter_list|)
 define|\
 value|((ntohl((in).s_addr)& ~((struct in_ifaddr *)(ifa)->ia_subnetmask))
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_decl_stmt
 specifier|extern
