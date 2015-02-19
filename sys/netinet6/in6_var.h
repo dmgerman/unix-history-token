@@ -2230,7 +2230,7 @@ name|in6m_nsrc
 decl_stmt|;
 comment|/* # of tree entries */
 name|struct
-name|ifqueue
+name|mbufq
 name|in6m_scq
 decl_stmt|;
 comment|/* queue of pending 						 * state-change packets */

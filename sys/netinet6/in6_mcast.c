@@ -2257,7 +2257,7 @@ name|in6m_state
 operator|=
 name|MLD_NOT_MEMBER
 expr_stmt|;
-name|IFQ_SET_MAXLEN
+name|mbufq_init
 argument_list|(
 operator|&
 name|inm
@@ -5064,7 +5064,7 @@ operator|--
 expr_stmt|;
 block|}
 comment|/* Free state-change requests that might be queued. */
-name|_IF_DRAIN
+name|mbufq_drain
 argument_list|(
 operator|&
 name|inm
@@ -12109,11 +12109,13 @@ name|inm
 operator|->
 name|in6m_refcount
 argument_list|,
+name|mbufq_len
+argument_list|(
+operator|&
 name|inm
 operator|->
 name|in6m_scq
-operator|.
-name|ifq_len
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf

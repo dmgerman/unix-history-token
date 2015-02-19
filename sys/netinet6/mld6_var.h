@@ -86,7 +86,7 @@ name|mli_relinmhead
 expr_stmt|;
 comment|/* released groups */
 name|struct
-name|ifqueue
+name|mbufq
 name|mli_gq
 decl_stmt|;
 comment|/* queue of general query responses */
