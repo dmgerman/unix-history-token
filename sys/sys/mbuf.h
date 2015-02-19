@@ -5383,15 +5383,6 @@ parameter_list|)
 value|do {						\         KASSERT((_m)->m_flags& M_PKTHDR, ("Attempt to set FIB on non header mbuf."));	\ 	((_m)->m_pkthdr.fibnum) = (_fib);				\ } while (0)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -5865,6 +5856,15 @@ operator|++
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

@@ -517,11 +517,6 @@ define|\
 value|do {									\ 	IN_IFADDR_RLOCK();						\ 	for ((ia) = TAILQ_FIRST(&V_in_ifaddrhead);			\ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp);			\ 	    (ia) = TAILQ_NEXT((ia), ia_link))				\ 		continue;						\ 	if ((ia) != NULL)						\ 		ifa_ref(&(ia)->ia_ifa);					\ 	IN_IFADDR_RUNLOCK();						\ } while (0)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * IP datagram reassembly.  */
 end_comment
@@ -1105,12 +1100,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_ifdef
 ifdef|#
@@ -1770,18 +1759,6 @@ name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|int	 in_rt_getifa(struct rt_addrinfo *, u_int fibnum); int	 in_rtioctl(u_long, caddr_t, u_int); int	 in_rtrequest1(int, struct rt_addrinfo *, struct rtentry **, u_int);
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
