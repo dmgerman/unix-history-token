@@ -156,19 +156,11 @@ parameter_list|)
 value|(((struct in6_ifextra *)(ifp)->if_afdata[AF_INET6])->lltable)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_WANT_IFADDR
-argument_list|)
-end_if
+end_ifdef
 
 begin_struct
 struct|struct
@@ -285,6 +277,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/* control structure to manage address selection policy */
