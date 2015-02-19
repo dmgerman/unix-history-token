@@ -147,12 +147,6 @@ directive|include
 file|<cxgb_osdep.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/mbufq.h>
-end_include
-
 begin_struct_decl
 struct_decl|struct
 name|adapter
@@ -886,7 +880,7 @@ name|bus_dma_tag_t
 name|entry_tag
 decl_stmt|;
 name|struct
-name|mbuf_head
+name|mbufq
 name|sendq
 decl_stmt|;
 name|struct

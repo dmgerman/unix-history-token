@@ -5666,6 +5666,7 @@ name|FW_CTRL_TID_START
 operator|+
 name|id
 expr_stmt|;
+comment|/* XXX: a sane limit is needed instead of INT_MAX */
 name|mbufq_init
 argument_list|(
 operator|&
@@ -5677,6 +5678,8 @@ name|TXQ_ETH
 index|]
 operator|.
 name|sendq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 name|mbufq_init
@@ -5690,6 +5693,8 @@ name|TXQ_OFLD
 index|]
 operator|.
 name|sendq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 name|mbufq_init
@@ -5703,6 +5708,8 @@ name|TXQ_CTRL
 index|]
 operator|.
 name|sendq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 block|}
@@ -9530,8 +9537,7 @@ if|if
 condition|(
 name|__predict_false
 argument_list|(
-operator|!
-name|mbufq_empty
+name|mbufq_len
 argument_list|(
 operator|&
 name|q
@@ -9543,7 +9549,10 @@ condition|)
 block|{
 name|addq_exit
 label|:
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|q
@@ -10073,8 +10082,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|mbufq_empty
+name|mbufq_len
 argument_list|(
 operator|&
 name|q
@@ -12029,7 +12037,7 @@ condition|(
 operator|(
 name|m
 operator|=
-name|mbufq_peek
+name|mbufq_first
 argument_list|(
 operator|&
 name|q
@@ -13252,6 +13260,8 @@ name|i
 index|]
 operator|.
 name|sendq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 name|q
@@ -19522,7 +19532,7 @@ index|]
 operator|.
 name|sendq
 operator|.
-name|qlen
+name|mq_len
 argument_list|,
 literal|0
 argument_list|,

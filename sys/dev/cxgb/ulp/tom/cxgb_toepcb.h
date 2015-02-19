@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbufq.h>
+file|<sys/limits.h>
 end_include
 
 begin_define
@@ -186,11 +186,11 @@ modifier|*
 name|tp_m_last
 decl_stmt|;
 name|struct
-name|mbuf_head
+name|mbufq
 name|wr_list
 decl_stmt|;
 name|struct
-name|mbuf_head
+name|mbufq
 name|out_of_order_queue
 decl_stmt|;
 block|}
@@ -215,8 +215,11 @@ operator|&
 name|toep
 operator|->
 name|wr_list
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
+comment|/* XXX: sane limit needed */
 block|}
 end_function
 
@@ -237,7 +240,10 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|toep
@@ -267,7 +273,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|mbufq_peek
+name|mbufq_first
 argument_list|(
 operator|&
 name|toep

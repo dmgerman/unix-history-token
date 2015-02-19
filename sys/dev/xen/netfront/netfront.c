@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -308,12 +314,6 @@ begin_include
 include|#
 directive|include
 file|<machine/xen/xenvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/xen/netfront/mbufq.h>
 end_include
 
 begin_include
@@ -1256,10 +1256,10 @@ name|xn_cdata
 decl_stmt|;
 comment|/* mbufs */
 name|struct
-name|mbuf_head
+name|mbufq
 name|xn_rx_batch
 decl_stmt|;
-comment|/* head of the batch queue */
+comment|/* batch queue */
 name|int
 name|xn_if_flags
 decl_stmt|;
@@ -3561,7 +3561,10 @@ operator|=
 name|MJUMPAGESIZE
 expr_stmt|;
 comment|/* queue the mbufs allocated */
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|sc
@@ -4262,7 +4265,7 @@ modifier|*
 name|m
 decl_stmt|;
 name|struct
-name|mbuf_head
+name|mbufq
 name|rxq
 decl_stmt|,
 name|errq
@@ -4292,16 +4295,21 @@ name|np
 argument_list|)
 condition|)
 return|return;
+comment|/* XXX: there should be some sane limit. */
 name|mbufq_init
 argument_list|(
 operator|&
 name|errq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 name|mbufq_init
 argument_list|(
 operator|&
 name|rxq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -4413,7 +4421,10 @@ if|if
 condition|(
 name|m
 condition|)
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|errq
@@ -4493,7 +4504,10 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|rxq
@@ -4609,21 +4623,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-while|while
-condition|(
-operator|(
-name|m
-operator|=
-name|mbufq_dequeue
+name|mbufq_drain
 argument_list|(
 operator|&
 name|errq
-argument_list|)
-operator|)
-condition|)
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 comment|/*  		 * Process all the mbufs after the remapping is complete. 		 * Break the mbuf chain first though. 		 */
