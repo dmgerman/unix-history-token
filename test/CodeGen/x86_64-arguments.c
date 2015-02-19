@@ -965,6 +965,83 @@ block|}
 end_function
 
 begin_comment
+comment|// PR22563 - We should unwrap simple structs and arrays to pass
+end_comment
+
+begin_comment
+comment|// and return them in the appropriate vector registers if possible.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|float
+name|v8f32
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(32)));
+end_typedef
+
+begin_struct
+struct|struct
+name|v8f32wrapper
+block|{
+name|v8f32
+name|v
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|struct
+name|v8f32wrapper
+name|f27a
+parameter_list|(
+name|struct
+name|v8f32wrapper
+name|X
+parameter_list|)
+block|{
+comment|// AVX-LABEL: define<8 x float> @f27a(<8 x float> %X.coerce)
+return|return
+name|X
+return|;
+block|}
+end_function
+
+begin_struct
+struct|struct
+name|v8f32wrapper_wrapper
+block|{
+name|v8f32
+name|v
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|struct
+name|v8f32wrapper_wrapper
+name|f27b
+parameter_list|(
+name|struct
+name|v8f32wrapper_wrapper
+name|X
+parameter_list|)
+block|{
+comment|// AVX-LABEL: define<8 x float> @f27b(<8 x float> %X.coerce)
+return|return
+name|X
+return|;
+block|}
+end_function
+
+begin_comment
 comment|// rdar://5711709
 end_comment
 
