@@ -1113,6 +1113,12 @@ argument|unsigned Idx
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Return the number of elements in the array, vector, or struct.
+name|unsigned
+name|getNumElements
+argument_list|()
+specifier|const
+block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 comment|///
 specifier|static
@@ -4623,6 +4629,12 @@ name|getElementValue
 argument_list|(
 argument|unsigned Idx
 argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return the number of elements in the array, vector, or struct.
+name|unsigned
+name|getNumElements
+argument_list|()
 specifier|const
 block|;
 name|void

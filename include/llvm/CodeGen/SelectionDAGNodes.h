@@ -9642,6 +9642,8 @@ argument|unsigned numOperands
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
+argument|ISD::LoadExtType ETy
+argument_list|,
 argument|EVT MemVT
 argument_list|,
 argument|MachineMemOperand *MMO
@@ -9665,7 +9667,33 @@ argument|MemVT
 argument_list|,
 argument|MMO
 argument_list|)
-block|{}
+block|{
+name|SubclassData
+operator||=
+operator|(
+name|unsigned
+name|short
+operator|)
+name|ETy
+block|;   }
+name|ISD
+operator|::
+name|LoadExtType
+name|getExtensionType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ISD
+operator|::
+name|LoadExtType
+argument_list|(
+name|SubclassData
+operator|&
+literal|3
+argument_list|)
+return|;
+block|}
 specifier|const
 name|SDValue
 operator|&
@@ -9726,6 +9754,8 @@ argument|unsigned numOperands
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
+argument|bool isTrunc
+argument_list|,
 argument|EVT MemVT
 argument_list|,
 argument|MachineMemOperand *MMO
@@ -9749,11 +9779,33 @@ argument|MemVT
 argument_list|,
 argument|MMO
 argument_list|)
-block|{}
+block|{
+name|SubclassData
+operator||=
+operator|(
+name|unsigned
+name|short
+operator|)
+name|isTrunc
+block|;   }
+comment|/// isTruncatingStore - Return true if the op does a truncation before store.
+comment|/// For integers this is the same as doing a TRUNCATE and storing the result.
+comment|/// For floats, it is the same as doing an FP_ROUND and storing the result.
+name|bool
+name|isTruncatingStore
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubclassData
+operator|&
+literal|1
+return|;
+block|}
 specifier|const
 name|SDValue
 operator|&
-name|getData
+name|getValue
 argument_list|()
 specifier|const
 block|{
