@@ -289,6 +289,14 @@ argument_list|(
 operator|&
 name|conf
 operator|->
+name|conf_luns
+argument_list|)
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|conf
+operator|->
 name|conf_targets
 argument_list|)
 expr_stmt|;
@@ -365,6 +373,14 @@ name|conf
 parameter_list|)
 block|{
 name|struct
+name|lun
+modifier|*
+name|lun
+decl_stmt|,
+modifier|*
+name|ltmp
+decl_stmt|;
+name|struct
 name|target
 modifier|*
 name|targ
@@ -403,6 +419,21 @@ operator|->
 name|conf_pidfh
 operator|==
 name|NULL
+argument_list|)
+expr_stmt|;
+name|TAILQ_FOREACH_SAFE
+argument_list|(
+argument|lun
+argument_list|,
+argument|&conf->conf_luns
+argument_list|,
+argument|l_next
+argument_list|,
+argument|ltmp
+argument_list|)
+name|lun_delete
+argument_list|(
+name|lun
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH_SAFE
@@ -5761,14 +5792,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|targ
-operator|->
-name|t_luns
-argument_list|)
-expr_stmt|;
 name|targ
 operator|->
 name|t_conf
@@ -5805,14 +5828,6 @@ modifier|*
 name|targ
 parameter_list|)
 block|{
-name|struct
-name|lun
-modifier|*
-name|lun
-decl_stmt|,
-modifier|*
-name|tmp
-decl_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5825,21 +5840,6 @@ argument_list|,
 name|targ
 argument_list|,
 name|t_next
-argument_list|)
-expr_stmt|;
-name|TAILQ_FOREACH_SAFE
-argument_list|(
-argument|lun
-argument_list|,
-argument|&targ->t_luns
-argument_list|,
-argument|l_next
-argument_list|,
-argument|tmp
-argument_list|)
-name|lun_delete
-argument_list|(
-name|lun
 argument_list|)
 expr_stmt|;
 name|free
@@ -5982,18 +5982,42 @@ block|}
 end_function
 
 begin_function
+name|void
+name|target_set_ctl_port
+parameter_list|(
+name|struct
+name|target
+modifier|*
+name|target
+parameter_list|,
+name|uint32_t
+name|value
+parameter_list|)
+block|{
+name|target
+operator|->
+name|t_ctl_port
+operator|=
+name|value
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|struct
 name|lun
 modifier|*
 name|lun_new
 parameter_list|(
 name|struct
-name|target
+name|conf
 modifier|*
-name|targ
+name|conf
 parameter_list|,
-name|int
-name|lun_id
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 block|{
 name|struct
@@ -6005,9 +6029,9 @@ name|lun
 operator|=
 name|lun_find
 argument_list|(
-name|targ
+name|conf
 argument_list|,
-name|lun_id
+name|name
 argument_list|)
 expr_stmt|;
 if|if
@@ -6019,13 +6043,9 @@ condition|)
 block|{
 name|log_warnx
 argument_list|(
-literal|"duplicated lun %d for target \"%s\""
+literal|"duplicated lun \"%s\""
 argument_list|,
-name|lun_id
-argument_list|,
-name|targ
-operator|->
-name|t_name
+name|name
 argument_list|)
 expr_stmt|;
 return|return
@@ -6062,9 +6082,18 @@ argument_list|)
 expr_stmt|;
 name|lun
 operator|->
-name|l_lun
+name|l_conf
 operator|=
-name|lun_id
+name|conf
+expr_stmt|;
+name|lun
+operator|->
+name|l_name
+operator|=
+name|checked_strdup
+argument_list|(
+name|name
+argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
@@ -6074,18 +6103,12 @@ operator|->
 name|l_options
 argument_list|)
 expr_stmt|;
-name|lun
-operator|->
-name|l_target
-operator|=
-name|targ
-expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|targ
+name|conf
 operator|->
-name|t_luns
+name|conf_luns
 argument_list|,
 name|lun
 argument_list|,
@@ -6111,6 +6134,11 @@ name|lun
 parameter_list|)
 block|{
 name|struct
+name|target
+modifier|*
+name|targ
+decl_stmt|;
+name|struct
 name|lun_option
 modifier|*
 name|lo
@@ -6118,14 +6146,62 @@ decl_stmt|,
 modifier|*
 name|tmp
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|targ
+argument_list|,
+argument|&lun->l_conf->conf_targets
+argument_list|,
+argument|t_next
+argument_list|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAX_LUNS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|targ
+operator|->
+name|t_luns
+index|[
+name|i
+index|]
+operator|==
+name|lun
+condition|)
+name|targ
+operator|->
+name|t_luns
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|lun
 operator|->
-name|l_target
+name|l_conf
 operator|->
-name|t_luns
+name|conf_luns
 argument_list|,
 name|lun
 argument_list|,
@@ -6145,6 +6221,13 @@ argument_list|)
 name|lun_option_delete
 argument_list|(
 name|lo
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|lun
+operator|->
+name|l_name
 argument_list|)
 expr_stmt|;
 name|free
@@ -6172,6 +6255,13 @@ name|free
 argument_list|(
 name|lun
 operator|->
+name|l_scsiname
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|lun
+operator|->
 name|l_serial
 argument_list|)
 expr_stmt|;
@@ -6191,12 +6281,14 @@ name|lun_find
 parameter_list|(
 specifier|const
 name|struct
-name|target
+name|conf
 modifier|*
-name|targ
+name|conf
 parameter_list|,
-name|int
-name|lun_id
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 block|{
 name|struct
@@ -6208,18 +6300,23 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|lun
 argument_list|,
-argument|&targ->t_luns
+argument|&conf->conf_luns
 argument_list|,
 argument|l_next
 argument_list|)
 block|{
 if|if
 condition|(
+name|strcmp
+argument_list|(
 name|lun
 operator|->
-name|l_lun
+name|l_name
+argument_list|,
+name|name
+argument_list|)
 operator|==
-name|lun_id
+literal|0
 condition|)
 return|return
 operator|(
@@ -6361,6 +6458,40 @@ end_function
 
 begin_function
 name|void
+name|lun_set_scsiname
+parameter_list|(
+name|struct
+name|lun
+modifier|*
+name|lun
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|value
+parameter_list|)
+block|{
+name|free
+argument_list|(
+name|lun
+operator|->
+name|l_scsiname
+argument_list|)
+expr_stmt|;
+name|lun
+operator|->
+name|l_scsiname
+operator|=
+name|checked_strdup
+argument_list|(
+name|value
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|lun_set_serial
 parameter_list|(
 name|struct
@@ -6482,19 +6613,13 @@ condition|)
 block|{
 name|log_warnx
 argument_list|(
-literal|"duplicated lun option %s for lun %d, target \"%s\""
+literal|"duplicated lun option \"%s\" for lun \"%s\""
 argument_list|,
 name|name
 argument_list|,
 name|lun
 operator|->
-name|l_lun
-argument_list|,
-name|lun
-operator|->
-name|l_target
-operator|->
-name|t_name
+name|l_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -6839,7 +6964,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void conf_print(struct conf *conf) { 	struct auth_group *ag; 	struct auth *auth; 	struct auth_name *auth_name; 	struct auth_portal *auth_portal; 	struct portal_group *pg; 	struct portal *portal; 	struct target *targ; 	struct lun *lun; 	struct lun_option *lo;  	TAILQ_FOREACH(ag,&conf->conf_auth_groups, ag_next) { 		fprintf(stderr, "auth-group %s {\n", ag->ag_name); 		TAILQ_FOREACH(auth,&ag->ag_auths, a_next) 			fprintf(stderr, "\t chap-mutual %s %s %s %s\n", 			    auth->a_user, auth->a_secret, 			    auth->a_mutual_user, auth->a_mutual_secret); 		TAILQ_FOREACH(auth_name,&ag->ag_names, an_next) 			fprintf(stderr, "\t initiator-name %s\n", 			    auth_name->an_initator_name); 		TAILQ_FOREACH(auth_portal,&ag->ag_portals, an_next) 			fprintf(stderr, "\t initiator-portal %s\n", 			    auth_portal->an_initator_portal); 		fprintf(stderr, "}\n"); 	} 	TAILQ_FOREACH(pg,&conf->conf_portal_groups, pg_next) { 		fprintf(stderr, "portal-group %s {\n", pg->pg_name); 		TAILQ_FOREACH(portal,&pg->pg_portals, p_next) 			fprintf(stderr, "\t listen %s\n", portal->p_listen); 		fprintf(stderr, "}\n"); 	} 	TAILQ_FOREACH(targ,&conf->conf_targets, t_next) { 		fprintf(stderr, "target %s {\n", targ->t_name); 		if (targ->t_alias != NULL) 			fprintf(stderr, "\t alias %s\n", targ->t_alias); 		TAILQ_FOREACH(lun,&targ->t_luns, l_next) { 			fprintf(stderr, "\tlun %d {\n", lun->l_lun); 			fprintf(stderr, "\t\tpath %s\n", lun->l_path); 			TAILQ_FOREACH(lo,&lun->l_options, lo_next) 				fprintf(stderr, "\t\toption %s %s\n", 				    lo->lo_name, lo->lo_value); 			fprintf(stderr, "\t}\n"); 		} 		fprintf(stderr, "}\n"); 	} }
+unit|static void conf_print(struct conf *conf) { 	struct auth_group *ag; 	struct auth *auth; 	struct auth_name *auth_name; 	struct auth_portal *auth_portal; 	struct portal_group *pg; 	struct portal *portal; 	struct target *targ; 	struct lun *lun; 	struct lun_option *lo;  	TAILQ_FOREACH(ag,&conf->conf_auth_groups, ag_next) { 		fprintf(stderr, "auth-group %s {\n", ag->ag_name); 		TAILQ_FOREACH(auth,&ag->ag_auths, a_next) 			fprintf(stderr, "\t chap-mutual %s %s %s %s\n", 			    auth->a_user, auth->a_secret, 			    auth->a_mutual_user, auth->a_mutual_secret); 		TAILQ_FOREACH(auth_name,&ag->ag_names, an_next) 			fprintf(stderr, "\t initiator-name %s\n", 			    auth_name->an_initator_name); 		TAILQ_FOREACH(auth_portal,&ag->ag_portals, an_next) 			fprintf(stderr, "\t initiator-portal %s\n", 			    auth_portal->an_initator_portal); 		fprintf(stderr, "}\n"); 	} 	TAILQ_FOREACH(pg,&conf->conf_portal_groups, pg_next) { 		fprintf(stderr, "portal-group %s {\n", pg->pg_name); 		TAILQ_FOREACH(portal,&pg->pg_portals, p_next) 			fprintf(stderr, "\t listen %s\n", portal->p_listen); 		fprintf(stderr, "}\n"); 	} 	TAILQ_FOREACH(lun,&conf->conf_luns, l_next) { 		fprintf(stderr, "\tlun %s {\n", lun->l_name); 		fprintf(stderr, "\t\tpath %s\n", lun->l_path); 		TAILQ_FOREACH(lo,&lun->l_options, lo_next) 			fprintf(stderr, "\t\toption %s %s\n", 			    lo->lo_name, lo->lo_value); 		fprintf(stderr, "\t}\n"); 	} 	TAILQ_FOREACH(targ,&conf->conf_targets, t_next) { 		fprintf(stderr, "target %s {\n", targ->t_name); 		if (targ->t_alias != NULL) 			fprintf(stderr, "\t alias %s\n", targ->t_alias); 		fprintf(stderr, "}\n"); 	} }
 endif|#
 directive|endif
 end_endif
@@ -6860,12 +6985,6 @@ name|struct
 name|lun
 modifier|*
 name|lun2
-decl_stmt|;
-specifier|const
-name|struct
-name|target
-modifier|*
-name|targ2
 decl_stmt|;
 if|if
 condition|(
@@ -6907,17 +7026,11 @@ condition|)
 block|{
 name|log_warnx
 argument_list|(
-literal|"missing path for lun %d, target \"%s\""
+literal|"missing path for lun \"%s\""
 argument_list|,
 name|lun
 operator|->
-name|l_lun
-argument_list|,
-name|lun
-operator|->
-name|l_target
-operator|->
-name|t_name
+name|l_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -6953,18 +7066,11 @@ condition|)
 block|{
 name|log_warnx
 argument_list|(
-literal|"missing size for ramdisk-backed lun %d, "
-literal|"target \"%s\""
+literal|"missing size for ramdisk-backed lun \"%s\""
 argument_list|,
 name|lun
 operator|->
-name|l_lun
-argument_list|,
-name|lun
-operator|->
-name|l_target
-operator|->
-name|t_name
+name|l_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -6985,17 +7091,11 @@ block|{
 name|log_warnx
 argument_list|(
 literal|"path must not be specified "
-literal|"for ramdisk-backed lun %d, target \"%s\""
+literal|"for ramdisk-backed lun \"%s\""
 argument_list|,
 name|lun
 operator|->
-name|l_lun
-argument_list|,
-name|lun
-operator|->
-name|l_target
-operator|->
-name|t_name
+name|l_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -7004,43 +7104,6 @@ literal|1
 operator|)
 return|;
 block|}
-block|}
-if|if
-condition|(
-name|lun
-operator|->
-name|l_lun
-operator|<
-literal|0
-operator|||
-name|lun
-operator|->
-name|l_lun
-operator|>
-literal|255
-condition|)
-block|{
-name|log_warnx
-argument_list|(
-literal|"invalid lun number for lun %d, target \"%s\"; "
-literal|"must be between 0 and 255"
-argument_list|,
-name|lun
-operator|->
-name|l_lun
-argument_list|,
-name|lun
-operator|->
-name|l_target
-operator|->
-name|t_name
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 if|if
 condition|(
@@ -7071,18 +7134,12 @@ condition|)
 block|{
 name|log_warnx
 argument_list|(
-literal|"invalid blocksize for lun %d, target \"%s\"; "
+literal|"invalid blocksize for lun \"%s\"; "
 literal|"must be larger than 0"
 argument_list|,
 name|lun
 operator|->
-name|l_lun
-argument_list|,
-name|lun
-operator|->
-name|l_target
-operator|->
-name|t_name
+name|l_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -7112,18 +7169,12 @@ condition|)
 block|{
 name|log_warnx
 argument_list|(
-literal|"invalid size for lun %d, target \"%s\"; "
+literal|"invalid size for lun \"%s\"; "
 literal|"must be multiple of blocksize"
 argument_list|,
 name|lun
 operator|->
-name|l_lun
-argument_list|,
-name|lun
-operator|->
-name|l_target
-operator|->
-name|t_name
+name|l_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -7134,18 +7185,9 @@ return|;
 block|}
 name|TAILQ_FOREACH
 argument_list|(
-argument|targ2
-argument_list|,
-argument|&lun->l_target->t_conf->conf_targets
-argument_list|,
-argument|t_next
-argument_list|)
-block|{
-name|TAILQ_FOREACH
-argument_list|(
 argument|lun2
 argument_list|,
-argument|&targ2->t_luns
+argument|&lun->l_conf->conf_luns
 argument_list|,
 argument|l_next
 argument_list|)
@@ -7188,8 +7230,8 @@ block|{
 name|log_debugx
 argument_list|(
 literal|"WARNING: path \"%s\" duplicated "
-literal|"between lun %d, target \"%s\", and "
-literal|"lun %d, target \"%s\""
+literal|"between lun \"%s\", and "
+literal|"lun \"%s\""
 argument_list|,
 name|lun
 operator|->
@@ -7197,26 +7239,13 @@ name|l_path
 argument_list|,
 name|lun
 operator|->
-name|l_lun
-argument_list|,
-name|lun
-operator|->
-name|l_target
-operator|->
-name|t_name
+name|l_name
 argument_list|,
 name|lun2
 operator|->
-name|l_lun
-argument_list|,
-name|lun2
-operator|->
-name|l_target
-operator|->
-name|t_name
+name|l_name
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 return|return
@@ -7262,6 +7291,8 @@ name|found
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -7280,6 +7311,34 @@ argument_list|(
 name|DEFAULT_PIDFILE
 argument_list|)
 expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|lun
+argument_list|,
+argument|&conf->conf_luns
+argument_list|,
+argument|l_next
+argument_list|)
+block|{
+name|error
+operator|=
+name|conf_verify_lun
+argument_list|(
+name|lun
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 name|TAILQ_FOREACH
 argument_list|(
 argument|targ
@@ -7353,33 +7412,31 @@ name|found
 operator|=
 name|false
 expr_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|lun
-argument_list|,
-argument|&targ->t_luns
-argument_list|,
-argument|l_next
-argument_list|)
-block|{
-name|error
+for|for
+control|(
+name|i
 operator|=
-name|conf_verify_lun
-argument_list|(
-name|lun
-argument_list|)
-expr_stmt|;
+literal|0
+init|;
+name|i
+operator|<
+name|MAX_LUNS
+condition|;
+name|i
+operator|++
+control|)
+block|{
 if|if
 condition|(
-name|error
+name|targ
+operator|->
+name|t_luns
+index|[
+name|i
+index|]
 operator|!=
-literal|0
+name|NULL
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|found
 operator|=
 name|true
@@ -8072,6 +8129,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * XXX: If target or lun removal fails, we should somehow "move" 	 *      the old lun or target into newconf, so that subsequent 	 *      conf_apply() would try to remove them again.  That would 	 *      be somewhat hairy, though, and lun deletion failures don't 	 *      really happen, so leave it as it is for now. 	 */
+comment|/* 	 * First, remove any targets present in the old configuration 	 * and missing in the new one. 	 */
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|oldtarg
@@ -8083,7 +8141,6 @@ argument_list|,
 argument|tmptarg
 argument_list|)
 block|{
-comment|/* 		 * First, remove any targets present in the old configuration 		 * and missing in the new one. 		 */
 name|newtarg
 operator|=
 name|target_find
@@ -8098,10 +8155,10 @@ expr_stmt|;
 if|if
 condition|(
 name|newtarg
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
+continue|continue;
 name|error
 operator|=
 name|kernel_port_remove
@@ -8125,83 +8182,15 @@ operator|->
 name|t_name
 argument_list|)
 expr_stmt|;
-comment|/* 				 * XXX: Uncomment after fixing the root cause. 				 * 				 * cumulated_error++; 				 */
+comment|/* 			 * XXX: Uncomment after fixing the root cause. 			 * 			 * cumulated_error++; 			 */
 block|}
+block|}
+comment|/* 	 * Second, remove any LUNs present in the old configuration 	 * and missing in the new one. 	 */
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|oldlun
 argument_list|,
-argument|&oldtarg->t_luns
-argument_list|,
-argument|l_next
-argument_list|,
-argument|tmplun
-argument_list|)
-block|{
-name|log_debugx
-argument_list|(
-literal|"target %s not found in new "
-literal|"configuration; removing its lun %d, "
-literal|"backed by CTL lun %d"
-argument_list|,
-name|oldtarg
-operator|->
-name|t_name
-argument_list|,
-name|oldlun
-operator|->
-name|l_lun
-argument_list|,
-name|oldlun
-operator|->
-name|l_ctl_lun
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|kernel_lun_remove
-argument_list|(
-name|oldlun
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|log_warnx
-argument_list|(
-literal|"failed to remove lun %d, "
-literal|"target %s, CTL lun %d"
-argument_list|,
-name|oldlun
-operator|->
-name|l_lun
-argument_list|,
-name|oldtarg
-operator|->
-name|t_name
-argument_list|,
-name|oldlun
-operator|->
-name|l_ctl_lun
-argument_list|)
-expr_stmt|;
-name|cumulated_error
-operator|++
-expr_stmt|;
-block|}
-block|}
-continue|continue;
-block|}
-comment|/* 		 * Second, remove any LUNs present in the old target 		 * and missing in the new one. 		 */
-name|TAILQ_FOREACH_SAFE
-argument_list|(
-argument|oldlun
-argument_list|,
-argument|&oldtarg->t_luns
+argument|&oldconf->conf_luns
 argument_list|,
 argument|l_next
 argument_list|,
@@ -8212,11 +8201,11 @@ name|newlun
 operator|=
 name|lun_find
 argument_list|(
-name|newtarg
+name|newconf
 argument_list|,
 name|oldlun
 operator|->
-name|l_lun
+name|l_name
 argument_list|)
 expr_stmt|;
 if|if
@@ -8228,17 +8217,13 @@ condition|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"lun %d, target %s, CTL lun %d "
+literal|"lun \"%s\", CTL lun %d "
 literal|"not found in new configuration; "
 literal|"removing"
 argument_list|,
 name|oldlun
 operator|->
-name|l_lun
-argument_list|,
-name|oldtarg
-operator|->
-name|t_name
+name|l_name
 argument_list|,
 name|oldlun
 operator|->
@@ -8261,16 +8246,12 @@ condition|)
 block|{
 name|log_warnx
 argument_list|(
-literal|"failed to remove lun %d, "
-literal|"target %s, CTL lun %d"
+literal|"failed to remove lun \"%s\", "
+literal|"CTL lun %d"
 argument_list|,
 name|oldlun
 operator|->
-name|l_lun
-argument_list|,
-name|oldtarg
-operator|->
-name|t_name
+name|l_name
 argument_list|,
 name|oldlun
 operator|->
@@ -8283,7 +8264,7 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
-comment|/* 			 * Also remove the LUNs changed by more than size. 			 */
+comment|/* 		 * Also remove the LUNs changed by more than size. 		 */
 name|changed
 operator|=
 literal|0
@@ -8324,16 +8305,12 @@ condition|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"backend for lun %d, target %s, "
+literal|"backend for lun \"%s\", "
 literal|"CTL lun %d changed; removing"
 argument_list|,
 name|oldlun
 operator|->
-name|l_lun
-argument_list|,
-name|oldtarg
-operator|->
-name|t_name
+name|l_name
 argument_list|,
 name|oldlun
 operator|->
@@ -8358,16 +8335,12 @@ condition|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"blocksize for lun %d, target %s, "
+literal|"blocksize for lun \"%s\", "
 literal|"CTL lun %d changed; removing"
 argument_list|,
 name|oldlun
 operator|->
-name|l_lun
-argument_list|,
-name|oldtarg
-operator|->
-name|t_name
+name|l_name
 argument_list|,
 name|oldlun
 operator|->
@@ -8411,16 +8384,12 @@ condition|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"device-id for lun %d, target %s, "
+literal|"device-id for lun \"%s\", "
 literal|"CTL lun %d changed; removing"
 argument_list|,
 name|oldlun
 operator|->
-name|l_lun
-argument_list|,
-name|oldtarg
-operator|->
-name|t_name
+name|l_name
 argument_list|,
 name|oldlun
 operator|->
@@ -8464,16 +8433,12 @@ condition|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"path for lun %d, target %s, "
+literal|"path for lun \"%s\", "
 literal|"CTL lun %d, changed; removing"
 argument_list|,
 name|oldlun
 operator|->
-name|l_lun
-argument_list|,
-name|oldtarg
-operator|->
-name|t_name
+name|l_name
 argument_list|,
 name|oldlun
 operator|->
@@ -8517,16 +8482,12 @@ condition|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"serial for lun %d, target %s, "
+literal|"serial for lun \"%s\", "
 literal|"CTL lun %d changed; removing"
 argument_list|,
 name|oldlun
 operator|->
-name|l_lun
-argument_list|,
-name|oldtarg
-operator|->
-name|t_name
+name|l_name
 argument_list|,
 name|oldlun
 operator|->
@@ -8559,16 +8520,12 @@ condition|)
 block|{
 name|log_warnx
 argument_list|(
-literal|"failed to remove lun %d, "
-literal|"target %s, CTL lun %d"
+literal|"failed to remove lun \"%s\", "
+literal|"CTL lun %d"
 argument_list|,
 name|oldlun
 operator|->
-name|l_lun
-argument_list|,
-name|oldtarg
-operator|->
-name|t_name
+name|l_name
 argument_list|,
 name|oldlun
 operator|->
@@ -8596,55 +8553,26 @@ name|l_ctl_lun
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * Now add new targets or modify existing ones. 	 */
-name|TAILQ_FOREACH
-argument_list|(
-argument|newtarg
-argument_list|,
-argument|&newconf->conf_targets
-argument_list|,
-argument|t_next
-argument_list|)
-block|{
-name|oldtarg
-operator|=
-name|target_find
-argument_list|(
-name|oldconf
-argument_list|,
-name|newtarg
-operator|->
-name|t_name
-argument_list|)
-expr_stmt|;
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|newlun
 argument_list|,
-argument|&newtarg->t_luns
+argument|&newconf->conf_luns
 argument_list|,
 argument|l_next
 argument_list|,
 argument|tmplun
 argument_list|)
 block|{
-if|if
-condition|(
-name|oldtarg
-operator|!=
-name|NULL
-condition|)
-block|{
 name|oldlun
 operator|=
 name|lun_find
 argument_list|(
-name|oldtarg
+name|oldconf
 argument_list|,
 name|newlun
 operator|->
-name|l_lun
+name|l_name
 argument_list|)
 expr_stmt|;
 if|if
@@ -8673,16 +8601,11 @@ condition|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"resizing lun %d, "
-literal|"target %s, CTL lun %d"
+literal|"resizing lun \"%s\", CTL lun %d"
 argument_list|,
 name|newlun
 operator|->
-name|l_lun
-argument_list|,
-name|newtarg
-operator|->
-name|t_name
+name|l_name
 argument_list|,
 name|newlun
 operator|->
@@ -8706,21 +8629,15 @@ block|{
 name|log_warnx
 argument_list|(
 literal|"failed to "
-literal|"resize lun %d, "
-literal|"target %s, "
-literal|"CTL lun %d"
+literal|"resize lun \"%s\", CTL lun %d"
 argument_list|,
 name|newlun
 operator|->
-name|l_lun
-argument_list|,
-name|newtarg
-operator|->
-name|t_name
+name|l_name
 argument_list|,
 name|newlun
 operator|->
-name|l_lun
+name|l_ctl_lun
 argument_list|)
 expr_stmt|;
 name|cumulated_error
@@ -8730,18 +8647,13 @@ block|}
 block|}
 continue|continue;
 block|}
-block|}
 name|log_debugx
 argument_list|(
-literal|"adding lun %d, target %s"
+literal|"adding lun \"%s\""
 argument_list|,
 name|newlun
 operator|->
-name|l_lun
-argument_list|,
-name|newtarg
-operator|->
-name|t_name
+name|l_name
 argument_list|)
 expr_stmt|;
 name|error
@@ -8760,15 +8672,11 @@ condition|)
 block|{
 name|log_warnx
 argument_list|(
-literal|"failed to add lun %d, target %s"
+literal|"failed to add lun \"%s\""
 argument_list|,
 name|newlun
 operator|->
-name|l_lun
-argument_list|,
-name|newtarg
-operator|->
-name|t_name
+name|l_name
 argument_list|)
 expr_stmt|;
 name|lun_delete
@@ -8781,13 +8689,33 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Now add new targets or modify existing ones. 	 */
+name|TAILQ_FOREACH
+argument_list|(
+argument|newtarg
+argument_list|,
+argument|&newconf->conf_targets
+argument_list|,
+argument|t_next
+argument_list|)
+block|{
+name|oldtarg
+operator|=
+name|target_find
+argument_list|(
+name|oldconf
+argument_list|,
+name|newtarg
+operator|->
+name|t_name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|oldtarg
 operator|==
 name|NULL
 condition|)
-block|{
 name|error
 operator|=
 name|kernel_port_add
@@ -8795,6 +8723,25 @@ argument_list|(
 name|newtarg
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|target_set_ctl_port
+argument_list|(
+name|newtarg
+argument_list|,
+name|oldtarg
+operator|->
+name|t_ctl_port
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|kernel_port_update
+argument_list|(
+name|newtarg
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
@@ -8804,15 +8751,24 @@ condition|)
 block|{
 name|log_warnx
 argument_list|(
-literal|"failed to add target %s"
+literal|"failed to %s target %s"
+argument_list|,
+operator|(
+name|oldtarg
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|"add"
+else|:
+literal|"update"
 argument_list|,
 name|newtarg
 operator|->
 name|t_name
 argument_list|)
 expr_stmt|;
-comment|/* 				 * XXX: Uncomment after fixing the root cause. 				 * 				 * cumulated_error++; 				 */
-block|}
+comment|/* 			 * XXX: Uncomment after fixing the root cause. 			 * 			 * cumulated_error++; 			 */
 block|}
 block|}
 comment|/* 	 * Go through the new portals, opening the sockets as neccessary. 	 */

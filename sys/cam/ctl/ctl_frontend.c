@@ -998,6 +998,11 @@ operator|->
 name|options
 argument_list|)
 expr_stmt|;
+name|ctl_lun_map_deinit
+argument_list|(
+name|port
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|port
