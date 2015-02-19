@@ -402,9 +402,6 @@ name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
 comment|/* Allocate memory for the FLF header. */
-if|if
-condition|(
-operator|(
 name|hdr
 operator|=
 name|malloc
@@ -419,19 +416,7 @@ name|M_LINKER
 argument_list|,
 name|M_WAITOK
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 comment|/* Read the ELF header. */
 if|if
 condition|(
@@ -538,9 +523,6 @@ name|out
 goto|;
 block|}
 comment|/* Allocate memory for all the section headers */
-if|if
-condition|(
-operator|(
 name|shdr
 operator|=
 name|malloc
@@ -551,19 +533,7 @@ name|M_LINKER
 argument_list|,
 name|M_WAITOK
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 comment|/* Read all the section headers */
 if|if
 condition|(
@@ -667,9 +637,6 @@ name|out
 goto|;
 block|}
 comment|/* Allocate memory to buffer the section header strings. */
-if|if
-condition|(
-operator|(
 name|shstrtab
 operator|=
 name|malloc
@@ -687,19 +654,7 @@ name|M_LINKER
 argument_list|,
 name|M_WAITOK
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 comment|/* Read the section header strings. */
 if|if
 condition|(
@@ -993,9 +948,6 @@ name|ctf_hdr
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Allocate memory for the compressed CTF data, including 		 * the header (which isn't compressed). 		 */
-if|if
-condition|(
-operator|(
 name|raw
 operator|=
 name|malloc
@@ -1011,19 +963,7 @@ name|M_LINKER
 argument_list|,
 name|M_WAITOK
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 block|}
 else|else
 block|{
@@ -1039,9 +979,6 @@ name|sh_size
 expr_stmt|;
 block|}
 comment|/* 	 * Allocate memory to buffer the CTF data in it's decompressed 	 * form. 	 */
-if|if
-condition|(
-operator|(
 name|ctftab
 operator|=
 name|malloc
@@ -1052,19 +989,7 @@ name|M_LINKER
 argument_list|,
 name|M_WAITOK
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 comment|/* 	 * Read the CTF data into the raw buffer if compressed, or 	 * directly into the CTF buffer otherwise. 	 */
 if|if
 condition|(
@@ -1254,9 +1179,6 @@ argument_list|(
 name|ctf_hdr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|ret
 operator|=
 name|inflate
@@ -1266,7 +1188,16 @@ name|zs
 argument_list|,
 name|Z_FINISH
 argument_list|)
-operator|)
+expr_stmt|;
+name|inflateEnd
+argument_list|(
+operator|&
+name|zs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
 operator|!=
 name|Z_STREAM_END
 condition|)

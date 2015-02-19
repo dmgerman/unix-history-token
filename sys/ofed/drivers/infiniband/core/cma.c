@@ -13741,6 +13741,12 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|int
 name|ipv6only
 decl_stmt|;
@@ -13752,6 +13758,8 @@ argument_list|(
 name|int
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|addr
@@ -17451,6 +17459,12 @@ operator|*
 operator|)
 name|addr
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -17463,6 +17477,8 @@ operator|*
 operator|)
 name|addr
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cma_any_addr
@@ -17482,6 +17498,12 @@ expr|*
 name|mgid
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 block|}
 elseif|else
 if|if
@@ -17588,6 +17610,8 @@ operator|+
 literal|4
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{

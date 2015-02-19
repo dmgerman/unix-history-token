@@ -1805,9 +1805,7 @@ name|index
 operator|<
 name|sc
 operator|->
-name|intr
-operator|.
-name|n_alloc
+name|evq_count
 condition|;
 name|index
 operator|++
@@ -2130,6 +2128,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|unsigned
 name|int
 name|index
 decl_stmt|;
@@ -2217,9 +2216,9 @@ literal|0
 init|;
 name|index
 operator|<
-name|intr
+name|sc
 operator|->
-name|n_alloc
+name|evq_count
 condition|;
 name|index
 operator|++
@@ -3122,9 +3121,9 @@ expr_stmt|;
 comment|/* Stop the event queue(s) */
 name|index
 operator|=
-name|intr
+name|sc
 operator|->
-name|n_alloc
+name|evq_count
 expr_stmt|;
 while|while
 condition|(
@@ -3220,9 +3219,9 @@ literal|0
 init|;
 name|index
 operator|<
-name|intr
+name|sc
 operator|->
-name|n_alloc
+name|evq_count
 condition|;
 name|index
 operator|++
@@ -3633,9 +3632,9 @@ expr_stmt|;
 comment|/* Tear down the event queue(s). */
 name|index
 operator|=
-name|intr
+name|sc
 operator|->
-name|n_alloc
+name|evq_count
 expr_stmt|;
 while|while
 condition|(
@@ -3650,6 +3649,12 @@ name|sc
 argument_list|,
 name|index
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|evq_count
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -3705,6 +3710,14 @@ operator|&
 name|sc
 operator|->
 name|intr
+expr_stmt|;
+name|sc
+operator|->
+name|evq_count
+operator|=
+name|intr
+operator|->
+name|n_alloc
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -3763,9 +3776,9 @@ literal|0
 init|;
 name|index
 operator|<
-name|intr
+name|sc
 operator|->
-name|n_alloc
+name|evq_count
 condition|;
 name|index
 operator|++
@@ -3820,6 +3833,12 @@ name|sc
 argument_list|,
 name|index
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|evq_count
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(

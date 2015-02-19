@@ -749,8 +749,6 @@ name|fd
 argument_list|,
 name|rightsp
 argument_list|,
-literal|0
-argument_list|,
 operator|&
 name|fp
 argument_list|,

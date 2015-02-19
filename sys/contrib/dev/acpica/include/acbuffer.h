@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -150,8 +150,14 @@ decl_stmt|;
 name|UINT8
 name|IgnoreColor
 decl_stmt|;
-name|UINT32
-name|Color
+name|UINT8
+name|Red
+decl_stmt|;
+name|UINT8
+name|Green
+decl_stmt|;
+name|UINT8
+name|Blue
 decl_stmt|;
 name|UINT16
 name|Width
@@ -312,27 +318,79 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_PLD_GET_COLOR
+name|ACPI_PLD_GET_RED
 parameter_list|(
 name|dword
 parameter_list|)
-value|ACPI_GET_BITS (dword, 8, ACPI_24BIT_MASK)
+value|ACPI_GET_BITS (dword, 8, ACPI_8BIT_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_PLD_SET_COLOR
+name|ACPI_PLD_SET_RED
 parameter_list|(
 name|dword
 parameter_list|,
 name|value
 parameter_list|)
-value|ACPI_SET_BITS (dword, 8, ACPI_24BIT_MASK, value)
+value|ACPI_SET_BITS (dword, 8, ACPI_8BIT_MASK, value)
 end_define
 
 begin_comment
-comment|/* Offset 8, Len 24 */
+comment|/* Offset 8, Len 8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PLD_GET_GREEN
+parameter_list|(
+name|dword
+parameter_list|)
+value|ACPI_GET_BITS (dword, 16, ACPI_8BIT_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PLD_SET_GREEN
+parameter_list|(
+name|dword
+parameter_list|,
+name|value
+parameter_list|)
+value|ACPI_SET_BITS (dword, 16, ACPI_8BIT_MASK, value)
+end_define
+
+begin_comment
+comment|/* Offset 16, Len 8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PLD_GET_BLUE
+parameter_list|(
+name|dword
+parameter_list|)
+value|ACPI_GET_BITS (dword, 24, ACPI_8BIT_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PLD_SET_BLUE
+parameter_list|(
+name|dword
+parameter_list|,
+name|value
+parameter_list|)
+value|ACPI_SET_BITS (dword, 24, ACPI_8BIT_MASK, value)
+end_define
+
+begin_comment
+comment|/* Offset 24, Len 8 */
 end_comment
 
 begin_comment
