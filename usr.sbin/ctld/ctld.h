@@ -104,6 +104,13 @@ name|MAX_BURST_LENGTH
 value|16776192
 end_define
 
+begin_define
+define|#
+directive|define
+name|SOCKBUF_SIZE
+value|1048576
+end_define
+
 begin_struct
 struct|struct
 name|auth

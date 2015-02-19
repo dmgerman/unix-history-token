@@ -4728,6 +4728,26 @@ name|error
 operator|)
 return|;
 block|}
+name|ic
+operator|->
+name|ic_socket
+operator|->
+name|so_snd
+operator|.
+name|sb_flags
+operator||=
+name|SB_AUTOSIZE
+expr_stmt|;
+name|ic
+operator|->
+name|ic_socket
+operator|->
+name|so_rcv
+operator|.
+name|sb_flags
+operator||=
+name|SB_AUTOSIZE
+expr_stmt|;
 comment|/* 	 * Disable Nagle. 	 */
 name|bzero
 argument_list|(
