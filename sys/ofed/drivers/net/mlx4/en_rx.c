@@ -2540,10 +2540,7 @@ operator|->
 name|m_len
 operator|=
 name|frag_info
-index|[
-name|nr
-index|]
-operator|.
+operator|->
 name|frag_size
 expr_stmt|;
 name|dma
