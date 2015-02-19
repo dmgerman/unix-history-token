@@ -649,9 +649,6 @@ decl_stmt|;
 name|int
 name|conf_maxproc
 decl_stmt|;
-name|uint16_t
-name|conf_last_portal_group_tag
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ICL_KERNEL_PROXY

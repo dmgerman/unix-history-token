@@ -67,6 +67,9 @@ index|[
 name|CTL_ISCSI_ALIAS_LEN
 index|]
 decl_stmt|;
+name|uint16_t
+name|ct_tag
+decl_stmt|;
 name|int
 name|ct_state
 decl_stmt|;
@@ -217,9 +220,6 @@ name|cs_callout
 decl_stmt|;
 name|int
 name|cs_timeout
-decl_stmt|;
-name|int
-name|cs_portal_group_tag
 decl_stmt|;
 name|struct
 name|cv
