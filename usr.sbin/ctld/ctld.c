@@ -8100,6 +8100,31 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|kernel_port_remove
+argument_list|(
+name|oldtarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|log_warnx
+argument_list|(
+literal|"failed to remove target %s"
+argument_list|,
+name|oldtarg
+operator|->
+name|t_name
+argument_list|)
+expr_stmt|;
+comment|/* 				 * XXX: Uncomment after fixing the root cause. 				 * 				 * cumulated_error++; 				 */
+block|}
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|oldlun
@@ -8166,31 +8191,6 @@ name|cumulated_error
 operator|++
 expr_stmt|;
 block|}
-block|}
-name|error
-operator|=
-name|kernel_port_remove
-argument_list|(
-name|oldtarg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|log_warnx
-argument_list|(
-literal|"failed to remove target %s"
-argument_list|,
-name|oldtarg
-operator|->
-name|t_name
-argument_list|)
-expr_stmt|;
-comment|/* 				 * XXX: Uncomment after fixing the root cause. 				 * 				 * cumulated_error++; 				 */
 block|}
 continue|continue;
 block|}
