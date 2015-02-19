@@ -12865,7 +12865,7 @@ name|inm
 operator|->
 name|inm_scq
 operator|.
-name|ifq_len
+name|mq_len
 argument_list|)
 expr_stmt|;
 name|printf
