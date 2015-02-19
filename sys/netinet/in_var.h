@@ -656,7 +656,7 @@ name|igi_relinmhead
 expr_stmt|;
 comment|/* released groups */
 name|struct
-name|ifqueue
+name|mbufq
 name|igi_gq
 decl_stmt|;
 comment|/* queue of general query responses */
@@ -948,7 +948,7 @@ name|inm_nsrc
 decl_stmt|;
 comment|/* # of tree entries */
 name|struct
-name|ifqueue
+name|mbufq
 name|inm_scq
 decl_stmt|;
 comment|/* queue of pending 						 * state-change packets */
