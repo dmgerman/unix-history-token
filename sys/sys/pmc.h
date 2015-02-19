@@ -712,7 +712,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CALLCHAIN_DEPTH_MAX
-value|32
+value|128
 end_define
 
 begin_define
@@ -1319,7 +1319,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CALLCHAIN_DEPTH
-value|16
+value|32
 end_define
 
 begin_define
