@@ -172,6 +172,8 @@ operator|=
 name|unwind_stack_one
 argument_list|(
 name|state
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Print the frame details */
