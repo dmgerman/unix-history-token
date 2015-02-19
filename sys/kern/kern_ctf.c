@@ -1254,9 +1254,6 @@ argument_list|(
 name|ctf_hdr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|ret
 operator|=
 name|inflate
@@ -1266,7 +1263,16 @@ name|zs
 argument_list|,
 name|Z_FINISH
 argument_list|)
-operator|)
+expr_stmt|;
+name|inflateEnd
+argument_list|(
+operator|&
+name|zs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
 operator|!=
 name|Z_STREAM_END
 condition|)
