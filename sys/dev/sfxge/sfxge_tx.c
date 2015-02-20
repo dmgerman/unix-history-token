@@ -5108,12 +5108,20 @@ operator|->
 name|entries
 argument_list|)
 condition|)
+block|{
+comment|/* reaped must be in sync with blocked */
+name|sfxge_tx_qreap
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 name|txq
 operator|->
 name|blocked
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 name|sfxge_tx_qdpl_service
 argument_list|(
