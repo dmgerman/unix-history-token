@@ -17,6 +17,37 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|DEV_APIC
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"opt_apic.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -142,6 +173,12 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -153,6 +190,11 @@ include|#
 directive|include
 file|<x86/apicvar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1226,9 +1268,14 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_APIC
 name|lapic_xapic_mode
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SMP
