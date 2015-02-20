@@ -1110,7 +1110,7 @@ define|#
 directive|define
 name|EFX_MON_STATS_SIZE
 value|0x100
-comment|/* START MKCONFIG GENERATED MonitorHeaderStatsBlock 16a14e61aa4f8d80 */
+comment|/* START MKCONFIG GENERATED MonitorHeaderStatsBlock 58706a378332aeee */
 typedef|typedef
 enum|enum
 name|efx_mon_stat_e
@@ -1146,6 +1146,34 @@ block|,
 name|EFX_MON_STAT_1_8V
 block|,
 name|EFX_MON_STAT_3_3V
+block|,
+name|EFX_MON_STAT_1_2VA
+block|,
+name|EFX_MON_STAT_VREF
+block|,
+name|EFX_MON_STAT_VAOE
+block|,
+name|EFX_MON_STAT_AOE_TEMP
+block|,
+name|EFX_MON_STAT_PSU_AOE_TEMP
+block|,
+name|EFX_MON_STAT_PSU_TEMP
+block|,
+name|EFX_MON_STAT_FAN0
+block|,
+name|EFX_MON_STAT_FAN1
+block|,
+name|EFX_MON_STAT_FAN2
+block|,
+name|EFX_MON_STAT_FAN3
+block|,
+name|EFX_MON_STAT_FAN4
+block|,
+name|EFX_MON_STAT_VAOE_IN
+block|,
+name|EFX_MON_STAT_IAOE
+block|,
+name|EFX_MON_STAT_IAOE_IN
 block|,
 name|EFX_MON_NSTATS
 block|}
