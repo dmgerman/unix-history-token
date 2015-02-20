@@ -45,17 +45,6 @@ value|(64 / 2 + 1)
 end_define
 
 begin_comment
-comment|/* Maximum number of DMA segments needed to map an output packet.  It  * could overlap all mbufs in the chain and also require an extra  * segment for a TSO header.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFXGE_TX_PACKET_MAX_SEG
-value|(SFXGE_TX_MAPPING_MAX_SEG + 1)
-end_define
-
-begin_comment
 comment|/*  * Buffer mapping flags.  *  * Buffers and DMA mappings must be freed when the last descriptor  * referring to them is completed.  Set the TX_BUF_UNMAP and  * TX_BUF_MBUF flags on the last descriptor generated for an mbuf  * chain.  Set only the TX_BUF_UNMAP flag on a descriptor referring to  * a heap buffer.  */
 end_comment
 
