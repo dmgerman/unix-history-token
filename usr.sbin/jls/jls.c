@@ -864,6 +864,12 @@ expr_stmt|;
 block|}
 block|}
 else|else
+block|{
+name|pflags
+operator|&=
+operator|~
+name|PRINT_VERBOSE
+expr_stmt|;
 while|while
 condition|(
 name|optind
@@ -890,6 +896,7 @@ argument_list|,
 name|JP_USER
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|pflags
