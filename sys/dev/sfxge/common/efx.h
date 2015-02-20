@@ -2101,6 +2101,10 @@ define|#
 directive|define
 name|EFX_FEATURE_MAC_HEADER_FILTERS
 value|0x00000080
+define|#
+directive|define
+name|EFX_FEATURE_TURBO
+value|0x00000100
 typedef|typedef
 struct|struct
 name|efx_nic_cfg_s
@@ -2166,6 +2170,9 @@ name|enc_buftbl_limit
 decl_stmt|;
 name|uint32_t
 name|enc_evq_moderation_max
+decl_stmt|;
+name|uint32_t
+name|enc_clk_mult
 decl_stmt|;
 if|#
 directive|if
