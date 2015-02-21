@@ -290,6 +290,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -297,6 +303,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
 end_include
 
 begin_include
@@ -321,6 +333,10 @@ begin_function_decl
 name|void
 name|inetprint
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|struct
 name|in_addr
 modifier|*
@@ -479,7 +495,7 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: %s"
 argument_list|,
@@ -506,7 +522,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"malloc %lu bytes"
 argument_list|,
@@ -541,7 +557,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: %s"
 argument_list|,
@@ -1065,7 +1081,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"malloc %lu bytes"
 argument_list|,
@@ -1093,7 +1109,7 @@ name|obj
 parameter_list|,
 name|size
 parameter_list|)
-value|do {						\ 	if (len< (size)) {						\ 		warnx("buffer size exceeded");				\ 		goto fail;						\ 	}								\ 	bcopy((obj), p, (size));					\ 	len -= (size);							\ 	p += (size);							\ } while (0)
+value|do {						\ 	if (len< (size)) {						\ 		xo_warnx("buffer size exceeded");			\ 		goto fail;						\ 	}								\ 	bcopy((obj), p, (size));					\ 	len -= (size);							\ 	p += (size);							\ } while (0)
 define|#
 directive|define
 name|KREAD
@@ -2071,7 +2087,7 @@ operator|!
 name|Lflag
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
 literal|"Active Internet connections"
 argument_list|)
@@ -2080,30 +2096,30 @@ if|if
 condition|(
 name|aflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|" (including servers)"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|xo_emit
 argument_list|(
 literal|"Current listen queue sizes (qlen/incqlen/maxqlen)"
 argument_list|)
 expr_stmt|;
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|Aflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-*s "
+literal|"{T:/%-*s} "
 argument_list|,
 literal|2
 operator|*
@@ -2123,7 +2139,7 @@ if|if
 condition|(
 name|Lflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
 operator|(
 name|Aflag
@@ -2132,9 +2148,9 @@ operator|!
 name|Wflag
 operator|)
 condition|?
-literal|"%-5.5s %-14.14s %-18.18s"
+literal|"{T:/%-5.5s} {T:/%-14.14s} {T:/%-18.18s}"
 else|:
-literal|"%-5.5s %-14.14s %-22.22s"
+literal|"{T:/%-5.5s} {T:/%-14.14s} {T:/%-22.22s}"
 argument_list|,
 literal|"Proto"
 argument_list|,
@@ -2148,7 +2164,7 @@ if|if
 condition|(
 name|Tflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
 operator|(
 name|Aflag
@@ -2157,9 +2173,9 @@ operator|!
 name|Wflag
 operator|)
 condition|?
-literal|"%-5.5s %-6.6s %-6.6s %-6.6s %-18.18s %s"
+literal|"{T:/%-5.5s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-18.18s} {T:/%s}"
 else|:
-literal|"%-5.5s %-6.6s %-6.6s %-6.6s %-22.22s %s"
+literal|"{T:/%-5.5s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-22.22s} {T:/%s}"
 argument_list|,
 literal|"Proto"
 argument_list|,
@@ -2176,7 +2192,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|xo_emit
 argument_list|(
 operator|(
 name|Aflag
@@ -2185,9 +2201,9 @@ operator|!
 name|Wflag
 operator|)
 condition|?
-literal|"%-5.5s %-6.6s %-6.6s %-18.18s %-18.18s"
+literal|"{T:/%-5.5s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-18.18s} {T:/%-18.18s}"
 else|:
-literal|"%-5.5s %-6.6s %-6.6s %-22.22s %-22.22s"
+literal|"{T:/%-5.5s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-22.22s} {T:/%-22.22s}"
 argument_list|,
 literal|"Proto"
 argument_list|,
@@ -2208,7 +2224,7 @@ operator|&&
 operator|!
 name|Rflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|" (state)"
 argument_list|)
@@ -2219,9 +2235,12 @@ condition|(
 name|xflag
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s %-6.6s"
+literal|" {T:/%-6.6s} {T:/%-6.6s} {T:/%-6.6s} "
+literal|"{T:/%-6.6s} {T:/%-6.6s} {T:/%-6.6s} "
+literal|"{T:/%-6.6s} {T:/%-6.6s} {T:/%-6.6s} "
+literal|"{T:/%-6.6s} {T:/%-6.6s} {T:/%-6.6s}"
 argument_list|,
 literal|"R-MBUF"
 argument_list|,
@@ -2248,9 +2267,10 @@ argument_list|,
 literal|"S-BMAX"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %7.7s %7.7s %7.7s %7.7s %7.7s %7.7s"
+literal|" {T:/%7.7s} {T:/%7.7s} {T:/%7.7s} "
+literal|"{T:/%7.7s} {T:/%7.7s} {T:/%7.7s}"
 argument_list|,
 literal|"rexmt"
 argument_list|,
@@ -2272,9 +2292,9 @@ condition|(
 name|Rflag
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"  %8.8s %5.5s"
+literal|"  {T:/%8.8s} {T:/%5.5s}"
 argument_list|,
 literal|"flowid"
 argument_list|,
@@ -2282,9 +2302,9 @@ literal|"ftype"
 argument_list|)
 expr_stmt|;
 block|}
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|first
@@ -2303,6 +2323,11 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+name|xo_open_instance
+argument_list|(
+literal|"socket"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Aflag
@@ -2312,9 +2337,9 @@ if|if
 condition|(
 name|istcp
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*lx "
+literal|"{q:address/%*lx} "
 argument_list|,
 literal|2
 operator|*
@@ -2336,9 +2361,9 @@ name|inp_ppcb
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*lx "
+literal|"{q:adddress/%*lx} "
 argument_list|,
 literal|2
 operator|*
@@ -2391,7 +2416,7 @@ operator|)
 condition|?
 literal|"46"
 else|:
-literal|"6 "
+literal|"6"
 expr_stmt|;
 else|else
 endif|#
@@ -2410,9 +2435,9 @@ operator|!=
 literal|0
 operator|)
 condition|?
-literal|"4 "
+literal|"4"
 else|:
-literal|"  "
+literal|""
 expr_stmt|;
 if|if
 condition|(
@@ -2428,9 +2453,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-3.3s%-2.2s "
+literal|"{:protocol/%-3.3s%-2.2s/%s%s} "
 argument_list|,
 literal|"toe"
 argument_list|,
@@ -2438,9 +2463,9 @@ name|vchar
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-3.3s%-2.2s "
+literal|"{:protocol/%-3.3s%-2.2s/%s%s} "
 argument_list|,
 name|name
 argument_list|,
@@ -2479,9 +2504,9 @@ operator|->
 name|so_qlimit
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-14.14s "
+literal|"{:listen-queue-sizes/%-14.14s} "
 argument_list|,
 name|buf1
 argument_list|)
@@ -2497,9 +2522,11 @@ if|if
 condition|(
 name|istcp
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%6u %6u %6u "
+literal|"{:sent-retransmit-packets/%6u} "
+literal|"{:received-out-of-order-packets/%6u} "
+literal|"{:sent-zero-window/%6u} "
 argument_list|,
 name|tp
 operator|->
@@ -2517,9 +2544,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%6u %6u "
+literal|"{:receive-bytes-waiting/%6u} "
+literal|"{:send-bytes-waiting/%6u} "
 argument_list|,
 name|so
 operator|->
@@ -2551,6 +2579,8 @@ condition|)
 block|{
 name|inetprint
 argument_list|(
+literal|"local"
+argument_list|,
 operator|&
 name|inp
 operator|->
@@ -2575,6 +2605,8 @@ name|Lflag
 condition|)
 name|inetprint
 argument_list|(
+literal|"remote"
+argument_list|,
 operator|&
 name|inp
 operator|->
@@ -2608,6 +2640,8 @@ condition|)
 block|{
 name|inet6print
 argument_list|(
+literal|"local"
+argument_list|,
 operator|&
 name|inp
 operator|->
@@ -2632,6 +2666,8 @@ name|Lflag
 condition|)
 name|inet6print
 argument_list|(
+literal|"remote"
+argument_list|,
 operator|&
 name|inp
 operator|->
@@ -2676,6 +2712,8 @@ condition|)
 block|{
 name|inetprint
 argument_list|(
+literal|"local"
+argument_list|,
 operator|&
 name|inp
 operator|->
@@ -2700,6 +2738,8 @@ name|Lflag
 condition|)
 name|inetprint
 argument_list|(
+literal|"remote"
+argument_list|,
 operator|&
 name|inp
 operator|->
@@ -2733,6 +2773,8 @@ condition|)
 block|{
 name|inet6print
 argument_list|(
+literal|"local"
+argument_list|,
 operator|&
 name|inp
 operator|->
@@ -2757,6 +2799,8 @@ name|Lflag
 condition|)
 name|inet6print
 argument_list|(
+literal|"remote"
+argument_list|,
 operator|&
 name|inp
 operator|->
@@ -2793,6 +2837,8 @@ condition|)
 block|{
 name|inetprint
 argument_list|(
+literal|"local"
+argument_list|,
 operator|&
 name|inp
 operator|->
@@ -2817,6 +2863,8 @@ name|Lflag
 condition|)
 name|inetprint
 argument_list|(
+literal|"remote"
+argument_list|,
 operator|&
 name|inp
 operator|->
@@ -2856,6 +2904,8 @@ condition|)
 block|{
 name|inet6print
 argument_list|(
+literal|"local"
+argument_list|,
 operator|&
 name|inp
 operator|->
@@ -2880,6 +2930,8 @@ name|Lflag
 condition|)
 name|inet6print
 argument_list|(
+literal|"remote"
+argument_list|,
 operator|&
 name|inp
 operator|->
@@ -2914,9 +2966,15 @@ condition|(
 name|xflag
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u %6u"
+literal|"{:receive-mbufs/%6u} {:send-mbufs/%6u} "
+literal|"{:receive-clusters/%6u} {:send-clusters/%6u} "
+literal|"{:receive-high-water/%6u} {:send-high-water/%6u} "
+literal|"{:receive-low-water/%6u} {:send-low-water/%6u} "
+literal|"{:receive-mbuf-bytes/%6u} {:send-mbuf-bytes/%6u} "
+literal|"{:receive-mbuf-bytes-max/%6u} "
+literal|"{:send-mbuf-bytes-max/%6u}"
 argument_list|,
 name|so
 operator|->
@@ -2997,9 +3055,14 @@ name|timer
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %4d.%02d %4d.%02d %4d.%02d %4d.%02d %4d.%02d %4d.%02d"
+literal|" {:retransmit-timer/%4d.%02d} "
+literal|"{:persist-timer/%4d.%02d} "
+literal|"{:keepalive-timer/%4d.%02d} "
+literal|"{:msl2-timer/%4d.%02d} "
+literal|"{:delay-ack-timer/%4d.%02d} "
+literal|"{:inactivity-timer/%4d.%02d}"
 argument_list|,
 name|timer
 operator|->
@@ -3130,9 +3193,9 @@ name|t_state
 operator|>=
 name|TCP_NSTATES
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%d"
+literal|"{:tcp-state/%d}"
 argument_list|,
 name|tp
 operator|->
@@ -3141,9 +3204,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+literal|"{:tcp-state/%s}"
 argument_list|,
 name|tcpstates
 index|[
@@ -3177,9 +3240,9 @@ operator||
 name|TF_NEEDFIN
 operator|)
 condition|)
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'*'
+literal|"{:need-syn-or-fin/*}"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3192,9 +3255,10 @@ condition|(
 name|Rflag
 condition|)
 block|{
-name|printf
+comment|/* XXX: is this right Alfred */
+name|xo_emit
 argument_list|(
-literal|" %08x %5d"
+literal|" {:flow-id/%08x} {:flow-type/%5d}"
 argument_list|,
 name|inp
 operator|->
@@ -3206,9 +3270,14 @@ name|inp_flowtype
 argument_list|)
 expr_stmt|;
 block|}
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"socket"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3238,9 +3307,10 @@ operator|->
 name|xig_count
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Some %s sockets may have been deleted.\n"
+literal|"Some {d:lost/%s} sockets may have been "
+literal|"deleted.\n"
 argument_list|,
 name|name
 argument_list|)
@@ -3258,9 +3328,10 @@ operator|->
 name|xig_count
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Some %s sockets may have been created.\n"
+literal|"Some {d:created/%s} sockets may have been "
+literal|"created.\n"
 argument_list|,
 name|name
 argument_list|)
@@ -3268,9 +3339,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Some %s sockets may have been created or deleted.\n"
+literal|"Some {d:changed/%s} sockets may have been "
+literal|"created or deleted.\n"
 argument_list|,
 name|name
 argument_list|)
@@ -3387,7 +3459,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet.tcp.stats"
 argument_list|)
@@ -3406,9 +3478,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%s:\n"
+literal|"tcp"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{T:/%s}:\n"
 argument_list|,
 name|name
 argument_list|)
@@ -3421,7 +3498,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (tcpstat.f || sflag<= 1)				\ 	printf(m, (uintmax_t )tcpstat.f, plural(tcpstat.f))
+value|if (tcpstat.f || sflag<= 1)				\ 	xo_emit(m, (uintmax_t )tcpstat.f, plural(tcpstat.f))
 define|#
 directive|define
 name|p1a
@@ -3430,7 +3507,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (tcpstat.f || sflag<= 1)				\ 	printf(m, (uintmax_t )tcpstat.f)
+value|if (tcpstat.f || sflag<= 1)				\ 	xo_emit(m, (uintmax_t )tcpstat.f)
 define|#
 directive|define
 name|p2
@@ -3441,7 +3518,7 @@ name|f2
 parameter_list|,
 name|m
 parameter_list|)
-value|if (tcpstat.f1 || tcpstat.f2 || sflag<= 1)	\ 	printf(m, (uintmax_t )tcpstat.f1, plural(tcpstat.f1),		\ 	    (uintmax_t )tcpstat.f2, plural(tcpstat.f2))
+value|if (tcpstat.f1 || tcpstat.f2 || sflag<= 1)	\ 	xo_emit(m, (uintmax_t )tcpstat.f1, plural(tcpstat.f1),		\ 	    (uintmax_t )tcpstat.f2, plural(tcpstat.f2))
 define|#
 directive|define
 name|p2a
@@ -3452,7 +3529,7 @@ name|f2
 parameter_list|,
 name|m
 parameter_list|)
-value|if (tcpstat.f1 || tcpstat.f2 || sflag<= 1)	\ 	printf(m, (uintmax_t )tcpstat.f1, plural(tcpstat.f1),		\ 	    (uintmax_t )tcpstat.f2)
+value|if (tcpstat.f1 || tcpstat.f2 || sflag<= 1)	\ 	xo_emit(m, (uintmax_t )tcpstat.f1, plural(tcpstat.f1),		\ 	    (uintmax_t )tcpstat.f2)
 define|#
 directive|define
 name|p3
@@ -3461,12 +3538,12 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (tcpstat.f || sflag<= 1)				\ 	printf(m, (uintmax_t )tcpstat.f, pluralies(tcpstat.f))
+value|if (tcpstat.f || sflag<= 1)				\ 	xo_emit(m, (uintmax_t )tcpstat.f, pluralies(tcpstat.f))
 name|p
 argument_list|(
 name|tcps_sndtotal
 argument_list|,
-literal|"\t%ju packet%s sent\n"
+literal|"\t{:sent-packets/%ju} {N:/packet%s sent}\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -3475,7 +3552,8 @@ name|tcps_sndpack
 argument_list|,
 name|tcps_sndbyte
 argument_list|,
-literal|"\t\t%ju data packet%s (%ju byte%s)\n"
+literal|"\t\t{:sent-data-packets/%ju} "
+literal|"{N:/data packet%s} ({:sent-data-bytes/%ju} {N:/byte%s})\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -3484,21 +3562,27 @@ name|tcps_sndrexmitpack
 argument_list|,
 name|tcps_sndrexmitbyte
 argument_list|,
-literal|"\t\t%ju data packet%s (%ju byte%s) retransmitted\n"
+literal|"\t\t"
+literal|"{:sent-retransmitted-packets/%ju} {N:/data packet%s} "
+literal|"({:sent-retransmitted-bytes/%ju} {N:/byte%s}) "
+literal|"{N:retransmitted}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sndrexmitbad
 argument_list|,
-literal|"\t\t%ju data packet%s unnecessarily retransmitted\n"
+literal|"\t\t"
+literal|"{:sent-unnecessary-retransmitted-packets/%ju} "
+literal|"{N:/data packet%s unnecessarily retransmitted}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_mturesent
 argument_list|,
-literal|"\t\t%ju resend%s initiated by MTU discovery\n"
+literal|"\t\t{:sent-resends-by-mtu-discovery/%ju} "
+literal|"{N:/resend%s initiated by MTU discovery}\n"
 argument_list|)
 expr_stmt|;
 name|p2a
@@ -3507,42 +3591,49 @@ name|tcps_sndacks
 argument_list|,
 name|tcps_delack
 argument_list|,
-literal|"\t\t%ju ack-only packet%s (%ju delayed)\n"
+literal|"\t\t{:sent-ack-only-packets/%ju} "
+literal|"{N:/ack-only packet%s/} ({:sent-packets-delayed/%ju} "
+literal|"{N:delayed})\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sndurg
 argument_list|,
-literal|"\t\t%ju URG only packet%s\n"
+literal|"\t\t{:sent-urg-only-packets/%ju} "
+literal|"{N:/URG only packet%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sndprobe
 argument_list|,
-literal|"\t\t%ju window probe packet%s\n"
+literal|"\t\t{:sent-window-probe-packets/%ju} "
+literal|"{N:/window probe packet%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sndwinup
 argument_list|,
-literal|"\t\t%ju window update packet%s\n"
+literal|"\t\t{:sent-window-update-packets/%ju} "
+literal|"{N:/window update packet%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sndctrl
 argument_list|,
-literal|"\t\t%ju control packet%s\n"
+literal|"\t\t{:sent-control-packets/%ju} "
+literal|"{N:/control packet%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvtotal
 argument_list|,
-literal|"\t%ju packet%s received\n"
+literal|"\t{:received-packets/%ju} "
+literal|"{N:/packet%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -3551,21 +3642,25 @@ name|tcps_rcvackpack
 argument_list|,
 name|tcps_rcvackbyte
 argument_list|,
-literal|"\t\t%ju ack%s (for %ju byte%s)\n"
+literal|"\t\t"
+literal|"{:received-ack-packets/%ju} {N:/ack%s} "
+literal|"{N:(for} {:received-ack-bytes/%ju} {N:/byte%s})\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvdupack
 argument_list|,
-literal|"\t\t%ju duplicate ack%s\n"
+literal|"\t\t{:received-duplicate-acks/%ju} "
+literal|"{N:/duplicate ack%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvacktoomuch
 argument_list|,
-literal|"\t\t%ju ack%s for unsent data\n"
+literal|"\t\t{:received-acks-for-unsent-data/%ju} "
+literal|"{N:/ack%s for unsent data}\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -3574,7 +3669,10 @@ name|tcps_rcvpack
 argument_list|,
 name|tcps_rcvbyte
 argument_list|,
-literal|"\t\t%ju packet%s (%ju byte%s) received in-sequence\n"
+literal|"\t\t"
+literal|"{:received-in-sequence-packets/%ju} {N:/packet%s} "
+literal|"({:received-in-sequence-bytes/%ju} {N:/byte%s}) "
+literal|"{N:received in-sequence}\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -3583,14 +3681,18 @@ name|tcps_rcvduppack
 argument_list|,
 name|tcps_rcvdupbyte
 argument_list|,
-literal|"\t\t%ju completely duplicate packet%s (%ju byte%s)\n"
+literal|"\t\t"
+literal|"{:received-completely-duplicate-packets/%ju} "
+literal|"{N:/completely duplicate packet%s} "
+literal|"({:received-completely-duplicate-bytes/%ju} {N:/byte%s})\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_pawsdrop
 argument_list|,
-literal|"\t\t%ju old duplicate packet%s\n"
+literal|"\t\t{:received-old-duplicate-packets/%ju} "
+literal|"{N:/old duplicate packet%s}\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -3599,7 +3701,10 @@ name|tcps_rcvpartduppack
 argument_list|,
 name|tcps_rcvpartdupbyte
 argument_list|,
-literal|"\t\t%ju packet%s with some dup. data (%ju byte%s duped)\n"
+literal|"\t\t"
+literal|"{:received-some-duplicate-packets/%ju} "
+literal|"{N:/packet%s with some dup. data} "
+literal|"({:received-some-duplicate-bytes/%ju} {N:/byte%s duped/})\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -3608,7 +3713,9 @@ name|tcps_rcvoopack
 argument_list|,
 name|tcps_rcvoobyte
 argument_list|,
-literal|"\t\t%ju out-of-order packet%s (%ju byte%s)\n"
+literal|"\t\t{:received-out-of-order/%ju} "
+literal|"{N:/out-of-order packet%s} "
+literal|"({:received-out-of-order-bytes/%ju} {N:/byte%s})\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -3617,98 +3724,114 @@ name|tcps_rcvpackafterwin
 argument_list|,
 name|tcps_rcvbyteafterwin
 argument_list|,
-literal|"\t\t%ju packet%s (%ju byte%s) of data after window\n"
+literal|"\t\t"
+literal|"{:received-after-window-packets/%ju} {N:/packet%s} "
+literal|"({:received-after-window-bytes/%ju} {N:/byte%s}) "
+literal|"{N:of data after window}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvwinprobe
 argument_list|,
-literal|"\t\t%ju window probe%s\n"
+literal|"\t\t{:received-window-probes/%ju} "
+literal|"{N:/window probe%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvwinupd
 argument_list|,
-literal|"\t\t%ju window update packet%s\n"
+literal|"\t\t{:receive-window-update-packets/%ju} "
+literal|"{N:/window update packet%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvafterclose
 argument_list|,
-literal|"\t\t%ju packet%s received after close\n"
+literal|"\t\t{:received-after-close-packets/%ju} "
+literal|"{N:/packet%s received after close}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvbadsum
 argument_list|,
-literal|"\t\t%ju discarded for bad checksum%s\n"
+literal|"\t\t{:discard-bad-checksum/%ju} "
+literal|"{N:/discarded for bad checksum%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvbadoff
 argument_list|,
-literal|"\t\t%ju discarded for bad header offset field%s\n"
+literal|"\t\t{:discard-bad-header-offset/%ju} "
+literal|"{N:/discarded for bad header offset field%s}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_rcvshort
 argument_list|,
-literal|"\t\t%ju discarded because packet too short\n"
+literal|"\t\t{:discard-too-short/%ju} "
+literal|"{N:discarded because packet too short}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
-name|tcps_rcvreassfull
+name|tcps_rcvmemdrop
 argument_list|,
-literal|"\t\t%ju discarded due to no space in reassembly queue\n"
+literal|"\t\t{:discard-memory-problems/%ju} "
+literal|"{N:discarded due to memory problems}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_connattempt
 argument_list|,
-literal|"\t%ju connection request%s\n"
+literal|"\t{:connection-requests/%ju} "
+literal|"{N:/connection request%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_accepts
 argument_list|,
-literal|"\t%ju connection accept%s\n"
+literal|"\t{:connections-accepts/%ju} "
+literal|"{N:/connection accept%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_badsyn
 argument_list|,
-literal|"\t%ju bad connection attempt%s\n"
+literal|"\t{:bad-connection-attempts/%ju} "
+literal|"{N:/bad connection attempt%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_listendrop
 argument_list|,
-literal|"\t%ju listen queue overflow%s\n"
+literal|"\t{:listen-queue-overflows/%ju} "
+literal|"{N:/listen queue overflow%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_badrst
 argument_list|,
-literal|"\t%ju ignored RSTs in the window%s\n"
+literal|"\t{:ignored-in-window-resets/%ju} "
+literal|"{N:/ignored RSTs in the window%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_connects
 argument_list|,
-literal|"\t%ju connection%s established (including accepts)\n"
+literal|"\t{:connections-established/%ju} "
+literal|"{N:/connection%s established (including accepts)}\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -3717,35 +3840,43 @@ name|tcps_closed
 argument_list|,
 name|tcps_drops
 argument_list|,
-literal|"\t%ju connection%s closed (including %ju drop%s)\n"
+literal|"\t{:connections-closed/%ju} "
+literal|"{N:/connection%s closed (including} "
+literal|"{:connection-drops/%ju} {N:/drop%s})\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_cachedrtt
 argument_list|,
-literal|"\t\t%ju connection%s updated cached RTT on close\n"
+literal|"\t\t{:connections-updated-rtt-on-close/%ju} "
+literal|"{N:/connection%s updated cached RTT on close}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_cachedrttvar
 argument_list|,
-literal|"\t\t%ju connection%s updated cached RTT variance on close\n"
+literal|"\t\t"
+literal|"{:connections-updated-variance-on-close/%ju} "
+literal|"{N:/connection%s updated cached RTT variance on close}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_cachedssthresh
 argument_list|,
-literal|"\t\t%ju connection%s updated cached ssthresh on close\n"
+literal|"\t\t"
+literal|"{:connections-updated-ssthresh-on-close/%ju} "
+literal|"{N:/connection%s updated cached ssthresh on close}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_conndrops
 argument_list|,
-literal|"\t%ju embryonic connection%s dropped\n"
+literal|"\t{:embryonic-connections-dropped/%ju} "
+literal|"{N:/embryonic connection%s dropped}\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -3754,308 +3885,341 @@ name|tcps_rttupdated
 argument_list|,
 name|tcps_segstimed
 argument_list|,
-literal|"\t%ju segment%s updated rtt (of %ju attempt%s)\n"
+literal|"\t{:segments-updated-rtt/%ju} "
+literal|"{N:/segment%s updated rtt (of} "
+literal|"{:segment-update-attempts/%ju} {N:/attempt%s})\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rexmttimeo
 argument_list|,
-literal|"\t%ju retransmit timeout%s\n"
+literal|"\t{:retransmit-timeouts/%ju} "
+literal|"{N:/retransmit timeout%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_timeoutdrop
 argument_list|,
-literal|"\t\t%ju connection%s dropped by rexmit timeout\n"
+literal|"\t\t"
+literal|"{:connections-dropped-by-retransmit-timeout/%ju} "
+literal|"{N:/connection%s dropped by rexmit timeout}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_persisttimeo
 argument_list|,
-literal|"\t%ju persist timeout%s\n"
+literal|"\t{:persist-timeout/%ju} "
+literal|"{N:/persist timeout%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_persistdrop
 argument_list|,
-literal|"\t\t%ju connection%s dropped by persist timeout\n"
+literal|"\t\t"
+literal|"{:connections-dropped-by-persist-timeout/%ju} "
+literal|"{N:/connection%s dropped by persist timeout}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_finwait2_drops
 argument_list|,
-literal|"\t%ju Connection%s (fin_wait_2) dropped because of timeout\n"
+literal|"\t"
+literal|"{:connections-dropped-by-finwait2-timeout/%ju} "
+literal|"{N:/Connection%s (fin_wait_2) dropped because of timeout}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_keeptimeo
 argument_list|,
-literal|"\t%ju keepalive timeout%s\n"
+literal|"\t{:keepalive-timeout/%ju} "
+literal|"{N:/keepalive timeout%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_keepprobe
 argument_list|,
-literal|"\t\t%ju keepalive probe%s sent\n"
+literal|"\t\t{:keepalive-probes/%ju} "
+literal|"{N:/keepalive probe%s sent}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_keepdrops
 argument_list|,
-literal|"\t\t%ju connection%s dropped by keepalive\n"
+literal|"\t\t{:connections-dropped-by-keepalives/%ju} "
+literal|"{N:/connection%s dropped by keepalive}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_predack
 argument_list|,
-literal|"\t%ju correct ACK header prediction%s\n"
+literal|"\t{:ack-header-predictions/%ju} "
+literal|"{N:/correct ACK header prediction%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_preddat
 argument_list|,
-literal|"\t%ju correct data packet header prediction%s\n"
+literal|"\t{:data-packet-header-predictions/%ju} "
+literal|"{N:/correct data packet header prediction%s}\n"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"syncache"
 argument_list|)
 expr_stmt|;
 name|p3
 argument_list|(
 name|tcps_sc_added
 argument_list|,
-literal|"\t%ju syncache entr%s added\n"
+literal|"\t{:entries-added/%ju} "
+literal|"{N:/syncache entr%s added}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_sc_retransmitted
 argument_list|,
-literal|"\t\t%ju retransmitted\n"
+literal|"\t\t{:retransmitted/%ju} "
+literal|"{N:/retransmitted}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_sc_dupsyn
 argument_list|,
-literal|"\t\t%ju dupsyn\n"
+literal|"\t\t{:duplicates/%ju} {N:/dupsyn}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_sc_dropped
 argument_list|,
-literal|"\t\t%ju dropped\n"
+literal|"\t\t{:dropped/%ju} {N:/dropped}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_sc_completed
 argument_list|,
-literal|"\t\t%ju completed\n"
+literal|"\t\t{:completed/%ju} {N:/completed}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_sc_bucketoverflow
 argument_list|,
-literal|"\t\t%ju bucket overflow\n"
+literal|"\t\t{:bucket-overflow/%ju} "
+literal|"{N:/bucket overflow}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_sc_cacheoverflow
 argument_list|,
-literal|"\t\t%ju cache overflow\n"
+literal|"\t\t{:cache-overflow/%ju} "
+literal|"{N:/cache overflow}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_sc_reset
 argument_list|,
-literal|"\t\t%ju reset\n"
+literal|"\t\t{:reset/%ju} {N:/reset}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_sc_stale
 argument_list|,
-literal|"\t\t%ju stale\n"
+literal|"\t\t{:stale/%ju} {N:/stale}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_sc_aborted
 argument_list|,
-literal|"\t\t%ju aborted\n"
+literal|"\t\t{:aborted/%ju} {N:/aborted}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_sc_badack
 argument_list|,
-literal|"\t\t%ju badack\n"
+literal|"\t\t{:bad-ack/%ju} {N:/badack}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_sc_unreach
 argument_list|,
-literal|"\t\t%ju unreach\n"
+literal|"\t\t{:unreachable/%ju} {N:/unreach}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sc_zonefail
 argument_list|,
-literal|"\t\t%ju zone failure%s\n"
+literal|"\t\t{:zone-failures/%ju} {N:/zone failure%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sc_sendcookie
 argument_list|,
-literal|"\t%ju cookie%s sent\n"
+literal|"\t{:sent-cookies/%ju} {N:/cookie%s sent}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sc_recvcookie
 argument_list|,
-literal|"\t%ju cookie%s received\n"
+literal|"\t{:receivd-cookies/%ju} "
+literal|"{N:/cookie%s received}\n"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"syncache"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"hostcache"
 argument_list|)
 expr_stmt|;
 name|p3
 argument_list|(
 name|tcps_hc_added
 argument_list|,
-literal|"\t%ju hostcache entr%s added\n"
+literal|"\t{:entries-added/%ju} "
+literal|"{N:/hostcache entr%s added}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_hc_bucketoverflow
 argument_list|,
-literal|"\t\t%ju bucket overflow\n"
+literal|"\t\t{:buffer-overflows/%ju} "
+literal|"{N:/bucket overflow}\n"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"hostcache"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"sack"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sack_recovery_episode
 argument_list|,
-literal|"\t%ju SACK recovery episode%s\n"
+literal|"\t{:recovery-episodes/%ju} "
+literal|"{N:/SACK recovery episode%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sack_rexmits
 argument_list|,
-literal|"\t%ju segment rexmit%s in SACK recovery episodes\n"
+literal|"\t{:segment-retransmits/%ju} "
+literal|"{N:/segment rexmit%s in SACK recovery episodes}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sack_rexmit_bytes
 argument_list|,
-literal|"\t%ju byte rexmit%s in SACK recovery episodes\n"
+literal|"\t{:byte-retransmits/%ju} "
+literal|"{N:/byte rexmit%s in SACK recovery episodes}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sack_rcv_blocks
 argument_list|,
-literal|"\t%ju SACK option%s (SACK blocks) received\n"
+literal|"\t{:received-blocks/%ju} "
+literal|"{N:/SACK option%s (SACK blocks) received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sack_send_blocks
 argument_list|,
-literal|"\t%ju SACK option%s (SACK blocks) sent\n"
+literal|"\t{:sent-option-blocks/%ju} "
+literal|"{N:/SACK option%s (SACK blocks) sent}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|tcps_sack_sboverflow
 argument_list|,
-literal|"\t%ju SACK scoreboard overflow\n"
+literal|"\t{:scoreboard-overflows/%ju} "
+literal|"{N:/SACK scoreboard overflow}\n"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"sack"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"ecn"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_ecn_ce
 argument_list|,
-literal|"\t%ju packet%s with ECN CE bit set\n"
+literal|"\t{:ce-packets/%ju} "
+literal|"{N:/packet%s with ECN CE bit set}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_ecn_ect0
 argument_list|,
-literal|"\t%ju packet%s with ECN ECT(0) bit set\n"
+literal|"\t{:ect0-packets/%ju} "
+literal|"{N:/packet%s with ECN ECT(0) bit set}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_ecn_ect1
 argument_list|,
-literal|"\t%ju packet%s with ECN ECT(1) bit set\n"
+literal|"\t{:ect1-packets/%ju} "
+literal|"{N:/packet%s with ECN ECT(1) bit set}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_ecn_shs
 argument_list|,
-literal|"\t%ju successful ECN handshake%s\n"
+literal|"\t{:handshakes/%ju} "
+literal|"{N:/successful ECN handshake%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_ecn_rcwnd
 argument_list|,
-literal|"\t%ju time%s ECN reduced the congestion window\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|tcps_sig_rcvgoodsig
-argument_list|,
-literal|"\t%ju packet%s with valid tcp-md5 signature received\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|tcps_sig_rcvbadsig
-argument_list|,
-literal|"\t%ju packet%s with invalid tcp-md5 signature received\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|tcps_sig_err_buildsig
-argument_list|,
-literal|"\t%ju packet%s with tcp-md5 signature mismatch\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|tcps_sig_err_sigopt
-argument_list|,
-literal|"\t%ju packet%s with unexpected tcp-md5 signature received\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|tcps_sig_err_nosigopt
-argument_list|,
-literal|"\t%ju packet%s without expected tcp-md5 signature received\n"
+literal|"\t{:congestion-reductions/%ju} "
+literal|"{N:/time%s ECN reduced the congestion window}\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -4073,6 +4237,16 @@ name|p2a
 undef|#
 directive|undef
 name|p3
+name|xo_close_container
+argument_list|(
+literal|"ecn"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"tcp"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4181,7 +4355,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet.udp.stats"
 argument_list|)
@@ -4200,9 +4374,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%s:\n"
+literal|"udp"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{T:/%s}:\n"
 argument_list|,
 name|name
 argument_list|)
@@ -4215,7 +4394,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (udpstat.f || sflag<= 1) \     printf("\t%ju " m, (uintmax_t)udpstat.f, plural(udpstat.f))
+value|if (udpstat.f || sflag<= 1) \ 	xo_emit("\t" m, (uintmax_t)udpstat.f, plural(udpstat.f))
 define|#
 directive|define
 name|p1a
@@ -4224,68 +4403,77 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (udpstat.f || sflag<= 1) \     printf("\t%ju " m, (uintmax_t)udpstat.f)
+value|if (udpstat.f || sflag<= 1) \ 	xo_emit("\t" m, (uintmax_t)udpstat.f)
 name|p
 argument_list|(
 name|udps_ipackets
 argument_list|,
-literal|"datagram%s received\n"
+literal|"{:received-datagrams/%ju} "
+literal|"{N:/datagram%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udps_hdrops
 argument_list|,
-literal|"with incomplete header\n"
+literal|"{:dropped-incomplete-headers/%ju} "
+literal|"{N:/with incomplete header}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udps_badlen
 argument_list|,
-literal|"with bad data length field\n"
+literal|"{:dropped-bad-data-length/%ju} "
+literal|"{N:/with bad data length field}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udps_badsum
 argument_list|,
-literal|"with bad checksum\n"
+literal|"{:dropped-bad-checksum/%ju} "
+literal|"{N:/with bad checksum}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udps_nosum
 argument_list|,
-literal|"with no checksum\n"
+literal|"{:dropped-no-checksum/%ju} "
+literal|"{N:/with no checksum}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udps_noport
 argument_list|,
-literal|"dropped due to no socket\n"
+literal|"{:dropped-no-socket/%ju} "
+literal|"{N:/dropped due to no socket}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|udps_noportbcast
 argument_list|,
-literal|"broadcast/multicast datagram%s undelivered\n"
+literal|"{:dropped-broadcast-multicast/%ju} "
+literal|"{N:/broadcast\\/multicast datagram%s undelivered}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udps_fullsock
 argument_list|,
-literal|"dropped due to full socket buffers\n"
+literal|"{:dropped-full-socket-buffer/%ju} "
+literal|"{N:/dropped due to full socket buffers}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udpps_pcbhashmiss
 argument_list|,
-literal|"not for hashed pcb\n"
+literal|"{:not-for-hashed-pcb/%ju} "
+literal|"{N:/not for hashed pcb}\n"
 argument_list|)
 expr_stmt|;
 name|delivered
@@ -4326,9 +4514,9 @@ name|sflag
 operator|<=
 literal|1
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t%ju delivered\n"
+literal|"\t{:delivered-packets/%ju} {N:/delivered}\n"
 argument_list|,
 operator|(
 name|uint64_t
@@ -4340,7 +4528,7 @@ name|p
 argument_list|(
 name|udps_opackets
 argument_list|,
-literal|"datagram%s output\n"
+literal|"{:output-packets/%ju} {N:/datagram%s output}\n"
 argument_list|)
 expr_stmt|;
 comment|/* the next statistic is cumulative in udps_noportbcast */
@@ -4348,7 +4536,8 @@ name|p
 argument_list|(
 name|udps_filtermcast
 argument_list|,
-literal|"time%s multicast source filter matched\n"
+literal|"{:multicast-source-filter-matches/%ju} "
+literal|"{N:/time%s multicast source filter matched}\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -4357,6 +4546,11 @@ name|p
 undef|#
 directive|undef
 name|p1a
+name|xo_close_container
+argument_list|(
+literal|"udp"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4454,7 +4648,7 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet.carp.stats"
 argument_list|)
@@ -4482,9 +4676,14 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%s:\n"
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{T:/%s}:\n"
 argument_list|,
 name|name
 argument_list|)
@@ -4497,7 +4696,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (carpstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)carpstat.f, plural(carpstat.f))
+value|if (carpstat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)carpstat.f, plural(carpstat.f))
 define|#
 directive|define
 name|p2
@@ -4506,96 +4705,109 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (carpstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)carpstat.f)
+value|if (carpstat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)carpstat.f)
 name|p
 argument_list|(
 name|carps_ipackets
 argument_list|,
-literal|"\t%ju packet%s received (IPv4)\n"
+literal|"\t{:received-inet-packets/%ju} "
+literal|"{N:/packet%s received (IPv4)}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_ipackets6
 argument_list|,
-literal|"\t%ju packet%s received (IPv6)\n"
+literal|"\t{:received-inet6-packets/%ju} "
+literal|"{N:/packet%s received (IPv6)}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_badttl
 argument_list|,
-literal|"\t\t%ju packet%s discarded for wrong TTL\n"
+literal|"\t\t{:dropped-wrong-ttl/%ju} "
+literal|"{N:/packet%s discarded for wrong TTL}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_hdrops
 argument_list|,
-literal|"\t\t%ju packet%s shorter than header\n"
+literal|"\t\t{:dropped-short-header/%ju} "
+literal|"{N:/packet%s shorter than header}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_badsum
 argument_list|,
-literal|"\t\t%ju discarded for bad checksum%s\n"
+literal|"\t\t{:dropped-bad-checksum/%ju} "
+literal|"{N:/discarded for bad checksum%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_badver
 argument_list|,
-literal|"\t\t%ju discarded packet%s with a bad version\n"
+literal|"\t\t{:dropped-bad-version/%ju} "
+literal|"{N:/discarded packet%s with a bad version}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|carps_badlen
 argument_list|,
-literal|"\t\t%ju discarded because packet too short\n"
+literal|"\t\t{:dropped-short-packet/%ju} "
+literal|"{N:/discarded because packet too short}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|carps_badauth
 argument_list|,
-literal|"\t\t%ju discarded for bad authentication\n"
+literal|"\t\t{:dropped-bad-authentication/%ju} "
+literal|"{N:/discarded for bad authentication}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|carps_badvhid
 argument_list|,
-literal|"\t\t%ju discarded for bad vhid\n"
+literal|"\t\t{:dropped-bad-vhid/%ju} "
+literal|"{N:/discarded for bad vhid}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|carps_badaddrs
 argument_list|,
-literal|"\t\t%ju discarded because of a bad address list\n"
+literal|"\t\t{:dropped-bad-address-list/%ju} "
+literal|"{N:/discarded because of a bad address list}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_opackets
 argument_list|,
-literal|"\t%ju packet%s sent (IPv4)\n"
+literal|"\t{:sent-inet-packets/%ju} "
+literal|"{N:/packet%s sent (IPv4)}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_opackets6
 argument_list|,
-literal|"\t%ju packet%s sent (IPv6)\n"
+literal|"\t{:sent-inet6-packets/%ju} "
+literal|"{N:/packet%s sent (IPv6)}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|carps_onomem
 argument_list|,
-literal|"\t\t%ju send failed due to mbuf memory error\n"
+literal|"\t\t{:send-failed-memory-error/%ju} "
+literal|"{N:/send failed due to mbuf memory error}\n"
 argument_list|)
 expr_stmt|;
 if|#
@@ -4605,7 +4817,8 @@ name|p
 argument_list|(
 name|carps_ostates
 argument_list|,
-literal|"\t\t%s state update%s sent\n"
+literal|"\t\t{:send-state-updates/%s} "
+literal|"{N:/state update%s sent}\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4616,6 +4829,11 @@ name|p
 undef|#
 directive|undef
 name|p2
+name|xo_close_container
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4704,7 +4922,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet.ip.stats"
 argument_list|)
@@ -4723,9 +4941,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%s:\n"
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{T:/%s}:\n"
 argument_list|,
 name|name
 argument_list|)
@@ -4738,7 +4961,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ipstat.f || sflag<= 1) \     printf(m, (uintmax_t )ipstat.f, plural(ipstat.f))
+value|if (ipstat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t )ipstat.f, plural(ipstat.f))
 define|#
 directive|define
 name|p1a
@@ -4747,124 +4970,141 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ipstat.f || sflag<= 1) \     printf(m, (uintmax_t )ipstat.f)
+value|if (ipstat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t )ipstat.f)
 name|p
 argument_list|(
 name|ips_total
 argument_list|,
-literal|"\t%ju total packet%s received\n"
+literal|"\t{:received-packets/%ju} "
+literal|"{N:/total packet%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_badsum
 argument_list|,
-literal|"\t%ju bad header checksum%s\n"
+literal|"\t{:dropped-bad-checksum/%ju} "
+literal|"{N:/bad header checksum%s}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ips_toosmall
 argument_list|,
-literal|"\t%ju with size smaller than minimum\n"
+literal|"\t{:dropped-below-minimum-size/%ju} "
+literal|"{N:/with size smaller than minimum}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ips_tooshort
 argument_list|,
-literal|"\t%ju with data size< data length\n"
+literal|"\t{:dropped-short-packets/%ju} "
+literal|"{N:/with data size< data length}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ips_toolong
 argument_list|,
-literal|"\t%ju with ip length> max ip packet size\n"
+literal|"\t{:dropped-too-long/%ju} "
+literal|"{N:/with ip length> max ip packet size}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ips_badhlen
 argument_list|,
-literal|"\t%ju with header length< data size\n"
+literal|"\t{:dropped-short-header-length/%ju} "
+literal|"{N:/with header length< data size}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ips_badlen
 argument_list|,
-literal|"\t%ju with data length< header length\n"
+literal|"\t{:dropped-short-data/%ju} "
+literal|"{N:/with data length< header length}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ips_badoptions
 argument_list|,
-literal|"\t%ju with bad options\n"
+literal|"\t{:dropped-bad-options/%ju} "
+literal|"{N:/with bad options}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ips_badvers
 argument_list|,
-literal|"\t%ju with incorrect version number\n"
+literal|"\t{:dropped-bad-version/%ju} "
+literal|"{N:/with incorrect version number}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_fragments
 argument_list|,
-literal|"\t%ju fragment%s received\n"
+literal|"\t{:received-fragments/%ju} "
+literal|"{N:/fragment%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_fragdropped
 argument_list|,
-literal|"\t%ju fragment%s dropped (dup or out of space)\n"
+literal|"\t{:dropped-fragments/%ju} "
+literal|"{N:/fragment%s dropped (dup or out of space)}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_fragtimeout
 argument_list|,
-literal|"\t%ju fragment%s dropped after timeout\n"
+literal|"\t{:dropped-fragments-after-timeout/%ju} "
+literal|"{N:/fragment%s dropped after timeout}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_reassembled
 argument_list|,
-literal|"\t%ju packet%s reassembled ok\n"
+literal|"\t{:reassembled-packets/%ju} "
+literal|"{N:/packet%s reassembled ok}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_delivered
 argument_list|,
-literal|"\t%ju packet%s for this host\n"
+literal|"\t{:received-local-packets/%ju} "
+literal|"{N:/packet%s for this host}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_noproto
 argument_list|,
-literal|"\t%ju packet%s for unknown/unsupported protocol\n"
+literal|"\t{:dropped-unknown-protocol/%ju} "
+literal|"{N:/packet%s for unknown\\/unsupported protocol}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_forward
 argument_list|,
-literal|"\t%ju packet%s forwarded"
+literal|"\t{:forwarded-packets/%ju} "
+literal|"{N:/packet%s forwarded}"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_fastforward
 argument_list|,
-literal|" (%ju packet%s fast forwarded)"
+literal|" ({:fast-forwarded-packets/%ju} "
+literal|"{N:/packet%s fast forwarded})"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4877,93 +5117,105 @@ name|sflag
 operator|<=
 literal|1
 condition|)
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_cantforward
 argument_list|,
-literal|"\t%ju packet%s not forwardable\n"
+literal|"\t{:packets-cannot-forward/%ju} "
+literal|"{N:/packet%s not forwardable}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_notmember
 argument_list|,
-literal|"\t%ju packet%s received for unknown multicast group\n"
+literal|"\t{:received-unknown-multicast-group/%ju} "
+literal|"{N:/packet%s received for unknown multicast group}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_redirectsent
 argument_list|,
-literal|"\t%ju redirect%s sent\n"
+literal|"\t{:redirects-sent/%ju} "
+literal|"{N:/redirect%s sent}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_localout
 argument_list|,
-literal|"\t%ju packet%s sent from this host\n"
+literal|"\t{:sent-packets/%ju} "
+literal|"{N:/packet%s sent from this host}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_rawout
 argument_list|,
-literal|"\t%ju packet%s sent with fabricated ip header\n"
+literal|"\t{:send-packets-fabricated-header/%ju} "
+literal|"{N:/packet%s sent with fabricated ip header}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_odropped
 argument_list|,
-literal|"\t%ju output packet%s dropped due to no bufs, etc.\n"
+literal|"\t{:discard-no-mbufs/%ju} "
+literal|"{N:/output packet%s dropped due to no bufs, etc.}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_noroute
 argument_list|,
-literal|"\t%ju output packet%s discarded due to no route\n"
+literal|"\t{:discard-no-route/%ju} "
+literal|"{N:/output packet%s discarded due to no route}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_fragmented
 argument_list|,
-literal|"\t%ju output datagram%s fragmented\n"
+literal|"\t{:sent-fragments/%ju} "
+literal|"{N:/output datagram%s fragmented}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_ofragments
 argument_list|,
-literal|"\t%ju fragment%s created\n"
+literal|"\t{:fragments-created/%ju} "
+literal|"{N:/fragment%s created}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_cantfrag
 argument_list|,
-literal|"\t%ju datagram%s that can't be fragmented\n"
+literal|"\t{:discard-cannot-fragment/%ju} "
+literal|"{N:/datagram%s that can't be fragmented}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_nogif
 argument_list|,
-literal|"\t%ju tunneling packet%s that can't find gif\n"
+literal|"\t{:discard-tunnel-no-gif/%ju} "
+literal|"{N:/tunneling packet%s that can't find gif}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_badaddr
 argument_list|,
-literal|"\t%ju datagram%s with bad address in header\n"
+literal|"\t{:discard-bad-address/%ju} "
+literal|"{N:/datagram%s with bad address in header}\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -4972,6 +5224,11 @@ name|p
 undef|#
 directive|undef
 name|p1a
+name|xo_close_container
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5062,7 +5319,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.link.ether.arp.stats"
 argument_list|)
@@ -5081,9 +5338,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%s:\n"
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{T:/%s}:\n"
 argument_list|,
 name|name
 argument_list|)
@@ -5096,7 +5358,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (arpstat.f || sflag<= 1) \     printf("\t%ju " m, (uintmax_t)arpstat.f, plural(arpstat.f))
+value|if (arpstat.f || sflag<= 1) \ 	xo_emit("\t" m, (uintmax_t)arpstat.f, plural(arpstat.f))
 define|#
 directive|define
 name|p2
@@ -5105,61 +5367,67 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (arpstat.f || sflag<= 1) \     printf("\t%ju " m, (uintmax_t)arpstat.f, pluralies(arpstat.f))
+value|if (arpstat.f || sflag<= 1) \ 	xo_emit("\t" m, (uintmax_t)arpstat.f, pluralies(arpstat.f))
 name|p
 argument_list|(
 name|txrequests
 argument_list|,
-literal|"ARP request%s sent\n"
+literal|"{:sent-requests/%ju} {N:/ARP request%s sent}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|txreplies
 argument_list|,
-literal|"ARP repl%s sent\n"
+literal|"{:sent-replies/%ju} {N:/ARP repl%s sent}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rxrequests
 argument_list|,
-literal|"ARP request%s received\n"
+literal|"{:received-requests/%ju} "
+literal|"{N:/ARP request%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|rxreplies
 argument_list|,
-literal|"ARP repl%s received\n"
+literal|"{:received-replies/%ju} "
+literal|"{N:/ARP repl%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|received
 argument_list|,
-literal|"ARP packet%s received\n"
+literal|"{:received-packers/%ju} "
+literal|"{N:/ARP packet%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|dropped
 argument_list|,
-literal|"total packet%s dropped due to no ARP entry\n"
+literal|"{:dropped-no-entry/%ju} "
+literal|"{N:/total packet%s dropped due to no ARP entry}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|timeouts
 argument_list|,
-literal|"ARP entry%s timed out\n"
+literal|"{:entries-timeout/%ju} "
+literal|"{N:/ARP entry%s timed out}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|dupips
 argument_list|,
-literal|"Duplicate IP%s seen\n"
+literal|"{:dropped-duplicate-address/%ju} "
+literal|"{N:/Duplicate IP%s seen}\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -5168,6 +5436,11 @@ name|p
 undef|#
 directive|undef
 name|p2
+name|xo_close_container
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5382,7 +5655,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet.icmp.stats"
 argument_list|)
@@ -5401,9 +5674,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%s:\n"
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{T:/%s}:\n"
 argument_list|,
 name|name
 argument_list|)
@@ -5416,7 +5694,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (icmpstat.f || sflag<= 1) \     printf(m, icmpstat.f, plural(icmpstat.f))
+value|if (icmpstat.f || sflag<= 1) \ 	xo_emit(m, icmpstat.f, plural(icmpstat.f))
 define|#
 directive|define
 name|p1a
@@ -5425,7 +5703,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (icmpstat.f || sflag<= 1) \     printf(m, icmpstat.f)
+value|if (icmpstat.f || sflag<= 1) \ 	xo_emit(m, icmpstat.f)
 define|#
 directive|define
 name|p2
@@ -5434,19 +5712,21 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (icmpstat.f || sflag<= 1) \     printf(m, icmpstat.f, plurales(icmpstat.f))
+value|if (icmpstat.f || sflag<= 1) \ 	xo_emit(m, icmpstat.f, plurales(icmpstat.f))
 name|p
 argument_list|(
 name|icps_error
 argument_list|,
-literal|"\t%lu call%s to icmp_error\n"
+literal|"\t{:icmp-calls/%lu} "
+literal|"{N:/call%s to icmp_error}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icps_oldicmp
 argument_list|,
-literal|"\t%lu error%s not generated in response to an icmp message\n"
+literal|"\t{:errors-not-from-message/%lu} "
+literal|"{N:/error%s not generated in response to an icmp message}\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -5468,6 +5748,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|icmpstat
@@ -5485,7 +5766,12 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_open_list
+argument_list|(
+literal|"output-histogram"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\tOutput histogram:\n"
 argument_list|)
@@ -5495,6 +5781,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|xo_open_instance
+argument_list|(
+literal|"output-histogram"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|icmpnames
@@ -5504,9 +5795,9 @@ index|]
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t\t%s: %lu\n"
+literal|"\t\t{k:name/%s}: {:count/%lu}\n"
 argument_list|,
 name|icmpnames
 index|[
@@ -5522,9 +5813,10 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t\tunknown ICMP #%d: %lu\n"
+literal|"\t\tunknown ICMP #{k:name/%d}: "
+literal|"{:count/%lu}\n"
 argument_list|,
 name|i
 argument_list|,
@@ -5536,47 +5828,69 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"output-histogram"
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"output-histogram"
+argument_list|)
+expr_stmt|;
 name|p
 argument_list|(
 name|icps_badcode
 argument_list|,
-literal|"\t%lu message%s with bad code fields\n"
+literal|"\t{:dropped-bad-code/%lu} "
+literal|"{N:/message%s with bad code fields}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icps_tooshort
 argument_list|,
-literal|"\t%lu message%s less than the minimum length\n"
+literal|"\t{:dropped-too-short/%lu} "
+literal|"{N:/message%s less than the minimum length}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icps_checksum
 argument_list|,
-literal|"\t%lu message%s with bad checksum\n"
+literal|"\t{:dropped-bad-checksum/%lu} "
+literal|"{N:/message%s with bad checksum}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icps_badlen
 argument_list|,
-literal|"\t%lu message%s with bad length\n"
+literal|"\t{:dropped-bad-length/%lu} "
+literal|"{N:/message%s with bad length}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|icps_bmcastecho
 argument_list|,
-literal|"\t%lu multicast echo requests ignored\n"
+literal|"\t{:dropped-multicast-echo/%lu} "
+literal|"{N:/multicast echo requests ignored}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|icps_bmcasttstamp
 argument_list|,
-literal|"\t%lu multicast timestamp requests ignored\n"
+literal|"\t{:dropped-multicast-timestamp/%lu} "
+literal|"{N:/multicast timestamp requests ignored}\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -5598,6 +5912,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|icmpstat
@@ -5615,7 +5930,12 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_open_list
+argument_list|(
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\tInput histogram:\n"
 argument_list|)
@@ -5625,6 +5945,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|xo_open_instance
+argument_list|(
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|icmpnames
@@ -5634,9 +5959,9 @@ index|]
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t\t%s: %lu\n"
+literal|"\t\t{k:name/%s}: {:count/%lu}\n"
 argument_list|,
 name|icmpnames
 index|[
@@ -5652,9 +5977,9 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t\tunknown ICMP #%d: %lu\n"
+literal|"\t\tunknown ICMP #{k:name/%d}: {:count/%lu}\n"
 argument_list|,
 name|i
 argument_list|,
@@ -5666,26 +5991,45 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
 name|p
 argument_list|(
 name|icps_reflect
 argument_list|,
-literal|"\t%lu message response%s generated\n"
+literal|"\t{:sent-packets/%lu} "
+literal|"{N:/message response%s generated}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|icps_badaddr
 argument_list|,
-literal|"\t%lu invalid return address%s\n"
+literal|"\t{:discard-invalid-return-address/%lu} "
+literal|"{N:/invalid return address%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icps_noroute
 argument_list|,
-literal|"\t%lu no return route%s\n"
+literal|"\t{:discard-no-route/%lu} "
+literal|"{N:/no return route%s}\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -5727,9 +6071,10 @@ operator|<
 literal|0
 condition|)
 return|return;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\tICMP address mask responses are %sabled\n"
+literal|"\tICMP address mask responses are "
+literal|"{q:icmp-address-responses/%sabled}\n"
 argument_list|,
 name|i
 condition|?
@@ -5739,6 +6084,11 @@ literal|"dis"
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_close_container
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5831,7 +6181,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet.igmp.stats"
 argument_list|)
@@ -5868,7 +6218,7 @@ operator|!=
 name|IGPS_VERSION_3
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"%s: version mismatch (%d != %d)"
 argument_list|,
@@ -5891,7 +6241,7 @@ operator|!=
 name|IGPS_VERSION3_LEN
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"%s: size mismatch (%d != %d)"
 argument_list|,
@@ -5905,9 +6255,14 @@ name|IGPS_VERSION3_LEN
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%s:\n"
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{T:/%s}:\n"
 argument_list|,
 name|name
 argument_list|)
@@ -5920,7 +6275,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (igmpstat.f || sflag<= 1) \     printf(m, (uintmax_t) igmpstat.f, plural(igmpstat.f))
+value|if (igmpstat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t) igmpstat.f, plural(igmpstat.f))
 define|#
 directive|define
 name|py64
@@ -5929,117 +6284,135 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (igmpstat.f || sflag<= 1) \     printf(m, (uintmax_t) igmpstat.f, pluralies(igmpstat.f))
+value|if (igmpstat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t) igmpstat.f, pluralies(igmpstat.f))
 name|p64
 argument_list|(
 name|igps_rcv_total
 argument_list|,
-literal|"\t%ju message%s received\n"
+literal|"\t{:received-messages/%ju} "
+literal|"{N:/message%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p64
 argument_list|(
 name|igps_rcv_tooshort
 argument_list|,
-literal|"\t%ju message%s received with too few bytes\n"
+literal|"\t{:dropped-too-short/%ju} "
+literal|"{N:/message%s received with too few bytes}\n"
 argument_list|)
 expr_stmt|;
 name|p64
 argument_list|(
 name|igps_rcv_badttl
 argument_list|,
-literal|"\t%ju message%s received with wrong TTL\n"
+literal|"\t{:dropped-wrong-ttl/%ju} "
+literal|"{N:/message%s received with wrong TTL}\n"
 argument_list|)
 expr_stmt|;
 name|p64
 argument_list|(
 name|igps_rcv_badsum
 argument_list|,
-literal|"\t%ju message%s received with bad checksum\n"
+literal|"\t{:dropped-bad-checksum/%ju} "
+literal|"{N:/message%s received with bad checksum}\n"
 argument_list|)
 expr_stmt|;
 name|py64
 argument_list|(
 name|igps_rcv_v1v2_queries
 argument_list|,
-literal|"\t%ju V1/V2 membership quer%s received\n"
+literal|"\t{:received-membership-queries/%ju} "
+literal|"{N:/V1\\/V2 membership quer%s received}\n"
 argument_list|)
 expr_stmt|;
 name|py64
 argument_list|(
 name|igps_rcv_v3_queries
 argument_list|,
-literal|"\t%ju V3 membership quer%s received\n"
+literal|"\t{:received-v3-membership-queries/%ju} "
+literal|"{N:/V3 membership quer%s received}\n"
 argument_list|)
 expr_stmt|;
 name|py64
 argument_list|(
 name|igps_rcv_badqueries
 argument_list|,
-literal|"\t%ju membership quer%s received with invalid field(s)\n"
+literal|"\t{:dropped-membership-queries/%ju} "
+literal|"{N:/membership quer%s received with invalid field(s)}\n"
 argument_list|)
 expr_stmt|;
 name|py64
 argument_list|(
 name|igps_rcv_gen_queries
 argument_list|,
-literal|"\t%ju general quer%s received\n"
+literal|"\t{:received-general-queries/%ju} "
+literal|"{N:/general quer%s received}\n"
 argument_list|)
 expr_stmt|;
 name|py64
 argument_list|(
 name|igps_rcv_group_queries
 argument_list|,
-literal|"\t%ju group quer%s received\n"
+literal|"\t{:received-group-queries/%ju} "
+literal|"{N:/group quer%s received}\n"
 argument_list|)
 expr_stmt|;
 name|py64
 argument_list|(
 name|igps_rcv_gsr_queries
 argument_list|,
-literal|"\t%ju group-source quer%s received\n"
+literal|"\t{:received-group-source-queries/%ju} "
+literal|"{N:/group-source quer%s received}\n"
 argument_list|)
 expr_stmt|;
 name|py64
 argument_list|(
 name|igps_drop_gsr_queries
 argument_list|,
-literal|"\t%ju group-source quer%s dropped\n"
+literal|"\t{:dropped-group-source-queries/%ju} "
+literal|"{N:/group-source quer%s dropped}\n"
 argument_list|)
 expr_stmt|;
 name|p64
 argument_list|(
 name|igps_rcv_reports
 argument_list|,
-literal|"\t%ju membership report%s received\n"
+literal|"\t{:received-membership-requests/%ju} "
+literal|"{N:/membership report%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p64
 argument_list|(
 name|igps_rcv_badreports
 argument_list|,
-literal|"\t%ju membership report%s received with invalid field(s)\n"
+literal|"\t{:dropped-membership-reports/%ju} "
+literal|"{N:/membership report%s received with invalid field(s)}\n"
 argument_list|)
 expr_stmt|;
 name|p64
 argument_list|(
 name|igps_rcv_ourreports
 argument_list|,
-literal|"\t%ju membership report%s received for groups to which we belong\n"
+literal|"\t"
+literal|"{:received-membership-reports-matching/%ju} "
+literal|"{N:/membership report%s received for groups to which we belong}"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|p64
 argument_list|(
 name|igps_rcv_nora
 argument_list|,
-literal|"\t%ju V3 report%s received without Router Alert\n"
+literal|"\t{:received-v3-reports-no-router-alert/%ju} "
+literal|"{N:/V3 report%s received without Router Alert}\n"
 argument_list|)
 expr_stmt|;
 name|p64
 argument_list|(
 name|igps_snd_reports
 argument_list|,
-literal|"\t%ju membership report%s sent\n"
+literal|"\t{:sent-membership-reports/%ju} "
+literal|"{N:/membership report%s sent}\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -6048,6 +6421,11 @@ name|p64
 undef|#
 directive|undef
 name|py64
+name|xo_close_container
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6143,7 +6521,7 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet.pim.stats"
 argument_list|)
@@ -6171,9 +6549,14 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%s:\n"
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{T:/%s}:\n"
 argument_list|,
 name|name
 argument_list|)
@@ -6186,7 +6569,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pimstat.f || sflag<= 1) \     printf(m, (uintmax_t)pimstat.f, plural(pimstat.f))
+value|if (pimstat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)pimstat.f, plural(pimstat.f))
 define|#
 directive|define
 name|py
@@ -6195,82 +6578,94 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pimstat.f || sflag<= 1) \     printf(m, (uintmax_t)pimstat.f, pimstat.f != 1 ? "ies" : "y")
+value|if (pimstat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)pimstat.f, pimstat.f != 1 ? "ies" : "y")
 name|p
 argument_list|(
 name|pims_rcv_total_msgs
 argument_list|,
-literal|"\t%ju message%s received\n"
+literal|"\t{:received-messages/%ju} "
+literal|"{N:/message%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_total_bytes
 argument_list|,
-literal|"\t%ju byte%s received\n"
+literal|"\t{:received-bytes/%ju} "
+literal|"{N:/byte%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_tooshort
 argument_list|,
-literal|"\t%ju message%s received with too few bytes\n"
+literal|"\t{:dropped-too-short/%ju} "
+literal|"{N:/message%s received with too few bytes}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_badsum
 argument_list|,
-literal|"\t%ju message%s received with bad checksum\n"
+literal|"\t{:dropped-bad-checksum/%ju} "
+literal|"{N:/message%s received with bad checksum}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_badversion
 argument_list|,
-literal|"\t%ju message%s received with bad version\n"
+literal|"\t{:dropped-bad-version/%ju} "
+literal|"{N:/message%s received with bad version}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_registers_msgs
 argument_list|,
-literal|"\t%ju data register message%s received\n"
+literal|"\t{:received-data-register-messages/%ju} "
+literal|"{N:/data register message%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_registers_bytes
 argument_list|,
-literal|"\t%ju data register byte%s received\n"
+literal|"\t{:received-data-register-bytes/%ju} "
+literal|"{N:/data register byte%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_registers_wrongiif
 argument_list|,
-literal|"\t%ju data register message%s received on wrong iif\n"
+literal|"\t"
+literal|"{:received-data-register-wrong-interface/%ju} "
+literal|"{N:/data register message%s received on wrong iif}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_badregisters
 argument_list|,
-literal|"\t%ju bad register%s received\n"
+literal|"\t{:received-bad-registers/%ju} "
+literal|"{N:/bad register%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_snd_registers_msgs
 argument_list|,
-literal|"\t%ju data register message%s sent\n"
+literal|"\t{:sent-data-register-messages/%ju} "
+literal|"{N:/data register message%s sent}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_snd_registers_bytes
 argument_list|,
-literal|"\t%ju data register byte%s sent\n"
+literal|"\t{:sent-data-register-bytes/%ju} "
+literal|"{N:/data register byte%s sent}\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -6279,6 +6674,11 @@ name|p
 undef|#
 directive|undef
 name|py
+name|xo_close_container
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6290,6 +6690,11 @@ begin_function
 name|void
 name|inetprint
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|container
+parameter_list|,
 name|struct
 name|in_addr
 modifier|*
@@ -6326,6 +6731,15 @@ decl_stmt|;
 name|int
 name|width
 decl_stmt|;
+if|if
+condition|(
+name|container
+condition|)
+name|xo_open_container
+argument_list|(
+name|container
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Wflag
@@ -6450,9 +6864,9 @@ if|if
 condition|(
 name|Wflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-*s "
+literal|"{d:target/%-*s} "
 argument_list|,
 name|width
 argument_list|,
@@ -6460,15 +6874,59 @@ name|line
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-*.*s "
+literal|"{d:target/%-*.*s} "
 argument_list|,
 name|width
 argument_list|,
 name|width
 argument_list|,
 name|line
+argument_list|)
+expr_stmt|;
+name|int
+name|alen
+init|=
+name|cp
+operator|-
+name|line
+operator|-
+literal|1
+decl_stmt|,
+name|plen
+init|=
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+operator|-
+literal|1
+decl_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:address/%*.*s}{e:port/%*.*s}"
+argument_list|,
+name|alen
+argument_list|,
+name|alen
+argument_list|,
+name|line
+argument_list|,
+name|plen
+argument_list|,
+name|plen
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|container
+condition|)
+name|xo_close_container
+argument_list|(
+name|container
 argument_list|)
 expr_stmt|;
 block|}

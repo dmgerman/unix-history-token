@@ -852,6 +852,10 @@ begin_function_decl
 name|void
 name|inet6print
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|struct
 name|in6_addr
 modifier|*
@@ -1158,6 +1162,9 @@ parameter_list|,
 name|u_long
 parameter_list|,
 name|u_long
+parameter_list|,
+name|bool
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

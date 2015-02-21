@@ -191,6 +191,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -204,6 +210,12 @@ begin_include
 include|#
 directive|include
 file|"netstat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
 end_include
 
 begin_decl_stmt
@@ -1550,6 +1562,9 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|bool
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1923,9 +1938,23 @@ name|char
 modifier|*
 name|endptr
 decl_stmt|;
+name|bool
+name|first
+init|=
+name|true
+decl_stmt|;
 name|af
 operator|=
 name|AF_UNSPEC
+expr_stmt|;
+name|argc
+operator|=
+name|xo_parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -2072,7 +2101,7 @@ name|ERANGE
 operator|)
 operator|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2206,7 +2235,7 @@ name|AF_LINK
 expr_stmt|;
 else|else
 block|{
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2339,11 +2368,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: unknown or uninstrumented protocol"
+literal|"%s: unknown or uninstrumented "
+literal|"protocol"
 argument_list|,
 name|optarg
 argument_list|)
@@ -2590,7 +2620,7 @@ name|xflag
 operator|&&
 name|Tflag
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2614,6 +2644,9 @@ name|bpf_stats
 argument_list|(
 name|interface
 argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -2666,6 +2699,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|xo_finish
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -2708,6 +2744,9 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+name|xo_finish
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -2732,6 +2771,11 @@ operator|!
 name|sflag
 condition|)
 block|{
+name|xo_open_container
+argument_list|(
+literal|"statistics"
+argument_list|)
+expr_stmt|;
 name|intpr
 argument_list|(
 name|interval
@@ -2740,6 +2784,14 @@ name|NULL
 argument_list|,
 name|af
 argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"statistics"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -2752,6 +2804,11 @@ condition|(
 name|rflag
 condition|)
 block|{
+name|xo_open_container
+argument_list|(
+literal|"statistics"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sflag
@@ -2772,6 +2829,14 @@ argument_list|,
 name|af
 argument_list|)
 expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"statistics"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -2783,6 +2848,11 @@ condition|(
 name|gflag
 condition|)
 block|{
+name|xo_open_container
+argument_list|(
+literal|"statistics"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sflag
@@ -2854,6 +2924,14 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|xo_close_container
+argument_list|(
+literal|"statistics"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -2871,6 +2949,11 @@ condition|(
 name|tp
 condition|)
 block|{
+name|xo_open_container
+argument_list|(
+literal|"statistics"
+argument_list|)
+expr_stmt|;
 name|printproto
 argument_list|(
 name|tp
@@ -2878,7 +2961,28 @@ argument_list|,
 name|tp
 operator|->
 name|pr_name
+argument_list|,
+operator|&
+name|first
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"socket"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"statistics"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -2886,6 +2990,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_open_container
+argument_list|(
+literal|"statistics"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|af
@@ -2916,6 +3025,9 @@ argument_list|,
 name|tp
 operator|->
 name|pr_name
+argument_list|,
+operator|&
+name|first
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2951,6 +3063,9 @@ argument_list|,
 name|tp
 operator|->
 name|pr_name
+argument_list|,
+operator|&
+name|first
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2989,6 +3104,9 @@ argument_list|,
 name|tp
 operator|->
 name|pr_name
+argument_list|,
+operator|&
+name|first
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3027,6 +3145,9 @@ argument_list|,
 name|tp
 operator|->
 name|pr_name
+argument_list|,
+operator|&
+name|first
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3083,7 +3204,28 @@ name|N_UNP_SPHEAD
 index|]
 operator|.
 name|n_value
+argument_list|,
+operator|&
+name|first
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"socket"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"statistics"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -3111,6 +3253,10 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|bool
+modifier|*
+name|first
 parameter_list|)
 block|{
 name|void
@@ -3132,6 +3278,11 @@ parameter_list|)
 function_decl|;
 name|u_long
 name|off
+decl_stmt|;
+name|bool
+name|doingdblocks
+init|=
+name|false
 decl_stmt|;
 if|if
 condition|(
@@ -3165,9 +3316,9 @@ if|if
 condition|(
 name|pflag
 condition|)
-name|printf
+name|xo_message
 argument_list|(
-literal|"%s: no per-interface stats routine\n"
+literal|"%s: no per-interface stats routine"
 argument_list|,
 name|tp
 operator|->
@@ -3194,9 +3345,9 @@ if|if
 condition|(
 name|pflag
 condition|)
-name|printf
+name|xo_message
 argument_list|(
-literal|"%s: no stats routine\n"
+literal|"%s: no stats routine"
 argument_list|,
 name|tp
 operator|->
@@ -3231,9 +3382,10 @@ if|if
 condition|(
 name|pflag
 condition|)
-name|printf
+name|xo_message
 argument_list|(
-literal|"%s: stats routine doesn't work on cores\n"
+literal|"%s: stats routine doesn't "
+literal|"work on cores"
 argument_list|,
 name|tp
 operator|->
@@ -3258,6 +3410,10 @@ block|}
 block|}
 else|else
 block|{
+name|doingdblocks
+operator|=
+name|true
+expr_stmt|;
 name|pr
 operator|=
 name|tp
@@ -3274,9 +3430,9 @@ if|if
 condition|(
 name|pflag
 condition|)
-name|printf
+name|xo_message
 argument_list|(
-literal|"%s: no PCB routine\n"
+literal|"%s: no PCB routine"
 argument_list|,
 name|tp
 operator|->
@@ -3311,9 +3467,10 @@ if|if
 condition|(
 name|pflag
 condition|)
-name|printf
+name|xo_message
 argument_list|(
-literal|"%s: PCB routine doesn't work on cores\n"
+literal|"%s: PCB routine doesn't work on "
+literal|"cores"
 argument_list|,
 name|tp
 operator|->
@@ -3357,6 +3514,26 @@ operator|!=
 name|AF_UNSPEC
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|doingdblocks
+operator|&&
+operator|*
+name|first
+condition|)
+block|{
+name|xo_open_list
+argument_list|(
+literal|"socket"
+argument_list|)
+expr_stmt|;
+operator|*
+name|first
+operator|=
+name|false
+expr_stmt|;
+block|}
 call|(
 modifier|*
 name|pr
@@ -3373,6 +3550,7 @@ operator|->
 name|pr_protocol
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3429,7 +3607,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"kvm not available: %s"
 argument_list|,
@@ -3518,7 +3696,7 @@ if|if
 condition|(
 name|nlistf
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3533,7 +3711,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3615,7 +3793,7 @@ operator|)
 name|size
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -4058,10 +4236,8 @@ block|{
 operator|(
 name|void
 operator|)
-name|fprintf
+name|xo_error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: netstat [-46AaLnRSTWx] [-f protocol_family | -p protocol]\n"
@@ -4094,6 +4270,9 @@ literal|"       netstat -gs [-46s] [-f address_family] [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -Q"
 argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
