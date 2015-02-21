@@ -1383,7 +1383,10 @@ name|encp
 operator|->
 name|enc_txq_limit
 operator|*
-literal|16
+name|EFX_TXQ_DC_NDESCS
+argument_list|(
+name|EFX_TXQ_DC_SIZE
+argument_list|)
 operator|)
 operator|-
 operator|(
@@ -1391,7 +1394,10 @@ name|encp
 operator|->
 name|enc_rxq_limit
 operator|*
-literal|64
+name|EFX_RXQ_DC_NDESCS
+argument_list|(
+name|EFX_RXQ_DC_SIZE
+argument_list|)
 operator|)
 expr_stmt|;
 return|return
