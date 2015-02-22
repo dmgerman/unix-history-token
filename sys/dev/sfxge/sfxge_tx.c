@@ -4949,14 +4949,13 @@ condition|(
 name|txq
 operator|->
 name|n_pend_desc
+operator|+
+literal|1
+comment|/* header */
+operator|+
+name|n_dma_seg
 operator|>
 name|SFXGE_TSO_MAX_DESC
-operator|-
-operator|(
-literal|1
-operator|+
-name|SFXGE_TX_MAPPING_MAX_SEG
-operator|)
 condition|)
 block|{
 name|txq
