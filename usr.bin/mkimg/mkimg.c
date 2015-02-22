@@ -2094,12 +2094,10 @@ operator|)
 expr_stmt|;
 name|error
 operator|=
-operator|(
 name|scheme_write
 argument_list|(
 name|block
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
