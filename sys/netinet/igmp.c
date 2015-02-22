@@ -192,7 +192,7 @@ end_endif
 begin_function_decl
 specifier|static
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi_alloc_locked
 parameter_list|(
@@ -253,7 +253,7 @@ name|in_multi
 modifier|*
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -269,7 +269,7 @@ name|in_multi
 modifier|*
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -285,7 +285,7 @@ name|in_multi
 modifier|*
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -367,7 +367,7 @@ name|in_multi
 modifier|*
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|,
 name|int
@@ -489,7 +489,7 @@ name|void
 name|igmp_set_version
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|,
 specifier|const
@@ -544,7 +544,7 @@ name|void
 name|igmp_v1v2_process_querier_timers
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -571,7 +571,7 @@ name|void
 name|igmp_v3_cancel_link_timers
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -583,7 +583,7 @@ name|void
 name|igmp_v3_dispatch_general_query
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -654,7 +654,7 @@ name|void
 name|igmp_v3_process_group_timers
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|,
 name|struct
@@ -765,7 +765,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * System-wide globals.  *  * Unlocked access to these is OK, except for the global IGMP output  * queue. The IGMP subsystem lock ends up being system-wide for the moment,  * because all VIMAGEs have to share a global output queue, as netisrs  * themselves are not virtualized.  *  * Locking:  *  * The permitted lock order is: IN_MULTI_LOCK, IGMP_LOCK, IF_ADDR_LOCK.  *    Any may be taken independently; if any are held at the same  *    time, the above lock order must be followed.  *  * All output is delegated to the netisr.  *    Now that Giant has been eliminated, the netisr may be inlined.  *  * IN_MULTI_LOCK covers in_multi.  *  * IGMP_LOCK covers igmp_ifinfo and any global variables in this file,  *    including the output queue.  *  * IF_ADDR_LOCK covers if_multiaddrs, which is used for a variety of  *    per-link state iterators.  *  * igmp_ifinfo is valid as long as PF_INET is attached to the interface,  *    therefore it is not refcounted.  *    We allow unlocked reads of igmp_ifinfo when accessed via in_multi.  *  * Reference counting  *  * IGMP acquires its own reference every time an in_multi is passed to  *    it and the group is being joined for the first time.  *  * IGMP releases its reference(s) on in_multi in a deferred way,  *    because the operations which process the release run as part of  *    a loop whose control variables are directly affected by the release  *    (that, and not recursing on the IF_ADDR_LOCK).  *  * VIMAGE: Each in_multi corresponds to an ifp, and each ifp corresponds  * to a vnet in ifp->if_vnet.  *  * SMPng: XXX We may potentially race operations on ifma_protospec.  * The problem is that we currently lack a clean way of taking the  * IF_ADDR_LOCK() between the ifnet and in layers w/o recursing,  * as anything which modifies ifma needs to be covered by that lock.  * So check for ifma_protospec being NULL before proceeding.  */
+comment|/*  * System-wide globals.  *  * Unlocked access to these is OK, except for the global IGMP output  * queue. The IGMP subsystem lock ends up being system-wide for the moment,  * because all VIMAGEs have to share a global output queue, as netisrs  * themselves are not virtualized.  *  * Locking:  *  * The permitted lock order is: IN_MULTI_LOCK, IGMP_LOCK, IF_ADDR_LOCK.  *    Any may be taken independently; if any are held at the same  *    time, the above lock order must be followed.  *  * All output is delegated to the netisr.  *    Now that Giant has been eliminated, the netisr may be inlined.  *  * IN_MULTI_LOCK covers in_multi.  *  * IGMP_LOCK covers igmp_ifsoftc and any global variables in this file,  *    including the output queue.  *  * IF_ADDR_LOCK covers if_multiaddrs, which is used for a variety of  *    per-link state iterators.  *  * igmp_ifsoftc is valid as long as PF_INET is attached to the interface,  *    therefore it is not refcounted.  *    We allow unlocked reads of igmp_ifsoftc when accessed via in_multi.  *  * Reference counting  *  * IGMP acquires its own reference every time an in_multi is passed to  *    it and the group is being joined for the first time.  *  * IGMP releases its reference(s) on in_multi in a deferred way,  *    because the operations which process the release run as part of  *    a loop whose control variables are directly affected by the release  *    (that, and not recursing on the IF_ADDR_LOCK).  *  * VIMAGE: Each in_multi corresponds to an ifp, and each ifp corresponds  * to a vnet in ifp->if_vnet.  *  * SMPng: XXX We may potentially race operations on ifma_protospec.  * The problem is that we currently lack a clean way of taking the  * IF_ADDR_LOCK() between the ifnet and in layers w/o recursing,  * as anything which modifies ifma needs to be covered by that lock.  * So check for ifma_protospec being NULL before proceeding.  */
 end_comment
 
 begin_decl_stmt
@@ -876,7 +876,7 @@ name|VNET_DEFINE
 argument_list|(
 name|LIST_HEAD
 argument_list|(,
-name|igmp_ifinfo
+name|igmp_ifsoftc
 argument_list|)
 argument_list|,
 name|igi_head
@@ -1810,7 +1810,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Expose struct igmp_ifinfo to userland, keyed by ifindex.  * For use by ifmcstat(8).  *  * SMPng: NOTE: Does an unlocked ifindex space read.  * VIMAGE: Assume curvnet set by caller. The node handler itself  * is not directly virtualized.  */
+comment|/*  * Expose struct igmp_ifsoftc to userland, keyed by ifindex.  * For use by ifmcstat(8).  *  * SMPng: NOTE: Does an unlocked ifindex space read.  * VIMAGE: Assume curvnet set by caller. The node handler itself  * is not directly virtualized.  */
 end_comment
 
 begin_function
@@ -1837,7 +1837,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -1971,18 +1971,94 @@ operator|->
 name|igi_ifp
 condition|)
 block|{
+name|struct
+name|igmp_ifinfo
+name|info
+decl_stmt|;
+name|info
+operator|.
+name|igi_version
+operator|=
+name|igi
+operator|->
+name|igi_version
+expr_stmt|;
+name|info
+operator|.
+name|igi_v1_timer
+operator|=
+name|igi
+operator|->
+name|igi_v1_timer
+expr_stmt|;
+name|info
+operator|.
+name|igi_v2_timer
+operator|=
+name|igi
+operator|->
+name|igi_v2_timer
+expr_stmt|;
+name|info
+operator|.
+name|igi_v3_timer
+operator|=
+name|igi
+operator|->
+name|igi_v3_timer
+expr_stmt|;
+name|info
+operator|.
+name|igi_flags
+operator|=
+name|igi
+operator|->
+name|igi_flags
+expr_stmt|;
+name|info
+operator|.
+name|igi_rv
+operator|=
+name|igi
+operator|->
+name|igi_rv
+expr_stmt|;
+name|info
+operator|.
+name|igi_qi
+operator|=
+name|igi
+operator|->
+name|igi_qi
+expr_stmt|;
+name|info
+operator|.
+name|igi_qri
+operator|=
+name|igi
+operator|->
+name|igi_qri
+expr_stmt|;
+name|info
+operator|.
+name|igi_uri
+operator|=
+name|igi
+operator|->
+name|igi_uri
+expr_stmt|;
 name|error
 operator|=
 name|SYSCTL_OUT
 argument_list|(
 name|req
 argument_list|,
-name|igi
+operator|&
+name|info
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|igmp_ifinfo
+name|info
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2265,7 +2341,7 @@ end_comment
 
 begin_function
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igmp_domifattach
 parameter_list|(
@@ -2276,7 +2352,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -2340,7 +2416,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi_alloc_locked
 parameter_list|(
@@ -2352,7 +2428,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -2366,7 +2442,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 argument_list|)
 argument_list|,
 name|M_IGMP
@@ -2459,7 +2535,7 @@ name|CTR2
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"allocate igmp_ifinfo for ifp %p(%s)"
+literal|"allocate igmp_ifsoftc for ifp %p(%s)"
 argument_list|,
 name|ifp
 argument_list|,
@@ -2493,7 +2569,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -2686,7 +2762,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -2750,7 +2826,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|,
@@ -2761,7 +2837,7 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: freeing igmp_ifinfo for ifp %p(%s)"
+literal|"%s: freeing igmp_ifsoftc for ifp %p(%s)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2843,7 +2919,7 @@ directive|ifdef
 name|INVARIANTS
 name|panic
 argument_list|(
-literal|"%s: igmp_ifinfo not found for ifp %p\n"
+literal|"%s: igmp_ifsoftc not found for ifp %p\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2888,7 +2964,7 @@ modifier|*
 name|ifma
 decl_stmt|;
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -2964,7 +3040,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no igmp_ifinfo for ifp %p"
+literal|"%s: no igmp_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -3188,7 +3264,7 @@ modifier|*
 name|ifma
 decl_stmt|;
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -3284,7 +3360,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no igmp_ifinfo for ifp %p"
+literal|"%s: no igmp_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -3688,7 +3764,7 @@ name|igmpv3
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -3961,7 +4037,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no igmp_ifinfo for ifp %p"
+literal|"%s: no igmp_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -4257,7 +4333,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|,
@@ -4757,7 +4833,7 @@ name|NULL
 condition|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -5215,7 +5291,7 @@ name|NULL
 condition|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -6179,7 +6255,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -6701,7 +6777,7 @@ name|void
 name|igmp_v3_process_group_timers
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|,
@@ -7117,7 +7193,7 @@ name|void
 name|igmp_set_version
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|,
@@ -7307,7 +7383,7 @@ name|void
 name|igmp_v3_cancel_link_timers
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|)
@@ -7545,7 +7621,7 @@ name|void
 name|igmp_v1v2_process_querier_timers
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|)
@@ -7884,7 +7960,7 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -8262,7 +8338,7 @@ name|inm
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -8349,7 +8425,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no igmp_ifinfo for ifp %p"
+literal|"%s: no igmp_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -8527,7 +8603,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|)
@@ -8936,7 +9012,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|)
@@ -9205,7 +9281,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|)
@@ -12678,7 +12754,7 @@ name|void
 name|igmp_v3_dispatch_general_query
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|)

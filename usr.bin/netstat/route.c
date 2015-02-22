@@ -191,6 +191,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -210,6 +216,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
 end_include
 
 begin_include
@@ -244,6 +256,11 @@ decl_stmt|;
 name|char
 name|b_val
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|b_name
+decl_stmt|;
 block|}
 name|bits
 index|[]
@@ -253,85 +270,113 @@ block|{
 name|RTF_UP
 block|,
 literal|'U'
+block|,
+literal|"up"
 block|}
 block|,
 block|{
 name|RTF_GATEWAY
 block|,
 literal|'G'
+block|,
+literal|"gateway"
 block|}
 block|,
 block|{
 name|RTF_HOST
 block|,
 literal|'H'
+block|,
+literal|"host"
 block|}
 block|,
 block|{
 name|RTF_REJECT
 block|,
 literal|'R'
+block|,
+literal|"reject"
 block|}
 block|,
 block|{
 name|RTF_DYNAMIC
 block|,
 literal|'D'
+block|,
+literal|"dynamic"
 block|}
 block|,
 block|{
 name|RTF_MODIFIED
 block|,
 literal|'M'
+block|,
+literal|"modified"
 block|}
 block|,
 block|{
 name|RTF_DONE
 block|,
 literal|'d'
+block|,
+literal|"done"
 block|}
 block|,
-comment|/* Completed -- for routing messages only */
+comment|/* Completed -- for routing msgs only */
 block|{
 name|RTF_XRESOLVE
 block|,
 literal|'X'
+block|,
+literal|"xresolve"
 block|}
 block|,
 block|{
 name|RTF_STATIC
 block|,
 literal|'S'
+block|,
+literal|"static"
 block|}
 block|,
 block|{
 name|RTF_PROTO1
 block|,
 literal|'1'
+block|,
+literal|"proto1"
 block|}
 block|,
 block|{
 name|RTF_PROTO2
 block|,
 literal|'2'
+block|,
+literal|"proto2"
 block|}
 block|,
 block|{
 name|RTF_PROTO3
 block|,
 literal|'3'
+block|,
+literal|"proto3"
 block|}
 block|,
 block|{
 name|RTF_BLACKHOLE
 block|,
 literal|'B'
+block|,
+literal|"blackhole"
 block|}
 block|,
 block|{
 name|RTF_BROADCAST
 block|,
 literal|'b'
+block|,
+literal|"broadcast"
 block|}
 block|,
 ifdef|#
@@ -341,6 +386,8 @@ block|{
 name|RTF_LLINFO
 block|,
 literal|'L'
+block|,
+literal|"llinfo"
 block|}
 block|,
 endif|#
@@ -349,6 +396,8 @@ block|{
 literal|0
 block|,
 literal|0
+block|,
+name|NULL
 block|}
 block|}
 struct|;
@@ -608,6 +657,11 @@ specifier|static
 name|void
 name|p_rtree_kvm
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|struct
 name|radix_node
 modifier|*
@@ -618,8 +672,30 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|p_rtentry_kvm
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|p_rtentry_sysctl
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|struct
 name|rt_msghdr
 modifier|*
@@ -632,6 +708,11 @@ specifier|static
 name|void
 name|p_sockaddr
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
@@ -693,18 +774,6 @@ name|fmt_flags
 parameter_list|(
 name|int
 name|f
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|p_rtentry_kvm
-parameter_list|(
-name|struct
-name|rtentry
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -846,23 +915,28 @@ argument_list|,
 literal|"clock_gettime() failed"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"Routing tables"
+literal|"route-information"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{T:Routing tables}"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|fibnum
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" (fib: %d)"
+literal|" ({L:fib}: {:fib/%d})"
 argument_list|,
 name|fibnum
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -892,6 +966,11 @@ argument_list|(
 name|fibnum
 argument_list|,
 name|af
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"route-information"
 argument_list|)
 expr_stmt|;
 block|}
@@ -976,17 +1055,17 @@ if|if
 condition|(
 name|afname
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\n%s:\n"
+literal|"\n{k:address-family/%s}:\n"
 argument_list|,
 name|afname
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\nProtocol Family %d:\n"
+literal|"\n{L:Protocol Family} {k:address-family/%d}:\n"
 argument_list|,
 name|af1
 argument_list|)
@@ -1720,9 +1799,9 @@ if|if
 condition|(
 name|Aflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-8.8s "
+literal|"{T:/%-8.8s} "
 argument_list|,
 literal|"Address"
 argument_list|)
@@ -1732,9 +1811,10 @@ condition|(
 name|Wflag
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-*.*s %-*.*s %-*.*s %*.*s %*.*s %*.*s %*s\n"
+literal|"{T:/%-*.*s} {T:/%-*.*s} {T:/%-*.*s} {T:/%*.*s} "
+literal|"{T:/%*.*s} {T:/%*.*s} {T:/%*.*s} {T:/%*s}\n"
 argument_list|,
 name|wid_dst
 argument_list|,
@@ -1780,9 +1860,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-*.*s %-*.*s %-*.*s  %*.*s %*s\n"
+literal|"{T:/%-*.*s} {T:/%-*.*s} {T:/%-*.*s}  {T:/%*.*s} "
+literal|"{T:/%*s}\n"
 argument_list|,
 name|wid_dst
 argument_list|,
@@ -1937,6 +2018,11 @@ name|fam
 decl_stmt|,
 name|af_size
 decl_stmt|;
+name|bool
+name|did_rt_family
+init|=
+name|false
+decl_stmt|;
 name|kresolve_list
 argument_list|(
 name|rl
@@ -1958,7 +2044,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
 literal|"rt_tables: symbol not in namelist\n"
 argument_list|)
@@ -2035,6 +2121,11 @@ argument_list|(
 name|EX_OSERR
 argument_list|,
 literal|"error retrieving radix pointers"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"route-table"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2149,16 +2240,28 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Netmasks:\n"
+literal|"{T:Netmasks}:\n"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"netmasks"
 argument_list|)
 expr_stmt|;
 name|p_rtree_kvm
 argument_list|(
+literal|"netmasks"
+argument_list|,
 name|head
 operator|.
 name|rnh_treetop
+argument_list|)
+expr_stmt|;
+name|xo_close_list
+argument_list|(
+literal|"netmasks"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2175,6 +2278,22 @@ operator|==
 name|fam
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|did_rt_family
+condition|)
+block|{
+name|xo_open_list
+argument_list|(
+literal|"rt-family"
+argument_list|)
+expr_stmt|;
+name|did_rt_family
+operator|=
+name|true
+expr_stmt|;
+block|}
 name|size_cols
 argument_list|(
 name|fam
@@ -2182,6 +2301,11 @@ argument_list|,
 name|head
 operator|.
 name|rnh_treetop
+argument_list|)
+expr_stmt|;
+name|xo_open_instance
+argument_list|(
+literal|"rt-family"
 argument_list|)
 expr_stmt|;
 name|pr_family
@@ -2193,6 +2317,11 @@ name|do_rtent
 operator|=
 literal|1
 expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"rt-entry"
+argument_list|)
+expr_stmt|;
 name|pr_rthdr
 argument_list|(
 name|fam
@@ -2200,13 +2329,39 @@ argument_list|)
 expr_stmt|;
 name|p_rtree_kvm
 argument_list|(
+literal|"rt-entry"
+argument_list|,
 name|head
 operator|.
 name|rnh_treetop
 argument_list|)
 expr_stmt|;
+name|xo_close_list
+argument_list|(
+literal|"rt-entry"
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"rt-family"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|did_rt_family
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"rt-family"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"route-table"
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|rt_tables
@@ -2224,12 +2379,34 @@ specifier|static
 name|void
 name|p_rtree_kvm
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|struct
 name|radix_node
 modifier|*
 name|rn
 parameter_list|)
 block|{
+name|bool
+name|opened
+decl_stmt|;
+name|opened
+operator|=
+name|false
+expr_stmt|;
+define|#
+directive|define
+name|DOOPEN
+parameter_list|()
+value|do { \ 	if (!opened) { xo_open_instance(name); opened = true; } \     } while (0)
+define|#
+directive|define
+name|DOCLOSE
+parameter_list|()
+value|do { \ 	if (opened) { opened = false; xo_close_instance(name); } \     } while(0)
 name|again
 label|:
 if|if
@@ -2269,9 +2446,13 @@ if|if
 condition|(
 name|Aflag
 condition|)
-name|printf
+block|{
+name|DOOPEN
+argument_list|()
+expr_stmt|;
+name|xo_emit
 argument_list|(
-literal|"%-8.8lx "
+literal|"{q:radix-node/%-8.8lx} "
 argument_list|,
 operator|(
 name|u_long
@@ -2279,6 +2460,7 @@ operator|)
 name|rn
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|rnode
@@ -2292,9 +2474,13 @@ if|if
 condition|(
 name|Aflag
 condition|)
-name|printf
+block|{
+name|DOOPEN
+argument_list|()
+expr_stmt|;
+name|xo_emit
 argument_list|(
-literal|"(root node)%s"
+literal|"({:root/root} node){L:/%s}"
 argument_list|,
 name|rnode
 operator|.
@@ -2305,6 +2491,7 @@ else|:
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -2324,8 +2511,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|DOOPEN
+argument_list|()
+expr_stmt|;
 name|p_rtentry_kvm
 argument_list|(
+name|name
+argument_list|,
 operator|&
 name|rtentry
 argument_list|)
@@ -2334,15 +2526,28 @@ if|if
 condition|(
 name|Aflag
 condition|)
+block|{
+name|DOOPEN
+argument_list|()
+expr_stmt|;
 name|p_rtnode_kvm
+argument_list|()
+expr_stmt|;
+name|DOCLOSE
 argument_list|()
 expr_stmt|;
 block|}
 block|}
+block|}
 else|else
 block|{
+name|DOOPEN
+argument_list|()
+expr_stmt|;
 name|p_sockaddr
 argument_list|(
+literal|"address"
+argument_list|,
 name|kgetsa
 argument_list|(
 operator|(
@@ -2362,12 +2567,15 @@ argument_list|,
 literal|44
 argument_list|)
 expr_stmt|;
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|DOCLOSE
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2391,9 +2599,12 @@ operator|&&
 name|do_rtent
 condition|)
 block|{
-name|printf
+name|DOOPEN
+argument_list|()
+expr_stmt|;
+name|xo_emit
 argument_list|(
-literal|"%-8.8lx "
+literal|"{q:radix-node/%-8.8lx} "
 argument_list|,
 operator|(
 name|u_long
@@ -2402,6 +2613,9 @@ name|rn
 argument_list|)
 expr_stmt|;
 name|p_rtnode_kvm
+argument_list|()
+expr_stmt|;
+name|DOCLOSE
 argument_list|()
 expr_stmt|;
 block|}
@@ -2413,6 +2627,8 @@ name|rn_right
 expr_stmt|;
 name|p_rtree_kvm
 argument_list|(
+name|name
+argument_list|,
 name|rnode
 operator|.
 name|rn_left
@@ -2420,6 +2636,8 @@ argument_list|)
 expr_stmt|;
 name|p_rtree_kvm
 argument_list|(
+name|name
+argument_list|,
 name|rn
 argument_list|)
 expr_stmt|;
@@ -2469,13 +2687,15 @@ operator|.
 name|rn_mask
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t  mask "
+literal|"\t  {L:mask} "
 argument_list|)
 expr_stmt|;
 name|p_sockaddr
 argument_list|(
+literal|"netmask"
+argument_list|,
 name|kgetsa
 argument_list|(
 operator|(
@@ -2508,22 +2728,14 @@ return|return;
 block|}
 else|else
 block|{
-name|sprintf
+name|xo_emit
 argument_list|(
-name|nbuf
-argument_list|,
-literal|"(%d)"
+literal|"{[:6}{:bit/(%d)}{]:} {q:left-node/%8.8lx} "
+literal|": {q:right-node/%8.8lx}"
 argument_list|,
 name|rnode
 operator|.
 name|rn_bit
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%6.6s %8.8lx : %8.8lx"
-argument_list|,
-name|nbuf
 argument_list|,
 operator|(
 name|u_long
@@ -2569,9 +2781,9 @@ operator|.
 name|rm_refs
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" mk = %8.8lx {(%d),%s"
+literal|" mk = {q:node/%8.8lx} \\{({:bit/%d}),{nbufs/%s}"
 argument_list|,
 operator|(
 name|u_long
@@ -2607,9 +2819,9 @@ name|struct
 name|radix_node
 name|rnode_aux
 decl_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"<normal>, "
+literal|"<{:mode/normal}>, "
 argument_list|)
 expr_stmt|;
 if|if
@@ -2627,11 +2839,13 @@ literal|0
 condition|)
 name|p_sockaddr
 argument_list|(
+literal|"netmask"
+argument_list|,
 name|kgetsa
 argument_list|(
+comment|/*XXX*/
 operator|(
-expr|struct
-name|sockaddr
+name|void
 operator|*
 operator|)
 name|rnode_aux
@@ -2654,6 +2868,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|,
 operator|-
@@ -2664,6 +2880,8 @@ block|}
 else|else
 name|p_sockaddr
 argument_list|(
+literal|"netmask"
+argument_list|,
 name|kgetsa
 argument_list|(
 operator|(
@@ -2684,9 +2902,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'}'
+literal|"\\}"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2699,15 +2917,15 @@ operator|.
 name|rm_mklist
 operator|)
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" ->"
+literal|" {D:->}"
 argument_list|)
 expr_stmt|;
 block|}
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2757,13 +2975,18 @@ decl_stmt|;
 name|int
 name|fam
 init|=
-literal|0
+name|AF_UNSPEC
 decl_stmt|,
 name|ifindex
 init|=
 literal|0
 decl_stmt|,
 name|size
+decl_stmt|;
+name|int
+name|need_table_close
+init|=
+name|false
 decl_stmt|;
 name|struct
 name|ifaddrs
@@ -3104,6 +3327,16 @@ name|buf
 operator|+
 name|needed
 expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"route-table"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"rt-family"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|next
@@ -3153,6 +3386,7 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+comment|/* Only print family first time. */
 if|if
 condition|(
 name|fam
@@ -3162,6 +3396,26 @@ operator|->
 name|sa_family
 condition|)
 block|{
+if|if
+condition|(
+name|need_table_close
+condition|)
+block|{
+name|xo_close_list
+argument_list|(
+literal|"rt-entry"
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"rt-family"
+argument_list|)
+expr_stmt|;
+block|}
+name|need_table_close
+operator|=
+name|true
+expr_stmt|;
 name|fam
 operator|=
 name|sa
@@ -3175,9 +3429,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|xo_open_instance
+argument_list|(
+literal|"rt-family"
+argument_list|)
+expr_stmt|;
 name|pr_family
 argument_list|(
 name|fam
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"rt-entry"
 argument_list|)
 expr_stmt|;
 name|pr_rthdr
@@ -3188,10 +3452,38 @@ expr_stmt|;
 block|}
 name|p_rtentry_sysctl
 argument_list|(
+literal|"rt-entry"
+argument_list|,
 name|rtm
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|need_table_close
+condition|)
+block|{
+name|xo_close_list
+argument_list|(
+literal|"rt-entry"
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"rt-family"
+argument_list|)
+expr_stmt|;
+block|}
+name|xo_close_list
+argument_list|(
+literal|"rt-family"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"route-table"
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|buf
@@ -3205,6 +3497,11 @@ specifier|static
 name|void
 name|p_rtentry_sysctl
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|struct
 name|rt_msghdr
 modifier|*
@@ -3250,6 +3547,11 @@ name|unsigned
 name|int
 name|l
 decl_stmt|;
+name|xo_open_instance
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|GETSA
@@ -3282,6 +3584,8 @@ argument_list|)
 expr_stmt|;
 name|p_sockaddr
 argument_list|(
+literal|"destination"
+argument_list|,
 operator|&
 name|addr
 operator|.
@@ -3301,6 +3605,8 @@ argument_list|)
 expr_stmt|;
 name|p_sockaddr
 argument_list|(
+literal|"gateway"
+argument_list|,
 operator|&
 name|gw
 operator|.
@@ -3322,9 +3628,7 @@ argument_list|(
 name|buffer
 argument_list|)
 argument_list|,
-literal|"%%-%d.%ds "
-argument_list|,
-name|wid_flags
+literal|"{[:-%d}{:flags/%%s}{]:}"
 argument_list|,
 name|wid_flags
 argument_list|)
@@ -3343,9 +3647,9 @@ condition|(
 name|Wflag
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*lu "
+literal|"{t:use/%*lu} "
 argument_list|,
 name|wid_pksent
 argument_list|,
@@ -3366,9 +3670,9 @@ name|rmx_mtu
 operator|!=
 literal|0
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*lu "
+literal|"{t:mtu/%*lu} "
 argument_list|,
 name|wid_mtu
 argument_list|,
@@ -3380,9 +3684,9 @@ name|rmx_mtu
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*s "
+literal|"{P:/%*s} "
 argument_list|,
 name|wid_mtu
 argument_list|,
@@ -3450,9 +3754,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*.*s"
+literal|"{t:interface-name/%*.*s}"
 argument_list|,
 name|wid_if
 argument_list|,
@@ -3491,9 +3795,9 @@ operator|)
 operator|>
 literal|0
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %*d"
+literal|" {:expire-time/%*d}"
 argument_list|,
 name|wid_expire
 argument_list|,
@@ -3504,9 +3808,14 @@ name|expire_time
 argument_list|)
 expr_stmt|;
 block|}
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -3517,6 +3826,11 @@ specifier|static
 name|void
 name|p_sockaddr
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
@@ -3539,6 +3853,12 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|char
+name|buf
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|cp
 operator|=
 name|fmt_sockaddr
@@ -3556,40 +3876,90 @@ name|width
 operator|<
 literal|0
 condition|)
-name|printf
+block|{
+name|snprintf
 argument_list|(
-literal|"%s "
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"{:%s/%%s} "
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+name|buf
 argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 if|if
 condition|(
 name|numeric_addr
 condition|)
-name|printf
+block|{
+name|snprintf
 argument_list|(
-literal|"%-*s "
+name|buf
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"{[:%d}{:%s/%%s}{]:} "
+argument_list|,
+operator|-
 name|width
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+name|buf
 argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
-name|printf
+block|{
+name|snprintf
 argument_list|(
-literal|"%-*.*s "
+name|buf
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"{[:%d}{:%s/%%-.*s}{]:} "
+argument_list|,
+operator|-
 name|width
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+name|buf
 argument_list|,
 name|width
 argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -4123,7 +4493,12 @@ modifier|*
 name|format
 parameter_list|)
 block|{
-name|printf
+name|struct
+name|bits
+modifier|*
+name|p
+decl_stmt|;
+name|xo_emit
 argument_list|(
 name|format
 argument_list|,
@@ -4131,6 +4506,46 @@ name|fmt_flags
 argument_list|(
 name|f
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"flags_pretty"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|bits
+init|;
+name|p
+operator|->
+name|b_mask
+condition|;
+name|p
+operator|++
+control|)
+if|if
+condition|(
+name|p
+operator|->
+name|b_mask
+operator|&
+name|f
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{le:flags_pretty/%s}"
+argument_list|,
+name|p
+operator|->
+name|b_name
+argument_list|)
+expr_stmt|;
+name|xo_close_list
+argument_list|(
+literal|"flags_pretty"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4212,6 +4627,11 @@ specifier|static
 name|void
 name|p_rtentry_kvm
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|struct
 name|rtentry
 modifier|*
@@ -4331,6 +4751,8 @@ argument_list|)
 expr_stmt|;
 name|p_sockaddr
 argument_list|(
+literal|"destination"
+argument_list|,
 operator|&
 name|addr
 operator|.
@@ -4350,6 +4772,8 @@ argument_list|)
 expr_stmt|;
 name|p_sockaddr
 argument_list|(
+literal|"gateway"
+argument_list|,
 name|kgetsa
 argument_list|(
 name|rt
@@ -4373,9 +4797,7 @@ argument_list|(
 name|buffer
 argument_list|)
 argument_list|,
-literal|"%%-%d.%ds "
-argument_list|,
-name|wid_flags
+literal|"{[:-%d}{:flags/%%s}{]:}"
 argument_list|,
 name|wid_flags
 argument_list|)
@@ -4394,10 +4816,11 @@ condition|(
 name|Wflag
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*ju "
+literal|"{[:%d}{t:use/%ju}{]:} "
 argument_list|,
+operator|-
 name|wid_pksent
 argument_list|,
 operator|(
@@ -4422,9 +4845,9 @@ name|rt_mtu
 operator|!=
 literal|0
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*lu "
+literal|"{t:mtu/%*lu} "
 argument_list|,
 name|wid_mtu
 argument_list|,
@@ -4434,9 +4857,9 @@ name|rt_mtu
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*s "
+literal|"{P:/%*s} "
 argument_list|,
 name|wid_mtu
 argument_list|,
@@ -4507,9 +4930,9 @@ operator|->
 name|rt_ifp
 expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*.*s"
+literal|"{t:interface-name/%*.*s}"
 argument_list|,
 name|wid_if
 argument_list|,
@@ -4544,9 +4967,9 @@ operator|)
 operator|>
 literal|0
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %*d"
+literal|" {:expire-time/%*d}"
 argument_list|,
 name|wid_expire
 argument_list|,
@@ -4568,15 +4991,15 @@ index|]
 operator|.
 name|rn_dupedkey
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|" =>"
 argument_list|)
 expr_stmt|;
 block|}
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5332,10 +5755,8 @@ if|if
 condition|(
 name|illegal
 condition|)
-name|fprintf
+name|xo_error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"illegal prefixlen\n"
 argument_list|)
 expr_stmt|;
@@ -5579,9 +6000,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"rtstat: symbol not in namelist\n"
+literal|"{W:rtstat: symbol not in namelist}\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5602,9 +6023,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"rttrash: symbol not in namelist\n"
+literal|"{W:rttrash: symbol not in namelist}\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5643,9 +6064,9 @@ name|rttrash
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"routing:\n"
+literal|"{T:routing}:\n"
 argument_list|)
 expr_stmt|;
 define|#
@@ -5656,40 +6077,45 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (rtstat.f || sflag<= 1) \ 	printf(m, rtstat.f, plural(rtstat.f))
+value|if (rtstat.f || sflag<= 1) \ 	xo_emit(m, rtstat.f, plural(rtstat.f))
 name|p
 argument_list|(
 name|rts_badredirect
 argument_list|,
-literal|"\t%hu bad routing redirect%s\n"
+literal|"\t{:bad-redirects/%hu} "
+literal|"{N:/bad routing redirect%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rts_dynamic
 argument_list|,
-literal|"\t%hu dynamically created route%s\n"
+literal|"\t{:dynamically-created/%hu} "
+literal|"{N:/dynamically created route%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rts_newgateway
 argument_list|,
-literal|"\t%hu new gateway%s due to redirects\n"
+literal|"\t{:new-gateways/%hu} "
+literal|"{N:/new gateway%s due to redirects}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rts_unreach
 argument_list|,
-literal|"\t%hu destination%s found unreachable\n"
+literal|"\t{:unreachable-destination/%hu} "
+literal|"{N:/destination%s found unreachable}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rts_wildcard
 argument_list|,
-literal|"\t%hu use%s of a wildcard route\n"
+literal|"\t{:wildcard-uses/%hu} "
+literal|"{N:/use%s of a wildcard route}\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -5703,9 +6129,10 @@ name|sflag
 operator|<=
 literal|1
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t%u route%s not in table but not freed\n"
+literal|"\t{:unused-but-not-freed/%u} "
+literal|"{N:/route%s not in table but not freed}\n"
 argument_list|,
 name|rttrash
 argument_list|,

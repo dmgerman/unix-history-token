@@ -1110,7 +1110,7 @@ define|#
 directive|define
 name|EFX_MON_STATS_SIZE
 value|0x100
-comment|/* START MKCONFIG GENERATED MonitorHeaderStatsBlock 16a14e61aa4f8d80 */
+comment|/* START MKCONFIG GENERATED MonitorHeaderStatsBlock 58706a378332aeee */
 typedef|typedef
 enum|enum
 name|efx_mon_stat_e
@@ -1146,6 +1146,34 @@ block|,
 name|EFX_MON_STAT_1_8V
 block|,
 name|EFX_MON_STAT_3_3V
+block|,
+name|EFX_MON_STAT_1_2VA
+block|,
+name|EFX_MON_STAT_VREF
+block|,
+name|EFX_MON_STAT_VAOE
+block|,
+name|EFX_MON_STAT_AOE_TEMP
+block|,
+name|EFX_MON_STAT_PSU_AOE_TEMP
+block|,
+name|EFX_MON_STAT_PSU_TEMP
+block|,
+name|EFX_MON_STAT_FAN0
+block|,
+name|EFX_MON_STAT_FAN1
+block|,
+name|EFX_MON_STAT_FAN2
+block|,
+name|EFX_MON_STAT_FAN3
+block|,
+name|EFX_MON_STAT_FAN4
+block|,
+name|EFX_MON_STAT_VAOE_IN
+block|,
+name|EFX_MON_STAT_IAOE
+block|,
+name|EFX_MON_STAT_IAOE_IN
 block|,
 name|EFX_MON_NSTATS
 block|}
@@ -2101,6 +2129,10 @@ define|#
 directive|define
 name|EFX_FEATURE_MAC_HEADER_FILTERS
 value|0x00000080
+define|#
+directive|define
+name|EFX_FEATURE_TURBO
+value|0x00000100
 typedef|typedef
 struct|struct
 name|efx_nic_cfg_s
@@ -2166,6 +2198,9 @@ name|enc_buftbl_limit
 decl_stmt|;
 name|uint32_t
 name|enc_evq_moderation_max
+decl_stmt|;
+name|uint32_t
+name|enc_clk_mult
 decl_stmt|;
 if|#
 directive|if
@@ -4272,6 +4307,13 @@ parameter_list|(
 name|_ndescs
 parameter_list|)
 value|((_ndescs) - 16)
+define|#
+directive|define
+name|EFX_RXQ_DC_NDESCS
+parameter_list|(
+name|_dcsize
+parameter_list|)
+value|(8<< _dcsize)
 typedef|typedef
 enum|enum
 name|efx_rxq_type_e
@@ -4515,6 +4557,13 @@ parameter_list|(
 name|_ndescs
 parameter_list|)
 value|((_ndescs) - 16)
+define|#
+directive|define
+name|EFX_TXQ_DC_NDESCS
+parameter_list|(
+name|_dcsize
+parameter_list|)
+value|(8<< _dcsize)
 specifier|extern
 name|__checkReturn
 name|int

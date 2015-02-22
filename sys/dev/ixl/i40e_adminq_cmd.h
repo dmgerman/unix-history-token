@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2013-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2013-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|I40E_FW_API_VERSION_MINOR
-value|0x0002
+value|0x0004
 end_define
 
 begin_struct
@@ -483,24 +483,7 @@ name|i40e_aqc_opc_list_dev_capabilities
 init|=
 literal|0x000B
 block|,
-name|i40e_aqc_opc_set_cppm_configuration
-init|=
-literal|0x0103
-block|,
-name|i40e_aqc_opc_set_arp_proxy_entry
-init|=
-literal|0x0104
-block|,
-name|i40e_aqc_opc_set_ns_proxy_entry
-init|=
-literal|0x0105
-block|,
 comment|/* LAA */
-name|i40e_aqc_opc_mng_laa
-init|=
-literal|0x0106
-block|,
-comment|/* AQ obsolete */
 name|i40e_aqc_opc_mac_address_read
 init|=
 literal|0x0107
@@ -892,10 +875,6 @@ name|i40e_aqc_opc_del_udp_tunnel
 init|=
 literal|0x0B01
 block|,
-name|i40e_aqc_opc_tunnel_key_structure
-init|=
-literal|0x0B10
-block|,
 comment|/* Async Events */
 name|i40e_aqc_opc_event_lan_overflow
 init|=
@@ -919,14 +898,6 @@ init|=
 literal|0xFE03
 block|,
 comment|/* debug commands */
-name|i40e_aqc_opc_debug_get_deviceid
-init|=
-literal|0xFF00
-block|,
-name|i40e_aqc_opc_debug_set_mode
-init|=
-literal|0xFF01
-block|,
 name|i40e_aqc_opc_debug_read_reg
 init|=
 literal|0xFF03
@@ -1802,8 +1773,12 @@ name|I40E_AQC_WOL_ADDR_VALID
 value|0x80
 define|#
 directive|define
+name|I40E_AQC_MC_MAG_EN_VALID
+value|0x100
+define|#
+directive|define
 name|I40E_AQC_ADDR_VALID_MASK
-value|0xf0
+value|0x1F0
 name|u8
 name|reserved
 index|[
@@ -1895,8 +1870,12 @@ name|I40E_AQC_WRITE_TYPE_PORT
 value|0x8000
 define|#
 directive|define
+name|I40E_AQC_WRITE_TYPE_UPDATE_MC_MAG
+value|0xC000
+define|#
+directive|define
 name|I40E_AQC_WRITE_TYPE_MASK
-value|0xc000
+value|0xC000
 name|__le16
 name|mac_sah
 decl_stmt|;
@@ -3625,6 +3604,10 @@ value|0x3FF
 name|__le16
 name|vlan_tag
 decl_stmt|;
+define|#
+directive|define
+name|I40E_AQC_SET_VSI_VLAN_MASK
+value|0x0FFF
 define|#
 directive|define
 name|I40E_AQC_SET_VSI_VLAN_VALID
@@ -7070,6 +7053,48 @@ define|#
 directive|define
 name|I40E_AQC_CEE_APP_STATUS_MASK
 value|(0x7<< I40E_AQC_CEE_APP_STATUS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_FCOE_STATUS_SHIFT
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_FCOE_STATUS_MASK
+value|(0x7<< I40E_AQC_CEE_FCOE_STATUS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_ISCSI_STATUS_SHIFT
+value|0xA
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_ISCSI_STATUS_MASK
+value|(0x7<< I40E_AQC_CEE_ISCSI_STATUS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_FIP_STATUS_SHIFT
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQC_CEE_FIP_STATUS_MASK
+value|(0x7<< I40E_AQC_CEE_FIP_STATUS_SHIFT)
 end_define
 
 begin_struct

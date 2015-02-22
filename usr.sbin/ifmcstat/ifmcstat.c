@@ -63,12 +63,6 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_WANT_IFADDR
-end_define
-
 begin_include
 include|#
 directive|include
@@ -123,56 +117,17 @@ directive|include
 file|<netinet/igmp.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
 begin_include
 include|#
 directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|KERNEL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|_KERNEL
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSCTL_DECL
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
 begin_include
 include|#
 directive|include
 file|<netinet/igmp_var.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|SYSCTL_DECL
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|_KERNEL
-end_undef
 
 begin_ifdef
 ifdef|#
@@ -186,23 +141,11 @@ directive|include
 file|<netinet/icmp6.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_KERNEL
-end_define
-
 begin_include
 include|#
 directive|include
 file|<netinet6/mld6_var.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|_KERNEL
-end_undef
 
 begin_endif
 endif|#
@@ -288,12 +231,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kvm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<limits.h>
 end_include
 
@@ -301,12 +238,6 @@ begin_include
 include|#
 directive|include
 file|<ifaddrs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nlist.h>
 end_include
 
 begin_include
@@ -321,8 +252,35 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KVM
+end_ifdef
+
 begin_comment
-comment|/* XXX: This file currently assumes INET and KVM support in the base system. */
+comment|/*  * Currently the KVM build is broken. To be fixed it requires uncovering  * large amount of _KERNEL code in include files, and it is also very  * tentative to internal kernel ABI changes. If anyone wishes to restore  * it, please move it out of src/usr.sbin to src/tools/tools.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XXX: This file currently assumes INET support in the base system. */
 end_comment
 
 begin_ifndef

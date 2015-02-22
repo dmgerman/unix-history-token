@@ -19,124 +19,6 @@ begin_comment
 comment|/*  * Multicast Listener Discovery (MLD)  * implementation-specific definitions.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * Per-link MLD state.  */
-end_comment
-
-begin_struct
-struct|struct
-name|mld_ifinfo
-block|{
-name|LIST_ENTRY
-argument_list|(
-argument|mld_ifinfo
-argument_list|)
-name|mli_link
-expr_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|mli_ifp
-decl_stmt|;
-comment|/* interface this instance belongs to */
-name|uint32_t
-name|mli_version
-decl_stmt|;
-comment|/* MLDv1 Host Compatibility Mode */
-name|uint32_t
-name|mli_v1_timer
-decl_stmt|;
-comment|/* MLDv1 Querier Present timer (s) */
-name|uint32_t
-name|mli_v2_timer
-decl_stmt|;
-comment|/* MLDv2 General Query (interface) timer (s)*/
-name|uint32_t
-name|mli_flags
-decl_stmt|;
-comment|/* MLD per-interface flags */
-name|uint32_t
-name|mli_rv
-decl_stmt|;
-comment|/* MLDv2 Robustness Variable */
-name|uint32_t
-name|mli_qi
-decl_stmt|;
-comment|/* MLDv2 Query Interval (s) */
-name|uint32_t
-name|mli_qri
-decl_stmt|;
-comment|/* MLDv2 Query Response Interval (s) */
-name|uint32_t
-name|mli_uri
-decl_stmt|;
-comment|/* MLDv2 Unsolicited Report Interval (s) */
-name|SLIST_HEAD
-argument_list|(
-argument_list|,
-argument|in6_multi
-argument_list|)
-name|mli_relinmhead
-expr_stmt|;
-comment|/* released groups */
-name|struct
-name|mbufq
-name|mli_gq
-decl_stmt|;
-comment|/* queue of general query responses */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|MLIF_SILENT
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* Do not use MLD on this ifp */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MLIF_USEALLOW
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* Use ALLOW/BLOCK for joins/leaves */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MLD_RANDOM_DELAY
-parameter_list|(
-name|X
-parameter_list|)
-value|(arc4random() % (X) + 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MLD_MAX_STATE_CHANGES
-value|24
-end_define
-
-begin_comment
-comment|/* Max pending changes per group */
-end_comment
-
 begin_comment
 comment|/*  * MLD per-group states.  */
 end_comment
@@ -496,6 +378,156 @@ value|(sizeof(struct ip6_hdr) + sizeof(struct mld_raopt) + \ 			 sizeof(struct i
 end_define
 
 begin_comment
+comment|/*  * Structure returned by net.inet6.mld.ifinfo.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mld_ifinfo
+block|{
+name|uint32_t
+name|mli_version
+decl_stmt|;
+comment|/* MLDv1 Host Compatibility Mode */
+name|uint32_t
+name|mli_v1_timer
+decl_stmt|;
+comment|/* MLDv1 Querier Present timer (s) */
+name|uint32_t
+name|mli_v2_timer
+decl_stmt|;
+comment|/* MLDv2 General Query (interface) timer (s)*/
+name|uint32_t
+name|mli_flags
+decl_stmt|;
+comment|/* MLD per-interface flags */
+define|#
+directive|define
+name|MLIF_SILENT
+value|0x00000001
+comment|/* Do not use MLD on this ifp */
+define|#
+directive|define
+name|MLIF_USEALLOW
+value|0x00000002
+comment|/* Use ALLOW/BLOCK for joins/leaves */
+name|uint32_t
+name|mli_rv
+decl_stmt|;
+comment|/* MLDv2 Robustness Variable */
+name|uint32_t
+name|mli_qi
+decl_stmt|;
+comment|/* MLDv2 Query Interval (s) */
+name|uint32_t
+name|mli_qri
+decl_stmt|;
+comment|/* MLDv2 Query Response Interval (s) */
+name|uint32_t
+name|mli_uri
+decl_stmt|;
+comment|/* MLDv2 Unsolicited Report Interval (s) */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * Per-link MLD state.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mld_ifsoftc
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|mld_ifsoftc
+argument_list|)
+name|mli_link
+expr_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|mli_ifp
+decl_stmt|;
+comment|/* interface this instance belongs to */
+name|uint32_t
+name|mli_version
+decl_stmt|;
+comment|/* MLDv1 Host Compatibility Mode */
+name|uint32_t
+name|mli_v1_timer
+decl_stmt|;
+comment|/* MLDv1 Querier Present timer (s) */
+name|uint32_t
+name|mli_v2_timer
+decl_stmt|;
+comment|/* MLDv2 General Query (interface) timer (s)*/
+name|uint32_t
+name|mli_flags
+decl_stmt|;
+comment|/* MLD per-interface flags */
+name|uint32_t
+name|mli_rv
+decl_stmt|;
+comment|/* MLDv2 Robustness Variable */
+name|uint32_t
+name|mli_qi
+decl_stmt|;
+comment|/* MLDv2 Query Interval (s) */
+name|uint32_t
+name|mli_qri
+decl_stmt|;
+comment|/* MLDv2 Query Response Interval (s) */
+name|uint32_t
+name|mli_uri
+decl_stmt|;
+comment|/* MLDv2 Unsolicited Report Interval (s) */
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|in6_multi
+argument_list|)
+name|mli_relinmhead
+expr_stmt|;
+comment|/* released groups */
+name|struct
+name|mbufq
+name|mli_gq
+decl_stmt|;
+comment|/* queue of general query responses */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|MLD_RANDOM_DELAY
+parameter_list|(
+name|X
+parameter_list|)
+value|(arc4random() % (X) + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLD_MAX_STATE_CHANGES
+value|24
+end_define
+
+begin_comment
+comment|/* Max pending changes per group */
+end_comment
+
+begin_comment
 comment|/*  * Subsystem lock macros.  * The MLD lock is only taken with MLD. Currently it is system-wide.  * VIMAGE: The lock could be pushed to per-VIMAGE granularity in future.  */
 end_comment
 
@@ -578,7 +610,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mld_domifattach
 parameter_list|(

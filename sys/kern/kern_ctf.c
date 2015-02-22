@@ -163,9 +163,6 @@ decl_stmt|;
 name|int
 name|nbytes
 decl_stmt|;
-name|ssize_t
-name|resid
-decl_stmt|;
 name|size_t
 name|sz
 decl_stmt|;
@@ -451,8 +448,7 @@ name|td_ucred
 argument_list|,
 name|NOCRED
 argument_list|,
-operator|&
-name|resid
+name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -569,8 +565,7 @@ name|td_ucred
 argument_list|,
 name|NOCRED
 argument_list|,
-operator|&
-name|resid
+name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -699,8 +694,7 @@ name|td_ucred
 argument_list|,
 name|NOCRED
 argument_list|,
-operator|&
-name|resid
+name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -815,8 +809,7 @@ name|td_ucred
 argument_list|,
 name|NOCRED
 argument_list|,
-operator|&
-name|resid
+name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -1036,8 +1029,7 @@ name|td_ucred
 argument_list|,
 name|NOCRED
 argument_list|,
-operator|&
-name|resid
+name|NULL
 argument_list|,
 name|td
 argument_list|)

@@ -124,15 +124,20 @@ file|"sfxge_tx.h"
 end_include
 
 begin_comment
-comment|/* Set the block level to ensure there is space to generate a  * large number of descriptors for TSO.  With minimum MSS and  * maximum mbuf length we might need more than a ring-ful of  * descriptors, but this should not happen in practice except  * due to deliberate attack.  In that case we will truncate  * the output at a packet boundary.  Allow for a reasonable  * minimum MSS of 512.  */
+comment|/*  * Estimate maximum number of Tx descriptors required for TSO packet.  * With minimum MSS and maximum mbuf length we might need more (even  * than a ring-ful of descriptors), but this should not happen in  * practice except due to deliberate attack.  In that case we will  * truncate the output at a packet boundary.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SFXGE_TSO_MAX_DESC
-value|((65535 / 512) * 2 + SFXGE_TX_MAPPING_MAX_SEG - 1)
+define|\
+value|(SFXGE_TSO_MAX_SEGS * 2 + SFXGE_TX_MAPPING_MAX_SEG - 1)
 end_define
+
+begin_comment
+comment|/*  * Set the block level to ensure there is space to generate a  * large number of descriptors for TSO.  */
+end_comment
 
 begin_define
 define|#
@@ -141,7 +146,8 @@ name|SFXGE_TXQ_BLOCK_LEVEL
 parameter_list|(
 name|_entries
 parameter_list|)
-value|((_entries) - SFXGE_TSO_MAX_DESC)
+define|\
+value|(EFX_TXQ_LIMIT(_entries) - SFXGE_TSO_MAX_DESC)
 end_define
 
 begin_ifdef
@@ -2008,7 +2014,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Put a packet on the deferred packet list.  *  * If we are called with the txq lock held, we put the packet on the "get  * list", otherwise we atomically push it on the "put list".  The swizzle  * function takes care of ordering.  *  * The length of the put list is bounded by SFXGE_TX_MAX_DEFFERED.  We  * overload the csum_data field in the mbuf to keep track of this length  * because there is no cheap alternative to avoid races.  */
+comment|/*  * Put a packet on the deferred packet list.  *  * If we are called with the txq lock held, we put the packet on the "get  * list", otherwise we atomically push it on the "put list".  The swizzle  * function takes care of ordering.  *  * The length of the put list is bounded by SFXGE_TX_MAX_DEFERRED.  We  * overload the csum_data field in the mbuf to keep track of this length  * because there is no cheap alternative to avoid races.  */
 end_comment
 
 begin_function
@@ -2292,7 +2298,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called from if_transmit - will try to grab the txq lock and enqueue to the  * put list if it succeeds, otherwise will push onto the defer list.  */
+comment|/*  * Called from if_transmit - will try to grab the txq lock and enqueue to the  * put list if it succeeds, otherwise try to push onto the defer list if space.  */
 end_comment
 
 begin_function
@@ -3658,6 +3664,16 @@ name|ether_header
 operator|*
 argument_list|)
 decl_stmt|;
+specifier|const
+name|struct
+name|tcphdr
+modifier|*
+name|th
+decl_stmt|;
+name|struct
+name|tcphdr
+name|th_copy
+decl_stmt|;
 name|tso
 operator|->
 name|mbuf
@@ -3827,6 +3843,79 @@ name|ip6_hdr
 argument_list|)
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|mbuf
+operator|->
+name|m_len
+operator|>=
+name|tso
+operator|->
+name|tcph_off
+argument_list|,
+operator|(
+literal|"network header is fragmented in mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* We need TCP header including flags (window is the next) */
+if|if
+condition|(
+name|mbuf
+operator|->
+name|m_len
+operator|<
+name|tso
+operator|->
+name|tcph_off
+operator|+
+name|offsetof
+argument_list|(
+expr|struct
+name|tcphdr
+argument_list|,
+name|th_win
+argument_list|)
+condition|)
+block|{
+name|m_copydata
+argument_list|(
+name|tso
+operator|->
+name|mbuf
+argument_list|,
+name|tso
+operator|->
+name|tcph_off
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|th_copy
+argument_list|)
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|th_copy
+argument_list|)
+expr_stmt|;
+name|th
+operator|=
+operator|&
+name|th_copy
+expr_stmt|;
+block|}
+else|else
+block|{
+name|th
+operator|=
+name|tso_tcph
+argument_list|(
+name|tso
+argument_list|)
+expr_stmt|;
+block|}
 name|tso
 operator|->
 name|header_len
@@ -3837,10 +3926,7 @@ name|tcph_off
 operator|+
 literal|4
 operator|*
-name|tso_tcph
-argument_list|(
-name|tso
-argument_list|)
+name|th
 operator|->
 name|th_off
 expr_stmt|;
@@ -3860,10 +3946,7 @@ name|seqnum
 operator|=
 name|ntohl
 argument_list|(
-name|tso_tcph
-argument_list|(
-name|tso
-argument_list|)
+name|th
 operator|->
 name|th_seq
 argument_list|)
@@ -3873,10 +3956,7 @@ name|KASSERT
 argument_list|(
 operator|!
 operator|(
-name|tso_tcph
-argument_list|(
-name|tso
-argument_list|)
+name|th
 operator|->
 name|th_flags
 operator|&
@@ -4874,14 +4954,13 @@ condition|(
 name|txq
 operator|->
 name|n_pend_desc
+operator|+
+literal|1
+comment|/* header */
+operator|+
+name|n_dma_seg
 operator|>
 name|SFXGE_TSO_MAX_DESC
-operator|-
-operator|(
-literal|1
-operator|+
-name|SFXGE_TX_MAPPING_MAX_SEG
-operator|)
 condition|)
 block|{
 name|txq
@@ -5034,12 +5113,20 @@ operator|->
 name|entries
 argument_list|)
 condition|)
+block|{
+comment|/* reaped must be in sync with blocked */
+name|sfxge_tx_qreap
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 name|txq
 operator|->
 name|blocked
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 name|sfxge_tx_qdpl_service
 argument_list|(
@@ -6935,17 +7022,9 @@ literal|0
 init|;
 name|id
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|sfxge_tx_stats
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|sfxge_tx_stats
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|id

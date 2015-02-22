@@ -204,7 +204,7 @@ end_endif
 begin_function_decl
 specifier|static
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli_alloc_locked
 parameter_list|(
@@ -264,7 +264,7 @@ name|in6_multi
 modifier|*
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -290,7 +290,7 @@ name|in6_multi
 modifier|*
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -306,7 +306,7 @@ name|in6_multi
 modifier|*
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|,
 specifier|const
@@ -344,7 +344,7 @@ name|void
 name|mld_set_version
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|,
 specifier|const
@@ -413,7 +413,7 @@ name|void
 name|mld_v1_process_group_timer
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|,
 name|struct
@@ -429,7 +429,7 @@ name|void
 name|mld_v1_process_querier_timers
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -471,7 +471,7 @@ name|void
 name|mld_v2_cancel_link_timers
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -483,7 +483,7 @@ name|void
 name|mld_v2_dispatch_general_query
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -600,7 +600,7 @@ name|void
 name|mld_v2_process_group_timers
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|,
 name|struct
@@ -631,7 +631,7 @@ name|in6_multi
 modifier|*
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|,
@@ -734,7 +734,7 @@ name|VNET_DEFINE
 argument_list|(
 name|LIST_HEAD
 argument_list|(,
-name|mld_ifinfo
+name|mld_ifsoftc
 argument_list|)
 argument_list|,
 name|mli_head
@@ -1346,7 +1346,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Expose struct mld_ifinfo to userland, keyed by ifindex.  * For use by ifmcstat(8).  *  * SMPng: NOTE: Does an unlocked ifindex space read.  * VIMAGE: Assume curvnet set by caller. The node handler itself  * is not directly virtualized.  */
+comment|/*  * Expose struct mld_ifsoftc to userland, keyed by ifindex.  * For use by ifmcstat(8).  *  * SMPng: NOTE: Does an unlocked ifindex space read.  * VIMAGE: Assume curvnet set by caller. The node handler itself  * is not directly virtualized.  */
 end_comment
 
 begin_function
@@ -1373,7 +1373,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -1507,18 +1507,86 @@ operator|->
 name|mli_ifp
 condition|)
 block|{
+name|struct
+name|mld_ifinfo
+name|info
+decl_stmt|;
+name|info
+operator|.
+name|mli_version
+operator|=
+name|mli
+operator|->
+name|mli_version
+expr_stmt|;
+name|info
+operator|.
+name|mli_v1_timer
+operator|=
+name|mli
+operator|->
+name|mli_v1_timer
+expr_stmt|;
+name|info
+operator|.
+name|mli_v2_timer
+operator|=
+name|mli
+operator|->
+name|mli_v2_timer
+expr_stmt|;
+name|info
+operator|.
+name|mli_flags
+operator|=
+name|mli
+operator|->
+name|mli_flags
+expr_stmt|;
+name|info
+operator|.
+name|mli_rv
+operator|=
+name|mli
+operator|->
+name|mli_rv
+expr_stmt|;
+name|info
+operator|.
+name|mli_qi
+operator|=
+name|mli
+operator|->
+name|mli_qi
+expr_stmt|;
+name|info
+operator|.
+name|mli_qri
+operator|=
+name|mli
+operator|->
+name|mli_qri
+expr_stmt|;
+name|info
+operator|.
+name|mli_uri
+operator|=
+name|mli
+operator|->
+name|mli_uri
+expr_stmt|;
 name|error
 operator|=
 name|SYSCTL_OUT
 argument_list|(
 name|req
 argument_list|,
-name|mli
+operator|&
+name|info
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|mld_ifinfo
+name|info
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1707,7 +1775,7 @@ end_comment
 
 begin_function
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mld_domifattach
 parameter_list|(
@@ -1718,7 +1786,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -1793,7 +1861,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli_alloc_locked
 parameter_list|(
@@ -1805,7 +1873,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -1819,7 +1887,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 argument_list|)
 argument_list|,
 name|M_MLD
@@ -1912,7 +1980,7 @@ name|CTR2
 argument_list|(
 name|KTR_MLD
 argument_list|,
-literal|"allocate mld_ifinfo for ifp %p(%s)"
+literal|"allocate mld_ifsoftc for ifp %p(%s)"
 argument_list|,
 name|ifp
 argument_list|,
@@ -1947,7 +2015,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -2168,7 +2236,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|,
@@ -2179,7 +2247,7 @@ name|CTR3
 argument_list|(
 name|KTR_MLD
 argument_list|,
-literal|"%s: freeing mld_ifinfo for ifp %p(%s)"
+literal|"%s: freeing mld_ifsoftc for ifp %p(%s)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2262,7 +2330,7 @@ directive|ifdef
 name|INVARIANTS
 name|panic
 argument_list|(
-literal|"%s: mld_ifinfo not found for ifp %p\n"
+literal|"%s: mld_ifsoftc not found for ifp %p\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2307,7 +2375,7 @@ modifier|*
 name|ifma
 decl_stmt|;
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -2504,7 +2572,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no mld_ifinfo for ifp %p"
+literal|"%s: no mld_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -2910,7 +2978,7 @@ name|icmp6len
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -3267,7 +3335,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no mld_ifinfo for ifp %p"
+literal|"%s: no mld_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -3542,7 +3610,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|,
@@ -4328,7 +4396,7 @@ name|NULL
 condition|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -4849,7 +4917,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -5239,7 +5307,7 @@ name|void
 name|mld_v1_process_group_timer
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|,
@@ -5374,7 +5442,7 @@ name|void
 name|mld_v2_process_group_timers
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|,
@@ -5728,7 +5796,7 @@ name|void
 name|mld_set_version
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|,
@@ -5840,7 +5908,7 @@ name|void
 name|mld_v2_cancel_link_timers
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|)
@@ -6128,7 +6196,7 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -6166,7 +6234,7 @@ name|void
 name|mld_v1_process_querier_timers
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|)
@@ -6628,7 +6696,7 @@ name|delay
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -6712,7 +6780,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no mld_ifinfo for ifp %p"
+literal|"%s: no mld_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -6892,7 +6960,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|,
@@ -7370,7 +7438,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|)
@@ -7656,7 +7724,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|)
@@ -11160,7 +11228,7 @@ name|void
 name|mld_v2_dispatch_general_query
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|)

@@ -2694,6 +2694,7 @@ name|generation_start
 argument_list|)
 expr_stmt|;
 comment|/* Check that we didn't read the stats in the middle of a DMA */
+comment|/* Not a good enough check ? */
 if|if
 condition|(
 name|memcmp

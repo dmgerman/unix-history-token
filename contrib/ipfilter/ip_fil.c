@@ -328,6 +328,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct
+struct|struct
+name|ifaddr
+block|{
+name|struct
+name|sockaddr_storage
+name|ifa_addr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function
 name|int
 name|ipfattach

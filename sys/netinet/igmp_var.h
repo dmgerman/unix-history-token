@@ -19,69 +19,6 @@ begin_comment
 comment|/*  * Internet Group Management Protocol (IGMP),  * implementation-specific definitions.  *  * Written by Steve Deering, Stanford, May 1988.  *  * MULTICAST Revision: 3.5.1.3  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
-
-begin_comment
-comment|/*  * Pre-IGMPV3 igmpstat structure.  */
-end_comment
-
-begin_struct
-struct|struct
-name|oigmpstat
-block|{
-name|u_int
-name|igps_rcv_total
-decl_stmt|;
-comment|/* total IGMP messages received */
-name|u_int
-name|igps_rcv_tooshort
-decl_stmt|;
-comment|/* received with too few bytes */
-name|u_int
-name|igps_rcv_badsum
-decl_stmt|;
-comment|/* received with bad checksum */
-name|u_int
-name|igps_rcv_queries
-decl_stmt|;
-comment|/* received membership queries */
-name|u_int
-name|igps_rcv_badqueries
-decl_stmt|;
-comment|/* received invalid queries */
-name|u_int
-name|igps_rcv_reports
-decl_stmt|;
-comment|/* received membership reports */
-name|u_int
-name|igps_rcv_badreports
-decl_stmt|;
-comment|/* received invalid reports */
-name|u_int
-name|igps_rcv_ourreports
-decl_stmt|;
-comment|/* received reports for our groups */
-name|u_int
-name|igps_snd_reports
-decl_stmt|;
-comment|/* sent membership reports */
-name|u_int
-name|igps_rcv_toolong
-decl_stmt|;
-comment|/* received with too many bytes */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * IGMPv3 protocol statistics.  */
 end_comment
@@ -198,39 +135,6 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IGMPSTAT_ADD
-parameter_list|(
-name|name
-parameter_list|,
-name|val
-parameter_list|)
-value|V_igmpstat.name += (val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGMPSTAT_INC
-parameter_list|(
-name|name
-parameter_list|)
-value|IGMPSTAT_ADD(name, 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|CTASSERT
 end_ifdef
 
@@ -243,7 +147,7 @@ expr|struct
 name|igmpstat
 argument_list|)
 operator|==
-literal|168
+name|IGPS_VERSION3_LEN
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -253,11 +157,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
+begin_comment
+comment|/*  * Identifiers for IGMP sysctl nodes  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMPCTL_STATS
+value|1
+end_define
+
+begin_comment
+comment|/* statistics (read-only) */
+end_comment
 
 begin_define
 define|#
@@ -669,6 +582,92 @@ value|(sizeof(struct ip) + RAOPT_LEN + sizeof(struct igmp_report))
 end_define
 
 begin_comment
+comment|/*  * Structure returned by net.inet.igmp.ifinfo sysctl.  */
+end_comment
+
+begin_struct
+struct|struct
+name|igmp_ifinfo
+block|{
+name|uint32_t
+name|igi_version
+decl_stmt|;
+comment|/* IGMPv3 Host Compatibility Mode */
+name|uint32_t
+name|igi_v1_timer
+decl_stmt|;
+comment|/* IGMPv1 Querier Present timer (s) */
+name|uint32_t
+name|igi_v2_timer
+decl_stmt|;
+comment|/* IGMPv2 Querier Present timer (s) */
+name|uint32_t
+name|igi_v3_timer
+decl_stmt|;
+comment|/* IGMPv3 General Query (interface) timer (s)*/
+name|uint32_t
+name|igi_flags
+decl_stmt|;
+comment|/* IGMP per-interface flags */
+define|#
+directive|define
+name|IGIF_SILENT
+value|0x00000001
+comment|/* Do not use IGMP on this ifp */
+define|#
+directive|define
+name|IGIF_LOOPBACK
+value|0x00000002
+comment|/* Send IGMP reports to loopback */
+name|uint32_t
+name|igi_rv
+decl_stmt|;
+comment|/* IGMPv3 Robustness Variable */
+name|uint32_t
+name|igi_qi
+decl_stmt|;
+comment|/* IGMPv3 Query Interval (s) */
+name|uint32_t
+name|igi_qri
+decl_stmt|;
+comment|/* IGMPv3 Query Response Interval (s) */
+name|uint32_t
+name|igi_uri
+decl_stmt|;
+comment|/* IGMPv3 Unsolicited Report Interval (s) */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IGMPSTAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|V_igmpstat.name += (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMPSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|IGMPSTAT_ADD(name, 1)
+end_define
+
+begin_comment
 comment|/*  * Subsystem lock macros.  * The IGMP lock is only taken with IGMP. Currently it is system-wide.  * VIMAGE: The lock could be pushed to per-VIMAGE granularity in future.  */
 end_comment
 
@@ -720,11 +719,78 @@ parameter_list|()
 value|mtx_assert(&igmp_mtx, MA_NOTOWNED)
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|igmp_ifinfo
-struct_decl|;
-end_struct_decl
+begin_comment
+comment|/*  * Per-interface IGMP router version information.  */
+end_comment
+
+begin_struct
+struct|struct
+name|igmp_ifsoftc
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|igmp_ifsoftc
+argument_list|)
+name|igi_link
+expr_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|igi_ifp
+decl_stmt|;
+comment|/* pointer back to interface */
+name|uint32_t
+name|igi_version
+decl_stmt|;
+comment|/* IGMPv3 Host Compatibility Mode */
+name|uint32_t
+name|igi_v1_timer
+decl_stmt|;
+comment|/* IGMPv1 Querier Present timer (s) */
+name|uint32_t
+name|igi_v2_timer
+decl_stmt|;
+comment|/* IGMPv2 Querier Present timer (s) */
+name|uint32_t
+name|igi_v3_timer
+decl_stmt|;
+comment|/* IGMPv3 General Query (interface) timer (s)*/
+name|uint32_t
+name|igi_flags
+decl_stmt|;
+comment|/* IGMP per-interface flags */
+name|uint32_t
+name|igi_rv
+decl_stmt|;
+comment|/* IGMPv3 Robustness Variable */
+name|uint32_t
+name|igi_qi
+decl_stmt|;
+comment|/* IGMPv3 Query Interval (s) */
+name|uint32_t
+name|igi_qri
+decl_stmt|;
+comment|/* IGMPv3 Query Response Interval (s) */
+name|uint32_t
+name|igi_uri
+decl_stmt|;
+comment|/* IGMPv3 Unsolicited Report Interval (s) */
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|in_multi
+argument_list|)
+name|igi_relinmhead
+expr_stmt|;
+comment|/* released groups */
+name|struct
+name|mbufq
+name|igi_gq
+decl_stmt|;
+comment|/* general query responses queue */
+block|}
+struct|;
+end_struct
 
 begin_function_decl
 name|int
@@ -748,7 +814,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igmp_domifattach
 parameter_list|(
@@ -822,21 +888,6 @@ end_endif
 
 begin_comment
 comment|/* _KERNEL */
-end_comment
-
-begin_comment
-comment|/*  * Identifiers for IGMP sysctl nodes  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGMPCTL_STATS
-value|1
-end_define
-
-begin_comment
-comment|/* statistics (read-only) */
 end_comment
 
 begin_endif

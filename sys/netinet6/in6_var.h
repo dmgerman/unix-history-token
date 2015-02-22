@@ -106,7 +106,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 struct_decl|;
 end_struct_decl
 
@@ -138,7 +138,7 @@ modifier|*
 name|lltable
 decl_stmt|;
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mld_ifinfo
 decl_stmt|;
@@ -156,19 +156,11 @@ parameter_list|)
 value|(((struct in6_ifextra *)(ifp)->if_afdata[AF_INET6])->lltable)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_WANT_IFADDR
-argument_list|)
-end_if
+end_ifdef
 
 begin_struct
 struct|struct
@@ -285,6 +277,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/* control structure to manage address selection policy */
@@ -2199,7 +2195,7 @@ decl_stmt|;
 comment|/* MLD6 listener report timer */
 comment|/* New fields for MLDv2 follow. */
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|in6m_mli
 decl_stmt|;

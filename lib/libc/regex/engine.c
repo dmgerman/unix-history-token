@@ -804,6 +804,8 @@ specifier|const
 name|char
 modifier|*
 name|dp
+init|=
+name|NULL
 decl_stmt|;
 specifier|const
 name|sopno
@@ -1284,6 +1286,10 @@ expr_stmt|;
 comment|/* Adjust start according to moffset, to speed things up */
 if|if
 condition|(
+name|dp
+operator|!=
+name|NULL
+operator|&&
 name|g
 operator|->
 name|moffset

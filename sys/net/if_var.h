@@ -1535,32 +1535,9 @@ parameter_list|)
 value|((ifp)->if_llsoftc)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
 begin_comment
 comment|/*  * The ifaddr structure contains information about one address  * of an interface.  They are maintained by the different address families,  * are allocated and attached when an address is set, and are linked  * together so all addresses for an interface can be located.  *  * NOTE: a 'struct ifaddr' is always at the beginning of a larger  * chunk of malloc'ed memory, where we store the three addresses  * (ifa_addr, ifa_dstaddr and ifa_netmask) referenced here.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_WANT_IFADDR
-argument_list|)
-end_if
 
 begin_struct
 struct|struct
@@ -1630,6 +1607,16 @@ name|u_short
 name|ifa_flags
 decl_stmt|;
 comment|/* mostly rt_flags for cloning */
+define|#
+directive|define
+name|IFA_ROUTE
+value|RTF_UP
+comment|/* route installed */
+define|#
+directive|define
+name|IFA_RTSELF
+value|RTF_HOST
+comment|/* loopback route to self installed */
 name|u_int
 name|ifa_refcnt
 decl_stmt|;
@@ -1649,39 +1636,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IFA_ROUTE
-value|RTF_UP
-end_define
-
-begin_comment
-comment|/* route installed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFA_RTSELF
-value|RTF_HOST
-end_define
-
-begin_comment
-comment|/* loopback route to self installed */
-end_comment
 
 begin_comment
 comment|/* For compatibility with other BSDs. SCTP uses it. */

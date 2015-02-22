@@ -169,18 +169,6 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_WANT_IFADDR
-end_define
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
-end_include
-
 begin_include
 include|#
 directive|include

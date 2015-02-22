@@ -310,6 +310,27 @@ begin_comment
 comment|//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_THREAD_ID
+end_ifndef
+
+begin_comment
+comment|/* ACPI's definitions are fine, use those */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_SYSTEM_INTTYPES
+value|1
+end_define
+
+begin_comment
+comment|/* Tell ACPI we've defined types */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|uint64_t
@@ -376,6 +397,11 @@ name|int8_t
 name|INT8
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#

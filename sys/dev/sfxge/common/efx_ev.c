@@ -2255,6 +2255,38 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|EFSYS_ASSERT
+argument_list|(
+name|eecp
+operator|->
+name|eec_link_change
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|EFSYS_ASSERT
+argument_list|(
+name|eecp
+operator|->
+name|eec_exception
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|EFSYS_OPT_MON_STATS
+name|EFSYS_ASSERT
+argument_list|(
+name|eecp
+operator|->
+name|eec_monitor
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|EFX_EV_QSTAT_INCR
 argument_list|(
 name|eep
@@ -2580,7 +2612,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_MCDI */
 end_comment
 
 begin_function
@@ -3438,6 +3470,17 @@ name|eep
 operator|->
 name|ee_enp
 decl_stmt|;
+name|efx_nic_cfg_t
+modifier|*
+name|encp
+init|=
+operator|&
+operator|(
+name|enp
+operator|->
+name|en_nic_cfg
+operator|)
+decl_stmt|;
 name|unsigned
 name|int
 name|locked
@@ -3463,10 +3506,8 @@ if|if
 condition|(
 name|us
 operator|>
-name|enp
+name|encp
 operator|->
-name|en_nic_cfg
-operator|.
 name|enc_evq_moderation_max
 condition|)
 block|{
@@ -3528,31 +3569,26 @@ name|uint32_t
 name|timer_val
 decl_stmt|;
 comment|/* Calculate the timer value in quanta */
-name|us
-operator|-=
-operator|(
-name|us
-operator|%
-name|EFX_EV_TIMER_QUANTUM
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|us
-operator|<
-name|EFX_EV_TIMER_QUANTUM
-condition|)
-name|us
-operator|=
-name|EFX_EV_TIMER_QUANTUM
-expr_stmt|;
 name|timer_val
 operator|=
 name|us
+operator|*
+name|encp
+operator|->
+name|enc_clk_mult
 operator|/
 name|EFX_EV_TIMER_QUANTUM
 expr_stmt|;
 comment|/* Moderation value is base 0 so we need to deduct 1 */
+if|if
+condition|(
+name|timer_val
+operator|>
+literal|0
+condition|)
+name|timer_val
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|enp
@@ -3572,8 +3608,6 @@ argument_list|,
 name|FRF_AB_TIMER_VAL
 argument_list|,
 name|timer_val
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 else|else
@@ -3588,8 +3622,6 @@ argument_list|,
 name|FRF_CZ_TC_TIMER_VAL
 argument_list|,
 name|timer_val
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3996,7 +4028,7 @@ name|efx_ev_mcdi
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_MCDI */
 comment|/* Set up the new event queue */
 if|if
 condition|(

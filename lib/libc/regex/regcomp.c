@@ -7333,10 +7333,14 @@ decl_stmt|;
 name|sop
 modifier|*
 name|start
+init|=
+name|NULL
 decl_stmt|;
 name|sop
 modifier|*
 name|newstart
+init|=
+name|NULL
 decl_stmt|;
 name|sopno
 name|newlen
