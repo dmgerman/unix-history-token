@@ -2612,7 +2612,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_MCDI */
 end_comment
 
 begin_function
@@ -4028,7 +4028,7 @@ name|efx_ev_mcdi
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_MCDI */
 comment|/* Set up the new event queue */
 if|if
 condition|(

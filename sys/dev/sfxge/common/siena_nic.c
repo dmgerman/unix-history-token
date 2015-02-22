@@ -1951,7 +1951,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_BIST */
+comment|/* EFSYS_OPT_PHY_BIST */
 return|return
 operator|(
 literal|0
@@ -2499,11 +2499,6 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
-name|mask
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX: pacify gcc */
 name|EFSYS_ASSERT3U
 argument_list|(
 name|enp

@@ -2342,7 +2342,7 @@ if|if
 condition|(
 name|build
 operator|==
-name|MC_CMD_GET_VERSION_OUT_FIRMWARE_BOOTROM
+name|MC_CMD_GET_VERSION_OUT_FIRMWARE_SIENA_BOOTROM
 condition|)
 block|{
 name|status
