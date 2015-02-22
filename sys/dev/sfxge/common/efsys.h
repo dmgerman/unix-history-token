@@ -1704,7 +1704,9 @@ parameter_list|,
 name|_p
 parameter_list|)
 define|\
-value|do {								\ 		(_esip) = (_esip);					\ 		(_p) = malloc((_size), M_SFXGE, M_WAITOK|M_ZERO);	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		(_esip) = (_esip);					\
+comment|/*							\ 		 * The macro is used in non-sleepable contexts, for	\ 		 * example, holding a mutex.				\ 		 */
+value|\ 		(_p) = malloc((_size), M_SFXGE, M_NOWAIT|M_ZERO);	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFSYS_KMEM_FREE
