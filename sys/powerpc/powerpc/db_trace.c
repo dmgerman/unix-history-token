@@ -1382,6 +1382,14 @@ operator|=
 literal|"PERF"
 expr_stmt|;
 break|break;
+case|case
+name|EXC_VSX
+case|:
+name|trapstr
+operator|=
+literal|"VSX"
+expr_stmt|;
+break|break;
 default|default:
 name|trapstr
 operator|=
