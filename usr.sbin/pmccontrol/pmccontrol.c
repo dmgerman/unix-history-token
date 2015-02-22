@@ -598,10 +598,10 @@ condition|(
 operator|(
 name|map
 operator|=
-name|malloc
+name|calloc
 argument_list|(
 name|npmc
-operator|*
+argument_list|,
 name|ncpu
 argument_list|)
 operator|)
@@ -613,20 +613,6 @@ argument_list|(
 name|EX_SOFTWARE
 argument_list|,
 literal|"Out of memory"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|memset
-argument_list|(
-name|map
-argument_list|,
-name|PMCC_OP_IGNORE
-argument_list|,
-name|npmc
-operator|*
-name|ncpu
 argument_list|)
 expr_stmt|;
 name|error
