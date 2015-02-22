@@ -27,6 +27,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**************************************************************************  *  * Falcon/Siena registers and descriptors  *  **************************************************************************  */
 comment|/*  * FR_AB_EE_VPD_CFG0_REG_SF(128bit):  * SPI/VPD configuration register 0  */
 define|#
 directive|define
@@ -10471,6 +10472,11 @@ define|#
 directive|define
 name|FSF_AZ_DRIVER_EV_RX_DESCQ_ID_WIDTH
 value|12
+comment|/**************************************************************************  *  * Falcon non-volatile configuration  *  **************************************************************************  */
+define|#
+directive|define
+name|FR_AZ_TX_PACE_TBL_OFST
+value|FR_BZ_TX_PACE_TBL_OFST
 ifdef|#
 directive|ifdef
 name|__cplusplus
