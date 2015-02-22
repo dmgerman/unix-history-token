@@ -2615,6 +2615,10 @@ name|scheme_selected
 argument_list|()
 operator|==
 name|NULL
+operator|&&
+name|nparts
+operator|>
+literal|0
 condition|)
 name|usage
 argument_list|(
@@ -2791,6 +2795,11 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|scheme_selected
+argument_list|()
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
