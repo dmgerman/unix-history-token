@@ -586,6 +586,19 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|uint64_t
+name|sfxge_tx_get_drops
+parameter_list|(
+name|struct
+name|sfxge_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|sfxge_tx_init
 parameter_list|(
