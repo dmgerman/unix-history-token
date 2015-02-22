@@ -87,11 +87,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__ANDROID__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
 name|__mips__
 argument_list|)
 end_if
@@ -108,11 +103,19 @@ directive|include
 file|<sys/syscall.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ANDROID__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|__LP64__
-end_ifdef
+argument_list|)
+end_if
 
 begin_comment
 comment|/*      * clear_mips_cache - Invalidates instruction cache for Mips.      */
@@ -345,11 +348,6 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__ANDROID__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
 name|__mips__
 argument_list|)
 specifier|const
@@ -370,9 +368,17 @@ name|uintptr_t
 operator|)
 name|end
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ANDROID__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|__LP64__
+argument_list|)
 comment|// Call synci implementation for short address range.
 specifier|const
 name|uintptr_t

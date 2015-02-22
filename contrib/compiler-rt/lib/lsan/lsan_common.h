@@ -98,10 +98,18 @@ if|#
 directive|if
 name|SANITIZER_LINUX
 operator|&&
+operator|(
 name|defined
 argument_list|(
 name|__x86_64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips64
+argument_list|)
+operator|)
+expr|\
 operator|&&
 operator|(
 name|SANITIZER_WORDSIZE
@@ -133,6 +141,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|namespace
+name|__sanitizer
+block|{
+name|class
+name|FlagParser
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -219,6 +237,18 @@ operator|&
 name|lsan_flags
 return|;
 block|}
+name|void
+name|RegisterLsanFlags
+parameter_list|(
+name|FlagParser
+modifier|*
+name|parser
+parameter_list|,
+name|Flags
+modifier|*
+name|f
+parameter_list|)
+function_decl|;
 struct|struct
 name|Leak
 block|{
@@ -407,10 +437,7 @@ enum|;
 comment|// Functions called from the parent tool.
 name|void
 name|InitCommonLsan
-parameter_list|(
-name|bool
-name|standalone
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|void
 name|DoLeakCheck

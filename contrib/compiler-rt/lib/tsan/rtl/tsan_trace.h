@@ -91,7 +91,7 @@ specifier|const
 name|int
 name|kTracePartSizeBits
 init|=
-literal|14
+literal|13
 decl_stmt|;
 specifier|const
 name|int
@@ -105,7 +105,7 @@ specifier|const
 name|int
 name|kTraceParts
 init|=
-literal|4
+literal|2
 operator|*
 literal|1024
 operator|*
@@ -185,12 +185,6 @@ struct|;
 struct|struct
 name|Trace
 block|{
-name|TraceHeader
-name|headers
-index|[
-name|kTraceParts
-index|]
-decl_stmt|;
 name|Mutex
 name|mtx
 decl_stmt|;
@@ -207,6 +201,14 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+comment|// Must be the last field, because we unmap the unused part in
+comment|// CreateThreadContext.
+name|TraceHeader
+name|headers
+index|[
+name|kTraceParts
+index|]
+decl_stmt|;
 name|Trace
 argument_list|()
 operator|:

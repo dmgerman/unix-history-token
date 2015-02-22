@@ -44,11 +44,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This header can be included by the instrumented program to fetch
+comment|// This header declares the AddressSanitizer runtime interface functions.
 end_comment
 
 begin_comment
-comment|// data (mostly allocator statistics) from ASan runtime library.
+comment|// The runtime library has to define these functions so the instrumented program
+end_comment
+
+begin_comment
+comment|// could call them.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// See also include/sanitizer/asan_interface.h
 end_comment
 
 begin_comment

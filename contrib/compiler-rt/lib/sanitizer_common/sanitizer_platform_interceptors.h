@@ -689,7 +689,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_PTRACE
-value|SI_LINUX_NOT_ANDROID&& \    (defined(__i386) || defined (__x86_64))
+value|SI_LINUX_NOT_ANDROID&& \    (defined(__i386) || defined (__x86_64) || defined (__mips64))
 end_define
 
 begin_comment

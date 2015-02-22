@@ -135,11 +135,9 @@ block|{}
 name|bool
 name|Parse
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|value
+argument|const char *value
 argument_list|)
+name|final
 block|; }
 expr_stmt|;
 name|template

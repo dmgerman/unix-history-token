@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Suppression parsing/matching code shared between TSan and LSan.
+comment|// Suppression parsing/matching code.
 end_comment
 
 begin_comment
@@ -75,40 +75,12 @@ begin_decl_stmt
 name|namespace
 name|__sanitizer
 block|{
-enum|enum
-name|SuppressionType
-block|{
-name|SuppressionNone
-block|,
-name|SuppressionRace
-block|,
-name|SuppressionMutex
-block|,
-name|SuppressionThread
-block|,
-name|SuppressionSignal
-block|,
-name|SuppressionLeak
-block|,
-name|SuppressionLib
-block|,
-name|SuppressionDeadlock
-block|,
-name|SuppressionVptrCheck
-block|,
-name|SuppressionInterceptorName
-block|,
-name|SuppressionInterceptorViaFunction
-block|,
-name|SuppressionInterceptorViaLibrary
-block|,
-name|SuppressionTypeCount
-block|}
-enum|;
 struct|struct
 name|Suppression
 block|{
-name|SuppressionType
+specifier|const
+name|char
+modifier|*
 name|type
 decl_stmt|;
 name|char
@@ -128,6 +100,23 @@ name|SuppressionContext
 block|{
 name|public
 label|:
+comment|// Create new SuppressionContext capable of parsing given suppression types.
+name|SuppressionContext
+argument_list|(
+argument|const char *supprression_types[]
+argument_list|,
+argument|int suppression_types_num
+argument_list|)
+empty_stmt|;
+name|void
+name|ParseFromFile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|)
+function_decl|;
 name|void
 name|Parse
 parameter_list|(
@@ -145,7 +134,9 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|SuppressionType
+specifier|const
+name|char
+modifier|*
 name|type
 parameter_list|,
 name|Suppression
@@ -162,7 +153,9 @@ expr_stmt|;
 name|bool
 name|HasSuppressionType
 argument_list|(
-name|SuppressionType
+specifier|const
+name|char
+operator|*
 name|type
 argument_list|)
 decl|const
@@ -189,26 +182,26 @@ operator|*
 name|matched
 argument_list|)
 decl_stmt|;
-comment|// Create a SuppressionContext singleton if it hasn't been created earlier.
-comment|// Not thread safe. Must be called early during initialization (but after
-comment|// runtime flags are parsed).
-specifier|static
-name|void
-name|InitIfNecessary
-parameter_list|()
-function_decl|;
-comment|// Returns a SuppressionContext singleton.
-specifier|static
-name|SuppressionContext
-modifier|*
-name|Get
-parameter_list|()
-function_decl|;
 name|private
 label|:
-name|SuppressionContext
-argument_list|()
-expr_stmt|;
+specifier|static
+specifier|const
+name|int
+name|kMaxSuppressionTypes
+init|=
+literal|16
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+modifier|*
+specifier|const
+name|suppression_types_
+decl_stmt|;
+specifier|const
+name|int
+name|suppression_types_num_
+decl_stmt|;
 name|InternalMmapVector
 operator|<
 name|Suppression
@@ -216,42 +209,16 @@ operator|>
 name|suppressions_
 expr_stmt|;
 name|bool
-name|has_suppresson_type_
+name|has_suppression_type_
 index|[
-name|SuppressionTypeCount
+name|kMaxSuppressionTypes
 index|]
 decl_stmt|;
 name|bool
 name|can_parse_
 decl_stmt|;
-name|friend
-name|class
-name|SuppressionContextTest
-decl_stmt|;
 block|}
 empty_stmt|;
-specifier|const
-name|char
-modifier|*
-name|SuppressionTypeString
-parameter_list|(
-name|SuppressionType
-name|t
-parameter_list|)
-function_decl|;
-name|bool
-name|TemplateMatch
-parameter_list|(
-name|char
-modifier|*
-name|templ
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|str
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 
