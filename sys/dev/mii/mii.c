@@ -1597,7 +1597,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: ivalid offloc %d\n"
+literal|"%s: invalid offloc %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1643,7 +1643,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: ivalid phyloc %d\n"
+literal|"%s: invalid phyloc %d\n"
 argument_list|,
 name|__func__
 argument_list|,
