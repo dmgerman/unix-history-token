@@ -683,11 +683,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|end
-operator|=
-name|image_get_size
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|scheme
