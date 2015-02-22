@@ -36,11 +36,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file is shared between AddressSanitizer and ThreadSanitizer
+comment|// This file is shared between run-time libraries of sanitizers.
 end_comment
 
 begin_comment
-comment|// run-time libraries.
+comment|//
 end_comment
 
 begin_comment
@@ -75,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"sanitizer_flags.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sanitizer_interface_internal.h"
 end_include
 
 begin_include
@@ -1161,6 +1167,20 @@ name|array
 parameter_list|,
 name|uptr
 name|size
+parameter_list|)
+function_decl|;
+name|bool
+name|TemplateMatch
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|templ
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 comment|// Exit

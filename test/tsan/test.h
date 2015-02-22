@@ -165,5 +165,56 @@ name|barrier
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+name|void
+name|print_address
+parameter_list|(
+name|void
+modifier|*
+name|address
+parameter_list|)
+block|{
+comment|// On FreeBSD, the %p conversion specifier works as 0x%x and thus does not match
+comment|// to the format used in the diagnotic message.
+ifdef|#
+directive|ifdef
+name|__x86_64__
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"0x%012lx"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|address
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__mips64
+argument_list|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"0x%010lx"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|address
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
 end_unit
 

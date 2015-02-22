@@ -40,11 +40,11 @@ comment|// LibIgnore allows to ignore all interceptors called from a particular 
 end_comment
 
 begin_comment
-comment|// of dynamic libraries. LibIgnore remembers all "called_from_lib" suppressions
+comment|// of dynamic libraries. LibIgnore can be initialized with several templates
 end_comment
 
 begin_comment
-comment|// from the provided SuppressionContext; finds code ranges for the libraries;
+comment|// of names of libraries to be ignored. It finds code ranges for the libraries;
 end_comment
 
 begin_comment
@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sanitizer_suppressions.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sanitizer_atomic.h"
 end_include
 
@@ -116,14 +110,14 @@ parameter_list|(
 name|LinkerInitialized
 parameter_list|)
 function_decl|;
-comment|// Fetches all "called_from_lib" suppressions from the SuppressionContext.
+comment|// Must be called during initialization.
 name|void
-name|Init
+name|AddIgnoredLibrary
 parameter_list|(
 specifier|const
-name|SuppressionContext
-modifier|&
-name|supp
+name|char
+modifier|*
+name|name_templ
 parameter_list|)
 function_decl|;
 comment|// Must be called after a new dynamic library is loaded.

@@ -335,6 +335,10 @@ name|context
 argument_list|)
 block|;
 name|void
+name|DisableReexec
+argument_list|()
+block|;
+name|void
 name|MaybeReexec
 argument_list|()
 block|;
