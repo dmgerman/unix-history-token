@@ -303,27 +303,29 @@ begin_struct
 struct|struct
 name|Flags
 block|{
-comment|// Whether to warn on unimplemented functions.
-name|bool
-name|warn_unimplemented
-decl_stmt|;
-comment|// Whether to warn on non-zero labels.
-name|bool
-name|warn_nonzero_labels
-decl_stmt|;
-comment|// Whether to propagate labels only when there is an obvious data dependency
-comment|// (e.g., when comparing strings, ignore the fact that the output of the
-comment|// comparison might be data-dependent on the content of the strings). This
-comment|// applies only to the custom functions defined in 'custom.c'.
-name|bool
-name|strict_data_dependencies
-decl_stmt|;
-comment|// The path of the file where to dump the labels when the program terminates.
-specifier|const
-name|char
-modifier|*
-name|dump_labels_at_exit
-decl_stmt|;
+define|#
+directive|define
+name|DFSAN_FLAG
+parameter_list|(
+name|Type
+parameter_list|,
+name|Name
+parameter_list|,
+name|DefaultValue
+parameter_list|,
+name|Description
+parameter_list|)
+value|Type Name;
+include|#
+directive|include
+file|"dfsan_flags.inc"
+undef|#
+directive|undef
+name|DFSAN_FLAG
+name|void
+name|SetDefaults
+parameter_list|()
+function_decl|;
 block|}
 struct|;
 end_struct

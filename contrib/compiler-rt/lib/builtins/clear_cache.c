@@ -102,6 +102,69 @@ directive|include
 file|<sys/cachectl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/syscall.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
+
+begin_comment
+comment|/*      * clear_mips_cache - Invalidates instruction cache for Mips.      */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|clear_mips_cache
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|Addr
+parameter_list|,
+name|size_t
+name|Size
+parameter_list|)
+block|{
+asm|asm
+specifier|volatile
+asm|(         ".set push\n"         ".set noreorder\n"         ".set noat\n"         "beq %[Size], $zero, 20f\n"
+comment|/* If size == 0, branch around. */
+asm|"nop\n"         "daddu %[Size], %[Addr], %[Size]\n"
+comment|/* Calculate end address + 1 */
+asm|"rdhwr $v0, $1\n"
+comment|/* Get step size for SYNCI.                                                 $1 is $HW_SYNCI_Step */
+asm|"beq $v0, $zero, 20f\n"
+comment|/* If no caches require                                                 synchronization, branch                                                 around. */
+asm|"nop\n"         "10:\n"         "synci 0(%[Addr])\n"
+comment|/* Synchronize all caches around                                                 address. */
+asm|"daddu %[Addr], %[Addr], $v0\n"
+comment|/* Add step size. */
+asm|"sltu $at, %[Addr], %[Size]\n"
+comment|/* Compare current with end                                                 address. */
+asm|"bne $at, $zero, 10b\n"
+comment|/* Branch if more to do. */
+asm|"nop\n"         "sync\n"
+comment|/* Clear memory hazards. */
+asm|"20:\n"         "bal 30f\n"         "nop\n"         "30:\n"         "daddiu $ra, $ra, 12\n"
+comment|/* $ra has a value of $pc here.                                                 Add offset of 12 to point to the                                                 instruction after the last nop.                                               */
+asm|"jr.hb $ra\n"
+comment|/* Return, clearing instruction                                                 hazards. */
+asm|"nop\n"         ".set pop\n"         : [Addr] "+r"(Addr), [Size] "+r"(Size)         :: "at", "ra", "v0", "memory"       );
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -219,7 +282,6 @@ name|defined
 argument_list|(
 name|__ANDROID__
 argument_list|)
-specifier|const
 specifier|register
 name|int
 name|start_reg
@@ -308,8 +370,45 @@ name|uintptr_t
 operator|)
 name|end
 decl_stmt|;
-name|_flush_cache
+ifdef|#
+directive|ifdef
+name|__LP64__
+comment|// Call synci implementation for short address range.
+specifier|const
+name|uintptr_t
+name|address_range_limit
+init|=
+literal|256
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|end_int
+operator|-
+name|start_int
+operator|)
+operator|<=
+name|address_range_limit
+condition|)
+block|{
+name|clear_mips_cache
 argument_list|(
+name|start
+argument_list|,
+operator|(
+name|end_int
+operator|-
+name|start_int
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|syscall
+argument_list|(
+name|__NR_cacheflush
+argument_list|,
 name|start
 argument_list|,
 operator|(
@@ -321,6 +420,26 @@ argument_list|,
 name|BCACHE
 argument_list|)
 expr_stmt|;
+block|}
+else|#
+directive|else
+name|syscall
+argument_list|(
+name|__NR_cacheflush
+argument_list|,
+name|start
+argument_list|,
+operator|(
+name|end_int
+operator|-
+name|start_int
+operator|)
+argument_list|,
+name|BCACHE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 elif|#
 directive|elif
 name|defined

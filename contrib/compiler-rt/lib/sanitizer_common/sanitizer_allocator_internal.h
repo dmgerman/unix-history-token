@@ -221,12 +221,42 @@ modifier|*
 name|internal_allocator
 parameter_list|()
 function_decl|;
+enum|enum
+name|InternalAllocEnum
+block|{
+name|INTERNAL_ALLOC
+block|}
+enum|;
 block|}
 end_decl_stmt
 
 begin_comment
 comment|// namespace __sanitizer
 end_comment
+
+begin_decl_stmt
+specifier|inline
+name|void
+modifier|*
+name|operator
+name|new
+argument_list|(
+name|__sanitizer
+operator|::
+name|operator_new_size_type
+name|size
+argument_list|,
+name|InternalAllocEnum
+argument_list|)
+block|{
+return|return
+name|InternalAlloc
+argument_list|(
+name|size
+argument_list|)
+return|;
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

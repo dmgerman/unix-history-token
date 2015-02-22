@@ -155,6 +155,9 @@ function_decl|;
 name|bool
 name|SymbolizeData
 parameter_list|(
+name|uptr
+name|addr
+parameter_list|,
 name|DataInfo
 modifier|*
 name|info

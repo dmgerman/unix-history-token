@@ -125,6 +125,24 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
+name|void
+modifier|*
+name|user_calloc
+parameter_list|(
+name|ThreadState
+modifier|*
+name|thr
+parameter_list|,
+name|uptr
+name|pc
+parameter_list|,
+name|uptr
+name|sz
+parameter_list|,
+name|uptr
+name|n
+parameter_list|)
+function_decl|;
 comment|// Does not accept NULL.
 name|void
 name|user_free

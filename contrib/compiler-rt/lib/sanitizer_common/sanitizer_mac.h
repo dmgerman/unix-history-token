@@ -95,7 +95,9 @@ block|,
 name|MACOS_VERSION_MAVERICKS
 block|,
 name|MACOS_VERSION_YOSEMITE
-block|, }
+block|,
+name|MACOS_VERSION_UNKNOWN_NEWER
+block|}
 enum|;
 name|MacosVersion
 name|GetMacosVersion

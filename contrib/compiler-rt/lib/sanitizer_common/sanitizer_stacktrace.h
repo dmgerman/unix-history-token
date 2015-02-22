@@ -71,7 +71,7 @@ name|__sanitizer
 block|{
 specifier|static
 specifier|const
-name|uptr
+name|u32
 name|kStackTraceMax
 init|=
 literal|256
@@ -153,9 +153,41 @@ name|uptr
 modifier|*
 name|trace
 decl_stmt|;
-name|uptr
+name|u32
 name|size
 decl_stmt|;
+name|u32
+name|tag
+decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|TAG_UNKNOWN
+init|=
+literal|0
+decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|TAG_ALLOC
+init|=
+literal|1
+decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|TAG_DEALLOC
+init|=
+literal|2
+decl_stmt|;
+specifier|static
+specifier|const
+name|int
+name|TAG_CUSTOM
+init|=
+literal|100
+decl_stmt|;
+comment|// Tool specific tags start here.
 name|StackTrace
 argument_list|()
 operator|:
@@ -168,12 +200,17 @@ name|size
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|0
+argument_list|)
 block|{}
 name|StackTrace
 argument_list|(
 argument|const uptr *trace
 argument_list|,
-argument|uptr size
+argument|u32 size
 argument_list|)
 operator|:
 name|trace
@@ -183,7 +220,36 @@ argument_list|)
 operator|,
 name|size
 argument_list|(
-argument|size
+name|size
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|StackTrace
+argument_list|(
+argument|const uptr *trace
+argument_list|,
+argument|u32 size
+argument_list|,
+argument|u32 tag
+argument_list|)
+operator|:
+name|trace
+argument_list|(
+name|trace
+argument_list|)
+operator|,
+name|size
+argument_list|(
+name|size
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+argument|tag
 argument_list|)
 block|{}
 comment|// Prints a symbolized stacktrace, followed by an empty line.
@@ -227,6 +293,7 @@ name|GetCurrentPc
 parameter_list|()
 function_decl|;
 specifier|static
+specifier|inline
 name|uptr
 name|GetPreviousInstructionPc
 parameter_list|(
@@ -264,7 +331,84 @@ parameter_list|)
 function_decl|;
 block|}
 struct|;
+comment|// Performance-critical, must be in the header.
+name|ALWAYS_INLINE
+name|uptr
+name|StackTrace
+operator|::
+name|GetPreviousInstructionPc
+argument_list|(
+argument|uptr pc
+argument_list|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+comment|// Cancel Thumb bit.
+name|pc
+operator|=
+name|pc
+operator|&
+operator|(
+operator|~
+literal|1
+operator|)
+block|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+comment|// PCs are always 4 byte aligned.
+return|return
+name|pc
+operator|-
+literal|4
+return|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__sparc__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+return|return
+name|pc
+operator|-
+literal|8
+return|;
+else|#
+directive|else
+return|return
+name|pc
+operator|-
+literal|1
+return|;
+endif|#
+directive|endif
+block|}
+end_decl_stmt
+
+begin_comment
 comment|// StackTrace that owns the buffer used to store the addresses.
+end_comment
+
+begin_decl_stmt
 name|struct
 name|BufferedStackTrace
 range|:
@@ -310,7 +454,7 @@ block|;
 name|void
 name|Unwind
 argument_list|(
-argument|uptr max_depth
+argument|u32 max_depth
 argument_list|,
 argument|uptr pc
 argument_list|,
@@ -338,7 +482,7 @@ argument|uptr stack_top
 argument_list|,
 argument|uptr stack_bottom
 argument_list|,
-argument|uptr max_depth
+argument|u32 max_depth
 argument_list|)
 block|;
 name|void
@@ -346,7 +490,7 @@ name|SlowUnwindStack
 argument_list|(
 argument|uptr pc
 argument_list|,
-argument|uptr max_depth
+argument|u32 max_depth
 argument_list|)
 block|;
 name|void
@@ -356,7 +500,7 @@ argument|uptr pc
 argument_list|,
 argument|void *context
 argument_list|,
-argument|uptr max_depth
+argument|u32 max_depth
 argument_list|)
 block|;
 name|void
@@ -388,10 +532,10 @@ operator|&
 operator|)
 block|; }
 decl_stmt|;
-block|}
 end_decl_stmt
 
 begin_comment
+unit|}
 comment|// namespace __sanitizer
 end_comment
 

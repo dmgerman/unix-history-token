@@ -229,34 +229,6 @@ name|uint64_t
 name|x
 parameter_list|)
 function_decl|;
-comment|// Initialize coverage.
-name|void
-name|__sanitizer_cov_init
-parameter_list|()
-function_decl|;
-comment|// Record and dump coverage info.
-name|void
-name|__sanitizer_cov_dump
-parameter_list|()
-function_decl|;
-comment|// Open<name>.sancov.packed in the coverage directory and return the file
-comment|// descriptor. Returns -1 on failure, or if coverage dumping is disabled.
-comment|// This is intended for use by sandboxing code.
-name|intptr_t
-name|__sanitizer_maybe_open_cov_file
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-comment|// Get the number of total unique covered entities (blocks, edges, calls).
-comment|// This can be useful for coverage-directed in-process fuzzers.
-name|uintptr_t
-name|__sanitizer_get_total_unique_coverage
-parameter_list|()
-function_decl|;
 comment|// Annotate the current state of a contiguous container, such as
 comment|// std::vector, std::string or similar.
 comment|// A contiguous container is a container that keeps all of its elements
@@ -340,6 +312,21 @@ comment|// Print the stack trace leading to this call. Useful for debugging user
 name|void
 name|__sanitizer_print_stack_trace
 parameter_list|()
+function_decl|;
+comment|// Sets the callback to be called right before death on error.
+comment|// Passing 0 will unset the callback.
+name|void
+name|__sanitizer_set_death_callback
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|)
 function_decl|;
 ifdef|#
 directive|ifdef
