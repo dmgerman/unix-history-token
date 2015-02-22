@@ -2197,7 +2197,10 @@ name|uint32_t
 name|enc_buftbl_limit
 decl_stmt|;
 name|uint32_t
-name|enc_evq_moderation_max
+name|enc_evq_timer_quantum_ns
+decl_stmt|;
+name|uint32_t
+name|enc_evq_timer_max_us
 decl_stmt|;
 name|uint32_t
 name|enc_clk_mult

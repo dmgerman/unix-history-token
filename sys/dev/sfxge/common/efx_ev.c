@@ -3508,7 +3508,7 @@ name|us
 operator|>
 name|encp
 operator|->
-name|enc_evq_moderation_max
+name|enc_evq_timer_max_us
 condition|)
 block|{
 name|rc
@@ -3573,11 +3573,11 @@ name|timer_val
 operator|=
 name|us
 operator|*
+literal|1000
+operator|/
 name|encp
 operator|->
-name|enc_clk_mult
-operator|/
-name|EFX_EV_TIMER_QUANTUM
+name|enc_evq_timer_quantum_ns
 expr_stmt|;
 comment|/* Moderation value is base 0 so we need to deduct 1 */
 if|if
