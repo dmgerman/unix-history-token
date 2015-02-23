@@ -3360,6 +3360,9 @@ name|a_un
 operator|.
 name|a_val
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|COMPAT_32BIT
 comment|/*      * Get the actual dynamic linker pathname from the executable if      * possible.  (It should always be possible.)  That ensures that      * gdb will find the right dynamic linker even if a non-standard      * one is being used.      */
 if|if
 condition|(
@@ -3408,6 +3411,8 @@ operator|.
 name|path
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|digest_dynamic
 argument_list|(
 name|obj_main
