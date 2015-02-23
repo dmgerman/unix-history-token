@@ -300,6 +300,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|size_t
+name|__elfN
+function_decl|(
+name|populate_note
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Machine specific function to dump per-thread information. */
 end_comment

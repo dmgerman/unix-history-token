@@ -41632,6 +41632,15 @@ argument_list|(
 literal|"NT_PROCSTAT_AUXV (auxv data)"
 argument_list|)
 return|;
+case|case
+name|NT_X86_XSTATE
+case|:
+return|return
+name|_
+argument_list|(
+literal|"NT_X86_XSTATE (x86 XSAVE extended state)"
+argument_list|)
+return|;
 default|default:
 return|return
 name|get_note_type
