@@ -10514,6 +10514,23 @@ name|cmn
 expr_stmt|;
 block|}
 block|}
+name|KASSERT
+argument_list|(
+name|m
+operator|==
+name|NULL
+operator|||
+name|m
+operator|->
+name|m_type
+operator|==
+name|MT_DATA
+argument_list|,
+operator|(
+literal|"soreceive_dgram: !data"
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|m
