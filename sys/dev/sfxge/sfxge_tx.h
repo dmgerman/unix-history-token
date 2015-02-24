@@ -194,6 +194,11 @@ name|int
 name|std_get_hiwat
 decl_stmt|;
 comment|/* Packets in get list 						 * high watermark */
+name|unsigned
+name|int
+name|std_put_hiwat
+decl_stmt|;
+comment|/* Packets in put list 						 * high watermark */
 block|}
 struct|;
 end_struct
