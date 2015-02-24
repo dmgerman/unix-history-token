@@ -1686,7 +1686,10 @@ argument_list|)
 argument_list|,
 name|V_SEINTARM
 argument_list|(
-name|F_QINTR_CNT_EN
+name|V_QINTR_TIMER_IDX
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 operator||
 name|V_INGRESSQID
@@ -6336,7 +6339,10 @@ argument_list|)
 operator||
 name|V_SEINTARM
 argument_list|(
-name|F_QINTR_CNT_EN
+name|V_QINTR_TIMER_IDX
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
