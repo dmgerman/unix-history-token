@@ -1945,6 +1945,8 @@ name|autoequiqe_to_viid
 operator|=
 name|htobe32
 argument_list|(
+name|F_FW_EQ_ETH_CMD_AUTOEQUEQE
+operator||
 name|V_FW_EQ_ETH_CMD_VIID
 argument_list|(
 name|pi
