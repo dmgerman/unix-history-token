@@ -6249,6 +6249,14 @@ name|vector
 init|=
 literal|1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RSS
+name|cpuset_t
+name|cpu_mask
+decl_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|int
@@ -6498,7 +6506,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RSS
-name|taskqueue_start_threads_pinned
+name|CPU_ZERO
+argument_list|(
+operator|&
+name|cpu_mask
+argument_list|)
+expr_stmt|;
+name|CPU_SET
+argument_list|(
+name|cpu_id
+argument_list|,
+operator|&
+name|cpu_mask
+argument_list|)
+expr_stmt|;
+name|taskqueue_start_threads_cpuset
 argument_list|(
 operator|&
 name|que
@@ -6509,7 +6531,8 @@ literal|1
 argument_list|,
 name|PI_NET
 argument_list|,
-name|cpu_id
+operator|&
+name|cpu_mask
 argument_list|,
 literal|"%s (bucket %d)"
 argument_list|,
