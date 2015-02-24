@@ -72,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|TRACEBUF_INITIALIZER
-value|{ __FILE__, __LINE__, NULL, 0 } ,
+value|{ __LINE__, 0, __FILE__, NULL } ,
 end_define
 
 begin_define
