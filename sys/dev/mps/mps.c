@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Yahoo! Inc.  * Copyright (c) 2012 LSI Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * LSI MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2009 Yahoo! Inc.  * Copyright (c) 2011-2015 LSI Corp.  * Copyright (c) 2013-2015 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Communications core for LSI MPT2 */
+comment|/* Communications core for Avago Technologies (LSI) MPT2 */
 end_comment
 
 begin_comment
@@ -6280,6 +6280,18 @@ name|max_chains
 operator|=
 name|MPS_CHAIN_FRAMES
 expr_stmt|;
+name|sc
+operator|->
+name|enable_ssu
+operator|=
+name|MPS_SSU_ENABLE_SSD_DISABLE_HDD
+expr_stmt|;
+name|sc
+operator|->
+name|spinup_wait_time
+operator|=
+name|DEFAULT_SPINUP_WAIT
+expr_stmt|;
 comment|/* 	 * Grab the global variables. 	 */
 name|TUNABLE_INT_FETCH
 argument_list|(
@@ -6319,6 +6331,26 @@ operator|&
 name|sc
 operator|->
 name|max_chains
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"hw.mps.enable_ssu"
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|enable_ssu
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"hw.mps.spinup_wait_time"
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|spinup_wait_time
 argument_list|)
 expr_stmt|;
 comment|/* Grab the unit-instance variables */
@@ -6485,6 +6517,64 @@ name|sc
 operator|->
 name|exclude_ids
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|tmpstr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmpstr
+argument_list|)
+argument_list|,
+literal|"dev.mps.%d.enable_ssu"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|mps_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+name|tmpstr
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|enable_ssu
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|tmpstr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmpstr
+argument_list|)
+argument_list|,
+literal|"dev.mps.%d.spinup_wait_time"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|mps_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+name|tmpstr
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|spinup_wait_time
 argument_list|)
 expr_stmt|;
 block|}
@@ -6908,6 +6998,31 @@ argument_list|,
 literal|"maximum chain frames that will be allocated"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|sysctl_ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|sysctl_tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"enable_ssu"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|enable_ssu
+argument_list|,
+literal|0
+argument_list|,
+literal|"enable SSU to SATA SSD/HDD at shutdown"
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -6939,6 +7054,32 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|//FreeBSD_version>= 900030
+name|SYSCTL_ADD_INT
+argument_list|(
+name|sysctl_ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|sysctl_tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"spinup_wait_time"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|spinup_wait_time
+argument_list|,
+name|DEFAULT_SPINUP_WAIT
+argument_list|,
+literal|"seconds to wait for "
+literal|"spinup after SATA ID error"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
