@@ -3889,6 +3889,9 @@ name|npkt
 parameter_list|,
 name|int
 name|npkt_remaining
+parameter_list|,
+name|int
+name|txcsum
 parameter_list|)
 block|{
 name|struct
@@ -4109,11 +4112,15 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* 			 * netmap(4) says "netmap does not use features such as 			 * checksum offloading, TCP segmentation offloading, 			 * encryption, VLAN encapsulation/decapsulation, etc." 			 * 			 * XXXNM: it makes sense to enable checksum offload. 			 */
+comment|/* 			 * netmap(4) says "netmap does not use features such as 			 * checksum offloading, TCP segmentation offloading, 			 * encryption, VLAN encapsulation/decapsulation, etc." 			 * 			 * So the ncxl interfaces have tx hardware checksumming 			 * disabled by default.  But you can override netmap by 			 * enabling IFCAP_TXCSUM on the interface manully. 			 */
 name|cpl
 operator|->
 name|ctrl1
 operator|=
+name|txcsum
+condition|?
+literal|0
+else|:
 name|htobe64
 argument_list|(
 name|F_TXPKT_IPCSUM_DIS
@@ -4791,6 +4798,8 @@ decl_stmt|,
 name|npkt_remaining
 decl_stmt|,
 name|ndesc_remaining
+decl_stmt|,
+name|txcsum
 decl_stmt|;
 comment|/* 	 * Tx was at kring->nr_hwcur last time around and now we need to advance 	 * to kring->rhead.  Note that the driver's pidx moves independent of 	 * netmap's kring->nr_hwcur (pidx counts descriptors and the relation 	 * between descriptors and frames isn't 1:1). 	 */
 name|npkt_remaining
@@ -4816,6 +4825,18 @@ operator|->
 name|nr_hwcur
 operator|+
 name|head
+expr_stmt|;
+name|txcsum
+operator|=
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+operator|(
+name|IFCAP_TXCSUM
+operator||
+name|IFCAP_TXCSUM_IPV6
+operator|)
 expr_stmt|;
 while|while
 condition|(
@@ -4925,6 +4946,8 @@ argument_list|,
 name|n
 argument_list|,
 name|npkt_remaining
+argument_list|,
+name|txcsum
 argument_list|)
 expr_stmt|;
 block|}
