@@ -285,7 +285,7 @@ define|#
 directive|define
 name|VM_EXIT_CTLS_ONE_SETTING
 define|\
-value|(VM_EXIT_HOST_LMA			|			\ 	VM_EXIT_SAVE_EFER			|			\ 	VM_EXIT_LOAD_EFER			|			\ 	VM_EXIT_ACKNOWLEDGE_INTERRUPT		|			\ 	VM_EXIT_SAVE_PAT			|			\ 	VM_EXIT_LOAD_PAT)
+value|(VM_EXIT_HOST_LMA			|			\ 	VM_EXIT_SAVE_EFER			|			\ 	VM_EXIT_LOAD_EFER			|			\ 	VM_EXIT_ACKNOWLEDGE_INTERRUPT)
 end_define
 
 begin_define
@@ -299,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|VM_ENTRY_CTLS_ONE_SETTING
-value|(VM_ENTRY_LOAD_EFER | VM_ENTRY_LOAD_PAT)
+value|(VM_ENTRY_LOAD_EFER)
 end_define
 
 begin_define
@@ -3269,7 +3269,7 @@ operator|->
 name|msr_bitmap
 argument_list|)
 expr_stmt|;
-comment|/* 	 * It is safe to allow direct access to MSR_GSBASE and MSR_FSBASE. 	 * The guest FSBASE and GSBASE are saved and restored during 	 * vm-exit and vm-entry respectively. The host FSBASE and GSBASE are 	 * always restored from the vmcs host state area on vm-exit. 	 * 	 * The SYSENTER_CS/ESP/EIP MSRs are identical to FS/GSBASE in 	 * how they are saved/restored so can be directly accessed by the 	 * guest. 	 * 	 * MSR_EFER is saved and restored in the guest VMCS area on a 	 * VM exit and entry respectively. It is also restored from the 	 * host VMCS area on a VM exit. 	 * 	 * MSR_PAT is saved and restored in the guest VMCS are on a VM exit 	 * and entry respectively. It is also restored from the host VMCS 	 * area on a VM exit. 	 * 	 * The TSC MSR is exposed read-only. Writes are disallowed as that 	 * will impact the host TSC. 	 * XXX Writes would be implemented with a wrmsr trap, and 	 * then modifying the TSC offset in the VMCS. 	 */
+comment|/* 	 * It is safe to allow direct access to MSR_GSBASE and MSR_FSBASE. 	 * The guest FSBASE and GSBASE are saved and restored during 	 * vm-exit and vm-entry respectively. The host FSBASE and GSBASE are 	 * always restored from the vmcs host state area on vm-exit. 	 * 	 * The SYSENTER_CS/ESP/EIP MSRs are identical to FS/GSBASE in 	 * how they are saved/restored so can be directly accessed by the 	 * guest. 	 * 	 * MSR_EFER is saved and restored in the guest VMCS area on a 	 * VM exit and entry respectively. It is also restored from the 	 * host VMCS area on a VM exit. 	 * 	 * The TSC MSR is exposed read-only. Writes are disallowed as that 	 * will impact the host TSC. 	 * XXX Writes would be implemented with a wrmsr trap, and 	 * then modifying the TSC offset in the VMCS. 	 */
 if|if
 condition|(
 name|guest_msr_rw
@@ -3312,13 +3312,6 @@ argument_list|(
 name|vmx
 argument_list|,
 name|MSR_EFER
-argument_list|)
-operator|||
-name|guest_msr_rw
-argument_list|(
-name|vmx
-argument_list|,
-name|MSR_PAT
 argument_list|)
 operator|||
 name|guest_msr_ro
