@@ -18889,6 +18889,9 @@ name|s
 argument_list|,
 name|serial_num
 argument_list|,
+operator|(
+name|ssize_t
+operator|)
 name|cgd
 operator|.
 name|serial_num_len
@@ -18935,6 +18938,9 @@ name|s
 argument_list|,
 name|serial_num
 argument_list|,
+operator|(
+name|ssize_t
+operator|)
 literal|0
 argument_list|,
 literal|"Serial Number"
