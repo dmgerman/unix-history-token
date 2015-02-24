@@ -48,6 +48,46 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Set an LPTE structure to match the contents of a PVO */
+end_comment
+
+begin_function_decl
+name|void
+name|moea64_pte_from_pvo
+parameter_list|(
+specifier|const
+name|struct
+name|pvo_entry
+modifier|*
+name|pvo
+parameter_list|,
+name|struct
+name|lpte
+modifier|*
+name|lpte
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOEA64_PTE_PROT_UPDATE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOEA64_PTE_INVALIDATE
+value|2
+end_define
+
+begin_comment
 comment|/*  * Bootstrap subroutines  *  * An MMU_BOOTSTRAP() implementation looks like this:  *   moea64_early_bootstrap();  *   Allocate Page Table  *   moea64_mid_bootstrap();  *   Add mappings for MMU resources  *   moea64_late_bootstrap();  */
 end_comment
 
@@ -120,15 +160,6 @@ end_decl_stmt
 begin_comment
 comment|/*  * State variables  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pvo_head
-modifier|*
-name|moea64_pvo_table
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
