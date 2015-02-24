@@ -16339,8 +16339,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-specifier|inline
 name|int
 name|tnl_cong
 parameter_list|(

@@ -4432,6 +4432,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|tnl_cong
+parameter_list|(
+name|struct
+name|port_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* t4_tracer.c */
 end_comment
