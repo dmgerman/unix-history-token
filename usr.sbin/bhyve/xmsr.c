@@ -434,6 +434,16 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+comment|/* 		 * OpenBSD guests test bit 0 of this MSR to detect if the 		 * workaround for erratum 721 is already applied. 		 * http://support.amd.com/TechDocs/41322_10h_Rev_Gd.pdf 		 */
+case|case
+literal|0xC0011029
+case|:
+operator|*
+name|val
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 default|default:
 name|error
 operator|=
