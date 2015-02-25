@@ -867,7 +867,7 @@ name|EFX_RXQ_LIMIT_TARGET
 define|#
 directive|define
 name|EFX_RXQ_LIMIT_TARGET
-value|768
+value|512
 endif|#
 directive|endif
 ifndef|#
