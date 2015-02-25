@@ -40,7 +40,6 @@ file|"ec_lcl.h"
 end_include
 
 begin_decl_stmt
-specifier|static
 specifier|const
 name|char
 name|EC_version

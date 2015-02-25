@@ -291,9 +291,10 @@ name|no_branch
 init|=
 literal|0
 decl_stmt|;
-comment|/* Invalid zero-padding would have particularly bad consequences 	 * in the case of 'num', so don't just rely on bn_check_top() for this one 	 * (bn_check_top() works only for BN_DEBUG builds) */
+comment|/* Invalid zero-padding would have particularly bad consequences 	 * so don't just rely on bn_check_top() here 	 * (bn_check_top() works only for BN_DEBUG builds) */
 if|if
 condition|(
+operator|(
 name|num
 operator|->
 name|top
@@ -312,6 +313,28 @@ literal|1
 index|]
 operator|==
 literal|0
+operator|)
+operator|||
+operator|(
+name|divisor
+operator|->
+name|top
+operator|>
+literal|0
+operator|&&
+name|divisor
+operator|->
+name|d
+index|[
+name|divisor
+operator|->
+name|top
+operator|-
+literal|1
+index|]
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|BNerr
@@ -328,6 +351,11 @@ block|}
 name|bn_check_top
 argument_list|(
 name|num
+argument_list|)
+expr_stmt|;
+name|bn_check_top
+argument_list|(
+name|divisor
 argument_list|)
 expr_stmt|;
 if|if
@@ -372,11 +400,8 @@ argument_list|)
 expr_stmt|;
 comment|/* bn_check_top(num); */
 comment|/* 'num' has been checked already */
-name|bn_check_top
-argument_list|(
-name|divisor
-argument_list|)
-expr_stmt|;
+comment|/* bn_check_top(divisor); */
+comment|/* 'divisor' has been checked already */
 if|if
 condition|(
 name|BN_is_zero

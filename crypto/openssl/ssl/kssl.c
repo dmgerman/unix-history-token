@@ -4205,8 +4205,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s[%d] "
 argument_list|,
 name|label
@@ -4252,8 +4254,10 @@ name|i
 index|]
 argument_list|)
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%c "
 argument_list|,
 name|kdata
@@ -4265,8 +4269,10 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x "
 argument_list|,
 operator|(
@@ -4282,8 +4288,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -4315,8 +4323,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s, authdata==0\n"
 argument_list|,
 name|label
@@ -4324,8 +4334,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s [%p]\n"
 argument_list|,
 name|label
@@ -4340,7 +4352,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|{         int 	i; 	printf("%s[at%d:%d] ", label, adata->ad_type, adata->length); 	for (i=0; i< adata->length; i++)                 {                 printf((isprint(adata->contents[i]))? "%c ": "%02x",                         adata->contents[i]); 		} 	printf("\n"); 	}
+block|{         int 	i; 	fprintf(stderr,"%s[at%d:%d] ", label, adata->ad_type, adata->length); 	for (i=0; i< adata->length; i++)                 {                 fprintf(stderr,(isprint(adata->contents[i]))? "%c ": "%02x",                         adata->contents[i]); 		} 	fprintf(stderr,"\n"); 	}
 endif|#
 directive|endif
 block|}
@@ -4373,8 +4385,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s, keyblk==0\n"
 argument_list|,
 name|label
@@ -4385,8 +4399,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|KRB5_HEIMDAL
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s\n\t[et%d:%d]: "
 argument_list|,
 name|label
@@ -4423,8 +4439,10 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x"
 argument_list|,
 operator|(
@@ -4445,15 +4463,19 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s\n\t[et%d:%d]: "
 argument_list|,
 name|label
@@ -4486,8 +4508,10 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x"
 argument_list|,
 name|keyblk
@@ -4499,8 +4523,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -4534,8 +4560,10 @@ name|ui
 decl_stmt|,
 name|uj
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s principal Realm: "
 argument_list|,
 name|label
@@ -4580,8 +4608,10 @@ name|ui
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|" (nametype %d) has %d strings:\n"
 argument_list|,
 name|princ
@@ -4612,8 +4642,10 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\t%d [%d]: "
 argument_list|,
 name|i
@@ -4668,8 +4700,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -5940,8 +5974,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"in kssl_sget_tkt(%s)\n"
 argument_list|,
 name|kstring
@@ -6544,13 +6580,17 @@ name|enc_part2
 operator|->
 name|caddrs
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Decrypted ticket fields:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tflags: %X, transit-type: %X"
 argument_list|,
 name|krb5ticket
@@ -6584,8 +6624,10 @@ name|tr_contents
 operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tcaddrs: %p, authdata: %p\n"
 argument_list|,
 name|krb5ticket
@@ -6606,8 +6648,10 @@ condition|(
 name|paddr
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tcaddrs:\n"
 argument_list|)
 expr_stmt|;
@@ -6663,8 +6707,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tstart/auth/end times: %d / %d / %d\n"
 argument_list|,
 name|krb5ticket
@@ -9005,8 +9051,10 @@ return|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"kssl_validate_times: %d |<-  | %d - %d |< %d  ->| %d\n"
 argument_list|,
 name|start
@@ -9200,8 +9248,10 @@ name|unsigned
 name|int
 name|ui
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"kssl_check_authent: authenticator[%d]:\n"
 argument_list|,
 name|authentp
@@ -9230,8 +9280,10 @@ condition|;
 name|ui
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x "
 argument_list|,
 name|p
@@ -9240,8 +9292,10 @@ name|ui
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -9512,8 +9566,10 @@ block|{
 name|int
 name|padl
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"kssl_check_authent: decrypted authenticator[%d] =\n"
 argument_list|,
 name|outl
@@ -9532,8 +9588,10 @@ condition|;
 name|padl
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x "
 argument_list|,
 name|unenc_authent
@@ -9542,8 +9600,10 @@ name|padl
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -9740,8 +9800,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"kssl_check_authent: returns %d for client time "
 argument_list|,
 operator|*
@@ -9768,8 +9830,10 @@ name|ctime
 operator|->
 name|data
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%.*s\n"
 argument_list|,
 name|auth
@@ -9786,8 +9850,10 @@ name|data
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"NULL\n"
 argument_list|)
 expr_stmt|;

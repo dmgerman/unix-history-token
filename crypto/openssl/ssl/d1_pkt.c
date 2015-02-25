@@ -6011,6 +6011,8 @@ operator|+=
 name|bs
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|s
 operator|->
 name|method
@@ -6023,7 +6025,12 @@ name|s
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|<
+literal|1
+condition|)
+goto|goto
+name|err
+goto|;
 comment|/* record length after mac and block padding */
 comment|/*	if (type == SSL3_RT_APPLICATION_DATA || 	(type == SSL3_RT_ALERT&& ! SSL_in_init(s))) */
 comment|/* there's only one epoch between handshake and app data */

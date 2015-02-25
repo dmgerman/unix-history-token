@@ -137,6 +137,12 @@ directive|include
 file|<openssl/md5.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SSL3_METHOD
+end_ifndef
+
 begin_function_decl
 specifier|static
 specifier|const
@@ -181,6 +187,24 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|IMPLEMENT_ssl3_meth_func
+argument_list|(
+argument|SSLv3_server_method
+argument_list|,
+argument|ssl3_accept
+argument_list|,
+argument|ssl_undefined_function
+argument_list|,
+argument|ssl3_get_server_method
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -284,19 +308,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_macro
-name|IMPLEMENT_ssl3_meth_func
-argument_list|(
-argument|SSLv3_server_method
-argument_list|,
-argument|ssl3_accept
-argument_list|,
-argument|ssl_undefined_function
-argument_list|,
-argument|ssl3_get_server_method
-argument_list|)
-end_macro
 
 begin_function
 name|int
@@ -623,6 +634,11 @@ name|SSL3_RT_MAX_PLAIN_LENGTH
 argument_list|)
 condition|)
 block|{
+name|BUF_MEM_free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 operator|-
@@ -671,6 +687,24 @@ name|flags
 operator|&=
 operator|~
 name|SSL3_FLAGS_SGC_RESTART_DONE
+expr_stmt|;
+name|s
+operator|->
+name|s3
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SSL3_FLAGS_CCS_OK
+expr_stmt|;
+comment|/* Should have been reset by ssl3_get_finished, too. */
+name|s
+operator|->
+name|s3
+operator|->
+name|change_cipher_spec
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2083,6 +2117,16 @@ case|:
 case|case
 name|SSL3_ST_SR_CERT_VRFY_B
 case|:
+comment|/* 			 * This *should* be the first time we enable CCS, but be 			 * extra careful about surrounding code changes. We need 			 * to set this here because we don't know if we're 			 * expecting a CertificateVerify or not. 			 */
+if|if
+condition|(
+operator|!
+name|s
+operator|->
+name|s3
+operator|->
+name|change_cipher_spec
+condition|)
 name|s
 operator|->
 name|s3
@@ -2176,6 +2220,24 @@ case|:
 case|case
 name|SSL3_ST_SR_NEXT_PROTO_B
 case|:
+comment|/* 			 * Enable CCS for resumed handshakes with NPN. 			 * In a full handshake with NPN, we end up here through 			 * SSL3_ST_SR_CERT_VRFY_B, where SSL3_FLAGS_CCS_OK was 			 * already set. Receiving a CCS clears the flag, so make 			 * sure not to re-enable it to ban duplicates. 			 * s->s3->change_cipher_spec is set when a CCS is 			 * processed in s3_pkt.c, and remains set until 			 * the client's Finished message is read. 			 */
+if|if
+condition|(
+operator|!
+name|s
+operator|->
+name|s3
+operator|->
+name|change_cipher_spec
+condition|)
+name|s
+operator|->
+name|s3
+operator|->
+name|flags
+operator||=
+name|SSL3_FLAGS_CCS_OK
+expr_stmt|;
 name|ret
 operator|=
 name|ssl3_get_next_proto
@@ -2213,6 +2275,16 @@ case|:
 case|case
 name|SSL3_ST_SR_FINISHED_B
 case|:
+comment|/* 			 * Enable CCS for resumed handshakes without NPN. 			 * In a full handshake, we end up here through 			 * SSL3_ST_SR_CERT_VRFY_B, where SSL3_FLAGS_CCS_OK was 			 * already set. Receiving a CCS clears the flag, so make 			 * sure not to re-enable it to ban duplicates. 			 * s->s3->change_cipher_spec is set when a CCS is 			 * processed in s3_pkt.c, and remains set until 			 * the client's Finished message is read. 			 */
+if|if
+condition|(
+operator|!
+name|s
+operator|->
+name|s3
+operator|->
+name|change_cipher_spec
+condition|)
 name|s
 operator|->
 name|s3
@@ -2550,14 +2622,6 @@ operator|->
 name|next_proto_neg_seen
 condition|)
 block|{
-name|s
-operator|->
-name|s3
-operator|->
-name|flags
-operator||=
-name|SSL3_FLAGS_CCS_OK
-expr_stmt|;
 name|s
 operator|->
 name|s3
@@ -3553,11 +3617,22 @@ operator|+
 name|n
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Only resume if the session's version matches the negotiated 		 * version. 		 * RFC 5246 does not provide much useful advice on resumption 		 * with a different protocol version. It doesn't forbid it but 		 * the sanity of such behaviour would be questionable. 		 * In practice, clients do not accept a version mismatch and 		 * will abort the handshake with an error. 		 */
 if|if
 condition|(
 name|i
 operator|==
 literal|1
+operator|&&
+name|s
+operator|->
+name|version
+operator|==
+name|s
+operator|->
+name|session
+operator|->
+name|ssl_version
 condition|)
 block|{
 comment|/* previous session */
@@ -3926,11 +4001,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CIPHER_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"client sent %d ciphers\n"
 argument_list|,
-name|sk_num
+name|sk_SSL_CIPHER_num
 argument_list|(
 name|ciphers
 argument_list|)
@@ -3967,13 +4044,15 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CIPHER_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"client [%2d of %2d]:%s\n"
 argument_list|,
 name|i
 argument_list|,
-name|sk_num
+name|sk_SSL_CIPHER_num
 argument_list|(
 name|ciphers
 argument_list|)
@@ -8752,6 +8831,9 @@ name|decrypt_good
 decl_stmt|,
 name|version_good
 decl_stmt|;
+name|size_t
+name|j
+decl_stmt|;
 comment|/* FIX THIS UP EAY EAY EAY EAY */
 if|if
 condition|(
@@ -8926,6 +9008,10 @@ name|SSL_OP_TLS_D5_BUG
 operator|)
 condition|)
 block|{
+name|al
+operator|=
+name|SSL_AD_DECODE_ERROR
+expr_stmt|;
 name|SSLerr
 argument_list|(
 name|SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE
@@ -8934,7 +9020,7 @@ name|SSL_R_TLS_RSA_ENCRYPTED_VALUE_LENGTH_IS_WRONG
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err
+name|f_err
 goto|;
 block|}
 else|else
@@ -8948,6 +9034,29 @@ name|n
 operator|=
 name|i
 expr_stmt|;
+block|}
+comment|/* 		 * Reject overly short RSA ciphertext because we want to be sure 		 * that the buffer size makes it safe to iterate over the entire 		 * size of a premaster secret (SSL_MAX_MASTER_KEY_LENGTH). The 		 * actual expected size is larger due to RSA padding, but the 		 * bound is sufficient to be safe. 		 */
+if|if
+condition|(
+name|n
+operator|<
+name|SSL_MAX_MASTER_KEY_LENGTH
+condition|)
+block|{
+name|al
+operator|=
+name|SSL_AD_DECRYPT_ERROR
+expr_stmt|;
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE
+argument_list|,
+name|SSL_R_TLS_RSA_ENCRYPTED_VALUE_LENGTH_IS_WRONG
+argument_list|)
+expr_stmt|;
+goto|goto
+name|f_err
+goto|;
 block|}
 comment|/* We must not leak whether a decryption failure occurs because 		 * of Bleichenbacher's attack on PKCS #1 v1.5 RSA padding (see 		 * RFC 2246, section 7.4.7.1). The code follows that advice of 		 * the TLS RFC and generates a random premaster secret for the 		 * case that the decrypt fails. See 		 * https://tools.ietf.org/html/rfc5246#section-7.4.7.1 */
 comment|/* should be RAND_bytes, but we cannot work around a failure. */
@@ -9108,30 +9217,27 @@ name|decrypt_good
 operator|&=
 name|version_good
 expr_stmt|;
-comment|/* Now copy rand_premaster_secret over p using 		 * decrypt_good_mask. */
+comment|/* 		 * Now copy rand_premaster_secret over from p using 		 * decrypt_good_mask. If decryption failed, then p does not 		 * contain valid plaintext, however, a check above guarantees 		 * it is still sufficiently large to read from. 		 */
 for|for
 control|(
-name|i
+name|j
 operator|=
 literal|0
 init|;
-name|i
+name|j
 operator|<
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|rand_premaster_secret
 argument_list|)
 condition|;
-name|i
+name|j
 operator|++
 control|)
 block|{
 name|p
 index|[
-name|i
+name|j
 index|]
 operator|=
 name|constant_time_select_8
@@ -9140,12 +9246,12 @@ name|decrypt_good
 argument_list|,
 name|p
 index|[
-name|i
+name|j
 index|]
 argument_list|,
 name|rand_premaster_secret
 index|[
-name|i
+name|j
 index|]
 argument_list|)
 expr_stmt|;
@@ -9174,14 +9280,20 @@ name|master_key
 argument_list|,
 name|p
 argument_list|,
-name|i
+sizeof|sizeof
+argument_list|(
+name|rand_premaster_secret
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|OPENSSL_cleanse
 argument_list|(
 name|p
 argument_list|,
-name|i
+sizeof|sizeof
+argument_list|(
+name|rand_premaster_secret
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9767,8 +9879,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"kssl_sget_tkt rtn %d [%d]\n"
 argument_list|,
 name|krb5rc
@@ -9784,8 +9898,10 @@ name|kssl_err
 operator|.
 name|text
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"kssl_err text= %s\n"
 argument_list|,
 name|kssl_err
@@ -9836,8 +9952,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"kssl_check_authent rtn %d [%d]\n"
 argument_list|,
 name|krb5rc
@@ -9853,8 +9971,10 @@ name|kssl_err
 operator|.
 name|text
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"kssl_err text= %s\n"
 argument_list|,
 name|kssl_err
@@ -13841,6 +13961,25 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|l
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_SEND_SERVER_CERTIFICATE
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|s
 operator|->
 name|state

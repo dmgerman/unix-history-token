@@ -429,6 +429,11 @@ name|SSL3_RT_MAX_PLAIN_LENGTH
 argument_list|)
 condition|)
 block|{
+name|BUF_MEM_free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 operator|-

@@ -20,7 +20,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"cryptlib.h"
+file|<string.h>
 end_include
 
 begin_ifndef

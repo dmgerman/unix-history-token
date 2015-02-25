@@ -368,36 +368,54 @@ name|pref_list
 index|[]
 init|=
 block|{
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 name|NID_sect571r1
 block|,
 comment|/* sect571r1 (14) */
 name|NID_sect571k1
 block|,
 comment|/* sect571k1 (13) */
+endif|#
+directive|endif
 name|NID_secp521r1
 block|,
 comment|/* secp521r1 (25) */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 name|NID_sect409k1
 block|,
 comment|/* sect409k1 (11) */
 name|NID_sect409r1
 block|,
 comment|/* sect409r1 (12) */
+endif|#
+directive|endif
 name|NID_secp384r1
 block|,
 comment|/* secp384r1 (24) */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 name|NID_sect283k1
 block|,
 comment|/* sect283k1 (9) */
 name|NID_sect283r1
 block|,
 comment|/* sect283r1 (10) */
+endif|#
+directive|endif
 name|NID_secp256k1
 block|,
 comment|/* secp256k1 (22) */
 name|NID_X9_62_prime256v1
 block|,
 comment|/* secp256r1 (23) */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 name|NID_sect239k1
 block|,
 comment|/* sect239k1 (8) */
@@ -407,24 +425,34 @@ comment|/* sect233k1 (6) */
 name|NID_sect233r1
 block|,
 comment|/* sect233r1 (7) */
+endif|#
+directive|endif
 name|NID_secp224k1
 block|,
 comment|/* secp224k1 (20) */
 name|NID_secp224r1
 block|,
 comment|/* secp224r1 (21) */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 name|NID_sect193r1
 block|,
 comment|/* sect193r1 (4) */
 name|NID_sect193r2
 block|,
 comment|/* sect193r2 (5) */
+endif|#
+directive|endif
 name|NID_secp192k1
 block|,
 comment|/* secp192k1 (18) */
 name|NID_X9_62_prime192v1
 block|,
 comment|/* secp192r1 (19) */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC2M
 name|NID_sect163k1
 block|,
 comment|/* sect163k1 (1) */
@@ -434,6 +462,8 @@ comment|/* sect163r1 (2) */
 name|NID_sect163r2
 block|,
 comment|/* sect163r2 (3) */
+endif|#
+directive|endif
 name|NID_secp160k1
 block|,
 comment|/* secp160k1 (15) */
@@ -455,7 +485,7 @@ name|int
 name|curve_id
 parameter_list|)
 block|{
-comment|/* ECC curves from draft-ietf-tls-ecc-12.txt (Oct. 17, 2005) */
+comment|/* ECC curves from RFC 4492 */
 if|if
 condition|(
 operator|(
@@ -507,7 +537,7 @@ name|int
 name|nid
 parameter_list|)
 block|{
-comment|/* ECC curves from draft-ietf-tls-ecc-12.txt (Oct. 17, 2005) */
+comment|/* ECC curves from RFC 4492 */
 switch|switch
 condition|(
 name|nid
@@ -1543,7 +1573,6 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
-comment|/* NB: draft-ietf-tls-ecc-12.txt uses a one-byte prefix for 		 * elliptic_curve_list, but the examples use two bytes. 		 * http://www1.ietf.org/mail-archive/web/tls/current/msg00538.html 		 * resolves this to two bytes. 		 */
 name|s2n
 argument_list|(
 name|s
@@ -4079,6 +4108,46 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !OPENSSL_NO_EC */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SRP
+if|if
+condition|(
+name|s
+operator|->
+name|srp_ctx
+operator|.
+name|login
+operator|!=
+name|NULL
+condition|)
+block|{
+name|OPENSSL_free
+argument_list|(
+name|s
+operator|->
+name|srp_ctx
+operator|.
+name|login
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|srp_ctx
+operator|.
+name|login
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|s
+operator|->
+name|srtp_profile
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|data
@@ -4855,6 +4924,11 @@ literal|2
 operator|||
 name|ellipticcurvelist_length
 operator|<
+literal|1
+operator|||
+comment|/* Each NamedCurve is 2 bytes. */
+name|ellipticcurvelist_length
+operator|&
 literal|1
 condition|)
 block|{
@@ -5996,6 +6070,12 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+name|s
+operator|->
+name|tlsext_ticket_expected
+operator|=
+literal|0
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_HEARTBEATS
@@ -7226,7 +7306,7 @@ index|]
 operator|=
 name|TLSEXT_ECPOINTFORMAT_ansiX962_compressed_char2
 expr_stmt|;
-comment|/* we support all named elliptic curves in draft-ietf-tls-ecc-12 */
+comment|/* we support all named elliptic curves in RFC 4492 */
 if|if
 condition|(
 name|s
