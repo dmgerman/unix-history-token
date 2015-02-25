@@ -604,6 +604,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ctl_sap_log_sense_handler
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|,
+name|struct
+name|ctl_page_index
+modifier|*
+name|page_index
+parameter_list|,
+name|int
+name|pc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ctl_config_move_done
 parameter_list|(
 name|union
