@@ -623,6 +623,15 @@ argument|const char *Name
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// Returns the linker path, respecting the -fuse-ld= argument to determine
+comment|/// the linker suffix or name.
+name|std
+operator|::
+name|string
+name|GetLinkerPath
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Dispatch to the specific toolchain for verbose printing.
 comment|///
 comment|/// This is used when handling the verbose option to print detailed,
