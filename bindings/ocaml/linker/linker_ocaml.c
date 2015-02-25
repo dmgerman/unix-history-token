@@ -48,7 +48,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* llmodule -> llmodule -> unit */
+comment|/* llmodule -> llmodule -> Mode.t -> unit */
 end_comment
 
 begin_function
@@ -61,6 +61,9 @@ name|Dst
 parameter_list|,
 name|LLVMModuleRef
 name|Src
+parameter_list|,
+name|value
+name|Mode
 parameter_list|)
 block|{
 name|char
@@ -75,7 +78,10 @@ name|Dst
 argument_list|,
 name|Src
 argument_list|,
-literal|0
+name|Int_val
+argument_list|(
+name|Mode
+argument_list|)
 argument_list|,
 operator|&
 name|Message
