@@ -492,6 +492,12 @@ decl_stmt|;
 name|int
 name|do_not_lock
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|num
+condition|)
+return|return;
 comment|/* 	 * (Based on the rand(3) manpage) 	 * 	 * The input is chopped up into units of 20 bytes (or less for 	 * the last block).  Each of these blocks is run through the hash 	 * function as follows:  The data passed to the hash function 	 * is the current 'md', the same number of bytes from the 'state' 	 * (the location determined by in incremented looping index) as 	 * the current 'block', the new key data 'block', and 'count' 	 * (which is incremented after each use). 	 * The result of this is kept in 'md' and also xored into the 	 * 'state' at the same locations that were used as input into the          * hash function. 	 */
 comment|/* check if we already have the lock */
 if|if

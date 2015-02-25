@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openssl/x509.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/x509v3.h>
 end_include
 
@@ -82,7 +88,7 @@ name|add_ext
 argument_list|(
 name|STACK_OF
 argument_list|(
-name|X509_REQUEST
+name|X509_EXTENSION
 argument_list|)
 operator|*
 name|sk
@@ -600,7 +606,7 @@ name|add_ext
 argument_list|(
 name|STACK_OF
 argument_list|(
-name|X509_REQUEST
+name|X509_EXTENSION
 argument_list|)
 operator|*
 name|sk

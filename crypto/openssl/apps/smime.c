@@ -2326,10 +2326,10 @@ condition|)
 block|{
 ifndef|#
 directive|ifndef
-name|OPENSSL_NO_RC2
+name|OPENSSL_NO_DES
 name|cipher
 operator|=
-name|EVP_rc2_40_cbc
+name|EVP_des_ede3_cbc
 argument_list|()
 expr_stmt|;
 else|#

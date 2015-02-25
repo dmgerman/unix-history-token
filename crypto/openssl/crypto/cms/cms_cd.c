@@ -53,11 +53,22 @@ directive|include
 file|<openssl/bio.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_COMP
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/comp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

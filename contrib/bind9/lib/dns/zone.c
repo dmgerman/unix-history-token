@@ -37885,6 +37885,11 @@ name|ISC_TRUE
 expr_stmt|;
 block|}
 block|}
+else|else
+block|{
+comment|/* 			 * No previously known key, and the key is not 			 * secure, so skip it. 			 */
+continue|continue;
+block|}
 comment|/* Delete old version */
 if|if
 condition|(
@@ -38150,6 +38155,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|secure
+operator|&&
 operator|!
 name|deletekey
 condition|)

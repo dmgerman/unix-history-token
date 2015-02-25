@@ -2562,6 +2562,10 @@ name|int
 name|debug
 init|=
 literal|0
+decl_stmt|,
+name|ri_match
+init|=
+literal|0
 decl_stmt|;
 name|ris
 operator|=
@@ -2622,6 +2626,10 @@ operator|!=
 name|CMS_RECIPINFO_TRANS
 condition|)
 continue|continue;
+name|ri_match
+operator|=
+literal|1
+expr_stmt|;
 comment|/* If we have a cert try matching RecipientInfo 		 * otherwise try them all. 		 */
 if|if
 condition|(
@@ -2720,6 +2728,8 @@ block|}
 comment|/* If no cert and not debugging always return success */
 if|if
 condition|(
+name|ri_match
+operator|&&
 operator|!
 name|cert
 operator|&&

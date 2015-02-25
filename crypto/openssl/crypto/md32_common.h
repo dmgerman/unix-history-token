@@ -639,7 +639,7 @@ name|c
 parameter_list|,
 name|l
 parameter_list|)
-value|(l =(((unsigned long)(*((c)++)))<<24),		\ 			 l|=(((unsigned long)(*((c)++)))<<16),		\ 			 l|=(((unsigned long)(*((c)++)))<< 8),		\ 			 l|=(((unsigned long)(*((c)++)))    ),		\ 			 l)
+value|(l =(((unsigned long)(*((c)++)))<<24),		\ 			 l|=(((unsigned long)(*((c)++)))<<16),		\ 			 l|=(((unsigned long)(*((c)++)))<< 8),		\ 			 l|=(((unsigned long)(*((c)++)))    )		)
 end_define
 
 begin_endif
@@ -841,7 +841,7 @@ name|c
 parameter_list|,
 name|l
 parameter_list|)
-value|(l =(((unsigned long)(*((c)++)))    ),		\ 			 l|=(((unsigned long)(*((c)++)))<< 8),		\ 			 l|=(((unsigned long)(*((c)++)))<<16),		\ 			 l|=(((unsigned long)(*((c)++)))<<24),		\ 			 l)
+value|(l =(((unsigned long)(*((c)++)))    ),		\ 			 l|=(((unsigned long)(*((c)++)))<< 8),		\ 			 l|=(((unsigned long)(*((c)++)))<<16),		\ 			 l|=(((unsigned long)(*((c)++)))<<24)		)
 end_define
 
 begin_endif

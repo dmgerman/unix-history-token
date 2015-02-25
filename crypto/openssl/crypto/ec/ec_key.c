@@ -33,12 +33,6 @@ directive|include
 file|<openssl/err.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
 begin_function
 name|EC_KEY
 modifier|*

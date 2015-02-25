@@ -3149,6 +3149,26 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* x**0 mod 1 is still zero. */
+if|if
+condition|(
+name|BN_is_one
+argument_list|(
+name|m
+argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+name|BN_zero
+argument_list|(
+name|rr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|ret
 operator|=
 name|BN_one

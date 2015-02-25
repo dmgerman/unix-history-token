@@ -1257,9 +1257,8 @@ name|SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER
 value|0x00000020L
 define|#
 directive|define
-name|SSL_OP_MSIE_SSLV2_RSA_PADDING
+name|SSL_OP_SAFARI_ECDHE_ECDSA_BUG
 value|0x00000040L
-comment|/* no effect since 0.9.7h and 0.9.8b */
 define|#
 directive|define
 name|SSL_OP_SSLEAY_080_CLIENT_DH_BUG
@@ -1272,6 +1271,11 @@ define|#
 directive|define
 name|SSL_OP_TLS_BLOCK_PADDING_BUG
 value|0x00000200L
+comment|/* Hasn't done anything since OpenSSL 0.9.7h, retained for compatibility */
+define|#
+directive|define
+name|SSL_OP_MSIE_SSLV2_RSA_PADDING
+value|0x0
 comment|/* Disable SSL 3.0/TLS 1.0 CBC vulnerability workaround that was added  * in OpenSSL 0.9.6d.  Usually (depending on the application protocol)  * the workaround is not needed.  Unfortunately some broken SSL/TLS  * implementations cannot handle it at all, which is why we include  * it in SSL_OP_ALL. */
 define|#
 directive|define
@@ -1387,7 +1391,7 @@ define|#
 directive|define
 name|SSL_MODE_NO_AUTO_CHAIN
 value|0x00000008L
-comment|/* Send TLS_FALLBACK_SCSV in the ClientHello.  * To be set by applications that reconnect with a downgraded protocol  * version; see draft-ietf-tls-downgrade-scsv-00 for details. */
+comment|/* Send TLS_FALLBACK_SCSV in the ClientHello.  * To be set only by applications that reconnect with a downgraded protocol  * version; see draft-ietf-tls-downgrade-scsv-00 for details.  *  * DO NOT ENABLE THIS if your application attempts a normal handshake.  * Only use this in explicit fallback retries, following the guidance  * in draft-ietf-tls-downgrade-scsv-00.  */
 define|#
 directive|define
 name|SSL_MODE_SEND_FALLBACK_SCSV

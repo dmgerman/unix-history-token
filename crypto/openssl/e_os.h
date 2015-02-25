@@ -897,6 +897,7 @@ parameter_list|)
 value|_strlen31(s)
 comment|/* cut strings to 2GB */
 specifier|static
+name|__inline
 name|unsigned
 name|int
 name|_strlen31
@@ -1215,7 +1216,7 @@ endif|#
 directive|endif
 else|#
 directive|else
-comment|/* The non-microsoft world world */
+comment|/* The non-microsoft world */
 ifdef|#
 directive|ifdef
 name|OPENSSL_SYS_VMS
@@ -2392,6 +2393,64 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* end vxworks */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+specifier|inline
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC_VERSION__
+argument_list|)
+operator|&&
+name|__STDC_VERSION__
+operator|>=
+literal|199901L
+comment|/* do nothing, inline works */
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|__GNUC__
+operator|>=
+literal|2
+define|#
+directive|define
+name|inline
+value|__inline__
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+comment|/*    * Visual Studio: inline is available in C++ only, however    * __inline is available for C, see    * http://msdn.microsoft.com/en-us/library/z8y1yy88.aspx    */
+define|#
+directive|define
+name|inline
+value|__inline
+else|#
+directive|else
+define|#
+directive|define
+name|inline
+endif|#
+directive|endif
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus
