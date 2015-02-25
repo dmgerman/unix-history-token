@@ -7848,6 +7848,12 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|func
+operator|->
+name|name
+operator|!=
+name|NULL
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
