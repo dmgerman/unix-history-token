@@ -3863,8 +3863,6 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"DEBUG: unique_subject undefined\n"
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8485,6 +8483,11 @@ argument_list|,
 literal|"Signature verification problems....\n"
 argument_list|)
 expr_stmt|;
+name|ERR_print_errors
+argument_list|(
+name|bio_err
+argument_list|)
+expr_stmt|;
 goto|goto
 name|err
 goto|;
@@ -8505,6 +8508,11 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"Signature did not match the certificate request\n"
+argument_list|)
+expr_stmt|;
+name|ERR_print_errors
+argument_list|(
+name|bio_err
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -14310,6 +14318,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|revtm
+condition|)
+return|return
+name|NULL
+return|;
 name|i
 operator|=
 name|revtm

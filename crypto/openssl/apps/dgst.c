@@ -1307,6 +1307,20 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|"-hmac arg       set the HMAC key to arg\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-non-fips-allow allow use of non FIPS digest\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|"-sign   file    sign digest using private key in file\n"
 argument_list|)
 expr_stmt|;
@@ -1988,7 +2002,7 @@ name|pctx
 argument_list|,
 name|md
 argument_list|,
-name|e
+name|NULL
 argument_list|,
 name|sigkey
 argument_list|)
@@ -2005,7 +2019,7 @@ name|pctx
 argument_list|,
 name|md
 argument_list|,
-name|e
+name|NULL
 argument_list|,
 name|sigkey
 argument_list|)

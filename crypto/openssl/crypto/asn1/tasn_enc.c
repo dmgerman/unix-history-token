@@ -1928,6 +1928,14 @@ name|derlst
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|derlst
+condition|)
+return|return
+literal|0
+return|;
 name|tmpdat
 operator|=
 name|OPENSSL_malloc
@@ -1938,14 +1946,18 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|derlst
-operator|||
-operator|!
 name|tmpdat
 condition|)
+block|{
+name|OPENSSL_free
+argument_list|(
+name|derlst
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 block|}
 block|}
 comment|/* If not sorting just output each item */

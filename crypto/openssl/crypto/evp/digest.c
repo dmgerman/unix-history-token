@@ -1204,6 +1204,11 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
+if|if
+condition|(
+name|ctx
+condition|)
+block|{
 name|EVP_MD_CTX_cleanup
 argument_list|(
 name|ctx
@@ -1214,6 +1219,7 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

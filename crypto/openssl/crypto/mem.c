@@ -1528,6 +1528,10 @@ condition|)
 return|return
 name|NULL
 return|;
+if|if
+condition|(
+name|allow_customize
+condition|)
 name|allow_customize
 operator|=
 literal|0
@@ -1539,6 +1543,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|allow_customize_debug
+condition|)
 name|allow_customize_debug
 operator|=
 literal|0
@@ -1735,6 +1743,10 @@ condition|)
 return|return
 name|NULL
 return|;
+if|if
+condition|(
+name|allow_customize
+condition|)
 name|allow_customize
 operator|=
 literal|0
@@ -1746,6 +1758,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|allow_customize_debug
+condition|)
 name|allow_customize_debug
 operator|=
 literal|0

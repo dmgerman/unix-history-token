@@ -15,12 +15,6 @@ begin_comment
 comment|/* We need to do this early, because stdio.h includes the header files    that handle _GNU_SOURCE and other similar macros.  Defining it later    is simply too late, because those headers are protected from re-    inclusion.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__linux
-end_ifdef
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -36,11 +30,6 @@ end_define
 begin_comment
 comment|/* make sure dladdr is declared */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -1925,7 +1914,7 @@ return|;
 block|}
 name|ERR_add_error_data
 argument_list|(
-literal|4
+literal|2
 argument_list|,
 literal|"dlfcn_pathbyaddr(): "
 argument_list|,

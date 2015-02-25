@@ -1713,14 +1713,6 @@ condition|)
 return|return
 literal|0
 return|;
-if|if
-condition|(
-operator|!
-name|pcerts
-condition|)
-return|return
-literal|0
-return|;
 for|for
 control|(
 name|i

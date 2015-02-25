@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ssl/tls1.h */
+comment|/* ssl/srtp.h */
 end_comment
 
 begin_comment
@@ -26,6 +26,12 @@ define|#
 directive|define
 name|HEADER_D1_SRTP_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<openssl/ssl.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -63,6 +69,9 @@ define|#
 directive|define
 name|SRTP_NULL_SHA1_32
 value|0x0006
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SRTP
 name|int
 name|SSL_CTX_set_tlsext_use_srtp
 parameter_list|(
@@ -110,6 +119,8 @@ operator|*
 name|ssl
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus

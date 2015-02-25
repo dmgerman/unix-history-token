@@ -540,21 +540,6 @@ parameter_list|)
 value|(OBJ_obj2nid((a)->type) == NID_pkcs7_digest)
 define|#
 directive|define
-name|PKCS7_type_is_encrypted
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|(OBJ_obj2nid((a)->type) == NID_pkcs7_encrypted)
-define|#
-directive|define
-name|PKCS7_type_is_digest
-parameter_list|(
-name|a
-parameter_list|)
-value|(OBJ_obj2nid((a)->type) == NID_pkcs7_digest)
-define|#
-directive|define
 name|PKCS7_set_detached
 parameter_list|(
 name|p
@@ -1880,6 +1865,10 @@ define|#
 directive|define
 name|PKCS7_R_INVALID_NULL_POINTER
 value|143
+define|#
+directive|define
+name|PKCS7_R_INVALID_SIGNED_DATA_TYPE
+value|155
 define|#
 directive|define
 name|PKCS7_R_MIME_NO_CONTENT_TYPE

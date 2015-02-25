@@ -1916,6 +1916,13 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|" -verify_return_error - return verification errors\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|" -cert arg     - certificate file to use\n"
 argument_list|)
 expr_stmt|;
@@ -2203,6 +2210,9 @@ argument_list|,
 literal|" -ssl2         - Just talk SSLv2\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SSL3_METHOD
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -2210,6 +2220,8 @@ argument_list|,
 literal|" -ssl3         - Just talk SSLv3\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -2323,6 +2335,13 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|" -bugs         - Turn on SSL bug compatibility\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -hack         - workaround for early Netscape code\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -2491,6 +2510,34 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|" -keymatexportlen len  - Export len bytes of keying material (default 20)\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -status           - respond to certificate status requests\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -status_verbose   - enable status request verbose printout\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -status_timeout n - status request responder timeout\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -status_url URL   - status request fallback URL\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3474,7 +3521,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|servername
 argument_list|,
@@ -6384,7 +6431,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|OPENSSL_NO_SSL3
+name|OPENSSL_NO_SSL3_METHOD
 elseif|else
 if|if
 condition|(
@@ -7043,6 +7090,31 @@ goto|goto
 name|end
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DTLS1
+if|if
+condition|(
+name|www
+operator|&&
+name|socket_type
+operator|==
+name|SOCK_DGRAM
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"Can't use -HTTP, -www or -WWW with DTLS\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
+endif|#
+directive|endif
 if|#
 directive|if
 operator|!
@@ -9846,10 +9918,44 @@ block|}
 if|if
 condition|(
 name|socket_mtu
-operator|>
-literal|28
 condition|)
 block|{
+if|if
+condition|(
+name|socket_mtu
+operator|<
+name|DTLS_get_link_min_mtu
+argument_list|(
+name|con
+argument_list|)
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"MTU too small. Must be at least %ld\n"
+argument_list|,
+name|DTLS_get_link_min_mtu
+argument_list|(
+name|con
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|BIO_free
+argument_list|(
+name|sbio
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 name|SSL_set_options
 argument_list|(
 name|con
@@ -9857,15 +9963,38 @@ argument_list|,
 name|SSL_OP_NO_QUERY_MTU
 argument_list|)
 expr_stmt|;
-name|SSL_set_mtu
+if|if
+condition|(
+operator|!
+name|DTLS_set_link_mtu
 argument_list|(
 name|con
 argument_list|,
 name|socket_mtu
-operator|-
-literal|28
+argument_list|)
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"Failed to set MTU\n"
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|BIO_free
+argument_list|(
+name|sbio
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 block|}
 else|else
 comment|/* want to do MTU discovery */

@@ -222,6 +222,11 @@ name|DTLS1_SCTP_AUTH_LABEL
 value|"EXPORTER_DTLS_OVER_SCTP"
 endif|#
 directive|endif
+comment|/* Max MTU overhead we know about so far is 40 for IPv6 + 8 for UDP */
+define|#
+directive|define
+name|DTLS1_MAX_MTU_OVERHEAD
+value|48
 typedef|typedef
 struct|struct
 name|dtls1_bitmap_st
@@ -472,6 +477,11 @@ name|listen
 decl_stmt|;
 name|unsigned
 name|int
+name|link_mtu
+decl_stmt|;
+comment|/* max on-the-wire DTLS packet size */
+name|unsigned
+name|int
 name|mtu
 decl_stmt|;
 comment|/* max DTLS packet size */
@@ -524,6 +534,7 @@ name|unsigned
 name|int
 name|retransmitting
 decl_stmt|;
+comment|/* 	 * Set when the handshake is ready to process peer's ChangeCipherSpec message. 	 * Cleared after the message has been processed. 	 */
 name|unsigned
 name|int
 name|change_cipher_spec_ok

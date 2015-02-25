@@ -608,16 +608,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|limb
-name|bottom32bits
-init|=
-literal|0xffffffff
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
 name|u64
 name|bottom63bits
 init|=

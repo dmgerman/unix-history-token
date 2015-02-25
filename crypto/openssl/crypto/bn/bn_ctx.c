@@ -460,12 +460,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"(%08x): "
+literal|"(%16p): "
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|ctx
 argument_list|)
 expr_stmt|;

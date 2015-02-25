@@ -612,6 +612,7 @@ name|char
 modifier|*
 name|out
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -649,12 +650,12 @@ name|i
 operator|++
 control|)
 operator|*
-name|in
-operator|++
-operator|=
-operator|*
 name|out
 operator|--
+operator|=
+operator|*
+name|in
+operator|++
 expr_stmt|;
 block|}
 else|else

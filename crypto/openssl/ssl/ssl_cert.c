@@ -845,48 +845,6 @@ argument_list|,
 name|CRYPTO_LOCK_EVP_PKEY
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
-name|i
-condition|)
-block|{
-comment|/* If there was anything special to do for 				 * certain types of keys, we'd do it here. 				 * (Nothing at the moment, I think.) */
-case|case
-name|SSL_PKEY_RSA_ENC
-case|:
-case|case
-name|SSL_PKEY_RSA_SIGN
-case|:
-comment|/* We have an RSA key. */
-break|break;
-case|case
-name|SSL_PKEY_DSA_SIGN
-case|:
-comment|/* We have a DSA key. */
-break|break;
-case|case
-name|SSL_PKEY_DH_RSA
-case|:
-case|case
-name|SSL_PKEY_DH_DSA
-case|:
-comment|/* We have a DH key. */
-break|break;
-case|case
-name|SSL_PKEY_ECC
-case|:
-comment|/* We have an ECC key */
-break|break;
-default|default:
-comment|/* Can't happen. */
-name|SSLerr
-argument_list|(
-name|SSL_F_SSL_CERT_DUP
-argument_list|,
-name|SSL_R_LIBRARY_BUG
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 comment|/* ret->extra_certs *should* exist, but currently the own certificate 	 * chain is held inside SSL_CTX */

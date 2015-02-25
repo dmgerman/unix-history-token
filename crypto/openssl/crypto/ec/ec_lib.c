@@ -40,7 +40,6 @@ file|"ec_lcl.h"
 end_include
 
 begin_decl_stmt
-specifier|static
 specifier|const
 name|char
 name|EC_version
@@ -1979,7 +1978,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* compare the curve name (if present) */
+comment|/* compare the curve name (if present in both) */
 if|if
 condition|(
 name|EC_GROUP_get_curve_name
@@ -1996,14 +1995,14 @@ name|EC_GROUP_get_curve_name
 argument_list|(
 name|a
 argument_list|)
-operator|==
+operator|!=
 name|EC_GROUP_get_curve_name
 argument_list|(
 name|b
 argument_list|)
 condition|)
 return|return
-literal|0
+literal|1
 return|;
 if|if
 condition|(
@@ -4355,7 +4354,7 @@ name|group
 operator|->
 name|meth
 operator|->
-name|dbl
+name|invert
 operator|==
 literal|0
 condition|)
@@ -4607,7 +4606,8 @@ name|ERR_R_SHOULD_NOT_HAVE_BEEN_CALLED
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 if|if
@@ -4641,7 +4641,8 @@ name|EC_R_INCOMPATIBLE_OBJECTS
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 return|return

@@ -892,6 +892,10 @@ name|ctx
 operator|->
 name|tmp
 expr_stmt|;
+name|num
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -1088,9 +1092,17 @@ block|}
 comment|/* we fell off the end without starting */
 if|if
 condition|(
+operator|(
 name|j
 operator|==
 name|i
+operator|)
+operator|&&
+operator|(
+name|num
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* Is this is one long chunk?, if so, keep on 				 * reading until a new line. */

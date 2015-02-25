@@ -189,7 +189,7 @@ condition|(
 name|pstr
 operator|->
 name|length
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
@@ -1394,6 +1394,9 @@ argument_list|,
 name|ERR_R_EC_LIB
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 comment|/* restore old encoding flags */
 name|EC_KEY_set_enc_flags
@@ -1877,6 +1880,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|public_key
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|pub_key
 operator|=
@@ -1908,10 +1918,6 @@ goto|goto
 name|err
 goto|;
 block|}
-if|if
-condition|(
-name|pub_key
-condition|)
 name|buf_len
 operator|=
 operator|(
@@ -1922,6 +1928,7 @@ argument_list|(
 name|pub_key
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

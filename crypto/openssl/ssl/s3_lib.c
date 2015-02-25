@@ -446,7 +446,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -544,7 +544,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -642,7 +642,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -738,7 +738,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -833,7 +833,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -990,7 +990,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -1070,7 +1070,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -1194,7 +1194,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -3023,12 +3023,14 @@ block|,
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
+operator||
+name|SSL_FIPS
 block|,
 name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -3054,6 +3056,8 @@ block|,
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
+operator||
+name|SSL_FIPS
 block|,
 name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
@@ -3085,6 +3089,8 @@ block|,
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
+operator||
+name|SSL_FIPS
 block|,
 name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
@@ -3785,7 +3791,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -3948,7 +3954,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -4111,7 +4117,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -4274,7 +4280,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -4437,7 +4443,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -4540,7 +4546,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -4571,7 +4577,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -4602,7 +4608,7 @@ name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
 name|TLS1_PRF
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -6282,6 +6288,26 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_TLSEXT
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC
+name|s
+operator|->
+name|s3
+operator|->
+name|is_probably_safari
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !OPENSSL_NO_EC */
+endif|#
+directive|endif
+comment|/* !OPENSSL_NO_TLSEXT */
 name|rp
 operator|=
 name|s
@@ -9774,8 +9800,10 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|CIPHER_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Server has %d from %p:\n"
 argument_list|,
 name|sk_SSL_CIPHER_num
@@ -9816,8 +9844,10 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%p:%s\n"
 argument_list|,
 operator|(
@@ -9832,8 +9862,10 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Client sent %d from %p:\n"
 argument_list|,
 name|sk_SSL_CIPHER_num
@@ -9874,8 +9906,10 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%p:%s\n"
 argument_list|,
 operator|(
@@ -10002,36 +10036,40 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SRP
-name|mask_k
-operator|=
-name|cert
-operator|->
-name|mask_k
-operator||
+if|if
+condition|(
 name|s
 operator|->
 name|srp_ctx
 operator|.
 name|srp_Mask
+operator|&
+name|SSL_kSRP
+condition|)
+block|{
+name|mask_k
+operator||=
+name|SSL_kSRP
 expr_stmt|;
 name|emask_k
-operator|=
-name|cert
-operator|->
-name|export_mask_k
-operator||
-name|s
-operator|->
-name|srp_ctx
-operator|.
-name|srp_Mask
+operator||=
+name|SSL_kSRP
 expr_stmt|;
+name|mask_a
+operator||=
+name|SSL_aSRP
+expr_stmt|;
+name|emask_a
+operator||=
+name|SSL_aSRP
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-comment|/*		printf("ssl3_choose_cipher %d alg= %lx\n", i,c->algorithms);*/
+comment|/*		fprintf(stderr,"ssl3_choose_cipher %d alg= %lx\n", i,c->algorithms);*/
 endif|#
 directive|endif
 comment|/* KSSL_DEBUG */
@@ -10119,8 +10157,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CIPHER_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%d:[%08lX:%08lX:%08lX:%08lX]%p:%s (export)\n"
 argument_list|,
 name|ok
@@ -10166,8 +10206,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CIPHER_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%d:[%08lX:%08lX:%08lX:%08lX]%p:%s\n"
 argument_list|,
 name|ok
@@ -10932,6 +10974,9 @@ operator|&&
 name|ec_ok
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ECDH
 if|if
 condition|(
 comment|/* if we are considering an ECC cipher suite that uses an ephemeral EC key */
@@ -11187,6 +11232,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* OPENSSL_NO_ECDH */
+endif|#
+directive|endif
 comment|/* OPENSSL_NO_EC */
 endif|#
 directive|endif
@@ -11213,6 +11261,58 @@ operator|>=
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_NO_EC
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_NO_TLSEXT
+argument_list|)
+if|if
+condition|(
+operator|(
+name|alg_k
+operator|&
+name|SSL_kEECDH
+operator|)
+operator|&&
+operator|(
+name|alg_a
+operator|&
+name|SSL_aECDSA
+operator|)
+operator|&&
+name|s
+operator|->
+name|s3
+operator|->
+name|is_probably_safari
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|ret
+condition|)
+name|ret
+operator|=
+name|sk_SSL_CIPHER_value
+argument_list|(
+name|allow
+argument_list|,
+name|ii
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+endif|#
+directive|endif
 name|ret
 operator|=
 name|sk_SSL_CIPHER_value

@@ -1236,6 +1236,8 @@ block|{
 name|X509_ALGOR
 modifier|*
 name|alg
+init|=
+name|NULL
 decl_stmt|;
 name|ASN1_STRING
 modifier|*

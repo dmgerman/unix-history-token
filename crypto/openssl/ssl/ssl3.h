@@ -828,15 +828,16 @@ define|#
 directive|define
 name|TLS1_FLAGS_KEEP_HANDSHAKE
 value|0x0020
+comment|/*  * Set when the handshake is ready to process peer's ChangeCipherSpec message.  * Cleared after the message has been processed.  */
+define|#
+directive|define
+name|SSL3_FLAGS_CCS_OK
+value|0x0080
 comment|/* SSL3_FLAGS_SGC_RESTART_DONE is set when we  * restart a handshake because of MS SGC and so prevents us  * from restarting the handshake in a loop. It's reset on a  * renegotiation, so effectively limits the client to one restart  * per negotiation. This limits the possibility of a DDoS  * attack where the client handshakes in a loop using SGC to  * restart. Servers which permit renegotiation can still be  * effected, but we can't prevent that.  */
 define|#
 directive|define
 name|SSL3_FLAGS_SGC_RESTART_DONE
 value|0x0040
-define|#
-directive|define
-name|SSL3_FLAGS_CCS_OK
-value|0x0080
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SSL_INTERN
@@ -982,7 +983,7 @@ modifier|*
 modifier|*
 name|handshake_dgst
 decl_stmt|;
-comment|/* this is set whenerver we see a change_cipher_spec message 	 * come in when we are not looking for one */
+comment|/* 	 * Set whenever an expected ChangeCipherSpec message is processed. 	 * Unset when the peer's Finished message is received. 	 * Unexpected ChangeCipherSpec messages trigger a fatal alert. 	 */
 name|int
 name|change_cipher_spec
 decl_stmt|;
@@ -1212,6 +1213,22 @@ name|next_proto_neg_seen
 decl_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_TLSEXT
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC
+comment|/* This is set to true if we believe that this is a version of Safari 	 * running on OS X 10.6 or newer. We wish to know this because Safari 	 * on 10.8 .. 10.8.3 has broken ECDHE-ECDSA support. */
+name|char
+name|is_probably_safari
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* !OPENSSL_NO_EC */
+endif|#
+directive|endif
+comment|/* !OPENSSL_NO_TLSEXT */
 block|}
 name|SSL3_STATE
 typedef|;

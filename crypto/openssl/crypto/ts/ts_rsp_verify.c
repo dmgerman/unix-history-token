@@ -2677,6 +2677,11 @@ name|imprint_len
 operator|=
 literal|0
 expr_stmt|;
+operator|*
+name|imprint
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 literal|0
 return|;

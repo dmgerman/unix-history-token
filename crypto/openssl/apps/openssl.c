@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openssl/rand.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/lhash.h>
 end_include
 
@@ -1417,14 +1423,6 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
-name|apps_shutdown
-argument_list|()
-expr_stmt|;
-name|CRYPTO_mem_leaks
-argument_list|(
-name|bio_err
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bio_err
@@ -1468,6 +1466,14 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|apps_shutdown
+argument_list|()
+expr_stmt|;
+name|CRYPTO_mem_leaks
+argument_list|(
+name|bio_err
+argument_list|)
+expr_stmt|;
 name|OPENSSL_EXIT
 argument_list|(
 name|ret

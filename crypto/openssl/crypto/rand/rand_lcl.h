@@ -380,6 +380,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|int
+name|ssleay_rand_bytes
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|num
+parameter_list|,
+name|int
+name|pseudo
+parameter_list|,
+name|int
+name|lock
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

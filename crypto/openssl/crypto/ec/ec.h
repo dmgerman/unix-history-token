@@ -1377,7 +1377,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/** Computes r = generator * n sum_{i=0}^num p[i] * m[i]  *  \param  group  underlying EC_GROUP object  *  \param  r      EC_POINT object for the result  *  \param  n      BIGNUM with the multiplier for the group generator (optional)  *  \param  num    number futher summands  *  \param  p      array of size num of EC_POINT objects  *  \param  m      array of size num of BIGNUM objects  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
+comment|/** Computes r = generator * n sum_{i=0}^{num-1} p[i] * m[i]  *  \param  group  underlying EC_GROUP object  *  \param  r      EC_POINT object for the result  *  \param  n      BIGNUM with the multiplier for the group generator (optional)  *  \param  num    number futher summands  *  \param  p      array of size num of EC_POINT objects  *  \param  m      array of size num of BIGNUM objects  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINTs_mul
 parameter_list|(

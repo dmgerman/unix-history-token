@@ -2957,7 +2957,7 @@ end_function_decl
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|OPENSSL_EC_NISTP_64_GCC_128
+name|OPENSSL_NO_EC_NISTP_64_GCC_128
 end_ifndef
 
 begin_comment

@@ -660,6 +660,8 @@ return|return
 literal|0
 return|;
 block|}
+if|if
+condition|(
 name|EVP_Cipher
 argument_list|(
 name|ds
@@ -674,7 +676,13 @@ name|input
 argument_list|,
 name|l
 argument_list|)
-expr_stmt|;
+operator|<
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG

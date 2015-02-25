@@ -855,6 +855,13 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|" -verify_return_error - return verification errors\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|" -cert arg     - certificate file to use, PEM format assumed\n"
 argument_list|)
 expr_stmt|;
@@ -919,6 +926,13 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|" -pause        - sleep(1) after each read(2) and write(2) system call\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -prexit       - print session information even on connection failure\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -1074,7 +1088,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -srp_strength int - minimal mength in bits for N (default %d).\n"
+literal|" -srp_strength int - minimal length in bits for N (default %d).\n"
 argument_list|,
 name|SRP_MINIMAL_N
 argument_list|)
@@ -1088,6 +1102,9 @@ argument_list|,
 literal|" -ssl2         - just use SSLv2\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SSL3_METHOD
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1095,6 +1112,8 @@ argument_list|,
 literal|" -ssl3         - just use SSLv3\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -3750,7 +3769,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|OPENSSL_NO_SSL3
+name|OPENSSL_NO_SSL3_METHOD
 elseif|else
 if|if
 condition|(
@@ -6207,10 +6226,39 @@ block|}
 if|if
 condition|(
 name|socket_mtu
-operator|>
-literal|28
 condition|)
 block|{
+if|if
+condition|(
+name|socket_mtu
+operator|<
+name|DTLS_get_link_min_mtu
+argument_list|(
+name|con
+argument_list|)
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"MTU too small. Must be at least %ld\n"
+argument_list|,
+name|DTLS_get_link_min_mtu
+argument_list|(
+name|con
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|BIO_free
+argument_list|(
+name|sbio
+argument_list|)
+expr_stmt|;
+goto|goto
+name|shut
+goto|;
+block|}
 name|SSL_set_options
 argument_list|(
 name|con
@@ -6218,15 +6266,33 @@ argument_list|,
 name|SSL_OP_NO_QUERY_MTU
 argument_list|)
 expr_stmt|;
-name|SSL_set_mtu
+if|if
+condition|(
+operator|!
+name|DTLS_set_link_mtu
 argument_list|(
 name|con
 argument_list|,
 name|socket_mtu
-operator|-
-literal|28
+argument_list|)
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"Failed to set MTU\n"
 argument_list|)
 expr_stmt|;
+name|BIO_free
+argument_list|(
+name|sbio
+argument_list|)
+expr_stmt|;
+goto|goto
+name|shut
+goto|;
+block|}
 block|}
 else|else
 comment|/* want to do MTU discovery */

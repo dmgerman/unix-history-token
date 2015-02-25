@@ -5581,6 +5581,10 @@ name|ASN1_R_TYPE_NOT_CONSTRUCTED
 value|156
 define|#
 directive|define
+name|ASN1_R_TYPE_NOT_PRIMITIVE
+value|218
+define|#
+directive|define
 name|ASN1_R_UNABLE_TO_DECODE_RSA_KEY
 value|157
 define|#

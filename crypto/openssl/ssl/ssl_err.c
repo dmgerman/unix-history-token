@@ -4309,7 +4309,7 @@ argument_list|(
 name|SSL_R_TLS_HEARTBEAT_PEER_DOESNT_ACCEPT
 argument_list|)
 block|,
-literal|"peer does not accept heartbearts"
+literal|"peer does not accept heartbeats"
 block|}
 block|,
 block|{

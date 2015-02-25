@@ -115,7 +115,7 @@ block|{
 if|if
 condition|(
 name|OPENSSL_armcap_P
-operator||
+operator|&
 name|ARMV7_TICK
 condition|)
 return|return

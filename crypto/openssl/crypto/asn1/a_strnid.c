@@ -98,7 +98,7 @@ name|unsigned
 name|long
 name|global_mask
 init|=
-literal|0xFFFFFFFFL
+name|B_ASN1_UTF8STRING
 decl_stmt|;
 end_decl_stmt
 

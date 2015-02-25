@@ -1940,6 +1940,11 @@ argument_list|,
 name|nm
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|signer
+condition|)
+block|{
 operator|*
 name|psigner
 operator|=
@@ -1948,6 +1953,7 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
 block|}
 name|signer
 operator|=

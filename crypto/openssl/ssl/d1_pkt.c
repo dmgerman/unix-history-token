@@ -3064,6 +3064,31 @@ name|start
 goto|;
 block|}
 block|}
+if|if
+condition|(
+name|s
+operator|->
+name|d1
+operator|->
+name|listen
+operator|&&
+name|rr
+operator|->
+name|type
+operator|!=
+name|SSL3_RT_HANDSHAKE
+condition|)
+block|{
+name|rr
+operator|->
+name|length
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|start
+goto|;
+block|}
 comment|/* we now have a packet which can be read and processed */
 if|if
 condition|(
@@ -3905,6 +3930,13 @@ operator|->
 name|renegotiate
 condition|)
 block|{
+name|s
+operator|->
+name|d1
+operator|->
+name|handshake_read_seq
+operator|++
+expr_stmt|;
 name|s
 operator|->
 name|new_session
@@ -5979,6 +6011,8 @@ operator|+=
 name|bs
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|s
 operator|->
 name|method
@@ -5991,7 +6025,12 @@ name|s
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|<
+literal|1
+condition|)
+goto|goto
+name|err
+goto|;
 comment|/* record length after mac and block padding */
 comment|/*	if (type == SSL3_RT_APPLICATION_DATA || 	(type == SSL3_RT_ALERT&& ! SSL_in_init(s))) */
 comment|/* there's only one epoch between handshake and app data */

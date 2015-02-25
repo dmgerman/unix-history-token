@@ -653,6 +653,16 @@ operator|==
 literal|0
 condition|)
 block|{
+name|d2i
+operator|=
+operator|(
+name|D2I_OF
+argument_list|(
+name|void
+argument_list|)
+operator|)
+name|d2i_RSAPrivateKey
+expr_stmt|;
 if|if
 condition|(
 name|xi
