@@ -6618,7 +6618,14 @@ name|buf
 argument_list|,
 name|buflen
 argument_list|,
-literal|"bus=%u hubaddr=%u port=%u devaddr=%u interface=%u"
+literal|"bus=%u hubaddr=%u port=%u devaddr=%u"
+literal|" interface=%u"
+if|#
+directive|if
+name|USB_HAVE_UGEN
+literal|" ugen=%s"
+endif|#
+directive|endif
 argument_list|,
 name|device_get_unit
 argument_list|(
@@ -6664,6 +6671,17 @@ argument_list|,
 name|res
 operator|.
 name|iface_index
+if|#
+directive|if
+name|USB_HAVE_UGEN
+argument_list|,
+name|res
+operator|.
+name|udev
+operator|->
+name|ugen_name
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 name|done
@@ -6841,7 +6859,7 @@ literal|"sernum=\"%s\" "
 literal|"release=0x%04x "
 literal|"mode=%s "
 literal|"intclass=0x%02x intsubclass=0x%02x "
-literal|"intprotocol=0x%02x "
+literal|"intprotocol=0x%02x"
 literal|"%s%s"
 argument_list|,
 name|UGETW
