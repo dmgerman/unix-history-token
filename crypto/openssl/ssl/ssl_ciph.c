@@ -2071,7 +2071,7 @@ operator|)
 operator|||
 operator|(
 name|i
-operator|>
+operator|>=
 name|SSL_ENC_NUM_IDX
 operator|)
 condition|)
@@ -2147,7 +2147,7 @@ operator|)
 operator|||
 operator|(
 name|i
-operator|>
+operator|>=
 name|SSL_MD_NUM_IDX
 operator|)
 condition|)

@@ -4853,6 +4853,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|frag
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
 name|frag

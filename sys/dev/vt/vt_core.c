@@ -8483,11 +8483,16 @@ return|;
 case|case
 name|VT_WAITACTIVE
 case|:
+block|{
+name|unsigned
+name|int
+name|idx
+decl_stmt|;
 name|error
 operator|=
 literal|0
 expr_stmt|;
-name|i
+name|idx
 operator|=
 operator|*
 operator|(
@@ -8499,7 +8504,7 @@ name|data
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|idx
 operator|>
 name|VT_MAXWINDOWS
 condition|)
@@ -8510,8 +8515,8 @@ operator|)
 return|;
 if|if
 condition|(
-name|i
-operator|!=
+name|idx
+operator|>
 literal|0
 condition|)
 name|vw
@@ -8520,7 +8525,7 @@ name|vd
 operator|->
 name|vd_windows
 index|[
-name|i
+name|idx
 operator|-
 literal|1
 index|]
@@ -8567,6 +8572,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 case|case
 name|VT_SETMODE
 case|:

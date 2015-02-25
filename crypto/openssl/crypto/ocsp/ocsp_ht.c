@@ -1594,6 +1594,14 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ctx
+condition|)
+return|return
+name|NULL
+return|;
 do|do
 block|{
 name|rv

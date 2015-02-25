@@ -206,6 +206,22 @@ name|long
 name|l
 decl_stmt|;
 comment|/* We can write SSLv2 and SSLv3 ciphers */
+comment|/* but no ECC ciphers */
+if|if
+condition|(
+name|c
+operator|->
+name|algorithms
+operator|&
+operator|(
+name|SSL_ECDH
+operator||
+name|SSL_aECDSA
+operator|)
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|p

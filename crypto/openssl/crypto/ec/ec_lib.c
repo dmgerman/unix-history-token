@@ -4699,7 +4699,7 @@ name|group
 operator|->
 name|meth
 operator|->
-name|dbl
+name|invert
 operator|==
 literal|0
 condition|)

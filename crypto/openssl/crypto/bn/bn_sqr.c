@@ -112,6 +112,12 @@ name|top
 operator|=
 literal|0
 expr_stmt|;
+name|r
+operator|->
+name|neg
+operator|=
+literal|0
+expr_stmt|;
 return|return
 literal|1
 return|;

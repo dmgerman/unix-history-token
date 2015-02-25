@@ -1391,7 +1391,7 @@ define|#
 directive|define
 name|SSL_MODE_NO_AUTO_CHAIN
 value|0x00000008L
-comment|/* Send TLS_FALLBACK_SCSV in the ClientHello.  * To be set by applications that reconnect with a downgraded protocol  * version; see draft-ietf-tls-downgrade-scsv-00 for details. */
+comment|/* Send TLS_FALLBACK_SCSV in the ClientHello.  * To be set only by applications that reconnect with a downgraded protocol  * version; see draft-ietf-tls-downgrade-scsv-00 for details.  *  * DO NOT ENABLE THIS if your application attempts a normal handshake.  * Only use this in explicit fallback retries, following the guidance  * in draft-ietf-tls-downgrade-scsv-00.  */
 define|#
 directive|define
 name|SSL_MODE_SEND_FALLBACK_SCSV

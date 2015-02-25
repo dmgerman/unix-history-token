@@ -6383,6 +6383,10 @@ goto|goto
 name|err
 goto|;
 block|}
+name|p
+operator|+=
+name|n
+expr_stmt|;
 continue|continue;
 block|}
 name|c
