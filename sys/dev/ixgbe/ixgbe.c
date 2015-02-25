@@ -10790,13 +10790,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RSS
-name|CPU_ZERO
-argument_list|(
-operator|&
-name|cpu_mask
-argument_list|)
-expr_stmt|;
-name|CPU_SET
+name|CPU_SETOF
 argument_list|(
 name|cpu_id
 argument_list|,
