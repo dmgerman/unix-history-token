@@ -3155,6 +3155,8 @@ operator|)
 decl_stmt|;
 name|int
 name|record
+init|=
+literal|0
 decl_stmt|;
 name|varflags
 operator|=
