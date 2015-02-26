@@ -263,7 +263,7 @@ parameter_list|)
 block|{
 switch|switch
 condition|(
-name|pthread_mutex_lock
+name|pthread_mutex_trylock
 argument_list|(
 name|mtx
 argument_list|)
