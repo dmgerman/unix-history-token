@@ -294,9 +294,25 @@ begin_comment
 comment|/* Define to 1 if you have the<execinfo.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_EXECINFO_H */
-end_comment
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000052
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_EXECINFO_H
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `exp' function. */
@@ -400,9 +416,25 @@ begin_comment
 comment|/* Define to 1 if you have the `futimens' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FUTIMENS */
-end_comment
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100056
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_FUTIMENS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `futimes' function. */

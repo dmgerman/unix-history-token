@@ -309,6 +309,17 @@ value|6
 end_define
 
 begin_comment
+comment|/* Patch version of the LLVM API */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_VERSION_PATCH
+value|0
+end_define
+
+begin_comment
 comment|/* LLVM version string */
 end_comment
 
