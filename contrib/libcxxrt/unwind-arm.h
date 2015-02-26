@@ -51,6 +51,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|int
+name|_Unwind_Action
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|uint32_t
 name|_Unwind_State
 typedef|;
