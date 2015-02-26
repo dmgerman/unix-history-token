@@ -194,6 +194,11 @@ name|int
 name|std_get_hiwat
 decl_stmt|;
 comment|/* Packets in get list 						 * high watermark */
+name|unsigned
+name|int
+name|std_put_hiwat
+decl_stmt|;
+comment|/* Packets in put list 						 * high watermark */
 block|}
 struct|;
 end_struct
@@ -580,6 +585,19 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|uint64_t
+name|sfxge_tx_get_drops
+parameter_list|(
+name|struct
+name|sfxge_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl

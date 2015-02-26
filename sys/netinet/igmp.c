@@ -5900,10 +5900,10 @@ name|uint16_t
 name|igmpv3len
 decl_stmt|;
 name|uint16_t
-name|srclen
+name|nsrc
 decl_stmt|;
 name|int
-name|nsrc
+name|srclen
 decl_stmt|;
 name|IGMPSTAT_INC
 argument_list|(

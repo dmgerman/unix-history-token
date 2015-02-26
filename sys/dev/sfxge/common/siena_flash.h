@@ -210,10 +210,16 @@ decl_stmt|;
 name|efx_word_t
 name|mac_addr_stride
 decl_stmt|;
+name|efx_word_t
+name|calibrated_vref
+decl_stmt|;
+name|efx_word_t
+name|adc_vref
+decl_stmt|;
 name|efx_dword_t
 name|reserved2
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 comment|/* (write as zero) */

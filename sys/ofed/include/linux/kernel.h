@@ -193,7 +193,7 @@ name|BUILD_BUG_ON
 parameter_list|(
 name|x
 parameter_list|)
-value|CTASSERT(x)
+value|CTASSERT(!(x))
 end_define
 
 begin_define

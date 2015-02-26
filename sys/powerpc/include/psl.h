@@ -33,6 +33,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PSL_VSX
+value|0x00800000UL
+end_define
+
+begin_comment
+comment|/* Vector-Scalar unit available */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PSL_EE
 value|0x00008000UL
 end_define

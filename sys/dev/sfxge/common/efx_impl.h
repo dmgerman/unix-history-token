@@ -867,7 +867,7 @@ name|EFX_RXQ_LIMIT_TARGET
 define|#
 directive|define
 name|EFX_RXQ_LIMIT_TARGET
-value|768
+value|512
 endif|#
 directive|endif
 ifndef|#
@@ -1685,8 +1685,14 @@ name|EFX_EVQ_MAGIC
 value|0x08081997
 define|#
 directive|define
-name|EFX_EV_TIMER_QUANTUM
-value|5
+name|EFX_EVQ_FALCON_TIMER_QUANTUM_NS
+value|4968
+comment|/* 621 cycles */
+define|#
+directive|define
+name|EFX_EVQ_SIENA_TIMER_QUANTUM_NS
+value|6144
+comment|/* 768 cycles */
 struct|struct
 name|efx_rxq_s
 block|{

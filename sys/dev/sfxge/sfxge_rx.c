@@ -5727,25 +5727,6 @@ operator|(
 name|rc
 operator|)
 return|;
-operator|(
-name|void
-operator|)
-name|memset
-argument_list|(
-name|esmp
-operator|->
-name|esm_base
-argument_list|,
-literal|0
-argument_list|,
-name|EFX_RXQ_SIZE
-argument_list|(
-name|sc
-operator|->
-name|rxq_entries
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Allocate buffer table entries. */
 name|sfxge_sram_buf_tbl_alloc
 argument_list|(

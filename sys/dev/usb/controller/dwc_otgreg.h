@@ -1006,6 +1006,52 @@ name|GUSBCFG_TOUTCAL_SHIFT
 value|0
 end_define
 
+begin_comment
+comment|/* STM32F4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOTG_GGPIO_NOVBUSSENS
+value|(1<< 21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DOTG_GGPIO_SOFOUTEN
+value|(1<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DOTG_GGPIO_VBUSBSEN
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DOTG_GGPIO_VBUSASEN
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DOTG_GGPIO_I2CPADEN
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DOTG_GGPIO_PWRDWN
+value|(1<< 16)
+end_define
+
 begin_define
 define|#
 directive|define

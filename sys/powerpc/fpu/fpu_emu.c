@@ -1269,6 +1269,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -1711,6 +1713,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 argument_list|,
 operator|(
 name|void
@@ -1769,6 +1773,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 argument_list|,
 name|size
 argument_list|)
@@ -1820,6 +1826,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 argument_list|)
 expr_stmt|;
 block|}
@@ -2075,6 +2083,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 argument_list|)
 expr_stmt|;
 name|fpu_explode
@@ -2283,6 +2293,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 argument_list|,
 operator|&
 name|fs
@@ -2291,6 +2303,8 @@ name|fpreg
 index|[
 name|rb
 index|]
+operator|.
+name|fpr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2311,6 +2325,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 expr_stmt|;
 operator|*
 name|a
@@ -2493,6 +2509,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 argument_list|,
 operator|&
 name|fs
@@ -2501,6 +2519,8 @@ name|fpreg
 index|[
 name|rb
 index|]
+operator|.
+name|fpr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2602,6 +2622,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 argument_list|,
 operator|&
 name|fs
@@ -2610,6 +2632,8 @@ name|fpreg
 index|[
 name|rb
 index|]
+operator|.
+name|fpr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2630,6 +2654,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 expr_stmt|;
 operator|*
 name|a
@@ -2667,6 +2693,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 argument_list|,
 operator|&
 name|fs
@@ -2675,6 +2703,8 @@ name|fpreg
 index|[
 name|rb
 index|]
+operator|.
+name|fpr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2695,6 +2725,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 expr_stmt|;
 operator|*
 name|a
@@ -2733,6 +2765,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 argument_list|,
 operator|&
 name|fs
@@ -2841,6 +2875,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 expr_stmt|;
 name|fe
 operator|->
@@ -3249,6 +3285,8 @@ name|fpreg
 index|[
 name|ra
 index|]
+operator|.
+name|fpr
 expr_stmt|;
 if|if
 condition|(
@@ -3293,6 +3331,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 argument_list|,
 operator|&
 name|fs
@@ -3301,6 +3341,8 @@ name|fpreg
 index|[
 name|rc
 index|]
+operator|.
+name|fpr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3363,6 +3405,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 operator|)
 operator|=
 literal|1
@@ -3502,6 +3546,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 operator|)
 operator|=
 literal|1
@@ -3906,6 +3952,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 argument_list|)
 expr_stmt|;
 name|fpu_explode
@@ -3959,6 +4007,8 @@ name|fpreg
 index|[
 name|rt
 index|]
+operator|.
+name|fpr
 argument_list|)
 expr_stmt|;
 name|cx

@@ -10447,6 +10447,14 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|RSS
+name|cpuset_t
+name|cpu_mask
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|RSS
 comment|/* 	 * If we're doing RSS, the number of queues needs to 	 * match the number of RSS buckets that are configured. 	 * 	 * + If there's more queues than RSS buckets, we'll end 	 *   up with queues that get no traffic. 	 * 	 * + If there's more RSS buckets than queues, we'll end 	 *   up having multiple RSS buckets map to the same queue, 	 *   so there'll be some contention. 	 */
 if|if
 condition|(
@@ -10782,7 +10790,15 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RSS
-name|taskqueue_start_threads_pinned
+name|CPU_SETOF
+argument_list|(
+name|cpu_id
+argument_list|,
+operator|&
+name|cpu_mask
+argument_list|)
+expr_stmt|;
+name|taskqueue_start_threads_cpuset
 argument_list|(
 operator|&
 name|que
@@ -10793,7 +10809,8 @@ literal|1
 argument_list|,
 name|PI_NET
 argument_list|,
-name|cpu_id
+operator|&
+name|cpu_mask
 argument_list|,
 literal|"%s (bucket %d)"
 argument_list|,

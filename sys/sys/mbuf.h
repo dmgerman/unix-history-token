@@ -5806,6 +5806,12 @@ argument_list|,
 name|m_stailqpkt
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_nextpkt
+operator|=
+name|NULL
+expr_stmt|;
 name|mq
 operator|->
 name|mq_len

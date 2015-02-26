@@ -8908,6 +8908,16 @@ operator|=
 name|GRANT_REF_INVALID
 expr_stmt|;
 block|}
+name|mbufq_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|xn_rx_batch
+argument_list|,
+name|INT_MAX
+argument_list|)
+expr_stmt|;
 comment|/* A grant for every tx ring slot */
 if|if
 condition|(

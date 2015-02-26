@@ -135,7 +135,7 @@ block|}
 name|__packed
 name|__aligned
 argument_list|(
-literal|4
+literal|2
 argument_list|)
 struct|;
 end_struct

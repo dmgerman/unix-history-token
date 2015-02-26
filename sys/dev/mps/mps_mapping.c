@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2011, 2012 LSI Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * LSI MPT-Fusion Host Adapter FreeBSD  */
+comment|/*-  * Copyright (c) 2011-2015 LSI Corp.  * Copyright (c) 2013-2015 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  */
 end_comment
 
 begin_include
@@ -3874,6 +3874,8 @@ decl_stmt|,
 name|enc_idx
 decl_stmt|,
 name|phy_idx
+decl_stmt|,
+name|sata_end_device
 decl_stmt|;
 name|u32
 name|map_idx
@@ -3910,6 +3912,8 @@ name|MPI2_EVENT_SAS_TOPO_RC_TARG_ADDED
 decl_stmt|;
 name|int
 name|rc
+init|=
+literal|1
 decl_stmt|;
 for|for
 control|(
@@ -3983,6 +3987,7 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * Always get SATA Identify information because this is used 		 * to determine if Start/Stop Unit should be sent to the drive 		 * when the system is shutdown. 		 */
 name|device_info
 operator|=
 name|le32toh
@@ -3992,17 +3997,32 @@ operator|.
 name|DeviceInfo
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|sas_address
+operator|=
+name|sas_device_pg0
+operator|.
+name|SASAddress
+operator|.
+name|High
+expr_stmt|;
+name|sas_address
+operator|=
 operator|(
-name|ioc_pg8_flags
-operator|&
-name|MPI2_IOCPAGE8_FLAGS_MASK_MAPPING_MODE
+name|sas_address
+operator|<<
+literal|32
 operator|)
-operator|==
-name|MPI2_IOCPAGE8_FLAGS_DEVICE_PERSISTENCE_MAPPING
-condition|)
-block|{
+operator||
+name|sas_device_pg0
+operator|.
+name|SASAddress
+operator|.
+name|Low
+expr_stmt|;
+name|sata_end_device
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4018,6 +4038,10 @@ name|MPI2_SAS_DEVICE_INFO_SATA_DEVICE
 operator|)
 condition|)
 block|{
+name|sata_end_device
+operator|=
+literal|1
+expr_stmt|;
 name|rc
 operator|=
 name|mpssas_get_sas_address_for_sata_disk
@@ -4032,6 +4056,11 @@ operator|->
 name|dev_handle
 argument_list|,
 name|device_info
+argument_list|,
+operator|&
+name|phy_change
+operator|->
+name|is_SATA_SSD
 argument_list|)
 expr_stmt|;
 if|if
@@ -4039,11 +4068,15 @@ condition|(
 name|rc
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: failed to compute the "
-literal|"hashed SAS Address for SATA "
-literal|"device with handle 0x%04x\n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+argument_list|,
+literal|"%s: failed to get "
+literal|"disk type (SSD or HDD) and SAS Address "
+literal|"for SATA device with handle 0x%04x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4052,91 +4085,22 @@ operator|->
 name|dev_handle
 argument_list|)
 expr_stmt|;
-name|sas_address
-operator|=
-name|sas_device_pg0
-operator|.
-name|SASAddress
-operator|.
-name|High
-expr_stmt|;
-name|sas_address
-operator|=
-operator|(
-name|sas_address
-operator|<<
-literal|32
-operator|)
-operator||
-name|sas_device_pg0
-operator|.
-name|SASAddress
-operator|.
-name|Low
-expr_stmt|;
 block|}
+else|else
+block|{
 name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_MAPPING
+name|MPS_INFO
 argument_list|,
-literal|"SAS Address for SATA device = %jx\n"
+literal|"SAS Address for SATA "
+literal|"device = %jx\n"
 argument_list|,
 name|sas_address
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|sas_address
-operator|=
-name|sas_device_pg0
-operator|.
-name|SASAddress
-operator|.
-name|High
-expr_stmt|;
-name|sas_address
-operator|=
-operator|(
-name|sas_address
-operator|<<
-literal|32
-operator|)
-operator||
-name|sas_device_pg0
-operator|.
-name|SASAddress
-operator|.
-name|Low
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|sas_address
-operator|=
-name|sas_device_pg0
-operator|.
-name|SASAddress
-operator|.
-name|High
-expr_stmt|;
-name|sas_address
-operator|=
-operator|(
-name|sas_address
-operator|<<
-literal|32
-operator|)
-operator||
-name|sas_device_pg0
-operator|.
-name|SASAddress
-operator|.
-name|Low
-expr_stmt|;
 block|}
 name|phy_change
 operator|->
@@ -4201,11 +4165,15 @@ name|is_processed
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: failed to add the device with "
-literal|"handle 0x%04x because the enclosure is "
-literal|"not in the mapping table\n"
+name|sc
+argument_list|,
+name|MPS_MAPPING
+argument_list|,
+literal|"%s: failed to add "
+literal|"the device with handle 0x%04x because the "
+literal|"enclosure is not in the mapping table\n"
 argument_list|,
 name|__func__
 argument_list|,

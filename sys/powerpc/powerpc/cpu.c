@@ -529,6 +529,8 @@ operator||
 name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
+operator||
+name|PPC_FEATURE_HAS_VSX
 block|,
 name|NULL
 block|}
@@ -545,6 +547,8 @@ operator||
 name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
+operator||
+name|PPC_FEATURE_HAS_VSX
 block|,
 name|NULL
 block|}
@@ -561,6 +565,8 @@ operator||
 name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
+operator||
+name|PPC_FEATURE_HAS_VSX
 block|,
 name|NULL
 block|}
@@ -577,6 +583,8 @@ operator||
 name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
+operator||
+name|PPC_FEATURE_HAS_VSX
 block|,
 name|NULL
 block|}

@@ -213,6 +213,17 @@ name|u_int
 name|policy
 decl_stmt|;
 comment|/* policy_type per pfkeyv2.h */
+name|u_int
+name|state
+decl_stmt|;
+define|#
+directive|define
+name|IPSEC_SPSTATE_DEAD
+value|0
+define|#
+directive|define
+name|IPSEC_SPSTATE_ALIVE
+value|1
 name|u_int32_t
 name|id
 decl_stmt|;
