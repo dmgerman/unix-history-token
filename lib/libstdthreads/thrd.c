@@ -326,6 +326,12 @@ operator|(
 name|thrd_error
 operator|)
 return|;
+if|if
+condition|(
+name|res
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|res
 operator|=
