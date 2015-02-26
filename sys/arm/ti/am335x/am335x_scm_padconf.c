@@ -3618,23 +3618,11 @@ block|,
 operator|.
 name|padstate
 operator|=
-operator|(
-expr|struct
-name|ti_scm_padstate
-operator|*
-operator|)
-operator|&
 name|ti_padstate_devmap
 block|,
 operator|.
 name|padconf
 operator|=
-operator|(
-expr|struct
-name|ti_scm_padconf
-operator|*
-operator|)
-operator|&
 name|ti_padconf_devmap
 block|, }
 decl_stmt|;
