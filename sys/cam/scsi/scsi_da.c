@@ -15524,7 +15524,7 @@ expr_stmt|;
 name|cdai
 operator|.
 name|flags
-operator||=
+operator|=
 name|CDAI_FLAG_STORE
 expr_stmt|;
 name|cdai

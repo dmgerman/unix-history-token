@@ -3332,7 +3332,7 @@ name|cdai
 operator|.
 name|flags
 operator|=
-literal|0
+name|CDAI_FLAG_NONE
 expr_stmt|;
 name|cdai
 operator|.
@@ -3434,7 +3434,7 @@ expr_stmt|;
 name|cdai
 operator|.
 name|flags
-operator||=
+operator|=
 name|CDAI_FLAG_STORE
 expr_stmt|;
 name|cdai
