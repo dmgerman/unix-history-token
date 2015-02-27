@@ -318,6 +318,11 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|free
+argument_list|(
+name|linehead
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
