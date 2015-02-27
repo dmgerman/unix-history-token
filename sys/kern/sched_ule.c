@@ -1226,16 +1226,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|sched_random
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Operations on per processor queues */
 end_comment
@@ -1798,6 +1788,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_comment
 comment|/*  * We need some randomness. Implement the classic Linear Congruential  * generator X_{n+1}=(aX_n+c) mod m. These values are optimized for  * m = 2^32, a = 69069 and c = 5. This is signed so that we can get  * both positive and negative values from it by shifting the value  * right.  */
 end_comment
@@ -1842,6 +1838,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Print the threads waiting on a run-queue.  */
