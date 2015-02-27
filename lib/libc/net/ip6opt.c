@@ -1657,12 +1657,12 @@ comment|/* 	 * The option data length must have a value between 0 and 255, 	 * i
 if|if
 condition|(
 name|len
-operator|<
-literal|0
-operator|||
-name|len
 operator|>
 literal|255
+operator|||
+name|len
+operator|<
+literal|0
 condition|)
 return|return
 operator|(
