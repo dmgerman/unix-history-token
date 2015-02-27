@@ -1802,7 +1802,9 @@ begin_function
 specifier|static
 name|int
 name|sched_random
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|rnd
