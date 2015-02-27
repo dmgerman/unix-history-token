@@ -2029,7 +2029,7 @@ name|i
 decl_stmt|,
 name|arat
 decl_stmt|;
-comment|/* 	 * Enable x2APIC mode if possible, otherwise map the local 	 * APIC registers page. 	 */
+comment|/* 	 * Enable x2APIC mode if possible. Map the local APIC 	 * registers page. 	 * 	 * Keep the LAPIC registers page mapped uncached for x2APIC 	 * mode too, to have direct map page attribute set to 	 * uncached.  This is needed to work around CPU errata present 	 * on all Intel processors. 	 */
 name|KASSERT
 argument_list|(
 name|trunc_page
@@ -2044,17 +2044,6 @@ literal|"local APIC not aligned on a page boundary"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|x2apic_mode
-condition|)
-block|{
-name|native_lapic_enable_x2apic
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-block|{
 name|lapic_paddr
 operator|=
 name|addr
@@ -2067,6 +2056,18 @@ name|addr
 argument_list|,
 name|PAGE_SIZE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|x2apic_mode
+condition|)
+block|{
+name|native_lapic_enable_x2apic
+argument_list|()
+expr_stmt|;
+name|lapic_map
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/* Setup the spurious interrupt handler. */
