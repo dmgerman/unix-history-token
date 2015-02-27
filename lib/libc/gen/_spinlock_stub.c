@@ -164,7 +164,7 @@ begin_pragma
 pragma|#
 directive|pragma
 name|weak
-name|_spinlock
+name|_spinunlock
 end_pragma
 
 begin_function
