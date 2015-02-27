@@ -10270,6 +10270,8 @@ name|mmc_send_op_cond
 argument_list|(
 name|sc
 argument_list|,
+name|MMC_OCR_CCS
+operator||
 name|mmcbr_get_ocr
 argument_list|(
 name|dev
