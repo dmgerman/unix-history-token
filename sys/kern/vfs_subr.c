@@ -11470,6 +11470,13 @@ name|v_usecount
 operator|==
 literal|0
 operator|||
+name|vp
+operator|->
+name|v_op
+operator|!=
+operator|&
+name|devfs_specops
+operator|||
 operator|(
 name|vp
 operator|->
