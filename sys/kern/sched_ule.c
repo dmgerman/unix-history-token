@@ -1795,20 +1795,16 @@ name|SMP
 end_ifdef
 
 begin_comment
-comment|/*  * We need some randomness. Implement the classic Linear Congruential  * generator X_{n+1}=(aX_n+c) mod m. These values are optimized for  * m = 2^32, a = 69069 and c = 5. This is signed so that we can get  * both positive and negative values from it by shifting the value  * right.  */
+comment|/*  * We need some randomness. Implement the classic Linear Congruential  * generator X_{n+1}=(aX_n+c) mod m. These values are optimized for  * m = 2^32, a = 69069 and c = 5. We only return the upper 16 bits  * of the random state (in the low bits of our answer) to return  * the maximum randomness.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|sched_random
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
-name|int
-name|rnd
-decl_stmt|,
+name|uint32_t
 modifier|*
 name|rndptr
 decl_stmt|;
@@ -1819,7 +1815,8 @@ argument_list|(
 name|randomval
 argument_list|)
 expr_stmt|;
-name|rnd
+operator|*
+name|rndptr
 operator|=
 operator|*
 name|rndptr
@@ -1828,14 +1825,12 @@ literal|69069
 operator|+
 literal|5
 expr_stmt|;
-operator|*
-name|rndptr
-operator|=
-name|rnd
-expr_stmt|;
 return|return
 operator|(
-name|rnd
+operator|*
+name|rndptr
+operator|>>
+literal|16
 operator|)
 return|;
 block|}
@@ -3468,10 +3463,9 @@ name|rnd
 operator|=
 name|sched_random
 argument_list|()
-operator|>>
-literal|26
+operator|%
+literal|32
 expr_stmt|;
-comment|/* -32 to +31 */
 if|if
 condition|(
 name|match
@@ -4204,12 +4198,8 @@ literal|1
 argument_list|)
 operator|+
 operator|(
-operator|(
 name|sched_random
 argument_list|()
-operator|>>
-literal|16
-operator|)
 operator|%
 name|balance_interval
 operator|)
