@@ -49,6 +49,13 @@ name|CORE_L2C
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|ARMCLK
+value|7
+end_define
+
 begin_comment
 comment|/* sclk gates (special clocks) */
 end_comment

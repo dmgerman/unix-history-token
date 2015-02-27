@@ -84,6 +84,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91_PINCTRL_DRIVE_STRENGTH_DEFAULT
+value|(0x0<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91_PINCTRL_DRIVE_STRENGTH_LOW
+value|(0x1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91_PINCTRL_DRIVE_STRENGTH_MED
+value|(0x2<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91_PINCTRL_DRIVE_STRENGTH_HI
+value|(0x3<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91_PIOA
 value|0
 end_define

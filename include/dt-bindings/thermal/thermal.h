@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|THERMAL_NO_LIMIT
-value|(-1UL)
+value|(~0)
 end_define
 
 begin_endif

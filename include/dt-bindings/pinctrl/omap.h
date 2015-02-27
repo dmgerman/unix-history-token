@@ -343,6 +343,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|DM816X_IOPAD
+parameter_list|(
+name|pa
+parameter_list|,
+name|val
+parameter_list|)
+value|OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AM33XX_IOPAD
 parameter_list|(
 name|pa
