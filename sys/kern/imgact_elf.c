@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -5109,7 +5115,15 @@ name|pos
 argument_list|,
 name|AT_OSRELDATE
 argument_list|,
-name|osreldate
+name|imgp
+operator|->
+name|proc
+operator|->
+name|p_ucred
+operator|->
+name|cr_prison
+operator|->
+name|pr_osreldate
 argument_list|)
 expr_stmt|;
 if|if
