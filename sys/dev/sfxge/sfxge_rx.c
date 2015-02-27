@@ -869,11 +869,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|rxq
 operator|->
 name|init_state
 operator|!=
 name|SFXGE_RXQ_STARTED
+argument_list|)
 condition|)
 return|return;
 name|rxfill
@@ -1199,11 +1202,14 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|rxq
 operator|->
 name|init_state
 operator|!=
 name|SFXGE_RXQ_STARTED
+argument_list|)
 condition|)
 return|return;
 comment|/* Make sure the queue is full */
@@ -4044,11 +4050,14 @@ name|mbuf
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|rxq
 operator|->
 name|init_state
 operator|!=
 name|SFXGE_RXQ_STARTED
+argument_list|)
 condition|)
 goto|goto
 name|discard
