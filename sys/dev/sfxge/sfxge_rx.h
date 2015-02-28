@@ -41,12 +41,6 @@ name|INET6
 argument_list|)
 end_if
 
-begin_error
-error|#
-directive|error
-error|LRO
-end_error
-
 begin_define
 define|#
 directive|define
