@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2012 Broadcom Corporation  * All Rights Reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *   * THIS SOFTWARE IS PROVIDED BY BROADCOM ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL BROADCOM OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003-2012 Broadcom Corporation  * All Rights Reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY BROADCOM ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL BROADCOM OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -921,7 +921,7 @@ condition|)
 return|return
 literal|0xFFFFFFFF
 return|;
-comment|/*  	 * The intline and int pin of SoC devices are DOA, except 	 * for bridges (slot %8 == 1). 	 * use the values we stashed in a writable PCI scratch reg. 	 */
+comment|/* 	 * The intline and int pin of SoC devices are DOA, except 	 * for bridges (slot %8 == 1). 	 * use the values we stashed in a writable PCI scratch reg. 	 */
 if|if
 condition|(
 name|b
@@ -1472,7 +1472,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XLS PCIe can have upto 4 links, and each link has its on IRQ  * Find the link on which the device is on   */
+comment|/*  * XLS PCIe can have upto 4 links, and each link has its on IRQ  * Find the link on which the device is on  */
 end_comment
 
 begin_function
@@ -1592,7 +1592,7 @@ name|i
 decl_stmt|,
 name|link
 decl_stmt|;
-comment|/* 	 * Each link has 32 MSIs that can be allocated, but for now 	 * we only support one device per link. 	 * msi_alloc() equivalent is needed when we start supporting  	 * bridges on the PCIe link. 	 */
+comment|/* 	 * Each link has 32 MSIs that can be allocated, but for now 	 * we only support one device per link. 	 * msi_alloc() equivalent is needed when we start supporting 	 * bridges on the PCIe link. 	 */
 name|link
 operator|=
 name|xlp_pcie_link
@@ -2005,7 +2005,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/*  	 * temporary hack for MSI, we support just one device per 	 * link, and assign the link interrupt to the device interrupt 	 */
+comment|/* 	 * temporary hack for MSI, we support just one device per 	 * link, and assign the link interrupt to the device interrupt 	 */
 if|if
 condition|(
 name|xlpirq

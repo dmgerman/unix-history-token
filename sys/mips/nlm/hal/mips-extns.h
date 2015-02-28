@@ -254,7 +254,7 @@ comment|/* ! (defined(__mips_n64) || defined(__mips_n32)) */
 end_comment
 
 begin_comment
-comment|/*  * 32 bit compilation, 64 bit values has to split   */
+comment|/*  * 32 bit compilation, 64 bit values has to split  */
 end_comment
 
 begin_define
