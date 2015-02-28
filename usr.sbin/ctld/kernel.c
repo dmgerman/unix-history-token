@@ -4321,9 +4321,11 @@ if|if
 condition|(
 name|conn
 operator|->
-name|conn_target
+name|conn_portal
 operator|->
-name|t_offload
+name|p_portal_group
+operator|->
+name|pg_offload
 operator|!=
 name|NULL
 condition|)
@@ -4340,9 +4342,11 @@ name|offload
 argument_list|,
 name|conn
 operator|->
-name|conn_target
+name|conn_portal
 operator|->
-name|t_offload
+name|p_portal_group
+operator|->
+name|pg_offload
 argument_list|,
 sizeof|sizeof
 argument_list|(
