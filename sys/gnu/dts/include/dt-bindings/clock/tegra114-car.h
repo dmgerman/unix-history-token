@@ -206,9 +206,12 @@ begin_comment
 comment|/* 31 */
 end_comment
 
-begin_comment
-comment|/* 32 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA114_CLK_MC
+value|32
+end_define
 
 begin_comment
 comment|/* 33 */

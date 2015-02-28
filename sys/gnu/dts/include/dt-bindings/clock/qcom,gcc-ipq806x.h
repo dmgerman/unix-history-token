@@ -1586,13 +1586,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PLL4
-value|224
-end_define
-
-begin_define
-define|#
-directive|define
 name|PLL4_VOTE
 value|225
 end_define
