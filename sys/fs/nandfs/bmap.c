@@ -2420,6 +2420,13 @@ condition|(
 name|error
 condition|)
 block|{
+name|free
+argument_list|(
+name|copy
+argument_list|,
+name|M_NANDFSTEMP
+argument_list|)
+expr_stmt|;
 name|nandfs_error
 argument_list|(
 literal|"%s: error %d when truncate "
