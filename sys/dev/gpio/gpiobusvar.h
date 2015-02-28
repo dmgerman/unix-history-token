@@ -223,6 +223,26 @@ end_struct
 
 begin_struct
 struct|struct
+name|gpiobus_pin
+block|{
+name|device_t
+name|dev
+decl_stmt|;
+comment|/* gpio device */
+name|uint32_t
+name|flags
+decl_stmt|;
+comment|/* pin flags */
+name|uint32_t
+name|pin
+decl_stmt|;
+comment|/* pin number */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|gpiobus_ivar
 block|{
 name|struct
@@ -330,7 +350,28 @@ name|ofw_gpiobus_add_fdt_child
 parameter_list|(
 name|device_t
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|phandle_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ofw_gpiobus_parse_gpios
+parameter_list|(
+name|device_t
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|gpiobus_pin
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
