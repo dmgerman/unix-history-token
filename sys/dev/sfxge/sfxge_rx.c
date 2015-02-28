@@ -129,6 +129,12 @@ parameter_list|)
 value|(EFX_RXQ_LIMIT(_entries) * 9 / 10)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
+end_ifdef
+
 begin_comment
 comment|/* Size of the LRO hash table.  Must be a power of 2.  A larger table  * means we can accelerate a larger number of streams.  */
 end_comment
@@ -382,6 +388,15 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SFXGE_LRO */
+end_comment
 
 begin_function
 name|void
@@ -1447,6 +1462,12 @@ name|NULL
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
+end_ifdef
 
 begin_function
 specifier|static
@@ -3917,6 +3938,55 @@ expr_stmt|;
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !SFXGE_LRO */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|sfxge_lro
+parameter_list|(
+name|struct
+name|sfxge_rxq
+modifier|*
+name|rxq
+parameter_list|,
+name|struct
+name|sfxge_rx_sw_desc
+modifier|*
+name|rx_buf
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sfxge_lro_end_of_burst
+parameter_list|(
+name|struct
+name|sfxge_rxq
+modifier|*
+name|rxq
+parameter_list|)
+block|{ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SFXGE_LRO */
+end_comment
+
 begin_function
 name|void
 name|sfxge_rx_qcomplete
@@ -5125,6 +5195,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -5491,6 +5567,46 @@ expr_stmt|;
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+specifier|static
+name|void
+name|sfxge_lro_init
+parameter_list|(
+name|struct
+name|sfxge_rxq
+modifier|*
+name|rxq
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sfxge_lro_fini
+parameter_list|(
+name|struct
+name|sfxge_rxq
+modifier|*
+name|rxq
+parameter_list|)
+block|{ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SFXGE_LRO */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -5835,6 +5951,9 @@ name|member
 parameter_list|)
 define|\
 value|{ #name, offsetof(struct sfxge_rxq, member) }
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
 name|SFXGE_RX_STAT
 argument_list|(
 name|lro_merges
@@ -5904,6 +6023,8 @@ argument|lro_drop_closed
 argument_list|,
 argument|lro.n_drop_closed
 argument_list|)
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -6156,6 +6277,9 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
 if|if
 condition|(
 name|lro_idle_ticks
@@ -6171,6 +6295,8 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* 100 ms */
+endif|#
+directive|endif
 name|intr
 operator|=
 operator|&
