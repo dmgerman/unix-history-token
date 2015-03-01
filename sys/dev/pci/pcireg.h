@@ -180,6 +180,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIE_ARI_RID2SLOT
+parameter_list|(
+name|rid
+parameter_list|)
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_ARI_RID2FUNC
+parameter_list|(
+name|rid
+parameter_list|)
+define|\
+value|(((rid)>> PCI_RID_FUNC_SHIFT)& PCIE_ARI_FUNCMAX)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIE_ARI_SLOT
 parameter_list|(
 name|func
