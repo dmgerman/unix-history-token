@@ -43,6 +43,10 @@ name|cdev
 modifier|*
 name|iov_cdev
 decl_stmt|;
+name|nvlist_t
+modifier|*
+name|iov_schema
+decl_stmt|;
 name|struct
 name|pci_iov_bar
 name|iov_bar

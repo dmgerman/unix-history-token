@@ -65,6 +65,12 @@ name|pci_addr_t
 typedef|;
 end_typedef
 
+begin_struct_decl
+struct_decl|struct
+name|nvlist
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* Interesting values for PCI power management */
 end_comment
@@ -2133,6 +2139,16 @@ name|pci_iov_attach
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|struct
+name|nvlist
+modifier|*
+name|pf_schema
+parameter_list|,
+name|struct
+name|nvlist
+modifier|*
+name|vf_schema
 parameter_list|)
 block|{
 return|return
@@ -2145,6 +2161,10 @@ name|dev
 argument_list|)
 argument_list|,
 name|dev
+argument_list|,
+name|pf_schema
+argument_list|,
+name|vf_schema
 argument_list|)
 operator|)
 return|;

@@ -1138,6 +1138,16 @@ name|bus
 parameter_list|,
 name|device_t
 name|dev
+parameter_list|,
+name|struct
+name|nvlist
+modifier|*
+name|pf_schema
+parameter_list|,
+name|struct
+name|nvlist
+modifier|*
+name|vf_schema
 parameter_list|)
 function_decl|;
 end_function_decl
