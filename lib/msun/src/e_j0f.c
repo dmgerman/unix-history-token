@@ -1172,6 +1172,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|float
 name|pzerof
 parameter_list|(
@@ -1657,6 +1658,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|float
 name|qzerof
 parameter_list|(

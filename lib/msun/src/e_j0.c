@@ -1176,6 +1176,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|double
 name|pzero
 parameter_list|(
@@ -1661,6 +1662,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|double
 name|qzero
 parameter_list|(

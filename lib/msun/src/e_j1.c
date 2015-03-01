@@ -1133,6 +1133,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|double
 name|pone
 parameter_list|(
@@ -1640,6 +1641,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|double
 name|qone
 parameter_list|(
