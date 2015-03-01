@@ -277,7 +277,7 @@ if|if
 condition|(
 name|ix
 operator|>
-literal|0x80000000
+literal|0x58000000
 condition|)
 name|z
 operator|=
@@ -292,6 +292,7 @@ argument_list|(
 name|y
 argument_list|)
 expr_stmt|;
+comment|/* |x|>2**49 */
 else|else
 block|{
 name|u
@@ -347,10 +348,10 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x32000000
+literal|0x39000000
 condition|)
 block|{
-comment|/* |x|<2**-27 */
+comment|/* |x|<2**-13 */
 if|if
 condition|(
 name|huge
@@ -676,7 +677,7 @@ if|if
 condition|(
 name|ix
 operator|>
-literal|0x48000000
+literal|0x58000000
 condition|)
 name|z
 operator|=
@@ -691,6 +692,7 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
+comment|/* |x|>2**49 */
 else|else
 block|{
 name|u
@@ -735,10 +737,10 @@ if|if
 condition|(
 name|ix
 operator|<=
-literal|0x24800000
+literal|0x33000000
 condition|)
 block|{
-comment|/* x< 2**-54 */
+comment|/* x< 2**-25 */
 return|return
 operator|(
 operator|-
@@ -1184,7 +1186,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x40f71c58
+literal|0x409173eb
 condition|)
 block|{
 name|p
@@ -1201,7 +1203,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x4036db68
+literal|0x4036d917
 condition|)
 block|{
 name|p
@@ -1674,7 +1676,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x40200000
+literal|0x41000000
 condition|)
 block|{
 name|p
@@ -1691,7 +1693,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x40f71c58
+literal|0x409173eb
 condition|)
 block|{
 name|p
@@ -1708,7 +1710,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x4036db68
+literal|0x4036d917
 condition|)
 block|{
 name|p
