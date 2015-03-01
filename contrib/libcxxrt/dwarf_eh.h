@@ -611,9 +611,6 @@ argument_list|(
 name|encoding
 argument_list|)
 decl_stmt|;
-name|uint64_t
-name|v
-decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -629,7 +626,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|case dwarf:\ 			v = static_cast<uint64_t>(*reinterpret_cast<type*>(*data));\ 			*data += sizeof(type);\ 			break;
+value|case dwarf:\ 		{\ 			type t;\ 			memcpy(&t, *data, sizeof t);\ 			*data += sizeof t;\ 			return static_cast<uint64_t>(t);\ 		}
 name|READ
 argument_list|(
 argument|DW_EH_PE_udata2
@@ -679,33 +676,26 @@ comment|// Read variable-length types
 case|case
 name|DW_EH_PE_sleb128
 case|:
-name|v
-operator|=
+return|return
 name|read_sleb128
 argument_list|(
 name|data
 argument_list|)
-expr_stmt|;
-break|break;
+return|;
 case|case
 name|DW_EH_PE_uleb128
 case|:
-name|v
-operator|=
+return|return
 name|read_uleb128
 argument_list|(
 name|data
 argument_list|)
-expr_stmt|;
-break|break;
+return|;
 default|default:
 name|abort
 argument_list|()
 expr_stmt|;
 block|}
-return|return
-name|v
-return|;
 block|}
 end_function
 
