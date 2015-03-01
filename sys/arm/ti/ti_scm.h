@@ -75,11 +75,13 @@ decl_stmt|;
 name|uint16_t
 name|padconf_sate_mask
 decl_stmt|;
+specifier|const
 name|struct
 name|ti_scm_padstate
 modifier|*
 name|padstate
 decl_stmt|;
+specifier|const
 name|struct
 name|ti_scm_padconf
 modifier|*
