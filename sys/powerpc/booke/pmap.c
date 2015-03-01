@@ -4923,6 +4923,15 @@ argument_list|(
 literal|"mmu_booke_bootstrap: entered\n"
 argument_list|)
 expr_stmt|;
+comment|/* Set interesting system properties */
+name|hw_direct_map
+operator|=
+literal|0
+expr_stmt|;
+name|elf32_nxstack
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Initialize invalidation mutex */
 name|mtx_init
 argument_list|(
@@ -6308,6 +6317,10 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|pmap_bootstrapped
+operator|=
+literal|1
+expr_stmt|;
 name|debugf
 argument_list|(
 literal|"virtual_avail = %08x\n"
