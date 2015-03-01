@@ -151,6 +151,7 @@ value|0x01
 end_define
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|nvlist_t
 modifier|*
 name|nvlist_create
@@ -3620,6 +3621,10 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

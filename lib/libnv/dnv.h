@@ -70,11 +70,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * The dnvlist_get functions returns value associated with the given name.  * If it returns a pointer, the pointer represents internal buffer and should  * not be freed by the caller.  * If no element of the given name and type exists, the function will return  * provided default value.  */
-end_comment
-
 begin_function_decl
+name|__BEGIN_DECLS
+comment|/*  * The dnvlist_get functions returns value associated with the given name.  * If it returns a pointer, the pointer represents internal buffer and should  * not be freed by the caller.  * If no element of the given name and type exists, the function will return  * provided default value.  */
 name|bool
 name|dnvlist_get_bool
 parameter_list|(
@@ -1151,6 +1149,10 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
