@@ -104,7 +104,7 @@ comment|/* Raw BAR value */
 name|pci_addr_t
 name|pm_size
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|pm_reg
 decl_stmt|;
 name|STAILQ_ENTRY
