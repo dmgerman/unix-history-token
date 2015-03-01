@@ -865,12 +865,8 @@ begin_define
 define|#
 directive|define
 name|QCA955X_GMAC_REG_ETH_CFG
-value|0x00
+value|(QCA955X_GMAC_BASE + 0x00)
 end_define
-
-begin_comment
-comment|/* XXX register base? */
-end_comment
 
 begin_define
 define|#
