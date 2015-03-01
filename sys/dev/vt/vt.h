@@ -325,6 +325,22 @@ begin_function_decl
 name|void
 name|vt_allocate
 parameter_list|(
+specifier|const
+name|struct
+name|vt_driver
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vt_deallocate
+parameter_list|(
+specifier|const
 name|struct
 name|vt_driver
 modifier|*
@@ -433,6 +449,22 @@ modifier|*
 name|vd_softc
 decl_stmt|;
 comment|/* (u) Driver data. */
+specifier|const
+name|struct
+name|vt_driver
+modifier|*
+name|vd_prev_driver
+decl_stmt|;
+comment|/* (?) Previous driver. */
+name|void
+modifier|*
+name|vd_prev_softc
+decl_stmt|;
+comment|/* (?) Previous driver data. */
+name|device_t
+name|vd_video_dev
+decl_stmt|;
+comment|/* (?) Video adapter. */
 ifndef|#
 directive|ifndef
 name|SC_NO_CUTPASTE
@@ -550,6 +582,11 @@ directive|define
 name|VDF_QUIET_BELL
 value|0x80
 comment|/* Disable bell. */
+define|#
+directive|define
+name|VDF_DOWNGRADE
+value|0x8000
+comment|/* The driver is being downgraded. */
 name|int
 name|vd_keyboard
 decl_stmt|;
@@ -1482,6 +1519,23 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|void
+name|vd_fini_t
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|,
+name|void
+modifier|*
+name|softc
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
 name|vd_postswitch_t
 parameter_list|(
 name|struct
@@ -1709,6 +1763,10 @@ decl_stmt|;
 name|vd_init_t
 modifier|*
 name|vd_init
+decl_stmt|;
+name|vd_fini_t
+modifier|*
+name|vd_fini
 decl_stmt|;
 comment|/* Drawing. */
 name|vd_blank_t

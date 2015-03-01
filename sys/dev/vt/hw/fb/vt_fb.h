@@ -55,9 +55,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|vt_fb_detach
+parameter_list|(
+name|struct
+name|fb_info
+modifier|*
+name|info
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|vd_init_t
 name|vt_fb_init
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vd_fini_t
+name|vt_fb_fini
 decl_stmt|;
 end_decl_stmt
 
