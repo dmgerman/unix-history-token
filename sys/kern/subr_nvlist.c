@@ -142,6 +142,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"msgio.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -167,31 +173,25 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"msgio.h"
+file|<sys/nv.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nv.h"
+file|<sys/nv_impl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nv_impl.h"
+file|<sys/nvlist_impl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nvlist_impl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"nvpair_impl.h"
+file|<sys/nvpair_impl.h>
 end_include
 
 begin_ifndef
