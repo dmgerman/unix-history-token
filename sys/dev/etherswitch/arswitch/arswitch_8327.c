@@ -2697,7 +2697,7 @@ comment|/* So this allows traffic to any port except ourselves */
 name|t
 operator||=
 operator|(
-literal|0x3f
+literal|0x7f
 operator|&
 operator|~
 operator|(
@@ -2906,7 +2906,7 @@ comment|/* Ports can see other ports */
 name|t
 operator|=
 operator|(
-literal|0x3f
+literal|0x7f
 operator|&
 operator|~
 operator|(
