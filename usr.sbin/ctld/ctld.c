@@ -1929,6 +1929,11 @@ operator|)
 return|;
 name|error
 label|:
+name|free
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 name|log_errx
 argument_list|(
 literal|1
