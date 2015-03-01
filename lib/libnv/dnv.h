@@ -21,6 +21,12 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -38,6 +44,11 @@ include|#
 directive|include
 file|<stdint.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -210,6 +221,12 @@ name|defsize
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_function_decl
 name|bool
@@ -627,6 +644,11 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The dnvlist_take functions returns value associated with the given name and  * remove corresponding nvpair.  * If it returns a pointer, the caller has to free it.  * If no element of the given name and type exists, the function will return  * provided default value.  */
 end_comment
@@ -757,6 +779,12 @@ name|defsize
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_function_decl
 name|bool
@@ -1149,6 +1177,11 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|__END_DECLS

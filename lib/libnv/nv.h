@@ -21,6 +21,12 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -44,6 +50,11 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -150,6 +161,33 @@ name|NV_FLAG_IGNORE_CASE
 value|0x01
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|MALLOC_DECLARE
+argument_list|)
+end_if
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_NVLIST
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|__BEGIN_DECLS
 name|nvlist_t
@@ -224,6 +262,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function_decl
 name|void
 name|nvlist_dump
@@ -254,6 +298,11 @@ name|fp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|size_t
@@ -509,6 +558,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function_decl
 name|bool
 name|nvlist_exists_descriptor
@@ -525,6 +580,11 @@ name|name
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|bool
@@ -654,6 +714,12 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_VA_LIST_DECLARED
+end_ifdef
+
 begin_function_decl
 name|void
 name|nvlist_add_stringv
@@ -687,6 +753,11 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|nvlist_add_nvlist
@@ -708,6 +779,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function_decl
 name|void
 name|nvlist_add_descriptor
@@ -726,6 +803,11 @@ name|value
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -795,6 +877,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function_decl
 name|void
 name|nvlist_move_descriptor
@@ -813,6 +901,11 @@ name|value
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -913,6 +1006,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function_decl
 name|int
 name|nvlist_get_descriptor
@@ -929,6 +1028,11 @@ name|name
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|const
@@ -1023,6 +1127,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function_decl
 name|int
 name|nvlist_take_descriptor
@@ -1038,6 +1148,11 @@ name|name
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -1179,6 +1294,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function_decl
 name|void
 name|nvlist_free_descriptor
@@ -1194,6 +1315,11 @@ name|name
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -1212,8 +1338,14 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Below are the same functions, but which operate on format strings and  * variable argument lists.  */
+comment|/*  * Below are the same functions, but which operate on format strings and  * variable argument lists.  *  * Functions that are not inserting a new pair into the nvlist cannot handle  * a failure to allocate the memory to hold the new name.  Therefore these  * functions are not provided in the kernel.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_function_decl
 name|bool
@@ -1734,6 +1866,11 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|nvlist_addf_null
@@ -1885,6 +2022,12 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function_decl
 name|void
 name|nvlist_addf_descriptor
@@ -1914,6 +2057,11 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -1949,6 +2097,21 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_VA_LIST_DECLARED
+argument_list|)
+end_if
 
 begin_function_decl
 name|void
@@ -2106,6 +2269,12 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function_decl
 name|void
 name|nvlist_addv_descriptor
@@ -2136,6 +2305,11 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -2172,6 +2346,11 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -2235,6 +2414,12 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function_decl
 name|void
 name|nvlist_movef_descriptor
@@ -2264,6 +2449,11 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -2298,6 +2488,21 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_VA_LIST_DECLARED
+argument_list|)
+end_if
 
 begin_function_decl
 name|void
@@ -2363,6 +2568,12 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function_decl
 name|void
 name|nvlist_movev_descriptor
@@ -2393,6 +2604,11 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -2428,6 +2644,17 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_function_decl
 name|bool
@@ -3635,6 +3862,15 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_macro
 name|__END_DECLS

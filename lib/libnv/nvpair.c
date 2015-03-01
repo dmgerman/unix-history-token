@@ -35,6 +35,47 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -82,6 +123,11 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -136,6 +182,49 @@ directive|ifndef
 name|HAVE_PJDLOG
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PJDLOG_ASSERT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|MPASS(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PJDLOG_RASSERT
+parameter_list|(
+name|expr
+parameter_list|,
+modifier|...
+parameter_list|)
+value|KASSERT(expr, (__VA_ARGS__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PJDLOG_ABORT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|panic(__VA_ARGS__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -173,6 +262,11 @@ modifier|...
 parameter_list|)
 value|abort()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -671,6 +765,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|_KERNEL
 case|case
 name|NV_TYPE_DESCRIPTOR
 case|:
@@ -687,6 +784,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|NV_TYPE_BINARY
 case|:
@@ -1372,6 +1471,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function
 name|unsigned
 name|char
@@ -1497,6 +1602,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|unsigned
@@ -1956,9 +2066,10 @@ operator|)
 return|;
 name|failed
 label|:
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2013,9 +2124,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2081,9 +2193,10 @@ name|value
 argument_list|)
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2102,9 +2215,10 @@ name|value
 argument_list|)
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2151,9 +2265,10 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2224,9 +2339,10 @@ name|uint64_t
 argument_list|)
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2245,9 +2361,10 @@ name|uint64_t
 argument_list|)
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2352,9 +2469,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2385,9 +2503,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2405,7 +2524,7 @@ operator|)
 operator|(
 name|uintptr_t
 operator|)
-name|strdup
+name|nv_strdup
 argument_list|(
 operator|(
 specifier|const
@@ -2512,9 +2631,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2590,6 +2710,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_function
 specifier|const
@@ -2770,6 +2896,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|const
 name|unsigned
@@ -2825,9 +2956,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2837,7 +2969,7 @@ return|;
 block|}
 name|value
 operator|=
-name|malloc
+name|nv_malloc
 argument_list|(
 name|nvp
 operator|->
@@ -2934,7 +3066,7 @@ name|tmp
 decl_stmt|;
 name|nvp
 operator|=
-name|calloc
+name|nv_calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -2996,7 +3128,7 @@ name|failed
 goto|;
 name|tmp
 operator|=
-name|realloc
+name|nv_realloc
 argument_list|(
 name|nvp
 argument_list|,
@@ -3068,7 +3200,7 @@ operator|)
 return|;
 name|failed
 label|:
-name|free
+name|nv_free
 argument_list|(
 name|nvp
 argument_list|)
@@ -3181,7 +3313,7 @@ argument_list|)
 expr_stmt|;
 name|namelen
 operator|=
-name|vasprintf
+name|nv_vasprintf
 argument_list|(
 operator|&
 name|name
@@ -3216,14 +3348,15 @@ operator|>=
 name|NV_NAME_MAX
 condition|)
 block|{
-name|free
+name|nv_free
 argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|ENAMETOOLONG
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3233,7 +3366,7 @@ return|;
 block|}
 name|nvp
 operator|=
-name|calloc
+name|nv_calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -3307,7 +3440,7 @@ operator|=
 name|NVPAIR_MAGIC
 expr_stmt|;
 block|}
-name|free
+name|nv_free
 argument_list|(
 name|name
 argument_list|)
@@ -3525,7 +3658,7 @@ name|len
 decl_stmt|;
 name|len
 operator|=
-name|vasprintf
+name|nv_vasprintf
 argument_list|(
 operator|&
 name|str
@@ -3561,7 +3694,7 @@ name|nvp
 operator|==
 name|NULL
 condition|)
-name|free
+name|nv_free
 argument_list|(
 name|str
 argument_list|)
@@ -3605,6 +3738,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function
 name|nvpair_t
 modifier|*
@@ -3633,6 +3772,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|nvpair_t
@@ -3939,6 +4083,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function
 name|nvpair_t
 modifier|*
@@ -3992,6 +4142,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|nvpair_t
@@ -4206,9 +4361,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4218,7 +4374,7 @@ return|;
 block|}
 name|data
 operator|=
-name|strdup
+name|nv_strdup
 argument_list|(
 name|value
 argument_list|)
@@ -4270,7 +4426,7 @@ name|nvp
 operator|==
 name|NULL
 condition|)
-name|free
+name|nv_free
 argument_list|(
 name|data
 argument_list|)
@@ -4317,9 +4473,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4392,6 +4549,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_function
 name|nvpair_t
@@ -4499,6 +4662,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|nvpair_t
 modifier|*
@@ -4540,9 +4708,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4552,7 +4721,7 @@ return|;
 block|}
 name|data
 operator|=
-name|malloc
+name|nv_malloc
 argument_list|(
 name|size
 argument_list|)
@@ -4604,7 +4773,7 @@ name|nvp
 operator|==
 name|NULL
 condition|)
-name|free
+name|nv_free
 argument_list|(
 name|data
 argument_list|)
@@ -4677,6 +4846,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function
 name|nvpair_t
 modifier|*
@@ -4705,6 +4880,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|nvpair_t
@@ -4851,6 +5031,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function
 name|nvpair_t
 modifier|*
@@ -4904,6 +5090,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|nvpair_t
@@ -4997,9 +5188,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -5040,18 +5232,20 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|SAVE_ERRNO
+argument_list|(
 name|serrno
-operator|=
-name|errno
+argument_list|)
 expr_stmt|;
-name|free
+name|nv_free
 argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|serrno
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -5098,9 +5292,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -5118,11 +5313,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|nvlist_error
 argument_list|(
 name|value
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nvlist_destroy
@@ -5183,6 +5379,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_function
 name|nvpair_t
@@ -5281,6 +5483,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|nvpair_t
 modifier|*
@@ -5320,9 +5527,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -5358,18 +5566,20 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|SAVE_ERRNO
+argument_list|(
 name|serrno
-operator|=
-name|errno
+argument_list|)
 expr_stmt|;
-name|free
+name|nv_free
 argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
+name|RESTORE_ERRNO
+argument_list|(
 name|serrno
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -5520,6 +5730,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_function
 name|int
 name|nvpair_get_descriptor
@@ -5556,6 +5772,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|const
@@ -5654,6 +5875,9 @@ operator|->
 name|nvp_type
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|_KERNEL
 case|case
 name|NV_TYPE_DESCRIPTOR
 case|:
@@ -5668,6 +5892,8 @@ name|nvp_data
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|NV_TYPE_NVLIST
 case|:
@@ -5689,7 +5915,7 @@ break|break;
 case|case
 name|NV_TYPE_STRING
 case|:
-name|free
+name|nv_free
 argument_list|(
 operator|(
 name|char
@@ -5707,7 +5933,7 @@ break|break;
 case|case
 name|NV_TYPE_BINARY
 case|:
-name|free
+name|nv_free
 argument_list|(
 operator|(
 name|void
@@ -5723,7 +5949,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|free
+name|nv_free
 argument_list|(
 name|nvp
 argument_list|)
@@ -5760,7 +5986,7 @@ name|nvp_magic
 operator|=
 literal|0
 expr_stmt|;
-name|free
+name|nv_free
 argument_list|(
 name|nvp
 argument_list|)

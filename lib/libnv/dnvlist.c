@@ -17,6 +17,53 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -40,6 +87,11 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -108,6 +160,12 @@ argument|nvlist
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_macro
 name|DNVLIST_GET
 argument_list|(
@@ -116,6 +174,11 @@ argument_list|,
 argument|descriptor
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -202,6 +265,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_define
 define|#
@@ -448,7 +517,7 @@ name|void
 modifier|*
 name|value
 decl_stmt|;
-name|vasprintf
+name|nv_vasprintf
 argument_list|(
 operator|&
 name|name
@@ -480,7 +549,7 @@ argument_list|,
 name|defsize
 argument_list|)
 expr_stmt|;
-name|free
+name|nv_free
 argument_list|(
 name|name
 argument_list|)
@@ -511,6 +580,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -561,6 +635,12 @@ argument|nvlist
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_macro
 name|DNVLIST_TAKE
 argument_list|(
@@ -569,6 +649,11 @@ argument_list|,
 argument|descriptor
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -651,6 +736,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_define
 define|#
@@ -889,7 +980,7 @@ name|void
 modifier|*
 name|value
 decl_stmt|;
-name|vasprintf
+name|nv_vasprintf
 argument_list|(
 operator|&
 name|name
@@ -921,7 +1012,7 @@ argument_list|,
 name|defsize
 argument_list|)
 expr_stmt|;
-name|free
+name|nv_free
 argument_list|(
 name|name
 argument_list|)
@@ -952,6 +1043,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
