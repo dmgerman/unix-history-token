@@ -82,6 +82,13 @@ name|IOV_RMAN_INITED
 value|0x0001
 end_define
 
+begin_define
+define|#
+directive|define
+name|IOV_BUSY
+value|0x0002
+end_define
+
 begin_endif
 endif|#
 directive|endif

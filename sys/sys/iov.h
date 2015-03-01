@@ -42,6 +42,13 @@ name|IOV_CONFIG
 value|_IOWR('p', 10, struct pci_iov_arg)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IOV_DELETE
+value|_IO('p', 11)
+end_define
+
 begin_endif
 endif|#
 directive|endif
