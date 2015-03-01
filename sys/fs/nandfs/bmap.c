@@ -1669,6 +1669,12 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|bp
+operator|!=
+name|NULL
+condition|)
 name|brelse
 argument_list|(
 name|bp
