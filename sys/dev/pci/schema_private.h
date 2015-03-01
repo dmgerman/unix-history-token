@@ -17,6 +17,18 @@ end_define
 
 begin_function_decl
 name|int
+name|pci_iov_validate_schema
+parameter_list|(
+specifier|const
+name|nvlist_t
+modifier|*
+name|schema
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pci_iov_schema_validate_config
 parameter_list|(
 specifier|const
