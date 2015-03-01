@@ -233,16 +233,10 @@ begin_struct
 struct|struct
 name|dmar_ctx
 block|{
-name|int
-name|bus
+name|uint16_t
+name|rid
 decl_stmt|;
-comment|/* pci bus/slot/func */
-name|int
-name|slot
-decl_stmt|;
-name|int
-name|func
-decl_stmt|;
+comment|/* pci RID */
 name|int
 name|domain
 decl_stmt|;
@@ -1497,14 +1491,8 @@ parameter_list|,
 name|device_t
 name|dev
 parameter_list|,
-name|int
-name|bus
-parameter_list|,
-name|int
-name|slot
-parameter_list|,
-name|int
-name|func
+name|uint16_t
+name|rid
 parameter_list|,
 name|bool
 name|id_mapped
@@ -1555,14 +1543,8 @@ name|dmar_unit
 modifier|*
 name|dmar
 parameter_list|,
-name|int
-name|bus
-parameter_list|,
-name|int
-name|slot
-parameter_list|,
-name|int
-name|func
+name|uint16_t
+name|rid
 parameter_list|)
 function_decl|;
 end_function_decl
