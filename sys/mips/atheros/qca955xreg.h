@@ -882,6 +882,31 @@ name|QCA955X_ETH_CFG_GE0_SGMII
 value|BIT(6)
 end_define
 
+begin_comment
+comment|/* XXX Same as AR934x values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QCA955X_PLL_VAL_1000
+value|0x16000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_PLL_VAL_100
+value|0x00000101
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_PLL_VAL_10
+value|0x00001616
+end_define
+
 begin_endif
 endif|#
 directive|endif
