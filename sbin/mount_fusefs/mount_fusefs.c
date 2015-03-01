@@ -292,6 +292,21 @@ block|,
 literal|1
 block|}
 block|,
+comment|/* 	 * MOPT_AUTOMOUNTED, included by MOPT_STDOPTS, does not fit into 	 * the 'flags' argument to nmount(2).  We have to abuse altflags 	 * to pass it, as string, via iovec. 	 */
+define|#
+directive|define
+name|ALTF_AUTOMOUNTED
+value|0x100
+block|{
+literal|"automounted"
+block|,
+literal|0
+block|,
+name|ALTF_AUTOMOUNTED
+block|,
+literal|1
+block|}
+block|,
 comment|/* Linux specific options, we silently ignore them */
 block|{
 literal|"fsname="
