@@ -198,6 +198,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|nvlist_set_error
+parameter_list|(
+name|nvlist_t
+modifier|*
+name|nvl
+parameter_list|,
+name|int
+name|error
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|nvlist_t
 modifier|*
 name|nvlist_clone
