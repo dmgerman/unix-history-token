@@ -586,6 +586,11 @@ condition|(
 name|sc
 operator|->
 name|sc_irq_res
+index|[
+literal|0
+index|]
+operator|!=
+name|NULL
 condition|)
 name|bus_release_resources
 argument_list|(
