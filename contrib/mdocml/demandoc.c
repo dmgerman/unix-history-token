@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: demandoc.c,v 1.12 2014/10/28 17:36:19 schwarze Exp $ */
+comment|/*	$Id: demandoc.c,v 1.15 2015/02/10 08:05:30 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -223,6 +223,8 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
+name|fd
+decl_stmt|,
 name|i
 decl_stmt|,
 name|list
@@ -231,6 +233,20 @@ specifier|extern
 name|int
 name|optind
 decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|progname
+operator|=
+literal|"demandoc"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
 name|progname
 operator|=
 name|strrchr
@@ -242,10 +258,7 @@ index|]
 argument_list|,
 literal|'/'
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|progname
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -357,7 +370,7 @@ name|mparse_alloc
 argument_list|(
 name|MPARSE_SO
 argument_list|,
-name|MANDOCLEVEL_FATAL
+name|MANDOCLEVEL_BADARG
 argument_list|,
 name|NULL
 argument_list|,
@@ -373,9 +386,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
 name|argc
+operator|<
+literal|1
 condition|)
 name|pmandoc
 argument_list|(
@@ -407,12 +420,39 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mparse_open
+argument_list|(
+name|mp
+argument_list|,
+operator|&
+name|fd
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+operator|!=
+name|MANDOCLEVEL_OK
+condition|)
+block|{
+name|perror
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|pmandoc
 argument_list|(
 name|mp
 argument_list|,
-operator|-
-literal|1
+name|fd
 argument_list|,
 name|argv
 index|[
@@ -501,8 +541,6 @@ name|line
 decl_stmt|,
 name|col
 decl_stmt|;
-if|if
-condition|(
 name|mparse_readfd
 argument_list|(
 name|mp
@@ -511,21 +549,7 @@ name|fd
 argument_list|,
 name|fn
 argument_list|)
-operator|>=
-name|MANDOCLEVEL_FATAL
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Parse failure\n"
-argument_list|,
-name|fn
-argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|mparse_result
 argument_list|(
 name|mp
@@ -1018,7 +1042,7 @@ condition|(
 name|list
 condition|)
 return|return;
-comment|/* 	 * Print out as many lines as needed to reach parity with the 	 * original input.  	 */
+comment|/* 	 * Print out as many lines as needed to reach parity with the 	 * original input. 	 */
 while|while
 condition|(
 operator|*

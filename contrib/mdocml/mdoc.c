@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc.c,v 1.233 2014/11/28 06:27:05 schwarze Exp $ */
+comment|/*	$Id: mdoc.c,v 1.238 2015/02/12 13:00:52 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2012, 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2012-2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -959,7 +959,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|mdoc_endparse
 parameter_list|(
 name|struct
@@ -973,11 +973,6 @@ argument_list|(
 name|mdoc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
@@ -1749,12 +1744,6 @@ name|pos
 expr_stmt|;
 name|p
 operator|->
-name|lastline
-operator|=
-name|line
-expr_stmt|;
-name|p
-operator|->
 name|tok
 operator|=
 name|tok
@@ -2014,7 +2003,9 @@ block|}
 end_function
 
 begin_function
-name|void
+name|struct
+name|mdoc_node
+modifier|*
 name|mdoc_endbody_alloc
 parameter_list|(
 name|struct
@@ -2047,6 +2038,20 @@ name|mdoc_node
 modifier|*
 name|p
 decl_stmt|;
+name|body
+operator|->
+name|flags
+operator||=
+name|MDOC_ENDED
+expr_stmt|;
+name|body
+operator|->
+name|parent
+operator|->
+name|flags
+operator||=
+name|MDOC_ENDED
+expr_stmt|;
 name|p
 operator|=
 name|node_alloc
@@ -2064,7 +2069,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|pending
+name|body
 operator|=
 name|body
 expr_stmt|;
@@ -2095,6 +2100,11 @@ name|next
 operator|=
 name|MDOC_NEXT_SIBLING
 expr_stmt|;
+return|return
+operator|(
+name|p
+operator|)
+return|;
 block|}
 end_function
 
@@ -2897,20 +2907,24 @@ expr_stmt|;
 comment|/* 	 * Divert directly to list processing if we're encountering a 	 * columnar MDOC_BLOCK with or without a prior MDOC_BLOCK entry 	 * (a MDOC_BODY means it's already open, in which case we should 	 * process within its context in the normal way). 	 */
 if|if
 condition|(
-name|MDOC_Bl
-operator|==
 name|n
 operator|->
 name|tok
-operator|&&
-name|MDOC_BODY
 operator|==
+name|MDOC_Bl
+operator|&&
 name|n
 operator|->
 name|type
-operator|&&
-name|LIST_column
 operator|==
+name|MDOC_BODY
+operator|&&
+name|n
+operator|->
+name|end
+operator|==
+name|ENDBODY_NOT
+operator|&&
 name|n
 operator|->
 name|norm
@@ -2918,6 +2932,8 @@ operator|->
 name|Bl
 operator|.
 name|type
+operator|==
+name|LIST_column
 condition|)
 block|{
 comment|/* `Bl' is open without any children. */
@@ -3593,20 +3609,24 @@ expr_stmt|;
 comment|/* 	 * If the first macro of a `Bl -column', open an `It' block 	 * context around the parsed macro. 	 */
 if|if
 condition|(
-name|MDOC_Bl
-operator|==
 name|n
 operator|->
 name|tok
-operator|&&
-name|MDOC_BODY
 operator|==
+name|MDOC_Bl
+operator|&&
 name|n
 operator|->
 name|type
-operator|&&
-name|LIST_column
 operator|==
+name|MDOC_BODY
+operator|&&
+name|n
+operator|->
+name|end
+operator|==
+name|ENDBODY_NOT
+operator|&&
 name|n
 operator|->
 name|norm
@@ -3614,6 +3634,8 @@ operator|->
 name|Bl
 operator|.
 name|type
+operator|==
+name|LIST_column
 condition|)
 block|{
 name|mdoc

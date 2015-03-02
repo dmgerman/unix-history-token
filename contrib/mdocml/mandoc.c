@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.c,v 1.88 2014/10/28 13:24:44 schwarze Exp $ */
+comment|/*	$Id: mandoc.c,v 1.92 2015/02/20 23:55:10 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012, 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008-2011, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011-2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -406,10 +406,6 @@ literal|'D'
 case|:
 comment|/* FALLTHROUGH */
 case|case
-literal|'o'
-case|:
-comment|/* FALLTHROUGH */
-case|case
 literal|'R'
 case|:
 comment|/* FALLTHROUGH */
@@ -420,22 +416,36 @@ comment|/* FALLTHROUGH */
 case|case
 literal|'Z'
 case|:
+name|gly
+operator|=
+name|ESCAPE_IGNORE
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+literal|'o'
+case|:
 if|if
 condition|(
-literal|'\0'
-operator|==
 operator|*
 operator|*
 name|start
+operator|==
+literal|'\0'
 condition|)
 return|return
 operator|(
 name|ESCAPE_ERROR
 operator|)
 return|;
+if|if
+condition|(
+name|gly
+operator|==
+name|ESCAPE_ERROR
+condition|)
 name|gly
 operator|=
-name|ESCAPE_IGNORE
+name|ESCAPE_OVERSTRIKE
 expr_stmt|;
 name|term
 operator|=
@@ -657,11 +667,12 @@ operator|*
 operator|*
 name|end
 condition|)
-operator|(
+operator|*
+name|start
+operator|=
+operator|++
 operator|*
 name|end
-operator|)
-operator|++
 expr_stmt|;
 switch|switch
 condition|(
@@ -714,6 +725,51 @@ expr_stmt|;
 name|term
 operator|=
 literal|'\''
+expr_stmt|;
+break|break;
+case|case
+literal|'3'
+case|:
+comment|/* FALLTHROUGH */
+case|case
+literal|'2'
+case|:
+comment|/* FALLTHROUGH */
+case|case
+literal|'1'
+case|:
+operator|*
+name|sz
+operator|=
+operator|(
+operator|*
+name|end
+operator|)
+index|[
+operator|-
+literal|1
+index|]
+operator|==
+literal|'s'
+operator|&&
+name|isdigit
+argument_list|(
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
+operator|*
+name|end
+argument_list|)
+index|[
+literal|1
+index|]
+argument_list|)
+condition|?
+literal|2
+else|:
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -1617,6 +1673,17 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tm
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 comment|/* 	 * Reserve space: 	 * up to 9 characters for the month (September) + blank 	 * up to 2 characters for the day + comma + blank 	 * 4 characters for the year and a terminating '\0' 	 */
 name|p
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: manpage.c,v 1.9 2014/08/17 03:24:47 schwarze Exp $ */
+comment|/*	$Id: manpage.c,v 1.10 2015/02/10 08:05:30 schwarze Exp $ */
 end_comment
 
 begin_comment

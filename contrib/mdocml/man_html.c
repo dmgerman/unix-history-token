@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man_html.c,v 1.107 2014/12/04 02:05:42 schwarze Exp $ */
+comment|/*	$Id: man_html.c,v 1.111 2015/02/10 08:05:30 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008-2012, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008-2012, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014, 2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -556,13 +556,6 @@ block|}
 block|,
 comment|/* RI */
 block|{
-name|man_ign_pre
-block|,
-name|NULL
-block|}
-block|,
-comment|/* na */
-block|{
 name|man_br_pre
 block|,
 name|NULL
@@ -1052,6 +1045,13 @@ parameter_list|(
 name|MAN_ARGS
 parameter_list|)
 block|{
+while|while
+condition|(
+name|n
+operator|!=
+name|NULL
+condition|)
+block|{
 name|print_man_node
 argument_list|(
 name|man
@@ -1063,25 +1063,13 @@ argument_list|,
 name|h
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|n
+operator|=
 name|n
 operator|->
 name|next
-condition|)
-name|print_man_nodelist
-argument_list|(
-name|man
-argument_list|,
-name|n
-operator|->
-name|next
-argument_list|,
-name|mh
-argument_list|,
-name|h
-argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1899,18 +1887,11 @@ argument_list|,
 name|SCALE_VS
 argument_list|)
 condition|)
-name|SCALE_VS_INIT
-argument_list|(
-operator|&
 name|su
-argument_list|,
-name|atoi
-argument_list|(
-name|n
-operator|->
-name|string
-argument_list|)
-argument_list|)
+operator|.
+name|scale
+operator|=
+literal|1.0
 expr_stmt|;
 block|}
 else|else

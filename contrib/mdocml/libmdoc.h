@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libmdoc.h,v 1.96 2014/12/01 04:05:32 schwarze Exp $ */
+comment|/*	$Id: libmdoc.h,v 1.97 2015/02/02 04:26:44 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -403,7 +403,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|struct
+name|mdoc_node
+modifier|*
 name|mdoc_endbody_alloc
 parameter_list|(
 name|struct
