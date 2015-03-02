@@ -7329,10 +7329,6 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|v_tpr
-operator|>=
-literal|0
-operator|&&
-name|v_tpr
 operator|<=
 literal|15
 argument_list|,
@@ -7916,7 +7912,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm __volatile("clgi" : : :);
+asm|__asm __volatile("clgi");
 block|}
 end_function
 
@@ -7929,7 +7925,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm __volatile("stgi" : : :);
+asm|__asm __volatile("stgi");
 block|}
 end_function
 
