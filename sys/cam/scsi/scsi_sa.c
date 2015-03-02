@@ -10436,7 +10436,7 @@ name|quirks
 operator|=
 name|SA_QUIRK_NONE
 expr_stmt|;
-comment|/* 	 * Long format data for READ POSITION was introduced in SSC, which 	 * was after SCSI-2.  (Roughly equivalent to SCSI-3.)  If the drive 	 * reports that it is SCSI-2 or older, it is unlikely to support 	 * long position data. 	 */
+comment|/* 	 * Long format data for READ POSITION was introduced in SSC, which 	 * was after SCSI-2.  (Roughly equivalent to SCSI-3.)  If the drive 	 * reports that it is SCSI-2 or older, it is unlikely to support 	 * long position data, but it might.  Some drives from that era 	 * claim to be SCSI-2, but do support long position information. 	 * So, instead of immediately disabling long position information 	 * for SCSI-2 devices, we'll try one pass through sagetpos(), and  	 * then disable long position information if we get an error.    	 */
 if|if
 condition|(
 name|cgd
@@ -10445,7 +10445,7 @@ name|inq_data
 operator|.
 name|version
 operator|<=
-name|SCSI_REV_2
+name|SCSI_REV_CCS
 condition|)
 name|softc
 operator|->
