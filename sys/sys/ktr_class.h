@@ -148,7 +148,7 @@ value|0x00000800
 end_define
 
 begin_comment
-comment|/* XXX Used by cxgb */
+comment|/* cxgb, amd64, xen, clk,&c */
 end_comment
 
 begin_define
@@ -192,7 +192,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* XXX Used by cxgb */
+comment|/* cxgb, drm2, ntb */
 end_comment
 
 begin_define
@@ -203,7 +203,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/* XXX Used by cxgb */
+comment|/* geom_sched */
 end_comment
 
 begin_define
