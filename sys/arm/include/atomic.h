@@ -3825,97 +3825,49 @@ begin_define
 define|#
 directive|define
 name|atomic_clear_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_clear_32((volatile uint32_t *)(p), (uint32_t)(v))
+value|atomic_clear_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_set_32((volatile uint32_t *)(p), (uint32_t)(v))
+value|atomic_set_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|cmpval
-parameter_list|,
-name|newval
-parameter_list|)
-define|\
-value|atomic_cmpset_32((volatile u_int32_t *)(p), (u_int32_t)(cmpval), \ 	    (u_int32_t)(newval))
+value|atomic_cmpset_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_rel_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|cmpval
-parameter_list|,
-name|newval
-parameter_list|)
-define|\
-value|atomic_cmpset_rel_32((volatile u_int32_t *)(p), (u_int32_t)(cmpval), \ 	    (u_int32_t)(newval))
+value|atomic_cmpset_rel_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_acq_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|cmpval
-parameter_list|,
-name|newval
-parameter_list|)
-define|\
-value|atomic_cmpset_acq_32((volatile u_int32_t *)(p), (u_int32_t)(cmpval), \ 	    (u_int32_t)(newval))
+value|atomic_cmpset_acq_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_store_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_store_32((volatile uint32_t *)(p), (uint32_t)(v))
+value|atomic_store_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_store_rel_ptr
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|atomic_store_rel_32((volatile uint32_t *)(p), (uint32_t)(v))
+value|atomic_store_rel_32
 end_define
 
 begin_define
