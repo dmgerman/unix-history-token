@@ -410,6 +410,8 @@ operator|&
 name|rid
 argument_list|,
 name|RF_ACTIVE
+operator||
+name|RF_SHAREABLE
 argument_list|)
 expr_stmt|;
 if|if
