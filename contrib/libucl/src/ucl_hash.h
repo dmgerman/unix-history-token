@@ -21,30 +21,20 @@ directive|include
 file|"ucl.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"uthash.h"
-end_include
-
 begin_comment
 comment|/******************************************************************************/
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|ucl_hash_node_s
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
-struct|struct
+name|struct
 name|ucl_hash_node_s
-block|{
-specifier|const
-name|ucl_object_t
-modifier|*
-name|data
-decl_stmt|;
-name|UT_hash_handle
-name|hh
-decl_stmt|;
-block|}
 name|ucl_hash_node_t
 typedef|;
 end_typedef
@@ -91,17 +81,16 @@ begin_comment
 comment|/**  * Linear chained hashtable.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|ucl_hash_struct
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
-struct|struct
+name|struct
 name|ucl_hash_struct
-block|{
-name|ucl_hash_node_t
-modifier|*
-name|buckets
-decl_stmt|;
-comment|/**< array of hash buckets. One list for each hash modulus. */
-block|}
 name|ucl_hash_t
 typedef|;
 end_typedef
@@ -115,7 +104,8 @@ name|ucl_hash_t
 modifier|*
 name|ucl_hash_create
 parameter_list|(
-name|void
+name|bool
+name|ignore_case
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -266,6 +256,10 @@ begin_function_decl
 name|bool
 name|ucl_hash_iter_has_next
 parameter_list|(
+name|ucl_hash_t
+modifier|*
+name|hashlin
+parameter_list|,
 name|ucl_hash_iter_t
 name|iter
 parameter_list|)
