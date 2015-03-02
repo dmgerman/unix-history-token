@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: read.c,v 1.104 2014/12/01 04:14:14 schwarze Exp $ */
+comment|/*	$Id: read.c,v 1.129 2015/03/02 14:50:17 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2014 Ingo Schwarze<schwarze@openbsd.org>  * Copyright (c) 2010, 2012 Joerg Sonnenberger<joerg@netbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2015 Ingo Schwarze<schwarze@openbsd.org>  * Copyright (c) 2010, 2012 Joerg Sonnenberger<joerg@netbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -373,7 +373,7 @@ name|MANDOCERR_WARNING
 block|,
 name|MANDOCERR_ERROR
 block|,
-name|MANDOCERR_FATAL
+name|MANDOCERR_UNSUPP
 block|,
 name|MANDOCERR_MAX
 block|,
@@ -432,7 +432,15 @@ literal|"content before first section header"
 block|,
 literal|"first section is not \"NAME\""
 block|,
-literal|"bad NAME section contents"
+literal|"NAME section without name"
+block|,
+literal|"NAME section without description"
+block|,
+literal|"description not at the end of NAME"
+block|,
+literal|"bad NAME section content"
+block|,
+literal|"missing description line, using \"\""
 block|,
 literal|"sections out of conventional order"
 block|,
@@ -478,9 +486,9 @@ literal|"conditional request controls empty scope"
 block|,
 literal|"skipping empty macro"
 block|,
-literal|"empty argument, using 0n"
+literal|"empty block"
 block|,
-literal|"argument count wrong"
+literal|"empty argument, using 0n"
 block|,
 literal|"missing display type, using -ragged"
 block|,
@@ -489,6 +497,8 @@ block|,
 literal|"missing -width in -tag list, using 8n"
 block|,
 literal|"missing utility name, using \"\""
+block|,
+literal|"missing function name, using \"\""
 block|,
 literal|"empty head in list item"
 block|,
@@ -500,7 +510,13 @@ literal|"unknown font type, using \\fR"
 block|,
 literal|"nothing follows prefix"
 block|,
+literal|"empty reference block"
+block|,
 literal|"missing -std argument, adding it"
+block|,
+literal|"missing option string, using \"\""
+block|,
+literal|"missing resource identifier, using \"\""
 block|,
 literal|"missing eqn box, using \"\""
 block|,
@@ -517,6 +533,8 @@ literal|"skipping duplicate list type"
 block|,
 literal|"skipping -width argument"
 block|,
+literal|"wrong number of cells"
+block|,
 literal|"unknown AT&T UNIX version"
 block|,
 literal|"comma in function argument"
@@ -528,6 +546,8 @@ block|,
 literal|"invalid Boolean argument"
 block|,
 literal|"unknown font, skipping request"
+block|,
+literal|"odd number of characters in request"
 block|,
 comment|/* related to plain text */
 literal|"blank line in fill mode, using .sp"
@@ -542,40 +562,48 @@ literal|"invalid escape sequence"
 block|,
 literal|"undefined string, using \"\""
 block|,
+comment|/* related to tables */
+literal|"tbl line starts with span"
+block|,
+literal|"tbl column starts with span"
+block|,
+literal|"skipping vertical bar in tbl layout"
+block|,
 literal|"generic error"
 block|,
-comment|/* related to equations */
-literal|"unexpected equation scope closure"
-block|,
-literal|"equation scope open on exit"
-block|,
-literal|"overlapping equation scopes"
-block|,
-literal|"unexpected end of equation"
-block|,
 comment|/* related to tables */
-literal|"bad table syntax"
+literal|"non-alphabetic character in tbl options"
 block|,
-literal|"bad table option"
+literal|"skipping unknown tbl option"
 block|,
-literal|"bad table layout"
+literal|"missing tbl option argument"
 block|,
-literal|"no table layout cells specified"
+literal|"wrong tbl option argument size"
 block|,
-literal|"no table data cells specified"
+literal|"empty tbl layout"
 block|,
-literal|"ignore data in cell"
+literal|"invalid character in tbl layout"
 block|,
-literal|"data block still open"
+literal|"unmatched parenthesis in tbl layout"
 block|,
-literal|"ignoring extra data cells"
+literal|"tbl without any data cells"
+block|,
+literal|"ignoring data in spanned tbl cell"
+block|,
+literal|"ignoring extra tbl data cells"
+block|,
+literal|"data block open at end of tbl"
 block|,
 comment|/* related to document structure and macros */
+name|NULL
+block|,
 literal|"input stack limit exceeded, infinite loop?"
 block|,
 literal|"skipping bad character"
 block|,
 literal|"skipping unknown macro"
+block|,
+literal|"skipping insecure request"
 block|,
 literal|"skipping item outside list"
 block|,
@@ -583,14 +611,14 @@ literal|"skipping column outside column list"
 block|,
 literal|"skipping end of block that is not open"
 block|,
+literal|"fewer RS blocks open, skipping"
+block|,
 literal|"inserting missing end of block"
 block|,
 literal|"appending missing end of block"
 block|,
 comment|/* related to request and macro arguments */
 literal|"escaped character not allowed in a name"
-block|,
-literal|"argument count wrong"
 block|,
 literal|"NOT IMPLEMENTED: Bd -file"
 block|,
@@ -604,40 +632,29 @@ literal|"unknown standard specifier"
 block|,
 literal|"skipping request without numeric argument"
 block|,
+literal|"NOT IMPLEMENTED: .so with absolute path or \"..\""
+block|,
+literal|".so request failed"
+block|,
 literal|"skipping all arguments"
 block|,
 literal|"skipping excess arguments"
 block|,
 literal|"divide by zero"
 block|,
-literal|"generic fatal error"
+literal|"unsupported feature"
 block|,
 literal|"input too large"
 block|,
-literal|"NOT IMPLEMENTED: .so with absolute path or \"..\""
+literal|"unsupported control character"
 block|,
-literal|".so request failed"
+literal|"unsupported roff request"
 block|,
-comment|/* system errors */
-literal|"cannot dup file descriptor"
+literal|"eqn delim option in tbl"
 block|,
-literal|"cannot exec"
+literal|"unsupported tbl layout modifier"
 block|,
-literal|"gunzip failed with code"
-block|,
-literal|"cannot fork"
-block|,
-name|NULL
-block|,
-literal|"cannot open pipe"
-block|,
-literal|"cannot read file"
-block|,
-literal|"gunzip died from signal"
-block|,
-literal|"cannot stat file"
-block|,
-literal|"wait failed"
+literal|"ignoring macro in table"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -662,7 +679,7 @@ literal|"WARNING"
 block|,
 literal|"ERROR"
 block|,
-literal|"FATAL"
+literal|"UNSUPP"
 block|,
 literal|"BADARG"
 block|,
@@ -954,6 +971,10 @@ name|roff
 argument_list|,
 name|curp
 argument_list|,
+name|curp
+operator|->
+name|defos
+argument_list|,
 name|MPARSE_QUICK
 operator|&
 name|curp
@@ -1018,6 +1039,15 @@ name|struct
 name|buf
 name|ln
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|save_file
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 name|size_t
 name|pos
 decl_stmt|;
@@ -1033,6 +1063,12 @@ name|int
 name|lnn
 decl_stmt|;
 comment|/* line number in the real file */
+name|int
+name|fd
+decl_stmt|;
+name|pid_t
+name|save_child
+decl_stmt|;
 name|unsigned
 name|char
 name|c
@@ -1277,7 +1313,7 @@ condition|)
 block|{
 name|mandoc_vmsg
 argument_list|(
-name|MANDOCERR_BADCHAR
+name|MANDOCERR_CHAR_BAD
 argument_list|,
 name|curp
 argument_list|,
@@ -1328,7 +1364,21 @@ condition|)
 block|{
 name|mandoc_vmsg
 argument_list|(
-name|MANDOCERR_BADCHAR
+name|c
+operator|==
+literal|0x00
+operator|||
+name|c
+operator|==
+literal|0x04
+operator|||
+name|c
+operator|>
+literal|0x0a
+condition|?
+name|MANDOCERR_CHAR_BAD
+else|:
+name|MANDOCERR_CHAR_UNSUPP
 argument_list|,
 name|curp
 argument_list|,
@@ -1346,6 +1396,12 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|!=
+literal|'\r'
+condition|)
 name|ln
 operator|.
 name|buf
@@ -1608,7 +1664,7 @@ condition|)
 block|{
 name|mandoc_vmsg
 argument_list|(
-name|MANDOCERR_BADCHAR
+name|MANDOCERR_CHAR_BAD
 argument_list|,
 name|curp
 argument_list|,
@@ -1901,19 +1957,6 @@ literal|0
 expr_stmt|;
 continue|continue;
 case|case
-name|ROFF_ERR
-case|:
-name|assert
-argument_list|(
-name|MANDOCLEVEL_FATAL
-operator|<=
-name|curp
-operator|->
-name|file_status
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|ROFF_SO
 case|:
 if|if
@@ -1984,12 +2027,42 @@ name|pos
 operator|+
 literal|1
 expr_stmt|;
+name|save_file
+operator|=
+name|curp
+operator|->
+name|file
+expr_stmt|;
+name|save_child
+operator|=
+name|curp
+operator|->
+name|child
+expr_stmt|;
+if|if
+condition|(
+name|mparse_open
+argument_list|(
+name|curp
+argument_list|,
+operator|&
+name|fd
+argument_list|,
+name|ln
+operator|.
+name|buf
+operator|+
+name|of
+argument_list|)
+operator|==
+name|MANDOCLEVEL_OK
+condition|)
+block|{
 name|mparse_readfd
 argument_list|(
 name|curp
 argument_list|,
-operator|-
-literal|1
+name|fd
 argument_list|,
 name|ln
 operator|.
@@ -1998,15 +2071,21 @@ operator|+
 name|of
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|MANDOCLEVEL_FATAL
-operator|<=
 name|curp
 operator|->
-name|file_status
-condition|)
+name|file
+operator|=
+name|save_file
+expr_stmt|;
+block|}
+else|else
 block|{
+name|curp
+operator|->
+name|file
+operator|=
+name|save_file
+expr_stmt|;
 name|mandoc_vmsg
 argument_list|(
 name|MANDOCERR_SO_FAIL
@@ -2028,8 +2107,59 @@ operator|+
 name|of
 argument_list|)
 expr_stmt|;
-break|break;
+name|ln
+operator|.
+name|sz
+operator|=
+name|mandoc_asprintf
+argument_list|(
+operator|&
+name|cp
+argument_list|,
+literal|".sp\nSee the file %s.\n.sp"
+argument_list|,
+name|ln
+operator|.
+name|buf
+operator|+
+name|of
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ln
+operator|.
+name|buf
+argument_list|)
+expr_stmt|;
+name|ln
+operator|.
+name|buf
+operator|=
+name|cp
+expr_stmt|;
+name|of
+operator|=
+literal|0
+expr_stmt|;
+name|mparse_buf_r
+argument_list|(
+name|curp
+argument_list|,
+name|ln
+argument_list|,
+name|of
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
+name|curp
+operator|->
+name|child
+operator|=
+name|save_child
+expr_stmt|;
 name|pos
 operator|=
 literal|0
@@ -2038,16 +2168,6 @@ continue|continue;
 default|default:
 break|break;
 block|}
-comment|/* 		 * If we encounter errors in the recursive parse, make 		 * sure we don't continue parsing. 		 */
-if|if
-condition|(
-name|MANDOCLEVEL_FATAL
-operator|<=
-name|curp
-operator|->
-name|file_status
-condition|)
-break|break;
 comment|/* 		 * If input parsers have not been allocated, do so now. 		 * We keep these instanced between parsers, but set them 		 * locally per parse routine since we can use different 		 * parsers with each one. 		 */
 if|if
 condition|(
@@ -2300,48 +2420,19 @@ name|st
 argument_list|)
 condition|)
 block|{
-name|curp
-operator|->
-name|file_status
-operator|=
-name|MANDOCLEVEL_SYSERR
-expr_stmt|;
-if|if
-condition|(
-name|curp
-operator|->
-name|mmsg
-condition|)
-call|(
-modifier|*
-name|curp
-operator|->
-name|mmsg
-call|)
+name|perror
 argument_list|(
-name|MANDOCERR_SYSSTAT
-argument_list|,
-name|curp
-operator|->
-name|file_status
-argument_list|,
 name|file
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
+name|exit
+argument_list|(
 operator|(
-literal|0
+name|int
 operator|)
-return|;
+name|MANDOCLEVEL_SYSERR
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * If we're a regular file, try just reading in the whole entry 	 * via mmap().  This is faster than reading it into blocks, and 	 * since each file is only a few bytes to begin with, I'm not 	 * concerned that this is going to tank any machines. 	 */
 if|if
@@ -2367,32 +2458,11 @@ literal|31
 operator|)
 condition|)
 block|{
-name|curp
-operator|->
-name|file_status
-operator|=
-name|MANDOCLEVEL_FATAL
-expr_stmt|;
-if|if
-condition|(
-name|curp
-operator|->
-name|mmsg
-condition|)
-call|(
-modifier|*
-name|curp
-operator|->
-name|mmsg
-call|)
+name|mandoc_msg
 argument_list|(
 name|MANDOCERR_TOOLARGE
 argument_list|,
 name|curp
-operator|->
-name|file_status
-argument_list|,
-name|file
 argument_list|,
 literal|0
 argument_list|,
@@ -2510,32 +2580,11 @@ literal|31
 operator|)
 condition|)
 block|{
-name|curp
-operator|->
-name|file_status
-operator|=
-name|MANDOCLEVEL_FATAL
-expr_stmt|;
-if|if
-condition|(
-name|curp
-operator|->
-name|mmsg
-condition|)
-call|(
-modifier|*
-name|curp
-operator|->
-name|mmsg
-call|)
+name|mandoc_msg
 argument_list|(
 name|MANDOCERR_TOOLARGE
 argument_list|,
 name|curp
-operator|->
-name|file_status
-argument_list|,
-name|file
 argument_list|,
 literal|0
 argument_list|,
@@ -2603,44 +2652,19 @@ operator|-
 literal|1
 condition|)
 block|{
-name|curp
-operator|->
-name|file_status
-operator|=
-name|MANDOCLEVEL_SYSERR
-expr_stmt|;
-if|if
-condition|(
-name|curp
-operator|->
-name|mmsg
-condition|)
-call|(
-modifier|*
-name|curp
-operator|->
-name|mmsg
-call|)
+name|perror
 argument_list|(
-name|MANDOCERR_SYSREAD
-argument_list|,
-name|curp
-operator|->
-name|file_status
-argument_list|,
 name|file
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
+name|exit
+argument_list|(
+operator|(
+name|int
+operator|)
+name|MANDOCLEVEL_SYSERR
+argument_list|)
+expr_stmt|;
 block|}
 name|off
 operator|+=
@@ -2682,15 +2706,6 @@ modifier|*
 name|curp
 parameter_list|)
 block|{
-if|if
-condition|(
-name|MANDOCLEVEL_FATAL
-operator|<=
-name|curp
-operator|->
-name|file_status
-condition|)
-return|return;
 if|if
 condition|(
 name|curp
@@ -2752,6 +2767,10 @@ name|curp
 argument_list|,
 name|curp
 operator|->
+name|defos
+argument_list|,
+name|curp
+operator|->
 name|options
 operator|&
 name|MPARSE_QUICK
@@ -2776,53 +2795,27 @@ condition|(
 name|curp
 operator|->
 name|mdoc
-operator|&&
-operator|!
+condition|)
 name|mdoc_endparse
 argument_list|(
 name|curp
 operator|->
 name|mdoc
 argument_list|)
-condition|)
-block|{
-name|assert
-argument_list|(
-name|MANDOCLEVEL_FATAL
-operator|<=
-name|curp
-operator|->
-name|file_status
-argument_list|)
 expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 name|curp
 operator|->
 name|man
-operator|&&
-operator|!
+condition|)
 name|man_endparse
 argument_list|(
 name|curp
 operator|->
 name|man
 argument_list|)
-condition|)
-block|{
-name|assert
-argument_list|(
-name|MANDOCLEVEL_FATAL
-operator|<=
-name|curp
-operator|->
-name|file_status
-argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|roff_endparse
 argument_list|(
 name|curp
@@ -3014,16 +3007,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
 operator|--
 name|recursion_depth
-operator|&&
-name|MANDOCLEVEL_FATAL
-operator|>
-name|curp
-operator|->
-name|file_status
+operator|==
+literal|0
 condition|)
 name|mparse_end
 argument_list|(
@@ -3104,7 +3091,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If a file descriptor is given, use it and assume it points  * to the named file.  Otherwise, open the named file.  * Read the whole file into memory and call the parsers.  * Called recursively when an .so request is encountered.  */
+comment|/*  * Read the whole file into memory and call the parsers.  * Called recursively when an .so request is encountered.  */
 end_comment
 
 begin_function
@@ -3136,46 +3123,6 @@ decl_stmt|;
 name|int
 name|save_filenc
 decl_stmt|;
-name|pid_t
-name|save_child
-decl_stmt|;
-name|save_child
-operator|=
-name|curp
-operator|->
-name|child
-expr_stmt|;
-if|if
-condition|(
-name|fd
-operator|!=
-operator|-
-literal|1
-condition|)
-name|curp
-operator|->
-name|child
-operator|=
-literal|0
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|mparse_open
-argument_list|(
-name|curp
-argument_list|,
-operator|&
-name|fd
-argument_list|,
-name|file
-argument_list|)
-operator|>=
-name|MANDOCLEVEL_SYSERR
-condition|)
-goto|goto
-name|out
-goto|;
 if|if
 condition|(
 name|read_whole_file
@@ -3282,14 +3229,6 @@ argument_list|(
 name|curp
 argument_list|)
 expr_stmt|;
-name|out
-label|:
-name|curp
-operator|->
-name|child
-operator|=
-name|save_child
-expr_stmt|;
 return|return
 operator|(
 name|curp
@@ -3333,18 +3272,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|enum
-name|mandocerr
-name|err
-decl_stmt|;
-name|pfd
-index|[
-literal|1
-index|]
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|curp
 operator|->
 name|file
@@ -3454,13 +3381,44 @@ name|errno
 operator|=
 name|save_errno
 expr_stmt|;
-name|err
-operator|=
-name|MANDOCERR_SYSOPEN
+name|free
+argument_list|(
+name|cp
+argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+operator|*
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|curp
+operator|->
+name|child
+operator|=
+literal|0
+expr_stmt|;
+name|mandoc_msg
+argument_list|(
+name|MANDOCERR_FILE
+argument_list|,
+name|curp
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|MANDOCLEVEL_ERROR
+operator|)
+return|;
 block|}
 comment|/* Run gunzip(1). */
 if|if
@@ -3474,13 +3432,19 @@ operator|-
 literal|1
 condition|)
 block|{
-name|err
-operator|=
-name|MANDOCERR_SYSPIPE
+name|perror
+argument_list|(
+literal|"pipe"
+argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+name|exit
+argument_list|(
+operator|(
+name|int
+operator|)
+name|MANDOCLEVEL_SYSERR
+argument_list|)
+expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -3496,35 +3460,19 @@ case|case
 operator|-
 literal|1
 case|:
-name|err
-operator|=
-name|MANDOCERR_SYSFORK
-expr_stmt|;
-name|close
+name|perror
 argument_list|(
-name|pfd
-index|[
-literal|0
-index|]
+literal|"fork"
 argument_list|)
 expr_stmt|;
-name|close
+name|exit
 argument_list|(
-name|pfd
-index|[
-literal|1
-index|]
+operator|(
+name|int
+operator|)
+name|MANDOCLEVEL_SYSERR
 argument_list|)
 expr_stmt|;
-name|pfd
-index|[
-literal|1
-index|]
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-break|break;
 case|case
 literal|0
 case|:
@@ -3552,11 +3500,19 @@ operator|-
 literal|1
 condition|)
 block|{
-name|err
-operator|=
-name|MANDOCERR_SYSDUP
+name|perror
+argument_list|(
+literal|"dup"
+argument_list|)
 expr_stmt|;
-break|break;
+name|exit
+argument_list|(
+operator|(
+name|int
+operator|)
+name|MANDOCLEVEL_SYSERR
+argument_list|)
+expr_stmt|;
 block|}
 name|execlp
 argument_list|(
@@ -3571,11 +3527,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
-name|MANDOCERR_SYSEXEC
+name|perror
+argument_list|(
+literal|"exec"
+argument_list|)
 expr_stmt|;
-break|break;
+name|exit
+argument_list|(
+operator|(
+name|int
+operator|)
+name|MANDOCLEVEL_SYSERR
+argument_list|)
+expr_stmt|;
 default|default:
 name|close
 argument_list|(
@@ -3599,86 +3563,6 @@ name|MANDOCLEVEL_OK
 operator|)
 return|;
 block|}
-name|out
-label|:
-name|free
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
-operator|*
-name|fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|curp
-operator|->
-name|child
-operator|=
-literal|0
-expr_stmt|;
-name|curp
-operator|->
-name|file_status
-operator|=
-name|MANDOCLEVEL_SYSERR
-expr_stmt|;
-if|if
-condition|(
-name|curp
-operator|->
-name|mmsg
-condition|)
-call|(
-modifier|*
-name|curp
-operator|->
-name|mmsg
-call|)
-argument_list|(
-name|err
-argument_list|,
-name|curp
-operator|->
-name|file_status
-argument_list|,
-name|curp
-operator|->
-name|file
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pfd
-index|[
-literal|1
-index|]
-operator|!=
-operator|-
-literal|1
-condition|)
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|curp
-operator|->
-name|file_status
-operator|)
-return|;
 block|}
 end_function
 
@@ -3727,36 +3611,26 @@ operator|-
 literal|1
 condition|)
 block|{
-name|mandoc_msg
+name|perror
 argument_list|(
-name|MANDOCERR_SYSWAIT
-argument_list|,
-name|curp
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"wait"
 argument_list|)
 expr_stmt|;
-name|curp
-operator|->
-name|file_status
-operator|=
-name|MANDOCLEVEL_SYSERR
-expr_stmt|;
-return|return
+name|exit
+argument_list|(
 operator|(
+name|int
+operator|)
+name|MANDOCLEVEL_SYSERR
+argument_list|)
+expr_stmt|;
+block|}
 name|curp
 operator|->
-name|file_status
-operator|)
-return|;
-block|}
+name|child
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|WIFSIGNALED
@@ -3767,7 +3641,7 @@ condition|)
 block|{
 name|mandoc_vmsg
 argument_list|(
-name|MANDOCERR_SYSSIG
+name|MANDOCERR_FILE
 argument_list|,
 name|curp
 argument_list|,
@@ -3775,7 +3649,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"%d"
+literal|"gunzip died from signal %d"
 argument_list|,
 name|WTERMSIG
 argument_list|(
@@ -3783,17 +3657,9 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|curp
-operator|->
-name|file_status
-operator|=
-name|MANDOCLEVEL_SYSERR
-expr_stmt|;
 return|return
 operator|(
-name|curp
-operator|->
-name|file_status
+name|MANDOCLEVEL_ERROR
 operator|)
 return|;
 block|}
@@ -3807,7 +3673,7 @@ condition|)
 block|{
 name|mandoc_vmsg
 argument_list|(
-name|MANDOCERR_SYSEXIT
+name|MANDOCERR_FILE
 argument_list|,
 name|curp
 argument_list|,
@@ -3815,7 +3681,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"%d"
+literal|"gunzip failed with code %d"
 argument_list|,
 name|WEXITSTATUS
 argument_list|(
@@ -3823,17 +3689,9 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|curp
-operator|->
-name|file_status
-operator|=
-name|MANDOCLEVEL_SYSERR
-expr_stmt|;
 return|return
 operator|(
-name|curp
-operator|->
-name|file_status
+name|MANDOCLEVEL_ERROR
 operator|)
 return|;
 block|}
@@ -3878,13 +3736,6 @@ name|mparse
 modifier|*
 name|curp
 decl_stmt|;
-name|assert
-argument_list|(
-name|wlevel
-operator|<=
-name|MANDOCLEVEL_FATAL
-argument_list|)
-expr_stmt|;
 name|curp
 operator|=
 name|mandoc_calloc
@@ -3997,6 +3848,10 @@ operator|->
 name|roff
 argument_list|,
 name|curp
+argument_list|,
+name|curp
+operator|->
+name|defos
 argument_list|,
 name|curp
 operator|->
@@ -4386,7 +4241,7 @@ name|level
 decl_stmt|;
 name|level
 operator|=
-name|MANDOCLEVEL_FATAL
+name|MANDOCLEVEL_UNSUPP
 expr_stmt|;
 while|while
 condition|(
@@ -4407,6 +4262,10 @@ operator|<
 name|m
 operator|->
 name|wlevel
+operator|&&
+name|er
+operator|!=
+name|MANDOCERR_FILE
 condition|)
 return|return;
 if|if

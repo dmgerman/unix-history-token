@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man.h,v 1.67 2014/12/01 04:05:32 schwarze Exp $ */
+comment|/*	$Id: man.h,v 1.69 2015/01/24 02:41:49 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -54,8 +54,6 @@ block|,
 name|MAN_IR
 block|,
 name|MAN_RI
-block|,
-name|MAN_na
 block|,
 name|MAN_sp
 block|,
@@ -259,6 +257,10 @@ modifier|*
 name|eqn
 decl_stmt|;
 comment|/* EQN */
+name|int
+name|aux
+decl_stmt|;
+comment|/* decoded node data, type-dependent */
 block|}
 struct|;
 end_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libman.h,v 1.66 2014/12/01 04:05:31 schwarze Exp $ */
+comment|/*	$Id: libman.h,v 1.67 2014/12/28 14:42:27 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -30,6 +30,12 @@ modifier|*
 name|parse
 decl_stmt|;
 comment|/* parse pointer */
+specifier|const
+name|char
+modifier|*
+name|defos
+decl_stmt|;
+comment|/* default OS argument for .TH */
 name|int
 name|quick
 decl_stmt|;
