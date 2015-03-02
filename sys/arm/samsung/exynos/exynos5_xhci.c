@@ -1154,6 +1154,8 @@ operator|->
 name|base
 argument_list|,
 name|dev
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
