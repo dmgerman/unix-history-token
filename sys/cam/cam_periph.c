@@ -474,6 +474,8 @@ decl_stmt|;
 name|int
 name|ndrivers
 decl_stmt|;
+name|again
+label|:
 name|ndrivers
 operator|=
 name|nperiph_drivers
@@ -497,6 +499,33 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|xpt_lock_buses
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ndrivers
+operator|!=
+name|nperiph_drivers
+operator|+
+literal|2
+condition|)
+block|{
+comment|/* 		 * Lost race against itself; go around. 		 */
+name|xpt_unlock_buses
+argument_list|()
+expr_stmt|;
+name|free
+argument_list|(
+name|newdrivers
+argument_list|,
+name|M_CAMPERIPH
+argument_list|)
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
 if|if
 condition|(
 name|periph_drivers
@@ -540,6 +569,12 @@ name|periph_drivers
 operator|=
 name|newdrivers
 expr_stmt|;
+name|nperiph_drivers
+operator|++
+expr_stmt|;
+name|xpt_unlock_buses
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|old
@@ -550,9 +585,6 @@ name|old
 argument_list|,
 name|M_CAMPERIPH
 argument_list|)
-expr_stmt|;
-name|nperiph_drivers
-operator|++
 expr_stmt|;
 comment|/* If driver marked as early or it is late now, initialize it. */
 if|if
