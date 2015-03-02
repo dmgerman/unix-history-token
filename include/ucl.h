@@ -429,8 +429,7 @@ name|double
 name|dv
 decl_stmt|;
 comment|/**< Double value of an object */
-name|struct
-name|ucl_object_s
+name|void
 modifier|*
 name|av
 decl_stmt|;
@@ -1395,6 +1394,55 @@ name|bool
 name|expand_values
 parameter_list|)
 function_decl|;
+comment|/**  * Create new safe iterator for the specified object  * @param obj object to iterate  * @return new iterator object that should be used with safe iterators API only  */
+name|UCL_EXTERN
+name|ucl_object_iter_t
+name|ucl_object_iterate_new
+argument_list|(
+specifier|const
+name|ucl_object_t
+operator|*
+name|obj
+argument_list|)
+name|UCL_WARN_UNUSED_RESULT
+decl_stmt|;
+comment|/**  * Reset initialized iterator to a new object  * @param obj new object to iterate  * @return modified iterator object  */
+name|UCL_EXTERN
+name|ucl_object_iter_t
+name|ucl_object_iterate_reset
+parameter_list|(
+name|ucl_object_iter_t
+name|it
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
+comment|/**  * Get the next object from the `obj`. This fucntion iterates over arrays, objects  * and implicit arrays  * @param iter safe iterator  * @return the next object in sequence  */
+name|UCL_EXTERN
+specifier|const
+name|ucl_object_t
+modifier|*
+name|ucl_object_iterate_safe
+parameter_list|(
+name|ucl_object_iter_t
+name|iter
+parameter_list|,
+name|bool
+name|expand_values
+parameter_list|)
+function_decl|;
+comment|/**  * Free memory associated with the safe iterator  * @param it safe iterator object  */
+name|UCL_EXTERN
+name|void
+name|ucl_object_iterate_free
+parameter_list|(
+name|ucl_object_iter_t
+name|it
+parameter_list|)
+function_decl|;
 comment|/** @} */
 comment|/**  * @defgroup parser Parsing functions  * These functions are used to parse UCL objects  *  * @{  */
 comment|/**  * Macro handler for a parser  * @param data the content of macro  * @param len the length of content  * @param arguments arguments object  * @param ud opaque user data  * @param err error pointer  * @return true if macro has been parsed  */
@@ -1647,6 +1695,17 @@ specifier|const
 name|char
 modifier|*
 name|ucl_parser_get_error
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|)
+function_decl|;
+comment|/**  * Clear the error in the parser  * @param parser parser object  */
+name|UCL_EXTERN
+name|void
+name|ucl_parser_clear_error
 parameter_list|(
 name|struct
 name|ucl_parser
