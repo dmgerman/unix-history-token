@@ -341,6 +341,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<mips/atheros/qca955xreg.h>
+end_include
+
+begin_comment
+comment|/* XXX tsk! */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<mips/atheros/if_argevar.h>
 end_include
 
@@ -410,6 +420,8 @@ block|,
 literal|"RGMII"
 block|,
 literal|"RMII"
+block|,
+literal|"SGMII"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1668,7 +1680,7 @@ operator|=
 name|RST_RESET_GE1_MAC
 expr_stmt|;
 block|}
-comment|/* 	 * AR934x (and later) also needs the MDIO block reset. 	 */
+comment|/* 	 * AR934x (and later) also needs the MDIO block reset. 	 * XXX should methodize this! 	 */
 if|if
 condition|(
 name|ar71xx_soc
@@ -1703,6 +1715,39 @@ block|{
 name|reset_reg
 operator||=
 name|AR934X_RESET_GE1_MDIO
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_QCA9556
+operator|||
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_QCA9558
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|arge_mac_unit
+operator|==
+literal|0
+condition|)
+block|{
+name|reset_reg
+operator||=
+name|QCA955X_RESET_GE0_MDIO
+expr_stmt|;
+block|}
+else|else
+block|{
+name|reset_reg
+operator||=
+name|QCA955X_RESET_GE1_MDIO
 expr_stmt|;
 block|}
 block|}
@@ -1970,6 +2015,12 @@ case|:
 case|case
 name|AR71XX_SOC_AR9344
 case|:
+case|case
+name|AR71XX_SOC_QCA9556
+case|:
+case|case
+name|AR71XX_SOC_QCA9558
+case|:
 name|table
 operator|=
 name|ar933x_mdio_div_table
@@ -2200,6 +2251,12 @@ name|AR71XX_SOC_AR9342
 case|:
 case|case
 name|AR71XX_SOC_AR9344
+case|:
+case|case
+name|AR71XX_SOC_QCA9556
+case|:
+case|case
+name|AR71XX_SOC_QCA9558
 case|:
 return|return
 operator|(
@@ -3539,6 +3596,12 @@ name|AR71XX_SOC_AR9342
 case|:
 case|case
 name|AR71XX_SOC_AR9344
+case|:
+case|case
+name|AR71XX_SOC_QCA9556
+case|:
+case|case
+name|AR71XX_SOC_QCA9558
 case|:
 name|ARGE_WRITE
 argument_list|(
@@ -5035,6 +5098,12 @@ name|AR71XX_SOC_AR9342
 case|:
 case|case
 name|AR71XX_SOC_AR9344
+case|:
+case|case
+name|AR71XX_SOC_QCA9556
+case|:
+case|case
+name|AR71XX_SOC_QCA9558
 case|:
 name|fifo_tx
 operator|=
