@@ -1085,6 +1085,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|writer
 index|[]

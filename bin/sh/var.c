@@ -322,6 +322,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|localvar
+modifier|*
+name|localvars
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|forcelocal
 decl_stmt|;
