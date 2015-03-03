@@ -3940,7 +3940,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: syslogd [-468ACcdknosTuv] [-a allowed_peer]"
+literal|"usage: syslogd [-468ACcdFknosTuv] [-a allowed_peer]"
 argument_list|,
 literal|"               [-b bind_address] [-f config_file]"
 argument_list|,
