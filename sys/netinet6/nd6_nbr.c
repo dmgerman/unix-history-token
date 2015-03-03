@@ -480,6 +480,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|nd6_ns_output_fib
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|,
+name|struct
+name|llentry
+modifier|*
+parameter_list|,
+name|uint8_t
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -1807,8 +1838,9 @@ comment|/*  * Output a Neighbor Solicitation Message. Caller specifies:  *	- ICM
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|nd6_ns_output
+name|nd6_ns_output_fib
 parameter_list|(
 name|struct
 name|ifnet
@@ -1835,6 +1867,9 @@ parameter_list|,
 name|uint8_t
 modifier|*
 name|nonce
+parameter_list|,
+name|u_int
+name|fibnum
 parameter_list|)
 block|{
 name|struct
@@ -1930,8 +1965,10 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"nd6_ns_output: max_linkhdr + maxlen>= MCLBYTES "
+literal|"%s: max_linkhdr + maxlen>= MCLBYTES "
 literal|"(%d + %d> %d)\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|max_linkhdr
 argument_list|,
@@ -1980,6 +2017,13 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|fibnum
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -2436,8 +2480,10 @@ argument_list|(
 operator|(
 name|LOG_DEBUG
 operator|,
-literal|"nd6_ns_output: source can't be "
+literal|"%s: source can't be "
 literal|"determined: dst=%s, error=%d\n"
+operator|,
+name|__func__
 operator|,
 name|ip6_sprintf
 argument_list|(
@@ -2934,6 +2980,66 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
+begin_function
+name|void
+name|nd6_ns_output
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+specifier|const
+name|struct
+name|in6_addr
+modifier|*
+name|daddr6
+parameter_list|,
+specifier|const
+name|struct
+name|in6_addr
+modifier|*
+name|taddr6
+parameter_list|,
+name|struct
+name|llentry
+modifier|*
+name|ln
+parameter_list|,
+name|uint8_t
+modifier|*
+name|nonce
+parameter_list|)
+block|{
+name|nd6_ns_output_fib
+argument_list|(
+name|ifp
+argument_list|,
+name|daddr6
+argument_list|,
+name|taddr6
+argument_list|,
+name|ln
+argument_list|,
+name|nonce
+argument_list|,
+name|RT_DEFAULT_FIB
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Neighbor advertisement input handling.  *  * Based on RFC 2461  * Based on RFC 2462 (duplicate address detection)  *  * the following items are not implemented yet:  * - proxy advertisement delay rule (RFC2461 7.2.8, last paragraph, SHOULD)  * - anycast advertisement delay rule (RFC2461 7.2.7, SHOULD)  */
