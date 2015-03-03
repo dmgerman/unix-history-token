@@ -1051,6 +1051,19 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|Foreground
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Run in foreground, instead of daemonizing */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|resolve
 init|=
 literal|1
@@ -1923,7 +1936,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"468Aa:b:cCdf:kl:m:nNop:P:sS:Tuv"
+literal|"468Aa:b:cCdf:Fkl:m:nNop:P:sS:Tuv"
 argument_list|)
 operator|)
 operator|!=
@@ -2027,6 +2040,14 @@ comment|/* configuration file */
 name|ConfFile
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+comment|/* run in foreground instead of daemon */
+name|Foreground
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -2483,8 +2504,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+operator|!
+name|Foreground
+operator|)
+operator|&&
+operator|(
 operator|!
 name|Debug
+operator|)
 condition|)
 block|{
 name|ppid
@@ -2522,7 +2550,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|Debug
+condition|)
 block|{
 name|setlinebuf
 argument_list|(
