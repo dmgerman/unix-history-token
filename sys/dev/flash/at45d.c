@@ -995,6 +995,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -1002,6 +1003,12 @@ argument_list|,
 literal|"config_intrhook_establish failed\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|0
