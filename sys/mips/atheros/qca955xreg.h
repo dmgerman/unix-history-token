@@ -907,6 +907,45 @@ name|QCA955X_PLL_VAL_10
 value|0x00001616
 end_define
 
+begin_comment
+comment|/* DDR block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QCA955X_DDR_REG_FLUSH_GE0
+value|(AR71XX_APB_BASE + 0x9c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_DDR_REG_FLUSH_GE1
+value|(AR71XX_APB_BASE + 0xa0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_DDR_REG_FLUSH_USB
+value|(AR71XX_APB_BASE + 0xa4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_DDR_REG_FLUSH_PCIE
+value|(AR71XX_APB_BASE + 0xa8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_DDR_REG_FLUSH_WMAC
+value|(AR71XX_APB_BASE + 0xac)
+end_define
+
 begin_endif
 endif|#
 directive|endif
