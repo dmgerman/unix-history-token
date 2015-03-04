@@ -2489,9 +2489,11 @@ literal|0xa01c177d
 block|,
 literal|0x00
 block|,
-literal|"ThunderX SATA"
+literal|"ThunderX"
 block|,
 name|AHCI_Q_ABAR0
+operator||
+name|AHCI_Q_1MSI
 block|}
 block|,
 block|{
