@@ -854,7 +854,7 @@ argument_list|()
 expr_stmt|;
 comment|/* 2-step here safe: precision is not guaranteed */
 name|ptelo
-operator||=
+operator|=
 name|pt
 operator|->
 name|pte_lo

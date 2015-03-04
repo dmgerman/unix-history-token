@@ -1240,6 +1240,11 @@ operator|-
 literal|1
 condition|)
 block|{
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1

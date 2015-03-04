@@ -535,6 +535,14 @@ name|cdev
 modifier|*
 name|fb_cdev
 decl_stmt|;
+name|device_t
+name|fb_fbd_dev
+decl_stmt|;
+comment|/* "fbd" device. */
+name|device_t
+name|fb_video_dev
+decl_stmt|;
+comment|/* Video adapter. */
 name|fb_enter_t
 modifier|*
 name|enter

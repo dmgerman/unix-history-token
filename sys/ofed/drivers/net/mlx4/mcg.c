@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/printk.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mlx4.h"
 end_include
 
@@ -3197,17 +3203,24 @@ if|if
 condition|(
 literal|0
 condition|)
+block|{
 name|mlx4_dbg
 argument_list|(
 name|dev
 argument_list|,
-literal|"Hash for %pI6 is %04x\n"
+literal|"Hash for "
+name|GID_PRINT_FMT
+literal|" is %04x\n"
 argument_list|,
+name|GID_PRINT_ARGS
+argument_list|(
 name|gid
+argument_list|)
 argument_list|,
 name|hash
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|index
 operator|=
@@ -4523,13 +4536,18 @@ name|BUF_SIZE
 operator|-
 name|len
 argument_list|,
-literal|"dst-gid = %pI6\n"
+literal|"dst-gid = "
+name|GID_PRINT_FMT
+literal|"\n"
 argument_list|,
+name|GID_PRINT_ARGS
+argument_list|(
 name|cur
 operator|->
 name|ib
 operator|.
 name|dst_gid
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|len
@@ -4544,13 +4562,18 @@ name|BUF_SIZE
 operator|-
 name|len
 argument_list|,
-literal|"dst-gid-mask = %pI6\n"
+literal|"dst-gid-mask = "
+name|GID_PRINT_FMT
+literal|"\n"
 argument_list|,
+name|GID_PRINT_ARGS
+argument_list|(
 name|cur
 operator|->
 name|ib
 operator|.
 name|dst_gid_msk
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5701,9 +5724,14 @@ name|mlx4_err
 argument_list|(
 name|dev
 argument_list|,
-literal|"MGID %pI6 not found\n"
+literal|"MGID "
+name|GID_PRINT_FMT
+literal|" not found\n"
 argument_list|,
+name|GID_PRINT_ARGS
+argument_list|(
 name|gid
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|err

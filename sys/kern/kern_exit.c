@@ -219,6 +219,12 @@ directive|include
 file|<sys/sem.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/umtx.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2265,6 +2271,11 @@ name|p
 operator|->
 name|p_pptr
 argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|umtx_thread_exit
+argument_list|(
 name|td
 argument_list|)
 expr_stmt|;

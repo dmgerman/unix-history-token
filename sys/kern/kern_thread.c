@@ -1611,11 +1611,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|umtx_thread_exit
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 comment|/* 	 * drop FPU& debug register state storage, or any other 	 * architecture specific resources that 	 * would not be on a new untouched process. 	 */
 name|cpu_thread_exit
 argument_list|(
@@ -3381,6 +3376,11 @@ name|p
 argument_list|)
 expr_stmt|;
 name|tdsigcleanup
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|umtx_thread_exit
 argument_list|(
 name|td
 argument_list|)

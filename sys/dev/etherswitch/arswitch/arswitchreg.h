@@ -2479,6 +2479,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR8327_REG_EEE_CTRL
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8327_EEE_CTRL_DISABLE_PHY
+parameter_list|(
+name|_i
+parameter_list|)
+value|BIT(4 + (_i) * 2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR8327_REG_PORT_VLAN0
 parameter_list|(
 name|_i

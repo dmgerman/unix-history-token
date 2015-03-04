@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2012 Broadcom Corporation  * All Rights Reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *   * THIS SOFTWARE IS PROVIDED BY BROADCOM ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL BROADCOM OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003-2012 Broadcom Corporation  * All Rights Reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY BROADCOM ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL BROADCOM OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -454,7 +454,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * l3cachelines - number of cache lines to allocate into l3  * fsv - 0 : use interface-id for selecting the free fifo pool  *       1 : use free fifo pool selected by FFS field  * ffs - selects which free fifo pool to use to take a free fifo  * prepad_en - If this field is set to 1, part or all of the   *             64 byte prepad seen by micro engines, is written  *             infront of every packet.  * prepad_ovride - If this field is 1, the ucore system uses   *                 prepad configuration defined in this register,  *                 0 means that it uses the configuration defined  *                 in NAE RX_CONFIG register  * prepad_size - number of 16 byte words in the 64-byte prepad  *               seen by micro engines and dma'ed to memory as  *               pkt prepad. This field is meaningful only if  *               prepad_en and prepad_ovride is set.  *               0 : 1 word  *               1 : 2 words  *               2 : 3 words  *               3 : 4 words  * prepad[0-3]: writing 0 to this means that the 1st 16 byte offset  *              of prepad in micro engine, gets setup as prepad0/1/2/3.  *              prepad word.  *              1 : means 2nd 16 byte chunk in prepad0/1/2/3  *              2 : means 3rd 16 byte chunk in prepad0/1/2/3  *              3 : means 4rth 16 byte chunk in prepad0/1/2/3  * pkt_discard - packet will be discarded if this is set to 1  * rd5 - value (single bit) to be inserted in bit 5, the unclassified  *       pkt bit of receive descriptor. If this bit is set, HPRE bit  *       should also be set in ucore_rxpktready register  */
+comment|/*  * l3cachelines - number of cache lines to allocate into l3  * fsv - 0 : use interface-id for selecting the free fifo pool  *       1 : use free fifo pool selected by FFS field  * ffs - selects which free fifo pool to use to take a free fifo  * prepad_en - If this field is set to 1, part or all of the  *             64 byte prepad seen by micro engines, is written  *             infront of every packet.  * prepad_ovride - If this field is 1, the ucore system uses  *                 prepad configuration defined in this register,  *                 0 means that it uses the configuration defined  *                 in NAE RX_CONFIG register  * prepad_size - number of 16 byte words in the 64-byte prepad  *               seen by micro engines and dma'ed to memory as  *               pkt prepad. This field is meaningful only if  *               prepad_en and prepad_ovride is set.  *               0 : 1 word  *               1 : 2 words  *               2 : 3 words  *               3 : 4 words  * prepad[0-3]: writing 0 to this means that the 1st 16 byte offset  *              of prepad in micro engine, gets setup as prepad0/1/2/3.  *              prepad word.  *              1 : means 2nd 16 byte chunk in prepad0/1/2/3  *              2 : means 3rd 16 byte chunk in prepad0/1/2/3  *              3 : means 4rth 16 byte chunk in prepad0/1/2/3  * pkt_discard - packet will be discarded if this is set to 1  * rd5 - value (single bit) to be inserted in bit 5, the unclassified  *       pkt bit of receive descriptor. If this bit is set, HPRE bit  *       should also be set in ucore_rxpktready register  */
 end_comment
 
 begin_function
@@ -659,7 +659,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get the class full vector field from POE.   * The POE maintains a threshold for each class.  * A bit in this field will be set corresponding to the class approaching  * class full status.  */
+comment|/* Get the class full vector field from POE.  * The POE maintains a threshold for each class.  * A bit in this field will be set corresponding to the class approaching  * class full status.  */
 end_comment
 
 begin_function
@@ -717,7 +717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function returns the context number assigned to incoming  * packet   */
+comment|/* This function returns the context number assigned to incoming  * packet  */
 end_comment
 
 begin_function
@@ -800,7 +800,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function returns 1 if end of packet (EOP) is set in   * packet data.   */
+comment|/* This function returns 1 if end of packet (EOP) is set in  * packet data.  */
 end_comment
 
 begin_function
@@ -947,7 +947,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function sets up the csum in ucore.  * iphdr_start - defines the start of ip header (to check - is this byte  * position???)  * iphdr_len - This field is auto filled by h/w parser if zero, else   * the value defined will be used.  */
+comment|/* This function sets up the csum in ucore.  * iphdr_start - defines the start of ip header (to check - is this byte  * position???)  * iphdr_len - This field is auto filled by h/w parser if zero, else  * the value defined will be used.  */
 end_comment
 
 begin_function
@@ -998,7 +998,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* crcpos - position of crc in pkt. If crc position is within startcrc and  * endcrc, zero out these bytes in the packet before computing crc. This   * field is not needed for FCoE.  * cps - If 1, uses the polynomial in RX_CRC_POLY1 of NAE register.  *       if 0, uses the polynomial in RX_CRC_POLY0 of NAE register.  * fcoe - If this is 1, crc calculation starts from 'startCRC' and the CRC  * engine ends calculation before the last byte.  * cbm - if 1, enables crc byte mirroring, where bits within a byte will get  * reversed (mirrored) during calculation of crc.  * cfi - If 1, performs a final inversion of crc before comarison is done during  * pkt reception.  * startcrc - This field is always required for both FCoE and SCTP crc.  * endcrc - This information needs to be setup only for SCTP. For FCoE this   * information is provided by hardware.  * valid - if set to 1, CRC status is placed into bit 2 of rx descriptor  *         if set to 0, TCP checksum status is placed into bit 2 of rx descriptor  * keysize - defines the number of bytes in the pre-pad that contains the key  */
+comment|/* crcpos - position of crc in pkt. If crc position is within startcrc and  * endcrc, zero out these bytes in the packet before computing crc. This  * field is not needed for FCoE.  * cps - If 1, uses the polynomial in RX_CRC_POLY1 of NAE register.  *       if 0, uses the polynomial in RX_CRC_POLY0 of NAE register.  * fcoe - If this is 1, crc calculation starts from 'startCRC' and the CRC  * engine ends calculation before the last byte.  * cbm - if 1, enables crc byte mirroring, where bits within a byte will get  * reversed (mirrored) during calculation of crc.  * cfi - If 1, performs a final inversion of crc before comarison is done during  * pkt reception.  * startcrc - This field is always required for both FCoE and SCTP crc.  * endcrc - This information needs to be setup only for SCTP. For FCoE this  * information is provided by hardware.  * valid - if set to 1, CRC status is placed into bit 2 of rx descriptor  *         if set to 0, TCP checksum status is placed into bit 2 of rx descriptor  * keysize - defines the number of bytes in the pre-pad that contains the key  */
 end_comment
 
 begin_function
@@ -1159,7 +1159,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function returns a fifo empty vector, where each bit provides   * the status of a fifo pool, where if the pool is empty the bit gets  * set to 1.  */
+comment|/* This function returns a fifo empty vector, where each bit provides  * the status of a fifo pool, where if the pool is empty the bit gets  * set to 1.  */
 end_comment
 
 begin_function
@@ -1184,7 +1184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function controls how POE will distribute the packet.  * pdm - is the packet distribution mode, where  *       0x0 - means packet distribution mode is not used  *       0x1 - means forwarding based on destination only (no enqueue)  *       0x2 - means forwarding based on FID and distr vector (enqueue)  *       0x3 - means forwarding based on dest and FID (enqueue)  *       0x4 - means forwarding based on distr vec (no enqueue)  *       0x6 - means forward based on FID (enqueue), distr vec and serial mode  *       0x7 - means forward based on FID (enqueue), dest and serial mode  * mc3 - If 1, then the 3 most significant bits of distribution list are taken  * from context->class_table  * pdl - poe distribution list  * dest - fixed destination setup  * hash - if 1, use hash based destination   */
+comment|/* This function controls how POE will distribute the packet.  * pdm - is the packet distribution mode, where  *       0x0 - means packet distribution mode is not used  *       0x1 - means forwarding based on destination only (no enqueue)  *       0x2 - means forwarding based on FID and distr vector (enqueue)  *       0x3 - means forwarding based on dest and FID (enqueue)  *       0x4 - means forwarding based on distr vec (no enqueue)  *       0x6 - means forward based on FID (enqueue), distr vec and serial mode  *       0x7 - means forward based on FID (enqueue), dest and serial mode  * mc3 - If 1, then the 3 most significant bits of distribution list are taken  * from context->class_table  * pdl - poe distribution list  * dest - fixed destination setup  * hash - if 1, use hash based destination  */
 end_comment
 
 begin_function

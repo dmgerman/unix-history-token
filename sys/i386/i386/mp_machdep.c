@@ -2972,10 +2972,6 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|/* 	 * On real hardware, switch to x2apic mode if possible. 	 * Disable local APIC until BSP directed APs to run. 	 */
-name|lapic_xapic_mode
-argument_list|()
-expr_stmt|;
 comment|/* signal our startup to the BSP. */
 name|mp_naps
 operator|++
@@ -3043,6 +3039,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * On real hardware, switch to x2apic mode if possible.  Do it 	 * after aps_ready was signalled, to avoid manipulating the 	 * mode while BSP might still want to send some IPI to us 	 * (second startup IPI is ignored on modern hardware etc). 	 */
+name|lapic_xapic_mode
+argument_list|()
+expr_stmt|;
 comment|/* Initialize the PAT MSR if present. */
 name|pmap_init_pat
 argument_list|()

@@ -83,8 +83,7 @@ begin_define
 define|#
 directive|define
 name|oom
-parameter_list|()
-value|exit(-1)
+value|abort
 end_define
 
 begin_endif
@@ -128,7 +127,7 @@ parameter_list|,
 name|amt
 parameter_list|)
 define|\
-value|do {                                                       \   if (((s)->n - (s)->i)< (size_t)(amt)) {                 \      (s)->d = (char*)realloc((s)->d, (s)->n + amt);        \      if ((s)->d == NULL) oom();                            \      (s)->n += amt;                                        \      if ((s)->pd) *((s)->pd) = (s)->d;                     \   }                                                        \ } while(0)
+value|do {                                                       \   if (((s)->n - (s)->i)< (size_t)(amt)) {                 \      (s)->d = (char*)realloc((s)->d, (s)->n + amt);        \      if ((s)->d == NULL) oom();                            \      else {(s)->n += amt;                                  \      if ((s)->pd) *((s)->pd) = (s)->d;}                    \   }                                                        \ } while(0)
 end_define
 
 begin_define
@@ -172,7 +171,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|do {                                                       \    s = (UT_string*)calloc(1, sizeof(UT_string));          \    if (!s) oom();                                          \    utstring_init(s);                                       \ } while(0)
+value|do {                                                       \    s = (UT_string*)calloc(1, sizeof(UT_string));          \    if (!s) oom();                                          \    else utstring_init(s);                                  \ } while(0)
 end_define
 
 begin_define

@@ -297,6 +297,15 @@ name|ARITH_COLON
 value|38
 end_define
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|arith_buf
+decl_stmt|;
+end_decl_stmt
+
 begin_union
 union|union
 name|yystype

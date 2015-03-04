@@ -2769,7 +2769,7 @@ name|dens
 index|[]
 init|=
 block|{
-comment|/* 	 * Taken from T10 Project 997D  	 * SCSI-3 Stream Device Commands (SSC) 	 * Revision 11, 4-Nov-97 	 * 	 * LTO 1-6 definitions obtained from the eighth edition of the 	 * IBM TotalStorage LTO Ultrium Tape Drive SCSI Reference 	 * (July 2007) and the second edition of the IBM System Storage LTO 	 * Tape Drive SCSI Reference (February 13, 2013). 	 * 	 * IBM 3592 definitions obtained from second edition of the IBM 	 * System Storage Tape Drive 3592 SCSI Reference (May 25, 2012). 	 */
+comment|/* 	 * Taken from T10 Project 997D  	 * SCSI-3 Stream Device Commands (SSC) 	 * Revision 11, 4-Nov-97 	 * 	 * LTO 1-6 definitions obtained from the eighth edition of the 	 * IBM TotalStorage LTO Ultrium Tape Drive SCSI Reference 	 * (July 2007) and the second edition of the IBM System Storage LTO 	 * Tape Drive SCSI Reference (February 13, 2013). 	 * 	 * IBM 3592 definitions obtained from second edition of the IBM 	 * System Storage Tape Drive 3592 SCSI Reference (May 25, 2012). 	 * 	 * DAT-72 and DAT-160 bpi values taken from "HP StorageWorks DAT160 	 * tape drive white paper", dated June 2007. 	 * 	 * DAT-160 / SDLT220 density code (0x48) conflict information 	 * found here: 	 * 	 * http://h20564.www2.hp.com/hpsc/doc/public/display?docId=emr_na-c01065117&sp4ts.oid=429311  	 * (Document ID c01065117) 	 */
 comment|/*Num.  bpmm    bpi     Reference     */
 block|{
 literal|0x1
@@ -3201,6 +3201,23 @@ block|,
 literal|"LTO-4"
 block|}
 block|,
+block|{
+literal|0x47
+block|,
+literal|6417
+block|,
+literal|163000
+block|,
+literal|"DAT-72"
+block|}
+block|,
+comment|/* 	 * XXX KDM note that 0x48 is also the density code for DAT-160. 	 * For some reason they used overlapping density codes. 	 */
+if|#
+directive|if
+literal|0
+block|{ 0x48, 6870,   174500, "DAT-160" },
+endif|#
+directive|endif
 block|{
 literal|0x48
 block|,

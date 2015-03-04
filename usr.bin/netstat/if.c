@@ -1907,7 +1907,7 @@ literal|"lu"
 argument_list|,
 literal|5
 argument_list|,
-literal|"dropped-packet"
+literal|"dropped-packets"
 argument_list|,
 name|IFA_STAT
 argument_list|(

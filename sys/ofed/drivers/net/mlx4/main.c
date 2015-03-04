@@ -7549,6 +7549,7 @@ name|info
 operator|->
 name|dev
 decl_stmt|;
+comment|/* When port type is eth, port mtu value isn't used. */
 if|if
 condition|(
 name|mdev
@@ -7564,13 +7565,10 @@ index|]
 operator|==
 name|MLX4_PORT_TYPE_ETH
 condition|)
-name|mlx4_warn
-argument_list|(
-name|mdev
-argument_list|,
-literal|"port level mtu is only used for IB ports\n"
-argument_list|)
-expr_stmt|;
+return|return
+operator|-
+name|EINVAL
+return|;
 name|sprintf
 argument_list|(
 name|buf
@@ -16106,6 +16104,26 @@ argument_list|(
 name|entries
 argument_list|)
 expr_stmt|;
+comment|/* if error, or can't alloc even 1 IRQ */
+if|if
+condition|(
+name|err
+operator|<
+literal|0
+condition|)
+block|{
+name|mlx4_err
+argument_list|(
+name|dev
+argument_list|,
+literal|"No IRQs left, device can't "
+literal|"be started.\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|no_irq
+goto|;
+block|}
 goto|goto
 name|no_msi
 goto|;
@@ -16259,6 +16277,25 @@ operator|->
 name|pdev
 operator|->
 name|irq
+expr_stmt|;
+return|return;
+name|no_irq
+label|:
+name|dev
+operator|->
+name|caps
+operator|.
+name|num_comp_vectors
+operator|=
+literal|0
+expr_stmt|;
+name|dev
+operator|->
+name|caps
+operator|.
+name|comp_pool
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -18140,6 +18177,33 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* no MSIX and no shared IRQ */
+if|if
+condition|(
+operator|!
+name|dev
+operator|->
+name|caps
+operator|.
+name|num_comp_vectors
+operator|&&
+operator|!
+name|dev
+operator|->
+name|caps
+operator|.
+name|comp_pool
+condition|)
+block|{
+name|err
+operator|=
+operator|-
+name|ENOSPC
+expr_stmt|;
+goto|goto
+name|err_free_eq
+goto|;
+block|}
 if|if
 condition|(
 operator|(

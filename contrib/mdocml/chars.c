@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: chars.c,v 1.65 2014/10/29 00:17:43 schwarze Exp $ */
+comment|/*	$Id: chars.c,v 1.66 2015/02/17 20:37:16 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -105,7 +105,7 @@ begin_define
 define|#
 directive|define
 name|LINES_MAX
-value|330
+value|332
 end_define
 
 begin_define

@@ -4203,11 +4203,6 @@ operator|->
 name|num_tx_rings_p_up
 decl_stmt|;
 name|u32
-name|vlan_tag
-init|=
-literal|0
-decl_stmt|;
-name|u32
 name|up
 init|=
 literal|0
@@ -4215,6 +4210,13 @@ decl_stmt|;
 name|u32
 name|queue_index
 decl_stmt|;
+if|#
+directive|if
+operator|(
+name|MLX4_EN_NUM_UP
+operator|>
+literal|1
+operator|)
 comment|/* Obtain VLAN information if present */
 if|if
 condition|(
@@ -4225,14 +4227,15 @@ operator|&
 name|M_VLANTAG
 condition|)
 block|{
+name|u32
 name|vlan_tag
-operator|=
+init|=
 name|mb
 operator|->
 name|m_pkthdr
 operator|.
 name|ether_vtag
-expr_stmt|;
+decl_stmt|;
 name|up
 operator|=
 operator|(
@@ -4240,8 +4243,12 @@ name|vlan_tag
 operator|>>
 literal|13
 operator|)
+operator|%
+name|MLX4_EN_NUM_UP
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* check if flowid is set */
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term.h,v 1.108 2014/12/02 10:08:06 schwarze Exp $ */
+comment|/*	$Id: term.h,v 1.111 2015/01/31 00:12:41 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -274,12 +274,14 @@ decl_stmt|;
 comment|/* Last font set. */
 name|enum
 name|termfont
+modifier|*
 name|fontq
-index|[
-literal|10
-index|]
 decl_stmt|;
 comment|/* Symmetric fonts. */
+name|int
+name|fontsz
+decl_stmt|;
+comment|/* Allocated size of font stack */
 name|int
 name|fonti
 decl_stmt|;
@@ -576,7 +578,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|size_t
+name|int
 name|term_hspan
 parameter_list|(
 specifier|const
@@ -593,7 +595,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|size_t
+name|int
 name|term_vspan
 parameter_list|(
 specifier|const
@@ -640,31 +642,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|enum
-name|termfont
-name|term_fonttop
-parameter_list|(
-name|struct
-name|termp
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|void
-modifier|*
-name|term_fontq
-parameter_list|(
-name|struct
-name|termp
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|term_fontpush
 parameter_list|(
@@ -697,9 +674,7 @@ name|struct
 name|termp
 modifier|*
 parameter_list|,
-specifier|const
-name|void
-modifier|*
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

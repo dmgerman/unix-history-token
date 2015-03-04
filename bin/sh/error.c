@@ -57,6 +57,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"eval.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"main.h"
 end_include
 
@@ -154,13 +160,6 @@ begin_decl_stmt
 specifier|volatile
 name|sig_atomic_t
 name|intpending
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|commandname
 decl_stmt|;
 end_decl_stmt
 

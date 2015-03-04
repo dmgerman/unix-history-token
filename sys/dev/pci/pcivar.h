@@ -65,6 +65,12 @@ name|pci_addr_t
 typedef|;
 end_typedef
 
+begin_struct_decl
+struct_decl|struct
+name|nvlist
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* Interesting values for PCI power management */
 end_comment
@@ -104,7 +110,7 @@ comment|/* Raw BAR value */
 name|pci_addr_t
 name|pm_size
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|pm_reg
 decl_stmt|;
 name|STAILQ_ENTRY
@@ -436,6 +442,28 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|pcicfg_vf
+block|{
+name|int
+name|index
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|PCICFG_VF
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Device is an SR-IOV Virtual Function */
+end_comment
+
 begin_comment
 comment|/* config header information common to all header types */
 end_comment
@@ -551,6 +579,14 @@ name|uint8_t
 name|func
 decl_stmt|;
 comment|/* config space function number */
+name|uint32_t
+name|flags
+decl_stmt|;
+comment|/* flags defined above */
+name|size_t
+name|devinfo_size
+decl_stmt|;
+comment|/* Size of devinfo for this bus type. */
 name|struct
 name|pcicfg_pp
 name|pp
@@ -586,6 +622,17 @@ name|pcicfg_pcix
 name|pcix
 decl_stmt|;
 comment|/* PCI-X */
+name|struct
+name|pcicfg_iov
+modifier|*
+name|iov
+decl_stmt|;
+comment|/* SR-IOV */
+name|struct
+name|pcicfg_vf
+name|vf
+decl_stmt|;
+comment|/* SR-IOV Virtual Function */
 block|}
 name|pcicfgregs
 typedef|;
@@ -2084,6 +2131,72 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|int
+name|pci_iov_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|nvlist
+modifier|*
+name|pf_schema
+parameter_list|,
+name|struct
+name|nvlist
+modifier|*
+name|vf_schema
+parameter_list|)
+block|{
+return|return
+operator|(
+name|PCI_IOV_ATTACH
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|pf_schema
+argument_list|,
+name|vf_schema
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|pci_iov_detach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|PCI_IOV_DETACH
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_function_decl
 name|device_t
 name|pci_find_bsf
@@ -2415,6 +2528,16 @@ parameter_list|,
 name|void
 modifier|*
 name|bios
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vga_pci_repost
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl

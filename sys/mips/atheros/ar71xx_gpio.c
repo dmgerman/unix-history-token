@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/gpio/gpiobusvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/atheros/ar933xreg.h>
 end_include
 
@@ -126,7 +132,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/gpio/gpiobusvar.h>
+file|<mips/atheros/qca955xreg.h>
 end_include
 
 begin_include
@@ -438,6 +444,14 @@ operator|||
 name|ar71xx_soc
 operator|==
 name|AR71XX_SOC_AR9344
+operator|||
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_QCA9556
+operator|||
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_QCA9558
 condition|)
 name|GPIO_SET_BITS
 argument_list|(
@@ -488,6 +502,14 @@ operator|||
 name|ar71xx_soc
 operator|==
 name|AR71XX_SOC_AR9344
+operator|||
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_QCA9556
+operator|||
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_QCA9558
 condition|)
 name|GPIO_CLEAR_BITS
 argument_list|(
@@ -717,6 +739,19 @@ operator|*
 name|maxpin
 operator|=
 name|AR934X_GPIO_COUNT
+operator|-
+literal|1
+expr_stmt|;
+case|case
+name|AR71XX_SOC_QCA9556
+case|:
+case|case
+name|AR71XX_SOC_QCA9558
+case|:
+operator|*
+name|maxpin
+operator|=
+name|QCA955X_GPIO_COUNT
 operator|-
 literal|1
 expr_stmt|;

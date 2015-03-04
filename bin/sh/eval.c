@@ -625,6 +625,7 @@ begin_function
 name|void
 name|evalstring
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
