@@ -2658,6 +2658,8 @@ name|id
 decl_stmt|;
 name|int
 name|defered
+decl_stmt|,
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -2703,6 +2705,10 @@ operator|(
 name|EPERM
 operator|)
 return|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|id
 operator|=
 name|TID
@@ -2776,6 +2782,8 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|_thr_umutex_unlock2
 argument_list|(
 operator|&
@@ -2834,7 +2842,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
