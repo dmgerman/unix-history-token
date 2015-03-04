@@ -777,14 +777,47 @@ name|int
 name|unit
 parameter_list|)
 block|{
-if|#
-directive|if
+switch|switch
+condition|(
+name|unit
+condition|)
+block|{
+case|case
 literal|0
-block|switch (unit) { 	case 0: 		ar71xx_ddr_flush(AR934X_DDR_REG_FLUSH_GE0); 		break; 	case 1: 		ar71xx_ddr_flush(AR934X_DDR_REG_FLUSH_GE1); 		break; 	default: 		printf("%s: invalid DDR flush for arge unit: %d\n", 		    __func__, unit); 		return; 	}
-endif|#
-directive|endif
+case|:
+name|ar71xx_ddr_flush
+argument_list|(
+name|QCA955X_DDR_REG_FLUSH_GE0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|ar71xx_ddr_flush
+argument_list|(
+name|QCA955X_DDR_REG_FLUSH_GE1
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"%s: invalid DDR flush for arge unit: %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 block|}
 end_function
+
+begin_comment
+comment|/* XXX TODO: USB flush, PCIe flush, wmac flush */
+end_comment
 
 begin_function
 specifier|static
