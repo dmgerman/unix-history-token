@@ -5083,8 +5083,34 @@ operator|->
 name|pm_slb
 argument_list|)
 expr_stmt|;
+asm|__asm __volatile("slbmte %0, %1; isync" ::
+literal|"r"
+operator|(
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_cpu
+operator|.
+name|aim
+operator|.
+name|usr_vsid
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|USER_SLB_SLBE
+operator|)
+block|)
+function|;
+end_function
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_expr_stmt
 name|PCPU_SET
 argument_list|(
 name|curpmap
@@ -5094,27 +5120,49 @@ operator|->
 name|pmap_phys
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|mtsrin
+argument_list|(
+name|USER_SR
+operator|<<
+name|ADDR_SR_SHFT
+argument_list|,
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_cpu
+operator|.
+name|aim
+operator|.
+name|usr_vsid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
 endif|#
 directive|endif
-block|}
-end_function
+end_endif
 
-begin_function
-name|void
+begin_macro
+unit|}  void
 name|moea64_deactivate
-parameter_list|(
-name|mmu_t
-name|mmu
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
+argument_list|(
+argument|mmu_t mmu
+argument_list|,
+argument|struct thread *td
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|pmap_t
 name|pm
 decl_stmt|;
+asm|__asm __volatile("isync; slbie %0" :: "r"(USER_ADDR));
 name|pm
 operator|=
 operator|&
@@ -5161,7 +5209,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_function
+end_block
 
 begin_function
 name|void
