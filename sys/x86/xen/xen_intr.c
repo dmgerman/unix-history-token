@@ -372,18 +372,17 @@ literal|1
 decl_stmt|;
 comment|/* close on unbind? */
 name|u_int
-name|xi_shared
-range|:
-literal|1
-decl_stmt|;
-comment|/* Shared with other domains. */
-name|u_int
 name|xi_activehi
 range|:
 literal|1
 decl_stmt|;
 name|u_int
 name|xi_edgetrigger
+range|:
+literal|1
+decl_stmt|;
+name|u_int
+name|xi_masked
 range|:
 literal|1
 decl_stmt|;
@@ -3411,12 +3410,41 @@ parameter_list|(
 name|struct
 name|intsrc
 modifier|*
-name|isrc
+name|base_isrc
 parameter_list|,
 name|int
 name|eoi
 parameter_list|)
-block|{ }
+block|{
+name|struct
+name|xenisrc
+modifier|*
+name|isrc
+decl_stmt|;
+name|isrc
+operator|=
+operator|(
+expr|struct
+name|xenisrc
+operator|*
+operator|)
+name|base_isrc
+expr_stmt|;
+comment|/* 	 * NB: checking if the event channel is already masked is 	 * needed because the event channel user-space device 	 * masks event channels on it's filter as part of it's 	 * normal operation, and those shouldn't be automatically 	 * unmasked by the generic interrupt code. The event channel 	 * device will unmask them when needed. 	 */
+name|isrc
+operator|->
+name|xi_masked
+operator|=
+operator|!
+operator|!
+name|evtchn_test_and_set_mask
+argument_list|(
+name|isrc
+operator|->
+name|xi_port
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
@@ -3431,9 +3459,39 @@ parameter_list|(
 name|struct
 name|intsrc
 modifier|*
-name|isrc
+name|base_isrc
 parameter_list|)
-block|{ }
+block|{
+name|struct
+name|xenisrc
+modifier|*
+name|isrc
+decl_stmt|;
+name|isrc
+operator|=
+operator|(
+expr|struct
+name|xenisrc
+operator|*
+operator|)
+name|base_isrc
+expr_stmt|;
+if|if
+condition|(
+name|isrc
+operator|->
+name|xi_masked
+operator|==
+literal|0
+condition|)
+name|evtchn_unmask_port
+argument_list|(
+name|isrc
+operator|->
+name|xi_port
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
@@ -3448,7 +3506,7 @@ parameter_list|(
 name|struct
 name|intsrc
 modifier|*
-name|isrc
+name|base_isrc
 parameter_list|)
 block|{ }
 end_function
@@ -3526,6 +3584,14 @@ operator|*
 operator|)
 name|base_isrc
 expr_stmt|;
+if|if
+condition|(
+name|isrc
+operator|->
+name|xi_edgetrigger
+operator|==
+literal|0
+condition|)
 name|evtchn_mask_port
 argument_list|(
 name|isrc
@@ -3576,6 +3642,14 @@ operator|*
 operator|)
 name|base_isrc
 expr_stmt|;
+if|if
+condition|(
+name|isrc
+operator|->
+name|xi_edgetrigger
+operator|==
+literal|0
+condition|)
 name|evtchn_unmask_port
 argument_list|(
 name|isrc
@@ -3606,7 +3680,9 @@ name|xenisrc
 modifier|*
 name|isrc
 decl_stmt|;
-comment|/* XXX Use shared page of flags for this. */
+name|int
+name|error
+decl_stmt|;
 name|isrc
 operator|=
 operator|(
@@ -3641,15 +3717,31 @@ operator|->
 name|xi_pirq
 block|}
 decl_stmt|;
-operator|(
-name|void
-operator|)
+name|error
+operator|=
 name|HYPERVISOR_physdev_op
 argument_list|(
 name|PHYSDEVOP_eoi
 argument_list|,
 operator|&
 name|eoi
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"Unable to EOI PIRQ#%d: %d\n"
+argument_list|,
+name|isrc
+operator|->
+name|xi_pirq
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -5068,10 +5160,6 @@ name|physdev_map_pirq
 name|map_pirq
 decl_stmt|;
 name|struct
-name|physdev_irq
-name|alloc_pirq
-decl_stmt|;
-name|struct
 name|xenisrc
 modifier|*
 name|isrc
@@ -5143,46 +5231,6 @@ block|{
 name|printf
 argument_list|(
 literal|"xen: unable to map IRQ#%d\n"
-argument_list|,
-name|vector
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-name|alloc_pirq
-operator|.
-name|irq
-operator|=
-name|vector
-expr_stmt|;
-name|alloc_pirq
-operator|.
-name|vector
-operator|=
-literal|0
-expr_stmt|;
-name|error
-operator|=
-name|HYPERVISOR_physdev_op
-argument_list|(
-name|PHYSDEVOP_alloc_irq_vector
-argument_list|,
-operator|&
-name|alloc_pirq
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"xen: unable to alloc PIRQ for IRQ#%d\n"
 argument_list|,
 name|vector
 argument_list|)
@@ -5473,6 +5521,13 @@ operator|.
 name|pirq
 operator|+
 name|i
+expr_stmt|;
+comment|/* MSI interrupts are always edge triggered */
+name|isrc
+operator|->
+name|xi_edgetrigger
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|mtx_unlock
@@ -6096,7 +6151,7 @@ block|{
 name|db_printf
 argument_list|(
 literal|"\tPirq: %d ActiveHi: %d EdgeTrigger: %d "
-literal|"NeedsEOI: %d Shared: %d\n"
+literal|"NeedsEOI: %d\n"
 argument_list|,
 name|isrc
 operator|->
@@ -6120,10 +6175,6 @@ name|xi_pirq
 argument_list|,
 name|xen_intr_pirq_eoi_map
 argument_list|)
-argument_list|,
-name|isrc
-operator|->
-name|xi_shared
 argument_list|)
 expr_stmt|;
 block|}

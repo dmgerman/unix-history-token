@@ -9135,7 +9135,7 @@ literal|0
 case|:
 name|fmt
 operator|=
-name|nullstr
+literal|""
 expr_stmt|;
 break|break;
 case|case

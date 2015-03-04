@@ -284,11 +284,7 @@ literal|"  dear = 0x%08x\n"
 argument_list|,
 name|frame
 operator|->
-name|cpu
-operator|.
-name|booke
-operator|.
-name|dear
+name|dar
 argument_list|)
 expr_stmt|;
 name|printf

@@ -4694,14 +4694,7 @@ argument_list|)
 expr_stmt|;
 name|dirsize
 operator|=
-name|roundup
-argument_list|(
-name|ip
-operator|->
-name|i_size
-argument_list|,
-name|blksize
-argument_list|)
+name|cursize
 operator|+
 name|blksize
 expr_stmt|;

@@ -84,7 +84,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: main.c 3111 2014-12-20 08:33:01Z kaiwang27 $"
+literal|"$Id: main.c 3156 2015-02-15 21:40:01Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

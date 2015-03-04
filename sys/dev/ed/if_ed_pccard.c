@@ -5857,12 +5857,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-return|return;
 name|ED_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 name|mii
 operator|=

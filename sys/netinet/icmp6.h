@@ -1410,6 +1410,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ND_OPT_NONCE
+value|14
+end_define
+
+begin_comment
+comment|/* RFC 3971 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ND_OPT_ROUTE_INFO
 value|24
 end_define
@@ -1439,6 +1450,13 @@ end_define
 begin_comment
 comment|/* RFC 6106 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_OPT_MAX
+value|31
+end_define
 
 begin_struct
 struct|struct
@@ -1528,6 +1546,62 @@ name|nd_opt_mtu_reserved
 decl_stmt|;
 name|u_int32_t
 name|nd_opt_mtu_mtu
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ND_OPT_NONCE_LEN
+value|((1 * 8) - 2)
+end_define
+
+begin_if
+if|#
+directive|if
+operator|(
+operator|(
+name|ND_OPT_NONCE_LEN
+operator|+
+literal|2
+operator|)
+operator|%
+literal|8
+operator|)
+operator|!=
+literal|0
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"(ND_OPT_NONCE_LEN + 2) must be a multiple of 8."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|nd_opt_nonce
+block|{
+comment|/* nonce option */
+name|u_int8_t
+name|nd_opt_nonce_type
+decl_stmt|;
+name|u_int8_t
+name|nd_opt_nonce_len
+decl_stmt|;
+name|u_int8_t
+name|nd_opt_nonce
+index|[
+name|ND_OPT_NONCE_LEN
+index|]
 decl_stmt|;
 block|}
 name|__packed

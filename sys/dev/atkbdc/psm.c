@@ -1200,6 +1200,26 @@ begin_comment
 comment|/* VersaPad finger down */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|kbdcp
+parameter_list|(
+name|p
+parameter_list|)
+value|((atkbdc_softc_t *)(p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALWAYS_RESTORE_CONTROLLER
+parameter_list|(
+name|kbdc
+parameter_list|)
+value|!(kbdcp(kbdc)->quirks \& KBDC_QUIRK_KEEP_ACTIVATED)
+end_define
+
 begin_comment
 comment|/* Tunables */
 end_comment
@@ -5006,6 +5026,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * this is CONTROLLER ERROR; I don't know how to recover 		 * from this error... 		 */
+if|if
+condition|(
+name|ALWAYS_RESTORE_CONTROLLER
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|)
+condition|)
 name|restore_controller
 argument_list|(
 name|sc
@@ -5108,6 +5137,15 @@ operator|&
 name|PSM_CONFIG_IGNPORTERROR
 condition|)
 break|break;
+if|if
+condition|(
+name|ALWAYS_RESTORE_CONTROLLER
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|)
+condition|)
 name|restore_controller
 argument_list|(
 name|sc
@@ -5168,6 +5206,15 @@ operator|->
 name|kbdc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ALWAYS_RESTORE_CONTROLLER
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|)
+condition|)
 name|restore_controller
 argument_list|(
 name|sc
@@ -5258,6 +5305,15 @@ operator|->
 name|kbdc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ALWAYS_RESTORE_CONTROLLER
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|)
+condition|)
 name|restore_controller
 argument_list|(
 name|sc
@@ -5407,6 +5463,15 @@ name|hwid
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|ALWAYS_RESTORE_CONTROLLER
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|)
+condition|)
 name|restore_controller
 argument_list|(
 name|sc
@@ -5937,6 +6002,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * this is CONTROLLER ERROR; I don't know the proper way to 		 * recover from this error... 		 */
+if|if
+condition|(
+name|ALWAYS_RESTORE_CONTROLLER
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|)
+condition|)
 name|restore_controller
 argument_list|(
 name|sc

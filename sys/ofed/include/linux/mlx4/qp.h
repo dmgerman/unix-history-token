@@ -884,6 +884,18 @@ init|=
 literal|16
 operator|+
 literal|32
+block|,
+name|MLX4_UPD_QP_PATH_MASK_ETH_SRC_CHECK_UC_LB
+init|=
+literal|18
+operator|+
+literal|32
+block|,
+name|MLX4_UPD_QP_PATH_MASK_ETH_SRC_CHECK_MC_LB
+init|=
+literal|19
+operator|+
+literal|32
 block|, }
 enum|;
 end_enum

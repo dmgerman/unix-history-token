@@ -752,6 +752,9 @@ name|err
 decl_stmt|,
 name|rid
 decl_stmt|;
+name|uint8_t
+name|usedma32
+decl_stmt|;
 name|rid
 operator|=
 name|PCI_XHCI_CBMEM
@@ -826,6 +829,31 @@ operator|->
 name|sc_io_res
 argument_list|)
 expr_stmt|;
+comment|/* check for USB 3.0 controllers which don't support 64-bit DMA */
+switch|switch
+condition|(
+name|pci_get_devid
+argument_list|(
+name|self
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0x01941033
+case|:
+comment|/* NEC uPD720200 USB 3.0 controller */
+name|usedma32
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+default|default:
+name|usedma32
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|xhci_init
@@ -833,6 +861,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|self
+argument_list|,
+name|usedma32
 argument_list|)
 condition|)
 block|{

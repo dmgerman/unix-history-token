@@ -34607,7 +34607,7 @@ name|cdai
 operator|.
 name|flags
 operator|=
-literal|0
+name|CDAI_FLAG_NONE
 expr_stmt|;
 name|ccb
 operator|->

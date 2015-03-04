@@ -1074,6 +1074,16 @@ modifier|*
 name|dt_ld_path
 decl_stmt|;
 comment|/* pathname of ld(1) to invoke if needed */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|char
+modifier|*
+name|dt_objcopy_path
+decl_stmt|;
+comment|/* pathname of objcopy(1) to invoke if needed */
+endif|#
+directive|endif
 name|dt_list_t
 name|dt_lib_path
 decl_stmt|;

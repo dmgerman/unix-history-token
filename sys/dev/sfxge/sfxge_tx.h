@@ -34,6 +34,28 @@ file|<netinet/tcp.h>
 end_include
 
 begin_comment
+comment|/* Maximum size of TSO packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TSO_MAX_SIZE
+value|(65535)
+end_define
+
+begin_comment
+comment|/*  * Maximum number of segments to be created for a TSO packet.  * Allow for a reasonable minimum MSS of 512.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TSO_MAX_SEGS
+value|howmany(SFXGE_TSO_MAX_SIZE, 512)
+end_define
+
+begin_comment
 comment|/* Maximum number of DMA segments needed to map an mbuf chain.  With  * TSO, the mbuf length may be just over 64K, divided into 2K mbuf  * clusters.  (The chain could be longer than this initially, but can  * be shortened with m_collapse().)  */
 end_comment
 
@@ -41,18 +63,8 @@ begin_define
 define|#
 directive|define
 name|SFXGE_TX_MAPPING_MAX_SEG
-value|(64 / 2 + 1)
-end_define
-
-begin_comment
-comment|/* Maximum number of DMA segments needed to map an output packet.  It  * could overlap all mbufs in the chain and also require an extra  * segment for a TSO header.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFXGE_TX_PACKET_MAX_SEG
-value|(SFXGE_TX_MAPPING_MAX_SEG + 1)
+define|\
+value|(1 + howmany(SFXGE_TSO_MAX_SIZE, MCLBYTES))
 end_define
 
 begin_comment
@@ -182,6 +194,11 @@ name|int
 name|std_get_hiwat
 decl_stmt|;
 comment|/* Packets in get list 						 * high watermark */
+name|unsigned
+name|int
+name|std_put_hiwat
+decl_stmt|;
+comment|/* Packets in put list 						 * high watermark */
 block|}
 struct|;
 end_struct
@@ -272,16 +289,6 @@ parameter_list|)
 value|(&(txq)->lock)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SFXGE_TX_SCALE
-parameter_list|(
-name|sc
-parameter_list|)
-value|((sc)->intr.n_alloc)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -295,16 +302,6 @@ parameter_list|(
 name|txq
 parameter_list|)
 value|(&(txq)->sc->tx_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SFXGE_TX_SCALE
-parameter_list|(
-name|sc
-parameter_list|)
-value|1
 end_define
 
 begin_endif
@@ -588,6 +585,19 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|uint64_t
+name|sfxge_tx_get_drops
+parameter_list|(
+name|struct
+name|sfxge_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl

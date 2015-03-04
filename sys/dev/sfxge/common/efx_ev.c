@@ -274,7 +274,7 @@ argument_list|(
 name|tobe_disc
 argument_list|)
 expr_stmt|;
-comment|/* Assume this is a unicast address mismatch, unless below 		 * we find either FSF_AZ_RX_EV_ETH_CRC_ERR or 		 * EV_RX_PAUSE_FRM_ERR is set. 		 */
+comment|/* 		 * Assume this is a unicast address mismatch, unless below 		 * we find either FSF_AZ_RX_EV_ETH_CRC_ERR or 		 * EV_RX_PAUSE_FRM_ERR is set. 		 */
 operator|(
 operator|*
 name|flagsp
@@ -330,7 +330,7 @@ name|EFSYS_OPT_RX_HDR_SPLIT
 operator|||
 name|EFSYS_OPT_RX_SCATTER
 operator|)
-comment|/* Lookout for payload queue ran dry errors and ignore them. 		 * 		 * Sadly for the header/data split cases, the descriptor 		 * pointer in this event refers to the header queue and 		 * therefore cannot be easily detected as duplicate. 		 * So we drop these and rely on the receive processing seeing 		 * a subsequent packet with FSF_AZ_RX_EV_SOP set to discard 		 * the partially received packet. 		 */
+comment|/* 		 * Lookout for payload queue ran dry errors and ignore them. 		 * 		 * Sadly for the header/data split cases, the descriptor 		 * pointer in this event refers to the header queue and 		 * therefore cannot be easily detected as duplicate. 		 * So we drop these and rely on the receive processing seeing 		 * a subsequent packet with FSF_AZ_RX_EV_SOP set to discard 		 * the partially received packet. 		 */
 if|if
 condition|(
 operator|(
@@ -2255,6 +2255,38 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|EFSYS_ASSERT
+argument_list|(
+name|eecp
+operator|->
+name|eec_link_change
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|EFSYS_ASSERT
+argument_list|(
+name|eecp
+operator|->
+name|eec_exception
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|EFSYS_OPT_MON_STATS
+name|EFSYS_ASSERT
+argument_list|(
+name|eecp
+operator|->
+name|eec_monitor
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|EFX_EV_QSTAT_INCR
 argument_list|(
 name|eep
@@ -2297,7 +2329,6 @@ name|enp
 argument_list|,
 name|MCDI_EV_FIELD
 argument_list|(
-operator|*
 name|eqp
 argument_list|,
 name|CMDDONE_SEQ
@@ -2305,7 +2336,6 @@ argument_list|)
 argument_list|,
 name|MCDI_EV_FIELD
 argument_list|(
-operator|*
 name|eqp
 argument_list|,
 name|CMDDONE_DATALEN
@@ -2313,7 +2343,6 @@ argument_list|)
 argument_list|,
 name|MCDI_EV_FIELD
 argument_list|(
-operator|*
 name|eqp
 argument_list|,
 name|CMDDONE_ERRNO
@@ -2583,7 +2612,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_MCDI */
 end_comment
 
 begin_function
@@ -3441,6 +3470,17 @@ name|eep
 operator|->
 name|ee_enp
 decl_stmt|;
+name|efx_nic_cfg_t
+modifier|*
+name|encp
+init|=
+operator|&
+operator|(
+name|enp
+operator|->
+name|en_nic_cfg
+operator|)
+decl_stmt|;
 name|unsigned
 name|int
 name|locked
@@ -3466,11 +3506,9 @@ if|if
 condition|(
 name|us
 operator|>
-name|enp
+name|encp
 operator|->
-name|en_nic_cfg
-operator|.
-name|enc_evq_moderation_max
+name|enc_evq_timer_max_us
 condition|)
 block|{
 name|rc
@@ -3531,31 +3569,26 @@ name|uint32_t
 name|timer_val
 decl_stmt|;
 comment|/* Calculate the timer value in quanta */
-name|us
-operator|-=
-operator|(
-name|us
-operator|%
-name|EFX_EV_TIMER_QUANTUM
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|us
-operator|<
-name|EFX_EV_TIMER_QUANTUM
-condition|)
-name|us
-operator|=
-name|EFX_EV_TIMER_QUANTUM
-expr_stmt|;
 name|timer_val
 operator|=
 name|us
+operator|*
+literal|1000
 operator|/
-name|EFX_EV_TIMER_QUANTUM
+name|encp
+operator|->
+name|enc_evq_timer_quantum_ns
 expr_stmt|;
 comment|/* Moderation value is base 0 so we need to deduct 1 */
+if|if
+condition|(
+name|timer_val
+operator|>
+literal|0
+condition|)
+name|timer_val
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|enp
@@ -3575,8 +3608,6 @@ argument_list|,
 name|FRF_AB_TIMER_VAL
 argument_list|,
 name|timer_val
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 else|else
@@ -3591,8 +3622,6 @@ argument_list|,
 name|FRF_CZ_TC_TIMER_VAL
 argument_list|,
 name|timer_val
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3999,7 +4028,7 @@ name|efx_ev_mcdi
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_MCDI */
 comment|/* Set up the new event queue */
 if|if
 condition|(

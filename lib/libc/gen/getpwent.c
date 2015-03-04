@@ -4472,6 +4472,8 @@ name|int
 name|rv
 decl_stmt|,
 name|stayopen
+init|=
+literal|0
 decl_stmt|,
 modifier|*
 name|errnop
@@ -7557,9 +7559,16 @@ name|resultlen
 operator|>=
 name|bufsize
 condition|)
+block|{
+name|free
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 goto|goto
 name|erange
 goto|;
+block|}
 name|memcpy
 argument_list|(
 name|buffer

@@ -344,6 +344,14 @@ case|:
 if|if
 condition|(
 name|data
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|union
+name|savefpu
+argument_list|)
+operator|||
+name|data
 operator|>
 name|cpu_max_ext_state_size
 condition|)

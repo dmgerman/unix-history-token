@@ -1520,6 +1520,9 @@ name|epp
 operator|->
 name|ep_epop
 decl_stmt|;
+name|uint32_t
+name|old_mask
+decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
@@ -1578,6 +1581,12 @@ condition|)
 goto|goto
 name|done
 goto|;
+name|old_mask
+operator|=
+name|epp
+operator|->
+name|ep_adv_cap_mask
+expr_stmt|;
 name|epp
 operator|->
 name|ep_adv_cap_mask
@@ -1616,6 +1625,32 @@ argument_list|(
 name|fail2
 argument_list|)
 expr_stmt|;
+name|epp
+operator|->
+name|ep_adv_cap_mask
+operator|=
+name|old_mask
+expr_stmt|;
+comment|/* Reconfigure for robustness */
+if|if
+condition|(
+name|epop
+operator|->
+name|epo_reconfigure
+argument_list|(
+name|enp
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * We may have an inconsistent view of our advertised speed 		 * capabilities. 		 */
+name|EFSYS_ASSERT
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|fail1
 label|:
 name|EFSYS_PROBE1

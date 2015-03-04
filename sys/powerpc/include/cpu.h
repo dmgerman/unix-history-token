@@ -97,9 +97,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|PPC_FEATURE_HAS_VSX
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
 name|PPC_FEATURE_BITMASK
 define|\
-value|"\20"								\ 	"\040PPC32\037PPC64\035ALTIVEC\034FPU\033MMU\031UNIFIEDCACHE"
+value|"\20"								\ 	"\040PPC32\037PPC64\035ALTIVEC\034FPU\033MMU\031UNIFIEDCACHE"	\ 	"\010VSX"
 end_define
 
 begin_define

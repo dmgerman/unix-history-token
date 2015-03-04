@@ -1506,6 +1506,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|umtx_thread_exit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|PROC_SLOCK
 argument_list|(
 name|p

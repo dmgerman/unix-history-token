@@ -1116,7 +1116,7 @@ name|DB_AND_RANDOMFALSE
 parameter_list|(
 name|defects
 parameter_list|)
-value|&& (random()> ddfects)
+value|&& (random()> defects)
 end_define
 
 begin_comment

@@ -132,7 +132,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: readelf.c 3110 2014-12-20 08:32:46Z kaiwang27 $"
+literal|"$Id: readelf.c 3155 2015-02-15 19:15:57Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -8977,6 +8977,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
 name|strcmp
 argument_list|(
 name|name
@@ -8985,6 +8986,16 @@ literal|"CORE"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"LINUX"
+argument_list|)
+operator|==
+literal|0
+operator|)
 operator|&&
 name|et
 operator|==
@@ -9300,16 +9311,16 @@ return|return
 literal|"NT_PRPSINFO (Process information)"
 return|;
 case|case
+literal|4
+case|:
+return|return
+literal|"NT_TASKSTRUCT (Task structure)"
+return|;
+case|case
 literal|6
 case|:
 return|return
 literal|"NT_AUXV (Auxiliary vector)"
-return|;
-case|case
-literal|0x46E62B7FUL
-case|:
-return|return
-literal|"NT_PRXFPREG (Linux user_xfpregs structure)"
 return|;
 case|case
 literal|10
@@ -9340,6 +9351,90 @@ literal|17
 case|:
 return|return
 literal|"NT_LWPSINFO (Linux lwpinfo_t type)"
+return|;
+case|case
+literal|18
+case|:
+return|return
+literal|"NT_WIN32PSTATUS (win32_pstatus structure)"
+return|;
+case|case
+literal|0x100
+case|:
+return|return
+literal|"NT_PPC_VMX (ppc Altivec registers)"
+return|;
+case|case
+literal|0x102
+case|:
+return|return
+literal|"NT_PPC_VSX (ppc VSX registers)"
+return|;
+case|case
+literal|0x202
+case|:
+return|return
+literal|"NT_X86_XSTATE (x86 XSAVE extended state)"
+return|;
+case|case
+literal|0x300
+case|:
+return|return
+literal|"NT_S390_HIGH_GPRS (s390 upper register halves)"
+return|;
+case|case
+literal|0x301
+case|:
+return|return
+literal|"NT_S390_TIMER (s390 timer register)"
+return|;
+case|case
+literal|0x302
+case|:
+return|return
+literal|"NT_S390_TODCMP (s390 TOD comparator register)"
+return|;
+case|case
+literal|0x303
+case|:
+return|return
+literal|"NT_S390_TODPREG (s390 TOD programmable register)"
+return|;
+case|case
+literal|0x304
+case|:
+return|return
+literal|"NT_S390_CTRS (s390 control registers)"
+return|;
+case|case
+literal|0x305
+case|:
+return|return
+literal|"NT_S390_PREFIX (s390 prefix register)"
+return|;
+case|case
+literal|0x400
+case|:
+return|return
+literal|"NT_ARM_VFP (arm VFP registers)"
+return|;
+case|case
+literal|0x46494c45UL
+case|:
+return|return
+literal|"NT_FILE (mapped files)"
+return|;
+case|case
+literal|0x46E62B7FUL
+case|:
+return|return
+literal|"NT_PRXFPREG (Linux user_xfpregs structure)"
+return|;
+case|case
+literal|0x53494749UL
+case|:
+return|return
+literal|"NT_SIGINFO (siginfo_t data)"
 return|;
 default|default:
 return|return
@@ -9508,6 +9603,12 @@ argument_list|(
 name|s_nt
 argument_list|)
 argument_list|,
+name|nt
+operator|>=
+literal|0x100
+condition|?
+literal|"<unknown: 0x%x>"
+else|:
 literal|"<unknown: %u>"
 argument_list|,
 name|nt
@@ -16957,6 +17058,28 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|s
+operator|->
+name|link
+operator|>=
+name|re
+operator|->
+name|shnum
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"invalid section link index %u"
+argument_list|,
+name|s
+operator|->
+name|link
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|symname
 operator|=
 name|get_symbol_name
@@ -17216,6 +17339,28 @@ argument_list|(
 operator|-
 literal|1
 argument_list|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|s
+operator|->
+name|link
+operator|>=
+name|re
+operator|->
+name|shnum
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"invalid section link index %u"
+argument_list|,
+name|s
+operator|->
+name|link
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -23160,6 +23305,20 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|len
+operator|<
+literal|4
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"truncated attribute section length"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|seclen
 operator|=
 name|re
@@ -23190,17 +23349,6 @@ name|len
 operator|-=
 name|seclen
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Attribute Section: %s\n"
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|p
-argument_list|)
-expr_stmt|;
 name|nlen
 operator|=
 name|strlen
@@ -23213,6 +23361,33 @@ name|p
 argument_list|)
 operator|+
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|nlen
+operator|+
+literal|4
+operator|>
+name|seclen
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"invalid attribute section name"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|printf
+argument_list|(
+literal|"Attribute Section: %s\n"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|p
+argument_list|)
 expr_stmt|;
 name|p
 operator|+=
@@ -36592,20 +36767,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"elf_getscn failed: %s"
-argument_list|,
-name|elf_errmsg
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 operator|(
 name|void
 operator|)

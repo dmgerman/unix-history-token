@@ -1133,6 +1133,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|double
 name|pone
 parameter_list|(
@@ -1219,13 +1220,7 @@ operator|=
 name|ps3
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ix
-operator|>=
-literal|0x40000000
-condition|)
+else|else
 block|{
 name|p
 operator|=
@@ -1236,6 +1231,7 @@ operator|=
 name|ps2
 expr_stmt|;
 block|}
+comment|/* ix>=0x40000000 */
 name|z
 operator|=
 name|one
@@ -1645,6 +1641,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|double
 name|qone
 parameter_list|(
@@ -1731,13 +1728,7 @@ operator|=
 name|qs3
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ix
-operator|>=
-literal|0x40000000
-condition|)
+else|else
 block|{
 name|p
 operator|=
@@ -1748,6 +1739,7 @@ operator|=
 name|qs2
 expr_stmt|;
 block|}
+comment|/* ix>=0x40000000 */
 name|z
 operator|=
 name|one

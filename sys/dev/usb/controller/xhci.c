@@ -325,6 +325,13 @@ name|xhcipolling
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|xhcidma32
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -362,7 +369,7 @@ name|xhciroute
 argument_list|,
 literal|0
 argument_list|,
-literal|"Routing bitmap for switching EHCI ports to XHCI controller"
+literal|"Routing bitmap for switching EHCI ports to the XHCI controller"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -383,7 +390,28 @@ name|xhcipolling
 argument_list|,
 literal|0
 argument_list|,
-literal|"Set to enable software interrupt polling for XHCI controller"
+literal|"Set to enable software interrupt polling for the XHCI controller"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb_xhci
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dma32
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|xhcidma32
+argument_list|,
+literal|0
+argument_list|,
+literal|"Set to only use 32-bit DMA for the XHCI controller"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -397,6 +425,13 @@ begin_define
 define|#
 directive|define
 name|xhciroute
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|xhcidma32
 value|0
 end_define
 
@@ -3272,6 +3307,9 @@ name|sc
 parameter_list|,
 name|device_t
 name|self
+parameter_list|,
+name|uint8_t
+name|dma32
 parameter_list|)
 block|{
 name|uint32_t
@@ -3485,10 +3523,20 @@ name|sc_bus
 operator|.
 name|dma_bits
 operator|=
+operator|(
 name|XHCI_HCS0_AC64
 argument_list|(
 name|temp
 argument_list|)
+operator|&&
+name|xhcidma32
+operator|==
+literal|0
+operator|&&
+name|dma32
+operator|==
+literal|0
+operator|)
 condition|?
 literal|64
 else|:
@@ -6621,6 +6669,33 @@ operator|&
 name|udev
 operator|->
 name|ctrl_ep_desc
+argument_list|)
+expr_stmt|;
+comment|/* ensure the control endpoint is setup again */
+name|USB_BUS_LOCK
+argument_list|(
+name|udev
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
+name|pepext
+operator|->
+name|trb_halted
+operator|=
+literal|1
+expr_stmt|;
+name|pepext
+operator|->
+name|trb_running
+operator|=
+literal|0
+expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|udev
+operator|->
+name|bus
 argument_list|)
 expr_stmt|;
 name|err

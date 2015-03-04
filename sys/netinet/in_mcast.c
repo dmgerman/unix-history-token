@@ -2428,8 +2428,7 @@ name|inm_state
 operator|=
 name|IGMP_NOT_MEMBER
 expr_stmt|;
-comment|/* 	 * Pending state-changes per group are subject to a bounds check. 	 */
-name|IFQ_SET_MAXLEN
+name|mbufq_init
 argument_list|(
 operator|&
 name|inm
@@ -12866,7 +12865,7 @@ name|inm
 operator|->
 name|inm_scq
 operator|.
-name|ifq_len
+name|mq_len
 argument_list|)
 expr_stmt|;
 name|printf

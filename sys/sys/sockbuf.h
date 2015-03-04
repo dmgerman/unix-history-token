@@ -1252,11 +1252,12 @@ modifier|*
 name|sb
 parameter_list|)
 block|{
-name|long
+name|int
 name|bleft
 decl_stmt|,
 name|mleft
 decl_stmt|;
+comment|/* size should match sockbuf fields */
 if|#
 directive|if
 literal|0

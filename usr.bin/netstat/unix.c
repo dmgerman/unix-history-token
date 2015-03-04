@@ -147,6 +147,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<strings.h>
 end_include
 
@@ -154,6 +160,12 @@ begin_include
 include|#
 directive|include
 file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
 end_include
 
 begin_include
@@ -271,7 +283,7 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: %s"
 argument_list|,
@@ -299,7 +311,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"malloc %lu bytes"
 argument_list|,
@@ -335,7 +347,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: %s"
 argument_list|,
@@ -506,7 +518,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"malloc %lu bytes"
 argument_list|,
@@ -535,7 +547,7 @@ name|obj
 parameter_list|,
 name|size
 parameter_list|)
-value|do {						\ 	if (len< (size)) {						\ 		warnx("buffer size exceeded");				\ 		goto fail;						\ 	}								\ 	bcopy((obj), p, (size));					\ 	len -= (size);							\ 	p += (size);							\ } while (0)
+value|do {						\ 	if (len< (size)) {						\ 		xo_warnx("buffer size exceeded");			\ 		goto fail;						\ 	}								\ 	bcopy((obj), p, (size));					\ 	len -= (size);							\ 	p += (size);							\ } while (0)
 define|#
 directive|define
 name|KREAD
@@ -909,6 +921,10 @@ name|shead_off
 parameter_list|,
 name|u_long
 name|sphead_off
+parameter_list|,
+name|bool
+modifier|*
+name|first
 parameter_list|)
 block|{
 name|char
@@ -1131,11 +1147,38 @@ operator|->
 name|xug_gen
 condition|)
 continue|continue;
+if|if
+condition|(
+operator|*
+name|first
+condition|)
+block|{
+name|xo_open_list
+argument_list|(
+literal|"socket"
+argument_list|)
+expr_stmt|;
+operator|*
+name|first
+operator|=
+name|false
+expr_stmt|;
+block|}
+name|xo_open_instance
+argument_list|(
+literal|"socket"
+argument_list|)
+expr_stmt|;
 name|unixdomainpr
 argument_list|(
 name|xunp
 argument_list|,
 name|so
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"socket"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1165,9 +1208,10 @@ operator|->
 name|xug_count
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Some %s sockets may have been deleted.\n"
+literal|"Some {:type/%s} sockets may have "
+literal|"been {:action/deleted}.\n"
 argument_list|,
 name|socktype
 index|[
@@ -1188,9 +1232,10 @@ operator|->
 name|xug_count
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Some %s sockets may have been created.\n"
+literal|"Some {:type/%s} sockets may have "
+literal|"been {:action/created}.\n"
 argument_list|,
 name|socktype
 index|[
@@ -1201,9 +1246,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Some %s sockets may have been created or deleted"
+literal|"Some {:type/%s} sockets may have "
+literal|"been {:action/created or deleted}"
 argument_list|,
 name|socktype
 index|[
@@ -1260,6 +1306,63 @@ index|[
 literal|15
 index|]
 decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|titles
+index|[
+literal|2
+index|]
+init|=
+block|{
+literal|"{T:/%-8.8s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-6.6s} {T:/%8.8s} "
+literal|"{T:/%8.8s} {T:/%8.8s} {T:/%8.8s} {T:Addr}\n"
+block|,
+literal|"{T:/%-16.16s} {T:/%-6.6s} {T:/%-6.6s} {T:/%-6.6s} {T:/%16.16s} "
+literal|"{T:/%16.16s} {T:/%16.16s} {T:/%16.16s} {T:Addr}\n"
+block|}
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|format
+index|[
+literal|2
+index|]
+init|=
+block|{
+literal|"{q:address/%8lx} {t:type/%-6.6s} "
+literal|"{:receive-bytes-waiting/%6u} "
+literal|"{:send-bytes-waiting/%6u} "
+literal|"{q:vnode/%8lx} {q:connection/%8lx} "
+literal|"{q:first-reference/%8lx} {q:next-reference/%8lx}"
+block|,
+literal|"{q:address/%16lx} {t:type/%-6.6s} "
+literal|"{:receive-bytes-waiting/%6u} "
+literal|"{:send-bytes-waiting/%6u} "
+literal|"{q:vnode/%16lx} {q:connection/%16lx} "
+literal|"{q:first-reference/%16lx} {q:next-reference/%16lx}"
+block|}
+decl_stmt|;
+name|int
+name|fmt
+init|=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|==
+literal|8
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+decl_stmt|;
 name|unp
 operator|=
 operator|&
@@ -1298,14 +1401,17 @@ operator|!
 name|Lflag
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Active UNIX domain sockets\n"
+literal|"{T:Active UNIX domain sockets}\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-8.8s %-6.6s %-6.6s %-6.6s %8.8s %8.8s %8.8s %8.8s Addr\n"
+name|titles
+index|[
+name|fmt
+index|]
 argument_list|,
 literal|"Address"
 argument_list|,
@@ -1366,19 +1472,35 @@ operator|->
 name|so_qlimit
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"unix  %-14.14s"
+literal|"unix  {d:socket/%-14.14s}{e:queue-length/%d}"
+literal|"{e:incomplete-queue-length/%d}{e:queue-limit/%d}"
 argument_list|,
 name|buf1
+argument_list|,
+name|so
+operator|->
+name|so_qlen
+argument_list|,
+name|so
+operator|->
+name|so_incqlen
+argument_list|,
+name|so
+operator|->
+name|so_qlimit
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%8lx %-6.6s %6u %6u %8lx %8lx %8lx %8lx"
+name|format
+index|[
+name|fmt
+index|]
 argument_list|,
 operator|(
 name|long
@@ -1447,9 +1569,9 @@ if|if
 condition|(
 name|sa
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %.*s"
+literal|" {:path/%.*s}"
 argument_list|,
 call|(
 name|int
@@ -1473,9 +1595,9 @@ operator|->
 name|sun_path
 argument_list|)
 expr_stmt|;
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -1426,7 +1426,10 @@ block|,
 name|AR71XX_MII_MODE_RGMII
 block|,
 name|AR71XX_MII_MODE_RMII
-block|, }
+block|,
+name|AR71XX_MII_MODE_SGMII
+comment|/* not hardware defined, though! */
+block|}
 name|ar71xx_mii_mode
 typedef|;
 end_typedef

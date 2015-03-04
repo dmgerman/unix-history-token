@@ -881,6 +881,26 @@ comment|/* auxiliary data queue */
 name|int
 name|retry
 decl_stmt|;
+name|int
+name|quirks
+decl_stmt|;
+comment|/* controller doesn't like deactivate */
+define|#
+directive|define
+name|KBDC_QUIRK_KEEP_ACTIVATED
+value|(1<< 0)
+define|#
+directive|define
+name|KBDC_QUIRK_IGNORE_PROBE_RESULT
+value|(1<< 1)
+define|#
+directive|define
+name|KBDC_QUIRK_RESET_AFTER_PROBE
+value|(1<< 2)
+define|#
+directive|define
+name|KBDC_QUIRK_SETLEDS_ON_INIT
+value|(1<< 3)
 block|}
 name|atkbdc_softc_t
 typedef|;

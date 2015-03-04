@@ -421,7 +421,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* We do only i/o device credit setup here. CPU credit setup is now  * moved to xlp_msgring_cpu_init() so that the credits get setup   * only if the CPU exists. xlp_msgring_cpu_init() gets called from  * platform_init_ap; and this makes it easy for us to setup CMS  * credits for various types of XLP chips, with varying number of  * cpu's and cores.  */
+comment|/* We do only i/o device credit setup here. CPU credit setup is now  * moved to xlp_msgring_cpu_init() so that the credits get setup  * only if the CPU exists. xlp_msgring_cpu_init() gets called from  * platform_init_ap; and this makes it easy for us to setup CMS  * credits for various types of XLP chips, with varying number of  * cpu's and cores.  */
 end_comment
 
 begin_function

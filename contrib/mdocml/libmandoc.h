@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libmandoc.h,v 1.51 2014/12/01 08:05:52 schwarze Exp $ */
+comment|/*	$Id: libmandoc.h,v 1.55 2015/01/15 04:26:39 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -33,10 +33,7 @@ name|ROFF_TBL
 block|,
 comment|/* a table row was successfully parsed */
 name|ROFF_EQN
-block|,
 comment|/* an equation was successfully parsed */
-name|ROFF_ERR
-comment|/* badness: puke and stop */
 block|}
 enum|;
 end_enum
@@ -71,12 +68,6 @@ struct_decl|struct
 name|mchars
 struct_decl|;
 end_struct_decl
-
-begin_enum_decl
-enum_decl|enum
-name|mandocerr
-enum_decl|;
-end_enum_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -325,7 +316,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|mdoc_endparse
 parameter_list|(
 name|struct
@@ -392,6 +383,10 @@ name|struct
 name|mparse
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -427,7 +422,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|man_endparse
 parameter_list|(
 name|struct

@@ -326,6 +326,21 @@ comment|/* Data store translation miss */
 end_comment
 
 begin_comment
+comment|/* Power ISA 2.06+: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_VSX
+value|0x0f40
+end_define
+
+begin_comment
+comment|/* VSX Unavailable */
+end_comment
+
+begin_comment
 comment|/* The following are available on 4xx and 85xx */
 end_comment
 

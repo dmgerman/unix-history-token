@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2013-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2013-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -137,6 +137,13 @@ define|#
 directive|define
 name|I40E_DEV_ID_10G_BASE_T
 value|0x1586
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_DEV_ID_20G_KR2
+value|0x1587
 end_define
 
 begin_define
@@ -952,8 +959,37 @@ name|iscsi
 decl_stmt|;
 comment|/* Indicates iSCSI enabled */
 name|bool
-name|mfp_mode_1
+name|flex10_enable
 decl_stmt|;
+name|bool
+name|flex10_capable
+decl_stmt|;
+name|u32
+name|flex10_mode
+decl_stmt|;
+define|#
+directive|define
+name|I40E_FLEX10_MODE_UNKNOWN
+value|0x0
+define|#
+directive|define
+name|I40E_FLEX10_MODE_DCC
+value|0x1
+define|#
+directive|define
+name|I40E_FLEX10_MODE_DCI
+value|0x2
+name|u32
+name|flex10_status
+decl_stmt|;
+define|#
+directive|define
+name|I40E_FLEX10_STATUS_DCC_ERROR
+value|0x1
+define|#
+directive|define
+name|I40E_FLEX10_STATUS_VC_MODE
+value|0x2
 name|bool
 name|mgmt_cem
 decl_stmt|;
@@ -1043,6 +1079,9 @@ name|enabled_tcmap
 decl_stmt|;
 name|u32
 name|maxtc
+decl_stmt|;
+name|u64
+name|wr_csr_prot
 decl_stmt|;
 block|}
 struct|;
@@ -1848,15 +1887,29 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|INLINE
+name|bool
 name|i40e_is_vf
 parameter_list|(
-name|_hw
+name|struct
+name|i40e_hw
+modifier|*
+name|hw
 parameter_list|)
-value|((_hw)->mac.type == I40E_MAC_VF)
-end_define
+block|{
+return|return
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|I40E_MAC_VF
+return|;
+block|}
+end_function
 
 begin_struct
 struct|struct
@@ -4346,6 +4399,15 @@ name|fd_atr_match
 decl_stmt|;
 name|u64
 name|fd_sb_match
+decl_stmt|;
+name|u64
+name|fd_atr_tunnel_match
+decl_stmt|;
+name|u32
+name|fd_atr_status
+decl_stmt|;
+name|u32
+name|fd_sb_status
 decl_stmt|;
 comment|/* EEE LPI */
 name|u32

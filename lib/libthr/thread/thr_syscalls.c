@@ -2188,6 +2188,16 @@ argument_list|(
 name|writev
 argument_list|)
 expr_stmt|;
+name|SLOT
+argument_list|(
+name|spinlock
+argument_list|)
+expr_stmt|;
+name|SLOT
+argument_list|(
+name|spinunlock
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|SLOT

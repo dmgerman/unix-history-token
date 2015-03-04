@@ -1146,6 +1146,10 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|if_clone
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1160,6 +1164,11 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|if_clone
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2702,7 +2711,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform generic interface initalization tasks and attach the interface  * to the list of "active" interfaces.  If vmove flag is set on entry  * to if_attach_internal(), perform only a limited subset of initialization  * tasks, given that we are moving from one vnet to another an ifnet which  * has already been fully initialized.  *  * XXX:  *  - The decision to return void and thus require this function to  *    succeed is questionable.  *  - We should probably do more sanity checking.  For instance we don't  *    do anything to insure if_xname is unique or non-empty.  */
+comment|/*  * Perform generic interface initalization tasks and attach the interface  * to the list of "active" interfaces.  If vmove flag is set on entry  * to if_attach_internal(), perform only a limited subset of initialization  * tasks, given that we are moving from one vnet to another an ifnet which  * has already been fully initialized.  *  * Note that if_detach_internal() removes group membership unconditionally  * even when vmove flag is set, and if_attach_internal() adds only IFG_ALL.  * Thus, when if_vmove() is applied to a cloned interface, group membership  * is lost while a cloned one always joins a group whose name is  * ifc->ifc_name.  To recover this after if_detach_internal() and  * if_attach_internal(), the cloner should be specified to  * if_attach_internal() via ifc.  If it is non-NULL, if_attach_internal()  * attempts to join a group whose name is ifc->ifc_name.  *  * XXX:  *  - The decision to return void and thus require this function to  *    succeed is questionable.  *  - We should probably do more sanity checking.  For instance we don't  *    do anything to insure if_xname is unique or non-empty.  */
 end_comment
 
 begin_function
@@ -2720,6 +2729,8 @@ argument_list|(
 name|ifp
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2959,6 +2970,11 @@ name|ifp
 parameter_list|,
 name|int
 name|vmove
+parameter_list|,
+name|struct
+name|if_clone
+modifier|*
+name|ifc
 parameter_list|)
 block|{
 name|unsigned
@@ -3037,6 +3053,22 @@ argument_list|(
 name|ifp
 argument_list|,
 name|IFG_ALL
+argument_list|)
+expr_stmt|;
+comment|/* Restore group membership for cloned interfaces. */
+if|if
+condition|(
+name|vmove
+operator|&&
+name|ifc
+operator|!=
+name|NULL
+condition|)
+name|if_clone_addgroup
+argument_list|(
+name|ifp
+argument_list|,
+name|ifc
 argument_list|)
 expr_stmt|;
 name|getmicrotime
@@ -4034,6 +4066,8 @@ argument_list|(
 name|ifp
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|CURVNET_RESTORE
@@ -4054,6 +4088,12 @@ name|ifp
 parameter_list|,
 name|int
 name|vmove
+parameter_list|,
+name|struct
+name|if_clone
+modifier|*
+modifier|*
+name|ifcp
 parameter_list|)
 block|{
 name|struct
@@ -4163,6 +4203,23 @@ else|else
 return|return;
 comment|/* XXX this should panic as well? */
 block|}
+comment|/* Check if this is a cloned interface or not. */
+if|if
+condition|(
+name|vmove
+operator|&&
+name|ifcp
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|ifcp
+operator|=
+name|if_clone_findifc
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Remove/wait for pending events. 	 */
 name|taskqueue_drain
 argument_list|(
@@ -4529,12 +4586,20 @@ modifier|*
 name|new_vnet
 parameter_list|)
 block|{
+name|struct
+name|if_clone
+modifier|*
+name|ifc
+decl_stmt|;
 comment|/* 	 * Detach from current vnet, but preserve LLADDR info, do not 	 * mark as dead etc. so that the ifnet can be reattached later. 	 */
 name|if_detach_internal
 argument_list|(
 name|ifp
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|ifc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Unlink the ifnet from ifindex_table[] in current vnet, and shrink 	 * the if_index for that vnet if possible. 	 * 	 * NOTE: IFNET_WLOCK/IFNET_WUNLOCK() are assumed to be unvirtualized, 	 * or we'd lock on one vnet and unlock on another. 	 */
@@ -4604,6 +4669,8 @@ argument_list|(
 name|ifp
 argument_list|,
 literal|1
+argument_list|,
+name|ifc
 argument_list|)
 expr_stmt|;
 name|CURVNET_RESTORE

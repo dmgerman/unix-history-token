@@ -528,6 +528,13 @@ argument_list|(
 name|cbdev
 argument_list|)
 expr_stmt|;
+name|device_printf
+argument_list|(
+name|cbdev
+argument_list|,
+literal|"Freeing up the allocatd bus\n"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -785,6 +792,14 @@ name|cbdev
 argument_list|)
 expr_stmt|;
 comment|/* detach existing cards */
+name|POWER_DISABLE_SOCKET
+argument_list|(
+name|brdev
+argument_list|,
+name|cbdev
+argument_list|)
+expr_stmt|;
+comment|/* Turn the socket off first */
 name|POWER_ENABLE_SOCKET
 argument_list|(
 name|brdev

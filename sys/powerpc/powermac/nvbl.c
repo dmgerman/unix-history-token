@@ -71,6 +71,19 @@ directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|PCI_VENDOR_ID_NVIDIA
+value|0x10de
+end_define
+
 begin_define
 define|#
 directive|define
@@ -412,6 +425,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|strcmp
 argument_list|(
 name|control
@@ -420,6 +434,17 @@ literal|"mnca"
 argument_list|)
 operator|!=
 literal|0
+operator|)
+operator|||
+name|pci_get_vendor
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+operator|!=
+name|PCI_VENDOR_ID_NVIDIA
 condition|)
 return|return
 operator|(

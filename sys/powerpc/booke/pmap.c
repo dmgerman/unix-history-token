@@ -560,6 +560,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|elf32_nxstack
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/**************************************************************************/
 end_comment
@@ -4923,6 +4930,15 @@ argument_list|(
 literal|"mmu_booke_bootstrap: entered\n"
 argument_list|)
 expr_stmt|;
+comment|/* Set interesting system properties */
+name|hw_direct_map
+operator|=
+literal|0
+expr_stmt|;
+name|elf32_nxstack
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Initialize invalidation mutex */
 name|mtx_init
 argument_list|(
@@ -6308,6 +6324,10 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|pmap_bootstrapped
+operator|=
+literal|1
+expr_stmt|;
 name|debugf
 argument_list|(
 literal|"virtual_avail = %08x\n"
@@ -8722,6 +8742,21 @@ index|]
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("isync");
+name|mtspr
+argument_list|(
+name|SPR_DBCR0
+argument_list|,
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_cpu
+operator|.
+name|booke
+operator|.
+name|dbcr0
+argument_list|)
+expr_stmt|;
 name|sched_unpin
 argument_list|()
 expr_stmt|;
@@ -8808,6 +8843,21 @@ operator|->
 name|p_pid
 argument_list|,
 name|pmap
+argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_cpu
+operator|.
+name|booke
+operator|.
+name|dbcr0
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_DBCR0
 argument_list|)
 expr_stmt|;
 name|CPU_CLR_ATOMIC

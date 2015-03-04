@@ -113,7 +113,7 @@ end_comment
 
 begin_function
 name|void
-name|_spinunlock
+name|__thr_spinunlock
 parameter_list|(
 name|spinlock_t
 modifier|*
@@ -152,7 +152,7 @@ end_function
 
 begin_function
 name|void
-name|_spinlock
+name|__thr_spinlock
 parameter_list|(
 name|spinlock_t
 modifier|*
@@ -217,32 +217,6 @@ operator|&
 name|_extra
 operator|->
 name|lock
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|_spinlock_debug
-parameter_list|(
-name|spinlock_t
-modifier|*
-name|lck
-parameter_list|,
-name|char
-modifier|*
-name|fname
-name|__unused
-parameter_list|,
-name|int
-name|lineno
-name|__unused
-parameter_list|)
-block|{
-name|_spinlock
-argument_list|(
-name|lck
 argument_list|)
 expr_stmt|;
 block|}

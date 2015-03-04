@@ -749,8 +749,6 @@ name|fd
 argument_list|,
 name|rightsp
 argument_list|,
-literal|0
-argument_list|,
 operator|&
 name|fp
 argument_list|,
@@ -10636,6 +10634,10 @@ operator|==
 name|DTYPE_SHM
 condition|)
 block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|shmfd
 operator|=
 name|fp

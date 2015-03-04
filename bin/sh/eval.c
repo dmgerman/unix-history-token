@@ -625,6 +625,7 @@ begin_function
 name|void
 name|evalstring
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
@@ -2250,7 +2251,7 @@ name|nhere
 operator|.
 name|expdoc
 operator|=
-name|nullstr
+literal|""
 expr_stmt|;
 name|savelocalvars
 operator|=

@@ -277,7 +277,7 @@ if|if
 condition|(
 name|ix
 operator|>
-literal|0x80000000
+literal|0x58000000
 condition|)
 name|z
 operator|=
@@ -292,6 +292,7 @@ argument_list|(
 name|y
 argument_list|)
 expr_stmt|;
+comment|/* |x|>2**49 */
 else|else
 block|{
 name|u
@@ -347,10 +348,10 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x32000000
+literal|0x39000000
 condition|)
 block|{
-comment|/* |x|<2**-27 */
+comment|/* |x|<2**-13 */
 if|if
 condition|(
 name|huge
@@ -676,7 +677,7 @@ if|if
 condition|(
 name|ix
 operator|>
-literal|0x48000000
+literal|0x58000000
 condition|)
 name|z
 operator|=
@@ -691,6 +692,7 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
+comment|/* |x|>2**49 */
 else|else
 block|{
 name|u
@@ -735,10 +737,10 @@ if|if
 condition|(
 name|ix
 operator|<=
-literal|0x24800000
+literal|0x33000000
 condition|)
 block|{
-comment|/* x< 2**-54 */
+comment|/* x< 2**-25 */
 return|return
 operator|(
 operator|-
@@ -1127,6 +1129,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|float
 name|ponef
 parameter_list|(
@@ -1184,7 +1187,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x40f71c58
+literal|0x409173eb
 condition|)
 block|{
 name|p
@@ -1201,7 +1204,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x4036db68
+literal|0x4036d917
 condition|)
 block|{
 name|p
@@ -1213,13 +1216,7 @@ operator|=
 name|ps3
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ix
-operator|>=
-literal|0x40000000
-condition|)
+else|else
 block|{
 name|p
 operator|=
@@ -1230,6 +1227,7 @@ operator|=
 name|ps2
 expr_stmt|;
 block|}
+comment|/* ix>=0x40000000 */
 name|z
 operator|=
 name|one
@@ -1639,6 +1637,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|float
 name|qonef
 parameter_list|(
@@ -1679,7 +1678,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x40200000
+literal|0x41000000
 condition|)
 block|{
 name|p
@@ -1696,7 +1695,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x40f71c58
+literal|0x409173eb
 condition|)
 block|{
 name|p
@@ -1713,7 +1712,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x4036db68
+literal|0x4036d917
 condition|)
 block|{
 name|p
@@ -1725,13 +1724,7 @@ operator|=
 name|qs3
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ix
-operator|>=
-literal|0x40000000
-condition|)
+else|else
 block|{
 name|p
 operator|=
@@ -1742,6 +1735,7 @@ operator|=
 name|qs2
 expr_stmt|;
 block|}
+comment|/* ix>=0x40000000 */
 name|z
 operator|=
 name|one

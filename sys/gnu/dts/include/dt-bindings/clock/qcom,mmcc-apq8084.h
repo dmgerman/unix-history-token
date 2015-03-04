@@ -340,7 +340,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|RBCPR_CLK_SRC
+name|MMSS_RBCPR_CLK_SRC
 value|46
 end_define
 

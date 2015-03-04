@@ -852,14 +852,44 @@ function_decl|;
 block|}
 name|efx_nic_ops_t
 typedef|;
+ifndef|#
+directive|ifndef
+name|EFX_TXQ_LIMIT_TARGET
 define|#
 directive|define
 name|EFX_TXQ_LIMIT_TARGET
 value|259
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|EFX_RXQ_LIMIT_TARGET
 define|#
 directive|define
 name|EFX_RXQ_LIMIT_TARGET
-value|768
+value|512
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|EFX_TXQ_DC_SIZE
+define|#
+directive|define
+name|EFX_TXQ_DC_SIZE
+value|1
+comment|/* 16 descriptors */
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|EFX_RXQ_DC_SIZE
+define|#
+directive|define
+name|EFX_RXQ_DC_SIZE
+value|3
+comment|/* 64 descriptors */
+endif|#
+directive|endif
 if|#
 directive|if
 name|EFSYS_OPT_FILTER
@@ -1655,8 +1685,14 @@ name|EFX_EVQ_MAGIC
 value|0x08081997
 define|#
 directive|define
-name|EFX_EV_TIMER_QUANTUM
-value|5
+name|EFX_EVQ_FALCON_TIMER_QUANTUM_NS
+value|4968
+comment|/* 621 cycles */
+define|#
+directive|define
+name|EFX_EVQ_SIENA_TIMER_QUANTUM_NS
+value|6144
+comment|/* 768 cycles */
 struct|struct
 name|efx_rxq_s
 block|{

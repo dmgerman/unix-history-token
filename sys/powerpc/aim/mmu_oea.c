@@ -4959,6 +4959,23 @@ argument_list|,
 name|pmr
 argument_list|)
 expr_stmt|;
+name|mtsrin
+argument_list|(
+name|USER_SR
+operator|<<
+name|ADDR_SR_SHFT
+argument_list|,
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_cpu
+operator|.
+name|aim
+operator|.
+name|usr_vsid
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

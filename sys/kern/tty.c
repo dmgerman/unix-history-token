@@ -8745,8 +8745,6 @@ argument_list|,
 name|CAP_TTYHOOK
 argument_list|)
 argument_list|,
-literal|0
-argument_list|,
 operator|&
 name|fp
 argument_list|,

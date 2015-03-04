@@ -193,7 +193,7 @@ name|BUILD_BUG_ON
 parameter_list|(
 name|x
 parameter_list|)
-value|CTASSERT(x)
+value|CTASSERT(!(x))
 end_define
 
 begin_define
@@ -239,11 +239,41 @@ parameter_list|)
 value|roundup2((x), (y))
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|PTR_ALIGN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PTR_ALIGN
+parameter_list|(
+name|p
+parameter_list|,
+name|a
+parameter_list|)
+value|((__typeof(p))ALIGN((uintptr_t)(p), (a)))
+end_define
+
 begin_define
 define|#
 directive|define
 name|DIV_ROUND_UP
 value|howmany
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIELD_SIZEOF
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|)
+value|sizeof(((t *)0)->f)
 end_define
 
 begin_define
@@ -699,6 +729,14 @@ begin_define
 define|#
 directive|define
 name|num_possible_cpus
+parameter_list|()
+value|mp_ncpus
+end_define
+
+begin_define
+define|#
+directive|define
+name|num_online_cpus
 parameter_list|()
 value|mp_ncpus
 end_define

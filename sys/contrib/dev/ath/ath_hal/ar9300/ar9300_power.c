@@ -2434,7 +2434,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ath_hal_wait
+name|ath_hal_waitfor
 argument_list|(
 name|ah
 argument_list|,
@@ -3279,6 +3279,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|ahp
+operator|->
+name|ah_chip_full_sleep
+operator|=
+name|AH_FALSE
+expr_stmt|;
 break|break;
 case|case
 name|HAL_PM_FULL_SLEEP
@@ -4949,7 +4955,7 @@ comment|/* Set receive disable bit */
 if|if
 condition|(
 operator|!
-name|ath_hal_wait
+name|ath_hal_waitfor
 argument_list|(
 name|ah
 argument_list|,

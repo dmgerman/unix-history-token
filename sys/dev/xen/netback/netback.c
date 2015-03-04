@@ -290,7 +290,7 @@ begin_define
 define|#
 directive|define
 name|XNB_GSO_TCPV4
-value|1
+value|0
 end_define
 
 begin_comment

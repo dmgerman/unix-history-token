@@ -950,13 +950,6 @@ name|PIC_CLOCK_TIMER
 value|7
 end_define
 
-begin_define
-define|#
-directive|define
-name|PIC_IRQ_BASE
-value|8
-end_define
-
 begin_if
 if|#
 directive|if
@@ -972,30 +965,6 @@ argument_list|(
 name|__ASSEMBLY__
 argument_list|)
 end_if
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_FIRST_IRQ
-value|(PIC_IRQ_BASE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_LAST_IRQ
-value|63
-end_define
-
-begin_define
-define|#
-directive|define
-name|XLP_IRQ_IS_PICINTR
-parameter_list|(
-name|irq
-parameter_list|)
-value|((irq)>= PIC_IRT_FIRST_IRQ)
-end_define
 
 begin_comment
 comment|/*  *   Misc  */

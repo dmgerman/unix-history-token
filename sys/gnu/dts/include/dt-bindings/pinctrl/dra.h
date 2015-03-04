@@ -195,14 +195,14 @@ begin_define
 define|#
 directive|define
 name|PIN_OUTPUT_PULLUP
-value|(PIN_OUTPUT | PULL_ENA | PULL_UP)
+value|(PULL_UP)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PIN_OUTPUT_PULLDOWN
-value|(PIN_OUTPUT | PULL_ENA)
+value|(0)
 end_define
 
 begin_define

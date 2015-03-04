@@ -2540,10 +2540,7 @@ operator|->
 name|m_len
 operator|=
 name|frag_info
-index|[
-name|nr
-index|]
-operator|.
+operator|->
 name|frag_size
 expr_stmt|;
 name|dma
@@ -2587,10 +2584,7 @@ argument_list|,
 name|dma
 argument_list|,
 name|frag_info
-index|[
-name|nr
-index|]
-operator|.
+operator|->
 name|frag_size
 argument_list|,
 name|PCI_DMA_FROMDEVICE

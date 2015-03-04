@@ -133,6 +133,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_STRTONUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_WCHAR
 value|1
 end_define

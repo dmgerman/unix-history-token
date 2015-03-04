@@ -1525,6 +1525,9 @@ specifier|const
 name|ucl_object_t
 operator|*
 name|obj
+argument_list|,
+name|bool
+name|ignore_case
 argument_list|)
 name|UCL_WARN_UNUSED_RESULT
 decl_stmt|;
@@ -1545,6 +1548,9 @@ specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
+parameter_list|,
+name|bool
+name|ignore_case
 parameter_list|)
 block|{
 if|if
@@ -1557,7 +1563,9 @@ block|{
 name|hashlin
 operator|=
 name|ucl_hash_create
-argument_list|()
+argument_list|(
+name|ignore_case
+argument_list|)
 expr_stmt|;
 block|}
 name|ucl_hash_insert

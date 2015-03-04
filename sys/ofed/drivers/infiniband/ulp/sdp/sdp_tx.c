@@ -2109,7 +2109,7 @@ name|ssk
 argument_list|,
 name|SDP_TX_SIZE
 argument_list|,
-name|IB_CQ_VECTOR_LEAST_ATTACHED
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

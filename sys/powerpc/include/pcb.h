@@ -81,15 +81,31 @@ directive|define
 name|PCB_VEC
 value|4
 comment|/* Process had Altivec initialized */
+define|#
+directive|define
+name|PCB_VSX
+value|8
+comment|/* Process had VSX initialized */
 struct|struct
 name|fpu
 block|{
+union|union
+block|{
 name|double
+name|fpr
+decl_stmt|;
+name|uint32_t
+name|vsr
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
 name|fpr
 index|[
 literal|32
 index|]
-decl_stmt|;
+union|;
 name|double
 name|fpscr
 decl_stmt|;

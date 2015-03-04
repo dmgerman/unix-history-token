@@ -203,6 +203,12 @@ literal|0
 expr_stmt|;
 name|rxs
 operator|->
+name|rs_phyerr
+operator|=
+literal|0
+expr_stmt|;
+name|rxs
+operator|->
 name|rs_datalen
 operator|=
 name|rxsp
@@ -642,7 +648,7 @@ name|rs_status
 operator||=
 name|HAL_RXERR_CRC
 expr_stmt|;
-comment|/*  			 * ignore CRC flag for spectral phy reports 			 */
+comment|/*  			 * ignore CRC flag for phy reports 			 */
 if|if
 condition|(
 name|rxsp
@@ -664,13 +670,6 @@ argument_list|,
 name|AR_phy_err_code
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|phyerr
-operator|==
-name|HAL_PHYERR_SPECTRAL
-condition|)
-block|{
 name|rxs
 operator|->
 name|rs_status
@@ -683,7 +682,6 @@ name|rs_phyerr
 operator|=
 name|phyerr
 expr_stmt|;
-block|}
 block|}
 block|}
 elseif|else
@@ -786,6 +784,12 @@ name|HAL_RXERR_MIC
 expr_stmt|;
 block|}
 block|}
+if|#
+directive|if
+literal|0
+block|rxs->rs_channel = AH_PRIVATE(ah)->ah_curchan->channel;
+endif|#
+directive|endif
 return|return
 name|HAL_OK
 return|;

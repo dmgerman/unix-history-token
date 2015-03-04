@@ -3222,7 +3222,7 @@ name|int
 name|crtc
 parameter_list|)
 block|{
-comment|/* vblank is not initialized (IRQ not installed ?) */
+comment|/* vblank is not initialized (IRQ not installed ?), or has been freed */
 if|if
 condition|(
 operator|!
@@ -3289,6 +3289,15 @@ name|int
 name|crtc
 parameter_list|)
 block|{
+comment|/* vblank is not initialized (IRQ not installed ?), or has been freed */
+if|if
+condition|(
+operator|!
+name|dev
+operator|->
+name|num_crtcs
+condition|)
+return|return;
 if|if
 condition|(
 name|dev

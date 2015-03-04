@@ -287,6 +287,20 @@ name|_pthread_mutex_init_calloc_cb
 argument_list|,
 name|_pthread_mutex_init_calloc_cb_stub
 argument_list|)
+block|,
+name|SLOT
+argument_list|(
+name|spinlock
+argument_list|,
+name|__libc_spinlock_stub
+argument_list|)
+block|,
+name|SLOT
+argument_list|(
+name|spinunlock
+argument_list|,
+name|__libc_spinunlock_stub
+argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt

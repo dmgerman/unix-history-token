@@ -253,11 +253,15 @@ begin_comment
 comment|/* Suspend CPU until restarted. */
 end_comment
 
+begin_comment
+comment|/*  * IPI_STOP_HARD does not need to occupy a slot in the IPI vector space since  * it is delivered using an NMI anyways.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IPI_STOP_HARD
-value|(APIC_IPI_INTS + 9)
+value|255
 end_define
 
 begin_comment
@@ -1689,6 +1693,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|x2apic_mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|lapic_eoi_suppression
 decl_stmt|;
 end_decl_stmt
 

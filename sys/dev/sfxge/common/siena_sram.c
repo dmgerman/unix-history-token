@@ -105,7 +105,10 @@ name|encp
 operator|->
 name|enc_rxq_limit
 operator|*
-literal|64
+name|EFX_RXQ_DC_NDESCS
+argument_list|(
+name|EFX_RXQ_DC_SIZE
+argument_list|)
 operator|)
 expr_stmt|;
 comment|/* Initialize the transmit descriptor cache */
@@ -134,10 +137,9 @@ name|oword
 argument_list|,
 name|FRF_AZ_TX_DC_SIZE
 argument_list|,
-literal|1
+name|EFX_TXQ_DC_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* 16 descriptors */
 name|EFX_BAR_WRITEO
 argument_list|(
 name|enp
@@ -174,10 +176,9 @@ name|oword
 argument_list|,
 name|FRF_AZ_RX_DC_SIZE
 argument_list|,
-literal|3
+name|EFX_RXQ_DC_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* 64 descriptors */
 name|EFX_BAR_WRITEO
 argument_list|(
 name|enp

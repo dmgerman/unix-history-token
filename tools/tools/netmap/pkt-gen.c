@@ -9513,11 +9513,14 @@ block|}
 block|}
 if|if
 condition|(
+name|strlen
+argument_list|(
 name|g
 operator|.
 name|ifname
-operator|==
-name|NULL
+argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 name|D

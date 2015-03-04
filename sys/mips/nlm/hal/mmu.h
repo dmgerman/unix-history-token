@@ -35,7 +35,7 @@ name|rv
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		".set	push\n" 		".set	mips64\n" 		"mfc0	%0, $16, 6\n" 		".set	pop\n"  		: "=r" (rv));
+asm|( 		".set	push\n" 		".set	mips64\n" 		"mfc0	%0, $16, 6\n" 		".set	pop\n" 		: "=r" (rv));
 return|return
 name|rv
 return|;
@@ -54,7 +54,7 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|__volatile__
-asm|( 		".set	push\n" 		".set	mips64\n" 		"mtc0	%0, $16, 6\n" 		".set	pop\n"  		: : "r" (value));
+asm|( 		".set	push\n" 		".set	mips64\n" 		"mtc0	%0, $16, 6\n" 		".set	pop\n" 		: : "r" (value));
 block|}
 end_function
 
@@ -72,7 +72,7 @@ name|rv
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		".set	push\n" 		".set	mips64\n" 		"mfc0	%0, $16, 7\n" 		".set	pop\n"  		: "=r" (rv));
+asm|( 		".set	push\n" 		".set	mips64\n" 		"mfc0	%0, $16, 7\n" 		".set	pop\n" 		: "=r" (rv));
 return|return
 name|rv
 return|;
@@ -91,7 +91,7 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|__volatile__
-asm|( 		".set	push\n" 		".set	mips64\n" 		"mtc0	%0, $16, 7\n" 		".set	pop\n"  		: : "r" (value));
+asm|( 		".set	push\n" 		".set	mips64\n" 		"mtc0	%0, $16, 7\n" 		".set	pop\n" 		: : "r" (value));
 block|}
 end_function
 

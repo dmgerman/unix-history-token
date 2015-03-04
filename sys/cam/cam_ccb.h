@@ -3807,6 +3807,11 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
+name|CDAI_FLAG_NONE
+value|0x0
+comment|/* No flags set */
+define|#
+directive|define
 name|CDAI_FLAG_STORE
 value|0x1
 comment|/* If set, action becomes store */

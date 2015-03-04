@@ -1680,6 +1680,9 @@ case|:
 case|case
 name|ND_OPT_REDIRECTED_HEADER
 case|:
+case|case
+name|ND_OPT_NONCE
+case|:
 if|if
 condition|(
 name|ndopts
@@ -2267,7 +2270,7 @@ name|dst
 argument_list|,
 name|ln
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|LLE_WLOCK
@@ -2498,7 +2501,7 @@ name|dst
 argument_list|,
 name|ln
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|LLE_WLOCK
@@ -2578,7 +2581,7 @@ name|dst
 argument_list|,
 name|ln
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|LLE_WLOCK
@@ -7874,7 +7877,7 @@ name|sin6_addr
 argument_list|,
 name|lle
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

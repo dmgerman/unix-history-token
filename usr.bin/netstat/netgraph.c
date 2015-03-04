@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -123,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
 end_include
 
 begin_include
@@ -204,10 +216,8 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|xo_warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Error reading symbols from ng_socket.ko"
 argument_list|)
 expr_stmt|;
@@ -406,25 +416,26 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Netgraph sockets\n"
+literal|"{T:Netgraph sockets}\n"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|Aflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-8.8s "
+literal|"{T:/%-8.8s} "
 argument_list|,
 literal|"PCB"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-5.5s %-6.6s %-6.6s %-14.14s %s\n"
+literal|"{T:/%-5.5s} {T:/%-6.6s} {T:/%-6.6s} "
+literal|"{T:/%-14.14s} {T:/%s}\n"
 argument_list|,
 literal|"Type"
 argument_list|,
@@ -447,9 +458,9 @@ if|if
 condition|(
 name|Aflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%8lx "
+literal|"{:address/%8lx} "
 argument_list|,
 operator|(
 name|u_long
@@ -457,9 +468,10 @@ operator|)
 name|this
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-5.5s %6u %6u "
+literal|"{t:name/%-5.5s} {:receive-bytes-waiting/%6u} "
+literal|"{:send-byte-waiting/%6u} "
 argument_list|,
 name|name
 argument_list|,
@@ -578,9 +590,9 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-14.14s %4d"
+literal|"{t:path/%-14.14s} {:hooks/%4d}"
 argument_list|,
 name|path
 argument_list|,
@@ -591,9 +603,9 @@ argument_list|)
 expr_stmt|;
 name|finish
 label|:
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

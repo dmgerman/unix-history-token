@@ -201,6 +201,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -214,6 +220,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
 end_include
 
 begin_include
@@ -927,7 +939,7 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet6.ip6.stats"
 argument_list|)
@@ -946,9 +958,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%s:\n"
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{T:/%s}:\n"
 argument_list|,
 name|name
 argument_list|)
@@ -961,7 +978,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ip6stat.f || sflag<= 1) \     printf(m, (uintmax_t)ip6stat.f, plural(ip6stat.f))
+value|if (ip6stat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)ip6stat.f, plural(ip6stat.f))
 define|#
 directive|define
 name|p1a
@@ -970,166 +987,189 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ip6stat.f || sflag<= 1) \     printf(m, (uintmax_t)ip6stat.f)
+value|if (ip6stat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)ip6stat.f)
 name|p
 argument_list|(
 name|ip6s_total
 argument_list|,
-literal|"\t%ju total packet%s received\n"
+literal|"\t{:received-packets/%ju} "
+literal|"{N:/total packet%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ip6s_toosmall
 argument_list|,
-literal|"\t%ju with size smaller than minimum\n"
+literal|"\t{:dropped-below-minimum-size/%ju} "
+literal|"{N:/with size smaller than minimum}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ip6s_tooshort
 argument_list|,
-literal|"\t%ju with data size< data length\n"
+literal|"\t{:dropped-short-packets/%ju} "
+literal|"{N:/with data size< data length}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ip6s_badoptions
 argument_list|,
-literal|"\t%ju with bad options\n"
+literal|"\t{:dropped-bad-options/%ju} "
+literal|"{N:/with bad options}\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ip6s_badvers
 argument_list|,
-literal|"\t%ju with incorrect version number\n"
+literal|"\t{:dropped-bad-version/%ju} "
+literal|"{N:/with incorrect version number}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_fragments
 argument_list|,
-literal|"\t%ju fragment%s received\n"
+literal|"\t{:received-fragments/%ju} "
+literal|"{N:/fragment%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_fragdropped
 argument_list|,
-literal|"\t%ju fragment%s dropped (dup or out of space)\n"
+literal|"\t{:dropped-fragment/%ju} "
+literal|"{N:/fragment%s dropped (dup or out of space)}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_fragtimeout
 argument_list|,
-literal|"\t%ju fragment%s dropped after timeout\n"
+literal|"\t{:dropped-fragment-after-timeout/%ju} "
+literal|"{N:/fragment%s dropped after timeout}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_fragoverflow
 argument_list|,
-literal|"\t%ju fragment%s that exceeded limit\n"
+literal|"\t{:dropped-fragments-overflow/%ju} "
+literal|"{N:/fragment%s that exceeded limit}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_reassembled
 argument_list|,
-literal|"\t%ju packet%s reassembled ok\n"
+literal|"\t{:reassembled-packets/%ju} "
+literal|"{N:/packet%s reassembled ok}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_delivered
 argument_list|,
-literal|"\t%ju packet%s for this host\n"
+literal|"\t{:received-local-packets/%ju} "
+literal|"{N:/packet%s for this host}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_forward
 argument_list|,
-literal|"\t%ju packet%s forwarded\n"
+literal|"\t{:forwarded-packets/%ju} "
+literal|"{N:/packet%s forwarded}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_cantforward
 argument_list|,
-literal|"\t%ju packet%s not forwardable\n"
+literal|"\t{:packets-not-forwardable/%ju} "
+literal|"{N:/packet%s not forwardable}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_redirectsent
 argument_list|,
-literal|"\t%ju redirect%s sent\n"
+literal|"\t{:sent-redirects/%ju} "
+literal|"{N:/redirect%s sent}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_localout
 argument_list|,
-literal|"\t%ju packet%s sent from this host\n"
+literal|"\t{:sent-packets/%ju} "
+literal|"{N:/packet%s sent from this host}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_rawout
 argument_list|,
-literal|"\t%ju packet%s sent with fabricated ip header\n"
+literal|"\t{:send-packets-fabricated-header/%ju} "
+literal|"{N:/packet%s sent with fabricated ip header}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_odropped
 argument_list|,
-literal|"\t%ju output packet%s dropped due to no bufs, etc.\n"
+literal|"\t{:discard-no-mbufs/%ju} "
+literal|"{N:/output packet%s dropped due to no bufs, etc.}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_noroute
 argument_list|,
-literal|"\t%ju output packet%s discarded due to no route\n"
+literal|"\t{:discard-no-route/%ju} "
+literal|"{N:/output packet%s discarded due to no route}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_fragmented
 argument_list|,
-literal|"\t%ju output datagram%s fragmented\n"
+literal|"\t{:sent-fragments/%ju} "
+literal|"{N:/output datagram%s fragmented}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_ofragments
 argument_list|,
-literal|"\t%ju fragment%s created\n"
+literal|"\t{:fragments-created/%ju} "
+literal|"{N:/fragment%s created}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_cantfrag
 argument_list|,
-literal|"\t%ju datagram%s that can't be fragmented\n"
+literal|"\t{:discard-cannot-fragment/%ju} "
+literal|"{N:/datagram%s that can't be fragmented}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_badscope
 argument_list|,
-literal|"\t%ju packet%s that violated scope rules\n"
+literal|"\t{:discard-scope-violations/%ju} "
+literal|"{N:/packet%s that violated scope rules}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_notmember
 argument_list|,
-literal|"\t%ju multicast packet%s which we don't join\n"
+literal|"\t{:multicast-no-join-packets/%ju} "
+literal|"{N:/multicast packet%s which we don't join}\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1166,9 +1206,14 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\tInput histogram:\n"
+literal|"\t{T:Input histogram}:\n"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"input-histogram"
 argument_list|)
 expr_stmt|;
 name|first
@@ -1176,9 +1221,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"\t\t%s: %ju\n"
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t\t{k:name/%s}: {:count/%ju}\n"
 argument_list|,
 name|ip6nh
 index|[
@@ -1196,15 +1246,35 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
-name|printf
+name|xo_close_instance
 argument_list|(
-literal|"\tMbuf statistics:\n"
+literal|"input-histogram"
 argument_list|)
 expr_stmt|;
-name|printf
+block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
 argument_list|(
-literal|"\t\t%ju one mbuf\n"
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"mbuf-statistics"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t{T:Mbuf statistics}:\n"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t\t{:one-mbuf/%ju} {N:/one mbuf}\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1255,9 +1325,14 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t\ttwo or more mbuf:\n"
+literal|"\t\t{N:two or more mbuf}:\n"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"mbuf-data"
 argument_list|)
 expr_stmt|;
 name|first
@@ -1265,9 +1340,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"\t\t\t%s= %ju\n"
+literal|"mbuf-data"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t\t\t{k:name/%s}= {:count/%ju}\n"
 argument_list|,
 name|if_indextoname
 argument_list|(
@@ -1287,11 +1367,26 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-name|printf
+name|xo_close_instance
 argument_list|(
-literal|"\t\t%ju one ext mbuf\n"
+literal|"mbuf-data"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"mbuf-data"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t\t{:one-extra-mbuf/%ju} {N:one ext mbuf}\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1301,9 +1396,10 @@ operator|.
 name|ip6s_mext1
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t\t%ju two or more ext mbuf\n"
+literal|"\t\t{:two-or-more-extra-mbufs/%ju} "
+literal|"{N:/two or more ext mbuf}\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1313,25 +1409,33 @@ operator|.
 name|ip6s_mext2m
 argument_list|)
 expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"mbuf-statistics"
+argument_list|)
+expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_exthdrtoolong
 argument_list|,
-literal|"\t%ju packet%s whose headers are not contiguous\n"
+literal|"\t{:dropped-header-too-long/%ju} "
+literal|"{N:/packet%s whose headers are not contiguous}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_nogif
 argument_list|,
-literal|"\t%ju tunneling packet%s that can't find gif\n"
+literal|"\t{:discard-tunnel-no-gif/%ju} "
+literal|"{N:/tunneling packet%s that can't find gif}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_toomanyhdr
 argument_list|,
-literal|"\t%ju packet%s discarded because of too many headers\n"
+literal|"\t{:dropped-too-many-headers/%ju} "
+literal|"{N:/packet%s discarded because of too many headers}\n"
 argument_list|)
 expr_stmt|;
 comment|/* for debugging source address selection */
@@ -1345,12 +1449,18 @@ name|i
 parameter_list|)
 value|do {\ 		switch(i) {
 comment|/* XXX hardcoding in each case */
-value|\ 		case 1:\ 			p(s, "\t\t%ju interface-local%s\n");\ 			break;\ 		case 2:\ 			p(s,"\t\t%ju link-local%s\n");\ 			break;\ 		case 5:\ 			p(s,"\t\t%ju site-local%s\n");\ 			break;\ 		case 14:\ 			p(s,"\t\t%ju global%s\n");\ 			break;\ 		default:\ 			printf("\t\t%ju addresses scope=%x\n",\ 			    (uintmax_t)ip6stat.s, i);\ 		}\ 	} while (0);
+value|\ 		case 1:\ 			p(s, "\t\t{ke:name/interface-locals}{:count/%ju} " \ 			  "{N:/interface-local%s}\n");	\ 			break;\ 		case 2:\ 			p(s,"\t\t{ke:name/link-locals}{:count/%ju} " \ 			"{N:/link-local%s}\n"); \ 			break;\ 		case 5:\ 			p(s,"\t\t{ke:name/site-locals}{:count/%ju} " \ 			  "{N:/site-local%s}\n");\ 			break;\ 		case 14:\ 			p(s,"\t\t{ke:name/globals}{:count/%ju} " \ 			  "{N:/global%s}\n");\ 			break;\ 		default:\ 			xo_emit("\t\t{qke:name/%x}{:count/%ju} " \ 				"addresses scope=%x\n",\ 				i, (uintmax_t)ip6stat.s, i);	   \ 		}\ 	} while (0);
+name|xo_open_container
+argument_list|(
+literal|"source-address-selection"
+argument_list|)
+expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_sources_none
 argument_list|,
-literal|"\t%ju failure%s of source address selection\n"
+literal|"\t{:address-selection-failures/%ju} "
+literal|"{N:/failure%s of source address selection}\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1386,9 +1496,15 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_open_list
 argument_list|(
-literal|"\tsource addresses on an outgoing I/F\n"
+literal|"outgoing-interface"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\tsource addresses on an outgoing "
+literal|"I/F\n"
 argument_list|)
 expr_stmt|;
 name|first
@@ -1396,6 +1512,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|xo_open_instance
+argument_list|(
+literal|"outgoing-interface"
+argument_list|)
+expr_stmt|;
 name|PRINT_SCOPESTAT
 argument_list|(
 name|ip6s_sources_sameif
@@ -1406,8 +1527,23 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"outgoing-interface"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"outgoing-interface"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|first
@@ -1441,9 +1577,15 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_open_list
 argument_list|(
-literal|"\tsource addresses on a non-outgoing I/F\n"
+literal|"non-outgoing-interface"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\tsource addresses on a non-outgoing "
+literal|"I/F\n"
 argument_list|)
 expr_stmt|;
 name|first
@@ -1451,6 +1593,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|xo_open_instance
+argument_list|(
+literal|"non-outgoing-interface"
+argument_list|)
+expr_stmt|;
 name|PRINT_SCOPESTAT
 argument_list|(
 name|ip6s_sources_otherif
@@ -1461,8 +1608,23 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"non-outgoing-interface"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"non-outgoing-interface"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|first
@@ -1496,7 +1658,12 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_open_list
+argument_list|(
+literal|"same-source"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\tsource addresses of same scope\n"
 argument_list|)
@@ -1506,6 +1673,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|xo_open_instance
+argument_list|(
+literal|"same-source"
+argument_list|)
+expr_stmt|;
 name|PRINT_SCOPESTAT
 argument_list|(
 name|ip6s_sources_samescope
@@ -1516,8 +1688,23 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"same-source"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"same-source"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|first
@@ -1551,9 +1738,15 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_open_list
 argument_list|(
-literal|"\tsource addresses of a different scope\n"
+literal|"different-scope"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\tsource addresses of a different "
+literal|"scope\n"
 argument_list|)
 expr_stmt|;
 name|first
@@ -1561,6 +1754,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|xo_open_instance
+argument_list|(
+literal|"different-scope"
+argument_list|)
+expr_stmt|;
 name|PRINT_SCOPESTAT
 argument_list|(
 name|ip6s_sources_otherscope
@@ -1571,8 +1769,23 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"different-scope"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"different-scope"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|first
@@ -1606,7 +1819,12 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_open_list
+argument_list|(
+literal|"deprecated-source"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\tdeprecated source addresses\n"
 argument_list|)
@@ -1616,6 +1834,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|xo_open_instance
+argument_list|(
+literal|"deprecated-source"
+argument_list|)
+expr_stmt|;
 name|PRINT_SCOPESTAT
 argument_list|(
 name|ip6s_sources_deprecated
@@ -1626,15 +1849,29 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-name|printf
+name|xo_close_instance
 argument_list|(
-literal|"\tSource addresses selection rule applied:\n"
+literal|"deprecated-source"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"deprecated-source"
 argument_list|)
 expr_stmt|;
 for|for
 control|(
+name|first
+operator|=
+literal|1
+operator|,
 name|i
 operator|=
 literal|0
@@ -1656,9 +1893,41 @@ index|[
 name|i
 index|]
 condition|)
-name|printf
+block|{
+if|if
+condition|(
+name|first
+condition|)
+block|{
+name|xo_open_list
 argument_list|(
-literal|"\t\t%ju %s\n"
+literal|"rules-applied"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t{T:Source addresses selection "
+literal|"rule applied}:\n"
+argument_list|)
+expr_stmt|;
+name|first
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|xo_open_instance
+argument_list|(
+literal|"rules-applied"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t\t{ke:name/%s}{:count/%ju} {d:name/%s}\n"
+argument_list|,
+name|srcrule_str
+index|[
+name|i
+index|]
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1676,13 +1945,39 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"rules-applied"
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"rules-applied"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"source-address-selection"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|p
 undef|#
 directive|undef
 name|p1a
+name|xo_close_container
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1714,16 +2009,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ifr.ifr_ifru.ifru_stat.f || sflag<= 1) \     printf(m, (uintmax_t)ifr.ifr_ifru.ifru_stat.f, plural(ifr.ifr_ifru.ifru_stat.f))
-define|#
-directive|define
-name|p_5
-parameter_list|(
-name|f
-parameter_list|,
-name|m
-parameter_list|)
-value|if (ifr.ifr_ifru.ifru_stat.f || sflag<= 1) \     printf(m, (uintmax_t)ip6stat.f)
+value|if (ifr.ifr_ifru.ifru_stat.f || sflag<= 1)	\ 	xo_emit(m, (uintmax_t)ifr.ifr_ifru.ifru_stat.f,		\ 	    plural(ifr.ifr_ifru.ifru_stat.f))
 if|if
 condition|(
 operator|(
@@ -1742,7 +2028,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|xo_warn
 argument_list|(
 literal|"Warning: socket(AF_INET6)"
 argument_list|)
@@ -1783,7 +2069,7 @@ name|errno
 operator|!=
 name|EPFNOSUPPORT
 condition|)
-name|perror
+name|xo_warn
 argument_list|(
 literal|"Warning: ioctl(SIOCGIFSTAT_IN6)"
 argument_list|)
@@ -1792,9 +2078,23 @@ goto|goto
 name|end
 goto|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"ip6 on %s:\n"
+literal|"{T:/ip6 on %s}:\n"
+argument_list|,
+name|ifr
+operator|.
+name|ifr_name
+argument_list|)
+expr_stmt|;
+name|xo_open_instance
+argument_list|(
+literal|"ip6-interface-statistics"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{ke:name/%s}"
 argument_list|,
 name|ifr
 operator|.
@@ -1805,144 +2105,169 @@ name|p
 argument_list|(
 name|ifs6_in_receive
 argument_list|,
-literal|"\t%ju total input datagram%s\n"
+literal|"\t{:received-packets/%ju} "
+literal|"{N:/total input datagram%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_hdrerr
 argument_list|,
-literal|"\t%ju datagram%s with invalid header received\n"
+literal|"\t{:dropped-invalid-header/%ju} "
+literal|"{N:/datagram%s with invalid header received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_toobig
 argument_list|,
-literal|"\t%ju datagram%s exceeded MTU received\n"
+literal|"\t{:dropped-mtu-exceeded/%ju} "
+literal|"{N:/datagram%s exceeded MTU received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_noroute
 argument_list|,
-literal|"\t%ju datagram%s with no route received\n"
+literal|"\t{:dropped-no-route/%ju} "
+literal|"{N:/datagram%s with no route received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_addrerr
 argument_list|,
-literal|"\t%ju datagram%s with invalid dst received\n"
+literal|"\t{:dropped-invalid-destination/%ju} "
+literal|"{N:/datagram%s with invalid dst received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_protounknown
 argument_list|,
-literal|"\t%ju datagram%s with unknown proto received\n"
+literal|"\t{:dropped-unknown-protocol/%ju} "
+literal|"{N:/datagram%s with unknown proto received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_truncated
 argument_list|,
-literal|"\t%ju truncated datagram%s received\n"
+literal|"\t{:dropped-truncated/%ju} "
+literal|"{N:/truncated datagram%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_discard
 argument_list|,
-literal|"\t%ju input datagram%s discarded\n"
+literal|"\t{:dropped-discarded/%ju} "
+literal|"{N:/input datagram%s discarded}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_deliver
 argument_list|,
-literal|"\t%ju datagram%s delivered to an upper layer protocol\n"
+literal|"\t{:received-valid-packets/%ju} "
+literal|"{N:/datagram%s delivered to an upper layer protocol}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_forward
 argument_list|,
-literal|"\t%ju datagram%s forwarded to this interface\n"
+literal|"\t{:sent-forwarded/%ju} "
+literal|"{N:/datagram%s forwarded to this interface}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_request
 argument_list|,
-literal|"\t%ju datagram%s sent from an upper layer protocol\n"
+literal|"\t{:sent-packets/%ju} "
+literal|"{N:/datagram%s sent from an upper layer protocol}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_discard
 argument_list|,
-literal|"\t%ju total discarded output datagram%s\n"
+literal|"\t{:discard-packets/%ju} "
+literal|"{N:/total discarded output datagram%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_fragok
 argument_list|,
-literal|"\t%ju output datagram%s fragmented\n"
+literal|"\t{:discard-fragments/%ju} "
+literal|"{N:/output datagram%s fragmented}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_fragfail
 argument_list|,
-literal|"\t%ju output datagram%s failed on fragment\n"
+literal|"\t{:fragments-failed/%ju} "
+literal|"{N:/output datagram%s failed on fragment}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_fragcreat
 argument_list|,
-literal|"\t%ju output datagram%s succeeded on fragment\n"
+literal|"\t{:fragments-created/%ju} "
+literal|"{N:/output datagram%s succeeded on fragment}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_reass_reqd
 argument_list|,
-literal|"\t%ju incoming datagram%s fragmented\n"
+literal|"\t{:reassembly-required/%ju} "
+literal|"{N:/incoming datagram%s fragmented}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_reass_ok
 argument_list|,
-literal|"\t%ju datagram%s reassembled\n"
+literal|"\t{:reassembled-packets/%ju} "
+literal|"{N:/datagram%s reassembled}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_reass_fail
 argument_list|,
-literal|"\t%ju datagram%s failed on reassembly\n"
+literal|"\t{:reassembly-failed/%ju} "
+literal|"{N:/datagram%s failed on reassembly}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_mcast
 argument_list|,
-literal|"\t%ju multicast datagram%s received\n"
+literal|"\t{:received-multicast/%ju} "
+literal|"{N:/multicast datagram%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_mcast
 argument_list|,
-literal|"\t%ju multicast datagram%s sent\n"
+literal|"\t{:sent-multicast/%ju} "
+literal|"{N:/multicast datagram%s sent}\n"
 argument_list|)
 expr_stmt|;
 name|end
 label|:
+name|xo_close_instance
+argument_list|(
+literal|"ip6-interface-statistics"
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|s
@@ -1951,9 +2276,6 @@ expr_stmt|;
 undef|#
 directive|undef
 name|p
-undef|#
-directive|undef
-name|p_5
 block|}
 end_function
 
@@ -2589,7 +2911,7 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet6.icmp6.stats"
 argument_list|)
@@ -2608,10 +2930,15 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s:\n"
+literal|"{T:/%s}:\n"
 argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
@@ -2623,7 +2950,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (icmp6stat.f || sflag<= 1) \     printf(m, (uintmax_t)icmp6stat.f, plural(icmp6stat.f))
+value|if (icmp6stat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)icmp6stat.f, plural(icmp6stat.f))
 define|#
 directive|define
 name|p_5
@@ -2632,26 +2959,29 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (icmp6stat.f || sflag<= 1) \     printf(m, (uintmax_t)icmp6stat.f)
+value|if (icmp6stat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)icmp6stat.f)
 name|p
 argument_list|(
 name|icp6s_error
 argument_list|,
-literal|"\t%ju call%s to icmp6_error\n"
+literal|"\t{:icmp6-calls/%ju} "
+literal|"{N:/call%s to icmp6_error}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_canterror
 argument_list|,
-literal|"\t%ju error%s not generated in response to an icmp6 message\n"
+literal|"\t{:errors-not-generated-from-message/%ju} "
+literal|"{N:/error%s not generated in response to an icmp6 message}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_toofreq
 argument_list|,
-literal|"\t%ju error%s not generated because of rate limitation\n"
+literal|"\t{:errors-discarded-by-rate-limitation/%ju} "
+literal|"{N:/error%s not generated because of rate limitation}\n"
 argument_list|)
 expr_stmt|;
 define|#
@@ -2692,9 +3022,14 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_open_list
 argument_list|(
-literal|"\tOutput histogram:\n"
+literal|"output-histogram"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t{T:Output histogram}:\n"
 argument_list|)
 expr_stmt|;
 name|first
@@ -2702,9 +3037,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"\t\t%s: %ju\n"
+literal|"output-histogram"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t\t{k:name/%s}: {:count/%ju}\n"
 argument_list|,
 name|icmp6names
 index|[
@@ -2722,7 +3062,22 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"output-histogram"
+argument_list|)
+expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"output-histogram"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|NELEM
@@ -2730,28 +3085,32 @@ name|p
 argument_list|(
 name|icp6s_badcode
 argument_list|,
-literal|"\t%ju message%s with bad code fields\n"
+literal|"\t{:dropped-bad-code/%ju} "
+literal|"{N:/message%s with bad code fields}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_tooshort
 argument_list|,
-literal|"\t%ju message%s< minimum length\n"
+literal|"\t{:dropped-too-short/%ju} "
+literal|"{N:/message%s< minimum length}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_checksum
 argument_list|,
-literal|"\t%ju bad checksum%s\n"
+literal|"\t{:dropped-bad-checksum/%ju} "
+literal|"{N:/bad checksum%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badlen
 argument_list|,
-literal|"\t%ju message%s with bad length\n"
+literal|"\t{:dropped-bad-length/%ju} "
+literal|"{N:/message%s with bad length}\n"
 argument_list|)
 expr_stmt|;
 define|#
@@ -2792,9 +3151,14 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_open_list
 argument_list|(
-literal|"\tInput histogram:\n"
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t{T:Input histogram}:\n"
 argument_list|)
 expr_stmt|;
 name|first
@@ -2802,9 +3166,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"\t\t%s: %ju\n"
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t\t{k:name/%s}: {:count/%ju}\n"
 argument_list|,
 name|icmp6names
 index|[
@@ -2822,167 +3191,212 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|NELEM
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\tHistogram of error messages to be generated:\n"
+literal|"\t{T:Histogram of error messages to be generated}:\n"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"errors"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_odst_unreach_noroute
 argument_list|,
-literal|"\t\t%ju no route\n"
+literal|"\t\t{:no-route/%ju} "
+literal|"{N:/no route}\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_odst_unreach_admin
 argument_list|,
-literal|"\t\t%ju administratively prohibited\n"
+literal|"\t\t{:admin-prohibited/%ju} "
+literal|"{N:/administratively prohibited}\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_odst_unreach_beyondscope
 argument_list|,
-literal|"\t\t%ju beyond scope\n"
+literal|"\t\t{:beyond-scope/%ju} "
+literal|"{N:/beyond scope}\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_odst_unreach_addr
 argument_list|,
-literal|"\t\t%ju address unreachable\n"
+literal|"\t\t{:address-unreachable/%ju} "
+literal|"{N:/address unreachable}\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_odst_unreach_noport
 argument_list|,
-literal|"\t\t%ju port unreachable\n"
+literal|"\t\t{:port-unreachable/%ju} "
+literal|"{N:/port unreachable}\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_opacket_too_big
 argument_list|,
-literal|"\t\t%ju packet too big\n"
+literal|"\t\t{:packet-too-big/%ju} "
+literal|"{N:/packet too big}\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_otime_exceed_transit
 argument_list|,
-literal|"\t\t%ju time exceed transit\n"
+literal|"\t\t{:time-exceed-transmit/%ju} "
+literal|"{N:/time exceed transit}\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_otime_exceed_reassembly
 argument_list|,
-literal|"\t\t%ju time exceed reassembly\n"
+literal|"\t\t{:time-exceed-reassembly/%ju} "
+literal|"{N:/time exceed reassembly}\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_oparamprob_header
 argument_list|,
-literal|"\t\t%ju erroneous header field\n"
+literal|"\t\t{:bad-header/%ju} "
+literal|"{N:/erroneous header field}\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_oparamprob_nextheader
 argument_list|,
-literal|"\t\t%ju unrecognized next header\n"
+literal|"\t\t{:bad-next-header/%ju} "
+literal|"{N:/unrecognized next header}\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_oparamprob_option
 argument_list|,
-literal|"\t\t%ju unrecognized option\n"
+literal|"\t\t{:bad-option/%ju} "
+literal|"{N:/unrecognized option}\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_oredirect
 argument_list|,
-literal|"\t\t%ju redirect\n"
+literal|"\t\t{:redirects/%ju} "
+literal|"{N:/redirect}\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_ounknown
 argument_list|,
-literal|"\t\t%ju unknown\n"
+literal|"\t\t{:unknown/%ju} {N:unknown}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_reflect
 argument_list|,
-literal|"\t%ju message response%s generated\n"
+literal|"\t{:reflect/%ju} "
+literal|"{N:/message response%s generated}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_nd_toomanyopt
 argument_list|,
-literal|"\t%ju message%s with too many ND options\n"
+literal|"\t{:too-many-nd-options/%ju} "
+literal|"{N:/message%s with too many ND options}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_nd_badopt
 argument_list|,
-literal|"\t%ju message%s with bad ND options\n"
+literal|"\t{:bad-nd-options/%ju} "
+literal|"{N:/message%s with bad ND options}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badns
 argument_list|,
-literal|"\t%ju bad neighbor solicitation message%s\n"
+literal|"\t{:bad-neighbor-solicitation/%ju} "
+literal|"{N:/bad neighbor solicitation message%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badna
 argument_list|,
-literal|"\t%ju bad neighbor advertisement message%s\n"
+literal|"\t{:bad-neighbor-advertisement/%ju} "
+literal|"{N:/bad neighbor advertisement message%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badrs
 argument_list|,
-literal|"\t%ju bad router solicitation message%s\n"
+literal|"\t{:bad-router-solicitation/%ju} "
+literal|"{N:/bad router solicitation message%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badra
 argument_list|,
-literal|"\t%ju bad router advertisement message%s\n"
+literal|"\t{:bad-router-advertisement/%ju} "
+literal|"{N:/bad router advertisement message%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badredirect
 argument_list|,
-literal|"\t%ju bad redirect message%s\n"
+literal|"\t{:bad-redirect/%ju} "
+literal|"{N:/bad redirect message%s}\n"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"errors"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_pmtuchg
 argument_list|,
-literal|"\t%ju path MTU change%s\n"
+literal|"\t{:path-mtu-changes/%ju} {N:/path MTU change%s}\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -2991,6 +3405,11 @@ name|p
 undef|#
 directive|undef
 name|p_5
+name|xo_close_container
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3022,7 +3441,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ifr.ifr_ifru.ifru_icmp6stat.f || sflag<= 1) \     printf(m, (uintmax_t)ifr.ifr_ifru.ifru_icmp6stat.f, plural(ifr.ifr_ifru.ifru_icmp6stat.f))
+value|if (ifr.ifr_ifru.ifru_icmp6stat.f || sflag<= 1)	\ 	xo_emit(m, (uintmax_t)ifr.ifr_ifru.ifru_icmp6stat.f,		\ 	    plural(ifr.ifr_ifru.ifru_icmp6stat.f))
 define|#
 directive|define
 name|p2
@@ -3031,7 +3450,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ifr.ifr_ifru.ifru_icmp6stat.f || sflag<= 1) \     printf(m, (uintmax_t)ifr.ifr_ifru.ifru_icmp6stat.f, pluralies(ifr.ifr_ifru.ifru_icmp6stat.f))
+value|if (ifr.ifr_ifru.ifru_icmp6stat.f || sflag<= 1)	\ 	xo_emit(m, (uintmax_t)ifr.ifr_ifru.ifru_icmp6stat.f,		\ 	    pluralies(ifr.ifr_ifru.ifru_icmp6stat.f))
 if|if
 condition|(
 operator|(
@@ -3050,7 +3469,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|xo_warn
 argument_list|(
 literal|"Warning: socket(AF_INET6)"
 argument_list|)
@@ -3091,7 +3510,7 @@ name|errno
 operator|!=
 name|EPFNOSUPPORT
 condition|)
-name|perror
+name|xo_warn
 argument_list|(
 literal|"Warning: ioctl(SIOCGIFSTAT_ICMP6)"
 argument_list|)
@@ -3100,9 +3519,23 @@ goto|goto
 name|end
 goto|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"icmp6 on %s:\n"
+literal|"{T:/icmp6 on %s}:\n"
+argument_list|,
+name|ifr
+operator|.
+name|ifr_name
+argument_list|)
+expr_stmt|;
+name|xo_open_instance
+argument_list|(
+literal|"icmp6-interface-statistics"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{ke:name/%s}"
 argument_list|,
 name|ifr
 operator|.
@@ -3113,242 +3546,281 @@ name|p
 argument_list|(
 name|ifs6_in_msg
 argument_list|,
-literal|"\t%ju total input message%s\n"
+literal|"\t{:received-packets/%ju} "
+literal|"{N:/total input message%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_error
 argument_list|,
-literal|"\t%ju total input error message%s\n"
+literal|"\t{:received-errors/%ju} "
+literal|"{N:/total input error message%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_dstunreach
 argument_list|,
-literal|"\t%ju input destination unreachable error%s\n"
+literal|"\t{:received-destination-unreachable/%ju} "
+literal|"{N:/input destination unreachable error%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_adminprohib
 argument_list|,
-literal|"\t%ju input administratively prohibited error%s\n"
+literal|"\t{:received-admin-prohibited/%ju} "
+literal|"{N:/input administratively prohibited error%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_timeexceed
 argument_list|,
-literal|"\t%ju input time exceeded error%s\n"
+literal|"\t{:received-time-exceeded/%ju} "
+literal|"{N:/input time exceeded error%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_paramprob
 argument_list|,
-literal|"\t%ju input parameter problem error%s\n"
+literal|"\t{:received-bad-parameter/%ju} "
+literal|"{N:/input parameter problem error%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_pkttoobig
 argument_list|,
-literal|"\t%ju input packet too big error%s\n"
+literal|"\t{:received-packet-too-big/%ju} "
+literal|"{N:/input packet too big error%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_echo
 argument_list|,
-literal|"\t%ju input echo request%s\n"
+literal|"\t{:received-echo-requests/%ju} "
+literal|"{N:/input echo request%s}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|ifs6_in_echoreply
 argument_list|,
-literal|"\t%ju input echo repl%s\n"
+literal|"\t{:received-echo-replies/%ju} "
+literal|"{N:/input echo repl%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_routersolicit
 argument_list|,
-literal|"\t%ju input router solicitation%s\n"
+literal|"\t{:received-router-solicitation/%ju} "
+literal|"{N:/input router solicitation%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_routeradvert
 argument_list|,
-literal|"\t%ju input router advertisement%s\n"
+literal|"\t{:received-router-advertisement/%ju} "
+literal|"{N:/input router advertisement%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_neighborsolicit
 argument_list|,
-literal|"\t%ju input neighbor solicitation%s\n"
+literal|"\t{:received-neighbor-solicitation/%ju} "
+literal|"{N:/input neighbor solicitation%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_neighboradvert
 argument_list|,
-literal|"\t%ju input neighbor advertisement%s\n"
+literal|"\t{:received-neighbor-advertisement/%ju} "
+literal|"{N:/input neighbor advertisement%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_redirect
 argument_list|,
-literal|"\t%ju input redirect%s\n"
+literal|"\t{received-redirects/%ju} "
+literal|"{N:/input redirect%s}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|ifs6_in_mldquery
 argument_list|,
-literal|"\t%ju input MLD quer%s\n"
+literal|"\t{:received-mld-queries/%ju} "
+literal|"{N:/input MLD quer%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_mldreport
 argument_list|,
-literal|"\t%ju input MLD report%s\n"
+literal|"\t{:received-mld-reports/%ju} "
+literal|"{N:/input MLD report%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_mlddone
 argument_list|,
-literal|"\t%ju input MLD done%s\n"
+literal|"\t{:received-mld-done/%ju} "
+literal|"{N:/input MLD done%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_msg
 argument_list|,
-literal|"\t%ju total output message%s\n"
+literal|"\t{:sent-packets/%ju} "
+literal|"{N:/total output message%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_error
 argument_list|,
-literal|"\t%ju total output error message%s\n"
+literal|"\t{:sent-errors/%ju} "
+literal|"{N:/total output error message%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_dstunreach
 argument_list|,
-literal|"\t%ju output destination unreachable error%s\n"
+literal|"\t{:sent-destination-unreachable/%ju} "
+literal|"{N:/output destination unreachable error%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_adminprohib
 argument_list|,
-literal|"\t%ju output administratively prohibited error%s\n"
+literal|"\t{:sent-admin-prohibited/%ju} "
+literal|"{N:/output administratively prohibited error%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_timeexceed
 argument_list|,
-literal|"\t%ju output time exceeded error%s\n"
+literal|"\t{:sent-time-exceeded/%ju} "
+literal|"{N:/output time exceeded error%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_paramprob
 argument_list|,
-literal|"\t%ju output parameter problem error%s\n"
+literal|"\t{:sent-bad-parameter/%ju} "
+literal|"{N:/output parameter problem error%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_pkttoobig
 argument_list|,
-literal|"\t%ju output packet too big error%s\n"
+literal|"\t{:sent-packet-too-big/%ju} "
+literal|"{N:/output packet too big error%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_echo
 argument_list|,
-literal|"\t%ju output echo request%s\n"
+literal|"\t{:sent-echo-requests/%ju} "
+literal|"{N:/output echo request%s}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|ifs6_out_echoreply
 argument_list|,
-literal|"\t%ju output echo repl%s\n"
+literal|"\t{:sent-echo-replies/%ju} "
+literal|"{N:/output echo repl%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_routersolicit
 argument_list|,
-literal|"\t%ju output router solicitation%s\n"
+literal|"\t{:sent-router-solicitation/%ju} "
+literal|"{N:/output router solicitation%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_routeradvert
 argument_list|,
-literal|"\t%ju output router advertisement%s\n"
+literal|"\t{:sent-router-advertisement/%ju} "
+literal|"{N:/output router advertisement%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_neighborsolicit
 argument_list|,
-literal|"\t%ju output neighbor solicitation%s\n"
+literal|"\t{:sent-neighbor-solicitation/%ju} "
+literal|"{N:/output neighbor solicitation%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_neighboradvert
 argument_list|,
-literal|"\t%ju output neighbor advertisement%s\n"
+literal|"\t{:sent-neighbor-advertisement/%ju} "
+literal|"{N:/output neighbor advertisement%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_redirect
 argument_list|,
-literal|"\t%ju output redirect%s\n"
+literal|"\t{:sent-redirects/%ju} "
+literal|"{N:/output redirect%s}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|ifs6_out_mldquery
 argument_list|,
-literal|"\t%ju output MLD quer%s\n"
+literal|"\t{:sent-mld-queries/%ju} "
+literal|"{N:/output MLD quer%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_mldreport
 argument_list|,
-literal|"\t%ju output MLD report%s\n"
+literal|"\t{:sent-mld-reports/%ju} "
+literal|"{N:/output MLD report%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_mlddone
 argument_list|,
-literal|"\t%ju output MLD done%s\n"
+literal|"\t{:sent-mld-dones/%ju} "
+literal|"{N:/output MLD done%s}\n"
 argument_list|)
 expr_stmt|;
 name|end
 label|:
+name|xo_close_instance
+argument_list|(
+literal|"icmp6-interface-statistics"
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|s
@@ -3451,7 +3923,7 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet6.pim.stats"
 argument_list|)
@@ -3479,10 +3951,15 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s:\n"
+literal|"{T:/%s}:\n"
 argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
@@ -3494,59 +3971,71 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pim6stat.f || sflag<= 1) \     printf(m, (uintmax_t)pim6stat.f, plural(pim6stat.f))
+value|if (pim6stat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)pim6stat.f, plural(pim6stat.f))
 name|p
 argument_list|(
 name|pim6s_rcv_total
 argument_list|,
-literal|"\t%ju message%s received\n"
+literal|"\t{:received-packets/%ju} "
+literal|"{N:/message%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pim6s_rcv_tooshort
 argument_list|,
-literal|"\t%ju message%s received with too few bytes\n"
+literal|"\t{:dropped-too-short/%ju} "
+literal|"{N:/message%s received with too few bytes}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pim6s_rcv_badsum
 argument_list|,
-literal|"\t%ju message%s received with bad checksum\n"
+literal|"\t{:dropped-bad-checksum/%ju} "
+literal|"{N:/message%s received with bad checksum}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pim6s_rcv_badversion
 argument_list|,
-literal|"\t%ju message%s received with bad version\n"
+literal|"\t{:dropped-bad-version/%ju} "
+literal|"{N:/message%s received with bad version}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pim6s_rcv_registers
 argument_list|,
-literal|"\t%ju register%s received\n"
+literal|"\t{:received-registers/%ju} "
+literal|"{N:/register%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pim6s_rcv_badregisters
 argument_list|,
-literal|"\t%ju bad register%s received\n"
+literal|"\t{:received-bad-registers/%ju} "
+literal|"{N:/bad register%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pim6s_snd_registers
 argument_list|,
-literal|"\t%ju register%s sent\n"
+literal|"\t{:sent-registers/%ju} "
+literal|"{N:/register%s sent}\n"
 argument_list|)
 expr_stmt|;
 undef|#
 directive|undef
 name|p
+name|xo_close_container
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3648,7 +4137,7 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet6.ip6.rip6stats"
 argument_list|)
@@ -3667,10 +4156,15 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s:\n"
+literal|"{T:/%s}:\n"
 argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
@@ -3682,47 +4176,53 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (rip6stat.f || sflag<= 1) \     printf(m, (uintmax_t)rip6stat.f, plural(rip6stat.f))
+value|if (rip6stat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)rip6stat.f, plural(rip6stat.f))
 name|p
 argument_list|(
 name|rip6s_ipackets
 argument_list|,
-literal|"\t%ju message%s received\n"
+literal|"\t{:received-packets/%ju} "
+literal|"{N:/message%s received}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rip6s_isum
 argument_list|,
-literal|"\t%ju checksum calculation%s on inbound\n"
+literal|"\t{:input-checksum-computation/%ju} "
+literal|"{N:/checksum calculation%s on inbound}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rip6s_badsum
 argument_list|,
-literal|"\t%ju message%s with bad checksum\n"
+literal|"\t{:received-bad-checksum/%ju} "
+literal|"{N:/message%s with bad checksum}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rip6s_nosock
 argument_list|,
-literal|"\t%ju message%s dropped due to no socket\n"
+literal|"\t{:dropped-no-socket/%ju} "
+literal|"{N:/message%s dropped due to no socket}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rip6s_nosockmcast
 argument_list|,
-literal|"\t%ju multicast message%s dropped due to no socket\n"
+literal|"\t{:dropped-multicast-no-socket/%ju} "
+literal|"{N:/multicast message%s dropped due to no socket}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rip6s_fullsock
 argument_list|,
-literal|"\t%ju message%s dropped due to full socket buffers\n"
+literal|"\t{:dropped-full-socket-buffer/%ju} "
+literal|"{N:/message%s dropped due to full socket buffers}\n"
 argument_list|)
 expr_stmt|;
 name|delivered
@@ -3755,9 +4255,9 @@ name|sflag
 operator|<=
 literal|1
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t%ju delivered\n"
+literal|"\t{:delivered-packets/%ju} {N:/delivered}\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -3769,12 +4269,18 @@ name|p
 argument_list|(
 name|rip6s_opackets
 argument_list|,
-literal|"\t%ju datagram%s output\n"
+literal|"\t{:sent-packets/%ju} "
+literal|"{N:/datagram%s output}\n"
 argument_list|)
 expr_stmt|;
 undef|#
 directive|undef
 name|p
+name|xo_close_container
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3801,6 +4307,11 @@ begin_function
 name|void
 name|inet6print
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|container
+parameter_list|,
 name|struct
 name|in6_addr
 modifier|*
@@ -3837,6 +4348,15 @@ decl_stmt|;
 name|int
 name|width
 decl_stmt|;
+if|if
+condition|(
+name|container
+condition|)
+name|xo_open_container
+argument_list|(
+name|container
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|line
@@ -3940,15 +4460,59 @@ literal|18
 else|:
 literal|22
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-*.*s "
+literal|"{d:target/%-*.*s} "
 argument_list|,
 name|width
 argument_list|,
 name|width
 argument_list|,
 name|line
+argument_list|)
+expr_stmt|;
+name|int
+name|alen
+init|=
+name|cp
+operator|-
+name|line
+operator|-
+literal|1
+decl_stmt|,
+name|plen
+init|=
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+operator|-
+literal|1
+decl_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:address/%*.*s}{e:port/%*.*s}"
+argument_list|,
+name|alen
+argument_list|,
+name|alen
+argument_list|,
+name|line
+argument_list|,
+name|plen
+argument_list|,
+name|plen
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|container
+condition|)
+name|xo_close_container
+argument_list|(
+name|container
 argument_list|)
 expr_stmt|;
 block|}

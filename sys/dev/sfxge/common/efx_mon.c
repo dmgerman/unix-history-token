@@ -675,7 +675,7 @@ name|EFSYS_OPT_NAMES
 end_if
 
 begin_comment
-comment|/* START MKCONFIG GENERATED MonitorStatNamesBlock 08518fd1fb4e2612 */
+comment|/* START MKCONFIG GENERATED MonitorStatNamesBlock 89ff37f1d74ad8b3 */
 end_comment
 
 begin_decl_stmt
@@ -720,6 +720,34 @@ block|,
 literal|"1_8v"
 block|,
 literal|"3_3v"
+block|,
+literal|"1_2va"
+block|,
+literal|"vref"
+block|,
+literal|"vaoe"
+block|,
+literal|"aoe_temperature"
+block|,
+literal|"psu_aoe_temperature"
+block|,
+literal|"psu_temperature"
+block|,
+literal|"fan0"
+block|,
+literal|"fan1"
+block|,
+literal|"fan2"
+block|,
+literal|"fan3"
+block|,
+literal|"fan4"
+block|,
+literal|"vaoe_in"
+block|,
+literal|"iaoe"
+block|,
+literal|"iaoe_in"
 block|, }
 decl_stmt|;
 end_decl_stmt

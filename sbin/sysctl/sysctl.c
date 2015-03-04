@@ -233,6 +233,8 @@ name|aflag
 decl_stmt|,
 name|bflag
 decl_stmt|,
+name|Bflag
+decl_stmt|,
 name|dflag
 decl_stmt|,
 name|eflag
@@ -535,9 +537,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: sysctl [-bdehiNnoqTWx] [-f filename] name[=value] ..."
+literal|"usage: sysctl [-bdehiNnoqTWx] [ -B<bufsize> ] [-f filename] name[=value] ..."
 argument_list|,
-literal|"       sysctl [-bdehNnoqTWx] -a"
+literal|"       sysctl [-bdehNnoqTWx] [ -B<bufsize> ] -a"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -601,7 +603,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aabdef:hiNnoqTwWxX"
+literal|"AabB:def:hiNnoqTwWxX"
 argument_list|)
 operator|)
 operator|!=
@@ -639,6 +641,21 @@ case|:
 name|bflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'B'
+case|:
+name|Bflag
+operator|=
+name|strtol
+argument_list|(
+name|optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -905,7 +922,7 @@ decl_stmt|;
 name|size_t
 name|newsize
 init|=
-literal|0
+name|Bflag
 decl_stmt|;
 name|int64_t
 name|i64val
@@ -4088,6 +4105,16 @@ operator|)
 return|;
 block|}
 comment|/* find an estimate of how much we need for this var */
+if|if
+condition|(
+name|Bflag
+condition|)
+name|j
+operator|=
+name|Bflag
+expr_stmt|;
+else|else
+block|{
 name|j
 operator|=
 literal|0
@@ -4115,6 +4142,7 @@ operator|+=
 name|j
 expr_stmt|;
 comment|/* we want to be sure :-) */
+block|}
 name|val
 operator|=
 name|oval

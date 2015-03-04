@@ -5621,6 +5621,10 @@ expr_stmt|;
 name|sendfileflagsname
 argument_list|(
 operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|ip
 argument_list|)
 expr_stmt|;

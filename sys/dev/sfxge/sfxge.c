@@ -159,7 +159,7 @@ begin_define
 define|#
 directive|define
 name|SFXGE_CAP
-value|(IFCAP_VLAN_MTU | \ 		   IFCAP_HWCSUM | IFCAP_VLAN_HWCSUM | IFCAP_TSO |	\ 		   IFCAP_JUMBO_MTU | IFCAP_LRO |			\ 		   IFCAP_VLAN_HWTSO | IFCAP_LINKSTATE)
+value|(IFCAP_VLAN_MTU | \ 		   IFCAP_HWCSUM | IFCAP_VLAN_HWCSUM | IFCAP_TSO |	\ 		   IFCAP_JUMBO_MTU | IFCAP_LRO |			\ 		   IFCAP_VLAN_HWTSO | IFCAP_LINKSTATE | IFCAP_HWSTATS)
 end_define
 
 begin_define
@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|SFXGE_CAP_FIXED
-value|(IFCAP_VLAN_MTU | IFCAP_HWCSUM | IFCAP_VLAN_HWCSUM | \ 			 IFCAP_JUMBO_MTU | IFCAP_LINKSTATE)
+value|(IFCAP_VLAN_MTU | IFCAP_HWCSUM | IFCAP_VLAN_HWCSUM | \ 			 IFCAP_JUMBO_MTU | IFCAP_LINKSTATE | IFCAP_HWSTATS)
 end_define
 
 begin_expr_stmt
@@ -1386,6 +1386,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|ifp
+operator|->
+name|if_get_counter
+operator|=
+name|sfxge_get_counter
+expr_stmt|;
 if|if
 condition|(
 operator|(

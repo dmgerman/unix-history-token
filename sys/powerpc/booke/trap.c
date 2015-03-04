@@ -1140,11 +1140,7 @@ name|va
 operator|=
 name|frame
 operator|->
-name|cpu
-operator|.
-name|booke
-operator|.
-name|dear
+name|dar
 expr_stmt|;
 break|break;
 case|case
@@ -1856,11 +1852,7 @@ name|eva
 operator|=
 name|frame
 operator|->
-name|cpu
-operator|.
-name|booke
-operator|.
-name|dear
+name|dar
 expr_stmt|;
 if|if
 condition|(
