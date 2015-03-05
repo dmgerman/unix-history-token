@@ -1230,6 +1230,10 @@ name|sts
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|sts
+operator|>
+literal|0
 condition|)
 name|ioctl
 argument_list|(
