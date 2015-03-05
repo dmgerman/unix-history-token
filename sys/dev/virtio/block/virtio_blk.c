@@ -1101,7 +1101,7 @@ define|#
 directive|define
 name|VTBLK_FEATURES
 define|\
-value|(VIRTIO_BLK_F_BARRIER		| \      VIRTIO_BLK_F_SIZE_MAX		| \      VIRTIO_BLK_F_SEG_MAX		| \      VIRTIO_BLK_F_GEOMETRY		| \      VIRTIO_BLK_F_RO			| \      VIRTIO_BLK_F_BLK_SIZE		| \      VIRTIO_BLK_F_WCE			| \      VIRTIO_BLK_F_CONFIG_WCE		| \      VIRTIO_RING_F_INDIRECT_DESC)
+value|(VIRTIO_BLK_F_BARRIER		| \      VIRTIO_BLK_F_SIZE_MAX		| \      VIRTIO_BLK_F_SEG_MAX		| \      VIRTIO_BLK_F_GEOMETRY		| \      VIRTIO_BLK_F_RO			| \      VIRTIO_BLK_F_BLK_SIZE		| \      VIRTIO_BLK_F_WCE			| \      VIRTIO_BLK_F_TOPOLOGY		| \      VIRTIO_BLK_F_CONFIG_WCE		| \      VIRTIO_RING_F_INDIRECT_DESC)
 end_define
 
 begin_define
