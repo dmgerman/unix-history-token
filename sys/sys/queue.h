@@ -72,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|TRACEBUF_INITIALIZER
-value|{ __FILE__, __LINE__, NULL, 0 } ,
+value|{ __LINE__, 0, __FILE__, NULL } ,
 end_define
 
 begin_define
@@ -1422,7 +1422,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {		\ 	QMD_TAILQ_CHECK_NEXT(listelm, field);				\ 	if ((TAILQ_NEXT((elm), field) = TAILQ_NEXT((listelm), field)) != NULL)\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\&TAILQ_NEXT((elm), field);				\ 	else {								\ 		(head)->tqh_last =&TAILQ_NEXT((elm), field);		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	TAILQ_NEXT((listelm), field) = (elm);				\ 	(elm)->field.tqe_prev =&TAILQ_NEXT((listelm), field);		\ 	QMD_TRACE_ELEM(&(elm)->field);					\ 	QMD_TRACE_ELEM(&listelm->field);				\ } while (0)
+value|do {		\ 	QMD_TAILQ_CHECK_NEXT(listelm, field);				\ 	if ((TAILQ_NEXT((elm), field) = TAILQ_NEXT((listelm), field)) != NULL)\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\&TAILQ_NEXT((elm), field);				\ 	else {								\ 		(head)->tqh_last =&TAILQ_NEXT((elm), field);		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	TAILQ_NEXT((listelm), field) = (elm);				\ 	(elm)->field.tqe_prev =&TAILQ_NEXT((listelm), field);		\ 	QMD_TRACE_ELEM(&(elm)->field);					\ 	QMD_TRACE_ELEM(&(listelm)->field);				\ } while (0)
 end_define
 
 begin_define
@@ -1436,7 +1436,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	QMD_TAILQ_CHECK_PREV(listelm, field);				\ 	(elm)->field.tqe_prev = (listelm)->field.tqe_prev;		\ 	TAILQ_NEXT((elm), field) = (listelm);				\ 	*(listelm)->field.tqe_prev = (elm);				\ 	(listelm)->field.tqe_prev =&TAILQ_NEXT((elm), field);		\ 	QMD_TRACE_ELEM(&(elm)->field);					\ 	QMD_TRACE_ELEM(&listelm->field);				\ } while (0)
+value|do {			\ 	QMD_TAILQ_CHECK_PREV(listelm, field);				\ 	(elm)->field.tqe_prev = (listelm)->field.tqe_prev;		\ 	TAILQ_NEXT((elm), field) = (listelm);				\ 	*(listelm)->field.tqe_prev = (elm);				\ 	(listelm)->field.tqe_prev =&TAILQ_NEXT((elm), field);		\ 	QMD_TRACE_ELEM(&(elm)->field);					\ 	QMD_TRACE_ELEM(&(listelm)->field);				\ } while (0)
 end_define
 
 begin_define
