@@ -157,13 +157,13 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|min
+name|MIN
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(a)< (b) ? a : b
+value|((a)< (b) ? a : b)
 end_define
 
 begin_comment
@@ -183,7 +183,7 @@ name|parmj
 parameter_list|,
 name|n
 parameter_list|)
-value|{ 		\ 	long i = (n) / sizeof (TYPE); 			\ 	TYPE *pi = (TYPE *) (parmi); 		\ 	TYPE *pj = (TYPE *) (parmj); 		\ 	do { 						\ 		TYPE	t = *pi;		\ 		*pi++ = *pj;				\ 		*pj++ = t;				\         } while (--i> 0);				\ }
+value|{		\ 	long i = (n) / sizeof (TYPE);			\ 	TYPE *pi = (TYPE *) (parmi);		\ 	TYPE *pj = (TYPE *) (parmj);		\ 	do { 						\ 		TYPE	t = *pi;		\ 		*pi++ = *pj;				\ 		*pj++ = t;				\ 	} while (--i> 0);				\ }
 end_define
 
 begin_define
@@ -1061,7 +1061,7 @@ name|es
 expr_stmt|;
 name|r
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|pa
 operator|-
@@ -1089,7 +1089,7 @@ argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|pd
 operator|-
