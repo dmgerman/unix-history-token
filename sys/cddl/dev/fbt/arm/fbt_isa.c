@@ -350,6 +350,23 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * Architecture-specific exclusion list, largely to do with FBT trap 	 * processing, to prevent reentrance. 	 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"undefinedinstruction"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|instr
 operator|=
 operator|(
