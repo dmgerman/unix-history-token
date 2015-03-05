@@ -6312,6 +6312,7 @@ argument_list|,
 name|buflen
 argument_list|,
 literal|"bus=%u hubaddr=%u port=%u devaddr=%u interface=%u"
+literal|" ugen=%s"
 argument_list|,
 operator|(
 name|res
@@ -6357,6 +6358,12 @@ argument_list|,
 name|res
 operator|.
 name|iface_index
+argument_list|,
+name|res
+operator|.
+name|udev
+operator|->
+name|ugen_name
 argument_list|)
 expr_stmt|;
 name|done
@@ -6534,7 +6541,7 @@ literal|"sernum=\"%s\" "
 literal|"release=0x%04x "
 literal|"mode=%s "
 literal|"intclass=0x%02x intsubclass=0x%02x "
-literal|"intprotocol=0x%02x "
+literal|"intprotocol=0x%02x"
 literal|"%s%s"
 argument_list|,
 name|UGETW
