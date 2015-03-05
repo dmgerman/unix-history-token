@@ -3569,6 +3569,8 @@ expr_stmt|;
 if|if
 condition|(
 name|first
+operator|+
+name|offset
 operator|>
 name|a_first
 condition|)
