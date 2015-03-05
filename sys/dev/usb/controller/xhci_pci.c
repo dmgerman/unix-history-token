@@ -833,6 +833,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|self
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
