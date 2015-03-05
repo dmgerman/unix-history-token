@@ -801,6 +801,10 @@ name|offset
 operator|)
 argument_list|)
 expr_stmt|;
+name|err
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|type
