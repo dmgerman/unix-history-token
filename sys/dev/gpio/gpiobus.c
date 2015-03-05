@@ -1208,9 +1208,6 @@ parameter_list|(
 name|device_t
 name|bus
 parameter_list|,
-name|device_t
-name|child
-parameter_list|,
 name|uint32_t
 name|pin
 parameter_list|)
@@ -1239,7 +1236,7 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|child
+name|bus
 argument_list|,
 literal|"invalid pin %d, max: %d\n"
 argument_list|,
@@ -1272,7 +1269,7 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|child
+name|bus
 argument_list|,
 literal|"warning: pin %d is already mapped\n"
 argument_list|,
@@ -1457,8 +1454,6 @@ argument_list|(
 name|sc
 operator|->
 name|sc_busdev
-argument_list|,
-name|child
 argument_list|,
 name|i
 argument_list|)

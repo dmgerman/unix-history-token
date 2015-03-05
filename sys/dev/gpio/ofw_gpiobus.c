@@ -1360,8 +1360,6 @@ name|bussc
 operator|->
 name|sc_busdev
 argument_list|,
-name|consumer
-argument_list|,
 operator|(
 operator|*
 name|pins
