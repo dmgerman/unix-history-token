@@ -35,11 +35,11 @@ begin_define
 define|#
 directive|define
 name|FBT_PATCHVAL
-value|0xe06a0cfe
+value|0xe7f000f0
 end_define
 
 begin_comment
-comment|/* illegal instruction */
+comment|/* Specified undefined instruction */
 end_comment
 
 begin_define
@@ -200,6 +200,14 @@ operator|(
 name|fbt
 operator|->
 name|fbtp_rval
+operator||
+operator|(
+name|fbt
+operator|->
+name|fbtp_savedval
+operator|<<
+name|DTRACE_INVOP_SHIFT
+operator|)
 operator|)
 return|;
 block|}
