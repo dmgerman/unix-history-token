@@ -1861,6 +1861,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|vnode_async_pbuf_freecnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of pbufs for vnode pager, 					     asynchronous reads */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|caddr_t
 name|unmapped_buf
 decl_stmt|;
