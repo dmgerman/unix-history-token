@@ -5360,7 +5360,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fech the NUMA domain for the given device.  *  * If a device has a _PXM method, map that to a NUMA domain.  *  * If none is found, then it'll call the parent method.  * If there's no domain, return ENOENT.  */
+comment|/*  * Fetch the NUMA domain for the given device.  *  * If a device has a _PXM method, map that to a NUMA domain.  *  * If none is found, then it'll call the parent method.  * If there's no domain, return ENOENT.  */
 end_comment
 
 begin_function
