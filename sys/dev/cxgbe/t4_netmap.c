@@ -1418,6 +1418,8 @@ argument_list|(
 name|na
 operator|->
 name|num_rx_desc
+operator|/
+literal|8
 operator|+
 name|spg_len
 operator|/
