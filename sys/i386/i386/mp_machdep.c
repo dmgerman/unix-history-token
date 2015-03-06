@@ -3346,13 +3346,13 @@ continue|continue;
 comment|/* Don't let hyperthreads service interrupts. */
 if|if
 condition|(
-name|hyperthreading_cpus
+name|cpu_logical
 operator|>
 literal|1
 operator|&&
 name|apic_id
 operator|%
-name|hyperthreading_cpus
+name|cpu_logical
 operator|!=
 literal|0
 condition|)
