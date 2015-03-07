@@ -556,6 +556,13 @@ name|void
 name|tid_flush
 parameter_list|(
 name|tlbtid_t
+name|tid
+parameter_list|,
+name|int
+name|tlb0_ways
+parameter_list|,
+name|int
+name|tlb0_entries_per_way
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -12529,6 +12536,10 @@ comment|/* Flush all entries from TLB0 matching this TID. */
 name|tid_flush
 argument_list|(
 name|tid
+argument_list|,
+name|tlb0_ways
+argument_list|,
+name|tlb0_entries_per_way
 argument_list|)
 expr_stmt|;
 block|}

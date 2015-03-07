@@ -789,16 +789,16 @@ argument|*restorebridgesize; extern void	*rfid_patch
 argument_list|,
 argument|*rfi_patch1
 argument_list|,
-argument|*rfi_patch2; extern void	*trapcode64;
+argument|*rfi_patch2; extern void	*trapcode64;  extern Elf_Addr	_GLOBAL_OFFSET_TABLE_[];
 endif|#
 directive|endif
 argument|extern void	*rstcode
 argument_list|,
 argument|*rstcodeend; extern void	*trapcode
 argument_list|,
-argument|*trapcodeend
+argument|*trapcodeend; extern void	*generictrap
 argument_list|,
-argument|*trapcode2; extern void	*slbtrap
+argument|*generictrap64; extern void	*slbtrap
 argument_list|,
 argument|*slbtrapend; extern void	*alitrap
 argument_list|,
@@ -818,7 +818,7 @@ argument|*dlmisssize; extern void	*dsmisstrap
 argument_list|,
 argument|*dsmisssize;  uintptr_t powerpc_init(vm_offset_t fdt, vm_offset_t toc, vm_offset_t ofentry, void *mdp) { 	struct		pcpu *pc; 	vm_offset_t	startkernel
 argument_list|,
-argument|endkernel; 	void		*generictrap; 	size_t		trap_offset
+argument|endkernel; 	size_t		trap_offset
 argument_list|,
 argument|trapsize; 	vm_offset_t	trap; 	void		*kmdp;         char		*env; 	register_t	msr
 argument_list|,
@@ -1000,20 +1000,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * Set the common trap entry point to the one that 		 * knows to restore 32-bit operation on execution. 		 */
-name|generictrap
-operator|=
-operator|&
-name|trapcode64
-expr_stmt|;
-block|}
-else|else
-block|{
-name|generictrap
-operator|=
-operator|&
-name|trapcode
-expr_stmt|;
 block|}
 else|#
 directive|else
@@ -1021,11 +1007,6 @@ comment|/* powerpc64 */
 name|cpu_features
 operator||=
 name|PPC_FEATURE_64
-expr_stmt|;
-name|generictrap
-operator|=
-operator|&
-name|trapcode
 expr_stmt|;
 endif|#
 directive|endif
@@ -1060,7 +1041,8 @@ literal|0x20
 control|)
 name|bcopy
 argument_list|(
-name|generictrap
+operator|&
+name|trapcode
 argument_list|,
 operator|(
 name|void
@@ -1407,7 +1389,7 @@ name|TRAP_GENTRAP
 operator|)
 operator|=
 operator|&
-name|trapcode2
+name|generictrap
 expr_stmt|;
 operator|*
 operator|(
@@ -1470,6 +1452,52 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* Set branch address for trap code */
+if|if
+condition|(
+name|cpu_features
+operator|&
+name|PPC_FEATURE_64
+condition|)
+operator|*
+operator|(
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+name|TRAP_GENTRAP
+operator|)
+operator|=
+operator|&
+name|generictrap64
+expr_stmt|;
+else|else
+operator|*
+operator|(
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+name|TRAP_GENTRAP
+operator|)
+operator|=
+operator|&
+name|generictrap
+expr_stmt|;
+operator|*
+operator|(
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+name|TRAP_TOCBASE
+operator|)
+operator|=
+name|_GLOBAL_OFFSET_TABLE_
+expr_stmt|;
 comment|/* G2-specific TLB miss helper handlers */
 name|bcopy
 argument_list|(
