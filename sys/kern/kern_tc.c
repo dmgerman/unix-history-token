@@ -53,12 +53,6 @@ directive|include
 file|<sys/limits.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FFCLOCK
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -70,11 +64,6 @@ include|#
 directive|include
 file|<sys/mutex.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -6559,6 +6548,32 @@ operator|.
 name|clear_sequence
 condition|)
 block|{
+if|if
+condition|(
+name|pps
+operator|->
+name|mtx
+operator|!=
+name|NULL
+condition|)
+name|err
+operator|=
+name|msleep
+argument_list|(
+name|pps
+argument_list|,
+name|pps
+operator|->
+name|mtx
+argument_list|,
+name|PCATCH
+argument_list|,
+literal|"ppsfch"
+argument_list|,
+name|timo
+argument_list|)
+expr_stmt|;
+else|else
 name|err
 operator|=
 name|tsleep
