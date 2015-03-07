@@ -2076,11 +2076,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * XXX: For some reson this returns -1 				 *	instead of EINTR, wtf?! 				 */
-name|error
-operator|=
-name|EINTR
-expr_stmt|;
 name|AUTOFS_WARN
 argument_list|(
 literal|"cv_wait_sig for %s failed "
@@ -2362,6 +2357,10 @@ condition|(
 name|error
 operator|==
 name|EINTR
+operator|||
+name|error
+operator|==
+name|ERESTART
 condition|)
 block|{
 name|AUTOFS_DEBUG
@@ -2552,11 +2551,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * XXX: For some reson this returns -1 instead 			 * 	of EINTR, wtf?! 			 */
-name|error
-operator|=
-name|EINTR
-expr_stmt|;
 name|sx_xunlock
 argument_list|(
 operator|&
