@@ -217,6 +217,24 @@ parameter_list|)
 value|roundup2((x), (y))
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|PTR_ALIGN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PTR_ALIGN
+parameter_list|(
+name|p
+parameter_list|,
+name|a
+parameter_list|)
+value|((__typeof(p))ALIGN((uintptr_t)(p), (a)))
+end_define
+
 begin_define
 define|#
 directive|define
