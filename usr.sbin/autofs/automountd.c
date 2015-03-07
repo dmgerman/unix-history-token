@@ -210,6 +210,9 @@ name|done
 parameter_list|(
 name|int
 name|request_error
+parameter_list|,
+name|bool
+name|wildcards
 parameter_list|)
 block|{
 name|struct
@@ -237,6 +240,12 @@ operator|.
 name|add_id
 operator|=
 name|request_id
+expr_stmt|;
+name|add
+operator|.
+name|add_wildcards
+operator|=
+name|wildcards
 expr_stmt|;
 name|add
 operator|.
@@ -610,6 +619,8 @@ block|{
 name|done
 argument_list|(
 name|EIO
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 block|}
@@ -672,6 +683,9 @@ name|tmp
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|bool
+name|wildcards
 decl_stmt|;
 name|log_debugx
 argument_list|(
@@ -821,6 +835,7 @@ name|lineno
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * "Wildcards" here actually means "make autofs(4) request 	 * automountd(8) action if the node being looked up does not 	 * exist, even though the parent is marked as cached".  This 	 * needs to be done for maps with wildcard entries, but also 	 * for special and executable maps. 	 */
 name|parse_map
 argument_list|(
 name|parent
@@ -841,6 +856,36 @@ operator|->
 name|adr_key
 else|:
 name|NULL
+argument_list|,
+operator|&
+name|wildcards
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|wildcards
+condition|)
+name|wildcards
+operator|=
+name|node_has_wildcards
+argument_list|(
+name|parent
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wildcards
+condition|)
+name|log_debugx
+argument_list|(
+literal|"map may contain wildcard entries"
+argument_list|)
+expr_stmt|;
+else|else
+name|log_debugx
+argument_list|(
+literal|"map does not contain wildcard entries"
 argument_list|)
 expr_stmt|;
 if|if
@@ -982,6 +1027,8 @@ expr_stmt|;
 name|done
 argument_list|(
 literal|0
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Exit without calling exit_callback(). 			 */
@@ -1060,6 +1107,8 @@ expr_stmt|;
 name|done
 argument_list|(
 literal|0
+argument_list|,
+name|wildcards
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Exit without calling exit_callback(). 		 */
@@ -1344,6 +1393,8 @@ expr_stmt|;
 name|done
 argument_list|(
 literal|0
+argument_list|,
+name|wildcards
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Exit without calling exit_callback(). 	 */

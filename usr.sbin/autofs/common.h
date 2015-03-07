@@ -429,6 +429,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bool
+name|node_has_wildcards
+parameter_list|(
+specifier|const
+name|struct
+name|node
+modifier|*
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|node_path
@@ -562,6 +575,10 @@ specifier|const
 name|char
 modifier|*
 name|args
+parameter_list|,
+name|bool
+modifier|*
+name|wildcards
 parameter_list|)
 function_decl|;
 end_function_decl

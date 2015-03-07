@@ -69,9 +69,13 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Compatibility with 10.1-RELEASE automountd(8).  */
+end_comment
+
 begin_struct
 struct|struct
-name|autofs_daemon_done
+name|autofs_daemon_done_101
 block|{
 comment|/* 	 * Identifier, copied from adr_id. 	 */
 name|int
@@ -80,6 +84,33 @@ decl_stmt|;
 comment|/* 	 * Error number, possibly returned to userland. 	 */
 name|int
 name|add_error
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|autofs_daemon_done
+block|{
+comment|/* 	 * Identifier, copied from adr_id. 	 */
+name|int
+name|add_id
+decl_stmt|;
+comment|/* 	 * Set to 1 if the map may contain wildcard entries; 	 * otherwise autofs will do negative caching. 	 */
+name|int
+name|add_wildcards
+decl_stmt|;
+comment|/* 	 * Error number, possibly returned to userland. 	 */
+name|int
+name|add_error
+decl_stmt|;
+comment|/* 	 * Reserved for future use. 	 */
+name|int
+name|add_spare
+index|[
+literal|7
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -95,8 +126,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUTOFSDONE101
+value|_IOW('I', 0x02, struct autofs_daemon_done_101)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUTOFSDONE
-value|_IOW('I', 0x02, struct autofs_daemon_done)
+value|_IOW('I', 0x03, struct autofs_daemon_done)
 end_define
 
 begin_endif
