@@ -4848,7 +4848,9 @@ name|sc
 operator|->
 name|sc_pps
 operator|.
-name|ppscap
+name|ppsparam
+operator|.
+name|mode
 operator|&
 name|PPS_CAPTUREBOTH
 operator|)
@@ -4900,7 +4902,9 @@ name|sc
 operator|->
 name|sc_pps
 operator|.
-name|ppscap
+name|ppsparam
+operator|.
+name|mode
 operator|&
 name|PPS_CAPTUREBOTH
 operator|)
