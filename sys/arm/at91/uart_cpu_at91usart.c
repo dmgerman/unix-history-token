@@ -121,6 +121,14 @@ name|at91_bs_tag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uart_class
+name|at91_usart_class
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|uart_cpu_eqres

@@ -5732,7 +5732,7 @@ name|next
 expr_stmt|;
 continue|continue;
 block|}
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|backing_object
 argument_list|)

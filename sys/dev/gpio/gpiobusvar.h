@@ -465,8 +465,6 @@ name|gpiobus_map_pin
 parameter_list|(
 name|device_t
 parameter_list|,
-name|device_t
-parameter_list|,
 name|uint32_t
 parameter_list|)
 function_decl|;

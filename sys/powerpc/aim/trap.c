@@ -859,10 +859,6 @@ name|srr0
 else|:
 name|frame
 operator|->
-name|cpu
-operator|.
-name|aim
-operator|.
 name|dar
 argument_list|)
 operator|!=
@@ -1342,10 +1338,6 @@ condition|(
 operator|(
 name|frame
 operator|->
-name|cpu
-operator|.
-name|aim
-operator|.
 name|dar
 operator|&
 name|SEGMENT_MASK
@@ -1649,10 +1641,6 @@ literal|"\n"
 argument_list|,
 name|frame
 operator|->
-name|cpu
-operator|.
-name|aim
-operator|.
 name|dar
 argument_list|)
 expr_stmt|;
@@ -2971,10 +2959,6 @@ name|eva
 operator|=
 name|frame
 operator|->
-name|cpu
-operator|.
-name|aim
-operator|.
 name|dar
 expr_stmt|;
 if|if
@@ -3337,10 +3321,6 @@ operator|*
 operator|)
 name|frame
 operator|->
-name|cpu
-operator|.
-name|aim
-operator|.
 name|dar
 argument_list|,
 name|fpr
@@ -3377,10 +3357,6 @@ operator|*
 operator|)
 name|frame
 operator|->
-name|cpu
-operator|.
-name|aim
-operator|.
 name|dar
 argument_list|,
 sizeof|sizeof

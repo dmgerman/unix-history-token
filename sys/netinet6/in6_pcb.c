@@ -2844,6 +2844,10 @@ condition|(
 name|cmd
 operator|==
 name|PRC_MSGSIZE
+operator|&&
+name|cmdarg
+operator|!=
+name|NULL
 condition|)
 name|ip6_notify_pmtu
 argument_list|(

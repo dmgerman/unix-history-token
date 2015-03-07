@@ -3865,6 +3865,23 @@ argument_list|,
 name|UQ_MSC_NO_SYNC_CACHE
 argument_list|)
 block|,
+name|USB_QUIRK
+argument_list|(
+name|QUALCOMMINC
+argument_list|,
+name|ZTE_MF730M
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_MSC_NO_GETMAXLUN
+argument_list|,
+name|UQ_MSC_NO_INQUIRY
+argument_list|,
+name|UQ_CFG_INDEX_0
+argument_list|)
+block|,
 comment|/* Non-standard USB MIDI devices */
 name|USB_QUIRK
 argument_list|(

@@ -156,6 +156,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|blockif_psectsz
+parameter_list|(
+name|struct
+name|blockif_ctxt
+modifier|*
+name|bc
+parameter_list|,
+name|int
+modifier|*
+name|size
+parameter_list|,
+name|int
+modifier|*
+name|off
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|blockif_queuesz
 parameter_list|(

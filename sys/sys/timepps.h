@@ -471,6 +471,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|mtx
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|pps_state
@@ -491,6 +497,12 @@ name|capgen
 decl_stmt|;
 name|unsigned
 name|capcount
+decl_stmt|;
+comment|/* pointer to mutex protecting this state, if any */
+name|struct
+name|mtx
+modifier|*
+name|mtx
 decl_stmt|;
 comment|/* State information. */
 name|pps_params_t

@@ -1771,10 +1771,6 @@ argument_list|(
 expr|struct
 name|trapframe
 argument_list|,
-name|cpu
-operator|.
-name|aim
-operator|.
 name|dar
 argument_list|)
 argument_list|)
@@ -1811,11 +1807,7 @@ argument_list|(
 expr|struct
 name|trapframe
 argument_list|,
-name|cpu
-operator|.
-name|booke
-operator|.
-name|dear
+name|dar
 argument_list|)
 argument_list|)
 expr_stmt|;
