@@ -280,17 +280,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-comment|/* 		 * Do this instead of log_err() to avoid calling 		 * done() again with error, from atexit handler. 		 */
 name|log_warn
 argument_list|(
 literal|"AUTOFSDONE"
-argument_list|)
-expr_stmt|;
-block|}
-name|quick_exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
