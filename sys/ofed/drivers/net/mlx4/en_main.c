@@ -1112,12 +1112,8 @@ operator|->
 name|caps
 operator|.
 name|num_ports
-operator|-
-literal|1
 argument_list|,
 name|MAX_MSIX_P_PORT
-operator|-
-literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;

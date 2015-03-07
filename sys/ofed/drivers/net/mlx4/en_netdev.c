@@ -6578,7 +6578,7 @@ name|en_err
 argument_list|(
 name|priv
 argument_list|,
-literal|"Failed allocating Tx CQ\n"
+literal|"Failed activating Tx CQ\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6679,7 +6679,9 @@ name|en_err
 argument_list|(
 name|priv
 argument_list|,
-literal|"Failed allocating Tx ring\n"
+literal|"Failed activating Tx ring %d\n"
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 name|mlx4_en_deactivate_cq

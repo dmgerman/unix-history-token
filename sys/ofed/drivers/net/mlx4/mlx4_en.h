@@ -551,7 +551,7 @@ begin_define
 define|#
 directive|define
 name|MAX_TX_RINGS
-value|(MLX4_EN_MAX_TX_RING_P_UP * \ 					 (MLX4_EN_NUM_UP + 1))
+value|(MLX4_EN_MAX_TX_RING_P_UP * \ 					 MLX4_EN_NUM_UP)
 end_define
 
 begin_define
@@ -1386,20 +1386,10 @@ name|__be16
 name|status
 parameter_list|)
 block|{
-specifier|static
+specifier|const
 name|__be16
 name|status_all
-decl_stmt|;
-specifier|static
-name|__be16
-name|status_ipv4_ipok_tcp
-decl_stmt|;
-specifier|static
-name|__be16
-name|status_ipv6_ipok_tcp
-decl_stmt|;
-name|status_all
-operator|=
+init|=
 name|cpu_to_be16
 argument_list|(
 name|MLX4_CQE_STATUS_IPV4
@@ -1416,9 +1406,11 @@ name|MLX4_CQE_STATUS_UDP
 operator||
 name|MLX4_CQE_STATUS_IPOK
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+specifier|const
+name|__be16
 name|status_ipv4_ipok_tcp
-operator|=
+init|=
 name|cpu_to_be16
 argument_list|(
 name|MLX4_CQE_STATUS_IPV4
@@ -1427,9 +1419,11 @@ name|MLX4_CQE_STATUS_IPOK
 operator||
 name|MLX4_CQE_STATUS_TCP
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+specifier|const
+name|__be16
 name|status_ipv6_ipok_tcp
-operator|=
+init|=
 name|cpu_to_be16
 argument_list|(
 name|MLX4_CQE_STATUS_IPV6
@@ -1438,7 +1432,7 @@ name|MLX4_CQE_STATUS_IPOK
 operator||
 name|MLX4_CQE_STATUS_TCP
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|status
 operator|&=
 name|status_all
