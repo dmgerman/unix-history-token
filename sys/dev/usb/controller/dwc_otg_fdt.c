@@ -149,6 +149,12 @@ directive|include
 file|<dev/usb/controller/dwc_otg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/controller/dwc_otg_fdt.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|device_probe_t
@@ -158,30 +164,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|device_attach_t
-name|dwc_otg_attach
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|device_detach_t
 name|dwc_otg_detach
 decl_stmt|;
 end_decl_stmt
-
-begin_struct
-struct|struct
-name|dwc_otg_super_softc
-block|{
-name|struct
-name|dwc_otg_softc
-name|sc_otg
-decl_stmt|;
-comment|/* must be first */
-block|}
-struct|;
-end_struct
 
 begin_function
 specifier|static
@@ -229,14 +215,13 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|dwc_otg_attach
 parameter_list|(
@@ -245,7 +230,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|dwc_otg_super_softc
+name|dwc_otg_fdt_softc
 modifier|*
 name|sc
 init|=
@@ -728,7 +713,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|dwc_otg_super_softc
+name|dwc_otg_fdt_softc
 modifier|*
 name|sc
 init|=
@@ -979,7 +964,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|driver_t
 name|dwc_otg_driver
 init|=
@@ -1000,7 +984,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dwc_otg_super_softc
+name|dwc_otg_fdt_softc
 argument_list|)
 block|, }
 decl_stmt|;
