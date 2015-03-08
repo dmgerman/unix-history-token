@@ -4832,7 +4832,7 @@ name|sc_lsr
 operator|=
 name|new_lsr
 expr_stmt|;
-comment|/* time pulse counting support */
+comment|/* 	 * Time pulse counting support. Note that both CTS and DCD are 	 * active-low signals. The status bit is high to indicate that 	 * the signal on the line is low, which corresponds to a PPS 	 * clear event. 	 */
 switch|switch
 condition|(
 name|ucom_pps_mode
@@ -4885,9 +4885,9 @@ operator|&
 name|SER_CTS
 operator|)
 condition|?
-name|PPS_CAPTUREASSERT
-else|:
 name|PPS_CAPTURECLEAR
+else|:
+name|PPS_CAPTUREASSERT
 argument_list|)
 expr_stmt|;
 block|}
@@ -4939,9 +4939,9 @@ operator|&
 name|SER_DCD
 operator|)
 condition|?
-name|PPS_CAPTUREASSERT
-else|:
 name|PPS_CAPTURECLEAR
+else|:
+name|PPS_CAPTUREASSERT
 argument_list|)
 expr_stmt|;
 block|}
