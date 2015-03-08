@@ -277,6 +277,13 @@ name|GPIOTOGGLE
 value|_IOWR('G', 5, struct gpio_req)
 end_define
 
+begin_define
+define|#
+directive|define
+name|GPIOSETNAME
+value|_IOW('G', 6, struct gpio_pin)
+end_define
+
 begin_endif
 endif|#
 directive|endif
