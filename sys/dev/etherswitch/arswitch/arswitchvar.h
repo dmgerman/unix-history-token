@@ -117,6 +117,7 @@ decl_stmt|;
 name|int
 name|mii_lo_first
 decl_stmt|;
+comment|/* Send low data DWORD before high */
 name|ar8x16_switch_type
 name|sc_switchtype
 decl_stmt|;
@@ -303,6 +304,35 @@ parameter_list|(
 name|struct
 name|arswitch_softc
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* PHY functions */
+name|int
+function_decl|(
+modifier|*
+name|arswitch_phy_read
+function_decl|)
+parameter_list|(
+name|device_t
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|arswitch_phy_write
+function_decl|)
+parameter_list|(
+name|device_t
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,

@@ -162,6 +162,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/etherswitch/arswitch/arswitch_phy.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/etherswitch/arswitch/arswitch_vlans.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/etherswitch/arswitch/arswitch_8327.h>
 end_include
 
@@ -1077,8 +1089,36 @@ name|val
 expr_stmt|;
 if|#
 directive|if
-literal|0
-block|device_printf(sc->sc_dev, 	    "%s: port %d: speed=%d, duplex=%d, txpause=%d, rxpause=%d\n", 	    __func__, 	    port, 	    pcfg->speed, 	    pcfg->duplex, 	    pcfg->txpause, 	    pcfg->rxpause);
+literal|1
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: port %d: speed=%d, duplex=%d, txpause=%d, rxpause=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|port
+argument_list|,
+name|pcfg
+operator|->
+name|speed
+argument_list|,
+name|pcfg
+operator|->
+name|duplex
+argument_list|,
+name|pcfg
+operator|->
+name|txpause
+argument_list|,
+name|pcfg
+operator|->
+name|rxpause
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 return|return
@@ -2348,6 +2388,17 @@ name|scfg
 argument_list|)
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: SGMII cfg?\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|t
 operator|=
 name|scfg
@@ -2675,7 +2726,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Port setup.  */
+comment|/*  * Port setup.  Called at attach time.  */
 end_comment
 
 begin_function
@@ -2695,6 +2746,14 @@ block|{
 name|uint32_t
 name|t
 decl_stmt|;
+name|int
+name|ports
+decl_stmt|;
+comment|/* For now, port can see all other ports */
+name|ports
+operator|=
+literal|0x7f
+expr_stmt|;
 if|if
 condition|(
 name|port
@@ -2819,7 +2878,7 @@ comment|/* So this allows traffic to any port except ourselves */
 name|t
 operator||=
 operator|(
-literal|0x7f
+name|ports
 operator|&
 operator|~
 operator|(
@@ -2862,17 +2921,7 @@ name|p
 parameter_list|)
 block|{
 comment|/* XXX stub for now */
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: called\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+comment|//	device_printf(sc->sc_dev, "%s: called\n", __func__);
 return|return
 operator|(
 literal|0
@@ -2880,6 +2929,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Get the port VLAN configuration.  */
+end_comment
 
 begin_function
 specifier|static
@@ -2897,17 +2950,7 @@ name|p
 parameter_list|)
 block|{
 comment|/* XXX stub for now */
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: called\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+comment|//	device_printf(sc->sc_dev, "%s: called\n", __func__);
 return|return
 operator|(
 literal|0
@@ -2935,6 +2978,38 @@ name|mode
 decl_stmt|,
 name|t
 decl_stmt|;
+name|int
+name|ports
+decl_stmt|;
+name|ARSWITCH_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
+name|ARSWITCH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Clear the existing VLAN configuration */
+name|memset
+argument_list|(
+name|sc
+operator|->
+name|vid
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|vid
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Disable mirroring. 	 */
 name|arswitch_modifyreg
 argument_list|(
@@ -2953,7 +3028,12 @@ name|AR8327_FWD_CTRL0_MIRROR_PORT_S
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For now, let's default to one portgroup, just so traffic 	 * flows.  All ports can see other ports. 	 */
+comment|/* 	 * XXX TODO: disable any Q-in-Q port configuration, 	 * tagging, egress filters, etc. 	 */
+comment|/* 	 * For now, let's default to one portgroup, just so traffic 	 * flows.  All ports can see other ports. There are two CPU GMACs 	 * (GMAC0, GMAC6), GMAC1..GMAC5 are external PHYs. 	 * 	 * (ETHERSWITCH_VLAN_PORT) 	 */
+name|ports
+operator|=
+literal|0x7f
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3028,7 +3108,7 @@ comment|/* Ports can see other ports */
 name|t
 operator|=
 operator|(
-literal|0x7f
+name|ports
 operator|&
 operator|~
 operator|(
@@ -3104,6 +3184,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|ARSWITCH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3122,17 +3207,13 @@ modifier|*
 name|vg
 parameter_list|)
 block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: called\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX for now, no dot1q vlans */
+block|if (sc->vlan_mode == ETHERSWITCH_VLAN_DOT1Q) 		return (EINVAL); 	return (ar8xxx_getvgroup(sc, vg));
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3156,17 +3237,13 @@ modifier|*
 name|vg
 parameter_list|)
 block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: called\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX for now, no dot1q vlans */
+block|if (sc->vlan_mode == ETHERSWITCH_VLAN_DOT1Q) 		return (EINVAL); 	return (ar8xxx_setvgroup(sc, vg));
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3356,6 +3433,22 @@ name|sc
 operator|->
 name|hal
 operator|.
+name|arswitch_vlan_getvgroup
+operator|=
+name|ar8327_vlan_getvgroup
+expr_stmt|;
+name|sc
+operator|->
+name|hal
+operator|.
+name|arswitch_vlan_setvgroup
+operator|=
+name|ar8327_vlan_setvgroup
+expr_stmt|;
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_port_vlan_setup
 operator|=
 name|ar8327_port_vlan_setup
@@ -3380,22 +3473,6 @@ name|sc
 operator|->
 name|hal
 operator|.
-name|arswitch_vlan_getvgroup
-operator|=
-name|ar8327_vlan_getvgroup
-expr_stmt|;
-name|sc
-operator|->
-name|hal
-operator|.
-name|arswitch_vlan_setvgroup
-operator|=
-name|ar8327_vlan_setvgroup
-expr_stmt|;
-name|sc
-operator|->
-name|hal
-operator|.
 name|arswitch_vlan_get_pvid
 operator|=
 name|ar8327_get_pvid
@@ -3415,6 +3492,23 @@ operator|.
 name|arswitch_atu_flush
 operator|=
 name|ar8327_atu_flush
+expr_stmt|;
+comment|/* 	 * Reading the PHY via the MDIO interface currently doesn't 	 * work correctly. 	 * 	 * So for now, just go direct to the PHY registers themselves. 	 * This has always worked  on external devices, but not internal 	 * devices (AR934x, AR724x, AR933x.) 	 */
+name|sc
+operator|->
+name|hal
+operator|.
+name|arswitch_phy_read
+operator|=
+name|arswitch_readphy_external
+expr_stmt|;
+name|sc
+operator|->
+name|hal
+operator|.
+name|arswitch_phy_write
+operator|=
+name|arswitch_writephy_external
 expr_stmt|;
 comment|/* Set the switch vlan capabilities. */
 name|sc
