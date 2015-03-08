@@ -335,9 +335,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|arswitch_get_dot1q_vlan
+name|ar8xxx_get_dot1q_vlan
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -452,9 +451,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|arswitch_set_dot1q_vlan
+name|ar8xxx_set_dot1q_vlan
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -509,9 +507,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|arswitch_get_port_vlan
+name|ar8xxx_get_port_vlan
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -583,9 +580,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|arswitch_set_port_vlan
+name|ar8xxx_set_port_vlan
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -897,6 +893,10 @@ operator|<<
 name|i
 operator|)
 expr_stmt|;
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_set_dot1q_vlan
 argument_list|(
 name|sc
@@ -1184,6 +1184,10 @@ name|ETHERSWITCH_VLAN_DOT1Q
 case|:
 name|err
 operator|=
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_get_dot1q_vlan
 argument_list|(
 name|sc
@@ -1204,6 +1208,10 @@ name|ETHERSWITCH_VLAN_PORT
 case|:
 name|err
 operator|=
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_get_port_vlan
 argument_list|(
 name|sc
@@ -1454,6 +1462,10 @@ name|ETHERSWITCH_VLAN_DOT1Q
 case|:
 name|err
 operator|=
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_set_dot1q_vlan
 argument_list|(
 name|sc
@@ -1471,6 +1483,10 @@ name|ETHERSWITCH_VLAN_PORT
 case|:
 name|err
 operator|=
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_set_port_vlan
 argument_list|(
 name|sc
