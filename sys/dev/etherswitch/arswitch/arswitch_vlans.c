@@ -112,13 +112,13 @@ file|"etherswitch_if.h"
 end_include
 
 begin_comment
-comment|/*  * XXX TODO: teach about the AR933x SoC switch  * XXX TODO: teach about the AR934x SoC switch  * XXX TODO: teach about the AR8327 external switch  */
+comment|/*  * XXX TODO: teach about the AR933x SoC switch  * XXX TODO: teach about the AR934x SoC switch  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|arswitch_vlan_op
+name|ar8xxx_vlan_op
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -262,9 +262,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|arswitch_flush_dot1q_vlan
+name|ar8xxx_flush_dot1q_vlan
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -281,7 +280,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|arswitch_vlan_op
+name|ar8xxx_vlan_op
 argument_list|(
 name|sc
 argument_list|,
@@ -297,9 +296,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|arswitch_purge_dot1q_vlan
+name|ar8xxx_purge_dot1q_vlan
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -319,7 +317,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|arswitch_vlan_op
+name|ar8xxx_vlan_op
 argument_list|(
 name|sc
 argument_list|,
@@ -366,7 +364,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|arswitch_vlan_op
+name|ar8xxx_vlan_op
 argument_list|(
 name|sc
 argument_list|,
@@ -478,7 +476,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|arswitch_vlan_op
+name|ar8xxx_vlan_op
 argument_list|(
 name|sc
 argument_list|,
@@ -758,6 +756,10 @@ block|}
 block|}
 if|if
 condition|(
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_flush_dot1q_vlan
 argument_list|(
 name|sc
@@ -1351,6 +1353,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_purge_dot1q_vlan
 argument_list|(
 name|sc
