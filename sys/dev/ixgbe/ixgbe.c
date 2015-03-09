@@ -8011,6 +8011,9 @@ argument_list|)
 condition|)
 block|{
 case|case
+name|IFM_10G_T
+case|:
+case|case
 name|IFM_AUTO
 case|:
 name|adapter
