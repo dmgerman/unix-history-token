@@ -140,6 +140,19 @@ decl_stmt|;
 name|int
 name|security_ext
 decl_stmt|;
+comment|/* L1 cache info */
+name|int
+name|dcache_line_size
+decl_stmt|;
+name|int
+name|dcache_line_mask
+decl_stmt|;
+name|int
+name|icache_line_size
+decl_stmt|;
+name|int
+name|icache_line_mask
+decl_stmt|;
 block|}
 struct|;
 end_struct
