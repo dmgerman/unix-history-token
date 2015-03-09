@@ -1136,6 +1136,10 @@ parameter_list|,
 name|vm_offset_t
 modifier|*
 name|modulep
+parameter_list|,
+name|vm_offset_t
+modifier|*
+name|dtbp
 parameter_list|)
 block|{
 name|struct
@@ -1178,6 +1182,11 @@ name|md_getboothowto
 argument_list|(
 name|args
 argument_list|)
+expr_stmt|;
+operator|*
+name|dtbp
+operator|=
+literal|0
 expr_stmt|;
 comment|/*       * Allow the environment variable 'rootdev' to override the supplied device       * This should perhaps go to MI code and/or have $rootdev tested/set by      * MI code before launching the kernel.      */
 if|if

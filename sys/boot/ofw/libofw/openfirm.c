@@ -2660,6 +2660,42 @@ empty_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|OF_quiesce
+parameter_list|()
+block|{
+specifier|static
+struct|struct
+block|{
+name|cell_t
+name|name
+decl_stmt|;
+name|cell_t
+name|nargs
+decl_stmt|;
+name|cell_t
+name|nreturns
+decl_stmt|;
+block|}
+name|args
+init|=
+block|{
+operator|(
+name|cell_t
+operator|)
+literal|"quiesce"
+block|, 	}
+struct|;
+name|openfirmware
+argument_list|(
+operator|&
+name|args
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* Free<size> bytes starting at<virt>, then call<entry> with<arg>. */
 end_comment
