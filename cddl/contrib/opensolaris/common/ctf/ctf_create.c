@@ -2808,9 +2808,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|CTF_TYPE_TO_INDEX
+argument_list|(
 name|dtd
 operator|->
 name|dtd_type
+argument_list|)
 operator|<=
 name|fp
 operator|->
@@ -7052,9 +7055,12 @@ name|dtd
 operator|!=
 name|NULL
 operator|&&
+name|CTF_TYPE_TO_INDEX
+argument_list|(
 name|dtd
 operator|->
 name|dtd_type
+argument_list|)
 operator|>
 name|dst_fp
 operator|->
