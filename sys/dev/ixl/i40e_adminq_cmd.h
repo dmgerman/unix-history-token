@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|I40E_FW_API_VERSION_MINOR
-value|0x0004
+value|0x0002
 end_define
 
 begin_struct
@@ -483,7 +483,24 @@ name|i40e_aqc_opc_list_dev_capabilities
 init|=
 literal|0x000B
 block|,
+name|i40e_aqc_opc_set_cppm_configuration
+init|=
+literal|0x0103
+block|,
+name|i40e_aqc_opc_set_arp_proxy_entry
+init|=
+literal|0x0104
+block|,
+name|i40e_aqc_opc_set_ns_proxy_entry
+init|=
+literal|0x0105
+block|,
 comment|/* LAA */
+name|i40e_aqc_opc_mng_laa
+init|=
+literal|0x0106
+block|,
+comment|/* AQ obsolete */
 name|i40e_aqc_opc_mac_address_read
 init|=
 literal|0x0107
@@ -875,6 +892,10 @@ name|i40e_aqc_opc_del_udp_tunnel
 init|=
 literal|0x0B01
 block|,
+name|i40e_aqc_opc_tunnel_key_structure
+init|=
+literal|0x0B10
+block|,
 comment|/* Async Events */
 name|i40e_aqc_opc_event_lan_overflow
 init|=
@@ -898,6 +919,14 @@ init|=
 literal|0xFE03
 block|,
 comment|/* debug commands */
+name|i40e_aqc_opc_debug_get_deviceid
+init|=
+literal|0xFF00
+block|,
+name|i40e_aqc_opc_debug_set_mode
+init|=
+literal|0xFF01
+block|,
 name|i40e_aqc_opc_debug_read_reg
 init|=
 literal|0xFF03
@@ -1773,12 +1802,8 @@ name|I40E_AQC_WOL_ADDR_VALID
 value|0x80
 define|#
 directive|define
-name|I40E_AQC_MC_MAG_EN_VALID
-value|0x100
-define|#
-directive|define
 name|I40E_AQC_ADDR_VALID_MASK
-value|0x1F0
+value|0xf0
 name|u8
 name|reserved
 index|[
@@ -1870,12 +1895,8 @@ name|I40E_AQC_WRITE_TYPE_PORT
 value|0x8000
 define|#
 directive|define
-name|I40E_AQC_WRITE_TYPE_UPDATE_MC_MAG
-value|0xC000
-define|#
-directive|define
 name|I40E_AQC_WRITE_TYPE_MASK
-value|0xC000
+value|0xc000
 name|__le16
 name|mac_sah
 decl_stmt|;
@@ -3604,10 +3625,6 @@ value|0x3FF
 name|__le16
 name|vlan_tag
 decl_stmt|;
-define|#
-directive|define
-name|I40E_AQC_SET_VSI_VLAN_MASK
-value|0x0FFF
 define|#
 directive|define
 name|I40E_AQC_SET_VSI_VLAN_VALID
@@ -7053,48 +7070,6 @@ define|#
 directive|define
 name|I40E_AQC_CEE_APP_STATUS_MASK
 value|(0x7<< I40E_AQC_CEE_APP_STATUS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_AQC_CEE_FCOE_STATUS_SHIFT
-value|0x8
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_AQC_CEE_FCOE_STATUS_MASK
-value|(0x7<< I40E_AQC_CEE_FCOE_STATUS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_AQC_CEE_ISCSI_STATUS_SHIFT
-value|0xA
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_AQC_CEE_ISCSI_STATUS_MASK
-value|(0x7<< I40E_AQC_CEE_ISCSI_STATUS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_AQC_CEE_FIP_STATUS_SHIFT
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_AQC_CEE_FIP_STATUS_MASK
-value|(0x7<< I40E_AQC_CEE_FIP_STATUS_SHIFT)
 end_define
 
 begin_struct
