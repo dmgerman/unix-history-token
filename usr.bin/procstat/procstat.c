@@ -98,8 +98,14 @@ decl_stmt|,
 name|vflag
 decl_stmt|,
 name|xflag
+decl_stmt|,
+name|Sflag
 decl_stmt|;
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 name|int
@@ -134,7 +140,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"                [-b | -c | -e | -f | -i | -j | -k | "
-literal|"-l | -r | -s | -t | -v | -x]\n"
+literal|"-l | -r | -s | -S | -t | -v | -x]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -319,6 +325,18 @@ condition|(
 name|xflag
 condition|)
 name|procstat_auxv
+argument_list|(
+name|prstat
+argument_list|,
+name|kipp
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|Sflag
+condition|)
+name|procstat_cs
 argument_list|(
 name|prstat
 argument_list|,
@@ -536,7 +554,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CHN:M:abcefijklhrstvw:x"
+literal|"CHN:M:abcefijklhrsStvw:x"
 argument_list|)
 operator|)
 operator|!=
@@ -577,6 +595,13 @@ case|:
 name|nlistf
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|Sflag
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -785,6 +810,8 @@ operator|+
 name|vflag
 operator|+
 name|xflag
+operator|+
+name|Sflag
 expr_stmt|;
 if|if
 condition|(
