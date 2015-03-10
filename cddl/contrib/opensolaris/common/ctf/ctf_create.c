@@ -2799,6 +2799,13 @@ operator|=
 name|ntd
 control|)
 block|{
+name|ntd
+operator|=
+name|ctf_list_prev
+argument_list|(
+name|dtd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dtd
@@ -2811,13 +2818,6 @@ name|ctf_dtoldid
 condition|)
 continue|continue;
 comment|/* skip types that have been committed */
-name|ntd
-operator|=
-name|ctf_list_prev
-argument_list|(
-name|dtd
-argument_list|)
-expr_stmt|;
 name|ctf_dtd_delete
 argument_list|(
 name|fp
