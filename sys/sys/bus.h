@@ -2900,6 +2900,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|device_set_devclass_fixed
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|classname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|device_set_driver
 parameter_list|(
 name|device_t
