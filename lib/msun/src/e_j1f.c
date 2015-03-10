@@ -21,6 +21,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * See e_j1.c for complete comments.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -45,6 +49,21 @@ name|qonef
 argument_list|(
 name|float
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+specifier|volatile
+name|float
+name|vone
+init|=
+literal|1
+decl_stmt|,
+name|vzero
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -555,7 +574,6 @@ literal|0x7fffffff
 operator|&
 name|hx
 expr_stmt|;
-comment|/* if Y1(NaN) is NaN, Y1(-inf) is NaN, Y1(inf) is 0 */
 if|if
 condition|(
 name|ix
@@ -563,7 +581,7 @@ operator|>=
 literal|0x7f800000
 condition|)
 return|return
-name|one
+name|vone
 operator|/
 operator|(
 name|x
@@ -583,7 +601,7 @@ return|return
 operator|-
 name|one
 operator|/
-name|zero
+name|vzero
 return|;
 if|if
 condition|(
@@ -592,9 +610,9 @@ operator|<
 literal|0
 condition|)
 return|return
-name|zero
+name|vzero
 operator|/
-name|zero
+name|vzero
 return|;
 if|if
 condition|(
