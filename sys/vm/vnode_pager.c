@@ -3043,7 +3043,7 @@ argument_list|(
 name|mreq
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The requested page has valid blocks.  Invalid part can only 	 * exist at the end of file, and the page is made fully valid 	 * by zeroing in vm_pager_getpages().  Free non-requested 	 * pages, since no i/o is done to read its content. 	 */
+comment|/* 	 * The requested page has valid blocks.  Invalid part can only 	 * exist at the end of file, and the page is made fully valid 	 * by zeroing in vm_pager_get_pages().  Free non-requested 	 * pages, since no i/o is done to read its content. 	 */
 if|if
 condition|(
 name|mreq
