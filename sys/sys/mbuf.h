@@ -5383,6 +5383,62 @@ parameter_list|)
 value|do {						\         KASSERT((_m)->m_flags& M_PKTHDR, ("Attempt to set FIB on non header mbuf."));	\ 	((_m)->m_pkthdr.fibnum) = (_fib);				\ } while (0)
 end_define
 
+begin_comment
+comment|/* flags passed as first argument for "m_ether_tcpip_hash()" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBUF_HASHFLAG_L2
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBUF_HASHFLAG_L3
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBUF_HASHFLAG_L4
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* mbuf hashing helper routines */
+end_comment
+
+begin_function_decl
+name|uint32_t
+name|m_ether_tcpip_hash_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|m_ether_tcpip_hash
+parameter_list|(
+specifier|const
+name|uint32_t
+parameter_list|,
+specifier|const
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+specifier|const
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
