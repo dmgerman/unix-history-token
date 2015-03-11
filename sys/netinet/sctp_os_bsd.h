@@ -1779,7 +1779,7 @@ begin_define
 define|#
 directive|define
 name|sb_cc
-value|sb_ccc
+value|sb_acc
 end_define
 
 begin_comment
