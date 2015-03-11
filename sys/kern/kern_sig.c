@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ktrace.h"
+file|"opt_gzio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_core.h"
+file|"opt_ktrace.h"
 end_include
 
 begin_include
@@ -14749,16 +14749,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|COMPRESS_USER_CORES
-argument_list|)
-end_if
+begin_define
+define|#
+directive|define
+name|GZ_SUFFIX
+value|".gz"
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GZIO
+end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|compress_user_cores
 init|=
@@ -14775,7 +14780,7 @@ name|OID_AUTO
 argument_list|,
 name|compress_user_cores
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|compress_user_cores
@@ -14791,14 +14796,9 @@ begin_decl_stmt
 name|int
 name|compress_user_cores_gzlevel
 init|=
-operator|-
-literal|1
+literal|6
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* default level */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -14809,32 +14809,31 @@ name|OID_AUTO
 argument_list|,
 name|compress_user_cores_gzlevel
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|compress_user_cores_gzlevel
 argument_list|,
-operator|-
-literal|1
+literal|0
 argument_list|,
 literal|"Corefile gzip compression level"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|GZ_SUFFIX
-value|".gz"
-end_define
+begin_else
+else|#
+directive|else
+end_else
 
-begin_define
-define|#
-directive|define
-name|GZ_SUFFIX_LEN
-value|3
-end_define
+begin_decl_stmt
+specifier|static
+name|int
+name|compress_user_cores
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -15198,9 +15197,6 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPRESS_USER_CORES
 if|if
 condition|(
 name|compress
@@ -15213,8 +15209,6 @@ argument_list|,
 name|GZ_SUFFIX
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sbuf_error
@@ -15668,9 +15662,6 @@ decl_stmt|;
 name|off_t
 name|limit
 decl_stmt|;
-name|int
-name|compress
-decl_stmt|;
 name|char
 modifier|*
 name|data
@@ -15705,21 +15696,6 @@ index|[]
 init|=
 literal|"core="
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPRESS_USER_CORES
-name|compress
-operator|=
-name|compress_user_cores
-expr_stmt|;
-else|#
-directive|else
-name|compress
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -15860,7 +15836,7 @@ name|p_pid
 argument_list|,
 name|td
 argument_list|,
-name|compress
+name|compress_user_cores
 argument_list|,
 operator|&
 name|vp
@@ -16088,7 +16064,7 @@ name|vp
 argument_list|,
 name|limit
 argument_list|,
-name|compress
+name|compress_user_cores
 condition|?
 name|IMGACT_CORE_COMPRESS
 else|:

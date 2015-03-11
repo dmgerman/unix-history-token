@@ -2799,18 +2799,6 @@ operator|=
 name|ntd
 control|)
 block|{
-if|if
-condition|(
-name|dtd
-operator|->
-name|dtd_type
-operator|<=
-name|fp
-operator|->
-name|ctf_dtoldid
-condition|)
-continue|continue;
-comment|/* skip types that have been committed */
 name|ntd
 operator|=
 name|ctf_list_prev
@@ -2818,6 +2806,21 @@ argument_list|(
 name|dtd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|CTF_TYPE_TO_INDEX
+argument_list|(
+name|dtd
+operator|->
+name|dtd_type
+argument_list|)
+operator|<=
+name|fp
+operator|->
+name|ctf_dtoldid
+condition|)
+continue|continue;
+comment|/* skip types that have been committed */
 name|ctf_dtd_delete
 argument_list|(
 name|fp
@@ -6990,8 +6993,10 @@ operator|&&
 name|dst_kind
 operator|!=
 name|kind
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|dst_kind
 operator|!=
 name|CTF_K_FORWARD
@@ -7009,7 +7014,6 @@ name|kind
 operator|!=
 name|CTF_K_UNION
 operator|)
-operator|)
 condition|)
 return|return
 operator|(
@@ -7021,6 +7025,12 @@ name|ECTF_CONFLICT
 argument_list|)
 operator|)
 return|;
+else|else
+name|dst_type
+operator|=
+name|CTF_ERR
+expr_stmt|;
+block|}
 comment|/* 	 * If the non-empty name was not found in the appropriate hash, search 	 * the list of pending dynamic definitions that are not yet committed. 	 * If a matching name and kind are found, assume this is the type that 	 * we are looking for.  This is necessary to permit ctf_add_type() to 	 * operate recursively on entities such as a struct that contains a 	 * pointer member that refers to the same struct type. 	 */
 if|if
 condition|(
@@ -7052,9 +7062,12 @@ name|dtd
 operator|!=
 name|NULL
 operator|&&
+name|CTF_TYPE_TO_INDEX
+argument_list|(
 name|dtd
 operator|->
 name|dtd_type
+argument_list|)
 operator|>
 name|dst_fp
 operator|->

@@ -1130,7 +1130,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * lwpid_t is 32bit but kernel thr API exports tid as long type  * in very earily date.  */
+comment|/*  * lwpid_t is 32bit but kernel thr API exports tid as long type  * to preserve the ABI for M:N model in very early date (r131431).  */
 end_comment
 
 begin_define

@@ -3376,6 +3376,9 @@ decl_stmt|;
 name|uint64_t
 name|sctp_features
 decl_stmt|;
+name|uint32_t
+name|max_cwnd
+decl_stmt|;
 name|uint16_t
 name|port
 decl_stmt|;

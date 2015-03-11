@@ -8697,6 +8697,13 @@ argument_list|,
 literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|mta
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* First, zot all the existing filters. */

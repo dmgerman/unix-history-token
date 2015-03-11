@@ -184,6 +184,23 @@ end_define
 
 begin_struct
 struct|struct
+name|gpiobus_pin_data
+block|{
+name|int
+name|mapped
+decl_stmt|;
+comment|/* pin is mapped/reserved. */
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* pin name. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|gpiobus_softc
 block|{
 name|struct
@@ -212,11 +229,12 @@ name|int
 name|sc_npins
 decl_stmt|;
 comment|/* total pins on bus */
-name|int
+name|struct
+name|gpiobus_pin_data
 modifier|*
-name|sc_pins_mapped
+name|sc_pins
 decl_stmt|;
-comment|/* mark mapped pins */
+comment|/* pin data */
 block|}
 struct|;
 end_struct

@@ -680,7 +680,7 @@ name|sctp_generate_cause
 argument_list|(
 name|SCTP_CAUSE_PROTOCOL_VIOLATION
 argument_list|,
-literal|"Association error couter exceeded"
+literal|"Association error counter exceeded"
 argument_list|)
 expr_stmt|;
 name|inp

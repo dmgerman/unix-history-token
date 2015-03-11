@@ -163,6 +163,24 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Sets the GPIO pin name.  The pin number and pin name to be set are passed  * as parameters.  */
+end_comment
+
+begin_function_decl
+name|int
+name|gpio_pin_set_name
+parameter_list|(
+name|gpio_handle_t
+parameter_list|,
+name|gpio_pin_t
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Sets the GPIO flags on a specific GPIO pin.  The pin number and the flags  * to be set are passed through the gpio_config_t structure.  */
 end_comment
 

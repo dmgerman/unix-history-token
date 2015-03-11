@@ -74,7 +74,7 @@ name|char
 name|ixlv_driver_version
 index|[]
 init|=
-literal|"1.2.1"
+literal|"1.2.4"
 decl_stmt|;
 end_decl_stmt
 
@@ -1915,7 +1915,7 @@ operator|*
 operator|)
 name|sc
 expr_stmt|;
-name|vsi
+name|sc
 operator|->
 name|link_up
 operator|=
@@ -2202,9 +2202,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|if_printf
 argument_list|(
-name|dev
+name|vsi
+operator|->
+name|ifp
 argument_list|,
 literal|"Vlan in use, detach first\n"
 argument_list|)
@@ -4224,7 +4226,7 @@ name|vsi
 operator|->
 name|max_frame_size
 operator|<=
-literal|2048
+name|MCLBYTES
 condition|)
 name|rxr
 operator|->
@@ -7844,9 +7846,7 @@ name|ixl_vsi
 modifier|*
 name|vsi
 init|=
-name|ifp
-operator|->
-name|if_softc
+name|arg
 decl_stmt|;
 name|struct
 name|ixlv_sc
@@ -8019,9 +8019,7 @@ name|ixl_vsi
 modifier|*
 name|vsi
 init|=
-name|ifp
-operator|->
-name|if_softc
+name|arg
 decl_stmt|;
 name|struct
 name|ixlv_sc
@@ -9681,7 +9679,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|vsi
+name|sc
 operator|->
 name|link_up
 condition|)
@@ -10788,16 +10786,9 @@ name|vsi
 operator|->
 name|ifp
 decl_stmt|;
-name|device_t
-name|dev
-init|=
-name|sc
-operator|->
-name|dev
-decl_stmt|;
 if|if
 condition|(
-name|vsi
+name|sc
 operator|->
 name|link_up
 condition|)
@@ -10815,14 +10806,14 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|device_printf
+name|if_printf
 argument_list|(
-name|dev
+name|ifp
 argument_list|,
 literal|"Link is Up, %d Gbps\n"
 argument_list|,
 operator|(
-name|vsi
+name|sc
 operator|->
 name|link_speed
 operator|==
@@ -10865,9 +10856,9 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|device_printf
+name|if_printf
 argument_list|(
-name|dev
+name|ifp
 argument_list|,
 literal|"Link is Down\n"
 argument_list|)
@@ -11921,13 +11912,6 @@ name|ixlv_mac_filter
 modifier|*
 name|f
 decl_stmt|;
-name|device_t
-name|dev
-init|=
-name|sc
-operator|->
-name|dev
-decl_stmt|;
 comment|/* Does one already exist? */
 name|f
 operator|=
@@ -11983,9 +11967,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|if_printf
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|vsi
+operator|.
+name|ifp
 argument_list|,
 literal|"%s: no filters available!!\n"
 argument_list|,
@@ -12839,7 +12827,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -12945,7 +12933,7 @@ operator|.
 name|rxr
 operator|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -12970,7 +12958,7 @@ argument_list|,
 literal|"m_defrag() failed"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -12995,7 +12983,7 @@ argument_list|,
 literal|"Driver dropped packets"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -13020,7 +13008,7 @@ argument_list|,
 literal|"irqs on this queue"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -13045,7 +13033,7 @@ argument_list|,
 literal|"TSO"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -13070,7 +13058,7 @@ argument_list|,
 literal|"Driver tx dma failure in xmit"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -13092,7 +13080,7 @@ argument_list|,
 literal|"Queue No Descriptor Available"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -13114,7 +13102,7 @@ argument_list|,
 literal|"Queue Packets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -13136,7 +13124,7 @@ argument_list|,
 literal|"Queue Bytes Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -13158,7 +13146,7 @@ argument_list|,
 literal|"Queue Packets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
