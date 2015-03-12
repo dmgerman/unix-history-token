@@ -1535,7 +1535,6 @@ expr_stmt|;
 block|}
 name|sbuf_putc
 argument_list|(
-operator|&
 name|sb
 argument_list|,
 literal|0
