@@ -1263,6 +1263,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|bus_print_child_domain
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|bus_print_child_footer
 parameter_list|(
 name|device_t
@@ -1550,6 +1563,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|bus_generic_get_domain
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+modifier|*
+name|domain
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Wrapper functions for the BUS_*_RESOURCE methods to make client code  * a little simpler.  */
 end_comment
@@ -1717,6 +1747,20 @@ name|bus_get_dma_tag
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bus_get_domain
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+modifier|*
+name|domain
 parameter_list|)
 function_decl|;
 end_function_decl
