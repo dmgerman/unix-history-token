@@ -16058,6 +16058,12 @@ name|kif
 operator|->
 name|kf_structsize
 argument_list|)
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
+name|ENOMEM
 expr_stmt|;
 if|if
 condition|(
