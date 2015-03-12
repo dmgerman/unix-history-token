@@ -2558,6 +2558,11 @@ name|node
 modifier|*
 name|n
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cmdline_options
+parameter_list|,
 name|int
 name|indent
 parameter_list|)
@@ -2577,6 +2582,9 @@ name|path
 decl_stmt|,
 modifier|*
 name|options
+decl_stmt|,
+modifier|*
+name|tmp
 decl_stmt|;
 name|path
 operator|=
@@ -2585,11 +2593,27 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-name|options
+name|tmp
 operator|=
 name|node_options
 argument_list|(
 name|n
+argument_list|)
+expr_stmt|;
+name|options
+operator|=
+name|concat
+argument_list|(
+name|cmdline_options
+argument_list|,
+literal|','
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Do not show both parent and child node if they have the same 	 * mountpoint; only show the child node.  This means the typical, 	 * "key location", map entries are shown in a single line; 	 * the "key mountpoint1 location2 mountpoint2 location2" entries 	 * take multiple lines. 	 */
@@ -2757,6 +2781,8 @@ name|node_print_indent
 argument_list|(
 name|child
 argument_list|,
+name|cmdline_options
+argument_list|,
 name|indent
 operator|+
 literal|2
@@ -2764,6 +2790,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Recursively print node with all its children.  The cmdline_options  * argument is used for additional options to be prepended to all the  * others - usually those are the options passed by command line.  */
+end_comment
 
 begin_function
 name|void
@@ -2774,6 +2804,11 @@ name|struct
 name|node
 modifier|*
 name|n
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cmdline_options
 parameter_list|)
 block|{
 specifier|const
@@ -2793,6 +2828,8 @@ argument_list|)
 name|node_print_indent
 argument_list|(
 name|child
+argument_list|,
+name|cmdline_options
 argument_list|,
 literal|0
 argument_list|)
