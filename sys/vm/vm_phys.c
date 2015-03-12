@@ -1268,6 +1268,15 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|sbuf_putc
+argument_list|(
+operator|&
+name|sbuf
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* nullterm */
 name|error
 operator|=
 name|sbuf_finish
@@ -1435,6 +1444,15 @@ name|free_queues
 argument_list|)
 expr_stmt|;
 block|}
+name|sbuf_putc
+argument_list|(
+operator|&
+name|sbuf
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* nullterm */
 name|error
 operator|=
 name|sbuf_finish
