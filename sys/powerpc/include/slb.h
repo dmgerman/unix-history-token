@@ -158,6 +158,17 @@ value|28
 end_define
 
 begin_comment
+comment|/* Virtual real-mode VSID in LPARs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSID_VRMA
+value|0x1ffffff
+end_define
+
+begin_comment
 comment|/*  * User segment for copyin/out  */
 end_comment
 
