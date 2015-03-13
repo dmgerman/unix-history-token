@@ -5241,7 +5241,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|void
 name|intel_opregion_init
 parameter_list|(
 name|struct
@@ -5268,7 +5268,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|opregion_asle_intr
+name|intel_opregion_asle_intr
 parameter_list|(
 name|struct
 name|drm_device
@@ -5281,7 +5281,20 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|opregion_enable_asle
+name|intel_opregion_gse_intr
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|intel_opregion_enable_asle
 parameter_list|(
 name|struct
 name|drm_device
