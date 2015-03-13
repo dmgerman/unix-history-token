@@ -125,6 +125,10 @@ name|uint32_t
 modifier|*
 name|ports
 parameter_list|,
+name|uint32_t
+modifier|*
+name|untagged_ports
+parameter_list|,
 name|int
 name|vid
 parameter_list|)
@@ -142,6 +146,9 @@ name|sc
 parameter_list|,
 name|uint32_t
 name|ports
+parameter_list|,
+name|uint32_t
+name|untagged_ports
 parameter_list|,
 name|int
 name|vid
