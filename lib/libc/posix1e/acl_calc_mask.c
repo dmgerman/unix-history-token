@@ -318,6 +318,11 @@ name|errno
 operator|=
 name|ENOMEM
 expr_stmt|;
+name|acl_free
+argument_list|(
+name|acl_new
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
