@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vmm_ipi.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vmm_ktr.h"
 end_include
 
