@@ -4820,6 +4820,11 @@ block|{
 name|int
 name|err
 decl_stmt|;
+name|twiddle
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(

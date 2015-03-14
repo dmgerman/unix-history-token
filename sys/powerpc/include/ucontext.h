@@ -69,6 +69,13 @@ index|[
 literal|33
 index|]
 decl_stmt|;
+name|uint64_t
+name|mc_vsxfpreg
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* low-order half of VSR0-31 */
 block|}
 name|mcontext_t
 name|__aligned
@@ -143,6 +150,13 @@ index|[
 literal|33
 index|]
 decl_stmt|;
+name|uint64_t
+name|mc_vsxfpreg
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* low-order half of VSR0-31 */
 block|}
 name|mcontext32_t
 name|__aligned

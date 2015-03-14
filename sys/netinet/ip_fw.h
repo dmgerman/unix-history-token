@@ -2279,7 +2279,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/* IPv6 nexthop */
+comment|/* limit */
 end_comment
 
 begin_define
@@ -2684,9 +2684,9 @@ name|dscp
 decl_stmt|;
 name|uint8_t
 name|spare0
-index|[
-literal|3
-index|]
+decl_stmt|;
+name|uint16_t
+name|spare1
 decl_stmt|;
 name|struct
 name|in6_addr
@@ -2697,8 +2697,9 @@ name|limit
 decl_stmt|;
 comment|/* O_LIMIT */
 name|uint32_t
-name|spare1
+name|zoneid
 decl_stmt|;
+comment|/* scope zone id for nh6 */
 name|uint64_t
 name|reserved
 decl_stmt|;

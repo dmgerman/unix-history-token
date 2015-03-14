@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vmm_ipi.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vmm_lapic.h"
 end_include
 

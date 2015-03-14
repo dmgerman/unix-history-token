@@ -278,12 +278,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vmm_ipi.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vmm_stat.h"
 end_include
 
@@ -1379,13 +1373,19 @@ argument_list|()
 expr_stmt|;
 name|vmm_ipinum
 operator|=
-name|vmm_ipi_alloc
-argument_list|()
+name|lapic_ipi_alloc
+argument_list|(
+operator|&
+name|IDTVEC
+argument_list|(
+name|justreturn
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|vmm_ipinum
-operator|==
+operator|<
 literal|0
 condition|)
 name|vmm_ipinum
@@ -1534,7 +1534,7 @@ name|vmm_ipinum
 operator|!=
 name|IPI_AST
 condition|)
-name|vmm_ipi_free
+name|lapic_ipi_free
 argument_list|(
 name|vmm_ipinum
 argument_list|)

@@ -152,28 +152,6 @@ name|IPI_INVLCACHE
 value|(APIC_IPI_INTS + 4)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IPI_LAZYPMAP
-value|(APIC_IPI_INTS + 5)
-end_define
-
-begin_comment
-comment|/* Lazy pmap release. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Vector to handle bitmap based IPIs */
 end_comment
@@ -182,7 +160,7 @@ begin_define
 define|#
 directive|define
 name|IPI_BITMAP_VECTOR
-value|(APIC_IPI_INTS + 6)
+value|(APIC_IPI_INTS + 5)
 end_define
 
 begin_comment
@@ -235,7 +213,7 @@ begin_define
 define|#
 directive|define
 name|IPI_STOP
-value|(APIC_IPI_INTS + 7)
+value|(APIC_IPI_INTS + 6)
 end_define
 
 begin_comment
@@ -246,11 +224,63 @@ begin_define
 define|#
 directive|define
 name|IPI_SUSPEND
-value|(APIC_IPI_INTS + 8)
+value|(APIC_IPI_INTS + 7)
 end_define
 
 begin_comment
 comment|/* Suspend CPU until restarted. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IPI_LAZYPMAP
+value|(APIC_IPI_INTS + 8)
+end_define
+
+begin_comment
+comment|/* Lazy pmap release. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_DYN_FIRST
+value|(APIC_IPI_INTS + 9)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IPI_DYN_FIRST
+value|(APIC_IPI_INTS + 8)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|IPI_DYN_LAST
+value|(254)
+end_define
+
+begin_comment
+comment|/* IPIs allocated at runtime */
 end_comment
 
 begin_comment
@@ -902,6 +932,27 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|ipi_alloc
+function_decl|)
+parameter_list|(
+name|inthand_t
+modifier|*
+name|ipifunc
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ipi_free
+function_decl|)
+parameter_list|(
+name|int
+name|vector
+parameter_list|)
+function_decl|;
 comment|/* LVT */
 name|int
 function_decl|(
@@ -1492,6 +1543,53 @@ operator|.
 name|ipi_wait
 argument_list|(
 name|delay
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|lapic_ipi_alloc
+parameter_list|(
+name|inthand_t
+modifier|*
+name|ipifunc
+parameter_list|)
+block|{
+return|return
+operator|(
+name|apic_ops
+operator|.
+name|ipi_alloc
+argument_list|(
+name|ipifunc
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|lapic_ipi_free
+parameter_list|(
+name|int
+name|vector
+parameter_list|)
+block|{
+return|return
+operator|(
+name|apic_ops
+operator|.
+name|ipi_free
+argument_list|(
+name|vector
 argument_list|)
 operator|)
 return|;

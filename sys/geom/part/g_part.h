@@ -197,6 +197,9 @@ comment|/* A DfBSD HAMMER2 FS partition entry */
 name|G_PART_ALIAS_PREP_BOOT
 block|,
 comment|/* A PREP/CHRP boot partition entry. */
+name|G_PART_ALIAS_APPLE_CORE_STORAGE
+block|,
+comment|/* An Apple Core Storage partition. */
 comment|/* Keep the following last */
 name|G_PART_ALIAS_COUNT
 block|}

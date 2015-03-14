@@ -21,7 +21,7 @@ comment|/* Returns: convert a to a unsigned int, rounding toward zero.  *       
 end_comment
 
 begin_comment
-comment|/* Assumption: long double is an intel 80 bit floating point type padded with 6 bytes  *             su_int is a 32 bit integral type  *             value in long double is representable in su_int or is negative   *                 (no range checking performed)  */
+comment|/* Assumption: long double is an intel 80 bit floating point type padded with 6 bytes  *             su_int is a 32 bit integral type  *             value in long double is representable in su_int or is negative   */
 end_comment
 
 begin_comment
@@ -87,6 +87,27 @@ literal|0x00008000
 operator|)
 condition|)
 return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|e
+operator|>
+sizeof|sizeof
+argument_list|(
+name|su_int
+argument_list|)
+operator|*
+name|CHAR_BIT
+condition|)
+return|return
+operator|~
+operator|(
+name|su_int
+operator|)
 literal|0
 return|;
 return|return

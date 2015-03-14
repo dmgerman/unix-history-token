@@ -15,6 +15,27 @@ directive|define
 name|_DEV_MII_RGEPHYREG_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|RGEPHY_8211B
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_8211C
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_8211F
+value|6
+end_define
+
 begin_comment
 comment|/*  * RealTek 8169S/8110S gigE PHY registers  */
 end_comment
@@ -1106,6 +1127,153 @@ begin_define
 define|#
 directive|define
 name|RGEPHY_SSR_JABBER
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Jabber */
+end_comment
+
+begin_comment
+comment|/* RTL8211F */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_MII_PCR1
+value|0x18
+end_define
+
+begin_comment
+comment|/* PHY Specific control register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_PCR1_MDI_MM
+value|0x0200
+end_define
+
+begin_comment
+comment|/* MDI / MDIX Manual Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_PCR1_MDI_MODE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* MDI Mode (0=MDIX,1=MDI) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_PCR1_ALDPS_EN
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Link Down Power Saving Enable */
+end_comment
+
+begin_comment
+comment|/* RTL8211F */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_MII_SSR
+value|0x1A
+end_define
+
+begin_comment
+comment|/* PHY Specific status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_SSR_S1000
+value|0x0020
+end_define
+
+begin_comment
+comment|/* 1000Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_SSR_S100
+value|0x0010
+end_define
+
+begin_comment
+comment|/* 100Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_SSR_S10
+value|0x0000
+end_define
+
+begin_comment
+comment|/* 10Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_SSR_SPD_MASK
+value|0x0030
+end_define
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_SSR_FDX
+value|0x0008
+end_define
+
+begin_comment
+comment|/* full duplex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_SSR_LINK
+value|0x0004
+end_define
+
+begin_comment
+comment|/* link up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_SSR_MDI
+value|0x0002
+end_define
+
+begin_comment
+comment|/* MDI/MDIX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_F_SSR_JABBER
 value|0x0001
 end_define
 
