@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ===-- fixunssfti.c - Implement __fixunssfti -----------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __fixunssfti for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
+comment|/* ===-- fixunstfsi.c - Implement __fixunstfsi -----------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|QUAD_PRECISION
+end_define
+
+begin_include
+include|#
+directive|include
+file|"fp_lib.h"
+end_include
 
 begin_if
 if|#
@@ -9,6 +21,11 @@ directive|if
 name|defined
 argument_list|(
 name|CRT_HAS_128BIT
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRT_LDBL_128BIT
 argument_list|)
 end_if
 
@@ -28,7 +45,7 @@ end_include
 begin_function
 name|COMPILER_RT_ABI
 name|tu_int
-name|__fixunssfti
+name|__fixunstfti
 parameter_list|(
 name|fp_t
 name|a
