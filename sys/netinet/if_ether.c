@@ -753,7 +753,7 @@ name|s_addr
 operator|=
 name|addr
 expr_stmt|;
-name|IF_AFDATA_RLOCK
+name|IF_AFDATA_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -780,7 +780,7 @@ operator|&
 name|addr4
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_RUNLOCK
+name|IF_AFDATA_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
