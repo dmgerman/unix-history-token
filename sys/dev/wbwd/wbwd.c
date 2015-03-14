@@ -1000,15 +1000,6 @@ operator|->
 name|reg_2
 argument_list|)
 expr_stmt|;
-name|sbuf_putc
-argument_list|(
-operator|&
-name|sb
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* nullterm */
 name|error
 operator|=
 name|sbuf_finish
