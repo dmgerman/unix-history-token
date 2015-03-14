@@ -89,6 +89,12 @@ name|defined
 argument_list|(
 name|__mips__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 end_if
 
 begin_include
@@ -349,6 +355,12 @@ directive|elif
 name|defined
 argument_list|(
 name|__mips__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
 argument_list|)
 specifier|const
 name|uintptr_t
