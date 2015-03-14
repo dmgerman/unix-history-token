@@ -3842,6 +3842,14 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
+name|sbuf_clear_flags
+argument_list|(
+operator|&
+name|sbuf
+argument_list|,
+name|SBUF_INCLUDENUL
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
