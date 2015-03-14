@@ -953,16 +953,11 @@ operator|->
 name|if_xname
 decl_stmt|;
 return|return
-name|SYSCTL_OUT
+name|SYSCTL_OUT_STR
 argument_list|(
 name|req
 argument_list|,
 name|name
-argument_list|,
-name|strlen
-argument_list|(
-name|name
-argument_list|)
 argument_list|)
 return|;
 block|}
