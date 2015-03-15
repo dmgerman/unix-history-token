@@ -687,6 +687,12 @@ name|struct
 name|task
 name|sc_start_task
 decl_stmt|;
+comment|/* Taskqueue */
+name|struct
+name|taskqueue
+modifier|*
+name|sc_tq
+decl_stmt|;
 comment|/* Eeprom info. */
 name|uint8_t
 name|cap
