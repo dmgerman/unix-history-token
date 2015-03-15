@@ -22366,7 +22366,6 @@ argument_list|(
 name|WPI_FILTER_BSS
 argument_list|)
 expr_stmt|;
-comment|/* XXX put somewhere HC_QOS_SUPPORT_ASSOC + HC_IBSS_START */
 name|DPRINTF
 argument_list|(
 name|sc
