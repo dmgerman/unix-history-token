@@ -533,6 +533,10 @@ decl_stmt|;
 name|uint32_t
 name|nodesmsk
 decl_stmt|;
+name|struct
+name|mtx
+name|nt_mtx
+decl_stmt|;
 name|int
 name|sc_tx_timer
 decl_stmt|;
@@ -642,7 +646,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* WPI_LOCK> WPI_TXQ_LOCK */
+comment|/* WPI_LOCK> WPI_NT_LOCK> WPI_TXQ_LOCK */
 end_comment
 
 begin_define
@@ -694,6 +698,47 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_destroy(&(_sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_NT_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|mtx_init(&(_sc)->nt_mtx, "node table lock", NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_NT_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->nt_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_NT_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->nt_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_NT_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->nt_mtx)
 end_define
 
 begin_define
