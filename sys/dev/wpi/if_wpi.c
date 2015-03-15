@@ -23335,7 +23335,8 @@ argument_list|,
 name|WPI_DEBUG_FIRMWARE
 argument_list|,
 literal|"Firmware Version: Major %d, Minor %d, Driver %d, \n"
-literal|"runtime (text: %u, data: %u) init (text: %u, data %u) boot (text %u)\n"
+literal|"runtime (text: %u, data: %u) init (text: %u, data %u) "
+literal|"boot (text %u)\n"
 argument_list|,
 name|hdr
 operator|->
