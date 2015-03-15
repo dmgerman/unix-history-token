@@ -244,6 +244,16 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|WPI_NODE
+parameter_list|(
+name|ni
+parameter_list|)
+value|((struct wpi_node *)(ni))
+end_define
+
 begin_struct
 struct|struct
 name|wpi_power_sample
