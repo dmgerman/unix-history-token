@@ -10942,7 +10942,7 @@ name|ic
 operator|->
 name|ic_flags
 operator|&
-name|IEEE80211_S_SCAN
+name|IEEE80211_F_SCAN
 operator|)
 operator|==
 literal|0
