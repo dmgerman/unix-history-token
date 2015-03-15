@@ -601,6 +601,10 @@ name|struct
 name|task
 name|sc_radioon_task
 decl_stmt|;
+name|struct
+name|task
+name|sc_start_task
+decl_stmt|;
 comment|/* Eeprom info. */
 name|uint8_t
 name|cap
