@@ -333,26 +333,6 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|static
-name|int
-name|lm75_faults
-index|[
-literal|4
-index|]
-init|=
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|4
-block|,
-literal|6
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Utility functions */
 end_comment
@@ -2240,6 +2220,20 @@ name|device_t
 name|dev
 decl_stmt|;
 name|int
+name|lm75_faults
+index|[]
+init|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|4
+block|,
+literal|6
+block|}
+decl_stmt|;
+name|int
 name|error
 decl_stmt|,
 name|faults
@@ -2284,7 +2278,7 @@ expr_stmt|;
 if|if
 condition|(
 name|tmp
-operator|>
+operator|>=
 name|nitems
 argument_list|(
 name|lm75_faults
@@ -2296,6 +2290,8 @@ name|nitems
 argument_list|(
 name|lm75_faults
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 name|faults
 operator|=

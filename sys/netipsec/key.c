@@ -18129,7 +18129,6 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-operator|&
 name|sin6
 argument_list|,
 operator|(

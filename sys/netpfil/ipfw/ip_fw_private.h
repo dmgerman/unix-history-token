@@ -198,11 +198,19 @@ name|_ip6dn_args
 name|dummypar
 decl_stmt|;
 comment|/* dummynet->ip6_output */
+union|union
+block|{
+comment|/* store here if cannot use a pointer */
 name|struct
 name|sockaddr_in
 name|hopstore
 decl_stmt|;
-comment|/* store here if cannot use a pointer */
+name|struct
+name|sockaddr_in6
+name|hopstore6
+decl_stmt|;
+block|}
+union|;
 block|}
 struct|;
 end_struct
@@ -1117,9 +1125,9 @@ name|dscp
 decl_stmt|;
 name|uint8_t
 name|spare0
-index|[
-literal|3
-index|]
+decl_stmt|;
+name|uint16_t
+name|spare1
 decl_stmt|;
 comment|/* -- 32 bytes -- */
 name|struct
@@ -1131,8 +1139,9 @@ name|limit
 decl_stmt|;
 comment|/* O_LIMIT */
 name|uint32_t
-name|spare1
+name|zoneid
 decl_stmt|;
+comment|/* scope zone id for nh6 */
 name|uint64_t
 name|refcnt
 decl_stmt|;

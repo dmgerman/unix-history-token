@@ -992,16 +992,11 @@ return|;
 block|}
 return|return
 operator|(
-name|SYSCTL_OUT
+name|SYSCTL_OUT_STR
 argument_list|(
 name|req
 argument_list|,
 name|value
-argument_list|,
-name|strlen
-argument_list|(
-name|value
-argument_list|)
 argument_list|)
 operator|)
 return|;

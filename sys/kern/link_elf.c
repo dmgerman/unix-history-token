@@ -1954,7 +1954,7 @@ literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__powerpc64__
+name|__powerpc__
 name|ef
 operator|->
 name|address

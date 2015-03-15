@@ -2568,7 +2568,7 @@ argument_list|,
 literal|"passthrough"
 argument_list|)
 condition|)
-name|device_set_devclass
+name|device_set_devclass_fixed
 argument_list|(
 name|vf
 argument_list|,

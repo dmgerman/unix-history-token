@@ -894,16 +894,6 @@ argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|fb_info
-operator|.
-name|fb_flags
-operator|&=
-operator|~
-name|FB_FLAG_NOMMAP
-expr_stmt|;
-comment|/* Set wrongly by vt_fb_init */
 return|return
 operator|(
 name|CN_INTERNAL

@@ -99,12 +99,6 @@ directive|include
 file|"mlx4_en.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"utils.h"
-end_include
-
 begin_enum
 enum|enum
 block|{
@@ -4129,8 +4123,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|uint32_t
 name|hashrandom
 decl_stmt|;
 end_decl_stmt
@@ -4147,7 +4140,7 @@ parameter_list|)
 block|{
 name|hashrandom
 operator|=
-name|random
+name|m_ether_tcpip_hash_init
 argument_list|()
 expr_stmt|;
 block|}
@@ -4270,11 +4263,11 @@ expr_stmt|;
 else|else
 name|queue_index
 operator|=
-name|mlx4_en_hashmbuf
+name|m_ether_tcpip_hash
 argument_list|(
-name|MLX4_F_HASHL3
+name|MBUF_HASHFLAG_L3
 operator||
-name|MLX4_F_HASHL4
+name|MBUF_HASHFLAG_L4
 argument_list|,
 name|mb
 argument_list|,

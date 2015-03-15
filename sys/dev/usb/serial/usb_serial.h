@@ -51,6 +51,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/timepps.h>
+end_include
+
 begin_comment
 comment|/* Module interface related macros */
 end_comment
@@ -599,6 +605,11 @@ name|sc_param_task
 index|[
 literal|2
 index|]
+decl_stmt|;
+comment|/* pulse capturing support, PPS */
+name|struct
+name|pps_state
+name|sc_pps
 decl_stmt|;
 comment|/* Used to set "UCOM_FLAG_GP_DATA" flag: */
 name|struct

@@ -1035,7 +1035,7 @@ begin_define
 define|#
 directive|define
 name|PPS_CDEV_NAME
-value|"pps"
+value|"dmtpps"
 end_define
 
 begin_function

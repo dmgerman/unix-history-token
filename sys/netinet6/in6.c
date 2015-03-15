@@ -8171,6 +8171,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|ND_IFINFO
 argument_list|(
 name|ifp
@@ -8179,6 +8180,18 @@ operator|->
 name|flags
 operator|&
 name|ND6_IFF_IFDISABLED
+operator|)
+operator|||
+operator|(
+name|ND_IFINFO
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_NO_DAD
+operator|)
 condition|)
 return|return
 operator|(

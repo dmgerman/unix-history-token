@@ -8062,6 +8062,8 @@ argument_list|,
 name|length
 argument_list|,
 name|SBUF_FIXEDLEN
+operator||
+name|SBUF_INCLUDENUL
 argument_list|)
 expr_stmt|;
 name|sbuf_set_drain

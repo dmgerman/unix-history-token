@@ -5395,6 +5395,30 @@ end_elif
 begin_define
 define|#
 directive|define
+name|DTRACE_INVOP_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTRACE_INVOP_MASK
+value|((1<< DTRACE_INVOP_SHIFT) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTRACE_INVOP_DATA
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> DTRACE_INVOP_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DTRACE_INVOP_PUSHM
 value|1
 end_define

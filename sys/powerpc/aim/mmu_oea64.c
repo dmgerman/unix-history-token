@@ -9197,6 +9197,14 @@ operator||=
 name|i
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|hash
+operator|==
+name|VSID_VRMA
+condition|)
+comment|/* also special, avoid this too */
+continue|continue;
 name|KASSERT
 argument_list|(
 operator|!

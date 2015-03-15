@@ -888,7 +888,6 @@ name|fbd
 operator|==
 name|NULL
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -898,8 +897,7 @@ argument_list|,
 literal|"Failed to add fbd child\n"
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
+elseif|else
 if|if
 condition|(
 name|device_probe_and_attach
@@ -909,7 +907,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -919,8 +916,6 @@ argument_list|,
 literal|"Failed to attach fbd device\n"
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 block|}
 else|else
 block|{
@@ -933,7 +928,6 @@ argument_list|,
 literal|"Failed to set framebuffer info\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|config_intrhook_disestablish
 argument_list|(

@@ -2306,6 +2306,7 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+specifier|const
 name|int
 name|linesize
 init|=
@@ -2353,7 +2354,7 @@ operator|+
 literal|1
 operator|)
 argument_list|,
-name|SBUF_FIXEDLEN
+name|SBUF_INCLUDENUL
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
@@ -2541,12 +2542,20 @@ block|}
 undef|#
 directive|undef
 name|msec
+name|error
+operator|=
 name|sbuf_finish
 argument_list|(
 operator|&
 name|sb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|error
 operator|=
 name|SYSCTL_OUT

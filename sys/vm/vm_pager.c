@@ -709,6 +709,12 @@ literal|2
 operator|+
 literal|1
 expr_stmt|;
+name|vnode_async_pbuf_freecnt
+operator|=
+name|nswbuf
+operator|/
+literal|2
+expr_stmt|;
 block|}
 end_function
 

@@ -490,6 +490,13 @@ name|SCTP_PKTDROP_SUPPORTED
 value|0x00000031
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_MAX_CWND
+value|0x00000032
+end_define
+
 begin_comment
 comment|/*  * read-only options  */
 end_comment

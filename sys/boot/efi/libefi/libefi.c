@@ -383,7 +383,7 @@ argument_list|)
 expr_stmt|;
 name|heapsize
 operator|=
-literal|2
+literal|3
 operator|*
 literal|1024
 operator|*

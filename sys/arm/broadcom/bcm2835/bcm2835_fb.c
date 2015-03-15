@@ -1206,7 +1206,6 @@ argument_list|,
 literal|"Failed to set framebuffer info\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|config_intrhook_disestablish
 argument_list|(

@@ -1395,7 +1395,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|SYSCTL_OUT
+name|SYSCTL_OUT_STR
 argument_list|(
 name|req
 argument_list|,
@@ -1403,14 +1403,6 @@ name|vm_guest_sysctl_names
 index|[
 name|vm_guest
 index|]
-argument_list|,
-name|strlen
-argument_list|(
-name|vm_guest_sysctl_names
-index|[
-name|vm_guest
-index|]
-argument_list|)
 argument_list|)
 operator|)
 return|;
