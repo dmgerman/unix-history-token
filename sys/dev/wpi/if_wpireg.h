@@ -52,6 +52,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WPI_DRV_NTXQUEUES
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|WPI_NDMACHNLS
 value|6
 end_define

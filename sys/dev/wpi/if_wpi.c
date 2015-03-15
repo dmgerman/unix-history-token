@@ -11428,7 +11428,7 @@ literal|0
 init|;
 name|qid
 operator|<
-name|WPI_NTXQUEUES
+name|WPI_DRV_NTXQUEUES
 condition|;
 name|qid
 operator|++
@@ -11793,7 +11793,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|WPI_NTXQUEUES
+name|WPI_DRV_NTXQUEUES
 condition|;
 name|i
 operator|++
