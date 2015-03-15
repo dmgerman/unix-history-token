@@ -2594,11 +2594,27 @@ name|BLOCKIF_SIG
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Stop the block i/o thread 	 */
+name|pthread_mutex_lock
+argument_list|(
+operator|&
+name|bc
+operator|->
+name|bc_mtx
+argument_list|)
+expr_stmt|;
 name|bc
 operator|->
 name|bc_closing
 operator|=
 literal|1
+expr_stmt|;
+name|pthread_mutex_unlock
+argument_list|(
+operator|&
+name|bc
+operator|->
+name|bc_mtx
+argument_list|)
 expr_stmt|;
 name|pthread_cond_broadcast
 argument_list|(
