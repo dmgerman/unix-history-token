@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man_html.c,v 1.111 2015/02/10 08:05:30 schwarze Exp $ */
+comment|/*	$Id: man_html.c,v 1.112 2015/03/03 21:11:34 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -1207,6 +1207,19 @@ return|return;
 case|case
 name|MAN_EQN
 case|:
+if|if
+condition|(
+name|n
+operator|->
+name|flags
+operator|&
+name|MAN_LINE
+condition|)
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
 name|print_eqn
 argument_list|(
 name|h

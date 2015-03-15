@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_term.c,v 1.311 2015/02/17 20:37:17 schwarze Exp $ */
+comment|/*	$Id: mdoc_term.c,v 1.313 2015/03/06 15:48:52 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -2201,6 +2201,21 @@ break|break;
 case|case
 name|MDOC_TBL
 case|:
+if|if
+condition|(
+name|p
+operator|->
+name|tbl
+operator|.
+name|cols
+operator|==
+name|NULL
+condition|)
+name|term_newln
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|term_tbl
 argument_list|(
 name|p
@@ -8277,7 +8292,7 @@ name|struct
 name|roffsu
 name|su
 decl_stmt|;
-name|size_t
+name|int
 name|i
 decl_stmt|,
 name|len
@@ -8365,6 +8380,20 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|len
+operator|<
+literal|0
+condition|)
+name|p
+operator|->
+name|skipvsp
+operator|-=
+name|len
+expr_stmt|;
+else|else
 for|for
 control|(
 name|i
