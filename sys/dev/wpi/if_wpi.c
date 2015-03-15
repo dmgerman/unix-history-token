@@ -12420,6 +12420,8 @@ argument_list|,
 name|M_NOWAIT
 argument_list|,
 name|WPI_MAX_SCATTER
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -12513,6 +12515,21 @@ name|error
 return|;
 block|}
 block|}
+name|KASSERT
+argument_list|(
+name|nsegs
+operator|<
+name|WPI_MAX_SCATTER
+argument_list|,
+operator|(
+literal|"too many DMA segments, nsegs (%d) should be less than %d"
+operator|,
+name|nsegs
+operator|,
+name|WPI_MAX_SCATTER
+operator|)
+argument_list|)
+expr_stmt|;
 name|data
 operator|->
 name|m
