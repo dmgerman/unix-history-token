@@ -986,6 +986,17 @@ if|if
 condition|(
 name|bc
 operator|->
+name|bc_rdonly
+condition|)
+name|err
+operator|=
+name|EROFS
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bc
+operator|->
 name|bc_ischr
 condition|)
 block|{

@@ -4371,6 +4371,8 @@ decl_stmt|,
 name|psectoff
 decl_stmt|,
 name|candelete
+decl_stmt|,
+name|ro
 decl_stmt|;
 name|uint16_t
 name|cyl
@@ -4380,6 +4382,15 @@ name|sech
 decl_stmt|,
 name|heads
 decl_stmt|;
+name|ro
+operator|=
+name|blockif_is_ro
+argument_list|(
+name|p
+operator|->
+name|bctx
+argument_list|)
+expr_stmt|;
 name|candelete
 operator|=
 name|blockif_candelete
@@ -4966,6 +4977,9 @@ expr_stmt|;
 if|if
 condition|(
 name|candelete
+operator|&&
+operator|!
+name|ro
 condition|)
 block|{
 name|buf
