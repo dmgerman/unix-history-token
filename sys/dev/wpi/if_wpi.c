@@ -25052,6 +25052,11 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
+name|WPI_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -25063,6 +25068,11 @@ name|hz
 argument_list|,
 name|wpi_watchdog_rfkill
 argument_list|,
+name|sc
+argument_list|)
+expr_stmt|;
+name|WPI_UNLOCK
+argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
