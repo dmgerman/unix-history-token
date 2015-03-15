@@ -10706,6 +10706,19 @@ name|WPI_CMD_QUEUE_NUM
 condition|)
 return|return;
 comment|/* Not a command ack. */
+name|KASSERT
+argument_list|(
+name|ring
+operator|->
+name|queued
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"ring->queued must be 0"
+operator|)
+argument_list|)
+expr_stmt|;
 name|data
 operator|=
 operator|&
@@ -12995,6 +13008,15 @@ argument_list|,
 name|ring
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ring
+operator|->
+name|qid
+operator|<
+name|WPI_CMD_QUEUE_NUM
+condition|)
+block|{
 comment|/* Mark TX ring as full if we reach a certain threshold. */
 if|if
 condition|(
@@ -13015,20 +13037,13 @@ name|ring
 operator|->
 name|qid
 expr_stmt|;
-if|if
-condition|(
-name|ring
-operator|->
-name|qid
-operator|<
-name|WPI_CMD_QUEUE_NUM
-condition|)
 name|sc
 operator|->
 name|sc_tx_timer
 operator|=
 literal|5
 expr_stmt|;
+block|}
 name|DPRINTF
 argument_list|(
 name|sc
