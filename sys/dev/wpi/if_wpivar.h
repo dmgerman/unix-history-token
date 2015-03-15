@@ -440,14 +440,6 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
-comment|/* Flags indicating the current state the driver 	 * expects the hardware to be in 	 */
-name|uint32_t
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|WPI_FLAG_BUSY
-value|(1<< 0)
 comment|/* Shared area. */
 name|struct
 name|wpi_dma_info
