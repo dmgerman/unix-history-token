@@ -552,11 +552,11 @@ name|struct
 name|callout
 name|scan_timeout
 decl_stmt|;
-comment|/* Watch dog timers. */
 name|struct
 name|callout
-name|watchdog_to
+name|tx_timeout
 decl_stmt|;
+comment|/* Watch dog timer. */
 name|struct
 name|callout
 name|watchdog_rfkill
@@ -616,9 +616,6 @@ decl_stmt|;
 name|struct
 name|mtx
 name|nt_mtx
-decl_stmt|;
-name|int
-name|sc_tx_timer
 decl_stmt|;
 name|void
 function_decl|(
