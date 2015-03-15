@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: preconv.c,v 1.13 2014/12/19 04:58:35 schwarze Exp $ */
+comment|/*	$Id: preconv.c,v 1.14 2015/03/06 09:24:59 kristaps Exp $ */
 end_comment
 
 begin_comment
@@ -90,6 +90,11 @@ name|accum
 decl_stmt|;
 name|cu
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|ib
 operator|->
 name|buf
