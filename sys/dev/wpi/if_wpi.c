@@ -20276,7 +20276,13 @@ name|ieee80211vap
 modifier|*
 name|vap
 init|=
-name|NULL
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|ic
+operator|->
+name|ic_vaps
+argument_list|)
 decl_stmt|;
 name|int
 name|bintval
@@ -20286,26 +20292,10 @@ decl_stmt|;
 comment|/* bintval is in TU (1.024mS) */
 if|if
 condition|(
-operator|!
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|ic
-operator|->
-name|ic_vaps
-argument_list|)
-condition|)
-block|{
 name|vap
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|ic
-operator|->
-name|ic_vaps
-argument_list|)
-expr_stmt|;
+operator|!=
+name|NULL
+condition|)
 name|bintval
 operator|=
 name|vap
@@ -20314,7 +20304,6 @@ name|iv_bss
 operator|->
 name|ni_intval
 expr_stmt|;
-block|}
 comment|/* 	 * If it's non-zero, we should calculate the minimum of 	 * it and the DWELL_BASE. 	 * 	 * XXX Yes, the math should take into account that bintval 	 * is 1.024mS, not 1mS.. 	 */
 if|if
 condition|(
