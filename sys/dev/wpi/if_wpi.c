@@ -10145,15 +10145,7 @@ name|tap
 operator|->
 name|wr_dbm_antnoise
 operator|=
-operator|(
-name|int8_t
-operator|)
-name|le16toh
-argument_list|(
-name|stat
-operator|->
-name|noise
-argument_list|)
+name|WPI_RSSI_OFFSET
 expr_stmt|;
 name|tap
 operator|->
