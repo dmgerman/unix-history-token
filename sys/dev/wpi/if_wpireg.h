@@ -28,12 +28,35 @@ name|WPI_TX_RING_HIMARK
 value|224
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|WPI_RX_RING_COUNT_LOG
+value|8
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|WPI_RX_RING_COUNT_LOG
 value|6
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

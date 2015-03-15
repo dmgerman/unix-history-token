@@ -11951,13 +11951,27 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|rxq
+operator|.
+name|cur
+operator|%
+literal|8
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* Tell the firmware what we have processed. */
 name|wpi_update_rx_ring
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
