@@ -2955,6 +2955,10 @@ name|SHUT_RD
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOTCONN
 condition|)
 block|{
 name|logerror
