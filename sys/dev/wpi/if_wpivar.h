@@ -771,9 +771,9 @@ define|#
 directive|define
 name|WPI_LOCK_ASSERT
 parameter_list|(
-name|sc
+name|_sc
 parameter_list|)
-value|mtx_assert(&(sc)->sc_mtx, MA_OWNED)
+value|mtx_assert(&(_sc)->sc_mtx, MA_OWNED)
 end_define
 
 begin_define
