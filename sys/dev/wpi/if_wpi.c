@@ -24373,11 +24373,13 @@ name|wpi_load_key_cb
 else|:
 name|wpi_del_key_cb
 argument_list|,
-operator|(
+name|__DECONST
+argument_list|(
 name|void
 operator|*
-operator|)
+argument_list|,
 name|k
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
