@@ -1287,7 +1287,7 @@ operator|>
 name|pindex
 argument_list|,
 operator|(
-literal|"vm_reserv_alloc_page: pindex already allocated"
+literal|"vm_reserv_alloc_contig: pindex already allocated"
 operator|)
 argument_list|)
 expr_stmt|;
