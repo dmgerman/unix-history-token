@@ -7568,7 +7568,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|WPI_DEBUG_HW
+name|WPI_DEBUG_EEPROM
 argument_list|,
 literal|"Channel Not Valid: %d, band %d\n"
 argument_list|,
