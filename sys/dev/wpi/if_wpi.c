@@ -2735,6 +2735,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|WPI_TXQ_STATE_LOCK_INIT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Allocate DMA memory for firmware transfers. */
 if|if
 condition|(
@@ -3333,7 +3338,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|sc_mtx
+name|txq_state_mtx
 argument_list|,
 literal|0
 argument_list|)
@@ -4398,6 +4403,11 @@ argument_list|,
 name|TRACE_STR_END
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+name|WPI_TXQ_STATE_LOCK_DESTROY
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|WPI_TXQ_LOCK_DESTROY
@@ -10815,6 +10825,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|WPI_TXQ_STATE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ring
 operator|->
 name|queued
@@ -10943,6 +10958,11 @@ operator|&
 name|sc
 operator|->
 name|tx_timeout
+argument_list|)
+expr_stmt|;
+name|WPI_TXQ_STATE_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -13698,6 +13718,11 @@ name|WPI_CMD_QUEUE_NUM
 condition|)
 block|{
 comment|/* Mark TX ring as full if we reach a certain threshold. */
+name|WPI_TXQ_STATE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|++
@@ -13754,6 +13779,11 @@ name|hz
 argument_list|,
 name|wpi_tx_timeout
 argument_list|,
+name|sc
+argument_list|)
+expr_stmt|;
+name|WPI_TXQ_STATE_UNLOCK
+argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
@@ -27968,12 +27998,22 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|WPI_TXQ_STATE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|callout_stop
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|tx_timeout
+argument_list|)
+expr_stmt|;
+name|WPI_TXQ_STATE_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|WPI_RXON_LOCK

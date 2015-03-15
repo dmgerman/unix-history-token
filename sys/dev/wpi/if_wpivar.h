@@ -533,6 +533,10 @@ name|struct
 name|mtx
 name|txq_mtx
 decl_stmt|;
+name|struct
+name|mtx
+name|txq_state_mtx
+decl_stmt|;
 name|uint32_t
 name|txq_active
 decl_stmt|;
@@ -724,7 +728,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* WPI_LOCK> WPI_RXON_LOCK> WPI_NT_LOCK / WPI_VAP_LOCK> WPI_TXQ_LOCK */
+comment|/*  * Locking order:  * 1. WPI_LOCK;  * 2. WPI_RXON_LOCK;  * 3. WPI_NT_LOCK / WPI_VAP_LOCK;  * 4. WPI_TXQ_LOCK;  * 5. WPI_TXQ_STATE_LOCK;  */
 end_comment
 
 begin_define
@@ -909,6 +913,47 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_destroy(&(_sc)->txq_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_TXQ_STATE_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|mtx_init(&(_sc)->txq_state_mtx, "txq state lock", NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_TXQ_STATE_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->txq_state_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_TXQ_STATE_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->txq_state_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_TXQ_STATE_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->txq_state_mtx)
 end_define
 
 end_unit
