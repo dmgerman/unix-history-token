@@ -104,14 +104,19 @@ init|=
 literal|0x00008000
 block|,
 comment|/* EEPROM info */
-name|WPI_DEBUG_KEY
+name|WPI_DEBUG_NODE
 init|=
 literal|0x00010000
+block|,
+comment|/* node addition/removal */
+name|WPI_DEBUG_KEY
+init|=
+literal|0x00020000
 block|,
 comment|/* node key management */
 name|WPI_DEBUG_EDCA
 init|=
-literal|0x00020000
+literal|0x00040000
 block|,
 comment|/* WME info */
 name|WPI_DEBUG_REGISTER
