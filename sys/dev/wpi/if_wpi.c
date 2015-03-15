@@ -22928,11 +22928,19 @@ expr_stmt|;
 comment|/* Enable power-saving mode if requested by user. */
 if|if
 condition|(
+operator|(
 name|vap
 operator|->
 name|iv_flags
 operator|&
 name|IEEE80211_F_PMGTON
+operator|)
+operator|&&
+name|vap
+operator|->
+name|iv_opmode
+operator|!=
+name|IEEE80211_M_IBSS
 condition|)
 operator|(
 name|void
