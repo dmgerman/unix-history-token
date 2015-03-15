@@ -10846,6 +10846,22 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* wpi_stop() was called. */
+return|return;
+block|}
 break|break;
 case|case
 name|WPI_TX_DONE
