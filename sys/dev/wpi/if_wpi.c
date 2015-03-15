@@ -2604,12 +2604,8 @@ argument_list|,
 literal|"can't map mem space\n"
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
 return|return
-name|error
+name|ENOMEM
 return|;
 block|}
 name|sc
