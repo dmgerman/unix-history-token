@@ -3869,6 +3869,16 @@ operator|->
 name|sc_radiooff_task
 argument_list|)
 expr_stmt|;
+name|ieee80211_draintask
+argument_list|(
+name|ic
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_radioon_task
+argument_list|)
+expr_stmt|;
 name|wpi_stop
 argument_list|(
 name|sc
