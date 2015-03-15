@@ -6560,9 +6560,22 @@ name|qid
 operator|>
 name|WPI_CMD_QUEUE_NUM
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|WPI_DEBUG_TRACE
+argument_list|,
+name|TRACE_STR_END
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 name|size
 operator|=
 name|WPI_TX_RING_COUNT
@@ -10924,8 +10937,8 @@ name|sc
 argument_list|,
 name|WPI_DEBUG_CMD
 argument_list|,
-literal|"cmd notification qid=%x idx=%d flags=%x "
-literal|"type=%s len=%d\n"
+literal|"cmd notification qid %x idx %d flags %x "
+literal|"type %s len %d\n"
 argument_list|,
 name|desc
 operator|->
@@ -16105,7 +16118,9 @@ name|sc
 argument_list|,
 name|WPI_DEBUG_CMD
 argument_list|,
-literal|"wpi_cmd %s size %zu async %d\n"
+literal|"%s: cmd %s size %zu async %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|wpi_cmd_str
 argument_list|(
@@ -28232,7 +28247,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: error %d settting channel\n"
+literal|"%s: error %d setting channel\n"
 argument_list|,
 name|__func__
 argument_list|,
