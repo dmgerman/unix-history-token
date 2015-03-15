@@ -346,6 +346,10 @@ name|struct
 name|ieee80211_beacon_offsets
 name|wv_boff
 decl_stmt|;
+name|struct
+name|mtx
+name|wv_mtx
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -374,6 +378,57 @@ parameter_list|(
 name|vap
 parameter_list|)
 value|((struct wpi_vap *)(vap))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_VAP_LOCK_INIT
+parameter_list|(
+name|_wvp
+parameter_list|)
+define|\
+value|mtx_init(&(_wvp)->wv_mtx, "lock for wv_bcbuf/wv_boff structures", \ 	    NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_VAP_LOCK
+parameter_list|(
+name|_wvp
+parameter_list|)
+value|mtx_lock(&(_wvp)->wv_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_VAP_UNLOCK
+parameter_list|(
+name|_wvp
+parameter_list|)
+value|mtx_unlock(&(_wvp)->wv_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_VAP_LOCK_ASSERT
+parameter_list|(
+name|_wvp
+parameter_list|)
+value|mtx_assert(&(_wvp)->wv_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_VAP_LOCK_DESTROY
+parameter_list|(
+name|_wvp
+parameter_list|)
+value|mtx_destroy(&(_wvp)->wv_mtx)
 end_define
 
 begin_struct
@@ -657,7 +712,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* WPI_LOCK> WPI_NT_LOCK> WPI_TXQ_LOCK */
+comment|/* WPI_LOCK> WPI_NT_LOCK / WPI_VAP_LOCK> WPI_TXQ_LOCK */
 end_comment
 
 begin_define
