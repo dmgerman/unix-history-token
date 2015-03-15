@@ -72,6 +72,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AssumptionCache
+decl_stmt|;
+name|class
 name|Loop
 decl_stmt|;
 name|class
@@ -113,6 +116,10 @@ parameter_list|,
 name|LPPassManager
 modifier|*
 name|LPM
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
 parameter_list|)
 function_decl|;
 name|bool

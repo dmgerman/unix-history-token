@@ -118,8 +118,8 @@ comment|/// MaxInstsToScan specifies the maximum instructions to scan in the blo
 comment|/// If it is set to 0, it will scan the whole block. You can also optionally
 comment|/// specify an alias analysis implementation, which makes this more precise.
 comment|///
-comment|/// If TBAATag is non-null and a load or store is found, the TBAA tag from the
-comment|/// load or store is recorded there.  If there is no TBAA tag or if no access
+comment|/// If AATags is non-null and a load or store is found, the AA tags from the
+comment|/// load or store are recorded there.  If there are no AA tags or if no access
 comment|/// is found, it is left unmodified.
 name|Value
 modifier|*
@@ -150,10 +150,9 @@ name|AA
 operator|=
 name|nullptr
 argument_list|,
-name|MDNode
+name|AAMDNodes
 operator|*
-operator|*
-name|TBAATag
+name|AATags
 operator|=
 name|nullptr
 argument_list|)

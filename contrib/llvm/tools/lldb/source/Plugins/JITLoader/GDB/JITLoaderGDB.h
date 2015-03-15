@@ -219,6 +219,17 @@ argument_list|(
 argument|bool all_entries
 argument_list|)
 block|;
+name|template
+operator|<
+name|typename
+name|ptr_t
+operator|>
+name|bool
+name|ReadJITDescriptorImpl
+argument_list|(
+argument|bool all_entries
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|JITDebugBreakpointHit

@@ -385,26 +385,37 @@ decl_stmt|;
 comment|// PhysRegInfo - Keep track of which instruction was the last def of a
 comment|// physical register. This is a purely local property, because all physical
 comment|// register references are presumed dead across basic blocks.
+name|std
+operator|::
+name|vector
+operator|<
 name|MachineInstr
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|PhysRegDef
-decl_stmt|;
+expr_stmt|;
 comment|// PhysRegInfo - Keep track of which instruction was the last use of a
 comment|// physical register. This is a purely local property, because all physical
 comment|// register references are presumed dead across basic blocks.
+name|std
+operator|::
+name|vector
+operator|<
 name|MachineInstr
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|PhysRegUse
-decl_stmt|;
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
 name|SmallVector
 operator|<
 name|unsigned
 operator|,
 literal|4
-operator|>
-operator|*
+operator|>>
 name|PHIVarInfo
 expr_stmt|;
 comment|// DistanceMap - Keep track the distance of a MI from the start of the
@@ -526,6 +537,32 @@ specifier|const
 name|MachineFunction
 modifier|&
 name|Fn
+parameter_list|)
+function_decl|;
+name|void
+name|runOnInstr
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|Defs
+argument_list|)
+decl_stmt|;
+name|void
+name|runOnBlock
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|MBB
+parameter_list|,
+name|unsigned
+name|NumRegs
 parameter_list|)
 function_decl|;
 name|public

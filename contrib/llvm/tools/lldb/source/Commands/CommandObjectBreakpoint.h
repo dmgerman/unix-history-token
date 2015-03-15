@@ -124,25 +124,73 @@ argument_list|()
 block|;
 specifier|static
 name|void
-name|VerifyBreakpointIDs
+name|VerifyBreakpointOrLocationIDs
 argument_list|(
-name|Args
-operator|&
+argument|Args&args
+argument_list|,
+argument|Target *target
+argument_list|,
+argument|CommandReturnObject&result
+argument_list|,
+argument|BreakpointIDList *valid_ids
+argument_list|)
+block|{
+name|VerifyIDs
+argument_list|(
 name|args
 argument_list|,
-name|Target
-operator|*
 name|target
 argument_list|,
-name|CommandReturnObject
-operator|&
+name|true
+argument_list|,
 name|result
 argument_list|,
-name|BreakpointIDList
-operator|*
 name|valid_ids
 argument_list|)
-block|;  }
+block|;     }
+specifier|static
+name|void
+name|VerifyBreakpointIDs
+argument_list|(
+argument|Args&args
+argument_list|,
+argument|Target *target
+argument_list|,
+argument|CommandReturnObject&result
+argument_list|,
+argument|BreakpointIDList *valid_ids
+argument_list|)
+block|{
+name|VerifyIDs
+argument_list|(
+name|args
+argument_list|,
+name|target
+argument_list|,
+name|false
+argument_list|,
+name|result
+argument_list|,
+name|valid_ids
+argument_list|)
+block|;     }
+name|private
+operator|:
+specifier|static
+name|void
+name|VerifyIDs
+argument_list|(
+argument|Args&args
+argument_list|,
+argument|Target *target
+argument_list|,
+argument|bool allow_locations
+argument_list|,
+argument|CommandReturnObject&result
+argument_list|,
+argument|BreakpointIDList *valid_ids
+argument_list|)
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

@@ -208,6 +208,7 @@ name|virtual
 name|bool
 name|GetThreadSuffixSupported
 parameter_list|()
+function|override
 block|{
 return|return
 name|true
@@ -463,8 +464,6 @@ block|}
 comment|//------------------------------------------------------------------
 comment|/// Specify the program to launch and its arguments.
 comment|///
-comment|/// The LaunchProcess () command can be executed to do the lauching.
-comment|///
 comment|/// @param[in] args
 comment|///     The command line to launch.
 comment|///
@@ -487,8 +486,6 @@ argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Specify the launch flags for the process.
-comment|///
-comment|/// The LaunchProcess () command can be executed to do the lauching.
 comment|///
 comment|/// @param[in] launch_flags
 comment|///     The launch flags to use when launching this process.
@@ -1294,6 +1291,22 @@ modifier|&
 name|packet
 parameter_list|)
 function_decl|;
+name|PacketResult
+name|Handle_D
+parameter_list|(
+name|StringExtractorGDBRemote
+modifier|&
+name|packet
+parameter_list|)
+function_decl|;
+name|PacketResult
+name|Handle_qThreadStopInfo
+parameter_list|(
+name|StringExtractorGDBRemote
+modifier|&
+name|packet
+parameter_list|)
+function_decl|;
 name|void
 name|SetCurrentThreadID
 argument_list|(
@@ -1439,11 +1452,11 @@ operator|!
 name|m_is_platform
 return|;
 block|}
-comment|/// Launch a process from lldb-gdbserver
+comment|/// Launch an inferior process from lldb-gdbserver
 name|lldb_private
 operator|::
 name|Error
-name|LaunchDebugServerProcess
+name|LaunchProcessForDebugging
 argument_list|()
 expr_stmt|;
 comment|/// Launch a process from lldb-platform
@@ -1499,6 +1512,18 @@ name|void
 name|ClearProcessSpecificData
 parameter_list|()
 function_decl|;
+name|bool
+name|ShouldRedirectInferiorOutputOverGdbRemote
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|ProcessLaunchInfo
+operator|&
+name|launch_info
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// For GDBRemoteCommunicationServer only
 comment|//------------------------------------------------------------------

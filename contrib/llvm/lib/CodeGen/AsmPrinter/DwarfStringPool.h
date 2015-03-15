@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CODEGEN_ASMPRINTER_STRINGPOOL_H__
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DWARFSTRINGPOOL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CODEGEN_ASMPRINTER_STRINGPOOL_H__
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DWARFSTRINGPOOL_H
 end_define
 
 begin_include
@@ -106,10 +106,6 @@ expr_stmt|;
 name|StringRef
 name|Prefix
 decl_stmt|;
-name|MCSymbol
-modifier|*
-name|SectionSymbol
-decl_stmt|;
 name|public
 label|:
 name|DwarfStringPool
@@ -128,12 +124,7 @@ argument_list|)
 operator|,
 name|Prefix
 argument_list|(
-name|Prefix
-argument_list|)
-operator|,
-name|SectionSymbol
-argument_list|(
-argument|Asm.GetTempSymbol(Prefix)
+argument|Prefix
 argument_list|)
 block|{}
 name|void
@@ -154,21 +145,8 @@ operator|*
 name|OffsetSection
 operator|=
 name|nullptr
-argument_list|,
-specifier|const
-name|MCSymbol
-operator|*
-name|StrSecSym
-operator|=
-name|nullptr
 argument_list|)
 expr_stmt|;
-comment|/// \brief Returns the entry into the start of the pool.
-name|MCSymbol
-modifier|*
-name|getSectionSymbol
-parameter_list|()
-function_decl|;
 comment|/// \brief Returns an entry into the string pool with the given
 comment|/// string text.
 name|MCSymbol

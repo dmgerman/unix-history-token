@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_CONSTRAINT_MANAGER_H
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_CONSTRAINTMANAGER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_CONSTRAINT_MANAGER_H
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_CONSTRAINTMANAGER_H
 end_define
 
 begin_include
@@ -488,19 +488,23 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ConstraintManager
-modifier|*
+operator|>
 name|CreateRangeConstraintManager
-parameter_list|(
+argument_list|(
 name|ProgramStateManager
-modifier|&
+operator|&
 name|statemgr
-parameter_list|,
+argument_list|,
 name|SubEngine
-modifier|*
+operator|*
 name|subengine
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|// end GR namespace
 block|}

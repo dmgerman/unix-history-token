@@ -198,10 +198,30 @@ name|process_t
 typedef|;
 comment|// Process type is HANDLE
 typedef|typedef
-name|uintptr_t
+name|void
+modifier|*
 name|thread_t
 typedef|;
 comment|// Host thread type
+typedef|typedef
+name|void
+modifier|*
+name|file_t
+typedef|;
+comment|// Host file type
+typedef|typedef
+name|void
+modifier|*
+name|pipe_t
+typedef|;
+comment|// Host pipe type
+typedef|typedef
+name|unsigned
+name|int
+name|__w64
+name|socket_t
+typedef|;
+comment|// Host socket type
 typedef|typedef
 name|uint32_t
 name|thread_key_t
@@ -273,6 +293,21 @@ name|pthread_t
 name|thread_t
 typedef|;
 comment|// Host thread type
+typedef|typedef
+name|int
+name|file_t
+typedef|;
+comment|// Host file type
+typedef|typedef
+name|int
+name|pipe_t
+typedef|;
+comment|// Host pipe type
+typedef|typedef
+name|int
+name|socket_t
+typedef|;
+comment|// Host socket type
 typedef|typedef
 name|pthread_key_t
 name|thread_key_t
@@ -393,6 +428,13 @@ parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|LLDB_INVALID_PROCESS
+value|((lldb::process_t)-1)
+end_define
 
 begin_define
 define|#

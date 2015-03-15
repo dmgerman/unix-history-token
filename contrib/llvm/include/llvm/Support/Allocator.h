@@ -452,6 +452,7 @@ name|void
 name|Reset
 argument_list|()
 block|{}
+name|LLVM_ATTRIBUTE_RETURNS_NONNULL
 name|void
 operator|*
 name|Allocate
@@ -538,8 +539,8 @@ comment|// End namespace detail.
 comment|/// \brief Allocate memory in an ever growing pool, as if by bump-pointer.
 comment|///
 comment|/// This isn't strictly a bump-pointer allocator as it uses backing slabs of
-comment|/// memory rather than relying on boundless contiguous heap. However, it has
-comment|/// bump-pointer semantics in that is a monotonically growing pool of memory
+comment|/// memory rather than relying on a boundless contiguous heap. However, it has
+comment|/// bump-pointer semantics in that it is a monotonically growing pool of memory
 comment|/// where every allocation is found by merely allocating the next N bytes in
 comment|/// the slab, or the next N bytes in the next slab.
 comment|///
@@ -952,6 +953,7 @@ name|clear
 argument_list|()
 block|;   }
 comment|/// \brief Allocate space at the specified alignment.
+name|LLVM_ATTRIBUTE_RETURNS_NONNULL
 name|void
 operator|*
 name|Allocate
@@ -961,56 +963,67 @@ argument_list|,
 argument|size_t Alignment
 argument_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|CurPtr
-condition|)
-comment|// Start a new slab if we haven't allocated one already.
-name|StartNewSlab
-argument_list|()
-expr_stmt|;
+name|assert
+argument_list|(
+name|Alignment
+operator|>
+literal|0
+operator|&&
+literal|"0-byte alignnment is not allowed. Use 1 instead."
+argument_list|)
+block|;
 comment|// Keep track of how many bytes we've allocated.
 name|BytesAllocated
 operator|+=
 name|Size
-expr_stmt|;
-comment|// 0-byte alignment means 1-byte alignment.
-if|if
-condition|(
-name|Alignment
-operator|==
-literal|0
-condition|)
-name|Alignment
+block|;
+name|size_t
+name|Adjustment
 operator|=
-literal|1
-expr_stmt|;
-comment|// Allocate the aligned space, going forwards from CurPtr.
-name|char
-modifier|*
-name|Ptr
-init|=
-name|alignPtr
+name|alignmentAdjustment
 argument_list|(
 name|CurPtr
 argument_list|,
 name|Alignment
 argument_list|)
-decl_stmt|;
-comment|// Check if we can hold it.
+block|;
+name|assert
+argument_list|(
+name|Adjustment
+operator|+
+name|Size
+operator|>=
+name|Size
+operator|&&
+literal|"Adjustment + Size must not overflow"
+argument_list|)
+block|;
+comment|// Check if we have enough space.
 if|if
 condition|(
-name|Ptr
+name|Adjustment
 operator|+
 name|Size
 operator|<=
+name|size_t
+argument_list|(
 name|End
+operator|-
+name|CurPtr
+argument_list|)
 condition|)
 block|{
+name|char
+modifier|*
+name|AlignedPtr
+init|=
+name|CurPtr
+operator|+
+name|Adjustment
+decl_stmt|;
 name|CurPtr
 operator|=
-name|Ptr
+name|AlignedPtr
 operator|+
 name|Size
 expr_stmt|;
@@ -1019,13 +1032,13 @@ comment|// Without this, MemorySanitizer messages for values originated from her
 comment|// will point to the allocation of the entire slab.
 name|__msan_allocated_memory
 argument_list|(
-name|Ptr
+name|AlignedPtr
 argument_list|,
 name|Size
 argument_list|)
 expr_stmt|;
 return|return
-name|Ptr
+name|AlignedPtr
 return|;
 block|}
 comment|// If Size is really big, allocate a separate slab for it.
@@ -1072,25 +1085,19 @@ name|PaddedSize
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|Ptr
-operator|=
-name|alignPtr
+name|uintptr_t
+name|AlignedAddr
+init|=
+name|alignAddr
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NewSlab
 argument_list|,
 name|Alignment
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|assert
 argument_list|(
-operator|(
-name|uintptr_t
-operator|)
-name|Ptr
+name|AlignedAddr
 operator|+
 name|Size
 operator|<=
@@ -1102,54 +1109,80 @@ operator|+
 name|PaddedSize
 argument_list|)
 expr_stmt|;
+name|char
+modifier|*
+name|AlignedPtr
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|AlignedAddr
+decl_stmt|;
 name|__msan_allocated_memory
 argument_list|(
-name|Ptr
+name|AlignedPtr
 argument_list|,
 name|Size
 argument_list|)
 expr_stmt|;
 return|return
-name|Ptr
+name|AlignedPtr
 return|;
 block|}
 comment|// Otherwise, start a new slab and try again.
 name|StartNewSlab
 argument_list|()
 expr_stmt|;
-name|Ptr
-operator|=
-name|alignPtr
+name|uintptr_t
+name|AlignedAddr
+init|=
+name|alignAddr
 argument_list|(
 name|CurPtr
 argument_list|,
 name|Alignment
 argument_list|)
-expr_stmt|;
-name|CurPtr
-operator|=
-name|Ptr
-operator|+
-name|Size
-expr_stmt|;
+decl_stmt|;
 name|assert
 argument_list|(
-name|CurPtr
+name|AlignedAddr
+operator|+
+name|Size
 operator|<=
+operator|(
+name|uintptr_t
+operator|)
 name|End
 operator|&&
 literal|"Unable to allocate memory!"
 argument_list|)
 expr_stmt|;
+name|char
+modifier|*
+name|AlignedPtr
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|AlignedAddr
+decl_stmt|;
+name|CurPtr
+operator|=
+name|AlignedPtr
+operator|+
+name|Size
+expr_stmt|;
 name|__msan_allocated_memory
 argument_list|(
-name|Ptr
+name|AlignedPtr
 argument_list|,
 name|Size
 argument_list|)
 expr_stmt|;
 return|return
-name|Ptr
+name|AlignedPtr
 return|;
 block|}
 end_decl_stmt
@@ -1579,6 +1612,13 @@ directive|ifndef
 name|NDEBUG
 comment|// Poison the memory so stale pointers crash sooner.  Note we must
 comment|// preserve the Size and NextPtr fields at the beginning.
+if|if
+condition|(
+name|AllocatedSlabSize
+operator|!=
+literal|0
+condition|)
+block|{
 name|sys
 operator|::
 name|Memory
@@ -1601,6 +1641,7 @@ argument_list|,
 name|AllocatedSlabSize
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|Allocator
@@ -1830,7 +1871,11 @@ name|assert
 argument_list|(
 name|Begin
 operator|==
-name|alignPtr
+operator|(
+name|char
+operator|*
+operator|)
+name|alignAddr
 argument_list|(
 name|Begin
 argument_list|,
@@ -1940,12 +1985,12 @@ name|char
 modifier|*
 name|Begin
 init|=
-name|alignPtr
-argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
+name|alignAddr
+argument_list|(
 operator|*
 name|I
 argument_list|,
@@ -2023,12 +2068,12 @@ name|second
 decl_stmt|;
 name|DestroyElements
 argument_list|(
-name|alignPtr
-argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
+name|alignAddr
+argument_list|(
 name|Ptr
 argument_list|,
 name|alignOf

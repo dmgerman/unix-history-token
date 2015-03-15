@@ -231,11 +231,11 @@ name|DoParseArgs
 argument_list|(
 argument|const int argc
 argument_list|,
-argument|const char * argv[]
+argument|const char *argv[]
 argument_list|,
-argument|FILE * vpStdOut
+argument|FILE *vpStdOut
 argument_list|,
-argument|bool& vwbExiting
+argument|bool&vwbExiting
 argument_list|)
 expr_stmt|;
 name|virtual
@@ -444,7 +444,7 @@ operator|&
 name|error
 argument_list|)
 decl_stmt|;
-comment|//static OptionDefinition m_cmd_option_table[];
+comment|// static OptionDefinition m_cmd_option_table[];
 name|std
 operator|::
 name|vector
@@ -483,8 +483,7 @@ operator|,
 name|std
 operator|::
 name|string
-operator|>
-expr|>
+operator|>>
 name|m_initial_commands
 expr_stmt|;
 name|std
@@ -500,8 +499,7 @@ operator|,
 name|std
 operator|::
 name|string
-operator|>
-expr|>
+operator|>>
 name|m_after_file_commands
 expr_stmt|;
 name|bool

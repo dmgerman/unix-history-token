@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_PROFILEDATA_INSTRPROF_READER_H_
+name|LLVM_PROFILEDATA_INSTRPROFREADER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_PROFILEDATA_INSTRPROF_READER_H_
+name|LLVM_PROFILEDATA_INSTRPROFREADER_H
 end_define
 
 begin_include
@@ -84,6 +84,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/EndianStream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/LineIterator.h"
 end_include
 
@@ -91,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/MemoryBuffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/EndianStream.h"
 end_include
 
 begin_include
@@ -449,14 +455,17 @@ block|}
 comment|/// Factory method to create an appropriately typed reader for the given
 comment|/// instrprof file.
 specifier|static
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|error_code
+name|unique_ptr
+operator|<
+name|InstrProfReader
+operator|>>
 name|create
 argument_list|(
 argument|std::string Path
-argument_list|,
-argument|std::unique_ptr<InstrProfReader>&Result
 argument_list|)
 expr_stmt|;
 block|}
@@ -572,6 +581,8 @@ block|,
 name|Line
 argument_list|(
 argument|*DataBuffer
+argument_list|,
+argument|true
 argument_list|,
 literal|'#'
 argument_list|)
@@ -982,7 +993,7 @@ name|vector
 operator|<
 name|uint64_t
 operator|>
-name|CountBuffer
+name|DataBuffer
 expr_stmt|;
 name|IndexedInstrProf
 operator|::
@@ -1001,10 +1012,37 @@ argument_list|(
 argument|HashType
 argument_list|)
 block|{}
-typedef|typedef
-name|InstrProfRecord
+struct|struct
 name|data_type
-typedef|;
+block|{
+name|data_type
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|ArrayRef<uint64_t> Data
+argument_list|)
+block|:
+name|Name
+argument_list|(
+name|Name
+argument_list|)
+operator|,
+name|Data
+argument_list|(
+argument|Data
+argument_list|)
+block|{}
+name|StringRef
+name|Name
+expr_stmt|;
+name|ArrayRef
+operator|<
+name|uint64_t
+operator|>
+name|Data
+expr_stmt|;
+block|}
+struct|;
 typedef|typedef
 name|StringRef
 name|internal_key_type
@@ -1147,7 +1185,7 @@ name|N
 argument_list|)
 return|;
 block|}
-name|InstrProfRecord
+name|data_type
 name|ReadData
 parameter_list|(
 name|StringRef
@@ -1163,17 +1201,13 @@ name|offset_type
 name|N
 parameter_list|)
 block|{
+name|DataBuffer
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-name|N
-operator|<
-literal|2
-operator|*
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-operator|||
 name|N
 operator|%
 sizeof|sizeof
@@ -1181,49 +1215,23 @@ argument_list|(
 name|uint64_t
 argument_list|)
 condition|)
-block|{
 comment|// The data is corrupt, don't try to read it.
-name|CountBuffer
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
 return|return
-name|InstrProfRecord
+name|data_type
 argument_list|(
 literal|""
 argument_list|,
-literal|0
-argument_list|,
-name|CountBuffer
+name|DataBuffer
 argument_list|)
 return|;
-block|}
 name|using
 name|namespace
 name|support
 decl_stmt|;
-comment|// The first stored value is the hash.
-name|uint64_t
-name|Hash
-init|=
-name|endian
-operator|::
-name|readNext
-operator|<
-name|uint64_t
-decl_stmt|,
-name|little
-decl_stmt|,
-name|unaligned
-decl|>
-argument_list|(
-name|D
-argument_list|)
-decl_stmt|;
-comment|// Each counter follows.
+comment|// We just treat the data as opaque here. It's simpler to handle in
+comment|// IndexedInstrProfReader.
 name|unsigned
-name|NumCounters
+name|NumEntries
 init|=
 name|N
 operator|/
@@ -1231,21 +1239,12 @@ sizeof|sizeof
 argument_list|(
 name|uint64_t
 argument_list|)
-operator|-
-literal|1
 decl_stmt|;
-name|CountBuffer
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-name|CountBuffer
+name|DataBuffer
 operator|.
 name|reserve
 argument_list|(
-name|NumCounters
-operator|-
-literal|1
+name|NumEntries
 argument_list|)
 expr_stmt|;
 for|for
@@ -1257,12 +1256,12 @@ literal|0
 init|;
 name|I
 operator|<
-name|NumCounters
+name|NumEntries
 condition|;
 operator|++
 name|I
 control|)
-name|CountBuffer
+name|DataBuffer
 operator|.
 name|push_back
 argument_list|(
@@ -1282,13 +1281,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
-name|InstrProfRecord
+name|data_type
 argument_list|(
 name|K
 argument_list|,
-name|Hash
-argument_list|,
-name|CountBuffer
+name|DataBuffer
 argument_list|)
 return|;
 block|}
@@ -1346,7 +1343,15 @@ operator|::
 name|data_iterator
 name|RecordIterator
 block|;
-comment|/// The maximal execution count among all fucntions.
+comment|/// Offset into our current data set.
+name|size_t
+name|CurrentOffset
+block|;
+comment|/// The file format version of the profile data.
+name|uint64_t
+name|FormatVersion
+block|;
+comment|/// The maximal execution count among all functions.
 name|uint64_t
 name|MaxFunctionCount
 block|;
@@ -1395,9 +1400,9 @@ argument_list|(
 name|nullptr
 argument_list|)
 block|,
-name|RecordIterator
+name|CurrentOffset
 argument_list|(
-argument|InstrProfReaderIndex::data_iterator()
+literal|0
 argument_list|)
 block|{}
 comment|/// Return true if the given buffer is in an indexed instrprof format.
@@ -1437,7 +1442,7 @@ name|getFunctionCounts
 argument_list|(
 argument|StringRef FuncName
 argument_list|,
-argument|uint64_t&FuncHash
+argument|uint64_t FuncHash
 argument_list|,
 argument|std::vector<uint64_t>&Counts
 argument_list|)
@@ -1475,10 +1480,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_PROFILEDATA_INSTRPROF_READER_H_
-end_comment
 
 end_unit
 

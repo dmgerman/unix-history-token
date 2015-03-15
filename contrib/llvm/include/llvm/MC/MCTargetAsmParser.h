@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MC_TARGETPARSER_H
+name|LLVM_MC_MCTARGETASMPARSER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MC_TARGETPARSER_H
+name|LLVM_MC_MCTARGETASMPARSER_H
 end_define
 
 begin_include
@@ -141,6 +141,9 @@ comment|// Rewrite in terms of $N.
 name|AOK_SizeDirective
 block|,
 comment|// Add a sizing directive (e.g., dword ptr).
+name|AOK_Label
+block|,
+comment|// Rewrite local labels.
 name|AOK_Skip
 comment|// Skip emission (e.g., offset/type operators).
 block|}
@@ -154,31 +157,34 @@ block|{
 literal|0
 block|,
 comment|// AOK_Delete
-literal|1
+literal|2
 block|,
 comment|// AOK_Align
-literal|1
+literal|2
 block|,
 comment|// AOK_DotOperator
-literal|1
+literal|2
 block|,
 comment|// AOK_Emit
-literal|3
+literal|4
 block|,
 comment|// AOK_Imm
-literal|3
+literal|4
 block|,
 comment|// AOK_ImmPrefix
-literal|2
+literal|3
 block|,
 comment|// AOK_Input
-literal|2
+literal|3
 block|,
 comment|// AOK_Output
-literal|4
+literal|5
 block|,
 comment|// AOK_SizeDirective
 literal|1
+block|,
+comment|// AOK_Label
+literal|2
 comment|// AOK_Skip
 block|}
 decl_stmt|;
@@ -196,6 +202,9 @@ name|Len
 decl_stmt|;
 name|unsigned
 name|Val
+decl_stmt|;
+name|StringRef
+name|Label
 decl_stmt|;
 name|public
 label|:
@@ -230,6 +239,42 @@ operator|,
 name|Val
 argument_list|(
 argument|val
+argument_list|)
+block|{}
+name|AsmRewrite
+argument_list|(
+argument|AsmRewriteKind kind
+argument_list|,
+argument|SMLoc loc
+argument_list|,
+argument|unsigned len
+argument_list|,
+argument|StringRef label
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|kind
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+name|loc
+argument_list|)
+operator|,
+name|Len
+argument_list|(
+name|len
+argument_list|)
+operator|,
+name|Val
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Label
+argument_list|(
+argument|label
 argument_list|)
 block|{}
 block|}
@@ -321,7 +366,7 @@ name|MCTargetAsmParser
 argument_list|()
 block|;
 comment|/// AvailableFeatures - The current set of available features.
-name|unsigned
+name|uint64_t
 name|AvailableFeatures
 block|;
 comment|/// ParsingInlineAsm - Are we parsing ms-style inline assembly?
@@ -345,7 +390,7 @@ operator|~
 name|MCTargetAsmParser
 argument_list|()
 block|;
-name|unsigned
+name|uint64_t
 name|getAvailableFeatures
 argument_list|()
 specifier|const
@@ -357,7 +402,7 @@ block|}
 name|void
 name|setAvailableFeatures
 argument_list|(
-argument|unsigned Value
+argument|uint64_t Value
 argument_list|)
 block|{
 name|AvailableFeatures
@@ -382,6 +427,15 @@ name|ParsingInlineAsm
 operator|=
 name|Value
 block|; }
+name|MCTargetOptions
+name|getTargetOptions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MCOptions
+return|;
+block|}
 name|void
 name|setSemaCallback
 argument_list|(
@@ -411,6 +465,14 @@ argument_list|)
 operator|=
 literal|0
 block|;
+comment|/// Sets frame register corresponding to the current MachineFunction.
+name|virtual
+name|void
+name|SetFrameRegister
+argument_list|(
+argument|unsigned RegNo
+argument_list|)
+block|{}
 comment|/// ParseInstruction - Parse one assembly instruction.
 comment|///
 comment|/// The parser is positioned following the instruction name. The target
@@ -489,7 +551,7 @@ argument|OperandVector&Operands
 argument_list|,
 argument|MCStreamer&Out
 argument_list|,
-argument|unsigned&ErrorInfo
+argument|uint64_t&ErrorInfo
 argument_list|,
 argument|bool MatchingInlineAsm
 argument_list|)

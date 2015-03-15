@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmnLLDBDebugSessionInfo.h
+comment|// File:        MICmnLLDBDebugSessionInfo.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmnLLDBDebugSessionInfo interface.
+comment|// Overview:    CMICmnLLDBDebugSessionInfo interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -188,39 +188,39 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI debug session object that holds debugging information between
+comment|// Details: MI debug session object that holds debugging information between
 end_comment
 
 begin_comment
-comment|//			instances of MI commands executing their work and producing MI
+comment|//          instances of MI commands executing their work and producing MI
 end_comment
 
 begin_comment
-comment|//			result records. Information/data is set by one or many commands then
+comment|//          result records. Information/data is set by one or many commands then
 end_comment
 
 begin_comment
-comment|//			retrieved by the same or other sebsequent commands.
+comment|//          retrieved by the same or other sebsequent commands.
 end_comment
 
 begin_comment
-comment|//			It primarily to hold LLDB type objects.
+comment|//          It primarily to hold LLDB type objects.
 end_comment
 
 begin_comment
-comment|//			A singleton class.
+comment|//          A singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 04/03/2014.
+comment|// Authors: Illya Rudkin 04/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -255,9 +255,9 @@ comment|// Structs:
 name|public
 label|:
 comment|//++ ============================================================================
-comment|// Details:	Break point information object. Used to easily pass information about
-comment|//			a break around and record break point information to be recalled by
-comment|//			other commands or LLDB event handling functions.
+comment|// Details: Break point information object. Used to easily pass information about
+comment|//          a break around and record break point information to be recalled by
+comment|//          other commands or LLDB event handling functions.
 comment|//--
 struct|struct
 name|SBrkPtInfo
@@ -326,7 +326,7 @@ name|m_nBrkPtThreadId
 argument_list|(
 literal|0
 argument_list|)
-block|{ 		}
+block|{         }
 name|MIuint
 name|m_id
 expr_stmt|;
@@ -405,6 +405,52 @@ decl_stmt|;
 comment|// Restrict the breakpoint to the specified thread-id
 block|}
 struct|;
+comment|// Enumerations:
+name|public
+label|:
+comment|//++ ===================================================================
+comment|// Details: The type of variable used by MIResponseFormVariableInfo family functions.
+comment|//--
+enum|enum
+name|VariableType_e
+block|{
+name|eVariableType_InScope
+init|=
+operator|(
+literal|1u
+operator|<<
+literal|0
+operator|)
+block|,
+comment|// In scope only.
+name|eVariableType_Statics
+init|=
+operator|(
+literal|1u
+operator|<<
+literal|1
+operator|)
+block|,
+comment|// Statics.
+name|eVariableType_Locals
+init|=
+operator|(
+literal|1u
+operator|<<
+literal|2
+operator|)
+block|,
+comment|// Locals.
+name|eVariableType_Arguments
+init|=
+operator|(
+literal|1u
+operator|<<
+literal|3
+operator|)
+comment|// Arguments.
+block|}
+enum|;
 comment|// Typedefs:
 name|public
 label|:
@@ -476,7 +522,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|//	Common command required functionality
+comment|//  Common command required functionality
 name|bool
 name|AccessPath
 parameter_list|(
@@ -1072,43 +1118,43 @@ comment|//++ -------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Details:	Command instances can create and share data between other instances of commands.
+comment|// Details: Command instances can create and share data between other instances of commands.
 end_comment
 
 begin_comment
-comment|//			This function adds new data to the shared data. Using the same ID more than
+comment|//          This function adds new data to the shared data. Using the same ID more than
 end_comment
 
 begin_comment
-comment|//			once replaces any previous matching data keys.
+comment|//          once replaces any previous matching data keys.
 end_comment
 
 begin_comment
-comment|// Type:	Template method.
+comment|// Type:    Template method.
 end_comment
 
 begin_comment
-comment|// Args:	T		- The type of the object to be stored.
+comment|// Args:    T       - The type of the object to be stored.
 end_comment
 
 begin_comment
-comment|//			vKey	- (R) A non empty unique data key to retrieve the data by.
+comment|//          vKey    - (R) A non empty unique data key to retrieve the data by.
 end_comment
 
 begin_comment
-comment|//			vData	- (R) Data to be added to the share.
+comment|//          vData   - (R) Data to be added to the share.
 end_comment
 
 begin_comment
-comment|// Return:	MIstatus::success - Functional succeeded.
+comment|// Return:  MIstatus::success - Functional succeeded.
 end_comment
 
 begin_comment
-comment|//			MIstatus::failure - Functional failed.
+comment|//          MIstatus::failure - Functional failed.
 end_comment
 
 begin_comment
-comment|// Throws:	None.
+comment|// Throws:  None.
 end_comment
 
 begin_comment
@@ -1126,9 +1172,9 @@ name|CMICmnLLDBDebugSessionInfo
 operator|::
 name|SharedDataAdd
 argument_list|(
-argument|const CMIUtilString& vKey
+argument|const CMIUtilString&vKey
 argument_list|,
-argument|const T& vData
+argument|const T&vData
 argument_list|)
 block|{
 if|if
@@ -1177,35 +1223,35 @@ comment|//++ -------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Details:	Command instances can create and share data between other instances of commands.
+comment|// Details: Command instances can create and share data between other instances of commands.
 end_comment
 
 begin_comment
-comment|//			This function retrieves data from the shared data container.
+comment|//          This function retrieves data from the shared data container.
 end_comment
 
 begin_comment
-comment|// Type:	Method.
+comment|// Type:    Method.
 end_comment
 
 begin_comment
-comment|// Args:	T		- The type of the object being retrieved.
+comment|// Args:    T     - The type of the object being retrieved.
 end_comment
 
 begin_comment
-comment|//			vKey	- (R) A non empty unique data key to retrieve the data by.
+comment|//          vKey  - (R) A non empty unique data key to retrieve the data by.
 end_comment
 
 begin_comment
-comment|//			vData	- (W) The data.
+comment|//          vData - (W) The data.
 end_comment
 
 begin_comment
-comment|// Return:	bool - True = data found, false = data not found or an error occurred trying to fetch.
+comment|// Return:  bool  - True = data found, false = data not found or an error occurred trying to fetch.
 end_comment
 
 begin_comment
-comment|// Throws:	None.
+comment|// Throws:  None.
 end_comment
 
 begin_comment
@@ -1223,9 +1269,9 @@ name|CMICmnLLDBDebugSessionInfo
 operator|::
 name|SharedDataRetrieve
 argument_list|(
-argument|const CMIUtilString& vKey
+argument|const CMIUtilString&vKey
 argument_list|,
-argument|T& vwData
+argument|T&vwData
 argument_list|)
 block|{
 name|bool

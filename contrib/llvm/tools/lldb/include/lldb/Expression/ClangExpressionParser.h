@@ -346,6 +346,14 @@ operator|>
 name|m_code_generator
 expr_stmt|;
 comment|///< The Clang object that generates IR
+name|class
+name|LLDBPreprocessorCallbacks
+decl_stmt|;
+name|LLDBPreprocessorCallbacks
+modifier|*
+name|m_pp_callbacks
+decl_stmt|;
+comment|///< Called when the preprocessor encounters module imports
 block|}
 empty_stmt|;
 block|}

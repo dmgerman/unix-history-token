@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_PTHMANAGER_H
+name|LLVM_CLANG_LEX_PTHMANAGER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_PTHMANAGER_H
+name|LLVM_CLANG_LEX_PTHMANAGER_H
 end_define
 
 begin_include
@@ -93,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/OnDiskHashTable.h"
 end_include
 
 begin_include
@@ -137,132 +143,189 @@ name|friend
 name|class
 name|PTHLexer
 block|;
+name|friend
+name|class
+name|PTHStatCache
+block|;
+name|class
+name|PTHStringLookupTrait
+block|;
+name|class
+name|PTHFileLookupTrait
+block|;
+typedef|typedef
+name|llvm
+operator|::
+name|OnDiskChainedHashTable
+operator|<
+name|PTHStringLookupTrait
+operator|>
+name|PTHStringIdLookup
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|OnDiskChainedHashTable
+operator|<
+name|PTHFileLookupTrait
+operator|>
+name|PTHFileLookup
+expr_stmt|;
 comment|/// The memory mapped PTH file.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
-operator|*
+operator|>
 name|Buf
-block|;
+expr_stmt|;
 comment|/// Alloc - Allocator used for IdentifierInfo objects.
 name|llvm
 operator|::
 name|BumpPtrAllocator
 name|Alloc
-block|;
+expr_stmt|;
 comment|/// IdMap - A lazily generated cache mapping from persistent identifiers to
 comment|///  IdentifierInfo*.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|IdentifierInfo
 operator|*
-operator|*
+index|[]
+operator|,
+name|llvm
+operator|::
+name|FreeDeleter
+operator|>
 name|PerIDCache
-block|;
+expr_stmt|;
 comment|/// FileLookup - Abstract data structure used for mapping between files
 comment|///  and token data in the PTH file.
-name|void
-operator|*
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PTHFileLookup
+operator|>
 name|FileLookup
-block|;
+expr_stmt|;
 comment|/// IdDataTable - Array representing the mapping from persistent IDs to the
 comment|///  data offset within the PTH file containing the information to
 comment|///  reconsitute an IdentifierInfo.
 specifier|const
 name|unsigned
 name|char
-operator|*
+modifier|*
 specifier|const
 name|IdDataTable
-block|;
+decl_stmt|;
 comment|/// SortedIdTable - Abstract data structure mapping from strings to
 comment|///  persistent IDs.  This is used by get().
-name|void
-operator|*
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PTHStringIdLookup
+operator|>
 name|StringIdLookup
-block|;
+expr_stmt|;
 comment|/// NumIds - The number of identifiers in the PTH file.
 specifier|const
 name|unsigned
 name|NumIds
-block|;
+decl_stmt|;
 comment|/// PP - The Preprocessor object that will use this PTHManager to create
 comment|///  PTHLexer objects.
 name|Preprocessor
-operator|*
+modifier|*
 name|PP
-block|;
+decl_stmt|;
 comment|/// SpellingBase - The base offset within the PTH memory buffer that
 comment|///  contains the cached spellings for literals.
 specifier|const
 name|unsigned
 name|char
-operator|*
+modifier|*
 specifier|const
 name|SpellingBase
-block|;
+decl_stmt|;
 comment|/// OriginalSourceFile - A null-terminated C-string that specifies the name
 comment|///  if the file (if any) that was to used to generate the PTH cache.
 specifier|const
 name|char
-operator|*
+modifier|*
 name|OriginalSourceFile
-block|;
+decl_stmt|;
 comment|/// This constructor is intended to only be called by the static 'Create'
 comment|/// method.
 name|PTHManager
 argument_list|(
-argument|const llvm::MemoryBuffer* buf
+argument|std::unique_ptr<const llvm::MemoryBuffer> buf
 argument_list|,
-argument|void* fileLookup
+argument|std::unique_ptr<PTHFileLookup> fileLookup
 argument_list|,
-argument|const unsigned char* idDataTable
+argument|const unsigned char *idDataTable
 argument_list|,
-argument|IdentifierInfo** perIDCache
+argument|std::unique_ptr<IdentifierInfo *[]
 argument_list|,
-argument|void* stringIdLookup
+argument|llvm::FreeDeleter> perIDCache
+argument_list|,
+argument|std::unique_ptr<PTHStringIdLookup> stringIdLookup
 argument_list|,
 argument|unsigned numIds
 argument_list|,
-argument|const unsigned char* spellingBase
+argument|const unsigned char *spellingBase
 argument_list|,
 argument|const char *originalSourceFile
 argument_list|)
-block|;
+empty_stmt|;
 name|PTHManager
 argument_list|(
 argument|const PTHManager&
 argument_list|)
 name|LLVM_DELETED_FUNCTION
-block|;
+expr_stmt|;
 name|void
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|PTHManager
 operator|&
 operator|)
 name|LLVM_DELETED_FUNCTION
-block|;
+decl_stmt|;
 comment|/// getSpellingAtPTHOffset - Used by PTHLexer classes to get the cached
 comment|///  spelling for a token.
 name|unsigned
 name|getSpellingAtPTHOffset
-argument_list|(
-argument|unsigned PTHOffset
-argument_list|,
-argument|const char*& Buffer
-argument_list|)
-block|;
+parameter_list|(
+name|unsigned
+name|PTHOffset
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|Buffer
+parameter_list|)
+function_decl|;
 comment|/// GetIdentifierInfo - Used to reconstruct IdentifierInfo objects from the
 comment|///  PTH file.
 specifier|inline
 name|IdentifierInfo
-operator|*
+modifier|*
 name|GetIdentifierInfo
-argument_list|(
-argument|unsigned PersistentID
-argument_list|)
+parameter_list|(
+name|unsigned
+name|PersistentID
+parameter_list|)
 block|{
 comment|// Check if the IdentifierInfo has already been resolved.
 if|if
@@ -381,11 +444,15 @@ comment|/// createStatCache - Returns a FileSystemStatCache object for use with
 comment|///  FileManager objects.  These objects use the PTH data to speed up
 comment|///  calls to stat by memoizing their results from when the PTH file
 comment|///  was generated.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FileSystemStatCache
-modifier|*
+operator|>
 name|createStatCache
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 block|}
 end_decl_stmt
 

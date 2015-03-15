@@ -132,7 +132,7 @@ name|iterator
 name|MBBI
 expr_stmt|;
 name|unsigned
-name|NumPhysRegs
+name|NumRegUnits
 decl_stmt|;
 comment|/// Tracking - True if RegScavenger is currently tracking the liveness of
 comment|/// registers.
@@ -190,23 +190,21 @@ literal|2
 operator|>
 name|Scavenged
 expr_stmt|;
-comment|/// CalleeSavedrRegs - A bitvector of callee saved registers for the target.
-comment|///
+comment|/// RegUnitsAvailable - The current state of each reg unit immediatelly
+comment|/// before MBBI. One bit per register unit. If bit is not set it means any
+comment|/// register containing that register unit is currently being used.
 name|BitVector
-name|CalleeSavedRegs
-decl_stmt|;
-comment|/// RegsAvailable - The current state of all the physical registers immediately
-comment|/// before MBBI. One bit per physical register. If bit is set that means it's
-comment|/// available, unset means the register is currently being used.
-name|BitVector
-name|RegsAvailable
+name|RegUnitsAvailable
 decl_stmt|;
 comment|// These BitVectors are only used internally to forward(). They are members
 comment|// to avoid frequent reallocations.
 name|BitVector
-name|KillRegs
+name|KillRegUnits
 decl_stmt|,
-name|DefRegs
+name|DefRegUnits
+decl_stmt|;
+name|BitVector
+name|TmpRegUnits
 decl_stmt|;
 name|public
 label|:
@@ -218,7 +216,7 @@ argument_list|(
 name|nullptr
 argument_list|)
 operator|,
-name|NumPhysRegs
+name|NumRegUnits
 argument_list|(
 literal|0
 argument_list|)
@@ -352,18 +350,20 @@ return|return
 name|MBBI
 return|;
 block|}
-comment|/// getRegsUsed - return all registers currently in use in used.
-name|void
-name|getRegsUsed
-parameter_list|(
-name|BitVector
-modifier|&
-name|used
-parameter_list|,
+comment|/// isRegUsed - return if a specific register is currently used.
+name|bool
+name|isRegUsed
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|,
 name|bool
 name|includeReserved
-parameter_list|)
-function_decl|;
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getRegsAvailable - Return all available registers in the register class
 comment|/// in Mask.
 name|BitVector
@@ -563,10 +563,10 @@ name|SPAdj
 argument_list|)
 return|;
 block|}
-comment|/// setUsed - Tell the scavenger a register is used.
+comment|/// setRegUsed - Tell the scavenger a register is used.
 comment|///
 name|void
-name|setUsed
+name|setRegUsed
 parameter_list|(
 name|unsigned
 name|Reg
@@ -592,66 +592,21 @@ name|Reg
 argument_list|)
 return|;
 block|}
-comment|/// isUsed - Test if a register is currently being used.  When called by the
-comment|/// isAliasUsed function, we only check isReserved if this is the original
-comment|/// register, not an alias register.
-comment|///
-name|bool
-name|isUsed
-argument_list|(
-name|unsigned
-name|Reg
-argument_list|,
-name|bool
-name|CheckReserved
-operator|=
-name|true
-argument_list|)
-decl|const
-block|{
-return|return
-operator|!
-name|RegsAvailable
-operator|.
-name|test
-argument_list|(
-name|Reg
-argument_list|)
-operator|||
-operator|(
-name|CheckReserved
-operator|&&
-name|isReserved
-argument_list|(
-name|Reg
-argument_list|)
-operator|)
-return|;
-block|}
-comment|/// isAliasUsed - Is Reg or an alias currently in use?
-name|bool
-name|isAliasUsed
-argument_list|(
-name|unsigned
-name|Reg
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// setUsed / setUnused - Mark the state of one or a number of registers.
+comment|/// setUsed / setUnused - Mark the state of one or a number of register units.
 comment|///
 name|void
 name|setUsed
 parameter_list|(
 name|BitVector
 modifier|&
-name|Regs
+name|RegUnits
 parameter_list|)
 block|{
-name|RegsAvailable
+name|RegUnitsAvailable
 operator|.
 name|reset
 argument_list|(
-name|Regs
+name|RegUnits
 argument_list|)
 expr_stmt|;
 block|}
@@ -660,23 +615,23 @@ name|setUnused
 parameter_list|(
 name|BitVector
 modifier|&
-name|Regs
+name|RegUnits
 parameter_list|)
 block|{
-name|RegsAvailable
+name|RegUnitsAvailable
 operator||=
-name|Regs
+name|RegUnits
 expr_stmt|;
 block|}
-comment|/// Processes the current instruction and fill the KillRegs and DefRegs bit
-comment|/// vectors.
+comment|/// Processes the current instruction and fill the KillRegUnits and
+comment|/// DefRegUnits bit vectors.
 name|void
 name|determineKillsAndDefs
 parameter_list|()
 function_decl|;
-comment|/// Add Reg and all its sub-registers to BV.
+comment|/// Add all Reg Units that Reg contains to BV.
 name|void
-name|addRegWithSubRegs
+name|addRegUnits
 parameter_list|(
 name|BitVector
 modifier|&

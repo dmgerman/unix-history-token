@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CODEGEN_INTRINSIC_H
+name|LLVM_UTILS_TABLEGEN_CODEGENINTRINSICS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CODEGEN_INTRINSIC_H
+name|LLVM_UTILS_TABLEGEN_CODEGENINTRINSICS_H
 end_define
 
 begin_include

@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86INSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_X86_X86INSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86INSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_X86_X86INSTRINFO_H
 end_define
 
 begin_include
@@ -678,6 +678,9 @@ decl_stmt|;
 name|RegOp2MemOpTableType
 name|RegOp2MemOpTable3
 decl_stmt|;
+name|RegOp2MemOpTableType
+name|RegOp2MemOpTable4
+decl_stmt|;
 comment|/// MemOp2RegOpTable - Load / store unfolding opcode map.
 comment|///
 typedef|typedef
@@ -751,6 +754,20 @@ return|return
 name|RI
 return|;
 block|}
+comment|/// getSPAdjust - This returns the stack pointer adjustment made by
+comment|/// this instruction. For x86, we need to handle more complex call
+comment|/// sequences involving PUSHes.
+name|int
+name|getSPAdjust
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 comment|/// isCoalescableExtInstr - Return true if the instruction is a "coalescable"
 comment|/// extension instruction. That is, it's like a copy where it's legal for the
 comment|/// source to overlap the destination. e.g. X86::MOVSX64rr32. If this returns
@@ -1791,6 +1808,9 @@ name|Size
 argument_list|,
 name|unsigned
 name|Alignment
+argument_list|,
+name|bool
+name|AllowCommute
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1819,6 +1839,12 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+name|unsigned
+name|getJumpInstrTableEntryBound
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
 name|bool
 name|isHighLatencyDef
 argument_list|(

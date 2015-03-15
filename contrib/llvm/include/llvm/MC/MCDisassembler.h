@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCRelocationInfo.h"
 end_include
 
@@ -78,16 +84,13 @@ name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
-name|MemoryObject
-decl_stmt|;
-name|class
 name|raw_ostream
 decl_stmt|;
 name|class
 name|MCContext
 decl_stmt|;
-comment|/// MCDisassembler - Superclass for all disassemblers.  Consumes a memory region
-comment|///   and provides an array of assembly instructions.
+comment|/// Superclass for all disassemblers. Consumes a memory region and provides an
+comment|/// array of assembly instructions.
 name|class
 name|MCDisassembler
 block|{
@@ -131,7 +134,6 @@ init|=
 literal|3
 block|}
 enum|;
-comment|/// Constructor     - Performs initial setup for the disassembler.
 name|MCDisassembler
 argument_list|(
 specifier|const
@@ -167,18 +169,17 @@ operator|~
 name|MCDisassembler
 argument_list|()
 expr_stmt|;
-comment|/// getInstruction  - Returns the disassembly of a single instruction.
+comment|/// Returns the disassembly of a single instruction.
 comment|///
-comment|/// @param instr    - An MCInst to populate with the contents of the
+comment|/// @param Instr    - An MCInst to populate with the contents of the
 comment|///                   instruction.
-comment|/// @param size     - A value to populate with the size of the instruction, or
+comment|/// @param Size     - A value to populate with the size of the instruction, or
 comment|///                   the number of bytes consumed while attempting to decode
 comment|///                   an invalid instruction.
-comment|/// @param region   - The memory object to use as a source for machine code.
-comment|/// @param address  - The address, in the memory space of region, of the first
+comment|/// @param Address  - The address, in the memory space of region, of the first
 comment|///                   byte of the instruction.
-comment|/// @param vStream  - The stream to print warnings and diagnostic messages on.
-comment|/// @param cStream  - The stream to print comments and annotations on.
+comment|/// @param VStream  - The stream to print warnings and diagnostic messages on.
+comment|/// @param CStream  - The stream to print comments and annotations on.
 comment|/// @return         - MCDisassembler::Success if the instruction is valid,
 comment|///                   MCDisassembler::SoftFail if the instruction was
 comment|///                                            disassemblable but invalid,
@@ -189,27 +190,28 @@ name|getInstruction
 argument_list|(
 name|MCInst
 operator|&
-name|instr
+name|Instr
 argument_list|,
 name|uint64_t
 operator|&
-name|size
+name|Size
 argument_list|,
-specifier|const
-name|MemoryObject
-operator|&
-name|region
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|Bytes
 argument_list|,
 name|uint64_t
-name|address
+name|Address
 argument_list|,
 name|raw_ostream
 operator|&
-name|vStream
+name|VStream
 argument_list|,
 name|raw_ostream
 operator|&
-name|cStream
+name|CStream
 argument_list|)
 decl|const
 init|=

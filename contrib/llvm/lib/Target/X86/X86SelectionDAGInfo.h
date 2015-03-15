@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86SELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_X86_X86SELECTIONDAGINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86SELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_X86_X86SELECTIONDAGINFO_H
 end_define
 
 begin_include
@@ -84,6 +84,17 @@ range|:
 name|public
 name|TargetSelectionDAGInfo
 block|{
+comment|/// Returns true if it is possible for the base register to conflict with the
+comment|/// given set of clobbers for a memory intrinsic.
+name|bool
+name|isBaseRegConflictPossible
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|ArrayRef<unsigned> ClobberSet
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|explicit

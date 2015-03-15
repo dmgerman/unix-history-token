@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdArgValListOfN.h
+comment|// File:        MICmdArgValListOfN.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdArgValListOfN interface.
+comment|// Overview:    CMICmdArgValListOfN interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -116,63 +116,63 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code class. Command argument class. Arguments object
+comment|// Details: MI common code class. Command argument class. Arguments object
 end_comment
 
 begin_comment
-comment|//			needing specialization derived from the CMICmdArgValBase class.
+comment|//          needing specialization derived from the CMICmdArgValBase class.
 end_comment
 
 begin_comment
-comment|//			An argument knows what type of argument it is and how it is to
+comment|//          An argument knows what type of argument it is and how it is to
 end_comment
 
 begin_comment
-comment|//			interpret the options (context) string to find and validate a matching
+comment|//          interpret the options (context) string to find and validate a matching
 end_comment
 
 begin_comment
-comment|//			argument and so extract a value from it .
+comment|//          argument and so extract a value from it .
 end_comment
 
 begin_comment
-comment|//			The CMICmdArgValBase objects added to *this ListOfN container belong
+comment|//          The CMICmdArgValBase objects added to *this ListOfN container belong
 end_comment
 
 begin_comment
-comment|//			to this container and will be deleted when *this object goes out of
+comment|//          to this container and will be deleted when *this object goes out of
 end_comment
 
 begin_comment
-comment|//			scope.
+comment|//          scope.
 end_comment
 
 begin_comment
-comment|//			To parse arguments like 'thread-id ...' i.e. 1 10 12 13 ...
+comment|//          To parse arguments like 'thread-id ...' i.e. 1 10 12 13 ...
 end_comment
 
 begin_comment
-comment|//			If vbMandatory argument is true it takes on the (...)+ specification
+comment|//          If vbMandatory argument is true it takes on the (...)+ specification
 end_comment
 
 begin_comment
-comment|//			otherwise assumed to be (...)* specification.
+comment|//          otherwise assumed to be (...)* specification.
 end_comment
 
 begin_comment
-comment|//			Based on the Interpreter pattern.
+comment|//          Based on the Interpreter pattern.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 16/04/2014.
+comment|// Authors: Illya Rudkin 16/04/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -198,7 +198,7 @@ block|;
 comment|/* ctor */
 name|CMICmdArgValListOfN
 argument_list|(
-argument|const CMIUtilString& vrArgName
+argument|const CMIUtilString&vrArgName
 argument_list|,
 argument|const bool vbMandatory
 argument_list|,
@@ -228,7 +228,7 @@ operator|>
 name|bool
 name|GetExpectedOption
 argument_list|(
-argument|T2& vrwValue
+argument|T2&vrwValue
 argument_list|)
 specifier|const
 block|;
@@ -260,7 +260,7 @@ operator|:
 name|bool
 name|IsListOfN
 argument_list|(
-argument|const CMIUtilString& vrTxt
+argument|const CMIUtilString&vrTxt
 argument_list|)
 specifier|const
 block|;
@@ -281,39 +281,39 @@ comment|//++ -------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Details:	Retrieve the first argument or option value from the list of 1 or more options
+comment|// Details: Retrieve the first argument or option value from the list of 1 or more options
 end_comment
 
 begin_comment
-comment|//			parsed from the command's options string.
+comment|//          parsed from the command's options string.
 end_comment
 
 begin_comment
-comment|// Type:	Template method.
+comment|// Type:    Template method.
 end_comment
 
 begin_comment
-comment|// Args:	vrwValue	- (W) Templated type return value.
+comment|// Args:    vrwValue    - (W) Templated type return value.
 end_comment
 
 begin_comment
-comment|//			T1			- The argument value's class type of the data hold in the list of options.
+comment|//          T1          - The argument value's class type of the data hold in the list of options.
 end_comment
 
 begin_comment
-comment|//			T2			- The type pf the variable which holds the value wanted.
+comment|//          T2          - The type pf the variable which holds the value wanted.
 end_comment
 
 begin_comment
-comment|// Return:	MIstatus::success - Functional succeeded.
+comment|// Return:  MIstatus::success - Functional succeeded.
 end_comment
 
 begin_comment
-comment|//			MIstatus::failure - Functional failed. List of object was empty.
+comment|//          MIstatus::failure - Functional failed. List of object was empty.
 end_comment
 
 begin_comment
-comment|// Throws:	None.
+comment|// Throws:  None.
 end_comment
 
 begin_comment
@@ -334,7 +334,7 @@ name|CMICmdArgValListOfN
 operator|::
 name|GetExpectedOption
 argument_list|(
-argument|T2& vrwValue
+argument|T2&vrwValue
 argument_list|)
 specifier|const
 block|{

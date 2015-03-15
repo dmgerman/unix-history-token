@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FRONTEND_VERIFYDIAGNOSTICSCLIENT_H
+name|LLVM_CLANG_FRONTEND_VERIFYDIAGNOSTICCONSUMER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FRONTEND_VERIFYDIAGNOSTICSCLIENT_H
+name|LLVM_CLANG_FRONTEND_VERIFYDIAGNOSTICCONSUMER_H
 end_define
 
 begin_include
@@ -231,32 +231,29 @@ block|{
 name|public
 label|:
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Directive
-modifier|*
+operator|>
 name|create
-parameter_list|(
-name|bool
-name|RegexKind
-parameter_list|,
-name|SourceLocation
-name|DirectiveLoc
-parameter_list|,
-name|SourceLocation
-name|DiagnosticLoc
-parameter_list|,
-name|bool
-name|MatchAnyLine
-parameter_list|,
-name|StringRef
-name|Text
-parameter_list|,
-name|unsigned
-name|Min
-parameter_list|,
-name|unsigned
-name|Max
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|bool RegexKind
+argument_list|,
+argument|SourceLocation DirectiveLoc
+argument_list|,
+argument|SourceLocation DiagnosticLoc
+argument_list|,
+argument|bool MatchAnyLine
+argument_list|,
+argument|StringRef Text
+argument_list|,
+argument|unsigned Min
+argument_list|,
+argument|unsigned Max
+argument_list|)
+expr_stmt|;
 name|public
 label|:
 comment|/// Constant representing n or more matches.
@@ -412,9 +409,12 @@ name|std
 operator|::
 name|vector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Directive
-operator|*
-operator|>
+operator|>>
 name|DirectiveList
 expr_stmt|;
 comment|/// ExpectedData - owns directive objects and deletes on destructor.
@@ -438,42 +438,27 @@ name|void
 name|Reset
 parameter_list|()
 block|{
-name|llvm
-operator|::
-name|DeleteContainerPointers
-argument_list|(
 name|Errors
-argument_list|)
+operator|.
+name|clear
+argument_list|()
 expr_stmt|;
-name|llvm
-operator|::
-name|DeleteContainerPointers
-argument_list|(
 name|Warnings
-argument_list|)
+operator|.
+name|clear
+argument_list|()
 expr_stmt|;
-name|llvm
-operator|::
-name|DeleteContainerPointers
-argument_list|(
 name|Remarks
-argument_list|)
+operator|.
+name|clear
+argument_list|()
 expr_stmt|;
-name|llvm
-operator|::
-name|DeleteContainerPointers
-argument_list|(
 name|Notes
-argument_list|)
+operator|.
+name|clear
+argument_list|()
 expr_stmt|;
 block|}
-operator|~
-name|ExpectedData
-argument_list|()
-block|{
-name|Reset
-argument_list|()
-block|; }
 block|}
 struct|;
 enum|enum
@@ -498,9 +483,14 @@ name|DiagnosticConsumer
 modifier|*
 name|PrimaryClient
 decl_stmt|;
-name|bool
-name|OwnsPrimaryClient
-decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DiagnosticConsumer
+operator|>
+name|PrimaryClientOwner
+expr_stmt|;
 name|std
 operator|::
 name|unique_ptr

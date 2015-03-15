@@ -293,8 +293,8 @@ argument_list|)
 block|{}
 block|}
 struct|;
-comment|/// GCFunctionInfo - Garbage collection metadata for a single function.
-comment|///
+comment|/// Garbage collection metadata for a single function.  Currently, this
+comment|/// information only applies to GCStrategies which use GCRoot.
 name|class
 name|GCFunctionInfo
 block|{
@@ -635,8 +635,9 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// GCModuleInfo - Garbage collection metadata for a whole module.
-comment|///
+comment|/// An analysis pass which caches information about the entire Module.
+comment|/// Records both the function level information used by GCRoots and a
+comment|/// cache of the 'active' gc strategy objects for the current Module.
 name|class
 name|GCModuleInfo
 range|:
@@ -664,26 +665,11 @@ name|GCStrategy
 operator|>>
 name|list_type
 expr_stmt|;
-typedef|typedef
-name|DenseMap
-operator|<
-specifier|const
-name|Function
-operator|*
-operator|,
-name|GCFunctionInfo
-operator|*
-operator|>
-name|finfo_map_type
-expr_stmt|;
 name|strategy_map_type
 name|StrategyMap
 decl_stmt|;
 name|list_type
 name|StrategyList
-decl_stmt|;
-name|finfo_map_type
-name|FInfoMap
 decl_stmt|;
 name|GCStrategy
 modifier|*
@@ -701,6 +687,72 @@ name|string
 operator|&
 name|Name
 argument_list|)
+decl_stmt|;
+name|public
+label|:
+comment|/// List of per function info objects.  In theory, Each of these
+comment|/// may be associated with a different GC.
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|GCFunctionInfo
+operator|>>
+name|FuncInfoVec
+expr_stmt|;
+name|FuncInfoVec
+operator|::
+name|iterator
+name|funcinfo_begin
+argument_list|()
+block|{
+return|return
+name|Functions
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|FuncInfoVec
+operator|::
+name|iterator
+name|funcinfo_end
+argument_list|()
+block|{
+return|return
+name|Functions
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|private
+label|:
+comment|/// Owning list of all GCFunctionInfos associated with this Module
+name|FuncInfoVec
+name|Functions
+decl_stmt|;
+comment|/// Non-owning map to bypass linear search when finding the GCFunctionInfo
+comment|/// associated with a particular Function.
+typedef|typedef
+name|DenseMap
+operator|<
+specifier|const
+name|Function
+operator|*
+operator|,
+name|GCFunctionInfo
+operator|*
+operator|>
+name|finfo_map_type
+expr_stmt|;
+name|finfo_map_type
+name|FInfoMap
 decl_stmt|;
 name|public
 label|:
@@ -750,8 +802,9 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// get - Look up function metadata.
-comment|///
+comment|/// get - Look up function metadata.  This is currently assumed
+comment|/// have the side effect of initializing the associated GCStrategy.  That
+comment|/// will soon change.
 name|GCFunctionInfo
 modifier|&
 name|getFunctionInfo

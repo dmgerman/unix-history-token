@@ -473,6 +473,8 @@ name|insert
 argument_list|(
 name|Filename
 argument_list|)
+operator|.
+name|second
 return|;
 block|}
 name|void
@@ -826,6 +828,25 @@ modifier|*
 name|Ptr
 parameter_list|)
 function_decl|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|void
+name|BuryPointer
+argument_list|(
+argument|std::unique_ptr<T> Ptr
+argument_list|)
+block|{
+name|BuryPointer
+argument_list|(
+name|Ptr
+operator|.
+name|release
+argument_list|()
+argument_list|)
+block|; }
 block|}
 end_decl_stmt
 

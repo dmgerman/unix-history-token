@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_ANALYSIS_CFG_REACHABILITY
+name|LLVM_CLANG_ANALYSIS_ANALYSES_CFGREACHABILITYANALYSIS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_ANALYSIS_CFG_REACHABILITY
+name|LLVM_CLANG_ANALYSIS_ANALYSES_CFGREACHABILITYANALYSIS_H
 end_define
 
 begin_include

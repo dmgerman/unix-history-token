@@ -508,6 +508,13 @@ decl_stmt|;
 comment|///< Whether we can generate the
 comment|///< global module index if needed.
 name|unsigned
+name|ASTDumpDecls
+range|:
+literal|1
+decl_stmt|;
+comment|///< Whether we include declaration
+comment|///< dumps in AST dumps.
+name|unsigned
 name|ASTDumpLookups
 range|:
 literal|1
@@ -604,6 +611,11 @@ name|ObjCMT_DesignatedInitializer
 init|=
 literal|0x800
 block|,
+comment|/// \brief Enable converting setter/getter expressions to property-dot syntx.
+name|ObjCMT_PropertyDotSyntax
+init|=
+literal|0x1000
+block|,
 name|ObjCMT_MigrateDecls
 init|=
 operator|(
@@ -632,6 +644,8 @@ operator||
 name|ObjCMT_Subscripting
 operator||
 name|ObjCMT_MigrateDecls
+operator||
+name|ObjCMT_PropertyDotSyntax
 operator|)
 block|}
 enum|;
@@ -745,6 +759,29 @@ name|string
 operator|>
 name|Plugins
 expr_stmt|;
+comment|/// \brief The list of module map files to load before processing the input.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ModuleMapFiles
+expr_stmt|;
+comment|/// \brief The list of additional prebuilt module files to load before
+comment|/// processing the input.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ModuleFiles
+expr_stmt|;
 comment|/// \brief The list of AST files to merge.
 name|std
 operator|::
@@ -848,6 +885,11 @@ operator|,
 name|GenerateGlobalModuleIndex
 argument_list|(
 name|true
+argument_list|)
+operator|,
+name|ASTDumpDecls
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|ASTDumpLookups

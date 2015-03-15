@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86MCTARGETDESC_H
+name|LLVM_LIB_TARGET_X86_MCTARGETDESC_X86MCTARGETDESC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86MCTARGETDESC_H
+name|LLVM_LIB_TARGET_X86_MCTARGETDESC_X86MCTARGETDESC_H
 end_define
 
 begin_include

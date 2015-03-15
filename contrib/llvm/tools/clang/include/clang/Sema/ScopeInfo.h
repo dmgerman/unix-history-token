@@ -54,14 +54,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SEMA_SCOPE_INFO_H
+name|LLVM_CLANG_SEMA_SCOPEINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SEMA_SCOPE_INFO_H
+name|LLVM_CLANG_SEMA_SCOPEINFO_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Expr.h"
+end_include
 
 begin_include
 include|#
@@ -159,12 +165,6 @@ name|TemplateParameterList
 decl_stmt|;
 name|class
 name|VarDecl
-decl_stmt|;
-name|class
-name|DeclRefExpr
-decl_stmt|;
-name|class
-name|MemberExpr
 decl_stmt|;
 name|class
 name|ObjCIvarRefExpr
@@ -369,6 +369,20 @@ literal|4
 operator|>
 name|PossiblyUnreachableDiags
 expr_stmt|;
+comment|/// \brief A list of parameters which have the nonnull attribute and are
+comment|/// modified in the function.
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+specifier|const
+name|ParmVarDecl
+operator|*
+operator|,
+literal|8
+operator|>
+name|ModifiedNonNullParams
+expr_stmt|;
 name|public
 label|:
 comment|/// Represents a simple identification of a weak object.
@@ -439,11 +453,6 @@ modifier|*
 name|BaseE
 parameter_list|)
 function_decl|;
-comment|// For use in DenseMap.
-name|friend
-name|class
-name|DenseMapInfo
-decl_stmt|;
 specifier|inline
 name|WeakObjectProfileTy
 argument_list|()
@@ -1072,7 +1081,7 @@ name|llvm
 operator|::
 name|PointerIntPair
 operator|<
-name|Expr
+name|void
 operator|*
 block|,
 literal|2
@@ -1224,6 +1233,10 @@ name|getInt
 argument_list|()
 operator|!=
 name|Cap_This
+operator|&&
+operator|!
+name|isVLATypeCapture
+argument_list|()
 return|;
 block|}
 name|bool
@@ -1238,6 +1251,10 @@ name|getInt
 argument_list|()
 operator|==
 name|Cap_ByCopy
+operator|&&
+operator|!
+name|isVLATypeCapture
+argument_list|()
 return|;
 block|}
 name|bool
@@ -1269,8 +1286,28 @@ name|Cap_Block
 return|;
 block|}
 name|bool
+name|isVLATypeCapture
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InitExprAndCaptureKind
+operator|.
+name|getInt
+argument_list|()
+operator|==
+name|Cap_ByCopy
+operator|&&
+name|getVariable
+argument_list|()
+operator|==
+name|nullptr
+return|;
+block|}
+name|bool
 name|isNested
 argument_list|()
+specifier|const
 block|{
 return|return
 name|VarAndNested
@@ -1331,11 +1368,27 @@ name|getInitExpr
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|!
+name|isVLATypeCapture
+argument_list|()
+operator|&&
+literal|"no init expression for type capture"
+argument_list|)
+block|;
 return|return
+name|static_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
 name|InitExprAndCaptureKind
 operator|.
 name|getPointer
 argument_list|()
+operator|)
 return|;
 block|}
 expr|}
@@ -1458,6 +1511,45 @@ name|size
 argument_list|()
 block|;   }
 name|void
+name|addVLATypeCapture
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|QualType CaptureType
+argument_list|)
+block|{
+name|Captures
+operator|.
+name|push_back
+argument_list|(
+name|Capture
+argument_list|(
+comment|/*Var*/
+name|nullptr
+argument_list|,
+comment|/*isBlock*/
+name|false
+argument_list|,
+comment|/*isByref*/
+name|false
+argument_list|,
+comment|/*isNested*/
+name|false
+argument_list|,
+name|Loc
+argument_list|,
+comment|/*EllipsisLoc*/
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|CaptureType
+argument_list|,
+comment|/*Cpy*/
+name|nullptr
+argument_list|)
+argument_list|)
+block|;   }
+name|void
 name|addThisCapture
 argument_list|(
 argument|bool isNested
@@ -1521,6 +1613,14 @@ name|Var
 argument_list|)
 return|;
 block|}
+comment|/// \brief Determine whether the given variable-array type has been captured.
+name|bool
+name|isVLATypeCaptured
+argument_list|(
+argument|const VariableArrayType *VAT
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief Retrieve the capture of the given variable, if it has been
 comment|/// captured already.
 name|Capture

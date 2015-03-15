@@ -68,6 +68,11 @@ block|{
 name|public
 operator|:
 specifier|static
+name|uint32_t
+name|GetMaxThreadNameLength
+argument_list|()
+block|;
+specifier|static
 name|bool
 name|GetOSVersion
 argument_list|(

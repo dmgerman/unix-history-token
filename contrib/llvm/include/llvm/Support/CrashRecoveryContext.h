@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -564,16 +564,16 @@ operator|,
 name|resource
 operator|)
 block|{}
-name|virtual
 name|void
 name|recoverResources
 argument_list|()
+name|override
 block|{
 name|delete
 name|this
 operator|->
 name|resource
-block|;   }
+block|; }
 block|}
 block|;
 name|template
@@ -623,10 +623,10 @@ operator|,
 name|resource
 operator|)
 block|{}
-name|virtual
 name|void
 name|recoverResources
 argument_list|()
+name|override
 block|{
 name|this
 operator|->
@@ -634,7 +634,7 @@ name|resource
 operator|->
 name|Release
 argument_list|()
-block|;   }
+block|; }
 block|}
 block|;
 name|template

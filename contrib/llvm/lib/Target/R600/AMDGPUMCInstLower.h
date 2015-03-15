@@ -38,13 +38,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPU_MCINSTLOWER_H
+name|LLVM_LIB_TARGET_R600_AMDGPUMCINSTLOWER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPU_MCINSTLOWER_H
+name|LLVM_LIB_TARGET_R600_AMDGPUMCINSTLOWER_H
 end_define
 
 begin_decl_stmt
@@ -66,15 +66,6 @@ decl_stmt|;
 name|class
 name|AMDGPUMCInstLower
 block|{
-comment|// This must be kept in sync with the SISubtarget class in SIInstrInfo.td
-enum|enum
-name|SISubtarget
-block|{
-name|SI
-init|=
-literal|0
-block|}
-enum|;
 name|MCContext
 modifier|&
 name|Ctx
@@ -83,26 +74,6 @@ specifier|const
 name|AMDGPUSubtarget
 modifier|&
 name|ST
-decl_stmt|;
-comment|/// Convert a member of the AMDGPUSubtarget::Generation enum to the
-comment|/// SISubtarget enum.
-name|enum
-name|SISubtarget
-name|AMDGPUSubtargetToSISubtarget
-argument_list|(
-name|unsigned
-name|Gen
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// Get the MC opcode for this MachineInstr.
-name|unsigned
-name|getMCOpcode
-argument_list|(
-name|unsigned
-name|MIOpcode
-argument_list|)
-decl|const
 decl_stmt|;
 name|public
 label|:
@@ -146,10 +117,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|//AMDGPU_MCINSTLOWER_H
-end_comment
 
 end_unit
 

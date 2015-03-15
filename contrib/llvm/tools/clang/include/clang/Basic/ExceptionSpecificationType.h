@@ -97,7 +97,10 @@ name|EST_Unevaluated
 block|,
 comment|///< not evaluated yet, for special member function
 name|EST_Uninstantiated
+block|,
 comment|///< not instantiated yet
+name|EST_Unparsed
+comment|///< not parsed yet
 block|}
 enum|;
 specifier|inline

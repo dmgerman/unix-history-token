@@ -98,13 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/Type.h"
+file|"lldb/Symbol/DeclVendor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/TypeVendor.h"
+file|"lldb/Symbol/Type.h"
 end_include
 
 begin_include
@@ -414,6 +414,14 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|ClassDescriptorSP
+name|GetMetaclass
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 comment|// virtual if any implementation has some other version-specific rules
 comment|// but for the known v1/v2 this is all that needs to be done
 name|virtual
@@ -821,7 +829,7 @@ modifier|*
 name|name
 parameter_list|,
 name|bool
-name|allow_unknownanytype
+name|for_expression
 parameter_list|)
 function_decl|;
 name|virtual
@@ -834,7 +842,7 @@ modifier|*
 name|name
 parameter_list|,
 name|bool
-name|allow_unknownanytype
+name|for_expression
 parameter_list|)
 function_decl|;
 name|virtual
@@ -853,7 +861,7 @@ operator|*
 name|name
 argument_list|,
 name|bool
-name|allow_unknownanytype
+name|for_expression
 argument_list|)
 init|=
 literal|0
@@ -1176,9 +1184,9 @@ name|isa
 parameter_list|)
 function_decl|;
 name|virtual
-name|TypeVendor
+name|DeclVendor
 modifier|*
-name|GetTypeVendor
+name|GetDeclVendor
 parameter_list|()
 block|{
 return|return

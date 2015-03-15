@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_POSTORDER_CFGVIEW
+name|LLVM_CLANG_ANALYSIS_ANALYSES_POSTORDERCFGVIEW_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_POSTORDER_CFGVIEW
+name|LLVM_CLANG_ANALYSIS_ANALYSES_POSTORDERCFGVIEW_H
 end_define
 
 begin_include
@@ -165,7 +165,16 @@ argument_list|)
 block|{}
 comment|/// \brief Set the bit associated with a particular CFGBlock.
 comment|/// This is the important method for the SetType template parameter.
+name|std
+operator|::
+name|pair
+operator|<
+name|llvm
+operator|::
+name|NoneType
+block|,
 name|bool
+operator|>
 name|insert
 argument_list|(
 argument|const CFGBlock *Block
@@ -181,7 +190,14 @@ operator|!
 name|Block
 condition|)
 return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|None
+argument_list|,
 name|false
+argument_list|)
 return|;
 comment|// if an edge is trivially false.
 if|if
@@ -197,7 +213,14 @@ argument_list|()
 argument_list|)
 condition|)
 return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|None
+argument_list|,
 name|false
+argument_list|)
 return|;
 name|VisitedBlockIDs
 operator|.
@@ -210,7 +233,14 @@ argument_list|()
 argument_list|)
 block|;
 return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|None
+argument_list|,
 name|true
+argument_list|)
 return|;
 block|}
 comment|/// \brief Check if the bit for a CFGBlock has been already set.

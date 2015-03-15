@@ -173,6 +173,11 @@ operator|::
 name|linkShadowStackGC
 argument_list|()
 expr_stmt|;
+name|llvm
+operator|::
+name|linkStatepointExampleGC
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)

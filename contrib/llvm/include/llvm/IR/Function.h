@@ -394,10 +394,7 @@ name|AttributeSet
 name|AttributeSets
 decl_stmt|;
 comment|///< Parameter attributes
-comment|// HasLazyArguments is stored in Value::SubclassData.
-comment|/*bool HasLazyArguments;*/
-comment|// The Calling Convention is stored in Value::SubclassData.
-comment|/*CallingConv::ID CallingConvention;*/
+comment|/*    * Value::SubclassData    *    * bit 0  : HasLazyArguments    * bit 1  : HasPrefixData    * bit 2  : HasPrologueData    * bit 3-6: CallingConvention    */
 name|friend
 name|class
 name|SymbolTableListTraits
@@ -428,7 +425,11 @@ return|return
 name|getSubclassDataFromValue
 argument_list|()
 operator|&
+operator|(
 literal|1
+operator|<<
+literal|0
+operator|)
 return|;
 block|}
 name|void
@@ -568,6 +569,18 @@ name|isVarArg
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|isMaterializable
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setIsMaterializable
+parameter_list|(
+name|bool
+name|V
+parameter_list|)
+function_decl|;
 comment|/// getIntrinsicID - This method returns the ID number of the specified
 comment|/// function, or Intrinsic::not_intrinsic if the function is not an
 comment|/// intrinsic, or if the pointer is null.  This value is always defined to be
@@ -619,7 +632,7 @@ operator|(
 name|getSubclassDataFromValue
 argument_list|()
 operator|>>
-literal|2
+literal|3
 operator|)
 return|;
 block|}
@@ -638,7 +651,7 @@ operator|(
 name|getSubclassDataFromValue
 argument_list|()
 operator|&
-literal|3
+literal|7
 operator|)
 operator||
 operator|(
@@ -650,7 +663,7 @@ operator|(
 name|CC
 operator|)
 operator|<<
-literal|2
+literal|3
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1819,7 +1832,11 @@ return|return
 name|getSubclassDataFromValue
 argument_list|()
 operator|&
-literal|2
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
 return|;
 block|}
 name|Constant
@@ -1834,6 +1851,36 @@ parameter_list|(
 name|Constant
 modifier|*
 name|PrefixData
+parameter_list|)
+function_decl|;
+name|bool
+name|hasPrologueData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSubclassDataFromValue
+argument_list|()
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+return|;
+block|}
+name|Constant
+operator|*
+name|getPrologueData
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setPrologueData
+parameter_list|(
+name|Constant
+modifier|*
+name|PrologueData
 parameter_list|)
 function_decl|;
 comment|/// viewCFG - This function is meant for use from the debugger.  You can just

@@ -152,12 +152,26 @@ name|void
 name|destroyConstantImpl
 argument_list|()
 block|;
+name|void
+name|replaceUsesOfWithOnConstantImpl
+argument_list|(
+name|Constant
+operator|*
+name|Replacement
+argument_list|)
+block|;
 name|public
 operator|:
 comment|/// isNullValue - Return true if this is the value that would be returned by
 comment|/// getNullValue.
 name|bool
 name|isNullValue
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Returns true if the value is one.
+name|bool
+name|isOneValue
 argument_list|()
 specifier|const
 block|;
@@ -178,6 +192,12 @@ block|;
 comment|/// Return true if the value is negative zero or null value.
 name|bool
 name|isZeroValue
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Return true if the value is not the smallest signed value.
+name|bool
+name|isNotMinSignedValue
 argument_list|()
 specifier|const
 block|;

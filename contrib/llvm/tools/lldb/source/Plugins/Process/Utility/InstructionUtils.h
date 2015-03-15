@@ -91,7 +91,7 @@ operator|)
 operator|&
 operator|(
 operator|(
-literal|1u
+literal|1ull
 operator|<<
 operator|(
 name|msbit

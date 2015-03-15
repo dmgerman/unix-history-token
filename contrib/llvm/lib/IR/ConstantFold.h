@@ -70,13 +70,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CONSTANTFOLDING_H
+name|LLVM_LIB_IR_CONSTANTFOLD_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CONSTANTFOLDING_H
+name|LLVM_LIB_IR_CONSTANTFOLD_H
 end_define
 
 begin_include

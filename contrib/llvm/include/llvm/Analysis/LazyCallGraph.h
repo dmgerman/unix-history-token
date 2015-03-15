@@ -134,13 +134,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ANALYSIS_LAZY_CALL_GRAPH
+name|LLVM_ANALYSIS_LAZYCALLGRAPH_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ANALYSIS_LAZY_CALL_GRAPH
+name|LLVM_ANALYSIS_LAZYCALLGRAPH_H
 end_define
 
 begin_include
@@ -212,6 +212,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/PassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -225,9 +231,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|ModuleAnalysisManager
-decl_stmt|;
 name|class
 name|PreservedAnalyses
 decl_stmt|;
@@ -978,6 +981,29 @@ name|C
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Short name useful for debugging or logging.
+comment|///
+comment|/// We use the name of the first function in the SCC to name the SCC for
+comment|/// the purposes of debugging and logging.
+name|StringRef
+name|getName
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+operator|*
+name|begin
+argument_list|()
+operator|)
+operator|->
+name|getFunction
+argument_list|()
+operator|.
+name|getName
+argument_list|()
+return|;
+block|}
 comment|///@{
 comment|/// \name Mutation API
 comment|///
@@ -1941,7 +1967,16 @@ operator|&
 name|PassID
 return|;
 block|}
-comment|/// \brief Compute the \c LazyCallGraph for a the module \c M.
+specifier|static
+name|StringRef
+name|name
+parameter_list|()
+block|{
+return|return
+literal|"Lazy CallGraph Analysis"
+return|;
+block|}
+comment|/// \brief Compute the \c LazyCallGraph for the module \c M.
 comment|///
 comment|/// This just builds the set of entry points to the call graph. The rest is
 comment|/// built lazily as it is walked.
@@ -1949,14 +1984,13 @@ name|LazyCallGraph
 name|run
 parameter_list|(
 name|Module
-modifier|*
+modifier|&
 name|M
 parameter_list|)
 block|{
 return|return
 name|LazyCallGraph
 argument_list|(
-operator|*
 name|M
 argument_list|)
 return|;
@@ -2008,7 +2042,7 @@ name|PreservedAnalyses
 name|run
 parameter_list|(
 name|Module
-modifier|*
+modifier|&
 name|M
 parameter_list|,
 name|ModuleAnalysisManager

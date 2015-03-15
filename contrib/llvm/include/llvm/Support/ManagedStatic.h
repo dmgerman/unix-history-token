@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_MANAGED_STATIC_H
+name|LLVM_SUPPORT_MANAGEDSTATIC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_MANAGED_STATIC_H
+name|LLVM_SUPPORT_MANAGEDSTATIC_H
 end_define
 
 begin_include

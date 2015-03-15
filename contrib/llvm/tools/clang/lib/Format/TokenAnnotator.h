@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FORMAT_TOKEN_ANNOTATOR_H
+name|LLVM_CLANG_LIB_FORMAT_TOKENANNOTATOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FORMAT_TOKEN_ANNOTATOR_H
+name|LLVM_CLANG_LIB_FORMAT_TOKENANNOTATOR_H
 end_define
 
 begin_include
@@ -100,11 +100,7 @@ name|LineType
 block|{
 name|LT_Invalid
 block|,
-name|LT_Other
-block|,
-name|LT_PreprocessorDirective
-block|,
-name|LT_VirtualFunctionDecl
+name|LT_ImportStatement
 block|,
 name|LT_ObjCDecl
 block|,
@@ -112,7 +108,13 @@ comment|// An @interface, @implementation, or @protocol line.
 name|LT_ObjCMethodDecl
 block|,
 name|LT_ObjCProperty
+block|,
 comment|// An @property line.
+name|LT_Other
+block|,
+name|LT_PreprocessorDirective
+block|,
+name|LT_VirtualFunctionDecl
 block|}
 enum|;
 name|class
@@ -462,9 +464,10 @@ name|FormatStyle
 operator|&
 name|Style
 argument_list|,
-name|IdentifierInfo
+specifier|const
+name|AdditionalKeywords
 operator|&
-name|Ident_in
+name|Keywords
 argument_list|)
 operator|:
 name|Style
@@ -472,9 +475,9 @@ argument_list|(
 name|Style
 argument_list|)
 operator|,
-name|Ident_in
+name|Keywords
 argument_list|(
-argument|Ident_in
+argument|Keywords
 argument_list|)
 block|{}
 comment|/// \brief Adapts the indent levels of comment lines to the indent of the
@@ -611,10 +614,10 @@ name|FormatStyle
 modifier|&
 name|Style
 decl_stmt|;
-comment|// Contextual keywords:
-name|IdentifierInfo
+specifier|const
+name|AdditionalKeywords
 modifier|&
-name|Ident_in
+name|Keywords
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -634,10 +637,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_FORMAT_TOKEN_ANNOTATOR_H
-end_comment
 
 end_unit
 

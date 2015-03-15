@@ -74,31 +74,34 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Pass
+decl_stmt|;
+name|class
 name|TargetLibraryInfo
 decl_stmt|;
 name|class
-name|Pass
+name|TargetMachine
 decl_stmt|;
 comment|// The old pass manager infrastructure is hidden in a legacy namespace now.
 name|namespace
 name|legacy
 block|{
 name|class
-name|PassManagerBase
+name|FunctionPassManager
 decl_stmt|;
 name|class
-name|FunctionPassManager
+name|PassManagerBase
 decl_stmt|;
 block|}
 name|using
 name|legacy
 operator|::
-name|PassManagerBase
+name|FunctionPassManager
 expr_stmt|;
 name|using
 name|legacy
 operator|::
-name|FunctionPassManager
+name|PassManagerBase
 expr_stmt|;
 comment|/// PassManagerBuilder - This class is used to set up a standard optimization
 comment|/// sequence for languages like C and C++, allowing some APIs to customize the
@@ -231,6 +234,21 @@ decl_stmt|;
 name|bool
 name|LoadCombine
 decl_stmt|;
+name|bool
+name|DisableGVNLoadPRE
+decl_stmt|;
+name|bool
+name|VerifyInput
+decl_stmt|;
+name|bool
+name|VerifyOutput
+decl_stmt|;
+name|bool
+name|StripDebug
+decl_stmt|;
+name|bool
+name|MergeFunctions
+decl_stmt|;
 name|private
 label|:
 comment|/// ExtensionList - This is list of all of the extensions that are registered.
@@ -305,6 +323,14 @@ name|PM
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|addLTOOptimizationPasses
+parameter_list|(
+name|PassManagerBase
+modifier|&
+name|PM
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|/// populateFunctionPassManager - This fills in the function pass manager,
@@ -334,16 +360,11 @@ name|PassManagerBase
 modifier|&
 name|PM
 parameter_list|,
-name|bool
-name|Internalize
-parameter_list|,
-name|bool
-name|RunInliner
-parameter_list|,
-name|bool
-name|DisableGVNLoadPRE
+name|TargetMachine
+modifier|*
+name|TM
 init|=
-name|false
+name|nullptr
 parameter_list|)
 function_decl|;
 block|}

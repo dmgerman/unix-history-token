@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LTO_MODULE_H
+name|LLVM_LTO_LTOMODULE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LTO_MODULE_H
+name|LLVM_LTO_LTOMODULE_H
 end_define
 
 begin_include
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringSet.h"
 end_include
 
 begin_include
@@ -144,13 +150,6 @@ name|LTOModule
 block|{
 name|private
 label|:
-typedef|typedef
-name|StringMap
-operator|<
-name|uint8_t
-operator|>
-name|StringSet
-expr_stmt|;
 struct|struct
 name|NameAndAttributes
 block|{
@@ -176,6 +175,14 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|LLVMContext
+operator|>
+name|OwnedContext
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|object
 operator|::
 name|IRObjectFile
@@ -191,8 +198,10 @@ operator|>
 name|_target
 expr_stmt|;
 name|StringSet
+operator|<
+operator|>
 name|_linkeropt_strings
-decl_stmt|;
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -223,8 +232,10 @@ name|_symbols
 expr_stmt|;
 comment|// _defines and _undefines only needed to disambiguate tentative definitions
 name|StringSet
+operator|<
+operator|>
 name|_defines
-decl_stmt|;
+expr_stmt|;
 name|StringMap
 operator|<
 name|NameAndAttributes
@@ -258,8 +269,37 @@ operator|*
 name|TM
 argument_list|)
 expr_stmt|;
+name|LTOModule
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|object
+operator|::
+name|IRObjectFile
+operator|>
+name|Obj
+argument_list|,
+name|TargetMachine
+operator|*
+name|TM
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|LLVMContext
+operator|>
+name|Context
+argument_list|)
+expr_stmt|;
 name|public
 label|:
+operator|~
+name|LTOModule
+argument_list|()
+expr_stmt|;
 comment|/// Returns 'true' if the file or memory contents is LLVM bitcode.
 specifier|static
 name|bool
@@ -300,24 +340,22 @@ parameter_list|)
 function_decl|;
 comment|/// Create a MemoryBuffer from a memory range with an optional name.
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MemoryBuffer
-modifier|*
+operator|>
 name|makeBuffer
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|mem
-parameter_list|,
-name|size_t
-name|length
-parameter_list|,
-name|StringRef
-name|name
-init|=
+argument_list|(
+argument|const void *mem
+argument_list|,
+argument|size_t length
+argument_list|,
+argument|StringRef name =
 literal|""
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// Create an LTOModule. N.B. These methods take ownership of the buffer. The
 comment|/// caller must have initialized the Targets, the TargetMCs, the AsmPrinters,
 comment|/// and the AsmParsers by calling:
@@ -427,6 +465,62 @@ name|StringRef
 name|path
 operator|=
 literal|""
+argument_list|)
+decl_stmt|;
+specifier|static
+name|LTOModule
+modifier|*
+name|createInLocalContext
+argument_list|(
+specifier|const
+name|void
+operator|*
+name|mem
+argument_list|,
+name|size_t
+name|length
+argument_list|,
+name|TargetOptions
+name|options
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|errMsg
+argument_list|,
+name|StringRef
+name|path
+argument_list|)
+decl_stmt|;
+specifier|static
+name|LTOModule
+modifier|*
+name|createInContext
+argument_list|(
+specifier|const
+name|void
+operator|*
+name|mem
+argument_list|,
+name|size_t
+name|length
+argument_list|,
+name|TargetOptions
+name|options
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|errMsg
+argument_list|,
+name|StringRef
+name|path
+argument_list|,
+name|LLVMContext
+operator|*
+name|Context
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -845,19 +939,13 @@ operator|&
 name|name
 argument_list|)
 decl_stmt|;
-comment|/// Create an LTOModule (private version). N.B. This method takes ownership of
-comment|/// the buffer.
+comment|/// Create an LTOModule (private version).
 specifier|static
 name|LTOModule
 modifier|*
 name|makeLTOModule
 argument_list|(
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|MemoryBuffer
-operator|>
+name|MemoryBufferRef
 name|Buffer
 argument_list|,
 name|TargetOptions
@@ -868,6 +956,10 @@ operator|::
 name|string
 operator|&
 name|errMsg
+argument_list|,
+name|LLVMContext
+operator|*
+name|Context
 argument_list|)
 decl_stmt|;
 block|}
@@ -879,10 +971,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LTO_MODULE_H
-end_comment
 
 end_unit
 

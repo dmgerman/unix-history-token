@@ -73,13 +73,61 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/CGSCCPassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/PassManager.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|ModulePassManager
-decl_stmt|;
+comment|/// \brief Registers all available module analysis passes.
+comment|///
+comment|/// This is an interface that can be used to populate a \c
+comment|/// ModuleAnalysisManager with all registered module analyses. Callers can
+comment|/// still manually register any additional analyses.
+name|void
+name|registerModuleAnalyses
+parameter_list|(
+name|ModuleAnalysisManager
+modifier|&
+name|MAM
+parameter_list|)
+function_decl|;
+comment|/// \brief Registers all available CGSCC analysis passes.
+comment|///
+comment|/// This is an interface that can be used to populate a \c CGSCCAnalysisManager
+comment|/// with all registered CGSCC analyses. Callers can still manually register any
+comment|/// additional analyses.
+name|void
+name|registerCGSCCAnalyses
+parameter_list|(
+name|CGSCCAnalysisManager
+modifier|&
+name|CGAM
+parameter_list|)
+function_decl|;
+comment|/// \brief Registers all available function analysis passes.
+comment|///
+comment|/// This is an interface that can be used to populate a \c
+comment|/// FunctionAnalysisManager with all registered function analyses. Callers can
+comment|/// still manually register any additional analyses.
+name|void
+name|registerFunctionAnalyses
+parameter_list|(
+name|FunctionAnalysisManager
+modifier|&
+name|FAM
+parameter_list|)
+function_decl|;
 comment|/// \brief Parse a textual pass pipeline description into a \c ModulePassManager.
 comment|///
 comment|/// The format of the textual pass pipeline description looks something like:
@@ -122,6 +170,11 @@ name|bool
 name|VerifyEachPass
 init|=
 name|true
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
 parameter_list|)
 function_decl|;
 block|}

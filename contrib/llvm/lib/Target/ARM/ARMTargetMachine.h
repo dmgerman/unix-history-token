@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARMTARGETMACHINE_H
+name|LLVM_LIB_TARGET_ARM_ARMTARGETMACHINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARMTARGETMACHINE_H
+name|LLVM_LIB_TARGET_ARM_ARMTARGETMACHINE_H
 end_define
 
 begin_include
@@ -93,10 +93,46 @@ range|:
 name|public
 name|LLVMTargetMachine
 block|{
+name|public
+operator|:
+expr|enum
+name|ARMABI
+block|{
+name|ARM_ABI_UNKNOWN
+block|,
+name|ARM_ABI_APCS
+block|,
+name|ARM_ABI_AAPCS
+comment|// ARM EABI
+block|}
+name|TargetABI
+block|;
 name|protected
 operator|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|TargetLoweringObjectFile
+operator|>
+name|TLOF
+block|;
 name|ARMSubtarget
 name|Subtarget
+block|;
+name|bool
+name|isLittle
+block|;
+name|mutable
+name|StringMap
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ARMSubtarget
+operator|>>
+name|SubtargetMap
 block|;
 name|public
 operator|:
@@ -121,6 +157,11 @@ argument_list|,
 argument|bool isLittle
 argument_list|)
 block|;
+operator|~
+name|ARMBaseTargetMachine
+argument_list|()
+name|override
+block|;
 specifier|const
 name|ARMSubtarget
 operator|*
@@ -135,131 +176,15 @@ name|Subtarget
 return|;
 block|}
 specifier|const
-name|ARMBaseRegisterInfo
+name|ARMSubtarget
 operator|*
-name|getRegisterInfo
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
 name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getRegisterInfo
-argument_list|()
-return|;
-block|}
-specifier|const
-name|ARMTargetLowering
-operator|*
-name|getTargetLowering
-argument_list|()
+argument_list|(
+argument|const Function&F
+argument_list|)
 specifier|const
 name|override
-block|{
-return|return
-name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getTargetLowering
-argument_list|()
-return|;
-block|}
-specifier|const
-name|ARMSelectionDAGInfo
-operator|*
-name|getSelectionDAGInfo
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getSelectionDAGInfo
-argument_list|()
-return|;
-block|}
-specifier|const
-name|ARMBaseInstrInfo
-operator|*
-name|getInstrInfo
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getInstrInfo
-argument_list|()
-return|;
-block|}
-specifier|const
-name|ARMFrameLowering
-operator|*
-name|getFrameLowering
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getFrameLowering
-argument_list|()
-return|;
-block|}
-specifier|const
-name|InstrItineraryData
-operator|*
-name|getInstrItineraryData
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getInstrItineraryData
-argument_list|()
-return|;
-block|}
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getDataLayout
-argument_list|()
-return|;
-block|}
-name|ARMJITInfo
-operator|*
-name|getJITInfo
-argument_list|()
-name|override
-block|{
-return|return
-name|Subtarget
-operator|.
-name|getJITInfo
-argument_list|()
-return|;
-block|}
+block|;
 comment|/// \brief Register ARM analysis passes with a pass manager.
 name|void
 name|addAnalysisPasses
@@ -277,21 +202,27 @@ argument|PassManagerBase&PM
 argument_list|)
 name|override
 block|;
-name|bool
-name|addCodeEmitter
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|JITCodeEmitter&MCE
-argument_list|)
+name|TargetLoweringObjectFile
+operator|*
+name|getObjFileLowering
+argument_list|()
+specifier|const
 name|override
-block|; }
-decl_stmt|;
+block|{
+return|return
+name|TLOF
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
 comment|/// ARMTargetMachine - ARM target machine.
 comment|///
 name|class
 name|ARMTargetMachine
-range|:
+operator|:
 name|public
 name|ARMBaseTargetMachine
 block|{
@@ -323,12 +254,12 @@ argument_list|,
 argument|bool isLittle
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 comment|/// ARMLETargetMachine - ARM little endian target machine.
 comment|///
 name|class
 name|ARMLETargetMachine
-range|:
+operator|:
 name|public
 name|ARMTargetMachine
 block|{
@@ -358,12 +289,12 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 comment|/// ARMBETargetMachine - ARM big endian target machine.
 comment|///
 name|class
 name|ARMBETargetMachine
-range|:
+operator|:
 name|public
 name|ARMTargetMachine
 block|{
@@ -393,14 +324,14 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 comment|/// ThumbTargetMachine - Thumb target machine.
 comment|/// Due to the way architectures are handled, this represents both
 comment|///   Thumb-1 and Thumb-2.
 comment|///
 name|class
 name|ThumbTargetMachine
-range|:
+operator|:
 name|public
 name|ARMBaseTargetMachine
 block|{
@@ -432,12 +363,12 @@ argument_list|,
 argument|bool isLittle
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 comment|/// ThumbLETargetMachine - Thumb little endian target machine.
 comment|///
 name|class
 name|ThumbLETargetMachine
-range|:
+operator|:
 name|public
 name|ThumbTargetMachine
 block|{
@@ -467,12 +398,12 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 comment|/// ThumbBETargetMachine - Thumb big endian target machine.
 comment|///
 name|class
 name|ThumbBETargetMachine
-range|:
+operator|:
 name|public
 name|ThumbTargetMachine
 block|{
@@ -502,8 +433,7 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-decl_stmt|;
-block|}
+block|;  }
 end_decl_stmt
 
 begin_comment

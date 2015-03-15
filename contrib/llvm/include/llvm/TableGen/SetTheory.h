@@ -182,13 +182,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SETTHEORY_H
+name|LLVM_TABLEGEN_SETTHEORY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SETTHEORY_H
+name|LLVM_TABLEGEN_SETTHEORY_H
 end_define
 
 begin_include

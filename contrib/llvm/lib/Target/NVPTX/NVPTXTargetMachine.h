@@ -50,25 +50,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NVPTX_TARGETMACHINE_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXTARGETMACHINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NVPTX_TARGETMACHINE_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXTARGETMACHINE_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"NVPTXSubtarget.h"
+file|"ManagedStringPool.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ManagedStringPool.h"
+file|"NVPTXSubtarget.h"
 end_include
 
 begin_include
@@ -101,6 +101,14 @@ range|:
 name|public
 name|LLVMTargetMachine
 block|{
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|TargetLoweringObjectFile
+operator|>
+name|TLOF
+block|;
 name|NVPTXSubtarget
 name|Subtarget
 block|;
@@ -131,54 +139,11 @@ argument_list|,
 argument|bool is64bit
 argument_list|)
 block|;
-specifier|const
-name|TargetFrameLowering
-operator|*
-name|getFrameLowering
+operator|~
+name|NVPTXTargetMachine
 argument_list|()
-specifier|const
 name|override
-block|{
-return|return
-name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getFrameLowering
-argument_list|()
-return|;
-block|}
-specifier|const
-name|NVPTXInstrInfo
-operator|*
-name|getInstrInfo
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getInstrInfo
-argument_list|()
-return|;
-block|}
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getDataLayout
-argument_list|()
-return|;
-block|}
+block|;
 specifier|const
 name|NVPTXSubtarget
 operator|*
@@ -190,54 +155,6 @@ block|{
 return|return
 operator|&
 name|Subtarget
-return|;
-block|}
-specifier|const
-name|NVPTXRegisterInfo
-operator|*
-name|getRegisterInfo
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getRegisterInfo
-argument_list|()
-return|;
-block|}
-specifier|const
-name|NVPTXTargetLowering
-operator|*
-name|getTargetLowering
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getTargetLowering
-argument_list|()
-return|;
-block|}
-specifier|const
-name|TargetSelectionDAGInfo
-operator|*
-name|getSelectionDAGInfo
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|getSubtargetImpl
-argument_list|()
-operator|->
-name|getSelectionDAGInfo
-argument_list|()
 return|;
 block|}
 name|ManagedStringPool
@@ -266,22 +183,6 @@ argument|PassManagerBase&PM
 argument_list|)
 name|override
 block|;
-comment|// Emission of machine code through JITCodeEmitter is not supported.
-name|bool
-name|addPassesToEmitMachineCode
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|JITCodeEmitter&
-argument_list|,
-argument|bool = true
-argument_list|)
-name|override
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Emission of machine code through MCJIT is not supported.
 name|bool
 name|addPassesToEmitMC
@@ -300,12 +201,33 @@ return|return
 name|true
 return|;
 block|}
-expr|}
-block|;
+name|TargetLoweringObjectFile
+operator|*
+name|getObjFileLowering
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|TLOF
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+comment|/// \brief Register NVPTX analysis passes with a pass manager.
+name|void
+name|addAnalysisPasses
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|)
+name|override
+block|;  }
+decl_stmt|;
 comment|// NVPTXTargetMachine.
 name|class
 name|NVPTXTargetMachine32
-operator|:
+range|:
 name|public
 name|NVPTXTargetMachine
 block|{
@@ -335,10 +257,10 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|NVPTXTargetMachine64
-operator|:
+range|:
 name|public
 name|NVPTXTargetMachine
 block|{
@@ -368,7 +290,8 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-block|;  }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

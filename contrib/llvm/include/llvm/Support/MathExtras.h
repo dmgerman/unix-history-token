@@ -101,12 +101,6 @@ directive|include
 file|<intrin.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<limits>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -326,9 +320,9 @@ operator|::
 name|type
 name|countTrailingZeros
 argument_list|(
-argument|T Val
+argument|T
 argument_list|,
-argument|ZeroBehavior ZB = ZB_Width
+argument|ZeroBehavior = ZB_Width
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 expr_stmt|;
@@ -387,9 +381,11 @@ argument_list|(
 name|__builtin_ctz
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -498,9 +494,11 @@ argument_list|(
 name|__builtin_ctzll
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -757,9 +755,9 @@ operator|::
 name|type
 name|countLeadingZeros
 argument_list|(
-argument|T Val
+argument|T
 argument_list|,
-argument|ZeroBehavior ZB = ZB_Width
+argument|ZeroBehavior = ZB_Width
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 expr_stmt|;
@@ -818,9 +816,11 @@ argument_list|(
 name|__builtin_clz
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -931,9 +931,11 @@ argument_list|(
 name|__builtin_clzll
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -1139,9 +1141,9 @@ operator|::
 name|type
 name|findFirstSet
 argument_list|(
-argument|T Val
+argument|T
 argument_list|,
-argument|ZeroBehavior ZB = ZB_Max
+argument|ZeroBehavior = ZB_Max
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 expr_stmt|;
@@ -1311,9 +1313,9 @@ operator|::
 name|type
 name|findLastSet
 argument_list|(
-argument|T Val
+argument|T
 argument_list|,
-argument|ZeroBehavior ZB = ZB_Max
+argument|ZeroBehavior = ZB_Max
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 expr_stmt|;
@@ -3170,7 +3172,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Aligns \c Ptr to \c Alignment bytes, rounding up.
+comment|/// \brief Aligns \c Addr to \c Alignment bytes, rounding up.
 end_comment
 
 begin_comment
@@ -3182,18 +3184,17 @@ comment|/// Alignment should be a power of two.  This method rounds up, so
 end_comment
 
 begin_comment
-comment|/// AlignPtr(7, 4) == 8 and AlignPtr(8, 4) == 8.
+comment|/// alignAddr(7, 4) == 8 and alignAddr(8, 4) == 8.
 end_comment
 
 begin_function
 specifier|inline
-name|char
-modifier|*
-name|alignPtr
+name|uintptr_t
+name|alignAddr
 parameter_list|(
-name|char
+name|void
 modifier|*
-name|Ptr
+name|Addr
 parameter_list|,
 name|size_t
 name|Alignment
@@ -3214,17 +3215,30 @@ operator|&&
 literal|"Alignment is not a power of two!"
 argument_list|)
 expr_stmt|;
-return|return
+name|assert
+argument_list|(
 operator|(
-name|char
-operator|*
+name|uintptr_t
 operator|)
+name|Addr
+operator|+
+name|Alignment
+operator|-
+literal|1
+operator|>=
+operator|(
+name|uintptr_t
+operator|)
+name|Addr
+argument_list|)
+expr_stmt|;
+return|return
 operator|(
 operator|(
 operator|(
 name|uintptr_t
 operator|)
-name|Ptr
+name|Addr
 operator|+
 name|Alignment
 operator|-
@@ -3241,6 +3255,43 @@ operator|-
 literal|1
 argument_list|)
 operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Returns the necessary adjustment for aligning \c Ptr to \c Alignment
+end_comment
+
+begin_comment
+comment|/// bytes, rounding up.
+end_comment
+
+begin_function
+specifier|inline
+name|size_t
+name|alignmentAdjustment
+parameter_list|(
+name|void
+modifier|*
+name|Ptr
+parameter_list|,
+name|size_t
+name|Alignment
+parameter_list|)
+block|{
+return|return
+name|alignAddr
+argument_list|(
+name|Ptr
+argument_list|,
+name|Alignment
+argument_list|)
+operator|-
+operator|(
+name|uintptr_t
+operator|)
+name|Ptr
 return|;
 block|}
 end_function
@@ -3393,6 +3444,10 @@ comment|///   RoundUpToAlignment(~0LL, 8) = 0
 end_comment
 
 begin_comment
+comment|///   RoundUpToAlignment(321, 255) = 510
+end_comment
+
+begin_comment
 comment|/// \endcode
 end_comment
 
@@ -3410,7 +3465,6 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
 name|Value
 operator|+
 name|Align
@@ -3419,7 +3473,6 @@ literal|1
 operator|)
 operator|/
 name|Align
-operator|)
 operator|*
 name|Align
 return|;
@@ -3665,58 +3718,13 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-end_if
-
-begin_comment
-comment|// Visual Studio defines the HUGE_VAL class of macros using purposeful
-end_comment
-
-begin_comment
-comment|// constant arithmetic overflow, which it then warns on when encountered.
-end_comment
-
 begin_decl_stmt
+specifier|extern
 specifier|const
 name|float
 name|huge_valf
-init|=
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|float
-operator|>
-operator|::
-name|infinity
-argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|const
-name|float
-name|huge_valf
-init|=
-name|HUGE_VALF
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 unit|}

@@ -296,14 +296,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|bool
-name|isSectionAtomizableBySymbols
-argument_list|(
-argument|const MCSection&Section
-argument_list|)
-specifier|const
-name|override
-block|;
 specifier|const
 name|MCSection
 operator|*

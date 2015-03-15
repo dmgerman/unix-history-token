@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPU_ASMPRINTER_H
+name|LLVM_LIB_TARGET_R600_AMDGPUASMPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPU_ASMPRINTER_H
+name|LLVM_LIB_TARGET_R600_AMDGPUASMPRINTER_H
 end_define
 
 begin_include
@@ -93,12 +93,12 @@ block|{
 name|SIProgramInfo
 argument_list|()
 operator|:
-name|NumVGPR
+name|VGPRBlocks
 argument_list|(
 literal|0
 argument_list|)
 block|,
-name|NumSGPR
+name|SGPRBlocks
 argument_list|(
 literal|0
 argument_list|)
@@ -136,6 +136,46 @@ block|,
 name|ScratchSize
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|ComputePGMRSrc1
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|LDSBlocks
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ScratchBlocks
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ComputePGMRSrc2
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|NumVGPR
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|NumSGPR
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|FlatUsed
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|VCCUsed
+argument_list|(
+name|false
 argument_list|)
 block|,
 name|CodeLen
@@ -145,10 +185,10 @@ argument_list|)
 block|{}
 comment|// Fields set in PGM_RSRC1 pm4 packet.
 name|uint32_t
-name|NumVGPR
+name|VGPRBlocks
 block|;
 name|uint32_t
-name|NumSGPR
+name|SGPRBlocks
 block|;
 name|uint32_t
 name|Priority
@@ -171,7 +211,35 @@ block|;
 name|uint32_t
 name|ScratchSize
 block|;
+name|uint64_t
+name|ComputePGMRSrc1
+block|;
+comment|// Fields set in PGM_RSRC2 pm4 packet.
+name|uint32_t
+name|LDSBlocks
+block|;
+name|uint32_t
+name|ScratchBlocks
+block|;
+name|uint64_t
+name|ComputePGMRSrc2
+block|;
+name|uint32_t
+name|NumVGPR
+block|;
+name|uint32_t
+name|NumSGPR
+block|;
+name|uint32_t
+name|LDSSize
+block|;
+name|bool
+name|FlatUsed
+block|;
 comment|// Bonus information for debugging.
+name|bool
+name|VCCUsed
+block|;
 name|uint64_t
 name|CodeLen
 block|;   }
@@ -220,6 +288,15 @@ name|SIProgramInfo
 operator|&
 name|KernelInfo
 argument_list|)
+block|;
+name|void
+name|EmitAmdKernelCodeT
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|const SIProgramInfo&KernelInfo
+argument_list|)
+specifier|const
 block|;
 name|public
 operator|:
@@ -301,10 +378,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|//AMDGPU_ASMPRINTER_H
-end_comment
 
 end_unit
 

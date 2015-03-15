@@ -5094,6 +5094,11 @@ operator|:
 name|public
 name|HNode
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|MapHNode
@@ -5108,11 +5113,6 @@ argument_list|(
 argument|n
 argument_list|)
 block|{ }
-name|virtual
-operator|~
-name|MapHNode
-argument_list|()
-block|;
 specifier|static
 specifier|inline
 name|bool
@@ -5149,9 +5149,12 @@ name|llvm
 operator|::
 name|StringMap
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|HNode
-operator|*
-operator|>
+operator|>>
 name|NameToNode
 expr_stmt|;
 name|bool
@@ -5182,6 +5185,11 @@ operator|:
 name|public
 name|HNode
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 name|SequenceHNode
@@ -5196,11 +5204,6 @@ argument_list|(
 argument|n
 argument_list|)
 block|{ }
-name|virtual
-operator|~
-name|SequenceHNode
-argument_list|()
-block|;
 specifier|static
 specifier|inline
 name|bool
@@ -5236,16 +5239,23 @@ name|std
 operator|::
 name|vector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|HNode
-operator|*
-operator|>
+operator|>>
 name|Entries
 block|;   }
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Input
 operator|::
 name|HNode
-operator|*
+operator|>
 name|createHNodes
 argument_list|(
 name|Node

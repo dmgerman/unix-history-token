@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/StringTableBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -334,10 +340,7 @@ block|;
 comment|/// @}
 comment|/// @name Symbol Table Data
 comment|/// @{
-name|SmallString
-operator|<
-literal|256
-operator|>
+name|StringTableBuilder
 name|StringTable
 block|;
 name|std
@@ -724,20 +727,12 @@ argument_list|)
 block|;
 comment|/// ComputeSymbolTable - Compute the symbol table data
 comment|///
-comment|/// \param StringTable [out] - The string table data.
 name|void
 name|ComputeSymbolTable
 argument_list|(
 name|MCAssembler
 operator|&
 name|Asm
-argument_list|,
-name|SmallString
-operator|<
-literal|256
-operator|>
-operator|&
-name|StringTable
 argument_list|,
 name|std
 operator|::

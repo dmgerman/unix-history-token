@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MIDataTypes.h
+comment|// File:        MIDataTypes.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	Common global switches, macros, etc.
+comment|// Overview:    Common global switches, macros, etc.
 end_comment
 
 begin_comment
@@ -52,31 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|//				This file contains common data types required by applications
+comment|//              This file contains common data types required by applications
 end_comment
 
 begin_comment
-comment|//				generally. If supported by the compiler, this file should be
+comment|//              generally. If supported by the compiler, this file should be
 end_comment
 
 begin_comment
-comment|//				#include'd as part of the project's PCH (precompiled header).
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              #include'd as part of the project's PCH (precompiled header).
 end_comment
 
 begin_comment
@@ -84,7 +68,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Environment: Compilers:  Visual C++ 12.
+end_comment
+
+begin_comment
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+end_comment
+
+begin_comment
+comment|//              Libraries:  See MIReadmetxt.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -204,7 +204,7 @@ begin_define
 define|#
 directive|define
 name|MI_NO_INITIALIZE_VTABLE
-value|__declspec( novtable )
+value|__declspec(novtable)
 end_define
 
 begin_define
@@ -334,7 +334,7 @@ directive|else
 end_else
 
 begin_comment
-comment|//		typedef	 long unsigned int size_t; // size_t already defined
+comment|//       typedef     long unsigned int size_t; // size_t already defined
 end_comment
 
 begin_typedef
@@ -472,7 +472,7 @@ comment|// 64bit unsigned integer.
 end_comment
 
 begin_comment
-comment|//using namespace std;	// Better to put this or std:: at translation units scope.
+comment|// using namespace std; // Better to put this or std:: at translation units scope.
 end_comment
 
 begin_comment

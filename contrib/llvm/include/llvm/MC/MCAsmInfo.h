@@ -123,27 +123,27 @@ name|enum
 name|class
 name|EncodingType
 block|{
-name|ET_Invalid
+name|Invalid
 operator|,
 comment|/// Invalid
-name|ET_Alpha
+name|Alpha
 operator|,
 comment|/// Windows Alpha
-name|ET_Alpha64
+name|Alpha64
 operator|,
 comment|/// Windows AXP64
-name|ET_ARM
+name|ARM
 operator|,
 comment|/// Windows NT (Windows on ARM)
-name|ET_CE
+name|CE
 operator|,
 comment|/// Windows CE ARM, PowerPC, SH3, SH4
-name|ET_Itanium
+name|Itanium
 operator|,
 comment|/// Windows x64, Windows Itanium (IA-64)
-name|ET_MIPS
+name|MIPS
 operator|=
-name|ET_Alpha
+name|Alpha
 operator|,
 block|}
 empty_stmt|;
@@ -164,9 +164,12 @@ comment|/// setjmp/longjmp based exceptions
 name|ARM
 operator|,
 comment|/// ARM EHABI
-name|WinEH
+name|ItaniumWinEH
 operator|,
-comment|/// Windows Exception Handling
+comment|/// Itanium EH built on Windows unwind info (.pdata and .xdata)
+name|MSVC
+operator|,
+comment|/// MSVC compatible exception handling
 block|}
 empty_stmt|;
 name|namespace
@@ -226,17 +229,11 @@ name|bool
 name|HasMachoTBSSDirective
 decl_stmt|;
 comment|/// True if the compiler should emit a ".reference .constructors_used" or
-comment|/// ".reference .destructors_used" directive after the a static ctor/dtor
+comment|/// ".reference .destructors_used" directive after the static ctor/dtor
 comment|/// list.  This directive is only emitted in Static relocation model.  Default
 comment|/// is false.
 name|bool
 name|HasStaticCtorDtorReferenceInStaticMode
-decl_stmt|;
-comment|/// True if the linker has a bug and requires that the debug_line section be
-comment|/// of a minimum size. In practice such a linker requires a non-empty line
-comment|/// sequence if a file is present.  Default to false.
-name|bool
-name|LinkerRequiresNonEmptyDwarfLines
 decl_stmt|;
 comment|/// This is the maximum possible length of an instruction, which is needed to
 comment|/// compute the size of an inline asm.  Defaults to 4.
@@ -284,6 +281,13 @@ specifier|const
 name|char
 modifier|*
 name|PrivateGlobalPrefix
+decl_stmt|;
+comment|/// This prefix is used for labels for basic blocks. Defaults to the same as
+comment|/// PrivateGlobalPrefix.
+specifier|const
+name|char
+modifier|*
+name|PrivateLabelPrefix
 decl_stmt|;
 comment|/// This prefix is used for symbols that should be passed through the
 comment|/// assembler but be removed by the linker.  This is 'l' on Darwin, currently
@@ -433,15 +437,20 @@ name|unsigned
 name|TextAlignFillValue
 decl_stmt|;
 comment|//===--- Global Variable Emission Directives --------------------------===//
-comment|/// This is the directive used to declare a global entity.  Defaults to NULL.
+comment|/// This is the directive used to declare a global entity. Defaults to
+comment|/// ".globl".
 specifier|const
 name|char
 modifier|*
 name|GlobalDirective
 decl_stmt|;
-comment|/// True if the assembler supports the .set directive.  Defaults to true.
+comment|/// True if the expression
+comment|///   .long f - g
+comment|/// uses an relocation but it can be supressed by writting
+comment|///   a = f - g
+comment|///   .long a
 name|bool
-name|HasSetDirective
+name|SetDirectiveSuppressesReloc
 decl_stmt|;
 comment|/// False if the assembler requires that we use
 comment|/// \code
@@ -491,6 +500,12 @@ comment|/// to false.
 name|bool
 name|HasNoDeadStrip
 decl_stmt|;
+comment|/// Used to declare a global as being a weak symbol. Defaults to ".weak".
+specifier|const
+name|char
+modifier|*
+name|WeakDirective
+decl_stmt|;
 comment|/// This directive, if non-null, is used to declare a global as being a weak
 comment|/// undefined symbol.  Defaults to NULL.
 specifier|const
@@ -529,10 +544,6 @@ name|MCSymbolAttr
 name|ProtectedVisibilityAttr
 decl_stmt|;
 comment|//===--- Dwarf Emission Directives -----------------------------------===//
-comment|/// True if target asm supports leb128 directives.  Defaults to false.
-name|bool
-name|HasLEB128
-decl_stmt|;
 comment|/// True if target supports emission of debugging information.  Defaults to
 comment|/// false.
 name|bool
@@ -737,6 +748,21 @@ return|return
 name|nullptr
 return|;
 block|}
+comment|/// \brief True if the section is atomized using the symbols in it.
+comment|/// This is false if the section is not atomized at all (most ELF sections) or
+comment|/// if it is atomized based on its contents (MachO' __TEXT,__cstring for
+comment|/// example).
+name|virtual
+name|bool
+name|isSectionAtomizableBySymbols
+argument_list|(
+specifier|const
+name|MCSection
+operator|&
+name|Section
+argument_list|)
+decl|const
+decl_stmt|;
 name|virtual
 specifier|const
 name|MCExpr
@@ -832,15 +858,6 @@ return|return
 name|HasStaticCtorDtorReferenceInStaticMode
 return|;
 block|}
-name|bool
-name|getLinkerRequiresNonEmptyDwarfLines
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LinkerRequiresNonEmptyDwarfLines
-return|;
-block|}
 name|unsigned
 name|getMaxInstLength
 argument_list|()
@@ -930,6 +947,17 @@ specifier|const
 block|{
 return|return
 name|PrivateGlobalPrefix
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getPrivateLabelPrefix
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PrivateLabelPrefix
 return|;
 block|}
 name|bool
@@ -1111,12 +1139,12 @@ name|GlobalDirective
 return|;
 block|}
 name|bool
-name|hasSetDirective
+name|doesSetDirectiveSuppressesReloc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasSetDirective
+name|SetDirectiveSuppressesReloc
 return|;
 block|}
 name|bool
@@ -1187,6 +1215,17 @@ block|}
 specifier|const
 name|char
 operator|*
+name|getWeakDirective
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WeakDirective
+return|;
+block|}
+specifier|const
+name|char
+operator|*
 name|getWeakRefDirective
 argument_list|()
 specifier|const
@@ -1250,15 +1289,6 @@ name|ProtectedVisibilityAttr
 return|;
 block|}
 name|bool
-name|hasLEB128
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasLEB128
-return|;
-block|}
-name|bool
 name|doesSupportDebugInformation
 argument_list|()
 specifier|const
@@ -1300,8 +1330,10 @@ return|return
 name|WinEHEncodingType
 return|;
 block|}
+comment|/// Return true if the exception handling type uses the language-specific data
+comment|/// area (LSDA) format specified by the Itanium C++ ABI.
 name|bool
-name|isExceptionHandlingDwarf
+name|usesItaniumLSDAForExceptions
 argument_list|()
 specifier|const
 block|{
@@ -1319,13 +1351,32 @@ name|ExceptionHandling
 operator|::
 name|ARM
 operator|||
-comment|// Windows handler data still uses DWARF LSDA encoding.
+comment|// This Windows EH type uses the Itanium LSDA encoding.
 name|ExceptionsType
 operator|==
 name|ExceptionHandling
 operator|::
-name|WinEH
+name|ItaniumWinEH
 operator|)
+return|;
+block|}
+name|bool
+name|usesWindowsCFI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExceptionsType
+operator|==
+name|ExceptionHandling
+operator|::
+name|ItaniumWinEH
+operator|||
+name|ExceptionsType
+operator|==
+name|ExceptionHandling
+operator|::
+name|MSVC
 return|;
 block|}
 name|bool

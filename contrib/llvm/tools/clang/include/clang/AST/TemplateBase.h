@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -194,8 +194,9 @@ block|{
 name|unsigned
 name|Kind
 decl_stmt|;
-name|bool
-name|ForRefParam
+name|void
+modifier|*
+name|QT
 decl_stmt|;
 name|ValueDecl
 modifier|*
@@ -376,7 +377,7 @@ name|TemplateArgument
 argument_list|(
 argument|ValueDecl *D
 argument_list|,
-argument|bool ForRefParam
+argument|QualType QT
 argument_list|)
 block|{
 name|assert
@@ -394,15 +395,18 @@ name|Declaration
 expr_stmt|;
 name|DeclArg
 operator|.
-name|D
+name|QT
 operator|=
-name|D
+name|QT
+operator|.
+name|getAsOpaquePtr
+argument_list|()
 expr_stmt|;
 name|DeclArg
 operator|.
-name|ForRefParam
+name|D
 operator|=
-name|ForRefParam
+name|D
 expr_stmt|;
 block|}
 comment|/// \brief Construct an integral constant template argument. The memory to
@@ -746,10 +750,8 @@ operator|.
 name|D
 return|;
 block|}
-comment|/// \brief Retrieve whether a declaration is binding to a
-comment|/// reference parameter in a declaration non-type template argument.
-name|bool
-name|isDeclForReferenceParam
+name|QualType
+name|getParamTypeForDecl
 argument_list|()
 specifier|const
 block|{
@@ -764,9 +766,14 @@ literal|"Unexpected kind"
 argument_list|)
 block|;
 return|return
+name|QualType
+operator|::
+name|getFromOpaquePtr
+argument_list|(
 name|DeclArg
 operator|.
-name|ForRefParam
+name|QT
+argument_list|)
 return|;
 block|}
 comment|/// \brief Retrieve the type for null non-type template argument.
@@ -1163,19 +1170,18 @@ name|Pack
 argument_list|)
 block|;
 return|return
-name|ArrayRef
-operator|<
-name|TemplateArgument
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|Args
 operator|.
 name|Args
-operator|,
+argument_list|,
 name|Args
 operator|.
 name|NumArgs
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// \brief Determines whether two template arguments are superficially the

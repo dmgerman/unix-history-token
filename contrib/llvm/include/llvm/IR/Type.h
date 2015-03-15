@@ -885,13 +885,11 @@ comment|///
 name|bool
 name|isSized
 argument_list|(
-name|SmallPtrSet
+name|SmallPtrSetImpl
 operator|<
 specifier|const
 name|Type
 operator|*
-argument_list|,
-literal|4
 operator|>
 operator|*
 name|Visited
@@ -1035,6 +1033,26 @@ name|NumContainedTys
 index|]
 return|;
 block|}
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+name|subtypes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|makeArrayRef
+argument_list|(
+name|subtype_begin
+argument_list|()
+argument_list|,
+name|subtype_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 typedef|typedef
 name|std
 operator|::
@@ -1071,7 +1089,7 @@ argument_list|)
 return|;
 block|}
 comment|/// getContainedType - This method is used to implement the type iterator
-comment|/// (defined a the end of the file).  For derived types, this returns the
+comment|/// (defined at the end of the file).  For derived types, this returns the
 comment|/// types 'contained' in the derived type.
 comment|///
 name|Type
@@ -1620,13 +1638,11 @@ comment|/// their size is relatively uncommon, move this operation out of line.
 name|bool
 name|isSizedDerivedType
 argument_list|(
-name|SmallPtrSet
+name|SmallPtrSetImpl
 operator|<
 specifier|const
 name|Type
 operator|*
-argument_list|,
-literal|4
 operator|>
 operator|*
 name|Visited

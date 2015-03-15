@@ -103,9 +103,6 @@ name|class
 name|InstrItineraryData
 decl_stmt|;
 name|class
-name|JITCodeEmitter
-decl_stmt|;
-name|class
 name|GlobalValue
 decl_stmt|;
 name|class
@@ -136,13 +133,7 @@ name|class
 name|TargetFrameLowering
 decl_stmt|;
 name|class
-name|TargetInstrInfo
-decl_stmt|;
-name|class
 name|TargetIntrinsicInfo
-decl_stmt|;
-name|class
-name|TargetJITInfo
 decl_stmt|;
 name|class
 name|TargetLowering
@@ -170,6 +161,9 @@ name|formatted_raw_ostream
 decl_stmt|;
 name|class
 name|raw_ostream
+decl_stmt|;
+name|class
+name|TargetLoweringObjectFile
 decl_stmt|;
 comment|// The old pass manager infrastructure is hidden in a legacy namespace now.
 name|namespace
@@ -268,6 +262,10 @@ literal|1
 decl_stmt|;
 name|public
 label|:
+name|mutable
+name|TargetOptions
+name|Options
+decl_stmt|;
 name|virtual
 operator|~
 name|TargetMachine
@@ -284,7 +282,6 @@ return|return
 name|TheTarget
 return|;
 block|}
-specifier|const
 name|StringRef
 name|getTargetTriple
 argument_list|()
@@ -294,7 +291,6 @@ return|return
 name|TargetTriple
 return|;
 block|}
-specifier|const
 name|StringRef
 name|getTargetCPU
 argument_list|()
@@ -304,7 +300,6 @@ return|return
 name|TargetCPU
 return|;
 block|}
-specifier|const
 name|StringRef
 name|getTargetFeatureString
 argument_list|()
@@ -328,101 +323,32 @@ return|return
 name|nullptr
 return|;
 block|}
-name|mutable
-name|TargetOptions
-name|Options
-decl_stmt|;
-comment|/// \brief Reset the target options based on the function's attributes.
-name|void
-name|resetTargetOptions
+name|virtual
+specifier|const
+name|TargetSubtargetInfo
+modifier|*
+name|getSubtargetImpl
 argument_list|(
 specifier|const
-name|MachineFunction
-operator|*
-name|MF
+name|Function
+operator|&
 argument_list|)
 decl|const
-decl_stmt|;
-comment|// Interfaces to the major aspects of target machine information:
-comment|//
-comment|// -- Instruction opcode and operand information
-comment|// -- Pipelines and scheduling information
-comment|// -- Stack frame information
-comment|// -- Selection DAG lowering information
-comment|//
-comment|// N.B. These objects may change during compilation. It's not safe to cache
-comment|// them between functions.
+block|{
+return|return
+name|getSubtargetImpl
+argument_list|()
+return|;
+block|}
 name|virtual
-specifier|const
-name|TargetInstrInfo
+name|TargetLoweringObjectFile
 operator|*
-name|getInstrInfo
+name|getObjFileLowering
 argument_list|()
 specifier|const
 block|{
 return|return
 name|nullptr
-return|;
-block|}
-name|virtual
-specifier|const
-name|TargetFrameLowering
-operator|*
-name|getFrameLowering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|nullptr
-return|;
-block|}
-name|virtual
-specifier|const
-name|TargetLowering
-operator|*
-name|getTargetLowering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|nullptr
-return|;
-block|}
-name|virtual
-specifier|const
-name|TargetSelectionDAGInfo
-operator|*
-name|getSelectionDAGInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|nullptr
-return|;
-block|}
-name|virtual
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-block|{
-return|return
-name|nullptr
-return|;
-block|}
-comment|/// getMCAsmInfo - Return target specific asm information.
-comment|///
-specifier|const
-name|MCAsmInfo
-operator|*
-name|getMCAsmInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AsmInfo
 return|;
 block|}
 comment|/// getSubtarget - This method returns a pointer to the specified type of
@@ -454,20 +380,58 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// getRegisterInfo - If register information is available, return it.  If
-comment|/// not, return null.  This is kept separate from RegInfo until RegInfo has
-comment|/// details of graph coloring register allocation removed from it.
-comment|///
-name|virtual
+name|template
+operator|<
+name|typename
+name|STC
+operator|>
 specifier|const
-name|TargetRegisterInfo
+name|STC
+operator|&
+name|getSubtarget
+argument_list|(
+argument|const Function *
+argument_list|)
+specifier|const
+block|{
+return|return
 operator|*
-name|getRegisterInfo
+name|static_cast
+operator|<
+specifier|const
+name|STC
+operator|*
+operator|>
+operator|(
+name|getSubtargetImpl
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Reset the target options based on the function's attributes.
+comment|// FIXME: Remove TargetOptions that affect per-function code generation
+comment|// from TargetMachine.
+name|void
+name|resetTargetOptions
+argument_list|(
+specifier|const
+name|Function
+operator|&
+name|F
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getMCAsmInfo - Return target specific asm information.
+comment|///
+specifier|const
+name|MCAsmInfo
+operator|*
+name|getMCAsmInfo
 argument_list|()
 specifier|const
 block|{
 return|return
-name|nullptr
+name|AsmInfo
 return|;
 block|}
 comment|/// getIntrinsicInfo - If intrinsic information is available, return it.  If
@@ -478,34 +442,6 @@ specifier|const
 name|TargetIntrinsicInfo
 operator|*
 name|getIntrinsicInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|nullptr
-return|;
-block|}
-comment|/// getJITInfo - If this target supports a JIT, return information for it,
-comment|/// otherwise return null.
-comment|///
-name|virtual
-name|TargetJITInfo
-modifier|*
-name|getJITInfo
-parameter_list|()
-block|{
-return|return
-name|nullptr
-return|;
-block|}
-comment|/// getInstrItineraryData - Returns instruction itinerary data for the target
-comment|/// or specific subtarget.
-comment|///
-name|virtual
-specifier|const
-name|InstrItineraryData
-operator|*
-name|getInstrItineraryData
 argument_list|()
 specifier|const
 block|{
@@ -711,32 +647,6 @@ return|return
 name|true
 return|;
 block|}
-comment|/// addPassesToEmitMachineCode - Add passes to the specified pass manager to
-comment|/// get machine code emitted.  This uses a JITCodeEmitter object to handle
-comment|/// actually outputting the machine code and resolving things like the address
-comment|/// of functions.  This method returns true if machine code emission is
-comment|/// not supported.
-comment|///
-name|virtual
-name|bool
-name|addPassesToEmitMachineCode
-parameter_list|(
-name|PassManagerBase
-modifier|&
-parameter_list|,
-name|JITCodeEmitter
-modifier|&
-parameter_list|,
-name|bool
-comment|/*DisableVerify*/
-init|=
-name|true
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|/// addPassesToEmitMC - Add passes to the specified pass manager to get
 comment|/// machine code emitted with the MCJIT. This method returns true if machine
 comment|/// code is not supported. It fills the MCContext Ctx pointer which can be
@@ -888,23 +798,6 @@ argument|AnalysisID StopAfter = nullptr
 argument_list|)
 name|override
 block|;
-comment|/// addPassesToEmitMachineCode - Add passes to the specified pass manager to
-comment|/// get machine code emitted.  This uses a JITCodeEmitter object to handle
-comment|/// actually outputting the machine code and resolving things like the address
-comment|/// of functions.  This method returns true if machine code emission is
-comment|/// not supported.
-comment|///
-name|bool
-name|addPassesToEmitMachineCode
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|JITCodeEmitter&MCE
-argument_list|,
-argument|bool DisableVerify = true
-argument_list|)
-name|override
-block|;
 comment|/// addPassesToEmitMC - Add passes to the specified pass manager to get
 comment|/// machine code emitted with the MCJIT. This method returns true if machine
 comment|/// code is not supported. It fills the MCContext Ctx pointer which can be
@@ -922,25 +815,9 @@ argument_list|,
 argument|bool DisableVerify = true
 argument_list|)
 name|override
-block|;
-comment|/// addCodeEmitter - This pass should be overridden by the target to add a
-comment|/// code emitter, if supported.  If this is not supported, 'true' should be
-comment|/// returned.
-name|virtual
-name|bool
-name|addCodeEmitter
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|JITCodeEmitter&
-argument_list|)
-block|{
-return|return
-name|true
-return|;
+block|; }
+decl_stmt|;
 block|}
-expr|}
-block|;  }
 end_decl_stmt
 
 begin_comment

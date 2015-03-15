@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86_INTEL_INST_PRINTER_H
+name|LLVM_LIB_TARGET_X86_INSTPRINTER_X86INTELINSTPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86_INTEL_INST_PRINTER_H
+name|LLVM_LIB_TARGET_X86_INSTPRINTER_X86INTELINSTPRINTER_H
 end_define
 
 begin_include
@@ -248,6 +248,25 @@ argument_list|,
 argument|raw_ostream&OS
 argument_list|)
 block|;
+name|void
+name|printanymem
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|printMemReference
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
 name|void
 name|printopaquemem
 argument_list|(

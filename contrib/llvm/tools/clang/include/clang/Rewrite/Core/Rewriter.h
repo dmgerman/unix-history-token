@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_REWRITER_H
+name|LLVM_CLANG_REWRITE_CORE_REWRITER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_REWRITER_H
+name|LLVM_CLANG_REWRITE_CORE_REWRITER_H
 end_define
 
 begin_include
@@ -117,9 +117,6 @@ name|Rewriter
 decl_stmt|;
 name|class
 name|SourceManager
-decl_stmt|;
-name|class
-name|Stmt
 decl_stmt|;
 comment|/// RewriteBuffer - As code is rewritten, SourceBuffer's from the original
 comment|/// input with modifications get a new RewriteBuffer associated with them.  The
@@ -879,21 +876,6 @@ name|SourceRange
 name|replacementRange
 parameter_list|)
 function_decl|;
-comment|/// ReplaceStmt - This replaces a Stmt/Expr with another, using the pretty
-comment|/// printer to generate the replacement code.  This returns true if the input
-comment|/// could not be rewritten, or false if successful.
-name|bool
-name|ReplaceStmt
-parameter_list|(
-name|Stmt
-modifier|*
-name|From
-parameter_list|,
-name|Stmt
-modifier|*
-name|To
-parameter_list|)
-function_decl|;
 comment|/// \brief Increase indentation for the lines between the given source range.
 comment|/// To determine what the indentation should be, 'parentIndent' is used
 comment|/// that should be at a source location with an indentation one degree
@@ -932,18 +914,6 @@ name|parentIndent
 argument_list|)
 return|;
 block|}
-comment|/// ConvertToString converts statement 'From' to a string using the
-comment|/// pretty printer.
-name|std
-operator|::
-name|string
-name|ConvertToString
-argument_list|(
-name|Stmt
-operator|*
-name|From
-argument_list|)
-expr_stmt|;
 comment|/// getEditBuffer - This is like getRewriteBufferFor, but always returns a
 comment|/// buffer, and allows you to write on it directly.  This is useful if you
 comment|/// want efficient low-level access to apis for scribbling on one specific

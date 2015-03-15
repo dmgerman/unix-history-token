@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SPARCSELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_SPARC_SPARCSELECTIONDAGINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SPARCSELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_SPARC_SPARCSELECTIONDAGINFO_H
 end_define
 
 begin_include

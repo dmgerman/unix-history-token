@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|BUGDRIVER_H
+name|LLVM_TOOLS_BUGPOINT_BUGDRIVER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|BUGDRIVER_H
+name|LLVM_TOOLS_BUGPOINT_BUGDRIVER_H
 end_define
 
 begin_include
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Transforms/Utils/ValueMapper.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -698,63 +704,70 @@ name|false
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// deleteInstructionFromProgram - This method clones the current Program and
-comment|/// deletes the specified instruction from the cloned module.  It then runs a
-comment|/// series of cleanup passes (ADCE and SimplifyCFG) to eliminate any code
-comment|/// which depends on the value.  The modified module is then returned.
+comment|/// This method clones the current Program and deletes the specified
+comment|/// instruction from the cloned module.  It then runs a series of cleanup
+comment|/// passes (ADCE and SimplifyCFG) to eliminate any code which depends on the
+comment|/// value. The modified module is then returned.
 comment|///
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
+operator|>
 name|deleteInstructionFromProgram
-parameter_list|(
-specifier|const
-name|Instruction
-modifier|*
-name|I
-parameter_list|,
-name|unsigned
-name|Simp
-parameter_list|)
-function_decl|;
-comment|/// performFinalCleanups - This method clones the current Program and performs
-comment|/// a series of cleanups intended to get rid of extra cruft on the module.  If
-comment|/// the MayModifySemantics argument is true, then the cleanups is allowed to
+argument_list|(
+argument|const Instruction *I
+argument_list|,
+argument|unsigned Simp
+argument_list|)
+expr_stmt|;
+comment|/// This method clones the current Program and performs a series of cleanups
+comment|/// intended to get rid of extra cruft on the module. If the
+comment|/// MayModifySemantics argument is true, then the cleanups is allowed to
 comment|/// modify how the code behaves.
 comment|///
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
+operator|>
 name|performFinalCleanups
-parameter_list|(
+argument_list|(
+argument|Module *M
+argument_list|,
+argument|bool MayModifySemantics = false
+argument_list|)
+expr_stmt|;
+comment|/// Given a module, extract up to one loop from it into a new function. This
+comment|/// returns null if there are no extractable loops in the program or if the
+comment|/// loop extractor crashes.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
+operator|>
+name|extractLoop
+argument_list|(
+name|Module
+operator|*
 name|M
-parameter_list|,
-name|bool
-name|MayModifySemantics
-init|=
-name|false
-parameter_list|)
-function_decl|;
-comment|/// ExtractLoop - Given a module, extract up to one loop from it into a new
-comment|/// function.  This returns null if there are no extractable loops in the
-comment|/// program or if the loop extractor crashes.
+argument_list|)
+expr_stmt|;
+comment|/// Extract all but the specified basic blocks into their own functions. The
+comment|/// only detail is that M is actually a module cloned from the one the BBs are
+comment|/// in, so some mapping needs to be performed. If this operation fails for
+comment|/// some reason (ie the implementation is buggy), this function should return
+comment|/// null, otherwise it returns a new Module.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
-name|ExtractLoop
-parameter_list|(
-name|Module
-modifier|*
-name|M
-parameter_list|)
-function_decl|;
-comment|/// ExtractMappedBlocksFromModule - Extract all but the specified basic blocks
-comment|/// into their own functions.  The only detail is that M is actually a module
-comment|/// cloned from the one the BBs are in, so some mapping needs to be performed.
-comment|/// If this operation fails for some reason (ie the implementation is buggy),
-comment|/// this function should return null, otherwise it returns a new Module.
-name|Module
-modifier|*
-name|ExtractMappedBlocksFromModule
+operator|>
+name|extractMappedBlocksFromModule
 argument_list|(
 specifier|const
 name|std
@@ -771,52 +784,32 @@ name|Module
 operator|*
 name|M
 argument_list|)
-decl_stmt|;
-comment|/// runPassesOn - Carefully run the specified set of pass on the specified
-comment|/// module, returning the transformed module on success, or a null pointer on
-comment|/// failure.  If AutoDebugCrashes is set to true, then bugpoint will
-comment|/// automatically attempt to track down a crashing pass if one exists, and
-comment|/// this method will never return null.
+expr_stmt|;
+comment|/// Carefully run the specified set of pass on the specified/ module,
+comment|/// returning the transformed module on success, or a null pointer on failure.
+comment|/// If AutoDebugCrashes is set to true, then bugpoint will automatically
+comment|/// attempt to track down a crashing pass if one exists, and this method will
+comment|/// never return null.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
+operator|>
 name|runPassesOn
 argument_list|(
-name|Module
-operator|*
-name|M
+argument|Module *M
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|Passes
+argument|const std::vector<std::string>&Passes
 argument_list|,
-name|bool
-name|AutoDebugCrashes
-operator|=
-name|false
+argument|bool AutoDebugCrashes = false
 argument_list|,
-name|unsigned
-name|NumExtraArgs
-operator|=
+argument|unsigned NumExtraArgs =
 literal|0
 argument_list|,
-specifier|const
-name|char
-operator|*
-specifier|const
-operator|*
-name|ExtraArgs
-operator|=
-name|nullptr
+argument|const char *const *ExtraArgs = nullptr
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// runPasses - Run the specified passes on Program, outputting a bitcode
 comment|/// file and writting the filename into OutputFile if successful.  If the
 comment|/// optimizations fail for some reason (optimizer crashes), return true,
@@ -1005,25 +998,22 @@ parameter_list|()
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// ParseInputFile - Given a bitcode or assembly input filename, parse and
-comment|/// return it, or return null if not possible.
+comment|///  Given a bitcode or assembly input filename, parse and return it, or return
+comment|///  null if not possible.
 comment|///
-name|Module
-modifier|*
-name|ParseInputFile
-argument_list|(
-specifier|const
 name|std
 operator|::
-name|string
-operator|&
-name|InputFilename
+name|unique_ptr
+operator|<
+name|Module
+operator|>
+name|parseInputFile
+argument_list|(
+argument|StringRef InputFilename
 argument_list|,
-name|LLVMContext
-operator|&
-name|ctxt
+argument|LLVMContext&ctxt
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// getPassesString - Turn a list of passes into a string which indicates the
 comment|/// command line options that must be passed to add the passes.
 comment|///

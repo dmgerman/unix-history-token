@@ -1127,6 +1127,14 @@ name|LLVMContextRef
 name|C
 parameter_list|)
 function_decl|;
+comment|/**  * Return an exact copy of the specified module.  */
+name|LLVMModuleRef
+name|LLVMCloneModule
+parameter_list|(
+name|LLVMModuleRef
+name|M
+parameter_list|)
+function_decl|;
 comment|/**  * Destroy a module instance.  *  * This must be called for every created module or memory will be  * leaked.  */
 name|void
 name|LLVMDisposeModule
@@ -1869,7 +1877,7 @@ parameter_list|(
 name|macro
 parameter_list|)
 define|\
-value|macro(Argument)                           \   macro(BasicBlock)                         \   macro(InlineAsm)                          \   macro(MDNode)                             \   macro(MDString)                           \   macro(User)                               \     macro(Constant)                         \       macro(BlockAddress)                   \       macro(ConstantAggregateZero)          \       macro(ConstantArray)                  \       macro(ConstantDataSequential)         \         macro(ConstantDataArray)            \         macro(ConstantDataVector)           \       macro(ConstantExpr)                   \       macro(ConstantFP)                     \       macro(ConstantInt)                    \       macro(ConstantPointerNull)            \       macro(ConstantStruct)                 \       macro(ConstantVector)                 \       macro(GlobalValue)                    \         macro(GlobalAlias)                  \         macro(GlobalObject)                 \           macro(Function)                   \           macro(GlobalVariable)             \       macro(UndefValue)                     \     macro(Instruction)                      \       macro(BinaryOperator)                 \       macro(CallInst)                       \         macro(IntrinsicInst)                \           macro(DbgInfoIntrinsic)           \             macro(DbgDeclareInst)           \           macro(MemIntrinsic)               \             macro(MemCpyInst)               \             macro(MemMoveInst)              \             macro(MemSetInst)               \       macro(CmpInst)                        \         macro(FCmpInst)                     \         macro(ICmpInst)                     \       macro(ExtractElementInst)             \       macro(GetElementPtrInst)              \       macro(InsertElementInst)              \       macro(InsertValueInst)                \       macro(LandingPadInst)                 \       macro(PHINode)                        \       macro(SelectInst)                     \       macro(ShuffleVectorInst)              \       macro(StoreInst)                      \       macro(TerminatorInst)                 \         macro(BranchInst)                   \         macro(IndirectBrInst)               \         macro(InvokeInst)                   \         macro(ReturnInst)                   \         macro(SwitchInst)                   \         macro(UnreachableInst)              \         macro(ResumeInst)                   \       macro(UnaryInstruction)               \         macro(AllocaInst)                   \         macro(CastInst)                     \           macro(AddrSpaceCastInst)          \           macro(BitCastInst)                \           macro(FPExtInst)                  \           macro(FPToSIInst)                 \           macro(FPToUIInst)                 \           macro(FPTruncInst)                \           macro(IntToPtrInst)               \           macro(PtrToIntInst)               \           macro(SExtInst)                   \           macro(SIToFPInst)                 \           macro(TruncInst)                  \           macro(UIToFPInst)                 \           macro(ZExtInst)                   \         macro(ExtractValueInst)             \         macro(LoadInst)                     \         macro(VAArgInst)
+value|macro(Argument)                           \   macro(BasicBlock)                         \   macro(InlineAsm)                          \   macro(User)                               \     macro(Constant)                         \       macro(BlockAddress)                   \       macro(ConstantAggregateZero)          \       macro(ConstantArray)                  \       macro(ConstantDataSequential)         \         macro(ConstantDataArray)            \         macro(ConstantDataVector)           \       macro(ConstantExpr)                   \       macro(ConstantFP)                     \       macro(ConstantInt)                    \       macro(ConstantPointerNull)            \       macro(ConstantStruct)                 \       macro(ConstantVector)                 \       macro(GlobalValue)                    \         macro(GlobalAlias)                  \         macro(GlobalObject)                 \           macro(Function)                   \           macro(GlobalVariable)             \       macro(UndefValue)                     \     macro(Instruction)                      \       macro(BinaryOperator)                 \       macro(CallInst)                       \         macro(IntrinsicInst)                \           macro(DbgInfoIntrinsic)           \             macro(DbgDeclareInst)           \           macro(MemIntrinsic)               \             macro(MemCpyInst)               \             macro(MemMoveInst)              \             macro(MemSetInst)               \       macro(CmpInst)                        \         macro(FCmpInst)                     \         macro(ICmpInst)                     \       macro(ExtractElementInst)             \       macro(GetElementPtrInst)              \       macro(InsertElementInst)              \       macro(InsertValueInst)                \       macro(LandingPadInst)                 \       macro(PHINode)                        \       macro(SelectInst)                     \       macro(ShuffleVectorInst)              \       macro(StoreInst)                      \       macro(TerminatorInst)                 \         macro(BranchInst)                   \         macro(IndirectBrInst)               \         macro(InvokeInst)                   \         macro(ReturnInst)                   \         macro(SwitchInst)                   \         macro(UnreachableInst)              \         macro(ResumeInst)                   \       macro(UnaryInstruction)               \         macro(AllocaInst)                   \         macro(CastInst)                     \           macro(AddrSpaceCastInst)          \           macro(BitCastInst)                \           macro(FPExtInst)                  \           macro(FPToSIInst)                 \           macro(FPToUIInst)                 \           macro(FPTruncInst)                \           macro(IntToPtrInst)               \           macro(PtrToIntInst)               \           macro(SExtInst)                   \           macro(SIToFPInst)                 \           macro(TruncInst)                  \           macro(UIToFPInst)                 \           macro(ZExtInst)                   \         macro(ExtractValueInst)             \         macro(LoadInst)                     \         macro(VAArgInst)
 comment|/**  * @defgroup LLVMCCoreValueGeneral General APIs  *  * Functions in this section work on all LLVMValueRef instances,  * regardless of their sub-type. They correspond to functions available  * on llvm::Value.  *  * @{  */
 comment|/**  * Obtain the type of a value.  *  * @see llvm::Value::getType()  */
 name|LLVMTypeRef
@@ -1959,6 +1967,20 @@ name|LLVM_FOR_EACH_VALUE_SUBCLASS
 argument_list|(
 argument|LLVM_DECLARE_VALUE_CAST
 argument_list|)
+name|LLVMValueRef
+name|LLVMIsAMDNode
+parameter_list|(
+name|LLVMValueRef
+name|Val
+parameter_list|)
+function_decl|;
+name|LLVMValueRef
+name|LLVMIsAMDString
+parameter_list|(
+name|LLVMValueRef
+name|Val
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * @defgroup LLVMCCoreValueUses Usage  *  * This module defines functions that allow you to inspect the uses of a  * LLVMValueRef.  *  * It is possible to obtain an LLVMUseRef for any LLVMValueRef instance.  * Each LLVMUseRef (which corresponds to a llvm::Use instance) holds a  * llvm::User and llvm::Value.  *  * @{  */
 comment|/**  * Obtain the first use of a value.  *  * Uses are obtained in an iterator fashion. First, call this function  * to obtain a reference to the first use. Then, call LLVMGetNextUse()  * on that instance and all subsequently obtained instances until  * LLVMGetNextUse() returns NULL.  *  * @see llvm::Value::use_begin()  */
@@ -1998,6 +2020,17 @@ comment|/**  * @defgroup LLVMCCoreValueUser User value  *  * Function in this gr
 comment|/**  * Obtain an operand at a specific index in a llvm::User value.  *  * @see llvm::User::getOperand()  */
 name|LLVMValueRef
 name|LLVMGetOperand
+parameter_list|(
+name|LLVMValueRef
+name|Val
+parameter_list|,
+name|unsigned
+name|Index
+parameter_list|)
+function_decl|;
+comment|/**  * Obtain the use of an operand at a specific index in a llvm::User value.  *  * @see llvm::User::getOperandUse()  */
+name|LLVMUseRef
+name|LLVMGetOperandUse
 parameter_list|(
 name|LLVMValueRef
 name|Val
@@ -2198,6 +2231,18 @@ name|LLVMValueRef
 name|ConstantVal
 parameter_list|)
 function_decl|;
+comment|/**  * Obtain the double value for an floating point constant value.  * losesInfo indicates if some precision was lost in the conversion.  *  * @see llvm::ConstantFP::getDoubleValue  */
+name|double
+name|LLVMConstRealGetDouble
+parameter_list|(
+name|LLVMValueRef
+name|ConstantVal
+parameter_list|,
+name|LLVMBool
+modifier|*
+name|losesInfo
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * @defgroup LLVMCCoreValueConstantComposite Composite Constants  *  * Functions in this group operate on composite constants.  *  * @{  */
 comment|/**  * Create a ConstantDataSequential and initialize it with a string.  *  * @see llvm::ConstantDataArray::getString()  */
@@ -2233,6 +2278,28 @@ name|Length
 parameter_list|,
 name|LLVMBool
 name|DontNullTerminate
+parameter_list|)
+function_decl|;
+comment|/**  * Returns true if the specified constant is an array of i8.  *  * @see ConstantDataSequential::getAsString()  */
+name|LLVMBool
+name|LLVMIsConstantString
+parameter_list|(
+name|LLVMValueRef
+name|c
+parameter_list|)
+function_decl|;
+comment|/**  * Get the given constant data sequential as a string.  *  * @see ConstantDataSequential::getAsString()  */
+specifier|const
+name|char
+modifier|*
+name|LLVMGetAsString
+parameter_list|(
+name|LLVMValueRef
+name|c
+parameter_list|,
+name|size_t
+modifier|*
+name|out
 parameter_list|)
 function_decl|;
 comment|/**  * Create an anonymous ConstantStruct with the specified values.  *  * @see llvm::ConstantStruct::getAnon()  */
@@ -2296,6 +2363,17 @@ name|ConstantVals
 parameter_list|,
 name|unsigned
 name|Count
+parameter_list|)
+function_decl|;
+comment|/**  * Get an element at specified index as a constant.  *  * @see ConstantDataSequential::getElementAsConstant()  */
+name|LLVMValueRef
+name|LLVMGetElementAsConstant
+parameter_list|(
+name|LLVMValueRef
+name|c
+parameter_list|,
+name|unsigned
+name|idx
 parameter_list|)
 function_decl|;
 comment|/**  * Create a ConstantVector from values.  *  * @see llvm::ConstantVector::get()  */
@@ -3903,6 +3981,22 @@ name|LLVMValueRef
 name|Inst
 parameter_list|)
 function_decl|;
+comment|/**  * Obtain the float predicate of an instruction.  *  * This is only valid for instructions that correspond to llvm::FCmpInst  * or llvm::ConstantExpr whose opcode is llvm::Instruction::FCmp.  *  * @see llvm::FCmpInst::getPredicate()  */
+name|LLVMRealPredicate
+name|LLVMGetFCmpPredicate
+parameter_list|(
+name|LLVMValueRef
+name|Inst
+parameter_list|)
+function_decl|;
+comment|/**  * Create a copy of 'this' instruction that is identical in all ways  * except the following:  *   * The instruction has no parent  *   * The instruction has no name  *  * @see llvm::Instruction::clone()  */
+name|LLVMValueRef
+name|LLVMInstructionClone
+parameter_list|(
+name|LLVMValueRef
+name|Inst
+parameter_list|)
+function_decl|;
 comment|/**  * @defgroup LLVMCCoreValueInstructionCall Call Sites and Invocations  *  * Functions in this group apply to instructions that refer to call  * sites and invocations. These correspond to C++ types in the  * llvm::CallInst class tree.  *  * @{  */
 comment|/**  * Set the calling convention for a call instruction.  *  * This expects an LLVMValueRef that corresponds to a llvm::CallInst or  * llvm::InvokeInst.  *  * @see llvm::CallInst::setCallingConv()  * @see llvm::InvokeInst::setCallingConv()  */
 name|void
@@ -3980,6 +4074,67 @@ name|IsTailCall
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
+comment|/**  * @defgroup LLVMCCoreValueInstructionTerminator Terminators  *  * Functions in this group only apply to instructions that map to  * llvm::TerminatorInst instances.  *  * @{  */
+comment|/**  * Return the number of successors that this terminator has.  *  * @see llvm::TerminatorInst::getNumSuccessors  */
+name|unsigned
+name|LLVMGetNumSuccessors
+parameter_list|(
+name|LLVMValueRef
+name|Term
+parameter_list|)
+function_decl|;
+comment|/**  * Return the specified successor.  *  * @see llvm::TerminatorInst::getSuccessor  */
+name|LLVMBasicBlockRef
+name|LLVMGetSuccessor
+parameter_list|(
+name|LLVMValueRef
+name|Term
+parameter_list|,
+name|unsigned
+name|i
+parameter_list|)
+function_decl|;
+comment|/**  * Update the specified successor to point at the provided block.  *  * @see llvm::TerminatorInst::setSuccessor  */
+name|void
+name|LLVMSetSuccessor
+parameter_list|(
+name|LLVMValueRef
+name|Term
+parameter_list|,
+name|unsigned
+name|i
+parameter_list|,
+name|LLVMBasicBlockRef
+name|block
+parameter_list|)
+function_decl|;
+comment|/**  * Return if a branch is conditional.  *  * This only works on llvm::BranchInst instructions.  *  * @see llvm::BranchInst::isConditional  */
+name|LLVMBool
+name|LLVMIsConditional
+parameter_list|(
+name|LLVMValueRef
+name|Branch
+parameter_list|)
+function_decl|;
+comment|/**  * Return the condition of a branch instruction.  *  * This only works on llvm::BranchInst instructions.  *  * @see llvm::BranchInst::getCondition  */
+name|LLVMValueRef
+name|LLVMGetCondition
+parameter_list|(
+name|LLVMValueRef
+name|Branch
+parameter_list|)
+function_decl|;
+comment|/**  * Set the condition of a branch instruction.  *  * This only works on llvm::BranchInst instructions.  *  * @see llvm::BranchInst::setCondition  */
+name|void
+name|LLVMSetCondition
+parameter_list|(
+name|LLVMValueRef
+name|Branch
+parameter_list|,
+name|LLVMValueRef
+name|Cond
+parameter_list|)
+function_decl|;
 comment|/**  * Obtain the default destination basic block of a switch instruction.  *  * This only works on llvm::SwitchInst instructions.  *  * @see llvm::SwitchInst::getDefaultDest()  */
 name|LLVMBasicBlockRef
 name|LLVMGetSwitchDefaultDest
@@ -3988,6 +4143,7 @@ name|LLVMValueRef
 name|SwitchInstr
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
 comment|/**  * @defgroup LLVMCCoreValueInstructionPHINode PHI Nodes  *  * Functions in this group only apply to instructions that map to  * llvm::PHINode instances.  *  * @{  */
 comment|/**  * Add an incoming value to the end of a PHI list.  */
 name|void

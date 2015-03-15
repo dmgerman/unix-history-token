@@ -184,6 +184,9 @@ struct_decl|struct
 name|PrintingPolicy
 struct_decl|;
 name|class
+name|RecordDecl
+decl_stmt|;
+name|class
 name|Stmt
 decl_stmt|;
 name|class
@@ -1742,12 +1745,23 @@ modifier|&
 name|C
 parameter_list|)
 function_decl|;
-comment|/// \brief Whether this declaration was referenced.
+comment|/// \brief Whether any declaration of this entity was referenced.
 name|bool
 name|isReferenced
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Whether this declaration was referenced. This should not be relied
+comment|/// upon for anything other than debugging.
+name|bool
+name|isThisDeclarationReferenced
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Referenced
+return|;
+block|}
 name|void
 name|setReferenced
 parameter_list|(
@@ -2309,21 +2323,21 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Determine whether this declaration is declared out of line (outside its
+end_comment
+
+begin_comment
+comment|/// semantic context).
+end_comment
+
 begin_expr_stmt
 name|virtual
 name|bool
 name|isOutOfLine
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getLexicalDeclContext
-argument_list|()
-operator|!=
-name|getDeclContext
-argument_list|()
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -4777,6 +4791,33 @@ name|getEnclosingNamespaceContext
 argument_list|()
 return|;
 block|}
+comment|/// \brief Retrieve the outermost lexically enclosing record context.
+name|RecordDecl
+modifier|*
+name|getOuterLexicalRecordContext
+parameter_list|()
+function_decl|;
+specifier|const
+name|RecordDecl
+operator|*
+name|getOuterLexicalRecordContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|DeclContext
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getOuterLexicalRecordContext
+argument_list|()
+return|;
+block|}
 comment|/// \brief Test if this context is part of the enclosing namespace set of
 comment|/// the context NS, as defined in C++0x [namespace.def]p9. If either context
 comment|/// isn't a namespace, this is equivalent to Equals().
@@ -6613,6 +6654,11 @@ operator|::
 name|raw_ostream
 operator|&
 name|OS
+argument_list|,
+name|bool
+name|DumpDecls
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;

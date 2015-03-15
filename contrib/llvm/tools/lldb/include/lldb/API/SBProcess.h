@@ -866,6 +866,21 @@ name|uint32_t
 name|idx
 parameter_list|)
 function_decl|;
+name|lldb
+operator|::
+name|SBThreadCollection
+name|GetHistoryThreads
+argument_list|(
+argument|addr_t addr
+argument_list|)
+expr_stmt|;
+name|bool
+name|IsInstrumentationRuntimePresent
+parameter_list|(
+name|InstrumentationRuntimeType
+name|type
+parameter_list|)
+function_decl|;
 name|protected
 label|:
 name|friend
@@ -887,6 +902,10 @@ decl_stmt|;
 name|friend
 name|class
 name|SBDebugger
+decl_stmt|;
+name|friend
+name|class
+name|SBExecutionContext
 decl_stmt|;
 name|friend
 name|class

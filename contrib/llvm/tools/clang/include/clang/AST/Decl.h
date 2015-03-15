@@ -181,6 +181,9 @@ name|class
 name|TemplateParameterList
 decl_stmt|;
 name|class
+name|TypeAliasTemplateDecl
+decl_stmt|;
+name|class
 name|TypeLoc
 decl_stmt|;
 name|class
@@ -238,6 +241,19 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|// implemented in TypeLoc.h
+comment|/// \brief Override the type stored in this TypeSourceInfo. Use with caution!
+name|void
+name|overrideType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+name|Ty
+operator|=
+name|T
+expr_stmt|;
+block|}
 block|}
 empty_stmt|;
 comment|/// TranslationUnitDecl - The top declaration context.
@@ -965,6 +981,11 @@ name|getMostRecentDecl
 argument_list|()
 return|;
 block|}
+name|ObjCStringFormatFamily
+name|getObjCFStringFormattingFamily
+argument_list|()
+specifier|const
+expr_stmt|;
 specifier|static
 name|bool
 name|classof
@@ -1076,6 +1097,12 @@ name|LabelStmt
 operator|*
 name|TheStmt
 block|;
+name|StringRef
+name|MSAsmName
+block|;
+name|bool
+name|MSAsmNameResolved
+block|;
 comment|/// LocStart - For normal labels, this is the same as the main declaration
 comment|/// label, i.e., the location of the identifier; for GNU local labels,
 comment|/// this is the location of the __label__ keyword.
@@ -1109,6 +1136,11 @@ block|,
 name|TheStmt
 argument_list|(
 name|S
+argument_list|)
+block|,
+name|MSAsmNameResolved
+argument_list|(
+name|false
 argument_list|)
 block|,
 name|LocStart
@@ -1217,6 +1249,55 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|bool
+name|isMSAsmLabel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MSAsmName
+operator|.
+name|size
+argument_list|()
+operator|!=
+literal|0
+return|;
+block|}
+name|bool
+name|isResolvedMSAsmLabel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isMSAsmLabel
+argument_list|()
+operator|&&
+name|MSAsmNameResolved
+return|;
+block|}
+name|void
+name|setMSAsmLabel
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|;
+name|StringRef
+name|getMSAsmLabel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MSAsmName
+return|;
+block|}
+name|void
+name|setMSAsmLabelResolved
+argument_list|()
+block|{
+name|MSAsmNameResolved
+operator|=
+name|true
+block|; }
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -2561,12 +2642,6 @@ operator|>
 block|{
 name|public
 operator|:
-typedef|typedef
-name|clang
-operator|::
-name|StorageClass
-name|StorageClass
-expr_stmt|;
 comment|/// getStorageClassSpecifierString - Return the string used to
 comment|/// specify the storage class \p SC.
 comment|///
@@ -2644,219 +2719,176 @@ comment|/// C++ default argument.
 name|mutable
 name|InitType
 name|Init
-decl_stmt|;
-end_decl_stmt
-
-begin_label
+block|;
 name|private
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 name|class
 name|VarDeclBitfields
 block|{
 name|friend
 name|class
 name|VarDecl
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|ASTDeclReader
-decl_stmt|;
+block|;
 name|unsigned
 name|SClass
-range|:
+operator|:
 literal|3
-decl_stmt|;
+block|;
 name|unsigned
 name|TSCSpec
-range|:
+operator|:
 literal|2
-decl_stmt|;
+block|;
 name|unsigned
 name|InitStyle
-range|:
+operator|:
 literal|2
-decl_stmt|;
+block|;
 comment|/// \brief Whether this variable is the exception variable in a C++ catch
 comment|/// or an Objective-C @catch statement.
 name|unsigned
 name|ExceptionVar
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// \brief Whether this local variable could be allocated in the return
 comment|/// slot of its function, enabling the named return value optimization
 comment|/// (NRVO).
 name|unsigned
 name|NRVOVariable
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// \brief Whether this variable is the for-range-declaration in a C++0x
 comment|/// for-range statement.
 name|unsigned
 name|CXXForRangeDecl
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// \brief Whether this variable is an ARC pseudo-__strong
 comment|/// variable;  see isARCPseudoStrong() for details.
 name|unsigned
 name|ARCPseudoStrong
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// \brief Whether this variable is (C++0x) constexpr.
 name|unsigned
 name|IsConstexpr
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// \brief Whether this variable is the implicit variable for a lambda
 comment|/// init-capture.
 name|unsigned
 name|IsInitCapture
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// \brief Whether this local extern variable's previous declaration was
 comment|/// declared in the same block scope. This controls whether we should merge
 comment|/// the type of this declaration with its previous declaration.
 name|unsigned
 name|PreviousDeclInSameBlockScope
-range|:
+operator|:
 literal|1
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_enum
-enum|enum
+block|;   }
+block|;   enum
 block|{
 name|NumVarDeclBits
-init|=
+operator|=
 literal|14
 block|}
-enum|;
-end_enum
-
-begin_decl_stmt
+block|;
 name|friend
 name|class
 name|ASTDeclReader
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|friend
 name|class
 name|StmtIteratorBase
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|friend
 name|class
 name|ASTNodeImporter
-decl_stmt|;
-end_decl_stmt
-
-begin_label
+block|;
 name|protected
-label|:
-end_label
-
-begin_enum
-enum|enum
+operator|:
+expr|enum
 block|{
 name|NumParameterIndexBits
-init|=
+operator|=
 literal|8
 block|}
-enum|;
-end_enum
-
-begin_decl_stmt
+block|;
 name|class
 name|ParmVarDeclBitfields
 block|{
 name|friend
 name|class
 name|ParmVarDecl
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|ASTDeclReader
-decl_stmt|;
+block|;
 name|unsigned
-label|:
+operator|:
 name|NumVarDeclBits
-expr_stmt|;
+block|;
 comment|/// Whether this parameter inherits a default argument from a
 comment|/// prior declaration.
 name|unsigned
 name|HasInheritedDefaultArg
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// Whether this parameter undergoes K&R argument promotion.
 name|unsigned
 name|IsKNRPromoted
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// Whether this parameter is an ObjC method parameter or not.
 name|unsigned
 name|IsObjCMethodParam
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// If IsObjCMethodParam, a Decl::ObjCDeclQualifier.
 comment|/// Otherwise, the number of function parameter scopes enclosing
 comment|/// the function parameter scope in which this parameter was
 comment|/// declared.
 name|unsigned
 name|ScopeDepthOrObjCQuals
-range|:
+operator|:
 literal|7
-decl_stmt|;
+block|;
 comment|/// The number of parameters preceding this parameter in the
 comment|/// function parameter scope in which it was declared.
 name|unsigned
 name|ParameterIndex
-range|:
+operator|:
 name|NumParameterIndexBits
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_union
-union|union
+block|;   }
+block|;
+expr|union
 block|{
 name|unsigned
 name|AllBits
-decl_stmt|;
+block|;
 name|VarDeclBitfields
 name|VarDeclBits
-decl_stmt|;
+block|;
 name|ParmVarDeclBitfields
 name|ParmVarDeclBits
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_macro
+block|;   }
+block|;
 name|VarDecl
 argument_list|(
 argument|Kind DK
@@ -2877,13 +2909,7 @@ argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass SC
 argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_typedef
+block|;
 typedef|typedef
 name|Redeclarable
 operator|<
@@ -2891,54 +2917,42 @@ name|VarDecl
 operator|>
 name|redeclarable_base
 expr_stmt|;
-end_typedef
-
-begin_function
 name|VarDecl
-modifier|*
+operator|*
 name|getNextRedeclarationImpl
-parameter_list|()
-function|override
+argument_list|()
+name|override
 block|{
 return|return
 name|getNextRedeclaration
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 name|VarDecl
-modifier|*
+operator|*
 name|getPreviousDeclImpl
-parameter_list|()
-function|override
+argument_list|()
+name|override
 block|{
 return|return
 name|getPreviousDecl
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 name|VarDecl
-modifier|*
+operator|*
 name|getMostRecentDeclImpl
-parameter_list|()
-function|override
+argument_list|()
+name|override
 block|{
 return|return
 name|getMostRecentDecl
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_label
 name|public
-label|:
-end_label
+operator|:
+end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -3496,6 +3510,33 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Similar to isLocalVarDecl but also includes parameters.
+end_comment
+
+begin_macro
+unit|bool
+name|isLocalVarDeclOrParm
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+return|return
+name|isLocalVarDecl
+argument_list|()
+operator|||
+name|getKind
+argument_list|()
+operator|==
+name|Decl
+operator|::
+name|ParmVar
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isFunctionOrMethodVarDecl - Similar to isLocalVarDecl, but
 end_comment
 
@@ -3503,13 +3544,10 @@ begin_comment
 comment|/// excludes variables declared in blocks.
 end_comment
 
-begin_macro
-unit|bool
+begin_expr_stmt
+name|bool
 name|isFunctionOrMethodVarDecl
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -6228,12 +6266,6 @@ decl|>
 block|{
 name|public
 label|:
-typedef|typedef
-name|clang
-operator|::
-name|StorageClass
-name|StorageClass
-expr_stmt|;
 comment|/// \brief The kind of templated function a FunctionDecl can be.
 enum|enum
 name|TemplatedKind
@@ -7762,13 +7794,11 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-specifier|const
 name|ArrayRef
 operator|<
 name|NamedDecl
 operator|*
 operator|>
-operator|&
 name|getDeclsInPrototypeScope
 argument_list|()
 specifier|const
@@ -8485,28 +8515,69 @@ name|CachedFieldIndex
 range|:
 literal|31
 decl_stmt|;
-comment|/// \brief An InClassInitStyle value, and either a bit width expression (if
-comment|/// the InClassInitStyle value is ICIS_NoInit), or a pointer to the in-class
-comment|/// initializer for this field (otherwise).
+comment|/// The kinds of value we can store in InitializerOrBitWidth.
 comment|///
-comment|/// We can safely combine these two because in-class initializers are not
-comment|/// permitted for bit-fields.
+comment|/// Note that this is compatible with InClassInitStyle except for
+comment|/// ISK_CapturedVLAType.
+enum|enum
+name|InitStorageKind
+block|{
+comment|/// If the pointer is null, there's nothing special.  Otherwise,
+comment|/// this is a bitfield and the pointer is the Expr* storing the
+comment|/// bit-width.
+name|ISK_BitWidthOrNothing
+init|=
+operator|(
+name|unsigned
+operator|)
+name|ICIS_NoInit
+block|,
+comment|/// The pointer is an (optional due to delayed parsing) Expr*
+comment|/// holding the copy-initializer.
+name|ISK_InClassCopyInit
+init|=
+operator|(
+name|unsigned
+operator|)
+name|ICIS_CopyInit
+block|,
+comment|/// The pointer is an (optional due to delayed parsing) Expr*
+comment|/// holding the list-initializer.
+name|ISK_InClassListInit
+init|=
+operator|(
+name|unsigned
+operator|)
+name|ICIS_ListInit
+block|,
+comment|/// The pointer is a VariableArrayType* that's been captured;
+comment|/// the enclosing context is a lambda or captured statement.
+name|ISK_CapturedVLAType
+block|,   }
+enum|;
+comment|/// \brief Storage for either the bit-width, the in-class
+comment|/// initializer, or the captured variable length array bound.
 comment|///
-comment|/// If the InClassInitStyle is not ICIS_NoInit and the initializer is null,
-comment|/// then this field has an in-class initializer which has not yet been parsed
+comment|/// We can safely combine these because in-class initializers are
+comment|/// not permitted for bit-fields, and both are exclusive with VLA
+comment|/// captures.
+comment|///
+comment|/// If the storage kind is ISK_InClassCopyInit or
+comment|/// ISK_InClassListInit, but the initializer is null, then this
+comment|/// field has an in-class initializer which has not yet been parsed
 comment|/// and attached.
 name|llvm
 operator|::
 name|PointerIntPair
 operator|<
-name|Expr
+name|void
 operator|*
 operator|,
 literal|2
 operator|,
-name|unsigned
+name|InitStorageKind
 operator|>
-name|InitializerOrBitWidth
+name|InitStorage
 expr_stmt|;
 name|protected
 label|:
@@ -8560,11 +8631,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|InitializerOrBitWidth
+name|InitStorage
 argument_list|(
 argument|BW
 argument_list|,
-argument|InitStyle
+argument|(InitStorageKind) InitStyle
 argument_list|)
 block|{
 name|assert
@@ -8639,22 +8710,26 @@ return|return
 name|Mutable
 return|;
 block|}
-comment|/// isBitfield - Determines whether this field is a bitfield.
+comment|/// \brief Determines whether this field is a bitfield.
 name|bool
 name|isBitField
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getInClassInitStyle
+name|InitStorage
+operator|.
+name|getInt
 argument_list|()
 operator|==
-name|ICIS_NoInit
+name|ISK_BitWidthOrNothing
 operator|&&
-name|InitializerOrBitWidth
+name|InitStorage
 operator|.
 name|getPointer
 argument_list|()
+operator|!=
+name|nullptr
 return|;
 block|}
 comment|/// @brief Determines whether this is an unnamed bitfield.
@@ -8691,10 +8766,17 @@ return|return
 name|isBitField
 argument_list|()
 operator|?
-name|InitializerOrBitWidth
+name|static_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|InitStorage
 operator|.
 name|getPointer
 argument_list|()
+operator|)
 operator|:
 name|nullptr
 return|;
@@ -8718,7 +8800,36 @@ name|Expr
 modifier|*
 name|Width
 parameter_list|)
-function_decl|;
+block|{
+name|assert
+argument_list|(
+name|InitStorage
+operator|.
+name|getInt
+argument_list|()
+operator|==
+name|ISK_BitWidthOrNothing
+operator|&&
+name|InitStorage
+operator|.
+name|getPointer
+argument_list|()
+operator|==
+name|nullptr
+operator|&&
+literal|"bit width, initializer or captured type already set"
+argument_list|)
+expr_stmt|;
+name|InitStorage
+operator|.
+name|setPointerAndInt
+argument_list|(
+name|Width
+argument_list|,
+name|ISK_BitWidthOrNothing
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// removeBitWidth - Remove the bit-field width from this member.
 comment|// Note: used by some clients (i.e., do not remove it).
 name|void
@@ -8733,11 +8844,13 @@ operator|&&
 literal|"no bitfield width to remove"
 argument_list|)
 expr_stmt|;
-name|InitializerOrBitWidth
+name|InitStorage
 operator|.
-name|setPointer
+name|setPointerAndInt
 argument_list|(
 name|nullptr
+argument_list|,
+name|ISK_BitWidthOrNothing
 argument_list|)
 expr_stmt|;
 block|}
@@ -8748,16 +8861,26 @@ name|getInClassInitStyle
 argument_list|()
 specifier|const
 block|{
-return|return
-name|static_cast
-operator|<
-name|InClassInitStyle
-operator|>
-operator|(
-name|InitializerOrBitWidth
+name|InitStorageKind
+name|storageKind
+operator|=
+name|InitStorage
 operator|.
 name|getInt
 argument_list|()
+block|;
+return|return
+operator|(
+name|storageKind
+operator|==
+name|ISK_CapturedVLAType
+condition|?
+name|ICIS_NoInit
+else|:
+operator|(
+name|InClassInitStyle
+operator|)
+name|storageKind
 operator|)
 return|;
 block|}
@@ -8789,10 +8912,17 @@ return|return
 name|hasInClassInitializer
 argument_list|()
 operator|?
-name|InitializerOrBitWidth
+name|static_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|InitStorage
 operator|.
 name|getPointer
 argument_list|()
+operator|)
 operator|:
 name|nullptr
 return|;
@@ -8806,7 +8936,30 @@ name|Expr
 modifier|*
 name|Init
 parameter_list|)
-function_decl|;
+block|{
+name|assert
+argument_list|(
+name|hasInClassInitializer
+argument_list|()
+operator|&&
+name|InitStorage
+operator|.
+name|getPointer
+argument_list|()
+operator|==
+name|nullptr
+operator|&&
+literal|"bit width, initializer or captured type already set"
+argument_list|)
+expr_stmt|;
+name|InitStorage
+operator|.
+name|setPointer
+argument_list|(
+name|Init
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// removeInClassInitializer - Remove the C++11 in-class initializer from this
 comment|/// member.
 name|void
@@ -8821,21 +8974,70 @@ operator|&&
 literal|"no initializer to remove"
 argument_list|)
 expr_stmt|;
-name|InitializerOrBitWidth
+name|InitStorage
 operator|.
-name|setPointer
+name|setPointerAndInt
 argument_list|(
 name|nullptr
-argument_list|)
-expr_stmt|;
-name|InitializerOrBitWidth
-operator|.
-name|setInt
-argument_list|(
-name|ICIS_NoInit
+argument_list|,
+name|ISK_BitWidthOrNothing
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Determine whether this member captures the variable length array
+comment|/// type.
+name|bool
+name|hasCapturedVLAType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InitStorage
+operator|.
+name|getInt
+argument_list|()
+operator|==
+name|ISK_CapturedVLAType
+return|;
+block|}
+comment|/// \brief Get the captured variable length array type.
+specifier|const
+name|VariableArrayType
+operator|*
+name|getCapturedVLAType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasCapturedVLAType
+argument_list|()
+operator|?
+name|static_cast
+operator|<
+specifier|const
+name|VariableArrayType
+operator|*
+operator|>
+operator|(
+name|InitStorage
+operator|.
+name|getPointer
+argument_list|()
+operator|)
+operator|:
+name|nullptr
+return|;
+block|}
+comment|/// \brief Set the captured variable length array type for this field.
+name|void
+name|setCapturedVLAType
+parameter_list|(
+specifier|const
+name|VariableArrayType
+modifier|*
+name|VLAType
+parameter_list|)
+function_decl|;
 comment|/// getParent - Returns the parent of this field declaration, which
 comment|/// is the struct in which this method is defined.
 specifier|const
@@ -10254,6 +10456,11 @@ operator|:
 name|public
 name|TypedefNameDecl
 block|{
+comment|/// The template for which this is the pattern, if any.
+name|TypeAliasTemplateDecl
+operator|*
+name|Template
+block|;
 name|TypeAliasDecl
 argument_list|(
 argument|ASTContext&C
@@ -10271,19 +10478,24 @@ argument_list|)
 operator|:
 name|TypedefNameDecl
 argument_list|(
-argument|TypeAlias
+name|TypeAlias
 argument_list|,
-argument|C
+name|C
 argument_list|,
-argument|DC
+name|DC
 argument_list|,
-argument|StartLoc
+name|StartLoc
 argument_list|,
-argument|IdLoc
+name|IdLoc
 argument_list|,
-argument|Id
+name|Id
 argument_list|,
-argument|TInfo
+name|TInfo
+argument_list|)
+block|,
+name|Template
+argument_list|(
+argument|nullptr
 argument_list|)
 block|{}
 name|public
@@ -10323,6 +10535,26 @@ specifier|const
 name|override
 name|LLVM_READONLY
 block|;
+name|TypeAliasTemplateDecl
+operator|*
+name|getDescribedAliasTemplate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Template
+return|;
+block|}
+name|void
+name|setDescribedAliasTemplate
+argument_list|(
+argument|TypeAliasTemplateDecl *TAT
+argument_list|)
+block|{
+name|Template
+operator|=
+name|TAT
+block|; }
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -10887,7 +11119,7 @@ comment|/// isThisDeclarationADefinition() - Return true if this declaration
 end_comment
 
 begin_comment
-comment|/// is a completion definintion of the type.  Provided for consistency.
+comment|/// is a completion definition of the type.  Provided for consistency.
 end_comment
 
 begin_expr_stmt
@@ -13095,6 +13327,26 @@ name|isInjectedClassName
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Determine whether this record is a class describing a lambda
+comment|/// function object.
+name|bool
+name|isLambda
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Determine whether this record is a record for captured variables in
+comment|/// CapturedStmt construct.
+name|bool
+name|isCapturedRecord
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Mark the record as a record for captured variables in CapturedStmt
+comment|/// construct.
+name|void
+name|setCapturedRecord
+argument_list|()
+block|;
 comment|/// getDefinition - Returns the RecordDecl that actually defines
 comment|///  this struct/union/class.  When determining whether or not a
 comment|///  struct/union/class is completely defined, one should use this
@@ -13299,6 +13551,49 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Whether we are allowed to insert extra padding between fields.
+end_comment
+
+begin_comment
+comment|/// These padding are added to help AddressSanitizer detect
+end_comment
+
+begin_comment
+comment|/// intra-object-overflow bugs.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|mayInsertExtraPadding
+argument_list|(
+name|bool
+name|EmitRemark
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Finds the first data member which has a name.
+end_comment
+
+begin_comment
+comment|/// nullptr is returned if no named data member exists.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|FieldDecl
+operator|*
+name|findFirstNamedDataMember
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|private

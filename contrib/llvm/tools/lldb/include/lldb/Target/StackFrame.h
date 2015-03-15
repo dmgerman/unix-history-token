@@ -901,6 +901,9 @@ comment|// Value objects for each variable in m_variable_list_sp
 name|StreamString
 name|m_disassembly
 decl_stmt|;
+name|Mutex
+name|m_mutex
+decl_stmt|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|StackFrame

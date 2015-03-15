@@ -36,15 +36,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file declares base abstract class ArgumentsAdjuster and its descendants.
+comment|// This file declares typedef ArgumentsAdjuster and functions to create several
 end_comment
 
 begin_comment
-comment|// These classes are intended to modify command line arguments obtained from
+comment|// useful argument adjusters.
 end_comment
 
 begin_comment
-comment|// a compilation database before they are used to run a frontend action.
+comment|// ArgumentsAdjusters modify command line arguments obtained from a compilation
+end_comment
+
+begin_comment
+comment|// database before they are used to run a frontend action.
 end_comment
 
 begin_comment
@@ -66,6 +70,12 @@ define|#
 directive|define
 name|LLVM_CLANG_TOOLING_ARGUMENTSADJUSTERS_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
 
 begin_include
 include|#
@@ -98,86 +108,96 @@ name|string
 operator|>
 name|CommandLineArguments
 expr_stmt|;
-comment|/// \brief Abstract interface for a command line adjusters.
+comment|/// \brief A prototype of a command line adjuster.
 comment|///
-comment|/// This abstract interface describes a command line argument adjuster,
-comment|/// which is responsible for command line arguments modification before
-comment|/// the arguments are used to run a frontend action.
-name|class
+comment|/// Command line argument adjuster is responsible for command line arguments
+comment|/// modification before the arguments are used to run a frontend action.
+typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
+name|CommandLineArguments
+argument_list|(
+specifier|const
+name|CommandLineArguments
+operator|&
+argument_list|)
+operator|>
 name|ArgumentsAdjuster
-block|{
-name|virtual
-name|void
-name|anchor
+expr_stmt|;
+comment|/// \brief Gets an argument adjuster that converts input command line arguments
+comment|/// to the "syntax check only" variant.
+name|ArgumentsAdjuster
+name|getClangSyntaxOnlyAdjuster
 parameter_list|()
 function_decl|;
-name|public
-label|:
-comment|/// \brief Returns adjusted command line arguments.
-comment|///
-comment|/// \param Args Input sequence of command line arguments.
-comment|///
-comment|/// \returns Modified sequence of command line arguments.
-name|virtual
-name|CommandLineArguments
-name|Adjust
+comment|/// \brief Gets an argument adjuster which removes output-related command line
+comment|/// arguments.
+name|ArgumentsAdjuster
+name|getClangStripOutputAdjuster
+parameter_list|()
+function_decl|;
+name|enum
+name|class
+name|ArgumentInsertPosition
+block|{
+name|BEGIN
+operator|,
+name|END
+block|}
+empty_stmt|;
+comment|/// \brief Gets an argument adjuster which inserts \p Extra arguments in the
+comment|/// specified position.
+name|ArgumentsAdjuster
+name|getInsertArgumentAdjuster
 parameter_list|(
 specifier|const
 name|CommandLineArguments
 modifier|&
-name|Args
+name|Extra
+parameter_list|,
+name|ArgumentInsertPosition
+name|Pos
 parameter_list|)
-init|=
-literal|0
 function_decl|;
-name|virtual
-operator|~
+comment|/// \brief Gets an argument adjuster which inserts an \p Extra argument in the
+comment|/// specified position.
 name|ArgumentsAdjuster
-argument_list|()
-block|{   }
+name|getInsertArgumentAdjuster
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Extra
+parameter_list|,
+name|ArgumentInsertPosition
+name|Pos
+init|=
+name|ArgumentInsertPosition
+operator|::
+name|END
+parameter_list|)
+function_decl|;
+comment|/// \brief Gets an argument adjuster which adjusts the arguments in sequence
+comment|/// with the \p First adjuster and then with the \p Second one.
+name|ArgumentsAdjuster
+name|combineAdjusters
+parameter_list|(
+name|ArgumentsAdjuster
+name|First
+parameter_list|,
+name|ArgumentsAdjuster
+name|Second
+parameter_list|)
+function_decl|;
 block|}
-empty_stmt|;
-comment|/// \brief Syntax check only command line adjuster.
-comment|///
-comment|/// This class implements ArgumentsAdjuster interface and converts input
-comment|/// command line arguments to the "syntax check only" variant.
-name|class
-name|ClangSyntaxOnlyAdjuster
-range|:
-name|public
-name|ArgumentsAdjuster
-block|{
-name|CommandLineArguments
-name|Adjust
-argument_list|(
-argument|const CommandLineArguments&Args
-argument_list|)
-name|override
-block|; }
-decl_stmt|;
-comment|/// \brief An argument adjuster which removes output-related command line
-comment|/// arguments.
-name|class
-name|ClangStripOutputAdjuster
-range|:
-name|public
-name|ArgumentsAdjuster
-block|{
-name|CommandLineArguments
-name|Adjust
-argument_list|(
-argument|const CommandLineArguments&Args
-argument_list|)
-name|override
-block|; }
-decl_stmt|;
-block|}
-comment|// end namespace tooling
+comment|// namespace tooling
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace clang
+comment|// namespace clang
 end_comment
 
 begin_endif

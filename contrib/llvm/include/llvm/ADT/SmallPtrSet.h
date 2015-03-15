@@ -105,6 +105,12 @@ directive|include
 file|<iterator>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -361,15 +367,26 @@ block|}
 comment|/// insert_imp - This returns true if the pointer was new to the set, false if
 comment|/// it was already in the set.  This is hidden from the client so that the
 comment|/// derived class can check that the right type of pointer is passed in.
-name|bool
-name|insert_imp
-parameter_list|(
+name|std
+operator|::
+name|pair
+operator|<
 specifier|const
 name|void
-modifier|*
+operator|*
+specifier|const
+operator|*
+operator|,
+name|bool
+operator|>
+name|insert_imp
+argument_list|(
+specifier|const
+name|void
+operator|*
 name|Ptr
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// erase_imp - If the set contains the specified pointer, remove it and
 comment|/// return true, otherwise return false.  This is hidden from the client so
 comment|/// that the derived class can check that the right type of pointer is passed
@@ -988,9 +1005,24 @@ name|PtrType
 operator|>
 name|PtrTraits
 expr_stmt|;
+name|SmallPtrSetImpl
+argument_list|(
+argument|const SmallPtrSetImpl&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|protected
-operator|:
+label|:
+end_label
+
+begin_comment
 comment|// Constructors that forward to the base.
+end_comment
+
+begin_expr_stmt
 name|SmallPtrSetImpl
 argument_list|(
 specifier|const
@@ -1047,15 +1079,61 @@ argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// insert - This returns true if the pointer was new to the set, false if it
-comment|/// was already in the set.
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|SmallPtrSetIterator
+operator|<
+name|PtrType
+operator|>
+name|iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|SmallPtrSetIterator
+operator|<
+name|PtrType
+operator|>
+name|const_iterator
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// Inserts Ptr if and only if there is no element in the container equal to
+end_comment
+
+begin_comment
+comment|/// Ptr. The bool component of the returned pair is true if and only if the
+end_comment
+
+begin_comment
+comment|/// insertion takes place, and the iterator component of the pair points to
+end_comment
+
+begin_comment
+comment|/// the element equal to Ptr.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
+name|iterator
+operator|,
 name|bool
+operator|>
 name|insert
 argument_list|(
 argument|PtrType Ptr
 argument_list|)
 block|{
-return|return
+name|auto
+name|p
+operator|=
 name|insert_imp
 argument_list|(
 name|PtrTraits
@@ -1064,6 +1142,27 @@ name|getAsVoidPointer
 argument_list|(
 name|Ptr
 argument_list|)
+argument_list|)
+block|;
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|iterator
+argument_list|(
+name|p
+operator|.
+name|first
+argument_list|,
+name|CurArray
+operator|+
+name|CurArraySize
+argument_list|)
+argument_list|,
+name|p
+operator|.
+name|second
 argument_list|)
 return|;
 block|}
@@ -1162,26 +1261,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|SmallPtrSetIterator
-operator|<
-name|PtrType
-operator|>
-name|iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|SmallPtrSetIterator
-operator|<
-name|PtrType
-operator|>
-name|const_iterator
-expr_stmt|;
-end_typedef
 
 begin_expr_stmt
 specifier|inline

@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_CRITICALANTIDEPBREAKER_H
+name|LLVM_LIB_CODEGEN_CRITICALANTIDEPBREAKER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_CRITICALANTIDEPBREAKER_H
+name|LLVM_LIB_CODEGEN_CRITICALANTIDEPBREAKER_H
 end_define
 
 begin_include
@@ -163,14 +163,14 @@ name|RegisterClassInfo
 operator|&
 name|RegClassInfo
 block|;
-comment|/// AllocatableSet - The set of allocatable registers.
+comment|/// The set of allocatable registers.
 comment|/// We'll be ignoring anti-dependencies on non-allocatable registers,
 comment|/// because they may not be safe to break.
 specifier|const
 name|BitVector
 name|AllocatableSet
 block|;
-comment|/// Classes - For live regs that are only used in one register class in a
+comment|/// For live regs that are only used in one register class in a
 comment|/// live range, the register class. If the register is not live, the
 comment|/// corresponding value is null. If the register is live but used in
 comment|/// multiple register classes, the corresponding value is -1 casted to a
@@ -185,7 +185,7 @@ operator|*
 operator|>
 name|Classes
 block|;
-comment|/// RegRefs - Map registers to all their references within a live range.
+comment|/// Map registers to all their references within a live range.
 name|std
 operator|::
 name|multimap
@@ -211,7 +211,7 @@ operator|::
 name|const_iterator
 name|RegRefIter
 expr_stmt|;
-comment|/// KillIndices - The index of the most recent kill (proceeding bottom-up),
+comment|/// The index of the most recent kill (proceeding bottom-up),
 comment|/// or ~0u if the register is not live.
 name|std
 operator|::
@@ -221,7 +221,7 @@ name|unsigned
 operator|>
 name|KillIndices
 decl_stmt|;
-comment|/// DefIndices - The index of the most recent complete def (proceeding
+comment|/// The index of the most recent complete def (proceeding
 comment|/// bottom up), or ~0u if the register is live.
 name|std
 operator|::
@@ -231,7 +231,7 @@ name|unsigned
 operator|>
 name|DefIndices
 expr_stmt|;
-comment|/// KeepRegs - A set of registers which are live and cannot be changed to
+comment|/// A set of registers which are live and cannot be changed to
 comment|/// break anti-dependencies.
 name|BitVector
 name|KeepRegs
@@ -253,7 +253,7 @@ operator|~
 name|CriticalAntiDepBreaker
 argument_list|()
 expr_stmt|;
-comment|/// Start - Initialize anti-dep breaking for a new basic block.
+comment|/// Initialize anti-dep breaking for a new basic block.
 name|void
 name|StartBlock
 argument_list|(
@@ -263,10 +263,8 @@ name|BB
 argument_list|)
 name|override
 decl_stmt|;
-comment|/// BreakAntiDependencies - Identifiy anti-dependencies along the critical
-comment|/// path
+comment|/// Identifiy anti-dependencies along the critical path
 comment|/// of the ScheduleDAG and break them by renaming registers.
-comment|///
 name|unsigned
 name|BreakAntiDependencies
 argument_list|(
@@ -299,9 +297,8 @@ name|DbgValues
 argument_list|)
 name|override
 decl_stmt|;
-comment|/// Observe - Update liveness information to account for the current
+comment|/// Update liveness information to account for the current
 comment|/// instruction, which will not be scheduled.
-comment|///
 name|void
 name|Observe
 argument_list|(
@@ -317,7 +314,7 @@ name|InsertPosIndex
 argument_list|)
 name|override
 decl_stmt|;
-comment|/// Finish - Finish anti-dep breaking for a basic block.
+comment|/// Finish anti-dep breaking for a basic block.
 name|void
 name|FinishBlock
 argument_list|()

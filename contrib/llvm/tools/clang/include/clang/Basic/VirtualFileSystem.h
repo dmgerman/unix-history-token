@@ -46,13 +46,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_BASIC_VIRTUAL_FILE_SYSTEM_H
+name|LLVM_CLANG_BASIC_VIRTUALFILESYSTEM_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_BASIC_VIRTUAL_FILE_SYSTEM_H
+name|LLVM_CLANG_BASIC_VIRTUALFILESYSTEM_H
 end_define
 
 begin_include
@@ -88,13 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/Support/SourceMgr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/SourceMgr.h"
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_decl_stmt
@@ -438,14 +438,21 @@ literal|0
 expr_stmt|;
 comment|/// \brief Get the contents of the file as a \p MemoryBuffer.
 name|virtual
+name|llvm
+operator|::
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|error_code
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|>>
 name|getBuffer
 argument_list|(
 argument|const Twine&Name
-argument_list|,
-argument|std::unique_ptr<llvm::MemoryBuffer>&Result
 argument_list|,
 argument|int64_t FileSize = -
 literal|1
@@ -941,38 +948,43 @@ literal|0
 block|;
 comment|/// \brief Get a \p File object for the file at \p Path, if one exists.
 name|virtual
+name|llvm
+operator|::
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|error_code
+name|unique_ptr
+operator|<
+name|File
+operator|>>
 name|openFileForRead
 argument_list|(
 specifier|const
 name|Twine
 operator|&
 name|Path
-argument_list|,
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|File
-operator|>
-operator|&
-name|Result
 argument_list|)
 operator|=
 literal|0
 block|;
 comment|/// This is a convenience method that opens a file, gets its content and then
 comment|/// closes the file.
+name|llvm
+operator|::
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|error_code
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|>>
 name|getBufferForFile
 argument_list|(
 argument|const Twine&Name
-argument_list|,
-argument|std::unique_ptr<llvm::MemoryBuffer>&Result
 argument_list|,
 argument|int64_t FileSize = -
 literal|1
@@ -1139,14 +1151,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|llvm
+operator|::
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|error_code
+name|unique_ptr
+operator|<
+name|File
+operator|>>
 name|openFileForRead
 argument_list|(
 argument|const Twine&Path
-argument_list|,
-argument|std::unique_ptr<File>&Result
 argument_list|)
 name|override
 expr_stmt|;
@@ -1246,14 +1263,6 @@ begin_comment
 comment|/// format.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Takes ownership of \p Buffer.
-end_comment
-
 begin_expr_stmt
 name|IntrusiveRefCntPtr
 operator|<
@@ -1261,7 +1270,7 @@ name|FileSystem
 operator|>
 name|getVFSFromYAML
 argument_list|(
-argument|llvm::MemoryBuffer *Buffer
+argument|std::unique_ptr<llvm::MemoryBuffer> Buffer
 argument_list|,
 argument|llvm::SourceMgr::DiagHandlerTy DiagHandler
 argument_list|,
@@ -1403,10 +1412,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_BASIC_VIRTUAL_FILE_SYSTEM_H
-end_comment
 
 end_unit
 

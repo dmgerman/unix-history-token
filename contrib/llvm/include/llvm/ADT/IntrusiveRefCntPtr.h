@@ -715,13 +715,21 @@ name|Obj
 argument_list|)
 expr_stmt|;
 block|}
-expr|}
-block|;
+name|template
+operator|<
+name|typename
+name|X
+operator|>
+name|friend
+name|class
+name|IntrusiveRefCntPtr
+block|;   }
+expr_stmt|;
 name|template
 operator|<
 name|class
 name|T
-block|,
+operator|,
 name|class
 name|U
 operator|>
@@ -763,7 +771,7 @@ name|template
 operator|<
 name|class
 name|T
-block|,
+operator|,
 name|class
 name|U
 operator|>
@@ -805,7 +813,7 @@ name|template
 operator|<
 name|class
 name|T
-block|,
+operator|,
 name|class
 name|U
 operator|>
@@ -840,7 +848,7 @@ name|template
 operator|<
 name|class
 name|T
-block|,
+operator|,
 name|class
 name|U
 operator|>
@@ -875,7 +883,7 @@ name|template
 operator|<
 name|class
 name|T
-block|,
+operator|,
 name|class
 name|U
 operator|>
@@ -910,7 +918,7 @@ name|template
 operator|<
 name|class
 name|T
-block|,
+operator|,
 name|class
 name|U
 operator|>
@@ -1098,8 +1106,8 @@ name|get
 argument_list|()
 return|;
 block|}
-expr|}
-block|;
+block|}
+empty_stmt|;
 name|template
 operator|<
 name|class
@@ -1135,8 +1143,9 @@ name|get
 argument_list|()
 return|;
 block|}
-expr|}
-block|;  }
+block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

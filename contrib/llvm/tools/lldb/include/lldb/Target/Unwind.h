@@ -96,7 +96,9 @@ name|thread
 argument_list|)
 operator|,
 name|m_unwind_mutex
-argument_list|()
+argument_list|(
+argument|Mutex::eMutexTypeRecursive
+argument_list|)
 block|{     }
 name|public
 operator|:

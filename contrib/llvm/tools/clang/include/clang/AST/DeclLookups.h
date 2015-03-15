@@ -406,10 +406,24 @@ argument_list|)
 return|;
 end_if
 
+begin_comment
+comment|// Synthesize an empty range. This requires that two default constructed
+end_comment
+
+begin_comment
+comment|// versions of these iterators form a valid empty range.
+end_comment
+
 begin_return
 return|return
 name|lookups_range
+argument_list|(
+name|all_lookups_iterator
 argument_list|()
+argument_list|,
+name|all_lookups_iterator
+argument_list|()
+argument_list|)
 return|;
 end_return
 
@@ -525,10 +539,24 @@ argument_list|)
 return|;
 end_expr_stmt
 
+begin_comment
+comment|// Synthesize an empty range. This requires that two default constructed
+end_comment
+
+begin_comment
+comment|// versions of these iterators form a valid empty range.
+end_comment
+
 begin_return
 return|return
 name|lookups_range
+argument_list|(
+name|all_lookups_iterator
 argument_list|()
+argument_list|,
+name|all_lookups_iterator
+argument_list|()
+argument_list|)
 return|;
 end_return
 

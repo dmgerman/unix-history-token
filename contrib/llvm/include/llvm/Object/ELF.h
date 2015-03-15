@@ -3509,17 +3509,14 @@ end_expr_stmt
 
 begin_return
 return|return
-name|ArrayRef
-operator|<
-name|uint8_t
-operator|>
-operator|(
+name|makeArrayRef
+argument_list|(
 name|Start
-operator|,
+argument_list|,
 name|Sec
 operator|->
 name|sh_size
-operator|)
+argument_list|)
 return|;
 end_return
 

@@ -80,19 +80,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineInstrBundle.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
 begin_include
@@ -146,9 +152,9 @@ empty_stmt|;
 name|private
 label|:
 specifier|const
-name|TargetMachine
-modifier|&
-name|TM
+name|MachineFunction
+modifier|*
+name|MF
 decl_stmt|;
 name|Delegate
 modifier|*
@@ -164,6 +170,10 @@ comment|/// Basic block live-in lists, kill flags, and implicit defs may not be
 comment|/// accurate when after this flag is cleared.
 name|bool
 name|TracksLiveness
+decl_stmt|;
+comment|/// True if subregister liveness is tracked.
+name|bool
+name|TracksSubRegLiveness
 decl_stmt|;
 comment|/// VRegInfo - Information we keep for each virtual register.
 comment|///
@@ -211,11 +221,15 @@ name|RegAllocHints
 expr_stmt|;
 comment|/// PhysRegUseDefLists - This is an array of the head of the use/def list for
 comment|/// physical registers.
+name|std
+operator|::
+name|vector
+operator|<
 name|MachineOperand
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|PhysRegUseDefLists
-decl_stmt|;
+expr_stmt|;
 comment|/// getRegUseDefListHead - Return the head pointer for the register use/def
 comment|/// list for the specified virtual or physical register.
 name|MachineOperand
@@ -384,15 +398,11 @@ name|explicit
 name|MachineRegisterInfo
 parameter_list|(
 specifier|const
-name|TargetMachine
-modifier|&
-name|TM
+name|MachineFunction
+modifier|*
+name|MF
 parameter_list|)
 function_decl|;
-operator|~
-name|MachineRegisterInfo
-argument_list|()
-expr_stmt|;
 specifier|const
 name|TargetRegisterInfo
 operator|*
@@ -401,7 +411,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TM
+name|MF
+operator|->
+name|getSubtarget
+argument_list|()
 operator|.
 name|getRegisterInfo
 argument_list|()
@@ -514,6 +527,29 @@ block|{
 name|TracksLiveness
 operator|=
 name|false
+expr_stmt|;
+block|}
+name|bool
+name|tracksSubRegLiveness
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TracksSubRegLiveness
+return|;
+block|}
+name|void
+name|enableSubRegLiveness
+parameter_list|(
+name|bool
+name|Enable
+init|=
+name|true
+parameter_list|)
+block|{
+name|TracksSubRegLiveness
+operator|=
+name|Enable
 expr_stmt|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -1989,6 +2025,10 @@ comment|///   constrainRegClass(ToReg, getRegClass(FromReg))
 comment|///
 comment|/// That function will return NULL if the virtual registers have incompatible
 comment|/// constraints.
+comment|///
+comment|/// Note that if ToReg is a physical register the function will replace and
+comment|/// apply sub registers to ToReg in order to obtain a final/proper physical
+comment|/// register.
 name|void
 name|replaceRegWith
 parameter_list|(
@@ -2749,6 +2789,16 @@ modifier|&
 name|TII
 parameter_list|)
 function_decl|;
+comment|/// Returns a mask covering all bits that can appear in lane masks of
+comment|/// subregisters of the virtual register @p Reg.
+name|unsigned
+name|getMaxLaneMaskForVReg
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// defusechain_iterator - This class provides iterator support for machine
 comment|/// operands in the function that use or define a specific register.  If
 comment|/// ReturnUses is true it returns uses of registers, if ReturnDefs is true it

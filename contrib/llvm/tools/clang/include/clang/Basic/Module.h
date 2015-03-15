@@ -206,19 +206,13 @@ name|Module
 modifier|*
 name|Parent
 decl_stmt|;
-comment|/// \brief The module map file that (along with the module name) uniquely
-comment|/// identifies this module.
-comment|///
-comment|/// The particular module that \c Name refers to may depend on how the module
-comment|/// was found in header search. However, the combination of \c Name and
-comment|/// \c ModuleMap will be globally unique for top-level modules. In the case of
-comment|/// inferred modules, \c ModuleMap will contain the module map that allowed
-comment|/// the inference (e.g. contained 'Module *') rather than the virtual
-comment|/// inferred module map file.
+comment|/// \brief The build directory of this module. This is the directory in
+comment|/// which the module is notionally built, and relative to which its headers
+comment|/// are found.
 specifier|const
-name|FileEntry
+name|DirectoryEntry
 modifier|*
-name|ModuleMap
+name|Directory
 decl_stmt|;
 comment|/// \brief The umbrella header or directory.
 name|llvm
@@ -302,43 +296,62 @@ name|VisibleModulesCache
 expr_stmt|;
 name|public
 label|:
-comment|/// \brief The headers that are part of this module.
-name|SmallVector
-operator|<
+enum|enum
+name|HeaderKind
+block|{
+name|HK_Normal
+block|,
+name|HK_Textual
+block|,
+name|HK_Private
+block|,
+name|HK_PrivateTextual
+block|,
+name|HK_Excluded
+block|}
+enum|;
+specifier|static
 specifier|const
-name|FileEntry
-operator|*
-operator|,
-literal|2
-operator|>
-name|NormalHeaders
-expr_stmt|;
-comment|/// \brief The headers that are explicitly excluded from this module.
-name|SmallVector
-operator|<
-specifier|const
-name|FileEntry
-operator|*
-operator|,
-literal|2
-operator|>
-name|ExcludedHeaders
-expr_stmt|;
-comment|/// \brief The headers that are private to this module.
-name|SmallVector
-operator|<
-specifier|const
-name|FileEntry
-operator|*
-operator|,
-literal|2
-operator|>
-name|PrivateHeaders
-expr_stmt|;
+name|int
+name|NumHeaderKinds
+init|=
+name|HK_Excluded
+operator|+
+literal|1
+decl_stmt|;
 comment|/// \brief Information about a header directive as found in the module map
 comment|/// file.
 struct|struct
-name|HeaderDirective
+name|Header
+block|{
+name|std
+operator|::
+name|string
+name|NameAsWritten
+expr_stmt|;
+specifier|const
+name|FileEntry
+modifier|*
+name|Entry
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief The headers that are part of this module.
+name|SmallVector
+operator|<
+name|Header
+operator|,
+literal|2
+operator|>
+name|Headers
+index|[
+literal|5
+index|]
+expr_stmt|;
+comment|/// \brief Stored information about a header directive that was found in the
+comment|/// module map file but has not been resolved to a file.
+struct|struct
+name|UnresolvedHeaderDirective
 block|{
 name|SourceLocation
 name|FileNameLoc
@@ -357,7 +370,7 @@ comment|/// \brief Headers that are mentioned in the module map file but could n
 comment|/// found on the file system.
 name|SmallVector
 operator|<
-name|HeaderDirective
+name|UnresolvedHeaderDirective
 operator|,
 literal|1
 operator|>
@@ -714,8 +727,6 @@ operator|>
 name|Conflicts
 expr_stmt|;
 comment|/// \brief Construct a new module or submodule.
-comment|///
-comment|/// For an explanation of \p ModuleMap, see Module::ModuleMap.
 name|Module
 argument_list|(
 argument|StringRef Name
@@ -723,8 +734,6 @@ argument_list|,
 argument|SourceLocation DefinitionLoc
 argument_list|,
 argument|Module *Parent
-argument_list|,
-argument|const FileEntry *ModuleMap
 argument_list|,
 argument|bool IsFramework
 argument_list|,
@@ -774,7 +783,7 @@ name|Requirement
 operator|&
 name|Req
 argument_list|,
-name|HeaderDirective
+name|UnresolvedHeaderDirective
 operator|&
 name|MissingHeader
 argument_list|)

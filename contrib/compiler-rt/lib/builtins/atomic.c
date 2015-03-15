@@ -15,6 +15,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"assembly.h"
+end_include
+
 begin_comment
 comment|// Clang objects if you redefine a builtin.  This little hack allows us to
 end_comment
@@ -23,59 +29,15 @@ begin_comment
 comment|// define a function with the same name as an intrinsic.
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__APPLE__
-end_if
-
-begin_comment
-comment|// mach-o has extra leading underscore
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
 name|redefine_extname
 name|__atomic_load_c
-name|___atomic_load
-end_pragma
-
-begin_pragma
-pragma|#
-directive|pragma
-name|redefine_extname
-name|__atomic_store_c
-name|___atomic_store
-end_pragma
-
-begin_pragma
-pragma|#
-directive|pragma
-name|redefine_extname
-name|__atomic_exchange_c
-name|___atomic_exchange
-end_pragma
-
-begin_pragma
-pragma|#
-directive|pragma
-name|redefine_extname
-name|__atomic_compare_exchange_c
-name|___atomic_compare_exchange
-end_pragma
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_pragma
-pragma|#
-directive|pragma
-name|redefine_extname
-name|__atomic_load_c
+name|SYMBOL_NAME
+name|(
 name|__atomic_load
+name|)
 end_pragma
 
 begin_pragma
@@ -83,7 +45,10 @@ pragma|#
 directive|pragma
 name|redefine_extname
 name|__atomic_store_c
+name|SYMBOL_NAME
+name|(
 name|__atomic_store
+name|)
 end_pragma
 
 begin_pragma
@@ -91,7 +56,10 @@ pragma|#
 directive|pragma
 name|redefine_extname
 name|__atomic_exchange_c
+name|SYMBOL_NAME
+name|(
 name|__atomic_exchange
+name|)
 end_pragma
 
 begin_pragma
@@ -99,13 +67,11 @@ pragma|#
 directive|pragma
 name|redefine_extname
 name|__atomic_compare_exchange_c
+name|SYMBOL_NAME
+name|(
 name|__atomic_compare_exchange
+name|)
 end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/// Number of locks.  This allocates one page on 32-bit platforms, two on

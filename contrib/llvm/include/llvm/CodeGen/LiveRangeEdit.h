@@ -111,6 +111,12 @@ directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetSubtargetInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -428,7 +434,7 @@ argument_list|(
 operator|*
 name|MF
 operator|.
-name|getTarget
+name|getSubtarget
 argument_list|()
 operator|.
 name|getInstrInfo
@@ -459,7 +465,7 @@ name|setDelegate
 argument_list|(
 name|this
 argument_list|)
-block|; }
+block|;   }
 operator|~
 name|LiveRangeEdit
 argument_list|()

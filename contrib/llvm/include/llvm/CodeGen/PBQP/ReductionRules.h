@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_REDUCTIONRULES_H
+name|LLVM_CODEGEN_PBQP_REDUCTIONRULES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_REDUCTIONRULES_H
+name|LLVM_CODEGEN_PBQP_REDUCTIONRULES_H
 end_define
 
 begin_include
@@ -78,6 +78,9 @@ file|"Solution.h"
 end_include
 
 begin_decl_stmt
+name|namespace
+name|llvm
+block|{
 name|namespace
 name|PBQP
 block|{
@@ -417,9 +420,6 @@ name|MId
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -440,9 +440,6 @@ operator|::
 name|NodeId
 name|NodeId
 expr_stmt|;
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|typename
 name|GraphT
@@ -450,9 +447,6 @@ operator|::
 name|EdgeId
 name|EdgeId
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|typename
 name|GraphT
@@ -460,9 +454,6 @@ operator|::
 name|Vector
 name|Vector
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|typename
 name|GraphT
@@ -470,9 +461,6 @@ operator|::
 name|Matrix
 name|Matrix
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|typename
 name|GraphT
@@ -480,9 +468,6 @@ operator|::
 name|RawMatrix
 name|RawMatrix
 expr_stmt|;
-end_typedef
-
-begin_expr_stmt
 name|assert
 argument_list|(
 name|G
@@ -497,9 +482,6 @@ operator|&&
 literal|"R2 applied to node with degree != 2."
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 specifier|const
 name|Vector
 modifier|&
@@ -512,9 +494,6 @@ argument_list|(
 name|NId
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|typename
 name|GraphT
 operator|::
@@ -531,9 +510,6 @@ operator|.
 name|begin
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|EdgeId
 name|YXEId
 init|=
@@ -548,9 +524,6 @@ operator|++
 name|AEItr
 operator|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|NodeId
 name|YNId
 init|=
@@ -574,9 +547,6 @@ argument_list|,
 name|NId
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|FlipEdge1
 init|=
@@ -604,9 +574,6 @@ operator|==
 name|NId
 operator|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|const
 name|Matrix
 modifier|*
@@ -636,9 +603,6 @@ argument_list|(
 name|YXEId
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|const
 name|Matrix
 modifier|*
@@ -668,9 +632,6 @@ argument_list|(
 name|ZXEId
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|XLen
 init|=
@@ -693,9 +654,6 @@ operator|->
 name|getRows
 argument_list|()
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 name|RawMatrix
 name|Delta
 parameter_list|(
@@ -704,9 +662,6 @@ parameter_list|,
 name|ZLen
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_for
 for|for
 control|(
 name|unsigned
@@ -837,9 +792,6 @@ name|Min
 expr_stmt|;
 block|}
 block|}
-end_for
-
-begin_if
 if|if
 condition|(
 name|FlipEdge1
@@ -847,9 +799,6 @@ condition|)
 name|delete
 name|YXECosts
 decl_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|FlipEdge2
@@ -857,9 +806,6 @@ condition|)
 name|delete
 name|ZXECosts
 decl_stmt|;
-end_if
-
-begin_decl_stmt
 name|EdgeId
 name|YZEId
 init|=
@@ -872,9 +818,6 @@ argument_list|,
 name|ZNId
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_if
 if|if
 condition|(
 name|YZEId
@@ -955,9 +898,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_if
-
-begin_expr_stmt
 name|G
 operator|.
 name|disconnectEdge
@@ -967,9 +907,6 @@ argument_list|,
 name|YNId
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|G
 operator|.
 name|disconnectEdge
@@ -979,14 +916,11 @@ argument_list|,
 name|ZNId
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// TODO: Try to normalize newly added/modified edge.
-end_comment
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// \brief Find a solution to a fully reduced graph by backpropagation.
 end_comment
 
@@ -1031,7 +965,7 @@ comment|//        state.
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|GraphT
@@ -1225,15 +1159,20 @@ name|s
 return|;
 end_return
 
-begin_endif
+begin_comment
 unit|}  }
+comment|// namespace PBQP
+end_comment
+
+begin_comment
+unit|}
+comment|// namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_REDUCTIONRULES_H
-end_comment
 
 end_unit
 

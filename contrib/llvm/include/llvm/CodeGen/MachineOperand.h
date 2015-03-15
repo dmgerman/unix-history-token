@@ -1759,6 +1759,30 @@ name|immVal
 expr_stmt|;
 block|}
 name|void
+name|setFPImm
+parameter_list|(
+specifier|const
+name|ConstantFP
+modifier|*
+name|CFP
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isFPImm
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand mutator"
+argument_list|)
+expr_stmt|;
+name|Contents
+operator|.
+name|CFP
+operator|=
+name|CFP
+expr_stmt|;
+block|}
+name|void
 name|setOffset
 parameter_list|(
 name|int64_t
@@ -1908,6 +1932,18 @@ name|ChangeToImmediate
 parameter_list|(
 name|int64_t
 name|ImmVal
+parameter_list|)
+function_decl|;
+comment|/// ChangeToFPImmediate - Replace this operand with a new FP immediate operand
+comment|/// of the specified value.  If an operand is known to be an FP immediate
+comment|/// already, the setFPImm method should be used.
+name|void
+name|ChangeToFPImmediate
+parameter_list|(
+specifier|const
+name|ConstantFP
+modifier|*
+name|FPImm
 parameter_list|)
 function_decl|;
 comment|/// ChangeToRegister - Replace this operand with a new register operand of
@@ -2775,6 +2811,10 @@ name|MachineRegisterInfo
 decl_stmt|;
 name|private
 label|:
+name|void
+name|removeRegFromUses
+parameter_list|()
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Methods for handling register use/def lists.
 comment|//===--------------------------------------------------------------------===//

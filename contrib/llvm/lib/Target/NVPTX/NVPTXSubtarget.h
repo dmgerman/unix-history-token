@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NVPTXSUBTARGET_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXSUBTARGET_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NVPTXSUBTARGET_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXSUBTARGET_H
 end_define
 
 begin_include
@@ -205,6 +205,7 @@ operator|*
 name|getFrameLowering
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -217,6 +218,7 @@ operator|*
 name|getInstrInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -229,6 +231,7 @@ operator|*
 name|getDataLayout
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -241,6 +244,7 @@ operator|*
 name|getRegisterInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -256,6 +260,7 @@ operator|*
 name|getTargetLowering
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -268,6 +273,7 @@ operator|*
 name|getSelectionDAGInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -646,10 +652,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// NVPTXSUBTARGET_H
-end_comment
 
 end_unit
 

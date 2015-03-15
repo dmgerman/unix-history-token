@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPSSE_FRAMEINFO_H
+name|LLVM_LIB_TARGET_MIPS_MIPSSEFRAMELOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPSSE_FRAMEINFO_H
+name|LLVM_LIB_TARGET_MIPS_MIPSSEFRAMELOWERING_H
 end_define
 
 begin_include

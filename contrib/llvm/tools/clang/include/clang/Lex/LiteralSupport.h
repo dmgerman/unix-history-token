@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_LITERALSUPPORT_H
+name|LLVM_CLANG_LEX_LITERALSUPPORT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_LITERALSUPPORT_H
+name|LLVM_CLANG_LEX_LITERALSUPPORT_H
 end_define
 
 begin_include

@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86DISASSEMBLERDECODER_H
+name|LLVM_LIB_TARGET_X86_DISASSEMBLER_X86DISASSEMBLERDECODER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86DISASSEMBLERDECODER_H
+name|LLVM_LIB_TARGET_X86_DISASSEMBLER_X86DISASSEMBLERDECODER_H
 end_define
 
 begin_include
@@ -465,12 +465,12 @@ define|#
 directive|define
 name|REGS_DEBUG
 define|\
-value|ENTRY(DR0)        \   ENTRY(DR1)        \   ENTRY(DR2)        \   ENTRY(DR3)        \   ENTRY(DR4)        \   ENTRY(DR5)        \   ENTRY(DR6)        \   ENTRY(DR7)
+value|ENTRY(DR0)        \   ENTRY(DR1)        \   ENTRY(DR2)        \   ENTRY(DR3)        \   ENTRY(DR4)        \   ENTRY(DR5)        \   ENTRY(DR6)        \   ENTRY(DR7)        \   ENTRY(DR8)        \   ENTRY(DR9)        \   ENTRY(DR10)       \   ENTRY(DR11)       \   ENTRY(DR12)       \   ENTRY(DR13)       \   ENTRY(DR14)       \   ENTRY(DR15)
 define|#
 directive|define
 name|REGS_CONTROL
 define|\
-value|ENTRY(CR0)          \   ENTRY(CR1)          \   ENTRY(CR2)          \   ENTRY(CR3)          \   ENTRY(CR4)          \   ENTRY(CR5)          \   ENTRY(CR6)          \   ENTRY(CR7)          \   ENTRY(CR8)
+value|ENTRY(CR0)          \   ENTRY(CR1)          \   ENTRY(CR2)          \   ENTRY(CR3)          \   ENTRY(CR4)          \   ENTRY(CR5)          \   ENTRY(CR6)          \   ENTRY(CR7)          \   ENTRY(CR8)          \   ENTRY(CR9)          \   ENTRY(CR10)         \   ENTRY(CR11)         \   ENTRY(CR12)         \   ENTRY(CR13)         \   ENTRY(CR14)         \   ENTRY(CR15)
 define|#
 directive|define
 name|ALL_EA_BASES

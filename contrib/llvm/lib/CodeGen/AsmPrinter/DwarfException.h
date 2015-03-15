@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_ASMPRINTER_DWARFEXCEPTION_H
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DWARFEXCEPTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_ASMPRINTER_DWARFEXCEPTION_H
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DWARFEXCEPTION_H
 end_define
 
 begin_include
@@ -187,69 +187,6 @@ block|;
 name|virtual
 operator|~
 name|ARMException
-argument_list|()
-block|;
-comment|/// endModule - Emit all exception information that should come after the
-comment|/// content.
-name|void
-name|endModule
-argument_list|()
-name|override
-block|;
-comment|/// beginFunction - Gather pre-function exception information.  Assumes being
-comment|/// emitted immediately after the function entry point.
-name|void
-name|beginFunction
-argument_list|(
-argument|const MachineFunction *MF
-argument_list|)
-name|override
-block|;
-comment|/// endFunction - Gather and emit post-function exception information.
-name|void
-name|endFunction
-argument_list|(
-argument|const MachineFunction *
-argument_list|)
-name|override
-block|; }
-decl_stmt|;
-name|class
-name|Win64Exception
-range|:
-name|public
-name|EHStreamer
-block|{
-comment|/// shouldEmitPersonality - Per-function flag to indicate if personality
-comment|/// info should be emitted.
-name|bool
-name|shouldEmitPersonality
-block|;
-comment|/// shouldEmitLSDA - Per-function flag to indicate if the LSDA
-comment|/// should be emitted.
-name|bool
-name|shouldEmitLSDA
-block|;
-comment|/// shouldEmitMoves - Per-function flag to indicate if frame moves info
-comment|/// should be emitted.
-name|bool
-name|shouldEmitMoves
-block|;
-name|public
-operator|:
-comment|//===--------------------------------------------------------------------===//
-comment|// Main entry points.
-comment|//
-name|Win64Exception
-argument_list|(
-name|AsmPrinter
-operator|*
-name|A
-argument_list|)
-block|;
-name|virtual
-operator|~
-name|Win64Exception
 argument_list|()
 block|;
 comment|/// endModule - Emit all exception information that should come after the

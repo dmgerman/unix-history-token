@@ -78,6 +78,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTConsumer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
@@ -85,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/LangOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Frontend/ASTUnit.h"
 end_include
 
 begin_include
@@ -122,13 +134,7 @@ name|namespace
 name|clang
 block|{
 name|class
-name|ASTConsumer
-decl_stmt|;
-name|class
 name|ASTMergeAction
-decl_stmt|;
-name|class
-name|ASTUnit
 decl_stmt|;
 name|class
 name|CompilerInstance
@@ -162,18 +168,19 @@ name|WrapperFrontendAction
 decl_stmt|;
 name|private
 label|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-modifier|*
+operator|>
 name|CreateWrappedASTConsumer
-parameter_list|(
-name|CompilerInstance
-modifier|&
-name|CI
-parameter_list|,
-name|StringRef
-name|InFile
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|)
+expr_stmt|;
 name|protected
 label|:
 comment|/// @name Implementation Action Interface
@@ -192,20 +199,21 @@ comment|/// getCurrentFile().
 comment|///
 comment|/// \return The new AST consumer, or null on failure.
 name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-modifier|*
+operator|>
 name|CreateASTConsumer
-parameter_list|(
-name|CompilerInstance
-modifier|&
-name|CI
-parameter_list|,
-name|StringRef
-name|InFile
-parameter_list|)
-init|=
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 comment|/// \brief Callback before starting processing a single input, giving the
 comment|/// opportunity to modify the CompilerInvocation or do some other action
 comment|/// before BeginSourceFileAction is called.
@@ -423,36 +431,61 @@ operator|*
 name|CurrentASTUnit
 return|;
 block|}
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTUnit
-modifier|*
+operator|>
 name|takeCurrentASTUnit
-parameter_list|()
+argument_list|()
 block|{
 return|return
+name|std
+operator|::
+name|move
+argument_list|(
 name|CurrentASTUnit
-operator|.
-name|release
-argument_list|()
+argument_list|)
 return|;
 block|}
 name|void
 name|setCurrentInput
-parameter_list|(
+argument_list|(
 specifier|const
 name|FrontendInputFile
-modifier|&
+operator|&
 name|CurrentInput
-parameter_list|,
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTUnit
-modifier|*
+operator|>
 name|AST
-init|=
+operator|=
 name|nullptr
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// @}
 comment|/// @name Supported Modes
 comment|/// @{
+comment|/// \brief Is this action invoked on a model file?
+comment|///
+comment|/// Model files are incomplete translation units that relies on type
+comment|/// information from another translation unit. Check ParseModelFileAction for
+comment|/// details.
+name|virtual
+name|bool
+name|isModelParsingAction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Does this action only use the preprocessor?
 comment|///
 comment|/// If so no AST context will be created and this action will be invalid
@@ -593,6 +626,9 @@ name|override
 block|;
 name|public
 operator|:
+name|ASTFrontendAction
+argument_list|()
+block|{}
 name|bool
 name|usesPreprocessorOnly
 argument_list|()
@@ -616,10 +652,14 @@ name|void
 name|anchor
 argument_list|()
 block|;
-name|protected
+name|public
 operator|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
@@ -630,8 +670,6 @@ name|override
 operator|=
 literal|0
 block|;
-name|public
-operator|:
 comment|/// \brief Parse the given plugin command line arguments.
 comment|///
 comment|/// \param CI - The compiler instance, for use in reporting diagnostics.
@@ -674,8 +712,12 @@ name|protected
 operator|:
 comment|/// \brief Provide a default implementation which returns aborts;
 comment|/// this method should never be called by FrontendAction clients.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
@@ -720,8 +762,12 @@ name|WrappedAction
 block|;
 name|protected
 operator|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI

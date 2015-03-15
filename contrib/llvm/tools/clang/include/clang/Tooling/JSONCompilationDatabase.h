@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_TOOLING_JSON_COMPILATION_DATABASE_H
+name|LLVM_CLANG_TOOLING_JSONCOMPILATIONDATABASE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_TOOLING_JSON_COMPILATION_DATABASE_H
+name|LLVM_CLANG_TOOLING_JSONCOMPILATIONDATABASE_H
 end_define
 
 begin_include
@@ -166,8 +166,12 @@ comment|///
 comment|/// Returns NULL and sets ErrorMessage if the database could not be
 comment|/// loaded from the given file.
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|JSONCompilationDatabase
-operator|*
+operator|>
 name|loadFromFile
 argument_list|(
 argument|StringRef FilePath
@@ -179,8 +183,12 @@ comment|/// \brief Loads a JSON compilation database from a data buffer.
 comment|///
 comment|/// Returns NULL and sets ErrorMessage if the database could not be loaded.
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|JSONCompilationDatabase
-operator|*
+operator|>
 name|loadFromBuffer
 argument_list|(
 argument|StringRef DatabaseString
@@ -240,21 +248,30 @@ operator|:
 comment|/// \brief Constructs a JSON compilation database on a memory buffer.
 name|JSONCompilationDatabase
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|llvm
 operator|::
 name|MemoryBuffer
-operator|*
+operator|>
 name|Database
 argument_list|)
 operator|:
 name|Database
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|Database
+argument_list|)
 argument_list|)
 block|,
 name|YAMLStream
 argument_list|(
-argument|Database->getBuffer()
+argument|this->Database->getBuffer()
 argument_list|,
 argument|SM
 argument_list|)
@@ -363,10 +380,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_TOOLING_JSON_COMPILATION_DATABASE_H
-end_comment
 
 end_unit
 

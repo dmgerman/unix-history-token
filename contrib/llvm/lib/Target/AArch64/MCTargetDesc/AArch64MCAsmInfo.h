@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AArch64TARGETASMINFO_H
+name|LLVM_LIB_TARGET_AARCH64_MCTARGETDESC_AARCH64MCASMINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AArch64TARGETASMINFO_H
+name|LLVM_LIB_TARGET_AARCH64_MCTARGETDESC_AARCH64MCASMINFO_H
 end_define
 
 begin_include

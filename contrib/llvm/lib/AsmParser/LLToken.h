@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LIBS_ASMPARSER_LLTOKEN_H
+name|LLVM_LIB_ASMPARSER_LLTOKEN_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LIBS_ASMPARSER_LLTOKEN_H
+name|LLVM_LIB_ASMPARSER_LLTOKEN_H
 end_define
 
 begin_decl_stmt
@@ -133,12 +133,6 @@ name|kw_private
 block|,
 name|kw_internal
 block|,
-name|kw_linker_private
-block|,
-comment|// NOTE: deprecated, for parser compatibility
-name|kw_linker_private_weak
-block|,
-comment|// NOTE: deprecated, for parser compatibility
 name|kw_linkonce
 block|,
 name|kw_linkonce_odr
@@ -261,6 +255,8 @@ name|kw_gc
 block|,
 name|kw_prefix
 block|,
+name|kw_prologue
+block|,
 name|kw_c
 block|,
 name|kw_cc
@@ -278,6 +274,8 @@ block|,
 name|kw_x86_fastcallcc
 block|,
 name|kw_x86_thiscallcc
+block|,
+name|kw_x86_vectorcallcc
 block|,
 name|kw_arm_apcscc
 block|,
@@ -306,6 +304,8 @@ block|,
 name|kw_preserve_mostcc
 block|,
 name|kw_preserve_allcc
+block|,
+name|kw_ghccc
 block|,
 comment|// Attributes:
 name|kw_attributes
@@ -582,6 +582,14 @@ block|,
 name|kw_insertvalue
 block|,
 name|kw_blockaddress
+block|,
+comment|// Metadata types.
+name|kw_distinct
+block|,
+comment|// Use-list order directives.
+name|kw_uselistorder
+block|,
+name|kw_uselistorder_bb
 block|,
 comment|// Unsigned Valued tokens (UIntVal).
 name|GlobalID

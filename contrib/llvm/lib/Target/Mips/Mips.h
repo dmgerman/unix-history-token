@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TARGET_MIPS_H
+name|LLVM_LIB_TARGET_MIPS_MIPS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TARGET_MIPS_H
+name|LLVM_LIB_TARGET_MIPS_MIPS_H
 end_define
 
 begin_include
@@ -119,19 +119,6 @@ parameter_list|(
 name|MipsTargetMachine
 modifier|&
 name|TM
-parameter_list|)
-function_decl|;
-name|FunctionPass
-modifier|*
-name|createMipsJITCodeEmitterPass
-parameter_list|(
-name|MipsTargetMachine
-modifier|&
-name|TM
-parameter_list|,
-name|JITCodeEmitter
-modifier|&
-name|JCE
 parameter_list|)
 function_decl|;
 name|FunctionPass

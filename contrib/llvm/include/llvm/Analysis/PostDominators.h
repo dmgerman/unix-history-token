@@ -70,7 +70,7 @@ name|namespace
 name|llvm
 block|{
 comment|/// PostDominatorTree Class - Concrete subclass of DominatorTree that is used to
-comment|/// compute the a post-dominator tree.
+comment|/// compute the post-dominator tree.
 comment|///
 name|struct
 name|PostDominatorTree

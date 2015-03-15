@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_ANALYZEROPTIONS_H
+name|LLVM_CLANG_STATICANALYZER_CORE_ANALYZEROPTIONS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_ANALYZEROPTIONS_H
+name|LLVM_CLANG_STATICANALYZER_CORE_ANALYZEROPTIONS_H
 end_define
 
 begin_include
@@ -378,6 +378,16 @@ expr_stmt|;
 comment|/// \brief The maximum number of times the analyzer visits a block.
 name|unsigned
 name|maxBlockVisitOnPath
+decl_stmt|;
+comment|/// \brief Disable all analyzer checks.
+comment|///
+comment|/// This flag allows one to disable analyzer checks on the code processed by
+comment|/// the given analysis consumer. Note, the code will get parsed and the
+comment|/// command-line options will get checked.
+name|unsigned
+name|DisableAllChecks
+range|:
+literal|1
 decl_stmt|;
 name|unsigned
 name|ShowCheckerHelp
@@ -890,6 +900,11 @@ operator|,
 name|AnalysisPurgeOpt
 argument_list|(
 name|PurgeStmt
+argument_list|)
+operator|,
+name|DisableAllChecks
+argument_list|(
+literal|0
 argument_list|)
 operator|,
 name|ShowCheckerHelp

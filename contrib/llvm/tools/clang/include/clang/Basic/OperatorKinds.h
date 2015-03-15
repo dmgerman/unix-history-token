@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_BASIC_OPERATOR_KINDS_H
+name|LLVM_CLANG_BASIC_OPERATORKINDS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_BASIC_OPERATOR_KINDS_H
+name|LLVM_CLANG_BASIC_OPERATORKINDS_H
 end_define
 
 begin_decl_stmt

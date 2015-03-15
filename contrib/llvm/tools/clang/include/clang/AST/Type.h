@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/AddressSpaces.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -128,12 +134,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -153,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -1898,11 +1904,15 @@ operator|.
 name|Mask
 expr_stmt|;
 block|}
-comment|/// \brief Determines if these qualifiers compatibly include another set.
-comment|/// Generally this answers the question of whether an object with the other
-comment|/// qualifiers can be safely used as an object with these qualifiers.
+comment|/// \brief Returns true if this address space is a superset of the other one.
+comment|/// OpenCL v2.0 defines conversion rules (OpenCLC v2.0 s6.5.5) and notion of
+comment|/// overlapping address spaces.
+comment|/// CL1.1 or CL1.2:
+comment|///   every address space is a superset of itself.
+comment|/// CL2.0 adds:
+comment|///   __generic is a superset of any address space except for __constant.
 name|bool
-name|compatiblyIncludes
+name|isAddressSpaceSupersetOf
 argument_list|(
 name|Qualifiers
 name|other
@@ -1918,9 +1928,47 @@ name|other
 operator|.
 name|getAddressSpace
 argument_list|()
+operator|||
+comment|// Otherwise in OpenCLC v2.0 s6.5.5: every address space except
+comment|// for __constant can be used as __generic.
+operator|(
+name|getAddressSpace
+argument_list|()
+operator|==
+name|LangAS
+operator|::
+name|opencl_generic
 operator|&&
-comment|// ObjC GC qualifiers can match, be added, or be removed, but can't be
-comment|// changed.
+name|other
+operator|.
+name|getAddressSpace
+argument_list|()
+operator|!=
+name|LangAS
+operator|::
+name|opencl_constant
+operator|)
+return|;
+block|}
+comment|/// \brief Determines if these qualifiers compatibly include another set.
+comment|/// Generally this answers the question of whether an object with the other
+comment|/// qualifiers can be safely used as an object with these qualifiers.
+name|bool
+name|compatiblyIncludes
+argument_list|(
+name|Qualifiers
+name|other
+argument_list|)
+decl|const
+block|{
+return|return
+name|isAddressSpaceSupersetOf
+argument_list|(
+name|other
+argument_list|)
+operator|&&
+comment|// ObjC GC qualifiers can match, be added, or be removed, but can't
+comment|// be changed.
 operator|(
 name|getObjCGCAttr
 argument_list|()
@@ -5602,6 +5650,10 @@ name|friend
 name|class
 name|FunctionType
 block|;
+name|friend
+name|class
+name|FunctionProtoType
+block|;
 name|unsigned
 operator|:
 name|NumTypeBits
@@ -5623,6 +5675,14 @@ name|unsigned
 name|TypeQuals
 operator|:
 literal|3
+block|;
+comment|/// \brief The ref-qualifier associated with a \c FunctionProtoType.
+comment|///
+comment|/// This is a value of type \c RefQualifierKind.
+name|unsigned
+name|RefQualifier
+operator|:
+literal|2
 block|;   }
 block|;
 name|class
@@ -6893,6 +6953,15 @@ name|getAsCXXRecordDecl
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Retrieves the TagDecl that this type refers to, either
+comment|/// because the type is a TagType or because it is the injected-class-name
+comment|/// type of a class template or class template partial specialization.
+name|TagDecl
+operator|*
+name|getAsTagDecl
+argument_list|()
+specifier|const
+block|;
 comment|/// If this is a pointer or reference to a RecordType, return the
 comment|/// CXXRecordDecl that that type refers to.
 comment|///
@@ -7854,6 +7923,57 @@ specifier|const
 block|{
 return|return
 name|PointeeType
+return|;
+block|}
+comment|/// \brief Returns true if address spaces of pointers overlap.
+comment|/// OpenCL v2.0 defines conversion rules for pointers to different
+comment|/// address spaces (OpenCLC v2.0 s6.5.5) and notion of overlapping
+comment|/// address spaces.
+comment|/// CL1.1 or CL1.2:
+comment|///   address spaces overlap iff they are they same.
+comment|/// CL2.0 adds:
+comment|///   __generic overlaps with any address space except for __constant.
+name|bool
+name|isAddressSpaceOverlapping
+argument_list|(
+argument|const PointerType&other
+argument_list|)
+specifier|const
+block|{
+name|Qualifiers
+name|thisQuals
+operator|=
+name|PointeeType
+operator|.
+name|getQualifiers
+argument_list|()
+block|;
+name|Qualifiers
+name|otherQuals
+operator|=
+name|other
+operator|.
+name|getPointeeType
+argument_list|()
+operator|.
+name|getQualifiers
+argument_list|()
+block|;
+comment|// Address spaces overlap if at least one of them is a superset of another
+return|return
+name|thisQuals
+operator|.
+name|isAddressSpaceSupersetOf
+argument_list|(
+name|otherQuals
+argument_list|)
+operator|||
+name|otherQuals
+operator|.
+name|isAddressSpaceSupersetOf
+argument_list|(
+name|thisQuals
+argument_list|)
 return|;
 block|}
 name|bool
@@ -11115,8 +11235,6 @@ argument|TypeClass tc
 argument_list|,
 argument|QualType res
 argument_list|,
-argument|unsigned typeQuals
-argument_list|,
 argument|QualType Canonical
 argument_list|,
 argument|bool Dependent
@@ -11157,12 +11275,6 @@ operator|=
 name|Info
 operator|.
 name|Bits
-block|;
-name|FunctionTypeBits
-operator|.
-name|TypeQuals
-operator|=
-name|typeQuals
 block|;   }
 name|unsigned
 name|getTypeQuals
@@ -11376,8 +11488,6 @@ argument|FunctionNoProto
 argument_list|,
 argument|Result
 argument_list|,
-literal|0
-argument_list|,
 argument|Canonical
 argument_list|,
 comment|/*Dependent=*/
@@ -11506,8 +11616,88 @@ name|FoldingSetNode
 block|{
 name|public
 operator|:
-comment|/// ExtProtoInfo - Extra information about a function prototype.
 expr|struct
+name|ExceptionSpecInfo
+block|{
+name|ExceptionSpecInfo
+argument_list|()
+operator|:
+name|Type
+argument_list|(
+name|EST_None
+argument_list|)
+block|,
+name|NoexceptExpr
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|SourceDecl
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|SourceTemplate
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+name|ExceptionSpecInfo
+argument_list|(
+argument|ExceptionSpecificationType EST
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|EST
+argument_list|)
+block|,
+name|NoexceptExpr
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|SourceDecl
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|SourceTemplate
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+comment|/// The kind of exception specification this is.
+name|ExceptionSpecificationType
+name|Type
+block|;
+comment|/// Explicitly-specified list of exception types.
+name|ArrayRef
+operator|<
+name|QualType
+operator|>
+name|Exceptions
+block|;
+comment|/// Noexcept expression, if this is EST_ComputedNoexcept.
+name|Expr
+operator|*
+name|NoexceptExpr
+block|;
+comment|/// The function whose exception specification this is, for
+comment|/// EST_Unevaluated and EST_Uninstantiated.
+name|FunctionDecl
+operator|*
+name|SourceDecl
+block|;
+comment|/// The function template whose exception specification this is instantiated
+comment|/// from, for EST_Uninstantiated.
+name|FunctionDecl
+operator|*
+name|SourceTemplate
+block|;   }
+block|;
+comment|/// ExtProtoInfo - Extra information about a function prototype.
+block|struct
 name|ExtProtoInfo
 block|{
 name|ExtProtoInfo
@@ -11528,39 +11718,9 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|ExceptionSpecType
-argument_list|(
-name|EST_None
-argument_list|)
-block|,
 name|RefQualifier
 argument_list|(
 name|RQ_None
-argument_list|)
-block|,
-name|NumExceptions
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Exceptions
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|NoexceptExpr
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|ExceptionSpecDecl
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|ExceptionSpecTemplate
-argument_list|(
-name|nullptr
 argument_list|)
 block|,
 name|ConsumedParameters
@@ -11593,39 +11753,9 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|ExceptionSpecType
-argument_list|(
-name|EST_None
-argument_list|)
-block|,
 name|RefQualifier
 argument_list|(
 name|RQ_None
-argument_list|)
-block|,
-name|NumExceptions
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Exceptions
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|NoexceptExpr
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|ExceptionSpecDecl
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|ExceptionSpecTemplate
-argument_list|(
-name|nullptr
 argument_list|)
 block|,
 name|ConsumedParameters
@@ -11633,6 +11763,29 @@ argument_list|(
 argument|nullptr
 argument_list|)
 block|{}
+name|ExtProtoInfo
+name|withExceptionSpec
+argument_list|(
+argument|const ExceptionSpecInfo&O
+argument_list|)
+block|{
+name|ExtProtoInfo
+name|Result
+argument_list|(
+operator|*
+name|this
+argument_list|)
+block|;
+name|Result
+operator|.
+name|ExceptionSpec
+operator|=
+name|O
+block|;
+return|return
+name|Result
+return|;
+block|}
 name|FunctionType
 operator|::
 name|ExtInfo
@@ -11652,31 +11805,11 @@ name|unsigned
 name|char
 name|TypeQuals
 block|;
-name|ExceptionSpecificationType
-name|ExceptionSpecType
-block|;
 name|RefQualifierKind
 name|RefQualifier
 block|;
-name|unsigned
-name|NumExceptions
-block|;
-specifier|const
-name|QualType
-operator|*
-name|Exceptions
-block|;
-name|Expr
-operator|*
-name|NoexceptExpr
-block|;
-name|FunctionDecl
-operator|*
-name|ExceptionSpecDecl
-block|;
-name|FunctionDecl
-operator|*
-name|ExceptionSpecTemplate
+name|ExceptionSpecInfo
+name|ExceptionSpec
 block|;
 specifier|const
 name|bool
@@ -11755,7 +11888,7 @@ comment|/// ExceptionSpecType - The type of exception specification this functio
 name|unsigned
 name|ExceptionSpecType
 operator|:
-literal|3
+literal|4
 block|;
 comment|/// HasAnyConsumedParams - Whether this function has any consumed parameters.
 name|unsigned
@@ -11774,14 +11907,6 @@ name|unsigned
 name|HasTrailingReturn
 operator|:
 literal|1
-block|;
-comment|/// \brief The ref-qualifier associated with a \c FunctionProtoType.
-comment|///
-comment|/// This is a value of type \c RefQualifierKind.
-name|unsigned
-name|RefQualifier
-operator|:
-literal|2
 block|;
 comment|// ParamInfo - There is an variable size array after the class in memory that
 comment|// holds the parameter types.
@@ -11906,17 +12031,16 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|QualType
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|param_type_begin
 argument_list|()
-expr|,
+argument_list|,
 name|param_type_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|ExtProtoInfo
@@ -11950,7 +12074,9 @@ argument_list|()
 block|;
 name|EPI
 operator|.
-name|ExceptionSpecType
+name|ExceptionSpec
+operator|.
+name|Type
 operator|=
 name|getExceptionSpecType
 argument_list|()
@@ -11980,22 +12106,20 @@ if|if
 condition|(
 name|EPI
 operator|.
-name|ExceptionSpecType
+name|ExceptionSpec
+operator|.
+name|Type
 operator|==
 name|EST_Dynamic
 condition|)
 block|{
 name|EPI
 operator|.
-name|NumExceptions
-operator|=
-name|NumExceptions
-expr_stmt|;
-name|EPI
+name|ExceptionSpec
 operator|.
 name|Exceptions
 operator|=
-name|exception_begin
+name|exceptions
 argument_list|()
 expr_stmt|;
 block|}
@@ -12004,12 +12128,16 @@ if|if
 condition|(
 name|EPI
 operator|.
-name|ExceptionSpecType
+name|ExceptionSpec
+operator|.
+name|Type
 operator|==
 name|EST_ComputedNoexcept
 condition|)
 block|{
 name|EPI
+operator|.
+name|ExceptionSpec
 operator|.
 name|NoexceptExpr
 operator|=
@@ -12022,21 +12150,27 @@ if|if
 condition|(
 name|EPI
 operator|.
-name|ExceptionSpecType
+name|ExceptionSpec
+operator|.
+name|Type
 operator|==
 name|EST_Uninstantiated
 condition|)
 block|{
 name|EPI
 operator|.
-name|ExceptionSpecDecl
+name|ExceptionSpec
+operator|.
+name|SourceDecl
 operator|=
 name|getExceptionSpecDecl
 argument_list|()
 expr_stmt|;
 name|EPI
 operator|.
-name|ExceptionSpecTemplate
+name|ExceptionSpec
+operator|.
+name|SourceTemplate
 operator|=
 name|getExceptionSpecTemplate
 argument_list|()
@@ -12047,14 +12181,18 @@ if|if
 condition|(
 name|EPI
 operator|.
-name|ExceptionSpecType
+name|ExceptionSpec
+operator|.
+name|Type
 operator|==
 name|EST_Unevaluated
 condition|)
 block|{
 name|EPI
 operator|.
-name|ExceptionSpecDecl
+name|ExceptionSpec
+operator|.
+name|SourceDecl
 operator|=
 name|getExceptionSpecDecl
 argument_list|()
@@ -12133,8 +12271,14 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// \brief Return whether this function has a dependent exception spec.
+name|bool
+name|hasDependentExceptionSpec
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Result type of getNoexceptSpec().
-expr|enum
+block|enum
 name|NoexceptResult
 block|{
 name|NR_NoNoexcept
@@ -12370,6 +12514,8 @@ operator|<
 name|RefQualifierKind
 operator|>
 operator|(
+name|FunctionTypeBits
+operator|.
 name|RefQualifier
 operator|)
 return|;
@@ -12442,22 +12588,18 @@ name|QualType
 modifier|*
 name|exception_iterator
 typedef|;
-typedef|typedef
-name|llvm
-operator|::
-name|iterator_range
+name|ArrayRef
 operator|<
-name|exception_iterator
+name|QualType
 operator|>
-name|exception_range
-expr_stmt|;
-name|exception_range
 name|exceptions
 argument_list|()
 specifier|const
 block|{
 return|return
-name|exception_range
+name|llvm
+operator|::
+name|makeArrayRef
 argument_list|(
 name|exception_begin
 argument_list|()
@@ -13769,6 +13911,8 @@ block|,
 name|attr_thiscall
 block|,
 name|attr_pascal
+block|,
+name|attr_vectorcall
 block|,
 name|attr_pnaclcall
 block|,
@@ -19897,9 +20041,6 @@ return|return
 name|nullptr
 return|;
 block|}
-end_block
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -19955,16 +20096,14 @@ operator|)
 name|K
 operator|)
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
+block|}
+end_block
 
 begin_expr_stmt
-unit|}  inline
+specifier|inline
 name|bool
 name|Type
 operator|::
@@ -21024,17 +21163,6 @@ name|void
 operator|)
 name|at
 block|;
-name|assert
-argument_list|(
-name|isa
-operator|<
-name|T
-operator|>
-operator|(
-name|CanonicalType
-operator|)
-argument_list|)
-block|;
 if|if
 condition|(
 specifier|const
@@ -21053,6 +21181,17 @@ condition|)
 return|return
 name|ty
 return|;
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|T
+operator|>
+operator|(
+name|CanonicalType
+operator|)
+argument_list|)
+expr_stmt|;
 end_expr_stmt
 
 begin_return

@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdCmdData.h
+comment|// File:        MICmdCmdData.h
 end_comment
 
 begin_comment
@@ -44,75 +44,39 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdCmdDataEvaluateExpression		interface.
+comment|// Overview:    CMICmdCmdDataEvaluateExpression     interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdDataDisassemble			interface.
+comment|//              CMICmdCmdDataDisassemble            interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdDataReadMemoryBytes		interface.
+comment|//              CMICmdCmdDataReadMemoryBytes        interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdDataReadMemory				interface.
+comment|//              CMICmdCmdDataReadMemory             interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdDataListRegisterNames		interface.
+comment|//              CMICmdCmdDataListRegisterNames      interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdDataListRegisterValues		interface.
+comment|//              CMICmdCmdDataListRegisterValues     interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdDataListRegisterChanged	interface.
+comment|//              CMICmdCmdDataListRegisterChanged    interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdDataWriteMemoryBytes		interface.
+comment|//              CMICmdCmdDataWriteMemoryBytes       interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdDataWriteMemory			interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//				To implement new MI commands derive a new command class from the command base
-end_comment
-
-begin_comment
-comment|//				class. To enable the new command for interpretation add the new command class
-end_comment
-
-begin_comment
-comment|//				to the command factory. The files of relevance are:
-end_comment
-
-begin_comment
-comment|//					MICmdCommands.cpp
-end_comment
-
-begin_comment
-comment|//					MICmdBase.h / .cpp
-end_comment
-
-begin_comment
-comment|//					MICmdCmd.h / .cpp
-end_comment
-
-begin_comment
-comment|//				For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
-end_comment
-
-begin_comment
-comment|//				command class as an example.
+comment|//              CMICmdCmdDataWriteMemory            interface.
 end_comment
 
 begin_comment
@@ -120,15 +84,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|//              To implement new MI commands derive a new command class from the command base
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//              class. To enable the new command for interpretation add the new command class
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              to the command factory. The files of relevance are:
+end_comment
+
+begin_comment
+comment|//                  MICmdCommands.cpp
+end_comment
+
+begin_comment
+comment|//                  MICmdBase.h / .cpp
+end_comment
+
+begin_comment
+comment|//                  MICmdCmd.h / .cpp
+end_comment
+
+begin_comment
+comment|//              For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
+end_comment
+
+begin_comment
+comment|//              command class as an example.
 end_comment
 
 begin_comment
@@ -136,7 +120,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Environment: Compilers:  Visual C++ 12.
+end_comment
+
+begin_comment
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+end_comment
+
+begin_comment
+comment|//              Libraries:  See MIReadmetxt.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -176,23 +176,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "data-evaluate-expression".
+comment|//          *this class implements MI command "data-evaluate-expression".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 26/03/2014.
+comment|// Authors: Illya Rudkin 26/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -318,7 +318,7 @@ comment|// Not specified in MI spec but Eclipse gives this option. Not handled b
 specifier|const
 name|CMIUtilString
 name|m_constStrArgExpr
-block|;		 }
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -327,23 +327,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "data-disassemble".
+comment|//          *this class implements MI command "data-disassemble".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 19/05/2014.
+comment|// Authors: Illya Rudkin 19/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -449,23 +449,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "data-read-memory-bytes".
+comment|//          *this class implements MI command "data-read-memory-bytes".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 20/05/2014.
+comment|// Authors: Illya Rudkin 20/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -575,23 +575,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "data-read-memory".
+comment|//          *this class implements MI command "data-read-memory".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 21/05/2014.
+comment|// Authors: Illya Rudkin 21/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -661,23 +661,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "data-list-register-names".
+comment|//          *this class implements MI command "data-list-register-names".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 21/05/2014.
+comment|// Authors: Illya Rudkin 21/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -770,23 +770,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "data-list-register-values".
+comment|//          *this class implements MI command "data-list-register-values".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 21/05/2014.
+comment|// Authors: Illya Rudkin 21/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -905,23 +905,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "data-list-changed-registers".
+comment|//          *this class implements MI command "data-list-changed-registers".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 22/05/2014.
+comment|// Authors: Illya Rudkin 22/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -991,23 +991,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "data-read-memory-bytes".
+comment|//          *this class implements MI command "data-read-memory-bytes".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 30/05/2014.
+comment|// Authors: Illya Rudkin 30/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -1096,14 +1096,8 @@ specifier|const
 name|CMIUtilString
 name|m_constStrArgCount
 block|;
-name|MIuint64
-name|m_nAddr
-block|;
 name|CMIUtilString
 name|m_strContents
-block|;
-name|MIuint64
-name|m_nCount
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1113,27 +1107,27 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "data-read-memory".
+comment|//          *this class implements MI command "data-read-memory".
 end_comment
 
 begin_comment
-comment|//			Not specified in MI spec but Eclipse gives *this command.
+comment|//          Not specified in MI spec but Eclipse gives *this command.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 02/05/2014.
+comment|// Authors: Illya Rudkin 02/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -1247,7 +1241,7 @@ block|;
 name|MIuchar
 operator|*
 name|m_pBufferMemory
-block|;		 }
+block|; }
 decl_stmt|;
 end_decl_stmt
 

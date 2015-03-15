@@ -478,7 +478,7 @@ block|{
 endif|#
 directive|endif
 comment|/* !defined(__cplusplus) */
-comment|/**  * Create a disassembler for the TripleName.  Symbolic disassembly is supported  * by passing a block of information in the DisInfo parameter and specifying the  * TagType and callback functions as described above.  These can all be passed  * as NULL.  If successful, this returns a disassembler context.  If not, it  * returns NULL. This function is equivalent to calling LLVMCreateDisasmCPU()  * with an empty CPU name.  */
+comment|/**  * Create a disassembler for the TripleName.  Symbolic disassembly is supported  * by passing a block of information in the DisInfo parameter and specifying the  * TagType and callback functions as described above.  These can all be passed  * as NULL.  If successful, this returns a disassembler context.  If not, it  * returns NULL. This function is equivalent to calling  * LLVMCreateDisasmCPUFeatures() with an empty CPU name and feature set.  */
 name|LLVMDisasmContextRef
 name|LLVMCreateDisasm
 parameter_list|(
@@ -501,7 +501,7 @@ name|LLVMSymbolLookupCallback
 name|SymbolLookUp
 parameter_list|)
 function_decl|;
-comment|/**  * Create a disassembler for the TripleName and a specific CPU.  Symbolic  * disassembly is supported by passing a block of information in the DisInfo  * parameter and specifying the TagType and callback functions as described  * above.  These can all be passed * as NULL.  If successful, this returns a  * disassembler context.  If not, it returns NULL.  */
+comment|/**  * Create a disassembler for the TripleName and a specific CPU.  Symbolic  * disassembly is supported by passing a block of information in the DisInfo  * parameter and specifying the TagType and callback functions as described  * above.  These can all be passed * as NULL.  If successful, this returns a  * disassembler context.  If not, it returns NULL. This function is equivalent  * to calling LLVMCreateDisasmCPUFeatures() with an empty feature set.  */
 name|LLVMDisasmContextRef
 name|LLVMCreateDisasmCPU
 parameter_list|(
@@ -514,6 +514,39 @@ specifier|const
 name|char
 modifier|*
 name|CPU
+parameter_list|,
+name|void
+modifier|*
+name|DisInfo
+parameter_list|,
+name|int
+name|TagType
+parameter_list|,
+name|LLVMOpInfoCallback
+name|GetOpInfo
+parameter_list|,
+name|LLVMSymbolLookupCallback
+name|SymbolLookUp
+parameter_list|)
+function_decl|;
+comment|/**  * Create a disassembler for the TripleName, a specific CPU and specific feature  * string.  Symbolic disassembly is supported by passing a block of information  * in the DisInfo parameter and specifying the TagType and callback functions as  * described above.  These can all be passed * as NULL.  If successful, this  * returns a disassembler context.  If not, it returns NULL.  */
+name|LLVMDisasmContextRef
+name|LLVMCreateDisasmCPUFeatures
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Triple
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|CPU
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Features
 parameter_list|,
 name|void
 modifier|*

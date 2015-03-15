@@ -359,30 +359,46 @@ init|=
 literal|1
 block|,
 comment|// MDSTRING:      [values]
-comment|// 2 is unused.
-comment|// 3 is unused.
+name|METADATA_VALUE
+init|=
+literal|2
+block|,
+comment|// VALUE:         [type num, value num]
+name|METADATA_NODE
+init|=
+literal|3
+block|,
+comment|// NODE:          [n x md num]
 name|METADATA_NAME
 init|=
 literal|4
 block|,
 comment|// STRING:        [values]
-comment|// 5 is unused.
+name|METADATA_DISTINCT_NODE
+init|=
+literal|5
+block|,
+comment|// DISTINCT_NODE: [n x md num]
 name|METADATA_KIND
 init|=
 literal|6
 block|,
 comment|// [n x [id, name]]
-comment|// 7 is unused.
-name|METADATA_NODE
+name|METADATA_LOCATION
+init|=
+literal|7
+block|,
+comment|// [distinct, line, col, scope, inlined-at?]
+name|METADATA_OLD_NODE
 init|=
 literal|8
 block|,
-comment|// NODE:          [n x (type num, value num)]
-name|METADATA_FN_NODE
+comment|// OLD_NODE:      [n x (type num, value num)]
+name|METADATA_OLD_FN_NODE
 init|=
 literal|9
 block|,
-comment|// FN_NODE:       [n x (type num, value num)]
+comment|// OLD_FN_NODE:   [n x (type num, value num)]
 name|METADATA_NAMED_NODE
 init|=
 literal|10
@@ -962,10 +978,15 @@ enum|;
 enum|enum
 name|UseListCodes
 block|{
-name|USELIST_CODE_ENTRY
+name|USELIST_CODE_DEFAULT
 init|=
 literal|1
-comment|// USELIST_CODE_ENTRY: TBD.
+block|,
+comment|// DEFAULT: [index..., value-id]
+name|USELIST_CODE_BB
+init|=
+literal|2
+comment|// BB: [index..., bb-id]
 block|}
 enum|;
 enum|enum

@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPSTARGETASMINFO_H
+name|LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSMCASMINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPSTARGETASMINFO_H
+name|LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSMCASMINFO_H
 end_define
 
 begin_include

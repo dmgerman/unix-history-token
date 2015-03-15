@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_OPENMP_H
+name|LLVM_CLANG_AST_DECLOPENMP_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_OPENMP_H
+name|LLVM_CLANG_AST_DECLOPENMP_H
 end_define
 
 begin_include
@@ -79,6 +79,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|Expr
+decl_stmt|;
 comment|/// \brief This represents '#pragma omp threadprivate ...' directive.
 comment|/// For example, in the following, both 'a' and 'A::b' are threadprivate:
 comment|///
@@ -143,13 +146,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|reinterpret_cast
 operator|<
 specifier|const
@@ -163,9 +163,9 @@ name|this
 operator|+
 literal|1
 operator|)
-expr|,
+argument_list|,
 name|NumVars
-operator|)
+argument_list|)
 return|;
 block|}
 name|MutableArrayRef

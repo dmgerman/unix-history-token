@@ -190,6 +190,14 @@ block|;
 name|epoch_
 operator|=
 name|current_epoch
+block|;
+name|n_recursive_locks
+operator|=
+literal|0
+block|;
+name|n_all_locks_
+operator|=
+literal|0
 block|;   }
 name|uptr
 name|getEpoch
@@ -359,16 +367,18 @@ block|}
 block|}
 block|}
 comment|// Printf("remLock: %zx %zx\n", lock_id, epoch_);
-name|CHECK
-argument_list|(
+if|if
+condition|(
+operator|!
 name|bv_
 operator|.
 name|clearBit
 argument_list|(
 name|lock_id
 argument_list|)
-argument_list|)
-expr_stmt|;
+condition|)
+return|return;
+comment|// probably addLock happened before flush
 if|if
 condition|(
 name|n_all_locks_
@@ -827,6 +837,13 @@ name|g_
 operator|.
 name|clear
 argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|n_edges_
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
 

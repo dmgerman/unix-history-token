@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_DRIVER_TOOLCHAIN_H_
+name|LLVM_CLANG_DRIVER_TOOLCHAIN_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_DRIVER_TOOLCHAIN_H_
+name|LLVM_CLANG_DRIVER_TOOLCHAIN_H
 end_define
 
 begin_include
@@ -155,7 +155,7 @@ name|std
 operator|::
 name|string
 operator|,
-literal|4
+literal|16
 operator|>
 name|path_list
 expr_stmt|;
@@ -516,9 +516,7 @@ return|;
 block|}
 comment|/// \brief Provide the default architecture name (as expected by -arch) for
 comment|/// this toolchain. Note t
-name|std
-operator|::
-name|string
+name|StringRef
 name|getDefaultUniversalArchName
 argument_list|()
 specifier|const
@@ -899,6 +897,30 @@ return|return
 name|false
 return|;
 block|}
+comment|/// getThreadModel() - Which thread model does this target use?
+name|virtual
+name|std
+operator|::
+name|string
+name|getThreadModel
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|"posix"
+return|;
+block|}
+comment|/// isThreadModelSupported() - Does this target support a thread model?
+name|virtual
+name|bool
+name|isThreadModelSupported
+argument_list|(
+specifier|const
+name|StringRef
+name|Model
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// ComputeLLVMTriple - Return the LLVM target triple to use, after taking
 comment|/// command line arguments into account.
 name|virtual

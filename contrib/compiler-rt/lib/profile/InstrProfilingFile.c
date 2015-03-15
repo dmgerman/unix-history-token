@@ -27,6 +27,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -909,11 +915,39 @@ operator|-
 literal|1
 return|;
 comment|/* Write the file. */
-return|return
+name|int
+name|rc
+init|=
 name|writeFileWithName
 argument_list|(
 name|__llvm_profile_CurrentFilename
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|rc
+operator|&&
+name|getenv
+argument_list|(
+literal|"LLVM_PROFILE_VERBOSE_ERRORS"
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"LLVM Profile: Failed to write file \"%s\": %s\n"
+argument_list|,
+name|__llvm_profile_CurrentFilename
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|rc
 return|;
 block|}
 end_function

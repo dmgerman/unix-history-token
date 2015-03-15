@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Metadata.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -147,6 +153,9 @@ name|Pass
 decl_stmt|;
 name|class
 name|TargetMachine
+decl_stmt|;
+name|class
+name|TargetSubtargetInfo
 decl_stmt|;
 name|class
 name|TargetRegisterClass
@@ -283,6 +292,36 @@ operator|~
 name|MachineFunctionInfo
 argument_list|()
 expr_stmt|;
+comment|/// \brief Factory function: default behavior is to call new using the
+comment|/// supplied allocator.
+comment|///
+comment|/// This function can be overridden in a derive class.
+name|template
+operator|<
+name|typename
+name|Ty
+operator|>
+specifier|static
+name|Ty
+operator|*
+name|create
+argument_list|(
+argument|BumpPtrAllocator&Allocator
+argument_list|,
+argument|MachineFunction&MF
+argument_list|)
+block|{
+return|return
+name|new
+argument_list|(
+argument|Allocator.Allocate<Ty>()
+argument_list|)
+name|Ty
+argument_list|(
+name|MF
+argument_list|)
+return|;
+block|}
 block|}
 struct|;
 name|class
@@ -298,6 +337,11 @@ name|TargetMachine
 modifier|&
 name|Target
 decl_stmt|;
+specifier|const
+name|TargetSubtargetInfo
+modifier|*
+name|STI
+decl_stmt|;
 name|MCContext
 modifier|&
 name|Ctx
@@ -305,10 +349,6 @@ decl_stmt|;
 name|MachineModuleInfo
 modifier|&
 name|MMI
-decl_stmt|;
-name|GCModuleInfo
-modifier|*
-name|GMI
 decl_stmt|;
 comment|// RegInfo - Information about each register in use in the function.
 name|MachineRegisterInfo
@@ -433,8 +473,6 @@ argument_list|,
 argument|unsigned FunctionNum
 argument_list|,
 argument|MachineModuleInfo&MMI
-argument_list|,
-argument|GCModuleInfo* GMI
 argument_list|)
 empty_stmt|;
 operator|~
@@ -449,16 +487,6 @@ specifier|const
 block|{
 return|return
 name|MMI
-return|;
-block|}
-name|GCModuleInfo
-operator|*
-name|getGMI
-argument_list|()
-specifier|const
-block|{
-return|return
-name|GMI
 return|;
 block|}
 name|MCContext
@@ -514,6 +542,34 @@ block|{
 return|return
 name|Target
 return|;
+block|}
+comment|/// getSubtarget - Return the subtarget for which this machine code is being
+comment|/// compiled.
+specifier|const
+name|TargetSubtargetInfo
+operator|&
+name|getSubtarget
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|STI
+return|;
+block|}
+name|void
+name|setSubtarget
+parameter_list|(
+specifier|const
+name|TargetSubtargetInfo
+modifier|*
+name|ST
+parameter_list|)
+block|{
+name|STI
+operator|=
+name|ST
+expr_stmt|;
 block|}
 comment|/// getRegInfo - Return information about the registers currently in use.
 comment|///
@@ -733,15 +789,19 @@ name|MFInfo
 condition|)
 name|MFInfo
 operator|=
-name|new
-argument_list|(
-argument|Allocator.Allocate<Ty>()
-argument_list|)
 name|Ty
-argument_list|(
+operator|::
+name|template
+name|create
+operator|<
+name|Ty
+operator|>
+operator|(
+name|Allocator
+operator|,
 operator|*
 name|this
-argument_list|)
+operator|)
 expr_stmt|;
 return|return
 name|static_cast
@@ -1435,11 +1495,12 @@ name|unsigned
 name|base_alignment
 parameter_list|,
 specifier|const
-name|MDNode
-modifier|*
-name|TBAAInfo
+name|AAMDNodes
+modifier|&
+name|AAInfo
 init|=
-name|nullptr
+name|AAMDNodes
+argument_list|()
 parameter_list|,
 specifier|const
 name|MDNode

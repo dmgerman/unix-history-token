@@ -197,10 +197,7 @@ name|std
 operator|::
 name|error_code
 name|commit
-argument_list|(
-argument|int64_t NewSmallerSize = -
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/// If this object was previously committed, the destructor just deletes
 comment|/// this object.  If this object was not committed, the destructor
@@ -230,7 +227,7 @@ name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 name|FileOutputBuffer
 argument_list|(
-argument|llvm::sys::fs::mapped_file_region *R
+argument|std::unique_ptr<llvm::sys::fs::mapped_file_region> R
 argument_list|,
 argument|StringRef Path
 argument_list|,

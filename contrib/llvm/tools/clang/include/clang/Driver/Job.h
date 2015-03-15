@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_DRIVER_JOB_H_
+name|LLVM_CLANG_DRIVER_JOB_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_DRIVER_JOB_H_
+name|LLVM_CLANG_DRIVER_JOB_H
 end_define
 
 begin_include
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator.h"
 end_include
 
 begin_include
@@ -101,6 +107,34 @@ name|opt
 operator|::
 name|ArgStringList
 expr_stmt|;
+struct|struct
+name|CrashReportInfo
+block|{
+name|StringRef
+name|Filename
+decl_stmt|;
+name|StringRef
+name|VFSPath
+decl_stmt|;
+name|CrashReportInfo
+argument_list|(
+argument|StringRef Filename
+argument_list|,
+argument|StringRef VFSPath
+argument_list|)
+block|:
+name|Filename
+argument_list|(
+name|Filename
+argument_list|)
+operator|,
+name|VFSPath
+argument_list|(
+argument|VFSPath
+argument_list|)
+block|{}
+block|}
+struct|;
 name|class
 name|Job
 block|{
@@ -154,7 +188,7 @@ comment|///
 comment|/// \param OS - The stream to print on.
 comment|/// \param Terminator - A string to print at the end of the line.
 comment|/// \param Quote - Should separate arguments be quoted.
-comment|/// \param CrashReport - Whether to print for inclusion in a crash report.
+comment|/// \param CrashInfo - Details for inclusion in a crash report.
 name|virtual
 name|void
 name|Print
@@ -173,10 +207,11 @@ argument_list|,
 name|bool
 name|Quote
 argument_list|,
-name|bool
-name|CrashReport
+name|CrashReportInfo
+operator|*
+name|CrashInfo
 operator|=
-name|false
+name|nullptr
 argument_list|)
 decl|const
 init|=
@@ -219,6 +254,51 @@ operator|::
 name|ArgStringList
 name|Arguments
 block|;
+comment|/// Response file name, if this command is set to use one, or nullptr
+comment|/// otherwise
+specifier|const
+name|char
+operator|*
+name|ResponseFile
+block|;
+comment|/// The input file list in case we need to emit a file list instead of a
+comment|/// proper response file
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgStringList
+name|InputFileList
+block|;
+comment|/// String storage if we need to create a new argument to specify a response
+comment|/// file
+name|std
+operator|::
+name|string
+name|ResponseFileFlag
+block|;
+comment|/// When a response file is needed, we try to put most arguments in an
+comment|/// exclusive file, while others remains as regular command line arguments.
+comment|/// This functions fills a vector with the regular command line arguments,
+comment|/// argv, excluding the ones passed in a response file.
+name|void
+name|buildArgvForResponseFile
+argument_list|(
+argument|llvm::SmallVectorImpl<const char *>&Out
+argument_list|)
+specifier|const
+block|;
+comment|/// Encodes an array of C strings into a single string separated by whitespace.
+comment|/// This function will also put in quotes arguments that have whitespaces and
+comment|/// will escape the regular backslashes (used in Windows paths) and quotes.
+comment|/// The results are the contents of a response file, written into a raw_ostream.
+name|void
+name|writeResponseFile
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|Command
@@ -257,7 +337,7 @@ argument|const char *Terminator
 argument_list|,
 argument|bool Quote
 argument_list|,
-argument|bool CrashReport = false
+argument|CrashReportInfo *CrashInfo = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -298,6 +378,33 @@ return|return
 name|Creator
 return|;
 block|}
+comment|/// Set to pass arguments via a response file when launching the command
+name|void
+name|setResponseFile
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|FileName
+argument_list|)
+block|;
+comment|/// Set an input file list, necessary if we need to use a response file but
+comment|/// the tool being called only supports input files lists.
+name|void
+name|setInputFileList
+argument_list|(
+argument|llvm::opt::ArgStringList List
+argument_list|)
+block|{
+name|InputFileList
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|List
+argument_list|)
+block|;   }
 specifier|const
 name|char
 operator|*
@@ -381,8 +488,12 @@ name|ArgStringList
 operator|&
 name|Arguments_
 argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Command
-operator|*
+operator|>
 name|Fallback_
 argument_list|)
 block|;
@@ -395,7 +506,7 @@ argument|const char *Terminator
 argument_list|,
 argument|bool Quote
 argument_list|,
-argument|bool CrashReport = false
+argument|CrashReportInfo *CrashInfo = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -451,8 +562,12 @@ operator|:
 typedef|typedef
 name|SmallVector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Job
-operator|*
+operator|>
 operator|,
 literal|4
 operator|>
@@ -465,15 +580,25 @@ name|size_type
 name|size_type
 expr_stmt|;
 typedef|typedef
+name|llvm
+operator|::
+name|pointee_iterator
+operator|<
 name|list_type
 operator|::
 name|iterator
+operator|>
 name|iterator
 expr_stmt|;
 typedef|typedef
+name|llvm
+operator|::
+name|pointee_iterator
+operator|<
 name|list_type
 operator|::
 name|const_iterator
+operator|>
 name|const_iterator
 expr_stmt|;
 name|private
@@ -490,46 +615,44 @@ name|virtual
 operator|~
 name|JobList
 argument_list|()
-expr_stmt|;
+block|{}
 name|void
 name|Print
 argument_list|(
-name|llvm
-operator|::
-name|raw_ostream
-operator|&
-name|OS
+argument|llvm::raw_ostream&OS
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|Terminator
+argument|const char *Terminator
 argument_list|,
-name|bool
-name|Quote
+argument|bool Quote
 argument_list|,
-name|bool
-name|CrashReport
-operator|=
-name|false
+argument|CrashReportInfo *CrashInfo = nullptr
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+expr_stmt|;
 comment|/// Add a job to the list (taking ownership).
 name|void
 name|addJob
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Job
-modifier|*
+operator|>
 name|J
-parameter_list|)
+argument_list|)
 block|{
 name|Jobs
 operator|.
 name|push_back
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|J
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
