@@ -15546,7 +15546,7 @@ literal|0
 return|;
 block|}
 return|return
-name|msleep
+name|mtx_sleep
 argument_list|(
 name|cmd
 argument_list|,
@@ -22685,7 +22685,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|msleep
+name|mtx_sleep
 argument_list|(
 name|sc
 argument_list|,
@@ -24632,7 +24632,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|msleep
+name|mtx_sleep
 argument_list|(
 name|sc
 argument_list|,
