@@ -11924,15 +11924,10 @@ operator|)
 operator|==
 literal|0xa5a5a5a0
 condition|)
-block|{
-name|WPI_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|end
+goto|;
 comment|/* Hardware gone! */
-block|}
 name|r2
 operator|=
 name|WPI_READ
@@ -12060,12 +12055,9 @@ operator|&=
 operator|~
 name|WPI_FLAG_BUSY
 expr_stmt|;
-name|WPI_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|end
+goto|;
 block|}
 if|if
 condition|(
@@ -12133,6 +12125,8 @@ argument_list|,
 name|WPI_INT_MASK_DEF
 argument_list|)
 expr_stmt|;
+name|end
+label|:
 name|WPI_UNLOCK
 argument_list|(
 name|sc
