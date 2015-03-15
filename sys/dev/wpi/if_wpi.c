@@ -10590,6 +10590,16 @@ name|ieee80211com
 modifier|*
 name|ic
 decl_stmt|;
+name|uint32_t
+name|status
+init|=
+name|le32toh
+argument_list|(
+name|stat
+operator|->
+name|status
+argument_list|)
+decl_stmt|;
 name|int
 name|ackfailcnt
 init|=
@@ -10600,16 +10610,6 @@ operator|/
 literal|2
 decl_stmt|;
 comment|/* wpi_mrr_setup() */
-name|int
-name|status
-init|=
-name|le32toh
-argument_list|(
-name|stat
-operator|->
-name|status
-argument_list|)
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|data
@@ -11208,7 +11208,7 @@ operator|->
 name|ic_vaps
 argument_list|)
 decl_stmt|;
-name|int
+name|uint32_t
 name|hw
 decl_stmt|;
 name|bus_dmamap_sync
@@ -11489,7 +11489,7 @@ operator|+
 literal|1
 operator|)
 decl_stmt|;
-name|int
+name|uint32_t
 name|misses
 decl_stmt|;
 name|bus_dmamap_sync
