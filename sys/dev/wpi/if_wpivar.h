@@ -548,6 +548,10 @@ decl_stmt|;
 name|int
 name|calib_cnt
 decl_stmt|;
+name|struct
+name|callout
+name|scan_timeout
+decl_stmt|;
 comment|/* Watch dog timers. */
 name|struct
 name|callout
@@ -611,9 +615,6 @@ name|nt_mtx
 decl_stmt|;
 name|int
 name|sc_tx_timer
-decl_stmt|;
-name|int
-name|sc_scan_timer
 decl_stmt|;
 name|void
 function_decl|(
