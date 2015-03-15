@@ -512,6 +512,10 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
+name|struct
+name|mtx
+name|tx_mtx
+decl_stmt|;
 comment|/* Shared area. */
 name|struct
 name|wpi_dma_info
@@ -728,7 +732,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Locking order:  * 1. WPI_LOCK;  * 2. WPI_RXON_LOCK;  * 3. WPI_NT_LOCK / WPI_VAP_LOCK;  * 4. WPI_TXQ_LOCK;  * 5. WPI_TXQ_STATE_LOCK;  */
+comment|/*  * Locking order:  * 1. WPI_LOCK;  * 2. WPI_RXON_LOCK;  * 3. WPI_TX_LOCK;  * 4. WPI_NT_LOCK / WPI_VAP_LOCK;  * 5. WPI_TXQ_LOCK;  * 6. WPI_TXQ_STATE_LOCK;  */
 end_comment
 
 begin_define
@@ -831,6 +835,47 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_destroy(&(_sc)->rxon_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_TX_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|mtx_init(&(_sc)->tx_mtx, "tx path lock", NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_TX_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_TX_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_TX_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->tx_mtx)
 end_define
 
 begin_define
