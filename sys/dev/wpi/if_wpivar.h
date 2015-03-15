@@ -336,7 +336,7 @@ name|wpi_vap
 block|{
 name|struct
 name|ieee80211vap
-name|vap
+name|wv_vap
 decl_stmt|;
 name|struct
 name|wpi_buf
@@ -349,7 +349,7 @@ decl_stmt|;
 name|int
 function_decl|(
 modifier|*
-name|newstate
+name|wv_newstate
 function_decl|)
 parameter_list|(
 name|struct

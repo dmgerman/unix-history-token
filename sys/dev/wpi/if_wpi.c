@@ -3800,7 +3800,7 @@ operator|=
 operator|&
 name|wvp
 operator|->
-name|vap
+name|wv_vap
 expr_stmt|;
 name|ieee80211_vap_setup
 argument_list|(
@@ -3833,14 +3833,6 @@ name|wvp
 argument_list|)
 expr_stmt|;
 comment|/* Override with driver methods. */
-name|wvp
-operator|->
-name|newstate
-operator|=
-name|vap
-operator|->
-name|iv_newstate
-expr_stmt|;
 name|vap
 operator|->
 name|iv_key_alloc
@@ -3858,6 +3850,14 @@ operator|->
 name|iv_key_delete
 operator|=
 name|wpi_key_delete
+expr_stmt|;
+name|wvp
+operator|->
+name|wv_newstate
+operator|=
+name|vap
+operator|->
+name|iv_newstate
 expr_stmt|;
 name|vap
 operator|->
@@ -9210,7 +9210,7 @@ expr_stmt|;
 return|return
 name|wvp
 operator|->
-name|newstate
+name|wv_newstate
 argument_list|(
 name|vap
 argument_list|,
@@ -21056,7 +21056,7 @@ name|ic
 init|=
 name|wvp
 operator|->
-name|vap
+name|wv_vap
 operator|.
 name|iv_ic
 decl_stmt|;
