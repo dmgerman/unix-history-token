@@ -2932,6 +2932,9 @@ operator||
 name|IEEE80211_C_IBSS
 comment|/* IBSS mode supported */
 operator||
+name|IEEE80211_C_HOSTAP
+comment|/* Host access point mode */
+operator||
 name|IEEE80211_C_MONITOR
 comment|/* monitor mode supported */
 operator||
@@ -2952,13 +2955,6 @@ comment|/* 802.11i */
 operator||
 name|IEEE80211_C_SHPREAMBLE
 comment|/* short preamble supported */
-if|#
-directive|if
-literal|0
-expr|| IEEE80211_C_HOSTAP
-comment|/* Host access point mode */
-endif|#
-directive|endif
 operator||
 name|IEEE80211_C_WME
 comment|/* 802.11e */
@@ -3894,6 +3890,10 @@ condition|(
 name|opmode
 operator|==
 name|IEEE80211_M_IBSS
+operator|||
+name|opmode
+operator|==
+name|IEEE80211_M_HOSTAP
 condition|)
 block|{
 name|WPI_VAP_LOCK_INIT
@@ -3939,6 +3939,16 @@ operator|->
 name|iv_update_beacon
 operator|=
 name|wpi_update_beacon
+expr_stmt|;
+name|vap
+operator|->
+name|iv_max_aid
+operator|=
+name|WPI_ID_IBSS_MAX
+operator|-
+name|WPI_ID_IBSS_MIN
+operator|+
+literal|1
 expr_stmt|;
 name|ieee80211_ratectl_init
 argument_list|(
@@ -4021,6 +4031,10 @@ condition|(
 name|opmode
 operator|==
 name|IEEE80211_M_IBSS
+operator|||
+name|opmode
+operator|==
+name|IEEE80211_M_HOSTAP
 condition|)
 block|{
 if|if
@@ -7653,6 +7667,17 @@ operator||=
 name|IEEE80211_CHAN_NOADHOC
 expr_stmt|;
 block|}
+comment|/* XXX HOSTAP uses WPI_MODE_IBSS */
+if|if
+condition|(
+name|nflags
+operator|&
+name|IEEE80211_CHAN_NOADHOC
+condition|)
+name|nflags
+operator||=
+name|IEEE80211_CHAN_NOHOSTAP
+expr_stmt|;
 return|return
 name|nflags
 return|;
@@ -9057,20 +9082,6 @@ case|:
 if|if
 condition|(
 operator|(
-name|vap
-operator|->
-name|iv_opmode
-operator|==
-name|IEEE80211_M_IBSS
-operator|||
-name|vap
-operator|->
-name|iv_opmode
-operator|==
-name|IEEE80211_M_AHDEMO
-operator|)
-operator|&&
-operator|(
 name|sc
 operator|->
 name|rxon
@@ -9082,6 +9093,12 @@ argument_list|(
 name|WPI_FILTER_BSS
 argument_list|)
 operator|)
+operator|&&
+name|vap
+operator|->
+name|iv_opmode
+operator|!=
+name|IEEE80211_M_STA
 condition|)
 block|{
 name|sc
@@ -17828,14 +17845,50 @@ name|sc
 operator|->
 name|sc_ifp
 decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ifp
+operator|->
+name|if_l2com
+decl_stmt|;
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+init|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|ic
+operator|->
+name|ic_vaps
+argument_list|)
+decl_stmt|;
 name|uint32_t
 name|promisc_filter
 decl_stmt|;
 name|promisc_filter
 operator|=
-name|WPI_FILTER_PROMISC
-operator||
 name|WPI_FILTER_CTL
+expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|!=
+name|NULL
+operator|&&
+name|vap
+operator|->
+name|iv_opmode
+operator|!=
+name|IEEE80211_M_HOSTAP
+condition|)
+name|promisc_filter
+operator||=
+name|WPI_FILTER_PROMISC
 expr_stmt|;
 if|if
 condition|(
@@ -19926,13 +19979,33 @@ operator||=
 name|WPI_FILTER_BEACON
 expr_stmt|;
 break|break;
-comment|/* XXX workaround for passive channels selection */
-case|case
-name|IEEE80211_M_AHDEMO
-case|:
 case|case
 name|IEEE80211_M_HOSTAP
 case|:
+comment|/* XXX workaround for beaconing */
+name|sc
+operator|->
+name|rxon
+operator|.
+name|mode
+operator|=
+name|WPI_MODE_IBSS
+expr_stmt|;
+name|sc
+operator|->
+name|rxon
+operator|.
+name|filter
+operator||=
+name|WPI_FILTER_ASSOC
+operator||
+name|WPI_FILTER_PROMISC
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_M_AHDEMO
+case|:
+comment|/* XXX workaround for passive channels selection */
 name|sc
 operator|->
 name|rxon
@@ -22819,6 +22892,12 @@ operator|->
 name|iv_opmode
 operator|==
 name|IEEE80211_M_IBSS
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_HOSTAP
 condition|)
 block|{
 if|if
@@ -24174,6 +24253,9 @@ name|IEEE80211_M_IBSS
 case|:
 case|case
 name|IEEE80211_M_AHDEMO
+case|:
+case|case
+name|IEEE80211_M_HOSTAP
 case|:
 name|ni
 operator|=

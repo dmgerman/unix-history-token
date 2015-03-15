@@ -1578,6 +1578,11 @@ define|#
 directive|define
 name|WPI_FILTER_BEACON
 value|(1<< 6)
+define|#
+directive|define
+name|WPI_FILTER_ASSOC
+value|(1<< 7)
+comment|/* Accept associaton requests. */
 name|uint8_t
 name|chan
 decl_stmt|;
