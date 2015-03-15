@@ -276,13 +276,11 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
-name|SYSCTL_OUT
+name|SYSCTL_OUT_STR
 argument_list|(
 name|req
 argument_list|,
 name|buf
-argument_list|,
-name|len
 argument_list|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_html.c,v 1.225 2015/02/12 12:24:33 schwarze Exp $ */
+comment|/*	$Id: mdoc_html.c,v 1.226 2015/03/03 21:11:34 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -2454,6 +2454,19 @@ return|return;
 case|case
 name|MDOC_EQN
 case|:
+if|if
+condition|(
+name|n
+operator|->
+name|flags
+operator|&
+name|MDOC_LINE
+condition|)
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
 name|print_eqn
 argument_list|(
 name|h

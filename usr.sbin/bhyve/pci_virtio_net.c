@@ -1154,6 +1154,9 @@ name|len
 decl_stmt|,
 name|n
 decl_stmt|;
+name|uint16_t
+name|idx
+decl_stmt|;
 comment|/* 	 * Should never be called without a valid tap fd 	 */
 name|assert
 argument_list|(
@@ -1209,11 +1212,6 @@ index|[
 name|VTNET_RXQ
 index|]
 expr_stmt|;
-name|vq_startchains
-argument_list|(
-name|vq
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1258,6 +1256,9 @@ operator|=
 name|vq_getchain
 argument_list|(
 name|vq
+argument_list|,
+operator|&
+name|idx
 argument_list|,
 name|iov
 argument_list|,
@@ -1374,6 +1375,8 @@ comment|/* 		 * Release this chain and handle more chains. 		 */
 name|vq_relchain
 argument_list|(
 name|vq
+argument_list|,
+name|idx
 argument_list|,
 name|len
 operator|+
@@ -1539,12 +1542,18 @@ name|plen
 decl_stmt|,
 name|tlen
 decl_stmt|;
+name|uint16_t
+name|idx
+decl_stmt|;
 comment|/* 	 * Obtain chain of descriptors.  The first one is 	 * really the header descriptor, so we need to sum 	 * up two lengths: packet length and transfer length. 	 */
 name|n
 operator|=
 name|vq_getchain
 argument_list|(
 name|vq
+argument_list|,
+operator|&
+name|idx
 argument_list|,
 name|iov
 argument_list|,
@@ -1642,6 +1651,8 @@ comment|/* chain is processed, release it and set tlen */
 name|vq_relchain
 argument_list|(
 name|vq
+argument_list|,
+name|idx
 argument_list|,
 name|tlen
 argument_list|)
@@ -1871,11 +1882,6 @@ operator|&
 name|sc
 operator|->
 name|tx_mtx
-argument_list|)
-expr_stmt|;
-name|vq_startchains
-argument_list|(
-name|vq
 argument_list|)
 expr_stmt|;
 do|do

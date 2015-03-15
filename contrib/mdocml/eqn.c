@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: eqn.c,v 1.57 2015/01/28 21:11:53 schwarze Exp $ */
+comment|/*	$Id: eqn.c,v 1.58 2015/03/04 12:19:49 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -485,6 +485,8 @@ name|EQNSYM_lessequal
 block|,
 name|EQNSYM_moreequal
 block|,
+name|EQNSYM_minus
+block|,
 name|EQNSYM__MAX
 block|}
 enum|;
@@ -844,7 +846,7 @@ comment|/* EQNSYM_approx */
 block|{
 literal|"prime"
 block|,
-literal|"aq"
+literal|"fm"
 block|}
 block|,
 comment|/* EQNSYM_prime */
@@ -932,6 +934,13 @@ literal|">="
 block|}
 block|,
 comment|/* EQNSYM_moreequal */
+block|{
+literal|"-"
+block|,
+literal|"mi"
+block|}
+block|,
+comment|/* EQNSYM_minus */
 block|}
 decl_stmt|;
 end_decl_stmt

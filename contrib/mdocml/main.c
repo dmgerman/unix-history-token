@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: main.c,v 1.222 2015/02/27 16:02:10 schwarze Exp $ */
+comment|/*	$Id: main.c,v 1.225 2015/03/10 13:50:03 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -28,6 +28,12 @@ end_include
 begin_comment
 comment|/* MACHINE */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
 
 begin_include
 include|#
@@ -533,7 +539,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|pid_t
 name|spawn_pager
 parameter_list|(
 name|void
@@ -739,14 +745,15 @@ name|int
 name|show_usage
 decl_stmt|;
 name|int
-name|use_pager
-decl_stmt|;
-name|int
 name|options
 decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+name|pid_t
+name|pager_pid
+decl_stmt|;
+comment|/* 0: don't use; 1: not yet spawned. */
 if|if
 condition|(
 name|argc
@@ -977,7 +984,7 @@ name|defos
 operator|=
 name|NULL
 expr_stmt|;
-name|use_pager
+name|pager_pid
 operator|=
 literal|1
 expr_stmt|;
@@ -1036,7 +1043,7 @@ break|break;
 case|case
 literal|'c'
 case|:
-name|use_pager
+name|pager_pid
 operator|=
 literal|0
 expr_stmt|;
@@ -1072,7 +1079,7 @@ name|synopsis_only
 operator|=
 literal|1
 expr_stmt|;
-name|use_pager
+name|pager_pid
 operator|=
 literal|0
 expr_stmt|;
@@ -1375,7 +1382,7 @@ name|outmode
 operator|=
 name|OUTMODE_ALL
 expr_stmt|;
-name|use_pager
+name|pager_pid
 operator|=
 literal|0
 expr_stmt|;
@@ -1463,6 +1470,11 @@ operator|(
 operator|(
 name|uc
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|argv
 index|[
 literal|0
@@ -1531,6 +1543,10 @@ name|search
 operator|.
 name|sec
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|uc
 expr_stmt|;
 name|argv
@@ -1557,6 +1573,9 @@ argument_list|(
 literal|"MACHINE"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MACHINE
 if|if
 condition|(
 name|search
@@ -1571,6 +1590,8 @@ name|arch
 operator|=
 name|MACHINE
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|rc
 operator|=
@@ -2013,13 +2034,17 @@ condition|)
 block|{
 if|if
 condition|(
-name|use_pager
+name|pager_pid
+operator|==
+literal|1
 operator|&&
 name|isatty
 argument_list|(
 name|STDOUT_FILENO
 argument_list|)
 condition|)
+name|pager_pid
+operator|=
 name|spawn_pager
 argument_list|()
 expr_stmt|;
@@ -2087,19 +2112,19 @@ condition|)
 block|{
 if|if
 condition|(
-name|use_pager
+name|pager_pid
+operator|==
+literal|1
 operator|&&
 name|isatty
 argument_list|(
 name|STDOUT_FILENO
 argument_list|)
 condition|)
+name|pager_pid
+operator|=
 name|spawn_pager
 argument_list|()
-expr_stmt|;
-name|use_pager
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2334,6 +2359,33 @@ argument_list|(
 name|defos
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If a pager is attached, flush the pipe leading to it 	 * and signal end of file such that the user can browse 	 * to the end.  Then wait for the user to close the pager. 	 */
+if|if
+condition|(
+name|pager_pid
+operator|!=
+literal|0
+operator|&&
+name|pager_pid
+operator|!=
+literal|1
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|waitpid
+argument_list|(
+name|pager_pid
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 operator|(
@@ -4597,7 +4649,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|pid_t
 name|spawn_pager
 parameter_list|(
 name|void
@@ -4632,6 +4684,9 @@ decl_stmt|;
 name|int
 name|argc
 decl_stmt|;
+name|pid_t
+name|pager_pid
+decl_stmt|;
 if|if
 condition|(
 name|pipe
@@ -4657,10 +4712,16 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 switch|switch
 condition|(
+name|pager_pid
+operator|=
 name|fork
 argument_list|()
 condition|)
@@ -4694,6 +4755,8 @@ expr_stmt|;
 case|case
 literal|0
 case|:
+break|break;
+default|default:
 name|close
 argument_list|(
 name|fildes
@@ -4741,11 +4804,21 @@ name|MANDOCLEVEL_SYSERR
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
-default|default:
-break|break;
+name|close
+argument_list|(
+name|fildes
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|pager_pid
+operator|)
+return|;
 block|}
-comment|/* The original process becomes the pager. */
+comment|/* The child process becomes the pager. */
 name|close
 argument_list|(
 name|fildes
@@ -4793,6 +4866,14 @@ name|MANDOCLEVEL_SYSERR
 argument_list|)
 expr_stmt|;
 block|}
+name|close
+argument_list|(
+name|fildes
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 name|pager
 operator|=
 name|getenv
