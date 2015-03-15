@@ -466,6 +466,13 @@ name|WPI_NTXQUEUES
 index|]
 decl_stmt|;
 name|struct
+name|mtx
+name|txq_mtx
+decl_stmt|;
+name|uint32_t
+name|txq_active
+decl_stmt|;
+name|struct
 name|wpi_rx_ring
 name|rxq
 decl_stmt|;
@@ -642,6 +649,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* WPI_LOCK> WPI_TXQ_LOCK */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -691,6 +702,47 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_destroy(&(_sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_TXQ_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|mtx_init(&(_sc)->txq_mtx, "txq/cmdq lock", NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_TXQ_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->txq_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_TXQ_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->txq_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_TXQ_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->txq_mtx)
 end_define
 
 end_unit
