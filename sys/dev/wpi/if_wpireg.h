@@ -59,6 +59,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WPI_CMD_QUEUE_NUM
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|WPI_NDMACHNLS
 value|6
 end_define
@@ -1047,7 +1054,7 @@ block|{
 name|uint32_t
 name|txbase
 index|[
-literal|8
+name|WPI_NTXQUEUES
 index|]
 decl_stmt|;
 name|uint32_t
@@ -1212,6 +1219,20 @@ name|__packed
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|WPI_RX_DESC_QID_MSK
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_UNSOLICITED_RX_NOTIF
+value|0x80
+end_define
+
 begin_struct
 struct|struct
 name|wpi_rx_stat
@@ -1233,7 +1254,7 @@ comment|/* received signal strength */
 define|#
 directive|define
 name|WPI_RSSI_OFFSET
-value|95
+value|-95
 name|uint8_t
 name|agc
 decl_stmt|;

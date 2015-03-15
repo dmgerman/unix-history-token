@@ -6301,7 +6301,7 @@ if|if
 condition|(
 name|qid
 operator|>
-literal|4
+name|WPI_CMD_QUEUE_NUM
 condition|)
 return|return
 literal|0
@@ -9897,7 +9897,7 @@ argument_list|(
 name|stat
 operator|->
 name|rssi
-operator|-
+operator|+
 name|WPI_RSSI_OFFSET
 argument_list|)
 expr_stmt|;
@@ -9978,7 +9978,6 @@ name|stat
 operator|->
 name|rssi
 argument_list|,
-operator|-
 name|WPI_RSSI_OFFSET
 argument_list|)
 expr_stmt|;
@@ -10003,7 +10002,6 @@ name|stat
 operator|->
 name|rssi
 argument_list|,
-operator|-
 name|WPI_RSSI_OFFSET
 argument_list|)
 expr_stmt|;
@@ -10482,7 +10480,7 @@ name|sc
 operator|->
 name|txq
 index|[
-literal|4
+name|WPI_CMD_QUEUE_NUM
 index|]
 decl_stmt|;
 name|struct
@@ -10533,10 +10531,10 @@ name|desc
 operator|->
 name|qid
 operator|&
-literal|7
+name|WPI_RX_DESC_QID_MSK
 operator|)
 operator|!=
-literal|4
+name|WPI_CMD_QUEUE_NUM
 condition|)
 return|return;
 comment|/* Not a command ack. */
@@ -10848,9 +10846,10 @@ name|desc
 operator|->
 name|qid
 operator|&
-literal|0x80
+name|WPI_UNSOLICITED_RX_NOTIF
 operator|)
 condition|)
+block|{
 comment|/* Reply to a command. */
 name|wpi_cmd_done
 argument_list|(
@@ -10859,6 +10858,7 @@ argument_list|,
 name|desc
 argument_list|)
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|desc
@@ -15098,7 +15098,7 @@ name|sc
 operator|->
 name|txq
 index|[
-literal|4
+name|WPI_CMD_QUEUE_NUM
 index|]
 decl_stmt|;
 name|struct
