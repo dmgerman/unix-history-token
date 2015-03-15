@@ -440,11 +440,6 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
-name|struct
-name|unrhdr
-modifier|*
-name|sc_unr
-decl_stmt|;
 comment|/* Flags indicating the current state the driver 	 * expects the hardware to be in 	 */
 name|uint32_t
 name|flags
@@ -535,6 +530,9 @@ name|temp
 decl_stmt|;
 name|uint32_t
 name|qfullmsk
+decl_stmt|;
+name|uint32_t
+name|nodesmsk
 decl_stmt|;
 name|int
 name|sc_tx_timer
