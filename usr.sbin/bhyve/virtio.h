@@ -1177,6 +1177,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vq_retchain
+parameter_list|(
+name|struct
+name|vqueue_info
+modifier|*
+name|vq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vq_relchain
 parameter_list|(
 name|struct

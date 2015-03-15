@@ -1317,7 +1317,29 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the currently-first request chain to the guest, setting  * its I/O length to the provided value.  *  * (This chain is the one you handled when you called vq_getchain()  * and used its positive return value.)  */
+comment|/*  * Return the currently-first request chain back to the available queue.  *  * (This chain is the one you handled when you called vq_getchain()  * and used its positive return value.)  */
+end_comment
+
+begin_function
+name|void
+name|vq_retchain
+parameter_list|(
+name|struct
+name|vqueue_info
+modifier|*
+name|vq
+parameter_list|)
+block|{
+name|vq
+operator|->
+name|vq_last_avail
+operator|--
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return specified request chain to the guest, setting its I/O length  * to the provided value.  *  * (This chain is the one you handled when you called vq_getchain()  * and used its positive return value.)  */
 end_comment
 
 begin_function

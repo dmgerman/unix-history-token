@@ -1327,6 +1327,11 @@ name|EWOULDBLOCK
 condition|)
 block|{
 comment|/* 			 * No more packets, but still some avail ring 			 * entries.  Interrupt if needed/appropriate. 			 */
+name|vq_retchain
+argument_list|(
+name|vq
+argument_list|)
+expr_stmt|;
 name|vq_endchains
 argument_list|(
 name|vq
