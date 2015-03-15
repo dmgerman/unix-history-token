@@ -446,6 +446,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WPI_APMG_CLK_CTRL
+value|0x3000
+end_define
+
+begin_define
+define|#
+directive|define
 name|WPI_APMG_CLK_EN
 value|0x3004
 end_define
