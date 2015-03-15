@@ -728,7 +728,7 @@ name|name
 argument_list|,
 name|FBT_RETURN
 argument_list|,
-literal|5
+literal|3
 argument_list|,
 name|fbt
 argument_list|)
