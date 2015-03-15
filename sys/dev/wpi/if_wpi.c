@@ -2240,7 +2240,11 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|rid
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WPI_DEBUG
+name|int
 name|supportsa
 init|=
 literal|1
@@ -2251,6 +2255,8 @@ name|wpi_ident
 modifier|*
 name|ident
 decl_stmt|;
+endif|#
+directive|endif
 name|uint8_t
 name|macaddr
 index|[
@@ -2361,6 +2367,9 @@ name|error
 return|;
 block|}
 comment|/* 	 * Some card's only support 802.11b/g not a, check to see if 	 * this is one such card. A 0x0 in the subdevice table indicates 	 * the entire subdevice range is to be ignored. 	 */
+ifdef|#
+directive|ifdef
+name|WPI_DEBUG
 for|for
 control|(
 name|ident
@@ -2400,6 +2409,8 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* Clear device-specific "PCI retry timeout" register (41h). */
 name|pci_write_config
 argument_list|(
