@@ -4545,9 +4545,17 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+literal|""
+argument_list|,
+literal|1
+argument_list|)
 operator|)
 return|;
+comment|/* add nulterm */
 name|error
 operator|=
 name|sysctl_handle_opaque
