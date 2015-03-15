@@ -2949,7 +2949,7 @@ else|:
 literal|"does not"
 argument_list|)
 expr_stmt|;
-comment|/* XXX hw_config uses the PCIDEV for the Hardware rev. Must check 	       what sc->rev really represents - benjsc 20070615 */
+comment|/* XXX hw_config uses the PCIDEV for the Hardware rev. Must 		   check what sc->rev really represents - benjsc 20070615 */
 block|}
 endif|#
 directive|endif
