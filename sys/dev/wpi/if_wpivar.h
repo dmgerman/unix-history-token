@@ -300,10 +300,13 @@ begin_struct
 struct|struct
 name|wpi_buf
 block|{
-name|void
-modifier|*
+name|uint8_t
 name|data
+index|[
+literal|56
+index|]
 decl_stmt|;
+comment|/* sizeof(struct wpi_cmd_beacon) */
 name|struct
 name|ieee80211_node
 modifier|*
