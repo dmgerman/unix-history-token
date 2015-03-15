@@ -5764,6 +5764,18 @@ name|rxq
 decl_stmt|;
 if|if
 condition|(
+name|ring
+operator|->
+name|update
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Wait for INT_WAKEUP event. */
+return|return;
+block|}
+if|if
+condition|(
 name|WPI_READ
 argument_list|(
 name|sc
@@ -6556,6 +6568,18 @@ modifier|*
 name|ring
 parameter_list|)
 block|{
+if|if
+condition|(
+name|ring
+operator|->
+name|update
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Wait for INT_WAKEUP event. */
+return|return;
+block|}
 if|if
 condition|(
 name|WPI_READ
