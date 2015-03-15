@@ -10125,7 +10125,10 @@ init|=
 name|stat
 operator|->
 name|ackfailcnt
+operator|/
+literal|2
 decl_stmt|;
+comment|/* wpi_mrr_setup() */
 name|int
 name|status
 init|=
