@@ -1079,7 +1079,27 @@ case|case
 name|VBH_OP_IDENT
 case|:
 comment|/* Assume a single buffer */
-name|strlcpy
+comment|/* S/n equal to buffer is not zero-terminated. */
+name|memset
+argument_list|(
+name|iov
+index|[
+literal|1
+index|]
+operator|.
+name|iov_base
+argument_list|,
+literal|0
+argument_list|,
+name|iov
+index|[
+literal|1
+index|]
+operator|.
+name|iov_len
+argument_list|)
+expr_stmt|;
+name|strncpy
 argument_list|(
 name|iov
 index|[
