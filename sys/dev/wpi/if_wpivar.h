@@ -350,6 +350,16 @@ name|struct
 name|mtx
 name|wv_mtx
 decl_stmt|;
+name|uint32_t
+name|wv_gtk
+decl_stmt|;
+define|#
+directive|define
+name|WPI_VAP_KEY
+parameter_list|(
+name|kid
+parameter_list|)
+value|(1<< kid)
 name|int
 function_decl|(
 modifier|*
