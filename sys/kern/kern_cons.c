@@ -1137,6 +1137,8 @@ operator|*
 literal|2
 argument_list|,
 name|SBUF_AUTOEXTEND
+operator||
+name|SBUF_INCLUDENUL
 argument_list|)
 expr_stmt|;
 if|if
