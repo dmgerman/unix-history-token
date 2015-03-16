@@ -1045,7 +1045,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Report list of supported event timers hardware via sysctl. */
+comment|/* Report list of supported event timer hardware via sysctl. */
 end_comment
 
 begin_function
