@@ -293,6 +293,16 @@ parameter_list|)
 value|((s)->s_flags& SBUF_INSECTION)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SBUF_NULINCLUDED
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->s_flags& SBUF_INCLUDENUL)
+end_define
+
 begin_comment
 comment|/*  * Set / clear flags  */
 end_comment
@@ -438,6 +448,51 @@ name|fun
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SBUF_ISFINISHED
+argument_list|(
+name|s
+argument_list|)
+operator|&&
+name|SBUF_NULINCLUDED
+argument_list|(
+name|s
+argument_list|)
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|s
+operator|->
+name|s_len
+operator|<=
+name|s
+operator|->
+name|s_size
+argument_list|,
+operator|(
+literal|"wrote past end of sbuf (%jd>= %jd)"
+operator|,
+operator|(
+name|intmax_t
+operator|)
+name|s
+operator|->
+name|s_len
+operator|,
+operator|(
+name|intmax_t
+operator|)
+name|s
+operator|->
+name|s_size
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|KASSERT
 argument_list|(
 name|s
@@ -467,6 +522,7 @@ name|s_size
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3217,11 +3273,10 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+name|SBUF_NULINCLUDED
+argument_list|(
 name|s
-operator|->
-name|s_flags
-operator|&
-name|SBUF_INCLUDENUL
+argument_list|)
 condition|)
 name|s
 operator|->
@@ -3420,19 +3475,16 @@ return|;
 comment|/* If finished, nulterm is already in len, else add one. */
 if|if
 condition|(
-operator|(
+name|SBUF_NULINCLUDED
+argument_list|(
 name|s
-operator|->
-name|s_flags
-operator|&
-operator|(
-name|SBUF_INCLUDENUL
-operator||
-name|SBUF_FINISHED
-operator|)
-operator|)
-operator|==
-name|SBUF_INCLUDENUL
+argument_list|)
+operator|&&
+operator|!
+name|SBUF_ISFINISHED
+argument_list|(
+name|s
+argument_list|)
 condition|)
 return|return
 operator|(
