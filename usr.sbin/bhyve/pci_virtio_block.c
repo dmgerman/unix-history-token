@@ -153,13 +153,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VTBLK_MAXSEGS
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
 name|VTBLK_S_OK
 value|0
 end_define
@@ -747,7 +740,7 @@ name|struct
 name|iovec
 name|iov
 index|[
-name|VTBLK_MAXSEGS
+name|BLOCKIF_IOV_MAX
 operator|+
 literal|2
 index|]
@@ -757,7 +750,7 @@ name|idx
 decl_stmt|,
 name|flags
 index|[
-name|VTBLK_MAXSEGS
+name|BLOCKIF_IOV_MAX
 operator|+
 literal|2
 index|]
@@ -773,7 +766,7 @@ name|idx
 argument_list|,
 name|iov
 argument_list|,
-name|VTBLK_MAXSEGS
+name|BLOCKIF_IOV_MAX
 operator|+
 literal|2
 argument_list|,
@@ -789,7 +782,7 @@ literal|2
 operator|&&
 name|n
 operator|<=
-name|VTBLK_MAXSEGS
+name|BLOCKIF_IOV_MAX
 operator|+
 literal|2
 argument_list|)
@@ -1574,7 +1567,7 @@ name|vbsc_cfg
 operator|.
 name|vbc_seg_max
 operator|=
-name|VTBLK_MAXSEGS
+name|BLOCKIF_IOV_MAX
 expr_stmt|;
 name|sc
 operator|->
