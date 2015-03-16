@@ -44,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rwlock.h>
+file|<sys/rmlock.h>
 end_include
 
 begin_include
@@ -177,7 +177,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|rwlock
+name|rmlock
 name|mphyp_eviction_lock
 decl_stmt|;
 end_decl_stmt
@@ -493,7 +493,7 @@ name|len
 decl_stmt|,
 name|res
 decl_stmt|;
-name|rw_init
+name|rm_init
 argument_list|(
 operator|&
 name|mphyp_eviction_lock
@@ -1233,6 +1233,10 @@ name|uint64_t
 name|ptebit
 parameter_list|)
 block|{
+name|struct
+name|rm_priotracker
+name|track
+decl_stmt|;
 name|int64_t
 name|refchg
 decl_stmt|;
@@ -1254,10 +1258,13 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|rw_rlock
+name|rm_rlock
 argument_list|(
 operator|&
 name|mphyp_eviction_lock
+argument_list|,
+operator|&
+name|track
 argument_list|)
 expr_stmt|;
 name|refchg
@@ -1276,10 +1283,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|rw_runlock
+name|rm_runlock
 argument_list|(
 operator|&
 name|mphyp_eviction_lock
+argument_list|,
+operator|&
+name|track
 argument_list|)
 expr_stmt|;
 return|return
@@ -1294,10 +1304,13 @@ name|brokenkvm
 condition|)
 block|{
 comment|/* 		 * No way to clear either bit, which is total madness. 		 * Pessimistically claim that, once modified, it stays so 		 * forever and that it is never referenced. 		 */
-name|rw_runlock
+name|rm_runlock
 argument_list|(
 operator|&
 name|mphyp_eviction_lock
+argument_list|,
+operator|&
+name|track
 argument_list|)
 expr_stmt|;
 return|return
@@ -1423,10 +1436,13 @@ name|LPTE_REF
 operator|)
 expr_stmt|;
 block|}
-name|rw_runlock
+name|rm_runlock
 argument_list|(
 operator|&
 name|mphyp_eviction_lock
+argument_list|,
+operator|&
+name|track
 argument_list|)
 expr_stmt|;
 return|return
@@ -1776,6 +1792,10 @@ modifier|*
 name|pvo
 parameter_list|)
 block|{
+name|struct
+name|rm_priotracker
+name|track
+decl_stmt|;
 name|int64_t
 name|result
 decl_stmt|;
@@ -1817,10 +1837,13 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Make sure further insertion is locked out during evictions */
-name|rw_rlock
+name|rm_rlock
 argument_list|(
 operator|&
 name|mphyp_eviction_lock
+argument_list|,
+operator|&
+name|track
 argument_list|)
 expr_stmt|;
 comment|/* 	 * First try primary hash. 	 */
@@ -1875,10 +1898,13 @@ operator|==
 name|H_SUCCESS
 condition|)
 block|{
-name|rw_runlock
+name|rm_runlock
 argument_list|(
 operator|&
 name|mphyp_eviction_lock
+argument_list|,
+operator|&
+name|track
 argument_list|)
 expr_stmt|;
 name|pvo
@@ -1991,10 +2017,13 @@ operator|==
 name|H_SUCCESS
 condition|)
 block|{
-name|rw_runlock
+name|rm_runlock
 argument_list|(
 operator|&
 name|mphyp_eviction_lock
+argument_list|,
+operator|&
+name|track
 argument_list|)
 expr_stmt|;
 name|pvo
@@ -2026,29 +2055,21 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Out of luck. Find a PTE to sacrifice. 	 */
 comment|/* Lock out all insertions for a bit */
-if|if
-condition|(
-operator|!
-name|rw_try_upgrade
+name|rm_runlock
 argument_list|(
 operator|&
 name|mphyp_eviction_lock
+argument_list|,
+operator|&
+name|track
 argument_list|)
-condition|)
-block|{
-name|rw_runlock
+expr_stmt|;
+name|rm_wlock
 argument_list|(
 operator|&
 name|mphyp_eviction_lock
 argument_list|)
 expr_stmt|;
-name|rw_wlock
-argument_list|(
-operator|&
-name|mphyp_eviction_lock
-argument_list|)
-expr_stmt|;
-block|}
 name|index
 operator|=
 name|mphyp_pte_spillable_ident
@@ -2120,7 +2141,7 @@ literal|1L
 condition|)
 block|{
 comment|/* No freeable slots in either PTEG? We're hosed. */
-name|rw_wunlock
+name|rm_wunlock
 argument_list|(
 operator|&
 name|mphyp_eviction_lock
@@ -2227,7 +2248,7 @@ operator|&
 name|junk
 argument_list|)
 expr_stmt|;
-name|rw_wunlock
+name|rm_wunlock
 argument_list|(
 operator|&
 name|mphyp_eviction_lock
