@@ -1748,12 +1748,17 @@ name|p_endzero
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|p2
-operator|->
-name|p_ucred
-operator|=
 name|crhold
 argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|)
+expr_stmt|;
+name|proc_set_cred
+argument_list|(
+name|p2
+argument_list|,
 name|td
 operator|->
 name|td_ucred
@@ -3630,13 +3635,14 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * XXX: This is ugly; when we copy resource usage, we need to bump 	 *      per-cred resource counters. 	 */
+name|proc_set_cred
+argument_list|(
 name|newproc
-operator|->
-name|p_ucred
-operator|=
+argument_list|,
 name|p1
 operator|->
 name|p_ucred
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize resource accounting for the child process. 	 */
 name|error
