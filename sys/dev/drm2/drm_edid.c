@@ -7247,6 +7247,7 @@ modifier|*
 name|to_match
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -7272,6 +7273,7 @@ block|{
 name|cea_mode
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|drm_display_mode
 operator|*
