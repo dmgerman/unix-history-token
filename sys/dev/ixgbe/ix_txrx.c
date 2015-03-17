@@ -59,6 +59,35 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/netmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/netmap/netmap_kern.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* ** HW RSC control: **  this feature only works with **  IPv4, and only on 82599 and later. **  Also this will cause IP forwarding to **  fail and that can't be controlled by **  the stack as LRO can. For all these **  reasons I've deemed it best to leave **  this off and not bother with a tuneable **  interface, this would need to be compiled **  to enable. */
 end_comment
@@ -5064,6 +5093,10 @@ ifdef|#
 directive|ifdef
 name|DEV_NETMAP
 comment|/* crcstrip is optional in netmap */
+specifier|extern
+name|int
+name|ix_crcstrip
+decl_stmt|;
 if|if
 condition|(
 name|adapter
