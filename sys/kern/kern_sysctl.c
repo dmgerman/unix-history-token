@@ -8051,6 +8051,21 @@ modifier|*
 name|req
 parameter_list|)
 block|{
+comment|/* Supply a default buffer size if none given. */
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+operator|&&
+name|length
+operator|==
+literal|0
+condition|)
+name|length
+operator|=
+literal|64
+expr_stmt|;
 name|s
 operator|=
 name|sbuf_new
