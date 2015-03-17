@@ -21,6 +21,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|drm_display_mode
 name|drm_dmt_modes
@@ -507,7 +508,7 @@ comment|/* 1024x768@43Hz, interlace */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1024x768"
+literal|"1024x768i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -2771,6 +2772,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|drm_display_mode
 name|edid_est_modes
@@ -3188,7 +3190,7 @@ comment|/* 1024x768@60Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1024x768"
+literal|"1024x768i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -3843,7 +3845,7 @@ specifier|const
 name|int
 name|num_est3_modes
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|est3_modes
 argument_list|)
@@ -3938,7 +3940,7 @@ specifier|const
 name|int
 name|num_extra_modes
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|extra_modes
 argument_list|)
@@ -4098,7 +4100,7 @@ comment|/* 5 - 1920x1080i@60Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1920x1080"
+literal|"1920x1080i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -4132,7 +4134,7 @@ comment|/* 6 - 1440x480i@60Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1440x480"
+literal|"1440x480i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -4166,7 +4168,7 @@ comment|/* 7 - 1440x480i@60Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1440x480"
+literal|"1440x480i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -4268,7 +4270,7 @@ comment|/* 10 - 2880x480i@60Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"2880x480"
+literal|"2880x480i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -4302,7 +4304,7 @@ comment|/* 11 - 2880x480i@60Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"2880x480"
+literal|"2880x480i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -4608,7 +4610,7 @@ comment|/* 20 - 1920x1080i@50Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1920x1080"
+literal|"1920x1080i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -4642,7 +4644,7 @@ comment|/* 21 - 1440x576i@50Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1440x576"
+literal|"1440x576i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -4676,7 +4678,7 @@ comment|/* 22 - 1440x576i@50Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1440x576"
+literal|"1440x576i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -4778,7 +4780,7 @@ comment|/* 25 - 2880x576i@50Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"2880x576"
+literal|"2880x576i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -4812,7 +4814,7 @@ comment|/* 26 - 2880x576i@50Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"2880x576"
+literal|"2880x576i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -5254,7 +5256,7 @@ comment|/* 39 - 1920x1080i@50Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1920x1080"
+literal|"1920x1080i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -5288,7 +5290,7 @@ comment|/* 40 - 1920x1080i@100Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1920x1080"
+literal|"1920x1080i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -5492,7 +5494,7 @@ comment|/* 46 - 1920x1080i@120Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1920x1080"
+literal|"1920x1080i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -5628,7 +5630,7 @@ comment|/* 50 - 1440x480i@120Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1440x480"
+literal|"1440x480i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -5662,7 +5664,7 @@ comment|/* 51 - 1440x480i@120Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1440x480"
+literal|"1440x480i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -5764,7 +5766,7 @@ comment|/* 54 - 1440x576i@200Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1440x576"
+literal|"1440x576i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -5798,7 +5800,7 @@ comment|/* 55 - 1440x576i@200Hz */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1440x576"
+literal|"1440x576i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -5900,7 +5902,7 @@ comment|/* 58 - 1440x480i@240 */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1440x480"
+literal|"1440x480i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -5934,7 +5936,7 @@ comment|/* 59 - 1440x480i@240 */
 block|{
 name|DRM_MODE
 argument_list|(
-literal|"1440x480"
+literal|"1440x480i"
 argument_list|,
 argument|DRM_MODE_TYPE_DRIVER
 argument_list|,
@@ -6143,7 +6145,7 @@ specifier|const
 name|int
 name|drm_num_cea_modes
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|edid_cea_modes
 argument_list|)

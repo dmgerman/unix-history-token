@@ -238,9 +238,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1483,7 +1483,7 @@ argument_list|,
 name|ringA
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|1000
 argument_list|)
@@ -1573,7 +1573,7 @@ goto|goto
 name|out_cleanup
 goto|;
 block|}
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|1000
 argument_list|)
@@ -1952,7 +1952,7 @@ argument_list|,
 name|ringB
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|1000
 argument_list|)
@@ -2050,7 +2050,7 @@ operator|++
 name|i
 control|)
 block|{
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|100
 argument_list|)
@@ -2168,7 +2168,7 @@ argument_list|,
 name|ringC
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|1000
 argument_list|)

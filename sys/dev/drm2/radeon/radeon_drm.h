@@ -3671,7 +3671,7 @@ name|unsigned
 name|int
 name|param
 decl_stmt|;
-name|int64_t
+name|__s64
 name|value
 decl_stmt|;
 block|}

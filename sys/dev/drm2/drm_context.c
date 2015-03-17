@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1999, 2000 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *  */
+comment|/**  * \file drm_context.c  * IOCTLs for generic contexts  *  * \author Rickard E. (Rik) Faith<faith@valinux.com>  * \author Gareth Hughes<gareth@valinux.com>  */
+end_comment
+
+begin_comment
+comment|/*  * Created: Fri Nov 24 18:31:37 2000 by gareth@valinux.com  *  * Copyright 1999, 2000 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  */
 end_comment
 
 begin_include
@@ -18,7 +22,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/** @file drm_context.c  * Implementation of the context management ioctls.  */
+comment|/*  * ChangeLog:  *  2001-11-16	Torsten Duwe<duwe@caldera.de>  *		added context constructor/destructor hooks,  *		needed by SiS driver's memory management.  */
 end_comment
 
 begin_include
@@ -28,7 +32,19 @@ file|<dev/drm2/drmP.h>
 end_include
 
 begin_comment
-comment|/* ================================================================  * Context bitmap support  */
+comment|/******************************************************************/
+end_comment
+
+begin_comment
+comment|/** \name Context bitmap support */
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/**  * Free a handle from the context bitmap.  *  * \param dev DRM device.  * \param ctx_handle context handle.  *  * Clears the bit specified by \p ctx_handle in drm_device::ctx_bitmap and the entry  * in drm_device::ctx_idr, while holding the drm_device::struct_mutex  * lock.  */
 end_comment
 
 begin_function
@@ -98,11 +114,15 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Context bitmap allocation.  *  * \param dev DRM device.  * \return (non-negative) context handle on success or a negative number on failure.  *  * Allocate a new idr from drm_device::ctx_idr while holding the  * drm_device::struct_mutex lock.  */
+end_comment
+
 begin_function
+specifier|static
 name|int
 name|drm_ctxbitmap_next
 parameter_list|(
@@ -189,7 +209,8 @@ operator|->
 name|max_context
 condition|)
 block|{
-name|drm_local_map_t
+name|struct
+name|drm_local_map
 modifier|*
 modifier|*
 name|ctx_sareas
@@ -291,6 +312,10 @@ name|bit
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Context bitmap initialization.  *  * \param dev DRM device.  *  * Initialise the drm_device::ctx_idr  */
+end_comment
 
 begin_function
 name|int
@@ -399,6 +424,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Context bitmap cleanup.  *  * \param dev DRM device.  *  * Free all idr members using drm_ctx_sarea_free helper function  * while holding the drm_device::struct_mutex lock.  */
+end_comment
+
 begin_function
 name|void
 name|drm_ctxbitmap_cleanup
@@ -449,7 +478,23 @@ block|}
 end_function
 
 begin_comment
-comment|/* ================================================================  * Per Context SAREA Support  */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/******************************************************************/
+end_comment
+
+begin_comment
+comment|/** \name Per Context SAREA Support */
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/**  * Get per-context SAREA.  *  * \param inode device inode.  * \param file_priv DRM file private.  * \param cmd command.  * \param arg user argument pointing to a drm_ctx_priv_map structure.  * \return zero on success or a negative number on failure.  *  * Gets the map from drm_device::ctx_idr with the handle specified and  * returns its handle.  */
 end_comment
 
 begin_function
@@ -478,7 +523,8 @@ name|request
 init|=
 name|data
 decl_stmt|;
-name|drm_local_map_t
+name|struct
+name|drm_local_map
 modifier|*
 name|map
 decl_stmt|;
@@ -550,6 +596,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Set per-context SAREA.  *  * \param inode device inode.  * \param file_priv DRM file private.  * \param cmd command.  * \param arg user argument pointing to a drm_ctx_priv_map structure.  * \return zero on success or a negative number on failure.  *  * Searches the mapping specified in \p arg and update the entry in  * drm_device::ctx_idr with it.  */
+end_comment
+
 begin_function
 name|int
 name|drm_setsareactx
@@ -576,9 +626,17 @@ name|request
 init|=
 name|data
 decl_stmt|;
-name|drm_local_map_t
+name|struct
+name|drm_local_map
 modifier|*
 name|map
+init|=
+name|NULL
+decl_stmt|;
+name|struct
+name|drm_map_list
+modifier|*
+name|r_list
 init|=
 name|NULL
 decl_stmt|;
@@ -587,21 +645,29 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH
+name|list_for_each_entry
 argument_list|(
-argument|map
+argument|r_list
 argument_list|,
 argument|&dev->maplist
 argument_list|,
-argument|link
+argument|head
 argument_list|)
 block|{
 if|if
 condition|(
-name|map
+name|r_list
 operator|->
-name|handle
+name|map
+operator|&&
+name|r_list
+operator|->
+name|user_token
 operator|==
+operator|(
+name|unsigned
+name|long
+operator|)
 name|request
 operator|->
 name|handle
@@ -669,10 +735,27 @@ block|}
 end_function
 
 begin_comment
-comment|/* ================================================================  * The actual DRM context handling routines  */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/******************************************************************/
+end_comment
+
+begin_comment
+comment|/** \name The actual DRM context handling routines */
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/**  * Switch context.  *  * \param dev DRM device.  * \param old old context handle.  * \param new new context handle.  * \return zero on success or a negative number on failure.  *  * Attempt to set drm_device::context_flag.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|drm_context_switch
 parameter_list|(
@@ -690,17 +773,15 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|atomic_xchg
+name|test_and_set_bit
 argument_list|(
+literal|0
+argument_list|,
 operator|&
 name|dev
 operator|->
 name|context_flag
-argument_list|,
-literal|1
 argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|DRM_ERROR
@@ -709,6 +790,7 @@ literal|"Reentering -- FIXME\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|-
 name|EBUSY
 return|;
 block|}
@@ -730,14 +812,14 @@ operator|->
 name|last_context
 condition|)
 block|{
-name|atomic_xchg
+name|clear_bit
 argument_list|(
+literal|0
+argument_list|,
 operator|&
 name|dev
 operator|->
 name|context_flag
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -750,7 +832,12 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Complete context switch.  *  * \param dev DRM device.  * \param new new context handle.  * \return zero on success or a negative number on failure.  *  * Updates drm_device::last_context and drm_device::last_switch. Verifies the  * hardware lock is held, clears the drm_device::context_flag and wakes up  * drm_device::context_wait.  */
+end_comment
+
 begin_function
+specifier|static
 name|int
 name|drm_context_switch_complete
 parameter_list|(
@@ -758,6 +845,11 @@ name|struct
 name|drm_device
 modifier|*
 name|dev
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|,
 name|int
 name|new
@@ -770,12 +862,20 @@ operator|=
 name|new
 expr_stmt|;
 comment|/* PRE/POST: This is the _only_ writer. */
+name|dev
+operator|->
+name|last_switch
+operator|=
+name|jiffies
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|_DRM_LOCK_IS_HELD
 argument_list|(
-name|dev
+name|file_priv
+operator|->
+name|master
 operator|->
 name|lock
 operator|.
@@ -792,14 +892,22 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* If a context switch is ever initiated 	   when the kernel holds the lock, release 	   that lock here. */
-name|atomic_xchg
+name|clear_bit
 argument_list|(
+literal|0
+argument_list|,
 operator|&
 name|dev
 operator|->
 name|context_flag
-argument_list|,
-literal|0
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|context_wait
 argument_list|)
 expr_stmt|;
 return|return
@@ -807,6 +915,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Reserve contexts.  *  * \param inode device inode.  * \param file_priv DRM file private.  * \param cmd command.  * \param arg user argument pointing to a drm_ctx_res structure.  * \return zero on success or a negative number on failure.  */
+end_comment
 
 begin_function
 name|int
@@ -850,10 +962,12 @@ operator|>=
 name|DRM_RESERVED_CONTEXTS
 condition|)
 block|{
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|ctx
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -883,7 +997,7 @@ name|i
 expr_stmt|;
 if|if
 condition|(
-name|DRM_COPY_TO_USER
+name|copy_to_user
 argument_list|(
 operator|&
 name|res
@@ -903,6 +1017,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
+operator|-
 name|EFAULT
 return|;
 block|}
@@ -918,6 +1033,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Add context.  *  * \param inode device inode.  * \param file_priv DRM file private.  * \param cmd command.  * \param arg user argument pointing to a drm_ctx structure.  * \return zero on success or a negative number on failure.  *  * Get a new handle for the context and copy to userspace.  */
+end_comment
 
 begin_function
 name|int
@@ -938,6 +1057,11 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
+name|struct
+name|drm_ctx_list
+modifier|*
+name|ctx_entry
+decl_stmt|;
 name|struct
 name|drm_ctx
 modifier|*
@@ -1000,48 +1124,91 @@ argument_list|)
 expr_stmt|;
 comment|/* Should this return -EBUSY instead? */
 return|return
+operator|-
 name|ENOMEM
 return|;
 block|}
+name|ctx_entry
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ctx_entry
+argument_list|)
+argument_list|,
+name|DRM_MEM_CTXBITMAP
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|dev
+operator|!
+name|ctx_entry
+condition|)
+block|{
+name|DRM_DEBUG
+argument_list|(
+literal|"out of memory\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+name|ENOMEM
+return|;
+block|}
+name|INIT_LIST_HEAD
+argument_list|(
+operator|&
+name|ctx_entry
 operator|->
-name|driver
+name|head
+argument_list|)
+expr_stmt|;
+name|ctx_entry
 operator|->
-name|context_ctor
-operator|&&
+name|handle
+operator|=
 name|ctx
 operator|->
 name|handle
-operator|!=
-name|DRM_KERNEL_CONTEXT
-condition|)
-block|{
+expr_stmt|;
+name|ctx_entry
+operator|->
+name|tag
+operator|=
+name|file_priv
+expr_stmt|;
 name|DRM_LOCK
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|dev
-operator|->
-name|driver
-operator|->
-name|context_ctor
+name|list_add
 argument_list|(
-name|dev
-argument_list|,
-name|ctx
+operator|&
+name|ctx_entry
 operator|->
-name|handle
+name|head
+argument_list|,
+operator|&
+name|dev
+operator|->
+name|ctxlist
 argument_list|)
+expr_stmt|;
+operator|++
+name|dev
+operator|->
+name|ctx_count
 expr_stmt|;
 name|DRM_UNLOCK
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
@@ -1073,6 +1240,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Get context.  *  * \param inode device inode.  * \param file_priv DRM file private.  * \param cmd command.  * \param arg user argument pointing to a drm_ctx structure.  * \return zero on success or a negative number on failure.  */
+end_comment
 
 begin_function
 name|int
@@ -1112,6 +1283,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Switch context.  *  * \param inode device inode.  * \param file_priv DRM file private.  * \param cmd command.  * \param arg user argument pointing to a drm_ctx structure.  * \return zero on success or a negative number on failure.  *  * Calls context_switch().  */
+end_comment
 
 begin_function
 name|int
@@ -1165,6 +1340,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * New context.  *  * \param inode device inode.  * \param file_priv DRM file private.  * \param cmd command.  * \param arg user argument pointing to a drm_ctx structure.  * \return zero on success or a negative number on failure.  *  * Calls context_switch_complete().  */
+end_comment
+
 begin_function
 name|int
 name|drm_newctx
@@ -1204,6 +1383,8 @@ name|drm_context_switch_complete
 argument_list|(
 name|dev
 argument_list|,
+name|file_priv
+argument_list|,
 name|ctx
 operator|->
 name|handle
@@ -1214,6 +1395,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Remove context.  *  * \param inode device inode.  * \param file_priv DRM file private.  * \param cmd command.  * \param arg user argument pointing to a drm_ctx structure.  * \return zero on success or a negative number on failure.  *  * If not the special kernel context, calls ctxbitmap_free() to free the specified context.  */
+end_comment
 
 begin_function
 name|int
@@ -1267,12 +1452,6 @@ name|driver
 operator|->
 name|context_dtor
 condition|)
-block|{
-name|DRM_LOCK
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|dev
 operator|->
 name|driver
@@ -1286,12 +1465,6 @@ operator|->
 name|handle
 argument_list|)
 expr_stmt|;
-name|DRM_UNLOCK
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-block|}
 name|drm_ctxbitmap_free
 argument_list|(
 name|dev
@@ -1302,11 +1475,90 @@ name|handle
 argument_list|)
 expr_stmt|;
 block|}
+name|DRM_LOCK
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|list_empty
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|ctxlist
+argument_list|)
+condition|)
+block|{
+name|struct
+name|drm_ctx_list
+modifier|*
+name|pos
+decl_stmt|,
+modifier|*
+name|n
+decl_stmt|;
+name|list_for_each_entry_safe
+argument_list|(
+argument|pos
+argument_list|,
+argument|n
+argument_list|,
+argument|&dev->ctxlist
+argument_list|,
+argument|head
+argument_list|)
+block|{
+if|if
+condition|(
+name|pos
+operator|->
+name|handle
+operator|==
+name|ctx
+operator|->
+name|handle
+condition|)
+block|{
+name|list_del
+argument_list|(
+operator|&
+name|pos
+operator|->
+name|head
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|pos
+argument_list|,
+name|DRM_MEM_CTXBITMAP
+argument_list|)
+expr_stmt|;
+operator|--
+name|dev
+operator|->
+name|ctx_count
+expr_stmt|;
+block|}
+block|}
+block|}
+name|DRM_UNLOCK
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*@}*/
+end_comment
 
 end_unit
 

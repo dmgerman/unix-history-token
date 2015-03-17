@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1999, 2000 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *  */
+comment|/**  * \file drm_dma.c  * DMA IOCTL and function support  *  * \author Rickard E. (Rik) Faith<faith@valinux.com>  * \author Gareth Hughes<gareth@valinux.com>  */
+end_comment
+
+begin_comment
+comment|/*-  * Created: Fri Mar 19 14:30:16 1999 by faith@valinux.com  *  * Copyright 1999, 2000 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  */
 end_comment
 
 begin_include
@@ -17,15 +21,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/** @file drm_dma.c  * Support code for DMA buffer management.  *  * The implementation used to be significantly more complicated, but the  * complexity has been moved into the drivers as different buffer management  * schemes evolved.  */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<dev/drm2/drmP.h>
 end_include
+
+begin_comment
+comment|/**  * Initialize the DMA data.  *  * \param dev DRM device.  * \return zero on success or a negative value on failure.  *  * Allocate and initialize a drm_device_dma structure.  */
+end_comment
 
 begin_function
 name|int
@@ -37,6 +41,9 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 name|dev
 operator|->
 name|dma
@@ -60,23 +67,53 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dev
 operator|->
 name|dma
-operator|==
-name|NULL
 condition|)
 return|return
+operator|-
 name|ENOMEM
 return|;
-name|DRM_SPININIT
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+name|DRM_MAX_ORDER
+condition|;
+name|i
+operator|++
+control|)
+name|memset
 argument_list|(
 operator|&
 name|dev
 operator|->
-name|dma_lock
+name|dma
+operator|->
+name|bufs
+index|[
+name|i
+index|]
 argument_list|,
-literal|"drmdma"
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dev
+operator|->
+name|dma
+operator|->
+name|bufs
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -84,6 +121,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Cleanup the DMA resources.  *  * \param dev DRM device.  *  * Free all pages associated with DMA buffers, the buffers and pages lists, and  * finally the drm_device::dma structure itself.  */
+end_comment
 
 begin_function
 name|void
@@ -95,7 +136,8 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-name|drm_device_dma_t
+name|struct
+name|drm_device_dma
 modifier|*
 name|dma
 init|=
@@ -110,9 +152,8 @@ name|j
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|dma
-operator|==
-name|NULL
 condition|)
 return|return;
 comment|/* Clear dma buffers */
@@ -189,6 +230,21 @@ name|j
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|dma
+operator|->
+name|bufs
+index|[
+name|i
+index|]
+operator|.
+name|seglist
+index|[
+name|j
+index|]
+condition|)
+block|{
 name|drm_pci_free
 argument_list|(
 name|dev
@@ -206,6 +262,7 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|free
 argument_list|(
@@ -324,16 +381,12 @@ name|dma
 operator|=
 name|NULL
 expr_stmt|;
-name|DRM_SPINUNINIT
-argument_list|(
-operator|&
-name|dev
-operator|->
-name|dma_lock
-argument_list|)
-expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Free a buffer.  *  * \param dev DRM device.  * \param buf buffer to free.  *  * Resets the fields of \p buf.  */
+end_comment
 
 begin_function
 name|void
@@ -344,7 +397,8 @@ name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|drm_buf_t
+name|struct
+name|drm_buf
 modifier|*
 name|buf
 parameter_list|)
@@ -355,6 +409,12 @@ operator|!
 name|buf
 condition|)
 return|return;
+name|buf
+operator|->
+name|waiting
+operator|=
+literal|0
+expr_stmt|;
 name|buf
 operator|->
 name|pending
@@ -376,9 +436,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Reclaim the buffers.  *  * \param file_priv DRM file private.  *  * Frees each buffer associated with \p file_priv not already on the hardware.  */
+end_comment
+
 begin_function
 name|void
-name|drm_reclaim_buffers
+name|drm_core_reclaim_buffers
 parameter_list|(
 name|struct
 name|drm_device
@@ -391,7 +455,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_device_dma_t
+name|struct
+name|drm_device_dma
 modifier|*
 name|dma
 init|=
@@ -490,68 +555,13 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* Call into the driver-specific DMA handler */
-end_comment
-
-begin_function
-name|int
-name|drm_dma
-parameter_list|(
-name|struct
-name|drm_device
-modifier|*
-name|dev
-parameter_list|,
-name|void
-modifier|*
-name|data
-parameter_list|,
-name|struct
-name|drm_file
-modifier|*
-name|file_priv
-parameter_list|)
-block|{
-if|if
-condition|(
-name|dev
-operator|->
-name|driver
-operator|->
-name|dma_ioctl
-condition|)
-block|{
-comment|/* shared code returns -errno */
-return|return
-operator|-
-name|dev
-operator|->
-name|driver
-operator|->
-name|dma_ioctl
+begin_expr_stmt
+name|EXPORT_SYMBOL
 argument_list|(
-name|dev
-argument_list|,
-name|data
-argument_list|,
-name|file_priv
-argument_list|)
-return|;
-block|}
-else|else
-block|{
-name|DRM_DEBUG
-argument_list|(
-literal|"DMA ioctl on driver with no dma handler\n"
+name|drm_core_reclaim_buffers
 argument_list|)
 expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
-block|}
-end_function
+end_expr_stmt
 
 end_unit
 

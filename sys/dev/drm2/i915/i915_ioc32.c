@@ -516,7 +516,8 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-name|drm_ioctl_desc_t
+name|struct
+name|drm_ioctl_desc
 name|i915_compat_ioctls
 index|[]
 init|=
@@ -564,7 +565,7 @@ begin_decl_stmt
 name|int
 name|i915_compat_ioctls_nr
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|i915_compat_ioctls
 argument_list|)

@@ -127,6 +127,46 @@ name|r600_cs_packet_next_reloc_mm
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_WIP
+end_ifdef
+
+begin_comment
+comment|/* FreeBSD: to please GCC 4.2. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|r600_cs_legacy_get_tiling_conf
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|u32
+modifier|*
+name|npipes
+parameter_list|,
+name|u32
+modifier|*
+name|nbanks
+parameter_list|,
+name|u32
+modifier|*
+name|group_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|r600_cs_track
@@ -911,7 +951,7 @@ if|if
 condition|(
 name|format
 operator|>=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|color_formats_table
 argument_list|)
@@ -953,7 +993,7 @@ if|if
 condition|(
 name|format
 operator|>=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|color_formats_table
 argument_list|)
@@ -1007,7 +1047,7 @@ if|if
 condition|(
 name|format
 operator|>=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|color_formats_table
 argument_list|)
@@ -1044,7 +1084,7 @@ if|if
 condition|(
 name|format
 operator|>=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|color_formats_table
 argument_list|)
@@ -1102,7 +1142,7 @@ if|if
 condition|(
 name|format
 operator|>=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|color_formats_table
 argument_list|)
@@ -5693,7 +5733,7 @@ if|if
 condition|(
 name|i
 operator|>=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|r600_reg_safe_bm
 argument_list|)
@@ -9136,7 +9176,7 @@ if|if
 condition|(
 name|i
 operator|>=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|r600_reg_safe_bm
 argument_list|)
@@ -13070,9 +13110,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -13371,7 +13411,7 @@ do|;
 if|#
 directive|if
 literal|0
-block|for (r = 0; r< p->ib.length_dw; r++) { 		DRM_INFO("%05d  0x%08X\n", r, p->ib.ptr[r]); 		DRM_MDELAY(1); 	}
+block|for (r = 0; r< p->ib.length_dw; r++) { 		DRM_INFO("%05d  0x%08X\n", r, p->ib.ptr[r]); 		mdelay(1); 	}
 endif|#
 directive|endif
 name|free
@@ -13434,9 +13474,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -13662,9 +13702,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -13729,7 +13769,7 @@ name|dev
 operator|=
 name|dev
 operator|->
-name|device
+name|dev
 expr_stmt|;
 name|parser
 operator|.
@@ -15400,7 +15440,7 @@ do|;
 if|#
 directive|if
 literal|0
-block|for (r = 0; r< p->ib->length_dw; r++) { 		DRM_INFO("%05d  0x%08X\n", r, p->ib.ptr[r]); 		DRM_MDELAY(1); 	}
+block|for (r = 0; r< p->ib->length_dw; r++) { 		DRM_INFO("%05d  0x%08X\n", r, p->ib.ptr[r]); 		mdelay(1); 	}
 endif|#
 directive|endif
 return|return

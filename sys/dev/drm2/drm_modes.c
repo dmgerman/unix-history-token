@@ -26,24 +26,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/drm2/drm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/drm2/drm_crtc.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|KHZ2PICOS
-parameter_list|(
-name|a
-parameter_list|)
-value|(1000000000UL/(a))
-end_define
 
 begin_comment
 comment|/**  * drm_mode_debug_printmodeline - debug print a mode  * @dev: DRM device  * @mode: mode to print  *  * LOCKING:  * None.  *  * Describe @mode using DRM_DEBUG.  */
@@ -53,6 +37,7 @@ begin_function
 name|void
 name|drm_mode_debug_printmodeline
 parameter_list|(
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -125,6 +110,14 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_debug_printmodeline
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/**  * drm_cvt_mode -create a modeline based on CVT algorithm  * @dev: DRM device  * @hdisplay: hdisplay size  * @vdisplay: vdisplay size  * @vrefresh  : vrefresh rate  * @reduced : Whether the GTF calculation is simplified  * @interlaced:Whether the interlace is supported  *  * LOCKING:  * none.  *  * return the modeline based on CVT algorithm  *  * This function is called to generate the modeline based on CVT algorithm  * according to the hdisplay, vdisplay, vrefresh.  * It is based from the VESA(TM) Coordinated Video Timing Generator by  * Graham Loveridge April 9, 2003 available at  * http://www.elo.utfsm.cl/~elo212/docs/CVTd6r1.xls   *  * And it is copied from xf86CVTmode in xserver/hw/xfree86/modes/xf86cvt.c.  * What I have done is to translate it by using integer calculation.  */
@@ -1029,6 +1022,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_cvt_mode
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/**  * drm_gtf_mode_complex - create the modeline based on full GTF algorithm  *  * @dev		:drm device  * @hdisplay	:hdisplay size  * @vdisplay	:vdisplay size  * @vrefresh	:vrefresh rate.  * @interlaced	:whether the interlace is supported  * @margins	:desired margin size  * @GTF_[MCKJ]  :extended GTF formula parameters  *  * LOCKING.  * none.  *  * return the modeline based on full GTF algorithm.  *  * GTF feature blocks specify C and J in multiples of 0.5, so we pass them  * in here multiplied by two.  For a C of 40, pass in 80.  */
 end_comment
@@ -1692,6 +1693,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_gtf_mode_complex
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/**  * drm_gtf_mode - create the modeline based on GTF algorithm  *  * @dev		:drm device  * @hdisplay	:hdisplay size  * @vdisplay	:vdisplay size  * @vrefresh	:vrefresh rate.  * @interlaced	:whether the interlace is supported  * @margins	:whether the margin is supported  *  * LOCKING.  * none.  *  * return the modeline based on GTF algorithm  *  * This function is to create the modeline based on the GTF algorithm.  * Generalized Timing Formula is derived from:  *	GTF Spreadsheet by Andy Morrish (1/5/97)  *	available at http://www.vesa.org  *  * And it is copied from the file of xserver/hw/xfree86/modes/xf86gtf.c.  * What I have done is to translate it by using integer calculation.  * I also refer to the function of fb_get_mode in the file of  * drivers/video/fbmon.c  *  * Standard GTF parameters:  * M = 600  * C = 40  * K = 128  * J = 20  */
 end_comment
@@ -1754,6 +1763,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_gtf_mode
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/**  * drm_mode_set_name - set the name on a mode  * @mode: name will be set in this mode  *  * LOCKING:  * None.  *  * Set the name of @mode to a standard format.  */
 end_comment
@@ -1809,6 +1826,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_set_name
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/**  * drm_mode_list_concat - move modes from one list to another  * @head: source list  * @new: dst list  *  * LOCKING:  * Caller must ensure both lists are locked.  *  * Move all the modes from @head to @new.  */
 end_comment
@@ -1856,6 +1881,14 @@ block|}
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_list_concat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/**  * drm_mode_width - get the width of a mode  * @mode: mode  *  * LOCKING:  * None.  *  * Return @mode's width (hdisplay) value.  *  * FIXME: is this needed?  *  * RETURNS:  * @mode->hdisplay  */
 end_comment
@@ -1864,6 +1897,7 @@ begin_function
 name|int
 name|drm_mode_width
 parameter_list|(
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -1878,6 +1912,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_width
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/**  * drm_mode_height - get the height of a mode  * @mode: mode  *  * LOCKING:  * None.  *  * Return @mode's height (vdisplay) value.  *  * FIXME: is this needed?  *  * RETURNS:  * @mode->vdisplay  */
 end_comment
@@ -1886,6 +1928,7 @@ begin_function
 name|int
 name|drm_mode_height
 parameter_list|(
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -1899,6 +1942,14 @@ name|vdisplay
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_height
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/** drm_mode_hsync - get the hsync of a mode  * @mode: mode  *  * LOCKING:  * None.  *  * Return @modes's hsync rate in kHz, rounded to the nearest int.  */
@@ -1971,6 +2022,14 @@ name|calc_val
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_hsync
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/**  * drm_mode_vrefresh - get the vrefresh of a mode  * @mode: mode  *  * LOCKING:  * None.  *  * Return @mode's vrefresh rate in Hz or calculate it if necessary.  *  * FIXME: why is this needed?  shouldn't vrefresh be set already?  *  * RETURNS:  * Vertical refresh rate. It will be the result of actual value plus 0.5.  * If it is 70.288, it will return 70Hz.  * If it is 59.6, it will return 60Hz.  */
@@ -2108,6 +2167,14 @@ name|refresh
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_vrefresh
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/**  * drm_mode_set_crtcinfo - set CRTC modesetting parameters  * @p: mode  * @adjust_flags: unused? (FIXME)  *  * LOCKING:  * None.  *  * Setup the CRTC modesetting parameters for @p, adjusting if necessary.  */
@@ -2260,12 +2327,6 @@ operator|/=
 literal|2
 expr_stmt|;
 block|}
-name|p
-operator|->
-name|crtc_vtotal
-operator||=
-literal|1
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2403,20 +2464,78 @@ operator|->
 name|crtc_htotal
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|crtc_hadjusted
-operator|=
-name|false
+block|}
+end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_set_crtcinfo
+argument_list|)
 expr_stmt|;
-name|p
+end_expr_stmt
+
+begin_comment
+comment|/**  * drm_mode_copy - copy the mode  * @dst: mode to overwrite  * @src: mode to copy  *  * LOCKING:  * None.  *  * Copy an existing mode into another mode, preserving the object id  * of the destination mode.  */
+end_comment
+
+begin_function
+name|void
+name|drm_mode_copy
+parameter_list|(
+name|struct
+name|drm_display_mode
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|struct
+name|drm_display_mode
+modifier|*
+name|src
+parameter_list|)
+block|{
+name|int
+name|id
+init|=
+name|dst
 operator|->
-name|crtc_vadjusted
+name|base
+operator|.
+name|id
+decl_stmt|;
+operator|*
+name|dst
 operator|=
-name|false
+operator|*
+name|src
+expr_stmt|;
+name|dst
+operator|->
+name|base
+operator|.
+name|id
+operator|=
+name|id
+expr_stmt|;
+name|INIT_LIST_HEAD
+argument_list|(
+operator|&
+name|dst
+operator|->
+name|head
+argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_copy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/**  * drm_mode_duplicate - allocate and duplicate an existing mode  * @m: mode to duplicate  *  * LOCKING:  * None.  *  * Just allocate a new mode, copy the existing mode into it, and return  * a pointer to it.  Used to create new instances of established modes.  */
@@ -2445,9 +2564,6 @@ name|drm_display_mode
 modifier|*
 name|nmode
 decl_stmt|;
-name|int
-name|new_id
-decl_stmt|;
 name|nmode
 operator|=
 name|drm_mode_create
@@ -2463,34 +2579,11 @@ condition|)
 return|return
 name|NULL
 return|;
-name|new_id
-operator|=
-name|nmode
-operator|->
-name|base
-operator|.
-name|id
-expr_stmt|;
-operator|*
-name|nmode
-operator|=
-operator|*
-name|mode
-expr_stmt|;
-name|nmode
-operator|->
-name|base
-operator|.
-name|id
-operator|=
-name|new_id
-expr_stmt|;
-name|INIT_LIST_HEAD
+name|drm_mode_copy
 argument_list|(
-operator|&
 name|nmode
-operator|->
-name|head
+argument_list|,
+name|mode
 argument_list|)
 expr_stmt|;
 return|return
@@ -2499,19 +2592,29 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_duplicate
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/**  * drm_mode_equal - test modes for equality  * @mode1: first mode  * @mode2: second mode  *  * LOCKING:  * None.  *  * Check to see if @mode1 and @mode2 are equivalent.  *  * RETURNS:  * true if the modes are equal, false otherwise.  */
+comment|/**  * drm_mode_equal - test modes for equality  * @mode1: first mode  * @mode2: second mode  *  * LOCKING:  * None.  *  * Check to see if @mode1 and @mode2 are equivalent.  *  * RETURNS:  * True if the modes are equal, false otherwise.  */
 end_comment
 
 begin_function
 name|bool
 name|drm_mode_equal
 parameter_list|(
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
 name|mode1
 parameter_list|,
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -2663,6 +2766,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_equal
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/**  * drm_mode_validate_size - make sure modes adhere to size constraints  * @dev: DRM device  * @mode_list: list of modes to check  * @maxX: maximum width  * @maxY: maximum height  * @maxPitch: max pitch  *  * LOCKING:  * Caller must hold a lock protecting @mode_list.  *  * The DRM device (@dev) has size and pitch limits.  Here we validate the  * modes we probed for @dev against those limits and set their status as  * necessary.  */
 end_comment
@@ -2762,6 +2873,14 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_validate_size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/**  * drm_mode_validate_clocks - validate modes against clock limits  * @dev: DRM device  * @mode_list: list of modes to check  * @min: minimum clock rate array  * @max: maximum clock rate array  * @n_ranges: number of clock ranges (size of arrays)  *  * LOCKING:  * Caller must hold a lock protecting @mode_list.  *  * Some code may need to check a mode list against the clock limits of the  * device in question.  This function walks the mode list, testing to make  * sure each mode falls within a given range (defined by @min and @max  * arrays) and sets @mode->status as needed.  */
@@ -2872,6 +2991,14 @@ block|}
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_validate_clocks
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/**  * drm_mode_prune_invalid - remove invalid modes from mode list  * @dev: DRM device  * @mode_list: list of modes to check  * @verbose: be verbose about it  *  * LOCKING:  * Caller must hold a lock protecting @mode_list.  *  * Once mode list generation is complete, a caller can use this routine to  * remove invalid modes from a mode list.  If any of the modes have a  * status other than %MODE_OK, they are removed from @mode_list and freed.  */
 end_comment
@@ -2965,6 +3092,14 @@ block|}
 block|}
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_prune_invalid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/**  * drm_mode_compare - compare modes for favorability  * @priv: unused  * @lh_a: list_head for first mode  * @lh_b: list_head for second mode  *  * LOCKING:  * None.  *  * Compare two modes, given by @lh_a and @lh_b, returning a value indicating  * which is better.  *  * RETURNS:  * Negative if @lh_a is better than @lh_b, zero if they're equivalent, or  * positive if @lh_b is better than @lh_a.  */
@@ -3123,6 +3258,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_sort
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/**  * drm_mode_connector_list_update - update the mode list for the connector  * @connector: the connector to update  *  * LOCKING:  * Caller must hold a lock protecting @mode_list.  *  * This moves the modes from the @connector probed_modes list  * to the actual mode list. It compares the probed mode against the current  * list and only adds different modes. All modes unverified after this point  * will be removed by the prune invalid modes.  */
 end_comment
@@ -3254,6 +3397,14 @@ block|}
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_connector_list_update
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/**  * drm_mode_parse_command_line_for_connector - parse command line for connector  * @mode_option - per connector mode option  * @connector - connector to parse line for  *  * This parses the connector specific then generic command lines for  * modes and options to configure the connector.  *  * This uses the same parameters as the fb modedb.c, except for extra  *<xres>x<yres>[M][R][-<bpp>][@<refresh>][i][m][eDd]  *  * enable/enable Digital/disable bit at the end  */
 end_comment
@@ -3355,7 +3506,7 @@ name|DRM_FORCE_UNSPECIFIED
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|XXX_CONFIG_FB
+name|CONFIG_FB
 if|if
 condition|(
 operator|!
@@ -3443,7 +3594,7 @@ condition|)
 block|{
 name|refresh
 operator|=
-name|strtol
+name|simple_strtol
 argument_list|(
 operator|&
 name|name
@@ -3494,7 +3645,7 @@ condition|)
 block|{
 name|bpp
 operator|=
-name|strtol
+name|simple_strtol
 argument_list|(
 operator|&
 name|name
@@ -3536,7 +3687,7 @@ condition|)
 block|{
 name|yres
 operator|=
-name|strtol
+name|simple_strtol
 argument_list|(
 operator|&
 name|name
@@ -3777,7 +3928,7 @@ name|ch
 decl_stmt|;
 name|xres
 operator|=
-name|strtol
+name|simple_strtol
 argument_list|(
 name|name
 argument_list|,
@@ -3838,7 +3989,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|printf
+name|DRM_WARNING
 argument_list|(
 literal|"parse error at position %i in video mode '%s'\n"
 argument_list|,
@@ -3952,6 +4103,14 @@ name|true
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_parse_command_line_for_connector
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|struct
@@ -4072,6 +4231,14 @@ name|mode
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_mode_create_from_cmdline_mode
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

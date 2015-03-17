@@ -86,6 +86,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_WIP
+end_ifdef
+
+begin_comment
+comment|/* FreeBSD: to please GCC 4.2. */
+end_comment
+
+begin_function_decl
+name|void
+name|rv770_fini
+parameter_list|(
+name|struct
+name|radeon_device
+modifier|*
+name|rdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|void
@@ -271,7 +298,7 @@ operator|&
 name|AVIVO_D1GRPH_SURFACE_UPDATE_PENDING
 condition|)
 break|break;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|1
 argument_list|)
@@ -1793,7 +1820,7 @@ argument_list|(
 name|GRBM_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|15
 argument_list|)

@@ -747,7 +747,7 @@ specifier|const
 name|u32
 name|cayman_ps_size
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|cayman_ps
 argument_list|)
@@ -759,7 +759,7 @@ specifier|const
 name|u32
 name|cayman_vs_size
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|cayman_vs
 argument_list|)
@@ -771,7 +771,7 @@ specifier|const
 name|u32
 name|cayman_default_size
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|cayman_default_state
 argument_list|)

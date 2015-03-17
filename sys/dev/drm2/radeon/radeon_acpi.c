@@ -54,6 +54,19 @@ name|ACPI_AC_CLASS
 value|"ac_adapter"
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|radeon_pm_acpi_event_handler
+parameter_list|(
+name|struct
+name|radeon_device
+modifier|*
+name|rdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|atif_verify_interface
@@ -1333,7 +1346,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 if|if
 condition|(
 name|rdev
@@ -1383,7 +1396,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 block|}
 comment|/* TODO: check other events */
@@ -1847,7 +1860,7 @@ name|context
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 if|if
 condition|(
 name|strcmp
@@ -1888,7 +1901,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 comment|/* Check for pending SBIOS requests */
 name|radeon_atif_handler
 argument_list|(

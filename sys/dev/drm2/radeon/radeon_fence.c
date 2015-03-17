@@ -42,7 +42,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_include
@@ -57,7 +57,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 begin_comment
@@ -260,7 +260,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -400,7 +400,7 @@ decl_stmt|;
 comment|/* Note there is a scenario here for an infinite loop but it's 	 * very unlikely to happen. For it to happen, the current polling 	 * process need to be interrupted by another process and another 	 * process needs to update the last_seq btw the atomic read and 	 * xchg of the current process. 	 * 	 * More over for this to go in infinite loop there need to be 	 * continuously new fence signaled ie radeon_fence_read needs 	 * to return a different value each time for both the currently 	 * polling process and the other process that xchg the last_seq 	 * btw atomic read and xchg of the current process. And the 	 * value the other process set as last seq must be higher than 	 * the seq value we just read. Which means that current process 	 * need to be interrupted after radeon_fence_read and before 	 * atomic xchg. 	 * 	 * To be even more safe we count the number of time we loop and 	 * we bail after 10 loop just accepting the fact that we might 	 * have temporarly set the last_seq not to the true real last 	 * seq but to an older one. 	 */
 name|last_seq
 operator|=
-name|atomic_load_acq_64
+name|atomic64_read
 argument_list|(
 operator|&
 name|rdev
@@ -594,7 +594,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|atomic_load_acq_64
+name|atomic64_read
 argument_list|(
 operator|&
 name|rdev
@@ -624,7 +624,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|atomic_load_acq_64
+name|atomic64_read
 argument_list|(
 operator|&
 name|rdev
@@ -772,7 +772,7 @@ while|while
 condition|(
 name|target_seq
 operator|>
-name|atomic_load_acq_64
+name|atomic64_read
 argument_list|(
 operator|&
 name|rdev
@@ -852,7 +852,7 @@ expr_stmt|;
 block|}
 name|seq
 operator|=
-name|atomic_load_acq_64
+name|atomic64_read
 argument_list|(
 operator|&
 name|rdev
@@ -1095,7 +1095,7 @@ if|if
 condition|(
 name|seq
 operator|!=
-name|atomic_load_acq_64
+name|atomic64_read
 argument_list|(
 operator|&
 name|rdev
@@ -2182,7 +2182,7 @@ name|seq
 decl_stmt|;
 name|seq
 operator|=
-name|atomic_load_acq_64
+name|atomic64_read
 argument_list|(
 operator|&
 name|rdev
@@ -2451,7 +2451,7 @@ index|[
 name|ring
 index|]
 operator|-
-name|atomic_load_acq_64
+name|atomic64_read
 argument_list|(
 operator|&
 name|rdev
@@ -2874,7 +2874,7 @@ name|radeon_fence_write
 argument_list|(
 name|rdev
 argument_list|,
-name|atomic_load_acq_64
+name|atomic64_read
 argument_list|(
 operator|&
 name|rdev
@@ -3021,7 +3021,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|atomic_store_rel_64
+name|atomic64_set
 argument_list|(
 operator|&
 name|rdev
@@ -3457,7 +3457,7 @@ name|unsigned
 name|long
 name|long
 operator|)
-name|atomic_load_acq_64
+name|atomic64_read
 argument_list|(
 operator|&
 name|rdev

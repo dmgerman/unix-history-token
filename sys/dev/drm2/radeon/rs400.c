@@ -686,6 +686,7 @@ name|RS480_REQ_TYPE_SNOOP_DIS
 argument_list|)
 expr_stmt|;
 comment|/* Disable AGP mode */
+comment|/* FIXME: according to doc we should set HIDE_MMCFG_BAR=0, 	 * AGPMODE30=0& AGP30ENHANCED=0 in NB_CNTL */
 if|if
 condition|(
 operator|(
@@ -705,31 +706,6 @@ name|CHIP_RS740
 operator|)
 condition|)
 block|{
-name|tmp
-operator|=
-name|RREG32_MC
-argument_list|(
-name|RS690_MC_NB_CNTL
-argument_list|)
-expr_stmt|;
-name|tmp
-operator|&=
-operator|~
-operator|(
-name|RS690_HIDE_MMCFG_BAR
-operator||
-name|RS690_AGPMODE30
-operator||
-name|RS690_AGP30ENHANCED
-operator|)
-expr_stmt|;
-name|WREG32_MC
-argument_list|(
-name|RS690_MC_NB_CNTL
-argument_list|,
-name|tmp
-argument_list|)
-expr_stmt|;
 name|WREG32_MC
 argument_list|(
 name|RS480_MC_MISC_CNTL
@@ -952,7 +928,8 @@ argument_list|(
 name|addr
 argument_list|)
 operator|&
-literal|0xfffff000
+operator|~
+name|PAGE_MASK
 operator|)
 operator||
 operator|(

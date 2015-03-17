@@ -1028,6 +1028,11 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+name|DRM_LOCK
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|args
@@ -1202,6 +1207,11 @@ operator|->
 name|base
 argument_list|)
 expr_stmt|;
+name|DRM_UNLOCK
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -1282,6 +1292,11 @@ return|return
 operator|-
 name|ENOENT
 return|;
+name|DRM_LOCK
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|args
 operator|->
 name|tiling_mode
@@ -1377,6 +1392,11 @@ operator|&
 name|obj
 operator|->
 name|base
+argument_list|)
+expr_stmt|;
+name|DRM_UNLOCK
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 return|return

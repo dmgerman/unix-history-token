@@ -671,7 +671,7 @@ name|ddev
 operator|->
 name|agp
 operator|->
-name|info
+name|agp_info
 operator|.
 name|ai_aperture_size
 operator|>>
@@ -703,7 +703,7 @@ name|ddev
 operator|->
 name|agp
 operator|->
-name|info
+name|agp_info
 operator|.
 name|ai_aperture_size
 operator|>>
@@ -1117,7 +1117,7 @@ name|ddev
 operator|->
 name|agp
 operator|->
-name|info
+name|agp_info
 operator|.
 name|ai_aperture_base
 expr_stmt|;
@@ -1133,7 +1133,7 @@ name|ddev
 operator|->
 name|agp
 operator|->
-name|info
+name|agp_info
 operator|.
 name|ai_aperture_size
 expr_stmt|;

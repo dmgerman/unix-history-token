@@ -260,11 +260,32 @@ name|size
 argument_list|,
 name|M_DRM_GLOBAL
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|unlikely
+argument_list|(
+name|item
+operator|->
+name|object
+operator|==
+name|NULL
+argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+operator|-
+name|ENOMEM
+expr_stmt|;
+goto|goto
+name|out_err
+goto|;
+block|}
 name|ref
 operator|->
 name|object
@@ -346,6 +367,14 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_global_item_ref
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -441,6 +470,14 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_global_item_unref
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
