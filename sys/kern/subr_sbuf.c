@@ -334,6 +334,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|SBUF_MINSIZE
+value|2
+end_define
+
+begin_comment
+comment|/* Min is 1 byte + nulterm. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SBUF_MINEXTENDSIZE
 value|16
 end_define
@@ -945,10 +956,12 @@ name|s
 operator|->
 name|s_size
 operator|>=
-literal|0
+name|SBUF_MINSIZE
 argument_list|,
 operator|(
-literal|"attempt to create a too small sbuf"
+literal|"attempt to create an sbuf smaller than %d bytes"
+operator|,
+name|SBUF_MINSIZE
 operator|)
 argument_list|)
 expr_stmt|;
