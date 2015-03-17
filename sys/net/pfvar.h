@@ -6398,18 +6398,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|pf_unlink_src_node_locked
-parameter_list|(
-name|struct
-name|pf_src_node
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|u_int
 name|pf_free_src_nodes
 parameter_list|(
