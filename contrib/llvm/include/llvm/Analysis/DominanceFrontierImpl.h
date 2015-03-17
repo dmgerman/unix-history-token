@@ -66,13 +66,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ANALYSIS_DOMINANCEFRONTIER_IMPL_H
+name|LLVM_ANALYSIS_DOMINANCEFRONTIERIMPL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ANALYSIS_DOMINANCEFRONTIER_IMPL_H
+name|LLVM_ANALYSIS_DOMINANCEFRONTIERIMPL_H
 end_define
 
 begin_include
@@ -968,21 +968,14 @@ if|if
 condition|(
 name|visited
 operator|.
-name|count
-argument_list|(
-name|currentBB
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|visited
-operator|.
 name|insert
 argument_list|(
 name|currentBB
 argument_list|)
-expr_stmt|;
+operator|.
+name|second
+condition|)
+block|{
 comment|// Loop over CFG successors to calculate DFlocal[currentNode]
 for|for
 control|(

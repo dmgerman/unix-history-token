@@ -70,13 +70,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_EXPLODEDGRAPH
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_EXPLODEDGRAPH_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_EXPLODEDGRAPH
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_EXPLODEDGRAPH_H
 end_define
 
 begin_include
@@ -1084,16 +1084,25 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ExplodedGraph
-operator|*
+operator|>
 name|MakeEmptyGraph
 argument_list|()
 specifier|const
 block|{
 return|return
-name|new
+name|llvm
+operator|::
+name|make_unique
+operator|<
 name|ExplodedGraph
-argument_list|()
+operator|>
+operator|(
+operator|)
 return|;
 block|}
 comment|/// addRoot - Add an untyped node to the set of roots.
@@ -1424,32 +1433,22 @@ comment|///                        the returned graph.
 comment|/// \param[out] InverseMap An optional map from nodes in the returned graph to
 comment|///                        nodes in this graph.
 comment|/// \returns The trimmed graph
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ExplodedGraph
-modifier|*
+operator|>
 name|trim
 argument_list|(
-name|ArrayRef
-operator|<
-specifier|const
-name|NodeTy
-operator|*
-operator|>
-name|Nodes
+argument|ArrayRef<const NodeTy *> Nodes
 argument_list|,
-name|InterExplodedGraphMap
-operator|*
-name|ForwardMap
-operator|=
-name|nullptr
+argument|InterExplodedGraphMap *ForwardMap = nullptr
 argument_list|,
-name|InterExplodedGraphMap
-operator|*
-name|InverseMap
-operator|=
-name|nullptr
+argument|InterExplodedGraphMap *InverseMap = nullptr
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 comment|/// Enable tracking of recently allocated nodes for potential reclamation
 comment|/// when calling reclaimRecentlyAllocatedNodes().
 name|void

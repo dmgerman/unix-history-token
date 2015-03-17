@@ -81,6 +81,12 @@ directive|include
 file|<system_error>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -93,6 +99,9 @@ name|GlobalValue
 decl_stmt|;
 name|class
 name|Module
+decl_stmt|;
+name|class
+name|StructType
 decl_stmt|;
 name|class
 name|GVMaterializer
@@ -109,21 +118,6 @@ operator|~
 name|GVMaterializer
 argument_list|()
 expr_stmt|;
-comment|/// True if GV can be materialized from whatever backing store this
-comment|/// GVMaterializer uses and has not been materialized yet.
-name|virtual
-name|bool
-name|isMaterializable
-argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
 comment|/// True if GV has been materialized and can be dematerialized back to
 comment|/// whatever backing store this GVMaterializer uses.
 name|virtual
@@ -145,7 +139,7 @@ name|virtual
 name|std
 operator|::
 name|error_code
-name|Materialize
+name|materialize
 argument_list|(
 name|GlobalValue
 operator|*
@@ -183,12 +177,19 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|void
-name|releaseBuffer
-parameter_list|()
-init|=
+name|std
+operator|::
+name|vector
+operator|<
+name|StructType
+operator|*
+operator|>
+name|getIdentifiedStructTypes
+argument_list|()
+specifier|const
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

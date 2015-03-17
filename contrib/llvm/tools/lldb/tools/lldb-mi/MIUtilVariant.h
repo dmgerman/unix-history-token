@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MIUtilVariant.h
+comment|// File:        MIUtilVariant.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMIUtilVariant interface.
+comment|// Overview:    CMIUtilVariant interface.
 end_comment
 
 begin_comment
@@ -52,23 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Gotchas:		See CMIUtilVariant class description.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -76,7 +68,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Gotchas:     See CMIUtilVariant class description.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -104,35 +104,35 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code utility class. The class implements behaviour of a
+comment|// Details: MI common code utility class. The class implements behaviour of a
 end_comment
 
 begin_comment
-comment|//			variant object which holds any data object of type T. A copy of the
+comment|//          variant object which holds any data object of type T. A copy of the
 end_comment
 
 begin_comment
-comment|//			data object specified is made and stored in *this wrapper. When the
+comment|//          data object specified is made and stored in *this wrapper. When the
 end_comment
 
 begin_comment
-comment|//			*this object is destroyed the data object hold within calls its
+comment|//          *this object is destroyed the data object hold within calls its
 end_comment
 
 begin_comment
-comment|//			destructor should it have one.
+comment|//          destructor should it have one.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 18/06/2014.
+comment|// Authors: Illya Rudkin 18/06/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -237,9 +237,9 @@ name|private
 label|:
 comment|//++ ----------------------------------------------------------------------
 comment|// Details: Base class wrapper to hold the variant's data object when
-comment|//			assigned to it by the Set() function. Do not use the CDataObjectBase
-comment|//			to create objects, use only CDataObjectBase derived objects,
-comment|//			see CDataObject() class.
+comment|//          assigned to it by the Set() function. Do not use the CDataObjectBase
+comment|//          to create objects, use only CDataObjectBase derived objects,
+comment|//          see CDataObject() class.
 comment|//--
 name|class
 name|CDataObjectBase
@@ -350,8 +350,8 @@ block|}
 empty_stmt|;
 comment|//++ ----------------------------------------------------------------------
 comment|// Details: Derived from CDataObjectBase, this class is the wrapper for the
-comment|//			data object as it has an aggregate of type T which is a copy
-comment|//			of the data object assigned to the variant object.
+comment|//          data object as it has an aggregate of type T which is a copy
+comment|//          of the data object assigned to the variant object.
 comment|//--
 name|template
 operator|<
@@ -464,13 +464,12 @@ argument|void
 argument_list|)
 specifier|const
 block|;
-comment|// Overridden:
+comment|// Overrideable:
 name|private
 operator|:
-comment|// From CDataObjectBase
 name|virtual
 name|void
-name|Copy
+name|Duplicate
 argument_list|(
 specifier|const
 name|CDataObject
@@ -478,6 +477,10 @@ operator|&
 name|vrOther
 argument_list|)
 block|;
+comment|// Overridden:
+name|private
+operator|:
+comment|// From CDataObjectBase
 name|virtual
 name|void
 name|Destroy
@@ -490,7 +493,7 @@ name|private
 operator|:
 name|T
 name|m_dataObj
-block|; 	}
+block|;     }
 expr_stmt|;
 comment|// Methods
 name|private
@@ -541,23 +544,23 @@ comment|//++ -------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Details:	CDataObject constructor.
+comment|// Details: CDataObject constructor.
 end_comment
 
 begin_comment
-comment|// Type:	Method.
+comment|// Type:    Method.
 end_comment
 
 begin_comment
-comment|// Args:	T	- The object's type.
+comment|// Args:    T   - The object's type.
 end_comment
 
 begin_comment
-comment|// Return:	None.
+comment|// Return:  None.
 end_comment
 
 begin_comment
-comment|// Throws:	None.
+comment|// Throws:  None.
 end_comment
 
 begin_comment
@@ -583,12 +586,12 @@ argument|void
 argument_list|)
 block|{ }
 comment|//++ ------------------------------------------------------------------------------------
-comment|// Details:	CDataObject constructor.
-comment|// Type:	Method.
-comment|// Args:	T		- The object's type.
-comment|//			vArg	- (R) The data object to be stored in the variant object.
-comment|// Return:	None.
-comment|// Throws:	None.
+comment|// Details: CDataObject constructor.
+comment|// Type:    Method.
+comment|// Args:    T       - The object's type.
+comment|//          vArg    - (R) The data object to be stored in the variant object.
+comment|// Return:  None.
+comment|// Throws:  None.
 comment|//--
 name|template
 operator|<
@@ -604,7 +607,7 @@ operator|>
 operator|::
 name|CDataObject
 argument_list|(
-argument|const T& vArg
+argument|const T&vArg
 argument_list|)
 block|{
 name|m_dataObj
@@ -612,11 +615,11 @@ operator|=
 name|vArg
 block|; }
 comment|//++ ------------------------------------------------------------------------------------
-comment|// Details:	CDataObject destructor.
-comment|// Type:	Overridden.
-comment|// Args:	T	- The object's type.
-comment|// Return:	None.
-comment|// Throws:	None.
+comment|// Details: CDataObject destructor.
+comment|// Type:    Overridden.
+comment|// Args:    T   - The object's type.
+comment|// Return:  None.
+comment|// Throws:  None.
 comment|//--
 name|template
 operator|<
@@ -640,11 +643,11 @@ name|Destroy
 argument_list|()
 block|; }
 comment|//++ ------------------------------------------------------------------------------------
-comment|// Details:	Retrieve the data object hold by *this object wrapper.
-comment|// Type:	Method.
-comment|// Args:	T	- The object's type.
-comment|// Return:	T&	- Reference to the data object.
-comment|// Throws:	None.
+comment|// Details: Retrieve the data object hold by *this object wrapper.
+comment|// Type:    Method.
+comment|// Args:    T   - The object's type.
+comment|// Return:  T& - Reference to the data object.
+comment|// Throws:  None.
 comment|//--
 name|template
 operator|<
@@ -676,23 +679,23 @@ comment|//++ -------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Details:	Create a new copy of *this class.
+comment|// Details: Create a new copy of *this class.
 end_comment
 
 begin_comment
-comment|// Type:	Overridden.
+comment|// Type:    Overridden.
 end_comment
 
 begin_comment
-comment|// Args:	T	- The object's type.
+comment|// Args:    T   - The object's type.
 end_comment
 
 begin_comment
-comment|// Return:	CDataObjectBase *	- Pointer to a new object.
+comment|// Return:  CDataObjectBase *   - Pointer to a new object.
 end_comment
 
 begin_comment
-comment|// Throws:	None.
+comment|// Throws:  None.
 end_comment
 
 begin_comment
@@ -745,27 +748,27 @@ comment|//++ -------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Details:	Determine if *this object is a derived from CDataObjectBase.
+comment|// Details: Determine if *this object is a derived from CDataObjectBase.
 end_comment
 
 begin_comment
-comment|// Type:	Overridden.
+comment|// Type:    Overridden.
 end_comment
 
 begin_comment
-comment|// Args:	T	- The object's type.
+comment|// Args:    T   - The object's type.
 end_comment
 
 begin_comment
-comment|// Return:	bool	- True = *this is derived from CDataObjectBase
+comment|// Return:  bool    - True = *this is derived from CDataObjectBase
 end_comment
 
 begin_comment
-comment|//					- False = *this is an instance of the base class.
+comment|//                  - False = *this is an instance of the base class.
 end_comment
 
 begin_comment
-comment|// Throws:	None.
+comment|// Throws:  None.
 end_comment
 
 begin_comment
@@ -803,27 +806,27 @@ comment|//++ -------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Details:	Perform a bitwise copy of *this object.
+comment|// Details: Perform a bitwise copy of *this object.
 end_comment
 
 begin_comment
-comment|// Type:	Overridden.
+comment|// Type:    Overrideable.
 end_comment
 
 begin_comment
-comment|// Args:	T		- The object's type.
+comment|// Args:    T       - The object's type.
 end_comment
 
 begin_comment
-comment|//			vrOther	- (R) The other object.
+comment|//          vrOther - (R) The other object.
 end_comment
 
 begin_comment
-comment|// Return:	None.
+comment|// Return:  None.
 end_comment
 
 begin_comment
-comment|// Throws:	None.
+comment|// Throws:  None.
 end_comment
 
 begin_comment
@@ -844,9 +847,9 @@ operator|<
 name|T
 operator|>
 operator|::
-name|Copy
+name|Duplicate
 argument_list|(
-argument|const CDataObject& vrOther
+argument|const CDataObject&vrOther
 argument_list|)
 block|{
 name|CDataObjectBase
@@ -863,11 +866,11 @@ operator|.
 name|m_dataObj
 block|; }
 comment|//++ ------------------------------------------------------------------------------------
-comment|// Details:	Release any resources used by *this object.
-comment|// Type:	Overridden.
-comment|// Args:	None.
-comment|// Return:	None.
-comment|// Throws:	None.
+comment|// Details: Release any resources used by *this object.
+comment|// Type:    Overridden.
+comment|// Args:    None.
+comment|// Return:  None.
+comment|// Throws:  None.
 comment|//--
 name|template
 operator|<
@@ -896,12 +899,12 @@ comment|//----------------------------------------------------------------------
 comment|//---------------------------------------------------------------------------------------
 comment|//---------------------------------------------------------------------------------------
 comment|//++ ------------------------------------------------------------------------------------
-comment|// Details:	Assign to the variant an object of a specified type.
-comment|// Type:	Template method.
-comment|// Args:	T		- The object's type.
-comment|//			vArg	- (R) The object to store.
-comment|// Return:	None.
-comment|// Throws:	None.
+comment|// Details: Assign to the variant an object of a specified type.
+comment|// Type:    Template method.
+comment|// Args:    T       - The object's type.
+comment|//          vArg    - (R) The object to store.
+comment|// Return:  None.
+comment|// Throws:  None.
 comment|//--
 name|template
 operator|<
@@ -913,7 +916,7 @@ name|CMIUtilVariant
 operator|::
 name|Set
 argument_list|(
-argument|const T& vArg
+argument|const T&vArg
 argument_list|)
 block|{
 name|m_pDataObject
@@ -928,11 +931,11 @@ name|vArg
 operator|)
 block|; }
 comment|//++ ------------------------------------------------------------------------------------
-comment|// Details:	Retrieve the data object from *this variant.
-comment|// Type:	Template method.
-comment|// Args:	T	- The object's type.
-comment|// Return:	T *	- Pointer the data object, NULL = data object not assigned to *this variant.
-comment|// Throws:	None.
+comment|// Details: Retrieve the data object from *this variant.
+comment|// Type:    Template method.
+comment|// Args:    T   - The object's type.
+comment|// Return:  T * - Pointer the data object, NULL = data object not assigned to *this variant.
+comment|// Throws:  None.
 comment|//--
 name|template
 operator|<

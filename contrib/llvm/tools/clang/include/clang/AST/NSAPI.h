@@ -135,6 +135,8 @@ block|,
 name|NSStr_stringWithCString
 block|,
 name|NSStr_initWithString
+block|,
+name|NSStr_initWithUTF8String
 block|}
 enum|;
 specifier|static
@@ -300,7 +302,7 @@ specifier|const
 name|unsigned
 name|NumNSDictionaryMethods
 init|=
-literal|11
+literal|12
 decl_stmt|;
 comment|/// \brief The Objective-C NSDictionary selectors.
 name|Selector
@@ -556,6 +558,16 @@ decl_stmt|;
 comment|/// \brief Returns true if \param T is a typedef of "NSUInteger" in objective-c.
 name|bool
 name|isObjCNSUIntegerType
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Returns one of NSIntegral typedef names if \param T is a typedef
+comment|/// of that name in objective-c.
+name|StringRef
+name|GetNSIntegralKind
 argument_list|(
 name|QualType
 name|T

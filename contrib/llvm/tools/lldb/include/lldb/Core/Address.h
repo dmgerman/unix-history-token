@@ -167,6 +167,8 @@ comment|///< and file and line), to information about what the pointer points to
 comment|///< if the address is in a section (section of pointers, c strings, etc).
 name|DumpStyleResolvedDescriptionNoModule
 block|,
+name|DumpStyleResolvedDescriptionNoFunctionArguments
+block|,
 name|DumpStyleDetailedSymbolContext
 block|,
 comment|///< Detailed symbol context information for an address for all symbol

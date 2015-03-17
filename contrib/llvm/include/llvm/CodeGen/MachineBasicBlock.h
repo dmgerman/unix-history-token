@@ -2725,6 +2725,25 @@ argument_list|,
 argument|IT E
 argument_list|)
 block|{
+name|assert
+argument_list|(
+operator|(
+name|I
+operator|==
+name|end
+argument_list|()
+operator|||
+name|I
+operator|->
+name|getParent
+argument_list|()
+operator|==
+name|this
+operator|)
+operator|&&
+literal|"iterator points outside of basic block"
+argument_list|)
+block|;
 name|Insts
 operator|.
 name|insert
@@ -2748,6 +2767,25 @@ argument_list|,
 argument|MachineInstr *MI
 argument_list|)
 block|{
+name|assert
+argument_list|(
+operator|(
+name|I
+operator|==
+name|end
+argument_list|()
+operator|||
+name|I
+operator|->
+name|getParent
+argument_list|()
+operator|==
+name|this
+operator|)
+operator|&&
+literal|"iterator points outside of basic block"
+argument_list|)
+block|;
 name|assert
 argument_list|(
 operator|!
@@ -2797,6 +2835,25 @@ modifier|*
 name|MI
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|(
+name|I
+operator|==
+name|end
+argument_list|()
+operator|||
+name|I
+operator|->
+name|getParent
+argument_list|()
+operator|==
+name|this
+operator|)
+operator|&&
+literal|"iterator points outside of basic block"
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 operator|!

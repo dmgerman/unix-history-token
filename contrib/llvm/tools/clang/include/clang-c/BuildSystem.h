@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_C_BUILD_SYSTEM_H
+name|LLVM_CLANG_C_BUILDSYSTEM_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_C_BUILD_SYSTEM_H
+name|LLVM_CLANG_C_BUILDSYSTEM_H
 end_define
 
 begin_include

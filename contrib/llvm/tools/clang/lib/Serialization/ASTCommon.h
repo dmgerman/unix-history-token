@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SERIALIZATION_LIB_AST_COMMON_H
+name|LLVM_CLANG_LIB_SERIALIZATION_ASTCOMMON_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SERIALIZATION_LIB_AST_COMMON_H
+name|LLVM_CLANG_LIB_SERIALIZATION_ASTCOMMON_H
 end_define
 
 begin_include
@@ -87,9 +87,9 @@ name|UPD_CXX_ADDED_TEMPLATE_SPECIALIZATION
 block|,
 name|UPD_CXX_ADDED_ANONYMOUS_NAMESPACE
 block|,
-name|UPD_CXX_INSTANTIATED_STATIC_DATA_MEMBER
+name|UPD_CXX_ADDED_FUNCTION_DEFINITION
 block|,
-name|UPD_CXX_INSTANTIATED_FUNCTION_DEFINITION
+name|UPD_CXX_INSTANTIATED_STATIC_DATA_MEMBER
 block|,
 name|UPD_CXX_INSTANTIATED_CLASS_DEFINITION
 block|,
@@ -102,6 +102,8 @@ block|,
 name|UPD_MANGLING_NUMBER
 block|,
 name|UPD_STATIC_LOCAL_NUMBER
+block|,
+name|UPD_DECL_MARKED_OPENMP_THREADPRIVATE
 block|}
 enum|;
 name|TypeIdx
@@ -310,6 +312,17 @@ name|isRedeclarableDeclKind
 parameter_list|(
 name|unsigned
 name|Kind
+parameter_list|)
+function_decl|;
+comment|/// \brief Determine whether the given declaration needs an anonymous
+comment|/// declaration number.
+name|bool
+name|needsAnonymousDeclarationNumber
+parameter_list|(
+specifier|const
+name|NamedDecl
+modifier|*
+name|D
 parameter_list|)
 function_decl|;
 block|}

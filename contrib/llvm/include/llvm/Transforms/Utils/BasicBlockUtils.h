@@ -504,6 +504,21 @@ name|i
 expr_stmt|;
 block|}
 block|}
+comment|// SplitAllCriticalEdges - Loop over all of the edges in the CFG,
+comment|// breaking critical edges as they are found. Pass P must not be NULL.
+comment|// Returns the number of broken edges.
+name|unsigned
+name|SplitAllCriticalEdges
+parameter_list|(
+name|Function
+modifier|&
+name|F
+parameter_list|,
+name|Pass
+modifier|*
+name|P
+parameter_list|)
+function_decl|;
 comment|/// SplitEdge -  Split the edge connecting specified block. Pass P must
 comment|/// not be NULL.
 name|BasicBlock

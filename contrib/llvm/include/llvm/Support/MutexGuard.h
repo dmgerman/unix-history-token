@@ -122,7 +122,7 @@ argument_list|)
 block|{
 name|M
 operator|.
-name|acquire
+name|lock
 argument_list|()
 block|; }
 operator|~
@@ -131,7 +131,7 @@ argument_list|()
 block|{
 name|M
 operator|.
-name|release
+name|unlock
 argument_list|()
 block|; }
 comment|/// holds - Returns true if this locker instance holds the specified lock.

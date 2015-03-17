@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/ISDOpcodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -182,11 +188,6 @@ comment|///
 name|class
 name|FunctionLoweringInfo
 block|{
-specifier|const
-name|TargetMachine
-modifier|&
-name|TM
-decl_stmt|;
 name|public
 label|:
 specifier|const
@@ -197,6 +198,11 @@ decl_stmt|;
 name|MachineFunction
 modifier|*
 name|MF
+decl_stmt|;
+specifier|const
+name|TargetLowering
+modifier|*
+name|TLI
 decl_stmt|;
 name|MachineRegisterInfo
 modifier|*
@@ -285,6 +291,18 @@ name|unsigned
 operator|>
 name|RegFixups
 expr_stmt|;
+comment|/// StatepointStackSlots - A list of temporary stack slots (frame indices)
+comment|/// used to spill values at a statepoint.  We store them here to enable
+comment|/// reuse of the same stack slots across different statepoints in different
+comment|/// basic blocks.
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|50
+operator|>
+name|StatepointStackSlots
+expr_stmt|;
 comment|/// MBB - The current block.
 name|MachineBasicBlock
 modifier|*
@@ -368,6 +386,20 @@ argument_list|)
 block|{}
 block|}
 struct|;
+comment|/// Record the preferred extend type (ISD::SIGN_EXTEND or ISD::ZERO_EXTEND)
+comment|/// for a value.
+name|DenseMap
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+name|ISD
+operator|::
+name|NodeType
+operator|>
+name|PreferredExtendType
+expr_stmt|;
 comment|/// VisitedBBs - The set of basic blocks visited thus far by instruction
 comment|/// selection.
 name|SmallPtrSet
@@ -400,6 +432,9 @@ operator|>
 expr|>
 name|PHINodesToUpdate
 expr_stmt|;
+name|unsigned
+name|OrigNumPHINodesToUpdate
+decl_stmt|;
 comment|/// If the current MBB is a landing pad, the exception pointer and exception
 comment|/// selector registers are copied into these virtual registers by
 comment|/// SelectionDAGISel::PrepareEHLandingPad().
@@ -408,40 +443,26 @@ name|ExceptionPointerVirtReg
 decl_stmt|,
 name|ExceptionSelectorVirtReg
 decl_stmt|;
-name|explicit
-name|FunctionLoweringInfo
-argument_list|(
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
-argument_list|)
-operator|:
-name|TM
-argument_list|(
-argument|TM
-argument_list|)
-block|{}
 comment|/// set - Initialize this FunctionLoweringInfo with the given Function
 comment|/// and its associated MachineFunction.
 comment|///
 name|void
 name|set
-argument_list|(
+parameter_list|(
 specifier|const
 name|Function
-operator|&
+modifier|&
 name|Fn
-argument_list|,
+parameter_list|,
 name|MachineFunction
-operator|&
+modifier|&
 name|MF
-argument_list|,
+parameter_list|,
 name|SelectionDAG
-operator|*
+modifier|*
 name|DAG
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// clear - Clear out all the function-specific state. This returns this
 comment|/// FunctionLoweringInfo to an empty state, ready to be used for a
 comment|/// different function.
@@ -719,6 +740,13 @@ name|It
 operator|->
 name|second
 decl_stmt|;
+if|if
+condition|(
+name|Reg
+operator|==
+literal|0
+condition|)
+return|return;
 name|LiveOutRegInfo
 operator|.
 name|grow

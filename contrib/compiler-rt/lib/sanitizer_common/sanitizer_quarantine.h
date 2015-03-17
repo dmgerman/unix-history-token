@@ -188,34 +188,67 @@ argument_list|,
 argument|uptr cache_size
 argument_list|)
 block|{
+name|atomic_store
+argument_list|(
+operator|&
 name|max_size_
-operator|=
+argument_list|,
 name|size
+argument_list|,
+name|memory_order_release
+argument_list|)
 block|;
+name|atomic_store
+argument_list|(
+operator|&
 name|min_size_
-operator|=
+argument_list|,
 name|size
 operator|/
 literal|10
 operator|*
 literal|9
+argument_list|,
+name|memory_order_release
+argument_list|)
 block|;
 comment|// 90% of max size.
 name|max_cache_size_
 operator|=
 name|cache_size
 block|;   }
+name|uptr
+name|GetSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|atomic_load
+argument_list|(
+operator|&
+name|max_size_
+argument_list|,
+name|memory_order_acquire
+argument_list|)
+return|;
+block|}
 name|void
 name|Put
-argument_list|(
-argument|Cache *c
-argument_list|,
-argument|Callback cb
-argument_list|,
-argument|Node *ptr
-argument_list|,
-argument|uptr size
-argument_list|)
+parameter_list|(
+name|Cache
+modifier|*
+name|c
+parameter_list|,
+name|Callback
+name|cb
+parameter_list|,
+name|Node
+modifier|*
+name|ptr
+parameter_list|,
+name|uptr
+name|size
+parameter_list|)
 block|{
 name|c
 operator|->
@@ -227,7 +260,7 @@ name|ptr
 argument_list|,
 name|size
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|c
@@ -280,7 +313,8 @@ operator|.
 name|Size
 argument_list|()
 operator|>
-name|max_size_
+name|GetSize
+argument_list|()
 operator|&&
 name|recycle_mutex_
 operator|.
@@ -302,10 +336,10 @@ index|[
 name|kCacheLineSize
 index|]
 decl_stmt|;
-name|uptr
+name|atomic_uintptr_t
 name|max_size_
 decl_stmt|;
-name|uptr
+name|atomic_uintptr_t
 name|min_size_
 decl_stmt|;
 name|uptr
@@ -343,6 +377,17 @@ block|{
 name|Cache
 name|tmp
 decl_stmt|;
+name|uptr
+name|min_size
+init|=
+name|atomic_load
+argument_list|(
+operator|&
+name|min_size_
+argument_list|,
+name|memory_order_acquire
+argument_list|)
+decl_stmt|;
 block|{
 name|SpinMutexLock
 name|l
@@ -358,7 +403,7 @@ operator|.
 name|Size
 argument_list|()
 operator|>
-name|min_size_
+name|min_size
 condition|)
 block|{
 name|QuarantineBatch
@@ -611,6 +656,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|CHECK
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|b
 operator|->
 name|batch
@@ -851,6 +904,11 @@ name|b
 argument_list|)
 argument_list|)
 decl_stmt|;
+name|CHECK
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
 name|b
 operator|->
 name|count

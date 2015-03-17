@@ -112,9 +112,8 @@ decl_stmt|;
 name|class
 name|ConstantExpr
 decl_stmt|;
-comment|/// Operator - This is a utility class that provides an abstraction for the
-comment|/// common functionality between Instructions and ConstantExprs.
-comment|///
+comment|/// This is a utility class that provides an abstraction for the common
+comment|/// functionality between Instructions and ConstantExprs.
 name|class
 name|Operator
 range|:
@@ -160,8 +159,7 @@ argument_list|()
 block|;
 name|public
 operator|:
-comment|/// getOpcode - Return the opcode for this Instruction or ConstantExpr.
-comment|///
+comment|/// Return the opcode for this Instruction or ConstantExpr.
 name|unsigned
 name|getOpcode
 argument_list|()
@@ -201,9 +199,8 @@ name|getOpcode
 argument_list|()
 return|;
 block|}
-comment|/// getOpcode - If V is an Instruction or ConstantExpr, return its
-comment|/// opcode. Otherwise return UserOp1.
-comment|///
+comment|/// If V is an Instruction or ConstantExpr, return its opcode.
+comment|/// Otherwise return UserOp1.
 specifier|static
 name|unsigned
 name|getOpcode
@@ -327,19 +324,15 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// OverflowingBinaryOperator - Utility class for integer arithmetic operators
+comment|/// Utility class for integer arithmetic operators which may exhibit overflow -
 end_comment
 
 begin_comment
-comment|/// which may exhibit overflow - Add, Sub, and Mul. It does not include SDiv,
+comment|/// Add, Sub, and Mul. It does not include SDiv, despite that operator having
 end_comment
 
 begin_comment
-comment|/// despite that operator having the potential for overflow.
-end_comment
-
-begin_comment
-comment|///
+comment|/// the potential for overflow.
 end_comment
 
 begin_decl_stmt
@@ -424,7 +417,7 @@ operator|)
 block|;   }
 name|public
 operator|:
-comment|/// hasNoUnsignedWrap - Test whether this operation is known to never
+comment|/// Test whether this operation is known to never
 comment|/// undergo unsigned overflow, aka the nuw property.
 name|bool
 name|hasNoUnsignedWrap
@@ -437,7 +430,7 @@ operator|&
 name|NoUnsignedWrap
 return|;
 block|}
-comment|/// hasNoSignedWrap - Test whether this operation is known to never
+comment|/// Test whether this operation is known to never
 comment|/// undergo signed overflow, aka the nsw property.
 name|bool
 name|hasNoSignedWrap
@@ -600,8 +593,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// PossiblyExactOperator - A udiv or sdiv instruction, which can be marked as
-comment|/// "exact", indicating that no bits are destroyed.
+comment|/// A udiv or sdiv instruction, which can be marked as "exact",
+comment|/// indicating that no bits are destroyed.
 name|class
 name|PossiblyExactOperator
 operator|:
@@ -654,8 +647,7 @@ operator|)
 block|;   }
 name|public
 operator|:
-comment|/// isExact - Test whether this division is known to be exact, with
-comment|/// zero remainder.
+comment|/// Test whether this division is known to be exact, with zero remainder.
 name|bool
 name|isExact
 argument_list|()
@@ -1028,7 +1020,7 @@ name|Flags
 block|;   }
 expr|}
 block|;
-comment|/// FPMathOperator - Utility class for floating point operations which can have
+comment|/// Utility class for floating point operations which can have
 comment|/// information about relaxed accuracy requirements attached to them.
 name|class
 name|FPMathOperator
@@ -1195,7 +1187,8 @@ operator|::
 name|AllowReciprocal
 operator|)
 block|;   }
-comment|/// Convenience function for setting all the fast-math flags
+comment|/// Convenience function for setting multiple fast-math flags.
+comment|/// FMF is a mask of the bits to set.
 name|void
 name|setFastMathFlags
 argument_list|(
@@ -1204,6 +1197,20 @@ argument_list|)
 block|{
 name|SubclassOptionalData
 operator||=
+name|FMF
+operator|.
+name|Flags
+block|;   }
+comment|/// Convenience function for copying all fast-math flags.
+comment|/// All values in FMF are transferred to this operator.
+name|void
+name|copyFastMathFlags
+argument_list|(
+argument|FastMathFlags FMF
+argument_list|)
+block|{
+name|SubclassOptionalData
+operator|=
 name|FMF
 operator|.
 name|Flags
@@ -1375,8 +1382,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ConcreteOperator - A helper template for defining operators for individual
-comment|/// opcodes.
+comment|/// A helper template for defining operators for individual opcodes.
 name|template
 operator|<
 name|typename
@@ -1594,6 +1600,20 @@ operator|>
 block|{ }
 block|;
 name|class
+name|ZExtOperator
+operator|:
+name|public
+name|ConcreteOperator
+operator|<
+name|Operator
+block|,
+name|Instruction
+operator|::
+name|ZExt
+operator|>
+block|{}
+block|;
+name|class
 name|GEPOperator
 operator|:
 name|public
@@ -1647,8 +1667,7 @@ operator|)
 block|;   }
 name|public
 operator|:
-comment|/// isInBounds - Test whether this is an inbounds GEP, as defined
-comment|/// by LangRef.html.
+comment|/// Test whether this is an inbounds GEP, as defined by LangRef.html.
 name|bool
 name|isInBounds
 argument_list|()
@@ -1742,8 +1761,7 @@ literal|0U
 return|;
 comment|// get index for modifying correct operand
 block|}
-comment|/// getPointerOperandType - Method to return the pointer operand as a
-comment|/// PointerType.
+comment|/// Method to return the pointer operand as a PointerType.
 name|Type
 operator|*
 name|getPointerOperandType
@@ -1758,24 +1776,17 @@ name|getType
 argument_list|()
 return|;
 block|}
-comment|/// getPointerAddressSpace - Method to return the address space of the
-comment|/// pointer operand.
+comment|/// Method to return the address space of the pointer operand.
 name|unsigned
 name|getPointerAddressSpace
 argument_list|()
 specifier|const
 block|{
 return|return
-name|cast
-operator|<
-name|PointerType
-operator|>
-operator|(
 name|getPointerOperandType
 argument_list|()
-operator|)
 operator|->
-name|getAddressSpace
+name|getPointerAddressSpace
 argument_list|()
 return|;
 block|}
@@ -1804,8 +1815,8 @@ operator|>
 literal|1
 return|;
 block|}
-comment|/// hasAllZeroIndices - Return true if all of the indices of this GEP are
-comment|/// zeros.  If so, the result pointer and the first operand have the same
+comment|/// Return true if all of the indices of this GEP are zeros.
+comment|/// If so, the result pointer and the first operand have the same
 comment|/// value, just potentially different types.
 name|bool
 name|hasAllZeroIndices
@@ -1863,8 +1874,8 @@ return|return
 name|true
 return|;
 block|}
-comment|/// hasAllConstantIndices - Return true if all of the indices of this GEP are
-comment|/// constant integers.  If so, the result pointer and the first operand have
+comment|/// Return true if all of the indices of this GEP are constant integers.
+comment|/// If so, the result pointer and the first operand have
 comment|/// a constant offset between them.
 name|bool
 name|hasAllConstantIndices
@@ -2163,8 +2174,7 @@ literal|0U
 return|;
 comment|// get index for modifying correct operand
 block|}
-comment|/// getPointerOperandType - Method to return the pointer operand as a
-comment|/// PointerType.
+comment|/// Method to return the pointer operand as a PointerType.
 name|Type
 operator|*
 name|getPointerOperandType
@@ -2179,8 +2189,7 @@ name|getType
 argument_list|()
 return|;
 block|}
-comment|/// getPointerAddressSpace - Method to return the address space of the
-comment|/// pointer operand.
+comment|/// Method to return the address space of the pointer operand.
 name|unsigned
 name|getPointerAddressSpace
 argument_list|()

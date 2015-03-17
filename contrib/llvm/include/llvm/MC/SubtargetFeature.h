@@ -222,7 +222,6 @@ label|:
 name|explicit
 name|SubtargetFeatures
 parameter_list|(
-specifier|const
 name|StringRef
 name|Initial
 init|=
@@ -241,7 +240,6 @@ comment|/// Adding Features.
 name|void
 name|AddFeature
 parameter_list|(
-specifier|const
 name|StringRef
 name|String
 parameter_list|)
@@ -254,7 +252,6 @@ argument_list|(
 name|uint64_t
 name|Bits
 argument_list|,
-specifier|const
 name|StringRef
 name|String
 argument_list|,
@@ -269,7 +266,6 @@ comment|/// Get feature bits of a CPU.
 name|uint64_t
 name|getFeatureBits
 argument_list|(
-specifier|const
 name|StringRef
 name|CPU
 argument_list|,

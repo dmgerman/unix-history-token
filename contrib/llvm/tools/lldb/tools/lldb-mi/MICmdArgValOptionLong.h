@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdArgValOptionLong.h
+comment|// File:        MICmdArgValOptionLong.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdArgValOptionLong interface.
+comment|// Overview:    CMICmdArgValOptionLong interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -112,51 +112,51 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code class. Command argument class. Arguments object
+comment|// Details: MI common code class. Command argument class. Arguments object
 end_comment
 
 begin_comment
-comment|//			needing specialization derived from the CMICmdArgValBase class.
+comment|//          needing specialization derived from the CMICmdArgValBase class.
 end_comment
 
 begin_comment
-comment|//			An argument knows what type of argument it is and how it is to
+comment|//          An argument knows what type of argument it is and how it is to
 end_comment
 
 begin_comment
-comment|//			interpret the options (context) string to find and validate a matching
+comment|//          interpret the options (context) string to find and validate a matching
 end_comment
 
 begin_comment
-comment|//			argument and so extract a value from it.
+comment|//          argument and so extract a value from it.
 end_comment
 
 begin_comment
-comment|//			If *this argument has expected options following it the option objects
+comment|//          If *this argument has expected options following it the option objects
 end_comment
 
 begin_comment
-comment|//			created to hold each of those option's values belong to *this argument
+comment|//          created to hold each of those option's values belong to *this argument
 end_comment
 
 begin_comment
-comment|//			object and so are deleted when *this object goes out of scope.
+comment|//          object and so are deleted when *this object goes out of scope.
 end_comment
 
 begin_comment
-comment|//			Based on the Interpreter pattern.
+comment|//          Based on the Interpreter pattern.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 16/04/2014.
+comment|// Authors: Illya Rudkin 16/04/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -182,7 +182,7 @@ block|;
 comment|/* ctor */
 name|CMICmdArgValOptionLong
 argument_list|(
-argument|const CMIUtilString& vrArgName
+argument|const CMIUtilString&vrArgName
 argument_list|,
 argument|const bool vbMandatory
 argument_list|,
@@ -192,7 +192,7 @@ block|;
 comment|/* ctor */
 name|CMICmdArgValOptionLong
 argument_list|(
-argument|const CMIUtilString& vrArgName
+argument|const CMIUtilString&vrArgName
 argument_list|,
 argument|const bool vbMandatory
 argument_list|,
@@ -207,7 +207,7 @@ comment|//
 name|bool
 name|IsArgLongOption
 argument_list|(
-argument|const CMIUtilString& vrTxt
+argument|const CMIUtilString&vrTxt
 argument_list|)
 specifier|const
 block|;
@@ -231,7 +231,7 @@ operator|>
 name|bool
 name|GetExpectedOption
 argument_list|(
-argument|T2& vrwValue
+argument|T2&vrwValue
 argument_list|)
 specifier|const
 block|;
@@ -263,7 +263,7 @@ operator|:
 name|bool
 name|ExtractExpectedOptions
 argument_list|(
-argument|CMICmdArgContext& vrwTxt
+argument|CMICmdArgContext&vrwTxt
 argument_list|,
 argument|const MIuint nArgIndex
 argument_list|)
@@ -275,7 +275,7 @@ name|virtual
 name|bool
 name|IsArgOptionCorrect
 argument_list|(
-argument|const CMIUtilString& vrTxt
+argument|const CMIUtilString&vrTxt
 argument_list|)
 specifier|const
 block|;
@@ -283,7 +283,7 @@ name|virtual
 name|bool
 name|ArgNameMatch
 argument_list|(
-argument|const CMIUtilString& vrTxt
+argument|const CMIUtilString&vrTxt
 argument_list|)
 specifier|const
 block|;
@@ -320,39 +320,39 @@ comment|//++ -------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Details:	Retrieve the first argument or option value from the list of 1 or more options
+comment|// Details: Retrieve the first argument or option value from the list of 1 or more options
 end_comment
 
 begin_comment
-comment|//			parsed from the command's options string.
+comment|//          parsed from the command's options string.
 end_comment
 
 begin_comment
-comment|// Type:	Template method.
+comment|// Type:    Template method.
 end_comment
 
 begin_comment
-comment|// Args:	vrwValue	- (W) Templated type return value.
+comment|// Args:    vrwValue    - (W) Templated type return value.
 end_comment
 
 begin_comment
-comment|//			T1			- The argument value's class type of the data hold in the list of options.
+comment|//          T1          - The argument value's class type of the data hold in the list of options.
 end_comment
 
 begin_comment
-comment|//			T2			- The type pf the variable which holds the value wanted.
+comment|//          T2          - The type pf the variable which holds the value wanted.
 end_comment
 
 begin_comment
-comment|// Return:	MIstatus::success - Functional succeeded.
+comment|// Return:  MIstatus::success - Functional succeeded.
 end_comment
 
 begin_comment
-comment|//			MIstatus::failure - Functional failed. List of object was empty.
+comment|//          MIstatus::failure - Functional failed. List of object was empty.
 end_comment
 
 begin_comment
-comment|// Throws:	None.
+comment|// Throws:  None.
 end_comment
 
 begin_comment
@@ -373,7 +373,7 @@ name|CMICmdArgValOptionLong
 operator|::
 name|GetExpectedOption
 argument_list|(
-argument|T2& vrwValue
+argument|T2&vrwValue
 argument_list|)
 specifier|const
 block|{

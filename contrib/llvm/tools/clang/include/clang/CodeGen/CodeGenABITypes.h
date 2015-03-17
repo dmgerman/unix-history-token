@@ -90,13 +90,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_CODEGEN_ABITYPES_H
+name|LLVM_CLANG_CODEGEN_CODEGENABITYPES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_CODEGEN_ABITYPES_H
+name|LLVM_CLANG_CODEGEN_CODEGENABITYPES_H
 end_define
 
 begin_include
@@ -149,6 +149,9 @@ decl_stmt|;
 name|class
 name|ObjCMethodDecl
 decl_stmt|;
+name|class
+name|CoverageSourceInfo
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -181,6 +184,12 @@ operator|::
 name|DataLayout
 operator|&
 name|TD
+argument_list|,
+name|CoverageSourceInfo
+operator|*
+name|CoverageInfo
+operator|=
+name|nullptr
 argument_list|)
 expr_stmt|;
 operator|~

@@ -405,6 +405,9 @@ argument_list|,
 argument|uint32_t log2align
 argument_list|,
 argument|uint32_t flags
+argument_list|,
+argument|uint32_t target_byte_size =
+literal|1
 argument_list|)
 empty_stmt|;
 comment|// Create a section that is a child of parent_section_sp
@@ -434,6 +437,9 @@ argument_list|,
 argument|uint32_t log2align
 argument_list|,
 argument|uint32_t flags
+argument_list|,
+argument|uint32_t target_byte_size =
+literal|1
 argument_list|)
 empty_stmt|;
 operator|~
@@ -791,6 +797,16 @@ operator|=
 name|align
 expr_stmt|;
 block|}
+comment|// Get the number of host bytes required to hold a target byte
+name|uint32_t
+name|GetTargetByteSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_target_byte_size
+return|;
+block|}
 name|protected
 label|:
 name|ObjectFile
@@ -866,6 +882,11 @@ range|:
 literal|1
 decl_stmt|;
 comment|// This section is thread specific
+name|uint32_t
+name|m_target_byte_size
+decl_stmt|;
+comment|// Some architectures have non-8-bit byte size. This is specified as
+comment|// as a multiple number of a host bytes
 name|private
 label|:
 name|DISALLOW_COPY_AND_ASSIGN

@@ -260,7 +260,9 @@ decl_stmt|;
 name|unsigned
 name|CommandID
 range|:
-literal|8
+name|CommandInfo
+operator|::
+name|NumCommandIDBits
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -270,7 +272,11 @@ name|NumInlineCommandCommentBits
 init|=
 name|NumInlineContentCommentBits
 operator|+
-literal|10
+literal|2
+operator|+
+name|CommandInfo
+operator|::
+name|NumCommandIDBits
 block|}
 enum|;
 name|class
@@ -380,7 +386,9 @@ expr_stmt|;
 name|unsigned
 name|CommandID
 range|:
-literal|8
+name|CommandInfo
+operator|::
+name|NumCommandIDBits
 decl_stmt|;
 comment|/// Describes the syntax that was used in a documentation command.
 comment|/// Contains values from CommandMarkerKind enum.
@@ -397,7 +405,11 @@ name|NumBlockCommandCommentBits
 init|=
 name|NumCommentBits
 operator|+
-literal|9
+name|CommandInfo
+operator|::
+name|NumCommandIDBits
+operator|+
+literal|1
 block|}
 enum|;
 name|class

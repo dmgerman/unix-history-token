@@ -129,6 +129,10 @@ block|,
 name|DefaultConstexprBacktraceLimit
 operator|=
 literal|10
+block|,
+name|DefaultSpellCheckingLimit
+operator|=
+literal|50
 block|}
 block|;
 comment|// Define simple diagnostic options (with no accessors).

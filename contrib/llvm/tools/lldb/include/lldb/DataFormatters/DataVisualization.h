@@ -204,6 +204,26 @@ expr_stmt|;
 endif|#
 directive|endif
 specifier|static
+name|lldb
+operator|::
+name|TypeValidatorImplSP
+name|GetValidator
+argument_list|(
+argument|ValueObject& valobj
+argument_list|,
+argument|lldb::DynamicValueType use_dynamic
+argument_list|)
+expr_stmt|;
+specifier|static
+name|lldb
+operator|::
+name|TypeValidatorImplSP
+name|GetValidatorForType
+argument_list|(
+argument|lldb::TypeNameSpecifierImplSP type_sp
+argument_list|)
+expr_stmt|;
+specifier|static
 name|bool
 name|AnyMatches
 argument_list|(
@@ -436,6 +456,16 @@ operator|&
 name|category
 argument_list|)
 decl_stmt|;
+specifier|static
+name|void
+name|EnableStar
+parameter_list|()
+function_decl|;
+specifier|static
+name|void
+name|DisableStar
+parameter_list|()
+function_decl|;
 specifier|static
 name|void
 name|LoopThrough

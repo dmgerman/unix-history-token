@@ -165,6 +165,9 @@ name|class
 name|MCContext
 decl_stmt|;
 name|class
+name|MCExpr
+decl_stmt|;
+name|class
 name|MCInst
 decl_stmt|;
 name|class
@@ -386,6 +389,16 @@ return|return
 name|DD
 return|;
 block|}
+name|DwarfDebug
+operator|*
+name|getDwarfDebug
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DD
+return|;
+block|}
 comment|/// Return true if assembly output should contain comments.
 comment|///
 name|bool
@@ -557,6 +570,15 @@ name|MachineInstr
 operator|&
 name|MI
 argument_list|)
+block|;
+name|void
+name|emitFrameAlloc
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
 block|;    enum
 name|CFIMoveType
 block|{
@@ -637,6 +659,18 @@ argument|const MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|;
+comment|/// Lower the specified LLVM Constant to an MCExpr.
+specifier|const
+name|MCExpr
+operator|*
+name|lowerConstant
+argument_list|(
+specifier|const
+name|Constant
+operator|*
+name|CV
+argument_list|)
+block|;
 comment|/// \brief Print a general LLVM constant to the .s file.
 name|void
 name|EmitGlobalConstant
@@ -683,6 +717,14 @@ name|virtual
 name|void
 name|EmitFunctionBodyEnd
 argument_list|()
+block|{}
+comment|/// Targets can override this to emit stuff at the end of a basic block.
+name|virtual
+name|void
+name|EmitBasicBlockEnd
+argument_list|(
+argument|const MachineBasicBlock&MBB
+argument_list|)
 block|{}
 comment|/// Targets should implement this to emit instructions.
 name|virtual
@@ -900,22 +942,6 @@ argument|unsigned Size
 argument_list|)
 specifier|const
 block|;
-comment|/// Emit something like ".long Hi+Offset-Lo" where the size in bytes of the
-comment|/// directive is specified by Size and Hi/Lo specify the labels.  This
-comment|/// implicitly uses .set if it is available.
-name|void
-name|EmitLabelOffsetDifference
-argument_list|(
-argument|const MCSymbol *Hi
-argument_list|,
-argument|uint64_t Offset
-argument_list|,
-argument|const MCSymbol *Lo
-argument_list|,
-argument|unsigned Size
-argument_list|)
-specifier|const
-block|;
 comment|/// Emit something like ".long Label+Offset" where the size in bytes of the
 comment|/// directive is specified by Size and Label specifies the label.  This
 comment|/// implicitly uses .set if it is available.
@@ -1045,6 +1071,21 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// Emit a dwarf register operation for describing
+comment|/// - a small value occupying only part of a register or
+comment|/// - a register representing only part of a value.
+name|void
+name|EmitDwarfOpPiece
+argument_list|(
+argument|ByteStreamer&Streamer
+argument_list|,
+argument|unsigned SizeInBits
+argument_list|,
+argument|unsigned OffsetInBits =
+literal|0
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief Emit a partial DWARF register operation.
 comment|/// \param MLoc             the register
 comment|/// \param PieceSize        size and
@@ -1072,7 +1113,7 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-comment|/// Emit dwarf register operation.
+comment|/// EmitDwarfRegOp - Emit a dwarf register operation.
 comment|/// \param Indirect   whether this is a register-indirect address
 name|virtual
 name|void
@@ -1158,6 +1199,16 @@ argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&OS
 argument_list|)
+block|;
+comment|/// Let the target do anything it needs to do before emitting inlineasm.
+comment|/// \p StartInfo - the subtarget info before parsing inline asm
+name|virtual
+name|void
+name|emitInlineAsmStart
+argument_list|(
+argument|const MCSubtargetInfo&StartInfo
+argument_list|)
+specifier|const
 block|;
 comment|/// Let the target do anything it needs to do after emitting inlineasm.
 comment|/// This callback can be used restore the original mode in case the

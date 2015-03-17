@@ -130,6 +130,18 @@ comment|// The value is zero extended in the location.
 name|AExt
 block|,
 comment|// The value is extended with undefined upper bits.
+name|SExtUpper
+block|,
+comment|// The value is in the upper bits of the location and should be
+comment|// sign extended when retrieved.
+name|ZExtUpper
+block|,
+comment|// The value is in the upper bits of the location and should be
+comment|// zero extended when retrieved.
+name|AExtUpper
+block|,
+comment|// The value is in the upper bits of the location and should be
+comment|// extended with undefined upper bits when retrieved.
 name|BCvt
 block|,
 comment|// The value is bit-converted in the location.
@@ -142,19 +154,7 @@ name|FPExt
 block|,
 comment|// The floating-point value is fp-extended in the location.
 name|Indirect
-block|,
 comment|// The location contains pointer to the value.
-name|SExtUpper
-block|,
-comment|// The value is in the upper bits of the location and should be
-comment|// sign extended when retrieved.
-name|ZExtUpper
-block|,
-comment|// The value is in the upper bits of the location and should be
-comment|// zero extended when retrieved.
-name|AExtUpper
-comment|// The value is in the upper bits of the location and should be
-comment|// extended with undefined upper bits when retrieved.
 comment|// TODO: a subset of the value is in the location.
 block|}
 enum|;
@@ -632,6 +632,46 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// Describes a register that needs to be forwarded from the prologue to a
+comment|/// musttail call.
+struct|struct
+name|ForwardedRegister
+block|{
+name|ForwardedRegister
+argument_list|(
+argument|unsigned VReg
+argument_list|,
+argument|MCPhysReg PReg
+argument_list|,
+argument|MVT VT
+argument_list|)
+block|:
+name|VReg
+argument_list|(
+name|VReg
+argument_list|)
+operator|,
+name|PReg
+argument_list|(
+name|PReg
+argument_list|)
+operator|,
+name|VT
+argument_list|(
+argument|VT
+argument_list|)
+block|{}
+name|unsigned
+name|VReg
+expr_stmt|;
+name|MCPhysReg
+name|PReg
+decl_stmt|;
+name|MVT
+name|VT
+decl_stmt|;
+block|}
+struct|;
 comment|/// CCAssignFn - This function assigns a location for Val, updating State to
 comment|/// reflect the change.  It returns 'true' if it failed to handle Val.
 typedef|typedef
@@ -731,11 +771,6 @@ decl_stmt|;
 name|MachineFunction
 modifier|&
 name|MF
-decl_stmt|;
-specifier|const
-name|TargetMachine
-modifier|&
-name|TM
 decl_stmt|;
 specifier|const
 name|TargetRegisterInfo
@@ -873,8 +908,6 @@ argument|bool isVarArg
 argument_list|,
 argument|MachineFunction&MF
 argument_list|,
-argument|const TargetMachine&TM
-argument_list|,
 argument|SmallVectorImpl<CCValAssign>&locs
 argument_list|,
 argument|LLVMContext&C
@@ -905,17 +938,6 @@ specifier|const
 block|{
 return|return
 name|Context
-return|;
-block|}
-specifier|const
-name|TargetMachine
-operator|&
-name|getTarget
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TM
 return|;
 block|}
 name|MachineFunction
@@ -1288,19 +1310,29 @@ comment|/// registers. If this is not possible, return zero. Otherwise, return t
 comment|/// register of the block that were allocated, marking the entire block as allocated.
 name|unsigned
 name|AllocateRegBlock
-parameter_list|(
-specifier|const
+argument_list|(
+name|ArrayRef
+operator|<
 name|uint16_t
-modifier|*
+operator|>
 name|Regs
-parameter_list|,
-name|unsigned
-name|NumRegs
-parameter_list|,
+argument_list|,
 name|unsigned
 name|RegsRequired
-parameter_list|)
+argument_list|)
 block|{
+if|if
+condition|(
+name|RegsRequired
+operator|>
+name|Regs
+operator|.
+name|size
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|unsigned
@@ -1310,7 +1342,10 @@ literal|0
 init|;
 name|StartIdx
 operator|<=
-name|NumRegs
+name|Regs
+operator|.
+name|size
+argument_list|()
 operator|-
 name|RegsRequired
 condition|;
@@ -1835,6 +1870,49 @@ return|return
 name|PendingLocs
 return|;
 block|}
+comment|/// Compute the remaining unused register parameters that would be used for
+comment|/// the given value type. This is useful when varargs are passed in the
+comment|/// registers that normal prototyped parameters would be passed in, or for
+comment|/// implementing perfect forwarding.
+name|void
+name|getRemainingRegParmsForType
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|MCPhysReg
+operator|>
+operator|&
+name|Regs
+argument_list|,
+name|MVT
+name|VT
+argument_list|,
+name|CCAssignFn
+name|Fn
+argument_list|)
+decl_stmt|;
+comment|/// Compute the set of registers that need to be preserved and forwarded to
+comment|/// any musttail calls.
+name|void
+name|analyzeMustTailForwardedRegisters
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|ForwardedRegister
+operator|>
+operator|&
+name|Forwards
+argument_list|,
+name|ArrayRef
+operator|<
+name|MVT
+operator|>
+name|RegParmTypes
+argument_list|,
+name|CCAssignFn
+name|Fn
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 comment|/// MarkAllocated - Mark a register and all of its aliases as allocated.

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|REMOTEMEMORYMANAGER_H
+name|LLVM_TOOLS_LLI_REMOTEMEMORYMANAGER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|REMOTEMEMORYMANAGER_H
+name|LLVM_TOOLS_LLI_REMOTEMEMORYMANAGER_H
 end_define
 
 begin_include
@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/JITMemoryManager.h"
+file|"llvm/ExecutionEngine/RTDyldMemoryManager.h"
 end_include
 
 begin_include
@@ -113,7 +113,7 @@ name|class
 name|RemoteMemoryManager
 range|:
 name|public
-name|JITMemoryManager
+name|RTDyldMemoryManager
 block|{
 name|public
 operator|:
@@ -280,7 +280,7 @@ name|notifyObjectLoaded
 argument_list|(
 argument|ExecutionEngine *EE
 argument_list|,
-argument|const ObjectImage *Obj
+argument|const object::ObjectFile&Obj
 argument_list|)
 name|override
 block|;
@@ -326,97 +326,7 @@ name|Target
 operator|=
 name|T
 block|; }
-comment|// The following obsolete JITMemoryManager calls are stubbed out for
-comment|// this model.
-name|void
-name|setMemoryWritable
-argument_list|()
-name|override
-block|;
-name|void
-name|setMemoryExecutable
-argument_list|()
-name|override
-block|;
-name|void
-name|setPoisonMemory
-argument_list|(
-argument|bool poison
-argument_list|)
-name|override
-block|;
-name|void
-name|AllocateGOT
-argument_list|()
-name|override
-block|;
-name|uint8_t
-operator|*
-name|getGOTBase
-argument_list|()
-specifier|const
-name|override
-block|;
-name|uint8_t
-operator|*
-name|startFunctionBody
-argument_list|(
-argument|const Function *F
-argument_list|,
-argument|uintptr_t&ActualSize
-argument_list|)
-name|override
-block|;
-name|uint8_t
-operator|*
-name|allocateStub
-argument_list|(
-argument|const GlobalValue* F
-argument_list|,
-argument|unsigned StubSize
-argument_list|,
-argument|unsigned Alignment
-argument_list|)
-name|override
-block|;
-name|void
-name|endFunctionBody
-argument_list|(
-argument|const Function *F
-argument_list|,
-argument|uint8_t *FunctionStart
-argument_list|,
-argument|uint8_t *FunctionEnd
-argument_list|)
-name|override
-block|;
-name|uint8_t
-operator|*
-name|allocateSpace
-argument_list|(
-argument|intptr_t Size
-argument_list|,
-argument|unsigned Alignment
-argument_list|)
-name|override
-block|;
-name|uint8_t
-operator|*
-name|allocateGlobal
-argument_list|(
-argument|uintptr_t Size
-argument_list|,
-argument|unsigned Alignment
-argument_list|)
-name|override
-block|;
-name|void
-name|deallocateFunctionBody
-argument_list|(
-argument|void *Body
-argument_list|)
-name|override
-block|; }
+block|}
 decl_stmt|;
 block|}
 end_decl_stmt

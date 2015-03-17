@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/API/SBExecutionContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/API/SBFileSpec.h"
 end_include
 

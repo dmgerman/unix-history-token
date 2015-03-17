@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SparcINSTPRINTER_H
+name|LLVM_LIB_TARGET_SPARC_INSTPRINTER_SPARCINSTPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SparcINSTPRINTER_H
+name|LLVM_LIB_TARGET_SPARC_INSTPRINTER_SPARCINSTPRINTER_H
 end_define
 
 begin_include

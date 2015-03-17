@@ -136,6 +136,15 @@ operator|:
 literal|4
 return|;
 block|}
+name|bool
+name|IsDWARF64
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_is_dwarf64
+return|;
+block|}
 name|protected
 operator|:
 name|mutable

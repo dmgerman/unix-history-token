@@ -161,6 +161,9 @@ name|class
 name|APInt
 decl_stmt|;
 name|class
+name|AssumptionCache
+decl_stmt|;
+name|class
 name|Constant
 decl_stmt|;
 name|class
@@ -406,13 +409,28 @@ argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NDEBUG
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LLVM_ENABLE_DUMP
+argument_list|)
 comment|/// dump - This method is used for debugging.
 comment|///
 name|void
 name|dump
 argument_list|()
 specifier|const
-block|;   }
+block|;
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 comment|// Specialize FoldingSetTrait for SCEV to avoid needing to compute
 comment|// temporary FoldingSetNodeID values.
@@ -719,6 +737,11 @@ name|Function
 operator|*
 name|F
 block|;
+comment|/// The tracker for @llvm.assume intrinsics in this function.
+name|AssumptionCache
+operator|*
+name|AC
+block|;
 comment|/// LI - The loop information for the function we are currently analyzing.
 comment|///
 name|LoopInfo
@@ -785,14 +808,6 @@ comment|/// ExitLimit - Information about the number of loop iterations for whic
 comment|/// loop exit's branch condition evaluates to the not-taken path.  This is a
 comment|/// temporary pair of exact and max expressions that are eventually
 comment|/// summarized in ExitNotTakenInfo and BackedgeTakenInfo.
-comment|///
-comment|/// If MustExit is true, then the exit must be taken when the BECount
-comment|/// reaches Exact (and before surpassing Max). If MustExit is false, then
-comment|/// BECount may exceed Exact or Max if the loop exits via another branch. In
-comment|/// either case, the loop may exit early via another branch.
-comment|///
-comment|/// MustExit is true for most cases. However, an exit guarded by an
-comment|/// (in)equality on a nonunit stride may be skipped.
 block|struct
 name|ExitLimit
 block|{
@@ -805,9 +820,6 @@ specifier|const
 name|SCEV
 operator|*
 name|Max
-block|;
-name|bool
-name|MustExit
 block|;
 comment|/*implicit*/
 name|ExitLimit
@@ -825,21 +837,20 @@ argument_list|)
 block|,
 name|Max
 argument_list|(
-name|E
-argument_list|)
-block|,
-name|MustExit
-argument_list|(
-argument|true
+argument|E
 argument_list|)
 block|{}
 name|ExitLimit
 argument_list|(
-argument|const SCEV *E
+specifier|const
+name|SCEV
+operator|*
+name|E
 argument_list|,
-argument|const SCEV *M
-argument_list|,
-argument|bool MustExit
+specifier|const
+name|SCEV
+operator|*
+name|M
 argument_list|)
 operator|:
 name|Exact
@@ -849,12 +860,7 @@ argument_list|)
 block|,
 name|Max
 argument_list|(
-name|M
-argument_list|)
-block|,
-name|MustExit
-argument_list|(
-argument|MustExit
+argument|M
 argument_list|)
 block|{}
 comment|/// hasAnyInfo - Test whether this ExitLimit contains any computed
@@ -2667,6 +2673,19 @@ argument_list|,
 argument|const SCEV *RHS
 argument_list|)
 block|;
+comment|/// \brief Returns the maximum trip count of the loop if it is a single-exit
+comment|/// loop and we can compute a small maximum for that loop.
+comment|///
+comment|/// Implemented in terms of the \c getSmallConstantTripCount overload with
+comment|/// the single exiting block passed to it. See that routine for details.
+name|unsigned
+name|getSmallConstantTripCount
+argument_list|(
+name|Loop
+operator|*
+name|L
+argument_list|)
+block|;
 comment|/// getSmallConstantTripCount - Returns the maximum trip count of this loop
 comment|/// as a normal unsigned value. Returns 0 if the trip count is unknown or
 comment|/// not constant. This "trip count" assumes that control exits via
@@ -2684,6 +2703,20 @@ argument_list|,
 name|BasicBlock
 operator|*
 name|ExitingBlock
+argument_list|)
+block|;
+comment|/// \brief Returns the largest constant divisor of the trip count of the
+comment|/// loop if it is a single-exit loop and we can compute a small maximum for
+comment|/// that loop.
+comment|///
+comment|/// Implemented in terms of the \c getSmallConstantTripMultiple overload with
+comment|/// the single exiting block passed to it. See that routine for details.
+name|unsigned
+name|getSmallConstantTripMultiple
+argument_list|(
+name|Loop
+operator|*
+name|L
 argument_list|)
 block|;
 comment|/// getSmallConstantTripMultiple - Returns the largest constant divisor of

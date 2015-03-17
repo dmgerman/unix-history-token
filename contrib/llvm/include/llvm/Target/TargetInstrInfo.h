@@ -62,13 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/DFAPacketizer.h"
+file|"llvm/CodeGen/MachineCombinerPattern.h"
 end_include
 
 begin_include
@@ -81,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/MCInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_decl_stmt
@@ -108,9 +120,9 @@ decl_stmt|;
 name|class
 name|MCInst
 decl_stmt|;
-name|class
+struct_decl|struct
 name|MCSchedModel
-decl_stmt|;
+struct_decl|;
 name|class
 name|MCSymbolRefExpr
 decl_stmt|;
@@ -137,6 +149,9 @@ name|BranchProbability
 decl_stmt|;
 name|class
 name|TargetSubtargetInfo
+decl_stmt|;
+name|class
+name|DFAPacketizer
 decl_stmt|;
 name|template
 operator|<
@@ -328,6 +343,18 @@ return|return
 name|CallFrameDestroyOpcode
 return|;
 block|}
+comment|/// Returns the actual stack pointer adjustment made by an instruction
+comment|/// as part of a call sequence. By default, only call frame setup/destroy
+comment|/// instructions adjust the stack, but targets may want to override this
+comment|/// to enable more fine-grained adjustment, or adjust by a different value.
+name|virtual
+name|int
+name|getSPAdjust
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
 comment|/// isCoalescableExtInstr - Return true if the instruction is a "coalescable"
 comment|/// extension instruction. That is, it's like a copy where it's legal for the
 comment|/// source to overlap the destination. e.g. X86::MOVSX64rr32. If this returns
@@ -509,6 +536,26 @@ argument|const TargetMachine *TM
 argument_list|)
 specifier|const
 block|;
+comment|/// isAsCheapAsAMove - Return true if the instruction is as cheap as a move
+comment|/// instruction.
+comment|///
+comment|/// Targets for different archs need to override this, and different
+comment|/// micro-architectures can also be finely tuned inside.
+name|virtual
+name|bool
+name|isAsCheapAsAMove
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|MI
+operator|->
+name|isAsCheapAsAMove
+argument_list|()
+return|;
+block|}
 comment|/// reMaterialize - Re-issue the specified 'original' instruction at the
 comment|/// specific location targeting a new destination register.
 comment|/// The register in Orig->getOperand(0).getReg() will be substituted by
@@ -606,6 +653,157 @@ argument_list|,
 argument|unsigned&SrcOpIdx1
 argument_list|,
 argument|unsigned&SrcOpIdx2
+argument_list|)
+specifier|const
+block|;
+comment|/// A pair composed of a register and a sub-register index.
+comment|/// Used to give some type checking when modeling Reg:SubReg.
+block|struct
+name|RegSubRegPair
+block|{
+name|unsigned
+name|Reg
+block|;
+name|unsigned
+name|SubReg
+block|;
+name|RegSubRegPair
+argument_list|(
+argument|unsigned Reg =
+literal|0
+argument_list|,
+argument|unsigned SubReg =
+literal|0
+argument_list|)
+operator|:
+name|Reg
+argument_list|(
+name|Reg
+argument_list|)
+block|,
+name|SubReg
+argument_list|(
+argument|SubReg
+argument_list|)
+block|{}
+block|}
+block|;
+comment|/// A pair composed of a pair of a register and a sub-register index,
+comment|/// and another sub-register index.
+comment|/// Used to give some type checking when modeling Reg:SubReg1, SubReg2.
+block|struct
+name|RegSubRegPairAndIdx
+operator|:
+name|RegSubRegPair
+block|{
+name|unsigned
+name|SubIdx
+block|;
+name|RegSubRegPairAndIdx
+argument_list|(
+argument|unsigned Reg =
+literal|0
+argument_list|,
+argument|unsigned SubReg =
+literal|0
+argument_list|,
+argument|unsigned SubIdx =
+literal|0
+argument_list|)
+operator|:
+name|RegSubRegPair
+argument_list|(
+name|Reg
+argument_list|,
+name|SubReg
+argument_list|)
+block|,
+name|SubIdx
+argument_list|(
+argument|SubIdx
+argument_list|)
+block|{}
+block|}
+block|;
+comment|/// Build the equivalent inputs of a REG_SEQUENCE for the given \p MI
+comment|/// and \p DefIdx.
+comment|/// \p [out] InputRegs of the equivalent REG_SEQUENCE. Each element of
+comment|/// the list is modeled as<Reg:SubReg, SubIdx>.
+comment|/// E.g., REG_SEQUENCE vreg1:sub1, sub0, vreg2, sub1 would produce
+comment|/// two elements:
+comment|/// - vreg1:sub1, sub0
+comment|/// - vreg2<:0>, sub1
+comment|///
+comment|/// \returns true if it is possible to build such an input sequence
+comment|/// with the pair \p MI, \p DefIdx. False otherwise.
+comment|///
+comment|/// \pre MI.isRegSequence() or MI.isRegSequenceLike().
+comment|///
+comment|/// \note The generic implementation does not provide any support for
+comment|/// MI.isRegSequenceLike(). In other words, one has to override
+comment|/// getRegSequenceLikeInputs for target specific instructions.
+name|bool
+name|getRegSequenceInputs
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|SmallVectorImpl<RegSubRegPairAndIdx>&InputRegs
+argument_list|)
+specifier|const
+block|;
+comment|/// Build the equivalent inputs of a EXTRACT_SUBREG for the given \p MI
+comment|/// and \p DefIdx.
+comment|/// \p [out] InputReg of the equivalent EXTRACT_SUBREG.
+comment|/// E.g., EXTRACT_SUBREG vreg1:sub1, sub0, sub1 would produce:
+comment|/// - vreg1:sub1, sub0
+comment|///
+comment|/// \returns true if it is possible to build such an input sequence
+comment|/// with the pair \p MI, \p DefIdx. False otherwise.
+comment|///
+comment|/// \pre MI.isExtractSubreg() or MI.isExtractSubregLike().
+comment|///
+comment|/// \note The generic implementation does not provide any support for
+comment|/// MI.isExtractSubregLike(). In other words, one has to override
+comment|/// getExtractSubregLikeInputs for target specific instructions.
+name|bool
+name|getExtractSubregInputs
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|RegSubRegPairAndIdx&InputReg
+argument_list|)
+specifier|const
+block|;
+comment|/// Build the equivalent inputs of a INSERT_SUBREG for the given \p MI
+comment|/// and \p DefIdx.
+comment|/// \p [out] BaseReg and \p [out] InsertedReg contain
+comment|/// the equivalent inputs of INSERT_SUBREG.
+comment|/// E.g., INSERT_SUBREG vreg0:sub0, vreg1:sub1, sub3 would produce:
+comment|/// - BaseReg: vreg0:sub0
+comment|/// - InsertedReg: vreg1:sub1, sub3
+comment|///
+comment|/// \returns true if it is possible to build such an input sequence
+comment|/// with the pair \p MI, \p DefIdx. False otherwise.
+comment|///
+comment|/// \pre MI.isInsertSubreg() or MI.isInsertSubregLike().
+comment|///
+comment|/// \note The generic implementation does not provide any support for
+comment|/// MI.isInsertSubregLike(). In other words, one has to override
+comment|/// getInsertSubregLikeInputs for target specific instructions.
+name|bool
+name|getInsertSubregInputs
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|RegSubRegPair&BaseReg
+argument_list|,
+argument|RegSubRegPairAndIdx&InsertedReg
 argument_list|)
 specifier|const
 block|;
@@ -763,6 +961,32 @@ argument_list|(
 literal|"Target didn't implement TargetInstrInfo::getTrap!"
 argument_list|)
 block|;   }
+comment|/// getJumpInstrTableEntryBound - Get a number of bytes that suffices to hold
+comment|/// either the instruction returned by getUnconditionalBranch or the
+comment|/// instruction returned by getTrap. This only makes sense because
+comment|/// getUnconditionalBranch returns a single, specific instruction. This
+comment|/// information is needed by the jumptable construction code, since it must
+comment|/// decide how many bytes to use for a jumptable entry so it can generate the
+comment|/// right mask.
+comment|///
+comment|/// Note that if the jumptable instruction requires alignment, then that
+comment|/// alignment should be factored into this required bound so that the
+comment|/// resulting bound gives the right alignment for the instruction.
+name|virtual
+name|unsigned
+name|getJumpInstrTableEntryBound
+argument_list|()
+specifier|const
+block|{
+comment|// This method gets called by LLVMTargetMachine always, so it can't fail
+comment|// just because there happens to be no implementation for this target.
+comment|// Any code that tries to use a jumptable annotation without defining
+comment|// getUnconditionalBranch on the appropriate Target will fail anyway, and
+comment|// the value returned here won't matter in that case.
+return|return
+literal|0
+return|;
+block|}
 comment|/// isLegalToSplitMBBAt - Return true if it's legal to split the given basic
 comment|/// block at the specified instruction (i.e. instruction would be the start
 comment|/// of a new basic block).
@@ -1026,6 +1250,8 @@ comment|/// If both sides of the select can be optimized, PreferFalse is used to
 comment|/// a side.
 comment|///
 comment|/// @param MI          Optimizable select instruction.
+comment|/// @param NewMIs     Set that record all MIs in the basic block up to \p
+comment|/// MI. Has to be updated with any newly created MI or deleted ones.
 comment|/// @param PreferFalse Try to optimize FalseOp instead of TrueOp.
 comment|/// @returns Optimized instruction or NULL.
 name|virtual
@@ -1034,6 +1260,8 @@ operator|*
 name|optimizeSelect
 argument_list|(
 argument|MachineInstr *MI
+argument_list|,
+argument|SmallPtrSetImpl<MachineInstr *>&NewMIs
 argument_list|,
 argument|bool PreferFalse = false
 argument_list|)
@@ -1186,6 +1414,69 @@ argument|MachineInstr* LoadMI
 argument_list|)
 specifier|const
 block|;
+comment|/// hasPattern - return true when there is potentially a faster code sequence
+comment|/// for an instruction chain ending in \p Root. All potential pattern are
+comment|/// returned in the \p Pattern vector. Pattern should be sorted in priority
+comment|/// order since the pattern evaluator stops checking as soon as it finds a
+comment|/// faster sequence.
+comment|/// \param Root - Instruction that could be combined with one of its operands
+comment|/// \param Pattern - Vector of possible combination pattern
+name|virtual
+name|bool
+name|hasPattern
+argument_list|(
+argument|MachineInstr&Root
+argument_list|,
+argument|SmallVectorImpl<MachineCombinerPattern::MC_PATTERN>&Pattern
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// genAlternativeCodeSequence - when hasPattern() finds a pattern this
+comment|/// function generates the instructions that could replace the original code
+comment|/// sequence. The client has to decide whether the actual replacementment is
+comment|/// beneficial or not.
+comment|/// \param Root - Instruction that could be combined with one of its operands
+comment|/// \param P - Combination pattern for Root
+comment|/// \param InsInstrs - Vector of new instructions that implement P
+comment|/// \param DelInstrs - Old instructions, including Root, that could be replaced
+comment|/// by InsInstr
+comment|/// \param InstrIdxForVirtReg - map of virtual register to instruction in
+comment|/// InsInstr that defines it
+name|virtual
+name|void
+name|genAlternativeCodeSequence
+argument_list|(
+argument|MachineInstr&Root
+argument_list|,
+argument|MachineCombinerPattern::MC_PATTERN P
+argument_list|,
+argument|SmallVectorImpl<MachineInstr *>&InsInstrs
+argument_list|,
+argument|SmallVectorImpl<MachineInstr *>&DelInstrs
+argument_list|,
+argument|DenseMap<unsigned
+argument_list|,
+argument|unsigned>&InstrIdxForVirtReg
+argument_list|)
+specifier|const
+block|{
+return|return;
+block|}
+comment|/// useMachineCombiner - return true when a target supports MachineCombiner
+name|virtual
+name|bool
+name|useMachineCombiner
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 name|protected
 operator|:
 comment|/// foldMemoryOperandImpl - Target-dependent implementation for
@@ -1230,6 +1521,80 @@ specifier|const
 block|{
 return|return
 name|nullptr
+return|;
+block|}
+comment|/// \brief Target-dependent implementation of getRegSequenceInputs.
+comment|///
+comment|/// \returns true if it is possible to build the equivalent
+comment|/// REG_SEQUENCE inputs with the pair \p MI, \p DefIdx. False otherwise.
+comment|///
+comment|/// \pre MI.isRegSequenceLike().
+comment|///
+comment|/// \see TargetInstrInfo::getRegSequenceInputs.
+name|virtual
+name|bool
+name|getRegSequenceLikeInputs
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|SmallVectorImpl<RegSubRegPairAndIdx>&InputRegs
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Target-dependent implementation of getExtractSubregInputs.
+comment|///
+comment|/// \returns true if it is possible to build the equivalent
+comment|/// EXTRACT_SUBREG inputs with the pair \p MI, \p DefIdx. False otherwise.
+comment|///
+comment|/// \pre MI.isExtractSubregLike().
+comment|///
+comment|/// \see TargetInstrInfo::getExtractSubregInputs.
+name|virtual
+name|bool
+name|getExtractSubregLikeInputs
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|RegSubRegPairAndIdx&InputReg
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Target-dependent implementation of getInsertSubregInputs.
+comment|///
+comment|/// \returns true if it is possible to build the equivalent
+comment|/// INSERT_SUBREG inputs with the pair \p MI, \p DefIdx. False otherwise.
+comment|///
+comment|/// \pre MI.isInsertSubregLike().
+comment|///
+comment|/// \see TargetInstrInfo::getInsertSubregInputs.
+name|virtual
+name|bool
+name|getInsertSubregLikeInputs
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|RegSubRegPair&BaseReg
+argument_list|,
+argument|RegSubRegPairAndIdx&InsertedReg
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
 return|;
 block|}
 name|public
@@ -1450,7 +1815,7 @@ argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
 block|;
-comment|/// getNoopForMachoTarget - Return the noop instruction to use for a noop.
+comment|/// Return the noop instruction to use for a noop.
 name|virtual
 name|void
 name|getNoopForMachoTarget
@@ -1458,9 +1823,7 @@ argument_list|(
 argument|MCInst&NopInst
 argument_list|)
 specifier|const
-block|{
-comment|// Default to just using 'nop' string.
-block|}
+block|;
 comment|/// isPredicated - Returns true if the instruction is already predicated.
 comment|///
 name|virtual
@@ -1690,6 +2053,18 @@ return|return
 name|false
 return|;
 block|}
+name|virtual
+name|bool
+name|optimizeCondBranch
+argument_list|(
+argument|MachineInstr *MI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// optimizeLoadInstr - Try to remove the load by folding it to a register
 comment|/// operand at the use. We fold the load instructions if and only if the
 comment|/// def and use are in the same BB. We only look at one load and see
@@ -1867,7 +2242,7 @@ comment|/// Return the default expected latency for a def based on it's opcode.
 name|unsigned
 name|defaultDefLatency
 argument_list|(
-argument|const MCSchedModel *SchedModel
+argument|const MCSchedModel&SchedModel
 argument_list|,
 argument|const MachineInstr *DefMI
 argument_list|)
@@ -2134,14 +2509,70 @@ name|DFAPacketizer
 operator|*
 name|CreateTargetScheduleState
 argument_list|(
-argument|const TargetMachine*
-argument_list|,
-argument|const ScheduleDAG*
+argument|const TargetSubtargetInfo&
 argument_list|)
 specifier|const
 block|{
 return|return
 name|nullptr
+return|;
+block|}
+comment|// areMemAccessesTriviallyDisjoint - Sometimes, it is possible for the target
+comment|// to tell, even without aliasing information, that two MIs access different
+comment|// memory addresses. This function returns true if two MIs access different
+comment|// memory addresses, and false otherwise.
+name|virtual
+name|bool
+name|areMemAccessesTriviallyDisjoint
+argument_list|(
+argument|MachineInstr *MIa
+argument_list|,
+argument|MachineInstr *MIb
+argument_list|,
+argument|AliasAnalysis *AA = nullptr
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|MIa
+operator|&&
+operator|(
+name|MIa
+operator|->
+name|mayLoad
+argument_list|()
+operator|||
+name|MIa
+operator|->
+name|mayStore
+argument_list|()
+operator|)
+operator|&&
+literal|"MIa must load from or modify a memory location"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|MIb
+operator|&&
+operator|(
+name|MIb
+operator|->
+name|mayLoad
+argument_list|()
+operator|||
+name|MIb
+operator|->
+name|mayStore
+argument_list|()
+operator|)
+operator|&&
+literal|"MIb must load from or modify a memory location"
+argument_list|)
+block|;
+return|return
+name|false
 return|;
 block|}
 name|private

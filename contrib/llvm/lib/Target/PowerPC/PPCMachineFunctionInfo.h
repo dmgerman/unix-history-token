@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|PPC_MACHINE_FUNCTION_INFO_H
+name|LLVM_LIB_TARGET_POWERPC_PPCMACHINEFUNCTIONINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|PPC_MACHINE_FUNCTION_INFO_H
+name|LLVM_LIB_TARGET_POWERPC_PPCMACHINEFUNCTIONINFO_H
 end_define
 
 begin_include
@@ -96,6 +96,10 @@ block|;
 comment|/// Frame index where the old base pointer is stored.
 name|int
 name|BasePointerSaveIndex
+block|;
+comment|/// Frame index where the old PIC base pointer is stored.
+name|int
+name|PICBasePointerSaveIndex
 block|;
 comment|/// MustSaveLR - Indicates whether LR is defined (or clobbered) in the current
 comment|/// function.  This is only valid after the initial scan of the function by
@@ -207,6 +211,11 @@ literal|0
 argument_list|)
 block|,
 name|BasePointerSaveIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|PICBasePointerSaveIndex
 argument_list|(
 literal|0
 argument_list|)
@@ -340,6 +349,25 @@ argument|int Idx
 argument_list|)
 block|{
 name|BasePointerSaveIndex
+operator|=
+name|Idx
+block|; }
+name|int
+name|getPICBasePointerSaveIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PICBasePointerSaveIndex
+return|;
+block|}
+name|void
+name|setPICBasePointerSaveIndex
+argument_list|(
+argument|int Idx
+argument_list|)
+block|{
+name|PICBasePointerSaveIndex
 operator|=
 name|Idx
 block|; }

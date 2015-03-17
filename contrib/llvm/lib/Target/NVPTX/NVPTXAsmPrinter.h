@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NVPTXASMPRINTER_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXASMPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NVPTXASMPRINTER_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXASMPRINTER_H
 end_define
 
 begin_include
@@ -178,42 +178,6 @@ end_comment
 begin_comment
 comment|// (subclass of MCStreamer).
 end_comment
-
-begin_comment
-comment|// This is defined in AsmPrinter.cpp.
-end_comment
-
-begin_comment
-comment|// Used to process the constant expressions in initializers.
-end_comment
-
-begin_decl_stmt
-name|namespace
-name|nvptx
-block|{
-specifier|const
-name|llvm
-operator|::
-name|MCExpr
-operator|*
-name|LowerConstant
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|CV
-argument_list|,
-name|llvm
-operator|::
-name|AsmPrinter
-operator|&
-name|AP
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -335,19 +299,26 @@ comment|// it out.
 name|public
 operator|:
 name|unsigned
-name|size
-block|;
-comment|// size of the buffer in bytes
-name|unsigned
-name|char
-operator|*
-name|buffer
-block|;
-comment|// the buffer
-name|unsigned
 name|numSymbols
 block|;
 comment|// number of symbol addresses
+name|private
+operator|:
+specifier|const
+name|unsigned
+name|size
+block|;
+comment|// size of the buffer in bytes
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+name|char
+operator|>
+name|buffer
+block|;
+comment|// the buffer
 name|SmallVector
 operator|<
 name|unsigned
@@ -366,8 +337,6 @@ literal|4
 operator|>
 name|Symbols
 block|;
-name|private
-operator|:
 name|unsigned
 name|curpos
 block|;
@@ -393,6 +362,16 @@ argument_list|,
 argument|NVPTXAsmPrinter&_AP
 argument_list|)
 operator|:
+name|size
+argument_list|(
+name|_size
+argument_list|)
+block|,
+name|buffer
+argument_list|(
+name|_size
+argument_list|)
+block|,
 name|O
 argument_list|(
 name|_O
@@ -403,19 +382,6 @@ argument_list|(
 argument|_AP
 argument_list|)
 block|{
-name|buffer
-operator|=
-name|new
-name|unsigned
-name|char
-index|[
-name|_size
-index|]
-block|;
-name|size
-operator|=
-name|_size
-block|;
 name|curpos
 operator|=
 literal|0
@@ -430,14 +396,6 @@ name|AP
 operator|.
 name|EmitGeneric
 block|;     }
-operator|~
-name|AggBuffer
-argument_list|()
-block|{
-name|delete
-index|[]
-name|buffer
-block|; }
 name|unsigned
 name|addBytes
 argument_list|(
@@ -854,13 +812,11 @@ block|{
 name|O
 operator|<<
 operator|*
-name|nvptx
-operator|::
-name|LowerConstant
+name|AP
+operator|.
+name|lowerConstant
 argument_list|(
 name|Cexpr
-argument_list|,
-name|AP
 argument_list|)
 expr_stmt|;
 block|}
@@ -910,9 +866,11 @@ name|int
 operator|*
 operator|)
 operator|(
+operator|&
 name|buffer
-operator|+
+index|[
 name|pos
+index|]
 operator|)
 expr_stmt|;
 else|else
@@ -926,9 +884,11 @@ name|long
 operator|*
 operator|)
 operator|(
+operator|&
 name|buffer
-operator|+
+index|[
 name|pos
+index|]
 operator|)
 expr_stmt|;
 block|}

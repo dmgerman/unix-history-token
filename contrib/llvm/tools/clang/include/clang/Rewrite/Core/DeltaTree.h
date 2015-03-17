@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_REWRITE_DELTATREE_H
+name|LLVM_CLANG_REWRITE_CORE_DELTATREE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_REWRITE_DELTATREE_H
+name|LLVM_CLANG_REWRITE_CORE_DELTATREE_H
 end_define
 
 begin_include

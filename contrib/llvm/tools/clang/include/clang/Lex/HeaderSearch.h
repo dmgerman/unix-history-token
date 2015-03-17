@@ -664,6 +664,20 @@ name|bool
 operator|>
 name|DirectoryHasModuleMap
 expr_stmt|;
+comment|/// \brief Set of module map files we've already loaded, and a flag indicating
+comment|/// whether they were valid or not.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+name|bool
+operator|>
+name|LoadedModuleMaps
+expr_stmt|;
 comment|/// \brief Uniqued set of framework names, which is used to track which
 comment|/// headers were included as framework headers.
 name|llvm
@@ -699,8 +713,10 @@ name|NumFrameworkLookups
 decl_stmt|,
 name|NumSubFrameworkLookups
 decl_stmt|;
-name|bool
-name|EnabledModules
+specifier|const
+name|LangOptions
+modifier|&
+name|LangOpts
 decl_stmt|;
 comment|// HeaderSearch doesn't support default or copy construction.
 name|HeaderSearch
@@ -1175,10 +1191,18 @@ name|CurDir
 argument_list|,
 name|ArrayRef
 operator|<
+name|std
+operator|::
+name|pair
+operator|<
 specifier|const
 name|FileEntry
 operator|*
-operator|>
+argument_list|,
+specifier|const
+name|DirectoryEntry
+operator|*
+operator|>>
 name|Includers
 argument_list|,
 name|SmallVectorImpl
@@ -1259,14 +1283,9 @@ parameter_list|)
 block|{
 return|return
 name|FrameworkMap
-operator|.
-name|GetOrCreateValue
-argument_list|(
+index|[
 name|FWName
-argument_list|)
-operator|.
-name|getValue
-argument_list|()
+index|]
 return|;
 block|}
 comment|/// \brief Mark the specified file as a target of of a \#include,
@@ -1487,7 +1506,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|EnabledModules
+name|LangOpts
+operator|.
+name|Modules
 return|;
 block|}
 comment|/// \brief Retrieve the name of the module file that should be used to
@@ -1943,6 +1964,11 @@ name|File
 parameter_list|,
 name|bool
 name|IsSystem
+parameter_list|,
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|Dir
 parameter_list|)
 function_decl|;
 comment|/// \brief Try to load the module map file in the given directory.

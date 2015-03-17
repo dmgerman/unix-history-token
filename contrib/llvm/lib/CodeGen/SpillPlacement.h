@@ -102,13 +102,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_SPILLPLACEMENT_H
+name|LLVM_LIB_CODEGEN_SPILLPLACEMENT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_SPILLPLACEMENT_H
+name|LLVM_LIB_CODEGEN_SPILLPLACEMENT_H
 end_define
 
 begin_include
@@ -216,9 +216,14 @@ name|SmallVector
 operator|<
 name|BlockFrequency
 block|,
-literal|4
+literal|8
 operator|>
 name|BlockFrequencies
+block|;
+comment|/// Decision threshold. A node gets the output value 0 if the weighted sum of
+comment|/// its inputs falls in the open interval (-Threshold;Threshold).
+name|BlockFrequency
+name|Threshold
 block|;
 name|public
 operator|:
@@ -430,6 +435,15 @@ name|void
 name|activate
 argument_list|(
 name|unsigned
+argument_list|)
+block|;
+name|void
+name|setThreshold
+argument_list|(
+specifier|const
+name|BlockFrequency
+operator|&
+name|Entry
 argument_list|)
 block|; }
 decl_stmt|;

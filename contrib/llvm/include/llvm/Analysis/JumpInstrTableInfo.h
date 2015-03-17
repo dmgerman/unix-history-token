@@ -109,8 +109,13 @@ specifier|static
 name|char
 name|ID
 block|;
+comment|/// The default byte alignment for jump tables is 16, which is large but
+comment|/// usually safe.
 name|JumpInstrTableInfo
-argument_list|()
+argument_list|(
+argument|uint64_t ByteAlign =
+literal|16
+argument_list|)
 block|;
 name|virtual
 operator|~
@@ -186,10 +191,24 @@ return|return
 name|Tables
 return|;
 block|}
+comment|/// Gets the alignment in bytes of a jumptable entry.
+name|uint64_t
+name|entryByteAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ByteAlignment
+return|;
+block|}
 name|private
 label|:
 name|JumpTables
 name|Tables
+decl_stmt|;
+comment|/// A power-of-two alignment of a jumptable entry.
+name|uint64_t
+name|ByteAlignment
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -197,6 +216,29 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/// Creates a JumpInstrTableInfo pass with the given bound on entry size. This
+end_comment
+
+begin_comment
+comment|/// bound specifies the maximum number of bytes needed to represent an
+end_comment
+
+begin_comment
+comment|/// unconditional jump or a trap instruction in the back end currently in use.
+end_comment
+
+begin_function_decl
+name|ModulePass
+modifier|*
+name|createJumpInstrTableInfoPass
+parameter_list|(
+name|unsigned
+name|Bound
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 unit|}

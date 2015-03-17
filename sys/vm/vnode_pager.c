@@ -3257,6 +3257,7 @@ operator|->
 name|pindex
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Synchronous and asynchronous paging operations use different 	 * free pbuf counters.  This is done to avoid asynchronous requests 	 * to consume all pbufs. 	 * Allocate the pbuf at the very beginning of the function, so that 	 * if we are low on certain kind of pbufs don't even proceed to BMAP, 	 * but sleep. 	 */
 name|freecnt
 operator|=
 name|iodone

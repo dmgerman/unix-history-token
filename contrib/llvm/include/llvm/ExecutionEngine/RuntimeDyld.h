@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/ObjectBuffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ExecutionEngine/RTDyldMemoryManager.h"
 end_include
 
@@ -81,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Memory.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -93,19 +93,27 @@ block|{
 name|class
 name|ObjectFile
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|OwningBinary
+expr_stmt|;
 block|}
 name|class
 name|RuntimeDyldImpl
 decl_stmt|;
 name|class
-name|ObjectImage
+name|RuntimeDyldCheckerImpl
 decl_stmt|;
 name|class
 name|RuntimeDyld
 block|{
 name|friend
 name|class
-name|RuntimeDyldChecker
+name|RuntimeDyldCheckerImpl
 decl_stmt|;
 name|RuntimeDyld
 argument_list|(
@@ -125,16 +133,24 @@ name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 comment|// RuntimeDyldImpl is the actual class. RuntimeDyld is just the public
 comment|// interface.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|RuntimeDyldImpl
-modifier|*
+operator|>
 name|Dyld
-decl_stmt|;
+expr_stmt|;
 name|RTDyldMemoryManager
 modifier|*
 name|MM
 decl_stmt|;
 name|bool
 name|ProcessAllSections
+decl_stmt|;
+name|RuntimeDyldCheckerImpl
+modifier|*
+name|Checker
 decl_stmt|;
 name|protected
 label|:
@@ -152,6 +168,88 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
+comment|/// \brief Information about the loaded object.
+name|class
+name|LoadedObjectInfo
+block|{
+name|friend
+name|class
+name|RuntimeDyldImpl
+decl_stmt|;
+name|public
+label|:
+name|LoadedObjectInfo
+argument_list|(
+argument|RuntimeDyldImpl&RTDyld
+argument_list|,
+argument|unsigned BeginIdx
+argument_list|,
+argument|unsigned EndIdx
+argument_list|)
+block|:
+name|RTDyld
+argument_list|(
+name|RTDyld
+argument_list|)
+operator|,
+name|BeginIdx
+argument_list|(
+name|BeginIdx
+argument_list|)
+operator|,
+name|EndIdx
+argument_list|(
+argument|EndIdx
+argument_list|)
+block|{ }
+name|virtual
+operator|~
+name|LoadedObjectInfo
+argument_list|()
+block|{}
+name|virtual
+name|object
+operator|::
+name|OwningBinary
+operator|<
+name|object
+operator|::
+name|ObjectFile
+operator|>
+name|getObjectForDebug
+argument_list|(
+argument|const object::ObjectFile&Obj
+argument_list|)
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|uint64_t
+name|getSectionLoadAddress
+argument_list|(
+name|StringRef
+name|Name
+argument_list|)
+decl|const
+decl_stmt|;
+name|protected
+label|:
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
+name|RuntimeDyldImpl
+modifier|&
+name|RTDyld
+decl_stmt|;
+name|unsigned
+name|BeginIdx
+decl_stmt|,
+name|EndIdx
+decl_stmt|;
+block|}
+empty_stmt|;
 name|RuntimeDyld
 argument_list|(
 name|RTDyldMemoryManager
@@ -162,58 +260,46 @@ operator|~
 name|RuntimeDyld
 argument_list|()
 expr_stmt|;
-comment|/// Prepare the object contained in the input buffer for execution.
-comment|/// Ownership of the input buffer is transferred to the ObjectImage
-comment|/// instance returned from this function if successful. In the case of load
-comment|/// failure, the input buffer will be deleted.
-name|ObjectImage
-modifier|*
-name|loadObject
-parameter_list|(
-name|ObjectBuffer
-modifier|*
-name|InputBuffer
-parameter_list|)
-function_decl|;
-comment|/// Prepare the referenced object file for execution.
-comment|/// Ownership of the input object is transferred to the ObjectImage
-comment|/// instance returned from this function if successful. In the case of load
-comment|/// failure, the input object will be deleted.
-name|ObjectImage
-modifier|*
-name|loadObject
-argument_list|(
+comment|/// Add the referenced object file to the list of objects to be loaded and
+comment|/// relocated.
 name|std
 operator|::
 name|unique_ptr
 operator|<
+name|LoadedObjectInfo
+operator|>
+name|loadObject
+argument_list|(
+specifier|const
 name|object
 operator|::
 name|ObjectFile
-operator|>
-name|InputObject
+operator|&
+name|O
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// Get the address of our local copy of the symbol. This may or may not
 comment|/// be the address used for relocation (clients can copy the data around
 comment|/// and resolve relocatons based on where they put it).
 name|void
 modifier|*
 name|getSymbolAddress
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Name
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Get the address of the target copy of the symbol. This is the address
 comment|/// used for relocation.
 name|uint64_t
 name|getSymbolLoadAddress
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Name
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Resolve the relocations for all symbols we currently know about.
 name|void
 name|resolveRelocations

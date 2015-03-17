@@ -114,6 +114,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Function
+decl_stmt|;
+name|class
 name|GlobalValue
 decl_stmt|;
 name|class
@@ -445,7 +448,7 @@ comment|/// FIXME: It's not clear that this is a good or useful query API. Clien
 comment|/// should probably move to simpler cost metrics using the above.
 comment|/// Alternatively, we could split the cost interface into distinct code-size
 comment|/// and execution-speed costs. This would allow modelling the core of this
-comment|/// query more accurately as the a call is a single small instruction, but
+comment|/// query more accurately as a call is a single small instruction, but
 comment|/// incurs significant execution cost.
 name|virtual
 name|bool
@@ -520,6 +523,11 @@ name|virtual
 name|void
 name|getUnrollingPreferences
 argument_list|(
+specifier|const
+name|Function
+operator|*
+name|F
+argument_list|,
 name|Loop
 operator|*
 name|L
@@ -601,6 +609,36 @@ name|HasBaseReg
 argument_list|,
 name|int64_t
 name|Scale
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Return true if the target works with masked instruction
+comment|/// AVX2 allows masks for consecutive load and store for i32 and i64 elements.
+comment|/// AVX-512 architecture will also allow masks for non-consecutive memory
+comment|/// accesses.
+name|virtual
+name|bool
+name|isLegalMaskedStore
+argument_list|(
+name|Type
+operator|*
+name|DataType
+argument_list|,
+name|int
+name|Consecutive
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
+name|bool
+name|isLegalMaskedLoad
+argument_list|(
+name|Type
+operator|*
+name|DataType
+argument_list|,
+name|int
+name|Consecutive
 argument_list|)
 decl|const
 decl_stmt|;
@@ -808,6 +846,19 @@ name|OK_NonUniformConstantValue
 comment|// Operand is a non uniform constant value.
 block|}
 enum|;
+comment|/// \brief Additional properties of an operand's values.
+enum|enum
+name|OperandValueProperties
+block|{
+name|OP_None
+init|=
+literal|0
+block|,
+name|OP_PowerOf2
+init|=
+literal|1
+block|}
+enum|;
 comment|/// \return The number of scalar or vector registers that the target has.
 comment|/// If 'Vectors' is true, it returns the number of vector registers. If it is
 comment|/// set to false, it returns the number of scalar registers.
@@ -830,12 +881,12 @@ name|Vector
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \return The maximum unroll factor that the vectorizer should try to
+comment|/// \return The maximum interleave factor that any transform should try to
 comment|/// perform for this target. This number depends on the level of parallelism
 comment|/// and the number of execution units in the CPU.
 name|virtual
 name|unsigned
-name|getMaximumUnrollFactor
+name|getMaxInterleaveFactor
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -860,6 +911,16 @@ name|OperandValueKind
 name|Opd2Info
 operator|=
 name|OK_AnyValue
+argument_list|,
+name|OperandValueProperties
+name|Opd1PropInfo
+operator|=
+name|OP_None
+argument_list|,
+name|OperandValueProperties
+name|Opd2PropInfo
+operator|=
+name|OP_None
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1064,6 +1125,24 @@ name|bool
 name|IsComplex
 operator|=
 name|false
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns The cost, if any, of keeping values of the given types alive
+comment|/// over a callsite.
+comment|///
+comment|/// Some types may require the use of register classes that do not have
+comment|/// any callee-saved registers, so would require a spill and fill.
+name|virtual
+name|unsigned
+name|getCostOfKeepingLiveOverCall
+argument_list|(
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+name|Tys
 argument_list|)
 decl|const
 decl_stmt|;

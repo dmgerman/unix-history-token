@@ -104,8 +104,9 @@ argument|const char *syntax
 argument_list|,
 argument|uint32_t max_matches
 argument_list|,
-argument|uint32_t completion_type_mask =
-literal|0
+argument|uint32_t completion_type_mask
+argument_list|,
+argument|bool is_removable
 argument_list|)
 block|;
 name|virtual
@@ -113,6 +114,16 @@ operator|~
 name|CommandObjectRegexCommand
 argument_list|()
 block|;
+name|bool
+name|IsRemovable
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|m_is_removable
+return|;
+block|}
 name|bool
 name|AddRegexCommand
 argument_list|(
@@ -140,7 +151,6 @@ name|empty
 argument_list|()
 return|;
 block|}
-name|virtual
 name|int
 name|HandleCompletion
 argument_list|(
@@ -158,22 +168,18 @@ argument|bool&word_complete
 argument_list|,
 argument|StringList&matches
 argument_list|)
+name|override
 block|;
 name|protected
 operator|:
-name|virtual
 name|bool
 name|DoExecute
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|command
+argument|const char *command
 argument_list|,
-name|CommandReturnObject
-operator|&
-name|result
+argument|CommandReturnObject&result
 argument_list|)
+name|override
 block|;      struct
 name|Entry
 block|{
@@ -205,6 +211,9 @@ name|m_completion_type_mask
 decl_stmt|;
 name|EntryCollection
 name|m_entries
+decl_stmt|;
+name|bool
+name|m_is_removable
 decl_stmt|;
 name|private
 label|:

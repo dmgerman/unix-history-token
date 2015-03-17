@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FORMAT_UNWRAPPED_LINE_PARSER_H
+name|LLVM_CLANG_LIB_FORMAT_UNWRAPPEDLINEPARSER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FORMAT_UNWRAPPED_LINE_PARSER_H
+name|LLVM_CLANG_LIB_FORMAT_UNWRAPPEDLINEPARSER_H
 end_define
 
 begin_include
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<list>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stack>
 end_include
 
 begin_decl_stmt
@@ -181,6 +187,11 @@ specifier|const
 name|FormatStyle
 operator|&
 name|Style
+argument_list|,
+specifier|const
+name|AdditionalKeywords
+operator|&
+name|Keywords
 argument_list|,
 name|ArrayRef
 operator|<
@@ -331,6 +342,10 @@ parameter_list|()
 function_decl|;
 name|void
 name|parseEnum
+parameter_list|()
+function_decl|;
+name|void
+name|parseJavaEnumBody
 parameter_list|()
 function_decl|;
 name|void
@@ -518,6 +533,11 @@ name|FormatStyle
 modifier|&
 name|Style
 decl_stmt|;
+specifier|const
+name|AdditionalKeywords
+modifier|&
+name|Keywords
+decl_stmt|;
 name|FormatTokenSource
 modifier|*
 name|Tokens
@@ -678,10 +698,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_FORMAT_UNWRAPPED_LINE_PARSER_H
-end_comment
 
 end_unit
 

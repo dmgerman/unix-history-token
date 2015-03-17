@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_LINEITERATOR_H__
+name|LLVM_SUPPORT_LINEITERATOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_LINEITERATOR_H__
+name|LLVM_SUPPORT_LINEITERATOR_H
 end_define
 
 begin_include
@@ -68,14 +68,15 @@ block|{
 name|class
 name|MemoryBuffer
 decl_stmt|;
-comment|/// \brief A forward iterator which reads non-blank text lines from a buffer.
+comment|/// \brief A forward iterator which reads text lines from a buffer.
 comment|///
 comment|/// This class provides a forward iterator interface for reading one line at
 comment|/// a time from a buffer. When default constructed the iterator will be the
 comment|/// "end" iterator.
 comment|///
-comment|/// The iterator also is aware of what line number it is currently processing
-comment|/// and can strip comment lines given the comment-starting character.
+comment|/// The iterator is aware of what line number it is currently processing. It
+comment|/// strips blank lines by default, and comment lines given a comment-starting
+comment|/// character.
 comment|///
 comment|/// Note that this iterator requires the buffer to be nul terminated.
 name|class
@@ -101,6 +102,9 @@ decl_stmt|;
 name|char
 name|CommentMarker
 decl_stmt|;
+name|bool
+name|SkipBlanks
+decl_stmt|;
 name|unsigned
 name|LineNumber
 decl_stmt|;
@@ -123,6 +127,8 @@ name|explicit
 name|line_iterator
 argument_list|(
 argument|const MemoryBuffer&Buffer
+argument_list|,
+argument|bool SkipBlanks = true
 argument_list|,
 argument|char CommentMarker =
 literal|'\0'
@@ -307,10 +313,6 @@ unit|}
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_SUPPORT_LINEITERATOR_H__
-end_comment
 
 end_unit
 

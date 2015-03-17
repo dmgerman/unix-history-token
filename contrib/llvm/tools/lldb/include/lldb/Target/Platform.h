@@ -173,7 +173,7 @@ specifier|static
 name|lldb
 operator|::
 name|PlatformSP
-name|GetDefaultPlatform
+name|GetHostPlatform
 argument_list|()
 block|;
 specifier|static
@@ -201,7 +201,7 @@ argument_list|()
 block|;
 specifier|static
 name|void
-name|SetDefaultPlatform
+name|SetHostPlatform
 argument_list|(
 specifier|const
 name|lldb
@@ -211,6 +211,19 @@ operator|&
 name|platform_sp
 argument_list|)
 block|;
+comment|// Find an existing platform plug-in by name
+specifier|static
+name|lldb
+operator|::
+name|PlatformSP
+name|Find
+argument_list|(
+specifier|const
+name|ConstString
+operator|&
+name|name
+argument_list|)
+block|;
 specifier|static
 name|lldb
 operator|::
@@ -218,9 +231,9 @@ name|PlatformSP
 name|Create
 argument_list|(
 specifier|const
-name|char
-operator|*
-name|platform_name
+name|ConstString
+operator|&
+name|name
 argument_list|,
 name|Error
 operator|&
@@ -294,21 +307,8 @@ comment|/// @param[in] plugin_name
 comment|///     An optional name of a specific platform plug-in that
 comment|///     should be used. If NULL, pick the best plug-in.
 comment|//------------------------------------------------------------------
-specifier|static
-name|Platform
-operator|*
-name|FindPlugin
-argument_list|(
-name|Process
-operator|*
-name|process
-argument_list|,
-specifier|const
-name|ConstString
-operator|&
-name|plugin_name
-argument_list|)
-block|;
+comment|//        static lldb::PlatformSP
+comment|//        FindPlugin (Process *process, const ConstString&plugin_name);
 comment|//------------------------------------------------------------------
 comment|/// Set the target's executable based off of the existing
 comment|/// architecture information in \a target given a path to an
@@ -333,14 +333,9 @@ name|Error
 name|ResolveExecutable
 argument_list|(
 specifier|const
-name|FileSpec
+name|ModuleSpec
 operator|&
-name|exe_file
-argument_list|,
-specifier|const
-name|ArchSpec
-operator|&
-name|arch
+name|module_spec
 argument_list|,
 name|lldb
 operator|::
@@ -845,10 +840,6 @@ operator|*
 name|target
 argument_list|,
 comment|// Can be NULL, if NULL create a new target, else use existing one
-name|Listener
-operator|&
-name|listener
-argument_list|,
 name|Error
 operator|&
 name|error
@@ -891,10 +882,6 @@ operator|*
 name|target
 argument_list|,
 comment|// Can be NULL, if NULL create a new target, else use existing one
-name|Listener
-operator|&
-name|listener
-argument_list|,
 name|Error
 operator|&
 name|error
@@ -1122,6 +1109,34 @@ name|m_sdk_build
 operator|=
 name|sdk_build
 block|;         }
+comment|// Override this to return true if your platform supports Clang modules.
+comment|// You may also need to override AddClangModuleCompilationOptions to pass the right Clang flags for your platform.
+name|virtual
+name|bool
+name|SupportsModules
+argument_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// Appends the platform-specific options required to find the modules for the current platform.
+name|virtual
+name|void
+name|AddClangModuleCompilationOptions
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|options
+argument_list|)
+block|;
 name|ConstString
 name|GetWorkingDirectory
 argument_list|()
@@ -1139,7 +1154,7 @@ comment|// There may be modules that we don't want to find by default for operat
 comment|// The platform will return "true" from this call if the passed in module happens to be one of these.
 name|virtual
 name|bool
-name|ModuleIsExcludedForNonModuleSpecificSearches
+name|ModuleIsExcludedForUnconstrainedSearches
 argument_list|(
 argument|Target&target
 argument_list|,

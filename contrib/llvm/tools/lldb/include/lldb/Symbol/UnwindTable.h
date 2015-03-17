@@ -91,6 +91,13 @@ operator|*
 name|GetEHFrameInfo
 argument_list|()
 expr_stmt|;
+name|lldb_private
+operator|::
+name|CompactUnwindInfo
+operator|*
+name|GetCompactUnwindInfo
+argument_list|()
+expr_stmt|;
 name|lldb
 operator|::
 name|FuncUnwindersSP
@@ -195,6 +202,10 @@ decl_stmt|;
 name|DWARFCallFrameInfo
 modifier|*
 name|m_eh_frame
+decl_stmt|;
+name|CompactUnwindInfo
+modifier|*
+name|m_compact_unwind
 decl_stmt|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(

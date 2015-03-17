@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_term.c,v 1.38 2015/01/31 00:12:41 schwarze Exp $ */
+comment|/*	$Id: tbl_term.c,v 1.40 2015/03/06 15:48:53 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -378,11 +378,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|term_flushln
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 name|tp
 operator|->
 name|tbl

@@ -891,15 +891,9 @@ name|C
 operator|->
 name|MF
 argument_list|,
-operator|*
 name|C
 operator|->
 name|MLI
-argument_list|,
-operator|*
-name|C
-operator|->
-name|MDT
 argument_list|,
 name|IsPostRA
 argument_list|,

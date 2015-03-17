@@ -111,11 +111,14 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// MemoryBuffer - This interface provides simple read-only access to a block
-comment|/// of memory, and provides simple methods for reading files and standard input
-comment|/// into a memory buffer.  In addition to basic access to the characters in the
-comment|/// file, this interface guarantees you can read one character past the end of
-comment|/// the file, and that this character will read as '\0'.
+name|class
+name|MemoryBufferRef
+decl_stmt|;
+comment|/// This interface provides simple read-only access to a block of memory, and
+comment|/// provides simple methods for reading files and standard input into a memory
+comment|/// buffer.  In addition to basic access to the characters in the file, this
+comment|/// interface guarantees you can read one character past the end of the file,
+comment|/// and that this character will read as '\0'.
 comment|///
 comment|/// The '\0' guarantee is needed to support an optimization -- it's intended to
 comment|/// be more efficient for clients which are reading all the data to stop
@@ -230,8 +233,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// getBufferIdentifier - Return an identifier for this buffer, typically the
-comment|/// filename it was read from.
+comment|/// Return an identifier for this buffer, typically the filename it was read
+comment|/// from.
 name|virtual
 specifier|const
 name|char
@@ -263,7 +266,7 @@ name|MemoryBuffer
 operator|>>
 name|getFile
 argument_list|(
-argument|Twine Filename
+argument|const Twine&Filename
 argument_list|,
 argument|int64_t FileSize = -
 literal|1
@@ -276,10 +279,6 @@ expr_stmt|;
 comment|/// Given an already-open file descriptor, map some slice of it into a
 comment|/// MemoryBuffer. The slice is specified by an \p Offset and \p MapSize.
 comment|/// Since this is in the middle of a file, the buffer is not null terminated.
-comment|///
-comment|/// \param IsVolatileSize Set to true to indicate that the file size may be
-comment|/// changing, e.g. when libclang tries to parse while the user is
-comment|/// editing/updating the file.
 specifier|static
 name|ErrorOr
 operator|<
@@ -293,13 +292,11 @@ name|getOpenFileSlice
 argument_list|(
 argument|int FD
 argument_list|,
-argument|const char *Filename
+argument|const Twine&Filename
 argument_list|,
 argument|uint64_t MapSize
 argument_list|,
 argument|int64_t Offset
-argument_list|,
-argument|bool IsVolatileSize = false
 argument_list|)
 expr_stmt|;
 comment|/// Given an already-open file descriptor, read the file and return a
@@ -321,7 +318,7 @@ name|getOpenFile
 argument_list|(
 argument|int FD
 argument_list|,
-argument|const char *Filename
+argument|const Twine&Filename
 argument_list|,
 argument|uint64_t FileSize
 argument_list|,
@@ -330,80 +327,92 @@ argument_list|,
 argument|bool IsVolatileSize = false
 argument_list|)
 expr_stmt|;
-comment|/// getMemBuffer - Open the specified memory range as a MemoryBuffer.  Note
-comment|/// that InputData must be null terminated if RequiresNullTerminator is true.
+comment|/// Open the specified memory range as a MemoryBuffer. Note that InputData
+comment|/// must be null terminated if RequiresNullTerminator is true.
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MemoryBuffer
-modifier|*
+operator|>
 name|getMemBuffer
-parameter_list|(
-name|StringRef
-name|InputData
-parameter_list|,
-name|StringRef
-name|BufferName
-init|=
+argument_list|(
+argument|StringRef InputData
+argument_list|,
+argument|StringRef BufferName =
 literal|""
-parameter_list|,
-name|bool
-name|RequiresNullTerminator
-init|=
-name|true
-parameter_list|)
-function_decl|;
-comment|/// getMemBufferCopy - Open the specified memory range as a MemoryBuffer,
-comment|/// copying the contents and taking ownership of it.  InputData does not
-comment|/// have to be null terminated.
+argument_list|,
+argument|bool RequiresNullTerminator = true
+argument_list|)
+expr_stmt|;
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MemoryBuffer
-modifier|*
+operator|>
+name|getMemBuffer
+argument_list|(
+argument|MemoryBufferRef Ref
+argument_list|,
+argument|bool RequiresNullTerminator = true
+argument_list|)
+expr_stmt|;
+comment|/// Open the specified memory range as a MemoryBuffer, copying the contents
+comment|/// and taking ownership of it. InputData does not have to be null terminated.
+specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>
 name|getMemBufferCopy
-parameter_list|(
-name|StringRef
-name|InputData
-parameter_list|,
-name|StringRef
-name|BufferName
-init|=
+argument_list|(
+argument|StringRef InputData
+argument_list|,
+argument|const Twine&BufferName =
 literal|""
-parameter_list|)
-function_decl|;
-comment|/// getNewMemBuffer - Allocate a new MemoryBuffer of the specified size that
-comment|/// is completely initialized to zeros.  Note that the caller should
-comment|/// initialize the memory allocated by this method.  The memory is owned by
-comment|/// the MemoryBuffer object.
+argument_list|)
+expr_stmt|;
+comment|/// Allocate a new zero-initialized MemoryBuffer of the specified size. Note
+comment|/// that the caller need not initialize the memory allocated by this method.
+comment|/// The memory is owned by the MemoryBuffer object.
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MemoryBuffer
-modifier|*
+operator|>
 name|getNewMemBuffer
-parameter_list|(
-name|size_t
-name|Size
-parameter_list|,
-name|StringRef
-name|BufferName
-init|=
+argument_list|(
+argument|size_t Size
+argument_list|,
+argument|StringRef BufferName =
 literal|""
-parameter_list|)
-function_decl|;
-comment|/// getNewUninitMemBuffer - Allocate a new MemoryBuffer of the specified size
-comment|/// that is not initialized.  Note that the caller should initialize the
-comment|/// memory allocated by this method.  The memory is owned by the MemoryBuffer
-comment|/// object.
+argument_list|)
+expr_stmt|;
+comment|/// Allocate a new MemoryBuffer of the specified size that is not initialized.
+comment|/// Note that the caller should initialize the memory allocated by this
+comment|/// method. The memory is owned by the MemoryBuffer object.
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MemoryBuffer
-modifier|*
+operator|>
 name|getNewUninitMemBuffer
-parameter_list|(
-name|size_t
-name|Size
-parameter_list|,
-name|StringRef
-name|BufferName
-init|=
+argument_list|(
+argument|size_t Size
+argument_list|,
+argument|const Twine&BufferName =
 literal|""
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// Read all of stdin into a file buffer, and return it.
 specifier|static
 name|ErrorOr
@@ -430,10 +439,29 @@ name|MemoryBuffer
 operator|>>
 name|getFileOrSTDIN
 argument_list|(
-argument|StringRef Filename
+argument|const Twine&Filename
 argument_list|,
 argument|int64_t FileSize = -
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/// Map a subrange of the the specified file as a MemoryBuffer.
+specifier|static
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>>
+name|getFileSlice
+argument_list|(
+argument|const Twine&Filename
+argument_list|,
+argument|uint64_t MapSize
+argument_list|,
+argument|uint64_t Offset
 argument_list|)
 expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
@@ -458,6 +486,102 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+name|MemoryBufferRef
+name|getMemBufferRef
+argument_list|()
+specifier|const
+expr_stmt|;
+block|}
+empty_stmt|;
+name|class
+name|MemoryBufferRef
+block|{
+name|StringRef
+name|Buffer
+decl_stmt|;
+name|StringRef
+name|Identifier
+decl_stmt|;
+name|public
+label|:
+name|MemoryBufferRef
+argument_list|()
+block|{}
+name|MemoryBufferRef
+argument_list|(
+argument|StringRef Buffer
+argument_list|,
+argument|StringRef Identifier
+argument_list|)
+block|:
+name|Buffer
+argument_list|(
+name|Buffer
+argument_list|)
+operator|,
+name|Identifier
+argument_list|(
+argument|Identifier
+argument_list|)
+block|{}
+name|StringRef
+name|getBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffer
+return|;
+block|}
+name|StringRef
+name|getBufferIdentifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Identifier
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getBufferStart
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffer
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getBufferEnd
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffer
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|size_t
+name|getBufferSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffer
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).

@@ -888,8 +888,12 @@ comment|/// FullDependence) with as much information as can be gleaned.
 comment|/// The flag PossiblyLoopIndependent should be set by the caller
 comment|/// if it appears that control flow can reach from Src to Dst
 comment|/// without traversing a loop back edge.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Dependence
-operator|*
+operator|>
 name|depends
 argument_list|(
 argument|Instruction *Src
@@ -944,7 +948,7 @@ name|SCEV
 operator|*
 name|getSplitIteration
 argument_list|(
-argument|const Dependence *Dep
+argument|const Dependence&Dep
 argument_list|,
 argument|unsigned Level
 argument_list|)
@@ -1434,6 +1438,18 @@ argument_list|,
 argument|const Loop *LoopNest
 argument_list|)
 specifier|const
+block|;
+comment|/// Makes sure both subscripts (i.e. Pair->Src and Pair->Dst) share the same
+comment|/// integer type by sign-extending one of them when necessary.
+comment|/// Sign-extending a subscript is safe because getelementptr assumes the
+comment|/// array subscripts are signed.
+name|void
+name|unifySubscriptType
+argument_list|(
+name|Subscript
+operator|*
+name|Pair
+argument_list|)
 block|;
 comment|/// removeMatchingExtensions - Examines a subscript pair.
 comment|/// If the source and destination are identically sign (or zero)
@@ -2246,15 +2262,28 @@ block|;
 name|bool
 name|tryDelinearize
 argument_list|(
-argument|const SCEV *SrcSCEV
-argument_list|,
-argument|const SCEV *DstSCEV
-argument_list|,
-argument|SmallVectorImpl<Subscript>&Pair
-argument_list|,
-argument|const SCEV *ElementSize
-argument_list|)
 specifier|const
+name|SCEV
+operator|*
+name|SrcSCEV
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|DstSCEV
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|Subscript
+operator|>
+operator|&
+name|Pair
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|ElementSize
+argument_list|)
 block|;
 name|public
 operator|:

@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_DRIVER_COMPILATION_H_
+name|LLVM_CLANG_DRIVER_COMPILATION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_DRIVER_COMPILATION_H_
+name|LLVM_CLANG_DRIVER_COMPILATION_H
 end_define
 
 begin_include
@@ -348,17 +348,26 @@ return|;
 block|}
 name|void
 name|addCommand
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Command
-modifier|*
+operator|>
 name|C
-parameter_list|)
+argument_list|)
 block|{
 name|Jobs
 operator|.
 name|addJob
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|C
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

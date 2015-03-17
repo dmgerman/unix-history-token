@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmnLLDBDebugSessionInfoVarObj.h
+comment|// File:        MICmnLLDBDebugSessionInfoVarObj.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmnLLDBDebugSessionInfoVarObj interface.
+comment|// Overview:    CMICmnLLDBDebugSessionInfoVarObj interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -112,23 +112,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI debug session variable object. The static functionality in *this
+comment|// Details: MI debug session variable object. The static functionality in *this
 end_comment
 
 begin_comment
-comment|//			class manages a map container of *these variable objects.
+comment|//          class manages a map container of *these variable objects.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 24/03/2014.
+comment|// Authors: Illya Rudkin 24/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -143,7 +143,7 @@ comment|// Enums:
 name|public
 label|:
 comment|//++ ----------------------------------------------------------------------
-comment|// Details:	Enumeration of a variable type that is not a composite type
+comment|// Details: Enumeration of a variable type that is not a composite type
 comment|//--
 enum|enum
 name|varFormat_e
@@ -169,7 +169,7 @@ comment|// Always last one
 block|}
 enum|;
 comment|//++ ----------------------------------------------------------------------
-comment|// Details:	Enumeration of a variable type by composite or internal type
+comment|// Details: Enumeration of a variable type by composite or internal type
 comment|//--
 enum|enum
 name|varType_e

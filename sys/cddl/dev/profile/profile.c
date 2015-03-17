@@ -381,7 +381,7 @@ begin_define
 define|#
 directive|define
 name|PROF_ARTIFICIAL_FRAMES
-value|3
+value|9
 end_define
 
 begin_endif

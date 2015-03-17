@@ -107,9 +107,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// OperandTraits - Compile-time customization of
-comment|/// operand-related allocators and accessors
-comment|/// for use of the User class
+comment|/// \brief Compile-time customization of User operands.
+comment|///
+comment|/// Customizes operand-related allocators and accessors.
 name|template
 operator|<
 name|class
@@ -153,12 +153,8 @@ argument_list|()
 block|;
 name|protected
 operator|:
-comment|/// NumOperands - The number of values used by this User.
+comment|/// \brief This is a pointer to the array of Uses for this User.
 comment|///
-name|unsigned
-name|NumOperands
-block|;
-comment|/// OperandList - This is a pointer to the array of Uses for this User.
 comment|/// For nodes of fixed arity (e.g. a binary operator) this array will live
 comment|/// prefixed to some derived class instance.  For nodes of resizable variable
 comment|/// arity (e.g. PHINodes, SwitchInst etc.), this memory will be dynamically
@@ -195,16 +191,15 @@ argument_list|,
 name|vty
 argument_list|)
 block|,
-name|NumOperands
-argument_list|(
-name|NumOps
-argument_list|)
-block|,
 name|OperandList
 argument_list|(
 argument|OpList
 argument_list|)
-block|{}
+block|{
+name|NumOperands
+operator|=
+name|NumOps
+block|;   }
 name|Use
 operator|*
 name|allocHungoffUses
@@ -256,7 +251,7 @@ operator|+
 name|NumOperands
 argument_list|)
 block|;   }
-comment|/// operator delete - free memory allocated for User and Use objects
+comment|/// \brief Free memory allocated for User and Use objects.
 name|void
 name|operator
 name|delete
@@ -266,7 +261,7 @@ operator|*
 name|Usr
 argument_list|)
 block|;
-comment|/// placement delete - required by std, but never called.
+comment|/// \brief Placement delete - required by std, but never called.
 name|void
 name|operator
 name|delete
@@ -281,7 +276,7 @@ argument_list|(
 literal|"Constructor throws?"
 argument_list|)
 block|;   }
-comment|/// placement delete - required by std, but never called.
+comment|/// \brief Placement delete - required by std, but never called.
 name|void
 name|operator
 name|delete
@@ -648,8 +643,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// Convenience iterator for directly iterating over the Values in the
-comment|/// OperandList
+comment|/// \brief Iterator for directly iterating over the operand Values.
 name|struct
 name|value_op_iterator
 range|:
@@ -783,35 +777,35 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// dropAllReferences() - This function is in charge of "letting go" of all
+comment|/// \brief Drop all references to operands.
 end_comment
 
 begin_comment
-comment|// objects that this User refers to.  This allows one to
+comment|///
 end_comment
 
 begin_comment
-comment|// 'delete' a whole class at a time, even though there may be circular
+comment|/// This function is in charge of "letting go" of all objects that this User
 end_comment
 
 begin_comment
-comment|// references...  First all references are dropped, and all use counts go to
+comment|/// refers to.  This allows one to 'delete' a whole class at a time, even
 end_comment
 
 begin_comment
-comment|// zero.  Then everything is deleted for real.  Note that no operations are
+comment|/// though there may be circular references...  First all references are
 end_comment
 
 begin_comment
-comment|// valid on an object that has "dropped all references", except operator
+comment|/// dropped, and all use counts go to zero.  Then everything is deleted for
 end_comment
 
 begin_comment
-comment|// delete.
+comment|/// real.  Note that no operations are valid on an object that has "dropped
 end_comment
 
 begin_comment
-comment|//
+comment|/// all references", except operator delete.
 end_comment
 
 begin_function
@@ -839,15 +833,19 @@ block|}
 end_function
 
 begin_comment
-comment|/// replaceUsesOfWith - Replaces all references to the "From" definition with
-end_comment
-
-begin_comment
-comment|/// references to the "To" definition.
+comment|/// \brief Replace uses of one Value with another.
 end_comment
 
 begin_comment
 comment|///
+end_comment
+
+begin_comment
+comment|/// Replaces all references to the "From" definition with references to the
+end_comment
+
+begin_comment
+comment|/// "To" definition.
 end_comment
 
 begin_function_decl

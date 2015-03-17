@@ -264,16 +264,6 @@ name|unsigned
 name|short
 name|MSLocalManglingNumber
 decl_stmt|;
-comment|/// \brief SEH __try blocks get uniquely numbered within a function.  This
-comment|/// variable holds the index for an SEH try block.
-name|short
-name|SEHTryIndex
-decl_stmt|;
-comment|/// \brief SEH __try blocks get uniquely numbered within a function.  This
-comment|/// variable holds the next free index at a function's scope.
-name|short
-name|SEHTryIndexPool
-decl_stmt|;
 comment|/// PrototypeDepth - This is the number of function prototype scopes
 comment|/// enclosing this scope, including this scope.
 name|unsigned
@@ -295,10 +285,6 @@ decl_stmt|;
 name|Scope
 modifier|*
 name|MSLocalManglingParent
-decl_stmt|;
-name|Scope
-modifier|*
-name|SEHTryParent
 decl_stmt|;
 comment|/// BreakParent/ContinueParent - This is a direct link to the innermost
 comment|/// BreakScope/ContinueScope which contains the contents of this scope
@@ -779,30 +765,6 @@ return|return
 literal|1
 return|;
 block|}
-name|int
-name|getSEHTryIndex
-parameter_list|()
-block|{
-return|return
-name|SEHTryIndex
-return|;
-block|}
-name|int
-name|getSEHTryParentIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SEHTryParent
-operator|?
-name|SEHTryParent
-operator|->
-name|SEHTryIndex
-operator|:
-operator|-
-literal|1
-return|;
-block|}
 comment|/// isDeclScope - Return true if this is the scope that the specified decl is
 comment|/// declared in.
 name|bool
@@ -869,6 +831,23 @@ name|ErrorTrap
 operator|.
 name|hasUnrecoverableErrorOccurred
 argument_list|()
+return|;
+block|}
+comment|/// isFunctionScope() - Return true if this scope is a function scope.
+name|bool
+name|isFunctionScope
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getFlags
+argument_list|()
+operator|&
+name|Scope
+operator|::
+name|FnScope
+operator|)
 return|;
 block|}
 comment|/// isClassScope - Return true if this scope is a class/struct/union scope.

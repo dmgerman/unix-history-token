@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPSINSTPRINTER_H
+name|LLVM_LIB_TARGET_MIPS_INSTPRINTER_MIPSINSTPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPSINSTPRINTER_H
+name|LLVM_LIB_TARGET_MIPS_INSTPRINTER_MIPSINSTPRINTER_H
 end_define
 
 begin_include
@@ -346,6 +346,16 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printRegisterPair
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int opNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printSHFMask
 argument_list|(
 argument|const MCInst *MI
@@ -405,6 +415,16 @@ argument_list|,
 name|raw_ostream
 operator|&
 name|O
+argument_list|)
+block|;
+name|void
+name|printRegisterList
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int opNum
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|; }
 decl_stmt|;

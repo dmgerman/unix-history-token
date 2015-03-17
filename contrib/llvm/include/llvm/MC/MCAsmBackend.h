@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCAsmBack.h - MC Asm Backend --------------------*- C++ -*-===//
+comment|//===-- llvm/MC/MCAsmBackend.h - MC Asm Backend -----------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -216,25 +216,6 @@ decl|const
 block|{
 return|return
 name|false
-return|;
-block|}
-comment|/// isSectionAtomizable - Check whether the given section can be split into
-comment|/// atoms.
-comment|///
-comment|/// \see MCAssembler::isSymbolLinkerVisible().
-name|virtual
-name|bool
-name|isSectionAtomizable
-argument_list|(
-specifier|const
-name|MCSection
-operator|&
-name|Section
-argument_list|)
-decl|const
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|/// @name Target Fixup Interfaces

@@ -14365,6 +14365,12 @@ operator|->
 name|bio_length
 argument_list|)
 expr_stmt|;
+name|bp
+operator|->
+name|bio_data
+operator|=
+name|unmapped_buf
+expr_stmt|;
 name|pmap_qremove
 argument_list|(
 name|start

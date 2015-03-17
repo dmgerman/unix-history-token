@@ -36,15 +36,31 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file contains constants used for implementing Dwarf debug support.  For
+comment|// \file
 end_comment
 
 begin_comment
-comment|// Details on the Dwarf 3 specfication see DWARF Debugging Information Format
+comment|// \brief This file contains constants used for implementing Dwarf
 end_comment
 
 begin_comment
-comment|// V.3 reference manual http://dwarf.freestandards.org ,
+comment|// debug support.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// For details on the Dwarf specfication see the latest DWARF Debugging
+end_comment
+
+begin_comment
+comment|// Information Format standard document on http://www.dwarfstd.org. This
+end_comment
+
+begin_comment
+comment|// file often includes support for non-released standard features.
 end_comment
 
 begin_comment
@@ -83,98 +99,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|//===----------------------------------------------------------------------===//
-comment|// Debug info constants.
-enum_decl|enum :
-name|uint32_t
-block|{
-name|LLVMDebugVersion
-init|=
-operator|(
-literal|12
-operator|<<
-literal|16
-operator|)
-block|,
-comment|// Current version of debug information.
-name|LLVMDebugVersion11
-init|=
-operator|(
-literal|11
-operator|<<
-literal|16
-operator|)
-block|,
-comment|// Constant for version 11.
-name|LLVMDebugVersion10
-init|=
-operator|(
-literal|10
-operator|<<
-literal|16
-operator|)
-block|,
-comment|// Constant for version 10.
-name|LLVMDebugVersion9
-init|=
-operator|(
-literal|9
-operator|<<
-literal|16
-operator|)
-block|,
-comment|// Constant for version 9.
-name|LLVMDebugVersion8
-init|=
-operator|(
-literal|8
-operator|<<
-literal|16
-operator|)
-block|,
-comment|// Constant for version 8.
-name|LLVMDebugVersion7
-init|=
-operator|(
-literal|7
-operator|<<
-literal|16
-operator|)
-block|,
-comment|// Constant for version 7.
-name|LLVMDebugVersion6
-init|=
-operator|(
-literal|6
-operator|<<
-literal|16
-operator|)
-block|,
-comment|// Constant for version 6.
-name|LLVMDebugVersion5
-init|=
-operator|(
-literal|5
-operator|<<
-literal|16
-operator|)
-block|,
-comment|// Constant for version 5.
-name|LLVMDebugVersion4
-init|=
-operator|(
-literal|4
-operator|<<
-literal|16
-operator|)
-block|,
-comment|// Constant for version 4.
-name|LLVMDebugVersionMask
-init|=
-literal|0xffff0000
-comment|// Mask for version number.
-block|}
-enum_decl|;
 name|namespace
 name|dwarf
 block|{
@@ -206,6 +130,11 @@ init|=
 literal|0x101
 block|,
 comment|// Tag for argument variables.
+name|DW_TAG_expression
+init|=
+literal|0x102
+block|,
+comment|// Tag for complex address expressions.
 name|DW_TAG_user_base
 init|=
 literal|0x1000
@@ -2731,6 +2660,8 @@ block|,
 name|DW_LLE_offset_pair_entry
 block|}
 enum|;
+comment|/// Contstants for the DW_APPLE_PROPERTY_attributes attribute.
+comment|/// Keep this list in sync with clang's DeclSpec.h ObjCPropertyAttributeKind.
 enum|enum
 name|ApplePropertyAttributes
 block|{
@@ -2739,7 +2670,7 @@ name|DW_APPLE_PROPERTY_readonly
 init|=
 literal|0x01
 block|,
-name|DW_APPLE_PROPERTY_readwrite
+name|DW_APPLE_PROPERTY_getter
 init|=
 literal|0x02
 block|,
@@ -2747,250 +2678,43 @@ name|DW_APPLE_PROPERTY_assign
 init|=
 literal|0x04
 block|,
-name|DW_APPLE_PROPERTY_retain
+name|DW_APPLE_PROPERTY_readwrite
 init|=
 literal|0x08
 block|,
-name|DW_APPLE_PROPERTY_copy
+name|DW_APPLE_PROPERTY_retain
 init|=
 literal|0x10
 block|,
-name|DW_APPLE_PROPERTY_nonatomic
+name|DW_APPLE_PROPERTY_copy
 init|=
 literal|0x20
+block|,
+name|DW_APPLE_PROPERTY_nonatomic
+init|=
+literal|0x40
+block|,
+name|DW_APPLE_PROPERTY_setter
+init|=
+literal|0x80
+block|,
+name|DW_APPLE_PROPERTY_atomic
+init|=
+literal|0x100
+block|,
+name|DW_APPLE_PROPERTY_weak
+init|=
+literal|0x200
+block|,
+name|DW_APPLE_PROPERTY_strong
+init|=
+literal|0x400
+block|,
+name|DW_APPLE_PROPERTY_unsafe_unretained
+init|=
+literal|0x800
 block|}
 enum|;
-comment|/// TagString - Return the string for the specified tag.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|TagString
-parameter_list|(
-name|unsigned
-name|Tag
-parameter_list|)
-function_decl|;
-comment|/// ChildrenString - Return the string for the specified children flag.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|ChildrenString
-parameter_list|(
-name|unsigned
-name|Children
-parameter_list|)
-function_decl|;
-comment|/// AttributeString - Return the string for the specified attribute.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|AttributeString
-parameter_list|(
-name|unsigned
-name|Attribute
-parameter_list|)
-function_decl|;
-comment|/// FormEncodingString - Return the string for the specified form encoding.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|FormEncodingString
-parameter_list|(
-name|unsigned
-name|Encoding
-parameter_list|)
-function_decl|;
-comment|/// OperationEncodingString - Return the string for the specified operation
-comment|/// encoding.
-specifier|const
-name|char
-modifier|*
-name|OperationEncodingString
-parameter_list|(
-name|unsigned
-name|Encoding
-parameter_list|)
-function_decl|;
-comment|/// AttributeEncodingString - Return the string for the specified attribute
-comment|/// encoding.
-specifier|const
-name|char
-modifier|*
-name|AttributeEncodingString
-parameter_list|(
-name|unsigned
-name|Encoding
-parameter_list|)
-function_decl|;
-comment|/// DecimalSignString - Return the string for the specified decimal sign
-comment|/// attribute.
-specifier|const
-name|char
-modifier|*
-name|DecimalSignString
-parameter_list|(
-name|unsigned
-name|Sign
-parameter_list|)
-function_decl|;
-comment|/// EndianityString - Return the string for the specified endianity.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|EndianityString
-parameter_list|(
-name|unsigned
-name|Endian
-parameter_list|)
-function_decl|;
-comment|/// AccessibilityString - Return the string for the specified accessibility.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|AccessibilityString
-parameter_list|(
-name|unsigned
-name|Access
-parameter_list|)
-function_decl|;
-comment|/// VisibilityString - Return the string for the specified visibility.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|VisibilityString
-parameter_list|(
-name|unsigned
-name|Visibility
-parameter_list|)
-function_decl|;
-comment|/// VirtualityString - Return the string for the specified virtuality.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|VirtualityString
-parameter_list|(
-name|unsigned
-name|Virtuality
-parameter_list|)
-function_decl|;
-comment|/// LanguageString - Return the string for the specified language.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|LanguageString
-parameter_list|(
-name|unsigned
-name|Language
-parameter_list|)
-function_decl|;
-comment|/// CaseString - Return the string for the specified identifier case.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|CaseString
-parameter_list|(
-name|unsigned
-name|Case
-parameter_list|)
-function_decl|;
-comment|/// ConventionString - Return the string for the specified calling convention.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|ConventionString
-parameter_list|(
-name|unsigned
-name|Convention
-parameter_list|)
-function_decl|;
-comment|/// InlineCodeString - Return the string for the specified inline code.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|InlineCodeString
-parameter_list|(
-name|unsigned
-name|Code
-parameter_list|)
-function_decl|;
-comment|/// ArrayOrderString - Return the string for the specified array order.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|ArrayOrderString
-parameter_list|(
-name|unsigned
-name|Order
-parameter_list|)
-function_decl|;
-comment|/// DiscriminantString - Return the string for the specified discriminant
-comment|/// descriptor.
-specifier|const
-name|char
-modifier|*
-name|DiscriminantString
-parameter_list|(
-name|unsigned
-name|Discriminant
-parameter_list|)
-function_decl|;
-comment|/// LNStandardString - Return the string for the specified line number standard.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|LNStandardString
-parameter_list|(
-name|unsigned
-name|Standard
-parameter_list|)
-function_decl|;
-comment|/// LNExtendedString - Return the string for the specified line number extended
-comment|/// opcode encodings.
-specifier|const
-name|char
-modifier|*
-name|LNExtendedString
-parameter_list|(
-name|unsigned
-name|Encoding
-parameter_list|)
-function_decl|;
-comment|/// MacinfoString - Return the string for the specified macinfo type encodings.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|MacinfoString
-parameter_list|(
-name|unsigned
-name|Encoding
-parameter_list|)
-function_decl|;
-comment|/// CallFrameString - Return the string for the specified call frame instruction
-comment|/// encodings.
-specifier|const
-name|char
-modifier|*
-name|CallFrameString
-parameter_list|(
-name|unsigned
-name|Encoding
-parameter_list|)
-function_decl|;
 comment|// Constants for the DWARF5 Accelerator Table Proposal
 enum|enum
 name|AcceleratorTable
@@ -3036,16 +2760,6 @@ init|=
 literal|0u
 block|}
 enum|;
-comment|/// AtomTypeString - Return the string for the specified Atom type.
-specifier|const
-name|char
-modifier|*
-name|AtomTypeString
-parameter_list|(
-name|unsigned
-name|Atom
-parameter_list|)
-function_decl|;
 comment|// Constants for the GNU pubnames/pubtypes extensions supporting gdb index.
 enum|enum
 name|GDBIndexEntryKind
@@ -3067,6 +2781,227 @@ block|,
 name|GIEK_UNUSED7
 block|}
 enum|;
+enum|enum
+name|GDBIndexEntryLinkage
+block|{
+name|GIEL_EXTERNAL
+block|,
+name|GIEL_STATIC
+block|}
+enum|;
+comment|/// \defgroup DwarfConstantsDumping Dwarf constants dumping functions
+comment|///
+comment|/// All these functions map their argument's value back to the
+comment|/// corresponding enumerator name or return nullptr if the value isn't
+comment|/// known.
+comment|///
+comment|/// @{
+specifier|const
+name|char
+modifier|*
+name|TagString
+parameter_list|(
+name|unsigned
+name|Tag
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|ChildrenString
+parameter_list|(
+name|unsigned
+name|Children
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|AttributeString
+parameter_list|(
+name|unsigned
+name|Attribute
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|FormEncodingString
+parameter_list|(
+name|unsigned
+name|Encoding
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|OperationEncodingString
+parameter_list|(
+name|unsigned
+name|Encoding
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|AttributeEncodingString
+parameter_list|(
+name|unsigned
+name|Encoding
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|DecimalSignString
+parameter_list|(
+name|unsigned
+name|Sign
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|EndianityString
+parameter_list|(
+name|unsigned
+name|Endian
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|AccessibilityString
+parameter_list|(
+name|unsigned
+name|Access
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|VisibilityString
+parameter_list|(
+name|unsigned
+name|Visibility
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|VirtualityString
+parameter_list|(
+name|unsigned
+name|Virtuality
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|LanguageString
+parameter_list|(
+name|unsigned
+name|Language
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|CaseString
+parameter_list|(
+name|unsigned
+name|Case
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|ConventionString
+parameter_list|(
+name|unsigned
+name|Convention
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|InlineCodeString
+parameter_list|(
+name|unsigned
+name|Code
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|ArrayOrderString
+parameter_list|(
+name|unsigned
+name|Order
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|DiscriminantString
+parameter_list|(
+name|unsigned
+name|Discriminant
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|LNStandardString
+parameter_list|(
+name|unsigned
+name|Standard
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|LNExtendedString
+parameter_list|(
+name|unsigned
+name|Encoding
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|MacinfoString
+parameter_list|(
+name|unsigned
+name|Encoding
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|CallFrameString
+parameter_list|(
+name|unsigned
+name|Encoding
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|ApplePropertyString
+parameter_list|(
+name|unsigned
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|AtomTypeString
+parameter_list|(
+name|unsigned
+name|Atom
+parameter_list|)
+function_decl|;
 specifier|const
 name|char
 modifier|*
@@ -3076,14 +3011,6 @@ name|GDBIndexEntryKind
 name|Kind
 parameter_list|)
 function_decl|;
-enum|enum
-name|GDBIndexEntryLinkage
-block|{
-name|GIEL_EXTERNAL
-block|,
-name|GIEL_STATIC
-block|}
-enum|;
 specifier|const
 name|char
 modifier|*
@@ -3093,6 +3020,23 @@ name|GDBIndexEntryLinkage
 name|Linkage
 parameter_list|)
 function_decl|;
+comment|/// @}
+comment|/// \brief Returns the symbolic string representing Val when used as a value
+comment|/// for attribute Attr.
+specifier|const
+name|char
+modifier|*
+name|AttributeValueString
+parameter_list|(
+name|uint16_t
+name|Attr
+parameter_list|,
+name|unsigned
+name|Val
+parameter_list|)
+function_decl|;
+comment|/// \brief Decsribes an entry of the various gnu_pub* debug sections.
+comment|///
 comment|/// The gnu_pub* kind looks like:
 comment|///
 comment|/// 0-3  reserved

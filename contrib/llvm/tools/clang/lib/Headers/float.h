@@ -34,6 +34,8 @@ name|_MSC_VER
 argument_list|)
 operator|)
 operator|&&
+name|__STDC_HOSTED__
+operator|&&
 expr|\
 name|__has_include_next
 argument_list|(

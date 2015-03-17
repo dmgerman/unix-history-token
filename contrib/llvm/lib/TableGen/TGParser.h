@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TGPARSER_H
+name|LLVM_LIB_TABLEGEN_TGPARSER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TGPARSER_H
+name|LLVM_LIB_TABLEGEN_TGPARSER_H
 end_define
 
 begin_include
@@ -242,9 +242,12 @@ name|std
 operator|::
 name|string
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MultiClass
-operator|*
-operator|>
+operator|>>
 name|MultiClasses
 expr_stmt|;
 comment|/// Loops - Keep track of any foreach loops we are within.

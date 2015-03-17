@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NVPTX_MCASM_INFO_H
+name|LLVM_LIB_TARGET_NVPTX_MCTARGETDESC_NVPTXMCASMINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NVPTX_MCASM_INFO_H
+name|LLVM_LIB_TARGET_NVPTX_MCTARGETDESC_NVPTXMCASMINFO_H
 end_define
 
 begin_include
@@ -91,10 +91,7 @@ operator|:
 name|explicit
 name|NVPTXMCAsmInfo
 argument_list|(
-specifier|const
-name|StringRef
-operator|&
-name|TT
+argument|StringRef TT
 argument_list|)
 block|; }
 decl_stmt|;
@@ -109,10 +106,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// NVPTX_MCASM_INFO_H
-end_comment
 
 end_unit
 

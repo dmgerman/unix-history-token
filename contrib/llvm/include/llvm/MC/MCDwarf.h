@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/MapVector.h"
 end_include
 
 begin_include
@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/MapVector.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -114,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -127,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -1755,7 +1755,6 @@ return|return
 name|Offset
 return|;
 block|}
-specifier|const
 name|StringRef
 name|getValues
 argument_list|()
@@ -1815,6 +1814,11 @@ operator|,
 name|Instructions
 argument_list|()
 operator|,
+name|CurrentCfaRegister
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|PersonalityEncoding
 argument_list|()
 operator|,
@@ -1864,6 +1868,9 @@ name|MCCFIInstruction
 operator|>
 name|Instructions
 expr_stmt|;
+name|unsigned
+name|CurrentCfaRegister
+decl_stmt|;
 name|unsigned
 name|PersonalityEncoding
 decl_stmt|;

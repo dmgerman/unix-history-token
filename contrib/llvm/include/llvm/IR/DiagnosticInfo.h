@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_DIAGNOSTICINFO_H
+name|LLVM_IR_DIAGNOSTICINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_DIAGNOSTICINFO_H
+name|LLVM_IR_DIAGNOSTICINFO_H
 end_define
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/DebugLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Module.h"
 end_include
 
 begin_include
@@ -133,9 +139,13 @@ comment|/// This enum should be extended with a new ID for each added concrete s
 enum|enum
 name|DiagnosticKind
 block|{
+name|DK_Bitcode
+block|,
 name|DK_InlineAsm
 block|,
 name|DK_StackSize
+block|,
+name|DK_Linker
 block|,
 name|DK_DebugMetadataVersion
 block|,
@@ -249,6 +259,20 @@ literal|0
 decl_stmt|;
 block|}
 empty_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+specifier|const
+name|DiagnosticInfo
+operator|&
+argument_list|)
+operator|>
+name|DiagnosticHandlerFunction
+expr_stmt|;
 comment|/// Diagnostic information for inline asm reporting.
 comment|/// This is basically a message and an optional location.
 name|class
@@ -1057,7 +1081,6 @@ name|DK_OptimizationRemark
 return|;
 block|}
 comment|/// \see DiagnosticInfoOptimizationBase::isEnabled.
-name|virtual
 name|bool
 name|isEnabled
 argument_list|()
@@ -1137,7 +1160,6 @@ name|DK_OptimizationRemarkMissed
 return|;
 block|}
 comment|/// \see DiagnosticInfoOptimizationBase::isEnabled.
-name|virtual
 name|bool
 name|isEnabled
 argument_list|()
@@ -1217,7 +1239,6 @@ name|DK_OptimizationRemarkAnalysis
 return|;
 block|}
 comment|/// \see DiagnosticInfoOptimizationBase::isEnabled.
-name|virtual
 name|bool
 name|isEnabled
 argument_list|()
@@ -1398,7 +1419,6 @@ name|DK_OptimizationFailure
 return|;
 block|}
 comment|/// \see DiagnosticInfoOptimizationBase::isEnabled.
-name|virtual
 name|bool
 name|isEnabled
 argument_list|()

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|R600INSTRUCTIONINFO_H_
+name|LLVM_LIB_TARGET_R600_R600INSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|R600INSTRUCTIONINFO_H_
+name|LLVM_LIB_TARGET_R600_R600INSTRINFO_H
 end_define
 
 begin_include
@@ -553,9 +553,7 @@ name|DFAPacketizer
 operator|*
 name|CreateTargetScheduleState
 argument_list|(
-argument|const TargetMachine *TM
-argument_list|,
-argument|const ScheduleDAG *DAG
+argument|const TargetSubtargetInfo&
 argument_list|)
 specifier|const
 name|override
@@ -746,13 +744,13 @@ return|return
 literal|1
 return|;
 block|}
-name|virtual
 name|bool
 name|expandPostRAPseudo
 argument_list|(
 argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// \brief Reserve the registers that may be accesed using indirect addressing.
 name|void
@@ -1009,10 +1007,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// R600INSTRINFO_H_
-end_comment
 
 end_unit
 

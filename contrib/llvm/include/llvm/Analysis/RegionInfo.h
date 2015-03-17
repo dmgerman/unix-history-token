@@ -1918,6 +1918,21 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NDEBUG
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LLVM_ENABLE_DUMP
+argument_list|)
+end_if
+
 begin_comment
 comment|/// @brief Print the region to stderr.
 end_comment
@@ -1929,6 +1944,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/// @brief Check if the region contains a BasicBlock.
@@ -3627,6 +3647,21 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NDEBUG
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LLVM_ENABLE_DUMP
+argument_list|)
+end_if
+
 begin_expr_stmt
 name|void
 name|dump
@@ -3634,6 +3669,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

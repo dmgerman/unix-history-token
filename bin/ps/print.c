@@ -1929,13 +1929,6 @@ name|tm
 modifier|*
 name|tp
 decl_stmt|;
-specifier|static
-name|int
-name|use_ampm
-init|=
-operator|-
-literal|1
-decl_stmt|;
 name|size_t
 name|buflen
 init|=
@@ -1976,24 +1969,6 @@ literal|1
 argument_list|,
 literal|"malloc failed"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|use_ampm
-operator|<
-literal|0
-condition|)
-name|use_ampm
-operator|=
-operator|(
-operator|*
-name|nl_langinfo
-argument_list|(
-name|T_FMT_AMPM
-argument_list|)
-operator|!=
-literal|'\0'
-operator|)
 expr_stmt|;
 name|then
 operator|=
@@ -2039,11 +2014,7 @@ name|buf
 argument_list|,
 name|buflen
 argument_list|,
-name|use_ampm
-condition|?
-literal|"%l:%M%p"
-else|:
-literal|"%k:%M  "
+literal|"%H:%M  "
 argument_list|,
 name|tp
 argument_list|)
@@ -2076,10 +2047,6 @@ name|buf
 argument_list|,
 name|buflen
 argument_list|,
-name|use_ampm
-condition|?
-literal|"%a%I%p"
-else|:
 literal|"%a%H  "
 argument_list|,
 name|tp

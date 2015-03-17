@@ -74,19 +74,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPSOPTIONRECORD_H
+name|LLVM_LIB_TARGET_MIPS_MIPSOPTIONRECORD_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPSOPTIONRECORD_H
+name|LLVM_LIB_TARGET_MIPS_MIPSOPTIONRECORD_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"MipsMCTargetDesc.h"
+file|"MCTargetDesc/MipsMCTargetDesc.h"
 end_include
 
 begin_include
@@ -102,13 +102,6 @@ file|"llvm/MC/MCRegisterInfo.h"
 end_include
 
 begin_decl_stmt
-name|using
-name|namespace
-name|llvm
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|namespace
 name|llvm
 block|{
@@ -118,10 +111,6 @@ decl_stmt|;
 name|class
 name|MCSubtargetInfo
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|class
 name|MipsOptionRecord
 block|{
@@ -141,13 +130,7 @@ init|=
 literal|0
 function_decl|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|class
 name|MipsRegInfoRecord
 range|:
@@ -346,6 +329,7 @@ block|{}
 name|void
 name|EmitMipsOptionRecord
 argument_list|()
+name|override
 block|;
 name|void
 name|SetPhysRegUsed
@@ -423,7 +407,12 @@ name|int64_t
 name|ri_gp_value
 block|; }
 decl_stmt|;
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

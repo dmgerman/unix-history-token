@@ -184,6 +184,15 @@ block|,
 name|CXXUsingDirective
 block|}
 enum|;
+specifier|static
+specifier|const
+name|unsigned
+name|NumNameKinds
+init|=
+name|CXXUsingDirective
+operator|+
+literal|1
+decl_stmt|;
 name|private
 label|:
 comment|/// StoredNameKind - The kind of name that is actually stored in the

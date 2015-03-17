@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCAssembler.h"
 end_include
 
@@ -118,6 +124,15 @@ block|;
 name|bool
 name|EmitDebugFrame
 block|;
+name|SmallVector
+operator|<
+name|MCSymbolData
+operator|*
+block|,
+literal|2
+operator|>
+name|PendingLabels
+block|;
 name|virtual
 name|void
 name|EmitInstToData
@@ -147,6 +162,16 @@ argument_list|(
 argument|MCDwarfFrameInfo&Frame
 argument_list|)
 name|override
+block|;
+comment|// If any labels have been emitted but not assigned fragments, ensure that
+comment|// they get assigned, either to F if possible or to a new data fragment.
+name|void
+name|flushPendingLabels
+argument_list|(
+name|MCFragment
+operator|*
+name|F
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -273,8 +298,12 @@ name|insert
 argument_list|(
 argument|MCFragment *F
 argument_list|)
-specifier|const
 block|{
+name|flushPendingLabels
+argument_list|(
+name|F
+argument_list|)
+block|;
 name|CurSectionData
 operator|->
 name|getFragmentList
@@ -300,7 +329,6 @@ name|MCDataFragment
 operator|*
 name|getOrCreateDataFragment
 argument_list|()
-specifier|const
 block|;
 name|public
 operator|:
@@ -548,11 +576,11 @@ name|FinishImpl
 argument_list|()
 name|override
 block|;
-name|virtual
 name|bool
 name|mayHaveInstructions
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getCurrentSectionData

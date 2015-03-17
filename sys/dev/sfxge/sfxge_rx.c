@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -135,6 +141,34 @@ directive|ifdef
 name|SFXGE_LRO
 end_ifdef
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw_sfxge
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|lro
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Large receive offload (LRO) parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|SFXGE_LRO_PARAM
+parameter_list|(
+name|_param
+parameter_list|)
+value|SFXGE_PARAM(lro._param)
+end_define
+
 begin_comment
 comment|/* Size of the LRO hash table.  Must be a power of 2.  A larger table  * means we can accelerate a larger number of streams.  */
 end_comment
@@ -148,6 +182,41 @@ literal|128
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|SFXGE_LRO_PARAM
+argument_list|(
+name|table_size
+argument_list|)
+argument_list|,
+operator|&
+name|lro_table_size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_sfxge_lro
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|table_size
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|lro_table_size
+argument_list|,
+literal|0
+argument_list|,
+literal|"Size of the LRO hash table (must be a power of 2)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Maximum length of a hash chain.  If chains get too long then the lookup  * time increases and may exceed the benefit of LRO.  */
 end_comment
@@ -160,6 +229,41 @@ init|=
 literal|20
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|SFXGE_LRO_PARAM
+argument_list|(
+name|chain_max
+argument_list|)
+argument_list|,
+operator|&
+name|lro_chain_max
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_sfxge_lro
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|chain_max
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|lro_chain_max
+argument_list|,
+literal|0
+argument_list|,
+literal|"The maximum length of a hash chain"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Maximum time (in ticks) that a connection can be idle before it's LRO  * state is discarded.  */
@@ -176,6 +280,42 @@ begin_comment
 comment|/* initialised in sfxge_rx_init() */
 end_comment
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|SFXGE_LRO_PARAM
+argument_list|(
+name|idle_ticks
+argument_list|)
+argument_list|,
+operator|&
+name|lro_idle_ticks
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_sfxge_lro
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|idle_ticks
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|lro_idle_ticks
+argument_list|,
+literal|0
+argument_list|,
+literal|"The maximum time (in ticks) that a connection can be idle "
+literal|"before it's LRO state is discarded"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Number of packets with payload that must arrive in-order before a  * connection is eligible for LRO.  The idea is we should avoid coalescing  * segments when the sender is in slow-start because reducing the ACK rate  * can damage performance.  */
 end_comment
@@ -189,6 +329,42 @@ literal|2000
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|SFXGE_LRO_PARAM
+argument_list|(
+name|slow_start_packets
+argument_list|)
+argument_list|,
+operator|&
+name|lro_slow_start_packets
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_sfxge_lro
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|slow_start_packets
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|lro_slow_start_packets
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of packets with payload that must arrive in-order before "
+literal|"a connection is eligible for LRO"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Number of packets with payload that must arrive in-order following loss  * before a connection is eligible for LRO.  The idea is we should avoid  * coalescing segments when the sender is recovering from loss, because  * reducing the ACK rate can damage performance.  */
 end_comment
@@ -201,6 +377,42 @@ init|=
 literal|20
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|SFXGE_LRO_PARAM
+argument_list|(
+name|loss_packets
+argument_list|)
+argument_list|,
+operator|&
+name|lro_loss_packets
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_sfxge_lro
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|loss_packets
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|lro_loss_packets
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of packets with payload that must arrive in-order "
+literal|"following loss before a connection is eligible for LRO"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Flags for sfxge_lro_conn::l2_id; must not collide with EVL_VLID_MASK */
@@ -6282,6 +6494,37 @@ directive|ifdef
 name|SFXGE_LRO
 if|if
 condition|(
+operator|!
+name|ISP2
+argument_list|(
+name|lro_table_size
+argument_list|)
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s=%u must be power of 2"
+argument_list|,
+name|SFXGE_LRO_PARAM
+argument_list|(
+name|table_size
+argument_list|)
+argument_list|,
+name|lro_table_size
+argument_list|)
+expr_stmt|;
+name|rc
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|fail_lro_table_size
+goto|;
+block|}
+if|if
+condition|(
 name|lro_idle_ticks
 operator|==
 literal|0
@@ -6394,6 +6637,13 @@ name|rxq_count
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
+name|fail_lro_table_size
+label|:
+endif|#
+directive|endif
 return|return
 operator|(
 name|rc

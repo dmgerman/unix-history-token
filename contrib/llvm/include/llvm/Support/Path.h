@@ -105,13 +105,13 @@ comment|/// @name Lexical Component Iterator
 comment|/// @{
 comment|/// @brief Path iterator.
 comment|///
-comment|/// This is a bidirectional iterator that iterates over the individual
-comment|/// components in \a path. The forward traversal order is as follows:
+comment|/// This is an input iterator that iterates over the individual components in
+comment|/// \a path. The traversal order is as follows:
 comment|/// * The root-name element, if present.
 comment|/// * The root-directory element, if present.
 comment|/// * Each successive filename element, if present.
 comment|/// * Dot, if one or more trailing non-root slash characters are present.
-comment|/// The backwards traversal order is the reverse of forward traversal.
+comment|/// Traversing backwards is possible with \a reverse_iterator
 comment|///
 comment|/// Iteration examples. Each component is separated by ',':
 comment|/// @code
@@ -124,6 +124,18 @@ comment|///   C:\foo\bar => C:,/,foo,bar
 comment|/// @endcode
 name|class
 name|const_iterator
+range|:
+name|public
+name|std
+operator|::
+name|iterator
+operator|<
+name|std
+operator|::
+name|input_iterator_tag
+decl_stmt|, const
+name|StringRef
+decl|>
 block|{
 name|StringRef
 name|Path
@@ -156,31 +168,6 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
-typedef|typedef
-specifier|const
-name|StringRef
-name|value_type
-typedef|;
-typedef|typedef
-name|ptrdiff_t
-name|difference_type
-typedef|;
-typedef|typedef
-name|value_type
-modifier|&
-name|reference
-typedef|;
-typedef|typedef
-name|value_type
-modifier|*
-name|pointer
-typedef|;
-typedef|typedef
-name|std
-operator|::
-name|bidirectional_iterator_tag
-name|iterator_category
-expr_stmt|;
 name|reference
 name|operator
 operator|*
@@ -221,23 +208,6 @@ name|int
 operator|)
 expr_stmt|;
 comment|// postincrement
-name|const_iterator
-operator|&
-name|operator
-operator|--
-operator|(
-operator|)
-expr_stmt|;
-comment|// predecrement
-name|const_iterator
-operator|&
-name|operator
-operator|--
-operator|(
-name|int
-operator|)
-expr_stmt|;
-comment|// postdecrement
 name|bool
 name|operator
 operator|==
@@ -259,7 +229,17 @@ operator|&
 name|RHS
 operator|)
 specifier|const
-expr_stmt|;
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|RHS
+operator|)
+return|;
+block|}
 comment|/// @brief Difference in bytes between this and RHS.
 name|ptrdiff_t
 name|operator
@@ -274,15 +254,130 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
-typedef|typedef
+comment|/// @brief Reverse path iterator.
+comment|///
+comment|/// This is an input iterator that iterates over the individual components in
+comment|/// \a path in reverse order. The traversal order is exactly reversed from that
+comment|/// of \a const_iterator
+name|class
+name|reverse_iterator
+range|:
+name|public
 name|std
 operator|::
-name|reverse_iterator
+name|iterator
 operator|<
-name|const_iterator
-operator|>
+name|std
+operator|::
+name|input_iterator_tag
+decl_stmt|, const
+name|StringRef
+decl|>
+block|{
+name|StringRef
+name|Path
+decl_stmt|;
+comment|///< The entire path.
+name|StringRef
+name|Component
+decl_stmt|;
+comment|///< The current component. Not necessarily in Path.
+name|size_t
+name|Position
+decl_stmt|;
+comment|///< The iterators current position within Path.
+name|friend
 name|reverse_iterator
+name|rbegin
+parameter_list|(
+name|StringRef
+name|path
+parameter_list|)
+function_decl|;
+name|friend
+name|reverse_iterator
+name|rend
+parameter_list|(
+name|StringRef
+name|path
+parameter_list|)
+function_decl|;
+name|public
+label|:
+name|reference
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|Component
+return|;
+block|}
+name|pointer
+name|operator
+operator|->
+expr|(
+block|)
+decl|const
+block|{
+return|return
+operator|&
+name|Component
+return|;
+block|}
+name|reverse_iterator
+operator|&
+name|operator
+operator|++
+operator|(
+operator|)
 expr_stmt|;
+comment|// preincrement
+name|reverse_iterator
+operator|&
+name|operator
+operator|++
+operator|(
+name|int
+operator|)
+expr_stmt|;
+comment|// postincrement
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|reverse_iterator
+operator|&
+name|RHS
+operator|)
+specifier|const
+expr_stmt|;
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|reverse_iterator
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|RHS
+operator|)
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// @brief Get begin iterator over \a path.
 comment|/// @param path Input path.
 comment|/// @returns Iterator initialized with the first component of \a path.
@@ -306,45 +401,23 @@ function_decl|;
 comment|/// @brief Get reverse begin iterator over \a path.
 comment|/// @param path Input path.
 comment|/// @returns Iterator initialized with the first reverse component of \a path.
-specifier|inline
 name|reverse_iterator
 name|rbegin
 parameter_list|(
 name|StringRef
 name|path
 parameter_list|)
-block|{
-return|return
-name|reverse_iterator
-argument_list|(
-name|end
-argument_list|(
-name|path
-argument_list|)
-argument_list|)
-return|;
-block|}
+function_decl|;
 comment|/// @brief Get reverse end iterator over \a path.
 comment|/// @param path Input path.
 comment|/// @returns Iterator initialized to the reverse end of \a path.
-specifier|inline
 name|reverse_iterator
 name|rend
 parameter_list|(
 name|StringRef
 name|path
 parameter_list|)
-block|{
-return|return
-name|reverse_iterator
-argument_list|(
-name|begin
-argument_list|(
-name|path
-argument_list|)
-argument_list|)
-return|;
-block|}
+function_decl|;
 comment|/// @}
 comment|/// @name Lexical Modifiers
 comment|/// @{
@@ -526,7 +599,6 @@ comment|/// @endcode
 comment|///
 comment|/// @param path Input path.
 comment|/// @result The root name of \a path if it has one, otherwise "".
-specifier|const
 name|StringRef
 name|root_name
 parameter_list|(
@@ -545,7 +617,6 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @result The root directory of \a path if it has one, otherwise
 comment|///               "".
-specifier|const
 name|StringRef
 name|root_directory
 parameter_list|(
@@ -559,7 +630,6 @@ comment|/// Equivalent to root_name + root_directory.
 comment|///
 comment|/// @param path Input path.
 comment|/// @result The root path of \a path if it has one, otherwise "".
-specifier|const
 name|StringRef
 name|root_path
 parameter_list|(
@@ -577,7 +647,6 @@ comment|/// @endcode
 comment|///
 comment|/// @param path Input path.
 comment|/// @result The path starting after root_path if one exists, otherwise "".
-specifier|const
 name|StringRef
 name|relative_path
 parameter_list|(
@@ -595,7 +664,6 @@ comment|/// @endcode
 comment|///
 comment|/// @param path Input path.
 comment|/// @result The parent path of \a path if one exists, otherwise "".
-specifier|const
 name|StringRef
 name|parent_path
 parameter_list|(
@@ -615,7 +683,6 @@ comment|///
 comment|/// @param path Input path.
 comment|/// @result The filename part of \a path. This is defined as the last component
 comment|///         of \a path.
-specifier|const
 name|StringRef
 name|filename
 parameter_list|(
@@ -639,7 +706,6 @@ comment|/// @endcode
 comment|///
 comment|/// @param path Input path.
 comment|/// @result The stem of \a path.
-specifier|const
 name|StringRef
 name|stem
 parameter_list|(
@@ -661,7 +727,6 @@ comment|/// @endcode
 comment|///
 comment|/// @param path Input path.
 comment|/// @result The extension of \a path.
-specifier|const
 name|StringRef
 name|extension
 parameter_list|(
@@ -683,7 +748,6 @@ function_decl|;
 comment|/// @brief Return the preferred separator for this platform.
 comment|///
 comment|/// @result StringRef of the preferred separator, null-terminated.
-specifier|const
 name|StringRef
 name|get_separator
 parameter_list|()
@@ -873,11 +937,14 @@ name|path
 parameter_list|)
 function_decl|;
 block|}
-comment|// end namespace path
-block|}
 end_decl_stmt
 
 begin_comment
+comment|// end namespace path
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace sys
 end_comment
 

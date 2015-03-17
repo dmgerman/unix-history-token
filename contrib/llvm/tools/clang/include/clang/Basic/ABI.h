@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_BASIC_ABI_H
+name|LLVM_CLANG_BASIC_ABI_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_BASIC_ABI_H
+name|LLVM_CLANG_BASIC_ABI_H
 end_define
 
 begin_include
@@ -87,8 +87,8 @@ comment|///< Complete object ctor
 name|Ctor_Base
 block|,
 comment|///< Base object ctor
-name|Ctor_CompleteAllocating
-comment|///< Complete object allocating ctor
+name|Ctor_Comdat
+comment|///< The COMDAT used for ctors
 block|}
 enum|;
 comment|/// \brief C++ destructor types.
@@ -102,7 +102,10 @@ name|Dtor_Complete
 block|,
 comment|///< Complete object dtor
 name|Dtor_Base
+block|,
 comment|///< Base object dtor
+name|Dtor_Comdat
+comment|///< The COMDAT used for dtors
 block|}
 enum|;
 comment|/// \brief A return adjustment.
@@ -805,10 +808,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// CLANG_BASIC_ABI_H
-end_comment
 
 end_unit
 

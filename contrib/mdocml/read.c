@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: read.c,v 1.129 2015/03/02 14:50:17 schwarze Exp $ */
+comment|/*	$Id: read.c,v 1.131 2015/03/11 13:05:20 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -2450,12 +2450,8 @@ condition|(
 name|st
 operator|.
 name|st_size
-operator|>=
-operator|(
-literal|1U
-operator|<<
-literal|31
-operator|)
+operator|>
+literal|0x7fffffff
 condition|)
 block|{
 name|mandoc_msg

@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -55,24 +49,6 @@ begin_include
 include|#
 directive|include
 file|<sys/fnv_hash.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
 end_include
 
 begin_include
@@ -139,12 +115,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<net/if_vlan_var.h>
-end_include
 
 begin_function
 specifier|static

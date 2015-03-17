@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|PPCTARGETASMINFO_H
+name|LLVM_LIB_TARGET_POWERPC_MCTARGETDESC_PPCMCASMINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|PPCTARGETASMINFO_H
+name|LLVM_LIB_TARGET_POWERPC_MCTARGETDESC_PPCMCASMINFO_H
 end_define
 
 begin_include
@@ -84,10 +84,10 @@ range|:
 name|public
 name|MCAsmInfoDarwin
 block|{
+name|virtual
 name|void
 name|anchor
 argument_list|()
-name|override
 block|;
 name|public
 operator|:
@@ -101,7 +101,7 @@ argument_list|)
 block|;   }
 decl_stmt|;
 name|class
-name|PPCLinuxMCAsmInfo
+name|PPCELFMCAsmInfo
 range|:
 name|public
 name|MCAsmInfoELF
@@ -114,7 +114,7 @@ block|;
 name|public
 operator|:
 name|explicit
-name|PPCLinuxMCAsmInfo
+name|PPCELFMCAsmInfo
 argument_list|(
 argument|bool is64Bit
 argument_list|,

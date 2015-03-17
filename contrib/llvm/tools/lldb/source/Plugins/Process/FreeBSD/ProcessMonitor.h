@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/HostThread.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/Mutex.h"
 end_include
 
@@ -705,14 +711,14 @@ name|ProcessFreeBSD
 modifier|*
 name|m_process
 decl_stmt|;
-name|lldb
+name|lldb_private
 operator|::
-name|thread_t
+name|HostThread
 name|m_operation_thread
 expr_stmt|;
-name|lldb
+name|lldb_private
 operator|::
-name|thread_t
+name|HostThread
 name|m_monitor_thread
 expr_stmt|;
 name|lldb
@@ -959,7 +965,7 @@ name|args
 parameter_list|)
 function_decl|;
 specifier|static
-name|bool
+name|void
 name|Attach
 parameter_list|(
 name|AttachArgs

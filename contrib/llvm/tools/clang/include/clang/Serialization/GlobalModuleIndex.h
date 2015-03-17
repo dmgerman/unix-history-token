@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SERIALIZATION_GLOBAL_MODULE_INDEX_H
+name|LLVM_CLANG_SERIALIZATION_GLOBALMODULEINDEX_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SERIALIZATION_GLOBAL_MODULE_INDEX_H
+name|LLVM_CLANG_SERIALIZATION_GLOBALMODULEINDEX_H
 end_define
 
 begin_include
@@ -307,10 +307,14 @@ comment|/// \brief Internal constructor. Use \c readIndex() to read an index.
 name|explicit
 name|GlobalModuleIndex
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|llvm
 operator|::
 name|MemoryBuffer
-operator|*
+operator|>
 name|Buffer
 argument_list|,
 name|llvm

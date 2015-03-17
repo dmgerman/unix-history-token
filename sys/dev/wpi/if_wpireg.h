@@ -28,12 +28,35 @@ name|WPI_TX_RING_HIMARK
 value|224
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|WPI_RX_RING_COUNT_LOG
+value|8
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|WPI_RX_RING_COUNT_LOG
 value|6
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -47,6 +70,20 @@ define|#
 directive|define
 name|WPI_NTXQUEUES
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_DRV_NTXQUEUES
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_CMD_QUEUE_NUM
+value|4
 end_define
 
 begin_define
@@ -427,6 +464,13 @@ define|#
 directive|define
 name|WPI_ALM_SCHED_SBYPASS_MODE2
 value|0x2e30
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_APMG_CLK_CTRL
+value|0x3000
 end_define
 
 begin_define
@@ -1040,7 +1084,7 @@ block|{
 name|uint32_t
 name|txbase
 index|[
-literal|8
+name|WPI_NTXQUEUES
 index|]
 decl_stmt|;
 name|uint32_t
@@ -1205,6 +1249,20 @@ name|__packed
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|WPI_RX_DESC_QID_MSK
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_UNSOLICITED_RX_NOTIF
+value|0x80
+end_define
+
 begin_struct
 struct|struct
 name|wpi_rx_stat
@@ -1226,7 +1284,7 @@ comment|/* received signal strength */
 define|#
 directive|define
 name|WPI_RSSI_OFFSET
-value|95
+value|-95
 name|uint8_t
 name|agc
 decl_stmt|;
@@ -1543,6 +1601,11 @@ define|#
 directive|define
 name|WPI_FILTER_BEACON
 value|(1<< 6)
+define|#
+directive|define
+name|WPI_FILTER_ASSOC
+value|(1<< 7)
+comment|/* Accept associaton requests. */
 name|uint8_t
 name|chan
 decl_stmt|;

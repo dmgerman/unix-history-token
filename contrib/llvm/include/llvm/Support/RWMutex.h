@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SYSTEM_RWMUTEX_H
+name|LLVM_SUPPORT_RWMUTEX_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SYSTEM_RWMUTEX_H
+name|LLVM_SUPPORT_RWMUTEX_H
 end_define
 
 begin_include
@@ -185,10 +185,10 @@ name|mt_only
 operator|>
 name|class
 name|SmartRWMutex
-operator|:
-name|public
-name|RWMutexImpl
 block|{
+name|RWMutexImpl
+name|impl
+block|;
 name|unsigned
 name|readers
 block|,
@@ -200,7 +200,7 @@ name|explicit
 name|SmartRWMutex
 argument_list|()
 operator|:
-name|RWMutexImpl
+name|impl
 argument_list|()
 block|,
 name|readers
@@ -214,7 +214,7 @@ literal|0
 argument_list|)
 block|{ }
 name|bool
-name|reader_acquire
+name|lock_shared
 argument_list|()
 block|{
 if|if
@@ -226,8 +226,8 @@ name|llvm_is_multithreaded
 argument_list|()
 condition|)
 return|return
-name|RWMutexImpl
-operator|::
+name|impl
+operator|.
 name|reader_acquire
 argument_list|()
 return|;
@@ -241,7 +241,7 @@ name|true
 return|;
 block|}
 name|bool
-name|reader_release
+name|unlock_shared
 parameter_list|()
 block|{
 if|if
@@ -253,8 +253,8 @@ name|llvm_is_multithreaded
 argument_list|()
 condition|)
 return|return
-name|RWMutexImpl
-operator|::
+name|impl
+operator|.
 name|reader_release
 argument_list|()
 return|;
@@ -277,7 +277,7 @@ name|true
 return|;
 block|}
 name|bool
-name|writer_acquire
+name|lock
 parameter_list|()
 block|{
 if|if
@@ -289,8 +289,8 @@ name|llvm_is_multithreaded
 argument_list|()
 condition|)
 return|return
-name|RWMutexImpl
-operator|::
+name|impl
+operator|.
 name|writer_acquire
 argument_list|()
 return|;
@@ -313,7 +313,7 @@ name|true
 return|;
 block|}
 name|bool
-name|writer_release
+name|unlock
 parameter_list|()
 block|{
 if|if
@@ -325,8 +325,8 @@ name|llvm_is_multithreaded
 argument_list|()
 condition|)
 return|return
-name|RWMutexImpl
-operator|::
+name|impl
+operator|.
 name|writer_release
 argument_list|()
 return|;
@@ -416,7 +416,7 @@ argument_list|)
 block|{
 name|mutex
 operator|.
-name|reader_acquire
+name|lock_shared
 argument_list|()
 block|;       }
 operator|~
@@ -425,7 +425,7 @@ argument_list|()
 block|{
 name|mutex
 operator|.
-name|reader_release
+name|unlock_shared
 argument_list|()
 block|;       }
 block|}
@@ -471,7 +471,7 @@ argument_list|)
 block|{
 name|mutex
 operator|.
-name|writer_acquire
+name|lock
 argument_list|()
 block|;       }
 operator|~
@@ -480,7 +480,7 @@ argument_list|()
 block|{
 name|mutex
 operator|.
-name|writer_release
+name|unlock
 argument_list|()
 block|;       }
 block|}

@@ -56,6 +56,26 @@ modifier|*
 name|Filename
 parameter_list|)
 function_decl|;
+comment|/**  * This function parses the given arguments using the LLVM command line parser.  * Note that the only stable thing about this function is its signature; you  * cannot rely on any particular set of command line arguments being interpreted  * the same way across LLVM versions.  *  * @see llvm::cl::ParseCommandLineOptions()  */
+name|void
+name|LLVMParseCommandLineOptions
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|argv
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Overview
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

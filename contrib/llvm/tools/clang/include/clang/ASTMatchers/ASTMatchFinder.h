@@ -158,19 +158,31 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_MATCHERS_AST_MATCH_FINDER_H
+name|LLVM_CLANG_ASTMATCHERS_ASTMATCHFINDER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_MATCHERS_AST_MATCH_FINDER_H
+name|LLVM_CLANG_ASTMATCHERS_ASTMATCHFINDER_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"clang/ASTMatchers/ASTMatchers.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Timer.h"
 end_include
 
 begin_decl_stmt
@@ -289,6 +301,16 @@ name|void
 name|onEndOfTranslationUnit
 parameter_list|()
 block|{}
+comment|/// \brief An id used to group the matchers.
+comment|///
+comment|/// This id is used, for example, for the profiling output.
+comment|/// It defaults to "<unknown>".
+name|virtual
+name|StringRef
+name|getID
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Called when parsing is finished. Intended for testing only.
@@ -311,9 +333,63 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
-name|MatchFinder
-argument_list|()
+struct|struct
+name|MatchFinderOptions
+block|{
+struct|struct
+name|Profiling
+block|{
+name|Profiling
+argument_list|(
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|llvm
+operator|::
+name|TimeRecord
+operator|>
+operator|&
+name|Records
+argument_list|)
+operator|:
+name|Records
+argument_list|(
+argument|Records
+argument_list|)
+block|{}
+comment|/// \brief Per bucket timing information.
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|llvm
+operator|::
+name|TimeRecord
+operator|>
+operator|&
+name|Records
 expr_stmt|;
+block|}
+struct|;
+comment|/// \brief Enables per-check timers.
+comment|///
+comment|/// It prints a report after match.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|Profiling
+operator|>
+name|CheckProfiling
+expr_stmt|;
+block|}
+struct|;
+name|MatchFinder
+argument_list|(
+argument|MatchFinderOptions Options = MatchFinderOptions()
+argument_list|)
+empty_stmt|;
 operator|~
 name|MatchFinder
 argument_list|()
@@ -429,10 +505,14 @@ name|Action
 argument_list|)
 decl_stmt|;
 comment|/// \brief Creates a clang ASTConsumer that finds all matches.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|clang
 operator|::
 name|ASTConsumer
-operator|*
+operator|>
 name|newASTConsumer
 argument_list|()
 expr_stmt|;
@@ -511,10 +591,11 @@ modifier|*
 name|ParsingDone
 parameter_list|)
 function_decl|;
-name|private
-label|:
-comment|/// \brief For each \c DynTypedMatcher a \c MatchCallback that will be called
+comment|/// \brief For each \c Matcher<> a \c MatchCallback that will be called
 comment|/// when it matches.
+struct|struct
+name|MatchersByType
+block|{
 name|std
 operator|::
 name|vector
@@ -529,10 +610,89 @@ name|DynTypedMatcher
 operator|,
 name|MatchCallback
 operator|*
-operator|>
-expr|>
-name|MatcherCallbackPairs
+operator|>>
+name|DeclOrStmt
 expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|TypeMatcher
+operator|,
+name|MatchCallback
+operator|*
+operator|>>
+name|Type
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|NestedNameSpecifierMatcher
+operator|,
+name|MatchCallback
+operator|*
+operator|>>
+name|NestedNameSpecifier
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|NestedNameSpecifierLocMatcher
+operator|,
+name|MatchCallback
+operator|*
+operator|>>
+name|NestedNameSpecifierLoc
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|TypeLocMatcher
+operator|,
+name|MatchCallback
+operator|*
+operator|>>
+name|TypeLoc
+expr_stmt|;
+comment|/// \brief All the callbacks in one container to simplify iteration.
+name|std
+operator|::
+name|vector
+operator|<
+name|MatchCallback
+operator|*
+operator|>
+name|AllCallbacks
+expr_stmt|;
+block|}
+struct|;
+name|private
+label|:
+name|MatchersByType
+name|Matchers
+decl_stmt|;
+name|MatchFinderOptions
+name|Options
+decl_stmt|;
 comment|/// \brief Called when parsing is done.
 name|ParsingDoneTestCallback
 modifier|*
@@ -601,14 +761,15 @@ comment|/// casted to \c NodeT.
 comment|///
 comment|/// This is useful in combanation with \c match():
 comment|/// \code
-comment|///   Decl *D = selectFirst<Decl>("id", match(Matcher.bind("id"),
-comment|///                                           Node, Context));
+comment|///   const Decl *D = selectFirst<Decl>("id", match(Matcher.bind("id"),
+comment|///                                                 Node, Context));
 comment|/// \endcode
 name|template
 operator|<
 name|typename
 name|NodeT
 operator|>
+specifier|const
 name|NodeT
 operator|*
 name|selectFirst
@@ -620,42 +781,23 @@ argument_list|)
 block|{
 for|for
 control|(
-name|SmallVectorImpl
-operator|<
+specifier|const
 name|BoundNodes
-operator|>
-operator|::
-name|const_iterator
-name|I
-operator|=
+modifier|&
+name|N
+range|:
 name|Results
-operator|.
-name|begin
-argument_list|()
-operator|,
-name|E
-operator|=
-name|Results
-operator|.
-name|end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
 control|)
 block|{
 if|if
 condition|(
+specifier|const
 name|NodeT
 modifier|*
 name|Node
 init|=
-name|I
-operator|->
+name|N
+operator|.
 name|getNodeAs
 operator|<
 name|NodeT
@@ -759,9 +901,14 @@ name|Context
 argument_list|)
 block|;
 return|return
+name|std
+operator|::
+name|move
+argument_list|(
 name|Callback
 operator|.
 name|Nodes
+argument_list|)
 return|;
 block|}
 name|template
@@ -818,10 +965,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_AST_MATCHERS_AST_MATCH_FINDER_H
-end_comment
 
 end_unit
 

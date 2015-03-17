@@ -189,6 +189,19 @@ name|SectionType
 name|GetSectionType
 parameter_list|()
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Return the size of a target's byte represented by this section
+comment|/// in numbers of host bytes. Note that certain architectures have
+comment|/// varying minimum addressable unit (i.e. byte) size for their
+comment|/// CODE or DATA buses.
+comment|///
+comment|/// @return
+comment|///     The number of host (8-bit) bytes needed to hold a target byte
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|GetTargetByteSize
+parameter_list|()
+function_decl|;
 name|bool
 name|operator
 operator|==

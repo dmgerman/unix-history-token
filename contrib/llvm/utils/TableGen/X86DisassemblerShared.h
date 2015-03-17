@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86DISASSEMBLERSHARED_H
+name|LLVM_UTILS_TABLEGEN_X86DISASSEMBLERSHARED_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86DISASSEMBLERSHARED_H
+name|LLVM_UTILS_TABLEGEN_X86DISASSEMBLERSHARED_H
 end_define
 
 begin_include

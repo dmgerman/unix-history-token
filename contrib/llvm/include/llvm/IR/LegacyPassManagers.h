@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_PASSMANAGERS_H
+name|LLVM_IR_LEGACYPASSMANAGERS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_PASSMANAGERS_H
+name|LLVM_IR_LEGACYPASSMANAGERS_H
 end_define
 
 begin_include
@@ -258,7 +258,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This is a external interface used by JIT to manage FunctionPasses. This
+comment|// This is a external interface used to manage FunctionPasses. This
 end_comment
 
 begin_comment
@@ -753,6 +753,17 @@ name|AnalysisID
 name|AID
 parameter_list|)
 function_decl|;
+comment|/// Retrieve the PassInfo for an analysis.
+specifier|const
+name|PassInfo
+modifier|*
+name|findAnalysisPassInfo
+argument_list|(
+name|AnalysisID
+name|AID
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Find analysis usage information for the pass P.
 name|AnalysisUsage
 modifier|*
@@ -916,7 +927,7 @@ operator|<
 name|ImmutablePass
 operator|*
 operator|,
-literal|8
+literal|16
 operator|>
 name|ImmutablePasses
 expr_stmt|;
@@ -929,6 +940,21 @@ name|AnalysisUsage
 operator|*
 operator|>
 name|AnUsageMap
+expr_stmt|;
+comment|/// Collection of PassInfo objects found via analysis IDs and in this top
+comment|/// level manager. This is used to memoize queries to the pass registry.
+comment|/// FIXME: This is an egregious hack because querying the pass registry is
+comment|/// either slow or racy.
+name|mutable
+name|DenseMap
+operator|<
+name|AnalysisID
+operator|,
+specifier|const
+name|PassInfo
+operator|*
+operator|>
+name|AnalysisPassInfos
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -1455,7 +1481,7 @@ operator|<
 name|Pass
 operator|*
 operator|,
-literal|8
+literal|16
 operator|>
 name|HigherLevelAnalysis
 expr_stmt|;

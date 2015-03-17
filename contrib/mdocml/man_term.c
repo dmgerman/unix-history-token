@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man_term.c,v 1.168 2015/01/30 22:04:44 schwarze Exp $ */
+comment|/*	$Id: man_term.c,v 1.169 2015/03/06 15:48:52 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -4465,18 +4465,17 @@ return|return;
 case|case
 name|MAN_TBL
 case|:
-comment|/* 		 * Tables are preceded by a newline.  Then process a 		 * table line, which will cause line termination, 		 */
 if|if
 condition|(
-name|n
+name|p
 operator|->
-name|span
-operator|->
-name|prev
+name|tbl
+operator|.
+name|cols
 operator|==
 name|NULL
 condition|)
-name|term_newln
+name|term_vspace
 argument_list|(
 name|p
 argument_list|)

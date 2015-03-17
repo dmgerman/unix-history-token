@@ -53,6 +53,14 @@ comment|/* #undef CLANG_HAVE_LIBXML */
 end_comment
 
 begin_comment
+comment|/* Multilib suffix for libdir. */
+end_comment
+
+begin_comment
+comment|/* #undef CLANG_LIBDIR_SUFFIX */
+end_comment
+
+begin_comment
 comment|/* Relative directory for resource files */
 end_comment
 
@@ -286,9 +294,25 @@ begin_comment
 comment|/* Define to 1 if you have the<execinfo.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_EXECINFO_H */
-end_comment
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000052
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_EXECINFO_H
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `exp' function. */
@@ -392,9 +416,25 @@ begin_comment
 comment|/* Define to 1 if you have the `futimens' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FUTIMENS */
-end_comment
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100056
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_FUTIMENS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `futimes' function. */
@@ -1808,7 +1848,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|5
+value|6
 end_define
 
 begin_comment
@@ -1820,6 +1860,17 @@ define|#
 directive|define
 name|LLVM_VERSION_PATCH
 value|0
+end_define
+
+begin_comment
+comment|/* LLVM version string */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_VERSION_STRING
+value|"3.6.0"
 end_define
 
 begin_comment
@@ -1871,7 +1922,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.5.1"
+value|"LLVM 3.6.0"
 end_define
 
 begin_comment
@@ -1893,7 +1944,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.5.1"
+value|"3.6.0"
 end_define
 
 begin_comment

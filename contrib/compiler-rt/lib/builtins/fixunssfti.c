@@ -3,6 +3,18 @@ begin_comment
 comment|/* ===-- fixunssfti.c - Implement __fixunssfti -----------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __fixunssfti for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SINGLE_PRECISION
+end_define
+
+begin_include
+include|#
+directive|include
+file|"fp_lib.h"
+end_include
+
 begin_if
 if|#
 directive|if

@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmnLogMediumFile.h
+comment|// File:        MICmnLogMediumFile.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmnLogMediumFile interface.
+comment|// Overview:    CMICmnLogMediumFile interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -120,39 +120,39 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code implementation class. Logs application fn trace/message/
+comment|// Details: MI common code implementation class. Logs application fn trace/message/
 end_comment
 
 begin_comment
-comment|//			error messages to a file. Used as part of the CMICmnLog Logger
+comment|//          error messages to a file. Used as part of the CMICmnLog Logger
 end_comment
 
 begin_comment
-comment|//			system. When instantiated *this object is register with the Logger
+comment|//          system. When instantiated *this object is register with the Logger
 end_comment
 
 begin_comment
-comment|//			which the Logger when given data to write to registered medium comes
+comment|//          which the Logger when given data to write to registered medium comes
 end_comment
 
 begin_comment
-comment|//			*this medium.
+comment|//          *this medium.
 end_comment
 
 begin_comment
-comment|//			Singleton class.
+comment|//          Singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 30/01/2014.
+comment|// Authors: Illya Rudkin 30/01/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment

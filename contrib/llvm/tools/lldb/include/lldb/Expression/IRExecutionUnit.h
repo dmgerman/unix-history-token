@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/JITMemoryManager.h"
+file|"llvm/ExecutionEngine/SectionMemoryManager.h"
 end_include
 
 begin_include
@@ -182,7 +182,7 @@ comment|/// and knows how to use the JIT to make it into executable code.  It ca
 comment|/// then be used as input to the IR interpreter, or the address of the
 comment|/// executable code can be passed to a thread plan to run in the target.
 comment|///
-comment|/// This class creates a subclass of LLVM's JITMemoryManager, because that is
+comment|/// This class creates a subclass of LLVM's SectionMemoryManager, because that is
 comment|/// how the JIT emits code.  Because LLDB needs to move JIT-compiled code
 comment|/// into the target process, the IRExecutionUnit knows how to copy the
 comment|/// emitted code into the target process.
@@ -545,7 +545,7 @@ range|:
 name|public
 name|llvm
 operator|::
-name|JITMemoryManager
+name|SectionMemoryManager
 block|{
 name|public
 operator|:
@@ -560,172 +560,6 @@ name|virtual
 operator|~
 name|MemoryManager
 argument_list|()
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|void
-name|setMemoryWritable
-argument_list|()
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|void
-name|setMemoryExecutable
-argument_list|()
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|void
-name|setPoisonMemory
-argument_list|(
-argument|bool poison
-argument_list|)
-block|{
-name|m_default_mm_ap
-operator|->
-name|setPoisonMemory
-argument_list|(
-name|poison
-argument_list|)
-block|;         }
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|void
-name|AllocateGOT
-argument_list|()
-block|{
-name|m_default_mm_ap
-operator|->
-name|AllocateGOT
-argument_list|()
-block|;         }
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|uint8_t
-operator|*
-name|getGOTBase
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_default_mm_ap
-operator|->
-name|getGOTBase
-argument_list|()
-return|;
-block|}
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|uint8_t
-operator|*
-name|startFunctionBody
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Function
-operator|*
-name|F
-argument_list|,
-name|uintptr_t
-operator|&
-name|ActualSize
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Allocate room for a dyld stub for a lazy-referenced function,
-comment|/// and add it to the m_stubs map
-comment|///
-comment|/// @param[in] F
-comment|///     The function being referenced.
-comment|///
-comment|/// @param[in] StubSize
-comment|///     The size of the stub.
-comment|///
-comment|/// @param[in] Alignment
-comment|///     The required alignment of the stub.
-comment|///
-comment|/// @return
-comment|///     Allocated space for the stub.
-comment|//------------------------------------------------------------------
-name|virtual
-name|uint8_t
-operator|*
-name|allocateStub
-argument_list|(
-argument|const llvm::GlobalValue* F
-argument_list|,
-argument|unsigned StubSize
-argument_list|,
-argument|unsigned Alignment
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Complete the body of a function, and add it to the m_functions map
-comment|///
-comment|/// @param[in] F
-comment|///     The function being completed.
-comment|///
-comment|/// @param[in] FunctionStart
-comment|///     The first instruction of the function.
-comment|///
-comment|/// @param[in] FunctionEnd
-comment|///     The last byte of the last instruction of the function.
-comment|//------------------------------------------------------------------
-name|virtual
-name|void
-name|endFunctionBody
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Function
-operator|*
-name|F
-argument_list|,
-name|uint8_t
-operator|*
-name|FunctionStart
-argument_list|,
-name|uint8_t
-operator|*
-name|FunctionEnd
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Allocate space for an unspecified purpose, and add it to the
-comment|/// m_spaceBlocks map
-comment|///
-comment|/// @param[in] Size
-comment|///     The size of the area.
-comment|///
-comment|/// @param[in] Alignment
-comment|///     The required alignment of the area.
-comment|///
-comment|/// @return
-comment|///     Allocated space.
-comment|//------------------------------------------------------------------
-name|virtual
-name|uint8_t
-operator|*
-name|allocateSpace
-argument_list|(
-argument|intptr_t Size
-argument_list|,
-argument|unsigned Alignment
-argument_list|)
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Allocate space for executable code, and add it to the
@@ -792,29 +626,6 @@ argument|bool IsReadOnly
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
-comment|/// Allocate space for a global variable, and add it to the
-comment|/// m_spaceBlocks map
-comment|///
-comment|/// @param[in] Size
-comment|///     The size of the variable.
-comment|///
-comment|/// @param[in] Alignment
-comment|///     The required alignment of the variable.
-comment|///
-comment|/// @return
-comment|///     Allocated space for the global.
-comment|//------------------------------------------------------------------
-name|virtual
-name|uint8_t
-operator|*
-name|allocateGlobal
-argument_list|(
-argument|uintptr_t Size
-argument_list|,
-argument|unsigned Alignment
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
 comment|/// Called when object loading is complete and section page
 comment|/// permissions can be applied. Currently unimplemented for LLDB.
 comment|///
@@ -839,105 +650,6 @@ return|return
 name|false
 return|;
 block|}
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|void
-name|deallocateFunctionBody
-argument_list|(
-name|void
-operator|*
-name|Body
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|size_t
-name|GetDefaultCodeSlabSize
-argument_list|()
-block|{
-return|return
-name|m_default_mm_ap
-operator|->
-name|GetDefaultCodeSlabSize
-argument_list|()
-return|;
-block|}
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|size_t
-name|GetDefaultDataSlabSize
-argument_list|()
-block|{
-return|return
-name|m_default_mm_ap
-operator|->
-name|GetDefaultDataSlabSize
-argument_list|()
-return|;
-block|}
-name|virtual
-name|size_t
-name|GetDefaultStubSlabSize
-argument_list|()
-block|{
-return|return
-name|m_default_mm_ap
-operator|->
-name|GetDefaultStubSlabSize
-argument_list|()
-return|;
-block|}
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|unsigned
-name|GetNumCodeSlabs
-argument_list|()
-block|{
-return|return
-name|m_default_mm_ap
-operator|->
-name|GetNumCodeSlabs
-argument_list|()
-return|;
-block|}
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|unsigned
-name|GetNumDataSlabs
-argument_list|()
-block|{
-return|return
-name|m_default_mm_ap
-operator|->
-name|GetNumDataSlabs
-argument_list|()
-return|;
-block|}
-comment|//------------------------------------------------------------------
-comment|/// Passthrough interface stub
-comment|//------------------------------------------------------------------
-name|virtual
-name|unsigned
-name|GetNumStubSlabs
-argument_list|()
-block|{
-return|return
-name|m_default_mm_ap
-operator|->
-name|GetNumStubSlabs
-argument_list|()
-return|;
-block|}
 name|virtual
 name|void
 name|registerEHFrames
@@ -949,18 +661,7 @@ argument_list|,
 argument|size_t Size
 argument_list|)
 block|{
-return|return
-name|m_default_mm_ap
-operator|->
-name|registerEHFrames
-argument_list|(
-name|Addr
-argument_list|,
-name|LoadAddr
-argument_list|,
-name|Size
-argument_list|)
-return|;
+return|return;
 block|}
 comment|//------------------------------------------------------------------
 comment|/// Passthrough interface stub
@@ -992,7 +693,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|JITMemoryManager
+name|SectionMemoryManager
 operator|>
 name|m_default_mm_ap
 block|;

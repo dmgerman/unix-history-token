@@ -1256,7 +1256,10 @@ name|DescriptionLevel
 name|level
 argument_list|,
 name|bool
-name|json_output
+name|print_json_thread
+argument_list|,
+name|bool
+name|print_json_stopinfo
 argument_list|)
 decl_stmt|;
 comment|//------------------------------------------------------------------
@@ -1761,6 +1764,19 @@ argument_list|,
 argument|uint32_t frame_idx
 argument_list|)
 expr_stmt|;
+name|virtual
+name|lldb
+operator|::
+name|ThreadPlanSP
+name|QueueThreadPlanForStepScripted
+argument_list|(
+argument|bool abort_other_plans
+argument_list|,
+argument|const char *class_name
+argument_list|,
+argument|bool stop_other_threads
+argument_list|)
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Thread Plan accessors:
 comment|//------------------------------------------------------------------
@@ -1948,6 +1964,24 @@ name|up_to_plan_ptr
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|/// Discards the plans queued on the plan stack of the current thread up to and
+comment|/// including the plan in that matches \a thread_index counting only
+comment|/// the non-Private plans.
+comment|///
+comment|/// @param[in] up_to_plan_sp
+comment|///   Discard all plans up to and including this user plan given by this index.
+comment|///
+comment|/// @return
+comment|///    \b true if there was a thread plan with that user index, \b false otherwise.
+comment|//------------------------------------------------------------------
+name|bool
+name|DiscardUserThreadPlansUpToIndex
+parameter_list|(
+name|uint32_t
+name|thread_index
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
 comment|/// Prints the current plan stack.
 comment|///
 comment|/// @param[in] s
@@ -1960,6 +1994,25 @@ argument_list|(
 name|Stream
 operator|*
 name|s
+argument_list|,
+name|lldb
+operator|::
+name|DescriptionLevel
+name|desc_level
+operator|=
+name|lldb
+operator|::
+name|eDescriptionLevelVerbose
+argument_list|,
+name|bool
+name|include_internal
+operator|=
+name|true
+argument_list|,
+name|bool
+name|ignore_boring
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2420,6 +2473,10 @@ name|uint32_t
 name|m_stop_info_stop_id
 decl_stmt|;
 comment|// This is the stop id for which the StopInfo is valid.  Can use this so you know that
+name|uint32_t
+name|m_stop_info_override_stop_id
+decl_stmt|;
+comment|// The stop ID containing the last time the stop info was checked against the stop info override
 comment|// the thread's m_stop_info_sp is current and you don't have to fetch it again
 specifier|const
 name|uint32_t

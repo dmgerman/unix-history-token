@@ -33,6 +33,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/* Note: LLVMLinkerPreserveSource has no effect. */
 typedef|typedef
 enum|enum
 block|{

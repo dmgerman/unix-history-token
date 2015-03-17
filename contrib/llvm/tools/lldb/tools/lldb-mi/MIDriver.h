@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MIDriver.h
+comment|// File:        MIDriver.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMIDriver interface.
+comment|// Overview:    CMIDriver interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -158,39 +158,39 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI driver implementation class. A singleton class derived from
+comment|// Details: MI driver implementation class. A singleton class derived from
 end_comment
 
 begin_comment
-comment|//			LLDB SBBroadcaster class. Register the instance of *this class with
+comment|//          LLDB SBBroadcaster class. Register the instance of *this class with
 end_comment
 
 begin_comment
-comment|//			the CMIDriverMgr. The CMIDriverMgr sets the driver(s) of to start
+comment|//          the CMIDriverMgr. The CMIDriverMgr sets the driver(s) of to start
 end_comment
 
 begin_comment
-comment|//			work depending on the one selected to work. A driver can if not able
+comment|//          work depending on the one selected to work. A driver can if not able
 end_comment
 
 begin_comment
-comment|//			to handle an instruction or 'command' can pass that command onto
+comment|//          to handle an instruction or 'command' can pass that command onto
 end_comment
 
 begin_comment
-comment|//			another driver object registered with the Driver Manager.
+comment|//          another driver object registered with the Driver Manager.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 29/01/2014.
+comment|// Authors: Illya Rudkin 29/01/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -239,13 +239,13 @@ name|public
 label|:
 comment|//++ ----------------------------------------------------------------------
 comment|// Details: The MI Driver has a running state which is used to help determin
-comment|//			which specific action(s) it should take or not allow.
-comment|//			The driver when operational and not shutting down alternates
-comment|//			between eDriverState_RunningNotDebugging and
-comment|//			eDriverState_RunningDebugging. eDriverState_RunningNotDebugging
-comment|//			is normally set when a breakpoint is hit or halted.
-comment|//			eDriverState_RunningDebugging is normally set when "exec-continue"
-comment|//			or "exec-run" is issued.
+comment|//          which specific action(s) it should take or not allow.
+comment|//          The driver when operational and not shutting down alternates
+comment|//          between eDriverState_RunningNotDebugging and
+comment|//          eDriverState_RunningDebugging. eDriverState_RunningNotDebugging
+comment|//          is normally set when a breakpoint is hit or halted.
+comment|//          eDriverState_RunningDebugging is normally set when "exec-continue"
+comment|//          or "exec-run" is issued.
 comment|//--
 enum|enum
 name|DriverState_e
@@ -447,11 +447,11 @@ name|DoParseArgs
 argument_list|(
 argument|const int argc
 argument_list|,
-argument|const char * argv[]
+argument|const char *argv[]
 argument_list|,
-argument|FILE * vpStdOut
+argument|FILE *vpStdOut
 argument_list|,
-argument|bool& vwbExiting
+argument|bool&vwbExiting
 argument_list|)
 expr_stmt|;
 name|virtual
@@ -651,11 +651,11 @@ name|ParseArgs
 argument_list|(
 argument|const int argc
 argument_list|,
-argument|const char * argv[]
+argument|const char *argv[]
 argument_list|,
-argument|FILE * vpStdOut
+argument|FILE *vpStdOut
 argument_list|,
-argument|bool& vwbExiting
+argument|bool&vwbExiting
 argument_list|)
 expr_stmt|;
 name|bool
@@ -831,7 +831,8 @@ decl_stmt|;
 name|bool
 name|m_bDriverDebuggingArgExecutable
 decl_stmt|;
-comment|// True = The MI Driver (MI mode) is debugging executable passed as argument, false = running via a client i.e Eclipse
+comment|// True = The MI Driver (MI mode) is debugging executable passed as argument, false = running via
+comment|// a client i.e Eclipse
 block|}
 end_decl_stmt
 

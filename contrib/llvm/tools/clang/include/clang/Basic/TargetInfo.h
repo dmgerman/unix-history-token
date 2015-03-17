@@ -1314,6 +1314,46 @@ return|return
 name|MaxAtomicInlineWidth
 return|;
 block|}
+comment|/// \brief Returns true if the given target supports lock-free atomic
+comment|/// operations at the specified width and alignment.
+name|virtual
+name|bool
+name|hasBuiltinAtomic
+argument_list|(
+argument|uint64_t AtomicSizeInBits
+argument_list|,
+argument|uint64_t AlignmentInBits
+argument_list|)
+specifier|const
+block|{
+return|return
+name|AtomicSizeInBits
+operator|<=
+name|AlignmentInBits
+operator|&&
+name|AtomicSizeInBits
+operator|<=
+name|getMaxAtomicInlineWidth
+argument_list|()
+operator|&&
+operator|(
+name|AtomicSizeInBits
+operator|<=
+name|getCharWidth
+argument_list|()
+operator|||
+name|llvm
+operator|::
+name|isPowerOf2_64
+argument_list|(
+name|AtomicSizeInBits
+operator|/
+name|getCharWidth
+argument_list|()
+argument_list|)
+operator|)
+return|;
+block|}
 comment|/// \brief Return the maximum vector alignment supported for the given target.
 name|unsigned
 name|getMaxVectorAlign
@@ -1643,7 +1683,18 @@ comment|// "+r" output constraint (read and write).
 name|CI_HasMatchingInput
 operator|=
 literal|0x08
+block|,
 comment|// This output operand has a matching input.
+name|CI_ImmediateConstant
+operator|=
+literal|0x10
+block|,
+comment|// This operand must be an immediate constant
+name|CI_EarlyClobber
+operator|=
+literal|0x20
+block|,
+comment|// "&" output constraint (early clobber).
 block|}
 block|;
 name|unsigned
@@ -1651,6 +1702,15 @@ name|Flags
 block|;
 name|int
 name|TiedOperand
+block|;     struct
+block|{
+name|int
+name|Min
+block|;
+name|int
+name|Max
+block|;     }
+name|ImmRange
 block|;
 name|std
 operator|::
@@ -1696,7 +1756,17 @@ name|Name
 argument_list|(
 argument|Name.str()
 argument_list|)
-block|{}
+block|{
+name|ImmRange
+operator|.
+name|Min
+operator|=
+name|ImmRange
+operator|.
+name|Max
+operator|=
+literal|0
+block|;     }
 specifier|const
 name|std
 operator|::
@@ -1733,6 +1803,20 @@ operator|(
 name|Flags
 operator|&
 name|CI_ReadWrite
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|bool
+name|earlyClobber
+argument_list|()
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|CI_EarlyClobber
 operator|)
 operator|!=
 literal|0
@@ -1822,6 +1906,43 @@ operator|)
 name|TiedOperand
 return|;
 block|}
+name|bool
+name|requiresImmediateConstant
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|CI_ImmediateConstant
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|int
+name|getImmConstantMin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ImmRange
+operator|.
+name|Min
+return|;
+block|}
+name|int
+name|getImmConstantMax
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ImmRange
+operator|.
+name|Max
+return|;
+block|}
 name|void
 name|setIsReadWrite
 argument_list|()
@@ -1829,6 +1950,14 @@ block|{
 name|Flags
 operator||=
 name|CI_ReadWrite
+block|; }
+name|void
+name|setEarlyClobber
+argument_list|()
+block|{
+name|Flags
+operator||=
+name|CI_EarlyClobber
 block|; }
 name|void
 name|setAllowsMemory
@@ -1854,6 +1983,30 @@ name|Flags
 operator||=
 name|CI_HasMatchingInput
 block|; }
+name|void
+name|setRequiresImmediate
+argument_list|(
+argument|int Min
+argument_list|,
+argument|int Max
+argument_list|)
+block|{
+name|Flags
+operator||=
+name|CI_ImmediateConstant
+block|;
+name|ImmRange
+operator|.
+name|Min
+operator|=
+name|Min
+block|;
+name|ImmRange
+operator|.
+name|Max
+operator|=
+name|Max
+block|;     }
 comment|/// \brief Indicate that this is an input operand that is tied to
 comment|/// the specified output operand.
 comment|///
@@ -1908,6 +2061,22 @@ specifier|const
 block|;
 name|virtual
 name|bool
+name|validateOutputSize
+argument_list|(
+argument|StringRef
+comment|/*Constraint*/
+argument_list|,
+argument|unsigned
+comment|/*Size*/
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
 name|validateInputSize
 argument_list|(
 argument|StringRef
@@ -1929,11 +2098,14 @@ argument_list|(
 argument|StringRef
 comment|/*Constraint*/
 argument_list|,
-argument|const char
+argument|char
 comment|/*Modifier*/
 argument_list|,
 argument|unsigned
 comment|/*Size*/
+argument_list|,
+argument|std::string&
+comment|/*SuggestedModifier*/
 argument_list|)
 specifier|const
 block|{

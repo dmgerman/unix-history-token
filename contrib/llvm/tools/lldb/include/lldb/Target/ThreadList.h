@@ -67,46 +67,38 @@ directive|include
 file|"lldb/Utility/Iterable.h"
 end_include
 
-begin_comment
-comment|// FIXME: Currently this is a thread list with lots of functionality for use only by
-end_comment
-
-begin_comment
-comment|// the process for which this is the thread list.  If we ever want a container class
-end_comment
-
-begin_comment
-comment|// to hand out that is just a random subset of threads, with iterator functionality,
-end_comment
-
-begin_comment
-comment|// then we should make that part a base class, and make a ProcessThreadList for the
-end_comment
-
-begin_comment
-comment|// process.
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Target/ThreadCollection.h"
+end_include
 
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+comment|// This is a thread list with lots of functionality for use only by the process
+comment|// for which this is the thread list.  A generic container class with iterator
+comment|// functionality is ThreadCollection.
 name|class
 name|ThreadList
+range|:
+name|public
+name|ThreadCollection
 block|{
 name|friend
 name|class
 name|Process
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|ThreadList
 argument_list|(
 name|Process
 operator|*
 name|process
 argument_list|)
-expr_stmt|;
+block|;
 name|ThreadList
 argument_list|(
 specifier|const
@@ -114,57 +106,30 @@ name|ThreadList
 operator|&
 name|rhs
 argument_list|)
-expr_stmt|;
+block|;
+name|virtual
 operator|~
 name|ThreadList
 argument_list|()
-expr_stmt|;
+block|;
 specifier|const
 name|ThreadList
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|ThreadList
 operator|&
 name|rhs
 operator|)
-decl_stmt|;
+block|;
 name|uint32_t
 name|GetSize
-parameter_list|(
-name|bool
-name|can_update
-init|=
-name|true
-parameter_list|)
-function_decl|;
-name|void
-name|AddThread
 argument_list|(
-specifier|const
-name|lldb
-operator|::
-name|ThreadSP
-operator|&
-name|thread_sp
+argument|bool can_update = true
 argument_list|)
-decl_stmt|;
-name|void
-name|InsertThread
-argument_list|(
-specifier|const
-name|lldb
-operator|::
-name|ThreadSP
-operator|&
-name|thread_sp
-argument_list|,
-name|uint32_t
-name|idx
-argument_list|)
-decl_stmt|;
+block|;
 comment|// Return the selected thread if there is one.  Otherwise, return the thread
 comment|// selected at index 0.
 name|lldb
@@ -172,45 +137,35 @@ operator|::
 name|ThreadSP
 name|GetSelectedThread
 argument_list|()
-expr_stmt|;
+block|;
 name|bool
 name|SetSelectedThreadByID
 argument_list|(
-name|lldb
-operator|::
-name|tid_t
-name|tid
+argument|lldb::tid_t tid
 argument_list|,
-name|bool
-name|notify
-operator|=
-name|false
+argument|bool notify = false
 argument_list|)
-decl_stmt|;
+block|;
 name|bool
 name|SetSelectedThreadByIndexID
-parameter_list|(
-name|uint32_t
-name|index_id
-parameter_list|,
-name|bool
-name|notify
-init|=
-name|false
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|uint32_t index_id
+argument_list|,
+argument|bool notify = false
+argument_list|)
+block|;
 name|void
 name|Clear
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|Flush
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|Destroy
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|// Note that "idx" is not the same as the "thread_index". It is a zero
 comment|// based index to accessing the current threads, whereas "thread_index"
 comment|// is a unique index assigned
@@ -223,45 +178,7 @@ argument|uint32_t idx
 argument_list|,
 argument|bool can_update = true
 argument_list|)
-expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb
-operator|::
-name|ThreadSP
-operator|>
-name|collection
-expr_stmt|;
-typedef|typedef
-name|LockingAdaptedIterable
-operator|<
-name|collection
-operator|,
-name|lldb
-operator|::
-name|ThreadSP
-operator|,
-name|vector_adapter
-operator|>
-name|ThreadIterable
-expr_stmt|;
-name|ThreadIterable
-name|Threads
-parameter_list|()
-block|{
-return|return
-name|ThreadIterable
-argument_list|(
-name|m_threads
-argument_list|,
-name|GetMutex
-argument_list|()
-argument_list|)
-return|;
-block|}
+block|;
 name|lldb
 operator|::
 name|ThreadSP
@@ -271,7 +188,7 @@ argument|lldb::tid_t tid
 argument_list|,
 argument|bool can_update = true
 argument_list|)
-expr_stmt|;
+block|;
 name|lldb
 operator|::
 name|ThreadSP
@@ -281,7 +198,7 @@ argument|lldb::tid_t tid
 argument_list|,
 argument|bool can_update = true
 argument_list|)
-expr_stmt|;
+block|;
 name|lldb
 operator|::
 name|ThreadSP
@@ -291,7 +208,7 @@ argument|lldb::tid_t tid
 argument_list|,
 argument|bool can_update = true
 argument_list|)
-expr_stmt|;
+block|;
 name|lldb
 operator|::
 name|ThreadSP
@@ -301,7 +218,7 @@ argument|lldb::tid_t tid
 argument_list|,
 argument|bool can_update = true
 argument_list|)
-expr_stmt|;
+block|;
 name|lldb
 operator|::
 name|ThreadSP
@@ -311,7 +228,7 @@ argument|uint32_t index_id
 argument_list|,
 argument|bool can_update = true
 argument_list|)
-expr_stmt|;
+block|;
 name|lldb
 operator|::
 name|ThreadSP
@@ -321,35 +238,35 @@ name|Thread
 operator|*
 name|thread_ptr
 argument_list|)
-expr_stmt|;
+block|;
 name|bool
 name|ShouldStop
-parameter_list|(
+argument_list|(
 name|Event
-modifier|*
+operator|*
 name|event_ptr
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|Vote
 name|ShouldReportStop
-parameter_list|(
+argument_list|(
 name|Event
-modifier|*
+operator|*
 name|event_ptr
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|Vote
 name|ShouldReportRun
-parameter_list|(
+argument_list|(
 name|Event
-modifier|*
+operator|*
 name|event_ptr
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|RefreshStateAfterStop
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|//------------------------------------------------------------------
 comment|/// The thread list asks tells all the threads it is about to resume.
 comment|/// If a thread can "resume" without having to resume the target, it
@@ -365,92 +282,83 @@ comment|///
 comment|//------------------------------------------------------------------
 name|bool
 name|WillResume
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|DidResume
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|DidStop
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|DiscardThreadPlans
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|uint32_t
 name|GetStopID
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|void
 name|SetStopID
-parameter_list|(
-name|uint32_t
-name|stop_id
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|uint32_t stop_id
+argument_list|)
+block|;
+name|virtual
 name|Mutex
-modifier|&
+operator|&
 name|GetMutex
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|Update
-parameter_list|(
+argument_list|(
 name|ThreadList
-modifier|&
+operator|&
 name|rhs
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|protected
-label|:
+operator|:
 name|void
 name|SetShouldReportStop
-parameter_list|(
-name|Vote
-name|vote
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|Vote vote
+argument_list|)
+block|;
 name|void
 name|NotifySelectedThreadChanged
 argument_list|(
-name|lldb
-operator|::
-name|tid_t
-name|tid
+argument|lldb::tid_t tid
 argument_list|)
-decl_stmt|;
+block|;
 comment|//------------------------------------------------------------------
 comment|// Classes that inherit from Process can see and modify these
 comment|//------------------------------------------------------------------
 name|Process
-modifier|*
+operator|*
 name|m_process
-decl_stmt|;
+block|;
 comment|///< The process that manages this thread list.
 name|uint32_t
 name|m_stop_id
-decl_stmt|;
+block|;
 comment|///< The process stop ID that this thread list is valid for.
-name|collection
-name|m_threads
-decl_stmt|;
-comment|///< The threads for this process.
 name|lldb
 operator|::
 name|tid_t
 name|m_selected_tid
-expr_stmt|;
+block|;
 comment|///< For targets that need the notion of a current thread.
 name|private
-label|:
+operator|:
 name|ThreadList
 argument_list|()
-expr_stmt|;
-block|}
-empty_stmt|;
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

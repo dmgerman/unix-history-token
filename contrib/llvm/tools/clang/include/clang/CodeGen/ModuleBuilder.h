@@ -92,6 +92,9 @@ name|class
 name|DiagnosticsEngine
 decl_stmt|;
 name|class
+name|CoverageSourceInfo
+decl_stmt|;
+name|class
 name|LangOptions
 decl_stmt|;
 name|class
@@ -181,6 +184,12 @@ operator|::
 name|LLVMContext
 operator|&
 name|C
+argument_list|,
+name|CoverageSourceInfo
+operator|*
+name|CoverageInfo
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 block|}

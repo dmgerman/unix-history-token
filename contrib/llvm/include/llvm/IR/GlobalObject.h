@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/GlobalObject.h - Class to represent a global object *- C++ -*-===//
+comment|//===-- llvm/GlobalObject.h - Class to represent global objects -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -155,6 +155,37 @@ name|Comdat
 operator|*
 name|ObjComdat
 block|;
+specifier|static
+specifier|const
+name|unsigned
+name|AlignmentBits
+operator|=
+literal|5
+block|;
+specifier|static
+specifier|const
+name|unsigned
+name|GlobalObjectSubClassDataBits
+operator|=
+name|GlobalValueSubClassDataBits
+operator|-
+name|AlignmentBits
+block|;
+name|private
+operator|:
+specifier|static
+specifier|const
+name|unsigned
+name|AlignmentMask
+operator|=
+operator|(
+literal|1
+operator|<<
+name|AlignmentBits
+operator|)
+operator|-
+literal|1
+block|;
 name|public
 operator|:
 name|unsigned
@@ -162,12 +193,24 @@ name|getAlignment
 argument_list|()
 specifier|const
 block|{
+name|unsigned
+name|Data
+operator|=
+name|getGlobalValueSubClassData
+argument_list|()
+block|;
+name|unsigned
+name|AlignmentData
+operator|=
+name|Data
+operator|&
+name|AlignmentMask
+block|;
 return|return
 operator|(
 literal|1u
 operator|<<
-name|getGlobalValueSubClassData
-argument_list|()
+name|AlignmentData
 operator|)
 operator|>>
 literal|1
@@ -177,6 +220,17 @@ name|void
 name|setAlignment
 argument_list|(
 argument|unsigned Align
+argument_list|)
+block|;
+name|unsigned
+name|getGlobalObjectSubClassData
+argument_list|()
+specifier|const
+block|;
+name|void
+name|setGlobalObjectSubClassData
+argument_list|(
+argument|unsigned Val
 argument_list|)
 block|;
 name|bool

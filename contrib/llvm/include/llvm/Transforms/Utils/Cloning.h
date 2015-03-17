@@ -160,6 +160,12 @@ decl_stmt|;
 name|class
 name|AllocaInst
 decl_stmt|;
+name|class
+name|AliasAnalysis
+decl_stmt|;
+name|class
+name|AssumptionCacheTracker
+decl_stmt|;
 comment|/// CloneModule - Return an exact copy of the specified module
 comment|///
 name|Module
@@ -463,6 +469,18 @@ operator|*
 name|DL
 operator|=
 name|nullptr
+argument_list|,
+name|AliasAnalysis
+operator|*
+name|AA
+operator|=
+name|nullptr
+argument_list|,
+name|AssumptionCacheTracker
+operator|*
+name|ACT
+operator|=
+name|nullptr
 argument_list|)
 operator|:
 name|CG
@@ -472,7 +490,17 @@ argument_list|)
 operator|,
 name|DL
 argument_list|(
-argument|DL
+name|DL
+argument_list|)
+operator|,
+name|AA
+argument_list|(
+name|AA
+argument_list|)
+operator|,
+name|ACT
+argument_list|(
+argument|ACT
 argument_list|)
 block|{}
 comment|/// CG - If non-null, InlineFunction will update the callgraph to reflect the
@@ -485,6 +513,14 @@ specifier|const
 name|DataLayout
 modifier|*
 name|DL
+decl_stmt|;
+name|AliasAnalysis
+modifier|*
+name|AA
+decl_stmt|;
+name|AssumptionCacheTracker
+modifier|*
+name|ACT
 decl_stmt|;
 comment|/// StaticAllocas - InlineFunction fills this in with all static allocas that
 comment|/// get copied into the caller.

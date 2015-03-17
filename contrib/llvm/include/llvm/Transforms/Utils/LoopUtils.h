@@ -67,6 +67,9 @@ name|class
 name|AliasAnalysis
 decl_stmt|;
 name|class
+name|AssumptionCache
+decl_stmt|;
+name|class
 name|BasicBlock
 decl_stmt|;
 name|class
@@ -143,6 +146,12 @@ modifier|*
 name|DL
 init|=
 name|nullptr
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Put loop into LCSSA form.
@@ -166,6 +175,10 @@ parameter_list|,
 name|DominatorTree
 modifier|&
 name|DT
+parameter_list|,
+name|LoopInfo
+modifier|*
+name|LI
 parameter_list|,
 name|ScalarEvolution
 modifier|*
@@ -193,6 +206,10 @@ parameter_list|,
 name|DominatorTree
 modifier|&
 name|DT
+parameter_list|,
+name|LoopInfo
+modifier|*
+name|LI
 parameter_list|,
 name|ScalarEvolution
 modifier|*

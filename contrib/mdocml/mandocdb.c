@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandocdb.c,v 1.185 2015/02/27 16:22:09 schwarze Exp $ */
+comment|/*	$Id: mandocdb.c,v 1.186 2015/03/13 00:19:41 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -4860,6 +4860,20 @@ argument_list|,
 name|mlink
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|inodev
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|inodev
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Clear padding. */
 name|inodev
 operator|.
 name|st_ino

@@ -184,6 +184,17 @@ argument_list|)
 empty_stmt|;
 name|ClangExpressionVariable
 argument_list|(
+argument|ExecutionContextScope *exe_scope
+argument_list|,
+argument|Value&value
+argument_list|,
+argument|const ConstString&name
+argument_list|,
+argument|uint16_t flags = EVNone
+argument_list|)
+empty_stmt|;
+name|ClangExpressionVariable
+argument_list|(
 specifier|const
 name|lldb
 operator|::

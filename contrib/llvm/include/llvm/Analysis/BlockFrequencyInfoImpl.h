@@ -1298,7 +1298,7 @@ comment|/// Get the node currently representing Node, which could be a containin
 comment|/// loop.
 comment|///
 comment|/// This function should only be called when distributing mass.  As long as
-comment|/// there are no irreducilbe edges to Node, then it will have complexity
+comment|/// there are no irreducible edges to Node, then it will have complexity
 comment|/// O(1) in this context.
 comment|///
 comment|/// In general, the complexity is O(L), where L is the number of loop

@@ -80,6 +80,7 @@ comment|///
 comment|/// @param UseDefFreq Expected number of executed use and def instructions
 comment|///                   per function call. Derived from block frequencies.
 comment|/// @param Size       Size of live interval as returnexd by getSize()
+comment|/// @param NumInstr   Number of instructions using this live interval
 comment|///
 specifier|static
 specifier|inline
@@ -91,6 +92,9 @@ name|UseDefFreq
 parameter_list|,
 name|unsigned
 name|Size
+parameter_list|,
+name|unsigned
+name|NumInstr
 parameter_list|)
 block|{
 comment|// The constant 25 instructions is added to avoid depending too much on
@@ -127,6 +131,8 @@ name|NormalizingFn
 function_decl|)
 parameter_list|(
 name|float
+parameter_list|,
+name|unsigned
 parameter_list|,
 name|unsigned
 parameter_list|)

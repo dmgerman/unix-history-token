@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_ARM_TARGETOBJECTFILE_H
+name|LLVM_LIB_TARGET_ARM_ARMTARGETOBJECTFILE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_ARM_TARGETOBJECTFILE_H
+name|LLVM_LIB_TARGET_ARM_ARMTARGETOBJECTFILE_H
 end_define
 
 begin_include

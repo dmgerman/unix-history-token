@@ -1557,6 +1557,20 @@ block|{
 name|IsLambda
 operator|=
 name|true
+block|;
+comment|// C++11 [expr.prim.lambda]p3:
+comment|//   This class type is neither an aggregate nor a literal type.
+name|Aggregate
+operator|=
+name|false
+block|;
+name|PlainOldData
+operator|=
+name|false
+block|;
+name|HasNonLiteralTypeFieldsOrBases
+operator|=
+name|true
 block|;     }
 comment|/// \brief Whether this lambda is known to be dependent, even if its
 comment|/// context isn't dependent.
@@ -2622,6 +2636,13 @@ name|DeclaredSpecialMembers
 operator|&
 name|SMF_DefaultConstructor
 operator|)
+operator|&&
+comment|// C++14 [expr.prim.lambda]p20:
+comment|//   The closure type associated with a lambda-expression has no
+comment|//   default constructor.
+operator|!
+name|isLambda
+argument_list|()
 return|;
 block|}
 comment|/// \brief Determine whether this class has any user-declared constructors.
@@ -4116,6 +4137,42 @@ name|TemplateSpecializationKind
 name|TSK
 parameter_list|)
 function_decl|;
+comment|/// \brief Retrieve the record declaration from which this record could be
+comment|/// instantiated. Returns null if this class is not a template instantiation.
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|getTemplateInstantiationPattern
+argument_list|()
+specifier|const
+expr_stmt|;
+name|CXXRecordDecl
+modifier|*
+name|getTemplateInstantiationPattern
+parameter_list|()
+block|{
+return|return
+name|const_cast
+operator|<
+name|CXXRecordDecl
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getTemplateInstantiationPattern
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// \brief Returns the destructor decl for this class.
 name|CXXDestructorDecl
 operator|*
@@ -7425,12 +7482,10 @@ literal|"Getting indexes for non-array init"
 argument_list|)
 block|;
 return|return
-name|ArrayRef
-operator|<
-name|VarDecl
-operator|*
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|reinterpret_cast
 operator|<
 name|VarDecl
@@ -7442,10 +7497,10 @@ name|this
 operator|+
 literal|1
 operator|)
-operator|,
+argument_list|,
 name|getNumArrayIndices
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -9722,34 +9777,42 @@ name|NamespaceAliasDecl
 range|:
 name|public
 name|NamedDecl
+decl_stmt|,
+name|public
+name|Redeclarable
+decl|<
+name|NamespaceAliasDecl
+decl|>
 block|{
 name|void
 name|anchor
 argument_list|()
 name|override
-block|;
+expr_stmt|;
 comment|/// \brief The location of the \c namespace keyword.
 name|SourceLocation
 name|NamespaceLoc
-block|;
+decl_stmt|;
 comment|/// \brief The location of the namespace's identifier.
 comment|///
 comment|/// This is accessed by TargetNameLoc.
 name|SourceLocation
 name|IdentLoc
-block|;
+decl_stmt|;
 comment|/// \brief The nested-name-specifier that precedes the namespace.
 name|NestedNameSpecifierLoc
 name|QualifierLoc
-block|;
+decl_stmt|;
 comment|/// \brief The Decl that this alias points to, either a NamespaceDecl or
 comment|/// a NamespaceAliasDecl.
 name|NamedDecl
-operator|*
+modifier|*
 name|Namespace
-block|;
+decl_stmt|;
 name|NamespaceAliasDecl
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation NamespaceLoc
@@ -9764,7 +9827,7 @@ argument|SourceLocation IdentLoc
 argument_list|,
 argument|NamedDecl *Namespace
 argument_list|)
-operator|:
+block|:
 name|NamedDecl
 argument_list|(
 name|NamespaceAlias
@@ -9775,196 +9838,63 @@ name|AliasLoc
 argument_list|,
 name|Alias
 argument_list|)
-block|,
+operator|,
+name|redeclarable_base
+argument_list|(
+name|C
+argument_list|)
+operator|,
 name|NamespaceLoc
 argument_list|(
 name|NamespaceLoc
 argument_list|)
-block|,
+operator|,
 name|IdentLoc
 argument_list|(
 name|IdentLoc
 argument_list|)
-block|,
+operator|,
 name|QualifierLoc
 argument_list|(
 name|QualifierLoc
 argument_list|)
-block|,
+operator|,
 name|Namespace
 argument_list|(
 argument|Namespace
 argument_list|)
-block|{ }
+block|{}
+typedef|typedef
+name|Redeclarable
+operator|<
+name|NamespaceAliasDecl
+operator|>
+name|redeclarable_base
+expr_stmt|;
+name|NamespaceAliasDecl
+operator|*
+name|getNextRedeclarationImpl
+argument_list|()
+name|override
+expr_stmt|;
+name|NamespaceAliasDecl
+operator|*
+name|getPreviousDeclImpl
+argument_list|()
+name|override
+expr_stmt|;
+name|NamespaceAliasDecl
+operator|*
+name|getMostRecentDeclImpl
+argument_list|()
+name|override
+expr_stmt|;
 name|friend
 name|class
 name|ASTDeclReader
-block|;
+decl_stmt|;
 name|public
-operator|:
-comment|/// \brief Retrieve the nested-name-specifier that qualifies the
-comment|/// name of the namespace, with source-location information.
-name|NestedNameSpecifierLoc
-name|getQualifierLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QualifierLoc
-return|;
-block|}
-comment|/// \brief Retrieve the nested-name-specifier that qualifies the
-comment|/// name of the namespace.
-name|NestedNameSpecifier
-operator|*
-name|getQualifier
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QualifierLoc
-operator|.
-name|getNestedNameSpecifier
-argument_list|()
-return|;
-block|}
-comment|/// \brief Retrieve the namespace declaration aliased by this directive.
-name|NamespaceDecl
-operator|*
-name|getNamespace
-argument_list|()
-block|{
-if|if
-condition|(
-name|NamespaceAliasDecl
-modifier|*
-name|AD
-init|=
-name|dyn_cast
-operator|<
-name|NamespaceAliasDecl
-operator|>
-operator|(
-name|Namespace
-operator|)
-condition|)
-return|return
-name|AD
-operator|->
-name|getNamespace
-argument_list|()
-return|;
-return|return
-name|cast
-operator|<
-name|NamespaceDecl
-operator|>
-operator|(
-name|Namespace
-operator|)
-return|;
-block|}
-end_decl_stmt
-
-begin_expr_stmt
-specifier|const
-name|NamespaceDecl
-operator|*
-name|getNamespace
-argument_list|()
-specifier|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|NamespaceAliasDecl
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getNamespace
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Returns the location of the alias name, i.e. 'foo' in
-end_comment
-
-begin_comment
-comment|/// "namespace foo = ns::bar;".
-end_comment
-
-begin_expr_stmt
-name|SourceLocation
-name|getAliasLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getLocation
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Returns the location of the \c namespace keyword.
-end_comment
-
-begin_expr_stmt
-name|SourceLocation
-name|getNamespaceLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NamespaceLoc
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Returns the location of the identifier in the named namespace.
-end_comment
-
-begin_expr_stmt
-name|SourceLocation
-name|getTargetNameLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IdentLoc
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Retrieve the namespace that this alias refers to, which
-end_comment
-
-begin_comment
-comment|/// may either be a NamespaceDecl or a NamespaceAliasDecl.
-end_comment
-
-begin_expr_stmt
-name|NamedDecl
-operator|*
-name|getAliasedNamespace
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Namespace
-return|;
-block|}
-end_expr_stmt
-
-begin_function_decl
+label|:
 specifier|static
 name|NamespaceAliasDecl
 modifier|*
@@ -9999,9 +9929,6 @@ modifier|*
 name|Namespace
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|NamespaceAliasDecl
 modifier|*
@@ -10015,9 +9942,193 @@ name|unsigned
 name|ID
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
+typedef|typedef
+name|redeclarable_base
+operator|::
+name|redecl_range
+name|redecl_range
+expr_stmt|;
+typedef|typedef
+name|redeclarable_base
+operator|::
+name|redecl_iterator
+name|redecl_iterator
+expr_stmt|;
+name|using
+name|redeclarable_base
+operator|::
+name|redecls_begin
+expr_stmt|;
+name|using
+name|redeclarable_base
+operator|::
+name|redecls_end
+expr_stmt|;
+name|using
+name|redeclarable_base
+operator|::
+name|redecls
+expr_stmt|;
+name|using
+name|redeclarable_base
+operator|::
+name|getPreviousDecl
+expr_stmt|;
+name|using
+name|redeclarable_base
+operator|::
+name|getMostRecentDecl
+expr_stmt|;
+name|NamespaceAliasDecl
+modifier|*
+name|getCanonicalDecl
+parameter_list|()
+function|override
+block|{
+return|return
+name|getFirstDecl
+argument_list|()
+return|;
+block|}
+specifier|const
+name|NamespaceAliasDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFirstDecl
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the nested-name-specifier that qualifies the
+comment|/// name of the namespace, with source-location information.
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualifierLoc
+return|;
+block|}
+comment|/// \brief Retrieve the nested-name-specifier that qualifies the
+comment|/// name of the namespace.
+name|NestedNameSpecifier
+operator|*
+name|getQualifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualifierLoc
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the namespace declaration aliased by this directive.
+name|NamespaceDecl
+modifier|*
+name|getNamespace
+parameter_list|()
+block|{
+if|if
+condition|(
+name|NamespaceAliasDecl
+modifier|*
+name|AD
+init|=
+name|dyn_cast
+operator|<
+name|NamespaceAliasDecl
+operator|>
+operator|(
+name|Namespace
+operator|)
+condition|)
+return|return
+name|AD
+operator|->
+name|getNamespace
+argument_list|()
+return|;
+return|return
+name|cast
+operator|<
+name|NamespaceDecl
+operator|>
+operator|(
+name|Namespace
+operator|)
+return|;
+block|}
+specifier|const
+name|NamespaceDecl
+operator|*
+name|getNamespace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|NamespaceAliasDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getNamespace
+argument_list|()
+return|;
+block|}
+comment|/// Returns the location of the alias name, i.e. 'foo' in
+comment|/// "namespace foo = ns::bar;".
+name|SourceLocation
+name|getAliasLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocation
+argument_list|()
+return|;
+block|}
+comment|/// Returns the location of the \c namespace keyword.
+name|SourceLocation
+name|getNamespaceLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NamespaceLoc
+return|;
+block|}
+comment|/// Returns the location of the identifier in the named namespace.
+name|SourceLocation
+name|getTargetNameLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IdentLoc
+return|;
+block|}
+comment|/// \brief Retrieve the namespace that this alias refers to, which
+comment|/// may either be a NamespaceDecl or a NamespaceAliasDecl.
+name|NamedDecl
+operator|*
+name|getAliasedNamespace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Namespace
+return|;
+block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -10034,9 +10145,6 @@ name|IdentLoc
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
@@ -10057,9 +10165,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classofKind
@@ -10074,10 +10179,14 @@ operator|==
 name|NamespaceAlias
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief Represents a shadow declaration introduced into a scope by a
 end_comment
 
@@ -10535,25 +10644,31 @@ name|UsingDecl
 range|:
 name|public
 name|NamedDecl
+decl_stmt|,
+name|public
+name|Mergeable
+decl|<
+name|UsingDecl
+decl|>
 block|{
 name|void
 name|anchor
 argument_list|()
 name|override
-block|;
+expr_stmt|;
 comment|/// \brief The source location of the 'using' keyword itself.
 name|SourceLocation
 name|UsingLocation
-block|;
+decl_stmt|;
 comment|/// \brief The nested-name-specifier that precedes the name.
 name|NestedNameSpecifierLoc
 name|QualifierLoc
-block|;
+decl_stmt|;
 comment|/// \brief Provides source/type location info for the declaration name
 comment|/// embedded in the ValueDecl base class.
 name|DeclarationNameLoc
 name|DNLoc
-block|;
+decl_stmt|;
 comment|/// \brief The first shadow declaration of the shadow decl chain associated
 comment|/// with this using declaration.
 comment|///
@@ -10565,13 +10680,13 @@ name|PointerIntPair
 operator|<
 name|UsingShadowDecl
 operator|*
-block|,
+operator|,
 literal|1
-block|,
+operator|,
 name|bool
 operator|>
 name|FirstUsingShadow
-block|;
+expr_stmt|;
 name|UsingDecl
 argument_list|(
 argument|DeclContext *DC
@@ -10584,7 +10699,7 @@ argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|bool HasTypenameKeyword
 argument_list|)
-operator|:
+block|:
 name|NamedDecl
 argument_list|(
 name|Using
@@ -10601,17 +10716,17 @@ operator|.
 name|getName
 argument_list|()
 argument_list|)
-block|,
+operator|,
 name|UsingLocation
 argument_list|(
 name|UL
 argument_list|)
-block|,
+operator|,
 name|QualifierLoc
 argument_list|(
 name|QualifierLoc
 argument_list|)
-block|,
+operator|,
 name|DNLoc
 argument_list|(
 name|NameInfo
@@ -10619,7 +10734,7 @@ operator|.
 name|getInfo
 argument_list|()
 argument_list|)
-block|,
+operator|,
 name|FirstUsingShadow
 argument_list|(
 argument|nullptr
@@ -10642,14 +10757,16 @@ block|}
 comment|/// \brief Set the source location of the 'using' keyword.
 name|void
 name|setUsingLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
 name|UsingLocation
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Retrieve the nested-name-specifier that qualifies the name,
 comment|/// with source-location information.
 name|NestedNameSpecifierLoc
@@ -10722,9 +10839,10 @@ block|}
 comment|/// \brief Sets whether the using declaration has 'typename'.
 name|void
 name|setTypename
-argument_list|(
-argument|bool TN
-argument_list|)
+parameter_list|(
+name|bool
+name|TN
+parameter_list|)
 block|{
 name|FirstUsingShadow
 operator|.
@@ -10732,7 +10850,8 @@ name|setInt
 argument_list|(
 name|TN
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Iterates through the using shadow declarations associated with
 comment|/// this using declaration.
 name|class
@@ -10740,11 +10859,11 @@ name|shadow_iterator
 block|{
 comment|/// \brief The current using shadow declaration.
 name|UsingShadowDecl
-operator|*
+modifier|*
 name|Current
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 typedef|typedef
 name|UsingShadowDecl
 modifier|*
@@ -10755,35 +10874,23 @@ name|UsingShadowDecl
 modifier|*
 name|reference
 typedef|;
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 name|UsingShadowDecl
 modifier|*
 name|pointer
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
 name|forward_iterator_tag
 name|iterator_category
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
 name|ptrdiff_t
 name|difference_type
 expr_stmt|;
-end_typedef
-
-begin_expr_stmt
 name|shadow_iterator
 argument_list|()
 operator|:
@@ -10816,26 +10923,17 @@ return|return
 name|Current
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|pointer
 name|operator
 operator|->
 expr|(
-end_expr_stmt
-
-begin_expr_stmt
-unit|)
-specifier|const
+block|)
+decl|const
 block|{
 return|return
 name|Current
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|shadow_iterator
 operator|&
 name|operator
@@ -10855,9 +10953,6 @@ operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|shadow_iterator
 name|operator
 operator|++
@@ -10882,9 +10977,6 @@ return|return
 name|tmp
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|friend
 name|bool
 name|operator
@@ -10907,9 +10999,6 @@ operator|.
 name|Current
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|friend
 name|bool
 name|operator
@@ -10932,10 +11021,14 @@ operator|.
 name|Current
 return|;
 block|}
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_typedef
-unit|};
 typedef|typedef
 name|llvm
 operator|::
@@ -11105,6 +11198,39 @@ name|LLVM_READONLY
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// Retrieves the canonical declaration of this declaration.
+end_comment
+
+begin_function
+name|UsingDecl
+modifier|*
+name|getCanonicalDecl
+parameter_list|()
+function|override
+block|{
+return|return
+name|getFirstDecl
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+specifier|const
+name|UsingDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFirstDecl
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_function
 specifier|static
 name|bool
@@ -11210,25 +11336,31 @@ name|UnresolvedUsingValueDecl
 range|:
 name|public
 name|ValueDecl
+decl_stmt|,
+name|public
+name|Mergeable
+decl|<
+name|UnresolvedUsingValueDecl
+decl|>
 block|{
 name|void
 name|anchor
 argument_list|()
 name|override
-block|;
+expr_stmt|;
 comment|/// \brief The source location of the 'using' keyword
 name|SourceLocation
 name|UsingLocation
-block|;
+decl_stmt|;
 comment|/// \brief The nested-name-specifier that precedes the name.
 name|NestedNameSpecifierLoc
 name|QualifierLoc
-block|;
+decl_stmt|;
 comment|/// \brief Provides source/type location info for the declaration name
 comment|/// embedded in the ValueDecl base class.
 name|DeclarationNameLoc
 name|DNLoc
-block|;
+decl_stmt|;
 name|UnresolvedUsingValueDecl
 argument_list|(
 argument|DeclContext *DC
@@ -11241,7 +11373,7 @@ argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|)
-operator|:
+block|:
 name|ValueDecl
 argument_list|(
 name|UnresolvedUsingValue
@@ -11260,17 +11392,17 @@ argument_list|()
 argument_list|,
 name|Ty
 argument_list|)
-block|,
+operator|,
 name|UsingLocation
 argument_list|(
 name|UsingLoc
 argument_list|)
-block|,
+operator|,
 name|QualifierLoc
 argument_list|(
 name|QualifierLoc
 argument_list|)
-block|,
+operator|,
 name|DNLoc
 argument_list|(
 argument|NameInfo.getInfo()
@@ -11291,14 +11423,16 @@ block|}
 comment|/// \brief Set the source location of the 'using' keyword.
 name|void
 name|setUsingLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
 name|UsingLocation
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Return true if it is a C++03 access declaration (no 'using').
 name|bool
 name|isAccessDeclaration
@@ -11357,43 +11491,82 @@ return|;
 block|}
 specifier|static
 name|UnresolvedUsingValueDecl
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation UsingLoc
-argument_list|,
-argument|NestedNameSpecifierLoc QualifierLoc
-argument_list|,
-argument|const DeclarationNameInfo&NameInfo
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|UsingLoc
+parameter_list|,
+name|NestedNameSpecifierLoc
+name|QualifierLoc
+parameter_list|,
+specifier|const
+name|DeclarationNameInfo
+modifier|&
+name|NameInfo
+parameter_list|)
+function_decl|;
 specifier|static
 name|UnresolvedUsingValueDecl
-operator|*
+modifier|*
 name|CreateDeserialized
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|unsigned ID
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|)
+function_decl|;
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
 name|override
 name|LLVM_READONLY
-block|;
+expr_stmt|;
+comment|/// Retrieves the canonical declaration of this declaration.
+name|UnresolvedUsingValueDecl
+modifier|*
+name|getCanonicalDecl
+parameter_list|()
+function|override
+block|{
+return|return
+name|getFirstDecl
+argument_list|()
+return|;
+block|}
+specifier|const
+name|UnresolvedUsingValueDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFirstDecl
+argument_list|()
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -11408,9 +11581,10 @@ block|}
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -11421,13 +11595,17 @@ block|}
 name|friend
 name|class
 name|ASTDeclReader
-block|;
+decl_stmt|;
 name|friend
 name|class
 name|ASTDeclWriter
-block|; }
 decl_stmt|;
+block|}
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/// \brief Represents a dependent using declaration which was marked with
@@ -11479,20 +11657,26 @@ name|UnresolvedUsingTypenameDecl
 range|:
 name|public
 name|TypeDecl
+decl_stmt|,
+name|public
+name|Mergeable
+decl|<
+name|UnresolvedUsingTypenameDecl
+decl|>
 block|{
 name|void
 name|anchor
 argument_list|()
 name|override
-block|;
+expr_stmt|;
 comment|/// \brief The source location of the 'typename' keyword
 name|SourceLocation
 name|TypenameLocation
-block|;
+decl_stmt|;
 comment|/// \brief The nested-name-specifier that precedes the name.
 name|NestedNameSpecifierLoc
 name|QualifierLoc
-block|;
+decl_stmt|;
 name|UnresolvedUsingTypenameDecl
 argument_list|(
 argument|DeclContext *DC
@@ -11507,7 +11691,7 @@ argument|SourceLocation TargetNameLoc
 argument_list|,
 argument|IdentifierInfo *TargetName
 argument_list|)
-operator|:
+block|:
 name|TypeDecl
 argument_list|(
 name|UnresolvedUsingTypename
@@ -11520,12 +11704,12 @@ name|TargetName
 argument_list|,
 name|UsingLoc
 argument_list|)
-block|,
+operator|,
 name|TypenameLocation
 argument_list|(
 name|TypenameLoc
 argument_list|)
-block|,
+operator|,
 name|QualifierLoc
 argument_list|(
 argument|QualifierLoc
@@ -11534,9 +11718,9 @@ block|{ }
 name|friend
 name|class
 name|ASTDeclReader
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 comment|/// \brief Returns the source location of the 'using' keyword.
 name|SourceLocation
 name|getUsingLoc
@@ -11585,40 +11769,79 @@ return|;
 block|}
 specifier|static
 name|UnresolvedUsingTypenameDecl
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation UsingLoc
-argument_list|,
-argument|SourceLocation TypenameLoc
-argument_list|,
-argument|NestedNameSpecifierLoc QualifierLoc
-argument_list|,
-argument|SourceLocation TargetNameLoc
-argument_list|,
-argument|DeclarationName TargetName
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|UsingLoc
+parameter_list|,
+name|SourceLocation
+name|TypenameLoc
+parameter_list|,
+name|NestedNameSpecifierLoc
+name|QualifierLoc
+parameter_list|,
+name|SourceLocation
+name|TargetNameLoc
+parameter_list|,
+name|DeclarationName
+name|TargetName
+parameter_list|)
+function_decl|;
 specifier|static
 name|UnresolvedUsingTypenameDecl
-operator|*
+modifier|*
 name|CreateDeserialized
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|unsigned ID
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|)
+function_decl|;
+comment|/// Retrieves the canonical declaration of this declaration.
+name|UnresolvedUsingTypenameDecl
+modifier|*
+name|getCanonicalDecl
+parameter_list|()
+function|override
+block|{
+return|return
+name|getFirstDecl
+argument_list|()
+return|;
+block|}
+specifier|const
+name|UnresolvedUsingTypenameDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFirstDecl
+argument_list|()
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -11633,9 +11856,10 @@ block|}
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -11643,12 +11867,21 @@ operator|==
 name|UnresolvedUsingTypename
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Represents a C++11 static_assert declaration.
+end_comment
+
+begin_decl_stmt
 name|class
 name|StaticAssertDecl
-operator|:
+range|:
 name|public
 name|Decl
 block|{
@@ -11869,37 +12102,121 @@ name|friend
 name|class
 name|ASTDeclReader
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// An instance of this class represents the declaration of a property
+end_comment
+
+begin_comment
 comment|/// member.  This is a Microsoft extension to C++, first introduced in
+end_comment
+
+begin_comment
 comment|/// Visual Studio .NET 2003 as a parallel to similar features in C#
+end_comment
+
+begin_comment
 comment|/// and Managed C++.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// A property must always be a non-static class member.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// A property member superficially resembles a non-static data
+end_comment
+
+begin_comment
 comment|/// member, except preceded by a property attribute:
+end_comment
+
+begin_comment
 comment|///   __declspec(property(get=GetX, put=PutX)) int x;
+end_comment
+
+begin_comment
 comment|/// Either (but not both) of the 'get' and 'put' names may be omitted.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// A reference to a property is always an lvalue.  If the lvalue
+end_comment
+
+begin_comment
 comment|/// undergoes lvalue-to-rvalue conversion, then a getter name is
+end_comment
+
+begin_comment
 comment|/// required, and that member is called with no arguments.
+end_comment
+
+begin_comment
 comment|/// If the lvalue is assigned into, then a setter name is required,
+end_comment
+
+begin_comment
 comment|/// and that member is called with one argument, the value assigned.
+end_comment
+
+begin_comment
 comment|/// Both operations are potentially overloaded.  Compound assignments
+end_comment
+
+begin_comment
 comment|/// are permitted, as are the increment and decrement operators.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// The getter and putter methods are permitted to be overloaded,
+end_comment
+
+begin_comment
 comment|/// although their return and parameter types are subject to certain
+end_comment
+
+begin_comment
 comment|/// restrictions according to the type of the property.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// A property declared using an incomplete array type may
+end_comment
+
+begin_comment
 comment|/// additionally be subscripted, adding extra parameters to the getter
+end_comment
+
+begin_comment
 comment|/// and putter methods.
+end_comment
+
+begin_decl_stmt
 name|class
 name|MSPropertyDecl
-operator|:
+range|:
 name|public
 name|DeclaratorDecl
 block|{
@@ -12054,42 +12371,55 @@ name|friend
 name|class
 name|ASTDeclReader
 block|; }
-block|;
-comment|/// Insertion operator for diagnostics.  This allows sending an AccessSpecifier
-comment|/// into a diagnostic with<<.
-specifier|const
-name|DiagnosticBuilder
-operator|&
-name|operator
-operator|<<
-operator|(
-specifier|const
-name|DiagnosticBuilder
-operator|&
-name|DB
-expr|,
-name|AccessSpecifier
-name|AS
-operator|)
-block|;
-specifier|const
-name|PartialDiagnostic
-operator|&
-name|operator
-operator|<<
-operator|(
-specifier|const
-name|PartialDiagnostic
-operator|&
-name|DB
-expr|,
-name|AccessSpecifier
-name|AS
-operator|)
-block|;  }
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Insertion operator for diagnostics.  This allows sending an AccessSpecifier
+end_comment
+
+begin_comment
+comment|/// into a diagnostic with<<.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|DB
+operator|,
+name|AccessSpecifier
+name|AS
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|PartialDiagnostic
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|PartialDiagnostic
+operator|&
+name|DB
+operator|,
+name|AccessSpecifier
+name|AS
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

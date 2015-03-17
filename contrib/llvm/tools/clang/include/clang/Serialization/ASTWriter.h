@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FRONTEND_AST_WRITER_H
+name|LLVM_CLANG_SERIALIZATION_ASTWRITER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FRONTEND_AST_WRITER_H
+name|LLVM_CLANG_SERIALIZATION_ASTWRITER_H
 end_define
 
 begin_include
@@ -366,6 +366,12 @@ name|Module
 modifier|*
 name|WritingModule
 decl_stmt|;
+comment|/// \brief The base directory for any relative paths we emit.
+name|std
+operator|::
+name|string
+name|BaseDirectory
+expr_stmt|;
 comment|/// \brief Indicates when the AST writing is actively performing
 comment|/// serialization, rather than just queueing updates.
 name|bool
@@ -857,6 +863,20 @@ operator|::
 name|PreprocessedEntityID
 operator|>
 name|MacroDefinitions
+expr_stmt|;
+comment|/// \brief Cache of indices of anonymous declarations within their lexical
+comment|/// contexts.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|AnonymousDeclarationNumbers
 expr_stmt|;
 comment|/// An update to a Decl.
 name|class
@@ -1486,9 +1506,6 @@ name|HeaderSearchOptions
 modifier|&
 name|HSOpts
 parameter_list|,
-name|StringRef
-name|isysroot
-parameter_list|,
 name|bool
 name|Modules
 parameter_list|)
@@ -1504,9 +1521,6 @@ specifier|const
 name|Preprocessor
 modifier|&
 name|PP
-parameter_list|,
-name|StringRef
-name|isysroot
 parameter_list|)
 function_decl|;
 name|void
@@ -1528,9 +1542,6 @@ specifier|const
 name|HeaderSearch
 modifier|&
 name|HS
-parameter_list|,
-name|StringRef
-name|isysroot
 parameter_list|)
 function_decl|;
 name|void
@@ -1563,6 +1574,16 @@ parameter_list|)
 function_decl|;
 name|void
 name|WriteCXXBaseSpecifiersOffsets
+parameter_list|()
+function_decl|;
+name|unsigned
+name|TypeExtQualAbbrev
+decl_stmt|;
+name|unsigned
+name|TypeFunctionProtoAbbrev
+decl_stmt|;
+name|void
+name|WriteTypeAbbrevs
 parameter_list|()
 function_decl|;
 name|void
@@ -1752,16 +1773,7 @@ name|unsigned
 name|UpdateVisibleAbbrev
 decl_stmt|;
 name|unsigned
-name|DeclRefExprAbbrev
-decl_stmt|;
-name|unsigned
-name|CharacterLiteralAbbrev
-decl_stmt|;
-name|unsigned
 name|DeclRecordAbbrev
-decl_stmt|;
-name|unsigned
-name|IntegerLiteralAbbrev
 decl_stmt|;
 name|unsigned
 name|DeclTypedefAbbrev
@@ -1778,8 +1790,23 @@ decl_stmt|;
 name|unsigned
 name|DeclObjCIvarAbbrev
 decl_stmt|;
+name|unsigned
+name|DeclCXXMethodAbbrev
+decl_stmt|;
+name|unsigned
+name|DeclRefExprAbbrev
+decl_stmt|;
+name|unsigned
+name|CharacterLiteralAbbrev
+decl_stmt|;
+name|unsigned
+name|IntegerLiteralAbbrev
+decl_stmt|;
+name|unsigned
+name|ExprImplicitCastAbbrev
+decl_stmt|;
 name|void
-name|WriteDeclsBlockAbbrevs
+name|WriteDeclAbbrevs
 parameter_list|()
 function_decl|;
 name|void
@@ -1855,7 +1882,8 @@ comment|/// \param WritingModule The module that we are writing. If null, we are
 comment|/// writing a precompiled header.
 comment|///
 comment|/// \param isysroot if non-empty, write a relocatable file whose headers
-comment|/// are relative to the given system root.
+comment|/// are relative to the given system root. If we're writing a module, its
+comment|/// build directory will be used in preference to this if both are available.
 name|void
 name|WriteAST
 argument_list|(
@@ -2286,6 +2314,15 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
+name|unsigned
+name|getAnonymousDeclarationNumber
+parameter_list|(
+specifier|const
+name|NamedDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 name|void
 name|AddQualifierInfo
 parameter_list|(
@@ -2448,6 +2485,46 @@ parameter_list|,
 name|RecordDataImpl
 modifier|&
 name|Record
+parameter_list|)
+function_decl|;
+comment|/// \brief Convert a path from this build process into one that is appropriate
+comment|/// for emission in the module file.
+name|bool
+name|PreparePathForOutput
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Path
+argument_list|)
+decl_stmt|;
+comment|/// \brief Add a path to the given record.
+name|void
+name|AddPath
+parameter_list|(
+name|StringRef
+name|Path
+parameter_list|,
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit the current record with the given path as a blob.
+name|void
+name|EmitRecordWithPath
+parameter_list|(
+name|unsigned
+name|Abbrev
+parameter_list|,
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|,
+name|StringRef
+name|Path
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a version tuple to the given record
@@ -2616,6 +2693,24 @@ name|ClearSwitchCaseIDs
 parameter_list|()
 function_decl|;
 name|unsigned
+name|getTypeExtQualAbbrev
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeExtQualAbbrev
+return|;
+block|}
+name|unsigned
+name|getTypeFunctionProtoAbbrev
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeFunctionProtoAbbrev
+return|;
+block|}
+name|unsigned
 name|getDeclParmVarAbbrev
 argument_list|()
 specifier|const
@@ -2625,39 +2720,12 @@ name|DeclParmVarAbbrev
 return|;
 block|}
 name|unsigned
-name|getDeclRefExprAbbrev
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DeclRefExprAbbrev
-return|;
-block|}
-name|unsigned
-name|getCharacterLiteralAbbrev
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CharacterLiteralAbbrev
-return|;
-block|}
-name|unsigned
 name|getDeclRecordAbbrev
 argument_list|()
 specifier|const
 block|{
 return|return
 name|DeclRecordAbbrev
-return|;
-block|}
-name|unsigned
-name|getIntegerLiteralAbbrev
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IntegerLiteralAbbrev
 return|;
 block|}
 name|unsigned
@@ -2703,6 +2771,51 @@ specifier|const
 block|{
 return|return
 name|DeclObjCIvarAbbrev
+return|;
+block|}
+name|unsigned
+name|getDeclCXXMethodAbbrev
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeclCXXMethodAbbrev
+return|;
+block|}
+name|unsigned
+name|getDeclRefExprAbbrev
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeclRefExprAbbrev
+return|;
+block|}
+name|unsigned
+name|getCharacterLiteralAbbrev
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CharacterLiteralAbbrev
+return|;
+block|}
+name|unsigned
+name|getIntegerLiteralAbbrev
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IntegerLiteralAbbrev
+return|;
+block|}
+name|unsigned
+name|getExprImplicitCastAbbrev
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExprImplicitCastAbbrev
 return|;
 block|}
 name|bool
@@ -2982,6 +3095,16 @@ name|override
 decl_stmt|;
 name|void
 name|DeclarationMarkedUsed
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+name|override
+decl_stmt|;
+name|void
+name|DeclarationMarkedOpenMPThreadPrivate
 argument_list|(
 specifier|const
 name|Decl

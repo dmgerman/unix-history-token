@@ -436,7 +436,7 @@ argument_list|)
 block|{
 name|registerCategory
 argument_list|()
-block|; }
+block|;   }
 specifier|const
 name|char
 operator|*
@@ -912,7 +912,7 @@ name|Category
 argument_list|(
 argument|&GeneralCategory
 argument_list|)
-block|{   }
+block|{}
 specifier|inline
 name|void
 name|setNumAdditionalVals
@@ -1522,7 +1522,7 @@ block|;
 name|Value
 operator|=
 name|V
-block|; }
+block|;   }
 name|bool
 name|compare
 argument_list|(
@@ -1663,7 +1663,7 @@ argument_list|()
 block|{}
 name|OptionValue
 argument_list|(
-argument|const DataType& V
+argument|const DataType&V
 argument_list|)
 block|{
 name|this
@@ -1672,7 +1672,7 @@ name|setValue
 argument_list|(
 name|V
 argument_list|)
-block|;   }
+block|; }
 comment|// Some options may take their value from a different data type.
 name|template
 operator|<
@@ -1755,7 +1755,7 @@ argument_list|()
 block|{}
 name|OptionValue
 argument_list|(
-argument|const cl::boolOrDefault& V
+argument|const cl::boolOrDefault&V
 argument_list|)
 block|{
 name|this
@@ -1764,7 +1764,7 @@ name|setValue
 argument_list|(
 name|V
 argument_list|)
-block|;   }
+block|; }
 name|OptionValue
 operator|<
 name|cl
@@ -1837,7 +1837,7 @@ argument_list|()
 block|{}
 name|OptionValue
 argument_list|(
-argument|const std::string& V
+argument|const std::string&V
 argument_list|)
 block|{
 name|this
@@ -1846,7 +1846,7 @@ name|setValue
 argument_list|(
 name|V
 argument_list|)
-block|;   }
+block|; }
 name|OptionValue
 operator|<
 name|std
@@ -1933,7 +1933,7 @@ begin_define
 define|#
 directive|define
 name|clEnumValEnd
-value|(reinterpret_cast<void*>(0))
+value|(reinterpret_cast<void *>(0))
 end_define
 
 begin_comment
@@ -1987,8 +1987,7 @@ block|,
 specifier|const
 name|char
 operator|*
-operator|>
-expr|>
+operator|>>
 block|,
 literal|4
 operator|>
@@ -2187,7 +2186,7 @@ name|ValuesClass
 operator|<
 name|DataType
 operator|>
-name|END_WITH_NULL
+name|LLVM_END_WITH_NULL
 name|values
 argument_list|(
 argument|const char *Arg
@@ -2489,7 +2488,7 @@ block|;   }
 name|void
 name|getExtraOptionNames
 argument_list|(
-argument|SmallVectorImpl<const char*>&OptionNames
+argument|SmallVectorImpl<const char *>&OptionNames
 argument_list|)
 block|{
 comment|// If there has been no argstr specified, that means that we need to add an
@@ -3197,7 +3196,7 @@ operator|=
 name|O
 operator|.
 name|ArgStr
-block|;   }
+block|; }
 expr|enum
 name|ValueExpected
 name|getValueExpectedFlagDefault
@@ -4397,7 +4396,7 @@ name|setArgStr
 argument_list|(
 name|Str
 argument_list|)
-block|; }
+block|;   }
 block|}
 expr_stmt|;
 end_expr_stmt
@@ -4438,7 +4437,7 @@ name|setArgStr
 argument_list|(
 name|Str
 argument_list|)
-block|; }
+block|;   }
 block|}
 expr_stmt|;
 end_expr_stmt
@@ -4475,7 +4474,7 @@ name|setArgStr
 argument_list|(
 name|Str
 argument_list|)
-block|; }
+block|;   }
 block|}
 expr_stmt|;
 end_expr_stmt
@@ -5161,8 +5160,7 @@ operator|=
 name|parser
 operator|<
 name|DataType
-operator|>
-expr|>
+operator|>>
 name|class
 name|opt
 operator|:
@@ -6403,7 +6401,7 @@ name|push_back
 argument_list|(
 name|V
 argument_list|)
-block|; }
+block|;   }
 block|}
 expr_stmt|;
 end_expr_stmt
@@ -6437,8 +6435,7 @@ operator|=
 name|parser
 operator|<
 name|DataType
-operator|>
-expr|>
+operator|>>
 name|class
 name|list
 operator|:
@@ -6480,7 +6477,7 @@ block|}
 name|void
 name|getExtraOptionNames
 argument_list|(
-argument|SmallVectorImpl<const char*>&OptionNames
+argument|SmallVectorImpl<const char *>&OptionNames
 argument_list|)
 name|override
 block|{
@@ -6634,7 +6631,7 @@ comment|/*Force*/
 argument_list|)
 decl|const
 name|override
-block|{}
+block|{   }
 end_decl_stmt
 
 begin_function
@@ -7447,7 +7444,7 @@ name|setNumAdditionalVals
 argument_list|(
 name|AdditionalVals
 argument_list|)
-block|; }
+block|;   }
 block|}
 struct|;
 end_struct
@@ -7738,7 +7735,7 @@ name|Bit
 argument_list|(
 name|V
 argument_list|)
-block|;   }
+block|; }
 name|unsigned
 name|getBits
 argument_list|()
@@ -7806,8 +7803,7 @@ operator|=
 name|parser
 operator|<
 name|DataType
-operator|>
-expr|>
+operator|>>
 name|class
 name|bits
 operator|:
@@ -7849,7 +7845,7 @@ block|}
 name|void
 name|getExtraOptionNames
 argument_list|(
-argument|SmallVectorImpl<const char*>&OptionNames
+argument|SmallVectorImpl<const char *>&OptionNames
 argument_list|)
 name|override
 block|{
@@ -7998,7 +7994,7 @@ comment|/*Force*/
 argument_list|)
 decl|const
 name|override
-block|{}
+block|{   }
 end_decl_stmt
 
 begin_function
@@ -8851,7 +8847,7 @@ comment|/*Force*/
 argument_list|)
 specifier|const
 name|override
-block|{}
+block|{   }
 name|ValueExpected
 name|getValueExpectedFlagDefault
 argument_list|()
@@ -8896,7 +8892,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-unit|} public:
+unit|}  public:
 name|void
 name|setAliasFor
 parameter_list|(
@@ -9524,6 +9520,14 @@ comment|/// \param [in] Saver Delegates back to the caller for saving parsed str
 end_comment
 
 begin_comment
+comment|/// \param [in] MarkEOLs true if tokenizing a response file and you want end of
+end_comment
+
+begin_comment
+comment|/// lines and end of the response file to be marked with a nullptr string.
+end_comment
+
+begin_comment
 comment|/// \param [out] NewArgv All parsed strings are appended to NewArgv.
 end_comment
 
@@ -9546,6 +9550,11 @@ operator|*
 operator|>
 operator|&
 name|NewArgv
+argument_list|,
+name|bool
+name|MarkEOLs
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -9583,6 +9592,14 @@ comment|/// \param [in] Saver Delegates back to the caller for saving parsed str
 end_comment
 
 begin_comment
+comment|/// \param [in] MarkEOLs true if tokenizing a response file and you want end of
+end_comment
+
+begin_comment
+comment|/// lines and end of the response file to be marked with a nullptr string.
+end_comment
+
+begin_comment
 comment|/// \param [out] NewArgv All parsed strings are appended to NewArgv.
 end_comment
 
@@ -9605,6 +9622,11 @@ operator|*
 operator|>
 operator|&
 name|NewArgv
+argument_list|,
+name|bool
+name|MarkEOLs
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -9639,6 +9661,9 @@ operator|*
 operator|>
 operator|&
 name|NewArgv
+operator|,
+name|bool
+name|MarkEOLs
 operator|)
 expr_stmt|;
 end_typedef
@@ -9652,7 +9677,23 @@ comment|/// StringSaver and tokenization strategy.  Argv should contain the comm
 end_comment
 
 begin_comment
-comment|/// before expansion and will be modified in place.
+comment|/// before expansion and will be modified in place. If requested, Argv will
+end_comment
+
+begin_comment
+comment|/// also be populated with nullptrs indicating where each response file line
+end_comment
+
+begin_comment
+comment|/// ends, which is useful for the "/link" argument that needs to consume all
+end_comment
+
+begin_comment
+comment|/// remaining arguments only until the next end of line, when in a response
+end_comment
+
+begin_comment
+comment|/// file.
 end_comment
 
 begin_comment
@@ -9669,6 +9710,14 @@ end_comment
 
 begin_comment
 comment|/// \param [in,out] Argv Command line into which to expand response files.
+end_comment
+
+begin_comment
+comment|/// \param [in] MarkEOLs Mark end of lines and the end of the response file
+end_comment
+
+begin_comment
+comment|/// with nullptrs in the Argv vector.
 end_comment
 
 begin_comment
@@ -9694,6 +9743,11 @@ operator|*
 operator|>
 operator|&
 name|Argv
+argument_list|,
+name|bool
+name|MarkEOLs
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 end_decl_stmt

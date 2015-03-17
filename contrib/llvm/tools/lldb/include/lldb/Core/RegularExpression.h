@@ -211,6 +211,23 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|__ANDROID_NDK__
+end_if
+
+begin_include
+include|#
+directive|include
+file|<regex>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

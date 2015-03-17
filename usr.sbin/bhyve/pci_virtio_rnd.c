@@ -296,14 +296,12 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+name|uint16_t
+name|idx
+decl_stmt|;
 name|sc
 operator|=
 name|vsc
-expr_stmt|;
-name|vq_startchains
-argument_list|(
-name|vq
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -334,6 +332,9 @@ block|{
 name|vq_getchain
 argument_list|(
 name|vq
+argument_list|,
+operator|&
+name|idx
 argument_list|,
 operator|&
 name|iov
@@ -381,6 +382,8 @@ comment|/* 		 * Release this chain and handle more 		 */
 name|vq_relchain
 argument_list|(
 name|vq
+argument_list|,
+name|idx
 argument_list|,
 name|len
 argument_list|)

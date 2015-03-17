@@ -142,13 +142,38 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_MATCHERS_AST_MATCHERS_MACROS_H
+name|LLVM_CLANG_ASTMATCHERS_ASTMATCHERSMACROS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_MATCHERS_AST_MATCHERS_MACROS_H
+name|LLVM_CLANG_ASTMATCHERS_ASTMATCHERSMACROS_H
+end_define
+
+begin_comment
+comment|/// \brief AST_MATCHER_FUNCTION(ReturnType, DefineMatcher) {
+end_comment
+
+begin_comment
+comment|/// defines a zero parameter function named DefineMatcher() that returns a
+end_comment
+
+begin_comment
+comment|/// ReturnType object.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AST_MATCHER_FUNCTION
+parameter_list|(
+name|ReturnType
+parameter_list|,
+name|DefineMatcher
+parameter_list|)
+define|\
+value|inline ReturnType DefineMatcher##_getInstance();                             \   inline ReturnType DefineMatcher() {                                          \     return internal::MemoizedMatcher<                                          \         ReturnType, DefineMatcher##_getInstance>::getInstance();               \   }                                                                            \   inline ReturnType DefineMatcher##_getInstance()
 end_define
 
 begin_comment
@@ -862,10 +887,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_AST_MATCHERS_AST_MATCHERS_MACROS_H
-end_comment
 
 end_unit
 

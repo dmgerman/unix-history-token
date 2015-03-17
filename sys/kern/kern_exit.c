@@ -3457,12 +3457,7 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * As a side effect of this lock, we know that all other writes to 	 * this proc are visible now, so no more locking is needed for p. 	 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Removal from allproc list and process group list paired with 	 * PROC_LOCK which was executed during that time should guarantee 	 * nothing can reach this process anymore. As such further locking 	 * is unnecessary. 	 */
 name|p
 operator|->
 name|p_xstat
@@ -3470,11 +3465,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX: why? */
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|q
@@ -3566,11 +3556,12 @@ operator|->
 name|p_ucred
 argument_list|)
 expr_stmt|;
+name|proc_set_cred
+argument_list|(
 name|p
-operator|->
-name|p_ucred
-operator|=
+argument_list|,
 name|NULL
+argument_list|)
 expr_stmt|;
 name|pargs_drop
 argument_list|(

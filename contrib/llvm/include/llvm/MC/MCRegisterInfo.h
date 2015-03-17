@@ -114,11 +114,6 @@ modifier|*
 name|const_iterator
 typedef|;
 specifier|const
-name|char
-modifier|*
-name|Name
-decl_stmt|;
-specifier|const
 name|iterator
 name|RegsBegin
 decl_stmt|;
@@ -127,6 +122,10 @@ name|uint8_t
 modifier|*
 specifier|const
 name|RegSet
+decl_stmt|;
+specifier|const
+name|uint32_t
+name|NameIdx
 decl_stmt|;
 specifier|const
 name|uint16_t
@@ -164,19 +163,6 @@ specifier|const
 block|{
 return|return
 name|ID
-return|;
-block|}
-comment|/// getName() - Return the register class name for debugging.
-comment|///
-specifier|const
-name|char
-operator|*
-name|getName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Name
 return|;
 block|}
 comment|/// begin/end - Return all of the registers in this class.
@@ -392,6 +378,11 @@ comment|// Scale, the high bits hold an offset into DiffLists. See MCRegUnitIter
 name|uint32_t
 name|RegUnits
 decl_stmt|;
+comment|/// Index into list with lane mask sequences. The sequence contains a lanemask
+comment|/// for every register unit.
+name|uint16_t
+name|RegUnitLaneMasks
+decl_stmt|;
 block|}
 struct|;
 comment|/// MCRegisterInfo base class - We assume that the target defines a static
@@ -512,11 +503,24 @@ name|DiffLists
 decl_stmt|;
 comment|// Pointer to the difflists array
 specifier|const
+name|unsigned
+modifier|*
+name|RegUnitMaskSequences
+decl_stmt|;
+comment|// Pointer to lane mask sequences
+comment|// for register units.
+specifier|const
 name|char
 modifier|*
 name|RegStrings
 decl_stmt|;
 comment|// Pointer to the string table.
+specifier|const
+name|char
+modifier|*
+name|RegClassStrings
+decl_stmt|;
+comment|// Pointer to the class strings.
 specifier|const
 name|uint16_t
 modifier|*
@@ -722,11 +726,19 @@ name|MCSubRegIterator
 decl_stmt|;
 name|friend
 name|class
+name|MCSubRegIndexIterator
+decl_stmt|;
+name|friend
+name|class
 name|MCSuperRegIterator
 decl_stmt|;
 name|friend
 name|class
 name|MCRegUnitIterator
+decl_stmt|;
+name|friend
+name|class
+name|MCRegUnitMaskIterator
 decl_stmt|;
 name|friend
 name|class
@@ -778,9 +790,19 @@ operator|*
 name|DL
 argument_list|,
 specifier|const
+name|unsigned
+operator|*
+name|RUMS
+argument_list|,
+specifier|const
 name|char
 operator|*
 name|Strings
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|ClassStrings
 argument_list|,
 specifier|const
 name|uint16_t
@@ -825,9 +847,17 @@ name|DiffLists
 operator|=
 name|DL
 expr_stmt|;
+name|RegUnitMaskSequences
+operator|=
+name|RUMS
+expr_stmt|;
 name|RegStrings
 operator|=
 name|Strings
+expr_stmt|;
+name|RegClassStrings
+operator|=
+name|ClassStrings
 expr_stmt|;
 name|NumClasses
 operator|=
@@ -1267,6 +1297,26 @@ name|i
 index|]
 return|;
 block|}
+specifier|const
+name|char
+modifier|*
+name|getRegClassName
+argument_list|(
+specifier|const
+name|MCRegisterClass
+operator|*
+name|Class
+argument_list|)
+decl|const
+block|{
+return|return
+name|RegClassStrings
+operator|+
+name|Class
+operator|->
+name|NameIdx
+return|;
+block|}
 comment|/// \brief Returns the encoding for RegNo
 name|uint16_t
 name|getEncodingValue
@@ -1429,6 +1479,102 @@ operator|*
 name|this
 expr_stmt|;
 block|}
+expr|}
+block|;
+comment|/// Iterator that enumerates the sub-registers of a Reg and the associated
+comment|/// sub-register indices.
+name|class
+name|MCSubRegIndexIterator
+block|{
+name|MCSubRegIterator
+name|SRIter
+block|;
+specifier|const
+name|uint16_t
+operator|*
+name|SRIndex
+block|;
+name|public
+operator|:
+comment|/// Constructs an iterator that traverses subregisters and their
+comment|/// associated subregister indices.
+name|MCSubRegIndexIterator
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|const MCRegisterInfo *MCRI
+argument_list|)
+operator|:
+name|SRIter
+argument_list|(
+argument|Reg
+argument_list|,
+argument|MCRI
+argument_list|)
+block|{
+name|SRIndex
+operator|=
+name|MCRI
+operator|->
+name|SubRegIndices
+operator|+
+name|MCRI
+operator|->
+name|get
+argument_list|(
+name|Reg
+argument_list|)
+operator|.
+name|SubRegIndices
+block|;   }
+comment|/// Returns current sub-register.
+name|unsigned
+name|getSubReg
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|SRIter
+return|;
+block|}
+comment|/// Returns sub-register index of the current sub-register.
+name|unsigned
+name|getSubRegIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|SRIndex
+return|;
+block|}
+comment|/// Returns true if this iterator is not yet at the end.
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SRIter
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+comment|/// Moves to the next position.
+name|void
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+operator|++
+name|SRIter
+block|;
+operator|++
+name|SRIndex
+block|;   }
 expr|}
 block|;
 comment|/// MCSuperRegIterator enumerates all super-registers of Reg.
@@ -1623,6 +1769,118 @@ name|advance
 argument_list|()
 block|;   }
 block|}
+block|;
+comment|/// MCRegUnitIterator enumerates a list of register units and their associated
+comment|/// lane masks for Reg. The register units are in ascending numerical order.
+name|class
+name|MCRegUnitMaskIterator
+block|{
+name|MCRegUnitIterator
+name|RUIter
+block|;
+specifier|const
+name|unsigned
+operator|*
+name|MaskListIter
+block|;
+name|public
+operator|:
+name|MCRegUnitMaskIterator
+argument_list|()
+block|{}
+comment|/// Constructs an iterator that traverses the register units and their
+comment|/// associated LaneMasks in Reg.
+name|MCRegUnitMaskIterator
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|const MCRegisterInfo *MCRI
+argument_list|)
+operator|:
+name|RUIter
+argument_list|(
+argument|Reg
+argument_list|,
+argument|MCRI
+argument_list|)
+block|{
+name|uint16_t
+name|Idx
+operator|=
+name|MCRI
+operator|->
+name|get
+argument_list|(
+name|Reg
+argument_list|)
+operator|.
+name|RegUnitLaneMasks
+block|;
+name|MaskListIter
+operator|=
+operator|&
+name|MCRI
+operator|->
+name|RegUnitMaskSequences
+index|[
+name|Idx
+index|]
+block|;   }
+comment|/// Returns a (RegUnit, LaneMask) pair.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+operator|*
+name|RUIter
+argument_list|,
+operator|*
+name|MaskListIter
+argument_list|)
+return|;
+block|}
+comment|/// Returns true if this iterator is not yet at the end.
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RUIter
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+comment|/// Moves to the next position.
+name|void
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+operator|++
+name|MaskListIter
+block|;
+operator|++
+name|RUIter
+block|;   }
+expr|}
 block|;
 comment|// Each register unit has one or two root registers. The complete set of
 comment|// registers containing a register unit is the union of the roots and their

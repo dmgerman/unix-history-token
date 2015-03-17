@@ -77,6 +77,12 @@ directive|include
 file|"lldb/Target/Process.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Core/StructuredData.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -333,6 +339,16 @@ operator|==
 name|eLazyBoolYes
 return|;
 block|}
+name|StructuredData
+operator|::
+name|ObjectSP
+name|GetExtendedInfo
+argument_list|()
+block|{
+return|return
+name|m_extended_info
+return|;
+block|}
 specifier|static
 name|lldb
 operator|::
@@ -535,6 +551,12 @@ decl_stmt|;
 name|LazyBool
 name|m_override_should_stop
 decl_stmt|;
+name|StructuredData
+operator|::
+name|ObjectSP
+name|m_extended_info
+expr_stmt|;
+comment|// The extended info for this stop info
 comment|// This determines whether the target has run since this stop info.
 comment|// N.B. running to evaluate a user expression does not count.
 name|bool

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86ISELLOWERING_H
+name|LLVM_LIB_TARGET_X86_X86ISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86ISELLOWERING_H
+name|LLVM_LIB_TARGET_X86_X86ISELLOWERING_H
 end_define
 
 begin_include
@@ -277,11 +277,16 @@ block|,
 comment|/// PSIGN - Copy integer sign.
 name|PSIGN
 block|,
-comment|/// BLENDV - Blend where the selector is a register.
-name|BLENDV
-block|,
 comment|/// BLENDI - Blend where the selector is an immediate.
 name|BLENDI
+block|,
+comment|/// SHRUNKBLEND - Blend where the condition has been shrunk.
+comment|/// This is used to emphasize that the condition mask is
+comment|/// no more valid for generic VSELECT optimizations.
+name|SHRUNKBLEND
+block|,
+comment|/// ADDSUB - Combined add and sub on an FP vector.
+name|ADDSUB
 block|,
 comment|// SUBUS - Integer sub with unsigned saturation.
 name|SUBUS
@@ -436,6 +441,16 @@ comment|// BEXTR - Bit field extract
 name|UMUL
 block|,
 comment|// LOW, HI, FLAGS = umul LHS, RHS
+comment|// 8-bit SMUL/UMUL - AX, FLAGS = smul8/umul8 AL, RHS
+name|SMUL8
+block|,
+name|UMUL8
+block|,
+comment|// 8-bit divrem that zero-extend the high result (AH).
+name|UDIVREM8_ZEXT_HREG
+block|,
+name|SDIVREM8_SEXT_HREG
+block|,
 comment|// MUL_IMM - X86 specific multiply by immediate.
 name|MUL_IMM
 block|,
@@ -458,7 +473,11 @@ name|PACKSS
 block|,
 name|PACKUS
 block|,
+comment|// Intra-lane alignr
 name|PALIGNR
+block|,
+comment|// AVX512 inter-lane alignr
+name|VALIGN
 block|,
 name|PSHUFD
 block|,
@@ -492,7 +511,9 @@ name|UNPCKL
 block|,
 name|UNPCKH
 block|,
-name|VPERMILP
+name|VPERMILPV
+block|,
+name|VPERMILPI
 block|,
 name|VPERMV
 block|,
@@ -514,10 +535,10 @@ name|VINSERT
 block|,
 name|VEXTRACT
 block|,
-comment|// PMULUDQ - Vector multiply packed unsigned doubleword integers
+comment|// Vector multiply packed unsigned doubleword integers
 name|PMULUDQ
 block|,
-comment|// PMULUDQ - Vector multiply packed signed doubleword integers
+comment|// Vector multiply packed signed doubleword integers
 name|PMULDQ
 block|,
 comment|// FMA nodes
@@ -533,20 +554,24 @@ name|FMADDSUB
 block|,
 name|FMSUBADD
 block|,
-comment|// VASTART_SAVE_XMM_REGS - Save xmm argument registers to the stack,
-comment|// according to %al. An operator is needed so that this can be expanded
-comment|// with control flow.
+comment|// Compress and expand
+name|COMPRESS
+block|,
+name|EXPAND
+block|,
+comment|// Save xmm argument registers to the stack, according to %al. An operator
+comment|// is needed so that this can be expanded with control flow.
 name|VASTART_SAVE_XMM_REGS
 block|,
-comment|// WIN_ALLOCA - Windows's _chkstk call to do stack probing.
+comment|// Windows's _chkstk call to do stack probing.
 name|WIN_ALLOCA
 block|,
-comment|// SEG_ALLOCA - For allocating variable amounts of stack space when using
+comment|// For allocating variable amounts of stack space when using
 comment|// segmented stacks. Check if the current stacklet has enough space, and
 comment|// falls back to heap allocation if not.
 name|SEG_ALLOCA
 block|,
-comment|// WIN_FTOL - Windows's _ftol2 runtime routine to do fptoui.
+comment|// Windows's _ftol2 runtime routine to do fptoui.
 name|WIN_FTOL
 block|,
 comment|// Memory barrier
@@ -558,28 +583,34 @@ name|SFENCE
 block|,
 name|LFENCE
 block|,
-comment|// FNSTSW16r - Store FP status word into i16 register.
+comment|// Store FP status word into i16 register.
 name|FNSTSW16r
 block|,
-comment|// SAHF - Store contents of %ah into %eflags.
+comment|// Store contents of %ah into %eflags.
 name|SAHF
 block|,
-comment|// RDRAND - Get a random integer and indicate whether it is valid in CF.
+comment|// Get a random integer and indicate whether it is valid in CF.
 name|RDRAND
 block|,
-comment|// RDSEED - Get a NIST SP800-90B& C compliant random integer and
+comment|// Get a NIST SP800-90B& C compliant random integer and
 comment|// indicate whether it is valid in CF.
 name|RDSEED
 block|,
-comment|// PCMP*STRI
 name|PCMPISTRI
 block|,
 name|PCMPESTRI
 block|,
-comment|// XTEST - Test if in transactional execution.
+comment|// Test if in transactional execution.
 name|XTEST
 block|,
-comment|// LCMPXCHG_DAG, LCMPXCHG8_DAG, LCMPXCHG16_DAG - Compare and swap.
+comment|// ERI instructions
+name|RSQRT28
+block|,
+name|RCP28
+block|,
+name|EXP2
+block|,
+comment|// Compare and swap.
 name|LCMPXCHG_DAG
 init|=
 name|ISD
@@ -590,13 +621,13 @@ name|LCMPXCHG8_DAG
 block|,
 name|LCMPXCHG16_DAG
 block|,
-comment|// VZEXT_LOAD - Load, scalar_to_vector, and zero extend.
+comment|// Load, scalar_to_vector, and zero extend.
 name|VZEXT_LOAD
 block|,
-comment|// FNSTCW16m - Store FP control world into i16 memory.
+comment|// Store FP control world into i16 memory.
 name|FNSTCW16m
 block|,
-comment|/// FP_TO_INT*_IN_MEM - This instruction implements FP_TO_SINT with the
+comment|/// This instruction implements FP_TO_SINT with the
 comment|/// integer destination in memory and a FP reg source.  This corresponds
 comment|/// to the X86::FIST*m instructions and the rounding mode change stuff. It
 comment|/// has two inputs (token chain and address) and two outputs (int value
@@ -607,7 +638,7 @@ name|FP_TO_INT32_IN_MEM
 block|,
 name|FP_TO_INT64_IN_MEM
 block|,
-comment|/// FILD, FILD_FLAG - This instruction implements SINT_TO_FP with the
+comment|/// This instruction implements SINT_TO_FP with the
 comment|/// integer source in memory and FP reg result.  This corresponds to the
 comment|/// X86::FILD*m instructions. It has three inputs (token chain, address,
 comment|/// and source type) and two outputs (FP value and token chain). FILD_FLAG
@@ -616,19 +647,19 @@ name|FILD
 block|,
 name|FILD_FLAG
 block|,
-comment|/// FLD - This instruction implements an extending load to FP stack slots.
+comment|/// This instruction implements an extending load to FP stack slots.
 comment|/// This corresponds to the X86::FLD32m / X86::FLD64m. It takes a chain
 comment|/// operand, ptr to load from, and a ValueType node indicating the type
 comment|/// to load to.
 name|FLD
 block|,
-comment|/// FST - This instruction implements a truncating store to FP stack
+comment|/// This instruction implements a truncating store to FP stack
 comment|/// slots. This corresponds to the X86::FST32m / X86::FST64m. It takes a
 comment|/// chain operand, value to store, address, and a ValueType to store it
 comment|/// as.
 name|FST
 block|,
-comment|/// VAARG_64 - This instruction grabs the address of the next argument
+comment|/// This instruction grabs the address of the next argument
 comment|/// from a va_list. (reads and modifies the va_list in memory)
 name|VAARG_64
 comment|// WARNING: Do not add anything in the end unless you want the node to
@@ -641,7 +672,7 @@ comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|X86
 block|{
-comment|/// isVEXTRACT128Index - Return true if the specified
+comment|/// Return true if the specified
 comment|/// EXTRACT_SUBVECTOR operand specifies a vector extract that is
 comment|/// suitable for input to VEXTRACTF128, VEXTRACTI128 instructions.
 name|bool
@@ -652,7 +683,7 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// isVINSERT128Index - Return true if the specified
+comment|/// Return true if the specified
 comment|/// INSERT_SUBVECTOR operand specifies a subvector insert that is
 comment|/// suitable for input to VINSERTF128, VINSERTI128 instructions.
 name|bool
@@ -663,7 +694,7 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// isVEXTRACT256Index - Return true if the specified
+comment|/// Return true if the specified
 comment|/// EXTRACT_SUBVECTOR operand specifies a vector extract that is
 comment|/// suitable for input to VEXTRACTF64X4, VEXTRACTI64X4 instructions.
 name|bool
@@ -674,7 +705,7 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// isVINSERT256Index - Return true if the specified
+comment|/// Return true if the specified
 comment|/// INSERT_SUBVECTOR operand specifies a subvector insert that is
 comment|/// suitable for input to VINSERTF64X4, VINSERTI64X4 instructions.
 name|bool
@@ -685,7 +716,7 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// getExtractVEXTRACT128Immediate - Return the appropriate
+comment|/// Return the appropriate
 comment|/// immediate to extract the specified EXTRACT_SUBVECTOR index
 comment|/// with VEXTRACTF128, VEXTRACTI128 instructions.
 name|unsigned
@@ -696,7 +727,7 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// getInsertVINSERT128Immediate - Return the appropriate
+comment|/// Return the appropriate
 comment|/// immediate to insert at the specified INSERT_SUBVECTOR index
 comment|/// with VINSERTF128, VINSERT128 instructions.
 name|unsigned
@@ -707,7 +738,7 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// getExtractVEXTRACT256Immediate - Return the appropriate
+comment|/// Return the appropriate
 comment|/// immediate to extract the specified EXTRACT_SUBVECTOR index
 comment|/// with VEXTRACTF64X4, VEXTRACTI64x4 instructions.
 name|unsigned
@@ -718,7 +749,7 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// getInsertVINSERT256Immediate - Return the appropriate
+comment|/// Return the appropriate
 comment|/// immediate to insert at the specified INSERT_SUBVECTOR index
 comment|/// with VINSERTF64x4, VINSERTI64x4 instructions.
 name|unsigned
@@ -729,8 +760,7 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// isZeroNode - Returns true if Elt is a constant zero or a floating point
-comment|/// constant +0.0.
+comment|/// Returns true if Elt is a constant zero or floating point constant +0.0.
 name|bool
 name|isZeroNode
 parameter_list|(
@@ -738,7 +768,7 @@ name|SDValue
 name|Elt
 parameter_list|)
 function_decl|;
-comment|/// isOffsetSuitableForCodeModel - Returns true of the given offset can be
+comment|/// Returns true of the given offset can be
 comment|/// fit into displacement field of the instruction.
 name|bool
 name|isOffsetSuitableForCodeModel
@@ -757,7 +787,7 @@ operator|=
 name|true
 argument_list|)
 decl_stmt|;
-comment|/// isCalleePop - Determines whether the callee is required to pop its
+comment|/// Determines whether the callee is required to pop its
 comment|/// own arguments. Callee pop is necessary to support tail calls.
 name|bool
 name|isCalleePop
@@ -777,9 +807,35 @@ name|bool
 name|TailCallOpt
 argument_list|)
 decl_stmt|;
+comment|/// AVX512 static rounding constants.  These need to match the values in
+comment|/// avx512fintrin.h.
+enum|enum
+name|STATIC_ROUNDING
+block|{
+name|TO_NEAREST_INT
+init|=
+literal|0
+block|,
+name|TO_NEG_INF
+init|=
+literal|1
+block|,
+name|TO_POS_INF
+init|=
+literal|2
+block|,
+name|TO_ZERO
+init|=
+literal|3
+block|,
+name|CUR_DIRECTION
+init|=
+literal|4
+block|}
+enum|;
 block|}
 comment|//===--------------------------------------------------------------------===//
-comment|//  X86TargetLowering - X86 Implementation of the TargetLowering interface
+comment|//  X86 Implementation of the TargetLowering interface
 name|class
 name|X86TargetLowering
 name|final
@@ -792,6 +848,7 @@ operator|:
 name|explicit
 name|X86TargetLowering
 argument_list|(
+specifier|const
 name|X86TargetMachine
 operator|&
 name|TM
@@ -833,8 +890,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// getPICJumpTableRelocaBase - Returns relocation base for the given PIC
-comment|/// jumptable.
+comment|/// Returns relocation base for the given PIC jumptable.
 name|SDValue
 name|getPICJumpTableRelocBase
 argument_list|(
@@ -859,7 +915,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// getByValTypeAlignment - Return the desired alignment for ByVal aggregate
+comment|/// Return the desired alignment for ByVal aggregate
 comment|/// function arguments in the caller parameter area. For X86, aggregates
 comment|/// that contains are placed at 16-byte boundaries while the rest are at
 comment|/// 4-byte boundaries.
@@ -871,7 +927,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// getOptimalMemOpType - Returns the target specific optimal type for load
+comment|/// Returns the target specific optimal type for load
 comment|/// and store operations as a result of memset, memcpy, and memmove
 comment|/// lowering. If DstAlign is zero that means it's safe to destination
 comment|/// alignment can satisfy any constraint. Similarly if SrcAlign is zero it
@@ -902,7 +958,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// isSafeMemOpType - Returns true if it's safe to use load / store of the
+comment|/// Returns true if it's safe to use load / store of the
 comment|/// specified type to expand memcpy / memset inline. This is mostly true
 comment|/// for all types except for some special cases. For example, on X86
 comment|/// targets without SSE2 f64 load / store are done with fldl / fstpl which
@@ -916,22 +972,24 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// allowsUnalignedMemoryAccesses - Returns true if the target allows
+comment|/// Returns true if the target allows
 comment|/// unaligned memory accesses. of the specified type. Returns whether it
 comment|/// is "fast" by reference in the second argument.
 name|bool
-name|allowsUnalignedMemoryAccesses
+name|allowsMisalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
 argument_list|,
 argument|unsigned AS
+argument_list|,
+argument|unsigned Align
 argument_list|,
 argument|bool *Fast
 argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// LowerOperation - Provide custom lowering hooks for some operations.
+comment|/// Provide custom lowering hooks for some operations.
 comment|///
 name|SDValue
 name|LowerOperation
@@ -943,7 +1001,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// ReplaceNodeResults - Replace the results of node with an illegal result
+comment|/// Replace the results of node with an illegal result
 comment|/// type with new values built out of custom code.
 comment|///
 name|void
@@ -968,7 +1026,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// isTypeDesirableForOp - Return true if the target has native support for
+comment|/// Return true if the target has native support for
 comment|/// the specified value type and it is 'desirable' to use the type for the
 comment|/// given node type. e.g. On x86 i16 is legal, but undesirable since i16
 comment|/// instruction encodings are longer and some i16 instructions are slow.
@@ -982,7 +1040,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// isTypeDesirable - Return true if the target has native support for the
+comment|/// Return true if the target has native support for the
 comment|/// specified value type and it is 'desirable' to use the type. e.g. On x86
 comment|/// i16 is legal, but undesirable since i16 instruction encodings are longer
 comment|/// and some i16 instructions are slow.
@@ -1007,8 +1065,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// getTargetNodeName - This method returns the name of a target specific
-comment|/// DAG node.
+comment|/// This method returns the name of a target specific DAG node.
 specifier|const
 name|char
 operator|*
@@ -1019,7 +1076,19 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// getSetCCResultType - Return the value type to use for ISD::SETCC.
+name|bool
+name|isCheapToSpeculateCttz
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|isCheapToSpeculateCtlz
+argument_list|()
+specifier|const
+name|override
+block|;
+comment|/// Return the value type to use for ISD::SETCC.
 name|EVT
 name|getSetCCResultType
 argument_list|(
@@ -1030,9 +1099,8 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// computeKnownBitsForTargetNode - Determine which of the bits specified
-comment|/// in Mask are known to be either zero or one and return them in the
-comment|/// KnownZero/KnownOne bitsets.
+comment|/// Determine which of the bits specified in Mask are known to be either
+comment|/// zero or one and return them in the KnownZero/KnownOne bitsets.
 name|void
 name|computeKnownBitsForTargetNode
 argument_list|(
@@ -1050,8 +1118,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|// ComputeNumSignBitsForTargetNode - Determine the number of bits in the
-comment|// operation that are sign bits.
+comment|/// Determine the number of bits in the operation that are sign bits.
 name|unsigned
 name|ComputeNumSignBitsForTargetNode
 argument_list|(
@@ -1121,10 +1188,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// LowerAsmOperandForConstraint - Lower the specified operand into the Ops
-comment|/// vector.  If it is invalid, don't add anything to Ops. If hasMemory is
-comment|/// true it means one of the asm constraint of the inline asm instruction
-comment|/// being processed is 'm'.
+comment|/// Lower the specified operand into the Ops vector. If it is invalid, don't
+comment|/// add anything to Ops. If hasMemory is true it means one of the asm
+comment|/// constraint of the inline asm instruction being processed is 'm'.
 name|void
 name|LowerAsmOperandForConstraint
 argument_list|(
@@ -1139,7 +1205,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// getRegForInlineAsmConstraint - Given a physical register constraint
+comment|/// Given a physical register constraint
 comment|/// (e.g. {edx}), return the register number and the register class for the
 comment|/// register.  This should only be used for C_Register constraints.  On
 comment|/// error, this returns a register number of 0.
@@ -1162,7 +1228,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// isLegalAddressingMode - Return true if the addressing mode represented
+comment|/// Return true if the addressing mode represented
 comment|/// by AM is legal for this target, for a load/store of the specified type.
 name|bool
 name|isLegalAddressingMode
@@ -1174,7 +1240,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// isLegalICmpImmediate - Return true if the specified immediate is legal
+comment|/// Return true if the specified immediate is legal
 comment|/// icmp immediate, that is the target has icmp instructions which can
 comment|/// compare a register against the immediate without having to materialize
 comment|/// the immediate into a register.
@@ -1186,7 +1252,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// isLegalAddImmediate - Return true if the specified immediate is legal
+comment|/// Return true if the specified immediate is legal
 comment|/// add immediate, that is the target has add instructions which can
 comment|/// add a register and the immediate without having to materialize
 comment|/// the immediate into a register.
@@ -1221,7 +1287,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// isTruncateFree - Return true if it's free to truncate a value of
+comment|/// Return true if it's free to truncate a value of
 comment|/// type Ty1 to type Ty2. e.g. On x86 it's free to truncate a i32 value in
 comment|/// register EAX to i16 by referencing its sub-register AX.
 name|bool
@@ -1254,7 +1320,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// isZExtFree - Return true if any actual instruction that defines a
+comment|/// Return true if any actual instruction that defines a
 comment|/// value of type Ty1 implicit zero-extends the value to Ty2 in the result
 comment|/// register. This does not necessarily include registers defined in
 comment|/// unknown ways, such as incoming arguments, or copies from unknown
@@ -1292,10 +1358,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// isFMAFasterThanFMulAndFAdd - Return true if an FMA operation is faster
-comment|/// than a pair of fmul and fadd instructions. fmuladd intrinsics will be
-comment|/// expanded to FMAs when this method returns true, otherwise fmuladd is
-comment|/// expanded to fmul + fadd.
+comment|/// Return true if an FMA operation is faster than a pair of fmul and fadd
+comment|/// instructions. fmuladd intrinsics will be expanded to FMAs when this
+comment|/// method returns true, otherwise fmuladd is expanded to fmul + fadd.
 name|bool
 name|isFMAFasterThanFMulAndFAdd
 argument_list|(
@@ -1304,7 +1369,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// isNarrowingProfitable - Return true if it's profitable to narrow
+comment|/// Return true if it's profitable to narrow
 comment|/// operations of type VT1 to VT2. e.g. on x86, it's profitable to narrow
 comment|/// from i32 to i8 but not from i32 to i16.
 name|bool
@@ -1317,7 +1382,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// isFPImmLegal - Returns true if the target can instruction select the
+comment|/// Returns true if the target can instruction select the
 comment|/// specified FP immediate natively. If false, the legalizer will
 comment|/// materialize the FP immediate as a load from a constant pool.
 name|bool
@@ -1330,10 +1395,10 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// isShuffleMaskLegal - Targets can use this to indicate that they only
-comment|/// support *some* VECTOR_SHUFFLE operations, those with specific masks.
-comment|/// By default, if a target supports the VECTOR_SHUFFLE node, all mask
-comment|/// values are assumed to be legal.
+comment|/// Targets can use this to indicate that they only support *some*
+comment|/// VECTOR_SHUFFLE operations, those with specific masks. By default, if a
+comment|/// target supports the VECTOR_SHUFFLE node, all mask values are assumed to
+comment|/// be legal.
 name|bool
 name|isShuffleMaskLegal
 argument_list|(
@@ -1344,10 +1409,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// isVectorClearMaskLegal - Similar to isShuffleMaskLegal. This is
-comment|/// used by Targets can use this to indicate if there is a suitable
-comment|/// VECTOR_SHUFFLE that can be used to replace a VAND with a constant
-comment|/// pool entry.
+comment|/// Similar to isShuffleMaskLegal. This is used by Targets can use this to
+comment|/// indicate if there is a suitable VECTOR_SHUFFLE that can be used to
+comment|/// replace a VAND with a constant pool entry.
 name|bool
 name|isVectorClearMaskLegal
 argument_list|(
@@ -1358,7 +1422,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// ShouldShrinkFPConstant - If true, then instruction selection should
+comment|/// If true, then instruction selection should
 comment|/// seek to shrink the FP constant of the specified type to a smaller type
 comment|/// in order to save space and / or reduce runtime.
 name|bool
@@ -1383,6 +1447,20 @@ operator|::
 name|f80
 return|;
 block|}
+comment|/// Return true if we believe it is correct and profitable to reduce the
+comment|/// load node to a smaller type.
+name|bool
+name|shouldReduceLoadWidth
+argument_list|(
+argument|SDNode *Load
+argument_list|,
+argument|ISD::LoadExtType ExtTy
+argument_list|,
+argument|EVT NewVT
+argument_list|)
+specifier|const
+name|override
+block|;
 specifier|const
 name|X86Subtarget
 operator|*
@@ -1394,8 +1472,8 @@ return|return
 name|Subtarget
 return|;
 block|}
-comment|/// isScalarFPTypeInSSEReg - Return true if the specified scalar FP type is
-comment|/// computed in an SSE register, not on the X87 floating point stack.
+comment|/// Return true if the specified scalar FP type is computed in an SSE
+comment|/// register, not on the X87 floating point stack.
 name|bool
 name|isScalarFPTypeInSSEReg
 argument_list|(
@@ -1427,15 +1505,14 @@ operator|)
 return|;
 comment|// f32 is when SSE1
 block|}
-comment|/// isTargetFTOL - Return true if the target uses the MSVC _ftol2 routine
-comment|/// for fptoui.
+comment|/// Return true if the target uses the MSVC _ftol2 routine for fptoui.
 name|bool
 name|isTargetFTOL
 argument_list|()
 specifier|const
 block|;
-comment|/// isIntegerTypeFTOL - Return true if the MSVC _ftol2 routine should be
-comment|/// used for fptoui to the given type.
+comment|/// Return true if the MSVC _ftol2 routine should be used for fptoui to the
+comment|/// given type.
 name|bool
 name|isIntegerTypeFTOL
 argument_list|(
@@ -1466,6 +1543,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// Return true if EXTRACT_SUBVECTOR is cheap for this result type
+comment|/// with this index.
+name|bool
+name|isExtractSubvectorCheap
+argument_list|(
+argument|EVT ResVT
+argument_list|,
+argument|unsigned Index
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// Intel processors have a unified instruction and data cache
 specifier|const
 name|char
@@ -1490,7 +1579,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// createFastISel - This method returns a target specific FastISel object,
+comment|/// This method returns a target specific FastISel object,
 comment|/// or null if the target does not support "fast" ISel.
 name|FastISel
 operator|*
@@ -1503,10 +1592,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// getStackCookieLocation - Return true if the target stores stack
-comment|/// protector cookies at a fixed offset in some non-standard address
-comment|/// space, and populates the address space and offset as
-comment|/// appropriate.
+comment|/// Return true if the target stores stack protector cookies at a fixed
+comment|/// offset in some non-standard address space, and populates the address
+comment|/// space and offset as appropriate.
 name|bool
 name|getStackCookieLocation
 argument_list|(
@@ -1548,6 +1636,12 @@ name|resetOperationActions
 argument_list|()
 name|override
 block|;
+name|bool
+name|useLoadStackGuardNode
+argument_list|()
+specifier|const
+name|override
+block|;
 comment|/// \brief Customize the preferred legalization strategy for certain types.
 name|LegalizeTypeAction
 name|getPreferredVectorAction
@@ -1578,7 +1672,7 @@ name|override
 block|;
 name|private
 operator|:
-comment|/// Subtarget - Keep a pointer to the X86Subtarget around so that we can
+comment|/// Keep a pointer to the X86Subtarget around so that we can
 comment|/// make the right decision when generating code for different targets.
 specifier|const
 name|X86Subtarget
@@ -1595,8 +1689,7 @@ comment|/// the operation actions unless we have to.
 name|TargetOptions
 name|TO
 block|;
-comment|/// X86ScalarSSEf32, X86ScalarSSEf64 - Select between SSE or x87
-comment|/// floating point ops.
+comment|/// Select between SSE or x87 floating point ops.
 comment|/// When SSE is available, use it for f32 operations.
 comment|/// When SSE2 is available, use it for f64 operations.
 name|bool
@@ -1605,7 +1698,7 @@ block|;
 name|bool
 name|X86ScalarSSEf64
 block|;
-comment|/// LegalFPImmediates - A list of legal fp immediates.
+comment|/// A list of legal FP immediates.
 name|std
 operator|::
 name|vector
@@ -1614,7 +1707,7 @@ name|APFloat
 operator|>
 name|LegalFPImmediates
 block|;
-comment|/// addLegalFPImmediate - Indicate that this x86 target can instruction
+comment|/// Indicate that this x86 target can instruction
 comment|/// select the specified FP immediate natively.
 name|void
 name|addLegalFPImmediate
@@ -1691,9 +1784,8 @@ argument_list|)
 specifier|const
 block|;
 comment|// Call lowering helpers.
-comment|/// IsEligibleForTailCallOptimization - Check whether the call is eligible
-comment|/// for tail call optimization. Targets which want to do tail call
-comment|/// optimization should implement this function.
+comment|/// Check whether the call is eligible for tail call optimization. Targets
+comment|/// that want to do tail call optimization should implement this function.
 name|bool
 name|IsEligibleForTailCallOptimization
 argument_list|(
@@ -2221,10 +2313,12 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|MVT
+name|EVT
 name|getTypeForExtArgOrReturn
 argument_list|(
-argument|MVT VT
+argument|LLVMContext&Context
+argument_list|,
+argument|EVT VT
 argument_list|,
 argument|ISD::NodeType ExtendKind
 argument_list|)
@@ -2256,6 +2350,46 @@ argument|CallingConv::ID CC
 argument_list|)
 specifier|const
 name|override
+block|;
+name|bool
+name|shouldExpandAtomicLoadInIR
+argument_list|(
+argument|LoadInst *SI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|shouldExpandAtomicStoreInIR
+argument_list|(
+argument|StoreInst *SI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|shouldExpandAtomicRMWInIR
+argument_list|(
+argument|AtomicRMWInst *AI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|LoadInst
+operator|*
+name|lowerIdempotentRMWIntoFencedLoad
+argument_list|(
+argument|AtomicRMWInst *AI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|needsCmpXchgNb
+argument_list|(
+argument|const Type *MemType
+argument_list|)
+specifier|const
 block|;
 comment|/// Utility function to emit atomic-load-arith operations (and, or, xor,
 comment|/// nand, max, min, umax, umin). It takes the corresponding instruction to
@@ -2332,8 +2466,6 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *BB
-argument_list|,
-argument|bool Is64Bit
 argument_list|)
 specifier|const
 block|;
@@ -2428,6 +2560,34 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+block|;
+comment|/// Use rsqrt* to speed up sqrt calculations.
+name|SDValue
+name|getRsqrtEstimate
+argument_list|(
+argument|SDValue Operand
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|,
+argument|unsigned&RefinementSteps
+argument_list|,
+argument|bool&UseOneConstNR
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Use rcp* to speed up fdiv calculations.
+name|SDValue
+name|getRecipEstimate
+argument_list|(
+argument|SDValue Operand
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|,
+argument|unsigned&RefinementSteps
+argument_list|)
+specifier|const
+name|override
 block|;   }
 decl_stmt|;
 name|namespace

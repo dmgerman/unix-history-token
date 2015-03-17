@@ -163,6 +163,12 @@ directive|include
 file|"llvm/IR/CallSite.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Metadata.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -351,12 +357,11 @@ comment|/// See http://llvm.org/docs/LangRef.html#pointeraliasing
 name|uint64_t
 name|Size
 decl_stmt|;
-comment|/// TBAATag - The metadata node which describes the TBAA type of
-comment|/// the location, or null if there is no known unique tag.
-specifier|const
-name|MDNode
-modifier|*
-name|TBAATag
+comment|/// AATags - The metadata nodes which describes the aliasing of the
+comment|/// location (each member is null if that kind of information is
+comment|/// unavailable)..
+name|AAMDNodes
+name|AATags
 decl_stmt|;
 name|explicit
 name|Location
@@ -365,7 +370,7 @@ argument|const Value *P = nullptr
 argument_list|,
 argument|uint64_t S = UnknownSize
 argument_list|,
-argument|const MDNode *N = nullptr
+argument|const AAMDNodes&N = AAMDNodes()
 argument_list|)
 block|:
 name|Ptr
@@ -378,7 +383,7 @@ argument_list|(
 name|S
 argument_list|)
 operator|,
-name|TBAATag
+name|AATags
 argument_list|(
 argument|N
 argument_list|)
@@ -433,7 +438,7 @@ name|Copy
 return|;
 block|}
 name|Location
-name|getWithoutTBAATag
+name|getWithoutAATags
 argument_list|()
 specifier|const
 block|{
@@ -446,9 +451,10 @@ argument_list|)
 block|;
 name|Copy
 operator|.
-name|TBAATag
+name|AATags
 operator|=
-name|nullptr
+name|AAMDNodes
+argument_list|()
 block|;
 return|return
 name|Copy
@@ -1896,7 +1902,7 @@ comment|//===-------------------------------------------------------------------
 comment|/// Higher level methods for querying mod/ref information.
 comment|///
 comment|/// canBasicBlockModify - Return true if it is possible for execution of the
-comment|/// specified basic block to modify the value pointed to by Ptr.
+comment|/// specified basic block to modify the location Loc.
 name|bool
 name|canBasicBlockModify
 parameter_list|(
@@ -1943,12 +1949,13 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// canInstructionRangeModify - Return true if it is possible for the
-comment|/// execution of the specified instructions to modify the value pointed to by
-comment|/// Ptr.  The instructions to consider are all of the instructions in the
-comment|/// range of [I1,I2] INCLUSIVE.  I1 and I2 must be in the same basic block.
+comment|/// canInstructionRangeModRef - Return true if it is possible for the
+comment|/// execution of the specified instructions to mod\ref (according to the
+comment|/// mode) the location Loc. The instructions to consider are all
+comment|/// of the instructions in the range of [I1,I2] INCLUSIVE.
+comment|/// I1 and I2 must be in the same basic block.
 name|bool
-name|canInstructionRangeModify
+name|canInstructionRangeModRef
 parameter_list|(
 specifier|const
 name|Instruction
@@ -1964,11 +1971,15 @@ specifier|const
 name|Location
 modifier|&
 name|Loc
+parameter_list|,
+specifier|const
+name|ModRefResult
+name|Mode
 parameter_list|)
 function_decl|;
-comment|/// canInstructionRangeModify - A convenience wrapper.
+comment|/// canInstructionRangeModRef - A convenience wrapper.
 name|bool
-name|canInstructionRangeModify
+name|canInstructionRangeModRef
 parameter_list|(
 specifier|const
 name|Instruction
@@ -1987,10 +1998,14 @@ name|Ptr
 parameter_list|,
 name|uint64_t
 name|Size
+parameter_list|,
+specifier|const
+name|ModRefResult
+name|Mode
 parameter_list|)
 block|{
 return|return
-name|canInstructionRangeModify
+name|canInstructionRangeModRef
 argument_list|(
 name|I1
 argument_list|,
@@ -2002,6 +2017,8 @@ name|Ptr
 argument_list|,
 name|Size
 argument_list|)
+argument_list|,
+name|Mode
 argument_list|)
 return|;
 block|}
@@ -2127,8 +2144,6 @@ name|getEmptyKey
 argument_list|()
 argument_list|,
 literal|0
-argument_list|,
-name|nullptr
 argument_list|)
 return|;
 block|}
@@ -2156,8 +2171,6 @@ name|getTombstoneKey
 argument_list|()
 argument_list|,
 literal|0
-argument_list|,
-name|nullptr
 argument_list|)
 return|;
 block|}
@@ -2197,16 +2210,14 @@ argument_list|)
 operator|^
 name|DenseMapInfo
 operator|<
-specifier|const
-name|MDNode
-operator|*
+name|AAMDNodes
 operator|>
 operator|::
 name|getHashValue
 argument_list|(
 name|Val
 operator|.
-name|TBAATag
+name|AATags
 argument_list|)
 return|;
 block|}
@@ -2238,11 +2249,11 @@ name|Size
 operator|&&
 name|LHS
 operator|.
-name|TBAATag
+name|AATags
 operator|==
 name|RHS
 operator|.
-name|TBAATag
+name|AATags
 return|;
 block|}
 expr|}

@@ -182,13 +182,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_MACHINE_TRACE_METRICS_H
+name|LLVM_CODEGEN_MACHINETRACEMETRICS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_MACHINE_TRACE_METRICS_H
+name|LLVM_CODEGEN_MACHINETRACEMETRICS_H
 end_define
 
 begin_include
@@ -804,6 +804,16 @@ operator|>
 name|ExtraInstrs
 operator|=
 name|None
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|MCSchedClassDesc
+operator|*
+operator|>
+name|RemoveInstrs
+operator|=
+name|None
 argument_list|)
 decl|const
 decl_stmt|;
@@ -866,6 +876,24 @@ specifier|const
 name|MachineInstr
 operator|*
 name|PHI
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// A dependence is useful if the basic block of the defining instruction
+comment|/// is part of the trace of the user instruction. It is assumed that DefMI
+comment|/// dominates UseMI (see also isUsefulDominator).
+name|bool
+name|isDepInTrace
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|DefMI
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|UseMI
 argument_list|)
 decl|const
 decl_stmt|;

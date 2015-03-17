@@ -422,6 +422,26 @@ name|NumContainedTys
 index|]
 return|;
 block|}
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+name|params
+argument_list|()
+specifier|const
+block|{
+return|return
+name|makeArrayRef
+argument_list|(
+name|param_begin
+argument_list|()
+argument_list|,
+name|param_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// Parameter type accessors.
 name|Type
 operator|*
@@ -670,16 +690,6 @@ name|SymbolTableEntry
 block|;
 name|public
 operator|:
-operator|~
-name|StructType
-argument_list|()
-block|{
-name|delete
-index|[]
-name|ContainedTys
-block|;
-comment|// Delete the body.
-block|}
 comment|/// StructType::create - This creates an identified struct.
 specifier|static
 name|StructType
@@ -768,7 +778,7 @@ argument|Type *elt1
 argument_list|,
 argument|...
 argument_list|)
-name|END_WITH_NULL
+name|LLVM_END_WITH_NULL
 block|;
 comment|/// StructType::get - This static method is the primary way to create a
 comment|/// literal StructType.
@@ -809,7 +819,7 @@ argument|Type *elt1
 argument_list|,
 argument|...
 argument_list|)
-name|END_WITH_NULL
+name|LLVM_END_WITH_NULL
 block|;
 name|bool
 name|isPacked
@@ -867,10 +877,7 @@ comment|/// isSized - Return true if this is a sized type.
 name|bool
 name|isSized
 argument_list|(
-argument|SmallPtrSet<const Type*
-argument_list|,
-literal|4
-argument|> *Visited = nullptr
+argument|SmallPtrSetImpl<const Type*> *Visited = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -919,7 +926,7 @@ argument|Type *elt1
 argument_list|,
 argument|...
 argument_list|)
-name|END_WITH_NULL
+name|LLVM_END_WITH_NULL
 block|;
 comment|/// isValidElementType - Return true if the specified type is valid as a
 comment|/// element type.
@@ -959,6 +966,27 @@ name|ContainedTys
 index|[
 name|NumContainedTys
 index|]
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+specifier|const
+name|elements
+argument_list|()
+specifier|const
+block|{
+return|return
+name|makeArrayRef
+argument_list|(
+name|element_begin
+argument_list|()
+argument_list|,
+name|element_end
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// isLayoutIdentical - Return true if this is layout identical to the

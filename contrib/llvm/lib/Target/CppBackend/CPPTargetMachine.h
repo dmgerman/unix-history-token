@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CPPTARGETMACHINE_H
+name|LLVM_LIB_TARGET_CPPBACKEND_CPPTARGETMACHINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CPPTARGETMACHINE_H
+name|LLVM_LIB_TARGET_CPPBACKEND_CPPTARGETMACHINE_H
 end_define
 
 begin_include
@@ -71,12 +71,25 @@ directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetSubtargetInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|formatted_raw_ostream
+decl_stmt|;
+name|class
+name|CPPSubtarget
+range|:
+name|public
+name|TargetSubtargetInfo
+block|{ }
 decl_stmt|;
 name|struct
 name|CPPTargetMachine
@@ -105,17 +118,40 @@ argument_list|)
 operator|:
 name|TargetMachine
 argument_list|(
-argument|T
+name|T
 argument_list|,
-argument|TT
+name|TT
 argument_list|,
-argument|CPU
+name|CPU
 argument_list|,
-argument|FS
+name|FS
 argument_list|,
-argument|Options
+name|Options
 argument_list|)
+block|,
+name|Subtarget
+argument_list|()
 block|{}
+name|private
+operator|:
+name|CPPSubtarget
+name|Subtarget
+block|;
+name|public
+operator|:
+specifier|const
+name|CPPSubtarget
+operator|*
+name|getSubtargetImpl
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|Subtarget
+return|;
+block|}
 name|bool
 name|addPassesToEmitFile
 argument_list|(
@@ -132,25 +168,13 @@ argument_list|,
 argument|AnalysisID StopAfter
 argument_list|)
 name|override
-block|;
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|nullptr
-return|;
-block|}
-expr|}
-block|;
+block|; }
+decl_stmt|;
 specifier|extern
 name|Target
 name|TheCppBackendTarget
-block|;  }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TARGET_X86_H
+name|LLVM_LIB_TARGET_X86_X86_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TARGET_X86_H
+name|LLVM_LIB_TARGET_X86_X86_H
 end_define
 
 begin_include
@@ -80,23 +80,8 @@ name|class
 name|ImmutablePass
 decl_stmt|;
 name|class
-name|JITCodeEmitter
-decl_stmt|;
-name|class
 name|X86TargetMachine
 decl_stmt|;
-comment|/// createX86AtomicExpandPass - This pass expands atomic operations that cannot
-comment|/// be handled natively in terms of a loop using cmpxchg.
-name|FunctionPass
-modifier|*
-name|createX86AtomicExpandPass
-parameter_list|(
-specifier|const
-name|X86TargetMachine
-modifier|*
-name|TM
-parameter_list|)
-function_decl|;
 comment|/// createX86ISelDag - This pass converts a legalized DAG into a
 comment|/// X86-specific DAG, ready for instruction scheduling.
 comment|///
@@ -146,21 +131,6 @@ modifier|*
 name|createX86IssueVZeroUpperPass
 parameter_list|()
 function_decl|;
-comment|/// createX86CodeEmitterPass - Return a pass that emits the collected X86 code
-comment|/// to the specified MCE object.
-name|FunctionPass
-modifier|*
-name|createX86JITCodeEmitterPass
-parameter_list|(
-name|X86TargetMachine
-modifier|&
-name|TM
-parameter_list|,
-name|JITCodeEmitter
-modifier|&
-name|JCE
-parameter_list|)
-function_decl|;
 comment|/// createX86EmitCodeToMemory - Returns a pass that converts a register
 comment|/// allocated function into raw machine code in a dynamically
 comment|/// allocated chunk of memory.
@@ -195,6 +165,14 @@ comment|/// to eliminate execution delays in some Atom processors.
 name|FunctionPass
 modifier|*
 name|createX86FixupLEAs
+parameter_list|()
+function_decl|;
+comment|/// createX86CallFrameOptimization - Return a pass that optimizes
+comment|/// the code-size of x86 call sequences. This is done by replacing
+comment|/// esp-relative movs with pushes.
+name|FunctionPass
+modifier|*
+name|createX86CallFrameOptimization
 parameter_list|()
 function_decl|;
 block|}

@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86RECOGNIZABLEINSTR_H
+name|LLVM_UTILS_TABLEGEN_X86RECOGNIZABLEINSTR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86RECOGNIZABLEINSTR_H
+name|LLVM_UTILS_TABLEGEN_X86RECOGNIZABLEINSTR_H
 end_define
 
 begin_include
@@ -152,9 +152,9 @@ comment|/// The OpSize field from the record
 name|uint8_t
 name|OpSize
 decl_stmt|;
-comment|/// The hasAdSizePrefix field from the record
-name|bool
-name|HasAdSizePrefix
+comment|/// The AdSize field from the record
+name|uint8_t
+name|AdSize
 decl_stmt|;
 comment|/// The hasREX_WPrefix field from the record
 name|bool

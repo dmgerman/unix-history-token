@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mansearch.c,v 1.54 2015/02/27 16:02:10 schwarze Exp $ */
+comment|/*	$Id: mansearch.c,v 1.55 2015/03/11 13:11:22 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -975,10 +975,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|outbit
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|NULL
@@ -988,6 +984,10 @@ operator|->
 name|outkey
 condition|)
 block|{
+name|outbit
+operator|=
+name|TYPE_Nd
+expr_stmt|;
 for|for
 control|(
 name|indexbit
@@ -1035,6 +1035,11 @@ break|break;
 block|}
 block|}
 block|}
+else|else
+name|outbit
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Save a descriptor to the current working directory. 	 * Since pathnames in the "paths" variable might be relative, 	 * and we'll be chdir()ing into them, we need to keep a handle 	 * on our current directory from which to start the chdir(). 	 */
 if|if
 condition|(

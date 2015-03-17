@@ -454,11 +454,25 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// dump - Dump the dominance frontier to dbgs().
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NDEBUG
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LLVM_ENABLE_DUMP
+argument_list|)
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_decl_stmt
 

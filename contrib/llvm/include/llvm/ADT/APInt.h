@@ -258,6 +258,10 @@ argument_list|)
 operator|)
 block|}
 enum|;
+name|friend
+struct_decl|struct
+name|DenseMapAPIntKeyInfo
+struct_decl|;
 comment|/// \brief Fast internal constructor
 comment|///
 comment|/// This constructor is used only internally for speed of construction of
@@ -769,13 +773,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|BitWidth
-operator|&&
-literal|"bitwidth too small"
-argument_list|)
-block|;
 if|if
 condition|(
 name|isSingleWord
@@ -2589,26 +2586,63 @@ operator|!
 name|isSingleWord
 argument_list|()
 condition|)
+block|{
+comment|// The MSVC STL shipped in 2013 requires that self move assignment be a
+comment|// no-op.  Otherwise algorithms like stable_sort will produce answers
+comment|// where half of the output is left in a moved-from state.
+if|if
+condition|(
+name|this
+operator|==
+operator|&
+name|that
+condition|)
+return|return
+operator|*
+name|this
+return|;
 name|delete
 index|[]
 name|pVal
 decl_stmt|;
-name|BitWidth
-operator|=
+block|}
+comment|// Use memcpy so that type based alias analysis sees both VAL and pVal
+comment|// as modified.
+name|memcpy
+argument_list|(
+operator|&
+name|VAL
+argument_list|,
+operator|&
 name|that
 operator|.
-name|BitWidth
+name|VAL
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uint64_t
+argument_list|)
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VAL
-operator|=
+begin_comment
+comment|// If 'this ==&that', avoid zeroing our own bitwidth by storing to 'that'
+end_comment
+
+begin_comment
+comment|// first.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|ThatBitWidth
+init|=
 name|that
 operator|.
-name|VAL
-expr_stmt|;
-end_expr_stmt
+name|BitWidth
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|that
@@ -2616,6 +2650,13 @@ operator|.
 name|BitWidth
 operator|=
 literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|BitWidth
+operator|=
+name|ThatBitWidth
 expr_stmt|;
 end_expr_stmt
 
@@ -4146,7 +4187,26 @@ begin_decl_stmt
 name|APInt
 name|sshl_ov
 argument_list|(
-name|unsigned
+specifier|const
+name|APInt
+operator|&
+name|Amt
+argument_list|,
+name|bool
+operator|&
+name|Overflow
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|APInt
+name|ushl_ov
+argument_list|(
+specifier|const
+name|APInt
+operator|&
 name|Amt
 argument_list|,
 name|bool

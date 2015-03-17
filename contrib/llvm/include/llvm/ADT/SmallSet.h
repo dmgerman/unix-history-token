@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -249,14 +255,23 @@ block|}
 block|}
 comment|/// insert - Insert an element into the set if it isn't already there.
 comment|/// Returns true if the element is inserted (it was not in the set before).
+comment|/// The first value of the returned pair is unused and provided for
+comment|/// partial compatibility with the standard library self-associative container
+comment|/// concept.
+comment|// FIXME: Add iterators that abstract over the small and large form, and then
+comment|// return those here.
+name|std
+operator|::
+name|pair
+operator|<
+name|NoneType
+operator|,
 name|bool
+operator|>
 name|insert
-parameter_list|(
-specifier|const
-name|T
-modifier|&
-name|V
-parameter_list|)
+argument_list|(
+argument|const T&V
+argument_list|)
 block|{
 if|if
 condition|(
@@ -265,6 +280,12 @@ name|isSmall
 argument_list|()
 condition|)
 return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|None
+argument_list|,
 name|Set
 operator|.
 name|insert
@@ -273,15 +294,16 @@ name|V
 argument_list|)
 operator|.
 name|second
+argument_list|)
 return|;
 name|VIterator
 name|I
-init|=
+operator|=
 name|vfind
 argument_list|(
 name|V
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|I
@@ -293,7 +315,14 @@ argument_list|()
 condition|)
 comment|// Don't reinsert if it already exists.
 return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|None
+argument_list|,
 name|false
+argument_list|)
 return|;
 if|if
 condition|(
@@ -313,7 +342,14 @@ name|V
 argument_list|)
 expr_stmt|;
 return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|None
+argument_list|,
 name|true
+argument_list|)
 return|;
 block|}
 comment|// Otherwise, grow from vector to set.
@@ -350,9 +386,19 @@ name|V
 argument_list|)
 expr_stmt|;
 return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|None
+argument_list|,
 name|true
+argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -383,6 +429,9 @@ name|I
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_function
 name|bool
 name|erase
 parameter_list|(
@@ -453,6 +502,9 @@ return|return
 name|false
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|clear
 parameter_list|()
@@ -468,8 +520,14 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_expr_stmt
 name|bool
 name|isSmall
 argument_list|()
@@ -482,6 +540,9 @@ name|empty
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|VIterator
 name|vfind
 argument_list|(
@@ -533,14 +594,10 @@ name|end
 argument_list|()
 return|;
 block|}
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// If this set is of pointer values, transparently switch over to using
 end_comment
 

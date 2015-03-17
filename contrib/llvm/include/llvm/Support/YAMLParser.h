@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/SMLoc.h"
 end_include
 
@@ -201,9 +207,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MemoryBuffer
-decl_stmt|;
 name|class
 name|SourceMgr
 decl_stmt|;
@@ -277,17 +280,13 @@ argument_list|,
 argument|SourceMgr&
 argument_list|)
 empty_stmt|;
-comment|/// \brief This takes ownership of \p InputBuffer.
 name|Stream
 argument_list|(
-name|MemoryBuffer
-operator|*
-name|InputBuffer
+argument|MemoryBufferRef InputBuffer
 argument_list|,
-name|SourceMgr
-operator|&
+argument|SourceMgr&
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 operator|~
 name|Stream
 argument_list|()

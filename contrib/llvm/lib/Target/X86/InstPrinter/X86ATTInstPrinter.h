@@ -50,19 +50,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86_ATT_INST_PRINTER_H
+name|LLVM_LIB_TARGET_X86_INSTPRINTER_X86ATTINSTPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86_ATT_INST_PRINTER_H
+name|LLVM_LIB_TARGET_X86_INSTPRINTER_X86ATTINSTPRINTER_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/MC/MCInstPrinter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCSubtargetInfo.h"
 end_include
 
 begin_decl_stmt
@@ -97,6 +103,11 @@ specifier|const
 name|MCRegisterInfo
 operator|&
 name|MRI
+argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
 argument_list|)
 operator|:
 name|MCInstPrinter
@@ -107,7 +118,16 @@ argument|MII
 argument_list|,
 argument|MRI
 argument_list|)
-block|{}
+block|{
+comment|// Initialize the set of available features.
+name|setAvailableFeatures
+argument_list|(
+name|STI
+operator|.
+name|getFeatureBits
+argument_list|()
+argument_list|)
+block|;   }
 name|void
 name|printRegName
 argument_list|(
@@ -269,6 +289,25 @@ argument_list|,
 argument|raw_ostream&OS
 argument_list|)
 block|;
+name|void
+name|printanymem
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|printMemReference
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
 name|void
 name|printopaquemem
 argument_list|(
@@ -763,7 +802,11 @@ argument_list|,
 name|O
 argument_list|)
 block|;   }
-block|}
+name|private
+operator|:
+name|bool
+name|HasCustomInstComment
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

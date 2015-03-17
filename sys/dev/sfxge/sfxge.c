@@ -155,6 +155,12 @@ directive|include
 file|"sfxge_rx.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"sfxge_version.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -2060,6 +2066,34 @@ condition|)
 goto|goto
 name|fail5
 goto|;
+name|SYSCTL_ADD_STRING
+argument_list|(
+name|device_get_sysctl_ctx
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|device_get_sysctl_tree
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"version"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|SFXGE_VERSION_STRING
+argument_list|,
+literal|0
+argument_list|,
+literal|"Driver version"
+argument_list|)
+expr_stmt|;
 comment|/* Initialize the NVRAM. */
 if|if
 condition|(

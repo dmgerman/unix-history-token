@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|PPCHAZRECS_H
+name|LLVM_LIB_TARGET_POWERPC_PPCHAZARDRECOGNIZERS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|PPCHAZRECS_H
+name|LLVM_LIB_TARGET_POWERPC_PPCHAZARDRECOGNIZERS_H
 end_define
 
 begin_include
@@ -296,7 +296,6 @@ operator|&
 name|DAG
 argument_list|)
 block|;
-name|virtual
 name|HazardType
 name|getHazardType
 argument_list|(
@@ -306,7 +305,6 @@ argument|int Stalls
 argument_list|)
 name|override
 block|;
-name|virtual
 name|void
 name|EmitInstruction
 argument_list|(
@@ -314,13 +312,11 @@ argument|SUnit *SU
 argument_list|)
 name|override
 block|;
-name|virtual
 name|void
 name|AdvanceCycle
 argument_list|()
 name|override
 block|;
-name|virtual
 name|void
 name|Reset
 argument_list|()

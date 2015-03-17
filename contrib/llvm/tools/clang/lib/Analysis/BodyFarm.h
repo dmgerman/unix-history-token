@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_ANALYSIS_BODYFARM_H
+name|LLVM_CLANG_LIB_ANALYSIS_BODYFARM_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_ANALYSIS_BODYFARM_H
+name|LLVM_CLANG_LIB_ANALYSIS_BODYFARM_H
 end_define
 
 begin_include
@@ -104,6 +104,9 @@ name|class
 name|Stmt
 decl_stmt|;
 name|class
+name|CodeInjector
+decl_stmt|;
+name|class
 name|BodyFarm
 block|{
 name|public
@@ -113,11 +116,20 @@ argument_list|(
 name|ASTContext
 operator|&
 name|C
+argument_list|,
+name|CodeInjector
+operator|*
+name|injector
 argument_list|)
 operator|:
 name|C
 argument_list|(
-argument|C
+name|C
+argument_list|)
+operator|,
+name|Injector
+argument_list|(
+argument|injector
 argument_list|)
 block|{}
 comment|/// Factory method for creating bodies for ordinary functions.
@@ -167,6 +179,10 @@ name|C
 decl_stmt|;
 name|BodyMap
 name|Bodies
+decl_stmt|;
+name|CodeInjector
+modifier|*
+name|Injector
 decl_stmt|;
 block|}
 empty_stmt|;

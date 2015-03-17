@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SEMA_FIXITUTILS_H
+name|LLVM_CLANG_SEMA_SEMAFIXITUTILS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SEMA_FIXITUTILS_H
+name|LLVM_CLANG_SEMA_SEMAFIXITUTILS_H
 end_define
 
 begin_include
@@ -268,10 +268,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_SEMA_FIXITUTILS_H
-end_comment
 
 end_unit
 

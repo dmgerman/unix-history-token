@@ -633,9 +633,6 @@ name|STI
 parameter_list|,
 name|bool
 name|RelaxAll
-parameter_list|,
-name|bool
-name|NoExecStack
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -1512,7 +1509,6 @@ comment|/// \param TAB The target assembler backend object. Takes ownership.
 comment|/// \param _OS The stream object.
 comment|/// \param _Emitter The target independent assembler object.Takes ownership.
 comment|/// \param RelaxAll Relax all fixups?
-comment|/// \param NoExecStack Mark file as not needing a executable stack.
 name|MCStreamer
 modifier|*
 name|createMCObjectStreamer
@@ -1543,9 +1539,6 @@ name|STI
 argument_list|,
 name|bool
 name|RelaxAll
-argument_list|,
-name|bool
-name|NoExecStack
 argument_list|)
 decl|const
 block|{
@@ -1576,8 +1569,6 @@ argument_list|,
 name|STI
 argument_list|,
 name|RelaxAll
-argument_list|,
-name|NoExecStack
 argument_list|)
 return|;
 block|}

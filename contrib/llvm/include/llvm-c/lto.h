@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|LTO_API_VERSION
-value|10
+value|11
 end_define
 
 begin_comment
@@ -397,6 +397,47 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Loads an object file in its own context.  *  * Loads an object file in its own LLVMContext.  This function call is  * thread-safe.  However, modules created this way should not be merged into an  * lto_code_gen_t using \a lto_codegen_add_module().  *  * Returns NULL on error (check lto_get_error_message() for details).  *  * \since LTO_API_VERSION=11  */
+specifier|extern
+name|lto_module_t
+name|lto_module_create_in_local_context
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|mem
+parameter_list|,
+name|size_t
+name|length
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Loads an object file in the codegen context.  *  * Loads an object file into the same context as \c cg.  The module is safe to  * add using \a lto_codegen_add_module().  *  * Returns NULL on error (check lto_get_error_message() for details).  *  * \since LTO_API_VERSION=11  */
+specifier|extern
+name|lto_module_t
+name|lto_module_create_in_codegen_context
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|mem
+parameter_list|,
+name|size_t
+name|length
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|lto_code_gen_t
+name|cg
+parameter_list|)
+function_decl|;
 comment|/**  * Loads an object file from disk. The seek point of fd is not preserved.  * Returns NULL on error (check lto_get_error_message() for details).  *  * \since LTO_API_VERSION=5  */
 specifier|extern
 name|lto_module_t
@@ -616,10 +657,18 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/**  * Instantiates a code generator.  * Returns NULL on error (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=3  */
+comment|/**  * Instantiates a code generator.  * Returns NULL on error (check lto_get_error_message() for details).  *  * All modules added using \a lto_codegen_add_module() must have been created  * in the same context as the codegen.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_code_gen_t
 name|lto_codegen_create
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Instantiate a code generator in its own context.  *  * Instantiates a code generator in its own context.  Modules added via \a  * lto_codegen_add_module() must have all been created in the same context,  * using \a lto_module_create_in_codegen_context().  *  * \since LTO_API_VERSION=11  */
+specifier|extern
+name|lto_code_gen_t
+name|lto_codegen_create_in_local_context
 parameter_list|(
 name|void
 parameter_list|)
@@ -632,7 +681,7 @@ parameter_list|(
 name|lto_code_gen_t
 parameter_list|)
 function_decl|;
-comment|/**  * Add an object module to the set of modules for which code will be generated.  * Returns true on error (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=3  */
+comment|/**  * Add an object module to the set of modules for which code will be generated.  * Returns true on error (check lto_get_error_message() for details).  *  * \c cg and \c mod must both be in the same context.  See \a  * lto_codegen_create_in_local_context() and \a  * lto_module_create_in_codegen_context().  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_bool_t
 name|lto_codegen_add_module

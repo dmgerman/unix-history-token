@@ -189,15 +189,6 @@ argument_list|)
 block|;
 name|virtual
 name|bool
-name|StackUsesFrames
-argument_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
 name|CallFrameAddressIsValid
 argument_list|(
 argument|lldb::addr_t cfa
@@ -286,18 +277,6 @@ literal|1
 return|;
 block|}
 end_expr_stmt
-
-begin_function
-name|virtual
-name|bool
-name|FunctionCallsChangeCFA
-parameter_list|()
-block|{
-return|return
-name|false
-return|;
-block|}
-end_function
 
 begin_expr_stmt
 name|virtual

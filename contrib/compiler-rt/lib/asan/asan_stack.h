@@ -91,6 +91,24 @@ begin_decl_stmt
 name|namespace
 name|__asan
 block|{
+specifier|static
+specifier|const
+name|u32
+name|kDefaultMallocContextSize
+init|=
+literal|30
+decl_stmt|;
+name|void
+name|SetMallocContextSize
+parameter_list|(
+name|u32
+name|size
+parameter_list|)
+function_decl|;
+name|u32
+name|GetMallocContextSize
+parameter_list|()
+function_decl|;
 comment|// Get the stack trace with the given pc and bp.
 comment|// The pc will be in the position 0 of the resulting stack trace.
 comment|// The bp may refer to the current frame or to the caller's frame.
@@ -357,7 +375,7 @@ define|#
 directive|define
 name|GET_STACK_TRACE_MALLOC
 define|\
-value|GET_STACK_TRACE(common_flags()->malloc_context_size,            \                   common_flags()->fast_unwind_on_malloc)
+value|GET_STACK_TRACE(GetMallocContextSize(), common_flags()->fast_unwind_on_malloc)
 end_define
 
 begin_define
