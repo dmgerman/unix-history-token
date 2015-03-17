@@ -63,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|UB_MAX_MR
-value|5
+value|16
 end_define
 
 begin_comment
