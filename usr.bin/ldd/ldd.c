@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<a.out.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dlfcn.h>
 end_include
 
@@ -94,6 +88,33 @@ include|#
 directive|include
 file|"extern.h"
 end_include
+
+begin_comment
+comment|/* We don't support a.out executables on arm64 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__aarch64__
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<a.out.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|AOUT_SUPPORTED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * 32-bit ELF data structures can only be used if the system header[s] declare  * them.  There is no official macro for determining whether they are declared,  * so check for the existence of one of the 32-macros defined in elf(5).  */
@@ -1186,10 +1207,15 @@ parameter_list|)
 block|{
 union|union
 block|{
+ifdef|#
+directive|ifdef
+name|AOUT_SUPPORTED
 name|struct
 name|exec
 name|aout
 decl_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|__ELF_WORD_SIZE
@@ -1260,6 +1286,9 @@ literal|0
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|AOUT_SUPPORTED
 if|if
 condition|(
 operator|(
@@ -1338,6 +1367,8 @@ literal|1
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 if|#
 directive|if
 name|__ELF_WORD_SIZE
