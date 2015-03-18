@@ -1619,7 +1619,7 @@ decl_stmt|;
 name|u_int8_t
 name|primary_density_codes
 index|[
-literal|8
+literal|9
 index|]
 decl_stmt|;
 name|u_int8_t

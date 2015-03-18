@@ -7333,9 +7333,21 @@ argument_list|)
 operator|==
 literal|0
 operator|)
+operator|||
+operator|(
+name|strcmp
+argument_list|(
+name|entry
+operator|->
+name|entry_name
+argument_list|,
+literal|"density_code"
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
-comment|/* XXX KDM this should really be unsigned */
 name|printf
 argument_list|(
 literal|"%*s%s (%s): %s\n"
