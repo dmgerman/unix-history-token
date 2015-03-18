@@ -2045,6 +2045,11 @@ name|terminate
 argument_list|(
 literal|"function %s has too many args: %d> %d\n"
 argument_list|,
+name|tdesc_name
+argument_list|(
+name|tp
+argument_list|)
+argument_list|,
 name|i
 argument_list|,
 name|CTF_MAX_VLEN
