@@ -8717,7 +8717,7 @@ modifier|*
 name|queue_list
 decl_stmt|;
 comment|/* Driver Statistics */
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -8737,7 +8737,7 @@ argument_list|,
 literal|"Driver dropped packets"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -8757,7 +8757,7 @@ argument_list|,
 literal|"m_defrag() failed"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
