@@ -51,6 +51,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<net/rss_config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in_rss.h>
 end_include
 
@@ -1216,7 +1222,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|ixgbe_methods
+name|ix_methods
 index|[]
 init|=
 block|{
@@ -1257,12 +1263,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|ixgbe_driver
+name|ix_driver
 init|=
 block|{
 literal|"ix"
 block|,
-name|ixgbe_methods
+name|ix_methods
 block|,
 sizeof|sizeof
 argument_list|(
@@ -1275,20 +1281,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|devclass_t
-name|ixgbe_devclass
+name|ix_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|ixgbe
+name|ix
 argument_list|,
 name|pci
 argument_list|,
-name|ixgbe_driver
+name|ix_driver
 argument_list|,
-name|ixgbe_devclass
+name|ix_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -1300,7 +1306,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|ixgbe
+name|ix
 argument_list|,
 name|pci
 argument_list|,
@@ -1316,7 +1322,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|ixgbe
+name|ix
 argument_list|,
 name|ether
 argument_list|,
@@ -9240,6 +9246,14 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|RSS
+name|cpuset_t
+name|cpu_mask
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|RSS
 comment|/* 	 * If we're doing RSS, the number of queues needs to 	 * match the number of RSS buckets that are configured. 	 * 	 * + If there's more queues than RSS buckets, we'll end 	 *   up with queues that get no traffic. 	 * 	 * + If there's more RSS buckets than queues, we'll end 	 *   up having multiple RSS buckets map to the same queue, 	 *   so there'll be some contention. 	 */
 if|if
 condition|(
@@ -9571,7 +9585,15 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RSS
-name|taskqueue_start_threads_pinned
+name|CPU_SETOF
+argument_list|(
+name|cpu_id
+argument_list|,
+operator|&
+name|cpu_mask
+argument_list|)
+expr_stmt|;
+name|taskqueue_start_threads_cpuset
 argument_list|(
 operator|&
 name|que
@@ -9582,7 +9604,8 @@ literal|1
 argument_list|,
 name|PI_NET
 argument_list|,
-name|cpu_id
+operator|&
+name|cpu_mask
 argument_list|,
 literal|"%s (bucket %d)"
 argument_list|,

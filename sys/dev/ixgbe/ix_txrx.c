@@ -51,6 +51,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<net/rss_config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in_rss.h>
 end_include
 

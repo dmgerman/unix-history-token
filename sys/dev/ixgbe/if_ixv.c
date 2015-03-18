@@ -720,7 +720,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|devclass_t
-name|ixgbe_devclass
+name|ixv_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -733,7 +733,7 @@ name|pci
 argument_list|,
 name|ixv_driver
 argument_list|,
-name|ixgbe_devclass
+name|ixv_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -773,6 +773,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* XXX depend on 'ix' ? */
+end_comment
 
 begin_comment
 comment|/* ** TUNEABLE PARAMETERS: */
