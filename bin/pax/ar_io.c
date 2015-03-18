@@ -3724,6 +3724,8 @@ operator|||
 operator|!
 name|wr_trail
 operator|||
+name|Oflag
+operator|||
 name|strcmp
 argument_list|(
 name|NM_TAR
