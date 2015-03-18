@@ -162,6 +162,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/netdevice.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_pager.h>
 end_include
 
@@ -215,31 +221,6 @@ parameter_list|)
 value|(head)->rbh_root
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|LIST_HEAD
-end_undef
-
-begin_comment
-comment|/* From sys/queue.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LIST_HEAD
-parameter_list|(
-name|name
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|struct name {								\ 	struct type *lh_first;
-comment|/* first element */
-value|\ }
-end_define
-
 begin_decl_stmt
 name|struct
 name|kobject
@@ -272,6 +253,13 @@ begin_decl_stmt
 name|struct
 name|list_head
 name|pci_devices
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|net
+name|init_net
 decl_stmt|;
 end_decl_stmt
 
@@ -3081,15 +3069,18 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|LIST_HEAD
-argument_list|(
+begin_struct
+struct|struct
 name|vmmaphd
-argument_list|,
+block|{
+name|struct
 name|vmmap
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+modifier|*
+name|lh_first
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
