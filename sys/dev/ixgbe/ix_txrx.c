@@ -89,6 +89,13 @@ directive|include
 file|<dev/netmap/netmap_kern.h>
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ix_crcstrip
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -5099,10 +5106,6 @@ ifdef|#
 directive|ifdef
 name|DEV_NETMAP
 comment|/* crcstrip is optional in netmap */
-specifier|extern
-name|int
-name|ix_crcstrip
-decl_stmt|;
 if|if
 condition|(
 name|adapter
