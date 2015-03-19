@@ -76,6 +76,7 @@ condition|(
 name|cmd
 condition|)
 block|{
+comment|/* NOTE(emilia): does not support detached digested data. */
 case|case
 name|PKCS7_OP_SET_DETACHED_SIGNATURE
 case|:
@@ -1981,6 +1982,26 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|p7
+operator|==
+name|NULL
+operator|||
+name|p7
+operator|->
+name|d
+operator|.
+name|ptr
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
 name|PKCS7_type_is_signed
 argument_list|(
 name|p7
@@ -1999,9 +2020,6 @@ name|signer_info
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_elseif
 elseif|else
 if|if
 condition|(
@@ -2023,16 +2041,13 @@ name|signer_info
 operator|)
 return|;
 block|}
-end_elseif
-
-begin_else
 else|else
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-end_else
+end_if
 
 begin_macro
 unit|}  void
