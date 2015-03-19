@@ -668,6 +668,10 @@ comment|/* Flowid for the connection. */
 name|u_int
 name|flowid
 decl_stmt|;
+comment|/* Flow type for the connection. */
+name|u_int
+name|flowtype
+decl_stmt|;
 comment|/* Link to next pkt_node in the list. */
 name|STAILQ_ENTRY
 argument_list|(
@@ -1929,6 +1933,10 @@ argument_list|,
 name|pkt_node
 operator|->
 name|flowid
+argument_list|,
+name|pkt_node
+operator|->
+name|flowtype
 argument_list|)
 expr_stmt|;
 block|}
@@ -2088,7 +2096,7 @@ argument_list|,
 name|MAX_LOG_MSG_LEN
 argument_list|,
 literal|"%c,0x%08x,%jd.%06ld,%u.%u.%u.%u,%u,%u.%u.%u.%u,%u,%ld,%ld,"
-literal|"%ld,%ld,%ld,%u,%u,%u,%u,%u,%u,%u,%d,%u,%u,%u,%u,%u,%u,%u\n"
+literal|"%ld,%ld,%ld,%u,%u,%u,%u,%u,%u,%u,%d,%u,%u,%u,%u,%u,%u,%u,%u\n"
 argument_list|,
 name|direction
 index|[
@@ -2265,6 +2273,10 @@ argument_list|,
 name|pkt_node
 operator|->
 name|flowid
+argument_list|,
+name|pkt_node
+operator|->
+name|flowtype
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3346,6 +3358,14 @@ operator|=
 name|inp
 operator|->
 name|inp_flowid
+expr_stmt|;
+name|pn
+operator|->
+name|flowtype
+operator|=
+name|inp
+operator|->
+name|inp_flowtype
 expr_stmt|;
 comment|/* We've finished accessing the tcb so release the lock. */
 if|if
