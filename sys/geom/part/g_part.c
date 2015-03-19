@@ -230,6 +230,12 @@ name|G_PART_ALIAS_APPLE_BOOT
 block|}
 block|,
 block|{
+literal|"apple-core-storage"
+block|,
+name|G_PART_ALIAS_APPLE_CORE_STORAGE
+block|}
+block|,
+block|{
 literal|"apple-hfs"
 block|,
 name|G_PART_ALIAS_APPLE_HFS
