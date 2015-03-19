@@ -499,7 +499,7 @@ begin_define
 define|#
 directive|define
 name|DMAR_IRTE1_DLM_LP
-value|(1ULL<< 5
+value|(1ULL<< 5)
 end_define
 
 begin_define
