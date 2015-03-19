@@ -775,6 +775,14 @@ expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
+comment|/* 		 * Don't bother doing the rest if buf==NULL; eg derefencing 		 * to assemble 'key'. 		 */
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+continue|continue;
 comment|/* Wildcard, replace '.' with byte from data */
 comment|/* TODO: add support wildcard escape '\.' */
 name|strncpy
@@ -841,13 +849,10 @@ index|]
 expr_stmt|;
 block|}
 block|}
+comment|/* Assume buf != NULL here */
 if|if
 condition|(
-name|buf
-operator|!=
-name|NULL
-operator|&&
-name|strncmp
+name|memcmp
 argument_list|(
 name|buf
 operator|+
