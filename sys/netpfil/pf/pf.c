@@ -33786,6 +33786,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+operator|*
+name|m
+operator|=
+name|NULL
+expr_stmt|;
 return|return;
 block|}
 if|if
