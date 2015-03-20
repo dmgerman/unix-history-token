@@ -4,19 +4,19 @@ comment|/* -*- Mode: C; c-file-style: "bsd" -*- */
 end_comment
 
 begin_comment
-comment|/*  * easy-tls.c -- generic TLS proxy.  * $Id: easy-tls.c,v 1.4 2002/03/05 09:07:16 bodo Exp $  */
+comment|/*-  * easy-tls.c -- generic TLS proxy.  * $Id: easy-tls.c,v 1.4 2002/03/05 09:07:16 bodo Exp $  */
 end_comment
 
 begin_comment
-comment|/*  (c) Copyright 1999 Bodo Moeller.  All rights reserved.   This is free software; you can redistributed and/or modify it  unter the terms of either    -  the GNU General Public License as published by the       Free Software Foundation, version 1, or (at your option)       any later version,  or    -  the following license: */
+comment|/*-  (c) Copyright 1999 Bodo Moeller.  All rights reserved.   This is free software; you can redistributed and/or modify it  unter the terms of either    -  the GNU General Public License as published by the       Free Software Foundation, version 1, or (at your option)       any later version,  or    -  the following license: */
 end_comment
 
 begin_comment
-comment|/*  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that each of the following  * conditions is met:  *  * 1. Redistributions qualify as "freeware" or "Open Source Software" under  *    one of the following terms:  *   *    (a) Redistributions are made at no charge beyond the reasonable cost of  *        materials and delivery.  *   *    (b) Redistributions are accompanied by a copy of the Source Code  *        or by an irrevocable offer to provide a copy of the Source Code  *        for up to three years at the cost of materials and delivery.  *        Such redistributions must allow further use, modification, and  *        redistribution of the Source Code under substantially the same  *        terms as this license.  *  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 3. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 4. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by Bodo Moeller."  *    (If available, substitute umlauted o for oe.)  *  * 5. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by Bodo Moeller."  *  * THIS SOFTWARE IS PROVIDED BY BODO MOELLER ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL BODO MOELLER OR  * HIS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that each of the following  * conditions is met:  *  * 1. Redistributions qualify as "freeware" or "Open Source Software" under  *    one of the following terms:  *  *    (a) Redistributions are made at no charge beyond the reasonable cost of  *        materials and delivery.  *  *    (b) Redistributions are accompanied by a copy of the Source Code  *        or by an irrevocable offer to provide a copy of the Source Code  *        for up to three years at the cost of materials and delivery.  *        Such redistributions must allow further use, modification, and  *        redistribution of the Source Code under substantially the same  *        terms as this license.  *  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 3. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 4. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by Bodo Moeller."  *    (If available, substitute umlauted o for oe.)  *  * 5. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by Bodo Moeller."  *  * THIS SOFTWARE IS PROVIDED BY BODO MOELLER ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL BODO MOELLER OR  * HIS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * Attribution for OpenSSL library:  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  * This product includes software developed by the OpenSSL Project  * for use in the OpenSSL Toolkit. (http://www.openssl.org/)  */
+comment|/*-  * Attribution for OpenSSL library:  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  * This product includes software developed by the OpenSSL Project  * for use in the OpenSSL Toolkit. (http://www.openssl.org/)  */
 end_comment
 
 begin_decl_stmt
@@ -227,7 +227,7 @@ file|"easy-tls.h"
 end_include
 
 begin_comment
-comment|/* include after<openssl/ssl.h> if both are needed */
+comment|/* include after<openssl/ssl.h> if both are                                  * needed */
 end_comment
 
 begin_if
@@ -294,7 +294,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Applications can define:  *   TLS_APP_PROCESS_INIT -- void ...(int fd, int client_p, void *apparg)  *   TLS_CUMULATE_ERRORS   *   TLS_ERROR_BUFSIZ  *   TLS_APP_ERRFLUSH -- void ...(int child_p, char *, size_t, void *apparg)  */
+comment|/*-  * Applications can define:  *   TLS_APP_PROCESS_INIT -- void ...(int fd, int client_p, void *apparg)  *   TLS_CUMULATE_ERRORS  *   TLS_ERROR_BUFSIZ  *   TLS_APP_ERRFLUSH -- void ...(int child_p, char *, size_t, void *apparg)  */
 end_comment
 
 begin_ifndef
@@ -606,7 +606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Slice in TLS proxy process at fd.  * Return value:  *   0    ok  (*pid is set to child's PID if pid != NULL),  *< 0  look at errno  *> 0  other error  *   (return value encodes place of error)  *  */
+comment|/*-  * Slice in TLS proxy process at fd.  * Return value:  *   0    ok  (*pid is set to child's PID if pid != NULL),  *< 0  look at errno  *> 0  other error  *   (return value encodes place of error)  *  */
 end_comment
 
 begin_function
@@ -1279,7 +1279,7 @@ operator|=
 literal|'\n'
 expr_stmt|;
 block|}
-comment|/* TLS_APP_ERRFLUSH may modify the string as needed,      * e.g. substitute other characters for \n for convenience */
+comment|/*      * TLS_APP_ERRFLUSH may modify the string as needed, e.g. substitute      * other characters for \n for convenience      */
 name|TLS_APP_ERRFLUSH
 argument_list|(
 name|tls_child_p
@@ -1453,7 +1453,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* app_prefix.. are for additional information provided by caller.  * If OpenSSL error queue is empty, print default_text ("???" if NULL).  */
+comment|/*  * app_prefix.. are for additional information provided by caller. If OpenSSL  * error queue is empty, print default_text ("???" if NULL).  */
 end_comment
 
 begin_function
@@ -2058,7 +2058,7 @@ modifier|*
 name|apparg
 parameter_list|)
 block|{
-comment|/* Seed OpenSSL's random number generator from file.        Try to read n bytes if n> 0, whole file if n == 0. */
+comment|/*      * Seed OpenSSL's random number generator from file. Try to read n bytes      * if n> 0, whole file if n == 0.      */
 name|int
 name|r
 decl_stmt|;
@@ -2103,7 +2103,7 @@ else|:
 name|LONG_MAX
 argument_list|)
 expr_stmt|;
-comment|/* r is the number of bytes filled into the random number generator,      * which are taken from "stat(filename, ...)" in addition to the      * file contents.      */
+comment|/*      * r is the number of bytes filled into the random number generator,      * which are taken from "stat(filename, ...)" in addition to the file      * contents.      */
 name|assert
 argument_list|(
 literal|1
@@ -2111,7 +2111,7 @@ operator|<
 name|my_MIN_SEED_BYTES
 argument_list|)
 expr_stmt|;
-comment|/* We need to detect at least those cases when the file does not exist      * at all.  With current versions of OpenSSL, this should do it: */
+comment|/*      * We need to detect at least those cases when the file does not exist at      * all.  With current versions of OpenSSL, this should do it:      */
 if|if
 condition|(
 name|n
@@ -2294,7 +2294,7 @@ argument_list|(
 name|cert
 argument_list|)
 expr_stmt|;
-comment|/* does not increment any reference counter */
+comment|/* does not increment any reference                                          * counter */
 name|assert
 argument_list|(
 sizeof|sizeof
@@ -2394,7 +2394,7 @@ operator|->
 name|str
 condition|)
 block|{
-comment|/* (Probably something was cut off.) 	     * Does not really work -- X509_NAME_oneline truncates after 	     * name components, we cannot tell from the result whether 	     * anything is missing. */
+comment|/*              * (Probably something was cut off.) Does not really work --              * X509_NAME_oneline truncates after name components, we cannot              * tell from the result whether anything is missing.              */
 name|assert
 argument_list|(
 name|namestring
@@ -2527,7 +2527,7 @@ directive|if
 name|OPENSSL_VERSION_NUMBER
 operator|>=
 literal|0x00905000L
-comment|/* don't allow unverified 					   * certificates -- they could 					   * survive session reuse, but 					   * OpenSSL< 0.9.5-dev does not 					   * preserve their verify_result */
+comment|/* don't allow unverified                                            * certificates -- they could                                            * survive session reuse, but                                            * OpenSSL< 0.9.5-dev does not                                            * preserve their verify_result */
 if|if
 condition|(
 name|i
@@ -2557,7 +2557,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* generating these takes a while, so do it just once */
+comment|/* generating these takes a while, so do it                                  * just once */
 end_comment
 
 begin_function
@@ -3007,7 +3007,7 @@ operator|!
 name|tls_rand_seeded_p
 condition|)
 block|{
-comment|/* particularly paranoid people may not like this -- 	     * so provide your own random seeding before calling this */
+comment|/*              * particularly paranoid people may not like this -- so provide              * your own random seeding before calling this              */
 if|if
 condition|(
 name|tls_rand_seed_from_file
@@ -3187,6 +3187,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* does not report failure if file does not exist ... */
+comment|/* NULL argument means no CA-directory */
 name|r
 operator|=
 name|SSL_CTX_load_verify_locations
@@ -3198,10 +3200,8 @@ operator|.
 name|ca_file
 argument_list|,
 name|NULL
-comment|/* no CA-directory */
 argument_list|)
 expr_stmt|;
-comment|/* does not report failure if file does not exist ... */
 if|if
 condition|(
 operator|!
@@ -3230,7 +3230,7 @@ operator|.
 name|client_p
 condition|)
 block|{
-comment|/* SSL_load_client_CA_file is a misnomer, it just creates a list of CNs. */
+comment|/*                  * SSL_load_client_CA_file is a misnomer, it just creates a                  * list of CNs.                  */
 name|SSL_CTX_set_client_CA_list
 argument_list|(
 name|ret
@@ -3243,7 +3243,7 @@ name|ca_file
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* SSL_CTX_set_client_CA_list does not have a return value; 		 * it does not really need one, but make sure 		 * (we really test if SSL_load_client_CA_file worked) */
+comment|/*                  * SSL_CTX_set_client_CA_list does not have a return value;                  * it does not really need one, but make sure (we really test                  * if SSL_load_client_CA_file worked)                  */
 if|if
 condition|(
 name|SSL_CTX_get_client_CA_list
@@ -3306,7 +3306,7 @@ sizeof|sizeof
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* make sure that i is non-negative -- pick one of the provided 	     * seeds */
+comment|/*              * make sure that i is non-negative -- pick one of the provided              * seeds              */
 if|if
 condition|(
 name|i
@@ -3601,6 +3601,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* timeout, -1 means no timeout */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -3620,7 +3624,6 @@ name|write_select_2
 parameter_list|,
 name|int
 name|seconds
-comment|/* timeout, -1 means no timeout */
 parameter_list|)
 block|{
 name|int
@@ -4610,7 +4613,7 @@ name|err_def
 operator|=
 literal|"I/O error"
 expr_stmt|;
-comment|/* loop finishes as soon as we detect that one side closed;      * when all (program and OS) buffers have enough space,      * the data from the last succesful read in each direction is transferred      * before close */
+comment|/*      * loop finishes as soon as we detect that one side closed; when all      * (program and OS) buffers have enough space, the data from the last      * succesful read in each direction is transferred before close      */
 do|do
 block|{
 name|int

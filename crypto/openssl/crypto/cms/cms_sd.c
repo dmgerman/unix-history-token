@@ -4,11 +4,11 @@ comment|/* crypto/cms/cms_sd.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2008 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  */
+comment|/* ====================================================================  * Copyright (c) 2008 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  */
 end_comment
 
 begin_include
@@ -1551,7 +1551,7 @@ name|merr
 goto|;
 block|}
 block|}
-comment|/* Since we have no EVP_PKEY_ASN1_METHOD in OpenSSL 0.9.8, 	 * hard code algorithm parameters. 	 */
+comment|/*      * Since we have no EVP_PKEY_ASN1_METHOD in OpenSSL 0.9.8, hard code      * algorithm parameters.      */
 switch|switch
 condition|(
 name|pk
@@ -1641,7 +1641,7 @@ name|CMS_NOATTR
 operator|)
 condition|)
 block|{
-comment|/* Initialialize signed attributes strutucture so other 		 * attributes such as signing time etc are added later 		 * even if we add none here. 		 */
+comment|/*          * Initialialize signed attributes strutucture so other attributes          * such as signing time etc are added later even if we add none here.          */
 if|if
 condition|(
 operator|!
@@ -2122,7 +2122,7 @@ block|}
 end_if
 
 begin_return
-unit|} 		}
+unit|}     }
 return|return
 name|signers
 return|;
@@ -2597,7 +2597,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* In OpenSSL 0.9.8 we have the link between digest types and public  * key types so we need to fixup the digest type if the public key  * type is not appropriate.  */
+comment|/*  * In OpenSSL 0.9.8 we have the link between digest types and public key  * types so we need to fixup the digest type if the public key type is not  * appropriate.  */
 end_comment
 
 begin_function
@@ -2736,7 +2736,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* If any signed attributes calculate and add messageDigest attribute */
+comment|/*      * If any signed attributes calculate and add messageDigest attribute      */
 if|if
 condition|(
 name|CMS_signed_get_attr_count
@@ -3153,7 +3153,7 @@ goto|;
 if|#
 directive|if
 literal|0
-block|if (EVP_PKEY_CTX_ctrl(pctx, -1, EVP_PKEY_OP_SIGN, 				EVP_PKEY_CTRL_CMS_SIGN, 0, si)<= 0) 		{ 		CMSerr(CMS_F_CMS_SIGNERINFO_SIGN, CMS_R_CTRL_ERROR); 		goto err; 		}
+block|if (EVP_PKEY_CTX_ctrl(pctx, -1, EVP_PKEY_OP_SIGN,                           EVP_PKEY_CTRL_CMS_SIGN, 0, si)<= 0) {         CMSerr(CMS_F_CMS_SIGNERINFO_SIGN, CMS_R_CTRL_ERROR);         goto err;     }
 endif|#
 directive|endif
 name|alen
@@ -3266,7 +3266,7 @@ goto|;
 if|#
 directive|if
 literal|0
-block|if (EVP_PKEY_CTX_ctrl(pctx, -1, EVP_PKEY_OP_SIGN, 				EVP_PKEY_CTRL_CMS_SIGN, 1, si)<= 0) 		{ 		CMSerr(CMS_F_CMS_SIGNERINFO_SIGN, CMS_R_CTRL_ERROR); 		goto err; 		}
+block|if (EVP_PKEY_CTX_ctrl(pctx, -1, EVP_PKEY_OP_SIGN,                           EVP_PKEY_CTRL_CMS_SIGN, 1, si)<= 0) {         CMSerr(CMS_F_CMS_SIGNERINFO_SIGN, CMS_R_CTRL_ERROR);         goto err;     }
 endif|#
 directive|endif
 name|EVP_MD_CTX_cleanup
@@ -4220,7 +4220,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int cms_add_digest_smcap(STACK_OF(X509_ALGOR) **sk, int nid, int arg) 	{ 	if (EVP_get_digestbynid(nid)) 		return CMS_add_simple_smimecap(sk, nid, arg); 	return 1; 	}
+unit|static int cms_add_digest_smcap(STACK_OF(X509_ALGOR) **sk, int nid, int arg) {     if (EVP_get_digestbynid(nid))         return CMS_add_simple_smimecap(sk, nid, arg);     return 1; }
 endif|#
 directive|endif
 end_endif

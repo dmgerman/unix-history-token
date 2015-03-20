@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Certificate creation. Demonstrates some certificate related  * operations.  */
+comment|/*  * Certificate creation. Demonstrates some certificate related operations.  */
 end_comment
 
 begin_include
@@ -524,7 +524,7 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-comment|/* This function creates and adds the entry, working out the 	 * correct string type and performing checks on its length. 	 * Normally we'd check the return value for errors... 	 */
+comment|/*      * This function creates and adds the entry, working out the correct      * string type and performing checks on its length. Normally we'd check      * the return value for errors...      */
 name|X509_NAME_add_entry_by_txt
 argument_list|(
 name|name
@@ -563,7 +563,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Its self signed so set the issuer name to be the same as the  	 * subject. 	 */
+comment|/*      * Its self signed so set the issuer name to be the same as the subject.      */
 name|X509_set_issuer_name
 argument_list|(
 name|x
@@ -698,7 +698,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Add extension using V3 code: we can set the config file as NULL  * because we wont reference any other sections.  */
+comment|/*  * Add extension using V3 code: we can set the config file as NULL because we  * wont reference any other sections.  */
 end_comment
 
 begin_function
@@ -732,7 +732,7 @@ operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
-comment|/* Issuer and subject certs: both the target since it is self signed, 	 * no request and no CRL 	 */
+comment|/*      * Issuer and subject certs: both the target since it is self signed, no      * request and no CRL      */
 name|X509V3_set_ctx
 argument_list|(
 operator|&

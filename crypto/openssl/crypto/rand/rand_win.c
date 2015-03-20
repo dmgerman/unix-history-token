@@ -4,11 +4,11 @@ comment|/* crypto/rand/rand_win.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ file|<tlhelp32.h>
 end_include
 
 begin_comment
-comment|/* Limit the time spent walking through the heap, processes, threads and modules to    a maximum of 1000 miliseconds each, unless CryptoGenRandom failed */
+comment|/*  * Limit the time spent walking through the heap, processes, threads and  * modules to a maximum of 1000 miliseconds each, unless CryptoGenRandom  * failed  */
 end_comment
 
 begin_define
@@ -91,7 +91,7 @@ value|1000
 end_define
 
 begin_comment
-comment|/* Intel hardware RNG CSP -- available from  * http://developer.intel.com/design/security/rng/redist_license.htm  */
+comment|/*  * Intel hardware RNG CSP -- available from  * http://developer.intel.com/design/security/rng/redist_license.htm  */
 end_comment
 
 begin_define
@@ -129,7 +129,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* It appears like CURSORINFO, PCURSORINFO and LPCURSORINFO are only defined    when WINVER is 0x0500 and up, which currently only happens on Win2000.    Unfortunately, those are typedefs, so they're a little bit difficult to    detect properly.  On the other hand, the macro CURSOR_SHOWING is defined    within the same conditional, so it can be use to detect the absence of said    typedefs. */
+comment|/*  * It appears like CURSORINFO, PCURSORINFO and LPCURSORINFO are only defined  * when WINVER is 0x0500 and up, which currently only happens on Win2000.  * Unfortunately, those are typedefs, so they're a little bit difficult to  * detect properly.  On the other hand, the macro CURSOR_SHOWING is defined  * within the same conditional, so it can be use to detect the absence of  * said typedefs.  */
 end_comment
 
 begin_ifndef
@@ -441,7 +441,7 @@ literal|1
 end_if
 
 begin_comment
-comment|/* The NET API is Unicode only.  It requires the use of the UNICODE        * macro.  When UNICODE is defined LPTSTR becomes LPWSTR.  LMSTR was        * was added to the Platform SDK to allow the NET API to be used in        * non-Unicode applications provided that Unicode strings were still        * used for input.  LMSTR is defined as LPWSTR.        */
+comment|/*  * The NET API is Unicode only.  It requires the use of the UNICODE macro.  * When UNICODE is defined LPTSTR becomes LPWSTR.  LMSTR was was added to the  * Platform SDK to allow the NET API to be used in non-Unicode applications  * provided that Unicode strings were still used for input.  LMSTR is defined  * as LPWSTR.  */
 end_comment
 
 begin_typedef
@@ -522,25 +522,6 @@ name|good
 init|=
 literal|0
 decl_stmt|;
-comment|/* Determine the OS version we are on so we can turn off things  	 * that do not work properly. 	 */
-name|OSVERSIONINFO
-name|osverinfo
-decl_stmt|;
-name|osverinfo
-operator|.
-name|dwOSVersionInfoSize
-operator|=
-sizeof|sizeof
-argument_list|(
-name|OSVERSIONINFO
-argument_list|)
-expr_stmt|;
-name|GetVersionEx
-argument_list|(
-operator|&
-name|osverinfo
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -557,7 +538,7 @@ operator|&&
 name|_WIN32_WCE
 operator|>=
 literal|300
-comment|/* Even though MSDN says _WIN32_WCE>=210, it doesn't seem to be available  * in commonly available implementations prior 300... */
+comment|/*      * Even though MSDN says _WIN32_WCE>=210, it doesn't seem to be available      * in commonly available implementations prior 300...      */
 block|{
 name|BYTE
 name|buf
@@ -627,7 +608,7 @@ directive|endif
 else|#
 directive|else
 comment|/* OPENSSL_SYS_WINCE */
-comment|/* 	 * None of below libraries are present on Windows CE, which is 	 * why we #ifndef the whole section. This also excuses us from 	 * handling the GetProcAddress issue. The trouble is that in 	 * real Win32 API GetProcAddress is available in ANSI flavor 	 * only. In WinCE on the other hand GetProcAddress is a macro 	 * most commonly defined as GetProcAddressW, which accepts 	 * Unicode argument. If we were to call GetProcAddress under 	 * WinCE, I'd recommend to either redefine GetProcAddress as 	 * GetProcAddressA (there seem to be one in common CE spec) or 	 * implement own shim routine, which would accept ANSI argument 	 * and expand it to Unicode. 	 */
+comment|/*      * None of below libraries are present on Windows CE, which is      * why we #ifndef the whole section. This also excuses us from      * handling the GetProcAddress issue. The trouble is that in      * real Win32 API GetProcAddress is available in ANSI flavor      * only. In WinCE on the other hand GetProcAddress is a macro      * most commonly defined as GetProcAddressW, which accepts      * Unicode argument. If we were to call GetProcAddress under      * WinCE, I'd recommend to either redefine GetProcAddress as      * GetProcAddressA (there seem to be one in common CE spec) or      * implement own shim routine, which would accept ANSI argument      * and expand it to Unicode.      */
 block|{
 comment|/* load functions dynamically - not available on all systems */
 name|HMODULE
@@ -739,7 +720,7 @@ block|{
 name|LPBYTE
 name|outbuf
 decl_stmt|;
-comment|/* NetStatisticsGet() is a Unicode only function  		 * STAT_WORKSTATION_0 contains 45 fields and STAT_SERVER_0 		 * contains 17 fields.  We treat each field as a source of 		 * one byte of entropy.                  */
+comment|/*              * NetStatisticsGet() is a Unicode only function              * STAT_WORKSTATION_0 contains 45 fields and STAT_SERVER_0              * contains 17 fields.  We treat each field as a source of one              * byte of entropy.              */
 if|if
 condition|(
 name|netstatget
@@ -824,26 +805,13 @@ argument_list|(
 name|netapi
 argument_list|)
 expr_stmt|;
-comment|/* It appears like this can cause an exception deep within ADVAPI32.DLL          * at random times on Windows 2000.  Reported by Jeffrey Altman.            * Only use it on NT. 	 */
-comment|/* Wolfgang Marczy<WMarczy@topcall.co.at> reports that 	 * the RegQueryValueEx call below can hang on NT4.0 (SP6). 	 * So we don't use this at all for now. */
-if|#
-directive|if
-literal|0
-block|if ( osverinfo.dwPlatformId == VER_PLATFORM_WIN32_NT&& 		osverinfo.dwMajorVersion< 5) 		{
-comment|/* Read Performance Statistics from NT/2000 registry 		 * The size of the performance data can vary from call 		 * to call so we must guess the size of the buffer to use 		 * and increase its size if we get an ERROR_MORE_DATA 		 * return instead of ERROR_SUCCESS. 		 */
-block|LONG   rc=ERROR_MORE_DATA; 		char * buf=NULL; 		DWORD bufsz=0; 		DWORD length;  		while (rc == ERROR_MORE_DATA) 			{ 			buf = realloc(buf,bufsz+8192); 			if (!buf) 				break; 			bufsz += 8192;  			length = bufsz; 			rc = RegQueryValueEx(HKEY_PERFORMANCE_DATA, TEXT("Global"), 				NULL, NULL, buf,&length); 			} 		if (rc == ERROR_SUCCESS) 			{
-comment|/* For entropy count assume only least significant 			 * byte of each DWORD is random. 			 */
-block|RAND_add(&length, sizeof(length), 0); 			RAND_add(buf, length, length / 4.0);
-comment|/* Close the Registry Key to allow Windows to cleanup/close 			 * the open handle 			 * Note: The 'HKEY_PERFORMANCE_DATA' key is implicitly opened 			 *       when the RegQueryValueEx above is done.  However, if 			 *       it is not explicitly closed, it can cause disk 			 *       partition manipulation problems. 			 */
-block|RegCloseKey(HKEY_PERFORMANCE_DATA); 			} 		if (buf) 			free(buf); 		}
-endif|#
-directive|endif
+comment|/*          * It appears like this can cause an exception deep within          * ADVAPI32.DLL at random times on Windows 2000.  Reported by Jeffrey          * Altman. Only use it on NT.          */
 if|if
 condition|(
 name|advapi
 condition|)
 block|{
-comment|/* 		 * If it's available, then it's available in both ANSI 		 * and UNICODE flavors even in Win9x, documentation says. 		 * We favor Unicode... 		 */
+comment|/*              * If it's available, then it's available in both ANSI              * and UNICODE flavors even in Win9x, documentation says.              * We favor Unicode...              */
 name|acquire
 operator|=
 operator|(
@@ -1039,11 +1007,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|osverinfo
-operator|.
-name|dwPlatformId
-operator|!=
-name|VER_PLATFORM_WIN32_NT
+operator|!
+name|check_winnt
+argument_list|()
 operator|||
 operator|!
 name|OPENSSL_isservice
@@ -1139,20 +1105,17 @@ condition|(
 name|cursor
 condition|)
 block|{
-comment|/* unfortunately, its not safe to call GetCursorInfo() 			 * on NT4 even though it exists in SP3 (or SP6) and 			 * higher. 			 */
+comment|/*                  * unfortunately, its not safe to call GetCursorInfo() on NT4                  * even though it exists in SP3 (or SP6) and higher.                  */
 if|if
 condition|(
-name|osverinfo
-operator|.
-name|dwPlatformId
-operator|==
-name|VER_PLATFORM_WIN32_NT
+name|check_winnt
+argument_list|()
 operator|&&
-name|osverinfo
-operator|.
-name|dwMajorVersion
-operator|<
+operator|!
+name|check_win_minplat
+argument_list|(
 literal|5
+argument_list|)
 condition|)
 name|cursor
 operator|=
@@ -1233,7 +1196,7 @@ name|user
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Toolhelp32 snapshot: enumerate processes, threads, modules and heap 	 * http://msdn.microsoft.com/library/psdk/winbase/toolhelp_5pfd.htm 	 * (Win 9x and 2000 only, not available on NT) 	 * 	 * This seeding method was proposed in Peter Gutmann, Software 	 * Generation of Practically Strong Random Numbers, 	 * http://www.usenix.org/publications/library/proceedings/sec98/gutmann.html 	 * revised version at http://www.cryptoengines.com/~peter/06_random.pdf 	 * (The assignment of entropy estimates below is arbitrary, but based 	 * on Peter's analysis the full poll appears to be safe. Additional 	 * interactive seeding is encouraged.) 	 */
+comment|/*-          * Toolhelp32 snapshot: enumerate processes, threads, modules and heap          * http://msdn.microsoft.com/library/psdk/winbase/toolhelp_5pfd.htm          * (Win 9x and 2000 only, not available on NT)          *          * This seeding method was proposed in Peter Gutmann, Software          * Generation of Practically Strong Random Numbers,          * http://www.usenix.org/publications/library/proceedings/sec98/gutmann.html          * revised version at http://www.cryptoengines.com/~peter/06_random.pdf          * (The assignment of entropy estimates below is arbitrary, but based          * on Peter's analysis the full poll appears to be safe. Additional          * interactive seeding is encouraged.)          */
 if|if
 condition|(
 name|kernel
@@ -1477,7 +1440,7 @@ name|INVALID_HANDLE_VALUE
 condition|)
 block|{
 comment|/* heap list and heap walking */
-comment|/* HEAPLIST32 contains 3 fields that will change with                          * each entry.  Consider each field a source of 1 byte                          * of entropy.                          * HEAPENTRY32 contains 5 fields that will change with                           * each entry.  Consider each field a source of 1 byte                          * of entropy.                          */
+comment|/*                  * HEAPLIST32 contains 3 fields that will change with each                  * entry.  Consider each field a source of 1 byte of entropy.                  * HEAPENTRY32 contains 5 fields that will change with each                  * entry.  Consider each field a source of 1 byte of entropy.                  */
 name|ZeroMemory
 argument_list|(
 operator|&
@@ -1521,7 +1484,7 @@ name|hlist
 argument_list|)
 condition|)
 block|{
-comment|/* 				   following discussion on dev ML, exception on WinCE (or other Win 				   platform) is theoretically of unknown origin; prevent infinite 				   loop here when this theoretical case occurs; otherwise cope with 				   the expected (MSDN documented) exception-throwing behaviour of 				   Heap32Next() on WinCE.  				   based on patch in original message by Tanguy FautrÃ© (2009/03/02) 			           Subject: RAND_poll() and CreateToolhelp32Snapshot() stability 			     */
+comment|/*                      * following discussion on dev ML, exception on WinCE (or                      * other Win platform) is theoretically of unknown                      * origin; prevent infinite loop here when this                      * theoretical case occurs; otherwise cope with the                      * expected (MSDN documented) exception-throwing                      * behaviour of Heap32Next() on WinCE.                      *                      * based on patch in original message by Tanguy FautrÃ©                      * (2009/03/02) Subject: RAND_poll() and                      * CreateToolhelp32Snapshot() stability                      */
 name|int
 name|ex_cnt_limit
 init|=
@@ -1633,7 +1596,7 @@ argument_list|(
 argument|EXCEPTION_EXECUTE_HANDLER
 argument_list|)
 block|{
-comment|/* ignore access violations when walking the heap list */
+comment|/*                              * ignore access violations when walking the heap                              * list                              */
 name|ex_cnt_limit
 operator|--
 expr_stmt|;
@@ -1785,7 +1748,7 @@ block|}
 endif|#
 directive|endif
 comment|/* process walking */
-comment|/* PROCESSENTRY32 contains 9 fields that will change                          * with each entry.  Consider each field a source of                          * 1 byte of entropy.                          */
+comment|/*                  * PROCESSENTRY32 contains 9 fields that will change with                  * each entry.  Consider each field a source of 1 byte of                  * entropy.                  */
 name|p
 operator|.
 name|dwSize
@@ -1853,7 +1816,7 @@ operator|)
 condition|)
 do|;
 comment|/* thread walking */
-comment|/* THREADENTRY32 contains 6 fields that will change                          * with each entry.  Consider each field a source of                          * 1 byte of entropy.                          */
+comment|/*                  * THREADENTRY32 contains 6 fields that will change with each                  * entry.  Consider each field a source of 1 byte of entropy.                  */
 name|t
 operator|.
 name|dwSize
@@ -1921,7 +1884,7 @@ operator|)
 condition|)
 do|;
 comment|/* module walking */
-comment|/* MODULEENTRY32 contains 9 fields that will change                          * with each entry.  Consider each field a source of                          * 1 byte of entropy.                          */
+comment|/*                  * MODULEENTRY32 contains 9 fields that will change with each                  * entry.  Consider each field a source of 1 byte of entropy.                  */
 name|m
 operator|.
 name|dwSize
@@ -2270,8 +2233,8 @@ name|RAND_screen
 parameter_list|(
 name|void
 parameter_list|)
-comment|/* function available for backward compatibility */
 block|{
+comment|/* function available for backward                                  * compatibility */
 name|RAND_poll
 argument_list|()
 expr_stmt|;
@@ -2333,9 +2296,7 @@ block|{
 name|__try
 block|{
 asm|__asm {
-asm|_emit 0x0f
-asm|_emit 0x31
-asm|mov cyclecount, eax
+asm|_emit 0x0f _emit 0x31 mov cyclecount, eax
 asm|}
 name|RAND_add
 argument_list|(
@@ -2514,10 +2475,8 @@ decl_stmt|;
 comment|/* number of screen lines to grab at a time */
 if|if
 condition|(
-name|GetVersion
+name|check_winnt
 argument_list|()
-operator|<
-literal|0x80000000
 operator|&&
 name|OPENSSL_isservice
 argument_list|()

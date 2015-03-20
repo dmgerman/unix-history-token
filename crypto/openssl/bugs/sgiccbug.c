@@ -18,11 +18,11 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/* This compiler bug it present on IRIX 5.3, 5.1 and 4.0.5 (these are  * the only versions of IRIX I have access to.  * defining FIXBUG removes the bug.  * (bug is still present in IRIX 6.3 according to  * Gage<agage@forgetmenot.Mines.EDU>  */
+comment|/*  * This compiler bug it present on IRIX 5.3, 5.1 and 4.0.5 (these are the  * only versions of IRIX I have access to. defining FIXBUG removes the bug.  * (bug is still present in IRIX 6.3 according to Gage  *<agage@forgetmenot.Mines.EDU>  */
 end_comment
 
 begin_comment
-comment|/* Compare the output from  * cc sgiccbug.c; ./a.out  * and  * cc -O sgiccbug.c; ./a.out  */
+comment|/*-  * Compare the output from  * cc sgiccbug.c; ./a.out  * and  * cc -O sgiccbug.c; ./a.out  */
 end_comment
 
 begin_decl_stmt

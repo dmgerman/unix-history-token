@@ -87,7 +87,7 @@ parameter_list|,
 name|z
 parameter_list|)
 value|((x)<< 16 | (y)<< 8 | (z))
-comment|/*  * Memory type  */
+comment|/*      * Memory type      */
 typedef|typedef
 struct|struct
 name|zencod_number_s
@@ -108,7 +108,7 @@ define|#
 directive|define
 name|KEY
 value|zen_nb_t
-comment|/*  * Misc  */
+comment|/*      * Misc      */
 typedef|typedef
 name|int
 name|t_zencod_lib_version
@@ -147,7 +147,7 @@ modifier|*
 name|key
 parameter_list|)
 function_decl|;
-comment|/*  * Key management tools  */
+comment|/*      * Key management tools      */
 typedef|typedef
 name|KEY
 modifier|*
@@ -206,7 +206,7 @@ name|long
 name|bits
 parameter_list|)
 function_decl|;
-comment|/*  * RSA API  */
+comment|/*      * RSA API      */
 comment|/* Compute modular exponential : y = x**e | n */
 typedef|typedef
 name|int
@@ -229,7 +229,7 @@ modifier|*
 name|e
 parameter_list|)
 function_decl|;
-comment|/* Compute modular exponential : y1 = (x | p)**edp | p, y2 = (x | p)**edp | p, y = y2 + (qinv * (y1 - y2) | p) * q */
+comment|/*      * Compute modular exponential : y1 = (x | p)**edp | p, y2 = (x | p)**edp      * | p, y = y2 + (qinv * (y1 - y2) | p) * q      */
 typedef|typedef
 name|int
 name|t_zencod_rsa_mod_exp_crt
@@ -263,7 +263,7 @@ modifier|*
 name|qinv
 parameter_list|)
 function_decl|;
-comment|/*  * DSA API  */
+comment|/*      * DSA API      */
 typedef|typedef
 name|int
 name|t_zencod_dsa_do_sign
@@ -346,7 +346,7 @@ modifier|*
 name|v
 parameter_list|)
 function_decl|;
-comment|/*  * DH API  */
+comment|/*      * DH API      */
 comment|/* Key generation : compute public value y = g**x | n */
 typedef|typedef
 name|int
@@ -393,7 +393,7 @@ modifier|*
 name|n
 parameter_list|)
 function_decl|;
-comment|/*  * RNG API  */
+comment|/*      * RNG API      */
 define|#
 directive|define
 name|ZENBRIDGE_RNG_DIRECT
@@ -415,7 +415,7 @@ name|int
 name|flags
 parameter_list|)
 function_decl|;
-comment|/*  * Math API  */
+comment|/*      * Math API      */
 typedef|typedef
 name|int
 name|t_zencod_math_mod_exp
@@ -437,7 +437,7 @@ modifier|*
 name|n
 parameter_list|)
 function_decl|;
-comment|/*  * Symetric API  */
+comment|/*      * Symetric API      */
 comment|/* Define a data structure for digests operations */
 typedef|typedef
 struct|struct
@@ -455,11 +455,11 @@ decl_stmt|;
 block|}
 name|ZEN_MD_DATA
 typedef|;
-comment|/*  * Functions for Digest (MD5, SHA1) stuff  */
+comment|/*      * Functions for Digest (MD5, SHA1) stuff      */
 comment|/* output : output data buffer */
 comment|/* input : input data buffer */
 comment|/* algo : hash algorithm, MD5 or SHA1 */
-comment|/* typedef int t_zencod_hash ( KEY *output, const KEY *input, int algo ) ;  * typedef int t_zencod_sha_hash ( KEY *output, const KEY *input, int algo ) ;  */
+comment|/*-      * typedef int t_zencod_hash ( KEY *output, const KEY *input, int algo ) ;      * typedef int t_zencod_sha_hash ( KEY *output, const KEY *input, int algo ) ;      */
 comment|/* For now separate this stuff that mad it easier to test */
 typedef|typedef
 name|int
@@ -533,13 +533,13 @@ modifier|*
 name|output
 parameter_list|)
 function_decl|;
-comment|/*  * Functions for Cipher (RC4, DES, 3DES) stuff  */
+comment|/*      * Functions for Cipher (RC4, DES, 3DES) stuff      */
 comment|/* output : output data buffer */
 comment|/* input : input data buffer */
 comment|/* key : rc4 key data */
 comment|/* index_1 : value of index x from RC4 key structure */
 comment|/* index_2 : value of index y from RC4 key structure */
-comment|/* Be carefull : RC4 key should be expanded before calling this method (Should we provide an expand function ??) */
+comment|/*      * Be carefull : RC4 key should be expanded before calling this method      * (Should we provide an expand function ??)      */
 typedef|typedef
 name|int
 name|t_zencod_rc4_cipher

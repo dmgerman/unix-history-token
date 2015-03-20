@@ -4,7 +4,7 @@ comment|/* crypto/engine/hw_zencod.c */
 end_comment
 
 begin_comment
-comment|/* Written by Fred Donnat (frederic.donnat@zencod.com) for "zencod"  * engine integration in order to redirect crypto computing on a crypto  * hardware accelerator zenssl32  ;-)  *  * Date : 25 jun 2002  * Revision : 17 Ju7 2002  * Version : zencod_engine-0.9.7  */
+comment|/*   * Written by Fred Donnat (frederic.donnat@zencod.com) for "zencod" * engine   * integration in order to redirect crypto computing on a crypto * hardware   * accelerator zenssl32 ;-) * * Date : 25 jun 2002 * Revision : 17 Ju7 2002   * * Version : zencod_engine-0.9.7   */
 end_comment
 
 begin_comment
@@ -397,7 +397,7 @@ name|n
 parameter_list|,
 name|bn
 parameter_list|)
-value|(ptr_zencod_init_number((n), \ 					(unsigned long) ((bn)->top * BN_BITS2), \ 					(unsigned char *) ((bn)->d)))
+value|(ptr_zencod_init_number((n), \                                         (unsigned long) ((bn)->top * BN_BITS2), \                                         (unsigned char *) ((bn)->d)))
 end_define
 
 begin_define
@@ -906,7 +906,7 @@ specifier|static
 specifier|const
 name|ENGINE_CMD_DEFN
 name|zencod_cmd_defns
-index|[ ]
+index|[]
 init|=
 block|{
 block|{
@@ -939,7 +939,7 @@ name|OPENSSL_NO_RSA
 end_ifndef
 
 begin_comment
-comment|/* Our internal RSA_METHOD specific to zencod ENGINE providing pointers to our function */
+comment|/*  * Our internal RSA_METHOD specific to zencod ENGINE providing pointers to  * our function  */
 end_comment
 
 begin_decl_stmt
@@ -989,7 +989,7 @@ name|OPENSSL_NO_DSA
 end_ifndef
 
 begin_comment
-comment|/* Our internal DSA_METHOD specific to zencod ENGINE providing pointers to our function */
+comment|/*  * Our internal DSA_METHOD specific to zencod ENGINE providing pointers to  * our function  */
 end_comment
 
 begin_decl_stmt
@@ -1033,7 +1033,7 @@ name|OPENSSL_NO_DH
 end_ifndef
 
 begin_comment
-comment|/* Our internal DH_METHOD specific to zencod ENGINE providing pointers to our function */
+comment|/*  * Our internal DH_METHOD specific to zencod ENGINE providing pointers to our  * function  */
 end_comment
 
 begin_decl_stmt
@@ -1067,7 +1067,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Our internal RAND_meth specific to zencod ZNGINE providing pointers to  our function */
+comment|/*  * Our internal RAND_meth specific to zencod ZNGINE providing pointers to our  * function  */
 end_comment
 
 begin_decl_stmt
@@ -1118,7 +1118,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This internal function is used by ENGINE_zencod () and possibly by the  * "dynamic" ENGINE support too   ;-)  */
+comment|/*  * This internal function is used by ENGINE_zencod () and possibly by the  * "dynamic" ENGINE support too ;-)  */
 end_comment
 
 begin_function
@@ -1299,7 +1299,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_RSA
-comment|/* We know that the "PKCS1_SSLeay()" functions hook properly 	 * to the Zencod-specific mod_exp and mod_exp_crt so we use 	 * those functions. NB: We don't use ENGINE_openssl() or 	 * anything "more generic" because something like the RSAref 	 * code may not hook properly, and if you own one of these 	 * cards then you have the right to do RSA operations on it 	 * anyway! 	 */
+comment|/*      * We know that the "PKCS1_SSLeay()" functions hook properly to the      * Zencod-specific mod_exp and mod_exp_crt so we use those functions. NB:      * We don't use ENGINE_openssl() or anything "more generic" because      * something like the RSAref code may not hook properly, and if you own      * one of these cards then you have the right to do RSA operations on it      * anyway!      */
 name|meth_rsa
 operator|=
 name|RSA_PKCS1_SSLeay
@@ -1360,7 +1360,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DSA
-comment|/* We use OpenSSL meth to supply what we don't provide ;-*) 	 */
+comment|/*      * We use OpenSSL meth to supply what we don't provide ;-*)      */
 name|meth_dsa
 operator|=
 name|DSA_OpenSSL
@@ -1406,7 +1406,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DH
-comment|/* We use OpenSSL meth to supply what we don't provide ;-*) 	 */
+comment|/*      * We use OpenSSL meth to supply what we don't provide ;-*)      */
 name|meth_dh
 operator|=
 name|DH_OpenSSL
@@ -1433,7 +1433,7 @@ name|finish
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* We use OpenSSL (SSLeay) meth to supply what we don't provide ;-*) 	 */
+comment|/*      * We use OpenSSL (SSLeay) meth to supply what we don't provide ;-*)      */
 name|meth_rand
 operator|=
 name|RAND_SSLeay
@@ -1474,7 +1474,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* As this is only ever called once, there's no need for locking  * (indeed - the lock will already be held by our caller!!!)  */
+comment|/*  * As this is only ever called once, there's no need for locking (indeed -  * the lock will already be held by our caller!!!)  */
 end_comment
 
 begin_function
@@ -1549,14 +1549,14 @@ modifier|*
 name|toadd
 init|=
 name|ENGINE_zencod
-argument_list|( )
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
 operator|!
 name|toadd
 condition|)
-return|return ;
+return|return;
 name|ENGINE_add
 argument_list|(
 name|toadd
@@ -1568,13 +1568,13 @@ name|toadd
 argument_list|)
 expr_stmt|;
 name|ERR_clear_error
-argument_list|( )
+argument_list|()
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* This is a process-global DSO handle used for loading and unloading  * the ZENBRIDGE library.  * NB: This is only set (or unset) during an * init () or finish () call  * (reference counts permitting) and they're  * operating with global locks,  * so this should be thread-safe * implicitly.  */
+comment|/*  * This is a process-global DSO handle used for loading and unloading the  * ZENBRIDGE library. NB: This is only set (or unset) during an * init () or  * finish () call (reference counts permitting) and they're * operating with  * global locks, so this should be thread-safe * implicitly.  */
 end_comment
 
 begin_decl_stmt
@@ -1798,7 +1798,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These are the static string constants for the DSO file name and the function  * symbol names to bind to.  */
+comment|/*  * These are the static string constants for the DSO file name and the  * function symbol names to bind to.  */
 end_comment
 
 begin_decl_stmt
@@ -2044,7 +2044,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Destructor (complements the "ENGINE_zencod ()" constructor)  */
+comment|/*  * Destructor (complements the "ENGINE_zencod ()" constructor)  */
 end_comment
 
 begin_function
@@ -2067,7 +2067,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* (de)initialisation functions. Control Function  */
+comment|/*  * (de)initialisation functions. Control Function  */
 end_comment
 
 begin_function
@@ -2167,7 +2167,7 @@ decl_stmt|;
 name|CHEESE
 argument_list|()
 expr_stmt|;
-comment|/* 	 * We Should add some tests for non NULL parameters or bad value !! 	 * Stuff to be done ... 	 */
+comment|/*      * We Should add some tests for non NULL parameters or bad value !!      * Stuff to be done ...      */
 if|if
 condition|(
 name|zencod_dso
@@ -2186,7 +2186,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Trying to load the Library "cryptozen" 	 */
+comment|/*      * Trying to load the Library "cryptozen"      */
 name|zencod_dso
 operator|=
 name|DSO_load
@@ -2218,7 +2218,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Trying to load Function from the Library 	 */
+comment|/*      * Trying to load Function from the Library      */
 if|if
 condition|(
 operator|!
@@ -2569,7 +2569,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* The function from "cryptozen" Library have been correctly loaded so copy them 	 */
+comment|/*      * The function from "cryptozen" Library have been correctly loaded so      * copy them      */
 name|ptr_zencod_test
 operator|=
 name|ptr_0
@@ -2658,7 +2658,7 @@ name|ptr_zencod_rc4_cipher
 operator|=
 name|ptr_rc4_1
 expr_stmt|;
-comment|/* We should peform a test to see if there is actually any unit runnig on the system ... 	 * Even if the cryptozen library is loaded the module coul not be loaded on the system ... 	 * For now we may just open and close the device !! 	 */
+comment|/*      * We should peform a test to see if there is actually any unit runnig on      * the system ... Even if the cryptozen library is loaded the module coul      * not be loaded on the system ... For now we may just open and close the      * device !!      */
 if|if
 condition|(
 name|ptr_zencod_test
@@ -2801,7 +2801,7 @@ block|{
 name|CHEESE
 argument_list|()
 expr_stmt|;
-comment|/* 	 * We Should add some tests for non NULL parameters or bad value !! 	 * Stuff to be done ... 	 */
+comment|/*      * We Should add some tests for non NULL parameters or bad value !!      * Stuff to be done ...      */
 if|if
 condition|(
 name|zencod_dso
@@ -2979,7 +2979,7 @@ decl_stmt|;
 name|CHEESE
 argument_list|()
 expr_stmt|;
-comment|/* 	 * We Should add some tests for non NULL parameters or bad value !! 	 * Stuff to be done ... 	 */
+comment|/*      * We Should add some tests for non NULL parameters or bad value !!      * Stuff to be done ...      */
 switch|switch
 condition|(
 name|cmd
@@ -3034,8 +3034,8 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-default|default :
-break|break ;
+default|default:
+break|break;
 block|}
 name|ZENCODerr
 argument_list|(
@@ -3051,7 +3051,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* BIGNUM stuff Functions  */
+comment|/*  * BIGNUM stuff Functions  */
 end_comment
 
 begin_function
@@ -3272,7 +3272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* RSA stuff Functions  */
+comment|/*  * RSA stuff Functions  */
 end_comment
 
 begin_ifndef
@@ -3577,7 +3577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function is aliased to RSA_mod_exp (with the mont stuff dropped).  */
+comment|/*  * This function is aliased to RSA_mod_exp (with the mont stuff dropped).  */
 end_comment
 
 begin_function
@@ -3817,7 +3817,7 @@ name|OPENSSL_NO_DSA
 end_ifndef
 
 begin_comment
-comment|/* DSA stuff Functions  */
+comment|/*  * DSA stuff Functions  */
 end_comment
 
 begin_function
@@ -4633,7 +4633,7 @@ name|OPENSSl_NO_DH
 end_ifndef
 
 begin_comment
-comment|/* DH stuff Functions  */
+comment|/*  * DH stuff Functions  */
 end_comment
 
 begin_function
@@ -5314,7 +5314,7 @@ comment|/* !OPENSSL_NO_DH */
 end_comment
 
 begin_comment
-comment|/* RAND stuff Functions  */
+comment|/*  * RAND stuff Functions  */
 end_comment
 
 begin_function
@@ -5331,7 +5331,7 @@ name|int
 name|num
 parameter_list|)
 block|{
-comment|/* Nothing to do cause our crypto accelerator provide a true random generator */
+comment|/*      * Nothing to do cause our crypto accelerator provide a true random      * generator      */
 block|}
 end_function
 
@@ -5437,7 +5437,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This stuff is needed if this ENGINE is being compiled into a self-contained  * shared-library.  */
+comment|/*  * This stuff is needed if this ENGINE is being compiled into a  * self-contained shared-library.  */
 end_comment
 
 begin_ifdef
@@ -5522,7 +5522,7 @@ comment|/* ENGINE_DYNAMIC_SUPPORT */
 end_comment
 
 begin_comment
-comment|/*  * Adding "Digest" and "Cipher" tools ...  * This is in development ... ;-)  * In orfer to code this, i refer to hw_openbsd_dev_crypto and openssl engine made by Geoff Thorpe (if i'm rigth),  * and evp, sha md5 definitions etc ...  */
+comment|/*      * Adding "Digest" and "Cipher" tools ...      * This is in development ... ;-)      * In orfer to code this, i refer to hw_openbsd_dev_crypto and openssl engine made by Geoff Thorpe (if i'm rigth),      * and evp, sha md5 definitions etc ...      */
 end_comment
 
 begin_comment
@@ -5564,7 +5564,7 @@ comment|/* Some variables declaration ... */
 end_comment
 
 begin_comment
-comment|/* DONS:  * Disable symetric computation except DES and 3DES, but let part of the code  */
+comment|/*      * DONS: Disable symetric computation except DES and 3DES, but let part      * of the code      */
 end_comment
 
 begin_comment
@@ -5575,9 +5575,9 @@ begin_decl_stmt
 specifier|static
 name|int
 name|engine_digest_nids
-index|[ ]
+index|[]
 init|=
-block|{  }
+block|{ }
 decl_stmt|;
 end_decl_stmt
 
@@ -5591,14 +5591,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* static int engine_cipher_nids [ ] = { NID_rc4, NID_rc4_40, NID_des_cbc, NID_des_ede3_cbc } ; */
+comment|/*  * static int engine_cipher_nids [ ] = { NID_rc4, NID_rc4_40, NID_des_cbc,  * NID_des_ede3_cbc } ;  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|engine_cipher_nids
-index|[ ]
+index|[]
 init|=
 block|{
 name|NID_des_cbc
@@ -5967,8 +5967,8 @@ name|SHA_DIGEST_LENGTH
 block|,
 name|EVP_MD_FLAG_ONESHOT
 block|,
-comment|/* 0, */
-comment|/* EVP_MD_FLAG_ONESHOT = x0001 digest can only handle a single block 				* XXX: set according to device info ... */
+comment|/*      * 0,      */
+comment|/*      * EVP_MD_FLAG_ONESHOT = x0001 digest can only handle a single block *      * XXX: set according to device info ...      */
 name|engine_sha1_init
 block|,
 name|engine_sha1_update
@@ -5990,7 +5990,7 @@ expr|sizeof
 operator|(
 name|ZEN_MD_DATA
 operator|)
-comment|/* sizeof ( MD_CTX_DATA )	The message digest data structure ... */
+comment|/*          * sizeof ( MD_CTX_DATA ) The message digest data structure ...          */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6014,8 +6014,8 @@ name|MD5_DIGEST_LENGTH
 block|,
 name|EVP_MD_FLAG_ONESHOT
 block|,
-comment|/* 0, */
-comment|/* EVP_MD_FLAG_ONESHOT = x0001 digest can only handle a single block 				* XXX: set according to device info ... */
+comment|/*      * 0,      */
+comment|/*      * EVP_MD_FLAG_ONESHOT = x0001 digest can only handle a single block *      * XXX: set according to device info ...      */
 name|engine_md5_init
 block|,
 name|engine_md5_update
@@ -6037,7 +6037,7 @@ expr|sizeof
 operator|(
 name|ZEN_MD_DATA
 operator|)
-comment|/* sizeof ( MD_CTX_DATA )	The message digest data structure ... */
+comment|/*          * sizeof ( MD_CTX_DATA ) The message digest data structure ...          */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6431,7 +6431,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* SHA stuff Functions  */
+comment|/*  * SHA stuff Functions  */
 end_comment
 
 begin_function
@@ -6621,7 +6621,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* MD5 stuff Functions  */
+comment|/*  * MD5 stuff Functions  */
 end_comment
 
 begin_function
@@ -7816,7 +7816,7 @@ operator|=
 operator|!
 name|to_return
 expr_stmt|;
-comment|/* But we need to set up the rigth iv ... 	 * Test ENCRYPT or DECRYPT mode to set iv ... */
+comment|/*      * But we need to set up the rigth iv ... Test ENCRYPT or DECRYPT mode to      * set iv ...      */
 if|if
 condition|(
 name|ctx
@@ -8317,7 +8317,7 @@ name|nid
 operator|==
 name|NID_rc4_40
 condition|)
-block|{ 	}
+block|{     }
 elseif|else
 if|if
 condition|(
@@ -8329,7 +8329,7 @@ name|nid
 operator|==
 name|NID_des_cbc
 condition|)
-block|{ 	}
+block|{     }
 elseif|else
 if|if
 condition|(
@@ -8341,7 +8341,7 @@ name|nid
 operator|==
 name|NID_des_ede3_cbc
 condition|)
-block|{ 	}
+block|{     }
 return|return
 literal|1
 return|;

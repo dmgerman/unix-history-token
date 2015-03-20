@@ -52,7 +52,7 @@ comment|/********************************************/
 end_comment
 
 begin_comment
-comment|/* These represent running "tunnels". Eg. if you wanted to do SSL in a  * "message-passing" scanario, the "int" file-descriptors might be replaced by  * thread or process IDs, and the "select" code might be replaced by message  * handling code. Whatever. */
+comment|/*  * These represent running "tunnels". Eg. if you wanted to do SSL in a  * "message-passing" scanario, the "int" file-descriptors might be replaced  * by thread or process IDs, and the "select" code might be replaced by  * message handling code. Whatever.  */
 end_comment
 
 begin_typedef
@@ -60,17 +60,17 @@ typedef|typedef
 struct|struct
 name|_tunala_item_t
 block|{
-comment|/* The underlying SSL state machine. This is a data-only processing unit 	 * and we communicate with it by talking to its four "buffers". */
+comment|/*      * The underlying SSL state machine. This is a data-only processing unit      * and we communicate with it by talking to its four "buffers".      */
 name|state_machine_t
 name|sm
 decl_stmt|;
-comment|/* The file-descriptors for the "dirty" (encrypted) side of the SSL 	 * setup. In actuality, this is typically a socket and both values are 	 * identical. */
+comment|/*      * The file-descriptors for the "dirty" (encrypted) side of the SSL      * setup. In actuality, this is typically a socket and both values are      * identical.      */
 name|int
 name|dirty_read
 decl_stmt|,
 name|dirty_send
 decl_stmt|;
-comment|/* The file-descriptors for the "clean" (unencrypted) side of the SSL 	 * setup. These could be stdin/stdout, a socket (both values the same), 	 * or whatever you like. */
+comment|/*      * The file-descriptors for the "clean" (unencrypted) side of the SSL      * setup. These could be stdin/stdout, a socket (both values the same),      * or whatever you like.      */
 name|int
 name|clean_read
 decl_stmt|,
@@ -82,7 +82,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* This structure is used as the data for running the main loop. Namely, in a  * network format such as this, it is stuff for select() - but as pointed out,  * when moving the real-world to somewhere else, this might be replaced by  * something entirely different. It's basically the stuff that controls when  * it's time to do some "work". */
+comment|/*  * This structure is used as the data for running the main loop. Namely, in a  * network format such as this, it is stuff for select() - but as pointed out,  * when moving the real-world to somewhere else, this might be replaced by  * something entirely different. It's basically the stuff that controls when  * it's time to do some "work".  */
 end_comment
 
 begin_typedef
@@ -93,7 +93,7 @@ block|{
 name|int
 name|max
 decl_stmt|;
-comment|/* As required as the first argument to select() */
+comment|/* As required as the first argument to                                  * select() */
 name|fd_set
 name|reads
 decl_stmt|,
@@ -126,7 +126,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* This structure is *everything*. We do it to avoid the use of globals so that,  * for example, it would be easier to shift things around between async-IO,  * thread-based, or multi-fork()ed (or combinations thereof). */
+comment|/*  * This structure is *everything*. We do it to avoid the use of globals so  * that, for example, it would be easier to shift things around between  * async-IO, thread-based, or multi-fork()ed (or combinations thereof).  */
 end_comment
 
 begin_typedef
@@ -154,12 +154,12 @@ comment|/* Our outside "loop" context stuff */
 name|tunala_selector_t
 name|selector
 decl_stmt|;
-comment|/* Our SSL_CTX, which is configured as the SSL client or server and has 	 * the various cert-settings and callbacks configured. */
+comment|/*      * Our SSL_CTX, which is configured as the SSL client or server and has      * the various cert-settings and callbacks configured.      */
 name|SSL_CTX
 modifier|*
 name|ssl_ctx
 decl_stmt|;
-comment|/* Simple flag with complex logic :-) Indicates whether we're an SSL 	 * server or an SSL client. */
+comment|/*      * Simple flag with complex logic :-) Indicates whether we're an SSL      * server or an SSL client.      */
 name|int
 name|server_mode
 decl_stmt|;
@@ -312,7 +312,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* This returns -1 for error, 0 for no new connections, or 1 for success, in  * which case *newfd is populated. */
+comment|/*  * This returns -1 for error, 0 for no new connections, or 1 for success, in  * which case *newfd is populated.  */
 end_comment
 
 begin_function_decl
@@ -693,7 +693,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Default DH parameters for use with "-dh_special standard" ... stolen striaght  * from s_server. */
+comment|/*  * Default DH parameters for use with "-dh_special standard" ... stolen  * striaght from s_server.  */
 end_comment
 
 begin_decl_stmt
@@ -831,7 +831,7 @@ block|,
 literal|0xE8
 block|,
 literal|0x33
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -844,12 +844,12 @@ index|[]
 init|=
 block|{
 literal|0x02
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* And the function that parses the above "standard" parameters, again, straight  * out of s_server. */
+comment|/*  * And the function that parses the above "standard" parameters, again,  * straight out of s_server.  */
 end_comment
 
 begin_function
@@ -3236,7 +3236,7 @@ name|tunnels_used
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Give each tunnel its moment, note the while loop is because it makes 	 * the logic easier than with "for" to deal with an array that may shift 	 * because of deletes. */
+comment|/*      * Give each tunnel its moment, note the while loop is because it makes      * the logic easier than with "for" to deal with an array that may shift      * because of deletes.      */
 name|loop
 operator|=
 literal|0
@@ -3270,7 +3270,7 @@ name|t_item
 argument_list|)
 condition|)
 block|{
-comment|/* We're closing whether for reasons of an error or a 			 * natural close. Don't increment loop or t_item because 			 * the next item is moving to us! */
+comment|/*              * We're closing whether for reasons of an error or a natural              * close. Don't increment loop or t_item because the next item is              * moving to us!              */
 if|if
 condition|(
 operator|!
@@ -3320,7 +3320,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Display the local (tunnelled) stats. NB: Data we 			 * *receive* is data sent *out* of the state_machine on 			 * its 'clean' side. Hence the apparent back-to-front 			 * OUT/IN mixup here :-) */
+comment|/*              * Display the local (tunnelled) stats. NB: Data we *receive* is              * data sent *out* of the state_machine on its 'clean' side.              * Hence the apparent back-to-front OUT/IN mixup here :-)              */
 name|fprintf
 argument_list|(
 name|stderr
@@ -3569,7 +3569,7 @@ argument_list|,
 name|cert
 argument_list|)
 expr_stmt|;
-comment|/* If a cert was given without matching key, we assume the same 		 * file contains the required key. */
+comment|/*          * If a cert was given without matching key, we assume the same file          * contains the required key.          */
 if|if
 condition|(
 operator|!
@@ -3862,7 +3862,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-comment|/* This shouldn't happen - screening values is handled 			 * in main(). */
+comment|/*              * This shouldn't happen - screening values is handled in main().              */
 name|abort
 argument_list|()
 expr_stmt|;
@@ -4986,7 +4986,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This returns -1 for error, 0 for no new connections, or 1 for success, in  * which case *newfd is populated. */
+comment|/*  * This returns -1 for error, 0 for no new connections, or 1 for success, in  * which case *newfd is populated.  */
 end_comment
 
 begin_function
@@ -5369,7 +5369,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* Which way round? If we're a server, "fd" is the dirty side and the 	 * connection we open is the clean one. For a client, it's the other way 	 * around. Unless, of course, we're "flipped" in which case everything 	 * gets reversed. :-) */
+comment|/*      * Which way round? If we're a server, "fd" is the dirty side and the      * connection we open is the clean one. For a client, it's the other way      * around. Unless, of course, we're "flipped" in which case everything      * gets reversed. :-)      */
 if|if
 condition|(
 operator|(
@@ -5435,7 +5435,7 @@ operator|=
 name|newfd
 expr_stmt|;
 block|}
-comment|/* We use the SSL's "app_data" to indicate a call-back induced "kill" */
+comment|/*      * We use the SSL's "app_data" to indicate a call-back induced "kill"      */
 name|SSL_set_app_data
 argument_list|(
 name|new_ssl
@@ -6202,7 +6202,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-comment|/* This function name is attributed to the term donated by David 	 * Schwartz on openssl-dev, message-ID: 	 *<NCBBLIEPOCNJOAEKBEAKEEDGLIAA.davids@webmaster.com>. :-) */
+comment|/*      * This function name is attributed to the term donated by David Schwartz      * on openssl-dev, message-ID:      *<NCBBLIEPOCbmasEKBEAKEEDGLIAA.davids@webmaster.com>. :-)      */
 if|if
 condition|(
 operator|!
@@ -6214,7 +6214,7 @@ operator|->
 name|sm
 argument_list|)
 condition|)
-comment|/* If the SSL closes, it will also zero-out the _in buffers 		 * and will in future process just outgoing data. As and 		 * when the outgoing data has gone, it will return zero 		 * here to tell us to bail out. */
+comment|/*          * If the SSL closes, it will also zero-out the _in buffers and will          * in future process just outgoing data. As and when the outgoing          * data has gone, it will return zero here to tell us to bail out.          */
 return|return
 literal|0
 return|;
@@ -6264,7 +6264,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* If only one side closed, notify the SSL of this so it can take 	 * appropriate action. */
+comment|/*      * If only one side closed, notify the SSL of this so it can take      * appropriate action.      */
 if|if
 condition|(
 operator|(

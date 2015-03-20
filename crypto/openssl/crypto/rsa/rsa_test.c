@@ -888,7 +888,7 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-comment|/* Different ciphertexts (rsa_oaep.c without -DPKCS_TESTVECT). 	   Try decrypting ctext_ex */
+comment|/*          * Different ciphertexts (rsa_oaep.c without -DPKCS_TESTVECT). Try          * decrypting ctext_ex          */
 name|num
 operator|=
 name|RSA_private_decrypt

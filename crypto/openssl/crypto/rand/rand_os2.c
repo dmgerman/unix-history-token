@@ -4,7 +4,7 @@ comment|/* crypto/rand/rand_os2.c */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -76,31 +76,31 @@ block|{
 name|ULONG
 name|ulTimeLow
 decl_stmt|;
-comment|/* Low 32 bits of time stamp      */
+comment|/* Low 32 bits of time stamp */
 name|ULONG
 name|ulTimeHigh
 decl_stmt|;
-comment|/* High 32 bits of time stamp     */
+comment|/* High 32 bits of time stamp */
 name|ULONG
 name|ulIdleLow
 decl_stmt|;
-comment|/* Low 32 bits of idle time       */
+comment|/* Low 32 bits of idle time */
 name|ULONG
 name|ulIdleHigh
 decl_stmt|;
-comment|/* High 32 bits of idle time      */
+comment|/* High 32 bits of idle time */
 name|ULONG
 name|ulBusyLow
 decl_stmt|;
-comment|/* Low 32 bits of busy time       */
+comment|/* Low 32 bits of busy time */
 name|ULONG
 name|ulBusyHigh
 decl_stmt|;
-comment|/* High 32 bits of busy time      */
+comment|/* High 32 bits of busy time */
 name|ULONG
 name|ulIntrLow
 decl_stmt|;
-comment|/* Low 32 bits of interrupt time  */
+comment|/* Low 32 bits of interrupt time */
 name|ULONG
 name|ulIntrHigh
 decl_stmt|;
@@ -302,7 +302,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* Sample a bunch of system variables, includes various process& memory statistics */
+comment|/*      * Sample a bunch of system variables, includes various process& memory      * statistics      */
 name|DosQuerySysInfo
 argument_list|(
 literal|1
@@ -329,7 +329,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* If available, sample CPU registers that count at CPU MHz      * Only fairly new CPUs (PPro& K6 onwards)& OS/2 versions support this      */
+comment|/*      * If available, sample CPU registers that count at CPU MHz Only fairly      * new CPUs (PPro& K6 onwards)& OS/2 versions support this      */
 if|if
 condition|(
 name|DosPerfSysCall
@@ -380,7 +380,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-comment|/* DosQuerySysState() gives us a huge quantity of process, thread, memory& handle stats */
+comment|/*      * DosQuerySysState() gives us a huge quantity of process, thread, memory      *& handle stats      */
 if|if
 condition|(
 name|DosQuerySysState
@@ -419,7 +419,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* First 4 bytes in buffer is a pointer to the thread count              * there should be at least 1 byte of entropy per thread              */
+comment|/*              * First 4 bytes in buffer is a pointer to the thread count there              * should be at least 1 byte of entropy per thread              */
 name|RAND_add
 argument_list|(
 name|buffer

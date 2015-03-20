@@ -4,11 +4,11 @@ comment|/* dso.h -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_ifndef
@@ -54,22 +54,22 @@ define|#
 directive|define
 name|DSO_CTRL_OR_FLAGS
 value|3
-comment|/* By default, DSO_load() will translate the provided filename into a form  * typical for the platform (more specifically the DSO_METHOD) using the  * dso_name_converter function of the method. Eg. win32 will transform "blah"  * into "blah.dll", and dlfcn will transform it into "libblah.so". The  * behaviour can be overriden by setting the name_converter callback in the DSO  * object (using DSO_set_name_converter()). This callback could even utilise  * the DSO_METHOD's converter too if it only wants to override behaviour for  * one or two possible DSO methods. However, the following flag can be set in a  * DSO to prevent *any* native name-translation at all - eg. if the caller has  * prompted the user for a path to a driver library so the filename should be  * interpreted as-is. */
+comment|/*  * By default, DSO_load() will translate the provided filename into a form  * typical for the platform (more specifically the DSO_METHOD) using the  * dso_name_converter function of the method. Eg. win32 will transform "blah"  * into "blah.dll", and dlfcn will transform it into "libblah.so". The  * behaviour can be overriden by setting the name_converter callback in the  * DSO object (using DSO_set_name_converter()). This callback could even  * utilise the DSO_METHOD's converter too if it only wants to override  * behaviour for one or two possible DSO methods. However, the following flag  * can be set in a DSO to prevent *any* native name-translation at all - eg.  * if the caller has prompted the user for a path to a driver library so the  * filename should be interpreted as-is.  */
 define|#
 directive|define
 name|DSO_FLAG_NO_NAME_TRANSLATION
 value|0x01
-comment|/* An extra flag to give if only the extension should be added as  * translation.  This is obviously only of importance on Unix and  * other operating systems where the translation also may prefix  * the name with something, like 'lib', and ignored everywhere else.  * This flag is also ignored if DSO_FLAG_NO_NAME_TRANSLATION is used  * at the same time. */
+comment|/*  * An extra flag to give if only the extension should be added as  * translation.  This is obviously only of importance on Unix and other  * operating systems where the translation also may prefix the name with  * something, like 'lib', and ignored everywhere else. This flag is also  * ignored if DSO_FLAG_NO_NAME_TRANSLATION is used at the same time.  */
 define|#
 directive|define
 name|DSO_FLAG_NAME_TRANSLATION_EXT_ONLY
 value|0x02
-comment|/* The following flag controls the translation of symbol names to upper  * case.  This is currently only being implemented for OpenVMS.  */
+comment|/*  * The following flag controls the translation of symbol names to upper case.  * This is currently only being implemented for OpenVMS.  */
 define|#
 directive|define
 name|DSO_FLAG_UPCASE_SYMBOL
 value|0x10
-comment|/* This flag loads the library with public symbols.  * Meaning: The exported symbols of this library are public  * to all libraries loaded after this library.  * At the moment only implemented in unix.  */
+comment|/*  * This flag loads the library with public symbols. Meaning: The exported  * symbols of this library are public to all libraries loaded after this  * library. At the moment only implemented in unix.  */
 define|#
 directive|define
 name|DSO_FLAG_GLOBAL_SYMBOLS
@@ -89,7 +89,7 @@ name|struct
 name|dso_st
 name|DSO
 typedef|;
-comment|/* The function prototype used for method functions (or caller-provided  * callbacks) that transform filenames. They are passed a DSO structure pointer  * (or NULL if they are to be used independantly of a DSO object) and a  * filename to transform. They should either return NULL (if there is an error  * condition) or a newly allocated string containing the transformed form that  * the caller will need to free with OPENSSL_free() when done. */
+comment|/*  * The function prototype used for method functions (or caller-provided  * callbacks) that transform filenames. They are passed a DSO structure  * pointer (or NULL if they are to be used independantly of a DSO object) and  * a filename to transform. They should either return NULL (if there is an  * error condition) or a newly allocated string containing the transformed  * form that the caller will need to free with OPENSSL_free() when done.  */
 typedef|typedef
 name|char
 modifier|*
@@ -106,7 +106,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* The function prototype used for method functions (or caller-provided  * callbacks) that merge two file specifications. They are passed a  * DSO structure pointer (or NULL if they are to be used independantly of  * a DSO object) and two file specifications to merge. They should  * either return NULL (if there is an error condition) or a newly allocated  * string containing the result of merging that the caller will need  * to free with OPENSSL_free() when done.  * Here, merging means that bits and pieces are taken from each of the  * file specifications and added together in whatever fashion that is  * sensible for the DSO method in question.  The only rule that really  * applies is that if the two specification contain pieces of the same  * type, the copy from the first string takes priority.  One could see  * it as the first specification is the one given by the user and the  * second being a bunch of defaults to add on if they're missing in the  * first. */
+comment|/*  * The function prototype used for method functions (or caller-provided  * callbacks) that merge two file specifications. They are passed a DSO  * structure pointer (or NULL if they are to be used independantly of a DSO  * object) and two file specifications to merge. They should either return  * NULL (if there is an error condition) or a newly allocated string  * containing the result of merging that the caller will need to free with  * OPENSSL_free() when done. Here, merging means that bits and pieces are  * taken from each of the file specifications and added together in whatever  * fashion that is sensible for the DSO method in question.  The only rule  * that really applies is that if the two specification contain pieces of the  * same type, the copy from the first string takes priority.  One could see  * it as the first specification is the one given by the user and the second  * being a bunch of defaults to add on if they're missing in the first.  */
 typedef|typedef
 name|char
 modifier|*
@@ -136,7 +136,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* Loads a shared library, NB: new DSO_METHODs must ensure that a 	 * successful load populates the loaded_filename field, and likewise a 	 * successful unload OPENSSL_frees and NULLs it out. */
+comment|/*      * Loads a shared library, NB: new DSO_METHODs must ensure that a      * successful load populates the loaded_filename field, and likewise a      * successful unload OPENSSL_frees and NULLs it out.      */
 name|int
 function_decl|(
 modifier|*
@@ -178,7 +178,7 @@ modifier|*
 name|symname
 parameter_list|)
 function_decl|;
-comment|/* Binds a function - assumes a return type of DSO_FUNC_TYPE. 	 * This should be cast to the real function prototype by the 	 * caller. Platforms that don't have compatible representations 	 * for different prototypes (this is possible within ANSI C) 	 * are highly unlikely to have shared libraries at all, let 	 * alone a DSO_METHOD implemented for them. */
+comment|/*      * Binds a function - assumes a return type of DSO_FUNC_TYPE. This should      * be cast to the real function prototype by the caller. Platforms that      * don't have compatible representations for different prototypes (this      * is possible within ANSI C) are highly unlikely to have shared      * libraries at all, let alone a DSO_METHOD implemented for them.      */
 name|DSO_FUNC_TYPE
 function_decl|(
 modifier|*
@@ -200,12 +200,12 @@ if|#
 directive|if
 literal|0
 comment|/* Unbinds a variable */
-block|int (*dso_unbind_var)(DSO *dso, char *symname, void *symptr);
+block|int (*dso_unbind_var) (DSO *dso, char *symname, void *symptr);
 comment|/* Unbinds a function */
-block|int (*dso_unbind_func)(DSO *dso, char *symname, DSO_FUNC_TYPE symptr);
+block|int (*dso_unbind_func) (DSO *dso, char *symname, DSO_FUNC_TYPE symptr);
 endif|#
 directive|endif
-comment|/* The generic (yuck) "ctrl()" function. NB: Negative return 	 * values (rather than zero) indicate errors. */
+comment|/*      * The generic (yuck) "ctrl()" function. NB: Negative return values      * (rather than zero) indicate errors.      */
 name|long
 function_decl|(
 modifier|*
@@ -227,11 +227,11 @@ modifier|*
 name|parg
 parameter_list|)
 function_decl|;
-comment|/* The default DSO_METHOD-specific function for converting filenames to 	 * a canonical native form. */
+comment|/*      * The default DSO_METHOD-specific function for converting filenames to a      * canonical native form.      */
 name|DSO_NAME_CONVERTER_FUNC
 name|dso_name_converter
 decl_stmt|;
-comment|/* The default DSO_METHOD-specific function for converting filenames to 	 * a canonical native form. */
+comment|/*      * The default DSO_METHOD-specific function for converting filenames to a      * canonical native form.      */
 name|DSO_MERGER_FUNC
 name|dso_merger
 decl_stmt|;
@@ -270,7 +270,7 @@ name|DSO_METHOD
 modifier|*
 name|meth
 decl_stmt|;
-comment|/* Standard dlopen uses a (void *). Win32 uses a HANDLE. VMS 	 * doesn't use anything but will need to cache the filename 	 * for use in the dso_bind handler. All in all, let each 	 * method control its own destiny. "Handles" and such go in 	 * a STACK. */
+comment|/*      * Standard dlopen uses a (void *). Win32 uses a HANDLE. VMS doesn't use      * anything but will need to cache the filename for use in the dso_bind      * handler. All in all, let each method control its own destiny.      * "Handles" and such go in a STACK.      */
 name|STACK
 modifier|*
 name|meth_data
@@ -281,24 +281,24 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-comment|/* For use by applications etc ... use this for your bits'n'pieces, 	 * don't touch meth_data! */
+comment|/*      * For use by applications etc ... use this for your bits'n'pieces, don't      * touch meth_data!      */
 name|CRYPTO_EX_DATA
 name|ex_data
 decl_stmt|;
-comment|/* If this callback function pointer is set to non-NULL, then it will 	 * be used in DSO_load() in place of meth->dso_name_converter. NB: This 	 * should normally set using DSO_set_name_converter(). */
+comment|/*      * If this callback function pointer is set to non-NULL, then it will be      * used in DSO_load() in place of meth->dso_name_converter. NB: This      * should normally set using DSO_set_name_converter().      */
 name|DSO_NAME_CONVERTER_FUNC
 name|name_converter
 decl_stmt|;
-comment|/* If this callback function pointer is set to non-NULL, then it will 	 * be used in DSO_load() in place of meth->dso_merger. NB: This 	 * should normally set using DSO_set_merger(). */
+comment|/*      * If this callback function pointer is set to non-NULL, then it will be      * used in DSO_load() in place of meth->dso_merger. NB: This should      * normally set using DSO_set_merger().      */
 name|DSO_MERGER_FUNC
 name|merger
 decl_stmt|;
-comment|/* This is populated with (a copy of) the platform-independant 	 * filename used for this DSO. */
+comment|/*      * This is populated with (a copy of) the platform-independant filename      * used for this DSO.      */
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-comment|/* This is populated with (a copy of) the translated filename by which 	 * the DSO was actually loaded. It is NULL iff the DSO is not currently 	 * loaded. NB: This is here because the filename translation process 	 * may involve a callback being invoked more than once not only to 	 * convert to a platform-specific form, but also to try different 	 * filenames in the process of trying to perform a load. As such, this 	 * variable can be used to indicate (a) whether this DSO structure 	 * corresponds to a loaded library or not, and (b) the filename with 	 * which it was actually loaded. */
+comment|/*      * This is populated with (a copy of) the translated filename by which      * the DSO was actually loaded. It is NULL iff the DSO is not currently      * loaded. NB: This is here because the filename translation process may      * involve a callback being invoked more than once not only to convert to      * a platform-specific form, but also to try different filenames in the      * process of trying to perform a load. As such, this variable can be      * used to indicate (a) whether this DSO structure corresponds to a      * loaded library or not, and (b) the filename with which it was actually      * loaded.      */
 name|char
 modifier|*
 name|loaded_filename
@@ -363,7 +363,7 @@ modifier|*
 name|parg
 parameter_list|)
 function_decl|;
-comment|/* This function sets the DSO's name_converter callback. If it is non-NULL,  * then it will be used instead of the associated DSO_METHOD's function. If  * oldcb is non-NULL then it is set to the function pointer value being  * replaced. Return value is non-zero for success. */
+comment|/*  * This function sets the DSO's name_converter callback. If it is non-NULL,  * then it will be used instead of the associated DSO_METHOD's function. If  * oldcb is non-NULL then it is set to the function pointer value being  * replaced. Return value is non-zero for success.  */
 name|int
 name|DSO_set_name_converter
 parameter_list|(
@@ -379,7 +379,7 @@ modifier|*
 name|oldcb
 parameter_list|)
 function_decl|;
-comment|/* These functions can be used to get/set the platform-independant filename  * used for a DSO. NB: set will fail if the DSO is already loaded. */
+comment|/*  * These functions can be used to get/set the platform-independant filename  * used for a DSO. NB: set will fail if the DSO is already loaded.  */
 specifier|const
 name|char
 modifier|*
@@ -403,7 +403,7 @@ modifier|*
 name|filename
 parameter_list|)
 function_decl|;
-comment|/* This function will invoke the DSO's name_converter callback to translate a  * filename, or if the callback isn't set it will instead use the DSO_METHOD's  * converter. If "filename" is NULL, the "filename" in the DSO itself will be  * used. If the DSO_FLAG_NO_NAME_TRANSLATION flag is set, then the filename is  * simply duplicated. NB: This function is usually called from within a  * DSO_METHOD during the processing of a DSO_load() call, and is exposed so that  * caller-created DSO_METHODs can do the same thing. A non-NULL return value  * will need to be OPENSSL_free()'d. */
+comment|/*  * This function will invoke the DSO's name_converter callback to translate a  * filename, or if the callback isn't set it will instead use the DSO_METHOD's  * converter. If "filename" is NULL, the "filename" in the DSO itself will be  * used. If the DSO_FLAG_NO_NAME_TRANSLATION flag is set, then the filename is  * simply duplicated. NB: This function is usually called from within a  * DSO_METHOD during the processing of a DSO_load() call, and is exposed so  * that caller-created DSO_METHODs can do the same thing. A non-NULL return  * value will need to be OPENSSL_free()'d.  */
 name|char
 modifier|*
 name|DSO_convert_filename
@@ -418,7 +418,7 @@ modifier|*
 name|filename
 parameter_list|)
 function_decl|;
-comment|/* This function will invoke the DSO's merger callback to merge two file  * specifications, or if the callback isn't set it will instead use the  * DSO_METHOD's merger.  A non-NULL return value will need to be  * OPENSSL_free()'d. */
+comment|/*  * This function will invoke the DSO's merger callback to merge two file  * specifications, or if the callback isn't set it will instead use the  * DSO_METHOD's merger.  A non-NULL return value will need to be  * OPENSSL_free()'d.  */
 name|char
 modifier|*
 name|DSO_merge
@@ -438,7 +438,7 @@ modifier|*
 name|filespec2
 parameter_list|)
 function_decl|;
-comment|/* If the DSO is currently loaded, this returns the filename that it was loaded  * under, otherwise it returns NULL. So it is also useful as a test as to  * whether the DSO is currently loaded. NB: This will not necessarily return  * the same value as DSO_convert_filename(dso, dso->filename), because the  * DSO_METHOD's load function may have tried a variety of filenames (with  * and/or without the aid of the converters) before settling on the one it  * actually loaded. */
+comment|/*  * If the DSO is currently loaded, this returns the filename that it was  * loaded under, otherwise it returns NULL. So it is also useful as a test as  * to whether the DSO is currently loaded. NB: This will not necessarily  * return the same value as DSO_convert_filename(dso, dso->filename), because  * the DSO_METHOD's load function may have tried a variety of filenames (with  * and/or without the aid of the converters) before settling on the one it  * actually loaded.  */
 specifier|const
 name|char
 modifier|*
@@ -486,7 +486,7 @@ modifier|*
 name|meth
 parameter_list|)
 function_decl|;
-comment|/* The all-singing all-dancing load function, you normally pass NULL  * for the first and third parameters. Use DSO_up and DSO_free for  * subsequent reference count handling. Any flags passed in will be set  * in the constructed DSO after its init() function but before the  * load operation. If 'dso' is non-NULL, 'flags' is ignored. */
+comment|/*  * The all-singing all-dancing load function, you normally pass NULL for the  * first and third parameters. Use DSO_up and DSO_free for subsequent  * reference count handling. Any flags passed in will be set in the  * constructed DSO after its init() function but before the load operation.  * If 'dso' is non-NULL, 'flags' is ignored.  */
 name|DSO
 modifier|*
 name|DSO_load
@@ -537,7 +537,7 @@ modifier|*
 name|symname
 parameter_list|)
 function_decl|;
-comment|/* This method is the default, but will beg, borrow, or steal whatever  * method should be the default on any particular platform (including  * DSO_METH_null() if necessary). */
+comment|/*  * This method is the default, but will beg, borrow, or steal whatever method  * should be the default on any particular platform (including  * DSO_METH_null() if necessary).  */
 name|DSO_METHOD
 modifier|*
 name|DSO_METHOD_openssl
@@ -545,7 +545,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* This method is defined for all platforms - if a platform has no  * DSO support then this will be the only method! */
+comment|/*  * This method is defined for all platforms - if a platform has no DSO  * support then this will be the only method!  */
 name|DSO_METHOD
 modifier|*
 name|DSO_METHOD_null
@@ -553,7 +553,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* If DSO_DLFCN is defined, the standard dlfcn.h-style functions  * (dlopen, dlclose, dlsym, etc) will be used and incorporated into  * this method. If not, this method will return NULL. */
+comment|/*  * If DSO_DLFCN is defined, the standard dlfcn.h-style functions (dlopen,  * dlclose, dlsym, etc) will be used and incorporated into this method. If  * not, this method will return NULL.  */
 name|DSO_METHOD
 modifier|*
 name|DSO_METHOD_dlfcn
@@ -561,7 +561,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* If DSO_DL is defined, the standard dl.h-style functions (shl_load,   * shl_unload, shl_findsym, etc) will be used and incorporated into  * this method. If not, this method will return NULL. */
+comment|/*  * If DSO_DL is defined, the standard dl.h-style functions (shl_load,  * shl_unload, shl_findsym, etc) will be used and incorporated into this  * method. If not, this method will return NULL.  */
 name|DSO_METHOD
 modifier|*
 name|DSO_METHOD_dl
@@ -586,7 +586,7 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_DSO_strings
 parameter_list|(

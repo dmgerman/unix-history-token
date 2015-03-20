@@ -4,7 +4,7 @@ comment|/* e_os.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_ifndef
@@ -32,7 +32,7 @@ file|<openssl/e_os2.h>
 end_include
 
 begin_comment
-comment|/*<openssl/e_os2.h> contains what we can justify to make visible  * to the outside; this file e_os.h is not part of the exported  * interface. */
+comment|/*  *<openssl/e_os2.h> contains what we can justify to make visible to the  * outside; this file e_os.h is not part of the exported interface.  */
 end_comment
 
 begin_ifdef
@@ -68,7 +68,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|DEVRANDOM
-comment|/* set this to a comma-separated list of 'random' device files to try out.  * My default, we will try to read at least one of these files */
+comment|/*  * set this to a comma-separated list of 'random' device files to try out. My  * default, we will try to read at least one of these files  */
 define|#
 directive|define
 name|DEVRANDOM
@@ -78,7 +78,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|DEVRANDOM_EGD
-comment|/* set this to a comma-seperated list of 'egd' sockets to try out. These  * sockets will be tried in the order listed in case accessing the device files  * listed in DEVRANDOM did not return enough entropy. */
+comment|/*  * set this to a comma-seperated list of 'egd' sockets to try out. These  * sockets will be tried in the order listed in case accessing the device  * files listed in DEVRANDOM did not return enough entropy.  */
 define|#
 directive|define
 name|DEVRANDOM_EGD
@@ -148,7 +148,7 @@ directive|endif
 endif|#
 directive|endif
 comment|/********************************************************************  The Microsoft section  ********************************************************************/
-comment|/* The following is used becaue of the small stack in some  * Microsoft operating systems */
+comment|/*  * The following is used becaue of the small stack in some Microsoft  * operating systems  */
 if|#
 directive|if
 name|defined
@@ -863,7 +863,7 @@ name|defined
 argument_list|(
 name|_WIN32_WINNT
 argument_list|)
-comment|/* 	* Defining _WIN32_WINNT here in e_os.h implies certain "discipline." 	* Most notably we ought to check for availability of each specific 	* routine with GetProcAddress() and/or quard NT-specific calls with 	* GetVersion()< 0x80000000. One can argue that in latter "or" case 	* we ought to /DELAYLOAD some .DLLs in order to protect ourselves 	* against run-time link errors. This doesn't seem to be necessary, 	* because it turned out that already Windows 95, first non-NT Win32 	* implementation, is equipped with at least NT 3.51 stubs, dummy 	* routines with same name, but which do nothing. Meaning that it's 	* apparently appropriate to guard generic NT calls with GetVersion 	* alone, while NT 4.0 and above calls ought to be additionally 	* checked upon with GetProcAddress. 	*/
+comment|/*         * Defining _WIN32_WINNT here in e_os.h implies certain "discipline."         * Most notably we ought to check for availability of each specific         * routine with GetProcAddress() and/or quard NT-specific calls with         * GetVersion()< 0x80000000. One can argue that in latter "or" case         * we ought to /DELAYLOAD some .DLLs in order to protect ourselves         * against run-time link errors. This doesn't seem to be necessary,         * because it turned out that already Windows 95, first non-NT Win32         * implementation, is equipped with at least NT 3.51 stubs, dummy         * routines with same name, but which do nothing. Meaning that it's         * apparently appropriate to guard generic NT calls with GetVersion         * alone, while NT 4.0 and above calls ought to be additionally         * checked upon with GetProcAddress.         */
 define|#
 directive|define
 name|_WIN32_WINNT
@@ -1041,7 +1041,7 @@ name|stdout
 undef|#
 directive|undef
 name|stderr
-comment|/* pre-1300 has __p__iob(), but it's available only in msvcrt.lib,           * or in other words with /MD. Declaring implicit import, i.e.           * with _imp_ prefix, works correctly with all compiler options,           * but without /MD results in LINK warning LNK4049:           * 'locally defined symbol "__iob" imported'.           */
+comment|/*           * pre-1300 has __p__iob(), but it's available only in msvcrt.lib,           * or in other words with /MD. Declaring implicit import, i.e. with           * _imp_ prefix, works correctly with all compiler options, but           * without /MD results in LINK warning LNK4049: 'locally defined           * symbol "__iob" imported'.           */
 specifier|extern
 name|FILE
 modifier|*
@@ -1214,6 +1214,45 @@ name|DEFAULT_HOME
 value|"C:"
 endif|#
 directive|endif
+comment|/* Avoid Visual Studio 13 GetVersion deprecated problems */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|>=
+literal|1800
+define|#
+directive|define
+name|check_winnt
+parameter_list|()
+value|(1)
+define|#
+directive|define
+name|check_win_minplat
+parameter_list|(
+name|x
+parameter_list|)
+value|(1)
+else|#
+directive|else
+define|#
+directive|define
+name|check_winnt
+parameter_list|()
+value|(GetVersion()< 0x80000000)
+define|#
+directive|define
+name|check_win_minplat
+parameter_list|(
+name|x
+parameter_list|)
+value|(LOBYTE(LOWORD(GetVersion()))>= (x))
+endif|#
+directive|endif
 else|#
 directive|else
 comment|/* The non-microsoft world */
@@ -1224,7 +1263,7 @@ define|#
 directive|define
 name|VMS
 value|1
-comment|/* some programs don't include stdlib, so exit() and others give implicit       function warnings */
+comment|/*    * some programs don't include stdlib, so exit() and others give implicit    * function warnings    */
 include|#
 directive|include
 file|<stdlib.h>
@@ -1268,14 +1307,14 @@ comment|/* We don't have any well-defined random devices on VMS, yet... */
 undef|#
 directive|undef
 name|DEVRANDOM
-comment|/* We need to do this since VMS has the following coding on status codes:       Bits 0-2: status type: 0 = warning, 1 = success, 2 = error, 3 = info ...                The important thing to know is that odd numbers are considered 	       good, while even ones are considered errors.      Bits 3-15: actual status number      Bits 16-27: facility number.  0 is considered "unknown"      Bits 28-31: control bits.  If bit 28 is set, the shell won't try to                  output the message (which, for random codes, just looks ugly)       So, what we do here is to change 0 to 1 to get the default success status,      and everything else is shifted up to fit into the status number field, and      the status is tagged as an error, which I believe is what is wanted here.      -- Richard Levitte   */
+comment|/*-      We need to do this since VMS has the following coding on status codes:       Bits 0-2: status type: 0 = warning, 1 = success, 2 = error, 3 = info ...                The important thing to know is that odd numbers are considered                good, while even ones are considered errors.      Bits 3-15: actual status number      Bits 16-27: facility number.  0 is considered "unknown"      Bits 28-31: control bits.  If bit 28 is set, the shell won't try to                  output the message (which, for random codes, just looks ugly)       So, what we do here is to change 0 to 1 to get the default success status,      and everything else is shifted up to fit into the status number field, and      the status is tagged as an error, which I believe is what is wanted here.      -- Richard Levitte   */
 define|#
 directive|define
 name|EXIT
 parameter_list|(
 name|n
 parameter_list|)
-value|do { int __VMS_EXIT = n; \                                      if (__VMS_EXIT == 0) \ 				       __VMS_EXIT = 1; \ 				     else \ 				       __VMS_EXIT = (n<< 3) | 2; \                                      __VMS_EXIT |= 0x10000000; \ 				     exit(__VMS_EXIT); } while(0)
+value|do { int __VMS_EXIT = n; \                                      if (__VMS_EXIT == 0) \                                        __VMS_EXIT = 1; \                                      else \                                        __VMS_EXIT = (n<< 3) | 2; \                                      __VMS_EXIT |= 0x10000000; \                                      exit(__VMS_EXIT); } while(0)
 define|#
 directive|define
 name|NO_SYS_PARAM_H
@@ -1423,7 +1462,7 @@ define|#
 directive|define
 name|pid_t
 value|int
-comment|/* pid_t is missing on NEXTSTEP/OPENSTEP                          * (unless when compiling with -D_POSIX_SOURCE,                          * which doesn't work for us) */
+comment|/* pid_t is missing on NEXTSTEP/OPENSTEP                                  * (unless when compiling with                                  * -D_POSIX_SOURCE, which doesn't work for                                  * us) */
 endif|#
 directive|endif
 if|#
@@ -1733,7 +1772,7 @@ name|defined
 argument_list|(
 name|OPENSSL_SYS_NETWARE
 argument_list|)
-comment|/* NetWare uses the WinSock2 interfaces by default, but can be configured for BSD          */
+comment|/*           * NetWare uses the WinSock2 interfaces by default, but can be           * configured for BSD           */
 if|#
 directive|if
 name|defined
@@ -2161,12 +2200,12 @@ directive|endif
 endif|#
 directive|endif
 comment|/***********************************************/
-comment|/* do we need to do this for getenv.  * Just define getenv for use under windows */
+comment|/*  * do we need to do this for getenv. Just define getenv for use under windows  */
 ifdef|#
 directive|ifdef
 name|WIN16
 comment|/* How to do this needs to be thought out a bit more.... */
-comment|/*char *GETENV(char *); #define Getenv	GETENV*/
+comment|/*  * char *GETENV(char *); #define Getenv GETENV  */
 define|#
 directive|define
 name|Getenv
@@ -2198,7 +2237,7 @@ name|OPENSSL_SYS_SNI
 define|#
 directive|define
 name|IRIX_CC_BUG
-comment|/* CDS++ up to V2.0Bsomething suffered from the same bug.*/
+comment|/* CDS++ up to V2.0Bsomething suffered from                                  * the same bug. */
 endif|#
 directive|endif
 if|#
@@ -2345,7 +2384,7 @@ define|#
 directive|define
 name|getpid
 value|taskIdSelf
-comment|/* NOTE: these are implemented by helpers in database app!  * if the database is not linked, we need to implement them  * elswhere */
+comment|/*  * NOTE: these are implemented by helpers in database app! if the database is  * not linked, we need to implement them elswhere  */
 name|struct
 name|hostent
 modifier|*

@@ -4,7 +4,7 @@ comment|/* crypto/evp/evp.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_ifndef
@@ -106,7 +106,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* #define EVP_RC2_KEY_SIZE		16 #define EVP_RC4_KEY_SIZE		16 #define EVP_BLOWFISH_KEY_SIZE		16 #define EVP_CAST5_KEY_SIZE		16 #define EVP_RC5_32_12_16_KEY_SIZE	16 */
+comment|/*- #define EVP_RC2_KEY_SIZE                16 #define EVP_RC4_KEY_SIZE                16 #define EVP_BLOWFISH_KEY_SIZE           16 #define EVP_CAST5_KEY_SIZE              16 #define EVP_RC5_32_12_16_KEY_SIZE       16 */
 end_comment
 
 begin_define
@@ -328,7 +328,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/* Type needs to be a bit field  * Sub-type needs to be for variations on the method, as in, can it do  * arbitrary encryption.... */
+comment|/*  * Type needs to be a bit field Sub-type needs to be for variations on the  * method, as in, can it do arbitrary encryption....  */
 struct|struct
 name|evp_pkey_st
 block|{
@@ -427,65 +427,65 @@ value|0x0008
 if|#
 directive|if
 literal|0
-comment|/* This structure is required to tie the message digest and signing together.  * The lookup can be done by md/pkey_method, oid, oid/pkey_method, or  * oid, md and pkey.  * This is required because for various smart-card perform the digest and  * signing/verification on-board.  To handle this case, the specific  * EVP_MD and EVP_PKEY_METHODs need to be closely associated.  * When a PKEY is created, it will have a EVP_PKEY_METHOD associated with it.  * This can either be software or a token to provide the required low level  * routines.  */
-block|typedef struct evp_pkey_md_st 	{ 	int oid; 	EVP_MD *md; 	EVP_PKEY_METHOD *pkey; 	} EVP_PKEY_MD;
+comment|/*  * This structure is required to tie the message digest and signing together.  * The lookup can be done by md/pkey_method, oid, oid/pkey_method, or oid, md  * and pkey. This is required because for various smart-card perform the  * digest and signing/verification on-board.  To handle this case, the  * specific EVP_MD and EVP_PKEY_METHODs need to be closely associated. When a  * PKEY is created, it will have a EVP_PKEY_METHOD associated with it. This  * can either be software or a token to provide the required low level  * routines.  */
+block|typedef struct evp_pkey_md_st {     int oid;     EVP_MD *md;     EVP_PKEY_METHOD *pkey; } EVP_PKEY_MD;
 define|#
 directive|define
 name|EVP_rsa_md2
 parameter_list|()
 define|\
-value|EVP_PKEY_MD_add(NID_md2WithRSAEncryption,\ 			EVP_rsa_pkcs1(),EVP_md2())
+value|EVP_PKEY_MD_add(NID_md2WithRSAEncryption,\                         EVP_rsa_pkcs1(),EVP_md2())
 define|#
 directive|define
 name|EVP_rsa_md5
 parameter_list|()
 define|\
-value|EVP_PKEY_MD_add(NID_md5WithRSAEncryption,\ 			EVP_rsa_pkcs1(),EVP_md5())
+value|EVP_PKEY_MD_add(NID_md5WithRSAEncryption,\                         EVP_rsa_pkcs1(),EVP_md5())
 define|#
 directive|define
 name|EVP_rsa_sha0
 parameter_list|()
 define|\
-value|EVP_PKEY_MD_add(NID_shaWithRSAEncryption,\ 			EVP_rsa_pkcs1(),EVP_sha())
+value|EVP_PKEY_MD_add(NID_shaWithRSAEncryption,\                         EVP_rsa_pkcs1(),EVP_sha())
 define|#
 directive|define
 name|EVP_rsa_sha1
 parameter_list|()
 define|\
-value|EVP_PKEY_MD_add(NID_sha1WithRSAEncryption,\ 			EVP_rsa_pkcs1(),EVP_sha1())
+value|EVP_PKEY_MD_add(NID_sha1WithRSAEncryption,\                         EVP_rsa_pkcs1(),EVP_sha1())
 define|#
 directive|define
 name|EVP_rsa_ripemd160
 parameter_list|()
 define|\
-value|EVP_PKEY_MD_add(NID_ripemd160WithRSA,\ 			EVP_rsa_pkcs1(),EVP_ripemd160())
+value|EVP_PKEY_MD_add(NID_ripemd160WithRSA,\                         EVP_rsa_pkcs1(),EVP_ripemd160())
 define|#
 directive|define
 name|EVP_rsa_mdc2
 parameter_list|()
 define|\
-value|EVP_PKEY_MD_add(NID_mdc2WithRSA,\ 			EVP_rsa_octet_string(),EVP_mdc2())
+value|EVP_PKEY_MD_add(NID_mdc2WithRSA,\                         EVP_rsa_octet_string(),EVP_mdc2())
 define|#
 directive|define
 name|EVP_dsa_sha
 parameter_list|()
 define|\
-value|EVP_PKEY_MD_add(NID_dsaWithSHA,\ 			EVP_dsa(),EVP_sha())
+value|EVP_PKEY_MD_add(NID_dsaWithSHA,\                         EVP_dsa(),EVP_sha())
 define|#
 directive|define
 name|EVP_dsa_sha1
 parameter_list|()
 define|\
-value|EVP_PKEY_MD_add(NID_dsaWithSHA1,\ 			EVP_dsa(),EVP_sha1())
-block|typedef struct evp_pkey_method_st 	{ 	char *name; 	int flags; 	int type;
+value|EVP_PKEY_MD_add(NID_dsaWithSHA1,\                         EVP_dsa(),EVP_sha1())
+block|typedef struct evp_pkey_method_st {     char *name;     int flags;     int type;
 comment|/* RSA, DSA, an SSLeay specific constant */
 block|int oid;
 comment|/* For the pub-key type */
 block|int encrypt_oid;
 comment|/* pub/priv key encryption */
-block|int (*sign)(); 	int (*verify)(); 	struct	{ 		int (*set)();
+block|int (*sign) ();     int (*verify) ();     struct {         int (*set) ();
 comment|/* get and/or set the underlying type */
-block|int (*get)(); 		int (*encrypt)(); 		int (*decrypt)(); 		int (*i2d)(); 		int (*d2i)(); 		int (*dup)(); 		} pub,priv; 	int (*set_asn1_parameters)(); 	int (*get_asn1_parameters)(); 	} EVP_PKEY_METHOD;
+block|int (*get) ();         int (*encrypt) ();         int (*decrypt) ();         int (*i2d) ();         int (*d2i) ();         int (*dup) ();     } pub, priv;     int (*set_asn1_parameters) ();     int (*get_asn1_parameters) (); } EVP_PKEY_METHOD;
 endif|#
 directive|endif
 ifndef|#
@@ -655,7 +655,7 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-comment|/*EVP_PKEY_xxx */
+comment|/* EVP_PKEY_xxx */
 name|int
 name|block_size
 decl_stmt|;
@@ -744,16 +744,16 @@ decl_stmt|;
 block|}
 name|EVP_MD_SVCTX
 typedef|;
+comment|/* digest can only handle a single block */
 define|#
 directive|define
 name|EVP_MD_FLAG_ONESHOT
 value|0x0001
-comment|/* digest can only handle a single 					* block */
+comment|/* Note if suitable for use in FIPS mode */
 define|#
 directive|define
 name|EVP_MD_FLAG_FIPS
 value|0x0400
-comment|/* Note if suitable for use in FIPS mode */
 define|#
 directive|define
 name|EVP_MD_FLAG_SVCTX
@@ -769,7 +769,7 @@ name|OPENSSL_NO_DSA
 define|#
 directive|define
 name|EVP_PKEY_DSA_method
-value|(evp_sign_method *)DSA_sign, \ 				(evp_verify_method *)DSA_verify, \ 				{EVP_PKEY_DSA,EVP_PKEY_DSA2,EVP_PKEY_DSA3, \ 					EVP_PKEY_DSA4,0}
+value|(evp_sign_method *)DSA_sign, \                                 (evp_verify_method *)DSA_verify, \                                 {EVP_PKEY_DSA,EVP_PKEY_DSA2,EVP_PKEY_DSA3, \                                         EVP_PKEY_DSA4,0}
 else|#
 directive|else
 define|#
@@ -784,7 +784,7 @@ name|OPENSSL_NO_ECDSA
 define|#
 directive|define
 name|EVP_PKEY_ECDSA_method
-value|(evp_sign_method *)ECDSA_sign, \ 				(evp_verify_method *)ECDSA_verify, \                                  {EVP_PKEY_EC,0,0,0}
+value|(evp_sign_method *)ECDSA_sign, \                                 (evp_verify_method *)ECDSA_verify, \                                  {EVP_PKEY_EC,0,0,0}
 else|#
 directive|else
 define|#
@@ -799,12 +799,12 @@ name|OPENSSL_NO_RSA
 define|#
 directive|define
 name|EVP_PKEY_RSA_method
-value|(evp_sign_method *)RSA_sign, \ 				(evp_verify_method *)RSA_verify, \ 				{EVP_PKEY_RSA,EVP_PKEY_RSA2,0,0}
+value|(evp_sign_method *)RSA_sign, \                                 (evp_verify_method *)RSA_verify, \                                 {EVP_PKEY_RSA,EVP_PKEY_RSA2,0,0}
 define|#
 directive|define
 name|EVP_PKEY_RSA_ASN1_OCTET_STRING_method
 define|\
-value|(evp_sign_method *)RSA_sign_ASN1_OCTET_STRING, \ 				(evp_verify_method *)RSA_verify_ASN1_OCTET_STRING, \ 				{EVP_PKEY_RSA,EVP_PKEY_RSA2,0,0}
+value|(evp_sign_method *)RSA_sign_ASN1_OCTET_STRING, \                                 (evp_verify_method *)RSA_verify_ASN1_OCTET_STRING, \                                 {EVP_PKEY_RSA,EVP_PKEY_RSA2,0,0}
 else|#
 directive|else
 define|#
@@ -832,7 +832,7 @@ name|ENGINE
 modifier|*
 name|engine
 decl_stmt|;
-comment|/* functional reference if 'digest' is ENGINE-provided */
+comment|/* functional reference if 'digest' is                                  * ENGINE-provided */
 name|unsigned
 name|long
 name|flags
@@ -849,22 +849,22 @@ define|#
 directive|define
 name|EVP_MD_CTX_FLAG_ONESHOT
 value|0x0001
-comment|/* digest update will be called 						* once only */
+comment|/* digest update will be                                                 * called once only */
 define|#
 directive|define
 name|EVP_MD_CTX_FLAG_CLEANED
 value|0x0002
-comment|/* context has already been 						* cleaned */
+comment|/* context has already been                                                 * cleaned */
 define|#
 directive|define
 name|EVP_MD_CTX_FLAG_REUSE
 value|0x0004
-comment|/* Don't free up ctx->md_data 						* in EVP_MD_CTX_cleanup */
+comment|/* Don't free up ctx->md_data                                                 * in EVP_MD_CTX_cleanup */
 define|#
 directive|define
 name|EVP_MD_CTX_FLAG_NON_FIPS_ALLOW
 value|0x0008
-comment|/* Allow use of non FIPS digest 						 * in FIPS mode */
+comment|/* Allow use of non FIPS                                                 * digest in FIPS mode */
 define|#
 directive|define
 name|EVP_MD_CTX_FLAG_PAD_MASK
@@ -913,18 +913,19 @@ decl_stmt|;
 name|int
 name|block_size
 decl_stmt|;
+comment|/* Default value for variable length ciphers */
 name|int
 name|key_len
 decl_stmt|;
-comment|/* Default value for variable length ciphers */
 name|int
 name|iv_len
 decl_stmt|;
+comment|/* Various flags */
 name|unsigned
 name|long
 name|flags
 decl_stmt|;
-comment|/* Various flags */
+comment|/* init key */
 name|int
 function_decl|(
 modifier|*
@@ -951,7 +952,7 @@ name|int
 name|enc
 parameter_list|)
 function_decl|;
-comment|/* init key */
+comment|/* encrypt/decrypt data */
 name|int
 function_decl|(
 modifier|*
@@ -978,7 +979,7 @@ name|int
 name|inl
 parameter_list|)
 function_decl|;
-comment|/* encrypt/decrypt data */
+comment|/* cleanup ctx */
 name|int
 function_decl|(
 modifier|*
@@ -989,11 +990,11 @@ name|EVP_CIPHER_CTX
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* cleanup ctx */
+comment|/* how big ctx->cipher_data needs to be */
 name|int
 name|ctx_size
 decl_stmt|;
-comment|/* how big ctx->cipher_data needs to be */
+comment|/* Populate a ASN1_TYPE with parameters */
 name|int
 function_decl|(
 modifier|*
@@ -1007,7 +1008,7 @@ name|ASN1_TYPE
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Populate a ASN1_TYPE with parameters */
+comment|/* Get parameters from a ASN1_TYPE */
 name|int
 function_decl|(
 modifier|*
@@ -1021,7 +1022,7 @@ name|ASN1_TYPE
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Get parameters from a ASN1_TYPE */
+comment|/* Miscellaneous operations */
 name|int
 function_decl|(
 modifier|*
@@ -1042,12 +1043,11 @@ modifier|*
 name|ptr
 parameter_list|)
 function_decl|;
-comment|/* Miscellaneous operations */
+comment|/* Application data */
 name|void
 modifier|*
 name|app_data
 decl_stmt|;
-comment|/* Application data */
 block|}
 comment|/* EVP_CIPHER */
 struct|;
@@ -1192,7 +1192,7 @@ name|ENGINE
 modifier|*
 name|engine
 decl_stmt|;
-comment|/* functional reference if 'cipher' is ENGINE-provided */
+comment|/* functional reference if 'cipher' is                                  * ENGINE-provided */
 name|int
 name|encrypt
 decl_stmt|;
@@ -1269,14 +1269,15 @@ typedef|typedef
 struct|struct
 name|evp_Encode_Ctx_st
 block|{
+comment|/* number saved in a partial encode/decode */
 name|int
 name|num
 decl_stmt|;
-comment|/* number saved in a partial encode/decode */
+comment|/*      * The length is either the output line length (in input bytes) or the      * shortest input line length that is ok.  Once decoding begins, the      * length is adjusted up each time a longer line is decoded      */
 name|int
 name|length
 decl_stmt|;
-comment|/* The length is either the output line length 			 * (in input bytes) or the shortest input line 			 * length that is ok.  Once decoding begins, 			 * the length is adjusted up each time a longer 			 * line is decoded */
+comment|/* data to encode */
 name|unsigned
 name|char
 name|enc_data
@@ -1284,11 +1285,10 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-comment|/* data to encode */
+comment|/* number read on current line */
 name|int
 name|line_num
 decl_stmt|;
-comment|/* number read on current line */
 name|int
 name|expect_nl
 decl_stmt|;
@@ -1343,7 +1343,7 @@ name|pkey
 parameter_list|,
 name|rsa
 parameter_list|)
-value|EVP_PKEY_assign((pkey),EVP_PKEY_RSA,\ 					(char *)(rsa))
+value|EVP_PKEY_assign((pkey),EVP_PKEY_RSA,\                                         (char *)(rsa))
 endif|#
 directive|endif
 ifndef|#
@@ -1357,7 +1357,7 @@ name|pkey
 parameter_list|,
 name|dsa
 parameter_list|)
-value|EVP_PKEY_assign((pkey),EVP_PKEY_DSA,\ 					(char *)(dsa))
+value|EVP_PKEY_assign((pkey),EVP_PKEY_DSA,\                                         (char *)(dsa))
 endif|#
 directive|endif
 ifndef|#
@@ -1371,7 +1371,7 @@ name|pkey
 parameter_list|,
 name|dh
 parameter_list|)
-value|EVP_PKEY_assign((pkey),EVP_PKEY_DH,\ 					(char *)(dh))
+value|EVP_PKEY_assign((pkey),EVP_PKEY_DH,\                                         (char *)(dh))
 endif|#
 directive|endif
 ifndef|#
@@ -3394,7 +3394,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* This should now be supported through the dev_crypto ENGINE. But also, why are  * rc4 and md5 declarations made here inside a "NO_DES" precompiler branch? */
+comment|/*  * This should now be supported through the dev_crypto ENGINE. But also, why  * are rc4 and md5 declarations made here inside a "NO_DES" precompiler  * branch?  */
 if|#
 directive|if
 literal|0
@@ -4841,7 +4841,7 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_EVP_strings
 parameter_list|(

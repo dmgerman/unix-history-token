@@ -34,7 +34,7 @@ comment|/* Copyright (C) 2008 Ben Laurie (ben@links.org) */
 end_comment
 
 begin_comment
-comment|/*  * Implement J-PAKE, as described in  * http://grouper.ieee.org/groups/1363/Research/contributions/hao-ryan-2008.pdf  *   * With hints from http://www.cl.cam.ac.uk/~fh240/software/JPAKE2.java.  */
+comment|/*  * Implement J-PAKE, as described in  * http://grouper.ieee.org/groups/1363/Research/contributions/hao-ryan-2008.pdf  *  * With hints from http://www.cl.cam.ac.uk/~fh240/software/JPAKE2.java.  */
 end_comment
 
 begin_function
@@ -274,19 +274,23 @@ comment|// Must be unique
 name|int
 name|base
 decl_stmt|;
-comment|// 1 for Alice, 3 for Bob. Only used for printing stuff.
+comment|// 1 for Alice, 3 for Bob. Only used for
+comment|// printing stuff.
 name|JPakeStep1
 name|s1c
 decl_stmt|;
-comment|// Alice's g^x3, ZKP(x3) or Bob's g^x1, ZKP(x1)
+comment|// Alice's g^x3, ZKP(x3) or Bob's g^x1,
+comment|// ZKP(x1)
 name|JPakeStep1
 name|s1d
 decl_stmt|;
-comment|// Alice's g^x4, ZKP(x4) or Bob's g^x2, ZKP(x2)
+comment|// Alice's g^x4, ZKP(x4) or Bob's g^x2,
+comment|// ZKP(x2)
 name|JPakeStep2
 name|s2
 decl_stmt|;
-comment|// Alice's A, ZKP(x2 * s) or Bob's B, ZKP(x4 * s)
+comment|// Alice's A, ZKP(x2 * s) or Bob's B, ZKP(x4
+comment|// * s)
 block|}
 name|JPakeUserPublic
 typedef|;
@@ -2065,9 +2069,9 @@ name|name
 argument_list|)
 expr_stmt|;
 comment|// K = (X/g^{xb * xd * s})^{xb}
-comment|//   = (g^{(xc + xa + xb) * xd * s - xb * xd *s})^{xb}
-comment|//   = (g^{(xa + xc) * xd * s})^{xb}
-comment|//   = g^{(xa + xc) * xb * xd * s}
+comment|// = (g^{(xc + xa + xb) * xd * s - xb * xd *s})^{xb}
+comment|// = (g^{(xa + xc) * xd * s})^{xb}
+comment|// = g^{(xa + xc) * xb * xd * s}
 comment|// [which is the same regardless of who calculates it]
 comment|// t1 = (g^{xd})^{xb} = g^{xb * xd}
 name|BN_mod_exp

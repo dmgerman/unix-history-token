@@ -8,7 +8,7 @@ comment|/* demos/bio/sconnect.c */
 end_comment
 
 begin_comment
-comment|/* A minimal program to do SSL to a passed host and port.  * It is actually using non-blocking IO but in a very simple manner  * sconnect host:port - it does a 'GET / HTTP/1.0'  *  * cc -I../../include sconnect.c -L../.. -lssl -lcrypto  */
+comment|/*-  * A minimal program to do SSL to a passed host and port.  * It is actually using non-blocking IO but in a very simple manner  * sconnect host:port - it does a 'GET / HTTP/1.0'  *  * cc -I../../include sconnect.c -L../.. -lssl -lcrypto  */
 end_comment
 
 begin_include
@@ -397,8 +397,8 @@ argument_list|()
 operator|==
 literal|0
 condition|)
-comment|/* system call error */
 block|{
+comment|/* system call error */
 name|fprintf
 argument_list|(
 name|stderr

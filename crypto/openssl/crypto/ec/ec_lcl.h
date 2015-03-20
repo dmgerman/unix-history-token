@@ -8,11 +8,11 @@ comment|/*  * Originally written by Bodo Moeller for the OpenSSL project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by   * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * The elliptic curve binary polynomial software is originally written by   * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by  * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * The elliptic curve binary polynomial software is originally written by  * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Structure details are not part of the exported interface,  * so all this may change in future versions. */
+comment|/*  * Structure details are not part of the exported interface, so all this may  * change in future versions.  */
 end_comment
 
 begin_struct
@@ -92,7 +92,7 @@ name|int
 name|field_type
 decl_stmt|;
 comment|/* a NID */
-comment|/* used by EC_GROUP_new, EC_GROUP_free, EC_GROUP_clear_free, EC_GROUP_copy: */
+comment|/*      * used by EC_GROUP_new, EC_GROUP_free, EC_GROUP_clear_free,      * EC_GROUP_copy:      */
 name|int
 function_decl|(
 modifier|*
@@ -220,7 +220,7 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* used by EC_POINT_new, EC_POINT_free, EC_POINT_clear_free, EC_POINT_copy: */
+comment|/*      * used by EC_POINT_new, EC_POINT_free, EC_POINT_clear_free,      * EC_POINT_copy:      */
 name|int
 function_decl|(
 modifier|*
@@ -265,7 +265,7 @@ name|EC_POINT
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* used by EC_POINT_set_to_infinity, 	 * EC_POINT_set_Jprojective_coordinates_GFp, 	 * EC_POINT_get_Jprojective_coordinates_GFp, 	 * EC_POINT_set_affine_coordinates_GFp,     ..._GF2m, 	 * EC_POINT_get_affine_coordinates_GFp,     ..._GF2m, 	 * EC_POINT_set_compressed_coordinates_GFp, ..._GF2m: 	 */
+comment|/*-      * used by EC_POINT_set_to_infinity,      * EC_POINT_set_Jprojective_coordinates_GFp,      * EC_POINT_get_Jprojective_coordinates_GFp,      * EC_POINT_set_affine_coordinates_GFp,     ..._GF2m,      * EC_POINT_get_affine_coordinates_GFp,     ..._GF2m,      * EC_POINT_set_compressed_coordinates_GFp, ..._GF2m:      */
 name|int
 function_decl|(
 modifier|*
@@ -545,7 +545,7 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* used by EC_POINT_is_at_infinity, EC_POINT_is_on_curve, EC_POINT_cmp: */
+comment|/*      * used by EC_POINT_is_at_infinity, EC_POINT_is_on_curve, EC_POINT_cmp:      */
 name|int
 function_decl|(
 modifier|*
@@ -642,7 +642,7 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* used by EC_POINTs_mul, EC_POINT_mul, EC_POINT_precompute_mult, EC_POINT_have_precompute_mult 	 * (default implementations are used if the 'mul' pointer is 0): */
+comment|/*      * used by EC_POINTs_mul, EC_POINT_mul, EC_POINT_precompute_mult,      * EC_POINT_have_precompute_mult (default implementations are used if the      * 'mul' pointer is 0):      */
 name|int
 function_decl|(
 modifier|*
@@ -709,7 +709,7 @@ name|group
 parameter_list|)
 function_decl|;
 comment|/* internal functions */
-comment|/* 'field_mul', 'field_sqr', and 'field_div' can be used by 'add' and 'dbl' so that 	 * the same implementations of point operations can be used with different 	 * optimized implementations of expensive field operations: */
+comment|/*      * 'field_mul', 'field_sqr', and 'field_div' can be used by 'add' and      * 'dbl' so that the same implementations of point operations can be used      * with different optimized implementations of expensive field      * operations:      */
 name|int
 function_decl|(
 modifier|*
@@ -789,6 +789,7 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* e.g. to Montgomery */
 name|int
 function_decl|(
 modifier|*
@@ -812,7 +813,7 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* e.g. to Montgomery */
+comment|/* e.g. from Montgomery */
 name|int
 function_decl|(
 modifier|*
@@ -836,7 +837,6 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* e.g. from Montgomery */
 name|int
 function_decl|(
 modifier|*
@@ -949,7 +949,7 @@ name|char
 modifier|*
 name|seed
 decl_stmt|;
-comment|/* optional seed for parameters (appears in ASN1) */
+comment|/* optional seed for parameters (appears in                                  * ASN1) */
 name|size_t
 name|seed_len
 decl_stmt|;
@@ -958,11 +958,12 @@ modifier|*
 name|extra_data
 decl_stmt|;
 comment|/* linked list */
-comment|/* The following members are handled by the method functions, 	 * even if they appear generic */
+comment|/*      * The following members are handled by the method functions, even if      * they appear generic      */
+comment|/*      * Field specification. For curves over GF(p), this is the modulus; for      * curves over GF(2^m), this is the irreducible polynomial defining the      * field.      */
 name|BIGNUM
 name|field
 decl_stmt|;
-comment|/* Field specification. 	               * For curves over GF(p), this is the modulus; 	               * for curves over GF(2^m), this is the  	               * irreducible polynomial defining the field. 	               */
+comment|/*      * Field specification for curves over GF(2^m). The irreducible f(t) is      * then of the form: t^poly[0] + t^poly[1] + ... + t^poly[k] where m =      * poly[0]> poly[1]> ...> poly[k] = 0.      */
 name|unsigned
 name|int
 name|poly
@@ -970,22 +971,22 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-comment|/* Field specification for curves over GF(2^m). 	                       * The irreducible f(t) is then of the form: 	                       *     t^poly[0] + t^poly[1] + ... + t^poly[k] 	                       * where m = poly[0]> poly[1]> ...> poly[k] = 0. 	                       */
+comment|/*      * Curve coefficients. (Here the assumption is that BIGNUMs can be used      * or abused for all kinds of fields, not just GF(p).) For characteristic      *> 3, the curve is defined by a Weierstrass equation of the form y^2 =      * x^3 + a*x + b. For characteristic 2, the curve is defined by an      * equation of the form y^2 + x*y = x^3 + a*x^2 + b.      */
 name|BIGNUM
 name|a
 decl_stmt|,
 name|b
 decl_stmt|;
-comment|/* Curve coefficients. 	              * (Here the assumption is that BIGNUMs can be used 	              * or abused for all kinds of fields, not just GF(p).) 	              * For characteristic> 3,  the curve is defined 	              * by a Weierstrass equation of the form 	              *     y^2 = x^3 + a*x + b. 	              * For characteristic  2,  the curve is defined by 	              * an equation of the form 	              *     y^2 + x*y = x^3 + a*x^2 + b. 	              */
+comment|/* enable optimized point arithmetics for special case */
 name|int
 name|a_is_minus3
 decl_stmt|;
-comment|/* enable optimized point arithmetics for special case */
+comment|/* method-specific (e.g., Montgomery structure) */
 name|void
 modifier|*
 name|field_data1
 decl_stmt|;
-comment|/* method-specific (e.g., Montgomery structure) */
+comment|/* method-specific */
 name|void
 modifier|*
 name|field_data2
@@ -1012,7 +1013,6 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* method-specific */
 block|}
 comment|/* EC_GROUP */
 struct|;
@@ -1057,7 +1057,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Basically a 'mixin' for extra data, but available for EC_GROUPs/EC_KEYs only  * (with visibility limited to 'package' level for now).  * We use the function pointers as index for retrieval; this obviates  * global ex_data-style index tables.  */
+comment|/*  * Basically a 'mixin' for extra data, but available for EC_GROUPs/EC_KEYs  * only (with visibility limited to 'package' level for now). We use the  * function pointers as index for retrieval; this obviates global  * ex_data-style index tables.  */
 end_comment
 
 begin_function_decl
@@ -1264,7 +1264,7 @@ name|EC_METHOD
 modifier|*
 name|meth
 decl_stmt|;
-comment|/* All members except 'meth' are handled by the method functions, 	 * even if they appear generic */
+comment|/*      * All members except 'meth' are handled by the method functions, even if      * they appear generic      */
 name|BIGNUM
 name|X
 decl_stmt|;
@@ -1274,18 +1274,18 @@ decl_stmt|;
 name|BIGNUM
 name|Z
 decl_stmt|;
-comment|/* Jacobian projective coordinates: 	           * (X, Y, Z)  represents  (X/Z^2, Y/Z^3)  if  Z != 0 */
+comment|/* Jacobian projective coordinates: (X, Y, Z)                                  * represents (X/Z^2, Y/Z^3) if Z != 0 */
 name|int
 name|Z_is_one
 decl_stmt|;
-comment|/* enable optimized point arithmetics for special case */
+comment|/* enable optimized point arithmetics for                                  * special case */
 block|}
 comment|/* EC_POINT */
 struct|;
 end_struct
 
 begin_comment
-comment|/* method functions in ec_mult.c  * (ec_lib.c uses these as defaults if group->method->mul is 0) */
+comment|/*  * method functions in ec_mult.c (ec_lib.c uses these as defaults if  * group->method->mul is 0)  */
 end_comment
 
 begin_function_decl

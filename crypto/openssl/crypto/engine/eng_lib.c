@@ -4,11 +4,11 @@ comment|/* crypto/engine/eng_lib.c */
 end_comment
 
 begin_comment
-comment|/* Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -116,7 +116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Placed here (close proximity to ENGINE_new) so that modifications to the  * elements of the ENGINE structure are more likely to be caught and changed  * here. */
+comment|/*  * Placed here (close proximity to ENGINE_new) so that modifications to the  * elements of the ENGINE structure are more likely to be caught and changed  * here.  */
 end_comment
 
 begin_function
@@ -334,7 +334,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* Give the ENGINE a chance to do any structural cleanup corresponding 	 * to allocation it did in its constructor (eg. unload error strings) */
+comment|/*      * Give the ENGINE a chance to do any structural cleanup corresponding to      * allocation it did in its constructor (eg. unload error strings)      */
 if|if
 condition|(
 name|e
@@ -396,7 +396,7 @@ comment|/* Cleanup stuff */
 end_comment
 
 begin_comment
-comment|/* ENGINE_cleanup() is coded such that anything that does work that will need  * cleanup can register a "cleanup" callback here. That way we don't get linker  * bloat by referring to all *possible* cleanups, but any linker bloat into code  * "X" will cause X's cleanup function to end up here. */
+comment|/*  * ENGINE_cleanup() is coded such that anything that does work that will need  * cleanup can register a "cleanup" callback here. That way we don't get  * linker bloat by referring to all *possible* cleanups, but any linker bloat  * into code "X" will cause X's cleanup function to end up here.  */
 end_comment
 
 begin_expr_stmt
@@ -644,7 +644,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* FIXME: This should be handled (somehow) through RAND, eg. by it 	 * registering a cleanup callback. */
+comment|/*      * FIXME: This should be handled (somehow) through RAND, eg. by it      * registering a cleanup callback.      */
 name|RAND_set_rand_method
 argument_list|(
 name|NULL
@@ -765,7 +765,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Functions to get/set an ENGINE's elements - mainly to avoid exposing the  * ENGINE structure itself. */
+comment|/*  * Functions to get/set an ENGINE's elements - mainly to avoid exposing the  * ENGINE structure itself.  */
 end_comment
 
 begin_function
@@ -1153,7 +1153,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* eng_lib.o is pretty much linked into anything that touches ENGINE already, so  * put the "static_state" hack here. */
+comment|/*  * eng_lib.o is pretty much linked into anything that touches ENGINE already,  * so put the "static_state" hack here.  */
 end_comment
 
 begin_decl_stmt

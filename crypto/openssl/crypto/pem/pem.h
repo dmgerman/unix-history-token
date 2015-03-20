@@ -4,7 +4,7 @@ comment|/* crypto/pem/pem.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1997 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1997 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_ifndef
@@ -317,7 +317,7 @@ define|#
 directive|define
 name|PEM_STRING_CMS
 value|"CMS"
-comment|/* Note that this structure is initialised by PEM_SealInit and cleaned up      by PEM_SealFinal (at least for now) */
+comment|/*    * Note that this structure is initialised by PEM_SealInit and cleaned up    * by PEM_SealFinal (at least for now)    */
 typedef|typedef
 struct|struct
 name|PEM_Encode_Seal_st
@@ -369,7 +369,7 @@ decl_stmt|;
 name|int
 name|key_enc
 decl_stmt|;
-comment|/*	char iv[8]; unused and wrong size */
+comment|/*      char iv[8]; unused and wrong size */
 block|}
 name|PEM_USER
 typedef|;
@@ -401,7 +401,7 @@ block|{
 name|int
 name|cipher
 decl_stmt|;
-comment|/* unused, and wrong size 	   unsigned char iv[8]; */
+comment|/*-         unused, and wrong size         unsigned char iv[8]; */
 block|}
 name|DEK_info
 struct|;
@@ -467,7 +467,7 @@ modifier|*
 name|key
 decl_stmt|;
 comment|/* key */
-comment|/* unused, and wrong size 	   unsigned char iv[8]; */
+comment|/*-     unused, and wrong size     unsigned char iv[8]; */
 name|int
 name|data_enc
 decl_stmt|;
@@ -483,7 +483,7 @@ decl_stmt|;
 block|}
 name|PEM_CTX
 typedef|;
-comment|/* These macros make the PEM_read/PEM_write functions easier to maintain and  * write. Now they are all implemented with either:  * IMPLEMENT_PEM_rw(...) or IMPLEMENT_PEM_rw_cb(...)  */
+comment|/*  * These macros make the PEM_read/PEM_write functions easier to maintain and  * write. Now they are all implemented with either: IMPLEMENT_PEM_rw(...) or  * IMPLEMENT_PEM_rw_cb(...)  */
 ifdef|#
 directive|ifdef
 name|OPENSSL_NO_FP_API
@@ -567,7 +567,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|type *PEM_read_##name(FILE *fp, type **x, pem_password_cb *cb, void *u)\ { \     return (type*)PEM_ASN1_read(CHECKED_D2I_OF(type, d2i_##asn1), \ 				str, fp, \ 				CHECKED_PPTR_OF(type, x), \ 				cb, u); \ }
+value|type *PEM_read_##name(FILE *fp, type **x, pem_password_cb *cb, void *u)\ { \     return (type*)PEM_ASN1_read(CHECKED_D2I_OF(type, d2i_##asn1), \                                 str, fp, \                                 CHECKED_PPTR_OF(type, x), \                                 cb, u); \ }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_fp
@@ -581,7 +581,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_##name(FILE *fp, type *x) \ { \     return PEM_ASN1_write(CHECKED_I2D_OF(type, i2d_##asn1), \ 			  str, fp, \ 			  CHECKED_PTR_OF(type, x), \ 			  NULL, NULL, 0, NULL, NULL); \ }
+value|int PEM_write_##name(FILE *fp, type *x) \ { \     return PEM_ASN1_write(CHECKED_I2D_OF(type, i2d_##asn1), \                           str, fp, \                           CHECKED_PTR_OF(type, x), \                           NULL, NULL, 0, NULL, NULL); \ }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_fp_const
@@ -595,7 +595,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_##name(FILE *fp, const type *x) \ { \     return PEM_ASN1_write(CHECKED_I2D_OF(const type, i2d_##asn1), \ 			  str, fp, \ 			  CHECKED_PTR_OF(const type, x), \ 			  NULL, NULL, 0, NULL, NULL); \ }
+value|int PEM_write_##name(FILE *fp, const type *x) \ { \     return PEM_ASN1_write(CHECKED_I2D_OF(const type, i2d_##asn1), \                           str, fp, \                           CHECKED_PTR_OF(const type, x), \                           NULL, NULL, 0, NULL, NULL); \ }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb_fp
@@ -609,7 +609,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, \ 		  void *u) \ 	{ \ 	    return PEM_ASN1_write(CHECKED_I2D_OF(type, i2d_##asn1), \ 				  str, fp, \ 				  CHECKED_PTR_OF(type, x), \ 				  enc, kstr, klen, cb, u); \ 	}
+value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \              unsigned char *kstr, int klen, pem_password_cb *cb, \                   void *u) \         { \             return PEM_ASN1_write(CHECKED_I2D_OF(type, i2d_##asn1), \                                   str, fp, \                                   CHECKED_PTR_OF(type, x), \                                   enc, kstr, klen, cb, u); \         }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb_fp_const
@@ -623,7 +623,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, \ 		  void *u) \ 	{ \ 	    return PEM_ASN1_write(CHECKED_I2D_OF(const type, i2d_##asn1), \ 				  str, fp, \ 				  CHECKED_PTR_OF(const type, x), \ 				  enc, kstr, klen, cb, u); \ 	}
+value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \              unsigned char *kstr, int klen, pem_password_cb *cb, \                   void *u) \         { \             return PEM_ASN1_write(CHECKED_I2D_OF(const type, i2d_##asn1), \                                   str, fp, \                                   CHECKED_PTR_OF(const type, x), \                                   enc, kstr, klen, cb, u); \         }
 endif|#
 directive|endif
 define|#
@@ -639,7 +639,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|type *PEM_read_bio_##name(BIO *bp, type **x, pem_password_cb *cb, void *u)\ { \     return (type*)PEM_ASN1_read_bio(CHECKED_D2I_OF(type, d2i_##asn1), \ 				    str, bp, \ 				    CHECKED_PPTR_OF(type, x), \ 				    cb, u); \ }
+value|type *PEM_read_bio_##name(BIO *bp, type **x, pem_password_cb *cb, void *u)\ { \     return (type*)PEM_ASN1_read_bio(CHECKED_D2I_OF(type, d2i_##asn1), \                                     str, bp, \                                     CHECKED_PPTR_OF(type, x), \                                     cb, u); \ }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_bio
@@ -653,7 +653,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_bio_##name(BIO *bp, type *x) \ { \     return PEM_ASN1_write_bio(CHECKED_I2D_OF(type, i2d_##asn1), \ 			      str, bp, \ 			      CHECKED_PTR_OF(type, x), \ 			      NULL, NULL, 0, NULL, NULL); \ }
+value|int PEM_write_bio_##name(BIO *bp, type *x) \ { \     return PEM_ASN1_write_bio(CHECKED_I2D_OF(type, i2d_##asn1), \                               str, bp, \                               CHECKED_PTR_OF(type, x), \                               NULL, NULL, 0, NULL, NULL); \ }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_bio_const
@@ -667,7 +667,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_bio_##name(BIO *bp, const type *x) \ { \     return PEM_ASN1_write_bio(CHECKED_I2D_OF(const type, i2d_##asn1), \ 			      str, bp, \ 			      CHECKED_PTR_OF(const type, x), \ 			      NULL, NULL, 0, NULL, NULL); \ }
+value|int PEM_write_bio_##name(BIO *bp, const type *x) \ { \     return PEM_ASN1_write_bio(CHECKED_I2D_OF(const type, i2d_##asn1), \                               str, bp, \                               CHECKED_PTR_OF(const type, x), \                               NULL, NULL, 0, NULL, NULL); \ }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb_bio
@@ -681,7 +681,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, void *u) \ 	{ \ 	    return PEM_ASN1_write_bio(CHECKED_I2D_OF(type, i2d_##asn1), \ 				      str, bp, \ 				      CHECKED_PTR_OF(type, x), \ 				      enc, kstr, klen, cb, u); \ 	}
+value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \              unsigned char *kstr, int klen, pem_password_cb *cb, void *u) \         { \             return PEM_ASN1_write_bio(CHECKED_I2D_OF(type, i2d_##asn1), \                                       str, bp, \                                       CHECKED_PTR_OF(type, x), \                                       enc, kstr, klen, cb, u); \         }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb_bio_const
@@ -695,7 +695,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, void *u) \ 	{ \ 	    return PEM_ASN1_write_bio(CHECKED_I2D_OF(const type, i2d_##asn1), \ 				      str, bp, \ 				      CHECKED_PTR_OF(const type, x), \ 				      enc, kstr, klen, cb, u); \ 	}
+value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \              unsigned char *kstr, int klen, pem_password_cb *cb, void *u) \         { \             return PEM_ASN1_write_bio(CHECKED_I2D_OF(const type, i2d_##asn1), \                                       str, bp, \                                       CHECKED_PTR_OF(const type, x), \                                       enc, kstr, klen, cb, u); \         }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write
@@ -709,7 +709,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_write_bio(name, type, str, asn1) \ 	IMPLEMENT_PEM_write_fp(name, type, str, asn1)
+value|IMPLEMENT_PEM_write_bio(name, type, str, asn1) \         IMPLEMENT_PEM_write_fp(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_const
@@ -723,7 +723,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_write_bio_const(name, type, str, asn1) \ 	IMPLEMENT_PEM_write_fp_const(name, type, str, asn1)
+value|IMPLEMENT_PEM_write_bio_const(name, type, str, asn1) \         IMPLEMENT_PEM_write_fp_const(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb
@@ -737,7 +737,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_write_cb_bio(name, type, str, asn1) \ 	IMPLEMENT_PEM_write_cb_fp(name, type, str, asn1)
+value|IMPLEMENT_PEM_write_cb_bio(name, type, str, asn1) \         IMPLEMENT_PEM_write_cb_fp(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb_const
@@ -751,7 +751,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_write_cb_bio_const(name, type, str, asn1) \ 	IMPLEMENT_PEM_write_cb_fp_const(name, type, str, asn1)
+value|IMPLEMENT_PEM_write_cb_bio_const(name, type, str, asn1) \         IMPLEMENT_PEM_write_cb_fp_const(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_read
@@ -765,7 +765,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_read_bio(name, type, str, asn1) \ 	IMPLEMENT_PEM_read_fp(name, type, str, asn1)
+value|IMPLEMENT_PEM_read_bio(name, type, str, asn1) \         IMPLEMENT_PEM_read_fp(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_rw
@@ -779,7 +779,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_read(name, type, str, asn1) \ 	IMPLEMENT_PEM_write(name, type, str, asn1)
+value|IMPLEMENT_PEM_read(name, type, str, asn1) \         IMPLEMENT_PEM_write(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_rw_const
@@ -793,7 +793,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_read(name, type, str, asn1) \ 	IMPLEMENT_PEM_write_const(name, type, str, asn1)
+value|IMPLEMENT_PEM_read(name, type, str, asn1) \         IMPLEMENT_PEM_write_const(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_rw_cb
@@ -807,7 +807,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_read(name, type, str, asn1) \ 	IMPLEMENT_PEM_write_cb(name, type, str, asn1)
+value|IMPLEMENT_PEM_read(name, type, str, asn1) \         IMPLEMENT_PEM_write_cb(name, type, str, asn1)
 comment|/* These are the same except they are for the declarations */
 if|#
 directive|if
@@ -897,7 +897,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
+value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \              unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
 endif|#
 directive|endif
 ifndef|#
@@ -942,7 +942,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
+value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \              unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
 else|#
 directive|else
 define|#
@@ -992,7 +992,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_write_bio(name, type) \ 	DECLARE_PEM_write_fp(name, type)
+value|DECLARE_PEM_write_bio(name, type) \         DECLARE_PEM_write_fp(name, type)
 define|#
 directive|define
 name|DECLARE_PEM_write_const
@@ -1002,7 +1002,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_write_bio_const(name, type) \ 	DECLARE_PEM_write_fp_const(name, type)
+value|DECLARE_PEM_write_bio_const(name, type) \         DECLARE_PEM_write_fp_const(name, type)
 define|#
 directive|define
 name|DECLARE_PEM_write_cb
@@ -1012,7 +1012,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_write_cb_bio(name, type) \ 	DECLARE_PEM_write_cb_fp(name, type)
+value|DECLARE_PEM_write_cb_bio(name, type) \         DECLARE_PEM_write_cb_fp(name, type)
 define|#
 directive|define
 name|DECLARE_PEM_read
@@ -1022,7 +1022,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_read_bio(name, type) \ 	DECLARE_PEM_read_fp(name, type)
+value|DECLARE_PEM_read_bio(name, type) \         DECLARE_PEM_read_fp(name, type)
 define|#
 directive|define
 name|DECLARE_PEM_rw
@@ -1032,7 +1032,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_read(name, type) \ 	DECLARE_PEM_write(name, type)
+value|DECLARE_PEM_read(name, type) \         DECLARE_PEM_write(name, type)
 define|#
 directive|define
 name|DECLARE_PEM_rw_const
@@ -1042,7 +1042,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_read(name, type) \ 	DECLARE_PEM_write_const(name, type)
+value|DECLARE_PEM_read(name, type) \         DECLARE_PEM_write_const(name, type)
 define|#
 directive|define
 name|DECLARE_PEM_rw_cb
@@ -1052,7 +1052,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_read(name, type) \ 	DECLARE_PEM_write_cb(name, type)
+value|DECLARE_PEM_read(name, type) \         DECLARE_PEM_write_cb(name, type)
 ifdef|#
 directive|ifdef
 name|SSLEAY_MACROS
@@ -1065,7 +1065,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write((int (*)())i2d_SSL_SESSION, \ 			PEM_STRING_SSL_SESSION,fp, (char *)x, NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write((int (*)())i2d_SSL_SESSION, \                         PEM_STRING_SSL_SESSION,fp, (char *)x, NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_X509
@@ -1075,7 +1075,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write((int (*)())i2d_X509,PEM_STRING_X509,fp, \ 			(char *)x, NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write((int (*)())i2d_X509,PEM_STRING_X509,fp, \                         (char *)x, NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_X509_REQ
@@ -1084,7 +1084,7 @@ name|fp
 parameter_list|,
 name|x
 parameter_list|)
-value|PEM_ASN1_write( \ 		(int (*)())i2d_X509_REQ,PEM_STRING_X509_REQ,fp,(char *)x, \ 			NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write( \                 (int (*)())i2d_X509_REQ,PEM_STRING_X509_REQ,fp,(char *)x, \                         NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_X509_CRL
@@ -1094,7 +1094,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write((int (*)())i2d_X509_CRL,PEM_STRING_X509_CRL, \ 			fp,(char *)x, NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write((int (*)())i2d_X509_CRL,PEM_STRING_X509_CRL, \                         fp,(char *)x, NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_RSAPrivateKey
@@ -1114,7 +1114,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|PEM_ASN1_write((int (*)())i2d_RSAPrivateKey,PEM_STRING_RSA,fp,\ 			(char *)x,enc,kstr,klen,cb,u)
+value|PEM_ASN1_write((int (*)())i2d_RSAPrivateKey,PEM_STRING_RSA,fp,\                         (char *)x,enc,kstr,klen,cb,u)
 define|#
 directive|define
 name|PEM_write_RSAPublicKey
@@ -1124,7 +1124,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write((int (*)())i2d_RSAPublicKey,\ 			PEM_STRING_RSA_PUBLIC,fp,(char *)x,NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write((int (*)())i2d_RSAPublicKey,\                         PEM_STRING_RSA_PUBLIC,fp,(char *)x,NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_DSAPrivateKey
@@ -1144,7 +1144,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|PEM_ASN1_write((int (*)())i2d_DSAPrivateKey,PEM_STRING_DSA,fp,\ 			(char *)x,enc,kstr,klen,cb,u)
+value|PEM_ASN1_write((int (*)())i2d_DSAPrivateKey,PEM_STRING_DSA,fp,\                         (char *)x,enc,kstr,klen,cb,u)
 define|#
 directive|define
 name|PEM_write_PrivateKey
@@ -1164,7 +1164,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|PEM_ASN1_write((int (*)())i2d_PrivateKey,\ 		(((x)->type == EVP_PKEY_DSA)?PEM_STRING_DSA:PEM_STRING_RSA),\ 			bp,(char *)x,enc,kstr,klen,cb,u)
+value|PEM_ASN1_write((int (*)())i2d_PrivateKey,\                 (((x)->type == EVP_PKEY_DSA)?PEM_STRING_DSA:PEM_STRING_RSA),\                         bp,(char *)x,enc,kstr,klen,cb,u)
 define|#
 directive|define
 name|PEM_write_PKCS7
@@ -1174,7 +1174,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write((int (*)())i2d_PKCS7,PEM_STRING_PKCS7,fp, \ 			(char *)x, NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write((int (*)())i2d_PKCS7,PEM_STRING_PKCS7,fp, \                         (char *)x, NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_DHparams
@@ -1184,7 +1184,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write((int (*)())i2d_DHparams,PEM_STRING_DHPARAMS,fp,\ 			(char *)x,NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write((int (*)())i2d_DHparams,PEM_STRING_DHPARAMS,fp,\                         (char *)x,NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_NETSCAPE_CERT_SEQUENCE
@@ -1194,7 +1194,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write((int (*)())i2d_NETSCAPE_CERT_SEQUENCE, \ 			PEM_STRING_X509,fp, \                         (char *)x, NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write((int (*)())i2d_NETSCAPE_CERT_SEQUENCE, \                         PEM_STRING_X509,fp, \                         (char *)x, NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_read_SSL_SESSION
@@ -1207,7 +1207,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(SSL_SESSION *)PEM_ASN1_read( \ 	(char *(*)())d2i_SSL_SESSION,PEM_STRING_SSL_SESSION,fp,(char **)x,cb,u)
+value|(SSL_SESSION *)PEM_ASN1_read( \         (char *(*)())d2i_SSL_SESSION,PEM_STRING_SSL_SESSION,fp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_X509
@@ -1220,7 +1220,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(X509 *)PEM_ASN1_read( \ 	(char *(*)())d2i_X509,PEM_STRING_X509,fp,(char **)x,cb,u)
+value|(X509 *)PEM_ASN1_read( \         (char *(*)())d2i_X509,PEM_STRING_X509,fp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_X509_REQ
@@ -1233,7 +1233,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(X509_REQ *)PEM_ASN1_read( \ 	(char *(*)())d2i_X509_REQ,PEM_STRING_X509_REQ,fp,(char **)x,cb,u)
+value|(X509_REQ *)PEM_ASN1_read( \         (char *(*)())d2i_X509_REQ,PEM_STRING_X509_REQ,fp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_X509_CRL
@@ -1246,7 +1246,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(X509_CRL *)PEM_ASN1_read( \ 	(char *(*)())d2i_X509_CRL,PEM_STRING_X509_CRL,fp,(char **)x,cb,u)
+value|(X509_CRL *)PEM_ASN1_read( \         (char *(*)())d2i_X509_CRL,PEM_STRING_X509_CRL,fp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_RSAPrivateKey
@@ -1259,7 +1259,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(RSA *)PEM_ASN1_read( \ 	(char *(*)())d2i_RSAPrivateKey,PEM_STRING_RSA,fp,(char **)x,cb,u)
+value|(RSA *)PEM_ASN1_read( \         (char *(*)())d2i_RSAPrivateKey,PEM_STRING_RSA,fp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_RSAPublicKey
@@ -1272,7 +1272,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(RSA *)PEM_ASN1_read( \ 	(char *(*)())d2i_RSAPublicKey,PEM_STRING_RSA_PUBLIC,fp,(char **)x,cb,u)
+value|(RSA *)PEM_ASN1_read( \         (char *(*)())d2i_RSAPublicKey,PEM_STRING_RSA_PUBLIC,fp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_DSAPrivateKey
@@ -1285,7 +1285,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(DSA *)PEM_ASN1_read( \ 	(char *(*)())d2i_DSAPrivateKey,PEM_STRING_DSA,fp,(char **)x,cb,u)
+value|(DSA *)PEM_ASN1_read( \         (char *(*)())d2i_DSAPrivateKey,PEM_STRING_DSA,fp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_PrivateKey
@@ -1298,7 +1298,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(EVP_PKEY *)PEM_ASN1_read( \ 	(char *(*)())d2i_PrivateKey,PEM_STRING_EVP_PKEY,fp,(char **)x,cb,u)
+value|(EVP_PKEY *)PEM_ASN1_read( \         (char *(*)())d2i_PrivateKey,PEM_STRING_EVP_PKEY,fp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_PKCS7
@@ -1311,7 +1311,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(PKCS7 *)PEM_ASN1_read( \ 	(char *(*)())d2i_PKCS7,PEM_STRING_PKCS7,fp,(char **)x,cb,u)
+value|(PKCS7 *)PEM_ASN1_read( \         (char *(*)())d2i_PKCS7,PEM_STRING_PKCS7,fp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_DHparams
@@ -1324,7 +1324,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(DH *)PEM_ASN1_read( \ 	(char *(*)())d2i_DHparams,PEM_STRING_DHPARAMS,fp,(char **)x,cb,u)
+value|(DH *)PEM_ASN1_read( \         (char *(*)())d2i_DHparams,PEM_STRING_DHPARAMS,fp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_NETSCAPE_CERT_SEQUENCE
@@ -1338,7 +1338,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|(NETSCAPE_CERT_SEQUENCE *)PEM_ASN1_read( \         (char *(*)())d2i_NETSCAPE_CERT_SEQUENCE,PEM_STRING_X509,fp,\ 							(char **)x,cb,u)
+value|(NETSCAPE_CERT_SEQUENCE *)PEM_ASN1_read( \         (char *(*)())d2i_NETSCAPE_CERT_SEQUENCE,PEM_STRING_X509,fp,\                                                         (char **)x,cb,u)
 define|#
 directive|define
 name|PEM_write_bio_X509
@@ -1348,7 +1348,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write_bio((int (*)())i2d_X509,PEM_STRING_X509,bp, \ 			(char *)x, NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write_bio((int (*)())i2d_X509,PEM_STRING_X509,bp, \                         (char *)x, NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_bio_X509_REQ
@@ -1357,7 +1357,7 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
-value|PEM_ASN1_write_bio( \ 		(int (*)())i2d_X509_REQ,PEM_STRING_X509_REQ,bp,(char *)x, \ 			NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write_bio( \                 (int (*)())i2d_X509_REQ,PEM_STRING_X509_REQ,bp,(char *)x, \                         NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_bio_X509_CRL
@@ -1367,7 +1367,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write_bio((int (*)())i2d_X509_CRL,PEM_STRING_X509_CRL,\ 			bp,(char *)x, NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write_bio((int (*)())i2d_X509_CRL,PEM_STRING_X509_CRL,\                         bp,(char *)x, NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_bio_RSAPrivateKey
@@ -1387,7 +1387,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|PEM_ASN1_write_bio((int (*)())i2d_RSAPrivateKey,PEM_STRING_RSA,\ 			bp,(char *)x,enc,kstr,klen,cb,u)
+value|PEM_ASN1_write_bio((int (*)())i2d_RSAPrivateKey,PEM_STRING_RSA,\                         bp,(char *)x,enc,kstr,klen,cb,u)
 define|#
 directive|define
 name|PEM_write_bio_RSAPublicKey
@@ -1397,7 +1397,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write_bio((int (*)())i2d_RSAPublicKey, \ 			PEM_STRING_RSA_PUBLIC,\ 			bp,(char *)x,NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write_bio((int (*)())i2d_RSAPublicKey, \                         PEM_STRING_RSA_PUBLIC,\                         bp,(char *)x,NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_bio_DSAPrivateKey
@@ -1417,7 +1417,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|PEM_ASN1_write_bio((int (*)())i2d_DSAPrivateKey,PEM_STRING_DSA,\ 			bp,(char *)x,enc,kstr,klen,cb,u)
+value|PEM_ASN1_write_bio((int (*)())i2d_DSAPrivateKey,PEM_STRING_DSA,\                         bp,(char *)x,enc,kstr,klen,cb,u)
 define|#
 directive|define
 name|PEM_write_bio_PrivateKey
@@ -1437,7 +1437,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|PEM_ASN1_write_bio((int (*)())i2d_PrivateKey,\ 		(((x)->type == EVP_PKEY_DSA)?PEM_STRING_DSA:PEM_STRING_RSA),\ 			bp,(char *)x,enc,kstr,klen,cb,u)
+value|PEM_ASN1_write_bio((int (*)())i2d_PrivateKey,\                 (((x)->type == EVP_PKEY_DSA)?PEM_STRING_DSA:PEM_STRING_RSA),\                         bp,(char *)x,enc,kstr,klen,cb,u)
 define|#
 directive|define
 name|PEM_write_bio_PKCS7
@@ -1447,7 +1447,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write_bio((int (*)())i2d_PKCS7,PEM_STRING_PKCS7,bp, \ 			(char *)x, NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write_bio((int (*)())i2d_PKCS7,PEM_STRING_PKCS7,bp, \                         (char *)x, NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_bio_DHparams
@@ -1457,7 +1457,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write_bio((int (*)())i2d_DHparams,PEM_STRING_DHPARAMS,\ 			bp,(char *)x,NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write_bio((int (*)())i2d_DHparams,PEM_STRING_DHPARAMS,\                         bp,(char *)x,NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_bio_DSAparams
@@ -1467,7 +1467,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write_bio((int (*)())i2d_DSAparams, \ 			PEM_STRING_DSAPARAMS,bp,(char *)x,NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write_bio((int (*)())i2d_DSAparams, \                         PEM_STRING_DSAPARAMS,bp,(char *)x,NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_bio_NETSCAPE_CERT_SEQUENCE
@@ -1477,7 +1477,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write_bio((int (*)())i2d_NETSCAPE_CERT_SEQUENCE, \ 			PEM_STRING_X509,bp, \                         (char *)x, NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write_bio((int (*)())i2d_NETSCAPE_CERT_SEQUENCE, \                         PEM_STRING_X509,bp, \                         (char *)x, NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_read_bio_X509
@@ -1490,7 +1490,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(X509 *)PEM_ASN1_read_bio( \ 	(char *(*)())d2i_X509,PEM_STRING_X509,bp,(char **)x,cb,u)
+value|(X509 *)PEM_ASN1_read_bio( \         (char *(*)())d2i_X509,PEM_STRING_X509,bp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_bio_X509_REQ
@@ -1503,7 +1503,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(X509_REQ *)PEM_ASN1_read_bio( \ 	(char *(*)())d2i_X509_REQ,PEM_STRING_X509_REQ,bp,(char **)x,cb,u)
+value|(X509_REQ *)PEM_ASN1_read_bio( \         (char *(*)())d2i_X509_REQ,PEM_STRING_X509_REQ,bp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_bio_X509_CRL
@@ -1516,7 +1516,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(X509_CRL *)PEM_ASN1_read_bio( \ 	(char *(*)())d2i_X509_CRL,PEM_STRING_X509_CRL,bp,(char **)x,cb,u)
+value|(X509_CRL *)PEM_ASN1_read_bio( \         (char *(*)())d2i_X509_CRL,PEM_STRING_X509_CRL,bp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_bio_RSAPrivateKey
@@ -1529,7 +1529,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(RSA *)PEM_ASN1_read_bio( \ 	(char *(*)())d2i_RSAPrivateKey,PEM_STRING_RSA,bp,(char **)x,cb,u)
+value|(RSA *)PEM_ASN1_read_bio( \         (char *(*)())d2i_RSAPrivateKey,PEM_STRING_RSA,bp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_bio_RSAPublicKey
@@ -1542,7 +1542,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(RSA *)PEM_ASN1_read_bio( \ 	(char *(*)())d2i_RSAPublicKey,PEM_STRING_RSA_PUBLIC,bp,(char **)x,cb,u)
+value|(RSA *)PEM_ASN1_read_bio( \         (char *(*)())d2i_RSAPublicKey,PEM_STRING_RSA_PUBLIC,bp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_bio_DSAPrivateKey
@@ -1555,7 +1555,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(DSA *)PEM_ASN1_read_bio( \ 	(char *(*)())d2i_DSAPrivateKey,PEM_STRING_DSA,bp,(char **)x,cb,u)
+value|(DSA *)PEM_ASN1_read_bio( \         (char *(*)())d2i_DSAPrivateKey,PEM_STRING_DSA,bp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_bio_PrivateKey
@@ -1568,7 +1568,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(EVP_PKEY *)PEM_ASN1_read_bio( \ 	(char *(*)())d2i_PrivateKey,PEM_STRING_EVP_PKEY,bp,(char **)x,cb,u)
+value|(EVP_PKEY *)PEM_ASN1_read_bio( \         (char *(*)())d2i_PrivateKey,PEM_STRING_EVP_PKEY,bp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_bio_PKCS7
@@ -1581,7 +1581,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(PKCS7 *)PEM_ASN1_read_bio( \ 	(char *(*)())d2i_PKCS7,PEM_STRING_PKCS7,bp,(char **)x,cb,u)
+value|(PKCS7 *)PEM_ASN1_read_bio( \         (char *(*)())d2i_PKCS7,PEM_STRING_PKCS7,bp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_bio_DHparams
@@ -1594,7 +1594,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(DH *)PEM_ASN1_read_bio( \ 	(char *(*)())d2i_DHparams,PEM_STRING_DHPARAMS,bp,(char **)x,cb,u)
+value|(DH *)PEM_ASN1_read_bio( \         (char *(*)())d2i_DHparams,PEM_STRING_DHPARAMS,bp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_bio_DSAparams
@@ -1607,7 +1607,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(DSA *)PEM_ASN1_read_bio( \ 	(char *(*)())d2i_DSAparams,PEM_STRING_DSAPARAMS,bp,(char **)x,cb,u)
+value|(DSA *)PEM_ASN1_read_bio( \         (char *(*)())d2i_DSAparams,PEM_STRING_DSAPARAMS,bp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_bio_NETSCAPE_CERT_SEQUENCE
@@ -1621,7 +1621,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|(NETSCAPE_CERT_SEQUENCE *)PEM_ASN1_read_bio( \         (char *(*)())d2i_NETSCAPE_CERT_SEQUENCE,PEM_STRING_X509,bp,\ 							(char **)x,cb,u)
+value|(NETSCAPE_CERT_SEQUENCE *)PEM_ASN1_read_bio( \         (char *(*)())d2i_NETSCAPE_CERT_SEQUENCE,PEM_STRING_X509,bp,\                                                         (char **)x,cb,u)
 endif|#
 directive|endif
 if|#
@@ -1846,7 +1846,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|((type*)PEM_ASN1_read_bio(CHECKED_D2I_OF(type, d2i), \ 			      name, bp,			\ 			      CHECKED_PPTR_OF(type, x), \ 			      cb, u))
+value|((type*)PEM_ASN1_read_bio(CHECKED_D2I_OF(type, d2i), \                               name, bp,                 \                               CHECKED_PPTR_OF(type, x), \                               cb, u))
 name|int
 name|PEM_ASN1_write_bio
 parameter_list|(
@@ -1914,7 +1914,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|(PEM_ASN1_write_bio(CHECKED_I2D_OF(type, i2d), \ 			name, bp,		   \ 			CHECKED_PTR_OF(type, x), \ 			enc, kstr, klen, cb, u))
+value|(PEM_ASN1_write_bio(CHECKED_I2D_OF(type, i2d), \                         name, bp,                  \                         CHECKED_PTR_OF(type, x), \                         enc, kstr, klen, cb, u))
 name|STACK_OF
 argument_list|(
 name|X509_INFO
@@ -2774,7 +2774,7 @@ endif|#
 directive|endif
 comment|/* SSLEAY_MACROS */
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_PEM_strings
 parameter_list|(

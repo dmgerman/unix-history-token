@@ -8,11 +8,11 @@ comment|/* ==================================================================== 
 end_comment
 
 begin_comment
-comment|/* NOTE: This file is licensed pursuant to the OpenSSL license below  * and may be modified; but after modifications, the above covenant  * may no longer apply!  In such cases, the corresponding paragraph  * ["In addition, Sun covenants ... causes the infringement."] and  * this note can be edited out; but please keep the Sun copyright  * notice and attribution. */
+comment|/*  * NOTE: This file is licensed pursuant to the OpenSSL license below and may  * be modified; but after modifications, the above covenant may no longer  * apply! In such cases, the corresponding paragraph ["In addition, Sun  * covenants ... causes the infringement."] and this note can be edited out;  * but please keep the Sun copyright notice and attribution.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -46,7 +46,7 @@ file|"bn_lcl.h"
 end_include
 
 begin_comment
-comment|/* Maximum number of iterations before BN_GF2m_mod_solve_quad_arr should fail. */
+comment|/*  * Maximum number of iterations before BN_GF2m_mod_solve_quad_arr should  * fail.  */
 end_comment
 
 begin_define
@@ -246,7 +246,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Product of two polynomials a, b each with degree< BN_BITS2 - 1,  * result is a polynomial r with degree< 2 * BN_BITS - 1  * The caller MUST ensure that the variables have the right amount  * of space allocated.  */
+comment|/*  * Product of two polynomials a, b each with degree< BN_BITS2 - 1, result is  * a polynomial r with degree< 2 * BN_BITS - 1 The caller MUST ensure that  * the variables have the right amount of space allocated.  */
 end_comment
 
 begin_ifdef
@@ -1891,7 +1891,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Product of two polynomials a, b each with degree< 2 * BN_BITS2 - 1,  * result is a polynomial r with degree< 4 * BN_BITS2 - 1  * The caller MUST ensure that the variables have the right amount  * of space allocated.  */
+comment|/*  * Product of two polynomials a, b each with degree< 2 * BN_BITS2 - 1,  * result is a polynomial r with degree< 4 * BN_BITS2 - 1 The caller MUST  * ensure that the variables have the right amount of space allocated.  */
 end_comment
 
 begin_function
@@ -2019,7 +2019,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Add polynomials a and b and store result in r; r could be a or b, a and b   * could be equal; r is the bitwise XOR of a and b.  */
+comment|/*  * Add polynomials a and b and store result in r; r could be a or b, a and b  * could be equal; r is the bitwise XOR of a and b.  */
 end_comment
 
 begin_function
@@ -2195,7 +2195,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Some functions allow for representation of the irreducible polynomials  * as an int[], say p.  The irreducible f(t) is then of the form:  *     t^p[0] + t^p[1] + ... + t^p[k]  * where m = p[0]> p[1]> ...> p[k] = 0.  */
+comment|/*-  * Some functions allow for representation of the irreducible polynomials  * as an int[], say p.  The irreducible f(t) is then of the form:  *     t^p[0] + t^p[1] + ... + t^p[k]  * where m = p[0]> p[1]> ...> p[k] = 0.  */
 end_comment
 
 begin_comment
@@ -2266,7 +2266,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* Since the algorithm does reduction in the r value, if a != r, copy 	 * the contents of a into r so we can do reduction in r.  	 */
+comment|/*      * Since the algorithm does reduction in the r value, if a != r, copy the      * contents of a into r so we can do reduction in r.      */
 if|if
 condition|(
 name|a
@@ -2618,7 +2618,7 @@ block|{
 name|BN_ULONG
 name|tmp_ulong
 decl_stmt|;
-comment|/* reducing component t^p[k]*/
+comment|/* reducing component t^p[k] */
 name|n
 operator|=
 name|p
@@ -2689,7 +2689,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Performs modular reduction of a by p and store result in r.  r could be a.  *  * This function calls down to the BN_GF2m_mod_arr implementation; this wrapper  * function is only provided for convenience; for best performance, use the   * BN_GF2m_mod_arr function.  */
+comment|/*  * Performs modular reduction of a by p and store result in r.  r could be a.  * This function calls down to the BN_GF2m_mod_arr implementation; this wrapper  * function is only provided for convenience; for best performance, use the  * BN_GF2m_mod_arr function.  */
 end_comment
 
 begin_function
@@ -2835,7 +2835,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute the product of two polynomials a and b, reduce modulo p, and store  * the result in r.  r could be a or b; a could be b.  */
+comment|/*  * Compute the product of two polynomials a and b, reduce modulo p, and store  * the result in r.  r could be a or b; a could be b.  */
 end_comment
 
 begin_function
@@ -3187,7 +3187,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute the product of two polynomials a and b, reduce modulo p, and store  * the result in r.  r could be a or b; a could equal b.  *  * This function calls down to the BN_GF2m_mod_mul_arr implementation; this wrapper  * function is only provided for convenience; for best performance, use the   * BN_GF2m_mod_mul_arr function.  */
+comment|/*  * Compute the product of two polynomials a and b, reduce modulo p, and store  * the result in r.  r could be a or b; a could equal b. This function calls  * down to the BN_GF2m_mod_mul_arr implementation; this wrapper function is  * only provided for convenience; for best performance, use the  * BN_GF2m_mod_mul_arr function.  */
 end_comment
 
 begin_function
@@ -3544,7 +3544,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Square a, reduce the result mod p, and store it in a.  r could be a.  *  * This function calls down to the BN_GF2m_mod_sqr_arr implementation; this wrapper  * function is only provided for convenience; for best performance, use the   * BN_GF2m_mod_sqr_arr function.  */
+comment|/*  * Square a, reduce the result mod p, and store it in a.  r could be a. This  * function calls down to the BN_GF2m_mod_sqr_arr implementation; this  * wrapper function is only provided for convenience; for best performance,  * use the BN_GF2m_mod_sqr_arr function.  */
 end_comment
 
 begin_function
@@ -3696,7 +3696,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Invert a, reduce modulo p, and store the result in r. r could be a.   * Uses Modified Almost Inverse Algorithm (Algorithm 10) from  *     Hankerson, D., Hernandez, J.L., and Menezes, A.  "Software Implementation  *     of Elliptic Curve Cryptography Over Binary Fields".  */
+comment|/*  * Invert a, reduce modulo p, and store the result in r. r could be a. Uses  * Modified Almost Inverse Algorithm (Algorithm 10) from Hankerson, D.,  * Hernandez, J.L., and Menezes, A.  "Software Implementation of Elliptic  * Curve Cryptography Over Binary Fields".  */
 end_comment
 
 begin_function
@@ -4034,7 +4034,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Invert xx, reduce modulo p, and store the result in r. r could be xx.   *  * This function calls down to the BN_GF2m_mod_inv implementation; this wrapper  * function is only provided for convenience; for best performance, use the   * BN_GF2m_mod_inv function.  */
+comment|/*  * Invert xx, reduce modulo p, and store the result in r. r could be xx.  * This function calls down to the BN_GF2m_mod_inv implementation; this  * wrapper function is only provided for convenience; for best performance,  * use the BN_GF2m_mod_inv function.  */
 end_comment
 
 begin_function
@@ -4147,7 +4147,7 @@ name|OPENSSL_SUN_GF2M_DIV
 end_ifndef
 
 begin_comment
-comment|/* Divide y by x, reduce modulo p, and store the result in r. r could be x   * or y, x could equal y.  */
+comment|/*  * Divide y by x, reduce modulo p, and store the result in r. r could be x  * or y, x could equal y.  */
 end_comment
 
 begin_function
@@ -4289,7 +4289,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Divide y by x, reduce modulo p, and store the result in r. r could be x   * or y, x could equal y.  * Uses algorithm Modular_Division_GF(2^m) from   *     Chang-Shantz, S.  "From Euclid's GCD to Montgomery Multiplication to   *     the Great Divide".  */
+comment|/*  * Divide y by x, reduce modulo p, and store the result in r. r could be x  * or y, x could equal y. Uses algorithm Modular_Division_GF(2^m) from  * Chang-Shantz, S.  "From Euclid's GCD to Montgomery Multiplication to the  * Great Divide".  */
 end_comment
 
 begin_function
@@ -4753,7 +4753,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Divide yy by xx, reduce modulo p, and store the result in r. r could be xx   * or yy, xx could equal yy.  *  * This function calls down to the BN_GF2m_mod_div implementation; this wrapper  * function is only provided for convenience; for best performance, use the   * BN_GF2m_mod_div function.  */
+comment|/*  * Divide yy by xx, reduce modulo p, and store the result in r. r could be xx  * * or yy, xx could equal yy. This function calls down to the  * BN_GF2m_mod_div implementation; this wrapper function is only provided for  * convenience; for best performance, use the BN_GF2m_mod_div function.  */
 end_comment
 
 begin_function
@@ -4872,7 +4872,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute the bth power of a, reduce modulo p, and store  * the result in r.  r could be a.  * Uses simple square-and-multiply algorithm A.5.1 from IEEE P1363.  */
+comment|/*  * Compute the bth power of a, reduce modulo p, and store the result in r.  r  * could be a. Uses simple square-and-multiply algorithm A.5.1 from IEEE  * P1363.  */
 end_comment
 
 begin_function
@@ -5108,7 +5108,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute the bth power of a, reduce modulo p, and store  * the result in r.  r could be a.  *  * This function calls down to the BN_GF2m_mod_exp_arr implementation; this wrapper  * function is only provided for convenience; for best performance, use the   * BN_GF2m_mod_exp_arr function.  */
+comment|/*  * Compute the bth power of a, reduce modulo p, and store the result in r.  r  * could be a. This function calls down to the BN_GF2m_mod_exp_arr  * implementation; this wrapper function is only provided for convenience;  * for best performance, use the BN_GF2m_mod_exp_arr function.  */
 end_comment
 
 begin_function
@@ -5272,7 +5272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute the square root of a, reduce modulo p, and store  * the result in r.  r could be a.  * Uses exponentiation as in algorithm A.4.1 from IEEE P1363.  */
+comment|/*  * Compute the square root of a, reduce modulo p, and store the result in r.  * r could be a. Uses exponentiation as in algorithm A.4.1 from IEEE P1363.  */
 end_comment
 
 begin_function
@@ -5405,7 +5405,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute the square root of a, reduce modulo p, and store  * the result in r.  r could be a.  *  * This function calls down to the BN_GF2m_mod_sqrt_arr implementation; this wrapper  * function is only provided for convenience; for best performance, use the   * BN_GF2m_mod_sqrt_arr function.  */
+comment|/*  * Compute the square root of a, reduce modulo p, and store the result in r.  * r could be a. This function calls down to the BN_GF2m_mod_sqrt_arr  * implementation; this wrapper function is only provided for convenience;  * for best performance, use the BN_GF2m_mod_sqrt_arr function.  */
 end_comment
 
 begin_function
@@ -5557,7 +5557,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find r such that r^2 + r = a mod p.  r could be a. If no r exists returns 0.  * Uses algorithms A.4.7 and A.4.6 from IEEE P1363.  */
+comment|/*  * Find r such that r^2 + r = a mod p.  r could be a. If no r exists returns  * 0. Uses algorithms A.4.7 and A.4.6 from IEEE P1363.  */
 end_comment
 
 begin_function
@@ -5720,8 +5720,8 @@ index|]
 operator|&
 literal|0x1
 condition|)
-comment|/* m is odd */
 block|{
+comment|/* m is odd */
 comment|/* compute half-trace of a */
 if|if
 condition|(
@@ -5811,8 +5811,8 @@ goto|;
 block|}
 block|}
 else|else
-comment|/* m is even */
 block|{
+comment|/* m is even */
 name|rho
 operator|=
 name|BN_CTX_get
@@ -6128,7 +6128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find r such that r^2 + r = a mod p.  r could be a. If no r exists returns 0.  *  * This function calls down to the BN_GF2m_mod_solve_quad_arr implementation; this wrapper  * function is only provided for convenience; for best performance, use the   * BN_GF2m_mod_solve_quad_arr function.  */
+comment|/*  * Find r such that r^2 + r = a mod p.  r could be a. If no r exists returns  * 0. This function calls down to the BN_GF2m_mod_solve_quad_arr  * implementation; this wrapper function is only provided for convenience;  * for best performance, use the BN_GF2m_mod_solve_quad_arr function.  */
 end_comment
 
 begin_function
@@ -6280,7 +6280,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert the bit-string representation of a polynomial  * ( \sum_{i=0}^n a_i * x^i , where a_0 is *not* zero) into an array  * of integers corresponding to the bits with non-zero coefficient.  * Up to max elements of the array will be filled.  Return value is total  * number of coefficients that would be extracted if array was large enough.  */
+comment|/*  * Convert the bit-string representation of a polynomial ( \sum_{i=0}^n a_i *  * x^i , where a_0 is *not* zero) into an array of integers corresponding to  * the bits with non-zero coefficient. Up to max elements of the array will  * be filled.  Return value is total number of coefficients that would be  * extracted if array was large enough.  */
 end_comment
 
 begin_function
@@ -6328,7 +6328,7 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-comment|/* a_0 == 0 => return error (the unsigned int array 		 * must be terminated by 0) 		 */
+comment|/*          * a_0 == 0 => return error (the unsigned int array must be          * terminated by 0)          */
 return|return
 literal|0
 return|;
@@ -6428,7 +6428,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert the coefficient array representation of a polynomial to a   * bit-string.  The array must be terminated by 0.  */
+comment|/*  * Convert the coefficient array representation of a polynomial to a  * bit-string.  The array must be terminated by 0.  */
 end_comment
 
 begin_function
@@ -6513,7 +6513,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Constant-time conditional swap of a and b.    * a and b are swapped if condition is not 0.  The code assumes that at most one bit of condition is set.  * nwords is the number of words to swap.  The code assumes that at least nwords are allocated in both a and b,  * and that no more than nwords are used by either a or b.  * a and b cannot be the same number  */
+comment|/*  * Constant-time conditional swap of a and b.  * a and b are swapped if condition is not 0.  The code assumes that at most one bit of condition is set.  * nwords is the number of words to swap.  The code assumes that at least nwords are allocated in both a and b,  * and that no more than nwords are used by either a or b.  * a and b cannot be the same number  */
 end_comment
 
 begin_function
@@ -6641,7 +6641,7 @@ parameter_list|(
 name|ind
 parameter_list|)
 define|\
-value|do { \ 		t = (a->d[ind] ^ b->d[ind])& condition; \ 		a->d[ind] ^= t; \ 		b->d[ind] ^= t; \ 	} while (0)
+value|do { \                 t = (a->d[ind] ^ b->d[ind])& condition; \                 a->d[ind] ^= t; \                 b->d[ind] ^= t; \         } while (0)
 switch|switch
 condition|(
 name|nwords

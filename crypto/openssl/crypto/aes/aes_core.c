@@ -81,7 +81,7 @@ file|"aes_locl.h"
 end_include
 
 begin_comment
-comment|/* Te0[x] = S [x].[02, 01, 01, 03]; Te1[x] = S [x].[03, 02, 01, 01]; Te2[x] = S [x].[01, 03, 02, 01]; Te3[x] = S [x].[01, 01, 03, 02];  Td0[x] = Si[x].[0e, 09, 0d, 0b]; Td1[x] = Si[x].[0b, 0e, 09, 0d]; Td2[x] = Si[x].[0d, 0b, 0e, 09]; Td3[x] = Si[x].[09, 0d, 0b, 0e]; Td4[x] = Si[x].[01]; */
+comment|/*- Te0[x] = S [x].[02, 01, 01, 03]; Te1[x] = S [x].[03, 02, 01, 01]; Te2[x] = S [x].[01, 03, 02, 01]; Te3[x] = S [x].[01, 01, 03, 02];  Td0[x] = Si[x].[0e, 09, 0d, 0b]; Td1[x] = Si[x].[0b, 0e, 09, 0d]; Td2[x] = Si[x].[0d, 0b, 0e, 09]; Td3[x] = Si[x].[09, 0d, 0b, 0e]; Td4[x] = Si[x].[01]; */
 end_comment
 
 begin_decl_stmt
@@ -6290,7 +6290,7 @@ name|key
 operator|->
 name|rd_key
 expr_stmt|;
-comment|/* 	 * map byte array block to cipher state 	 * and add initial round key: 	 */
+comment|/*      * map byte array block to cipher state      * and add initial round key:      */
 name|s0
 operator|=
 name|GETU32
@@ -9037,7 +9037,7 @@ block|}
 endif|#
 directive|endif
 comment|/* ?FULL_UNROLL */
-comment|/* 	 * apply last round and 	 * map cipher state to byte array block: 	 */
+comment|/*      * apply last round and      * map cipher state to byte array block:      */
 name|s0
 operator|=
 operator|(
@@ -9398,7 +9398,7 @@ name|key
 operator|->
 name|rd_key
 expr_stmt|;
-comment|/* 	 * map byte array block to cipher state 	 * and add initial round key: 	 */
+comment|/*      * map byte array block to cipher state      * and add initial round key:      */
 name|s0
 operator|=
 name|GETU32
@@ -12145,7 +12145,7 @@ block|}
 endif|#
 directive|endif
 comment|/* ?FULL_UNROLL */
-comment|/* 	 * apply last round and 	 * map cipher state to byte array block: 	 */
+comment|/*      * apply last round and      * map cipher state to byte array block:      */
 name|s0
 operator|=
 operator|(
