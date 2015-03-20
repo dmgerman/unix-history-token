@@ -270,6 +270,23 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Sets the power state for a given device */
+end_comment
+
+begin_function_decl
+name|int
+name|bcm2835_mbox_set_power_state
+parameter_list|(
+name|device_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|boolean_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
