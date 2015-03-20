@@ -1808,9 +1808,9 @@ define|#
 directive|define
 name|__nonnull
 parameter_list|(
-name|x
+modifier|...
 parameter_list|)
-value|__attribute__((__nonnull__(x)))
+value|__attribute__((__nonnull__(__VA_ARGS__)))
 end_define
 
 begin_else
@@ -1823,7 +1823,7 @@ define|#
 directive|define
 name|__nonnull
 parameter_list|(
-name|x
+modifier|...
 parameter_list|)
 end_define
 
