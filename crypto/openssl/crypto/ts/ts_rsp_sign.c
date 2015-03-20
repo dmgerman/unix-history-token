@@ -4,11 +4,11 @@ comment|/* crypto/ts/ts_resp_sign.c */
 end_comment
 
 begin_comment
-comment|/* Written by Zoltan Glozik (zglozik@stones.com) for the OpenSSL  * project 2002.  */
+comment|/*  * Written by Zoltan Glozik (zglozik@stones.com) for the OpenSSL project  * 2002.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -1275,7 +1275,7 @@ parameter_list|(
 name|ctx
 parameter_list|)
 define|\
-value|ASN1_INTEGER_free(ctx->seconds);	\ 	ctx->seconds = NULL;			\ 	ASN1_INTEGER_free(ctx->millis);		\ 	ctx->millis = NULL;			\ 	ASN1_INTEGER_free(ctx->micros);		\ 	ctx->micros = NULL;
+value|ASN1_INTEGER_free(ctx->seconds);        \         ctx->seconds = NULL;                    \         ASN1_INTEGER_free(ctx->millis);         \         ctx->millis = NULL;                     \         ASN1_INTEGER_free(ctx->micros);         \         ctx->micros = NULL;
 end_define
 
 begin_function
@@ -2599,7 +2599,7 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/* Return the default policy if none is requested or the default is 	   requested. */
+comment|/*      * Return the default policy if none is requested or the default is      * requested.      */
 if|if
 condition|(
 operator|!
@@ -3265,7 +3265,7 @@ argument_list|,
 name|i
 argument_list|)
 decl_stmt|;
-comment|/* XXXXX The last argument was previously 		   (void *)ctx->extension_cb, but ISO C doesn't permit 		   converting a function pointer to void *.  For lack of 		   better information, I'm placing a NULL there instead. 		   The callback can pick its own address out from the ctx 		   anyway... 		*/
+comment|/*          * XXXXX The last argument was previously (void *)ctx->extension_cb,          * but ISO C doesn't permit converting a function pointer to void *.          * For lack of better information, I'm placing a NULL there instead.          * The callback can pick its own address out from the ctx anyway...          */
 name|ok
 operator|=
 call|(
@@ -3567,7 +3567,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Create the ESS SigningCertificate attribute which contains  	   the signer certificate id and optionally the certificate chain. */
+comment|/*      * Create the ESS SigningCertificate attribute which contains the signer      * certificate id and optionally the certificate chain.      */
 name|certs
 operator|=
 name|ctx
@@ -4546,7 +4546,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/*  	 * Put "genTime_str" in GeneralizedTime format.  We work around the  	 * restrictions imposed by rfc3280 (i.e. "GeneralizedTime values MUST  	 * NOT include fractional seconds") and OpenSSL related functions to  	 * meet the rfc3161 requirement: "GeneralizedTime syntax can include  	 * fraction-of-second details".  	 */
+comment|/*      * Put "genTime_str" in GeneralizedTime format.  We work around the      * restrictions imposed by rfc3280 (i.e. "GeneralizedTime values MUST      * NOT include fractional seconds") and OpenSSL related functions to      * meet the rfc3161 requirement: "GeneralizedTime syntax can include      * fraction-of-second details".      */
 name|p
 operator|+=
 name|BIO_snprintf
@@ -4609,7 +4609,7 @@ argument_list|,
 name|usec
 argument_list|)
 expr_stmt|;
-comment|/* We cannot use the snprintf return value,  		   because it might have been truncated. */
+comment|/*          * We cannot use the snprintf return value, because it might have          * been truncated.          */
 name|p
 operator|+=
 name|strlen
@@ -4617,8 +4617,8 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* To make things a bit harder, X.690 | ISO/IEC 8825-1 provides 		   the following restrictions for a DER-encoding, which OpenSSL 		   (specifically ASN1_GENERALIZEDTIME_check() function) doesn't  		   support: 		   "The encoding MUST terminate with a "Z" (which means "Zulu"  		   time). The decimal point element, if present, MUST be the  		   point option ".". The fractional-seconds elements,  		   if present, MUST omit all trailing 0's;  		   if the elements correspond to 0, they MUST be wholly 		   omitted, and the decimal point element also MUST be 		   omitted." */
-comment|/* Remove trailing zeros. The dot guarantees the exit 		   condition of this loop even if all the digits are zero. */
+comment|/*          * To make things a bit harder, X.690 | ISO/IEC 8825-1 provides the          * following restrictions for a DER-encoding, which OpenSSL          * (specifically ASN1_GENERALIZEDTIME_check() function) doesn't          * support: "The encoding MUST terminate with a "Z" (which means          * "Zulu" time). The decimal point element, if present, MUST be the          * point option ".". The fractional-seconds elements, if present,          * MUST omit all trailing 0's; if the elements correspond to 0, they          * MUST be wholly omitted, and the decimal point element also MUST be          * omitted."          */
+comment|/*          * Remove trailing zeros. The dot guarantees the exit condition of          * this loop even if all the digits are zero.          */
 while|while
 condition|(
 operator|*
@@ -4627,7 +4627,7 @@ name|p
 operator|==
 literal|'0'
 condition|)
-comment|/* empty */
+comment|/*              * empty              */
 empty_stmt|;
 comment|/* p points to either the dot or the last non-zero digit. */
 if|if

@@ -4,7 +4,7 @@ comment|/* test/heartbeat_test.c */
 end_comment
 
 begin_comment
-comment|/*  * Unit test for TLS heartbeats.  *  * Acts as a regression test against the Heartbleed bug (CVE-2014-0160).  *  * Author:  Mike Bland (mbland@acm.org, http://mike-bland.com/)  * Date:    2014-04-12  * License: Creative Commons Attribution 4.0 International (CC By 4.0)  *          http://creativecommons.org/licenses/by/4.0/deed.en_US  *  * OUTPUT  * ------  * The program returns zero on success. It will print a message with a count  * of the number of failed tests and return nonzero if any tests fail.  *  * It will print the contents of the request and response buffers for each  * failing test. In a "fixed" version, all the tests should pass and there  * should be no output.  *  * In a "bleeding" version, you'll see:  *  *   test_dtls1_heartbleed failed:  *     expected payload len: 0  *     received: 1024  *   sent 26 characters  *     "HEARTBLEED                "  *   received 1024 characters  *     "HEARTBLEED                \xde\xad\xbe\xef..."  *   ** test_dtls1_heartbleed failed **  *  * The contents of the returned buffer in the failing test will depend on the  * contents of memory on your machine.  *  * MORE INFORMATION  * ----------------  * http://mike-bland.com/2014/04/12/heartbleed.html  * http://mike-bland.com/tags/heartbleed.html  */
+comment|/*-  * Unit test for TLS heartbeats.  *  * Acts as a regression test against the Heartbleed bug (CVE-2014-0160).  *  * Author:  Mike Bland (mbland@acm.org, http://mike-bland.com/)  * Date:    2014-04-12  * License: Creative Commons Attribution 4.0 International (CC By 4.0)  *          http://creativecommons.org/licenses/by/4.0/deed.en_US  *  * OUTPUT  * ------  * The program returns zero on success. It will print a message with a count  * of the number of failed tests and return nonzero if any tests fail.  *  * It will print the contents of the request and response buffers for each  * failing test. In a "fixed" version, all the tests should pass and there  * should be no output.  *  * In a "bleeding" version, you'll see:  *  *   test_dtls1_heartbleed failed:  *     expected payload len: 0  *     received: 1024  *   sent 26 characters  *     "HEARTBLEED                "  *   received 1024 characters  *     "HEARTBLEED                \xde\xad\xbe\xef..."  *   ** test_dtls1_heartbleed failed **  *  * The contents of the returned buffer in the failing test will depend on the  * contents of memory on your machine.  *  * MORE INFORMATION  * ----------------  * http://mike-bland.com/2014/04/12/heartbleed.html  * http://mike-bland.com/tags/heartbleed.html  */
 end_comment
 
 begin_define
@@ -315,7 +315,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Clear the memory for the return buffer, since this isn't automatically 	 * zeroed in opt mode and will cause spurious test failures that will change 	 * with each execution. 	 */
+comment|/*      * Clear the memory for the return buffer, since this isn't automatically      * zeroed in opt mode and will cause spurious test failures that will      * change with each execution.      */
 name|memset
 argument_list|(
 name|fixture
@@ -395,7 +395,7 @@ name|process_heartbeat
 operator|=
 name|dtls1_process_heartbeat
 expr_stmt|;
-comment|/* As per dtls1_get_record(), skipping the following from the beginning of 	 * the returned heartbeat message: 	 * type-1 byte; version-2 bytes; sequence number-8 bytes; length-2 bytes 	 * 	 * And then skipping the 1-byte type encoded by process_heartbeat for 	 * a total of 14 bytes, at which point we can grab the length and the 	 * payload we seek. 	 */
+comment|/*      * As per dtls1_get_record(), skipping the following from the beginning      * of the returned heartbeat message: type-1 byte; version-2 bytes;      * sequence number-8 bytes; length-2 bytes And then skipping the 1-byte      * type encoded by process_heartbeat for a total of 14 bytes, at which      * point we can grab the length and the payload we seek.      */
 name|fixture
 operator|.
 name|return_payload_offset
@@ -465,7 +465,7 @@ name|handshake_func
 operator|=
 name|dummy_handshake
 expr_stmt|;
-comment|/* As per do_ssl3_write(), skipping the following from the beginning of 	 * the returned heartbeat message: 	 * type-1 byte; version-2 bytes; length-2 bytes 	 * 	 * And then skipping the 1-byte type encoded by process_heartbeat for 	 * a total of 6 bytes, at which point we can grab the length and the payload 	 * we seek. 	 */
+comment|/*      * As per do_ssl3_write(), skipping the following from the beginning of      * the returned heartbeat message: type-1 byte; version-2 bytes; length-2      * bytes And then skipping the 1-byte type encoded by process_heartbeat      * for a total of 6 bytes, at which point we can grab the length and the      * payload we seek.      */
 name|fixture
 operator|.
 name|return_payload_offset
@@ -730,7 +730,7 @@ argument_list|,
 name|payload
 argument_list|)
 expr_stmt|;
-comment|/* Make a local copy of the request, since it gets overwritten at some 	 * point */
+comment|/*      * Make a local copy of the request, since it gets overwritten at some      * point      */
 name|memcpy
 argument_list|(
 operator|(
@@ -790,7 +790,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* If there is any byte alignment, it will be stored in wbuf.offset. */
+comment|/*      * If there is any byte alignment, it will be stored in wbuf.offset.      */
 name|p
 operator|=
 operator|&
@@ -1099,7 +1099,7 @@ argument_list|(
 name|dtls
 argument_list|)
 expr_stmt|;
-comment|/* Three-byte pad at the beginning for type and payload length, plus a NUL 	 * at the end */
+comment|/*      * Three-byte pad at the beginning for type and payload length, plus a      * NUL at the end      */
 name|unsigned
 name|char
 name|payload_buf
@@ -1250,7 +1250,7 @@ argument_list|(
 name|dtls
 argument_list|)
 expr_stmt|;
-comment|/* Excluding the NUL at the end, one byte short of type + payload length + 	 * minimum padding */
+comment|/*      * Excluding the NUL at the end, one byte short of type + payload length      * + minimum padding      */
 name|unsigned
 name|char
 name|payload_buf
@@ -1335,7 +1335,7 @@ argument_list|(
 name|dtls
 argument_list|)
 expr_stmt|;
-comment|/* Excluding the NUL at the end, one byte in excess of maximum allowed 	 * heartbeat message length */
+comment|/*      * Excluding the NUL at the end, one byte in excess of maximum allowed      * heartbeat message length      */
 name|unsigned
 name|char
 name|payload_buf
@@ -1495,7 +1495,7 @@ argument_list|(
 name|tls
 argument_list|)
 expr_stmt|;
-comment|/* Three-byte pad at the beginning for type and payload length, plus a NUL 	 * at the end */
+comment|/*      * Three-byte pad at the beginning for type and payload length, plus a      * NUL at the end      */
 name|unsigned
 name|char
 name|payload_buf
@@ -1646,7 +1646,7 @@ argument_list|(
 name|tls
 argument_list|)
 expr_stmt|;
-comment|/* Excluding the NUL at the end, one byte short of type + payload length + 	 * minimum padding */
+comment|/*      * Excluding the NUL at the end, one byte short of type + payload length      * + minimum padding      */
 name|unsigned
 name|char
 name|payload_buf
@@ -1768,7 +1768,7 @@ operator|+
 name|test_dtls1_heartbleed_empty_payload
 argument_list|()
 operator|+
-comment|/* The following test causes an assertion failure at 	     * ssl/d1_pkt.c:dtls1_write_bytes() in versions prior to 1.0.1g: */
+comment|/*          * The following test causes an assertion failure at          * ssl/d1_pkt.c:dtls1_write_bytes() in versions prior to 1.0.1g:          */
 operator|(
 name|OPENSSL_VERSION_NUMBER
 operator|>=
@@ -1837,7 +1837,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* OPENSSL_NO_HEARTBEATS*/
+comment|/* OPENSSL_NO_HEARTBEATS */
 end_comment
 
 begin_function

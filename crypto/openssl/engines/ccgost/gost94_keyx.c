@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**********************************************************************  *                             gost94_keyx.c                          *  *             Copyright (c) 2005-2006 Cryptocom LTD                  *  *         This file is distributed under the same license as OpenSSL *  *                                                                    *  *     Implements generation and parsing of GOST_KEY_TRANSPORT for    *  *     			GOST R 34.10-94 algorithms                            *  *																	  *  *          Requires OpenSSL 0.9.9 for compilation                    *  **********************************************************************/
+comment|/**********************************************************************  *                             gost94_keyx.c                          *  *             Copyright (c) 2005-2006 Cryptocom LTD                  *  *         This file is distributed under the same license as OpenSSL *  *                                                                    *  *     Implements generation and parsing of GOST_KEY_TRANSPORT for    *  *              GOST R 34.10-94 algorithms                            *  *                                                                    *  *          Requires OpenSSL 0.9.9 for compilation                    *  **********************************************************************/
 end_comment
 
 begin_include
@@ -68,11 +68,11 @@ comment|/* Common functions for both 94 and 2001 key exchange schemes */
 end_comment
 
 begin_comment
-comment|/* Implementation of the Diffi-Hellman key agreement scheme based on  * GOST-94 keys */
+comment|/*  * Implementation of the Diffi-Hellman key agreement scheme based on GOST-94  * keys  */
 end_comment
 
 begin_comment
-comment|/* Computes Diffie-Hellman key and stores it into buffer in  * little-endian byte order as expected by both versions of GOST 94  * algorithm  */
+comment|/*  * Computes Diffie-Hellman key and stores it into buffer in little-endian  * byte order as expected by both versions of GOST 94 algorithm  */
 end_comment
 
 begin_function
@@ -170,7 +170,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Computes 256 bit Key exchange key as specified in RFC 4357   */
+comment|/*  * Computes 256 bit Key exchange key as specified in RFC 4357  */
 end_comment
 
 begin_function
@@ -421,7 +421,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* EVP_PKEY_METHOD callback encrypt for  * GOST R 34.10-94 cryptopro modification  */
+comment|/*  * EVP_PKEY_METHOD callback encrypt for GOST R 34.10-94 cryptopro  * modification  */
 end_comment
 
 begin_function
@@ -991,7 +991,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* EVP_PLEY_METHOD callback decrypt for  * GOST R 34.10-94 cryptopro modification  */
+comment|/*  * EVP_PLEY_METHOD callback decrypt for GOST R 34.10-94 cryptopro  * modification  */
 end_comment
 
 begin_function

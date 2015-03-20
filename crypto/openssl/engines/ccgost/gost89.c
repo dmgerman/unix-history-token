@@ -16,7 +16,7 @@ file|"gost89.h"
 end_include
 
 begin_comment
-comment|/* Substitution blocks from RFC 4357         Note: our implementation of gost 28147-89 algorithm     uses S-box matrix rotated 90 degrees counterclockwise, relative to     examples given in RFC.     */
+comment|/*-    Substitution blocks from RFC 4357     Note: our implementation of gost 28147-89 algorithm    uses S-box matrix rotated 90 degrees counterclockwise, relative to    examples given in RFC.   */
 end_comment
 
 begin_comment
@@ -4576,7 +4576,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute GOST 28147 mac block   *   * Parameters  *   gost_ctx *c - context initalized with substitution blocks and key  *   buffer - 8-byte mac state buffer  *   block 8-byte block to process.  * */
+comment|/*  * Compute GOST 28147 mac block Parameters gost_ctx *c - context initalized  * with substitution blocks and key buffer - 8-byte mac state buffer block  * 8-byte block to process.  */
 end_comment
 
 begin_function
@@ -5185,7 +5185,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute mac of specified length (in bits) from data.   * Context should be initialized with key and subst blocks */
+comment|/*  * Compute mac of specified length (in bits) from data. Context should be  * initialized with key and subst blocks  */
 end_comment
 
 begin_function

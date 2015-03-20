@@ -302,7 +302,7 @@ argument_list|,
 name|ctx
 argument_list|)
 expr_stmt|;
-comment|/*Serialize elliptic curve point same way as we do it when saving 	 * key */
+comment|/*      * Serialize elliptic curve point same way as we do it when saving key      */
 name|store_bignum
 argument_list|(
 name|Y
@@ -438,7 +438,7 @@ modifier|*
 name|keylen
 parameter_list|)
 block|{
-comment|/* Public key of peer in the ctx field peerkey 	 * Our private key in the ctx pkey 	 * ukm is in the algorithm specific context data 	 */
+comment|/*      * Public key of peer in the ctx field peerkey Our private key in the ctx      * pkey ukm is in the algorithm specific context data      */
 name|EVP_PKEY
 modifier|*
 name|my_key
@@ -540,15 +540,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*    * EVP_PKEY_METHOD callback encrypt    * Implementation of GOST2001 key transport, cryptocom variation   */
+comment|/*  * EVP_PKEY_METHOD callback encrypt  * Implementation of GOST2001 key transport, cryptocom variation  */
 end_comment
 
 begin_comment
-comment|/* Generates ephemeral key based on pubk algorithm  * computes shared key using VKO and returns filled up  * GOST_KEY_TRANSPORT structure  */
+comment|/*  * Generates ephemeral key based on pubk algorithm computes shared key using  * VKO and returns filled up GOST_KEY_TRANSPORT structure  */
 end_comment
 
 begin_comment
-comment|/*    * EVP_PKEY_METHOD callback encrypt    * Implementation of GOST2001 key transport, cryptopo variation   */
+comment|/*  * EVP_PKEY_METHOD callback encrypt  * Implementation of GOST2001 key transport, cryptopo variation  */
 end_comment
 
 begin_function
@@ -1111,7 +1111,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*    * EVP_PKEY_METHOD callback decrypt    * Implementation of GOST2001 key transport, cryptopo variation   */
+comment|/*  * EVP_PKEY_METHOD callback decrypt  * Implementation of GOST2001 key transport, cryptopo variation  */
 end_comment
 
 begin_function

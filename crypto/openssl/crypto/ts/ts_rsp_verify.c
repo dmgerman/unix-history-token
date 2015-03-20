@@ -4,11 +4,11 @@ comment|/* crypto/ts/ts_resp_verify.c */
 end_comment
 
 begin_comment
-comment|/* Written by Zoltan Glozik (zglozik@stones.com) for the OpenSSL  * project 2002.  */
+comment|/*  * Written by Zoltan Glozik (zglozik@stones.com) for the OpenSSL project  * 2002.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -315,7 +315,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Local mapping between response codes and descriptions.  * Don't forget to change TS_STATUS_BUF_SIZE when modifying   * the elements of this array.  */
+comment|/*  * Local mapping between response codes and descriptions.  * Don't forget to change TS_STATUS_BUF_SIZE when modifying  * the elements of this array.  */
 end_comment
 
 begin_decl_stmt
@@ -432,7 +432,7 @@ begin_define
 define|#
 directive|define
 name|TS_FAILURE_INFO_SIZE
-value|(sizeof(TS_failure_info) / \ 				sizeof(*TS_failure_info))
+value|(sizeof(TS_failure_info) / \                                 sizeof(*TS_failure_info))
 end_define
 
 begin_comment
@@ -440,7 +440,7 @@ comment|/* Functions for verifying a signed TS_TST_INFO structure. */
 end_comment
 
 begin_comment
-comment|/*  * This function carries out the following tasks:  *	- Checks if there is one and only one signer.  *	- Search for the signing certificate in 'certs' and in the response.  *	- Check the extended key usage and key usage fields of the signer  *	certificate (done by the path validation).  *	- Build and validate the certificate path.  *	- Check if the certificate path meets the requirements of the  *	SigningCertificate ESS signed attribute.  *	- Verify the signature value.  *	- Returns the signer certificate in 'signer', if 'signer' is not NULL.  */
+comment|/*-  * This function carries out the following tasks:  *      - Checks if there is one and only one signer.  *      - Search for the signing certificate in 'certs' and in the response.  *      - Check the extended key usage and key usage fields of the signer  *      certificate (done by the path validation).  *      - Build and validate the certificate path.  *      - Check if the certificate path meets the requirements of the  *      SigningCertificate ESS signed attribute.  *      - Verify the signature value.  *      - Returns the signer certificate in 'signer', if 'signer' is not NULL.  */
 end_comment
 
 begin_decl_stmt
@@ -626,7 +626,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Get hold of the signer certificate, search only internal 	   certificates if it was requested. */
+comment|/*      * Get hold of the signer certificate, search only internal certificates      * if it was requested.      */
 name|signers
 operator|=
 name|PKCS7_get0_signers
@@ -681,7 +681,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* Check if the signer certificate is consistent with the 	   ESS extension. */
+comment|/*      * Check if the signer certificate is consistent with the ESS extension.      */
 if|if
 condition|(
 operator|!
@@ -1042,7 +1042,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* Check the other certificates of the chain if there are more 	   than one certificate ids in cert_ids. */
+comment|/*      * Check the other certificates of the chain if there are more than one      * certificate ids in cert_ids.      */
 if|if
 condition|(
 name|sk_ESS_CERT_ID_num
@@ -1444,7 +1444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Verifies whether 'response' contains a valid response with regards   * to the settings of the context:  *	- Gives an error message if the TS_TST_INFO is not present.  *	- Calls _TS_RESP_verify_token to verify the token content.  */
+comment|/*-  * Verifies whether 'response' contains a valid response with regards  * to the settings of the context:  *      - Gives an error message if the TS_TST_INFO is not present.  *      - Calls _TS_RESP_verify_token to verify the token content.  */
 end_comment
 
 begin_function
@@ -1583,7 +1583,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Verifies whether the 'token' contains a valid time stamp token   * with regards to the settings of the context. Only those checks are  * carried out that are specified in the context:  *	- Verifies the signature of the TS_TST_INFO.  *	- Checks the version number of the response.  *	- Check if the requested and returned policies math.  *	- Check if the message imprints are the same.  *	- Check if the nonces are the same.  *	- Check if the TSA name matches the signer.  *	- Check if the TSA name is the expected TSA.  */
+comment|/*-  * Verifies whether the 'token' contains a valid time stamp token  * with regards to the settings of the context. Only those checks are  * carried out that are specified in the context:  *      - Verifies the signature of the TS_TST_INFO.  *      - Checks the version number of the response.  *      - Check if the requested and returned policies math.  *      - Check if the message imprints are the same.  *      - Check if the nonces are the same.  *      - Check if the TSA name matches the signer.  *      - Check if the TSA name is the expected TSA.  */
 end_comment
 
 begin_function
@@ -2918,7 +2918,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check if the specified TSA name matches either the subject    or one of the subject alternative names of the TSA certificate. */
+comment|/*  * Check if the specified TSA name matches either the subject or one of the  * subject alternative names of the TSA certificate.  */
 end_comment
 
 begin_function
@@ -3020,7 +3020,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* Get the next subject alternative name, 		   although there should be no more than one. */
+comment|/*          * Get the next subject alternative name, although there should be no          * more than one.          */
 name|GENERAL_NAMES_free
 argument_list|(
 name|gen_names

@@ -4,7 +4,7 @@ comment|/* crypto/pem/pem.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1997 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1997 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_ifndef
@@ -321,7 +321,7 @@ define|#
 directive|define
 name|PEM_STRING_CMS
 value|"CMS"
-comment|/* Note that this structure is initialised by PEM_SealInit and cleaned up      by PEM_SealFinal (at least for now) */
+comment|/*    * Note that this structure is initialised by PEM_SealInit and cleaned up    * by PEM_SealFinal (at least for now)    */
 typedef|typedef
 struct|struct
 name|PEM_Encode_Seal_st
@@ -373,7 +373,7 @@ decl_stmt|;
 name|int
 name|key_enc
 decl_stmt|;
-comment|/*	char iv[8]; unused and wrong size */
+comment|/*      char iv[8]; unused and wrong size */
 block|}
 name|PEM_USER
 typedef|;
@@ -405,7 +405,7 @@ block|{
 name|int
 name|cipher
 decl_stmt|;
-comment|/* unused, and wrong size 	   unsigned char iv[8]; */
+comment|/*-         unused, and wrong size         unsigned char iv[8]; */
 block|}
 name|DEK_info
 struct|;
@@ -421,7 +421,7 @@ modifier|*
 modifier|*
 name|recipient
 decl_stmt|;
-comment|/* XXX(ben): don#t think this is used!  		STACK *x509_chain;	/ * certificate chain */
+comment|/*-     XXX(ben): don#t think this is used!         STACK *x509_chain;      / * certificate chain */
 name|EVP_MD
 modifier|*
 name|md
@@ -455,7 +455,7 @@ modifier|*
 name|key
 decl_stmt|;
 comment|/* key */
-comment|/* unused, and wrong size 	   unsigned char iv[8]; */
+comment|/*-     unused, and wrong size     unsigned char iv[8]; */
 name|int
 name|data_enc
 decl_stmt|;
@@ -471,7 +471,7 @@ decl_stmt|;
 block|}
 name|PEM_CTX
 typedef|;
-comment|/* These macros make the PEM_read/PEM_write functions easier to maintain and  * write. Now they are all implemented with either:  * IMPLEMENT_PEM_rw(...) or IMPLEMENT_PEM_rw_cb(...)  */
+comment|/*  * These macros make the PEM_read/PEM_write functions easier to maintain and  * write. Now they are all implemented with either: IMPLEMENT_PEM_rw(...) or  * IMPLEMENT_PEM_rw_cb(...)  */
 ifdef|#
 directive|ifdef
 name|OPENSSL_NO_FP_API
@@ -597,7 +597,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, \ 		  void *u) \ 	{ \ 	return PEM_ASN1_write((i2d_of_void *)i2d_##asn1,str,fp,x,enc,kstr,klen,cb,u); \ 	}
+value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \              unsigned char *kstr, int klen, pem_password_cb *cb, \                   void *u) \         { \         return PEM_ASN1_write((i2d_of_void *)i2d_##asn1,str,fp,x,enc,kstr,klen,cb,u); \         }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb_fp_const
@@ -611,7 +611,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, \ 		  void *u) \ 	{ \ 	return PEM_ASN1_write((i2d_of_void *)i2d_##asn1,str,fp,x,enc,kstr,klen,cb,u); \ 	}
+value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \              unsigned char *kstr, int klen, pem_password_cb *cb, \                   void *u) \         { \         return PEM_ASN1_write((i2d_of_void *)i2d_##asn1,str,fp,x,enc,kstr,klen,cb,u); \         }
 endif|#
 directive|endif
 define|#
@@ -669,7 +669,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, void *u) \ 	{ \ 	return PEM_ASN1_write_bio((i2d_of_void *)i2d_##asn1,str,bp,x,enc,kstr,klen,cb,u); \ 	}
+value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \              unsigned char *kstr, int klen, pem_password_cb *cb, void *u) \         { \         return PEM_ASN1_write_bio((i2d_of_void *)i2d_##asn1,str,bp,x,enc,kstr,klen,cb,u); \         }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb_bio_const
@@ -683,7 +683,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, void *u) \ 	{ \ 	return PEM_ASN1_write_bio((i2d_of_void *)i2d_##asn1,str,bp,(void *)x,enc,kstr,klen,cb,u); \ 	}
+value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \              unsigned char *kstr, int klen, pem_password_cb *cb, void *u) \         { \         return PEM_ASN1_write_bio((i2d_of_void *)i2d_##asn1,str,bp,(void *)x,enc,kstr,klen,cb,u); \         }
 define|#
 directive|define
 name|IMPLEMENT_PEM_write
@@ -697,7 +697,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_write_bio(name, type, str, asn1) \ 	IMPLEMENT_PEM_write_fp(name, type, str, asn1)
+value|IMPLEMENT_PEM_write_bio(name, type, str, asn1) \         IMPLEMENT_PEM_write_fp(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_const
@@ -711,7 +711,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_write_bio_const(name, type, str, asn1) \ 	IMPLEMENT_PEM_write_fp_const(name, type, str, asn1)
+value|IMPLEMENT_PEM_write_bio_const(name, type, str, asn1) \         IMPLEMENT_PEM_write_fp_const(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb
@@ -725,7 +725,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_write_cb_bio(name, type, str, asn1) \ 	IMPLEMENT_PEM_write_cb_fp(name, type, str, asn1)
+value|IMPLEMENT_PEM_write_cb_bio(name, type, str, asn1) \         IMPLEMENT_PEM_write_cb_fp(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_write_cb_const
@@ -739,7 +739,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_write_cb_bio_const(name, type, str, asn1) \ 	IMPLEMENT_PEM_write_cb_fp_const(name, type, str, asn1)
+value|IMPLEMENT_PEM_write_cb_bio_const(name, type, str, asn1) \         IMPLEMENT_PEM_write_cb_fp_const(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_read
@@ -753,7 +753,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_read_bio(name, type, str, asn1) \ 	IMPLEMENT_PEM_read_fp(name, type, str, asn1)
+value|IMPLEMENT_PEM_read_bio(name, type, str, asn1) \         IMPLEMENT_PEM_read_fp(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_rw
@@ -767,7 +767,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_read(name, type, str, asn1) \ 	IMPLEMENT_PEM_write(name, type, str, asn1)
+value|IMPLEMENT_PEM_read(name, type, str, asn1) \         IMPLEMENT_PEM_write(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_rw_const
@@ -781,7 +781,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_read(name, type, str, asn1) \ 	IMPLEMENT_PEM_write_const(name, type, str, asn1)
+value|IMPLEMENT_PEM_read(name, type, str, asn1) \         IMPLEMENT_PEM_write_const(name, type, str, asn1)
 define|#
 directive|define
 name|IMPLEMENT_PEM_rw_cb
@@ -795,7 +795,7 @@ parameter_list|,
 name|asn1
 parameter_list|)
 define|\
-value|IMPLEMENT_PEM_read(name, type, str, asn1) \ 	IMPLEMENT_PEM_write_cb(name, type, str, asn1)
+value|IMPLEMENT_PEM_read(name, type, str, asn1) \         IMPLEMENT_PEM_write_cb(name, type, str, asn1)
 comment|/* These are the same except they are for the declarations */
 if|#
 directive|if
@@ -871,7 +871,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
+value|int PEM_write_##name(FILE *fp, type *x, const EVP_CIPHER *enc, \              unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
 endif|#
 directive|endif
 ifndef|#
@@ -916,7 +916,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \ 	     unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
+value|int PEM_write_bio_##name(BIO *bp, type *x, const EVP_CIPHER *enc, \              unsigned char *kstr, int klen, pem_password_cb *cb, void *u);
 else|#
 directive|else
 define|#
@@ -966,7 +966,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_write_bio(name, type) \ 	DECLARE_PEM_write_fp(name, type)
+value|DECLARE_PEM_write_bio(name, type) \         DECLARE_PEM_write_fp(name, type)
 define|#
 directive|define
 name|DECLARE_PEM_write_const
@@ -976,7 +976,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_write_bio_const(name, type) \ 	DECLARE_PEM_write_fp_const(name, type)
+value|DECLARE_PEM_write_bio_const(name, type) \         DECLARE_PEM_write_fp_const(name, type)
 define|#
 directive|define
 name|DECLARE_PEM_write_cb
@@ -986,7 +986,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_write_cb_bio(name, type) \ 	DECLARE_PEM_write_cb_fp(name, type)
+value|DECLARE_PEM_write_cb_bio(name, type) \         DECLARE_PEM_write_cb_fp(name, type)
 define|#
 directive|define
 name|DECLARE_PEM_read
@@ -996,7 +996,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_read_bio(name, type) \ 	DECLARE_PEM_read_fp(name, type)
+value|DECLARE_PEM_read_bio(name, type) \         DECLARE_PEM_read_fp(name, type)
 define|#
 directive|define
 name|DECLARE_PEM_rw
@@ -1006,7 +1006,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_read(name, type) \ 	DECLARE_PEM_write(name, type)
+value|DECLARE_PEM_read(name, type) \         DECLARE_PEM_write(name, type)
 define|#
 directive|define
 name|DECLARE_PEM_rw_const
@@ -1016,7 +1016,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_read(name, type) \ 	DECLARE_PEM_write_const(name, type)
+value|DECLARE_PEM_read(name, type) \         DECLARE_PEM_write_const(name, type)
 define|#
 directive|define
 name|DECLARE_PEM_rw_cb
@@ -1026,7 +1026,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|DECLARE_PEM_read(name, type) \ 	DECLARE_PEM_write_cb(name, type)
+value|DECLARE_PEM_read(name, type) \         DECLARE_PEM_write_cb(name, type)
 if|#
 directive|if
 literal|1
@@ -2263,7 +2263,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_PEM_strings
 parameter_list|(

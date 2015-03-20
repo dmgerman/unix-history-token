@@ -415,7 +415,7 @@ literal|1
 operator|)
 operator|)
 decl_stmt|,
-comment|/* 32 is $MOD from rc4_md5-x86_64.pl */
+comment|/* 32 is $MOD from                                                        * rc4_md5-x86_64.pl */
 name|md5_off
 init|=
 name|MD5_CBLOCK

@@ -37,7 +37,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * x86_64 BIGNUM accelerator version 0.1, December 2002.  *  * Implemented by Andy Polyakov<appro@fy.chalmers.se> for the OpenSSL  * project.  *  * Rights for redistribution and usage in source and binary forms are  * granted according to the OpenSSL license. Warranty of any kind is  * disclaimed.  *  * Q. Version 0.1? It doesn't sound like Andy, he used to assign real  *    versions, like 1.0...  * A. Well, that's because this code is basically a quick-n-dirty  *    proof-of-concept hack. As you can see it's implemented with  *    inline assembler, which means that you're bound to GCC and that  *    there might be enough room for further improvement.  *  * Q. Why inline assembler?  * A. x86_64 features own ABI which I'm not familiar with. This is  *    why I decided to let the compiler take care of subroutine  *    prologue/epilogue as well as register allocation. For reference.  *    Win64 implements different ABI for AMD64, different from Linux.  *  * Q. How much faster does it get?  * A. 'apps/openssl speed rsa dsa' output with no-asm:  *  *	                  sign    verify    sign/s verify/s  *	rsa  512 bits   0.0006s   0.0001s   1683.8  18456.2  *	rsa 1024 bits   0.0028s   0.0002s    356.0   6407.0  *	rsa 2048 bits   0.0172s   0.0005s     58.0   1957.8  *	rsa 4096 bits   0.1155s   0.0018s      8.7    555.6  *	                  sign    verify    sign/s verify/s  *	dsa  512 bits   0.0005s   0.0006s   2100.8   1768.3  *	dsa 1024 bits   0.0014s   0.0018s    692.3    559.2  *	dsa 2048 bits   0.0049s   0.0061s    204.7    165.0  *  *    'apps/openssl speed rsa dsa' output with this module:  *  *	                  sign    verify    sign/s verify/s  *	rsa  512 bits   0.0004s   0.0000s   2767.1  33297.9  *	rsa 1024 bits   0.0012s   0.0001s    867.4  14674.7  *	rsa 2048 bits   0.0061s   0.0002s    164.0   5270.0  *	rsa 4096 bits   0.0384s   0.0006s     26.1   1650.8  *	                  sign    verify    sign/s verify/s  *	dsa  512 bits   0.0002s   0.0003s   4442.2   3786.3  *	dsa 1024 bits   0.0005s   0.0007s   1835.1   1497.4  *	dsa 2048 bits   0.0016s   0.0020s    620.4    504.6  *  *    For the reference. IA-32 assembler implementation performs  *    very much like 64-bit code compiled with no-asm on the same  *    machine.  */
+comment|/*-  * x86_64 BIGNUM accelerator version 0.1, December 2002.  *  * Implemented by Andy Polyakov<appro@fy.chalmers.se> for the OpenSSL  * project.  *  * Rights for redistribution and usage in source and binary forms are  * granted according to the OpenSSL license. Warranty of any kind is  * disclaimed.  *  * Q. Version 0.1? It doesn't sound like Andy, he used to assign real  *    versions, like 1.0...  * A. Well, that's because this code is basically a quick-n-dirty  *    proof-of-concept hack. As you can see it's implemented with  *    inline assembler, which means that you're bound to GCC and that  *    there might be enough room for further improvement.  *  * Q. Why inline assembler?  * A. x86_64 features own ABI which I'm not familiar with. This is  *    why I decided to let the compiler take care of subroutine  *    prologue/epilogue as well as register allocation. For reference.  *    Win64 implements different ABI for AMD64, different from Linux.  *  * Q. How much faster does it get?  * A. 'apps/openssl speed rsa dsa' output with no-asm:  *  *                        sign    verify    sign/s verify/s  *      rsa  512 bits   0.0006s   0.0001s   1683.8  18456.2  *      rsa 1024 bits   0.0028s   0.0002s    356.0   6407.0  *      rsa 2048 bits   0.0172s   0.0005s     58.0   1957.8  *      rsa 4096 bits   0.1155s   0.0018s      8.7    555.6  *                        sign    verify    sign/s verify/s  *      dsa  512 bits   0.0005s   0.0006s   2100.8   1768.3  *      dsa 1024 bits   0.0014s   0.0018s    692.3    559.2  *      dsa 2048 bits   0.0049s   0.0061s    204.7    165.0  *  *    'apps/openssl speed rsa dsa' output with this module:  *  *                        sign    verify    sign/s verify/s  *      rsa  512 bits   0.0004s   0.0000s   2767.1  33297.9  *      rsa 1024 bits   0.0012s   0.0001s    867.4  14674.7  *      rsa 2048 bits   0.0061s   0.0002s    164.0   5270.0  *      rsa 4096 bits   0.0384s   0.0006s     26.1   1650.8  *                        sign    verify    sign/s verify/s  *      dsa  512 bits   0.0002s   0.0003s   4442.2   3786.3  *      dsa 1024 bits   0.0005s   0.0007s   1835.1   1497.4  *      dsa 2048 bits   0.0016s   0.0020s    620.4    504.6  *  *    For the reference. IA-32 assembler implementation performs  *    very much like 64-bit code compiled with no-asm on the same  *    machine.  */
 end_comment
 
 begin_ifdef
@@ -89,7 +89,7 @@ name|sqr
 end_undef
 
 begin_comment
-comment|/*  * "m"(a), "+m"(r)	is the way to favor DirectPath µ-code;  * "g"(0)		let the compiler to decide where does it  *			want to keep the value of zero;  */
+comment|/*-  * "m"(a), "+m"(r)      is the way to favor DirectPath µ-code;  * "g"(0)               let the compiler to decide where does it  *                      want to keep the value of zero;  */
 end_comment
 
 begin_define
@@ -105,7 +105,7 @@ name|word
 parameter_list|,
 name|carry
 parameter_list|)
-value|do {	\ 	register BN_ULONG high,low;	\ 	asm ("mulq %3"			\ 		: "=a"(low),"=d"(high)	\ 		: "a"(word),"m"(a)	\ 		: "cc");		\ 	asm ("addq %2,%0; adcq %3,%1"	\ 		: "+r"(carry),"+d"(high)\ 		: "a"(low),"g"(0)	\ 		: "cc");		\ 	asm ("addq %2,%0; adcq %3,%1"	\ 		: "+m"(r),"+d"(high)	\ 		: "r"(carry),"g"(0)	\ 		: "cc");		\ 	carry=high;			\ 	} while (0)
+value|do {   \         register BN_ULONG high,low;     \         asm ("mulq %3"                  \                 : "=a"(low),"=d"(high)  \                 : "a"(word),"m"(a)      \                 : "cc");                \         asm ("addq %2,%0; adcq %3,%1"   \                 : "+r"(carry),"+d"(high)\                 : "a"(low),"g"(0)       \                 : "cc");                \         asm ("addq %2,%0; adcq %3,%1"   \                 : "+m"(r),"+d"(high)    \                 : "r"(carry),"g"(0)     \                 : "cc");                \         carry=high;                     \         } while (0)
 end_define
 
 begin_define
@@ -121,7 +121,7 @@ name|word
 parameter_list|,
 name|carry
 parameter_list|)
-value|do {	\ 	register BN_ULONG high,low;	\ 	asm ("mulq %3"			\ 		: "=a"(low),"=d"(high)	\ 		: "a"(word),"g"(a)	\ 		: "cc");		\ 	asm ("addq %2,%0; adcq %3,%1"	\ 		: "+r"(carry),"+d"(high)\ 		: "a"(low),"g"(0)	\ 		: "cc");		\ 	(r)=carry, carry=high;		\ 	} while (0)
+value|do {       \         register BN_ULONG high,low;     \         asm ("mulq %3"                  \                 : "=a"(low),"=d"(high)  \                 : "a"(word),"g"(a)      \                 : "cc");                \         asm ("addq %2,%0; adcq %3,%1"   \                 : "+r"(carry),"+d"(high)\                 : "a"(low),"g"(0)       \                 : "cc");                \         (r)=carry, carry=high;          \         } while (0)
 end_define
 
 begin_define
@@ -136,7 +136,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|asm ("mulq %2"			\ 		: "=a"(r0),"=d"(r1)	\ 		: "a"(a)		\ 		: "cc");
+value|asm ("mulq %2"                  \                 : "=a"(r0),"=d"(r1)     \                 : "a"(a)                \                 : "cc");
 end_define
 
 begin_function
@@ -777,7 +777,7 @@ name|ret
 decl_stmt|,
 name|waste
 decl_stmt|;
-asm|asm ("divq	%4" 		: "=a"(ret),"=d"(waste) 		: "a"(l),"d"(h),"g"(d) 		: "cc");
+asm|asm("divq      %4":"=a"(ret), "=d"(waste)  :     "a"(l), "d"(h), "g"(d)  :     "cc");
 return|return
 name|ret
 return|;
@@ -826,7 +826,7 @@ literal|0
 return|;
 asm|asm
 specifier|volatile
-asm|( 	"	subq	%2,%2		\n" 	".p2align 4			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	adcq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "=&a"(ret),"+c"(n),"=&r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc", "memory" 	);
+asm|("       subq    %2,%2           \n"                   ".p2align 4                     \n"                   "1:     movq    (%4,%2,8),%0    \n"                   "       adcq    (%5,%2,8),%0    \n"                   "       movq    %0,(%3,%2,8)    \n"                   "       leaq    1(%2),%2        \n"                   "       loop    1b              \n"                   "       sbbq    %0,%0           \n":"=&a" (ret), "+c"(n),                   "=&r"(i)                   :"r"(rp), "r"(ap), "r"(bp)                   :"cc", "memory");
 return|return
 name|ret
 operator|&
@@ -883,7 +883,7 @@ literal|0
 return|;
 asm|asm
 specifier|volatile
-asm|( 	"	subq	%2,%2		\n" 	".p2align 4			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	sbbq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "=&a"(ret),"+c"(n),"=&r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc", "memory" 	);
+asm|("       subq    %2,%2           \n"                   ".p2align 4                     \n"                   "1:     movq    (%4,%2,8),%0    \n"                   "       sbbq    (%5,%2,8),%0    \n"                   "       movq    %0,(%3,%2,8)    \n"                   "       leaq    1(%2),%2        \n"                   "       loop    1b              \n"                   "       sbbq    %0,%0           \n":"=&a" (ret), "+c"(n),                   "=&r"(i)                   :"r"(rp), "r"(ap), "r"(bp)                   :"cc", "memory");
 return|return
 name|ret
 operator|&
@@ -1201,7 +1201,7 @@ comment|/* sqr_add_c(a,i,c0,c1,c2)  -- c+=a[i]^2 for three word number c=(c2,c1,
 end_comment
 
 begin_comment
-comment|/* sqr_add_c2(a,i,c0,c1,c2) -- c+=2*a[i]*a[j] for three word number c=(c2,c1,c0) */
+comment|/*  * sqr_add_c2(a,i,c0,c1,c2) -- c+=2*a[i]*a[j] for three word number  * c=(c2,c1,c0)  */
 end_comment
 
 begin_comment
@@ -1233,7 +1233,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|{	\ 	BN_ULONG ta=(a),tb=(b);		\ 	t1 = ta * tb;			\ 	t2 = BN_UMULT_HIGH(ta,tb);	\ 	c0 += t1; t2 += (c0<t1)?1:0;	\ 	c1 += t2; c2 += (c1<t2)?1:0;	\ 	}
+value|{       \         BN_ULONG ta=(a),tb=(b);         \         t1 = ta * tb;                   \         t2 = BN_UMULT_HIGH(ta,tb);      \         c0 += t1; t2 += (c0<t1)?1:0;    \         c1 += t2; c2 += (c1<t2)?1:0;    \         }
 end_define
 
 begin_define
@@ -1251,7 +1251,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|{	\ 	BN_ULONG ta=(a),tb=(b),t0;	\ 	t1 = BN_UMULT_HIGH(ta,tb);	\ 	t0 = ta * tb;			\ 	c0 += t0; t2 = t1+((c0<t0)?1:0);\ 	c1 += t2; c2 += (c1<t2)?1:0;	\ 	c0 += t0; t1 += (c0<t0)?1:0;	\ 	c1 += t1; c2 += (c1<t1)?1:0;	\ 	}
+value|{      \         BN_ULONG ta=(a),tb=(b),t0;      \         t1 = BN_UMULT_HIGH(ta,tb);      \         t0 = ta * tb;                   \         c0 += t0; t2 = t1+((c0<t0)?1:0);\         c1 += t2; c2 += (c1<t2)?1:0;    \         c0 += t0; t1 += (c0<t0)?1:0;    \         c1 += t1; c2 += (c1<t1)?1:0;    \         }
 end_define
 
 begin_else
@@ -1274,7 +1274,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|do {	\ 	asm ("mulq %3"			\ 		: "=a"(t1),"=d"(t2)	\ 		: "a"(a),"m"(b)		\ 		: "cc");		\ 	asm ("addq %2,%0; adcq %3,%1"	\ 		: "+r"(c0),"+d"(t2)	\ 		: "a"(t1),"g"(0)	\ 		: "cc");		\ 	asm ("addq %2,%0; adcq %3,%1"	\ 		: "+r"(c1),"+r"(c2)	\ 		: "d"(t2),"g"(0)	\ 		: "cc");		\ 	} while (0)
+value|do {    \         asm ("mulq %3"                  \                 : "=a"(t1),"=d"(t2)     \                 : "a"(a),"m"(b)         \                 : "cc");                \         asm ("addq %2,%0; adcq %3,%1"   \                 : "+r"(c0),"+d"(t2)     \                 : "a"(t1),"g"(0)        \                 : "cc");                \         asm ("addq %2,%0; adcq %3,%1"   \                 : "+r"(c1),"+r"(c2)     \                 : "d"(t2),"g"(0)        \                 : "cc");                \         } while (0)
 end_define
 
 begin_define
@@ -1292,7 +1292,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|do {	\ 	asm ("mulq %2"			\ 		: "=a"(t1),"=d"(t2)	\ 		: "a"(a[i])		\ 		: "cc");		\ 	asm ("addq %2,%0; adcq %3,%1"	\ 		: "+r"(c0),"+d"(t2)	\ 		: "a"(t1),"g"(0)	\ 		: "cc");		\ 	asm ("addq %2,%0; adcq %3,%1"	\ 		: "+r"(c1),"+r"(c2)	\ 		: "d"(t2),"g"(0)	\ 		: "cc");		\ 	} while (0)
+value|do {    \         asm ("mulq %2"                  \                 : "=a"(t1),"=d"(t2)     \                 : "a"(a[i])             \                 : "cc");                \         asm ("addq %2,%0; adcq %3,%1"   \                 : "+r"(c0),"+d"(t2)     \                 : "a"(t1),"g"(0)        \                 : "cc");                \         asm ("addq %2,%0; adcq %3,%1"   \                 : "+r"(c1),"+r"(c2)     \                 : "d"(t2),"g"(0)        \                 : "cc");                \         } while (0)
 end_define
 
 begin_define
@@ -1310,7 +1310,7 @@ name|c1
 parameter_list|,
 name|c2
 parameter_list|)
-value|do {	\ 	asm ("mulq %3"			\ 		: "=a"(t1),"=d"(t2)	\ 		: "a"(a),"m"(b)		\ 		: "cc");		\ 	asm ("addq %3,%0; adcq %4,%1; adcq %5,%2"	\ 		: "+r"(c0),"+r"(c1),"+r"(c2)		\ 		: "r"(t1),"r"(t2),"g"(0)		\ 		: "cc");				\ 	asm ("addq %3,%0; adcq %4,%1; adcq %5,%2"	\ 		: "+r"(c0),"+r"(c1),"+r"(c2)		\ 		: "r"(t1),"r"(t2),"g"(0)		\ 		: "cc");				\ 	} while (0)
+value|do {   \         asm ("mulq %3"                  \                 : "=a"(t1),"=d"(t2)     \                 : "a"(a),"m"(b)         \                 : "cc");                \         asm ("addq %3,%0; adcq %4,%1; adcq %5,%2"       \                 : "+r"(c0),"+r"(c1),"+r"(c2)            \                 : "r"(t1),"r"(t2),"g"(0)                \                 : "cc");                                \         asm ("addq %3,%0; adcq %4,%1; adcq %5,%2"       \                 : "+r"(c0),"+r"(c1),"+r"(c2)            \                 : "r"(t1),"r"(t2),"g"(0)                \                 : "cc");                                \         } while (0)
 end_define
 
 begin_endif

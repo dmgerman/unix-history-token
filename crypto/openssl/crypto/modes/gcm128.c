@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2010 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  */
+comment|/* ====================================================================  * Copyright (c) 2010 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  */
 end_comment
 
 begin_define
@@ -135,11 +135,11 @@ name|REDUCE1BIT
 parameter_list|(
 name|V
 parameter_list|)
-value|do { \ 	if (sizeof(size_t)==8) { \ 		u64 T = U64(0xe100000000000000)& (0-(V.lo&1)); \ 		V.lo  = (V.hi<<63)|(V.lo>>1); \ 		V.hi  = (V.hi>>1 )^T; \ 	} \ 	else { \ 		u32 T = 0xe1000000U& (0-(u32)(V.lo&1)); \ 		V.lo  = (V.hi<<63)|(V.lo>>1); \ 		V.hi  = (V.hi>>1 )^((u64)T<<32); \ 	} \ } while(0)
+value|do { \         if (sizeof(size_t)==8) { \                 u64 T = U64(0xe100000000000000)& (0-(V.lo&1)); \                 V.lo  = (V.hi<<63)|(V.lo>>1); \                 V.hi  = (V.hi>>1 )^T; \         } \         else { \                 u32 T = 0xe1000000U& (0-(u32)(V.lo&1)); \                 V.lo  = (V.hi<<63)|(V.lo>>1); \                 V.hi  = (V.hi>>1 )^((u64)T<<32); \         } \ } while(0)
 end_define
 
 begin_comment
-comment|/*  * Even though permitted values for TABLE_BITS are 8, 4 and 1, it should  * never be set to 8. 8 is effectively reserved for testing purposes.  * TABLE_BITS>1 are lookup-table-driven implementations referred to as  * "Shoup's" in GCM specification. In other words OpenSSL does not cover  * whole spectrum of possible table driven implementations. Why? In  * non-"Shoup's" case memory access pattern is segmented in such manner,  * that it's trivial to see that cache timing information can reveal  * fair portion of intermediate hash value. Given that ciphertext is  * always available to attacker, it's possible for him to attempt to  * deduce secret parameter H and if successful, tamper with messages  * [which is nothing but trivial in CTR mode]. In "Shoup's" case it's  * not as trivial, but there is no reason to believe that it's resistant  * to cache-timing attack. And the thing about "8-bit" implementation is  * that it consumes 16 (sixteen) times more memory, 4KB per individual  * key + 1KB shared. Well, on pros side it should be twice as fast as  * "4-bit" version. And for gcc-generated x86[_64] code, "8-bit" version  * was observed to run ~75% faster, closer to 100% for commercial  * compilers... Yet "4-bit" procedure is preferred, because it's  * believed to provide better security-performance balance and adequate  * all-round performance. "All-round" refers to things like:  *  * - shorter setup time effectively improves overall timing for  *   handling short messages;  * - larger table allocation can become unbearable because of VM  *   subsystem penalties (for example on Windows large enough free  *   results in VM working set trimming, meaning that consequent  *   malloc would immediately incur working set expansion);  * - larger table has larger cache footprint, which can affect  *   performance of other code paths (not necessarily even from same  *   thread in Hyper-Threading world);  *  * Value of 1 is not appropriate for performance reasons.  */
+comment|/*-  * Even though permitted values for TABLE_BITS are 8, 4 and 1, it should  * never be set to 8. 8 is effectively reserved for testing purposes.  * TABLE_BITS>1 are lookup-table-driven implementations referred to as  * "Shoup's" in GCM specification. In other words OpenSSL does not cover  * whole spectrum of possible table driven implementations. Why? In  * non-"Shoup's" case memory access pattern is segmented in such manner,  * that it's trivial to see that cache timing information can reveal  * fair portion of intermediate hash value. Given that ciphertext is  * always available to attacker, it's possible for him to attempt to  * deduce secret parameter H and if successful, tamper with messages  * [which is nothing but trivial in CTR mode]. In "Shoup's" case it's  * not as trivial, but there is no reason to believe that it's resistant  * to cache-timing attack. And the thing about "8-bit" implementation is  * that it consumes 16 (sixteen) times more memory, 4KB per individual  * key + 1KB shared. Well, on pros side it should be twice as fast as  * "4-bit" version. And for gcc-generated x86[_64] code, "8-bit" version  * was observed to run ~75% faster, closer to 100% for commercial  * compilers... Yet "4-bit" procedure is preferred, because it's  * believed to provide better security-performance balance and adequate  * all-round performance. "All-round" refers to things like:  *  * - shorter setup time effectively improves overall timing for  *   handling short messages;  * - larger table allocation can become unbearable because of VM  *   subsystem penalties (for example on Windows large enough free  *   results in VM working set trimming, meaning that consequent  *   malloc would immediately incur working set expansion);  * - larger table has larger cache footprint, which can affect  *   performance of other code paths (not necessarily even from same  *   thread in Hyper-Threading world);  *  * Value of 1 is not appropriate for performance reasons.  */
 end_comment
 
 begin_if
@@ -2654,7 +2654,7 @@ argument_list|(
 name|__arm
 argument_list|)
 operator|)
-comment|/* 	 * ARM assembler expects specific dword order in Htable. 	 */
+comment|/*      * ARM assembler expects specific dword order in Htable.      */
 block|{
 name|int
 name|j
@@ -3768,7 +3768,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* Htable shifted left  by 4 bits */
+comment|/* Htable shifted left by 4 bits */
 specifier|static
 specifier|const
 name|unsigned
@@ -4940,7 +4940,7 @@ value|gcm_ghash_4bit((ctx)->Xi.u,(ctx)->Htable,in,len)
 end_define
 
 begin_comment
-comment|/* GHASH_CHUNK is "stride parameter" missioned to mitigate cache  * trashing effect. In other words idea is to hash data while it's  * still in L1 cache after encryption pass... */
+comment|/*  * GHASH_CHUNK is "stride parameter" missioned to mitigate cache trashing  * effect. In other words idea is to hash data while it's still in L1 cache  * after encryption pass...  */
 end_comment
 
 begin_define
@@ -7492,7 +7492,7 @@ directive|endif
 if|#
 directive|if
 literal|0
-block|n = (unsigned int)mlen%16;
+block|n = (unsigned int)mlen % 16;
 comment|/* alternative to ctx->mres */
 endif|#
 directive|endif
@@ -7643,9 +7643,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-do|do
 block|{
 comment|/* always true actually */
+do|do
+block|{
 if|if
 condition|(
 name|n
@@ -8445,6 +8446,7 @@ condition|(
 literal|0
 condition|)
 do|;
+block|}
 endif|#
 directive|endif
 for|for
@@ -8893,9 +8895,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-do|do
 block|{
 comment|/* always true actually */
+do|do
+block|{
 if|if
 condition|(
 name|n
@@ -9709,6 +9712,7 @@ condition|(
 literal|0
 condition|)
 do|;
+block|}
 endif|#
 directive|endif
 for|for
@@ -11953,7 +11957,10 @@ modifier|*
 name|C1
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T1
 index|[]
 init|=
@@ -12011,7 +12018,10 @@ name|P2
 index|[
 literal|16
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C2
 index|[]
 init|=
@@ -12048,7 +12058,10 @@ literal|0xfe
 block|,
 literal|0x78
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T2
 index|[]
 init|=
@@ -12130,7 +12143,10 @@ literal|0x83
 block|,
 literal|0x08
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|P3
 index|[]
 init|=
@@ -12263,7 +12279,10 @@ literal|0xd2
 block|,
 literal|0x55
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|IV3
 index|[]
 init|=
@@ -12292,7 +12311,10 @@ literal|0xf8
 block|,
 literal|0x88
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C3
 index|[]
 init|=
@@ -12425,7 +12447,10 @@ literal|0x59
 block|,
 literal|0x85
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T3
 index|[]
 init|=
@@ -12599,7 +12624,10 @@ literal|0x7b
 block|,
 literal|0x39
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|A4
 index|[]
 init|=
@@ -12644,7 +12672,10 @@ literal|0xda
 block|,
 literal|0xd2
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C4
 index|[]
 init|=
@@ -12769,7 +12800,10 @@ literal|0xe0
 block|,
 literal|0x91
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T4
 index|[]
 init|=
@@ -12843,7 +12877,10 @@ literal|0xdb
 block|,
 literal|0xad
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C5
 index|[]
 init|=
@@ -12968,7 +13005,10 @@ literal|0x45
 block|,
 literal|0x98
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T5
 index|[]
 init|=
@@ -13146,7 +13186,10 @@ literal|0xb3
 block|,
 literal|0x9b
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C6
 index|[]
 init|=
@@ -13271,7 +13314,10 @@ literal|0xae
 block|,
 literal|0xe5
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T6
 index|[]
 init|=
@@ -13337,7 +13383,10 @@ modifier|*
 name|C7
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T7
 index|[]
 init|=
@@ -13395,7 +13444,10 @@ name|P8
 index|[
 literal|16
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C8
 index|[]
 init|=
@@ -13432,7 +13484,10 @@ literal|0xf6
 block|,
 literal|0x00
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T8
 index|[]
 init|=
@@ -13530,7 +13585,10 @@ literal|0x73
 block|,
 literal|0x1c
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|P9
 index|[]
 init|=
@@ -13663,7 +13721,10 @@ literal|0xd2
 block|,
 literal|0x55
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|IV9
 index|[]
 init|=
@@ -13692,7 +13753,10 @@ literal|0xf8
 block|,
 literal|0x88
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C9
 index|[]
 init|=
@@ -13825,7 +13889,10 @@ literal|0xe2
 block|,
 literal|0x56
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T9
 index|[]
 init|=
@@ -13999,7 +14066,10 @@ literal|0x7b
 block|,
 literal|0x39
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|A10
 index|[]
 init|=
@@ -14044,7 +14114,10 @@ literal|0xda
 block|,
 literal|0xd2
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C10
 index|[]
 init|=
@@ -14169,7 +14242,10 @@ literal|0x27
 block|,
 literal|0x10
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T10
 index|[]
 init|=
@@ -14243,7 +14319,10 @@ literal|0xdb
 block|,
 literal|0xad
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C11
 index|[]
 init|=
@@ -14368,7 +14447,10 @@ literal|0x62
 block|,
 literal|0xf7
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T11
 index|[]
 init|=
@@ -14546,7 +14628,10 @@ literal|0xb3
 block|,
 literal|0x9b
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C12
 index|[]
 init|=
@@ -14671,7 +14756,10 @@ literal|0x37
 block|,
 literal|0x3b
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T12
 index|[]
 init|=
@@ -14737,7 +14825,10 @@ modifier|*
 name|C13
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T13
 index|[]
 init|=
@@ -14796,7 +14887,10 @@ name|IV14
 index|[
 literal|12
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C14
 index|[]
 init|=
@@ -14833,7 +14927,10 @@ literal|0x9d
 block|,
 literal|0x18
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T14
 index|[]
 init|=
@@ -14947,7 +15044,10 @@ literal|0x83
 block|,
 literal|0x08
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|P15
 index|[]
 init|=
@@ -15080,7 +15180,10 @@ literal|0xd2
 block|,
 literal|0x55
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|IV15
 index|[]
 init|=
@@ -15109,7 +15212,10 @@ literal|0xf8
 block|,
 literal|0x88
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C15
 index|[]
 init|=
@@ -15242,7 +15348,10 @@ literal|0x15
 block|,
 literal|0xad
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T15
 index|[]
 init|=
@@ -15416,7 +15525,10 @@ literal|0x7b
 block|,
 literal|0x39
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|A16
 index|[]
 init|=
@@ -15461,7 +15573,10 @@ literal|0xda
 block|,
 literal|0xd2
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C16
 index|[]
 init|=
@@ -15586,7 +15701,10 @@ literal|0xf6
 block|,
 literal|0x62
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T16
 index|[]
 init|=
@@ -15660,7 +15778,10 @@ literal|0xdb
 block|,
 literal|0xad
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C17
 index|[]
 init|=
@@ -15785,7 +15906,10 @@ literal|0x9b
 block|,
 literal|0x1f
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T17
 index|[]
 init|=
@@ -15963,7 +16087,10 @@ literal|0xb3
 block|,
 literal|0x9b
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C18
 index|[]
 init|=
@@ -16088,7 +16215,10 @@ literal|0x7e
 block|,
 literal|0x3f
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T18
 index|[]
 init|=
@@ -16406,7 +16536,10 @@ literal|0x15
 block|,
 literal|0xad
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T19
 index|[]
 init|=
@@ -16453,6 +16586,7 @@ define|#
 directive|define
 name|A20
 value|A1
+comment|/* this results in 0xff in counter LSB */
 specifier|static
 specifier|const
 name|u8
@@ -16470,13 +16604,18 @@ literal|0xff
 block|,
 literal|0xff
 block|}
-decl_stmt|,
-comment|/* this results in 0xff in counter LSB */
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|P20
 index|[
 literal|288
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|C20
 index|[]
 init|=
@@ -17057,7 +17196,10 @@ literal|0x16
 block|,
 literal|0x5c
 block|}
-decl_stmt|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|u8
 name|T20
 index|[]
 init|=
@@ -17101,7 +17243,7 @@ name|TEST_CASE
 parameter_list|(
 name|n
 parameter_list|)
-value|do {					\ 	u8 out[sizeof(P##n)];					\ 	AES_set_encrypt_key(K##n,sizeof(K##n)*8,&key);		\ 	CRYPTO_gcm128_init(&ctx,&key,(block128_f)AES_encrypt);	\ 	CRYPTO_gcm128_setiv(&ctx,IV##n,sizeof(IV##n));		\ 	memset(out,0,sizeof(out));				\ 	if (A##n) CRYPTO_gcm128_aad(&ctx,A##n,sizeof(A##n));	\ 	if (P##n) CRYPTO_gcm128_encrypt(&ctx,P##n,out,sizeof(out));	\ 	if (CRYPTO_gcm128_finish(&ctx,T##n,16) ||		\ 	    (C##n&& memcmp(out,C##n,sizeof(out))))		\ 		ret++, printf ("encrypt test#%d failed.\n",n);	\ 	CRYPTO_gcm128_setiv(&ctx,IV##n,sizeof(IV##n));		\ 	memset(out,0,sizeof(out));				\ 	if (A##n) CRYPTO_gcm128_aad(&ctx,A##n,sizeof(A##n));	\ 	if (C##n) CRYPTO_gcm128_decrypt(&ctx,C##n,out,sizeof(out));	\ 	if (CRYPTO_gcm128_finish(&ctx,T##n,16) ||		\ 	    (P##n&& memcmp(out,P##n,sizeof(out))))		\ 		ret++, printf ("decrypt test#%d failed.\n",n);	\ 	} while(0)
+value|do {                                    \         u8 out[sizeof(P##n)];                                   \         AES_set_encrypt_key(K##n,sizeof(K##n)*8,&key);          \         CRYPTO_gcm128_init(&ctx,&key,(block128_f)AES_encrypt);  \         CRYPTO_gcm128_setiv(&ctx,IV##n,sizeof(IV##n));          \         memset(out,0,sizeof(out));                              \         if (A##n) CRYPTO_gcm128_aad(&ctx,A##n,sizeof(A##n));    \         if (P##n) CRYPTO_gcm128_encrypt(&ctx,P##n,out,sizeof(out));     \         if (CRYPTO_gcm128_finish(&ctx,T##n,16) ||               \             (C##n&& memcmp(out,C##n,sizeof(out))))             \                 ret++, printf ("encrypt test#%d failed.\n",n);  \         CRYPTO_gcm128_setiv(&ctx,IV##n,sizeof(IV##n));          \         memset(out,0,sizeof(out));                              \         if (A##n) CRYPTO_gcm128_aad(&ctx,A##n,sizeof(A##n));    \         if (C##n) CRYPTO_gcm128_decrypt(&ctx,C##n,out,sizeof(out));     \         if (CRYPTO_gcm128_finish(&ctx,T##n,16) ||               \             (P##n&& memcmp(out,P##n,sizeof(out))))             \                 ret++, printf ("decrypt test#%d failed.\n",n);  \         } while(0)
 name|int
 name|main
 parameter_list|()

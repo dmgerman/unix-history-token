@@ -4,11 +4,11 @@ comment|/* v3_ncons.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -663,7 +663,7 @@ return|;
 end_return
 
 begin_function
-unit|} 			  	  static
+unit|}  static
 name|int
 name|i2r_NAME_CONSTRAINTS
 parameter_list|(
@@ -1057,7 +1057,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check a certificate conforms to a specified set of constraints.  * Return values:  *  X509_V_OK: All constraints obeyed.  *  X509_V_ERR_PERMITTED_VIOLATION: Permitted subtree violation.  *  X509_V_ERR_EXCLUDED_VIOLATION: Excluded subtree violation.  *  X509_V_ERR_SUBTREE_MINMAX: Min or max values present and matching type.  *  X509_V_ERR_UNSUPPORTED_CONSTRAINT_TYPE:  Unsupported constraint type.  *  X509_V_ERR_UNSUPPORTED_CONSTRAINT_SYNTAX: bad unsupported constraint syntax.  *  X509_V_ERR_UNSUPPORTED_NAME_SYNTAX: bad or unsupported syntax of name   */
+comment|/*-  * Check a certificate conforms to a specified set of constraints.  * Return values:  *  X509_V_OK: All constraints obeyed.  *  X509_V_ERR_PERMITTED_VIOLATION: Permitted subtree violation.  *  X509_V_ERR_EXCLUDED_VIOLATION: Excluded subtree violation.  *  X509_V_ERR_SUBTREE_MINMAX: Min or max values present and matching type.  *  X509_V_ERR_UNSUPPORTED_CONSTRAINT_TYPE:  Unsupported constraint type.  *  X509_V_ERR_UNSUPPORTED_CONSTRAINT_SYNTAX: bad unsupported constraint syntax.  *  X509_V_ERR_UNSUPPORTED_NAME_SYNTAX: bad or unsupported syntax of name  */
 end_comment
 
 begin_function
@@ -1315,7 +1315,7 @@ name|match
 init|=
 literal|0
 decl_stmt|;
-comment|/* Permitted subtrees: if any subtrees exist of matching the type 	 * at least one subtree must match. 	 */
+comment|/*      * Permitted subtrees: if any subtrees exist of matching the type at      * least one subtree must match.      */
 for|for
 control|(
 name|i
@@ -1631,7 +1631,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* directoryName name constraint matching.  * The canonical encoding of X509_NAME makes this comparison easy. It is  * matched if the subtree is a subset of the name.  */
+comment|/*  * directoryName name constraint matching. The canonical encoding of  * X509_NAME makes this comparison easy. It is matched if the subtree is a  * subset of the name.  */
 end_comment
 
 begin_function
@@ -1772,7 +1772,7 @@ condition|)
 return|return
 name|X509_V_OK
 return|;
-comment|/* Otherwise can add zero or more components on the left so 	 * compare RHS and if dns is longer and expect '.' as preceding 	 * character. 	 */
+comment|/*      * Otherwise can add zero or more components on the left so compare RHS      * and if dns is longer and expect '.' as preceding character.      */
 if|if
 condition|(
 name|dns

@@ -268,7 +268,7 @@ name|NID_undef
 block|,
 name|NID_rsaEncryption
 block|}
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -443,7 +443,7 @@ name|sigoid_srt
 index|[
 literal|28
 index|]
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -312,7 +312,7 @@ argument_list|(
 name|NID_id_GostR3411_94_CryptoProParamSet
 argument_list|)
 expr_stmt|;
-comment|/*gkp->cipher_params = OBJ_nid2obj(cipher_param_nid);*/
+comment|/*      * gkp->cipher_params = OBJ_nid2obj(cipher_param_nid);      */
 name|params
 operator|->
 name|length
@@ -376,7 +376,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parses GOST algorithm parameters from X509_ALGOR and  * modifies pkey setting NID and parameters  */
+comment|/*  * Parses GOST algorithm parameters from X509_ALGOR and modifies pkey setting  * NID and parameters  */
 end_comment
 
 begin_function
@@ -1321,7 +1321,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*----------------------- free functions * ------------------------------*/
+comment|/* --------------------- free functions * ------------------------------*/
 end_comment
 
 begin_function
@@ -4538,7 +4538,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------ ASN1 METHOD for GOST MAC  -------------------*/
+comment|/* ---------------------- ASN1 METHOD for GOST MAC  -------------------*/
 end_comment
 
 begin_function

@@ -4,11 +4,11 @@ comment|/* engines/e_capi.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2008 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  */
+comment|/* ====================================================================  * Copyright (c) 2008 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  */
 end_comment
 
 begin_include
@@ -743,7 +743,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/* This structure contains CAPI ENGINE specific data:  * it contains various global options and affects how  * other functions behave.  */
+comment|/*  * This structure contains CAPI ENGINE specific data: it contains various  * global options and affects how other functions behave.  */
 end_comment
 
 begin_define
@@ -1664,7 +1664,7 @@ block|,
 comment|/* bn_mod_exp */
 literal|0
 block|,
-comment|/* init	*/
+comment|/* init */
 name|capi_rsa_free
 block|,
 comment|/* finish */
@@ -1708,7 +1708,7 @@ block|,
 comment|/* bn_mod_exp */
 literal|0
 block|,
-comment|/* init	*/
+comment|/* init */
 name|capi_dsa_free
 block|,
 comment|/* finish */
@@ -2081,7 +2081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* CryptoAPI key application data. This contains  * a handle to the private key container (for sign operations)  * and a handle to the key (for decrypt operations).  */
+comment|/*  * CryptoAPI key application data. This contains a handle to the private key  * container (for sign operations) and a handle to the key (for decrypt  * operations).  */
 end_comment
 
 begin_struct
@@ -2411,7 +2411,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* Reverse buffer in place: since this is a keyblob structure 	 * that will be freed up after conversion anyway it doesn't  	 * matter if we change it. 	 */
+comment|/*      * Reverse buffer in place: since this is a keyblob structure that will      * be freed up after conversion anyway it doesn't matter if we change      * it.      */
 for|for
 control|(
 name|i
@@ -7586,7 +7586,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Match found: attach extra data to it so 			 * we can retrieve the key later. 			 */
+comment|/*              * Match found: attach extra data to it so we can retrieve the              * key later.              */
 name|excert
 operator|=
 name|CertDuplicateCertificateContext
@@ -7826,11 +7826,11 @@ name|OPENSSL_CAPIENG_DIALOG
 end_ifdef
 
 begin_comment
-comment|/* More complex cert selection function, using standard function  * CryptUIDlgSelectCertificateFromStore() to produce a dialog box.  */
+comment|/*  * More complex cert selection function, using standard function  * CryptUIDlgSelectCertificateFromStore() to produce a dialog box.  */
 end_comment
 
 begin_comment
-comment|/* Definitions which are in cryptuiapi.h but this is not present in older  * versions of headers.  */
+comment|/*  * Definitions which are in cryptuiapi.h but this is not present in older  * versions of headers.  */
 end_comment
 
 begin_ifndef
@@ -7876,7 +7876,7 @@ begin_define
 define|#
 directive|define
 name|dlg_columns
-value|CRYPTUI_SELECT_LOCATION_COLUMN \ 			|CRYPTUI_SELECT_INTENDEDUSE_COLUMN
+value|CRYPTUI_SELECT_LOCATION_COLUMN \                         |CRYPTUI_SELECT_INTENDEDUSE_COLUMN
 end_define
 
 begin_decl_stmt
@@ -8285,7 +8285,7 @@ name|ENGINE_load_capi
 parameter_list|(
 name|void
 parameter_list|)
-block|{}
+block|{ }
 end_function
 
 begin_endif

@@ -4,7 +4,7 @@ comment|/* v3_pcia.c -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Contributed to the OpenSSL Project 2004  * by Richard Levitte (richard@levitte.org)  */
+comment|/*  * Contributed to the OpenSSL Project 2004 by Richard Levitte  * (richard@levitte.org)  */
 end_comment
 
 begin_comment
