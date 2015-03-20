@@ -2078,7 +2078,7 @@ begin_define
 define|#
 directive|define
 name|SATA_SS_SPD_GEN3
-value|0x00000040
+value|0x00000030
 end_define
 
 begin_define
@@ -2321,7 +2321,7 @@ begin_define
 define|#
 directive|define
 name|SATA_SC_SPD_SPEED_GEN3
-value|0x00000040
+value|0x00000030
 end_define
 
 begin_define
