@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**********************************************************************  *                          gost2001.c                                *  *             Copyright (c) 2005-2006 Cryptocom LTD                  *  *         This file is distributed under the same license as OpenSSL *  *                                                                    *  *          Implementation of GOST R 34.10-2001      				  *  *          Requires OpenSSL 0.9.9 for compilation                    *  **********************************************************************/
+comment|/**********************************************************************  *                          gost2001.c                                *  *             Copyright (c) 2005-2006 Cryptocom LTD                  *  *         This file is distributed under the same license as OpenSSL *  *                                                                    *  *          Implementation of GOST R 34.10-2001                                   *  *          Requires OpenSSL 0.9.9 for compilation                    *  **********************************************************************/
 end_comment
 
 begin_include
@@ -476,7 +476,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Computes gost2001 signature as DSA_SIG structure   *  *  */
+comment|/*  * Computes gost2001 signature as DSA_SIG structure  *  *  */
 end_comment
 
 begin_function
@@ -1772,7 +1772,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *   * Generates GOST R 34.10-2001 keypair  *  *  */
+comment|/*  *  * Generates GOST R 34.10-2001 keypair  *  *  */
 end_comment
 
 begin_function

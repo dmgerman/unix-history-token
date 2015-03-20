@@ -4,11 +4,11 @@ comment|/* dso_dl.c -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Written by Richard Levitte (richard@levitte.org) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Richard Levitte (richard@levitte.org) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -280,7 +280,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* For this DSO_METHOD, our meth_data STACK will contain;  * (i) the handle (shl_t) returned from shl_load().  * NB: I checked on HPUX11 and shl_t is itself a pointer  * type so the cast is safe.  */
+comment|/*  * For this DSO_METHOD, our meth_data STACK will contain; (i) the handle  * (shl_t) returned from shl_load(). NB: I checked on HPUX11 and shl_t is  * itself a pointer type so the cast is safe.  */
 end_comment
 
 begin_function
@@ -298,7 +298,7 @@ name|ptr
 init|=
 name|NULL
 decl_stmt|;
-comment|/* We don't do any fancy retries or anything, just take the method's 	 * (or DSO's if it has the callback set) best translation of the 	 * platform-independant filename and try once with that. */
+comment|/*      * We don't do any fancy retries or anything, just take the method's (or      * DSO's if it has the callback set) best translation of the      * platform-independant filename and try once with that.      */
 name|char
 modifier|*
 name|filename
@@ -413,7 +413,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Success, stick the converted filename we've loaded under into the DSO 	 * (it also serves as the indicator that we are currently loaded). */
+comment|/*      * Success, stick the converted filename we've loaded under into the DSO      * (it also serves as the indicator that we are currently loaded).      */
 name|dso
 operator|->
 name|loaded_filename
@@ -534,7 +534,7 @@ argument_list|,
 name|DSO_R_NULL_HANDLE
 argument_list|)
 expr_stmt|;
-comment|/* Should push the value back onto the stack in 		 * case of a retry. */
+comment|/*          * Should push the value back onto the stack in case of a retry.          */
 name|sk_push
 argument_list|(
 name|dso
@@ -960,7 +960,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* If the first file specification is a rooted path, it rules. 	   same goes if the second file specification is missing. */
+comment|/*      * If the first file specification is a rooted path, it rules. same goes      * if the second file specification is missing.      */
 if|if
 condition|(
 operator|!
@@ -1013,7 +1013,7 @@ name|filespec1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If the first file specification is missing, the second one rules. */
+comment|/*      * If the first file specification is missing, the second one rules.      */
 elseif|else
 if|if
 condition|(
@@ -1061,7 +1061,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* This part isn't as trivial as it looks.  It assumes that 		   the second file specification really is a directory, and 		   makes no checks whatsoever.  Therefore, the result becomes 		   the concatenation of filespec2 followed by a slash followed 		   by filespec1. */
+comment|/*          * This part isn't as trivial as it looks.  It assumes that the          * second file specification really is a directory, and makes no          * checks whatsoever.  Therefore, the result becomes the          * concatenation of filespec2 followed by a slash followed by          * filespec1.          */
 block|{
 name|int
 name|spec2len
@@ -1182,7 +1182,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function is identical to the one in dso_dlfcn.c, but as it is highly  * unlikely that both the "dl" *and* "dlfcn" variants are being compiled at the  * same time, there's no great duplicating the code. Figuring out an elegant   * way to share one copy of the code would be more difficult and would not  * leave the implementations independant. */
+comment|/*  * This function is identical to the one in dso_dlfcn.c, but as it is highly  * unlikely that both the "dl" *and* "dlfcn" variants are being compiled at  * the same time, there's no great duplicating the code. Figuring out an  * elegant way to share one copy of the code would be more difficult and  * would not leave the implementations independant.  */
 end_comment
 
 begin_if

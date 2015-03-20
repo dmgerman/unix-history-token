@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Support for VIA PadLock Advanced Cryptography Engine (ACE)  * Written by Michal Ludvig<michal@logix.cz>  *            http://www.logix.cz/michal  *  * Big thanks to Andy Polyakov for a help with optimization,   * assembler fixes, port to MS Windows and a lot of other   * valuable work on this engine!  */
+comment|/*-  * Support for VIA PadLock Advanced Cryptography Engine (ACE)  * Written by Michal Ludvig<michal@logix.cz>  *            http://www.logix.cz/michal  *  * Big thanks to Andy Polyakov for a help with optimization,  * assembler fixes, port to MS Windows and a lot of other  * valuable work on this engine!  */
 end_comment
 
 begin_comment
@@ -165,7 +165,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VIA PadLock AES is available *ONLY* on some x86 CPUs.    Not only that it doesn't exist elsewhere, but it    even can't be compiled on other platforms!      In addition, because of the heavy use of inline assembler,    compiler choice is limited to GCC and Microsoft C. */
+comment|/*  * VIA PadLock AES is available *ONLY* on some x86 CPUs. Not only that it  * doesn't exist elsewhere, but it even can't be compiled on other platforms!  *  * In addition, because of the heavy use of inline assembler, compiler choice  * is limited to GCC and Microsoft C.  */
 end_comment
 
 begin_undef
@@ -324,7 +324,7 @@ name|COMPILE_HW_PADLOCK
 end_ifdef
 
 begin_comment
-comment|/* We do these includes here to avoid header problems on platforms that    do not have the VIA padlock anyway... */
+comment|/*  * We do these includes here to avoid header problems on platforms that do  * not have the VIA padlock anyway...  */
 end_comment
 
 begin_include
@@ -577,7 +577,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|1
-comment|/* disable RNG for now, see commentary in vicinity of RNG code */
+comment|/* disable RNG for now, see commentary in                                  * vicinity of RNG code */
 name|padlock_use_rng
 operator|=
 literal|0
@@ -768,7 +768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This stuff is needed if this ENGINE is being compiled into a self-contained  * shared-library.  */
+comment|/*  * This stuff is needed if this ENGINE is being compiled into a  * self-contained shared-library.  */
 end_comment
 
 begin_ifdef
@@ -895,11 +895,11 @@ value|32
 end_define
 
 begin_comment
-comment|/* Here we store the status information relevant to the     current context. */
+comment|/*      * Here we store the status information relevant to the current context.      */
 end_comment
 
 begin_comment
-comment|/* BIG FAT WARNING:  * 	Inline assembler in PADLOCK_XCRYPT_ASM()  * 	depends on the order of items in this structure.  * 	Don't blindly modify, reorder, etc!  */
+comment|/*      * BIG FAT WARNING: Inline assembler in PADLOCK_XCRYPT_ASM() depends on      * the order of items in this structure.  Don't blindly modify, reorder,      * etc!      */
 end_comment
 
 begin_struct
@@ -1005,7 +1005,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * =======================================================  * Inline assembler section(s).  * =======================================================  * Order of arguments is chosen to facilitate Windows port  * using __fastcall calling convention. If you wish to add  * more routines, keep in mind that first __fastcall  * argument is passed in %ecx and second - in %edx.  * =======================================================  */
+comment|/*-  * =======================================================  * Inline assembler section(s).  * =======================================================  * Order of arguments is chosen to facilitate Windows port  * using __fastcall calling convention. If you wish to add  * more routines, keep in mind that first __fastcall  * argument is passed in %ecx and second - in %edx.  * =======================================================  */
 end_comment
 
 begin_if
@@ -1026,7 +1026,7 @@ comment|/*  * As for excessive "push %ebx"/"pop %ebx" found all over.  * When ge
 end_comment
 
 begin_comment
-comment|/* Helper function - check if a CPUID instruction    is available on this CPU */
+comment|/*  * Helper function - check if a CPUID instruction is available on this CPU  */
 end_comment
 
 begin_function
@@ -1043,10 +1043,10 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-comment|/* We're checking if the bit #21 of EFLAGS  	   can be toggled. If yes = CPUID is available. */
+comment|/*      * We're checking if the bit #21 of EFLAGS can be toggled. If yes =      * CPUID is available.      */
 asm|asm
 specifier|volatile
-asm|( 		"pushf\n" 		"popl %%eax\n" 		"xorl $0x200000, %%eax\n" 		"movl %%eax, %%ecx\n" 		"andl $0x200000, %%ecx\n" 		"pushl %%eax\n" 		"popf\n" 		"pushf\n" 		"popl %%eax\n" 		"andl $0x200000, %%eax\n" 		"xorl %%eax, %%ecx\n" 		"movl %%ecx, %0\n" 		: "=r" (result) : : "eax", "ecx");
+asm|("pushf\n"                   "popl %%eax\n"                   "xorl $0x200000, %%eax\n"                   "movl %%eax, %%ecx\n"                   "andl $0x200000, %%ecx\n"                   "pushl %%eax\n"                   "popf\n"                   "pushf\n"                   "popl %%eax\n"                   "andl $0x200000, %%eax\n"                   "xorl %%eax, %%ecx\n"                   "movl %%ecx, %0\n":"=r" (result)::"eax", "ecx");
 return|return
 operator|(
 name|result
@@ -1058,7 +1058,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Load supported features of the CPU to see if    the PadLock is available. */
+comment|/*  * Load supported features of the CPU to see if the PadLock is available.  */
 end_comment
 
 begin_function
@@ -1105,7 +1105,7 @@ literal|0
 expr_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"pushl	%%ebx\n" 		"cpuid\n" 		"movl	%%ebx,(%%edi)\n" 		"movl	%%edx,4(%%edi)\n" 		"movl	%%ecx,8(%%edi)\n" 		"popl	%%ebx" 		: "+a"(eax) : "D"(vendor_string) : "ecx", "edx");
+asm|("pushl  %%ebx\n"                   "cpuid\n"                   "movl   %%ebx,(%%edi)\n"                   "movl   %%edx,4(%%edi)\n"                   "movl   %%ecx,8(%%edi)\n"                   "popl   %%ebx":"+a" (eax):"D"(vendor_string):"ecx", "edx");
 if|if
 condition|(
 name|strcmp
@@ -1127,7 +1127,7 @@ literal|0xC0000000
 expr_stmt|;
 asm|asm
 specifier|volatile
-asm|("pushl %%ebx; cpuid; popl	%%ebx" 		: "+a"(eax) : : "ecx", "edx");
+asm|("pushl %%ebx; cpuid; popl %%ebx":"+a" (eax)::"ecx", "edx");
 if|if
 condition|(
 name|eax
@@ -1144,7 +1144,7 @@ literal|0xC0000001
 expr_stmt|;
 asm|asm
 specifier|volatile
-asm|("pushl %%ebx; cpuid; popl %%ebx" 		: "+a"(eax), "=d"(edx) : : "ecx");
+asm|("pushl %%ebx; cpuid; popl %%ebx":"+a" (eax),                   "=d"(edx)::"ecx");
 comment|/* Fill up some flags */
 name|padlock_use_ace
 operator|=
@@ -1258,7 +1258,7 @@ condition|)
 block|{
 asm|asm
 specifier|volatile
-asm|("bswapl %0" : "+r"(*key));
+asm|("bswapl %0":"+r" (*key));
 name|key
 operator|++
 expr_stmt|;
@@ -1277,7 +1277,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Force key reload from memory to the CPU microcode.    Loading EFLAGS from the stack clears EFLAGS[30]     which does the trick. */
+comment|/*  * Force key reload from memory to the CPU microcode. Loading EFLAGS from the  * stack clears EFLAGS[30] which does the trick.  */
 end_comment
 
 begin_function
@@ -1319,7 +1319,7 @@ parameter_list|)
 block|{
 asm|asm
 specifier|volatile
-asm|( 	"pushfl\n" "	btl	$30,(%%esp)\n" "	jnc	1f\n" "	cmpl	%2,%1\n" "	je	1f\n" "	popfl\n" "	subl	$4,%%esp\n" "1:	addl	$4,%%esp\n" "	movl	%2,%0" 	:"+m"(padlock_saved_context) 	: "r"(padlock_saved_context), "r"(cdata) : "cc");
+asm|("pushfl\n"                   "       btl     $30,(%%esp)\n"                   "       jnc     1f\n"                   "       cmpl    %2,%1\n"                   "       je      1f\n"                   "       popfl\n"                   "       subl    $4,%%esp\n"                   "1:     addl    $4,%%esp\n"                   "       movl    %2,%0":"+m" (padlock_saved_context)                   :"r"(padlock_saved_context), "r"(cdata):"cc");
 block|}
 end_function
 
@@ -1328,7 +1328,7 @@ comment|/* Template for padlock_xcrypt_* modes */
 end_comment
 
 begin_comment
-comment|/* BIG FAT WARNING:   * 	The offsets used with 'leal' instructions  * 	describe items of the 'padlock_cipher_data'  * 	structure.  */
+comment|/*  * BIG FAT WARNING: The offsets used with 'leal' instructions describe items  * of the 'padlock_cipher_data' structure.  */
 end_comment
 
 begin_define
@@ -1341,11 +1341,15 @@ parameter_list|,
 name|rep_xcrypt
 parameter_list|)
 define|\
-value|static inline void *name(size_t cnt,		\ 	struct padlock_cipher_data *cdata,	\ 	void *out, const void *inp) 		\ {	void *iv; 				\ 	asm volatile ( "pushl	%%ebx\n"	\ 		"	leal	16(%0),%%edx\n"	\ 		"	leal	32(%0),%%ebx\n"	\ 			rep_xcrypt "\n"		\ 		"	popl	%%ebx"		\ 		: "=a"(iv), "=c"(cnt), "=D"(out), "=S"(inp) \ 		: "0"(cdata), "1"(cnt), "2"(out), "3"(inp)  \ 		: "edx", "cc", "memory");	\ 	return iv;				\ }
+value|static inline void *name(size_t cnt,            \         struct padlock_cipher_data *cdata,      \         void *out, const void *inp)             \ {       void *iv;                               \         asm volatile ( "pushl   %%ebx\n"        \                 "       leal    16(%0),%%edx\n" \                 "       leal    32(%0),%%ebx\n" \                         rep_xcrypt "\n"         \                 "       popl    %%ebx"          \                 : "=a"(iv), "=c"(cnt), "=D"(out), "=S"(inp) \                 : "0"(cdata), "1"(cnt), "2"(out), "3"(inp)  \                 : "edx", "cc", "memory");       \         return iv;                              \ }
 end_define
 
 begin_comment
 comment|/* Generate all functions with appropriate opcodes */
+end_comment
+
+begin_comment
+comment|/* rep xcryptecb */
 end_comment
 
 begin_macro
@@ -1358,7 +1362,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* rep xcryptecb */
+comment|/* rep xcryptcbc */
 end_comment
 
 begin_macro
@@ -1371,7 +1375,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* rep xcryptcbc */
+comment|/* rep xcryptcfb */
 end_comment
 
 begin_macro
@@ -1384,7 +1388,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* rep xcryptcfb */
+comment|/* rep xcryptofb */
 end_comment
 
 begin_macro
@@ -1395,10 +1399,6 @@ argument_list|,
 literal|".byte 0xf3,0x0f,0xa7,0xe8"
 argument_list|)
 end_macro
-
-begin_comment
-comment|/* rep xcryptofb */
-end_comment
 
 begin_endif
 endif|#
@@ -1433,7 +1433,7 @@ asm|asm
 specifier|volatile
 asm|(".byte 0x0f,0xa7,0xc0"
 comment|/* xstore */
-asm|: "=a"(eax_out),"=m"(*(unsigned *)addr) 	    : "D"(addr), "d" (edx_in) 	    );
+asm|:"=a" (eax_out), "=m"(*(unsigned *)addr)                   :"D"(addr), "d"(edx_in)         );
 return|return
 name|eax_out
 return|;
@@ -1441,7 +1441,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Why not inline 'rep movsd'? I failed to find information on what  * value in Direction Flag one can expect and consequently have to  * apply "better-safe-than-sorry" approach and assume "undefined."  * I could explicitly clear it and restore the original value upon  * return from padlock_aes_cipher, but it's presumably too much  * trouble for too little gain...  *  * In case you wonder 'rep xcrypt*' instructions above are *not*  * affected by the Direction Flag and pointers advance toward  * larger addresses unconditionally.  */
+comment|/*  * Why not inline 'rep movsd'? I failed to find information on what value in  * Direction Flag one can expect and consequently have to apply  * "better-safe-than-sorry" approach and assume "undefined." I could  * explicitly clear it and restore the original value upon return from  * padlock_aes_cipher, but it's presumably too much trouble for too little  * gain... In case you wonder 'rep xcrypt*' instructions above are *not*  * affected by the Direction Flag and pointers advance toward larger  * addresses unconditionally.  */
 end_comment
 
 begin_function
@@ -1530,11 +1530,11 @@ parameter_list|(
 name|code
 parameter_list|)
 define|\
-value|_asm _emit 0xf3			\ 	_asm _emit 0x0f _asm _emit 0xa7	\ 	_asm _emit code
+value|_asm _emit 0xf3                 \         _asm _emit 0x0f _asm _emit 0xa7 \         _asm _emit code
 end_define
 
 begin_comment
-comment|/* BIG FAT WARNING:   * 	The offsets used with 'lea' instructions  * 	describe items of the 'padlock_cipher_data'  * 	structure.  */
+comment|/*  * BIG FAT WARNING: The offsets used with 'lea' instructions describe items  * of the 'padlock_cipher_data' structure.  */
 end_comment
 
 begin_define
@@ -1547,7 +1547,7 @@ parameter_list|,
 name|code
 parameter_list|)
 define|\
-value|static void * __fastcall 		\ 	name (size_t cnt, void *cdata,	\ 	void *outp, const void *inp)	\ {	_asm	mov	eax,edx		\ 	_asm	lea	edx,[eax+16]	\ 	_asm	lea	ebx,[eax+32]	\ 	_asm	mov	edi,outp	\ 	_asm	mov	esi,inp		\ 	REP_XCRYPT(code)		\ }
+value|static void * __fastcall                \         name (size_t cnt, void *cdata,  \         void *outp, const void *inp)    \ {       _asm    mov     eax,edx         \         _asm    lea     edx,[eax+16]    \         _asm    lea     ebx,[eax+32]    \         _asm    mov     edi,outp        \         _asm    mov     esi,inp         \         REP_XCRYPT(code)                \ }
 end_define
 
 begin_macro
@@ -1843,7 +1843,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* MS actually specifies status of Direction Flag and compiler even  * manages to compile following as 'rep movsd' all by itself...  */
+comment|/*  * MS actually specifies status of Direction Flag and compiler even manages  * to compile following as 'rep movsd' all by itself...  */
 end_comment
 
 begin_define
@@ -2038,7 +2038,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* List of supported ciphers. */
+comment|/*  * List of supported ciphers.  */
 end_comment
 
 begin_decl_stmt
@@ -2161,7 +2161,7 @@ name|NEAREST_ALIGNED
 parameter_list|(
 name|ptr
 parameter_list|)
-value|( (unsigned char *)(ptr) +		\ 	( (0x10 - ((size_t)(ptr)& 0x0F))& 0x0F )	)
+value|( (unsigned char *)(ptr) +         \         ( (0x10 - ((size_t)(ptr)& 0x0F))& 0x0F )      )
 end_define
 
 begin_define
@@ -2171,7 +2171,7 @@ name|ALIGNED_CIPHER_DATA
 parameter_list|(
 name|ctx
 parameter_list|)
-value|((struct padlock_cipher_data *)\ 	NEAREST_ALIGNED(ctx->cipher_data))
+value|((struct padlock_cipher_data *)\         NEAREST_ALIGNED(ctx->cipher_data))
 end_define
 
 begin_define
@@ -2203,7 +2203,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Declaring so many ciphers by hand would be a pain.    Instead introduce a bit of preprocessor magic :-) */
+comment|/*  * Declaring so many ciphers by hand would be a pain. Instead introduce a bit  * of preprocessor magic :-)  */
 end_comment
 
 begin_define
@@ -2218,7 +2218,7 @@ parameter_list|,
 name|umode
 parameter_list|)
 define|\
-value|static const EVP_CIPHER padlock_aes_##ksize##_##lmode = {	\ 	NID_aes_##ksize##_##lmode,		\ 	EVP_CIPHER_block_size_##umode,	\ 	AES_KEY_SIZE_##ksize,		\ 	AES_BLOCK_SIZE,			\ 	0 | EVP_CIPH_##umode##_MODE,	\ 	padlock_aes_init_key,		\ 	padlock_aes_cipher,		\ 	NULL,				\ 	sizeof(struct padlock_cipher_data) + 16,	\ 	EVP_CIPHER_set_asn1_iv,		\ 	EVP_CIPHER_get_asn1_iv,		\ 	NULL,				\ 	NULL				\ }
+value|static const EVP_CIPHER padlock_aes_##ksize##_##lmode = {       \         NID_aes_##ksize##_##lmode,              \         EVP_CIPHER_block_size_##umode,  \         AES_KEY_SIZE_##ksize,           \         AES_BLOCK_SIZE,                 \         0 | EVP_CIPH_##umode##_MODE,    \         padlock_aes_init_key,           \         padlock_aes_cipher,             \         NULL,                           \         sizeof(struct padlock_cipher_data) + 16,        \         EVP_CIPHER_set_asn1_iv,         \         EVP_CIPHER_get_asn1_iv,         \         NULL,                           \         NULL                            \ }
 end_define
 
 begin_expr_stmt
@@ -2702,7 +2702,7 @@ block|{
 case|case
 literal|128
 case|:
-comment|/* PadLock can generate an extended key for 			   AES128 in hardware */
+comment|/*          * PadLock can generate an extended key for AES128 in hardware          */
 name|memcpy
 argument_list|(
 name|cdata
@@ -2733,8 +2733,8 @@ case|:
 case|case
 literal|256
 case|:
-comment|/* Generate an extended AES key in software. 			   Needed for AES192/AES256 */
-comment|/* Well, the above applies to Stepping 8 CPUs 			   and is listed as hardware errata. They most 			   likely will fix it at some point and then 			   a check for stepping would be due here. */
+comment|/*          * Generate an extended AES key in software. Needed for AES192/AES256          */
+comment|/*          * Well, the above applies to Stepping 8 CPUs and is listed as          * hardware errata. They most likely will fix it at some point and          * then a check for stepping would be due here.          */
 if|if
 condition|(
 name|EVP_CIPHER_CTX_mode
@@ -2781,7 +2781,7 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|AES_ASM
-comment|/* OpenSSL C functions use byte-swapped extended key. */
+comment|/*          * OpenSSL C functions use byte-swapped extended key.          */
 name|padlock_bswapl
 argument_list|(
 operator|&
@@ -2809,7 +2809,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 	 * This is done to cover for cases when user reuses the 	 * context for new key. The catch is that if we don't do 	 * this, padlock_eas_cipher might proceed with old key... 	 */
+comment|/*      * This is done to cover for cases when user reuses the      * context for new key. The catch is that if we don't do      * this, padlock_eas_cipher might proceed with old key...      */
 name|padlock_reload_key
 argument_list|()
 expr_stmt|;
@@ -2820,7 +2820,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Simplified version of padlock_aes_cipher() used when  * 1) both input and output buffers are at aligned addresses.  * or when  * 2) running on a newer CPU that doesn't require aligned buffers.  */
+comment|/*-  * Simplified version of padlock_aes_cipher() used when  * 1) both input and output buffers are at aligned addresses.  * or when  * 2) running on a newer CPU that doesn't require aligned buffers.  */
 end_comment
 
 begin_function
@@ -3094,7 +3094,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Re-align the arguments to 16-Bytes boundaries and run the     encryption function itself. This function is not AES-specific. */
+comment|/*  * Re-align the arguments to 16-Bytes boundaries and run the encryption  * function itself. This function is not AES-specific.  */
 end_comment
 
 begin_function
@@ -3154,7 +3154,7 @@ name|allocated
 init|=
 literal|0
 decl_stmt|;
-comment|/* ctx->num is maintained in byte-oriented modes, 	   such as CFB and OFB... */
+comment|/*      * ctx->num is maintained in byte-oriented modes, such as CFB and OFB...      */
 if|if
 condition|(
 operator|(
@@ -3370,15 +3370,15 @@ return|;
 if|#
 directive|if
 literal|0
-block|if (nbytes % AES_BLOCK_SIZE) 		return 0;
+block|if (nbytes % AES_BLOCK_SIZE)         return 0;
 comment|/* are we expected to do tail processing? */
 else|#
 directive|else
-comment|/* nbytes is always multiple of AES_BLOCK_SIZE in ECB and CBC 	   modes and arbitrary value in byte-oriented modes, such as 	   CFB and OFB... */
+comment|/*      * nbytes is always multiple of AES_BLOCK_SIZE in ECB and CBC modes and      * arbitrary value in byte-oriented modes, such as CFB and OFB...      */
 endif|#
 directive|endif
-comment|/* VIA promises CPUs that won't require alignment in the future. 	   For now padlock_aes_align_required is initialized to 1 and 	   the condition is never met... */
-comment|/* C7 core is capable to manage unaligned input in non-ECB[!] 	   mode, but performance penalties appear to be approximately 	   same as for software alignment below or ~3x. They promise to 	   improve it in the future, but for now we can just as well 	   pretend that it can only handle aligned input... */
+comment|/*      * VIA promises CPUs that won't require alignment in the future. For now      * padlock_aes_align_required is initialized to 1 and the condition is      * never met...      */
+comment|/*      * C7 core is capable to manage unaligned input in non-ECB[!] mode, but      * performance penalties appear to be approximately same as for software      * alignment below or ~3x. They promise to improve it in the future, but      * for now we can just as well pretend that it can only handle aligned      * input...      */
 if|if
 condition|(
 operator|!
@@ -3430,7 +3430,7 @@ operator|&
 literal|0x0F
 operator|)
 expr_stmt|;
-comment|/* Note that even if output is aligned and input not, 	 * I still prefer to loop instead of copy the whole 	 * input and then encrypt in one stroke. This is done 	 * in order to improve L1 cache utilization... */
+comment|/*      * Note that even if output is aligned and input not, I still prefer to      * loop instead of copy the whole input and then encrypt in one stroke.      * This is done in order to improve L1 cache utilization...      */
 name|realign_in_loop
 operator|=
 name|out_misaligned
@@ -4356,7 +4356,7 @@ comment|/*  * This code is not engaged. The reason is that it does not comply  *
 end_comment
 
 begin_comment
-comment|/* Wrapper that provides an interface between the API and     the raw PadLock RNG */
+comment|/*  * Wrapper that provides an interface between the API and the raw PadLock  * RNG  */
 end_comment
 
 begin_function

@@ -277,13 +277,13 @@ name|NID_id_Gost28147_89
 block|,
 literal|1
 block|,
-comment|/*block_size*/
+comment|/* block_size */
 literal|32
 block|,
-comment|/*key_size*/
+comment|/* key_size */
 literal|8
 block|,
-comment|/*iv_len */
+comment|/* iv_len */
 name|EVP_CIPH_CFB_MODE
 operator||
 name|EVP_CIPH_NO_PADDING
@@ -314,7 +314,7 @@ block|,
 name|gost_cipher_ctl
 block|,
 name|NULL
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -327,13 +327,13 @@ name|NID_gost89_cnt
 block|,
 literal|1
 block|,
-comment|/*block_size*/
+comment|/* block_size */
 literal|32
 block|,
-comment|/*key_size*/
+comment|/* key_size */
 literal|8
 block|,
-comment|/*iv_len */
+comment|/* iv_len */
 name|EVP_CIPH_OFB_MODE
 operator||
 name|EVP_CIPH_NO_PADDING
@@ -364,7 +364,7 @@ block|,
 name|gost_cipher_ctl
 block|,
 name|NULL
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -545,7 +545,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Correspondence between gost parameter OIDs and substitution blocks  * NID field is filed by register_gost_NID function in engine.c  * upon engine initialization  */
+comment|/*  * Correspondence between gost parameter OIDs and substitution blocks  * NID field is filed by register_gost_NID function in engine.c  * upon engine initialization  */
 end_comment
 
 begin_decl_stmt
@@ -555,10 +555,10 @@ name|gost_cipher_list
 index|[]
 init|=
 block|{
-comment|/* NID */
-comment|/* Subst block */
-comment|/* Key meshing*/
-comment|/*{NID_id_GostR3411_94_CryptoProParamSet,&GostR3411_94_CryptoProParamSet,0},*/
+comment|/*- NID */
+comment|/*      * Subst block      */
+comment|/*      * Key meshing      */
+comment|/*      * {NID_id_GostR3411_94_CryptoProParamSet,&GostR3411_94_CryptoProParamSet,0},      */
 block|{
 name|NID_id_Gost28147_89_cc
 block|,
@@ -625,7 +625,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  get encryption parameters from crypto network settings 	FIXME For now we use environment var CRYPT_PARAMS as place to  	store these settings. Actually, it is better to use engine control   command, read from configuration file to set them */
+comment|/*  * get encryption parameters from crypto network settings FIXME For now we  * use environment var CRYPT_PARAMS as place to store these settings.  * Actually, it is better to use engine control command, read from  * configuration file to set them  */
 end_comment
 
 begin_function
@@ -1151,7 +1151,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Wrapper around gostcrypt function from gost89.c which perform  * key meshing when nesseccary   */
+comment|/*  * Wrapper around gostcrypt function from gost89.c which perform key meshing  * when nesseccary  */
 end_comment
 
 begin_function
@@ -1529,7 +1529,7 @@ name|go
 operator|>
 name|g
 condition|)
-comment|/*  overflow*/
+comment|/* overflow */
 name|g
 operator|++
 expr_stmt|;
@@ -1853,7 +1853,7 @@ operator|+=
 literal|8
 control|)
 block|{
-comment|/*block cipher current iv */
+comment|/*          * block cipher current iv          */
 name|gost_crypt_mesh
 argument_list|(
 name|ctx
@@ -1869,8 +1869,8 @@ operator|->
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/*xor next block of input text with it and output it*/
-comment|/*output this block */
+comment|/*          * xor next block of input text with it and output it          */
+comment|/*          * output this block          */
 if|if
 condition|(
 operator|!
@@ -1922,7 +1922,7 @@ index|]
 expr_stmt|;
 block|}
 comment|/* Encrypt */
-comment|/* Next iv is next block of cipher text*/
+comment|/* Next iv is next block of cipher text */
 if|if
 condition|(
 name|ctx
@@ -2215,7 +2215,7 @@ operator|+=
 literal|8
 control|)
 block|{
-comment|/*block cipher current iv */
+comment|/*          * block cipher current iv          */
 comment|/* Encrypt */
 name|gost_cnt_next
 argument_list|(
@@ -2232,8 +2232,8 @@ operator|->
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/*xor next block of input text with it and output it*/
-comment|/*output this block */
+comment|/*          * xor next block of input text with it and output it          */
+comment|/*          * output this block          */
 for|for
 control|(
 name|j
@@ -3041,7 +3041,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* We are using local buffer for iv because CryptoPro doesn't  	 * interpret internal state of MAC algorithm as iv during keymeshing 	 * (but does initialize internal state from iv in key transport 	 */
+comment|/*      * We are using local buffer for iv because CryptoPro doesn't interpret      * internal state of MAC algorithm as iv during keymeshing (but does      * initialize internal state from iv in key transport      */
 name|assert
 argument_list|(
 name|c

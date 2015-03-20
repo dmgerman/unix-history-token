@@ -4,11 +4,11 @@ comment|/* crypto/ts/ts.h */
 end_comment
 
 begin_comment
-comment|/* Written by Zoltan Glozik (zglozik@opentsa.org) for the OpenSSL  * project 2002, 2003, 2004.  */
+comment|/*  * Written by Zoltan Glozik (zglozik@opentsa.org) for the OpenSSL project  * 2002, 2003, 2004.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_ifndef
@@ -182,7 +182,7 @@ file|<openssl/x509.h>
 include|#
 directive|include
 file|<openssl/x509v3.h>
-comment|/* MessageImprint ::= SEQUENCE  {      hashAlgorithm                AlgorithmIdentifier,      hashedMessage                OCTET STRING  } */
+comment|/*- MessageImprint ::= SEQUENCE  {      hashAlgorithm                AlgorithmIdentifier,      hashedMessage                OCTET STRING  } */
 typedef|typedef
 struct|struct
 name|TS_msg_imprint_st
@@ -198,7 +198,7 @@ decl_stmt|;
 block|}
 name|TS_MSG_IMPRINT
 typedef|;
-comment|/* TimeStampReq ::= SEQUENCE  {    version                  INTEGER  { v1(1) },    messageImprint           MessageImprint,      --a hash algorithm OID and the hash value of the data to be      --time-stamped    reqPolicy                TSAPolicyId                OPTIONAL,    nonce                    INTEGER                    OPTIONAL,    certReq                  BOOLEAN                    DEFAULT FALSE,    extensions               [0] IMPLICIT Extensions    OPTIONAL  } */
+comment|/*- TimeStampReq ::= SEQUENCE  {    version                  INTEGER  { v1(1) },    messageImprint           MessageImprint,      --a hash algorithm OID and the hash value of the data to be      --time-stamped    reqPolicy                TSAPolicyId                OPTIONAL,    nonce                    INTEGER                    OPTIONAL,    certReq                  BOOLEAN                    DEFAULT FALSE,    extensions               [0] IMPLICIT Extensions    OPTIONAL  } */
 typedef|typedef
 struct|struct
 name|TS_req_st
@@ -236,7 +236,7 @@ comment|/* [0] OPTIONAL */
 block|}
 name|TS_REQ
 typedef|;
-comment|/* Accuracy ::= SEQUENCE {                 seconds        INTEGER           OPTIONAL,                 millis     [0] INTEGER  (1..999) OPTIONAL,                 micros     [1] INTEGER  (1..999) OPTIONAL  } */
+comment|/*- Accuracy ::= SEQUENCE {                 seconds        INTEGER           OPTIONAL,                 millis     [0] INTEGER  (1..999) OPTIONAL,                 micros     [1] INTEGER  (1..999) OPTIONAL  } */
 typedef|typedef
 struct|struct
 name|TS_accuracy_st
@@ -256,7 +256,7 @@ decl_stmt|;
 block|}
 name|TS_ACCURACY
 typedef|;
-comment|/* TSTInfo ::= SEQUENCE  {     version                      INTEGER  { v1(1) },     policy                       TSAPolicyId,     messageImprint               MessageImprint,       -- MUST have the same value as the similar field in       -- TimeStampReq     serialNumber                 INTEGER,      -- Time-Stamping users MUST be ready to accommodate integers      -- up to 160 bits.     genTime                      GeneralizedTime,     accuracy                     Accuracy                 OPTIONAL,     ordering                     BOOLEAN             DEFAULT FALSE,     nonce                        INTEGER                  OPTIONAL,       -- MUST be present if the similar field was present       -- in TimeStampReq.  In that case it MUST have the same value.     tsa                          [0] GeneralName          OPTIONAL,     extensions                   [1] IMPLICIT Extensions  OPTIONAL   } */
+comment|/*- TSTInfo ::= SEQUENCE  {     version                      INTEGER  { v1(1) },     policy                       TSAPolicyId,     messageImprint               MessageImprint,       -- MUST have the same value as the similar field in       -- TimeStampReq     serialNumber                 INTEGER,      -- Time-Stamping users MUST be ready to accommodate integers      -- up to 160 bits.     genTime                      GeneralizedTime,     accuracy                     Accuracy                 OPTIONAL,     ordering                     BOOLEAN             DEFAULT FALSE,     nonce                        INTEGER                  OPTIONAL,       -- MUST be present if the similar field was present       -- in TimeStampReq.  In that case it MUST have the same value.     tsa                          [0] GeneralName          OPTIONAL,     extensions                   [1] IMPLICIT Extensions  OPTIONAL   } */
 typedef|typedef
 struct|struct
 name|TS_tst_info_st
@@ -306,7 +306,7 @@ expr_stmt|;
 block|}
 name|TS_TST_INFO
 typedef|;
-comment|/* PKIStatusInfo ::= SEQUENCE {     status        PKIStatus,     statusString  PKIFreeText     OPTIONAL,     failInfo      PKIFailureInfo  OPTIONAL  }  From RFC 1510 - section 3.1.1: PKIFreeText ::= SEQUENCE SIZE (1..MAX) OF UTF8String 	-- text encoded as UTF-8 String (note:  each UTF8String SHOULD 	-- include an RFC 1766 language tag to indicate the language 	-- of the contained text) */
+comment|/*- PKIStatusInfo ::= SEQUENCE {     status        PKIStatus,     statusString  PKIFreeText     OPTIONAL,     failInfo      PKIFailureInfo  OPTIONAL  }  From RFC 1510 - section 3.1.1: PKIFreeText ::= SEQUENCE SIZE (1..MAX) OF UTF8String         -- text encoded as UTF-8 String (note:  each UTF8String SHOULD         -- include an RFC 1766 language tag to indicate the language         -- of the contained text) */
 comment|/* Possible values for status. See ts_resp_print.c&& ts_resp_verify.c. */
 define|#
 directive|define
@@ -332,7 +332,7 @@ define|#
 directive|define
 name|TS_STATUS_REVOCATION_NOTIFICATION
 value|5
-comment|/* Possible values for failure_info. See ts_resp_print.c&& ts_resp_verify.c */
+comment|/*  * Possible values for failure_info. See ts_resp_print.c&& ts_resp_verify.c  */
 define|#
 directive|define
 name|TS_INFO_BAD_ALG
@@ -395,7 +395,7 @@ name|DECLARE_ASN1_SET_OF
 argument_list|(
 argument|ASN1_UTF8STRING
 argument_list|)
-comment|/* TimeStampResp ::= SEQUENCE  {      status                  PKIStatusInfo,      timeStampToken          TimeStampToken     OPTIONAL } */
+comment|/*- TimeStampResp ::= SEQUENCE  {      status                  PKIStatusInfo,      timeStampToken          TimeStampToken     OPTIONAL } */
 typedef|typedef
 struct|struct
 name|TS_resp_st
@@ -416,7 +416,7 @@ block|}
 name|TS_RESP
 typedef|;
 comment|/* The structure below would belong to the ESS component. */
-comment|/* IssuerSerial ::= SEQUENCE { 	issuer                   GeneralNames, 	serialNumber             CertificateSerialNumber 	} */
+comment|/*- IssuerSerial ::= SEQUENCE {         issuer                   GeneralNames,         serialNumber             CertificateSerialNumber         } */
 typedef|typedef
 struct|struct
 name|ESS_issuer_serial
@@ -435,7 +435,7 @@ decl_stmt|;
 block|}
 name|ESS_ISSUER_SERIAL
 typedef|;
-comment|/* ESSCertID ::=  SEQUENCE {         certHash                 Hash,         issuerSerial             IssuerSerial OPTIONAL } */
+comment|/*- ESSCertID ::=  SEQUENCE {         certHash                 Hash,         issuerSerial             IssuerSerial OPTIONAL } */
 typedef|typedef
 struct|struct
 name|ESS_cert_id
@@ -460,7 +460,7 @@ name|DECLARE_ASN1_SET_OF
 argument_list|(
 argument|ESS_CERT_ID
 argument_list|)
-comment|/* SigningCertificate ::=  SEQUENCE {        certs        SEQUENCE OF ESSCertID,        policies     SEQUENCE OF PolicyInformation OPTIONAL } */
+comment|/*- SigningCertificate ::=  SEQUENCE {        certs        SEQUENCE OF ESSCertID,        policies     SEQUENCE OF PolicyInformation OPTIONAL } */
 typedef|typedef
 struct|struct
 name|ESS_signing_cert
@@ -1986,7 +1986,7 @@ modifier|*
 name|idx
 parameter_list|)
 function_decl|;
-comment|/* Declarations related to response generation, defined in ts/ts_resp_sign.c. */
+comment|/*  * Declarations related to response generation, defined in ts/ts_resp_sign.c.  */
 comment|/* Optional flags for response generation. */
 comment|/* Don't include the TSA name in response. */
 define|#
@@ -2024,7 +2024,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* This must return the seconds and microseconds since Jan 1, 1970 in    the sec and usec variables allocated by the caller.     Return non-zero for success and zero for failure. */
+comment|/*  * This must return the seconds and microseconds since Jan 1, 1970 in the sec  * and usec variables allocated by the caller. Return non-zero for success  * and zero for failure.  */
 typedef|typedef
 name|int
 function_decl|(
@@ -2048,7 +2048,7 @@ modifier|*
 name|usec
 parameter_list|)
 function_decl|;
-comment|/* This must process the given extension.  * It can modify the TS_TST_INFO object of the context.  * Return values: !0 (processed), 0 (error, it must set the   * status info/failure info of the response).  */
+comment|/*  * This must process the given extension. It can modify the TS_TST_INFO  * object of the context. Return values: !0 (processed), 0 (error, it must  * set the status info/failure info of the response).  */
 typedef|typedef
 name|int
 function_decl|(
@@ -2126,7 +2126,7 @@ comment|/* accuracy, 0 means not specified. */
 name|unsigned
 name|clock_precision_digits
 decl_stmt|;
-comment|/* fraction of seconds in 						   time stamp token. */
+comment|/* fraction of seconds in time stamp                                       * token. */
 name|unsigned
 name|flags
 decl_stmt|;
@@ -2251,7 +2251,7 @@ operator|*
 name|certs
 argument_list|)
 decl_stmt|;
-comment|/* Adds a new acceptable policy, only the default policy     is accepted by default. */
+comment|/*  * Adds a new acceptable policy, only the default policy is accepted by  * default.  */
 name|int
 name|TS_RESP_CTX_add_policy
 parameter_list|(
@@ -2264,7 +2264,7 @@ modifier|*
 name|policy
 parameter_list|)
 function_decl|;
-comment|/* Adds a new acceptable message digest. Note that no message digests     are accepted by default. The md argument is shared with the caller. */
+comment|/*  * Adds a new acceptable message digest. Note that no message digests are  * accepted by default. The md argument is shared with the caller.  */
 name|int
 name|TS_RESP_CTX_add_md
 parameter_list|(
@@ -2296,7 +2296,7 @@ name|int
 name|micros
 parameter_list|)
 function_decl|;
-comment|/* Clock precision digits, i.e. the number of decimal digits:     '0' means sec, '3' msec, '6' usec, and so on. Default is 0. */
+comment|/*  * Clock precision digits, i.e. the number of decimal digits: '0' means sec,  * '3' msec, '6' usec, and so on. Default is 0.  */
 name|int
 name|TS_RESP_CTX_set_clock_precision_digits
 parameter_list|(
@@ -2357,7 +2357,7 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
-comment|/* Default callback rejects all extensions. The extension callback is called   * when the TS_TST_INFO object is already set up and not signed yet. */
+comment|/*  * Default callback rejects all extensions. The extension callback is called  * when the TS_TST_INFO object is already set up and not signed yet.  */
 comment|/* FIXME: extension handling is not tested yet. */
 name|void
 name|TS_RESP_CTX_set_extension_cb
@@ -2438,7 +2438,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/*   * Creates the signed TS_TST_INFO and puts it in TS_RESP.  * In case of errors it sets the status info properly.  * Returns NULL only in case of memory allocation/fatal error.  */
+comment|/*  * Creates the signed TS_TST_INFO and puts it in TS_RESP.  * In case of errors it sets the status info properly.  * Returns NULL only in case of memory allocation/fatal error.  */
 name|TS_RESP
 modifier|*
 name|TS_RESP_create_response
@@ -2493,12 +2493,12 @@ define|#
 directive|define
 name|TS_VFY_POLICY
 value|(1u<< 2)
-comment|/* Verify the message imprint provided by the user. This flag should not be    specified with TS_VFY_DATA. */
+comment|/*  * Verify the message imprint provided by the user. This flag should not be  * specified with TS_VFY_DATA.  */
 define|#
 directive|define
 name|TS_VFY_IMPRINT
 value|(1u<< 3)
-comment|/* Verify the message imprint computed by the verify method from the user    provided data and the MD algorithm of the response. This flag should not be    specified with TS_VFY_IMPRINT. */
+comment|/*  * Verify the message imprint computed by the verify method from the user  * provided data and the MD algorithm of the response. This flag should not  * be specified with TS_VFY_IMPRINT.  */
 define|#
 directive|define
 name|TS_VFY_DATA
@@ -2522,11 +2522,11 @@ comment|/* You can use the following convenience constants. */
 define|#
 directive|define
 name|TS_VFY_ALL_IMPRINT
-value|(TS_VFY_SIGNATURE	\ 				 | TS_VFY_VERSION	\ 				 | TS_VFY_POLICY	\ 				 | TS_VFY_IMPRINT	\ 				 | TS_VFY_NONCE		\ 				 | TS_VFY_SIGNER	\ 				 | TS_VFY_TSA_NAME)
+value|(TS_VFY_SIGNATURE       \                                  | TS_VFY_VERSION       \                                  | TS_VFY_POLICY        \                                  | TS_VFY_IMPRINT       \                                  | TS_VFY_NONCE         \                                  | TS_VFY_SIGNER        \                                  | TS_VFY_TSA_NAME)
 define|#
 directive|define
 name|TS_VFY_ALL_DATA
-value|(TS_VFY_SIGNATURE	\ 				 | TS_VFY_VERSION	\ 				 | TS_VFY_POLICY	\ 				 | TS_VFY_DATA		\ 				 | TS_VFY_NONCE		\ 				 | TS_VFY_SIGNER	\ 				 | TS_VFY_TSA_NAME)
+value|(TS_VFY_SIGNATURE       \                                  | TS_VFY_VERSION       \                                  | TS_VFY_POLICY        \                                  | TS_VFY_DATA          \                                  | TS_VFY_NONCE         \                                  | TS_VFY_SIGNER        \                                  | TS_VFY_TSA_NAME)
 typedef|typedef
 struct|struct
 name|TS_verify_ctx
@@ -2552,7 +2552,7 @@ name|ASN1_OBJECT
 modifier|*
 name|policy
 decl_stmt|;
-comment|/* Must be set only with TS_VFY_IMPRINT. If md_alg is NULL,  	   the algorithm from the response is used. */
+comment|/*      * Must be set only with TS_VFY_IMPRINT. If md_alg is NULL, the      * algorithm from the response is used.      */
 name|X509_ALGOR
 modifier|*
 name|md_alg
@@ -2640,7 +2640,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/*   * If ctx is NULL, it allocates and returns a new object, otherwise  * it returns ctx. It initialises all the members as follows:  * flags = TS_VFY_ALL_IMPRINT& ~(TS_VFY_TSA_NAME | TS_VFY_SIGNATURE)  * certs = NULL  * store = NULL  * policy = policy from the request or NULL if absent (in this case  *	TS_VFY_POLICY is cleared from flags as well)  * md_alg = MD algorithm from request  * imprint, imprint_len = imprint from request  * data = NULL  * nonce, nonce_len = nonce from the request or NULL if absent (in this case  * 	TS_VFY_NONCE is cleared from flags as well)  * tsa_name = NULL  * Important: after calling this method TS_VFY_SIGNATURE should be added!  */
+comment|/*-  * If ctx is NULL, it allocates and returns a new object, otherwise  * it returns ctx. It initialises all the members as follows:  * flags = TS_VFY_ALL_IMPRINT& ~(TS_VFY_TSA_NAME | TS_VFY_SIGNATURE)  * certs = NULL  * store = NULL  * policy = policy from the request or NULL if absent (in this case  *      TS_VFY_POLICY is cleared from flags as well)  * md_alg = MD algorithm from request  * imprint, imprint_len = imprint from request  * data = NULL  * nonce, nonce_len = nonce from the request or NULL if absent (in this case  *      TS_VFY_NONCE is cleared from flags as well)  * tsa_name = NULL  * Important: after calling this method TS_VFY_SIGNATURE should be added!  */
 name|TS_VERIFY_CTX
 modifier|*
 name|TS_REQ_to_TS_VERIFY_CTX
@@ -2759,7 +2759,7 @@ modifier|*
 name|msg
 parameter_list|)
 function_decl|;
-comment|/* Function declarations for handling configuration options,    defined in ts/ts_conf.c */
+comment|/*  * Function declarations for handling configuration options, defined in  * ts/ts_conf.c  */
 name|X509
 modifier|*
 name|TS_CONF_load_cert
@@ -3074,7 +3074,7 @@ parameter_list|)
 function_decl|;
 comment|/* -------------------------------------------------- */
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_TS_strings
 parameter_list|(

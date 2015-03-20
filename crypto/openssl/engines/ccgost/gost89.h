@@ -168,7 +168,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Note: encrypt and decrypt expect full blocks--padding blocks is           caller's responsibility. All bulk encryption is done in  		 ECB mode by these calls. Other modes may be added easily  		 enough.                                            */
+comment|/*  * Note: encrypt and decrypt expect full blocks--padding blocks is caller's  * responsibility. All bulk encryption is done in ECB mode by these calls.  * Other modes may be added easily enough.  */
 end_comment
 
 begin_comment
@@ -471,7 +471,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Compute MAC of given length in bits from data, using non-zero 8-byte  * IV (non-standard, for use in CryptoPro key transport only */
+comment|/*  * Compute MAC of given length in bits from data, using non-zero 8-byte IV  * (non-standard, for use in CryptoPro key transport only  */
 end_comment
 
 begin_function_decl

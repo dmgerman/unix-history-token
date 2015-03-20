@@ -4,11 +4,11 @@ comment|/* crypto/store/str_mem.c -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Written by Richard Levitte (richard@levitte.org) for the OpenSSL  * project 2003.  */
+comment|/*  * Written by Richard Levitte (richard@levitte.org) for the OpenSSL project  * 2003.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ file|"str_locl.h"
 end_include
 
 begin_comment
-comment|/* The memory store is currently highly experimental.  It's meant to become    a base store used by other stores for internal caching (for full caching    support, aging needs to be added).     The database use is meant to support as much attribute association as    possible, while providing for as small search ranges as possible.    This is currently provided for by sorting the entries by numbers that    are composed of bits set at the positions indicated by attribute type    codes.  This provides for ranges determined by the highest attribute    type code value.  A better idea might be to sort by values computed    from the range of attributes associated with the object (basically,    the difference between the highest and lowest attribute type code)    and it's distance from a base (basically, the lowest associated    attribute type code). */
+comment|/*  * The memory store is currently highly experimental.  It's meant to become a  * base store used by other stores for internal caching (for full caching  * support, aging needs to be added).  *  * The database use is meant to support as much attribute association as  * possible, while providing for as small search ranges as possible. This is  * currently provided for by sorting the entries by numbers that are composed  * of bits set at the positions indicated by attribute type codes.  This  * provides for ranges determined by the highest attribute type code value.  * A better idea might be to sort by values computed from the range of  * attributes associated with the object (basically, the difference between  * the highest and lowest attribute type code) and it's distance from a base  * (basically, the lowest associated attribute type code).  */
 end_comment
 
 begin_typedef
@@ -65,6 +65,7 @@ begin_struct
 struct|struct
 name|mem_data_st
 block|{
+comment|/*      * sorted with      * STORE_ATTR_INFO_compare().      */
 name|STACK_OF
 argument_list|(
 name|MEM_OBJECT_DATA
@@ -72,14 +73,13 @@ argument_list|)
 operator|*
 name|data
 expr_stmt|;
-comment|/* sorted with 					  * STORE_ATTR_INFO_compare(). */
+comment|/*      * Currently unused, but can      * be used to add attributes      * from parts of the data.      */
 name|unsigned
 name|int
 name|compute_components
 range|:
 literal|1
 decl_stmt|;
-comment|/* Currently unused, but can 						be used to add attributes 						from parts of the data. */
 block|}
 struct|;
 end_struct
@@ -95,10 +95,11 @@ begin_struct
 struct|struct
 name|mem_ctx_st
 block|{
+comment|/* The type we're searching for */
 name|int
 name|type
 decl_stmt|;
-comment|/* The type we're searching for */
+comment|/*      * Sets of      * attributes to search for.  Each      * element is a STORE_ATTR_INFO.      */
 name|STACK_OF
 argument_list|(
 name|STORE_ATTR_INFO
@@ -106,15 +107,14 @@ argument_list|)
 operator|*
 name|search_attributes
 expr_stmt|;
-comment|/* Sets of 				     attributes to search for.  Each 				     element is a STORE_ATTR_INFO. */
+comment|/*      * which of the search attributes we      * found a match for, -1 when we still      * haven't found any      */
 name|int
 name|search_index
 decl_stmt|;
-comment|/* which of the search attributes we 				   found a match for, -1 when we still 				   haven't found any */
+comment|/* -1 as long as we're searching for the first */
 name|int
 name|index
 decl_stmt|;
-comment|/* -1 as long as we're searching for                                     the first */
 block|}
 struct|;
 end_struct
@@ -737,7 +737,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The list functions may be the hardest to understand.  Basically,    mem_list_start compiles a stack of attribute info elements, and    puts that stack into the context to be returned.  mem_list_next    will then find the first matching element in the store, and then    walk all the way to the end of the store (since any combination    of attribute bits above the starting point may match the searched    for bit pattern...). */
+comment|/*  * The list functions may be the hardest to understand.  Basically,  * mem_list_start compiles a stack of attribute info elements, and puts that  * stack into the context to be returned.  mem_list_next will then find the  * first matching element in the store, and then walk all the way to the end  * of the store (since any combination of attribute bits above the starting  * point may match the searched for bit pattern...).  */
 end_comment
 
 begin_function

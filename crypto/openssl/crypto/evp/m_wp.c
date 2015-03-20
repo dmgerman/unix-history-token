@@ -174,7 +174,7 @@ sizeof|sizeof
 argument_list|(
 name|WHIRLPOOL_CTX
 argument_list|)
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
